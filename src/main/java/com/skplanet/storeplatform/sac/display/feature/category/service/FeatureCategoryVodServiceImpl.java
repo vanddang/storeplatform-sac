@@ -102,13 +102,10 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		// 배치완료 기준일시 조회
 		String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), listId);
 
-		// 기준일시 체크 - TGR000000002는 누적
-		if (!"TGR000000002".equals(listId)) {
-			if (StringUtils.isEmpty(stdDt)) {
-				throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
-			} else {
-				req.setStdDt(stdDt);
-			}
+		if (StringUtils.isEmpty(stdDt)) {
+			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+		} else {
+			req.setStdDt(stdDt);
 		}
 
 		// prodGradeCd 배열로 변경
