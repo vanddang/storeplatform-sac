@@ -345,7 +345,7 @@
             , MCI.ARTIST_ID
             , MCI.REG_DT
           </if>
-         FROM UV_TB_DP_MULTIMDA_PROD MP
+         FROM TB_DP_MUSIC_PROD MP
           <if test='chartClsfCd != null and chartClsfCd != ""'>
             , TB_DP_MUSIC_CHART MCI
           </if>
@@ -358,7 +358,7 @@
             , TB_DP_MENU_CATEGORY C
             , TB_DP_MENU_CATEGORY_DESC CD
             , TB_DP_MENU_CATEGORY_DESC CD2
-            , UV_TB_DP_MULTIMDA_PROD MP2
+            , TB_DP_MUSIC_PROD MP2
             , TB_DP_PROD P2
             , TB_DP_TENANT_PROD TP2
             , TB_DP_PROD_IMG PI
