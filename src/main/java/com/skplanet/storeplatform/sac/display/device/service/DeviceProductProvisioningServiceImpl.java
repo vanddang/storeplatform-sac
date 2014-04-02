@@ -80,14 +80,16 @@ public class DeviceProductProvisioningServiceImpl implements DeviceProductProvis
 		paramMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("supportDevice", supportDevice);
 
-		List<MetaInfo> metaInfoList = this.commonDAO.queryForList(
-				"DeviceProductProvisioning.searchProductProvisioning", paramMap, MetaInfo.class);
-		if (metaInfoList != null) {
-			for (MetaInfo metaInfo : metaInfoList) {
-				product = new Product();
-				product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
-				product.setRights(this.commonGenerator.generateRights(metaInfo));
-				productList.add(product);
+		if (supportDevice != null) {
+			List<MetaInfo> metaInfoList = this.commonDAO.queryForList(
+					"DeviceProductProvisioning.searchProductProvisioning", paramMap, MetaInfo.class);
+			if (metaInfoList != null) {
+				for (MetaInfo metaInfo : metaInfoList) {
+					product = new Product();
+					product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+					product.setRights(this.commonGenerator.generateRights(metaInfo));
+					productList.add(product);
+				}
 			}
 		}
 		commonResponse.setTotalCount(productList.size());
