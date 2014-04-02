@@ -35,8 +35,8 @@
 			 #{prodId, jdbcType=VARCHAR}         
 			,#{partProdId, jdbcType=VARCHAR}
 			,#{prodRshpCd, jdbcType=VARCHAR}
-			,'SYSTEM'
-			,SYSDATE    
+			,#{regId, jdbcType=VARCHAR}
+			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')    
 		 )
 	</insert>
 

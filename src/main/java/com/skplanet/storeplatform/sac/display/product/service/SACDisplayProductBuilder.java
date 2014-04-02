@@ -99,6 +99,10 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 		 */
 		dpProductService.insertDPProduct(notification.getDpProductTotal().getDpProduct());
 		
+		/*
+		 * 상품정보 매핑
+		 */
+		dpProductRshpService.insertDPProductRshp(notification.getDpProductTotal().getDpProductRshp());
 		
 		/*
 		 * 테넌트 정보

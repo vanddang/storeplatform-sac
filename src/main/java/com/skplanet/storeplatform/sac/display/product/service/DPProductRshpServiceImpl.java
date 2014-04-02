@@ -52,8 +52,8 @@ public class DPProductRshpServiceImpl implements DPProductRshpService {
 	 * (non-Javadoc)
 	 * @see com.skplanet.icms.deploy.tstore.service.DPProductCatService#insertDPProductCat(com.skplanet.icms.deploy.DPProductCatVO)
 	 */
-	public void insertDPProductRshp(DPProductRshpVO dpProdCat) {
-		this.commonDAO.insert(NAMESPACE + ".insertDPProductRshp", dpProdCat);
+	public void insertDPProductRshp(DPProductRshpVO dpProdRshp) {
+		this.commonDAO.insert(NAMESPACE + ".insertDPProductRshp", dpProdRshp);
 	}
 
 	/*
