@@ -34,26 +34,5 @@
         </property>
         <property name="order" value="10"/>
     </bean>
-    
-    <bean id="memberTlogLocalSCIPostProcessor" class="com.skplanet.storeplatform.framework.integration.interceptor.DefalutExpressionAdvisorPostProcessor">
-        <property name="userAdvice">
-            <bean class="com.skplanet.storeplatform.framework.integration.interceptor.TLogLocalSCIInterceptor">
-                <constructor-arg type="java.lang.String" name="componentId" value="MEMBER"/>
-                <constructor-arg type="java.lang.String" name="componentTLogLoggerName" value="TLOG_MEMBER_LOGGER"/>
-            </bean>
-        </property>      
-        <property name="expression" value="within(com.skplanet.storeplatform.member..*) and @within(com.skplanet.storeplatform.framework.integration.bean.LocalSCI)" />
-        <property name="order" value="11"/>        
-    </bean>
-    <bean id="purchaseTlogLocalSCIPostProcessor" class="com.skplanet.storeplatform.framework.integration.interceptor.DefalutExpressionAdvisorPostProcessor">
-        <property name="userAdvice">
-            <bean class="com.skplanet.storeplatform.framework.integration.interceptor.TLogLocalSCIInterceptor">
-                <constructor-arg type="java.lang.String" name="componentId" value="PURCHASE"/>
-                <constructor-arg type="java.lang.String" name="componentTLogLoggerName" value="TLOG_PURCHASE_LOGGER"/>
-            </bean>
-        </property>      
-        <property name="expression" value="within(com.skplanet.storeplatform.purchase..*) and @within(com.skplanet.storeplatform.framework.integration.bean.LocalSCI)" />
-        <property name="order" value="12"/>
-    </bean>
 
 </beans>
