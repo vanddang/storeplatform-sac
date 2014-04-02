@@ -1170,7 +1170,7 @@ public class ShoppingCouponSacController {
 			if (StringUtils.equalsIgnoreCase("C", itemInfoList.get(i).getCudType())) {
 				if (this.couponItemService.getItemCountCudType(itemInfoList.get(i).getItemCode()) > 0) {
 					itemInfoList.get(i).setCudType("U");
-					System.out.println("sdfjklsdfjk" + itemInfoList.get(i).getCudType());
+					this.log.info("itemInfoList" + i + "번째::" + itemInfoList.get(i).getCudType());
 				}
 			}
 		}
