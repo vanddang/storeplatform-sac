@@ -510,6 +510,11 @@ public class DisplayConstants {
 	public static final Integer DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT = Integer.valueOf(50);
 
 	/**
+	 * 구매 내역 조회 시 필요한 상품 메타 정보 조회 API 파라미터 제한 개수.
+	 */
+	public static final Integer DP_PRODUCT_INFO_PARAMETER_LIMIT = Integer.valueOf(100);
+
+	/**
 	 * 특정 상품 조회 API 파라미터 제한 개수.
 	 */
 	public static final Integer DP_UPDATE_PARAM_LIMIT = Integer.valueOf(1000);
@@ -646,11 +651,10 @@ public class DisplayConstants {
 
 	public static final String DP_LIST_SHOPPING_POPULAR = "RNK000000006";
 
-    
-    /** 할인율 product.point */
-    public static final String DC_RATE_TMEMBERSHIP = "tmembership";
-    /** 할인율 유형 - 일반 상품 */
-    public static final String DC_RATE_TYPE_NORMAL = "normal";
-    /** 할인율 유형 - 정액권 상품 */
-    public static final String DC_RATE_TYPE_FREEPASS = "freepass";
+	/** 할인율 product.point */
+	public static final String DC_RATE_TMEMBERSHIP = "tmembership";
+	/** 할인율 유형 - 일반 상품 */
+	public static final String DC_RATE_TYPE_NORMAL = "normal";
+	/** 할인율 유형 - 정액권 상품 */
+	public static final String DC_RATE_TYPE_FREEPASS = "freepass";
 }

@@ -24,6 +24,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
@@ -44,6 +46,9 @@ public class DeviceProductProvisioningServiceImpl implements DeviceProductProvis
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 
+	@Autowired
+	private DisplayCommonService displayCommonService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -62,6 +67,9 @@ public class DeviceProductProvisioningServiceImpl implements DeviceProductProvis
 		Product product = null;
 
 		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
+				.getModel());
+
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
 		paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
@@ -70,6 +78,7 @@ public class DeviceProductProvisioningServiceImpl implements DeviceProductProvis
 		paramMap.put("tenantHeader", tenantHeader);
 		paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		paramMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		paramMap.put("supportDevice", supportDevice);
 
 		List<MetaInfo> metaInfoList = this.commonDAO.queryForList(
 				"DeviceProductProvisioning.searchProductProvisioning", paramMap, MetaInfo.class);

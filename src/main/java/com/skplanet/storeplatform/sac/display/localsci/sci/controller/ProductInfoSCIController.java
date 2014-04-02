@@ -38,9 +38,8 @@ public class ProductInfoSCIController implements ProductInfoSCI {
 	 */
 	@Override
 	public ProductInfoSacRes getProductList(@Validated ProductInfoSacReq req) {
-		if (req.getList().size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
-			throw new StorePlatformException("SAC_DSP_0004", "list",
-					DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
+		if (req.getList().size() > DisplayConstants.DP_PRODUCT_INFO_PARAMETER_LIMIT) {
+			throw new StorePlatformException("SAC_DSP_0004", "list", DisplayConstants.DP_PRODUCT_INFO_PARAMETER_LIMIT);
 		}
 		return this.productInfoService.getProductList(req);
 	}

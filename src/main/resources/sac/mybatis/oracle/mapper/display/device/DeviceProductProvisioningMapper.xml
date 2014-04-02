@@ -72,42 +72,19 @@
 	                        #{item}
 	                   </foreach>
 	               </if>
-			       AND DECODE (
-			              P.TOP_MENU_ID,
-			              'DP13', CD.EBOOK_SPRT_YN,                                                                   -- 이북(eBook) TOP
-			              'DP14', CD.COMIC_SPRT_YN,                                                                   -- 툰도시(Comic) TOP
-			              'DP16', DECODE (P.META_CLSF_CD, 'CT25', CD.MUSIC_SPRT_YN,'Y'),                              -- 통합뮤직 TOP
-			              'DP17', DECODE (
-			                         CD.VIDEO_DRM_SPRT_YN,
-			                         'N', DECODE (NVL (P.DRM_YN, 'N'), 'N', 'Y', 'N'),
-			                         'Y'),                                           -- 영화
-			              'DP18', DECODE (
-			                         CD.VIDEO_DRM_SPRT_YN,
-			                         'N', DECODE (NVL (P.DRM_YN, 'N'), 'N', 'Y', 'N'),
-			                         'Y'),                                        -- TV 방송
-			              'DP09', DECODE (
-			                         CD.VIDEO_DRM_SPRT_YN,
-			                         'N', DECODE (NVL (P.DRM_YN, 'N'), 'N', 'Y', 'N'),
-			                         'Y'),                                  -- 고화질 동영상 TOP
-			              'Y') = 'Y'
-			      AND (  CASE WHEN P.TOP_MENU_ID IN ('DP17','DP18','DP09')                                            -- 영화 / TV 방송 / 고화질 동영상 TOP
-			                  THEN ( SELECT  'Y' 
-			                           FROM TB_DP_SUB_CONTENTS SC
-			                           WHERE   
-			                                   SC.PROD_ID = P.PROD_ID
-			                               AND    SC.SALE_YN = 'Y'
-			                               AND DECODE( CD.SD_VIDEO_SPRT_YN              --  SD_동영상_지원_여부
-			                                         ,'Y', DECODE ( SC.DP_PG_QULT_CD     -- 전시 화면 품질 코드
-			                                                     , 'PD009701', 'Y'      -- 일반화질
-			                                                     , 'PD009702', 'Y'      -- 고화질 SD
-			                                                     , CD.HDV_SPRT_YN),    -- 고화질 HD 지원
-			                                         DECODE( SC.DP_PG_QULT_CD ,    
-			                                                 'PD009701', 'Y' ,         -- 일반화질
-			                                                 'N' ) ) = 'Y'
-			                            AND ROWNUM <![CDATA[<=]]> 1  )
-			                  ELSE 'Y'
-                         END ) = 'Y'
-		    </if>
+	               AND  (CASE WHEN P.TOP_MENU_ID = 'DP13' THEN
+	                           CASE WHEN #{supportDevice.ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
+		                      WHEN P.TOP_MENU_ID = 'DP14' THEN
+		                           CASE WHEN #{supportDevice.comicSprtYn} = 'Y' THEN 1 ELSE 0 END
+		                      WHEN P.TOP_MENU_ID = 'DP15' THEN 0
+		                      WHEN P.TOP_MENU_ID = 'DP16' THEN
+		                           CASE WHEN P.META_CLSF_CD = 'CT25' THEN
+		                                     CASE WHEN #{supportDevice.musicSprtYn} = 'Y' THEN 1 ELSE 0 END ELSE 1 END
+		                      WHEN P.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+		                           CASE WHEN NVL(P.DRM_YN, 'N') = 'Y' AND #{supportDevice.videoDrmSprtYn} = 'N' THEN 0
+		                                ELSE CASE WHEN #{supportDevice.sdVideoSprtYn} = 'Y' THEN 1 ELSE 0 END END
+		                      ELSE 1 END) = 1
+	       </if>
   </select>
  	
 </mapper>
