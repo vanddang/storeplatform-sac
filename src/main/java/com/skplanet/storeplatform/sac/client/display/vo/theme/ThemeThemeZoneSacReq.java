@@ -30,6 +30,7 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
+
 	private String topMenuId; // TOP 메뉴 아이디
 	private String bnrMenuId; // 배너 메뉴 아이디
 	private String prodCharge; // 상품의 유료/무료 구분
@@ -37,13 +38,13 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
 	private String b2bProd; // B2B 상품 구분
 
+	private String anyDeviceModelCd; // 가상단말명
 	// TB_CM_DEVICE 가능여부
-	private String ebookSprtYn;
-	private String magazineSprtYn;
-	private String comicSprtYn;
-	private String musicSprtYn;
-	private String hdvSprtYn;
-	private String videoDrmSprtYn;
+	private String ebookSprtYn; // eBook 상품 지원여부
+	private String comicSprtYn; // Comic 상품 지원여부
+	private String musicSprtYn; // 음악 상품 지원여부
+	private String videoDrmSprtYn; // VOD 상품 DRM 지원 여부
+	private String sdVideoSprtYn; // VOD 상품 SD 지원 여부
 
 	// TODO osm1021 dummy data가 필요없어지면 삭제할것
 	private String dummy;
@@ -168,21 +169,6 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the magazineSprtYn
-	 */
-	public String getMagazineSprtYn() {
-		return this.magazineSprtYn;
-	}
-
-	/**
-	 * @param magazineSprtYn
-	 *            the magazineSprtYn to set
-	 */
-	public void setMagazineSprtYn(String magazineSprtYn) {
-		this.magazineSprtYn = magazineSprtYn;
-	}
-
-	/**
 	 * @return the comicSprtYn
 	 */
 	public String getComicSprtYn() {
@@ -213,21 +199,6 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the hdvSprtYn
-	 */
-	public String getHdvSprtYn() {
-		return this.hdvSprtYn;
-	}
-
-	/**
-	 * @param hdvSprtYn
-	 *            the hdvSprtYn to set
-	 */
-	public void setHdvSprtYn(String hdvSprtYn) {
-		this.hdvSprtYn = hdvSprtYn;
-	}
-
-	/**
 	 * @return the videoDrmSprtYn
 	 */
 	public String getVideoDrmSprtYn() {
@@ -240,6 +211,43 @@ public class ThemeThemeZoneSacReq extends CommonInfo {
 	 */
 	public void setVideoDrmSprtYn(String videoDrmSprtYn) {
 		this.videoDrmSprtYn = videoDrmSprtYn;
+	}
+
+	/**
+	 * @return the sdVideoSprtYn
+	 */
+	public String getSdVideoSprtYn() {
+		return this.sdVideoSprtYn;
+	}
+
+	/**
+	 * @param sdVideoSprtYn
+	 *            the sdVideoSprtYn to set
+	 */
+	public void setSdVideoSprtYn(String sdVideoSprtYn) {
+		this.sdVideoSprtYn = sdVideoSprtYn;
+	}
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	/**
+	 * @return the anyDeviceModelCd
+	 */
+	public String getAnyDeviceModelCd() {
+		return this.anyDeviceModelCd;
+	}
+
+	/**
+	 * @param anyDeviceModelCd
+	 *            the anyDeviceModelCd to set
+	 */
+	public void setAnyDeviceModelCd(String anyDeviceModelCd) {
+		this.anyDeviceModelCd = anyDeviceModelCd;
 	}
 
 }
