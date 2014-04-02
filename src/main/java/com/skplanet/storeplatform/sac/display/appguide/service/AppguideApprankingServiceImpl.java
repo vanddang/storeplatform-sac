@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -91,6 +92,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 		req.setTenantId(header.getTenantHeader().getTenantId());
 		req.setImageCd("DP000101");
 		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		// 배치완료 기준일시 조회
 		String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), listId);
@@ -115,6 +117,18 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 		}
 
 		List<ProductBasicInfo> productBasicInfoList;
+
+		// 단말 지원정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
+				.getModel());
+
+		if (supportDevice != null) {
+			req.setEbookSprtYn(supportDevice.getEbookSprtYn());
+			req.setComicSprtYn(supportDevice.getComicSprtYn());
+			req.setMusicSprtYn(supportDevice.getMusicSprtYn());
+			req.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
+			req.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+		}
 
 		// 추천 리스트 조회
 		productBasicInfoList = this.commonDAO.queryForList("AppguideAppranking.selectApprankingList", req,
