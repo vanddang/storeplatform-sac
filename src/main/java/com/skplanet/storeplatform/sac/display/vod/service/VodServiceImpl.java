@@ -675,6 +675,15 @@ public class VodServiceImpl implements VodService {
 		support.setType(DisplayConstants.DP_VOD_DOLBY_NM);
 		support.setText(mapperVO.getDolbySprtYn());
 		supportList.add(support);
+		
+		
+		//FIXME : BTV Support (임시값)
+		support = new Support();
+		support.setType(DisplayConstants.DP_VOD_BTV_SUPPORT_NM);
+		support.setText("Y");
+		supportList.add(support);
+		
+		
 		return supportList;
 	}
 
