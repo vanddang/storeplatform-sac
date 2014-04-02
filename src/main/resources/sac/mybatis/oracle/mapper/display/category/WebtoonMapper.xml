@@ -54,6 +54,7 @@
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                            AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                                            AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
+                                           AND E.EPSD_CNT > 0
                                            AND F.LANG_CD = #{langCd}                 /* 언어 코드 */
                                            AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
                                            AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
@@ -66,7 +67,7 @@
                                            AND A.MENU_ID LIKE 'DP26%'                /* 메뉴ID */
 		                                 </if>
                                          <if test="weekDayCd != null and weekDayCd != ''">
-                                           AND K.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd} AND LANG_CD = #{langCd} )|| '%' /* DP010101 ~DP010107  :월~토*/
+                                           AND K.SERIALLY_WKDY LIKE CONCAT('%', CONCAT((SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd} AND LANG_CD = #{langCd}), '%')) /* DP010101 ~ DP010107 : 월~토*/
 					                     </if> 
                                ) IA
                                  WHERE IA.RN = 1
