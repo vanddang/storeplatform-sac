@@ -197,7 +197,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		reqMap.put("episodeContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getFeatureProductList",
@@ -278,7 +278,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		reqMap.put("episodeContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getNewProductList", reqMap,
 				ProductBasicInfo.class);
@@ -412,7 +412,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		reqMap.put("episodeContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getSubProductList", reqMap,
 				ProductBasicInfo.class);
@@ -751,7 +751,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		reqMap.put("episodeContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 				"Shopping.getSpecialSalesProductList", reqMap, ProductBasicInfo.class);
@@ -1021,7 +1021,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		reqMap.put("episodeContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getBrandshopProductList",
 				reqMap, ProductBasicInfo.class);
 		List<Product> productList = new ArrayList<Product>();
@@ -1234,7 +1234,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		reqMap.put("episodeContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getThemeProductList",
 				reqMap, ProductBasicInfo.class);
 		List<Product> productList = new ArrayList<Product>();
@@ -1369,7 +1369,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		reqMap.put("episodeContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 				"Shopping.getCatagoryAnotherProductList", reqMap, ProductBasicInfo.class);
@@ -1510,7 +1510,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		reqMap.put("episodeContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 				"Shopping.getBrandAnotherProductList", reqMap, ProductBasicInfo.class);

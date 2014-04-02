@@ -17,7 +17,7 @@
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
                    ,EXPO_ORD as expoOrd
-                   ,#{episodeContentTypeCd}  as contentsTypeCd
+                   ,#{channelContentTypeCd}  as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -157,7 +157,7 @@
                    ,TENANT_ID AS tenentId
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
-                   ,#{episodeContentTypeCd} as contentsTypeCd
+                   ,#{channelContentTypeCd} as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -268,7 +268,7 @@
                    ,TENANT_ID AS tenentId
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
-                   ,#{episodeContentTypeCd} as contentsTypeCd
+                   ,#{channelContentTypeCd} as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -649,7 +649,7 @@
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
                    ,EXPO_ORD as expoOrd
-                   ,#{episodeContentTypeCd} as contentsTypeCd
+                   ,#{channelContentTypeCd} as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -846,7 +846,7 @@
                    ,TENANT_ID AS tenentId
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
-                   ,#{episodeContentTypeCd} as contentsTypeCd
+                   ,#{channelContentTypeCd} as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -1033,7 +1033,7 @@
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
                    ,EXPO_ORD as expoOrd
-                   ,#{episodeContentTypeCd} as contentsTypeCd
+                   ,#{channelContentTypeCd} as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -1153,7 +1153,7 @@
                    ,TENANT_ID AS tenentId
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
-                   ,#{episodeContentTypeCd} as contentsTypeCd
+                   ,#{channelContentTypeCd} as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -1311,7 +1311,7 @@
                    ,TENANT_ID AS tenentId
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
-                   ,#{episodeContentTypeCd} as contentsTypeCd
+                   ,#{channelContentTypeCd} as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
