@@ -80,9 +80,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	@Autowired
 	private DeviceSCI deviceSCI;
 
-	// @Autowired
-	// private UpdatePurchaseCountSCI updatePurchaseCountSCI;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -93,24 +90,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	public DownloadVodSacRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodSacReq downloadVodSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
-
-		// List<UpdatePurchaseCountSacReq> listReq = new ArrayList<UpdatePurchaseCountSacReq>();
-		// UpdatePurchaseCountSacReq updatePurchaseCountSacReq = new UpdatePurchaseCountSacReq();
-		// updatePurchaseCountSacReq.setProductId("0000059181"); // APP
-		// updatePurchaseCountSacReq.setPurchaseCount(1);
-		// updatePurchaseCountSacReq.setTenantId("S01");
-		// listReq.add(updatePurchaseCountSacReq);
-		// updatePurchaseCountSacReq = new UpdatePurchaseCountSacReq();
-		// updatePurchaseCountSacReq.setProductId("H900051963"); // MM
-		// updatePurchaseCountSacReq.setPurchaseCount(-2);
-		// updatePurchaseCountSacReq.setTenantId("S01");
-		// listReq.add(updatePurchaseCountSacReq);
-		// updatePurchaseCountSacReq = new UpdatePurchaseCountSacReq();
-		// updatePurchaseCountSacReq.setProductId("S900000914"); // SH
-		// updatePurchaseCountSacReq.setPurchaseCount(1);
-		// updatePurchaseCountSacReq.setTenantId("S01");
-		// listReq.add(updatePurchaseCountSacReq);
-		// this.updatePurchaseCountSCI.updatePurchaseCount(listReq);
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
@@ -390,6 +369,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 											String decData = new String(decrypt, "UTF-8");
 											this.log.debug("----------------------------------------------------------------");
 											this.log.debug("[DownloadVodServiceImpl] decData : {}", decData);
+											System.out.println("decData	:	" + decData);
 											this.log.debug("----------------------------------------------------------------");
 										} catch (UnsupportedEncodingException e) {
 											e.printStackTrace();
@@ -449,8 +429,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						metaInfo.getHdcpYn()));
 				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM,
 						metaInfo.getHdvYn()));
-				// supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM,
-				// metaInfo.getBtvYn()));
+				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM, "Y"));
 				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM,
 						metaInfo.getDolbySprtYn()));
 				product.setSupportList(supportList);
