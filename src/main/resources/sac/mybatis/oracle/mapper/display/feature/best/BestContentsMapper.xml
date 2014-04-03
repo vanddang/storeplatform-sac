@@ -148,12 +148,12 @@
                                                )                        A
                                              , TB_DP_MENU_CATEGORY      B
                                              , TB_DP_PROD               D
-                                             , UV_TB_DP_MULTIMDA_PROD   E
+                                             , TB_DP_EBOOK_PROD         E
                                              , TB_DP_TENANT_PROD        G
                                              , TB_DP_PROD_RSHP          I
                                              , TB_DP_PROD               J
                                              , TB_DP_SPRT_DEVICE        K
-                                             , UV_TB_DP_MULTIMDA_PROD   L
+                                             , TB_DP_EBOOK_PROD         L
                                              , TB_CM_DEVICE             M
                                          WHERE A.MENU_ID = B.MENU_ID
                                            AND A.PROD_ID = D.PROD_ID

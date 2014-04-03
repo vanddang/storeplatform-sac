@@ -97,12 +97,12 @@
                                           FROM TB_DP_MENU_CATEGORY      A
                                              , TB_DP_MENU_CATEGORY_PROD_MAPG B
                                              , TB_DP_PROD               D /* 채널 상품 */
-                                             , UV_TB_DP_MULTIMDA_PROD   E /* 채널 상품 */
+                                             , TB_DP_EBOOK_PROD         E /* 채널 상품 */
                                              , TB_DP_PROD_DESC          F
                                              , TB_DP_TENANT_PROD        G
                                              , TB_DP_PROD_RSHP          I
                                              , TB_DP_PROD               J /* 에피소드 상품 */
-                                             , UV_TB_DP_MULTIMDA_PROD   K /* 에피소드 상품 */
+                                             , TB_DP_EBOOK_PROD         K /* 에피소드 상품 */
                                              , TB_DP_SPRT_DEVICE        L
                                              , TB_CM_DEVICE             M
                                          WHERE B.MENU_ID = A.MENU_ID 
