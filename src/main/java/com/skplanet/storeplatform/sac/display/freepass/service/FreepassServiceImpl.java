@@ -312,7 +312,7 @@ public class FreepassServiceImpl implements FreepassService {
 			for (int i = 0; i < prodIdList.length; i++) {
 				productBasicInfo.setProdId(prodIdList[i]);
 				productBasicInfo.setTenantId("S01");
-				productBasicInfo.setContentsTypeCd("PD002501");
+				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 				reqMap.put("productBasicInfo", productBasicInfo);
 				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
 				product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
@@ -448,7 +448,7 @@ public class FreepassServiceImpl implements FreepassService {
 			for (int i = 0; i < prodIdList.length; i++) {
 				productBasicInfo.setProdId(prodIdList[i]);
 				productBasicInfo.setTenantId("S01");
-				productBasicInfo.setContentsTypeCd("PD002501");
+				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 				reqMapP.put("productBasicInfo", productBasicInfo);
 				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
 				product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
