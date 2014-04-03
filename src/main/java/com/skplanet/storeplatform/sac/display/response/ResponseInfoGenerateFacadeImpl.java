@@ -76,7 +76,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	public Product generateAppProduct(MetaInfo metaInfo) {
 		Product product = new Product();
 		product.setIdentifierList(this.appGenerator.generateIdentifierList(metaInfo));
-		;
+
 		// App용 SupportList 설정
 		List<Support> supportList = this.appGenerator.generateSupportList(metaInfo);
 		// Title 설정
