@@ -27,10 +27,10 @@
                                              , A.MENU_ID
                                              , D.PROD_ID
                                              , I.PART_PROD_ID                                     
-                                             , D.UPD_DT
                                              , D.META_CLSF_CD
                                              , D.CONTENTS_TYPE_CD
                                              , F.PROD_NM
+                                             , J.UPD_DT
                                           FROM TB_DP_MENU_CATEGORY      A
                                              , TB_DP_MENU_CATEGORY_PROD_MAPG B
                                              , TB_DP_PROD               D /* 채널 상품 */
