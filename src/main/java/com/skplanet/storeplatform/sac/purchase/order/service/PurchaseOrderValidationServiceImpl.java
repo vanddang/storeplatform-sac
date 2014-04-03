@@ -329,18 +329,24 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			// 요청 시 받은 상품 정보 세팅
 			/* IAP */
-			// contentsType // 컨텐츠_타입
-			purchaseProduct.setTid(reqProduct.getTid()); // 부분유료화 개발사 구매Key
-			purchaseProduct.setTxId(reqProduct.getTxId()); // 부분유료화 전자영수증 번호
-			purchaseProduct.setPartChrgVer(reqProduct.getPartChrgVer()); // 부분_유료_버전
-			purchaseProduct.setPartChrgProdNm(reqProduct.getPartChrgProdNm()); // 부분_유료_상품_명
-			/* Ring & Bell */
-			purchaseProduct.setRnBillCd(reqProduct.getRnPid()); // RN 상품 ID
-			purchaseProduct.setInfoUseFee(reqProduct.getInfoUseFee()); // 정보_이용_요금 (ISU_AMT_ADD)
-			purchaseProduct.setCid(reqProduct.getCid()); // 컨텐츠 ID (SONG ID)
-			purchaseProduct.setContentsClsf(reqProduct.getContentsClsf()); // 컨텐츠 구분
-			purchaseProduct.setTimbreClsf(reqProduct.getTimbreClsf()); // 음질_구분
-			purchaseProduct.setTimbreSctn(reqProduct.getTimbreSctn()); // 음질_구간
+			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+				// contentsType // 컨텐츠_타입
+				purchaseProduct.setTid(reqProduct.getTid()); // 부분유료화 개발사 구매Key
+				purchaseProduct.setTxId(reqProduct.getTxId()); // 부분유료화 전자영수증 번호
+				purchaseProduct.setPartChrgVer(reqProduct.getPartChrgVer()); // 부분_유료_버전
+				purchaseProduct.setPartChrgProdNm(reqProduct.getPartChrgProdNm()); // 부분_유료_상품_명
+
+			} else if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
+				/* Ring & Bell */
+				purchaseProduct.setRnBillCd(reqProduct.getRnPid()); // RN 상품 ID
+				purchaseProduct.setInfoUseFee(reqProduct.getInfoUseFee()); // 정보_이용_요금 (ISU_AMT_ADD)
+				purchaseProduct.setCid(reqProduct.getCid()); // 컨텐츠 ID (SONG ID)
+				purchaseProduct.setContentsClsf(reqProduct.getContentsClsf()); // 컨텐츠 구분
+				purchaseProduct.setTimbreClsf(reqProduct.getTimbreClsf()); // 음질_구분
+				purchaseProduct.setTimbreSctn(reqProduct.getTimbreSctn()); // 음질_구간
+			}
 
 			// 비과금 구매요청 경우, 이용종료일시 세팅
 			if (purchaseOrderInfo.isFreeChargeReq()) {
