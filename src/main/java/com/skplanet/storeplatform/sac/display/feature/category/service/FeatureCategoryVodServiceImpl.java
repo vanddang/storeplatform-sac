@@ -159,18 +159,6 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				this.logger.debug("방송 > 방송사별 최신 UP 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
 
-				// 배치완료 기준일시 조회
-				// 최신 Up 상품의 경우 방송 카테고리별 추천 상품 제외하기 때문에 운영자추천 배치완료 일자 조회함
-				String subStdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(),
-						"ADM000000008");
-
-				// 기준일시 체크
-				if (StringUtils.isEmpty(subStdDt)) {
-					throw new StorePlatformException("SAC_DSP_0002", "subStdDt", subStdDt);
-				} else {
-					req.setSubStdDt(subStdDt);
-				}
-
 				// 리스트 조회
 				productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureNewUpTvList", req,
 						ProductBasicInfo.class);
