@@ -48,8 +48,6 @@ public class FeatureCategoryVodSacReq extends CommonInfo {
 
 	private String stdDt; // 기준일시
 
-	private String subStdDt; // 기준일시(최신Up에서 사용)
-
 	private String deviceModelCd; // 단말 모델 코드
 
 	private String anyDeviceModelCd; // 가상단말명
@@ -410,31 +408,6 @@ public class FeatureCategoryVodSacReq extends CommonInfo {
 	 */
 	public void setProdGradeCdArr(String[] prodGradeCdArr) {
 		this.prodGradeCdArr = prodGradeCdArr == null ? null : prodGradeCdArr.clone();
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 서브 배치완료일자.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getSubStdDt() {
-		return this.subStdDt;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 서브 배치완료일자.
-	 * </pre>
-	 * 
-	 * @param subStdDt
-	 *            subStdDt
-	 */
-	public void setSubStdDt(String subStdDt) {
-		this.subStdDt = subStdDt;
 	}
 
 	/**
