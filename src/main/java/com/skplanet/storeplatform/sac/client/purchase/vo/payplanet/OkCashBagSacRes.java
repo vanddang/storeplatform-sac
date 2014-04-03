@@ -20,38 +20,39 @@ public class OkCashBagSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String cdResult;
-	private String msgResult;
+	private String code;
+	private String msg;
 	private String ocbPoint;
+	private String txNo;
 
 	/**
-	 * @return the cdResult
+	 * @return the code
 	 */
-	public String getCdResult() {
-		return this.cdResult;
+	public String getCode() {
+		return this.code;
 	}
 
 	/**
-	 * @param cdResult
-	 *            the cdResult to set
+	 * @param code
+	 *            the code to set
 	 */
-	public void setCdResult(String cdResult) {
-		this.cdResult = cdResult;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	/**
-	 * @return the msgResult
+	 * @return the msg
 	 */
-	public String getMsgResult() {
-		return this.msgResult;
+	public String getMsg() {
+		return this.msg;
 	}
 
 	/**
-	 * @param msgResult
-	 *            the msgResult to set
+	 * @param msg
+	 *            the msg to set
 	 */
-	public void setMsgResult(String msgResult) {
-		this.msgResult = msgResult;
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 
 	/**
@@ -67,6 +68,21 @@ public class OkCashBagSacRes extends CommonInfo {
 	 */
 	public void setOcbPoint(String ocbPoint) {
 		this.ocbPoint = ocbPoint;
+	}
+
+	/**
+	 * @return the txNo
+	 */
+	public String getTxNo() {
+		return this.txNo;
+	}
+
+	/**
+	 * @param txNo
+	 *            the txNo to set
+	 */
+	public void setTxNo(String txNo) {
+		this.txNo = txNo;
 	}
 
 }
