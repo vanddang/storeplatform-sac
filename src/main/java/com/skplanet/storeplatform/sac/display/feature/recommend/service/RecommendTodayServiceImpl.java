@@ -19,7 +19,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.display.category.service.CategoryMusicContentsService;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -46,9 +45,6 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 
 	@Autowired
 	private MetaInfoService metaInfoService;
-
-	@Autowired
-	private CategoryMusicContentsService musicService;
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
@@ -145,7 +141,7 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 
 				if ("DP16".equals(requestVO.getTopMenuId())) {
 					// Meta 정보 조회
-					MetaInfo retMetaInfo = this.musicService.getMusicMetaInfo(reqMap);
+					MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
 
 					if (retMetaInfo != null) {
 						// Response Generate
