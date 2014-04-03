@@ -395,6 +395,7 @@ public class MemberCommonComponent {
 			agree.setExtraAgreementId(StringUtil.setTrim(mbrAgree.getExtraAgreementID()));
 			agree.setExtraAgreementVersion(StringUtil.setTrim(mbrAgree.getExtraAgreementVersion()));
 			agree.setIsExtraAgreement(StringUtil.setTrim(mbrAgree.getIsExtraAgreement()));
+			agree.setIsMandatory(StringUtil.setTrim(mbrAgree.getIsMandatory()));
 
 			listAgreement.add(agree);
 		}

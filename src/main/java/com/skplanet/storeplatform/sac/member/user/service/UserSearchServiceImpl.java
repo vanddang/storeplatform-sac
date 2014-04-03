@@ -402,6 +402,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			agree.setIsMandatory(StringUtil.setTrim(scAgree.getIsMandatory()));
 			agree.setRegDate(StringUtil.setTrim(scAgree.getRegDate()));
 			agree.setUpdateDate(StringUtil.setTrim(scAgree.getUpdateDate()));
+			agree.setIsMandatory(StringUtil.setTrim(scAgree.getIsMandatory()));
 
 			agreementList.add(agree);
 		}
@@ -788,6 +789,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			agree.setExtraAgreementId(StringUtil.setTrim(mbrAgree.getExtraAgreementID()));
 			agree.setExtraAgreementVersion(StringUtil.setTrim(mbrAgree.getExtraAgreementVersion()));
 			agree.setIsExtraAgreement(StringUtil.setTrim(mbrAgree.getIsExtraAgreement()));
+			agree.setIsMandatory(StringUtil.setTrim(mbrAgree.getIsMandatory()));
 
 			listAgreement.add(agree);
 		}
