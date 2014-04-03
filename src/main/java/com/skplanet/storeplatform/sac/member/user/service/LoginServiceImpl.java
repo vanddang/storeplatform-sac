@@ -957,8 +957,6 @@ public class LoginServiceImpl implements LoginService {
 
 			res.setDeviceKey(newDeviceKey);
 			res.setUserKey(newUserKey);
-			res.setUserAuthKey(this.tempUserAuthKey);
-			res.setIsLoginSuccess("Y");
 
 		} else if (StringUtil.equals(isJoinMdn, "Y")) {
 
@@ -1033,8 +1031,6 @@ public class LoginServiceImpl implements LoginService {
 
 			res.setDeviceKey(oldDeviceKey);
 			res.setUserKey(oldUserKey);
-			res.setUserAuthKey(this.tempUserAuthKey);
-			res.setIsLoginSuccess("Y");
 
 		}
 
