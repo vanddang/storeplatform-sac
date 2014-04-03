@@ -8,7 +8,7 @@
         <!--</association>-->
     <!--</resultMap>-->
 
-    <select id="getAppInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.AppMetaInfo">
+    <select id="getAppInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.AppMeta">
         SELECT
             /* ProductInfoMapper.xml, getAppInfo, 정희원, 2014-03-05 */
               PROD.PROD_ID

@@ -10,11 +10,7 @@
 package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaInfo;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaInfoParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.SubContent;
-import com.skplanet.storeplatform.sac.display.cache.vo.MenuInfo;
-import org.codehaus.jackson.map.annotate.JsonCachable;
+import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
@@ -38,7 +34,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 
     @Override
     @Cacheable(value = "sac:display:appmeta", key = "#param.getCacheKey()")
-    public AppMetaInfo getAppMetaInfo(AppMetaInfoParam param) {
+    public AppMeta getAppMeta(AppMetaParam param) {
         final String SVC_GRP_CD = "DP000201";
         final String IMAGE_CD = "DP000101";
 
@@ -49,7 +45,13 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         reqMap.put("imageCd", IMAGE_CD);
         reqMap.put("svcGrpCd", SVC_GRP_CD);
 
-        return commonDAO.queryForObject("ProductInfo.getAppInfo", reqMap, AppMetaInfo.class);
+        return commonDAO.queryForObject("ProductInfo.getAppInfo", reqMap, AppMeta.class);
+    }
+
+    @Override
+    @Cacheable(value = "sac:display:mmmeta", key = "#param.getCacheKey()")
+    public MultimediaMeta getMultimediaMeta(MultimediaMetaParam param) {
+        return null;
     }
 
     @Override

@@ -9,25 +9,30 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaInfoParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaInfo;
-import com.skplanet.storeplatform.sac.display.cache.vo.SubContent;
-import com.skplanet.storeplatform.sac.display.cache.vo.MenuInfo;
+import com.skplanet.storeplatform.sac.display.cache.vo.*;
 
 /**
  * <p>
- * DESC
+ * 캐쉬용 메타 데이터 조회 서비스
  * </p>
  * Updated on : 2014. 03. 03 Updated by : 정희원, SK 플래닛.
  */
 public interface ProductInfoManager {
 
     /**
+     * 앱 메타정보 조회
      *
      * @param param
      * @return
      */
-    AppMetaInfo getAppMetaInfo(AppMetaInfoParam param);
+    AppMeta getAppMeta(AppMetaParam param);
+
+    /**
+     * 멀티미디어 메타정보 조회
+     * @param param
+     * @return
+     */
+    MultimediaMeta getMultimediaMeta(MultimediaMetaParam param);
 
     /**
      * 서브컨텐트 정보를 조회한다. APP상품에서 이용한다.

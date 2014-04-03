@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * </p>
  * Updated on : 2014. 03. 05 Updated by : 정희원, SK 플래닛.
  */
-public class AppMetaInfo extends CommonInfo {
+public class AppMeta extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
     private String prodId;

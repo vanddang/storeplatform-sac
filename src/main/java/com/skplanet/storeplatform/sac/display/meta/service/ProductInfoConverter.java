@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.meta.service;
 
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaInfo;
+import com.skplanet.storeplatform.sac.display.cache.vo.AppMeta;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
  * Updated on : 2014. 03. 05 Updated by : 정희원, SK 플래닛.
  */
 public class ProductInfoConverter {
-    public MetaInfo convertAppInfo(AppMetaInfo appMetaInfo) {
+    public MetaInfo convertAppInfo(AppMeta appMeta) {
         MetaInfo metaInfo = new MetaInfo();
 
         return metaInfo;

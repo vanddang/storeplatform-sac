@@ -6,8 +6,8 @@ import java.util.Map;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaInfo;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaInfoParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.AppMeta;
+import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
 import com.skplanet.storeplatform.sac.display.cache.vo.SubContent;
 import com.skplanet.storeplatform.sac.display.cache.vo.MenuInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -47,7 +47,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	public MetaInfo getAppMetaInfo(Map<String, Object> paramMap) {
         Boolean useCache = (Boolean) RequestContextHolder.currentRequestAttributes().getAttribute("useCache", RequestAttributes.SCOPE_REQUEST);
         if(useCache) {
-            AppMetaInfoParam param = new AppMetaInfoParam();
+            AppMetaParam param = new AppMetaParam();
             ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
             TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
             DeviceHeader deviceHeader = (DeviceHeader) paramMap.get("deviceHeader");
@@ -56,7 +56,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             param.setLangCd(tenantHeader.getLangCd());
             param.setTenantId(tenantHeader.getTenantId());
 
-            AppMetaInfo app = productInfoManager.getAppMetaInfo(param);
+            AppMeta app = productInfoManager.getAppMeta(param);
             if(app == null)
                 return null;
 

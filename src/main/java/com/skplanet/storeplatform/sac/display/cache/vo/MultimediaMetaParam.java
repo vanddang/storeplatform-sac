@@ -15,39 +15,15 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * <p>
  * DESC
  * </p>
- * Updated on : 2014. 03. 05 Updated by : 정희원, SK 플래닛.
+ * Updated on : 2014. 04. 01 Updated by : 정희원, SK 플래닛.
  */
-public class AppMetaInfoParam extends CommonInfo {
-    private static long serialVersionUID = 1L;
+public class MultimediaMetaParam extends CommonInfo {
+    private static final long serialVersionUID = 1L;
 
     private String langCd;
-
     private String channelId;
     private String tenantId;
 
-    public String getLangCd() {
-        return langCd;
-    }
-
-    public void setLangCd(String langCd) {
-        this.langCd = langCd;
-    }
-
-    public String getChannelId() {
-        return channelId;
-    }
-
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
 
     public String getCacheKey() {
         return channelId + "_" + tenantId + "_" + langCd;
