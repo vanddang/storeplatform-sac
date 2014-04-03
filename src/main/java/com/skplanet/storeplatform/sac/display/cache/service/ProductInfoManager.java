@@ -28,6 +28,12 @@ public interface ProductInfoManager {
     AppMeta getAppMeta(AppMetaParam param);
 
     /**
+     * 캐싱된 메타정보를 Evict한다.
+     * @param param
+     */
+    void evictAppMeta(AppMetaParam param);
+
+    /**
      * 멀티미디어 메타정보 조회
      * @param param
      * @return

@@ -13,6 +13,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,12 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         reqMap.put("svcGrpCd", SVC_GRP_CD);
 
         return commonDAO.queryForObject("ProductInfo.getAppInfo", reqMap, AppMeta.class);
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:appmeta", key = "#param.getCacheKey()")
+    public void evictAppMeta(AppMetaParam param) {
+
     }
 
     @Override
