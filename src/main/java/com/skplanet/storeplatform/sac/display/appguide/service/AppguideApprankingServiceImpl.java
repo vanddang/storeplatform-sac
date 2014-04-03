@@ -83,7 +83,7 @@ public class AppguideApprankingServiceImpl implements AppguideApprankingService 
 		}
 
 		// B2B 상품 구분 구분 기본 설정
-		if (StringUtils.isEmpty(b2bProd)) {
+		if (StringUtils.isEmpty(b2bProd) || b2bProd == null) {
 			req.setB2bProd("A");
 		}
 
