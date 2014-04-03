@@ -53,8 +53,8 @@ public class OtherPackageListServiceImpl implements OtherPackageListService {
 	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.other.service.OtherPackageListService#searchProductListByPackageNm(com
-	 * .skplanet.storeplatform.sac.client.display.vo.other.OtherPakcageListReq,
-	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
+	 * .skplanet.storeplatform.sac.client.display.vo.other.OtherPackageListReq,
+	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, java.util.List)
 	 */
 	@Override
 	public OtherPackageListRes searchProductListByPackageNm(OtherPackageListReq req, SacRequestHeader header,
