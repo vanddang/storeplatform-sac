@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.controller;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateP
 import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpdateService;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateAlarmService;
 import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService;
@@ -78,7 +82,12 @@ public class PersonalController {
 				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", req.getDeviceKey());
 			}
 		}
-		return this.personalUpdateProductService.searchUpdateProductList(req, header);
+		List<String> packageInfoList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
+		if (packageInfoList.size() > DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT) {
+			throw new StorePlatformException("SAC_DSP_0004", "packageInfo",
+					DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT);
+		}
+		return this.personalUpdateProductService.searchUpdateProductList(req, header, packageInfoList);
 	}
 
 	/**
@@ -96,7 +105,12 @@ public class PersonalController {
 	@ResponseBody
 	public PersonalAutoUpdateRes updateAutoUpdateList(@Validated @RequestBody PersonalAutoUpdateReq req,
 			SacRequestHeader header) {
-		return this.personalAutoUpdateService.updateAutoUpdateList(req, header);
+		List<String> packageInfoList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
+		if (packageInfoList.size() > DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT) {
+			throw new StorePlatformException("SAC_DSP_0004", "packageInfo",
+					DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT);
+		}
+		return this.personalAutoUpdateService.updateAutoUpdateList(req, header, packageInfoList);
 	}
 
 	/**

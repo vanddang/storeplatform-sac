@@ -82,12 +82,13 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpgradeService#searchAutoUpgradeList(com.
-	 * skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpgradeReq,
-	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
+	 * com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpdateService#updateAutoUpdateList(com.skplanet
+	 * .storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq,
+	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, java.util.List)
 	 */
 	@Override
-	public PersonalAutoUpdateRes updateAutoUpdateList(PersonalAutoUpdateReq req, SacRequestHeader header) {
+	public PersonalAutoUpdateRes updateAutoUpdateList(PersonalAutoUpdateReq req, SacRequestHeader header,
+			List<String> packageInfoList) {
 
 		CommonResponse commonResponse = new CommonResponse();
 		PersonalAutoUpdateRes res = new PersonalAutoUpdateRes();
@@ -99,13 +100,11 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 
 		// 다운로드 서버 상태 조회는 & 앱 버전 정보 활용 조회 처리 & 업그레이드 관리이력 조회는 tenant 단에서 처리하기 때문에 제외
 
-		String sArrPkgNm[] = StringUtils.split(req.getPackageInfo(), "+");
-
 		/**************************************************************
 		 * Package 명으로 상품 조회
 		 **************************************************************/
 		List<String> listPkgNm = new ArrayList<String>();
-		for (String s : sArrPkgNm) {
+		for (String s : packageInfoList) {
 			listPkgNm.add(StringUtils.split(s, "/")[0]);
 		}
 
@@ -176,7 +175,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				sPkgNm = ObjectUtils.toString(mapPkg.get("APK_PKG_NM"));
 				iPkgVerCd = NumberUtils.toInt(ObjectUtils.toString(mapPkg.get("APK_VER")));
 				String sArrPkgInfo[] = null;
-				for (String s : sArrPkgNm) {
+				for (String s : packageInfoList) {
 					sArrPkgInfo = StringUtils.split(s, "/");
 					this.log.debug("###########################################");
 					this.log.debug("##### {}'s server version is {} !!!!!!!!!!", sPkgNm, iPkgVerCd);

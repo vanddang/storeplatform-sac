@@ -3,6 +3,8 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.service;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -24,6 +26,20 @@ public interface PersonalAutoUpdateService {
 	 *            header
 	 * @return PersonalAutoUpgradeRes
 	 */
-	public PersonalAutoUpdateRes updateAutoUpdateList(PersonalAutoUpdateReq req, SacRequestHeader header);
+	/**
+	 * <pre>
+	 * 자동 Update 목록 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @param packageInfoList
+	 *            packageInfoList
+	 * @return PersonalAutoUpgradeRes
+	 */
+	public PersonalAutoUpdateRes updateAutoUpdateList(PersonalAutoUpdateReq req, SacRequestHeader header,
+			List<String> packageInfoList);
 
 }

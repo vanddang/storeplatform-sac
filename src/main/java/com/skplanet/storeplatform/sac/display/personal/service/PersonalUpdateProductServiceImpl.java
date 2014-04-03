@@ -90,12 +90,13 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.skplanet.storeplatform.sac.display.personal.service.PersonalUpgradeProductService#searchUpdateProductList
-	 * (com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpgradeProductReq,
-	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
+	 * com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService#searchUpdateProductList(
+	 * com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq,
+	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, java.util.List)
 	 */
 	@Override
-	public PersonalUpdateProductRes searchUpdateProductList(PersonalUpdateProductReq req, SacRequestHeader header) {
+	public PersonalUpdateProductRes searchUpdateProductList(PersonalUpdateProductReq req, SacRequestHeader header,
+			List<String> packageInfoList) {
 		PersonalUpdateProductRes res = new PersonalUpdateProductRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
@@ -109,9 +110,8 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		/**************************************************************
 		 * Package 명으로 상품 조회
 		 **************************************************************/
-		String sArrPkgNm[] = StringUtils.split(req.getPackageInfo(), "+");
 		List<String> listPkgNm = new ArrayList<String>();
-		for (String s : sArrPkgNm) {
+		for (String s : packageInfoList) {
 			listPkgNm.add(StringUtils.split(s, "/")[0]);
 		}
 
@@ -186,7 +186,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 				String sArrPkgInfo[] = null;
 				int iReqPkgVerCd = 0;
 
-				for (String s : sArrPkgNm) {
+				for (String s : packageInfoList) {
 					sArrPkgInfo = StringUtils.split(s, "/");
 					if (sPkgNm.equals(sArrPkgInfo[0])) {
 						iReqPkgVerCd = NumberUtils.toInt(sArrPkgInfo[1]);

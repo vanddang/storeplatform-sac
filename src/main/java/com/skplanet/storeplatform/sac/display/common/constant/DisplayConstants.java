@@ -520,6 +520,11 @@ public class DisplayConstants {
 	public static final Integer DP_UPDATE_PARAM_LIMIT = Integer.valueOf(1000);
 
 	/**
+	 * 업데이트 목록 조회 API 파라미터 제한 개수.
+	 */
+	public static final Integer DP_PERSONAL_UPDATE_PARAM_LIMIT = Integer.valueOf(1000);
+
+	/**
 	 * 상품 ID에 대한 단말 Provisioning 조회 API 파라미터 제한 개수.
 	 */
 	public static final Integer DP_DEVICE_PROVISIONG_PARAMETER_LIMIT = Integer.valueOf(100);
