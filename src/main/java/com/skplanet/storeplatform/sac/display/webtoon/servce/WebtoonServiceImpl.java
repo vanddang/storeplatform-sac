@@ -80,6 +80,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 		Accrual accrual;
 		Source source;
 		Menu menu;
+		Date date;
 		Contributor contributor;
 
 		// Response VO를 만들기위한 생성자
@@ -181,17 +182,16 @@ public class WebtoonServiceImpl implements WebtoonService {
 			book.setTotalPages(webtoonDetail.getBookPageCnt());
 			product.setBook(book);
 
-			// contributor (업데이트 일자, 작가명)
+			// contributor 작가명
 			contributor = new Contributor();
-			if (!StringUtils.isEmpty(webtoonDetail.getUpdDt())) {
-				Date date = new Date();
-				date.setType("updDt");
-				date.setText(DateUtils.parseDate(webtoonDetail.getUpdDt()));
-				contributor.setDate(date);
-			}
-			// 작가명
 			contributor.setName(webtoonDetail.getArtist1Nm());
 			product.setContributor(contributor);
+
+			// 업데이트 일자
+			date = new Date();
+			date.setType("updDt");
+			date.setText(DateUtils.parseDate(webtoonDetail.getUpdDt()));
+			product.setDate(date);
 
 			// 평점, 참여자수
 			accrual = new Accrual();
