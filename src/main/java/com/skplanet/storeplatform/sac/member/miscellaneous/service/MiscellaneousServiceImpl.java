@@ -575,7 +575,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.service_code(serviceCode);
+				shuttle.log_id("TL00041").service_code(serviceCode);
 				LOGGER.info(shuttle.toString());
 			}
 		});
