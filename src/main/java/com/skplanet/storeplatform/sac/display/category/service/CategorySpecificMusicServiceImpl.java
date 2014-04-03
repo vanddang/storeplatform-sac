@@ -124,28 +124,30 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", paramMap,
 								MetaInfo.class);
 
+						product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
 						if (metaInfo != null) {
-							paramMap.put("outsdContentsId", metaInfo.getOutsdContentsId());
-							product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
-							Music music = new Music();
-							product.setMusic(this.musicGenerator.generateMusic(metaInfo));
-							List<CategorySpecificProduct> metaList = this.commonDAO.queryForList(
-									"CategorySpecificProduct.selectMusicMetaList", paramMap,
-									CategorySpecificProduct.class);
-							if (metaList != null) {
+							if (metaInfo.getOutsdContentsId() != null) {
+								paramMap.put("outsdContentsId", metaInfo.getOutsdContentsId());
+								Music music = new Music();
+								product.setMusic(this.musicGenerator.generateMusic(metaInfo));
+								List<CategorySpecificProduct> metaList = this.commonDAO.queryForList(
+										"CategorySpecificProduct.selectMusicMetaList", paramMap,
+										CategorySpecificProduct.class);
+								if (metaList != null) {
 
-								List<BellService> bellServiceList = new ArrayList<BellService>();
-								BellService bellService = null;
-								for (int i = 0; i < metaList.size(); i++) {
-									categorySpecificProduct = metaList.get(i);
-									bellService = new BellService();
-									bellService.setName(categorySpecificProduct.getMetaClsfCd());
-									bellService.setType(categorySpecificProduct.getProdId());
-									bellServiceList.add(bellService);
+									List<BellService> bellServiceList = new ArrayList<BellService>();
+									BellService bellService = null;
+									for (int i = 0; i < metaList.size(); i++) {
+										categorySpecificProduct = metaList.get(i);
+										bellService = new BellService();
+										bellService.setName(categorySpecificProduct.getMetaClsfCd());
+										bellService.setType(categorySpecificProduct.getProdId());
+										bellServiceList.add(bellService);
+									}
+									music.setBellServiceList(bellServiceList);
 								}
-								music.setBellServiceList(bellServiceList);
+								product.setMusic(music);
 							}
-							product.setMusic(music);
 							productList.add(product);
 						}
 					}
