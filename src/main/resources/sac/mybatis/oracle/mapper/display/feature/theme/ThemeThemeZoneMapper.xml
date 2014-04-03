@@ -92,7 +92,7 @@
                        AND D.USE_YN = 'Y'
                        AND D.MENU_ID = E.MENU_ID
                        AND E.USE_YN = 'Y'
-                       AND C.PART_PROD_ID = F.PROD_ID
+                       AND C.PROD_ID = F.PROD_ID
                        AND F.PROD_ID = G.PROD_ID
                        <if test='prodCharge != "A"'>
                          AND  F.PROD_CHRG_YN = #{prodCharge}       /* 상품유료여부 */
