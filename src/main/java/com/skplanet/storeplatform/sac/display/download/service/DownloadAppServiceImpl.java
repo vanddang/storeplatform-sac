@@ -132,8 +132,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		List<Identifier> identifierList = null;
 
-		Product product = null;
-		Component component = null;
+		Product product = new Product();
+		Component component = new Component();
 
 		if (downloadAppSacReq.getDummy() == null) {
 
@@ -180,8 +180,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 			if (metaInfo != null) {
 				identifierList = new ArrayList<Identifier>();
-
-				product = new Product();
 
 				if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
 					// 구매내역 조회를 위한 생성자
@@ -391,7 +389,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										try {
 											String decData = new String(decrypt, "UTF-8");
 											this.log.debug("----------------------------------------------------------------");
-											this.log.debug("[DownloadAppServiceImpl] decData : {}", decData);
+											System.out.println("[DownloadAppServiceImpl] decData : {}" + decData);
 											this.log.debug("----------------------------------------------------------------");
 										} catch (UnsupportedEncodingException e) {
 											e.printStackTrace();
