@@ -15,6 +15,7 @@ import javax.validation.constraints.Null;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateFreePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchase;
 
@@ -33,21 +34,27 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	private Double prodAmt; // 상품 가격
 	@NotNull(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
 	private int prodQty; // 상품 수량
-	@Null(groups = { GroupCreateFreePurchase.class })
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String tid; // 부분유료화 개발사 구매Key
-	@Null(groups = { GroupCreateFreePurchase.class })
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String txId; // 부분유료화 전자영수증 번호
-	@Null(groups = { GroupCreateFreePurchase.class })
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String partChrgVer; // 부분유료화 라이브러리 버전
-	@Null(groups = { GroupCreateFreePurchase.class })
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String partChrgProdNm; // 부분유료화 상세 상품명
-	@Null(groups = { GroupCreateFreePurchase.class })
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String rnPid; // RN 관리 상품ID
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String infoUseFee; // 정보 이용 요금
-	@Null(groups = { GroupCreateFreePurchase.class })
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String cid; // 컨텐츠 ID (SONG ID)
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String contentsClsf; // 컨텐츠 구분: 컬러링 / 벨소리
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String timbreClsf; // 음질 구분
-	@Null(groups = { GroupCreateFreePurchase.class })
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String timbreSctn; // 음질 구간
-	@Null(groups = { GroupCreatePurchase.class })
+	@Null(groups = { GroupCreatePurchase.class, GroupCreateBizPurchase.class })
 	private String useExprDt; // 이용종료일
 	private String resvCol01; // 예비컬럼01
 	private String resvCol02; // 예비컬럼02
@@ -174,6 +181,21 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	}
 
 	/**
+	 * @return the rnPid
+	 */
+	public String getRnPid() {
+		return this.rnPid;
+	}
+
+	/**
+	 * @param rnPid
+	 *            the rnPid to set
+	 */
+	public void setRnPid(String rnPid) {
+		this.rnPid = rnPid;
+	}
+
+	/**
 	 * @return the infoUseFee
 	 */
 	public String getInfoUseFee() {
@@ -186,6 +208,36 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	 */
 	public void setInfoUseFee(String infoUseFee) {
 		this.infoUseFee = infoUseFee;
+	}
+
+	/**
+	 * @return the cid
+	 */
+	public String getCid() {
+		return this.cid;
+	}
+
+	/**
+	 * @param cid
+	 *            the cid to set
+	 */
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	/**
+	 * @return the contentsClsf
+	 */
+	public String getContentsClsf() {
+		return this.contentsClsf;
+	}
+
+	/**
+	 * @param contentsClsf
+	 *            the contentsClsf to set
+	 */
+	public void setContentsClsf(String contentsClsf) {
+		this.contentsClsf = contentsClsf;
 	}
 
 	/**
