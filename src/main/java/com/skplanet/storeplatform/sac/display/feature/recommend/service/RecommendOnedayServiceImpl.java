@@ -224,12 +224,12 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 						retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
 
 						if (retMetaInfo != null) {
+							retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
 								product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 							} else {
 								product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
 							}
-							retMetaInfo.setOneSeq(recommendOneday.getOneSeq());
 							// 하루에 하나 정보
 							product.setPartChrgmonyAppYn(recommendOneday.getPartChrgmonyAppYn());
 							product.setFreeItemAmt(recommendOneday.getFreeItemAmt());
