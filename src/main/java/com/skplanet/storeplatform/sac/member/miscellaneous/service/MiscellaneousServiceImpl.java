@@ -13,6 +13,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
@@ -34,6 +35,8 @@ import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
@@ -565,7 +568,20 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		JoinSupServiceRequestEcRes joinSupServiceEcRes = this.idpSCI.joinSupServiceRequest(joinSupServiceEcReq);
 		LOGGER.debug("[MiscellaneousService.createAdditionalService] SAC<-IDP Response {}", joinSupServiceEcRes);
 
-		response.setSvcCode(joinSupServiceEcRes.getSvcCode()); // 부가서비스 코드
+		final String serviceCode = joinSupServiceEcRes.getSvcCode();
+
+		/* FDS LOG START */
+		new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
+
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.service_code(serviceCode);
+				LOGGER.info(shuttle.toString());
+			}
+		});
+		/* FDS LOG END */
+
+		response.setSvcCode(serviceCode); // 부가서비스 코드
 		response.setMsisdn(joinSupServiceEcRes.getUserMdn()); // 사용자 휴대폰번호
 		LOGGER.info("## Response {}", response);
 
