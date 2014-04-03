@@ -581,12 +581,12 @@
 		                              , EP_M.BP_JOIN_FILE_NO
 		                          FROM  TB_DP_PROD                    CH_A
 		                              , TB_DP_PROD_DESC               CH_B
-		                              , UV_TB_DP_MULTIMDA_PROD        CH_C
+		                              , TB_DP_EBOOK_PROD              CH_C
 		                              , TB_DP_TENANT_PROD             CH_D
 		                              , TB_DP_PROD_RSHP               MP_E
 		                              , TB_DP_PROD                    EP_F
 		                              , TB_DP_PROD_DESC               EP_G
-		                              , UV_TB_DP_MULTIMDA_PROD        EP_H
+		                              , TB_DP_EBOOK_PROD              EP_H
 		                              , TB_DP_TENANT_PROD             EP_I
 		                              , TB_DP_TENANT_PROD_PRICE       EP_J
 		                              , TB_DP_SPRT_DEVICE             EP_K
@@ -718,12 +718,12 @@
 		                      , EP_M.FILE_PATH
 		                  FROM  TB_DP_PROD              CH_A
 		                      , TB_DP_PROD_DESC         CH_B
-		                      , UV_TB_DP_MULTIMDA_PROD  CH_C
+		                      , TB_DP_EBOOK_PROD        CH_C
 		                      , TB_DP_TENANT_PROD       CH_D
 		                      , TB_DP_PROD_RSHP         MP_E
 		                      , TB_DP_PROD              EP_F
 		                      , TB_DP_PROD_DESC         EP_G
-		                      , UV_TB_DP_MULTIMDA_PROD  EP_H
+		                      , TB_DP_EBOOK_PROD        EP_H
 		                      , TB_DP_TENANT_PROD       EP_I
 		                      , TB_DP_TENANT_PROD_PRICE EP_J
 		                      , TB_DP_SPRT_DEVICE       EP_K
