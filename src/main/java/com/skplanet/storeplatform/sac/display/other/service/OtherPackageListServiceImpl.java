@@ -58,7 +58,7 @@ public class OtherPackageListServiceImpl implements OtherPackageListService {
 	 */
 	@Override
 	public OtherPackageListRes searchProductListByPackageNm(OtherPackageListReq req, SacRequestHeader header,
-			List<String> prodIdList) {
+			List<String> packageInfoList) {
 		OtherPackageListRes res = new OtherPackageListRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
@@ -68,7 +68,7 @@ public class OtherPackageListServiceImpl implements OtherPackageListService {
 		this.log.debug("#### osVerion : {}", osVersion);
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("req", req);
-		paramMap.put("PKG_LIST", prodIdList);
+		paramMap.put("PKG_LIST", packageInfoList);
 		paramMap.put("osVersion", osVersion);
 		paramMap.put("deviceHeader", deviceHeader);
 		paramMap.put("tenantHeader", tenantHeader);

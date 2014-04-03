@@ -167,11 +167,11 @@ public class OtherController {
 	@RequestMapping(value = "/package/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public OtherPackageListRes searchProductListByPackageNm(@Validated OtherPackageListReq req, SacRequestHeader header) {
-		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
-		if (prodIdList.size() > DisplayConstants.DP_UPDATE_PARAM_LIMIT) {
+		List<String> packageInfoList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
+		if (packageInfoList.size() > DisplayConstants.DP_UPDATE_PARAM_LIMIT) {
 			throw new StorePlatformException("SAC_DSP_0004", "packageInfo", DisplayConstants.DP_UPDATE_PARAM_LIMIT);
 		}
-		return this.otherPackageListService.searchProductListByPackageNm(req, header, prodIdList);
+		return this.otherPackageListService.searchProductListByPackageNm(req, header, packageInfoList);
 	}
 
 	/**

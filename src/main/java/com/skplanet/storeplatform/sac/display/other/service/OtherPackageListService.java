@@ -32,11 +32,11 @@ public interface OtherPackageListService {
 	 * @param header
 	 *            header
 	 * 
-	 * @param prodIdList
-	 *            prodIdList
+	 * @param packageInfoList
+	 *            packageInfoList
 	 * 
 	 * @return OtherPakcageListRes
 	 */
 	public OtherPackageListRes searchProductListByPackageNm(OtherPackageListReq req, SacRequestHeader header,
-			List<String> prodIdList);
+			List<String> packageInfoList);
 }
