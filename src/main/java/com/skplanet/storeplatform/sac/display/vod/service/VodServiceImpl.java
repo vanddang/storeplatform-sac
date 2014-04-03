@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,6 +73,10 @@ public class VodServiceImpl implements VodService {
 
     @Autowired
     private DisplayCommonService commonService;
+    
+	/** The message source accessor. */
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor;
 
 	/*
 	 * (non-Javadoc)
@@ -282,6 +287,9 @@ public class VodServiceImpl implements VodService {
 		Accrual accrual = this.mapAccrual(mapperVO);
 		product.setAccrual(accrual);
         
+		Vod vod = this.mapVod(mapperVO);
+		product.setVod(vod);
+		
         //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(req.getTenantId(), mapperVO.getTopMenuId());
         if(tmembershipDcInfo != null) {
@@ -516,12 +524,14 @@ public class VodServiceImpl implements VodService {
             Source source = new Source();
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
 			source.setUrl(commonService.makePreviewUrl(mapperVO.getScSamplUrl()));
+			source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getScSamplUrl()));
 			sourceList.add(source);
 		}
 		if (StringUtils.isNotEmpty(mapperVO.getSamplUrl())) {
             Source source = new Source();
 			source.setType(DisplayConstants.DP_PREVIEW_HQ);
             source.setUrl(commonService.makePreviewUrl(mapperVO.getSamplUrl()));
+            source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getSamplUrl()));
 			sourceList.add(source);
         }
 		preview.setSourceList(sourceList);
@@ -785,11 +795,11 @@ public class VodServiceImpl implements VodService {
         runningTime.setText(String.valueOf(mapperVO.getEpsdPlayTm()));
         vod.setRunningTime(runningTime);
 
-        chapter.setUnit(mapperVO.getChapterUnit());
         if(StringUtils.isNotEmpty(mapperVO.getChapter())) {
+        	chapter.setUnit(this.messageSourceAccessor.getMessage("display.chapter.unit.vod"));
             chapter.setText(Integer.parseInt(mapperVO.getChapter()));
+            vod.setChapter(chapter);
         }
-        vod.setChapter(chapter);
 
         /** 일반화질 정보 */
         if (StringUtils.isNotEmpty(mapperVO.getNmSubContsId())) {
@@ -824,7 +834,7 @@ public class VodServiceImpl implements VodService {
             videoInfo.setVersion(mapperVO.getHdProdVer());
             videoInfoList.add(videoInfo);
         }
-        vod.setVideoInfoList(videoInfoList);
+        if(videoInfoList.size() > 0) vod.setVideoInfoList(videoInfoList);
         return vod;
     }
 

@@ -289,6 +289,11 @@ public class DisplayConstants {
 
 	public static final String DP_EBOOK_PLAY_SUPPORT_NM = "play";
 
+	
+	/** 이북/코믹 book.type */
+	public static final String DP_BOOK_TYPE_BOOK = "book";
+	public static final String DP_BOOK_TYPE_SERIAL = "serial";
+	
 	// //////////////////////////////////// Source Type //////////////////////////////////////////
 	/** 상품. */
 	public static final String DP_SOURCE_TYPE_PRODUCT = "product";

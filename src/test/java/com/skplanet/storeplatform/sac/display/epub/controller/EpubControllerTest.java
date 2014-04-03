@@ -84,7 +84,7 @@ public class EpubControllerTest {
 	@Test
 	public void searchEpubChannel_ebook_단편_CT19() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("channelId", "H000400481");
+		param.put("channelId", "H000494432"); // H000400481
 		param.put("deviceKey", "DE201402201711283140002222");
 		param.put("userKey", "US201402201711282940003170");
 		String json = this.convertMapToJson(param);
@@ -105,6 +105,31 @@ public class EpubControllerTest {
     	System.out.println(stopWatch.prettyPrint());
 	}
 
+	
+	@Test
+	public void searchEpubChannel_ebook_1() throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("channelId", "H001611089");
+		param.put("deviceKey", "DE201402201711283140002222");
+		param.put("userKey", "US201402201711282940003170");
+		String json = this.convertMapToJson(param);
+		
+		StopWatch stopWatch = new StopWatch(); 
+		stopWatch.start("searchEpubChannel_ebook");
+		this.mvc.perform(
+				post("/display/epub/channel/detail/v1")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"));
+		stopWatch.stop();
+		System.out.println(stopWatch.prettyPrint());
+	}
+	
 	
 	@Test
 	public void searchEpubChannel_ebook() throws Exception {
@@ -165,7 +190,7 @@ public class EpubControllerTest {
     public void searchEpubSeries_ebook_이북시리즈_CT20_1() throws Exception {
     	
     	Map<String, Object> param = new HashMap<String, Object>();
-    	param.put("channelId", "H001553068");
+    	param.put("channelId", "H000494432"); //H001553068
     	//param.put("bookTypeCd", "DP004301");
     	param.put("deviceKey", "DE201402201711283140002222");
     	param.put("userKey", "US201402201711282940003170");

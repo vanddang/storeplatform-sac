@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -71,6 +72,10 @@ public class EpubServiceImpl implements EpubService {
     @Autowired
     private DisplayCommonService commonService;
 
+	/** The message source accessor. */
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor;
+    
     /*
      * (non-Javadoc)
      *
@@ -119,7 +124,7 @@ public class EpubServiceImpl implements EpubService {
             
 			this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
 
-			// 단행인 경우 시리즈 정보를 제공
+			// 단편인 경우 시리즈 정보를 제공
 			if(StringUtils.equals(sMetaClsCd, DisplayConstants.DP_BOOK_META_CLASS_CD)) {
                 param.put("orderedBy", DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
                 param.put("offset", 1);
@@ -496,11 +501,26 @@ public class EpubServiceImpl implements EpubService {
 
 		Book book = new Book();
 
-    	if (StringUtils.isNotEmpty(mapperVO.getChapter())) {
+    	if (StringUtils.isNotEmpty(mapperVO.getChapter())
+    			/* 단편인 경우 Chapter 정보 비노출 */
+    			&& !StringUtils.equals(mapperVO.getMetaClsfCd(), DisplayConstants.DP_BOOK_META_CLASS_CD)
+    			) {
             Chapter chapter = new Chapter();
-            chapter.setUnit(mapperVO.getChapterUnit());
             if(StringUtils.isNumeric(mapperVO.getChapter()))
                 chapter.setText(Integer.parseInt(mapperVO.getChapter()));
+            
+            //chapter.setUnit(mapperVO.getChapterUnit());
+            //챕터 단위 - 권/호/회 (언어처리)
+            String chapterUnit = null;
+            if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_BOOK)) {
+            	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.book");
+            } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_SERIAL)) {
+            	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.serial");
+            } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_MAGAZINE)) {
+            	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.magazine");
+            }
+            chapter.setUnit(chapterUnit);
+            
             book.setChapter(chapter);
         }
 
@@ -510,17 +530,18 @@ public class EpubServiceImpl implements EpubService {
 		book.setTotalCount(mapperVO.getTotalCount());
         book.setBookVersion(mapperVO.getProdVer());
         book.setStatus(mapperVO.getBookStatus());
-        book.setType(mapperVO.getBookType());
-        //book.setBookTypeCd(mapperVO.getBookType());
+        
         
         // 채널 정보에서만 리턴
         // freeItem 정보를 위한 건수 조회
         if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_BOOK)) {
         	book.setBookCount(mapperVO.getBookCnt());
         	book.setBookFreeCount(mapperVO.getBookFreeCnt());
+        	book.setType(DisplayConstants.DP_BOOK_TYPE_BOOK);
         } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_SERIAL)) {
         	book.setSerialCount(mapperVO.getSerialCnt());
         	book.setSerialFreeCount(mapperVO.getSerialCnt());
+        	book.setType(DisplayConstants.DP_BOOK_TYPE_SERIAL);
         } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_MAGAZINE)) {
         	book.setSerialCount(mapperVO.getSerialCnt());
         	book.setSerialFreeCount(mapperVO.getSerialCnt());
