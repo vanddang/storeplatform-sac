@@ -619,10 +619,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
 		// Comic용 Contributor 설정
 		Contributor contributor = this.ebookComicGenerator.generateComicContributor(metaInfo);
-		// BOOK 설정
 
-		Book book = new Book();
-		book = this.ebookComicGenerator.generateBook(metaInfo);
+		// BOOK 설정
+		Book book = this.ebookComicGenerator.generateBook(metaInfo);
 		if (StringUtils.isEmpty(metaInfo.getBookClsfCd())) {
 			if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
 				Chapter chapter = new Chapter();
