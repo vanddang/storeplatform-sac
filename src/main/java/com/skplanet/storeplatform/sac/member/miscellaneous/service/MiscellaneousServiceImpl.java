@@ -576,7 +576,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
 				shuttle.log_id("TL00041").service_code(serviceCode);
-				LOGGER.info(shuttle.toString());
 			}
 		});
 		/* FDS LOG END */
