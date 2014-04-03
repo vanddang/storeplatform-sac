@@ -129,7 +129,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				req.setProdCharge("A");
 			}
 
-			// B2B 상품 구분 구분 기본 설정
+			// B2B 상품 구분 기본 설정
 			if (StringUtils.isEmpty(b2bProd)) {
 				req.setB2bProd("A");
 			}
