@@ -65,13 +65,12 @@
            AND E.PART_PROD_ID = G.PROD_ID
            AND E.PART_PROD_ID = H.PROD_ID
            AND E.PART_PROD_ID = I.PROD_ID
-           AND E.PROD_ID = J.PROD_ID
+           AND E.PROD_ID = J.PROD_ID(+)
            AND E.PART_PROD_ID = K.PROD_ID
            AND E.PROD_ID = L.PROD_ID(+)
            
            AND B.LANG_CD = C.LANG_CD
            AND B.LANG_CD = F.LANG_CD
-           AND B.LANG_CD = J.LANG_CD
            AND H.TENANT_ID = K.TENANT_ID
            AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
            AND A.USE_YN = 'Y'
@@ -81,13 +80,14 @@
            AND I.CONTENTS_TYPE_CD = 'PD002502'
            AND A.TOP_MENU_ID = #{productBasicInfo.topMenuId}
            AND B.LANG_CD = #{tenantHeader.langCd}
+           AND j.LANG_CD(+) = #{tenantHeader.langCd}
            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
            AND E.PROD_ID = #{productBasicInfo.prodId}
            </if>
            <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
            AND E.PART_PROD_ID = #{productBasicInfo.partProdId}
            </if>
-           AND J.IMG_CD = #{imageCd}
+           AND J.IMG_CD(+) = #{imageCd}
            AND H.TENANT_ID = #{tenantHeader.tenantId}
            AND L.TENANT_ID(+) = #{tenantHeader.tenantId}
            AND ROWNUM = 1      
