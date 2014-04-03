@@ -225,6 +225,7 @@
                         AND G.CONTENTS_TYPE_CD = 'PD002502' /* 추가 */
                         AND G.SVC_GRP_CD = 'DP000203' /* 추가 */
                         AND I.PROD_STATUS_CD = 'PD000403' /* 추가 */
+                        AND J.PROD_RSHP_CD = 'DP010802' /* 추가 */
 		                AND A.MENU_ID = C.CHART_GENRE_CD
 		                AND B.PROD_ID = C.PROD_ID
 		                AND C.PROD_ID = D.PROD_ID
@@ -286,6 +287,7 @@
                         AND G.CONTENTS_TYPE_CD = 'PD002502' /* 추가 */
                         AND G.SVC_GRP_CD = 'DP000203' /* 추가 */
                         AND I.PROD_STATUS_CD = 'PD000403' /* 추가 */
+                        AND J.PROD_RSHP_CD = 'DP010802' /* 추가 */
                         AND C.RANK_START_DAY = ( 
                             SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD')) 
                             FROM TB_DP_BATCH_COMPT A1
