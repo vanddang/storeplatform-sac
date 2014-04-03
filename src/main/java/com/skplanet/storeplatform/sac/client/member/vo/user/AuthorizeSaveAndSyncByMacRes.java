@@ -22,19 +22,9 @@ public class AuthorizeSaveAndSyncByMacRes extends CommonInfo implements Serializ
 	private String userKey;
 
 	/**
-	 * IDP 인증 Key.
-	 */
-	private String userAuthKey;
-
-	/**
 	 * 기기 Key.
 	 */
 	private String deviceKey;
-
-	/**
-	 * 로그인 성공여부(Y/N).
-	 */
-	private String isLoginSuccess;
 
 	/**
 	 * @return userKey
@@ -52,21 +42,6 @@ public class AuthorizeSaveAndSyncByMacRes extends CommonInfo implements Serializ
 	}
 
 	/**
-	 * @return userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
-	}
-
-	/**
 	 * @return deviceKey
 	 */
 	public String getDeviceKey() {
@@ -79,21 +54,6 @@ public class AuthorizeSaveAndSyncByMacRes extends CommonInfo implements Serializ
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
-	}
-
-	/**
-	 * @return isLoginSuccess
-	 */
-	public String getIsLoginSuccess() {
-		return this.isLoginSuccess;
-	}
-
-	/**
-	 * @param isLoginSuccess
-	 *            String
-	 */
-	public void setIsLoginSuccess(String isLoginSuccess) {
-		this.isLoginSuccess = isLoginSuccess;
 	}
 
 }
