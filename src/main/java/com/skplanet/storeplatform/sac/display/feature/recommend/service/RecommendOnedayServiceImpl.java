@@ -74,14 +74,6 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
 		}
 
-		// 시작점 ROW Default 세팅
-		if (requestVO.getOffset() == null) {
-			requestVO.setOffset(1);
-		}
-		// 페이지당 노출될 ROW 개수 Default 세팅
-		if (requestVO.getCount() == null) {
-			requestVO.setCount(20);
-		}
 		// 상품 등급 코드 설정
 		if (StringUtils.isNotEmpty(requestVO.getProdGradeCd())) {
 			String[] arrayProdGradeCd = requestVO.getProdGradeCd().split("\\+");
