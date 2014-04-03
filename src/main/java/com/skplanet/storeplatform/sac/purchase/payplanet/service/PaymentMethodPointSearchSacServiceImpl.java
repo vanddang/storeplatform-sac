@@ -69,8 +69,8 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		TMemberShipEcRes tMemberShipEcRes = this.paymentMethodPointSearchSCI.postTMemberShip(req);
 
 		TMemberShipSacRes res = new TMemberShipSacRes();
-		res.setCdResult(tMemberShipEcRes.getCode());
-		res.setMsgResult(tMemberShipEcRes.getMsg());
+		res.setCode(tMemberShipEcRes.getCode());
+		res.setMsg(tMemberShipEcRes.getMsg());
 		res.setTmsPoint(tMemberShipEcRes.getTmsPoint());
 		this.logger.debug("PRCHS,TMEMBERSHIP,SAC,RES,{}", res);
 		return res;
@@ -100,9 +100,10 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		OkCashBagEcRes okCashBagEcRes = this.paymentMethodPointSearchSCI.postOkCashBag(req);
 
 		OkCashBagSacRes res = new OkCashBagSacRes();
-		res.setCdResult(okCashBagEcRes.getCode());
-		res.setMsgResult(okCashBagEcRes.getMsg());
+		res.setCode(okCashBagEcRes.getCode());
+		res.setMsg(okCashBagEcRes.getMsg());
 		res.setOcbPoint(okCashBagEcRes.getOcbPoint());
+		res.setTxNo(okCashBagEcRes.getTxNo());
 		this.logger.debug("PRCHS,OKCASHBAG,SAC,RES,{}", res);
 		return res;
 	}
@@ -130,8 +131,8 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		DotoriEcRes dotoriEcRes = this.paymentMethodPointSearchSCI.postDotori(req);
 
 		DotoriSacRes res = new DotoriSacRes();
-		res.setCdResult(dotoriEcRes.getCode());
-		res.setMsgResult(dotoriEcRes.getMsg());
+		res.setCode(dotoriEcRes.getCode());
+		res.setMsg(dotoriEcRes.getMsg());
 		res.setCntDotori(dotoriEcRes.getCntDotori());
 		this.logger.debug("PRCHS,DOTORI,SAC,RES,{}", res);
 		return res;
@@ -160,8 +161,8 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		CultureEcRes cultureEcRes = this.paymentMethodPointSearchSCI.postCulture(req);
 
 		CultureSacRes res = new CultureSacRes();
-		res.setCdResult(cultureEcRes.getCode());
-		res.setMsgResult(cultureEcRes.getMsg());
+		res.setCode(cultureEcRes.getCode());
+		res.setMsg(cultureEcRes.getMsg());
 		res.setCulturePoint(cultureEcRes.getCulturePoint());
 		this.logger.debug("PRCHS,CULTURE,SAC,RES,{}", res);
 		return res;
