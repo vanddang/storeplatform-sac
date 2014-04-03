@@ -33,7 +33,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
-import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
@@ -41,8 +40,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse
 import com.skplanet.storeplatform.member.client.user.sci.vo.GameCenter;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
@@ -55,7 +52,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateGameCenterRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
@@ -467,29 +463,29 @@ public class DeviceServiceImpl implements DeviceService {
 			LOGGER.debug("::: purchaseUserInfoInternalSCI.updateUserDevice SUCCESS");
 
 			/* 5. 약관 이관 처리 */
-			try {
-				SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
-				schAgreeListReq.setCommonRequest(commonRequest);
-				schAgreeListReq.setUserKey(previousUserKey);
-
-				SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
-				List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
-				for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
-					agreeInfo.setMemberKey(userKey);
-					agreeList.add(agreeInfo);
-				}
-				UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
-				updAgreeReq.setCommonRequest(commonRequest);
-				updAgreeReq.setUserKey(userKey);
-				updAgreeReq.setMbrClauseAgreeList(agreeList);
-				this.userSCI.updateAgreement(updAgreeReq);
-
-			} catch (StorePlatformException ex) {
-				/* 약관 조회 결과 없는경우를 제외하고 throw */
-				if (!StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-					throw ex;
-				}
-			}
+			//			try {
+			//				SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
+			//				schAgreeListReq.setCommonRequest(commonRequest);
+			//				schAgreeListReq.setUserKey(previousUserKey);
+			//
+			//				SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
+			//				List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
+			//				for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
+			//					agreeInfo.setMemberKey(userKey);
+			//					agreeList.add(agreeInfo);
+			//				}
+			//				UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
+			//				updAgreeReq.setCommonRequest(commonRequest);
+			//				updAgreeReq.setUserKey(userKey);
+			//				updAgreeReq.setMbrClauseAgreeList(agreeList);
+			//				this.userSCI.updateAgreement(updAgreeReq);
+			//
+			//			} catch (StorePlatformException ex) {
+			//				/* 약관 조회 결과 없는경우를 제외하고 throw */
+			//				if (!StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+			//					throw ex;
+			//				}
+			//			}
 
 			/* 6. 실명인증 비교 후 초기화 */
 			SearchRealNameRequest schRealNameReq = new SearchRealNameRequest();
