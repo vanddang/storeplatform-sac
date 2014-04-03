@@ -87,8 +87,8 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		if (StringUtils.isNotEmpty(metaInfo.getSubContentsId())) {
 			subContents.setScid(metaInfo.getSubContentsId());
 			subContents.setPath(metaInfo.getFilePath());
-			subContentsList.add(subContents);
 		}
+		subContentsList.add(subContents);
 		data.setSubContents(subContentsList);
 
 		// 사용 정책
