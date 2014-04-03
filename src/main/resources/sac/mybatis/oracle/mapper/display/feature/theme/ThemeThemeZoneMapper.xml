@@ -245,7 +245,7 @@
                   AND TDLP.TENANT_ID = #{tenantId}
                   AND E.TENANT_ID = #{tenantId}
 	              AND TDLP.EXPO_YN = 'Y'
-	              AND TDLP.PROD_ID = D.PROD_ID
+	              AND TDLP.PROD_ID = A.PROD_ID
 	              AND A.PART_PROD_ID = D.PROD_ID    
 	              AND A.PROD_RSHP_CD = 'DP010802'
 	              AND A.PROD_ID = B.PROD_ID
