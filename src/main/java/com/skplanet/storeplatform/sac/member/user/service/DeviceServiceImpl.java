@@ -429,6 +429,10 @@ public class DeviceServiceImpl implements DeviceService {
 
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
+		if (StringUtil.isBlank(createDeviceRes.getDeviceKey())) {
+			throw new StorePlatformException("SAC_MEM_1507"); // 휴대기기 등록에 실패하였습니다.
+		}
+
 		/* 2. 기등록된 회원이 존재하는지 확인 */
 		String previousUserKey = createDeviceRes.getPreviousUserKey();
 		String previousDeviceKey = createDeviceRes.getPreviousDeviceKey();
