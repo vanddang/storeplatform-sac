@@ -44,9 +44,11 @@
 			,#{deviceModelCd, jdbcType=VARCHAR}
 			,#{subContentsId, jdbcType=VARCHAR}
 			,#{regId, jdbcType=VARCHAR}
-			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+        <if test="regDt != null">,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')</if>
+        <if test="regDt == null">,sysdate</if>
 			,#{updId, jdbcType=VARCHAR}
-			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+        <if test="updDt != null">,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')</if>
+        <if test="updDt == null">,sysdate</if>
 		 )
 	</insert>
   

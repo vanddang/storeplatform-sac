@@ -21,9 +21,16 @@ public class AppMetaParam extends CommonInfo {
     private static long serialVersionUID = 1L;
 
     private String langCd;
-
     private String channelId;
     private String tenantId;
+
+    public AppMetaParam(String tenantId, String langCd, String channelId) {
+        this.langCd = langCd;
+        this.channelId = channelId;
+        this.tenantId = tenantId;
+    }
+
+    public AppMetaParam() {}
 
     public String getLangCd() {
         return langCd;

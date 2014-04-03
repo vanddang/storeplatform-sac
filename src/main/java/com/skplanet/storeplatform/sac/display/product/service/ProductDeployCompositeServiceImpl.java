@@ -1,10 +1,9 @@
 package com.skplanet.storeplatform.sac.display.product.service;
 
-import com.skplanet.icms.refactoring.deploy.DPProductVO;
-import com.skplanet.icms.refactoring.deploy.DPTenantProductVO;
-import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSac;
-import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSacResult;
+import com.skplanet.icms.refactoring.deploy.*;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import com.skplanet.storeplatform.sac.display.product.vo.CmsVo;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +45,12 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 	@Resource
 	private AmqpTemplate cmsAmqpTemplate;
 
+    @Autowired
+    private ProductInfoManager productInfoManager;
+
+    @Value("#{propertiesForSac['skp.common.service.language']}")
+    private String SERVICE_LANG;
+
 	@Override
 	public void executeProcess(NotificationRefactoringSac message){
 
@@ -72,6 +78,7 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
                 try {
 
                     List<DPTenantProductVO> tenantInfo = message.getDpProductTotal().getDpTenantProduct();
+                    // 기 등록된 상품의 상태를 얻어온다.
                     if (null != tenantInfo) {
                         if (0 < tenantInfo.size()) {
                             for (DPTenantProductVO vo : tenantInfo) {
@@ -97,6 +104,15 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
                     // 결과 설정
                     cv.setResultCd(IFConstants.CMS_RST_CODE_SUCCESS);
                     cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
+
+                    // Evict Cache
+                    for(DPTenantProductVO tenProd : message.getDpProductTotal().getDpTenantProduct()) {
+                        if(StringUtils.isNotEmpty(this.SERVICE_LANG)) {
+                            for(String langCd : this.SERVICE_LANG.split(",")) {
+                                this.productInfoManager.evictAppMeta(new AppMetaParam(tenProd.getTenantId(), langCd, tenProd.getProdId()));
+                            }
+                        }
+                    }
 
                 } catch (StorePlatformException ie) {
                     cv.setResultCd(ie.getErrorInfo().getCode()); // Result Code

@@ -1,33 +1,18 @@
 package com.skplanet.storeplatform.sac.display.product.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.skplanet.icms.refactoring.deploy.*;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
+import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.icms.refactoring.deploy.DPAppProductVO;
-import com.skplanet.icms.refactoring.deploy.DPProductCatMapVO;
-import com.skplanet.icms.refactoring.deploy.DPProductDescVO;
-import com.skplanet.icms.refactoring.deploy.DPProductImgVO;
-import com.skplanet.icms.refactoring.deploy.DPProductRshpVO;
-import com.skplanet.icms.refactoring.deploy.DPProductSubContsVO;
-import com.skplanet.icms.refactoring.deploy.DPProductTotalVO;
-import com.skplanet.icms.refactoring.deploy.DPProductUpdVO;
-import com.skplanet.icms.refactoring.deploy.DPProductVO;
-import com.skplanet.icms.refactoring.deploy.DPSeedMappVO;
-import com.skplanet.icms.refactoring.deploy.DPSprtDeviceVO;
-import com.skplanet.icms.refactoring.deploy.DPTagInfoVO;
-import com.skplanet.icms.refactoring.deploy.DPTenantProductPriceVO;
-import com.skplanet.icms.refactoring.deploy.DPTenantProductVO;
-import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSac;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -331,16 +316,24 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 		List<DPSprtDeviceVO> displaySupportPhoneList = notification.getDpSprtDeviceList();
 		if(displaySupportPhoneList != null){
 			log.info("CMS displaySupportPhoneList Size = " + displaySupportPhoneList.size());
-			if(displaySupportPhoneList.size() >0){
-				
-				for (DPSprtDeviceVO vo : displaySupportPhoneList) {
+			if(displaySupportPhoneList.size() >0) {
 
-					// 전시상품 단말 등록
-					log.info("CMS DisplaySupportPhoneList Info");
-					dpSprtDeviceService.insertDPSprtDevice(vo);
-				}
-			}
-		}
+                for (DPSprtDeviceVO vo : displaySupportPhoneList) {
+                    // 전시상품 단말 등록
+                    log.info("CMS DisplaySupportPhoneList Info");
+                    dpSprtDeviceService.insertDPSprtDevice(vo);
+                }
+
+                // 앱 기본 단말 추가
+                DPSprtDeviceVO anyPhone = new DPSprtDeviceVO();
+                anyPhone.setDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4APP);
+                anyPhone.setSubContentsId(null);
+                anyPhone.setRegId("admin");
+                anyPhone.setUpdId("admin");
+                anyPhone.setProdId(prodId);
+                dpSprtDeviceService.insertDPSprtDevice(anyPhone);
+            }
+        }
 		
 		/*
 		 * 전시상품 배포파일정보
