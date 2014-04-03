@@ -397,8 +397,31 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 					String oldProdStatCd = ""; // 기존_판매_상태
 					String oldTopMenuId = "";
 							
+					log.info("CMS PROD INFO = " + prodId + " | " + mbrNo);
+					ProductVo pv = new ProductVo();
+					pv.setMbrNo(mbrNo);
+					pv = this.prodService.selectMemberInfo(pv);
+					if (null == pv) throw new StorePlatformException(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR, "MBR_NO [ " + mbrNo + " ] 로 등록되어진 회원 정보가 없습니다.");
+					
+					//ProductVo 값 설정
+					pv.setProdId(prodId);
+					pv.setRegDt(vo.getRegDt());
+					pv.setTenantId(vo.getTenantId());
+					pv.setProdStatCd(vo.getProdStatusCd());
+					
+					String result = this.prodService.registProdSettl(pv);
+					log.info("CMS 정산율 = " + result);
+					
+					// 신규 상품 등록
+					// 트리거 확인 후 작업
+					log.info("CMS New Free Data Insert");
+					
+					String stdDt = displayCommonService.getBatchStandardDateString(pv.getTenantId(), DisplayConstants.DP_LIST_NEWFREE);
+					this.prodService.insertNewFreeData(pv, stdDt);
+					
 					if (null != tempList) {
 						if(tempList.size() > 0){
+
 							for(int count = 0; count < tempList.size() ; count ++){
 								
 								Map<String, Object> oldProd = tempList.get(count);
@@ -407,28 +430,6 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 									if(oldProd.get("TENANTID").equals(vo.getTenantId())){
 										oldProdStatCd = (String)oldProd.get("PRODSTATUSCD");
 										oldTopMenuId     = (String)oldProd.get("TOPMENUID");
-										
-										log.info("CMS PROD INFO = " + prodId + " | " + mbrNo);
-										ProductVo pv = new ProductVo();
-										pv.setMbrNo(mbrNo);
-										pv = this.prodService.selectMemberInfo(pv);
-										if (null == pv) throw new StorePlatformException(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR, "MBR_NO [ " + mbrNo + " ] 로 등록되어진 회원 정보가 없습니다.");
-										
-										//ProductVo 값 설정
-										pv.setProdId(prodId);
-										pv.setRegDt(vo.getRegDt());
-										pv.setTenantId(vo.getTenantId());
-										pv.setProdStatCd(vo.getProdStatusCd());
-
-										String result = this.prodService.registProdSettl(pv);
-										log.info("CMS 정산율 = " + result);
-										
-										// 신규 상품 등록
-										// 트리거 확인 후 작업
-										log.info("CMS New Free Data Insert");
-
-                                        String stdDt = displayCommonService.getBatchStandardDateString(pv.getTenantId(), DisplayConstants.DP_LIST_NEWFREE);
-                                        this.prodService.insertNewFreeData(pv, stdDt);
 										
 										// 판매중인 상품의 카테고리 대분류가 변경될시 운영자추천상품 - SUB 상품 삭제
 										log.info("CMS 운영자 추천 상품 삭제 여부 Check | " + oldProdStatCd);
