@@ -100,7 +100,7 @@
                    AND  B.PROD_ID = I.PROD_ID
                    AND  B.PROD_ID = J.PROD_ID
                    AND  I.SUB_CONTENTS_ID = J.SUB_CONTENTS_ID
-                   AND  B.PROD_ID = K.PROD_ID
+                   AND  B.PROD_ID = K.PROD_ID(+)
                    AND  G.TENANT_ID = L.TENANT_ID(+)
                    AND  G.PROD_ID = L.PROD_ID(+)
                    AND  A.USE_YN = 'Y'                                    /* Y : 사용 (사용여부) */
@@ -115,9 +115,9 @@
                    </if>
                    AND  G.EXPO_YN = 'Y'                 /* Y : 노출 (노출여부) */
                    AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
-                   AND  K.IMG_CD = #{imageCd}           /* 이미지코드 */
-                   AND  K.EXPO_ORD = 1                  /* 노출순서 */
-                   AND  K.LANG_CD = #{tenantHeader.langCd}                /* ko : 한국어 */
+                   AND  K.IMG_CD(+) = #{imageCd}           /* 이미지코드 */
+                   AND  K.EXPO_ORD (+)= 1                  /* 노출순서 */
+                   AND  K.LANG_CD(+) = #{tenantHeader.langCd}                /* ko : 한국어 */
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    -----------------------------------------------------------------------------
@@ -384,7 +384,7 @@
           AND TPP.PROD_ID = TP.PROD_ID
           AND TPP.TENANT_ID = TP.TENANT_ID
           AND PD.PROD_ID = P.PROD_ID
-          AND PI.PROD_ID = CP.PROD_ID
+          AND PI.PROD_ID(+) = CP.PROD_ID
           <if test='chartClsfCd != null and chartClsfCd != ""'>
        -----------------------------------------------------------------------------
        -- 차트 정보 조건절 START
@@ -418,7 +418,7 @@
             AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
           </if>
           AND P.TOP_MENU_ID = #{productBasicInfo.topMenuId}
-          AND PI.IMG_CD = #{imageCd}
+          AND PI.IMG_CD(+) = #{imageCd}
           AND TP.TENANT_ID = #{tenantHeader.tenantId}
           AND PD.LANG_CD = #{tenantHeader.langCd}
           AND CD.LANG_CD = #{tenantHeader.langCd}
@@ -558,7 +558,7 @@
                    AND B.PROD_ID = G.PROD_ID
                    AND B.PROD_ID = H.PROD_ID
                    AND B.PROD_ID = I.PROD_ID
-                   AND B.PROD_ID = M.PROD_ID
+                   AND B.PROD_ID = M.PROD_ID(+)
                    AND G.TENANT_ID = H.TENANT_ID                      
                    AND G.TENANT_ID = N.TENANT_ID(+)
                    AND G.TENANT_ID = O.TENANT_ID
@@ -580,9 +580,9 @@
 /*                 AND H.SEQ = 1 */                          /* 조건 추가 고려 필요 */
                    AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                    AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
-                   AND M.IMG_CD = #{imageCd}                 /* 이미지코드 */
-                   AND M.EXPO_ORD = 1                        /* 노출순서 */
-                   AND M.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */           
+                   AND M.IMG_CD(+) = #{imageCd}                 /* 이미지코드 */
+                   AND M.EXPO_ORD(+) = 1                        /* 노출순서 */
+                   AND M.LANG_CD(+) = #{tenantHeader.langCd}    /* ko : 한국어 */           
                    AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
@@ -712,7 +712,7 @@
                    AND B.PROD_ID = G.PROD_ID
                    AND B.PROD_ID = H.PROD_ID
                    AND B.PROD_ID = I.PROD_ID
-                   AND B.PROD_ID = M.PROD_ID
+                   AND B.PROD_ID = M.PROD_ID(+)
                    AND G.TENANT_ID = H.TENANT_ID                      
                    AND G.TENANT_ID = N.TENANT_ID(+)
                    AND G.TENANT_ID = O.TENANT_ID
@@ -733,9 +733,9 @@
                    AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                    AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
-                   AND M.IMG_CD = #{imageCd}                 /* 이미지코드 */
-                   AND M.EXPO_ORD = 1                        /* 노출순서 */
-                   AND M.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */           
+                   AND M.IMG_CD(+) = #{imageCd}                 /* 이미지코드 */
+                   AND M.EXPO_ORD (+)= 1                        /* 노출순서 */
+                   AND M.LANG_CD(+) = #{tenantHeader.langCd}    /* ko : 한국어 */           
                    AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
