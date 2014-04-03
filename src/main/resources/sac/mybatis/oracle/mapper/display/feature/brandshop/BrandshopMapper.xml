@@ -202,12 +202,12 @@
 			        ) Z2
         <!-- 최신순 -->
         <if test='orderedBy == "DP000701"'>
-            ORDER BY B.REG_DT DESC
+            ORDER BY Z2.REG_DT DESC
         </if>
         <!-- 인기순 -->
         <if test='orderedBy == "DP000709"'>
-            ORDER BY B.PRCHS_CNT DESC
-                   , B.REG_DT DESC
+            ORDER BY Z2.PRCHS_CNT DESC
+                   , Z2.REG_DT DESC
         </if>
         ) Z3
         WHERE RNUM BETWEEN #{offset} AND #{count}
