@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.brandshop.BrandshopSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.brandshop.BrandshopSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -232,7 +233,7 @@ public class BrandshopServiceImpl implements BrandshopService {
 			count = offset + count - 1;
 			req.setCount(count);
 
-			if (req.getOrderedBy() != null) {
+			if (req.getOrderedBy() != null || StringUtils.isEmpty(req.getOrderedBy())) {
 				req.setOrderedBy("DP000701");
 			}
 
