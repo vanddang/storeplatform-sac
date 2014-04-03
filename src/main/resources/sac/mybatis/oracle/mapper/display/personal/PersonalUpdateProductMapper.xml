@@ -42,7 +42,7 @@
     FROM(
         SELECT
              LA.*
-            ,( SELECT COUNT(*)
+            ,( SELECT COUNT(PROD_ID)
                             FROM TB_CM_AUTO_UPGRD_ALTR_PROD AUAP
                            WHERE AUAP.PROD_ID = LA.PROD_ID
              ) AS FAKE_CNT

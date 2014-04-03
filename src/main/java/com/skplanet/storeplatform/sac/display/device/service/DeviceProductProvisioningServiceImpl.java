@@ -4,12 +4,10 @@
 package com.skplanet.storeplatform.sac.display.device.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,19 +52,18 @@ public class DeviceProductProvisioningServiceImpl implements DeviceProductProvis
 	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService#searchProductProvisioning
-	 * (com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes,
-	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
+	 * (com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningReq,
+	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, java.util.List)
 	 */
 	@Override
 	public DeviceProductProvisioningRes searchProductProvisioning(DeviceProductProvisioningReq req,
-			SacRequestHeader header) {
+			SacRequestHeader header, List<String> prodIdList) {
 		CommonResponse commonResponse = new CommonResponse();
 		DeviceProductProvisioningRes res = new DeviceProductProvisioningRes();
 		List<Product> productList = new ArrayList<Product>();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		Product product = null;
 
-		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelNo());
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();

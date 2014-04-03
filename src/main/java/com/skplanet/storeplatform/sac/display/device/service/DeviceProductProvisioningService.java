@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.device.service;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -19,6 +21,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  * Updated on : 2014. 2. 3. Updated by : 오승민, 인크로스.
  */
 public interface DeviceProductProvisioningService {
+
 	/**
 	 * <pre>
 	 * 상품 ID에 대한 단말 Provisioning 조회.
@@ -28,8 +31,10 @@ public interface DeviceProductProvisioningService {
 	 *            req
 	 * @param header
 	 *            header
+	 * @param prodIdList
+	 *            prodIdList
 	 * @return DeviceProductProvisioningRes
 	 */
 	public DeviceProductProvisioningRes searchProductProvisioning(DeviceProductProvisioningReq req,
-			SacRequestHeader header);
+			SacRequestHeader header, List<String> prodIdList);
 }

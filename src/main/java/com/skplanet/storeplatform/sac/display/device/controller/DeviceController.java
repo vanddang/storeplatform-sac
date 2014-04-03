@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.device.controller;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceChangeSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes;
@@ -27,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSa
 import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceChangeService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
@@ -84,7 +90,12 @@ public class DeviceController {
 	@ResponseBody
 	public DeviceProductProvisioningRes searchProductProvisioning(@Validated DeviceProductProvisioningReq req,
 			SacRequestHeader header) {
-		return this.deviceProductProvisioningService.searchProductProvisioning(req, header);
+		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
+		if (prodIdList.size() > DisplayConstants.DP_DEVICE_PROVISIONG_PARAMETER_LIMIT) {
+			throw new StorePlatformException("SAC_DSP_0004", "list",
+					DisplayConstants.DP_DEVICE_PROVISIONG_PARAMETER_LIMIT);
+		}
+		return this.deviceProductProvisioningService.searchProductProvisioning(req, header, prodIdList);
 	}
 
 	/**
