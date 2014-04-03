@@ -39,6 +39,11 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	private String langCd; // 언어코드
 	private String testYn; // 테스트 여부
 	private String mmDeviceModelCd; // 가상 프로비저닝 모델명 (멀티미디어).
+	private String ebookSprtYn; // eBook 상품 지원여부
+	private String comicSprtYn; // Comic 상품 지원여부
+	private String musicSprtYn; // 음악 상품 지원여부
+	private String videoDrmSprtYn; // VOD 상품 DRM 지원 여부
+	private String sdVideoSprtYn; // VOD 상품 SD 지원 여부
 
 	/**
 	 * 
@@ -249,7 +254,8 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	 * @return String[]
 	 */
 	public String[] getArrayExceptId() {
-		return this.arrayExceptId;
+		return this.arrayExceptId.clone();
+
 	}
 
 	/**
@@ -262,7 +268,7 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	 *            String[]
 	 */
 	public void setArrayExceptId(String[] arrayExceptId) {
-		this.arrayExceptId = arrayExceptId;
+		this.arrayExceptId = arrayExceptId.clone();
 	}
 
 	/**
@@ -313,5 +319,130 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	 */
 	public void setMmDeviceModelCd(String mmDeviceModelCd) {
 		this.mmDeviceModelCd = mmDeviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * eBook 상품 지원여부.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getEbookSprtYn() {
+		return this.ebookSprtYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * eBook 상품 지원여부.
+	 * </pre>
+	 * 
+	 * @param ebookSprtYn
+	 *            String
+	 */
+	public void setEbookSprtYn(String ebookSprtYn) {
+		this.ebookSprtYn = ebookSprtYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Comic 상품 지원여부.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getComicSprtYn() {
+		return this.comicSprtYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Comic 상품 지원여부.
+	 * </pre>
+	 * 
+	 * @param comicSprtYn
+	 *            String
+	 */
+	public void setComicSprtYn(String comicSprtYn) {
+		this.comicSprtYn = comicSprtYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 음악 상품 지원여부.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getMusicSprtYn() {
+		return this.musicSprtYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 음악 상품 지원여부.
+	 * </pre>
+	 * 
+	 * @param musicSprtYn
+	 *            String
+	 */
+	public void setMusicSprtYn(String musicSprtYn) {
+		this.musicSprtYn = musicSprtYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * VOD 상품 DRM 지원 여부.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getVideoDrmSprtYn() {
+		return this.videoDrmSprtYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * VOD 상품 DRM 지원 여부.
+	 * </pre>
+	 * 
+	 * @param videoDrmSprtYn
+	 *            String
+	 */
+	public void setVideoDrmSprtYn(String videoDrmSprtYn) {
+		this.videoDrmSprtYn = videoDrmSprtYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * VOD 상품 SD 지원 여부.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getSdVideoSprtYn() {
+		return this.sdVideoSprtYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * VOD 상품 SD 지원 여부.
+	 * </pre>
+	 * 
+	 * @param sdVideoSprtYn
+	 *            String
+	 */
+	public void setSdVideoSprtYn(String sdVideoSprtYn) {
+		this.sdVideoSprtYn = sdVideoSprtYn;
 	}
 }
