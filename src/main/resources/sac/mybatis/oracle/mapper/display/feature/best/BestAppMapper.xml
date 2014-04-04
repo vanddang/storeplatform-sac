@@ -104,8 +104,7 @@
                                                  ,A.MENU_ID                                                     
                                                  ,F.TOP_MENU_ID
                                                  ,H.SUB_CONTENTS_ID
-                                                     FROM 
-                                                 (
+                                            FROM (
                                                    SELECT TENANT_ID
                                                          ,PROD_ID
                                                          ,MENU_ID
@@ -147,7 +146,7 @@
                                               AND K.USE_YN = 'Y'
                                               AND I.EXPO_YN = 'Y' /* 노출여부 */
                                          ) IA
-                                         ORDER BY IA.EXPO_ORD_ALWAYS_YN DESC, IA.EXPO_ORD, IA.EXPO_ORD_SUB
+                                    ORDER BY IA.EXPO_ORD_ALWAYS_YN DESC, IA.EXPO_ORD, IA.EXPO_ORD_SUB
                                  ) JA          
                             WHERE JA.RN <![CDATA[ <= ]]> 2 
                          ) TA
