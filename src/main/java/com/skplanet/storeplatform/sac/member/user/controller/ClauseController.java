@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListClauseSacRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.user.service.ClauseService;
 
 /**
@@ -39,14 +40,14 @@ public class ClauseController {
 
 	@RequestMapping(value = "/member/user/listClause/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListClauseSacRes listClause() {
+	public ListClauseSacRes listClause(SacRequestHeader sacHeader) {
 		LOGGER.debug("####################################################");
 		LOGGER.debug("##### 2.1.32. 약관목록 조회 #####");
 		LOGGER.debug("####################################################");
 
 		LOGGER.info("약관목록조회 Start");
 
-		ListClauseSacRes res = this.svc.listClause();
+		ListClauseSacRes res = this.svc.listClause(sacHeader);
 
 		LOGGER.info("약관목록조회 Final Response : {}", res.getClauseList().get(0).toString());
 

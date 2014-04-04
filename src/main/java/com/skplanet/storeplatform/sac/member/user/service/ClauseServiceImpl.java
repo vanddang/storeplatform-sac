@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListClauseSacRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 
@@ -43,8 +44,8 @@ public class ClauseServiceImpl implements ClauseService {
 	 * 약관목록 조회
 	 */
 	@Override
-	public ListClauseSacRes listClause() {
-		List<Clause> clauseList = this.commService.getListClause();
+	public ListClauseSacRes listClause(SacRequestHeader sacHeader) {
+		List<Clause> clauseList = this.commService.getListClause(sacHeader.getTenantHeader().getTenantId());
 
 		LOGGER.debug("ListClauseSacRes : ", clauseList.toString());
 
