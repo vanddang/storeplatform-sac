@@ -568,11 +568,9 @@ public class SellerServiceImpl implements SellerService {
 					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 		}
 
-		// 무료, BP
+		// 무료
 		if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY, searchSellerResponse.getSellerMbr()
-				.getSellerCategory())
-				|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_BP, searchSellerResponse
-						.getSellerMbr().getSellerCategory())) {
+				.getSellerCategory())) {
 			throw new StorePlatformException("SAC_MEM_2004", searchSellerResponse.getSellerMbr().getSellerCategory(),
 					searchSellerResponse.getSellerMbr().getSellerClass());
 		}
