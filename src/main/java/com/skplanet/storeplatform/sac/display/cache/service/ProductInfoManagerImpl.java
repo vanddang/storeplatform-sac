@@ -34,7 +34,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     private CommonDAO commonDAO;
 
     @Override
-    @Cacheable(value = "sac:display:appmeta", key = "#param.getCacheKey()")
+    @Cacheable(value = "sac:display:appmeta", key = "#param.getCacheKey()", unless = "#result == null")
     public AppMeta getAppMeta(AppMetaParam param) {
         final String SVC_GRP_CD = "DP000201";
         final String IMAGE_CD = "DP000101";
@@ -52,17 +52,17 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     @Override
     @CacheEvict(value = "sac:display:appmeta", key = "#param.getCacheKey()")
     public void evictAppMeta(AppMetaParam param) {
-
+        // TODO subContent, menuInfo도 함께
     }
 
     @Override
-    @Cacheable(value = "sac:display:mmmeta", key = "#param.getCacheKey()")
+    @Cacheable(value = "sac:display:mmmeta", key = "#param.getCacheKey()", unless = "#result == null")
     public MultimediaMeta getMultimediaMeta(MultimediaMetaParam param) {
         return null;
     }
 
     @Override
-    @Cacheable("sac:display:subcontent")
+    @Cacheable(value = "sac:display:subcontent", unless = "#result == null")
     public SubContent getSubContent(String prodId, String deviceModelCd) {
         Map<String, String> reqMap = new HashMap<String, String>();
         reqMap.put("prodId", prodId);
@@ -72,7 +72,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
-    @Cacheable("sac:display:menuinfo")
+    @Cacheable(value = "sac:display:menuinfo", unless = "#result == null")
     public MenuInfo getMenuInfo(String langCd, String menuId, String prodId) {
         Map<String, String> reqMap = new HashMap<String, String>();
         reqMap.put("prodId", prodId);
