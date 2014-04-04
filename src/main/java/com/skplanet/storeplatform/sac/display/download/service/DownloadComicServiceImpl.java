@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -337,6 +338,17 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 									encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
 									encryption.setToken(encryptString);
 									encryptionList.add(encryption);
+
+									// JSON 복호화
+									byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+									byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+
+									try {
+										String decData = new String(decrypt, "UTF-8");
+										this.logger.debug("[getDownloadComicInfo] decData : {}", decData);
+									} catch (UnsupportedEncodingException e) {
+										e.printStackTrace();
+									}
 								}
 							}
 						}
