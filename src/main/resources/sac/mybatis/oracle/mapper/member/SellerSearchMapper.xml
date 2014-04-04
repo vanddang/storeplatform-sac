@@ -11,7 +11,7 @@
               , CD_NM AS secedeReasonMessage
           FROM  TB_CM_CD
          WHERE  GRP_CD_ID = 'US0104'
-           AND  lANG_CD = #{langCd} 
+           AND  LANG_CD = #{langCd} 
     </select>
     
     <!-- 나라별 해외은행 정보 조회 -->
