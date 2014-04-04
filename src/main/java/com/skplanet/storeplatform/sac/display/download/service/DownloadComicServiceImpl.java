@@ -191,13 +191,13 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 					// 구매내역 조회 실행
 					this.logger
-							.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+							.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 					long start = System.currentTimeMillis();
 					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 					this.logger
-							.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
+							.info("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
 					long end = System.currentTimeMillis();
-					this.logger.debug(
+					this.logger.info(
 							"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
 							(end - start));
 				} catch (Exception ex) {
@@ -287,13 +287,13 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 									// 기기정보 조회
 									this.logger
-											.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
+											.info("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
 									long start = System.currentTimeMillis();
 									deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 									this.logger
-											.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
+											.info("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
 									long end = System.currentTimeMillis();
-									this.logger.debug(
+									this.logger.info(
 											"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
 											(end - start));
 
@@ -345,7 +345,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 									try {
 										String decData = new String(decrypt, "UTF-8");
-										this.logger.debug("[getDownloadComicInfo] decData : {}", decData);
+										this.logger.info("[getDownloadComicInfo] decData : {}", decData);
 									} catch (UnsupportedEncodingException e) {
 										e.printStackTrace();
 									}
