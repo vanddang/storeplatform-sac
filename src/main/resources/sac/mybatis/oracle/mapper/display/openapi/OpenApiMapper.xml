@@ -1641,7 +1641,7 @@
                               , TO_CHAR(H.REG_DT, 'YYYYMMDD') AS REG_DT
                               , (SELECT AVG_EVLU_SCORE FROM TB_DP_TENANT_PROD_STATS WHERE TENANT_ID = #{tenantId} AND PROD_ID = A.PROD_ID ) AS AVG_EVLU_SCORE
                               , (SELECT PRCHS_CNT FROM TB_DP_TENANT_PROD_STATS WHERE TENANT_ID = #{tenantId} AND PROD_ID = A.PROD_ID ) AS PRCHS_CNT
-                              , E.PROD_ID AS PROD_ID
+                              , E.PART_PROD_ID AS PROD_ID
                               , E.PART_PROD_ID AS EPSD_PROD_ID
                               , L.SUB_CONTENTS_ID
                         </if>      
