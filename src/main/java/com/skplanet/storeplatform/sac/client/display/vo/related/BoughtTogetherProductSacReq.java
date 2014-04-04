@@ -254,7 +254,7 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	 * @return String[]
 	 */
 	public String[] getArrayExceptId() {
-		return this.arrayExceptId.clone();
+		return this.arrayExceptId == null ? null : this.arrayExceptId.clone();
 
 	}
 
@@ -268,7 +268,7 @@ public class BoughtTogetherProductSacReq extends CommonInfo implements Serializa
 	 *            String[]
 	 */
 	public void setArrayExceptId(String[] arrayExceptId) {
-		this.arrayExceptId = arrayExceptId.clone();
+		this.arrayExceptId = arrayExceptId == null ? null : arrayExceptId.clone();
 	}
 
 	/**

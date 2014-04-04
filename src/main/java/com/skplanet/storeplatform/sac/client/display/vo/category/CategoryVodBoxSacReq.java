@@ -97,7 +97,7 @@ public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 	 * @return String[]
 	 */
 	public String[] getArrayChannelId() {
-		return this.arrayChannelId.clone();
+		return this.arrayChannelId == null ? null : this.arrayChannelId.clone();
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class CategoryVodBoxSacReq extends CommonInfo implements Serializable {
 	 *            String[]
 	 */
 	public void setArrayChannelId(String[] arrayChannelId) {
-		this.arrayChannelId = arrayChannelId.clone();
+		this.arrayChannelId = arrayChannelId == null ? null : arrayChannelId.clone();
 	}
 
 	/**

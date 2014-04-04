@@ -247,7 +247,8 @@ public class SellerProductSacReq extends CommonInfo implements Serializable {
 	 * @return String[]
 	 */
 	public String[] getArrayExceptId() {
-		return this.arrayExceptId.clone();
+		return this.arrayExceptId == null ? null : this.arrayExceptId.clone();
+
 	}
 
 	/**
@@ -260,7 +261,7 @@ public class SellerProductSacReq extends CommonInfo implements Serializable {
 	 *            String[]
 	 */
 	public void setArrayExceptId(String[] arrayExceptId) {
-		this.arrayExceptId = arrayExceptId.clone();
+		this.arrayExceptId = arrayExceptId == null ? null : arrayExceptId.clone();
 	}
 
 }
