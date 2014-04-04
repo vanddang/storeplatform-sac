@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionSubContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionUsagePolicy;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -61,34 +62,42 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		date.setTextUtc(DateUtils.parseDate(metaInfo.getPurchaseDt()));
 		data.setPurchaseDate(date.getText());
 
-		// 서브 컨텐츠 정보
-		if (StringUtils.isNotEmpty(metaInfo.getNmSubContsId())) {
+		if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
+				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+			// 서브 컨텐츠 정보
+			if (StringUtils.isNotEmpty(metaInfo.getNmSubContsId())) {
+				subContents = new EncryptionSubContents();
+				subContents.setType("");
+				subContents.setDeltaPath("");
+				subContents.setScid(metaInfo.getNmSubContsId());
+				subContents.setPath(metaInfo.getNmFilePath());
+				subContentsList.add(subContents);
+			}
+			if (StringUtils.isNotEmpty(metaInfo.getSdSubContsId())) {
+				subContents = new EncryptionSubContents();
+				subContents.setType("");
+				subContents.setDeltaPath("");
+				subContents.setScid(metaInfo.getSdSubContsId());
+				subContents.setPath(metaInfo.getSdFilePath());
+				subContentsList.add(subContents);
+			}
+			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
+				subContents = new EncryptionSubContents();
+				subContents.setType("");
+				subContents.setDeltaPath("");
+				subContents.setScid(metaInfo.getHdSubContsId());
+				subContents.setPath(metaInfo.getHdFilePath());
+				subContentsList.add(subContents);
+			}
+		} else {
 			subContents = new EncryptionSubContents();
-			subContents.setScid(metaInfo.getNmSubContsId());
-			subContents.setPath(metaInfo.getNmFilePath());
-			subContentsList.add(subContents);
-		}
-		if (StringUtils.isNotEmpty(metaInfo.getSdSubContsId())) {
-			subContents = new EncryptionSubContents();
-			subContents.setScid(metaInfo.getSdSubContsId());
-			subContents.setPath(metaInfo.getSdFilePath());
-			subContentsList.add(subContents);
-		}
-		if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
-			subContents = new EncryptionSubContents();
-			subContents.setScid(metaInfo.getHdSubContsId());
-			subContents.setPath(metaInfo.getHdFilePath());
-			subContentsList.add(subContents);
-		}
-
-		subContents = new EncryptionSubContents();
-		subContents.setType("");
-		subContents.setDeltaPath("");
-		if (StringUtils.isNotEmpty(metaInfo.getSubContentsId())) {
+			subContents.setType("");
+			subContents.setDeltaPath("");
 			subContents.setScid(metaInfo.getSubContentsId());
 			subContents.setPath(metaInfo.getFilePath());
+			subContentsList.add(subContents);
+
 		}
-		subContentsList.add(subContents);
 		data.setSubContents(subContentsList);
 
 		// 사용 정책
