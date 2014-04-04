@@ -442,8 +442,7 @@
                                    AND C.PART_PROD_ID = J.PROD_ID   
                                    AND B.PROD_ID = L.PROD_ID(+)
                                    AND F.MENU_ID = G.MENU_ID      
-                                   AND H.TENANT_ID = I.TENANT_ID
-                                   AND H.TENANT_ID = L.TENANT_ID
+                                   AND H.TENANT_ID = I.TENANT_ID                                   
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.SVC_GRP_CD       = 'DP000201'
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
@@ -466,13 +465,14 @@
                                    AND C.PROD_RSHP_CD     = 'DP010802'
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
-                                   AND H.TENANT_ID =#{tenantId}
+                                   AND H.TENANT_ID = #{tenantId}
                                    AND H.PROD_STATUS_CD   = 'PD000403'
                                    AND SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
                                    AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
                                    AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
                                    AND K.REP_DEVICE_YN ='Y'
                                    AND K.USE_YN ='Y'
+                                   AND L.TENANT_ID(+) = #{tenantId}
                                    <if test="searchType != null">
                                     <if test='searchType == "prodNm"'>
                                       AND UPPER( D.PROD_NM ) like '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
