@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -120,6 +121,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		List<VideoInfo> videoInfoList;
 		Contributor contributor;
 		Play play;
+		List<Date> dateList;
 
 		// VOD 보관함 조회
 		this.log.debug("VOD 보관함 조회");
@@ -170,15 +172,21 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					contributor.setChannel(categoryVodBox.getBrdcCompNm());
 				}
 				contributor.setArtist(categoryVodBox.getArtist1Nm());
-				contributor.setDate(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_BROADCAST,
-						categoryVodBox.getIssueDay()));
-				product.setContributor(contributor);
+
+				/*
+				 * contributor.setDate(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_BROADCAST,
+				 * categoryVodBox.getIssueDay())); product.setContributor(contributor);
+				 */
 
 				/*
 				 * Date
 				 */
-				product.setDate(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_REG,
-						categoryVodBox.getRegDt()));
+
+				dateList = new ArrayList<Date>();
+				dateList.add(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_REG, categoryVodBox.getRegDt()));
+				dateList.add(this.commonMetaInfo.generateDateString(DisplayConstants.DP_DATE_RELEASE,
+						categoryVodBox.getIssueDay()));
+				product.setDateList(dateList);
 
 				/*
 				 * Rights
@@ -210,6 +218,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					identifierList.add(this.commonMetaInfo.generateIdentifier(
 							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, categoryVodBox.getProdId()));
 					play.setIdentifierList(identifierList);
+					play.setSalesStatus(categoryVodBox.getProdStatusCd());
 					// play.setPlayProductStatusCode("restrict"); // "사용중" 상태가 아닐경우에 "restrict" 노출(항상 사용중)
 					sourceList = new ArrayList<Source>();
 					sourceList.add(this.commonMetaInfo.generateSource(categoryVodBox.getFilePath()));
@@ -227,6 +236,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					identifierList.add(this.commonMetaInfo.generateIdentifier(
 							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, categoryVodBox.getProdId()));
 					store.setIdentifierList(identifierList);
+					store.setSalesStatus(categoryVodBox.getProdStatusCd());
 					// store.setStoreProductStatusCode("restrict"); // "사용중" 상태가 아닐경우에 "restrict" 노출(항상 사용중)
 					sourceList = new ArrayList<Source>();
 					sourceList.add(this.commonMetaInfo.generateSource(categoryVodBox.getFilePath()));
@@ -242,8 +252,8 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				vod.setRunningTime(new Time(null, categoryVodBox.getEpsdPlayTm()));
 				vod.setChapter(new Chapter(categoryVodBox.getChapterUnit(), categoryVodBox.getChapter()));
 
-				vod.setDate(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_RELEASE,
-						categoryVodBox.getIssueDay()));
+				// vod.setDate(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_RELEASE,
+				// categoryVodBox.getIssueDay()));
 				// vodExplain = new VodExplain();
 				// vodExplain.setSaleDateInfo(categoryVodBox.getIssueDay());
 				// vod.setVodExplain(vodExplain);
