@@ -246,12 +246,12 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					List<String> userKeyList = new ArrayList<String>();
 					userKeyList.add(userKey);
 					searchUserSacReq.setUserKeyList(userKeyList);
-					this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
+					this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
 					long start = System.currentTimeMillis();
 					SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
-					this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserByUserKey");
+					this.log.info("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserByUserKey");
 					long end = System.currentTimeMillis();
-					this.log.debug("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserByUserKey takes {} ms",
+					this.log.info("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserByUserKey takes {} ms",
 							(end - start));
 					Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
 					UserInfoSac userInfoSac = userInfo.get(userKey);
@@ -283,13 +283,13 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 						historyListSacReq.setProductList(productListSacInList);
 
 						// 구매내역 조회 실행
-						this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+						this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 						start = System.currentTimeMillis();
 						HistoryListSacInRes historyListSacRes = this.historyInternalSCI
 								.searchHistoryList(historyListSacReq);
-						this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+						this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 						end = System.currentTimeMillis();
-						this.log.debug(
+						this.log.info(
 								"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
 								(end - start));
 						if (historyListSacRes != null) {
