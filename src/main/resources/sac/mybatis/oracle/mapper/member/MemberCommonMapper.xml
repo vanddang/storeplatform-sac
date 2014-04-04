@@ -170,10 +170,10 @@
          WHERE UA_CD = #{uacd}
     </select>
     
-    <!-- 공통 약관 목록 정보 조회 -->
-    <select id="getClauseItemList" parameterType="ClauseDTO" resultType="ClauseDTO">
+    <!-- 공통 약관 코드 정보 조회 -->
+    <select id="getClauseItemInfo" parameterType="ClauseDTO" resultType="ClauseDTO">
 	    <![CDATA[
-			SELECT /* MemberCommonMapper.getClauseItemList, 공통 약관 목록 정보 조회, 심대진/다모아, 2014-04-04 */
+			SELECT /* MemberCommonMapper.getClauseItemInfo, 공통 약관 코드 정보 조회, 심대진/다모아, 2014-04-04 */
 				   A.CLAUSE_ITEM_CD AS clauseItemCd,
 				   A.START_DAY AS startDay,
 				   A.END_DAY AS endDay,
@@ -185,6 +185,8 @@
 			AND TO_DATE(SYSDATE) < TO_DATE(A.END_DAY)
 			AND B.USE_YN = 'Y'
 			AND B.TENANT_ID = #{tenantId}
+			AND A.CLAUSE_ITEM_CD = #{clauseItemCd}
+			ORDER BY A.CLAUSE_ITEM_CD ASC
 		]]>
     </select>
     

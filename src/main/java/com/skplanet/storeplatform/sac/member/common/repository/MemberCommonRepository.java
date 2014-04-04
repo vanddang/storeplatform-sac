@@ -78,12 +78,14 @@ public interface MemberCommonRepository {
 
 	/**
 	 * <pre>
-	 * 공통 약관 목록 정보 조회.
+	 * 공통 약관 코드 정보 조회.
 	 * </pre>
 	 * 
 	 * @param tenantId
 	 *            테넌트 아이디
-	 * @return List<ClauseDTO>
+	 * @param clauseItemCd
+	 *            약관 코드
+	 * @return Clause
 	 */
-	public List<Clause> searchClauseItemList(String tenantId);
+	public Clause getClauseItemInfo(String tenantId, String clauseItemCd);
 }

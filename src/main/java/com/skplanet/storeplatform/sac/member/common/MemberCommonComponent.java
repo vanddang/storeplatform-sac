@@ -1050,4 +1050,53 @@ public class MemberCommonComponent {
 		}
 
 	}
+
+	/**
+	 * <pre>
+	 * 공통 약관정보의 필수약관여부, 약관버전를 맵핑해줌. [버전정보는 값이 들어올 경우만 맵핑해줌.]
+	 * 
+	 * 맵핑 정보 없을시 SAC_MEM_1100 에러 발생함.
+	 * </pre>
+	 */
+	public List<AgreementInfo> getClauseMappingInfo(String tenantId, List<AgreementInfo> agreementList) {
+
+		LOGGER.info("## >> Before : {}", agreementList);
+
+		if (agreementList.size() > 0) {
+
+			for (AgreementInfo info : agreementList) {
+
+				/**
+				 * 맵핑할 약관정보 조회.
+				 */
+				Clause clauseInfo = this.repository.getClauseItemInfo(tenantId, info.getExtraAgreementId());
+
+				/**
+				 * 유효한 약관정보가 존재 하지 않을경우 에러.
+				 */
+				if (clauseInfo == null || StringUtils.isBlank(clauseInfo.getClauseItemCd())) {
+					throw new StorePlatformException("SAC_MEM_1100", info.getExtraAgreementId());
+				}
+
+				/**
+				 * 필수 약관 여부 세팅.
+				 */
+				info.setMandAgreeYn(clauseInfo.getMandAgreeYn());
+
+				/**
+				 * 약관 버전 세팅.
+				 */
+				if (StringUtils.isNotBlank(info.getExtraAgreementVersion())) {
+					info.setMandAgreeYn(clauseInfo.getClauseVer());
+				}
+
+			}
+
+		}
+
+		LOGGER.info("## >> After : {}", agreementList);
+
+		return agreementList;
+
+	}
 }
