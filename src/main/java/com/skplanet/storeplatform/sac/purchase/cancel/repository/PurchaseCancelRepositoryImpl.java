@@ -356,19 +356,23 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			prchsProdCnt.setTenantId(prchsDtlSacParam.getTenantId());
 			prchsProdCnt.setUseUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
 			prchsProdCnt.setUseDeviceKey(prchsDtlSacParam.getUseInsdDeviceId());
+			prchsProdCnt.setPrchsId(prchsDtlSacParam.getPrchsId());
+			prchsProdCnt.setPrchsClas(prchsDtlSacParam.getPrchsReqPathCd());
 
 			// 중복 구매 가능한 쇼핑상품 / 부분유료화 상품 처리
-			String tenantProdGrpCd = prchsDtlSacParam.getTenantProdGrpCd();
-			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
-					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			// String tenantProdGrpCd = prchsDtlSacParam.getTenantProdGrpCd();
+			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+					|| StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+							PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 				prchsProdCnt.setProdGrpCd(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 12)
 						+ prchsDtlSacParam.getPrchsId());
 			} else {
 				prchsProdCnt.setProdGrpCd(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 12));
 			}
 
-			prchsProdCnt.setProdGrpCd(tenantProdGrpCd);
 			prchsProdCnt.setProdId(prchsDtlSacParam.getProdId());
+			prchsProdCnt.setProdAmt(prchsDtlSacParam.getProdAmt());
 			prchsProdCnt.setProdQty(prchsDtlSacParam.getProdQty());
 			prchsProdCnt.setStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
 			prchsProdCnt.setPrchsDt(StringUtils.substring(prchsDtlSacParam.getPrchsDt(), 0, 8));
@@ -376,6 +380,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 			prchsProdCnt.setRegId(purchaseCancelSacParam.getSystemId());
 			prchsProdCnt.setUpdId(purchaseCancelSacParam.getSystemId());
+
 			prchsProdCntList.add(prchsProdCnt);
 		}
 		insertPurchaseProductCountScReq.setPrchsProdCntList(prchsProdCntList);
@@ -522,6 +527,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		prchsDtlSacParam.setPrchsProdType(prchsDtl.getPrchsProdType());
 		prchsDtlSacParam.setUseFixrateProdId(prchsDtl.getUseFixrateProdId());
 		prchsDtlSacParam.setPrchsResvDesc(prchsDtl.getPrchsResvDesc());
+		prchsDtlSacParam.setPrchsReqPathCd(prchsDtl.getPrchsReqPathCd());
 
 		return prchsDtlSacParam;
 

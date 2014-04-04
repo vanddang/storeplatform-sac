@@ -50,9 +50,25 @@ public class PrchsDtlSacParam extends CommonInfo {
 	private String cpnBizOrderNo;
 	private String cpnBizProdSeq;
 	private String prchsResvDesc;
+	private String prchsReqPathCd;
 
 	private String appId;
 	private String specialSaleCouponId;
+
+	/**
+	 * @return the prchsReqPathCd
+	 */
+	public String getPrchsReqPathCd() {
+		return this.prchsReqPathCd;
+	}
+
+	/**
+	 * @param prchsReqPathCd
+	 *            the prchsReqPathCd to set
+	 */
+	public void setPrchsReqPathCd(String prchsReqPathCd) {
+		this.prchsReqPathCd = prchsReqPathCd;
+	}
 
 	/**
 	 * @return the appId
