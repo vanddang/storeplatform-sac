@@ -337,13 +337,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 										metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
 									}
 
-									// 인터파크 DRM 번호
-									if (StringUtils.isNotEmpty(metaInfo.getBpJoinFileNo())) {
-										metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_EBOOK_TYPE);
-									} else {
-										metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
-									}
-
 									// 암호화 정보 (JSON)
 									EncryptionContents contents = this.encryptionGenerator
 											.generateEncryptionContents(metaInfo);

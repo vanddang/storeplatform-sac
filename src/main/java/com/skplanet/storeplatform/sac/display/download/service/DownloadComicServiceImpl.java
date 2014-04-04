@@ -311,7 +311,6 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 									metaInfo.setDeviceKey(deviceKey);
 									metaInfo.setDeviceType(deviceIdType);
 									metaInfo.setDeviceSubKey(deviceId);
-									metaInfo.setBpJoinFileType(DisplayConstants.DP_FORDOWNLOAD_BP_DEFAULT_TYPE);
 
 									// 구매시점 DRM 여부값으로 세팅
 									if (StringUtils.isNotEmpty(drmYn)) {

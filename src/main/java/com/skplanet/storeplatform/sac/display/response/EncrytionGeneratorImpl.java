@@ -101,16 +101,16 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		data.setSubContents(subContentsList);
 
 		// 사용 정책
-		usagePolicy.setApplyDrm(metaInfo.getDrmYn());
-		if (StringUtils.isNotEmpty(metaInfo.getUseExprDt())) {
-			date = new Date();
-			date.setTextUtc(DateUtils.parseDate(metaInfo.getUseExprDt()));
-			usagePolicy.setExpirationDate(date.getText());
-		} else {
-			usagePolicy.setExpirationDate("");
+		if (StringUtils.isNotEmpty(metaInfo.getAid())) {
+			usagePolicy.setApplyDrm(metaInfo.getDrmYn());
+			if (StringUtils.isNotEmpty(metaInfo.getUseExprDt())) {
+				date = new Date();
+				date.setTextUtc(DateUtils.parseDate(metaInfo.getUseExprDt()));
+				usagePolicy.setExpirationDate(date.getText());
+			} else {
+				usagePolicy.setExpirationDate("");
+			}
 		}
-		usagePolicy.setBpCode(this.isEmpty(metaInfo.getBpJoinFileType()));
-		usagePolicy.setBpBookNo(this.isEmpty(metaInfo.getBpJoinFileNo()));
 		data.setUsagePolicy(usagePolicy);
 
 		// 기기 정보
