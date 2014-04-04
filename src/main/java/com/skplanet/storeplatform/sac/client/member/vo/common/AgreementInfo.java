@@ -12,19 +12,24 @@ public class AgreementInfo extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 약관 동의 코드
+	 * 약관 동의 코드.
 	 */
 	private String extraAgreementId;
 
 	/**
-	 * 약관 버전
+	 * 약관 버전.
 	 */
 	private String extraAgreementVersion;
 
 	/**
-	 * 약관 동의 여부
+	 * 약관 동의 여부.
 	 */
 	private String isExtraAgreement;
+
+	/**
+	 * 필수 약관 여부.
+	 */
+	private String mandAgreeYn;
 
 	/**
 	 * @return String : extraAgreementId
@@ -69,6 +74,21 @@ public class AgreementInfo extends CommonInfo {
 	 */
 	public void setIsExtraAgreement(String isExtraAgreement) {
 		this.isExtraAgreement = isExtraAgreement;
+	}
+
+	/**
+	 * @return String : mandAgreeYn
+	 */
+	public String getMandAgreeYn() {
+		return this.mandAgreeYn;
+	}
+
+	/**
+	 * @param mandAgreeYn
+	 *            String : the mandAgreeYn to set
+	 */
+	public void setMandAgreeYn(String mandAgreeYn) {
+		this.mandAgreeYn = mandAgreeYn;
 	}
 
 }
