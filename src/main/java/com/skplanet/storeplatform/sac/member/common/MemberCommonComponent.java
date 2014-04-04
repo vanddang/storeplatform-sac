@@ -777,7 +777,8 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
+			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -1020,7 +1021,8 @@ public class MemberCommonComponent {
 	 * @param previousDeviceKey
 	 *            이전 휴대기기 Key
 	 */
-	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey, String previousUserKey, String deviceKey, String previousDeviceKey) {
+	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey, String previousUserKey, String deviceKey,
+			String previousDeviceKey) {
 
 		if (isCall) {
 
@@ -1037,8 +1039,12 @@ public class MemberCommonComponent {
 			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
 			userInfoSacInReq.setSystemId(systemId);
 			userInfoSacInReq.setTenantId(tenantId);
-			userInfoSacInReq.setDeviceKey(previousDeviceKey);
-			userInfoSacInReq.setNewDeviceKey(deviceKey);
+
+			if (StringUtil.isNotBlank(deviceKey) && StringUtil.isNotBlank(previousDeviceKey)) {
+				userInfoSacInReq.setNewDeviceKey(deviceKey);
+				userInfoSacInReq.setDeviceKey(previousDeviceKey);
+			}
+
 			userInfoSacInReq.setUserKey(previousUserKey);
 			userInfoSacInReq.setNewUserKey(userKey);
 			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
