@@ -350,8 +350,8 @@
 		                 WHERE JA.PROD_ID = JB.PROD_ID(+)
 		                   AND JA.IMG_CD  = JB.IMG_CD(+)
 		               ) KA
+                 WHERE KA.RNUM <![CDATA[ <= 8 ]]> 
                )
-		         <!-- WHERE KA.RNUM <![CDATA[ <= 4 ]]> -->
     </select>      
     
     <!-- 2.15.1.9 유/무료 다운로드 BEST 리스트 - 최신순,평점순 AS-IS getProductList -->
