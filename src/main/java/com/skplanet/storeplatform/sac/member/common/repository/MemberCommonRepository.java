@@ -76,4 +76,14 @@ public interface MemberCommonRepository {
 	 */
 	public int searchOmdCount(String uacd);
 
+	/**
+	 * <pre>
+	 * 공통 약관 목록 정보 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트 아이디
+	 * @return List<ClauseDTO>
+	 */
+	public List<Clause> searchClauseItemList(String tenantId);
 }

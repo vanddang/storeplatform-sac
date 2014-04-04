@@ -118,7 +118,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
 				 */
-				this.reviveUser(sacHeader, userKey, deviceId);
+				this.reviveUser(sacHeader, userKey, deviceId, deviceKey);
 
 			}
 
@@ -218,8 +218,10 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 *            사용자 Key
 	 * @param deviceId
 	 *            기기 ID
+	 * @param deviceKey
+	 *            기기 Key
 	 */
-	private void reviveUser(SacRequestHeader sacHeader, String userKey, String deviceId) {
+	private void reviveUser(SacRequestHeader sacHeader, String userKey, String deviceId, String deviceKey) {
 
 		/**
 		 * IDP 모바일 회원 가입.
@@ -239,7 +241,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
 		 */
-		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), newMbrNo, userKey, "", "");
+		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), newMbrNo, userKey, deviceKey, deviceKey);
 
 	}
 
@@ -273,7 +275,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
 		 */
-		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), mbrNo, userKey, "", "");
+		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), mbrNo, userKey, deviceKey, deviceKey);
 
 		/**
 		 * SC 단말 Device 업데이트.

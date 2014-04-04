@@ -56,6 +56,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Change
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
@@ -1038,12 +1039,8 @@ public class MemberCommonComponent {
 			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
 			userInfoSacInReq.setSystemId(systemId);
 			userInfoSacInReq.setTenantId(tenantId);
-
-			if (StringUtil.isNotBlank(deviceKey) && StringUtil.isNotBlank(previousDeviceKey)) {
-				userInfoSacInReq.setNewDeviceKey(deviceKey);
-				userInfoSacInReq.setDeviceKey(previousDeviceKey);
-			}
-
+			userInfoSacInReq.setNewDeviceKey(deviceKey);
+			userInfoSacInReq.setDeviceKey(previousDeviceKey);
 			userInfoSacInReq.setUserKey(previousUserKey);
 			userInfoSacInReq.setNewUserKey(userKey);
 			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
