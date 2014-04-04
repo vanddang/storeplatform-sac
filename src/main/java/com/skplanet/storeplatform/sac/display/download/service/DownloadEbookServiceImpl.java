@@ -385,7 +385,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			ebookRes.setProduct(product);
 			commonResponse.setTotalCount(1);
 		} else {
-			commonResponse.setTotalCount(0);
+			throw new StorePlatformException("SAC_DSP_0005", productId);
 		}
 
 		ebookRes.setCommonResponse(commonResponse);

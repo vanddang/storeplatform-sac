@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
 import com.skplanet.storeplatform.framework.test.MarshallingHelper;
@@ -365,10 +366,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			comicRes.setProduct(product);
 			commonResponse.setTotalCount(1);
 		} else {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("[getDownloadComicInfo] 조회된 내역이 없습니다.");
-			this.logger.debug("----------------------------------------------------------------");
-			commonResponse.setTotalCount(0);
+			throw new StorePlatformException("SAC_DSP_0005", productId);
 		}
 
 		comicRes.setCommonResponse(commonResponse);
