@@ -25,10 +25,8 @@ public class EncryptionUsagePolicy extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String applyDrm; // DRM 지원여부
+
 	private String expirationDate; // DRM 만료일
-	private String bpCode; // 인터파크 DRM키 여부
-	// private String certKey; // 인터파크 DRM키
-	private String bpBookNo; // 인터파크 DRM키
 
 	/**
 	 * @return the applyDrm
@@ -59,35 +57,4 @@ public class EncryptionUsagePolicy extends CommonInfo implements Serializable {
 	public void setExpirationDate(String expirationDate) {
 		this.expirationDate = expirationDate;
 	}
-
-	/**
-	 * @return the bpCode
-	 */
-	public String getBpCode() {
-		return this.bpCode;
-	}
-
-	/**
-	 * @param bpCode
-	 *            the bpCode to set
-	 */
-	public void setBpCode(String bpCode) {
-		this.bpCode = bpCode;
-	}
-
-	/**
-	 * @return the bpBookNo
-	 */
-	public String getBpBookNo() {
-		return this.bpBookNo;
-	}
-
-	/**
-	 * @param bpBookNo
-	 *            the bpBookNo to set
-	 */
-	public void setBpBookNo(String bpBookNo) {
-		this.bpBookNo = bpBookNo;
-	}
-
 }
