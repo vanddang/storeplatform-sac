@@ -90,13 +90,16 @@
 		                , TB_DP_PROD C
 		                , TB_DP_TENANT_PROD D
 		                , TB_DP_SPRT_DEVICE E
+                        , TB_CM_DEVICE F
 		            WHERE  A.MENU_ID = B.MENU_ID
 		            AND  B.PROD_ID = C.PROD_ID
 		            AND  B.PROD_ID = D.PROD_ID
 		            AND  B.PROD_ID = E.PROD_ID
+		            AND  E.DEVICE_MODEL_CD = F.DEVICE_MODEL_CD
 		            AND  A.MENU_DEPTH = 2
 		            AND  A.USE_YN = 'Y' /* Y : 사용 (사용여부) */
 		            AND  B.USE_YN = 'Y' /* Y : 사용 (사용여부) */
+                    AND  F.USE_YN = 'Y'
 		            AND  D.EXPO_YN = 'Y'
 		            AND  C.SVC_GRP_CD = 'DP000201' /* DP000201 : 애플리캐이션 */
 		            AND  D.PROD_STATUS_CD = 'PD000403' /* PD000403 : 판매중 */
@@ -104,7 +107,7 @@
 		            AND  A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
                     AND  B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
 		            AND  D.TENANT_ID = #{tenantId} /* 테넌트ID */
-		            AND  E.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+		            AND  F.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
 		            GROUP BY A.MENU_ID
 		        ) C
 		    WHERE A.TENANT_MENU_ID = B.MENU_ID
