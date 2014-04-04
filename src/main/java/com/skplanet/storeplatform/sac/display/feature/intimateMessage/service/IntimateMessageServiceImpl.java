@@ -88,6 +88,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 	public IntimateMessageSacRes searchIntimateMessageList(SacRequestHeader header, IntimateMessageSacReq messageReq) {
 		IntimateMessageSacRes intimateMessageRes = new IntimateMessageSacRes();
 		CommonResponse commonResponse = new CommonResponse();
+		List<IntimateMessage> intimateMessageList = new ArrayList<IntimateMessage>();
 
 		String userKey = messageReq.getUserKey();
 		String deviceKey = messageReq.getDeviceKey();
@@ -181,7 +182,6 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 
 			List<Identifier> identifierList = null;
 			List<Source> sourceList = null;
-			List<IntimateMessage> intimateMessageList = new ArrayList<IntimateMessage>();
 
 			for (int i = 0; i < resultList.size(); i++) {
 				messageDefault = resultList.get(i);
@@ -260,11 +260,12 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 			}
 
 			commonResponse.setTotalCount(messageDefault.getTotalCount());
-			intimateMessageRes.setCommonResponse(commonResponse);
-			intimateMessageRes.setIntimateMessageList(intimateMessageList);
 		} else {
-			intimateMessageRes.setCommonResponse(commonResponse);
+			commonResponse.setTotalCount(0);
 		}
+
+		intimateMessageRes.setCommonResponse(commonResponse);
+		intimateMessageRes.setIntimateMessageList(intimateMessageList);
 
 		return intimateMessageRes;
 	}
@@ -282,6 +283,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 
 		IntimateMessageAppCodiSacRes appCodiRes = new IntimateMessageAppCodiSacRes();
 		CommonResponse commonResponse = new CommonResponse();
+		List<Product> productList = new ArrayList<Product>();
 
 		String daCode = messageReq.getDaCode();
 
@@ -331,7 +333,6 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 
 				if (prodList != null && !prodList.isEmpty()) {
 					MetaInfo metaInfo = null;
-					List<Product> productList = new ArrayList<Product>();
 
 					for (int i = 0; i < prodList.size(); i++) {
 						metaInfo = prodList.get(i);
@@ -344,7 +345,6 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 						}
 					}
 
-					appCodiRes.setProductList(productList);
 					commonResponse.setTotalCount(prodList.get(0).getTotalCount());
 				} else {
 					commonResponse.setTotalCount(0);
@@ -353,8 +353,6 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("[searchIntimateMessageAppCodiList] supportDevice is empty!");
 				this.logger.debug("----------------------------------------------------------------");
-				List<Product> productList = new ArrayList<Product>();
-				appCodiRes.setProductList(productList);
 			}
 		} else {
 			this.logger.debug("----------------------------------------------------------------");
@@ -362,6 +360,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 			this.logger.debug("----------------------------------------------------------------");
 		}
 
+		appCodiRes.setProductList(productList);
 		appCodiRes.setCommonResponse(commonResponse);
 		return appCodiRes;
 	}

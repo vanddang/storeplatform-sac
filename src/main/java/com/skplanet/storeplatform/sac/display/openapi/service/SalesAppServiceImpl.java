@@ -95,12 +95,12 @@ public class SalesAppServiceImpl implements SalesAppService {
 				productList.add(product);
 			}
 
-			salesAppSacRes.setProductList(productList);
 			commonResponse.setTotalCount(metaInfo.getTotalCount());
 		} else {
 			commonResponse.setTotalCount(0);
 		}
 
+		salesAppSacRes.setProductList(productList);
 		salesAppSacRes.setCommonResponse(commonResponse);
 		return salesAppSacRes;
 	}

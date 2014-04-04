@@ -63,12 +63,12 @@ public class DeviceChangeServiceImpl implements DeviceChangeService {
 				deviceList.add(device);
 			}
 
-			deviceChangeSacRes.setDeviceList(deviceList);
 			commonResponse.setTotalCount(metaInfo.getTotalCount());
 		} else {
 			commonResponse.setTotalCount(0);
 		}
 
+		deviceChangeSacRes.setDeviceList(deviceList);
 		deviceChangeSacRes.setCommonResponse(commonResponse);
 		return deviceChangeSacRes;
 	}
@@ -103,12 +103,12 @@ public class DeviceChangeServiceImpl implements DeviceChangeService {
 				deviceList.add(device);
 			}
 
-			deviceUserAgentSacRes.setDeviceList(deviceList);
 			commonResponse.setTotalCount(metaInfo.getTotalCount());
 		} else {
 			commonResponse.setTotalCount(0);
 		}
 
+		deviceUserAgentSacRes.setDeviceList(deviceList);
 		deviceUserAgentSacRes.setCommonResponse(commonResponse);
 		return deviceUserAgentSacRes;
 	}
