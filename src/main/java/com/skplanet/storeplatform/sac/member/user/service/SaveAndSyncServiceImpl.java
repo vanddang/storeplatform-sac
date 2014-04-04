@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
@@ -31,6 +32,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 
@@ -56,6 +58,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	@Autowired
 	private MemberCommonComponent mcc;
 
+	@Value("#{propertiesForSac['member.ogg.internal.method.iscall']}")
+	public boolean isCall;
+
 	@Override
 	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId) {
 
@@ -80,9 +85,6 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
-			/**
-			 * TODO 어떤 deviceId 로 회원 탈퇴를 할지 테스트할때 처리할것.
-			 */
 			LOGGER.info("## >> ★★★  변동성 대상!!!");
 			LOGGER.info("## >> ★★★  nowDeviceId : {}", nowDeviceId);
 			LOGGER.info("## >> ★★★  preDeviceId  : {}", preDeviceId);
@@ -95,14 +97,14 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				// 번호 변경만.....
 
 				/**
-				 * 기존 IDP 모바일 회원 탈퇴.
-				 */
-				this.secedeForWap(nowDeviceId);
-
-				/**
 				 * IDP 무선회원 가입
 				 */
 				String mbrNo = this.joinForWap(deviceId);
+
+				/**
+				 * 기존 IDP 모바일 회원 탈퇴.
+				 */
+				this.secedeForWap(nowDeviceId);
 
 				/**
 				 * 회원 MBR_NO 업데이트
@@ -165,9 +167,19 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 		} catch (StorePlatformException spe) {
 
-			LOGGER.info("## IDP 회원 가입 Error 시에 Skip......");
-			LOGGER.info("## errorCode : {}", spe.getErrorInfo().getCode());
-			LOGGER.info("## errorMsg  : {}", spe.getErrorInfo().getMessage());
+			/**
+			 * 가가입일 경우 처리. (이경우에 걸리게 되면 테넌트에서 모바일전용회원가입을 시킨다. [** 신규 가입처리 되므로 회원정보가 복구 되지 않는다. 이때 회원이 클레임을 걸경우 수동으로
+			 * 처리하기로함.])
+			 */
+			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
+
+				throw new StorePlatformException("SAC_MEM_0002", "회원");
+
+			} else {
+
+				throw spe;
+
+			}
 
 		}
 
@@ -185,23 +197,13 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 */
 	private void secedeForWap(String preDeviceId) {
 
-		try {
-
-			/**
-			 * IDP 모바일 회원 가입 탈퇴 요청.
-			 */
-			LOGGER.info("## IDP 모바일 회원 가입 탈퇴 요청.");
-			SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-			ecReq.setUserMdn(preDeviceId);
-			this.idpSCI.secedeForWap(ecReq);
-
-		} catch (StorePlatformException spe) {
-
-			LOGGER.info("## IDP 회원 탈퇴 Error 시에 Skip......");
-			LOGGER.info("## errorCode : {}", spe.getErrorInfo().getCode());
-			LOGGER.info("## errorMsg  : {}", spe.getErrorInfo().getMessage());
-
-		}
+		/**
+		 * IDP 모바일 회원 가입 탈퇴 요청.
+		 */
+		LOGGER.info("## IDP 모바일 회원 가입 탈퇴 요청.");
+		SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+		ecReq.setUserMdn(preDeviceId);
+		this.idpSCI.secedeForWap(ecReq);
 
 	}
 
@@ -234,6 +236,11 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		ReviveUserResponse reviveUserResponse = this.deviceSCI.reviveUser(reviveUserRequest);
 		LOGGER.info("## >> reviveUserResponse : {}", reviveUserResponse);
 
+		/**
+		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
+		 */
+		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), newMbrNo, userKey, "", "");
+
 	}
 
 	/**
@@ -252,42 +259,35 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 */
 	private void modifyMbrNo(SacRequestHeader sacHeader, String userKey, String deviceKey, String deviceId, String mbrNo) {
 
-		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-
-		/**
-		 * 공통 정보 setting.
-		 */
-		updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-
-		/**
-		 * 사용자 기본정보 setting.
-		 */
-		UserMbr userMbr = new UserMbr();
-		userMbr.setUserKey(userKey);
-		userMbr.setImMbrNo(mbrNo); // MBR_NO
-
-		updateUserRequest.setUserMbr(userMbr);
-
 		/**
 		 * SC 사용자 회원 기본정보 수정 요청.
 		 */
+		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+		updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserKey(userKey);
+		userMbr.setImMbrNo(mbrNo); // MBR_NO
+		updateUserRequest.setUserMbr(userMbr);
 		this.userSCI.updateUser(updateUserRequest);
 
-		CreateDeviceRequest createDeviceRequest = new CreateDeviceRequest();
-		createDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-
-		createDeviceRequest.setIsNew(MemberConstants.USE_N);
-		createDeviceRequest.setUserKey(userKey);
+		/**
+		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
+		 */
+		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), mbrNo, userKey, "", "");
 
 		/**
-		 * 단말 Device 업데이트.
+		 * SC 단말 Device 업데이트.
 		 */
+		CreateDeviceRequest createDeviceRequest = new CreateDeviceRequest();
+		createDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		createDeviceRequest.setIsNew(MemberConstants.USE_N);
+		createDeviceRequest.setUserKey(userKey);
 		UserMbrDevice userMbrDevice = new UserMbrDevice();
 		userMbrDevice.setUserKey(userKey);
 		userMbrDevice.setDeviceKey(deviceKey);
 		userMbrDevice.setDeviceID(deviceId); // 수정할 DeviceId
-
 		createDeviceRequest.setUserMbrDevice(userMbrDevice);
+
 		this.deviceSCI.createDevice(createDeviceRequest);
 
 	}
