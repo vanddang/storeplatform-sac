@@ -144,6 +144,8 @@ public class UseableDeviceServiceImpl implements UseableDeviceService {
 				device.setMnftCompCd(metaInfo.getMnftCompCd());
 				device.setMnftCompNm(metaInfo.getMnftCompNm());
 				device.setSvcGrpCd(req.getSvcGrpCd());
+				device.setListImagePath(metaInfo.getListImagePath());
+				device.setDtlImagePath(metaInfo.getDtlImagePath());
 				deviceList.add(device);
 			}
 		} else {
