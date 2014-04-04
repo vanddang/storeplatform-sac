@@ -80,7 +80,6 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	private String accountRealDate;
 
 	/** 계좌번호. */
-	@NotBlank
 	private String bankAccount;
 
 	/** 예금자명. */
