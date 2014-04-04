@@ -101,15 +101,13 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		data.setSubContents(subContentsList);
 
 		// 사용 정책
-		if (StringUtils.isNotEmpty(metaInfo.getAid())) {
-			usagePolicy.setApplyDrm(metaInfo.getDrmYn());
-			if (StringUtils.isNotEmpty(metaInfo.getUseExprDt())) {
-				date = new Date();
-				date.setTextUtc(DateUtils.parseDate(metaInfo.getUseExprDt()));
-				usagePolicy.setExpirationDate(date.getText());
-			} else {
-				usagePolicy.setExpirationDate("");
-			}
+		usagePolicy.setApplyDrm(metaInfo.getDrmYn());
+		if (StringUtils.isNotEmpty(metaInfo.getUseExprDt())) {
+			date = new Date();
+			date.setTextUtc(DateUtils.parseDate(metaInfo.getUseExprDt()));
+			usagePolicy.setExpirationDate(date.getText());
+		} else {
+			usagePolicy.setExpirationDate("");
 		}
 		data.setUsagePolicy(usagePolicy);
 
