@@ -51,6 +51,10 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementList
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
@@ -92,6 +96,12 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private SellerSCI sellerSCI;
+
+	@Autowired
+	private ChangeDisplayUserSCI changeDisplayUserSCI;
+
+	@Autowired
+	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
 
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	public String fixedMobileUserAuthKey;
@@ -767,8 +777,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -987,6 +996,55 @@ public class MemberCommonComponent {
 			return false;
 		} else {
 			return true;
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param isCall
+	 *            내부메서드 연동여부
+	 * @param systemId
+	 *            Sysetm ID
+	 * @param tenantId
+	 *            Tenant ID
+	 * @param userKey
+	 *            사용자 Key
+	 * @param previousUserKey
+	 *            이전 사용자 Key
+	 * @param deviceKey
+	 *            휴대기기 Key
+	 * @param previousDeviceKey
+	 *            이전 휴대기기 Key
+	 */
+	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey, String previousUserKey, String deviceKey, String previousDeviceKey) {
+
+		if (isCall) {
+
+			/* 3. 기타파트 userKey 변경 */
+			ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
+			changeDisplayUserSacReq.setNewUseKey(userKey);
+			changeDisplayUserSacReq.setOldUserKey(previousUserKey);
+			changeDisplayUserSacReq.setTenantId(tenantId);
+			this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
+
+			LOGGER.debug("::: changeDisplayUserSCI.changeUserKey SUCCESS");
+
+			/* 4. 구매파트 userKey, deviceKey 변경 */
+			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
+			userInfoSacInReq.setSystemId(systemId);
+			userInfoSacInReq.setTenantId(tenantId);
+			userInfoSacInReq.setDeviceKey(previousDeviceKey);
+			userInfoSacInReq.setNewDeviceKey(deviceKey);
+			userInfoSacInReq.setUserKey(previousUserKey);
+			userInfoSacInReq.setNewUserKey(userKey);
+			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
+
+			LOGGER.debug("::: purchaseUserInfoInternalSCI.updateUserDevice SUCCESS");
+
 		}
 
 	}
