@@ -32,6 +32,7 @@ public class HttpHeaders extends CommonInfo {
 	private String timestamp;
 	private String nonce;
 
+	private String tenantId;
 	private String systemId;
 	private String interfaceId;
 
@@ -102,6 +103,14 @@ public class HttpHeaders extends CommonInfo {
 
 	public void setNonce(String nonce) {
 		this.nonce = nonce;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	public String getSystemId() {

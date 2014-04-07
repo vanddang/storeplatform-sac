@@ -39,6 +39,7 @@ public class HttpHeaderEnricher {
 		String signature = (String) headers.get(CommonConstants.HEADER_AUTH_SIGNATURE);
 		String timestamp = (String) headers.get(CommonConstants.HEADER_AUTH_TIMESTAMP);
 		String nonce = (String) headers.get(CommonConstants.HEADER_AUTH_NONCE);
+		String tenantId = (String) headers.get(CommonConstants.HEADER_TENANT_ID);
 		String systemId = (String) headers.get(CommonConstants.HEADER_SYSTEM_ID);
 		String interfaceId = (String) headers.get(CommonConstants.HEADER_INTERFACE_ID);
 		String guid = (String) headers.get(CommonConstants.HEADER_GUID);
@@ -54,6 +55,7 @@ public class HttpHeaderEnricher {
 		httpHeader.setSignature(signature);
 		httpHeader.setTimestamp(timestamp);
 		httpHeader.setNonce(nonce);
+		httpHeader.setTenantId(tenantId);
 		httpHeader.setSystemId(systemId);
 		httpHeader.setInterfaceId(interfaceId);
 		httpHeader.setGuid(guid);
