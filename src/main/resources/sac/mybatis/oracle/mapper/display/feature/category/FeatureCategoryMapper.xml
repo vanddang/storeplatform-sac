@@ -257,7 +257,7 @@
                             , A.EXPO_ORD
                             , A.EXPO_ORD_SUB
                             , D.REG_DT
-                            , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY TO_NUMBER(REGEXP_REPLACE( G.CHAPTER, '[^[:digit:]]') ) DESC, D.REG_DT DESC) AS RN
+                            , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY G.CHAPTER DESC, D.REG_DT DESC) AS RN
                          FROM (SELECT LP1.TENANT_ID
                                     , LP1.PROD_ID
                                     , LP1.MENU_ID

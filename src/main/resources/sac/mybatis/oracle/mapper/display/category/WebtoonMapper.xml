@@ -395,12 +395,12 @@
 		           AND C.PROD_STATUS_CD = 'PD000403'
 		           AND C.PROD_ID = D.PROD_ID
 		           <if test='orderedBy == "pre"'>
-		           AND TO_NUMBER(REGEXP_REPLACE(D.CHAPTER, '[^[:digit:]]')) <![CDATA[ < ]]> #{chapter}
-		         ORDER BY TO_NUMBER(REGEXP_REPLACE(D.CHAPTER, '[^[:digit:]]')) DESC
+		           AND D.CHAPTER <![CDATA[ < ]]> #{chapter}
+		         ORDER BY D.CHAPTER DESC
 		           </if>
 		           <if test='orderedBy == "next"'>
-		           AND TO_NUMBER(REGEXP_REPLACE(D.CHAPTER, '[^[:digit:]]')) <![CDATA[> ]]> #{chapter}
-		         ORDER BY TO_NUMBER(REGEXP_REPLACE(D.CHAPTER, '[^[:digit:]]')) ASC
+		           AND D.CHAPTER <![CDATA[> ]]> #{chapter}
+		         ORDER BY D.CHAPTER ASC
 		           </if>
 		       )
 		 WHERE ROWNUM = 1
