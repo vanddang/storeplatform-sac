@@ -117,7 +117,7 @@ public class LoginServiceImpl implements LoginService {
 	private String tempUserAuthKey;
 
 	@Value("#{propertiesForSac['member.ogg.internal.method.iscall']}")
-	public boolean isCalChangeKeyl;
+	public boolean isCallChangeKey;
 
 	@Autowired
 	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
@@ -1034,7 +1034,7 @@ public class LoginServiceImpl implements LoginService {
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 			/* OGG 연동을 위해 전시/기타, 구매 파트 키 변경 */
-			this.commService.excuteInternalMethod(this.isCalChangeKeyl, requestHeader.getTenantHeader().getSystemId(), requestHeader
+			this.commService.excuteInternalMethod(this.isCallChangeKey, requestHeader.getTenantHeader().getSystemId(), requestHeader
 					.getTenantHeader().getTenantId(), oldUserKey, joinForWapEcRes.getUserKey(), oldDeviceKey, oldDeviceKey);
 
 			res.setDeviceKey(oldDeviceKey);
