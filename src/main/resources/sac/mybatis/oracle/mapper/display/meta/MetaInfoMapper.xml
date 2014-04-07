@@ -144,8 +144,7 @@
 	 	     , A1.PART_PROD_ID
 	 	     , A1.VOD_TITL_NM
 	 	     , A1.PROD_NM
-	 	     , REGEXP_REPLACE( A1.CHAPTER, '[^[:digit:]]') AS CHAPTER /* 회차의 수 */
-	 	     , NVL(REGEXP_REPLACE( A1.CHAPTER, '[[:digit:], ]'), '회') AS CHAPTER_UNIT /* 회차 단위 */
+	 	     , A1.CHAPTER /* 회차의 수 */
 	 	     , A1.SAMPL_URL
 	 	     , A1.SC_SAMPL_URL
 	 	     , A1.PROD_BASE_DESC
@@ -294,7 +293,7 @@
 		           AND O.LANG_CD = #{tenantHeader.langCd}
 		           AND N.TOP_MENU_ID = P.MENU_ID
 		           AND P.LANG_CD = #{tenantHeader.langCd}
-		         ORDER BY TO_NUMBER(TRANSLATE(J.CHAPTER, '0123456789'||J.CHAPTER, '0123456789')) DESC, I.REG_DT DESC
+		         ORDER BY J.CHAPTER DESC, I.REG_DT DESC
 		       ) A1
 		 WHERE ROWNUM = 1
     </select>
@@ -446,11 +445,7 @@
              , TB.VOD_TITL_NM
              , TB.PROD_NM
              , TB.CHAPTER
-             , CASE WHEN TB.BOOK_CLSF_CD = 'DP004301' THEN '권'
-                    WHEN TB.BOOK_CLSF_CD = 'DP004302' THEN '회'
-                    WHEN TB.BOOK_CLSF_CD = 'DP004303' THEN '호'
-                    ELSE ''
-               END AS BOOK_CLSF_CD
+             , TB.BOOK_CLSF_CD
              , CASE WHEN TB.TOP_MENU_ID = 'DP13' -- 이북은 상품기본설명 컬럼 위치가 다름
                     THEN TB.PROD_DTL_DESC
                     ELSE TB.PROD_BASE_DESC
@@ -495,7 +490,7 @@
                  SELECT 
                         ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
-                                                        , TO_NUMBER( REGEXP_REPLACE( L.CHAPTER, '[^[:digit:]]') ) DESC
+                                                        , L.CHAPTER DESC
                                                         , NVL( J.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
                                                         , J.UPD_DT DESC ) AS RN
                       , A.UP_MENU_ID
@@ -618,11 +613,7 @@
              , TB.VOD_TITL_NM
              , TB.PROD_NM
              , TB.CHAPTER
-             , CASE WHEN TB.BOOK_CLSF_CD = 'DP004301' THEN '권'
-                    WHEN TB.BOOK_CLSF_CD = 'DP004302' THEN '회'
-                    WHEN TB.BOOK_CLSF_CD = 'DP004303' THEN '호'
-                    ELSE ''
-               END AS BOOK_CLSF_CD
+             , TB.BOOK_CLSF_CD
              , TB.PROD_BASE_DESC
              , TB.PROD_GRD_CD
              , TB.ARTIST1_NM

@@ -110,7 +110,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		Book book = new Book();
 		if (StringUtils.isNotEmpty(metaInfo.getBookClsfCd()) && StringUtils.isNotEmpty(metaInfo.getChapter())) {
 			Chapter chapter = new Chapter();
-			chapter.setUnit(metaInfo.getBookClsfCd());
+			chapter.setUnit(this.commonService.getEpubChapterUnit(metaInfo.getBookClsfCd()));
 			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
 			book.setChapter(chapter);
 		}
