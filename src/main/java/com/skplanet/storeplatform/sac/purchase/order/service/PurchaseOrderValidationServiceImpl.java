@@ -568,7 +568,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 기구매 체크
 		// TAKTEST:: 로컬 테스트, 상용 성능테스트
 		if ((StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL) == false)
-				|| (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL) == false)) {
+				&& (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL) == false)) {
 			if (existenceProdIdList.size() > 0) {
 
 				List<ExistenceScRes> checkPurchaseResultList = this.searchExistence(existTenantId, existUserKey,
