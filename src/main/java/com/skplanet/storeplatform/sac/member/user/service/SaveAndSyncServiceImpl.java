@@ -173,7 +173,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			 */
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
-				throw new StorePlatformException("SAC_MEM_0002", "회원");
+				throw new StorePlatformException("SAC_MEM_0002", "회원(Save&Sync)");
 
 			} else {
 
