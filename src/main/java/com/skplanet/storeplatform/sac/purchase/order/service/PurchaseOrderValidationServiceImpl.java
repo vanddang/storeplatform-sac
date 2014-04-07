@@ -365,6 +365,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			purchaseProductList.add(purchaseProduct);
 		}
 
+		// 상품 조회 갯수 체크
+		// if (purchaseOrderInfo.getCreatePurchaseReq().getProductList().size() != purchaseOrderInfo
+		// .getPurchaseProductList().size()) {
+		// throw new StorePlatformException("SAC_PUR_9999");
+		// }
+		if (purchaseOrderInfo.getPurchaseProductList().size() < 1) {
+			throw new StorePlatformException("SAC_PUR_9999");
+		}
+
 		// 결제 총 금액 & 상품 가격 총합 체크 : // 비과금 요청 경우, 결제금액 체크 생략
 		if (purchaseOrderInfo.isFreeChargeReq()) {
 			purchaseOrderInfo.setRealTotAmt(0.0);
@@ -390,10 +399,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 구매차단 체크
 		if (purchaseOrderInfo.isBlockPayment()) {
 			throw new StorePlatformException("SAC_PUR_6103");
-		}
-
-		if (purchaseOrderInfo.getPurchaseProductList().size() <= 0) {
-			throw new StorePlatformException("SAC_PUR_9999");
 		}
 
 		// Biz 쿠폰 경우 이하 체크 Skip
@@ -560,10 +565,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 		}
 
-		// TAKTEST:: 로컬 테스트
-		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL) == false) {
-
-			// 기구매 체크
+		// 기구매 체크
+		// TAKTEST:: 로컬 테스트, 상용 성능테스트
+		if ((StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL) == false)
+				|| (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL) == false)) {
 			if (existenceProdIdList.size() > 0) {
 
 				List<ExistenceScRes> checkPurchaseResultList = this.searchExistence(existTenantId, existUserKey,
@@ -577,7 +582,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					// TAKTODO:: 예약 상태 경우 해당 구매ID 사용... 복수 구매 시 일부 예약상태일 때 처리 방안?
 				}
 			}
-
 		}
 
 	}
