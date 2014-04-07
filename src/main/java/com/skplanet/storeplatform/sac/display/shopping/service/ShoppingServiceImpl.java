@@ -1577,7 +1577,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					req.setSpecialProdId(req.getProductId());
 					req.setProductId(channelByEpisode.getCatalogId());
 				} else {
-					throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
+					throw new StorePlatformException("SAC_DSP_0009");
 				}
 			}
 		}
@@ -1611,7 +1611,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				MetaInfo.class);
 
 		if (resultChannelList == null) {
-			throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
+			throw new StorePlatformException("SAC_DSP_0009");
 		} else {
 			if (resultChannelList.size() > 0) {
 
@@ -1939,7 +1939,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				}
 				res.setProduct(product);
 			} else {
-				throw new StorePlatformException("SAC_DSP_0005", req.getProductId());
+				throw new StorePlatformException("SAC_DSP_0009");
 			}
 		}
 		return res;
