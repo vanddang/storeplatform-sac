@@ -67,7 +67,7 @@ public class Coupon extends CommonInfo implements Serializable {
 	 */
 	private Date date;
 	private List<Date> dateList;
-	
+
 	/**
 	 * 쿠폰명/정액권명.
 	 */
@@ -93,21 +93,26 @@ public class Coupon extends CommonInfo implements Serializable {
 	private Coverage coverage;
 
 	private List<EpisodeCoupon> episodeCouponList;
-	
+
 	/**
 	 * Identifier 배열.
 	 */
 	private List<Identifier> identifierList;
-	
+
 	/**
 	 * > Code : 대분류 카테고리시 topClass.
 	 */
 	private List<Menu> menuList;
-	
+
 	/**
 	 * > Code : 판매상태.
 	 */
 	private String saleStatus;
+
+	/**
+	 * > Cash : 캐쉬정보
+	 */
+	private List<Cash> cashList;
 
 	/**
 	 * @return Identifier
@@ -323,11 +328,12 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * @return the menuList
 	 */
 	public List<Menu> getMenuList() {
-		return menuList;
+		return this.menuList;
 	}
 
 	/**
-	 * @param menuList the menuList to set
+	 * @param menuList
+	 *            the menuList to set
 	 */
 	public void setMenuList(List<Menu> menuList) {
 		this.menuList = menuList;
@@ -337,11 +343,12 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * @return the saleStatus
 	 */
 	public String getSaleStatus() {
-		return saleStatus;
+		return this.saleStatus;
 	}
 
 	/**
-	 * @param saleStatus the saleStatus to set
+	 * @param saleStatus
+	 *            the saleStatus to set
 	 */
 	public void setSaleStatus(String saleStatus) {
 		this.saleStatus = saleStatus;
@@ -351,11 +358,12 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * @return the identifierList
 	 */
 	public List<Identifier> getIdentifierList() {
-		return identifierList;
+		return this.identifierList;
 	}
 
 	/**
-	 * @param identifierList the identifierList to set
+	 * @param identifierList
+	 *            the identifierList to set
 	 */
 	public void setIdentifierList(List<Identifier> identifierList) {
 		this.identifierList = identifierList;
@@ -365,16 +373,30 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * @return the dateList
 	 */
 	public List<Date> getDateList() {
-		return dateList;
+		return this.dateList;
 	}
 
 	/**
-	 * @param dateList the dateList to set
+	 * @param dateList
+	 *            the dateList to set
 	 */
 	public void setDateList(List<Date> dateList) {
 		this.dateList = dateList;
 	}
-	
-	
+
+	/**
+	 * @return the cashList
+	 */
+	public List<Cash> getCashList() {
+		return this.cashList;
+	}
+
+	/**
+	 * @param cashList
+	 *            the cashList to set
+	 */
+	public void setCashList(List<Cash> cashList) {
+		this.cashList = cashList;
+	}
 
 }
