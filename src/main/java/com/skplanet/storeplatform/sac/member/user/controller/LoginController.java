@@ -166,7 +166,7 @@ public class LoginController {
 
 	/**
 	 * <pre>
-	 * Save&Sync 인증.
+	 * Save&Sync.
 	 * </pre>
 	 * 
 	 * @param requestHeader
