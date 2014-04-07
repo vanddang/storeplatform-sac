@@ -24,7 +24,6 @@ import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
@@ -221,7 +220,7 @@ public class FreepassServiceImpl implements FreepassService {
 			retMetaInfo = this.commonDAO.queryForObject("Freepass.selectFreepassDetail", req, MetaInfo.class);
 
 			if (retMetaInfo == null)
-				throw new StorePlatformException("SAC_DSP_0005", req.getProductId(), req.getProductId());
+				throw new StorePlatformException("SAC_DSP_0009", req.getProductId(), req.getProductId());
 
 			// 상품 상태 조회 - 판매중,판매중지,판매종료가 아니면 노출 안함
 			if (!DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
@@ -358,7 +357,7 @@ public class FreepassServiceImpl implements FreepassService {
 		List<ProductBasicInfo> couponBasicInfoList = null;
 		ProductBasicInfo productBasicInfo = null;
 		MetaInfo retMetaInfo = null;
-		this.log.debug("1111");
+
 		if (StringUtil.nvl(req.getDummy(), "").equals("")) {
 
 			// 정액제 상품 목록 조회
@@ -385,7 +384,7 @@ public class FreepassServiceImpl implements FreepassService {
 					ProductBasicInfo.class);
 
 			if (couponBasicInfoList == null)
-				throw new StorePlatformException("SAC_DSP_0009");
+				commonResponse.setTotalCount(0);
 
 			// 정액제 상품 메타 조회
 			if (couponBasicInfoList != null && couponBasicInfoList.size() > 0) {
@@ -747,7 +746,7 @@ public class FreepassServiceImpl implements FreepassService {
 
 				paymentInfo.setExclusiveFixrateProdIdList(exclusiveFixrateProdIdList);
 			} else {
-				throw new StorePlatformException("SAC_DSP_0005", "[정액권 상품 조회]" + prodIdList.get(0));
+				throw new StorePlatformException("SAC_DSP_0009", "[정액권 상품 조회]" + prodIdList.get(0));
 			}
 			paymentInfoList.add(paymentInfo);
 		}

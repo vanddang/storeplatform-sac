@@ -82,7 +82,7 @@
                 #{topMenuId}
                 </foreach>
             </if>
-			    ORDER BY PD.REG_DT DESC
+			    ORDER BY TP.EXPO_ORD, PD.REG_DT DESC
 			  ) IV
 			) OV
 			WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
@@ -246,7 +246,7 @@
 					    WHEN PD.TOP_MENU_ID='DP14' 
 					        THEN DV.COMIC_SPRT_YN ELSE 'N' END = 'Y'
     		        )
-        		ORDER BY FM.EXPO_ORD
+        		ORDER BY FM.EXPO_ORD, PD.REG_DT DESC
 			) IV
 		) OV
 		WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
@@ -331,7 +331,7 @@
                 #{kind}
                 </foreach>
             </if>
-                ORDER BY TP.EXPO_ORD
+                ORDER BY TP.EXPO_ORD, PD.REG_DT DESC
               ) IV
             ) OV
             WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
@@ -427,7 +427,7 @@
       		<if test='menuId != null and menuId != ""'>
 					AND TM.MENU_ID = #{menuId}  /* DP13XXX:ebook/DP14XXX:코믹/DP17XXX:영화/DP18XXX:TV/방송 */
           </if>
-			    ORDER BY TP.EXPO_ORD
+			    ORDER BY TP.EXPO_ORD, PD.REG_DT DESC
 			  ) IV
 			) OV
 			WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
