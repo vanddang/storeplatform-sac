@@ -65,9 +65,11 @@ public class TenantExtractorImpl implements TenantExtractor {
 			tenant.setTenantId(tenantId);
 		} else {
 			String authKey = webRequest.getHeader(CommonConstants.HEADER_AUTH_KEY);
-			AuthKey authKeyObj = this.dbService.selectAuthKey(authKey);
-			String tenantIdFromDb = authKeyObj.getTenantId();
-			tenant.setTenantId(tenantIdFromDb);
+			if (StringUtils.isNotBlank(authKey)) {
+				AuthKey authKeyObj = this.dbService.selectAuthKey(authKey);
+				String tenantIdFromDb = authKeyObj.getTenantId();
+				tenant.setTenantId(tenantIdFromDb);
+			}
 		}
 
 		/*
