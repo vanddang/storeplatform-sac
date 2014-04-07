@@ -152,7 +152,7 @@
 			    , T.CHNL_PROD_ID
 			    , T.PROD_NM, T.PROD_BASE_DESC, T.PROD_DTL_DESC, T.PROD_INTR_DSCR
 			    , T.ARTIST1_NM, T.ARTIST2_NM, T.ARTIST3_NM
-			    , T.BOOK_CLSF_CD, T.CHAPTER, T.CHAPTER_UNIT
+			    , T.BOOK_CLSF_CD, T.CHAPTER
 			    , ( CASE WHEN T.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( T.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
 			    , T.SVC_START_DT , NVL( T.BOOK_PAGE_CNT, 0 ) AS BOOK_PAGE_CNT, T.COMPT_YN, T.ISSUE_DAY
 			    , T.SUB_CONTENTS_ID, T.FILE_SIZE, T.PROD_VER
@@ -179,7 +179,6 @@
 			                , MAX( T2.PROD_NM ) AS PROD_NM
 			                , MAX( T2.LANG_CD ) AS LANG_CD
 			                , MAX( T2.MENU_ID ) AS MENU_ID, MAX( T2.TOP_MENU_ID ) AS TOP_MENU_ID
-			                , MAX( T2.CHAPTER_UNIT ) AS CHAPTER_UNIT
 			                , MAX( T2.COMPT_YN ) AS COMPT_YN, MAX( T2.BOOK_CLSF_CD ) AS BOOK_CLSF_CD
 			                , MAX( T2.SVC_START_DT ) AS SVC_START_DT, MAX( T2.BOOK_PAGE_CNT ) AS BOOK_PAGE_CNT, MAX( T2.ISSUE_DAY ) AS ISSUE_DAY
 			                , MAX( T2.SUB_CONTENTS_ID ) AS SUB_CONTENTS_ID
@@ -223,8 +222,7 @@
 		                      , TP.PROD_STATUS_CD
 		                      , MP.BOOK_CLSF_CD, MP.COMPT_YN
 		                      , MP.SVC_START_DT, MP.BOOK_PAGE_CNT, MP.ISSUE_DAY
-		                      , TO_NUMBER( REGEXP_REPLACE( MP.CHAPTER, '[^[:digit:]]')) AS CHAPTER
-		                      , REGEXP_REPLACE( MP.CHAPTER, '[[:digit:], ]') AS CHAPTER_UNIT
+		                      , MP.CHAPTER
 		                      , PRC.PROD_AMT, PRC.PROD_NET_AMT
 		                      , SC.SUB_CONTENTS_ID, SC.FILE_SIZE, SC.PROD_VER
 		                      , ROW_NUMBER() OVER ( PARTITION BY PD.PROD_ID ORDER BY SC.PROD_VER DESC ) AS RN
@@ -258,7 +256,7 @@
 							  AND MP.BOOK_CLSF_CD = #{bookTypeCd}
 		                      </if>
 		                      <if test="baseChapter != null">
-		                      AND TO_NUMBER( REGEXP_REPLACE( NVL( MP.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{baseChapter}
+		                      AND MP.CHAPTER > #{baseChapter}
 		                      </if>
 							  <if test="orderedBy == 'nonPayment'">
 							  <if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
