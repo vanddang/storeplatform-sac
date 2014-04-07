@@ -182,7 +182,6 @@
         SELECT /* WebtoonMapper.xml, selectWebtoonSeries, SAC 전시, 2014-02-13 */
             BB.MENU_ID
              , BB.PROD_ID
-             , BB.PART_PROD_ID
              , BB.FIRST_PROD_ID
              , BB.TOP_MENU_ID
              , BB.CONTENTS_TYPE_CD
@@ -190,8 +189,7 @@
             FROM
             (
              SELECT                
-                  AA.PART_PROD_ID
-                , AA.PROD_ID
+                   AA.PROD_ID
                 , AA.TOP_MENU_ID
                 , AA.CONTENTS_TYPE_CD
                 , AA.MENU_ID
@@ -202,14 +200,13 @@
                 , ROWNUM AS RNUM
                 FROM
                 (
-                    SELECT 
-                         C.PART_PROD_ID
-                         , D.TOP_MENU_ID
+                    SELECT
+                           D.TOP_MENU_ID
                          , D.CONTENTS_TYPE_CD
                          , A.MENU_ID
                          , D.UPD_DT
                          , F.CHAPTER
-                         , C.PROD_ID
+                         , D.PROD_ID
                          ,(  SELECT ZZ.PROD_ID
 						    FROM (
 						        SELECT C1.PROD_ID
@@ -231,18 +228,15 @@
 						WHERE ROWNUM = 1) AS FIRST_PROD_ID
                     FROM TB_DP_MENU_CATEGORY      A
                         , TB_DP_MENU_CATEGORY_PROD_MAPG B
-                        , TB_DP_PROD_RSHP C
                         , TB_DP_PROD D /* 채널 */
                         , TB_DP_TENANT_PROD E
                         , UV_TB_DP_MULTIMDA_PROD F /* 채널 */
                     WHERE A.MENU_ID = B.MENU_ID
                     AND B.PROD_ID = D.PROD_ID
                     AND A.MENU_ID = #{menuId}
-                    AND C.PROD_ID = #{channelId}
-                    AND C.PROD_RSHP_CD ='DP010802'
-                    AND C.PART_PROD_ID = D.PROD_ID
-                    AND C.PART_PROD_ID = F.PROD_ID
-                    AND C.PART_PROD_ID = E.PROD_ID
+                    AND D.PROD_ID = #{channelId}
+                    AND D.PROD_ID = F.PROD_ID
+                    AND D.PROD_ID  = E.PROD_ID
                     AND E.TENANT_ID = #{tenantId}
                     AND D.CONTENTS_TYPE_CD = 'PD002501'
                     AND D.SVC_GRP_CD = 'DP000203'
