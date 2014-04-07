@@ -45,6 +45,13 @@
         class="com.skplanet.spring.data.plandasj.PlandasjCacheManager" 
         p:template-ref="plandasjTemplate" >
         <property name="usePrefix" value="true" />
+        <property name="expires">
+            <map>
+                <entry key="sac:display:product:app" value="1800000" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:subcontent" value="1800000" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:menuinfo" value="1800000" value-type="java.lang.Long"/>  <!-- 30분 -->
+            </map>
+        </property>
     </bean>
       
     <bean name="plandasjpool" class="com.skplanet.plandasj.PlandasjPool" destroy-method="release">
