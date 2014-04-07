@@ -495,7 +495,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) {
 
-		List<SecedeReson> sList = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", header
+		List<SecedeReson> sList = this.commonDAO.queryForList("SellerSearch.lis" + "tWithdrawalReason", header
 				.getTenantHeader().getLangCd(), SecedeReson.class);
 
 		ListWithdrawalReasonRes response = new ListWithdrawalReasonRes();
@@ -522,7 +522,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
-		// 파라미터 Setting. SC 쿼리에서 null check 하므로 전체 setting 해서 넘겨줘도 무관.
 		schReq.setSellerBizNumber(StringUtils.isNotBlank(req.getSellerBizNumber()) ? req.getSellerBizNumber() : null);
 		schReq.setSellerCompany(StringUtils.isNotBlank(req.getSellerCompany()) ? req.getSellerCompany() : null);
 		schReq.setSellerEmail(StringUtils.isNotBlank(req.getSellerEmail()) ? req.getSellerEmail() : null);
