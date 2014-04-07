@@ -106,22 +106,7 @@
 		                     , TB_DP_MENU_CATEGORY E
 		                     , TB_DP_PROD F  /* 에피소드 */
 		                     , TB_DP_TENANT_PROD G
-		                     , (SELECT SD.PROD_ID
-		                         FROM TB_DP_SPRT_DEVICE SD
-		                             , TB_CM_DEVICE CD
-		                         WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
-		                           AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = #{anyDeviceModelCd})
-		                           AND CD.USE_YN = 'Y'
-		                           <if test='topMenuId == "DP13"'>
-		                           AND CD.EBOOK_SPRT_YN = 'Y'
-		                           </if>
-		                           <if test='topMenuId == "DP14"'>
-		                           AND CD.COMIC_SPRT_YN = 'Y'
-		                           </if>
-		                           <if test='topMenuId == "DP16"'>
-		                           AND CD.MUSIC_SPRT_YN = 'Y'
-		                           </if>
-		                       ) H
+		                     , TB_DP_SPRT_DEVICE H
 		                 WHERE A.LIST_ID = B.LIST_ID
 		                   AND A.TENANT_ID = B.TENANT_ID
 		                   AND A.EXPO_YN = 'Y'
@@ -151,20 +136,36 @@
                               #{prodGradeCd}          
                               </foreach> /* 상품등급코드 */
 		                   </if>
-		                   <if test='topMenuId == "DP16"'>
-		                   AND F.META_CLSF_CD = 'CT25'  /* MUSIC */
-		                   </if>
-		                   <if test='topMenuId == "DP13"'>
-		                   AND F.META_CLSF_CD IN ('CT19', 'CT20')  /* EBOOK */
-		                   </if>
-		                   <if test='topMenuId == "DP14"'>
-                           AND F.META_CLSF_CD = 'CT21'  /* COMIC */
-                           </if>
 		                   AND F.PROD_ID = G.PROD_ID
 		                   AND G.TENANT_ID = #{tenantId}
 		                   AND G.EXPO_YN = 'Y'
 		                   AND G.PROD_STATUS_CD = 'PD000403'
 		                   AND C.PART_PROD_ID = H.PROD_ID
+		                   AND (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+		                   <if test='topMenuId == "DP13"'>
+                           AND F.META_CLSF_CD IN ('CT19', 'CT20')  /* EBOOK */
+                           AND (CASE WHEN (SELECT EBOOK_SPRT_YN 
+                                     FROM TB_CM_DEVICE CD 
+                                    WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                      AND CD.USE_YN = 'Y') = 'Y'  
+                             THEN 1 ELSE 0 END) = 1
+                           </if>
+                           <if test='topMenuId == "DP14"'>
+                           AND F.META_CLSF_CD = 'CT21'  /* COMIC */
+                           AND (CASE WHEN (SELECT COMIC_SPRT_YN 
+                                     FROM TB_CM_DEVICE CD 
+                                    WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                      AND CD.USE_YN = 'Y') = 'Y'  
+                             THEN 1 ELSE 0 END) = 1
+                           </if>
+                           <if test='topMenuId == "DP16"'>
+                           AND F.META_CLSF_CD = 'CT25'  /* MUSIC */
+                           AND (CASE WHEN (SELECT MUSIC_SPRT_YN 
+                                     FROM TB_CM_DEVICE CD 
+                                    WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                      AND CD.USE_YN = 'Y') = 'Y'  
+                             THEN 1 ELSE 0 END) = 1
+                           </if>
 		              ) A
 		      ) B
 		 WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)

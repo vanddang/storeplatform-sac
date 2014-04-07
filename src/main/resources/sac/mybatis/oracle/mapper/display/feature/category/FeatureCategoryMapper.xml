@@ -104,10 +104,16 @@
                                             FROM TB_CM_DEVICE 
                                            WHERE DEVICE_MODEL_CD = #{deviceModelCd}
                                              AND USE_YN = 'Y' )  = 'N' 
-                                             AND NVL(E.DRM_YN, 'N') = 'Y' 
-                                    THEN 'NOT SUPPORT'
-                                    ELSE 'SUPPORT'
-                                END) = 'SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
+                                         AND NVL(E.DRM_YN, 'N') = 'Y'  
+                                    THEN 'NOT SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
+                                    ELSE CASE WHEN (SELECT SD_VIDEO_SPRT_YN 
+                                                     FROM TB_CM_DEVICE 
+                                                    WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                                    AND USE_YN = 'Y' )  = 'Y' 
+                                              THEN 'SUPPORT' 
+                                              ELSE 'NOT SUPPORT' 
+                                         END 
+                                     END) = 'SUPPORT'
                           AND B.PROD_ID = H.PROD_ID
                           AND H.LANG_CD = #{langCd}
                       ) A
@@ -214,11 +220,16 @@
                                             FROM TB_CM_DEVICE 
                                            WHERE DEVICE_MODEL_CD = #{deviceModelCd}
                                              AND USE_YN = 'Y' )  = 'N' 
-                                             AND NVL(E.DRM_YN, 'N') = 'Y' 
-                                    THEN 'NOT SUPPORT'
-                                    ELSE 'SUPPORT'
-                                END) = 'SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
-                                
+                                         AND NVL(E.DRM_YN, 'N') = 'Y'  
+                                    THEN 'NOT SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
+                                    ELSE CASE WHEN (SELECT SD_VIDEO_SPRT_YN 
+                                                     FROM TB_CM_DEVICE 
+                                                    WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                                    AND USE_YN = 'Y' )  = 'Y' 
+                                              THEN 'SUPPORT' 
+                                              ELSE 'NOT SUPPORT' 
+                                         END 
+                                     END) = 'SUPPORT'
                           AND A.PROD_ID = H.PROD_ID(+)
                           AND A.TENANT_ID = H.TENANT_ID(+)
                           AND B.PROD_ID = I.PROD_ID
@@ -337,10 +348,16 @@
                                             FROM TB_CM_DEVICE 
                                            WHERE DEVICE_MODEL_CD = #{deviceModelCd}
                                              AND USE_YN = 'Y' )  = 'N' 
-                                             AND NVL(D.DRM_YN, 'N') = 'Y' 
-                                    THEN 'NOT SUPPORT'
-                                    ELSE 'SUPPORT'
-                                END) = 'SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
+                                         AND NVL(D.DRM_YN, 'N') = 'Y'  
+                                    THEN 'NOT SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
+                                    ELSE CASE WHEN (SELECT SD_VIDEO_SPRT_YN 
+                                                     FROM TB_CM_DEVICE 
+                                                    WHERE DEVICE_MODEL_CD = #{deviceModelCd}
+                                                    AND USE_YN = 'Y' )  = 'Y' 
+                                              THEN 'SUPPORT' 
+                                              ELSE 'NOT SUPPORT' 
+                                         END 
+                                     END) = 'SUPPORT'
                           AND D.PROD_ID = G.PROD_ID
                           <if test='filteredBy == "mbc"'>
                           AND G.BRDC_COMP_CD = 'DP004601'  /* mbc */
@@ -604,19 +621,7 @@
                              , TB_DP_MENU_CATEGORY E
                              , TB_DP_PROD F  /* 에피소드 */
                              , TB_DP_TENANT_PROD G
-                             , (SELECT SD.PROD_ID
-                                 FROM TB_DP_SPRT_DEVICE SD
-                                     , TB_CM_DEVICE CD
-                                 WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
-                                   AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = #{anyDeviceModelCd})
-                                   AND CD.USE_YN = 'Y'
-                                   <if test='topMenuId == "DP13"'>
-                                   AND CD.EBOOK_SPRT_YN = 'Y'
-                                   </if>
-                                   <if test='topMenuId == "DP14"'>
-                                   AND CD.COMIC_SPRT_YN = 'Y'
-                                   </if>
-                               ) H
+                             , TB_DP_SPRT_DEVICE H
                          WHERE A.LIST_ID = B.LIST_ID
                            AND A.TENANT_ID = B.TENANT_ID
                            AND A.EXPO_YN = 'Y'
@@ -670,6 +675,21 @@
                            AND G.EXPO_YN = 'Y'
                            AND G.PROD_STATUS_CD = 'PD000403'
                            AND C.PART_PROD_ID = H.PROD_ID
+                           AND (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                           <if test='topMenuId == "DP13"'>
+                           AND (CASE WHEN (SELECT EBOOK_SPRT_YN 
+                                             FROM TB_CM_DEVICE CD 
+                                            WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                              AND CD.USE_YN = 'Y') = 'Y'  
+                                     THEN 1 ELSE 0 END) = 1
+                           </if>
+                           <if test='topMenuId == "DP14"'>
+                           AND (CASE WHEN (SELECT COMIC_SPRT_YN 
+                                             FROM TB_CM_DEVICE CD 
+                                            WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                              AND CD.USE_YN = 'Y') = 'Y'  
+                                     THEN 1 ELSE 0 END) = 1
+                           </if>
                       ) A
                  WHERE RN = 1
               ) B
@@ -701,19 +721,7 @@
                      , TB_DP_MENU_CATEGORY D
                      , TB_DP_PROD E
                      , TB_DP_TENANT_PROD F
-                     , (SELECT SD.PROD_ID
-                          FROM TB_DP_SPRT_DEVICE SD
-                             , TB_CM_DEVICE CD
-                         WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
-                           AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = #{anyDeviceModelCd})
-                           AND CD.USE_YN = 'Y'
-                           <if test='topMenuId == "DP13"'>
-                           AND CD.EBOOK_SPRT_YN = 'Y'
-                           </if>
-                           <if test='topMenuId == "DP14"'>
-                           AND CD.COMIC_SPRT_YN = 'Y'
-                           </if>
-                       ) G
+                     , TB_DP_SPRT_DEVICE G
                      , TB_DP_PROD_RSHP H
                  WHERE A.LIST_ID = B.LIST_ID
                    AND A.TENANT_ID = B.TENANT_ID
@@ -779,15 +787,28 @@
                        <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
                    #{prodGradeCd}          
                        </foreach> /* 상품등급코드 */
-                   </if>
-                   <if test='topMenuId == "DP13"'>
-                   AND E.META_CLSF_CD IN ('CT19', 'CT20')  /* EBOOK */
-                   </if>         
+                   </if>       
                    AND E.PROD_ID = F.PROD_ID
                    AND F.EXPO_YN = 'Y'
                    AND F.PROD_STATUS_CD = 'PD000403'
                    AND B.TENANT_ID = F.TENANT_ID
                    AND F.PROD_ID = G.PROD_ID
+                   AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                   <if test='topMenuId == "DP13"'>
+                   AND E.META_CLSF_CD IN ('CT19', 'CT20')  /* EBOOK */
+                   AND (CASE WHEN (SELECT EBOOK_SPRT_YN 
+                                     FROM TB_CM_DEVICE CD 
+                                    WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                      AND CD.USE_YN = 'Y') = 'Y'  
+                             THEN 1 ELSE 0 END) = 1
+                   </if>
+                   <if test='topMenuId == "DP14"'>
+                   AND (CASE WHEN (SELECT COMIC_SPRT_YN 
+                                     FROM TB_CM_DEVICE CD 
+                                    WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                      AND CD.USE_YN = 'Y') = 'Y'  
+                             THEN 1 ELSE 0 END) = 1
+                   </if>
                    AND G.PROD_ID = H.PART_PROD_ID
                    AND H.PROD_RSHP_CD = 'DP010802'
                ) A
