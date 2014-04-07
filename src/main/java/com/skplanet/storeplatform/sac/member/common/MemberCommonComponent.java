@@ -1055,7 +1055,7 @@ public class MemberCommonComponent {
 	 * <pre>
 	 * 공통 약관정보의 필수약관여부, 약관버전를 맵핑해줌. [버전정보는 값이 들어올 경우만 맵핑해줌.]
 	 * 
-	 * 맵핑 정보 없을시 SAC_MEM_1100 에러 발생함.
+	 * 맵핑 정보 없을시 SAC_MEM_1105 에러 발생함.
 	 * </pre>
 	 */
 	public List<AgreementInfo> getClauseMappingInfo(String tenantId, List<AgreementInfo> agreementList) {
@@ -1075,7 +1075,7 @@ public class MemberCommonComponent {
 				 * 유효한 약관정보가 존재 하지 않을경우 에러.
 				 */
 				if (clauseInfo == null || StringUtils.isBlank(clauseInfo.getClauseItemCd())) {
-					throw new StorePlatformException("SAC_MEM_1100", info.getExtraAgreementId());
+					throw new StorePlatformException("SAC_MEM_1105", info.getExtraAgreementId());
 				}
 
 				/**
