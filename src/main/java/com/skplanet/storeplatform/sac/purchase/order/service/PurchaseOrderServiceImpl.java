@@ -1214,11 +1214,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 상품 건수 저장을 위한 목록
 	 */
 	private List<PrchsProdCnt> makePrchsProdCntList(List<PrchsDtlMore> prchsDtlMoreList, String prchsStatusCd) {
-		// TAKTEST:: 로컬은 제외
-		if (StringUtils.equalsIgnoreCase(this.envServerLevel, "local")) {
-			return null;
-		}
-
 		List<PrchsProdCnt> prchsProdCntList = new ArrayList<PrchsProdCnt>();
 		PrchsProdCnt prchsProdCnt = null;
 
@@ -1263,6 +1258,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			prchsProdCnt.setCntProcStatus(PurchaseConstants.USE_N);
 
 			prchsProdCntList.add(prchsProdCnt);
+		}
+
+		// TAKTEST:: 로컬 테스트, 상용 성능테스트
+		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL)
+				|| StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+			return null;
 		}
 
 		return prchsProdCntList;
