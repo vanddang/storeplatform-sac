@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -56,6 +58,9 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	/**
 	 * 
@@ -94,13 +99,29 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 		MetaInfo retMetaInfo = null;
 		Product product = null;
 
-		// 이 상품과 유사 상품 조회
-		this.log.debug("이 상품과 함께 구매한 상품 조회");
-		List<ProductBasicInfo> boughtTogetherProductList = this.commonDAO.queryForList(
-				"BoughtTogetherProduct.selectBoughtTogetherProductList", requestVO, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
+		List<ProductBasicInfo> boughtTogetherProductList = null;
+		List<Product> productList = null;
+
+		// 단말 지원정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(requestHeader.getDeviceHeader()
+				.getModel());
+
+		if (supportDevice != null) {
+			requestVO.setEbookSprtYn(supportDevice.getEbookSprtYn());
+			requestVO.setComicSprtYn(supportDevice.getComicSprtYn());
+			requestVO.setMusicSprtYn(supportDevice.getMusicSprtYn());
+			requestVO.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
+			requestVO.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+
+			// 이 상품과 유사 상품 조회
+			this.log.debug("이 상품과 함께 구매한 상품 조회");
+			boughtTogetherProductList = this.commonDAO.queryForList(
+					"BoughtTogetherProduct.selectBoughtTogetherProductList", requestVO, ProductBasicInfo.class);
+		}
 
 		if (!boughtTogetherProductList.isEmpty()) {
+			productList = new ArrayList<Product>();
+
 			reqMap.put("tenantHeader", requestHeader.getTenantHeader());
 			reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
 			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);

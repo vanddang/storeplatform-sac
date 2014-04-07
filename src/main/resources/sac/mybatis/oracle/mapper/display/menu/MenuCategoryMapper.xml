@@ -255,7 +255,6 @@
                         AND B.PROD_ID = E.PROD_ID
                         AND C.PROD_ID = G.PROD_ID
                         AND C.PROD_ID = J.PART_PROD_ID
-                        AND E.DEVICE_MODEL_CD = F.DEVICE_MODEL_CD
                         AND D.TENANT_ID = I.TENANT_ID
                         AND J.PROD_ID = I.PROD_ID 
                         AND J.PROD_ID = K.PROD_ID 
@@ -280,6 +279,7 @@
 		                AND A.TOP_MENU_ID = 'DP16' /* 메뉴ID */
                         AND B.MENU_ID LIKE 'DP16%' /* 메뉴ID */
 		                AND (E.DEVICE_MODEL_CD = #{deviceModelCd} OR E.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
+                        AND F.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
 		                GROUP BY C.MENU_ID
 		            ) C
 		    WHERE A.TENANT_MENU_ID = B.MENU_ID
@@ -400,7 +400,6 @@
 		                    AND E.PART_PROD_ID = F.PROD_ID
                             AND E.PROD_ID = H.PROD_ID  /* 추가 */
                             AND E.PROD_ID = I.PROD_ID  /* 추가 */
-		                    AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
                             AND D.TENANT_ID = I.TENANT_ID  /* 추가 */
                             AND A.TOP_MENU_ID = C.TOP_MENU_ID  /* 추가 */
                             AND A.TOP_MENU_ID = H.TOP_MENU_ID  /* 추가 */
@@ -419,8 +418,9 @@
 		                    
 		                    /* 방송 */
 		                    <if test="topMenuId == 'DP17' or topMenuId == 'DP18'">
-		                    AND 1 = CASE WHEN NVL(C.DRM_YN, 'N') = 'Y' AND NVL(G.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
-                                ELSE 1 END
+			                AND CASE WHEN NVL(C.DRM_YN, 'N') = 'Y' AND NVL(G.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
+			                    ELSE CASE WHEN NVL(G.SD_VIDEO_SPRT_YN, 'N') = 'Y' THEN 1 ELSE 0 END 
+			                    END = 1              
 		                    </if>
 		                    
 		                    /* 이북 */
@@ -437,6 +437,7 @@
 		                    AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
                             AND B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
 		                    AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
+                            AND G.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
 		                ) A
 		                GROUP BY A.MENU_ID
 		            ) C
@@ -566,7 +567,6 @@
                             AND E.PROD_ID = H.PROD_ID  /* 추가 */
                             AND E.PROD_ID = I.PROD_ID  /* 추가 */
                             AND E.PROD_ID = J.PROD_ID  /* 추가 */
-                            AND F.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
                             AND D.TENANT_ID = J.TENANT_ID  /* 추가 */
                             AND D.TENANT_ID = I.TENANT_ID  /* 추가 */
                             AND A.TOP_MENU_ID = C.TOP_MENU_ID  /* 추가 */
@@ -587,13 +587,15 @@
                             AND J.LIST_ID = 'TGR000000002'  /* 추가 */
                             
                             /* VOD */
-                            AND 1 = CASE WHEN NVL(C.DRM_YN, 'N') = 'Y' AND NVL(G.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
-                                ELSE 1 END
+                            AND CASE WHEN NVL(C.DRM_YN, 'N') = 'Y' AND NVL(G.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
+                                ELSE CASE WHEN NVL(G.SD_VIDEO_SPRT_YN, 'N') = 'Y' THEN 1 ELSE 0 END 
+                                END = 1   
                             
                             AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
                             AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
                             AND B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
                             AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
+                            AND G.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
                         ) A
                         GROUP BY A.MENU_ID
                     ) C
@@ -718,7 +720,6 @@
                             AND E.PART_PROD_ID = G.PROD_ID
                             AND E.PART_PROD_ID = H.PROD_ID
                             AND E.PART_PROD_ID = I.PROD_ID
-                            AND I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
                             AND G.TENANT_ID = H.TENANT_ID /* 추가 */
                             AND NVL(B.CHNL_CNT, 0) > 0
                             AND A.USE_YN ='Y'
@@ -730,6 +731,7 @@
                             AND SYSDATE BETWEEN  H.APPLY_START_DT AND H.APPLY_END_DT /* 추가 */
                             AND J.SCL_SHPG_SPRT_YN = 'Y'
                             AND (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
+                            AND J.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
                             AND G.TENANT_ID = #{tenantId} /* 테넌트ID */
                             AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
                             AND C.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */

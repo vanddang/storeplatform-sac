@@ -217,7 +217,6 @@
 		        WHERE A.PROD_ID = B.PROD_ID
 		        AND A.PROD_ID = C.PART_PROD_ID
 		        AND A.PROD_ID = D.PROD_ID
-		        AND D.DEVICE_MODEL_CD = E.DEVICE_MODEL_CD
 		        AND A.PROD_ID = F.PROD_ID
 		        AND A.PROD_ID = G.PROD_ID
 		
@@ -229,10 +228,12 @@
                 AND E.USE_YN = 'Y' /* 사용 여부 */
 		        AND F.SALE_YN = 'Y' /* 판매 여부 */
 		        
-				AND 1 = CASE WHEN NVL(A.DRM_YN, 'N') = 'Y' AND NVL(E.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
-                            ELSE 1 END
+				AND CASE WHEN NVL(A.DRM_YN, 'N') = 'Y' AND NVL(E.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
+				    ELSE CASE WHEN NVL(E.SD_VIDEO_SPRT_YN, 'N') = 'Y' THEN 1 ELSE 0 END 
+				    END = 1
 				
 		        AND (D.DEVICE_MODEL_CD = #{deviceModelCd} OR D.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말 모델 코드 */
+                AND E.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말 모델 코드 */
                 AND C.PROD_ID IN /* 채널 ID */
                 <foreach collection="arrayChannelId" item="channelId" separator="," open="(" close=")">
                     #{channelId}

@@ -62,7 +62,6 @@
                 AND B.PART_PROD_ID = E.PROD_ID
                 AND B.PART_PROD_ID = F.PROD_ID
                 AND B.PART_PROD_ID = G.PROD_ID
-                AND G.DEVICE_MODEL_CD = H.DEVICE_MODEL_CD
                 AND A.PROD_ID = I.PROD_ID
                 AND A.PROD_ID = J.PROD_ID
                 AND F.TENANT_ID = J.TENANT_ID
@@ -76,11 +75,12 @@
                 AND F.PROD_STATUS_CD = 'PD000403'
                 AND J.PROD_STATUS_CD = 'PD000403'
                 AND B.PROD_RSHP_CD = 'DP010802'
-                AND 1 = CASE
-                        WHEN D.TOP_MENU_ID = 'DP13' AND H.EBOOK_SPRT_YN = 'Y' THEN 1
-                        WHEN D.TOP_MENU_ID = 'DP14' AND H.COMIC_SPRT_YN = 'Y' THEN 1
-                        ELSE 0 END
-
+                AND  (CASE WHEN D.TOP_MENU_ID = 'DP13' THEN
+                           CASE WHEN H.EBOOK_SPRT_YN = 'Y' THEN 1 ELSE 0 END
+                      WHEN D.TOP_MENU_ID = 'DP14' THEN
+                           CASE WHEN H.COMIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END
+                      ELSE 1 END) = 1
+                      
                 <if test="filteredBy == 'author'"> /* 작가 */
                 AND A.ARTIST1_NM = #{authorName}
                 </if>
@@ -98,6 +98,7 @@
                 AND F.TENANT_ID = #{tenantId}
                 AND A.LANG_CD = #{langCd}
                 AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = #{mmDeviceModelCd})
+                AND H.DEVICE_MODEL_CD = #{deviceModelCd}
             ) A
             WHERE RNUM = 1
         ) A
