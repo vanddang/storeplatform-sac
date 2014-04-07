@@ -60,6 +60,10 @@ public class CategoryServiceImpl implements CategoryService {
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
 
+		if (StringUtils.isEmpty(requestVO.getSystemId())) {
+			requestVO.setSystemId("S01-01002");
+		}
+
 		MenuListSacRes menuListSacRes = new MenuListSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<MenuDetail> menuDetailList = new ArrayList<MenuDetail>();
@@ -134,6 +138,10 @@ public class CategoryServiceImpl implements CategoryService {
 		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
 		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
 		requestVO.setMmDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+
+		if (StringUtils.isEmpty(requestVO.getSystemId())) {
+			requestVO.setSystemId("S01-01002");
+		}
 
 		// 요청 값 세팅
 		requestVO.setFeaturedExposureYn(!StringUtils.isEmpty(requestVO.getFeaturedExposureYn()) ? requestVO

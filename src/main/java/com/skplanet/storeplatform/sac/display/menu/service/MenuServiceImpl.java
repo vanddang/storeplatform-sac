@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.menu.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,10 @@ public class MenuServiceImpl implements MenuService {
 		// 헤더 값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
+
+		if (StringUtils.isEmpty(requestVO.getSystemId())) {
+			requestVO.setSystemId("S01-01002");
+		}
 
 		MenuListSacRes menuListSacRes = new MenuListSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -128,6 +133,10 @@ public class MenuServiceImpl implements MenuService {
 		// 헤더 값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
+
+		if (StringUtils.isEmpty(requestVO.getSystemId())) {
+			requestVO.setSystemId("S01-01002");
+		}
 
 		// // 필수 파라미터 체크
 		// if (StringUtils.isEmpty(requestVO.getMenuId())) {
