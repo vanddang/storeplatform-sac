@@ -1286,6 +1286,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		autoPrchs.setInsdUsermbrNo(prchsDtlMore.getInsdUsermbrNo());
 		autoPrchs.setInsdDeviceId(prchsDtlMore.getInsdDeviceId());
 		autoPrchs.setProdId(prchsDtlMore.getProdId());
+		autoPrchs.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 		autoPrchs.setPaymentStartDt(prchsDtlMore.getPrchsDt());
 		autoPrchs.setPaymentEndDt("99991231235959"); // TAKTODO
 		autoPrchs.setAfterPaymentDt(prchsDtlMore.getUseExprDt().substring(0, 8) + "000000"); // TAKTODO
