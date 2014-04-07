@@ -1,5 +1,10 @@
 package com.skplanet.storeplatform.sac.display.appguide.vo;
 
+/**
+ * App guide info
+ * 
+ * Updated on : 2014. 02. 27. Updated by : 윤주영, SK 플래닛.
+ */
 public class Appguide {
 
 	private int totalCount;
