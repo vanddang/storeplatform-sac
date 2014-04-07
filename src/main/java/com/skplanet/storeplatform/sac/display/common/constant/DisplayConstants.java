@@ -289,11 +289,10 @@ public class DisplayConstants {
 
 	public static final String DP_EBOOK_PLAY_SUPPORT_NM = "play";
 
-	
 	/** 이북/코믹 book.type */
 	public static final String DP_BOOK_TYPE_BOOK = "book";
 	public static final String DP_BOOK_TYPE_SERIAL = "serial";
-	
+
 	// //////////////////////////////////// Source Type //////////////////////////////////////////
 	/** 상품. */
 	public static final String DP_SOURCE_TYPE_PRODUCT = "product";
@@ -599,6 +598,8 @@ public class DisplayConstants {
 	// 정액제 상품 자동결제 구분
 	public static final String DP_AUTOPAY_AUTO = "auto"; // 자동결제
 	public static final String DP_AUTOPAY_NORMAL = "normal"; // 일반결제
+	public static final String DP_FREEPASS_CASH = "cash"; // 게임 캐쉬
+	public static final String DP_FREEPASS_BONUS = "bonus"; // 게임 보너스
 
 	/**
 	 * OpenApi Release Type.
