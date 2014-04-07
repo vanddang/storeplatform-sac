@@ -405,6 +405,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			// SKT 후불 재조정
 			if (StringUtils.equals(testMdnType, PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE)) {
+				sbPaymentMtdAmtRate.append("11:0:0");
 			} else {
 				if (sktAvailableAmt > 0.0) {
 					sbPaymentMtdAmtRate.append("11:").append(sktAvailableAmt).append(":100");
