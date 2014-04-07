@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -21,6 +22,8 @@ public interface MetaInfoService {
 	 * @return MetaInfo
 	 */
 	public MetaInfo getAppMetaInfo(Map<String, Object> paramMap);
+
+    public List<MetaInfo> getAppMetaInfoList(List<String> prodIdList, String langCd, String tenantId, String deviceModelCd);
 
 	/**
 	 * <pre>

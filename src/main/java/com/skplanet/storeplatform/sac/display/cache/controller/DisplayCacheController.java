@@ -35,9 +35,9 @@ public class DisplayCacheController {
     private TempProductInfoManager tempProductInfoManager;
 
     @RequestMapping(value = "/evict", method = RequestMethod.GET)
-    public void evictAppMeta(@RequestParam(required = true) String channelId) {
+    public void evictAppMeta(@RequestParam(required = true) String prodId) {
         AppMetaParam param = new AppMetaParam();
-        param.setChannelId(channelId);
+        param.setChannelId(prodId);
         param.setTenantId("S01");
         param.setLangCd("ko");
 

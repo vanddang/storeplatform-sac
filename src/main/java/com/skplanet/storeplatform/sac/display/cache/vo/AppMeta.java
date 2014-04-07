@@ -13,7 +13,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
- * DESC
+ * Notict:
+ * 클래스 이름이 바뀌거나 필드에 변경이 있는 경우 캐쉬를 모두 Evict시켜야 한다.
  * </p>
  * Updated on : 2014. 03. 05 Updated by : 정희원, SK 플래닛.
  */
@@ -40,6 +41,88 @@ public class AppMeta extends CommonInfo {
     private Double avgEvluScore;
     private String prodDtlDesc;
     private String prodStatusCd;
+
+    private String subContentsId;
+    private String apkPkgNm;
+    private String apkVer;
+    private String menuId;
+    private String menuNm;
+    private String menuDesc;
+    private String topMenuId;
+    private String topMenuNm;
+    private String topMenuDesc;
+
+    public String getSubContentsId() {
+        return subContentsId;
+    }
+
+    public void setSubContentsId(String subContentsId) {
+        this.subContentsId = subContentsId;
+    }
+
+    public String getApkPkgNm() {
+        return apkPkgNm;
+    }
+
+    public void setApkPkgNm(String apkPkgNm) {
+        this.apkPkgNm = apkPkgNm;
+    }
+
+    public String getApkVer() {
+        return apkVer;
+    }
+
+    public void setApkVer(String apkVer) {
+        this.apkVer = apkVer;
+    }
+
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
+
+    public String getMenuNm() {
+        return menuNm;
+    }
+
+    public void setMenuNm(String menuNm) {
+        this.menuNm = menuNm;
+    }
+
+    public String getMenuDesc() {
+        return menuDesc;
+    }
+
+    public void setMenuDesc(String menuDesc) {
+        this.menuDesc = menuDesc;
+    }
+
+    public String getTopMenuId() {
+        return topMenuId;
+    }
+
+    public void setTopMenuId(String topMenuId) {
+        this.topMenuId = topMenuId;
+    }
+
+    public String getTopMenuNm() {
+        return topMenuNm;
+    }
+
+    public void setTopMenuNm(String topMenuNm) {
+        this.topMenuNm = topMenuNm;
+    }
+
+    public String getTopMenuDesc() {
+        return topMenuDesc;
+    }
+
+    public void setTopMenuDesc(String topMenuDesc) {
+        this.topMenuDesc = topMenuDesc;
+    }
 
     public String getProdId() {
         return prodId;

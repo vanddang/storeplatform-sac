@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
+import com.skplanet.spring.data.plandasj.PlandasjTemplate;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,8 +36,11 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     @Qualifier("sac")
     private CommonDAO commonDAO;
 
+    @Autowired
+    PlandasjTemplate<String, String> plandasjTemplate;
+
     @Override
-    @Cacheable(value = "sac:display:appmeta", key = "#param.getCacheKey()", unless = "#result == null")
+    @Cacheable(value = "sac:display:product:app", key = "#param.getCacheKey()", unless = "#result == null")
     public AppMeta getAppMeta(AppMetaParam param) {
         final String SVC_GRP_CD = "DP000201";
         final String IMAGE_CD = "DP000101";
@@ -50,13 +56,33 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
-    @CacheEvict(value = "sac:display:appmeta", key = "#param.getCacheKey()")
+    public List<AppMeta> getAppMetaList(String langCd, String tenantId, List<String> prodIdList, String deviceModelCd) {
+        final String SVC_GRP_CD = "DP000201";
+        final String IMAGE_CD = "DP000101";
+
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("prodIdList", prodIdList);  // MyBatis에서는 foreach에서 목록이 역순으로 생성됨.
+        reqMap.put("langCd", langCd);
+        reqMap.put("tenantId", tenantId);
+        reqMap.put("deviceModelCd", deviceModelCd);
+        reqMap.put("imageCd", IMAGE_CD);
+        reqMap.put("svcGrpCd", SVC_GRP_CD);
+
+        return commonDAO.queryForList("ProductInfo.getAppInfoList", reqMap, AppMeta.class);
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:product:app", key = "#param.getCacheKey()")
     public void evictAppMeta(AppMetaParam param) {
         // TODO subContent, menuInfo도 함께
     }
 
     @Override
-    @Cacheable(value = "sac:display:mmmeta", key = "#param.getCacheKey()", unless = "#result == null")
+    @CacheEvict(value = "sac:display:product:app", allEntries = true)
+    public void evictAllAppMeta() { }
+
+    @Override
+    @Cacheable(value = "sac:display:product:mm", key = "#param.getCacheKey()", unless = "#result == null")
     public MultimediaMeta getMultimediaMeta(MultimediaMetaParam param) {
         return null;
     }

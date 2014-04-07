@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
 import java.lang.reflect.Method;
-import java.util.Map;
+import java.util.*;
 
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -57,8 +57,10 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             param.setTenantId(tenantHeader.getTenantId());
 
             AppMeta app = productInfoManager.getAppMeta(param);
-            if(app == null)
+            if(app == null) {
+                logger.warn("메타데이터를 읽을 수 없습니다 - App#{}", basicInfo.getProdId());
                 return null;
+            }
 
             SubContent subContent = productInfoManager.getSubContent(basicInfo.getProdId(), deviceHeader.getModel());
             MenuInfo menuInfo = productInfoManager.getMenuInfo(tenantHeader.getLangCd(), basicInfo.getMenuId(), basicInfo.getProdId());
@@ -79,11 +81,56 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             return this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getMusicMetaInfo(java.util.Map)
-	 */
+    @Override
+    public List<MetaInfo> getAppMetaInfoList(List<String> prodIdList, String langCd, String tenantId, String deviceModelCd) {
+        List<AppMeta> appMetaList;
+
+        if(prodIdList.size() > 1000) {
+            appMetaList = new ArrayList<AppMeta>();
+            List<String> partitionList = new ArrayList<String>();
+            for (int i = 1; i <= prodIdList.size(); ++i) {
+                partitionList.add(prodIdList.get(i-1));
+                if (i % 1000 == 0) {
+                    appMetaList.addAll(this.productInfoManager.getAppMetaList(langCd, tenantId, partitionList, deviceModelCd));
+                    partitionList.clear();
+                }
+            }
+        } else {
+            appMetaList = this.productInfoManager.getAppMetaList(langCd, tenantId, prodIdList, deviceModelCd);
+        }
+
+        ArrayList<MetaInfo> metaList = new ArrayList<MetaInfo>();
+
+        Map<String, AppMeta> appMetaMap = new HashMap<String, AppMeta>();
+        for (AppMeta app : appMetaList) {
+            appMetaMap.put(app.getProdId(), app);
+        }
+
+        for (String prodId : prodIdList) {
+            AppMeta app = appMetaMap.get(prodId);
+            if (app == null) {
+                logger.warn("메타데이터를 읽을 수 없습니다 - App#{}", prodId);
+            } else {
+                MetaInfo me = new MetaInfo();
+                setProperties(app, me);
+
+                if(app.getPartParentClsfCd() != null) {
+                    me.setPartParentClsfCd("PD012301".equals(app.getPartParentClsfCd()) ? "Y" : "N");
+                }
+                me.setSubContentsId(null);
+
+                metaList.add(me);
+            }
+        }
+
+        return metaList;
+    }
+
+    /*
+         * (non-Javadoc)
+         *
+         * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getMusicMetaInfo(java.util.Map)
+         */
 	@Override
 	public MetaInfo getMusicMetaInfo(Map<String, Object> paramMap) {
 		return this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
@@ -147,8 +194,12 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             if(mtd.getName().startsWith("get")) {
                 String fld = mtd.getName().substring(3);
                 try {
-                    Method setMtd = MetaInfo.class.getDeclaredMethod("set"+fld, mtd.getReturnType());
-                    setMtd.invoke(meta, mtd.invoke(prop));
+                    Object v = mtd.invoke(prop);
+                    // value가 null인 경우 Assign을 하지 않음
+                    if(v != null) {
+                        Method setMtd = MetaInfo.class.getDeclaredMethod("set"+fld, mtd.getReturnType());
+                        setMtd.invoke(meta, mtd.invoke(prop));
+                    }
                 }
                 catch(NoSuchMethodException nsme) {
 

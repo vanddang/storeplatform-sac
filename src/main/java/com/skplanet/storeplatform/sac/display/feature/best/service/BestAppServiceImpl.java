@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,8 @@ import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -68,6 +71,9 @@ public class BestAppServiceImpl implements BestAppService {
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
+    @Autowired
+    private ProductInfoManager productInfoManager;
 
 	/**
 	 * 
@@ -167,19 +173,40 @@ public class BestAppServiceImpl implements BestAppService {
 				reqMap.put("tenantHeader", tenantHeader);
 				reqMap.put("deviceHeader", deviceHeader);
 				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-				for (ProductBasicInfo productBasicInfo : appList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
-					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-					MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 
-					if (retMetaInfo != null) {
-						Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
-						productList.add(product);
-					}
-				}
-				commonResponse.setTotalCount(appList.get(0).getTotalCount());
-				response.setProductList(productList);
-				response.setCommonResponse(commonResponse);
+                ///// [임시로직] 캐쉬를 타지 않도록 요청한 경우 prodId목록으로 일괄조회.
+                Boolean useCache = (Boolean) RequestContextHolder.currentRequestAttributes().getAttribute("useCache", RequestAttributes.SCOPE_REQUEST);
+                if(useCache) {
+                    for (ProductBasicInfo productBasicInfo : appList) {
+                        reqMap.put("productBasicInfo", productBasicInfo);
+                        reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+                        MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+
+                        if (retMetaInfo != null) {
+                            Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+                            productList.add(product);
+                        }
+                    }
+                }
+                else {
+                    List<String> prodIdList = new ArrayList<String>();
+                    for(ProductBasicInfo prodInfo : appList) {
+                        prodIdList.add(prodInfo.getProdId());
+                    }
+
+                    List<MetaInfo> metaList = this.metaInfoService.getAppMetaInfoList(prodIdList, tenantHeader.getLangCd(), tenantHeader.getTenantId(), deviceHeader.getModel());
+                    for (MetaInfo appMeta : metaList) {
+                        if (appMeta != null) {
+                            Product product = this.responseInfoGenerateFacade.generateAppProduct(appMeta);
+                            productList.add(product);
+                        }
+                    }
+                }
+
+                commonResponse.setTotalCount(appList.get(0).getTotalCount());
+                response.setProductList(productList);
+                response.setCommonResponse(commonResponse);
+
 			} else {
 				// 조회 결과 없음
 				commonResponse.setTotalCount(0);

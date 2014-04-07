@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 
+import java.util.List;
+
 /**
  * <p>
  * 캐쉬용 메타 데이터 조회 서비스
@@ -27,11 +29,18 @@ public interface ProductInfoManager {
      */
     AppMeta getAppMeta(AppMetaParam param);
 
+    List<AppMeta> getAppMetaList(String langCd, String tenantId, List<String> prodIdList, String deviceModelCd);
+
     /**
      * 캐싱된 메타정보를 Evict한다.
      * @param param
      */
     void evictAppMeta(AppMetaParam param);
+
+    /**
+     * 앱 메타 캐쉬 정보를 모두 Evict한다.
+     */
+    void evictAllAppMeta();
 
     /**
      * 멀티미디어 메타정보 조회
