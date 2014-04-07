@@ -258,6 +258,12 @@ public class MetaInfo extends CommonInfo {
 	private String thumbnailFilePath; // 썸네일이미지
 	private String prodIntrDscr; // 정액제 상품 설명
 	private String prodStatusCd; // 정액제 상품 상태
+	private Integer cashAmt; // 캐쉬 가격
+	private String bnsCashAmtClsfCd; // 보너스 캐쉬 가격 구분코드
+	private Integer bnsCashAmt; // 보너스 캐쉬 가격
+	private Double bnsCashRatio; // 보너스 캐쉬 할인률
+	private String bnsUsePeriodUnitCd; // 보너스 사용 기간단위 코드
+	private String bnsUsePeriod; // 보너스 사용기간
 
 	// ////////////////////////// 하루에 하나 변수 ////////////////////////////
 	private String expoDt;
@@ -3628,6 +3634,96 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setProdStatusCd(String prodStatusCd) {
 		this.prodStatusCd = prodStatusCd;
+	}
+
+	/**
+	 * @return the cashAmt
+	 */
+	public Integer getCashAmt() {
+		return this.cashAmt;
+	}
+
+	/**
+	 * @param cashAmt
+	 *            the cashAmt to set
+	 */
+	public void setCashAmt(Integer cashAmt) {
+		this.cashAmt = cashAmt;
+	}
+
+	/**
+	 * @return the bnsCashAmtClsfCd
+	 */
+	public String getBnsCashAmtClsfCd() {
+		return this.bnsCashAmtClsfCd;
+	}
+
+	/**
+	 * @param bnsCashAmtClsfCd
+	 *            the bnsCashAmtClsfCd to set
+	 */
+	public void setBnsCashAmtClsfCd(String bnsCashAmtClsfCd) {
+		this.bnsCashAmtClsfCd = bnsCashAmtClsfCd;
+	}
+
+	/**
+	 * @return the bnsCashAmt
+	 */
+	public Integer getBnsCashAmt() {
+		return this.bnsCashAmt;
+	}
+
+	/**
+	 * @param bnsCashAmt
+	 *            the bnsCashAmt to set
+	 */
+	public void setBnsCashAmt(Integer bnsCashAmt) {
+		this.bnsCashAmt = bnsCashAmt;
+	}
+
+	/**
+	 * @return the bnsCashRatio
+	 */
+	public Double getBnsCashRatio() {
+		return this.bnsCashRatio;
+	}
+
+	/**
+	 * @param bnsCashRatio
+	 *            the bnsCashRatio to set
+	 */
+	public void setBnsCashRatio(Double bnsCashRatio) {
+		this.bnsCashRatio = bnsCashRatio;
+	}
+
+	/**
+	 * @return the bnsUsePeriodUnitCd
+	 */
+	public String getBnsUsePeriodUnitCd() {
+		return this.bnsUsePeriodUnitCd;
+	}
+
+	/**
+	 * @param bnsUsePeriodUnitCd
+	 *            the bnsUsePeriodUnitCd to set
+	 */
+	public void setBnsUsePeriodUnitCd(String bnsUsePeriodUnitCd) {
+		this.bnsUsePeriodUnitCd = bnsUsePeriodUnitCd;
+	}
+
+	/**
+	 * @return the bnsUsePeriod
+	 */
+	public String getBnsUsePeriod() {
+		return this.bnsUsePeriod;
+	}
+
+	/**
+	 * @param bnsUsePeriod
+	 *            the bnsUsePeriod to set
+	 */
+	public void setBnsUsePeriod(String bnsUsePeriod) {
+		this.bnsUsePeriod = bnsUsePeriod;
 	}
 
 	/**
