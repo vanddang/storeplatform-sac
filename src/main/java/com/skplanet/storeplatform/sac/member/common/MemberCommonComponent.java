@@ -778,7 +778,8 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
+			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -1026,7 +1027,7 @@ public class MemberCommonComponent {
 
 		if (isCall) {
 
-			/* 3. 기타파트 userKey 변경 */
+			/* 1. 기타/전시 파트 userKey 변경 */
 			ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
 			changeDisplayUserSacReq.setNewUseKey(userKey);
 			changeDisplayUserSacReq.setOldUserKey(previousUserKey);
@@ -1035,7 +1036,7 @@ public class MemberCommonComponent {
 
 			LOGGER.debug("::: changeDisplayUserSCI.changeUserKey SUCCESS");
 
-			/* 4. 구매파트 userKey, deviceKey 변경 */
+			/* 2. 구매 파트 userKey, deviceKey 변경 */
 			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
 			userInfoSacInReq.setSystemId(systemId);
 			userInfoSacInReq.setTenantId(tenantId);
