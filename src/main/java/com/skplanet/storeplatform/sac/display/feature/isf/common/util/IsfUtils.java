@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 /**
  * Calss 설명
  * 
- * Updated on : 2014. 3. 14. Updated by : gtsoft_jy1124yun, gtsoft.
+ * Updated on : 2014. 3. 14. Updated by : 윤주영, SK 플래닛.
  */
 public class IsfUtils {
 
