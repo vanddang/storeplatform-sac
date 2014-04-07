@@ -196,10 +196,10 @@
             ,MM_MBR_MAX_PRCHS_QTY    = NVL(#{mmMbrMaxPrchsQty},MM_MBR_MAX_PRCHS_QTY)            /* 월_회원_최대_구매_수량 */
             ,DAY_MBR_MAX_PRCHS_QTY   = NVL(#{dayMbrMaxPrchsQty},DAY_MBR_MAX_PRCHS_QTY)          /* 일_회원_최대_구매_수량 */
             ,FIRST_MAX_PRCHS_QTY     = NVL(#{firstMaxPrchsQty},FIRST_MAX_PRCHS_QTY)             /* 1차_최대_구매_수량 */
-            ,USE_PLAC                = NVL(#{usePlac},USE_PLAC)                                 /* 사용_장소 */
-            ,USE_LIMT_DESC           = NVL(#{useLimtDesc},USE_LIMT_DESC)                        /* 사용_제한_설명 */
-            ,NOTICE_MATT             = NVL(#{noticeMatt},NOTICE_MATT)                           /* 공지_사항 */
-            ,PRCHS_CANCEL_DRBK_REASON= NVL(#{prchsCancelDrbkReason},PRCHS_CANCEL_DRBK_REASON)    /* 구매_취소_환불_사유 */
+            ,USE_PLAC                = #{usePlac}                                               /* 사용_장소 */
+            ,USE_LIMT_DESC           = #{useLimtDesc}                                           /* 사용_제한_설명 */
+            ,NOTICE_MATT             = #{noticeMatt}                                            /* 공지_사항 */
+            ,PRCHS_CANCEL_DRBK_REASON= #{prchsCancelDrbkReason}                                 /* 구매_취소_환불_사유 */
             ,PROD_CASE_CD            = NVL(#{prodCaseCd},PROD_CASE_CD)                          /* 상품_유형_코드(DP0063) */
             ,B2B_PROD_YN             = NVL(#{b2bProdYn},B2B_PROD_YN)                            /* B2B_상품_여부 */
             ,DLV_PROD_YN             = NVL(#{dlvProdYn},DLV_PROD_YN)                            /* 배송_상품_여부 */
