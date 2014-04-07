@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
 /**
  * ACL 관련 DB 접근 서비스
- * <p/>
+ *
  * Updated on : 2014. 2. 17.
  * Updated by : 서대영, SK플래닛
  */
