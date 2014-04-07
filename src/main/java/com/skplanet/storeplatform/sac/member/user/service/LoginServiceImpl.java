@@ -1119,15 +1119,17 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
+	 * <pre>
 	 * SC회원정보 조회.
+	 * </pre>
 	 * 
-	 * @param commonRequest
-	 *            CommonRequest
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param keyType
-	 *            조회타입
+	 *            String
 	 * @param keyString
-	 *            조회값
-	 * @return SearchUserResponse
+	 *            String
+	 * @return String
 	 */
 	public SearchUserResponse searchUser(SacRequestHeader requestHeader, String keyType, String keyString) {
 
@@ -1341,6 +1343,8 @@ public class LoginServiceImpl implements LoginService {
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param deviceId
+	 *            String
+	 * @param userKey
 	 *            String
 	 * @return UserAuthMethod
 	 */
