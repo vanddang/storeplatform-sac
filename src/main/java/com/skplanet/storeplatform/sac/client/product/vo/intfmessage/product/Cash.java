@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 public class Cash extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 캐쉬 종류
+	 * 캐쉬 종류.
 	 */
 	private String name;
 	/**
