@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -37,6 +38,8 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 public class VodGeneratorImpl implements VodGenerator {
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
+	@Autowired
+	private DisplayCommonService commonService;	
 
 	/*
 	 * (non-Javadoc)
@@ -88,7 +91,7 @@ public class VodGeneratorImpl implements VodGenerator {
 		Chapter chapter = new Chapter();
 		Time time = new Time();
 		time.setText(metaInfo.getEpsdPlayTm());
-		chapter.setUnit(metaInfo.getChapterUnit());
+		chapter.setUnit(commonService.getVodChapterUnit());
 		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
 			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
 		}
