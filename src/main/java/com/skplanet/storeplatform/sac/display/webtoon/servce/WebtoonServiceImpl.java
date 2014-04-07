@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.webtoon.WebtoonDetailSacReq;
@@ -68,6 +69,10 @@ public class WebtoonServiceImpl implements WebtoonService {
 
 		List<WebtoonDetail> resultList = this.commonDAO.queryForList("Webtoon.searchWebtoonDetail", req,
 				WebtoonDetail.class);
+
+		if (resultList.size() == 0) {
+			throw new StorePlatformException("SAC_DSP_0009");
+		}
 
 		List<Product> listVO = new ArrayList<Product>();
 
