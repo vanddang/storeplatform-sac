@@ -442,7 +442,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 				commonResponse.setTotalCount(1);
 			} else {
-				throw new StorePlatformException("SAC_DSP_0005", productId);
+				throw new StorePlatformException("SAC_DSP_0009");
 			}
 
 		}
