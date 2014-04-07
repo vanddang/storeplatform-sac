@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.cache.controller;
 
 import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.service.TempProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,9 @@ public class DisplayCacheController {
     @Autowired
     private ProductInfoManager productInfoManager;
 
+    @Autowired
+    private TempProductInfoManager tempProductInfoManager;
+
     @RequestMapping(value = "/evict", method = RequestMethod.GET)
     public void evictAppMeta(@RequestParam(required = true) String channelId) {
         AppMetaParam param = new AppMetaParam();
@@ -38,5 +42,10 @@ public class DisplayCacheController {
         param.setLangCd("ko");
 
         productInfoManager.evictAppMeta(param);
+    }
+
+    @RequestMapping(value = "/evict/oldApp", method = RequestMethod.GET)
+    public void evictOldAppMeta() {
+        this.tempProductInfoManager.evictAllOldAppMeta();
     }
 }
