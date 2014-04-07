@@ -511,14 +511,7 @@ public class EpubServiceImpl implements EpubService {
             
             //chapter.setUnit(mapperVO.getChapterUnit());
             //챕터 단위 - 권/호/회 (언어처리)
-            String chapterUnit = null;
-            if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_BOOK)) {
-            	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.book");
-            } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_SERIAL)) {
-            	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.serial");
-            } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_MAGAZINE)) {
-            	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.magazine");
-            }
+            String chapterUnit = commonService.getEpubChapterUnit(mapperVO.getBookClsfCd());
             chapter.setUnit(chapterUnit);
             
             book.setChapter(chapter);

@@ -118,4 +118,27 @@ public interface DisplayCommonService {
 	 * @return HashMap
 	 */
 	public SupportDevice getSupportDeviceInfo(String deviceModelCd);
+	
+	/**
+	 * <pre>
+	 * 이북/코믹 Chapter Unit
+	 * </pre>
+	 * 
+	 * @param bookClsfCd
+	 * @return String
+	 * 			chapterUnit
+	 */
+	public String getEpubChapterUnit(String bookClsfCd);
+	
+	/**
+	 * <pre>
+	 * Vod Chapter Unit
+	 * </pre>
+	 * 
+	 * @return String
+	 * 			chapterUnit
+	 */	
+	public String getVodChapterUnit();
+	
+	
 }

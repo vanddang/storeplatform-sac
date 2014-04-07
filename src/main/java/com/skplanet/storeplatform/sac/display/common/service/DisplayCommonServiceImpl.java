@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -46,6 +47,11 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 	@Value("#{propertiesForSac['display.previewUrlPrefix']}")
 	private final String previewPrefix = "";
+	
+	/** The message source accessor. */
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor;
+	
 
 	@Override
 	public String getBatchStandardDateString(String tenantId, String listId) {
@@ -191,5 +197,35 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		}
 
 		return (SupportDevice) this.commonDAO.queryForObject("DisplayCommon.getSupportDeviceInfo", deviceModelCd);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
+	 */
+	@Override	
+	public String getEpubChapterUnit(String bookClsfCd) {
+        String chapterUnit = null;
+        if(StringUtils.equals(bookClsfCd, DisplayConstants.DP_BOOK_BOOK)) {
+        	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.book");
+        } else if(StringUtils.equals(bookClsfCd, DisplayConstants.DP_BOOK_SERIAL)) {
+        	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.serial");
+        } else if(StringUtils.equals(bookClsfCd, DisplayConstants.DP_BOOK_MAGAZINE)) {
+        	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.magazine");
+        }
+        return chapterUnit;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
+	 */
+	@Override	
+	public String getVodChapterUnit() {
+		return this.messageSourceAccessor.getMessage("display.chapter.unit.vod");
 	}
 }

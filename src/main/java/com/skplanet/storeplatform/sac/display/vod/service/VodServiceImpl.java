@@ -395,7 +395,9 @@ public class VodServiceImpl implements VodService {
 			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getStoreProdId()));
 			store.setIdentifierList(identifierList);
 
-			store.setSupport(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
+			List<Support> supportList = new ArrayList<Support>(); 
+			supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
+			store.setSupportList(supportList);
 
 			//가격
 			store.setPrice(this.mapPrice(mapperVO.getStoreProdAmt(), mapperVO.getStoreProdNetAmt()));
@@ -442,7 +444,9 @@ public class VodServiceImpl implements VodService {
 			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getPlayProdId()));
 			play.setIdentifierList(identifierList);
 
-			play.setSupport(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
+			List<Support> supportList = new ArrayList<Support>(); 
+			supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
+			play.setSupportList(supportList);
 
             play.setDate(DisplayCommonUtil.makeDateUsagePeriod(mapperVO.getUsePeriodUnitCd(), mapperVO.getUsePeriod()));
 
@@ -788,15 +792,17 @@ public class VodServiceImpl implements VodService {
     private Vod mapVod(VodDetail mapperVO) {
         Vod vod = new Vod();
         List<VideoInfo> videoInfoList = new ArrayList<VideoInfo>();
-        Time runningTime = new Time();
         Chapter chapter = new Chapter();
         VideoInfo videoInfo;
 
-        runningTime.setText(String.valueOf(mapperVO.getEpsdPlayTm()));
-        vod.setRunningTime(runningTime);
+        if(mapperVO.getEpsdPlayTm() != null) {
+	        Time runningTime = new Time();
+	        runningTime.setText(String.valueOf(mapperVO.getEpsdPlayTm()));
+	        vod.setRunningTime(runningTime);
+        }
 
         if(StringUtils.isNotEmpty(mapperVO.getChapter())) {
-        	chapter.setUnit(this.messageSourceAccessor.getMessage("display.chapter.unit.vod"));
+        	chapter.setUnit(commonService.getVodChapterUnit());
             chapter.setText(Integer.parseInt(mapperVO.getChapter()));
             vod.setChapter(chapter);
         }
