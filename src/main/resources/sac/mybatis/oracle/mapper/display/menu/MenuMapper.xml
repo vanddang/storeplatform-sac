@@ -77,7 +77,7 @@
 		    WHERE A.TENANT_ID = #{tenantId}
 		    AND A.SYSTEM_ID = #{systemId}
 		    AND A.USE_YN = 'Y'
-		    START WITH UP_MENU_ID = '999999'
+		    START WITH UP_MENU_ID = '999999' AND A.SYSTEM_ID = #{systemId}
 		    CONNECT BY PRIOR TENANT_MENU_ID = UP_MENU_ID
 		    ORDER SIBLINGS BY EXPO_ORD
 		) A

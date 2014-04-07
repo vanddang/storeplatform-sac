@@ -76,7 +76,14 @@
 		        , A.REG_DT 
 		        , A.UPD_ID 
 		        , A.UPD_DT  
-                , ROWNUM AS RNK
+                , ( SELECT CASE WHEN MENU_DEPTH = 1 THEN 0 ELSE EXPO_ORD END EXPO_ORD
+                    FROM TB_DP_TENANT_MENU
+                    WHERE TENANT_MENU_ID = SUBSTR(A.TENANT_MENU_ID, 0, 7 )
+                    AND SYSTEM_ID = A.SYSTEM_ID) AS RNK1
+                , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( A.TENANT_MENU_ID, 0, 7 )
+                                             ORDER BY A.MENU_DEPTH
+                                                    , A.EXPO_ORD
+                                                    , A.MENU_NM ) AS RNK2
 		    FROM 
 		        TB_DP_TENANT_MENU A
 		        , TB_DP_MENU_CATEGORY B
@@ -114,16 +121,14 @@
 		    AND A.TENANT_MENU_ID = C.MENU_ID(+)
 		    AND A.USE_YN = 'Y'
 		    AND B.USE_YN = 'Y'
+		    AND B.TOP_MENU_ID = #{topMenuId}
 		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
 		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
             <if test='featuredExposureYn == "N"'>
             AND NVL(A.CATEGORY_MENU_YN, 'Y') = 'Y'
             </if> 
-		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
-		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
-		    ORDER SIBLINGS BY EXPO_ORD
 		) A
-        ORDER BY A.RNK
+        ORDER BY A.RNK1, A.RNK2 
     </select>
 
     <!-- 세부 카테고리정보 조회 - 뮤직 -->
@@ -373,7 +378,14 @@
 		        , A.REG_DT 
 		        , A.UPD_ID 
 		        , A.UPD_DT  
-                , ROWNUM AS RNK
+                , ( SELECT CASE WHEN MENU_DEPTH = 1 THEN 0 ELSE EXPO_ORD END EXPO_ORD
+                    FROM TB_DP_TENANT_MENU
+                    WHERE TENANT_MENU_ID = SUBSTR(A.TENANT_MENU_ID, 0, 7 )
+                    AND SYSTEM_ID = A.SYSTEM_ID) AS RNK1
+                , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( A.TENANT_MENU_ID, 0, 7 )
+                                             ORDER BY A.MENU_DEPTH
+                                                    , A.EXPO_ORD
+                                                    , A.MENU_NM ) AS RNK2
 		    FROM 
 		        TB_DP_TENANT_MENU A
 		        , TB_DP_MENU_CATEGORY B
@@ -446,16 +458,14 @@
 		    AND A.TENANT_MENU_ID = C.MENU_ID(+)
 		    AND A.USE_YN = 'Y'
 		    AND B.USE_YN = 'Y'
+		    AND B.TOP_MENU_ID = #{topMenuId}
 		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
 		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
             <if test='featuredExposureYn == "N"'>
             AND NVL(A.CATEGORY_MENU_YN, 'Y') = 'Y'
             </if> 
-		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
-		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
-		    ORDER SIBLINGS BY EXPO_ORD
-		) A
-        ORDER BY A.RNK
+		) A  
+        ORDER BY A.RNK1, A.RNK2 
     </select>
 
     <!-- 세부 카테고리정보 조회 - 영화 -->
@@ -534,7 +544,14 @@
                 , A.REG_DT 
                 , A.UPD_ID 
                 , A.UPD_DT  
-                , ROWNUM AS RNK
+                , ( SELECT CASE WHEN MENU_DEPTH = 1 THEN 0 ELSE EXPO_ORD END EXPO_ORD
+                    FROM TB_DP_TENANT_MENU
+                    WHERE TENANT_MENU_ID = SUBSTR(A.TENANT_MENU_ID, 0, 7 )
+                    AND SYSTEM_ID = A.SYSTEM_ID) AS RNK1
+                , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( A.TENANT_MENU_ID, 0, 7 )
+                                             ORDER BY A.MENU_DEPTH
+                                                    , A.EXPO_ORD
+                                                    , A.MENU_NM ) AS RNK2
             FROM 
                 TB_DP_TENANT_MENU A
                 , TB_DP_MENU_CATEGORY B
@@ -604,16 +621,14 @@
             AND A.TENANT_MENU_ID = C.MENU_ID(+)
             AND A.USE_YN = 'Y'
             AND B.USE_YN = 'Y'
+            AND B.TOP_MENU_ID = #{topMenuId}
             AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
             AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
             <if test='featuredExposureYn == "N"'>
             AND NVL(A.CATEGORY_MENU_YN, 'Y') = 'Y'
             </if> 
-            START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
-            CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
-            ORDER SIBLINGS BY EXPO_ORD
         ) A
-        ORDER BY A.RNK
+        ORDER BY A.RNK1, A.RNK2 
     </select>
 
     <!-- 세부 카테고리정보 조회 - 쇼핑 -->
@@ -690,7 +705,14 @@
 		        , A.REG_DT 
 		        , A.UPD_ID 
 		        , A.UPD_DT  
-                , ROWNUM AS RNK
+                , ( SELECT CASE WHEN MENU_DEPTH = 1 THEN 0 ELSE EXPO_ORD END EXPO_ORD
+                    FROM TB_DP_TENANT_MENU
+                    WHERE TENANT_MENU_ID = SUBSTR(A.TENANT_MENU_ID, 0, 7 )
+                    AND SYSTEM_ID = A.SYSTEM_ID) AS RNK1
+                , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( A.TENANT_MENU_ID, 0, 7 )
+                                             ORDER BY A.MENU_DEPTH
+                                                    , A.EXPO_ORD
+                                                    , A.MENU_NM ) AS RNK2
 		    FROM 
 		        TB_DP_TENANT_MENU A
 		        , TB_DP_MENU_CATEGORY B
@@ -743,16 +765,14 @@
 		    AND A.TENANT_MENU_ID = C.MENU_ID(+)
 		    AND A.USE_YN = 'Y'
 		    AND B.USE_YN = 'Y'
+		    AND B.TOP_MENU_ID = #{topMenuId}
 		    AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
 		    AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
             <if test='featuredExposureYn == "N"'>
             AND NVL(A.CATEGORY_MENU_YN, 'Y') = 'Y'
             </if> 
-		    START WITH B.MENU_ID = #{topMenuId} /* 메뉴ID */
-		    CONNECT BY PRIOR A.TENANT_MENU_ID = A.UP_MENU_ID
-		    ORDER SIBLINGS BY EXPO_ORD
-		) A
-        ORDER BY A.RNK
+		) A   
+        ORDER BY A.RNK1, A.RNK2 
     </select>
          
 </mapper>
