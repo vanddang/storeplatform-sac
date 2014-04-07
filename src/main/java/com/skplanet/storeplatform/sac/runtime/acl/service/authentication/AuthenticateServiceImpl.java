@@ -154,6 +154,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
     /**
      * System 정보 유효성 체크
+     * 어느 테넌트에도 속할 수 있는 Non Tenant 하위 시스템을 위해서 Tenant ID 없이 System ID만 체크함
      * @param headers
      * @return System
      *          시스템 정보
