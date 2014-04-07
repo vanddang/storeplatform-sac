@@ -873,6 +873,7 @@ public class LoginServiceImpl implements LoginService {
 		String oldUserKey = macDeviceInfo.getUserKey();
 		String newDeviceKey = null;
 		String newUserKey = null;
+		String isVariability = null; // 변동성 여부
 
 		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) { // 회원인 경우
 
@@ -891,7 +892,7 @@ public class LoginServiceImpl implements LoginService {
 
 			if (StringUtil.equals(saveAndSync.getIsSaveAndSyncTarget(), "Y")) { // 변동성 대상인 경우
 
-				isPurchaseChange = "Y";
+				isVariability = "Y";
 				newDeviceKey = saveAndSync.getDeviceKey();
 				newUserKey = saveAndSync.getUserKey();
 
@@ -910,7 +911,7 @@ public class LoginServiceImpl implements LoginService {
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 
-		if (StringUtil.equals(isPurchaseChange, "Y")) {
+		if (StringUtil.equals(isPurchaseChange, "Y") || StringUtil.equals(isVariability, "Y")) {
 
 			/* mac 정보 탈퇴처리 */
 			RemoveUserRequest removeUserRequest = new RemoveUserRequest();
@@ -949,8 +950,10 @@ public class LoginServiceImpl implements LoginService {
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 			/* 전시/기타, 구매 파트 키 변경 */
-			this.commService.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(),
-					newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
+			if (StringUtil.equals(isPurchaseChange, "Y")) {
+				this.commService.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader()
+						.getTenantId(), newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
+			}
 
 			res.setDeviceKey(newDeviceKey);
 			res.setUserKey(newUserKey);
