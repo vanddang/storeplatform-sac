@@ -952,7 +952,18 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(this.ebookComicGenerator.generateEbookContributor(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
-		product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
+		// product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
+		// BOOK 설정
+		Book book = this.ebookComicGenerator.generateBook(metaInfo);
+		if (StringUtils.isEmpty(metaInfo.getBookClsfCd())) {
+			if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
+				Chapter chapter = new Chapter();
+				chapter.setText(Integer.parseInt(metaInfo.getChapter()));
+				book.setChapter(chapter);
+			}
+		}
+		book.setStatus(metaInfo.getBookStatus());
+		product.setBook(book);
 		product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo));
 		// Title 정보 설정
 		Title title = new Title();

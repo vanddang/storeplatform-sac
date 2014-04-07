@@ -804,6 +804,11 @@
              , TB.PROD_NM
           </if>        
              , TB.CHAPTER
+             , CASE WHEN TB.BOOK_CLSF_CD = 'DP004301' THEN '권'
+                    WHEN TB.BOOK_CLSF_CD = 'DP004302' THEN '회'
+                    WHEN TB.BOOK_CLSF_CD = 'DP004303' THEN '호'
+                    ELSE ''
+               END AS BOOK_CLSF_CD
              , TB.PROD_BASE_DESC
              , TB.PROD_GRD_CD
              , TB.ARTIST1_NM
@@ -875,7 +880,14 @@
                       , H.CHNL_UNLMT_AMT
                       , J.DRM_YN
                       , J.UPD_DT
-                      , L.CHAPTER
+                   <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+                      , E.CHAPTER    
+                      , E.BOOK_CLSF_CD
+                   </if>
+                   <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                      , L.CHAPTER    
+                      , L.BOOK_CLSF_CD
+                   </if>        
                       , M.FILE_PATH
                       , M.FILE_NM
                       , N.PATICPERS_CNT
