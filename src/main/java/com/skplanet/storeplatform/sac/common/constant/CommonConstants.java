@@ -40,6 +40,11 @@ public class CommonConstants {
 	public static final String HEADER_AUTH_NONCE = "x-sac-auth-nonce";
 
 	/**
+	 * 요청 커스텀 헤더 상수 - 테넌트 아이디
+	 */
+	public static final String HEADER_TENANT_ID = "x-sac-tenant-id";
+
+	/**
 	 * 요청 커스텀 헤더 상수 - 시스템 아이디
 	 */
 	public static final String HEADER_SYSTEM_ID = "x-sac-system-id";
