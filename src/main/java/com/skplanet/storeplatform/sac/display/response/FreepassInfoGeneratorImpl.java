@@ -213,8 +213,8 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 			cash.setCashRate(metaInfo.getBnsCashRatio());
 			Date date = new Date();
 			// 구매일로부터 기간 제한
-			if (StringUtil.nvl(metaInfo.getUsePeriodUnitCd(), "") != "") {
-				String usePeriodUnitNm = (metaInfo.getBnsUsePeriodUnitCd() == null) ? "" : (metaInfo
+			if (StringUtil.nvl(metaInfo.getBnsUsePeriodUnitCd(), "") != "") {
+				String bnsUsePeriodUnitNm = (metaInfo.getBnsUsePeriodUnitCd() == null) ? "" : (metaInfo
 						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (metaInfo
 						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (metaInfo
 						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day" : (metaInfo
@@ -225,8 +225,8 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year" : (metaInfo
 						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
 
-				if (usePeriodUnitNm != "") {
-					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, usePeriodUnitNm + "/"
+				if (bnsUsePeriodUnitNm != "") {
+					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, bnsUsePeriodUnitNm + "/"
 							+ metaInfo.getBnsUsePeriod());
 
 				}
