@@ -41,7 +41,7 @@ public class DeviceUtil {
 		if (deviceExtraInfoList != null) {
 			for (DeviceExtraInfo info : deviceExtraInfoList) {
 
-				if (info.getExtraProfile().equals(extraProfile)) {
+				if (StringUtil.equals(info.getExtraProfile(), extraProfile)) {
 					extraProfileValue = info.getExtraProfileValue();
 					break;
 				}
@@ -67,7 +67,7 @@ public class DeviceUtil {
 		if (userMbrDeviceDetailList != null) {
 			for (UserMbrDeviceDetail info : userMbrDeviceDetailList) {
 
-				if (info.getExtraProfile().equals(extraProfile)) {
+				if (StringUtil.equals(info.getExtraProfile(), extraProfile)) {
 					extraProfileValue = info.getExtraProfileValue();
 					break;
 				}
@@ -167,8 +167,7 @@ public class DeviceUtil {
 		if (list != null && list.size() > 0) {
 			deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 			for (UserMbrDeviceDetail userMbrDeviceDetail : list) {
-				if (!StringUtil.equals(userMbrDeviceDetail.getExtraProfile(), "")
-						&& !StringUtil.equals(userMbrDeviceDetail.getExtraProfileValue(), "")) {
+				if (StringUtil.isNotBlank(userMbrDeviceDetail.getExtraProfile()) && StringUtil.isNotBlank(userMbrDeviceDetail.getExtraProfileValue())) {
 					deviceExtraInfo = new DeviceExtraInfo();
 					deviceExtraInfo.setExtraProfile(userMbrDeviceDetail.getExtraProfile());
 					deviceExtraInfo.setExtraProfileValue(userMbrDeviceDetail.getExtraProfileValue());
@@ -230,7 +229,7 @@ public class DeviceUtil {
 		if (deviceInfo.getDeviceExtraInfoList() != null && deviceInfo.getDeviceExtraInfoList().size() > 0) {
 			userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 			for (DeviceExtraInfo deviceExtraInfo : deviceInfo.getDeviceExtraInfoList()) {
-				if (!StringUtil.equals(deviceExtraInfo.getExtraProfile(), "") && !StringUtil.equals(deviceExtraInfo.getExtraProfileValue(), "")) {
+				if (StringUtil.isNotBlank(deviceExtraInfo.getExtraProfile()) && StringUtil.isNotBlank(deviceExtraInfo.getExtraProfileValue())) {
 					userMbrDeviceDetail = new UserMbrDeviceDetail();
 					userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
 					userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
