@@ -39,8 +39,7 @@
 		    , A.DRM_YN
 		    , A.PROD_STATUS_CD
 		    , A.PROD_NM
-            , REGEXP_REPLACE( A.CHAPTER, '[^[:digit:]]') AS CHAPTER /* 회차의 수 */
-            , NVL(REGEXP_REPLACE( A.CHAPTER, '[[:digit:], ]'), '회') AS CHAPTER_UNIT /* 회차 단위 */
+            , A.CHAPTER /* 회차의 수 */
 		    , A.ISSUE_DAY
 		    , A.PROD_BASE_DESC
 		    , A.USE_PERIOD_UNIT_CD
@@ -62,7 +61,7 @@
 		FROM (
 		    SELECT 
 			    COUNT(A.CID) OVER () AS TOTAL_COUNT
-			    , ROW_NUMBER() OVER(ORDER BY A.CHNL_REG_DT, TO_NUMBER(REGEXP_REPLACE(CHAPTER, '[^[:digit:]]')) ASC, A.UPD_DT DESC) RNK
+			    , ROW_NUMBER() OVER(ORDER BY A.CHNL_REG_DT, A.CHAPTER ASC, A.UPD_DT DESC) RNK
 	            , A.RNUM
 	            , A.CHNL_PROD_ID
 	            , A.TOP_MENU_ID
@@ -246,7 +245,7 @@
                 
                 <if test="filteredBy == 'chapter'">
                 /* 특정 회차(chapter)기준 이후 회차 컨텐츠 */
-                AND TO_NUMBER( REGEXP_REPLACE( NVL( G.CHAPTER, '99999' ), '[^[:digit:]]') ) > #{chapter}
+                AND G.CHAPTER > #{chapter}
                 </if>
                 
                 <if test="filteredBy == 'regDate'">

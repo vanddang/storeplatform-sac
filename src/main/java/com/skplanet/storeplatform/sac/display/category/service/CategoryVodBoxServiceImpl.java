@@ -250,7 +250,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				 */
 				vod = new Vod();
 				vod.setRunningTime(new Time(null, categoryVodBox.getEpsdPlayTm()));
-				vod.setChapter(new Chapter(categoryVodBox.getChapterUnit(), categoryVodBox.getChapter()));
+				vod.setChapter(new Chapter(this.commonService.getVodChapterUnit(), categoryVodBox.getChapter()));
 
 				// vod.setDate(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_RELEASE,
 				// categoryVodBox.getIssueDay()));
