@@ -50,10 +50,10 @@ public class MusicController {
     @Autowired
     private MusicDetailBinder musicDetailBinder;
 
-    @InitBinder
-    public void initBinder(WebDataBinder dataBinder) {
-        dataBinder.setValidator(new MusicDetailReqValidator());
-    }
+//    @InitBinder
+//    public void initBinder(WebDataBinder dataBinder) {
+//        dataBinder.setValidator(new MusicDetailReqValidator());
+//    }
 
     @RequestMapping(value = "/music/detail/v1", method = RequestMethod.POST)
     @ResponseBody

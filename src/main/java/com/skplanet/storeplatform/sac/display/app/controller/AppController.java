@@ -39,10 +39,10 @@ public class AppController {
     @Autowired
     private AppService appService;
 
-    @InitBinder
-    public void initBinder(WebDataBinder dataBinder) {
-        dataBinder.setValidator(new AppDetailReqValidator());
-    }
+//    @InitBinder
+//    public void initBinder(WebDataBinder dataBinder) {
+//        dataBinder.setValidator(new AppDetailReqValidator());
+//    }
 
     @RequestMapping(value = "/app/detail/v1", method = RequestMethod.POST)
     @ResponseBody
