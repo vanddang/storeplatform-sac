@@ -1087,8 +1087,8 @@ public class MemberCommonComponent {
 				/**
 				 * 약관 버전 세팅.
 				 */
-				if (StringUtils.isNotBlank(info.getExtraAgreementVersion())) {
-					info.setMandAgreeYn(clauseInfo.getClauseVer());
+				if (StringUtils.isBlank(info.getExtraAgreementVersion())) {
+					info.setExtraAgreementVersion(clauseInfo.getClauseVer());
 				}
 
 			}

@@ -114,11 +114,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 		/**
-		 * 필수 약관 동의여부 체크
+		 * 약관 맵핑정보 세팅.
 		 */
-		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_MEM_1100");
-		}
+		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
 
 		JoinForWapEcRes joinForWapEcRes = null;
 
@@ -232,11 +230,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req) {
 
 		/**
-		 * 필수 약관 동의여부 체크
+		 * 약관 맵핑정보 세팅.
 		 */
-		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_MEM_1100");
-		}
+		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
 
 		/**
 		 * (통합 IDP 연동) 이용동의 가입 (cmd = TXAgreeUserIDP)
@@ -331,11 +327,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 				req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 		/**
-		 * 필수 약관 동의여부 체크
+		 * 약관 맵핑정보 세팅.
 		 */
-		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_MEM_1100");
-		}
+		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
 
 		/**
 		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
@@ -596,11 +590,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
 		/**
-		 * 필수 약관 동의여부 체크
+		 * 약관 맵핑정보 세팅.
 		 */
-		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_MEM_1100");
-		}
+		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), req.getAgreementList());
 
 		/**
 		 * 회원 기가입 여부 체크
@@ -625,6 +617,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            테넌트 아이디
 	 * @return boolean
 	 */
+	@Deprecated
 	private boolean checkAgree(List<AgreementInfo> agreementList, String tenantId) {
 
 		/**
@@ -711,6 +704,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrClauseAgree.setExtraAgreementID(info.getExtraAgreementId());
 			mbrClauseAgree.setExtraAgreementVersion(info.getExtraAgreementVersion());
 			mbrClauseAgree.setIsExtraAgreement(info.getIsExtraAgreement());
+			mbrClauseAgree.setIsMandatory(info.getMandAgreeYn());
 			mbrClauseAgree.setRegDate(DateUtil.getToday());
 			mbrClauseAgreeList.add(mbrClauseAgree);
 		}

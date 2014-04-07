@@ -178,7 +178,7 @@
 				   A.START_DAY AS startDay,
 				   A.END_DAY AS endDay,
 				   A.CLAUSE_VER AS clauseVer,
-				   B.MAND_AGREE_YN AS mandAgree
+				   B.MAND_AGREE_YN AS mandAgreeYn
 			FROM TB_CM_CLAUSE A, TB_CM_TENANT_CLAUSE B
 			WHERE A.CLAUSE_ITEM_CD = B.CLAUSE_ID
 			AND TO_DATE(SYSDATE) >= TO_DATE(A.START_DAY)
@@ -186,7 +186,6 @@
 			AND B.USE_YN = 'Y'
 			AND B.TENANT_ID = #{tenantId}
 			AND A.CLAUSE_ITEM_CD = #{clauseItemCd}
-			ORDER BY A.CLAUSE_ITEM_CD ASC
 		]]>
     </select>
     
