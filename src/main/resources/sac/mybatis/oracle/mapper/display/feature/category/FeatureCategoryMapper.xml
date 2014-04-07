@@ -37,33 +37,9 @@
                                     , LP.EXPO_ORD_SUB
                                  FROM TB_DP_LIST_PROD LP  /* 채널 */
                                     , TB_DP_LIST LT
-                                WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
-                                  AND LP.LIST_ID = #{listId}       /* ADM000000008 : 운영자추천 멀티미디어 */
-                                  <if test='filteredBy == "recommend"'>
-                                  AND LP.ETC_CD = 'DP004801'       /* DP004801 : 영화 */
-                                  </if>
-                                  <if test='filteredBy == "movie1000"'>
-                                  AND LP.ETC_CD = 'DP004807'       /* DP004807 : 1000원관 */
-                                  </if>
-                                   <if test='filteredBy == "westernDrama"'>
-                                  AND LP.ETC_CD = 'DP004803'       /* 미드/외화 */  
-                                  </if>
-                                  <if test='filteredBy == "drama"'>
-                                  AND LP.ETC_CD = 'DP004804'       /* 드라마 */
-                                  </if>
-                                  <if test='filteredBy == "entertainmentFun"'>
-                                  AND LP.ETC_CD = 'DP004805'       /* 연예/오락 */
-                                  </if>
-                                  <if test='filteredBy == "animationKids"'>
-                                  AND LP.ETC_CD = 'DP004806'       /* 애니/키즈 */
-                                  </if>
-                                  <if test='filteredBy == "cable"'>
-                                  AND LP.ETC_CD = 'DP004811'       /* 케이블 */
-                                  </if>
-                                  <if test='filteredBy == "special"'>
-                                  AND LP.ETC_CD = 'DP004812'       /* 스페셜 */
-                                  </if>
-                                  AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+                                WHERE LP.TENANT_ID = #{tenantId}  /* 테넌트ID */
+                                  AND LP.LIST_ID = #{listId}
+                                  AND LP.EXPO_YN = 'Y'  /* Y : 노출 (노출여부) */
                                   AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
                                   AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
                                   AND LP.TENANT_ID = LT.TENANT_ID
@@ -289,26 +265,31 @@
                                   AND LT1.EXPO_YN = 'Y'
                                   AND LP1.PROD_ID NOT IN (SELECT PROD_ID
                                                             FROM (SELECT LP.PROD_ID
-                                                                       , ROW_NUMBER() OVER(PARTITION BY LP.ETC_CD ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC, LP.EXPO_ORD, LP.EXPO_ORD_SUB, PD.PROD_NM) AS NO
-                                                                      FROM TB_DP_LIST_PROD LP  /* 채널 */
-                                                                         , TB_DP_LIST LT
-                                                                         , TB_DP_TENANT_PROD TP
-                                                                         , TB_DP_PROD_DESC PD
-                                                                     WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
-                                                                       AND LP.LIST_ID = 'ADM000000008'  /* ADM000000008 : 운영자추천 멀티미디어 */
-                                                                       AND LP.ETC_CD IN ('DP004803', 'DP004804', 'DP004805', 'DP004806', 'DP004811', 'DP004812')
-                                                                       AND LP.EXPO_YN = 'Y'  /* Y : 노출 (노출여부) */
-                                                                       AND LP.STD_DT = (SELECT STD_DT FROM TB_DP_BATCH_COMPT WHERE TENANT_ID='S01' AND BATCH_ID = 'ADM000000008')
-                                                                       AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
-                                                                       AND LP.TENANT_ID = LT.TENANT_ID
-                                                                       AND LP.LIST_ID = LT.LIST_ID
-                                                                       AND LT.EXPO_YN = 'Y'
-                                                                       AND LP.PROD_ID = TP.PROD_ID
-                                                                       AND LP.TENANT_ID = TP.TENANT_ID
-                                                                       AND TP.PROD_STATUS_CD = 'PD000403'
-                                                                       AND TP.EXPO_YN = 'Y'
-                                                                       AND LP.PROD_ID = PD.PROD_ID
-                                                                       AND PD.LANG_CD = #{langCd}
+																	    , ROW_NUMBER() OVER(PARTITION BY LP.ETC_CD ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC, LP.EXPO_ORD, LP.EXPO_ORD_SUB, PD.PROD_NM) AS NO
+																	 FROM TB_DP_LIST_PROD LP
+																	    , (SELECT TENANT_ID, BATCH_ID, STD_DT
+																	         FROM TB_DP_BATCH_COMPT
+																	        WHERE BATCH_ID IN ('ADM000000033', 'ADM000000034', 'ADM000000035', 'ADM000000036', 'ADM000000041', 'ADM000000042')
+																	          AND TENANT_ID = #{tenantId}
+																	      ) BC
+																	    , TB_DP_LIST LT
+																	    , TB_DP_TENANT_PROD TP
+																	    , TB_DP_PROD_DESC PD
+																	WHERE LP.LIST_ID IN ('ADM000000033', 'ADM000000034', 'ADM000000035', 'ADM000000036', 'ADM000000041', 'ADM000000042')
+																	  AND LP.TENANT_ID = #{tenantId}
+																	  AND LP.LIST_ID = BC.BATCH_ID
+																	  AND LP.TENANT_ID = BC.TENANT_ID
+																	  AND LP.STD_DT = BC.STD_DT
+																	  AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+																	  AND LP.TENANT_ID = LT.TENANT_ID
+																	  AND LP.LIST_ID = LT.LIST_ID
+																	  AND LT.EXPO_YN = 'Y'
+																	  AND LP.PROD_ID = TP.PROD_ID
+																	  AND LP.TENANT_ID = TP.TENANT_ID
+																	  AND TP.PROD_STATUS_CD = 'PD000403'
+																	  AND TP.EXPO_YN = 'Y'
+																	  AND LP.PROD_ID = PD.PROD_ID
+																	  AND PD.LANG_CD = #{langCd}
                                                                  )
                                                            WHERE NO <![CDATA[<=]]> 4
                                                          )  /* 방송 카테고리별 추천 제외 */

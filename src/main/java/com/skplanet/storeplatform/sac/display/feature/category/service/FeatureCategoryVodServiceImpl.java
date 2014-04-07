@@ -77,12 +77,6 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		String listId = req.getListId();
 		String filteredBy = req.getFilteredBy();
 
-		// 영화 추천/1000원관, 방송 카테고리별 추천 filteredBy 필수
-		// TGR000000002 신규 방송 최신 up의 경우도 filteredBy 필수이나 없는 경우 신규상품 조회
-		if ("ADM000000008".equals(listId) && StringUtils.isEmpty(filteredBy)) {
-			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
-		}
-
 		// 시작점 ROW Default 세팅
 		if (req.getOffset() == null) {
 			req.setOffset(1);
@@ -123,38 +117,13 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 
 		List<ProductBasicInfo> productBasicInfoList;
 
-		// ADM000000008 : 운영자 추천, TGR000000002 운영자 신규
+		// TGR000000002 운영자 신규
+		// ADM000000031 : 영화 추천, ADM000000037 : 영화 1,000원관
+		// ADM000000033 : 방송 추천 미드/외화, ADM000000034 : 방송 추천 드라마, ADM000000035 : 방송 추천 연예/오락, ADM000000036 : 방송 추천 애니/키즈,
+		// ADM000000041 : 방송 추천 케이블, ADM000000042 : 방송 추천 스페셜
 		// DP17 : 영화, DP18 : 방송
-		if ("ADM000000008".equals(listId)) {
-			if ("DP17".equals(topMenuId)) {
-				if ("recommend".equals(filteredBy)) {
-					this.logger.debug("----------------------------------------------------------------");
-					this.logger.debug("영화 > 추천 상품 조회");
-					this.logger.debug("----------------------------------------------------------------");
-				} else if ("movie1000".equals(filteredBy)) {
-					this.logger.debug("----------------------------------------------------------------");
-					this.logger.debug("영화 > 1000원관 상품 조회");
-					this.logger.debug("----------------------------------------------------------------");
-				} else {
-					this.logger.debug("----------------------------------------------------------------");
-					this.logger.debug("유효하지않은 조회유형");
-					this.logger.debug("----------------------------------------------------------------");
-
-					throw new StorePlatformException("SAC_DSP_0003", "listId", listId, "topMenuId", topMenuId,
-							"filteredBy", filteredBy);
-				}
-			} else {
-				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("방송 > 카테고리별 추천 상품 조회");
-				this.logger.debug("----------------------------------------------------------------");
-			}
-
-			// 추천 리스트 조회
-			productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureVodList", req,
-					ProductBasicInfo.class);
-
-		} else {
-			if (!"".equals(filteredBy) && filteredBy != null) {
+		if ("TGR000000002".equals(listId)) {
+			if ("mbc".equals(filteredBy) || "kbs".equals(filteredBy) || "sbs".equals(filteredBy)) {
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("방송 > 방송사별 최신 UP 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
@@ -172,6 +141,14 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureNewVodist", req,
 						ProductBasicInfo.class);
 			}
+		} else {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("영화/방송 > 추천 상품 조회");
+			this.logger.debug("----------------------------------------------------------------");
+
+			// 추천 리스트 조회
+			productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureVodList", req,
+					ProductBasicInfo.class);
 		}
 
 		List<Product> productList = new ArrayList<Product>();
