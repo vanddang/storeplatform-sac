@@ -58,11 +58,9 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
@@ -441,53 +439,10 @@ public class DeviceServiceImpl implements DeviceService {
 			LOGGER.debug(":::: [PreviousUserKey] {}", previousUserKey);
 			LOGGER.debug(":::: [NowUserKey] {}", userKey);
 
-			/* 3. 기타파트 userKey 변경 */
-			ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
-			changeDisplayUserSacReq.setNewUseKey(userKey);
-			changeDisplayUserSacReq.setOldUserKey(previousUserKey);
-			changeDisplayUserSacReq.setTenantId(tenantId);
-			this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
+			/* 3. 전시/기타, 구매 파트 키 변경 */
+			this.commService.excuteInternalMethod(true, systemId, tenantId, userKey, previousUserKey, deviceKey, previousDeviceKey);
 
-			LOGGER.debug("::: changeDisplayUserSCI.changeUserKey SUCCESS");
-
-			/* 4. 구매파트 userKey, deviceKey 변경 */
-			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
-			userInfoSacInReq.setSystemId(systemId);
-			userInfoSacInReq.setTenantId(tenantId);
-			userInfoSacInReq.setDeviceKey(previousDeviceKey);
-			userInfoSacInReq.setNewDeviceKey(deviceKey);
-			userInfoSacInReq.setUserKey(previousUserKey);
-			userInfoSacInReq.setNewUserKey(userKey);
-			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
-
-			LOGGER.debug("::: purchaseUserInfoInternalSCI.updateUserDevice SUCCESS");
-
-			/* 5. 약관 이관 처리 */
-			//			try {
-			//				SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
-			//				schAgreeListReq.setCommonRequest(commonRequest);
-			//				schAgreeListReq.setUserKey(previousUserKey);
-			//
-			//				SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
-			//				List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
-			//				for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
-			//					agreeInfo.setMemberKey(userKey);
-			//					agreeList.add(agreeInfo);
-			//				}
-			//				UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
-			//				updAgreeReq.setCommonRequest(commonRequest);
-			//				updAgreeReq.setUserKey(userKey);
-			//				updAgreeReq.setMbrClauseAgreeList(agreeList);
-			//				this.userSCI.updateAgreement(updAgreeReq);
-			//
-			//			} catch (StorePlatformException ex) {
-			//				/* 약관 조회 결과 없는경우를 제외하고 throw */
-			//				if (!StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-			//					throw ex;
-			//				}
-			//			}
-
-			/* 6. 실명인증 비교 후 초기화 */
+			/* 4. 실명인증 비교 후 초기화 */
 			SearchRealNameRequest schRealNameReq = new SearchRealNameRequest();
 			schRealNameReq.setCommonRequest(commonRequest);
 			schRealNameReq.setUserKey(previousUserKey);
@@ -511,7 +466,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			}
 
-			/* 7. 통합회원에 휴대기기 등록시 무선회원 해지 */
+			/* 5. 통합회원에 휴대기기 등록시 무선회원 해지 */
 			SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 			if (schUserRes.getUserMbr().getImSvcNo() != null) {
 
@@ -535,7 +490,7 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
-		/* 8. 게임센터 연동 */
+		/* 6. 게임센터 연동 */
 		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 		gameCenterSacReq.setUserKey(userKey);
 		gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
@@ -549,7 +504,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 		this.insertGameCenterIF(gameCenterSacReq);
 
-		/* 9. MQ 연동 */
+		/* 7. MQ 연동 */
 		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
 		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 		if (StringUtil.isNotBlank(previousUserKey) && StringUtil.isNotBlank(previousDeviceKey)) {
@@ -617,6 +572,9 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
+		if (StringUtil.isBlank(deviceInfo.getDeviceId())) {
+			deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
+		}
 
 		// 부가정보 등록시 셋팅할 값들
 		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());

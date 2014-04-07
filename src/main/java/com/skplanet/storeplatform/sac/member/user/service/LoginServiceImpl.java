@@ -46,6 +46,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
@@ -114,6 +116,9 @@ public class LoginServiceImpl implements LoginService {
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	private String tempUserAuthKey;
 
+	@Value("#{propertiesForSac['member.ogg.internal.method.iscall']}")
+	public boolean isCalChangeKeyl;
+
 	@Autowired
 	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
 
@@ -134,7 +139,7 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
 		/* 회원정보 조회 */
-		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		/* 회원 존재유무 확인 */
 		if (StringUtil.equals(chkDupRes.getIsRegistered(), "N")) {
@@ -234,7 +239,7 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
 		/* 회원정보 조회 */
-		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		/* 회원 존재유무 확인 */
 		if (StringUtil.equals(chkDupRes.getIsRegistered(), "N")) {
@@ -374,7 +379,7 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
 		/* mdn 회원유무 조회 */
-		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		String isVariability = "Y"; // 변동성 체크 성공 유무
 		String userKey = null;
@@ -450,10 +455,9 @@ public class LoginServiceImpl implements LoginService {
 		} else {
 
 			/* 인증수단 조회 */
-			UserAuthMethod userAuthMethod = this.searchUserAuthMethod(requestHeader, req.getDeviceId());
+			UserAuthMethod userAuthMethod = this.searchUserAuthMethod(requestHeader, req.getDeviceId(), userKey);
 
-			if (StringUtil.isBlank(userAuthMethod.getUserId())
-					&& (StringUtil.isBlank(userAuthMethod.getIsRealName()) || StringUtil.equals(userAuthMethod.getIsRealName(), "N"))) { // 인증수단이 없는경우
+			if (StringUtil.isBlank(userAuthMethod.getUserId()) && StringUtil.equals(userAuthMethod.getIsRealName(), "N")) { // 인증수단이 없는경우
 
 				LOGGER.info("### {} 추가인증수단 없음, IDP/SC회원 탈퇴처리", req.getDeviceId());
 
@@ -507,7 +511,7 @@ public class LoginServiceImpl implements LoginService {
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
 		/* 회원정보 조회 */
-		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId);
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId);
 
 		/* 원아이디 서비스 이용동의 간편 가입 대상 및 가가입 상태 체크 */
 		if (!StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
@@ -861,7 +865,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* mdn 회원유무 조회 */
-		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		String isPurchaseChange = "N";
 		String isJoinMdn = "N";
@@ -1029,6 +1033,10 @@ public class LoginServiceImpl implements LoginService {
 
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
+			/* OGG 연동을 위해 전시/기타, 구매 파트 키 변경 */
+			this.commService.excuteInternalMethod(this.isCalChangeKeyl, requestHeader.getTenantHeader().getSystemId(), requestHeader
+					.getTenantHeader().getTenantId(), oldUserKey, joinForWapEcRes.getUserKey(), oldDeviceKey, oldDeviceKey);
+
 			res.setDeviceKey(oldDeviceKey);
 			res.setUserKey(oldUserKey);
 
@@ -1074,7 +1082,7 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
-	 * SC회원콤포넌트 회원 정보 조회.
+	 * 회원유무 확인.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -1087,7 +1095,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @return CheckDuplicationResponse
 	 * 
 	 */
-	private CheckDuplicationResponse searchUserInfo(SacRequestHeader requestHeader, String keyType, String keyString) {
+	private CheckDuplicationResponse checkDuplicationUser(SacRequestHeader requestHeader, String keyType, String keyString) {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
@@ -1106,9 +1114,47 @@ public class LoginServiceImpl implements LoginService {
 		chkDupReq.setCommonRequest(commonRequest);
 		chkDupReq.setKeySearchList(keySearchList);
 
-		CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
+		return this.userSCI.checkDuplication(chkDupReq);
 
-		return chkDupRes;
+	}
+
+	/**
+	 * SC회원정보 조회.
+	 * 
+	 * @param commonRequest
+	 *            CommonRequest
+	 * @param keyType
+	 *            조회타입
+	 * @param keyString
+	 *            조회값
+	 * @return SearchUserResponse
+	 */
+	public SearchUserResponse searchUser(SacRequestHeader requestHeader, String keyType, String keyString) {
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
+		SearchUserRequest schUserReq = new SearchUserRequest();
+		schUserReq.setCommonRequest(commonRequest);
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(keyType);
+		key.setKeyString(keyString);
+		keySearchList.add(key);
+		schUserReq.setKeySearchList(keySearchList);
+
+		try {
+			return this.userSCI.searchUser(schUserReq);
+		} catch (StorePlatformException ex) {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)
+					|| ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_USERKEY)) {
+				throw new StorePlatformException("SAC_MEM_0003", "userKey", keyString);
+			} else {
+				throw ex;
+			}
+		}
+
 	}
 
 	/**
@@ -1298,13 +1344,23 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return UserAuthMethod
 	 */
-	private UserAuthMethod searchUserAuthMethod(SacRequestHeader requestHeader, String deviceId) {
-		CheckDuplicationResponse chkDupRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, deviceId);
+	private UserAuthMethod searchUserAuthMethod(SacRequestHeader requestHeader, String deviceId, String userKey) {
+
+		SearchUserResponse schUserRes = this.searchUser(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
+
 		UserAuthMethod userAuthMethod = new UserAuthMethod();
-		if (!StringUtil.equals(chkDupRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
-			userAuthMethod.setUserId(chkDupRes.getUserMbr().getUserID());
+
+		/* 인증수단 userId */
+		if (!StringUtil.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+			userAuthMethod.setUserId(schUserRes.getUserMbr().getUserID());
 		}
-		userAuthMethod.setIsRealName(chkDupRes.getUserMbr().getIsRealName());
+
+		/* 인증수단 실명인증 여부 */
+		if (StringUtil.isNotBlank(schUserRes.getMbrAuth().getCi())) {
+			userAuthMethod.setIsRealName("Y");
+		} else {
+			userAuthMethod.setIsRealName("N");
+		}
 		return userAuthMethod;
 	}
 
