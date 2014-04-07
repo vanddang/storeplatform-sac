@@ -1986,7 +1986,6 @@
 		         WHERE  A.PROD_ID = B.PROD_ID
 		           AND  A.PROD_ID = C.PROD_ID
 		           AND  A.PROD_ID = D.PROD_ID
-		           AND  D.DEVICE_MODEL_CD = E.DEVICE_MODEL_CD
 		           AND  D.PROD_ID = F.PROD_ID
 		           AND  D.SUB_CONTENTS_ID = F.SUB_CONTENTS_ID
 		           AND  C.TENANT_ID = #{tenantId}

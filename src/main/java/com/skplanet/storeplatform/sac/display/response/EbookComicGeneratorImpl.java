@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chap
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -33,6 +34,9 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 public class EbookComicGeneratorImpl implements EbookComicGenerator {
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
+
+	@Autowired
+	private DisplayCommonService commonService;
 
 	/*
 	 * (non-Javadoc)
@@ -152,7 +156,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
 			Chapter chapter = new Chapter();
 			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
-			chapter.setUnit(metaInfo.getChapterUnit());
+			chapter.setUnit(this.commonService.getEpubChapterUnit(metaInfo.getBookClsfCd()));
 			book.setChapter(chapter);
 		}
 

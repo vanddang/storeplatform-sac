@@ -530,7 +530,7 @@
 		              , MAX(JA.PROD_BASE_DESC) AS PROD_BASE_DESC
 		              , MAX(JA.PROD_DTL_DESC) AS PROD_DTL_DESC
 		              , MAX(JA.BOOK_PAGE_CNT) AS BOOK_PAGE_CNT
-		              , REGEXP_REPLACE(MAX(JA.CHAPTER), '[^[:digit:]]') AS CHAPTER
+		              , MAX(JA.CHAPTER) AS CHAPTER
 		              , MAX(JA.COLOR_SPRT_YN) AS COLOR_SPRT_YN
 		              , MAX(JA.ISBN) AS ISBN
 		              , NVL(MAX(JA.MGZIN_COVER_YN), 'N') AS MGZIN_COVER_YN
@@ -674,10 +674,6 @@
 		          WHERE MENU_ID = JA.MENU_ID
 		            AND LANG_CD = #{langCd}
 		            AND ROWNUM = 1) AS MENU_NM
-              , CASE WHEN JA.META_CLSF_CD = 'CT21' AND JA.BOOK_CLSF_CD = 'DP004301' THEN '권'
-                     WHEN JA.META_CLSF_CD = 'CT21' AND JA.BOOK_CLSF_CD = 'DP004302' THEN '회'
-                     WHEN JA.META_CLSF_CD = 'CT22' THEN '호'
-                     WHEN JA.META_CLSF_CD = 'CT23' THEN '화' END AS CHAPTER_UNIT
 		  FROM (SELECT IA.*, IC.TOP_MENU_ID, IC.MENU_ID
 		          FROM (SELECT  ROW_NUMBER() OVER(PARTITION BY MP_E.PART_PROD_ID ORDER BY EP_M.PROD_VER DESC) AS RNUM
 		                      , CH_A.PROD_ID
