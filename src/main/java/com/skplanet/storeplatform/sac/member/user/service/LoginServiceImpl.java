@@ -384,6 +384,8 @@ public class LoginServiceImpl implements LoginService {
 		String userKey = null;
 		String isSaveAndSyncTarget = null; // 변동성 mdn 유무
 
+		LOGGER.info("### {} 회원 여부 : {}", req.getDeviceId(), chkDupRes.getIsRegistered());
+
 		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
 
 			/* 휴대기기 정보 조회 */
@@ -424,7 +426,7 @@ public class LoginServiceImpl implements LoginService {
 			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
 			isSaveAndSyncTarget = saveAndSync.getIsSaveAndSyncTarget();
 
-			if (StringUtil.equals(isSaveAndSyncTarget, "N")) {
+			if (!StringUtil.equals(isSaveAndSyncTarget, "Y")) {
 
 				/* 회원 정보가 존재 하지 않습니다. */
 				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
