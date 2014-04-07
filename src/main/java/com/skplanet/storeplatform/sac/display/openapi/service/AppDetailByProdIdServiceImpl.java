@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacRes;
@@ -204,6 +205,8 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 				productList.add(product);
 				commonResponse.setTotalCount(1);
 			}
+		} else {
+			throw new StorePlatformException("SAC_DSP_0009");
 		}
 		response.setCommonResponse(commonResponse);
 		response.setProductList(productList);

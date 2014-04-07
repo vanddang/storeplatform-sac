@@ -122,7 +122,7 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 			}
 		} else {
 			// 패키지 정보에 대한 상품이 존재하지 않는다.
-			throw new StorePlatformException("SAC_DSP_0005", packageName);
+			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
 		Identifier identifier = new Identifier();
@@ -223,6 +223,8 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 				productList.add(product);
 				commonResponse.setTotalCount(1);
 			}
+		} else {
+			throw new StorePlatformException("SAC_DSP_0009");
 		}
 		response.setCommonResponse(commonResponse);
 		response.setProductList(productList);

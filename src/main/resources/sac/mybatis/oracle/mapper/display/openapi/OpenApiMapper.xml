@@ -1832,7 +1832,8 @@
 							AND MCP.MENU_ID       = MCD.MENU_ID
 							AND TP.PROD_ID        = TPP.PROD_ID
 							AND TP.TENANT_ID      = TPP.TENANT_ID
-							AND TP.TENANT_ID = TV.TENANT_ID                         
+							AND TP.TENANT_ID      = #{tenantId}
+							AND TV.TENANT_ID(+)   = #{tenantId}                   
 							AND P.PROD_ID = TV.PROD_ID(+)    
 							AND TP.PROD_STATUS_CD = 'PD000403'
 							AND P.SVC_GRP_CD      = 'DP000201'
@@ -2278,7 +2279,7 @@
         AND CP.MENU_ID = DMCD.MENU_ID
         AND P.PROD_ID = DTP.PROD_ID
         AND C.PROD_RSHP_CD = #{rshpCd}
-        AND PA.TENANT_ID = #{tenantId}
+        AND PA.TENANT_ID(+) = #{tenantId}
         AND DTP.TENANT_ID = #{tenantId}
         AND PA.PROD_ID(+) = P.PROD_ID
         AND SH.PROD_ID(+) = P.PROD_ID        
@@ -2345,12 +2346,12 @@
 		AND CP.MENU_ID = DMCD.MENU_ID
 		AND P.PROD_ID = DTP.PROD_ID
 		AND DTP.PROD_ID = DTPP.PROD_ID
-		AND C.PROD_RSHP_CD = #{rshpCd}
-		AND PA.TENANT_ID = #{tenantId}
+		AND C.PROD_RSHP_CD = #{rshpCd}		
 		AND DTP.TENANT_ID = #{tenantId}
 		AND DTP.TENANT_ID = DTPP.TENANT_ID
 		AND PA.PROD_ID(+) = P.PROD_ID
-		AND SH.PROD_ID(+) = P.PROD_ID        
+		AND SH.PROD_ID(+) = P.PROD_ID 
+		AND PA.TENANT_ID(+) = #{tenantId}       
 		AND SH.DEVICE_MODEL_CD(+) = #{deviceModelNo}
 		AND CP.USE_YN = 'Y'
 		AND DMCD.LANG_CD = #{langCd}
