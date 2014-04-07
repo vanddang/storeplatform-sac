@@ -38,6 +38,7 @@
 		                                   AND TENANT_ID =#{tenantId}
 		                                   AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
 		                                   AND EXPO_YN ='Y'
+		                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
 		                               )                          A
 		                               , TB_DP_PROD               B
 		                               , TB_DP_PROD_DESC          C
@@ -49,10 +50,11 @@
 		                           AND A.PROD_ID = C.PROD_ID
 		                           AND A.PROD_ID = D.PROD_ID
 		                           AND A.PROD_ID = E.PROD_ID
-		                           AND A.PROD_ID = F.PROD_ID
+		                           AND A.PROD_ID = F.PROD_ID(+)
 		                           AND A.PROD_ID = G.PROD_ID
 		                           AND A.TENANT_ID = E.TENANT_ID
-		                           AND A.TENANT_ID = F.TENANT_ID
+		                           /* AND A.TENANT_ID = F.TENANT_ID */
+		                           AND F.TENANT_ID(+) = #{tenantId}
 		                           AND A.TENANT_ID = G.TENANT_ID
 		                           AND B.TOP_MENU_ID != 'DP02'
 		                           AND B.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
@@ -590,6 +592,7 @@
                                            AND LIST_ID = #{listId}
                                            AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
                                            AND EXPO_YN ='Y'
+                                           AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                        )                              A           
                                       , TB_DP_PROD                    B
                                       , TB_DP_PROD_RSHP               C
@@ -614,7 +617,8 @@
                                    AND F.MENU_ID = G.MENU_ID      
                                    AND A.TENANT_ID = H.TENANT_ID
                                    AND A.TENANT_ID = I.TENANT_ID
-                                   AND A.TENANT_ID = L.TENANT_ID
+                                   --AND A.TENANT_ID = L.TENANT_ID
+                                   AND L.TENANT_ID(+) = #{tenantId}
                                    AND B.PROD_CHRG_YN     = 'Y'
                                    <choose>
                                    <when test ="topMenuId == 'DP16'">
@@ -732,6 +736,7 @@
                                            AND LIST_ID = #{listId}
                                            AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
                                            AND EXPO_YN ='Y'
+                                           AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                        )                              A           
                                       , TB_DP_PROD                    B
                                       , TB_DP_PROD_RSHP               C
@@ -756,7 +761,8 @@
                                    AND F.MENU_ID = G.MENU_ID      
                                    AND A.TENANT_ID = H.TENANT_ID
                                    AND A.TENANT_ID = I.TENANT_ID
-                                   AND A.TENANT_ID = L.TENANT_ID
+                                   --AND A.TENANT_ID = L.TENANT_ID
+                                   AND L.TENANT_ID(+) = #{tenantId}
                                    AND B.PROD_CHRG_YN     = 'N'
                                    <choose>
                                    <when test ="topMenuId == 'DP16'">
@@ -873,6 +879,7 @@
                                            AND LIST_ID = #{listId}
                                            AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
                                            AND EXPO_YN ='Y'
+                                           AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                        )                              A           
                                       , TB_DP_PROD                    B
                                       , TB_DP_PROD_RSHP               C
@@ -897,7 +904,8 @@
                                    AND F.MENU_ID = G.MENU_ID      
                                    AND A.TENANT_ID = H.TENANT_ID
                                    AND A.TENANT_ID = I.TENANT_ID
-                                   AND A.TENANT_ID = L.TENANT_ID
+                                   --AND A.TENANT_ID = L.TENANT_ID
+                                   AND L.TENANT_ID(+) = #{tenantId}
                                    <choose>
                                    <when test ="topMenuId == 'DP16'">
                                    AND B.SVC_GRP_CD       = 'DP000203'    /* 음악일 경우 멀티미디어 그룹에서 조회 */
@@ -1014,6 +1022,7 @@
                                            AND LIST_ID = #{listId}
                                            AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
                                            AND EXPO_YN ='Y'
+                                           AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                        )                              A           
                                       , TB_DP_PROD                    B
                                       , TB_DP_PROD_RSHP               C
@@ -1038,7 +1047,8 @@
                                    AND F.MENU_ID = G.MENU_ID      
                                    AND A.TENANT_ID = H.TENANT_ID
                                    AND A.TENANT_ID = I.TENANT_ID
-                                   AND A.TENANT_ID = L.TENANT_ID
+                                   AND L.TENANT_ID(+) = #{tenantId}
+                                   --AND A.TENANT_ID = L.TENANT_ID
                                    <choose>
                                    <when test ="topMenuId == 'DP16'">
                                    AND B.SVC_GRP_CD       = 'DP000203'    /* 음악일 경우 멀티미디어 그룹에서 조회 */

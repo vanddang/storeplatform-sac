@@ -30,6 +30,7 @@
 		                    AND A.LIST_ID   = #{listId} 
 		                    AND A.EXPO_YN   = 'Y'
 		                    AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} 
+		                    AND SYSDATE BETWEEN A.EXPO_START_DT AND A.EXPO_END_DT
                             AND A.PROD_ID = C.PART_PROD_ID
                             AND B.PROD_ID = C.PROD_ID 
                             AND B.TOP_MENU_ID != 'DP02'                            
