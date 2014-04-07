@@ -244,11 +244,11 @@
      /* CouponMapper.xml, updateTbDpProdDescInfo,TB_DP_PROD_DESC 테이블에 UPDATE, 김형식/SK플래닛  , 2013-01-08 */
         update TB_DP_PROD_DESC
         set
-             PROD_NM       = NVL(#{prodNm},PROD_NM)                /*  */
-            ,PROD_BASE_DESC= NVL(#{prodBaseDesc},PROD_BASE_DESC)    /*  */
-            ,PROD_DTL_DESC = NVL(#{prodDtlDesc},PROD_DTL_DESC)     /*  */
-            ,PROD_INTR_DSCR= NVL(#{prodIntrDscr},PROD_INTR_DSCR)    /*  */
-            ,PROD_USE_MTD  = NVL(#{prodUseMtd},PROD_USE_MTD)       /*  */
+             PROD_NM       = #{prodNm}         /*  */
+            ,PROD_BASE_DESC= #{prodBaseDesc}    /*  */
+            ,PROD_DTL_DESC = #{prodDtlDesc}    /*  */
+            ,PROD_INTR_DSCR= #{prodIntrDscr}    /*  */
+            ,PROD_USE_MTD  = #{prodUseMtd}       /*  */
             ,UPD_ID        = NVL(#{updId},UPD_ID)                  /*  */
             ,UPD_DT        = sysdate                               /*  */
         where 1=1
