@@ -17,6 +17,7 @@
 						">
 
     <!-- PlanDas : Global Cache -->
+    <bean id="globalCacheProcessor" class="com.skplanet.storeplatform.framework.core.cache.process.GlobalCacheProcessor" />
     <bean id="globalAnnotationCacheOperationSource" class="org.springframework.cache.annotation.AnnotationCacheOperationSource" />
     <bean id="globalCacheInterceptor" class="com.skplanet.storeplatform.framework.core.cache.interceptor.GlobalCacheInterceptor"> 
         <property name="cacheOperationSources" ref="globalAnnotationCacheOperationSource"/>
