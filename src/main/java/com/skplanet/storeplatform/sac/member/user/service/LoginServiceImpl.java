@@ -868,12 +868,12 @@ public class LoginServiceImpl implements LoginService {
 
 		String isPurchaseChange = "N";
 		String isJoinMdn = "N";
+		String isVariability = "N"; // 변동성 여부
 
 		String oldDeviceKey = macDeviceInfo.getDeviceKey();
 		String oldUserKey = macDeviceInfo.getUserKey();
 		String newDeviceKey = null;
 		String newUserKey = null;
-		String isVariability = null; // 변동성 여부
 
 		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) { // 회원인 경우
 
