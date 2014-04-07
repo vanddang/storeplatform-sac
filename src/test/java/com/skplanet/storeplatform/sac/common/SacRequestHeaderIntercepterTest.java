@@ -9,8 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.common;
 
-import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
-import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 
 /**
  * <p>
@@ -38,7 +38,7 @@ import java.util.Map;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class SacRequestHeaderIntercepterTest {
 
-    private static final String APP_DETAIL_URL = "/display/app/detail/v1";
+    private static final String APP_DETAIL_URL = "/example/sample/detail?no=11";
 
     @Autowired
     private WebApplicationContext wac;
@@ -52,21 +52,21 @@ public class SacRequestHeaderIntercepterTest {
     @Test
     public void test1() throws Exception {
         Map<String, String> headerMap = new HashMap<String, String>();
-        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000065131"), true);
+        MvcTestBuilder.build2(this.mvc, false, headerMap, APP_DETAIL_URL, null, true);
     }
 
     @Test
     public void test2() throws Exception {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("x-sac-device-info", "model=\"SHW-M340S\"");
-        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
+        MvcTestBuilder.build2(this.mvc, false, headerMap, APP_DETAIL_URL, null, true);
     }
 
     @Test
     public void test3WithWrongKeyName() throws Exception {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("x-sac-device-info", "modele=\"SHW-M340S\"");
-        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), null);
+        MvcTestBuilder.build2(this.mvc, false, headerMap, APP_DETAIL_URL, null, null);
     }
 
     @Test
@@ -75,39 +75,39 @@ public class SacRequestHeaderIntercepterTest {
 
         headerMap.put(CommonConstants.HEADER_NETWORK, "type=\"lte\"");
         headerMap.put("x-sac-device-info", "model=\"SHW-M340S\"");
-        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), null);
+        MvcTestBuilder.build2(this.mvc, false, headerMap, APP_DETAIL_URL, null, null);
     }
 
     @Test
     public void testComplexDeviceHeader() throws Exception {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("x-sac-device-info", "model=\"SHW-M340S\", dpi=\"200,\", resolution =\"160*160\" , os=\"Android_/4.0.4\",pkg=\"test/38\",svc=\"\"");
-        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
+        MvcTestBuilder.build2(this.mvc, false, headerMap, APP_DETAIL_URL, null, true);
     }
 
     @Test
     public void testAcceptLanguage1() throws Exception {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("Accept-Language", "da");
-        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
+        MvcTestBuilder.build2(this.mvc, false, headerMap, APP_DETAIL_URL, null, true);
     }
 
     @Test
     public void testAcceptLanguage2() throws Exception {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("Accept-Language", "ko");
-        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
+        MvcTestBuilder.build2(this.mvc, false, headerMap, APP_DETAIL_URL, null, true);
     }
 
     @Test
     public void testAcceptLanguage3() throws Exception {
-        MvcTestBuilder.build2(mvc, true, null, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
+        MvcTestBuilder.build2(this.mvc, false, null, APP_DETAIL_URL, null, true);
     }
 
     @Test
     public void testAcceptLanguage4() throws Exception {
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put("Accept-Language", "da, jp, en-gb, en");
-        MvcTestBuilder.build2(mvc, true, headerMap, APP_DETAIL_URL, new AppDetailReq("0000297941"), true);
+        MvcTestBuilder.build2(this.mvc, false, headerMap, APP_DETAIL_URL, null, true);
     }
 }
