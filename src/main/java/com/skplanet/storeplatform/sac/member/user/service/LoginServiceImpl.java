@@ -54,7 +54,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
@@ -913,15 +912,9 @@ public class LoginServiceImpl implements LoginService {
 
 		if (StringUtil.equals(isPurchaseChange, "Y")) {
 
-			/* 구매내역 이관 */
-			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
-			userInfoSacInReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-			userInfoSacInReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-			userInfoSacInReq.setDeviceKey(oldDeviceKey);
-			userInfoSacInReq.setUserKey(oldUserKey);
-			userInfoSacInReq.setNewDeviceKey(newDeviceKey);
-			userInfoSacInReq.setNewUserKey(newUserKey);
-			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
+			/* 전시/기타, 구매 파트 키 변경 */
+			this.commService.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(),
+					newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
 
 			/* mac 정보 탈퇴처리 */
 			RemoveUserRequest removeUserRequest = new RemoveUserRequest();
@@ -1033,9 +1026,9 @@ public class LoginServiceImpl implements LoginService {
 
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
-			/* OGG 연동을 위해 전시/기타, 구매 파트 키 변경 */
+			/* usermbr_no가 변경된경우 OGG 연동을 위해 전시/기타, 구매 파트 키 변경 */
 			this.commService.excuteInternalMethod(this.isCallChangeKey, requestHeader.getTenantHeader().getSystemId(), requestHeader
-					.getTenantHeader().getTenantId(), oldUserKey, joinForWapEcRes.getUserKey(), oldDeviceKey, oldDeviceKey);
+					.getTenantHeader().getTenantId(), joinForWapEcRes.getUserKey(), oldUserKey, oldDeviceKey, oldDeviceKey);
 
 			res.setDeviceKey(oldDeviceKey);
 			res.setUserKey(oldUserKey);
