@@ -1037,7 +1037,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		coupon.setAutopay(autoPay);
 		// coupon.setDate(date);
 		coupon.setSaleStatus(metaInfo.getProdStatusCd());
-
+		if (metaInfo.getCashAmt() != null) {
+			coupon.setCashList(this.freepassGenerator.generateCashList(metaInfo));
+		}
 		return coupon;
 	}
 

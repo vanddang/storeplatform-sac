@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cash;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -186,6 +187,56 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 		menu.setName(metaInfo.getTopMenuNm());
 		menuList.add(menu);
 		return menuList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.FreepassInfoGenerator#generateCashList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Cash> generateCashList(MetaInfo metaInfo) {
+		Cash cash = new Cash();
+		List<Cash> cashList = new ArrayList<Cash>();
+
+		if (metaInfo.getCashAmt() != null) {
+			cash = new Cash();
+			cash.setName(DisplayConstants.DP_FREEPASS_CASH);
+			cash.setText(metaInfo.getCashAmt());
+			cashList.add(cash);
+
+			cash = new Cash();
+			cash.setName(DisplayConstants.DP_FREEPASS_BONUS);
+			cash.setText(metaInfo.getBnsCashAmt());
+			cash.setCashRate(metaInfo.getBnsCashRatio());
+			Date date = new Date();
+			// 구매일로부터 기간 제한
+			if (StringUtil.nvl(metaInfo.getUsePeriodUnitCd(), "") != "") {
+				String usePeriodUnitNm = (metaInfo.getBnsUsePeriodUnitCd() == null) ? "" : (metaInfo
+						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (metaInfo
+						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (metaInfo
+						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day" : (metaInfo
+						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) ? "month" : (metaInfo
+						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) ? "year" : (metaInfo
+						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) ? "limit/day" : (metaInfo
+						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) ? "limit/month" : (metaInfo
+						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year" : (metaInfo
+						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
+
+				if (usePeriodUnitNm != "") {
+					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, usePeriodUnitNm + "/"
+							+ metaInfo.getBnsUsePeriod());
+
+				}
+			}
+			cash.setDate(date);
+
+			cashList.add(cash);
+		}
+
+		return cashList;
 	}
 
 }

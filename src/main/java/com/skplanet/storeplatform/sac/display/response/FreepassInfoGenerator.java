@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cash;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -25,7 +26,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
  * Updated on : 2014. 2. 11. Updated by : 서영배, GTSOFT.
  */
 public interface FreepassInfoGenerator {
-	
+
 	/**
 	 * <pre>
 	 * 정액제 Identifier List 생성.
@@ -36,7 +37,7 @@ public interface FreepassInfoGenerator {
 	 * @return List<Identifier>
 	 */
 	public List<Identifier> generateIdentifierList(MetaInfo metaInfo);
-	
+
 	/**
 	 * <pre>
 	 * 정액제 AutoPay 생성.
@@ -47,7 +48,7 @@ public interface FreepassInfoGenerator {
 	 * @return AutoPay
 	 */
 	public AutoPay generateAutoPay(MetaInfo metaInfo);
-	
+
 	/**
 	 * <pre>
 	 * 정액제 Title 생성.
@@ -58,7 +59,7 @@ public interface FreepassInfoGenerator {
 	 * @return Title
 	 */
 	public Title generateTitle(MetaInfo metaInfo);
-	
+
 	/**
 	 * <pre>
 	 * 정액제 Source List 생성.
@@ -69,7 +70,7 @@ public interface FreepassInfoGenerator {
 	 * @return List<Source>
 	 */
 	public List<Source> generateSourceList(MetaInfo metaInfo);
-	
+
 	/**
 	 * <pre>
 	 * 정액제 Date 생성.
@@ -80,7 +81,7 @@ public interface FreepassInfoGenerator {
 	 * @return Date
 	 */
 	public Date generateDate(MetaInfo metaInfo);
-	
+
 	/**
 	 * <pre>
 	 * 정액제 Date 생성.
@@ -91,7 +92,7 @@ public interface FreepassInfoGenerator {
 	 * @return List
 	 */
 	public List<Date> generateDateList(MetaInfo metaInfo);
-	
+
 	/**
 	 * <pre>
 	 * 정액제 Menu 생성.
@@ -102,5 +103,16 @@ public interface FreepassInfoGenerator {
 	 * @return List
 	 */
 	public List<Menu> generateMenuList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 정액제 Cash 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List
+	 */
+	public List<Cash> generateCashList(MetaInfo metaInfo);
 
 }
