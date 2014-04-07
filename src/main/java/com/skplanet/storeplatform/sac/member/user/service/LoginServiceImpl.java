@@ -912,10 +912,6 @@ public class LoginServiceImpl implements LoginService {
 
 		if (StringUtil.equals(isPurchaseChange, "Y")) {
 
-			/* 전시/기타, 구매 파트 키 변경 */
-			this.commService.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(),
-					newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
-
 			/* mac 정보 탈퇴처리 */
 			RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 			removeUserRequest.setCommonRequest(commonRequest);
@@ -951,6 +947,10 @@ public class LoginServiceImpl implements LoginService {
 					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
 
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
+
+			/* 전시/기타, 구매 파트 키 변경 */
+			this.commService.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(),
+					newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
 
 			res.setDeviceKey(newDeviceKey);
 			res.setUserKey(newUserKey);
