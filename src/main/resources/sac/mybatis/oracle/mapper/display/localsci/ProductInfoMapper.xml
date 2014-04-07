@@ -161,10 +161,6 @@
 		       , C.MENU_DESC
 		       , D.PROD_GRD_CD
 		       , D.META_CLSF_CD
-		       ,  (CASE
-                  WHEN D.META_CLSF_CD IN ('CT14', 'CT15','CT16') THEN '회'
-                  ELSE ''
-                  END ) AS CHAPTER_UNIT
 		       , D.CONTENTS_TYPE_CD
 		       , D.EXPO_SELLER_EMAIL
 		       , D.EXPO_SELLER_NM
@@ -346,11 +342,7 @@
              , E.EPSD_CNT
              , E.CHAPTER
              , E.BOOK_PAGE_CNT
-             , (CASE WHEN E.BOOK_CLSF_CD = 'DP004301' THEN '권'
-                    WHEN E.BOOK_CLSF_CD = 'DP004302' THEN '회'
-                    WHEN E.BOOK_CLSF_CD = 'DP004303' THEN '호'
-                    ELSE ''
-               END) AS CHAPTER_UNIT
+             , E.BOOK_CLSF_CD
              , E.POSS_LEND_CLSF_CD
              , 'paid' as PROD_CLSF_CD
              , F.PROD_NM

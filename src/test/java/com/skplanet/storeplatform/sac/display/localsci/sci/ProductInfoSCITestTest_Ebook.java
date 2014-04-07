@@ -57,11 +57,11 @@ public class ProductInfoSCITestTest_Ebook {
 	public void testSearchEbookProductList() throws JsonGenerationException, JsonMappingException, IOException {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
-		list.add("H900005941");
-		list.add("H900006037");
-		list.add("H900006041");
-		list.add("H900008864");
-		list.add("H900006019");
+		list.add("H001380128");
+		list.add("H001390492");
+		list.add("H001402272");
+		list.add("H001415928");
+		list.add("H001474407");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
 		req.setTenantId("S01");

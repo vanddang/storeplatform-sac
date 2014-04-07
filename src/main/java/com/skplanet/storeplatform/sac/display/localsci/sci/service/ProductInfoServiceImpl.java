@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Produc
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 
 /**
@@ -32,6 +33,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	/*
 	 * (non-Javadoc)
@@ -100,7 +104,14 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 						this.log.debug("##### Search for EbookComic specific product");
 						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getEbookComicMetaInfo",
 								paramMap, ProductInfo.class);
+						String chapterUnit = null;
 						if (product != null) {
+							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+								chapterUnit = this.displayCommonService.getEpubChapterUnit(product.getBookClsfCd());
+							} else {
+								chapterUnit = this.displayCommonService.getVodChapterUnit();
+							}
+							product.setChapterUnit(chapterUnit);
 							productList.add(product);
 						}
 					} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
