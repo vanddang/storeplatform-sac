@@ -174,75 +174,99 @@
     <!-- 하루에 하나 상품 조회 -->
     <select id="selectRecommendOnedayList" parameterType="RecommendOnedaySacReq" resultType="RecommendOneday">
         SELECT /* FeatureRecommendMapper.xml, selectRecommendOnedayList, SAC 전시 , 2014-02-28 */
-			    ONE.TENANT_ID
-             , ONE.SEQ AS ONE_SEQ
-			 , ONE.EXPO_DT
-             , TO_CHAR(ONE.EXPO_START_DT,'YYYYMMDDHHmiss') AS EXPO_START_DT
-             , TO_CHAR(ONE.EXPO_END_DT,'YYYYMMDDHHmiss') AS EXPO_END_DT
-             , ONE.PART_CHRGMONY_APP_YN
-             , NVL(ONE.FREE_ITEM_AMT, 0) AS FREE_ITEM_AMT        
-             , NVL(ONE.PROD_REALRE_AMT, 0) AS PROD_REALRE_AMT        
-             , NVL(ONE.PROD_OFFR_AMT, 0) AS PROD_OFFR_AMT                         
-             , TDMC.MENU_ID
-			 , PROD.PROD_ID
-			 , TBPR.PART_PROD_ID
-			 , TDMC.TOP_MENU_ID
-			 , PROD.META_CLSF_CD
-             , PROD.SVC_GRP_CD
-             , FC_GET_CM_CD_NM(PROD.SVC_GRP_CD,#{langCd}) AS SVC_GRP_NM     
-			 , PROD.CONTENTS_TYPE_CD
-			FROM TB_DP_ONEDAY_ONE_APP ONE
-			    , TB_DP_PROD PROD
-			    , TB_DP_MENU_CATEGORY_PROD_MAPG TDMM
-			    , TB_DP_MENU_CATEGORY TDMC
-			    , TB_DP_PROD_RSHP TBPR
-			    , TB_DP_PROD_DESC TDPD
-			    , TB_DP_TENANT_PROD TDTP
-			WHERE ONE.PROD_ID = PROD.PROD_ID
-				AND ONE.PROD_ID = TDPD.PROD_ID
-				AND ONE.PROD_ID = TDTP.PROD_ID
-				AND ONE.PROD_ID = TBPR.PART_PROD_ID
-                AND TBPR.PROD_RSHP_CD  = 'DP010802'
-				AND PROD.PROD_ID = TDMM.PROD_ID
-				AND TDMM.USE_YN = 'Y'
-				AND TDMM.MENU_ID = TDMC.MENU_ID
-				AND TDMC.USE_YN = 'Y'
-				AND ONE.TENANT_ID = #{tenantId}
-				AND TDTP.TENANT_ID = #{tenantId}
-				AND ONE.USE_YN = 'Y'
-				AND TDTP.EXPO_YN = 'Y'
-                <if test="menuId != null and menuId != ''">
-                AND TDMM.MENU_ID = #{menuId}
-                </if>
-                <if test="arrayProdGradeCd != null">
-                   AND PROD.PROD_GRD_CD IN
-                     <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
-                       #{prodGradeCd}
-                     </foreach>
-                 </if>                 
-                <if test='searchType == "S"'>    
-                    AND ONE.SEQ = #{seq}
-                </if>
-                <if test='searchType != "S"'>    
-	                <if test='searchType == "A"'>         
-	                AND ONE.EXPO_DT <![CDATA[ >= ]]>
-	                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE -8, 'YYYYMMDD')
-	                        ELSE  TO_CHAR(SYSDATE -7, 'YYYYMMDD')
-	                    END
-	                AND ONE.EXPO_DT <![CDATA[ <= ]]>
-	                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE +3, 'YYYYMMDD')
-	                        ELSE  TO_CHAR(SYSDATE +4, 'YYYYMMDD')
-	                    END
+            ZZ.TENANT_ID
+		    , ZZ.ONE_SEQ
+		    , ZZ.EXPO_DT
+		    , ZZ.EXPO_START_DT
+		    , ZZ.EXPO_END_DT
+		    , ZZ.PART_CHRGMONY_APP_YN
+		    , ZZ.FREE_ITEM_AMT        
+		    , ZZ.PROD_REALRE_AMT        
+		    , ZZ.PROD_OFFR_AMT                         
+		    , ZZ.MENU_ID
+		    , ZZ.PROD_ID
+		    , ZZ.PART_PROD_ID
+		    , ZZ.TOP_MENU_ID
+		    , ZZ.META_CLSF_CD
+		    , ZZ.SVC_GRP_CD
+		    , ZZ.SVC_GRP_NM     
+		    , ZZ.CONTENTS_TYPE_CD
+		    FROM
+		    (
+			     SELECT
+				    ONE.TENANT_ID
+	             , ONE.SEQ AS ONE_SEQ
+				 , ONE.EXPO_DT
+	             , TO_CHAR(ONE.EXPO_START_DT,'YYYYMMDDHHmiss') AS EXPO_START_DT
+	             , TO_CHAR(ONE.EXPO_END_DT,'YYYYMMDDHHmiss') AS EXPO_END_DT
+	             , ONE.PART_CHRGMONY_APP_YN
+	             , NVL(ONE.FREE_ITEM_AMT, 0) AS FREE_ITEM_AMT        
+	             , NVL(ONE.PROD_REALRE_AMT, 0) AS PROD_REALRE_AMT        
+	             , NVL(ONE.PROD_OFFR_AMT, 0) AS PROD_OFFR_AMT                         
+	             , TDMC.MENU_ID
+				 , PROD.PROD_ID
+				 , TBPR.PART_PROD_ID
+				 , TDMC.TOP_MENU_ID
+				 , PROD.META_CLSF_CD
+	             , PROD.SVC_GRP_CD
+	             , FC_GET_CM_CD_NM(PROD.SVC_GRP_CD,#{langCd}) AS SVC_GRP_NM     
+				 , PROD.CONTENTS_TYPE_CD
+				 , ROW_NUMBER( ) OVER ( PARTITION BY ONE.SEQ
+				                             ORDER BY TBPR.REG_DT DESC) AS RN
+				FROM TB_DP_ONEDAY_ONE_APP ONE
+				    , TB_DP_PROD PROD
+				    , TB_DP_MENU_CATEGORY_PROD_MAPG TDMM
+				    , TB_DP_MENU_CATEGORY TDMC
+				    , TB_DP_PROD_RSHP TBPR
+				    , TB_DP_PROD_DESC TDPD
+				    , TB_DP_TENANT_PROD TDTP
+				WHERE ONE.PROD_ID = PROD.PROD_ID
+					AND ONE.PROD_ID = TDPD.PROD_ID
+					AND ONE.PROD_ID = TDTP.PROD_ID
+                    AND ONE.PROD_ID = TBPR.PROD_ID
+	                AND TBPR.PROD_RSHP_CD  = 'DP010802'
+					AND PROD.PROD_ID = TDMM.PROD_ID
+					AND TDMM.USE_YN = 'Y'
+					AND TDMM.MENU_ID = TDMC.MENU_ID
+					AND TDMC.USE_YN = 'Y'
+					AND ONE.TENANT_ID = #{tenantId}
+					AND TDTP.TENANT_ID = #{tenantId}
+					AND ONE.USE_YN = 'Y'
+					AND TDTP.EXPO_YN = 'Y'
+	                <if test="menuId != null and menuId != ''">
+	                AND TDMM.MENU_ID = #{menuId}
 	                </if>
-	                <if test='searchType != "A"'>   
-	                     <if test="periodStart != null">
-	                         AND ONE.EXPO_DT <![CDATA[ >= ]]> #{periodStart}
-	                     </if>
-	                     <if test="periodEnd != null">
-	                         AND ONE.EXPO_DT <![CDATA[ <= ]]> #{periodEnd}
-	                     </if>
+	                <if test="arrayProdGradeCd != null">
+	                   AND PROD.PROD_GRD_CD IN
+	                     <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+	                       #{prodGradeCd}
+	                     </foreach>
+	                 </if>                 
+	                <if test='searchType == "S"'>    
+	                    AND ONE.SEQ = #{seq}
 	                </if>
-	              </if>
-			ORDER BY ONE.EXPO_DT
+	                <if test='searchType != "S"'>    
+		                <if test='searchType == "A"'>         
+		                AND ONE.EXPO_DT <![CDATA[ >= ]]>
+		                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE -8, 'YYYYMMDD')
+		                        ELSE  TO_CHAR(SYSDATE -7, 'YYYYMMDD')
+		                    END
+		                AND ONE.EXPO_DT <![CDATA[ <= ]]>
+		                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE +3, 'YYYYMMDD')
+		                        ELSE  TO_CHAR(SYSDATE +4, 'YYYYMMDD')
+		                    END
+		                </if>
+		                <if test='searchType != "A"'>   
+		                     <if test="periodStart != null">
+		                         AND ONE.EXPO_DT <![CDATA[ >= ]]> #{periodStart}
+		                     </if>
+		                     <if test="periodEnd != null">
+		                         AND ONE.EXPO_DT <![CDATA[ <= ]]> #{periodEnd}
+		                     </if>
+		                </if>
+		              </if>
+		    ) ZZ
+            WHERE ZZ.RN = 1
+			ORDER BY ZZ.EXPO_DT
     </select>
 </mapper>
