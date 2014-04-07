@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 
 /**
- * Interface Message Layout Value Object.
+ * Interface Message Cash Value Object.
  * 
  * Updated on : 2014. 04. 07. Updated by : 김형식, SK 플래닛.
  */
