@@ -206,6 +206,17 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
+	 * 테넌트 약관 코드조회.
+	 * </pre>
+	 * 
+	 * @return ClauseDTO
+	 */
+	public Clause getTenantClauseCode(String clauseItemCd) {
+		return this.repository.searchTenantClauseCode(clauseItemCd);
+	}
+
+	/**
+	 * <pre>
 	 * 폰 정보 조회.
 	 * </pre>
 	 * 

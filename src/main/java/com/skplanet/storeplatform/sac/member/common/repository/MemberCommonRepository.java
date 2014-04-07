@@ -45,6 +45,16 @@ public interface MemberCommonRepository {
 
 	/**
 	 * <pre>
+	 * 테넌트 약관 코드 조회
+	 * </pre>
+	 * 
+	 * @param clauseItemCd
+	 * @return Clause
+	 */
+	public Clause searchTenantClauseCode(String clauseItemCd);
+
+	/**
+	 * <pre>
 	 * 폰 정보 조회.
 	 * </pre>
 	 * 

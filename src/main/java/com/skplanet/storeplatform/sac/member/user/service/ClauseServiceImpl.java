@@ -75,6 +75,14 @@ public class ClauseServiceImpl implements ClauseService {
 	@Override
 	public DetailClauseSacRes detailClauseList(DetailClauseSacReq req) {
 		String clauseItemCd = req.getClauseItemCd();
+
+		/* Tenant에 등록된 코드인지 확인 */
+		Clause clauseCode = this.commService.getTenantClauseCode(clauseItemCd);
+		if (clauseCode == null) {
+			throw new StorePlatformException("SAC_MEM_1105", clauseItemCd);
+		}
+
+		/* Tenant에 등록된 코드면 TB_CM_CLAUSE 조회 */
 		List<Clause> clauseList = this.commService.getDetailClauseList(clauseItemCd);
 
 		LOGGER.debug("ListClauseSacRes : ", clauseList.toString());
