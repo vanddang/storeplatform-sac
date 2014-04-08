@@ -128,9 +128,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	@Override
 	public String executeChangeMobileNumber(HashMap<String, String> map) {
 
-		// <provisionInterface> CMD[ changeMobileNumber] REQUEST URL [
-		// http://stg.tstore.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=changeMobileNumber&mdn=01071295269&model_id=SSNT&be_mdn=01071295269&svc_mng_num=7213811004]
-		// svcMngNum [ 7213811004] mdn [ 01071295269] modelId [ SSNT]
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
 		String beMdn = StringUtil.nvl(map.get("be_mdn"), "");
@@ -541,9 +538,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	@Override
 	public String executeChangeMobileID(HashMap<String, String> map) {
 
-		// <provisionInterface> CMD[ changeMobileID] REQUEST URL [
-		// http://sbeta.itopping.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=changeMobileID&svc_mng_num=7035516765&mdn=01049545098&be_mdn=01049545098&model_id=SSOG&min=1049545098]
-		// svcMngNum [ 7035516765] mdn [ 01049545098] modelId [ SSOG]
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
 		String uacd = StringUtil.nvl(map.get("model_id"), ""); // uacd
@@ -771,9 +765,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	@Override
 	public String executeSecedeMobileNumber(HashMap<String, String> map) {
 
-		// <provisionInterface> CMD[ secedeMobileNumber] REQUEST URL [
-		// http://sbeta.itopping.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=secedeMobileNumber&svc_mng_num=7049931033&mdn=01090130995&be_mdn=01090130995&svc_rsn_cd=Z21Z&min=1090130995]
-		// svcMngNum [ 7049931033] mdn [ 01090130995] modelId [ null]
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
 		String svcMngNum = StringUtil.nvl(map.get("svc_mng_num"), "");
@@ -1033,16 +1024,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 */
 	@Override
 	public String executeAdjustWiredProfile(HashMap<String, String> map) {
-		// <provisionInterface> CMD[ adjustWiredProfile] REQUEST URL [
-		// http://sbeta.itopping.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=adjustWiredProfile&user_address=%EC%9D%B8%EC%B2%9C+%EA%B3%84%EC%96%91%EA%B5%AC+%EB%8F%99%EC%96%91%EB%8F%99&user_address2=595-3+%ED%95%9C%EB%AB%BC%EC%9C%84%EB%84%88%EC%8A%A4%EB%B9%8C+102%EB%8F%99+402%ED%98%B8&is_foreign=N&user_sex=F&user_key=IF1023112421620111107130852&user_id=newjungyb&user_birthday=19880903&user_zipcode=407340]
-		// svcMngNum [ null] mdn [ null] modelId [ null]
-		// userpoc_idp2.log:2013-01-24 16:06:11,769 [ajp-9209-3] INFO
-		// (com.omp.market.intf.idp.action.IdpOmpSubscriptAction:132) - <provisionInterface> CMD[ adjustWiredProfile]
-		// REQUEST URL [
-		// http://sbeta.itopping.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=adjustWiredProfile&user_key=IF1023548360620120726182243&user_id=expertman99&is_rname_auth=N&is_foreign=N]
-		// svcMngNum [ null] mdn [ null] modelId [ null]
 
-		// cmd=adjustWiredProfile&is_foreign=N&user_sex=F&user_key=IF1023112421620111107130852&user_id=newjungyb&user_birthday=19880903&user_email=vanddang1234@gadf.com&is_rname_auth=Y&user_name=반범진&user_social_number=8312101
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String imIntSvcNo = StringUtil.nvl(map.get("im_int_svc_no"), "");
 		String imMbrNo = StringUtil.nvl(map.get("user_key"), "");
@@ -1391,9 +1373,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	@Override
 	public String executeEcgJoinedTStore(HashMap<String, String> map) {
 
-		// <provisionInterface> CMD[ ecgJoinedTStore] REQUEST URL [
-		// http://stg.tstore.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=ecgJoinedTStore&svc_mng_num=7240323788&mdn=01021489123&min=1021489123]
-		// svcMngNum [ 7240323788] mdn [ 01021489123] modelId [ null]
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
 		String min = StringUtil.nvl(map.get("min"), "");
@@ -1495,7 +1474,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 */
 	@Override
 	public String executeEcgScededTStore(HashMap<String, String> map) {
-		// TODO Auto-generated method stub
 		return IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 	}
 }
