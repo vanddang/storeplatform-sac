@@ -187,6 +187,9 @@ public class SellerServiceImpl implements SellerService {
 		mbrAuth.setRealNameDate(req.getRealNameDate());
 		// 내국인 여부
 		mbrAuth.setIsDomestic(req.getIsDomestic());
+		// TenantId 추가
+		mbrAuth.setTenantID(header.getTenantHeader().getTenantId());
+
 		createSellerRequest.setMbrAuth(mbrAuth);
 
 		LOGGER.debug("==>>[SC] CreateSellerRequest.MbrAuth.toString() : {}", mbrAuth.toString());
@@ -1028,6 +1031,8 @@ public class SellerServiceImpl implements SellerService {
 			mbrAuth.setRealNameSite(commonRequest.getSystemID());
 			mbrAuth.setSex(req.getSex());
 			mbrAuth.setTelecom(req.getSellerTelecom());
+			// TenantId 추가
+			mbrAuth.setTenantID(header.getTenantHeader().getTenantId());
 			updateRealNameSellerRequest.setMbrAuth(mbrAuth);
 
 		} else if (StringUtils.equals(MemberConstants.AUTH_TYPE_PARENT, req.getIsOwn())) {
