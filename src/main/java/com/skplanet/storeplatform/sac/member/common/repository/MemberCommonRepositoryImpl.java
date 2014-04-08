@@ -71,10 +71,10 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 	}
 
 	@Override
-	public Clause getClauseItemInfo(String tenantId, String clauseItemCd) {
+	public Clause getClauseItemInfo(String tenantId, String clauseId) {
 		Clause dto = new Clause();
 		dto.setTenantId(tenantId);
-		dto.setClauseItemCd(clauseItemCd);
+		dto.setClauseId(clauseId);
 		return (Clause) this.commonDAO.queryForObject("MemberCommon.getClauseItemInfo", dto);
 	}
 }

@@ -93,9 +93,9 @@ public interface MemberCommonRepository {
 	 * 
 	 * @param tenantId
 	 *            테넌트 아이디
-	 * @param clauseItemCd
+	 * @param clauseId
 	 *            약관 코드
 	 * @return Clause
 	 */
-	public Clause getClauseItemInfo(String tenantId, String clauseItemCd);
+	public Clause getClauseItemInfo(String tenantId, String clauseId);
 }

@@ -187,17 +187,17 @@
     <!-- 공통 약관 코드 정보 조회 -->
     <select id="getClauseItemInfo" parameterType="ClauseDTO" resultType="ClauseDTO">
 		SELECT /* MemberCommonMapper.getClauseItemInfo, 공통 약관 코드 정보 조회, 심대진/다모아, 2014-04-04 */
-			   A.CLAUSE_ITEM_CD AS clauseItemCd,
+			   A.CLAUSE_ID AS clauseId,
 			   A.START_DAY AS startDay,
 			   A.END_DAY AS endDay,
 			   A.CLAUSE_VER AS clauseVer,
 			   B.MAND_AGREE_YN AS mandAgreeYn
 		FROM TB_CM_CLAUSE A, TB_CM_TENANT_CLAUSE B
-		WHERE A.CLAUSE_ITEM_CD = B.CLAUSE_ID
+		WHERE A.CLAUSE_ID = B.CLAUSE_ID
 		AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN A.START_DAY AND A.END_DAY
 		AND B.USE_YN = 'Y'
 		AND B.TENANT_ID = #{tenantId}
-		AND A.CLAUSE_ITEM_CD = #{clauseItemCd}
+		AND A.CLAUSE_ID = #{clauseId}
     </select>
     
 </mapper>

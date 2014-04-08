@@ -1083,7 +1083,7 @@ public class MemberCommonComponent {
 				/**
 				 * 유효한 약관정보가 존재 하지 않을경우 에러.
 				 */
-				if (clauseInfo == null || StringUtils.isBlank(clauseInfo.getClauseItemCd())) {
+				if (clauseInfo == null || StringUtils.isBlank(clauseInfo.getClauseId())) {
 					throw new StorePlatformException("SAC_MEM_1105", info.getExtraAgreementId());
 				}
 
