@@ -92,19 +92,6 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId 또는 deviceKey");
 		}
 
-		// ChangedDeviceHistoryReq historyRequest = new ChangedDeviceHistoryReq();
-		// historyRequest.setUserKey(request.getUserKey());
-		// historyRequest.setDeviceId(request.getDeviceId());
-		// historyRequest.setDeviceKey(request.getDeviceKey());
-
-		// ChangedDeviceHistoryRes changedDeviceHistoryRes =
-		// this.deviceService.searchChangedDeviceHistory(requestHeader,
-		// historyRequest);
-
-		// ChangedDeviceHistorySacRes response = new ChangedDeviceHistorySacRes();
-		// response.setDeviceKey(changedDeviceHistoryRes.getDeviceKey());
-		// response.setIsChanged(changedDeviceHistoryRes.getIsChanged());
-
 		ChangedDeviceHistorySacRes changedDeviceHistoryRes = this.deviceService.searchChangedDeviceHistory(
 				requestHeader, request);
 
