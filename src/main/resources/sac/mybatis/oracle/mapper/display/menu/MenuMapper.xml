@@ -3,9 +3,9 @@
 <mapper namespace="Menu">
     <!-- Menu 리스트 조회-->
     <select id="selectMenuList" parameterType="MenuSacReq" resultType="Menu">
-		SELECT /* MenuMapper.xml, selectMenuList, SAC 전시 , 2014-03-07 */
-		    COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
-		    , A.TENANT_ID 
+        SELECT /* MenuMapper.xml, selectMenuList, SAC 전시 , 2014-03-07 */
+            COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
+            , A.TENANT_ID 
             , A.MENU_ID 
             , A.SYSTEM_ID 
             , A.MENU_NM 
@@ -38,49 +38,52 @@
             , A.REG_DT 
             , A.UPD_ID 
             , A.UPD_DT 
-		FROM (
-		    SELECT 
-		          A.TENANT_ID 
-		        , A.TENANT_MENU_ID AS MENU_ID 
-		        , A.SYSTEM_ID 
-		        , A.MENU_NM 
-		        , A.MENU_ENG_NM 
-		        , A.MENU_DESC 
-		        , A.MENU_DEPTH 
-		        , A.INFR_MENU_YN 
-		        , A.UP_MENU_ID 
-		        , A.EXPO_ORD 
-		        , A.TARGET_URL 
-		        , A.SEARCH_FILE_PATH 
-		        , A.SEARCH_FILE_NM 
-		        , A.BODY_FILE_PATH 
-		        , A.BODY_FILE_NM 
-		        , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
-		        , A.MAIN_ON_FILE_PATH 
-		        , A.MAIN_ON_FILE_NM 
-		        , A.MAIN_OFF_FILE_PATH 
-		        , A.MAIN_OFF_FILE_NM 
-		        , A.RANK_FILE_PATH 
-		        , A.RANK_FILE_NM 
-		        , A.USE_YN 
-		        , A.MENU_ID_TYPE
+        FROM (
+            SELECT 
+                  A.TENANT_ID 
+                , A.TENANT_MENU_ID AS MENU_ID 
+                , A.SYSTEM_ID 
+                , A.MENU_NM 
+                , A.MENU_ENG_NM 
+                , A.MENU_DESC 
+                , A.MENU_DEPTH 
+                , A.INFR_MENU_YN 
+                , A.UP_MENU_ID 
+                , A.EXPO_ORD 
+                , A.TARGET_URL 
+                , A.SEARCH_FILE_PATH 
+                , A.SEARCH_FILE_NM 
+                , A.BODY_FILE_PATH 
+                , A.BODY_FILE_NM 
+                , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+                , A.MAIN_ON_FILE_PATH 
+                , A.MAIN_ON_FILE_NM 
+                , A.MAIN_OFF_FILE_PATH 
+                , A.MAIN_OFF_FILE_NM 
+                , A.RANK_FILE_PATH 
+                , A.RANK_FILE_NM 
+                , A.USE_YN 
+                , A.MENU_ID_TYPE
                 , A.LNB_FILE_PATH
                 , A.LNB_FILE_NM
                 , A.LNB_FILE_SIZE
                 , A.PRE_CATEGORY_INFO
                 , A.CATEGORY_MENU_YN
-		        , A.REG_ID 
-		        , A.REG_DT 
-		        , A.UPD_ID 
-		        , A.UPD_DT 
-		    FROM TB_DP_TENANT_MENU A
-		    WHERE A.TENANT_ID = #{tenantId}
-		    AND A.SYSTEM_ID = #{systemId}
-		    AND A.USE_YN = 'Y'
-		    START WITH UP_MENU_ID = '999999' AND A.SYSTEM_ID = #{systemId}
-		    CONNECT BY PRIOR TENANT_MENU_ID = UP_MENU_ID
-		    ORDER SIBLINGS BY EXPO_ORD
-		) A
+                , A.REG_ID 
+                , A.REG_DT 
+                , A.UPD_ID 
+                , A.UPD_DT 
+            FROM (
+                SELECT *
+	            FROM TB_DP_TENANT_MENU A
+	            WHERE A.TENANT_ID = #{tenantId}
+	            AND A.SYSTEM_ID = #{systemId}
+	            AND A.USE_YN = 'Y'
+                ) A
+            START WITH UP_MENU_ID = '999999'
+            CONNECT BY PRIOR TENANT_MENU_ID = UP_MENU_ID
+            ORDER SIBLINGS BY EXPO_ORD
+        ) A
     </select>
     
     <!-- Menu Detail 조회-->
