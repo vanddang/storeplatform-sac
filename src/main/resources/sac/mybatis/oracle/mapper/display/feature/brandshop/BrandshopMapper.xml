@@ -118,7 +118,6 @@
                 , Z2.SVC_GRP_CD
 			    , Z2.CONTENTS_TYPE_CD
 			    , Z2.PROD_NM
-                , Z2.PRCHS_CNT
 			    FROM
 			    ( 
 			        SELECT
@@ -133,7 +132,6 @@
                             , Z1.SVC_GRP_CD
 			                , Z1.CONTENTS_TYPE_CD
 			                , Z1.PROD_NM
-                            , Z1.PRCHS_CNT
 			            FROM
 			             (
 			            SELECT DISTINCT  D.PROD_ID AS PROD_ID
@@ -146,7 +144,6 @@
                              , D.SVC_GRP_CD
 			                 , D.CONTENTS_TYPE_CD
 			                 , H.PROD_NM
-			                 , I.PRCHS_CNT
 			                 , ROW_NUMBER( ) OVER ( PARTITION BY D.PROD_ID
 			                                           ORDER BY D.REG_DT DESC) AS RN
 			            FROM TB_DP_BRAND_SHOP BS
@@ -159,12 +156,10 @@
 			                , TB_DP_TENANT_PROD E
 			                , TB_DP_SPRT_DEVICE G
 			                , TB_DP_PROD_DESC H
-			                , TB_DP_TENANT_PROD_STATS I
 			            WHERE 1=1
 			            AND BS.TENANT_ID = #{tenantId}
 	                    AND BSS.TENANT_ID = #{tenantId}
 	                    AND BSD.TENANT_ID = #{tenantId}
-                        AND I.TENANT_ID = #{tenantId}
 			            AND BS.BRAND_SHOP_NO = #{brandshopId}          
 			            AND BS.BRAND_SHOP_NO = BSS.BRAND_SHOP_NO
 			            AND BS.BRAND_SHOP_NO = BSD.BRAND_SHOP_NO
@@ -179,7 +174,6 @@
 			            AND C.USE_YN = 'Y'
 			            AND D.PROD_ID = E.PROD_ID
 			            AND D.PROD_ID = H.PROD_ID
-                        AND D.PROD_ID = I.PROD_ID
 			            AND BS.TENANT_ID = E.TENANT_ID
                         AND E.PROD_STATUS_CD = 'PD000403'
 		                AND (BSD.DVC_TYPE_CD = #{deviceModelCd} OR BSD.DVC_TYPE_CD = #{anyDeviceModelCd})
