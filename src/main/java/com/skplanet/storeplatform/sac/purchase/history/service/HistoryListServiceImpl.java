@@ -253,8 +253,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 			if (!StringUtils.isEmpty(historySac.getSendUserKey())
 					&& !StringUtils.isEmpty(historySac.getSendDeviceKey())) {
 				sendDeviceInfo = new SearchUserDeviceSac();
-				sendDeviceInfo.setUserKey(historySac.getUseUserKey());
-				sendDeviceInfo.setDeviceKey(historySac.getUseDeviceKey());
+				sendDeviceInfo.setUserKey(historySac.getSendUserKey());
+				sendDeviceInfo.setDeviceKey(historySac.getSendDeviceKey());
 				sendDeviceList.add(sendDeviceInfo);
 			}
 
@@ -295,6 +295,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 						}
 					}
 				}
+
 			}
 		}
 		this.logger.debug("##### HistoryList ProductInfo End");
