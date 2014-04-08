@@ -14,7 +14,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SearchIdSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	/* 기기 ID(MSISDN, UUID, MacAddress), Value : 01011112222 */
+	/* 기기 ID */
 	private String deviceId;
 
 	private String userEmail;

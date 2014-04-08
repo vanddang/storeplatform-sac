@@ -15,20 +15,19 @@ public class ExistRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/* 사용자 Key, Value : IW102158844420091030165015 */
+	/* 사용자 Key */
 	private String userKey;
 	/*
-	 * 사용자 구분 코드, Value : US011501(기기사용자) US011502(IDP사용자) US011503(OneId사용자)
-	 * null(Tstore 회원 아님)
+	 * 사용자 구분 코드
 	 */
 	private String userType;
-	/* 회원 아이디, Value : 모바일 회원이거나 Tstore, 회원이 아닐경우 null */
+	/* 회원 아이디 */
 	private String userId;
-	/* 실명인증 여부 Value : Y/N, Tstore회원이 아닐 경우 null */
+	/* 실명인증 여부 */
 	private String isRealName;
-	/* 14세 미만 법정대리인 동의 여부 Value : Y/N, Tstore회원이 아닐 경우 null */
+	/* 14세 미만 법정대리인 동의 여부 */
 	private String agencyYn;
-	/* 회원 이메일 정보 Value : 없을 경우 null */
+	/* 회원 이메일 정보 */
 	private String userEmail;
 	/* 회원 메인 상태 코드 */
 	private String userMainStatus;

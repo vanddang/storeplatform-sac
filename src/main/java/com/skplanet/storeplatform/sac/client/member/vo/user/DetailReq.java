@@ -23,9 +23,7 @@ public class DetailReq extends CommonInfo {
 	private String userKey;
 	/* 기기 키 */
 	private String deviceKey;
-	/*
-	 * 정보조회범위 01 : 기본정보 02 : 기본정보 + 부가정보 03 : 기본정보 + 부가정보 + 단말정보
-	 */
+
 	private SearchExtentReq searchExtent;
 
 	public String getUserId() {

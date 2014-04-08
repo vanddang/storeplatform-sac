@@ -14,13 +14,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class ExistReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	/* 사용자ID, Value : hkd */
+	/* 사용자ID */
 	private String userId;
-	/* 기기 ID(MSISDN, UUID, MacAddress), Value : 01011112222 */
+	/* 기기 ID */
 	private String deviceId;
-	/* 사용자 Key, Value : IW102158844420091030165015 */
+	/* 사용자 키 */
 	private String userKey;
-	/* 기기 Key, Value : 01011112222 */
+	/* 기기 Key */
 	private String deviceKey;
 
 	public String getUserId() {

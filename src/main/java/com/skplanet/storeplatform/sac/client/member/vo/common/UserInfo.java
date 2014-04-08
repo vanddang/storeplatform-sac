@@ -59,7 +59,7 @@ public class UserInfo extends CommonInfo {
 	private String secedeDate;
 
 	/*
-	 * 탈퇴 사유 코드(탈퇴 GROUP CODE : US0104).
+	 * 탈퇴 사유 코드.
 	 */
 	private String secedeReasonCode;
 
@@ -79,21 +79,17 @@ public class UserInfo extends CommonInfo {
 	private String userKey;
 
 	/*
-	 * 사용자 구분 코드 - US011501 : 기기 사용자 - US011502 : IDP 사용자 - US011503 : OneID 사용자
-	 * - null : Tstore 회원 아님
+	 * 사용자 구분 코드
 	 */
 	private String userType;
 
 	/*
-	 * 사용자 메인 상태코드 - US010701 : 정상 - US010702 : 탈퇴 - US010703 : 대기(가가입) -
-	 * US010704 : 가입 - US010705 : 전환 - US010706 : 탈퇴 - US010707 : 승인대기
+	 * 사용자 메인 상태코드
 	 */
 	private String userMainStatus;
 
 	/*
-	 * 사용자 서브 상태 코드 - US010201 : 모바일전용회원 - US010202 : 가가입승인대기 - US010203 : 정상 -
-	 * US010204 : 일시정지 - US010205 : 자의탈퇴 - US010206 : 이메일변경승인대기 - US010207 :
-	 * 가입승인 만료 - US010208 : 직권탈퇴
+	 * 사용자 서브 상태 코드
 	 */
 	private String userSubStatus;
 
