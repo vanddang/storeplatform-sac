@@ -52,12 +52,6 @@ public class TenantExtractorImpl implements TenantExtractor {
 		TenantHeader tenant = new TenantHeader();
 
 		/*
-		 * 0. 기본값으로 세팅 (나중에 제거되야할 로직)
-		 */
-		tenant.setTenantId("S01"); // Default Tenant : T Stroe
-		tenant.setSystemId("S01-01002"); // Default System : Shop Client 3.0
-
-		/*
 		 * 1. Tenant ID 세팅 (x-sac-tenant-id 커스텀 헤더, 없으면 x-sac-auth-key로 DB 조회)
 		 */
 		String tenantId = webRequest.getHeader(CommonConstants.HEADER_TENANT_ID);
@@ -78,6 +72,16 @@ public class TenantExtractorImpl implements TenantExtractor {
 		 */
 		String acceptLanguage = webRequest.getHeader(CommonConstants.HEADER_ACCEPT_LANGUAGE);
 		tenant.setLangCd(this.parseAcceptLanguage(acceptLanguage));
+
+		/*
+		 * 4. 기본값으로 세팅 (나중에 제거되야할 로직)
+		 */
+		if (StringUtils.isBlank(tenant.getTenantId())) {
+			tenant.setTenantId("S01"); // Default Tenant : T Stroe
+		}
+		if (StringUtils.isBlank(tenant.getSystemId())) {
+			tenant.setSystemId("S01-01002"); // Default System : Shop Client 3.0
+		}
 
 		return tenant;
 	}
