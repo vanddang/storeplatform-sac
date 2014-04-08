@@ -515,9 +515,14 @@ public class LoginServiceImpl implements LoginService {
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId);
 
 		/* 원아이디 서비스 이용동의 간편 가입 대상 및 가가입 상태 체크 */
-		if (!StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
+		if (chkDupRes.getUserMbr() == null && chkDupRes.getMbrOneID() == null) {
 
-			if (chkDupRes.getUserMbr() == null && chkDupRes.getMbrOneID() != null) {
+			/* 회원 정보가 존재 하지 않습니다. */
+			throw new StorePlatformException("SAC_MEM_0003", "userId", userId);
+
+		} else if (chkDupRes.getMbrOneID() != null) {
+
+			if (chkDupRes.getUserMbr() == null || StringUtil.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) { //회원 정보가 없거나 회원메인상태가 가가입이면 가가입정보를 내려줌
 
 				try {
 
@@ -529,11 +534,10 @@ public class LoginServiceImpl implements LoginService {
 
 					if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_OK)) {
 
-						throw new StorePlatformException("SAC_MEM_1200"); // 원아이디 이용동의 간편가입 대상 정보가 상이합니다.(SC회원 DB 미동의회원,
-																			// IDP 동의회원)
+						LOGGER.info(":::: SC_INVALID_USER authorizeById :::: userId : {}, {}", userId);
+						throw new StorePlatformException("SAC_MEM_1200"); // 원아이디 이용동의 간편가입 대상 정보가 상이합니다.
 
-					} else if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입 상태인 경우 EC에서 성공으로 처리하여 joinSstList를
-																																				// Response로 받는다.
+					} else if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입 상태인 경우 EC에서 성공으로 처리하여 joinSstList 받는다.
 
 						Map<String, String> mapSiteCd = new HashMap<String, String>();
 						mapSiteCd.put("10100", "네이트");
@@ -621,10 +625,6 @@ public class LoginServiceImpl implements LoginService {
 
 				}
 
-			} else {
-
-				/* 회원 정보가 존재 하지 않습니다. */
-				throw new StorePlatformException("SAC_MEM_0003", "userId", userId);
 			}
 
 		}
