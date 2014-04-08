@@ -110,18 +110,22 @@ public class TenantExtractorImpl implements TenantExtractor {
      * AuthKey로 DB를 조회하여 TenantID 세팅
      */
     private void setTenantIdFromDb(NativeWebRequest webRequest, TenantHeader tenant) {
-    	String authKey = webRequest.getHeader(CommonConstants.HEADER_AUTH_KEY);
-    	if (StringUtils.isBlank(authKey)) {
-    		return;
-    	}
+    	try {
+        	String authKey = webRequest.getHeader(CommonConstants.HEADER_AUTH_KEY);
+        	if (StringUtils.isBlank(authKey)) {
+        		return;
+        	}
 
-    	AuthKey authKeyObj = this.dbService.selectAuthKey(authKey);
-    	if (authKeyObj == null) {
-    		return;
-    	}
+        	AuthKey authKeyObj = this.dbService.selectAuthKey(authKey);
+        	if (authKeyObj == null) {
+        		return;
+        	}
 
-		String tenantIdFromDb = authKeyObj.getTenantId();
-		tenant.setTenantId(tenantIdFromDb);
+    		String tenantIdFromDb = authKeyObj.getTenantId();
+    		tenant.setTenantId(tenantIdFromDb);
+		} catch (Exception e) {
+			return; // DB나 Cache 접근 중 에러 발생하면, 그냥 skip
+		}
     }
 
 }
