@@ -7,52 +7,41 @@ import com.skplanet.storeplatform.sac.client.rest.error.SacRestClientException;
 
 public class RestTemplateApahe {
 
-	private final String scheme = "http";
-
 	private final String host;
 
 	private final String authKey;
 
 	private final String secret;
 
+	private final String tenantId;
+
 	private final String systemId;
 
 	/**
 	 * 상용키용 생성자
-	 * @param host
-	 * @param authKey
-	 * @param secret
-	 * @param systemId
+	 * @param host 호스트 (Domain/IP)
+	 * @param authKey 인증키
+	 * @param secret 비밀키
+	 * @param tenantId 테넌트 식별자
+	 * @param systemId 시스템 식별자
 	 */
-	public RestTemplateApahe(String host, String authKey, String secret, String systemId) {
+	public RestTemplateApahe(String host, String authKey, String secret, String tenantId, String systemId) {
 		this.host = host;
 		this.authKey = authKey;
 		this.secret = secret;
+		this.tenantId = tenantId;
 		this.systemId = systemId;
 	}
 
-	/**
-	 * 테스트키용 생성자
-	 * @param host
-	 * @param authKey
-	 * @param systemId
-	 */
-	public RestTemplateApahe(String host, String authKey, String systemId) {
-		this.host = host;
-		this.authKey = authKey;
-		this.secret = null;
-		this.systemId = systemId;
-	}
-
-	public <T> T process(RestMethod method, String interfaceId, String path, Class<T> responseType, Object param, Object body) throws SacRestClientException {
+	public <T> T process(String scheme, RestMethod method, String interfaceId, String path, Class<T> responseType, Object param, Object body) throws SacRestClientException {
 		// 1) Format the URL.
-		String url = UrlFormatter.formatUrl(this.scheme, this.host, path, param);
+		String url = UrlFormatter.formatUrl(scheme, this.host, path, param);
 
 		// 2) Prepare a request.
 		HttpUriRequest request = RequestComposer.prepareRequest(method, body, url);
 
 		// 3) Set request headers.
-		RequestComposer.injectHeaders(request, this.authKey, this.systemId, interfaceId);
+		RequestComposer.injectHeaders(request, this.authKey, this.tenantId, this.systemId, interfaceId);
 
 		// 4) Call the SAC API.
 		HttpResponse response = RestInvoker.invoke(request);

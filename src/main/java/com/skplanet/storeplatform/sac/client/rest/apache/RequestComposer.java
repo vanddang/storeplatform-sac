@@ -38,7 +38,7 @@ public class RequestComposer {
 		return request;
 	}
 
-	public static void injectHeaders(HttpUriRequest request, String authKey, String systemId, String interfaceId) {
+	public static void injectHeaders(HttpUriRequest request, String authKey, String tenantId, String systemId, String interfaceId) {
 		request.addHeader("Content-Type", "application/json;charset=UTF-8");
 		request.addHeader("Accept", "application/json;charset=UTF-8");
 
@@ -53,6 +53,7 @@ public class RequestComposer {
 		// request.addHeader("x-sac-auth-signature", signature);
 
 		request.addHeader("x-sac-auth-key", authKey);
+		request.addHeader("x-sac-tenant-id", tenantId);
 		request.addHeader("x-sac-system-id", systemId);
 		request.addHeader("x-sac-interface-id", interfaceId);
 		// TODO: request.addHeader("x-sac-guid", guid);
