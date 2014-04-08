@@ -151,6 +151,8 @@ public interface BrandCatalogService {
 	 * 
 	 * @param brandId
 	 *            brandId
+	 * @param catalogId
+	 *            catalogId
 	 * @return int
 	 */
 	public int getBrandCatalogChangeCudType(String brandId, String catalogId);

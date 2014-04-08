@@ -381,6 +381,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 * 
 	 * @param brandId
 	 *            brandId
+	 * @param catalogId
+	 *            catalogId
 	 * @return int
 	 */
 	@Override
