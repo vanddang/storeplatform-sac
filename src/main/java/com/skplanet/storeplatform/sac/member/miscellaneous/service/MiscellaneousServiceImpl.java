@@ -286,10 +286,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/* External Comp.에 SMS 발송 요청 */
 		SmsSendEcReq smsReq = new SmsSendEcReq();
-		smsReq.setSrcId(request.getSrcId()); // test 값 : US004504
+		smsReq.setSrcId(request.getSrcId());
 		smsReq.setSendMdn(messageSender);
 		smsReq.setRecvMdn(request.getRecvMdn());
-		smsReq.setTeleSvcId(request.getTeleSvcId()); // test 값 : 0 (단문 SM)
+		smsReq.setTeleSvcId(request.getTeleSvcId());
 		smsReq.setMsg(messageText);
 		if (StringUtils.isBlank(request.getCarrier())) { // 통신사정보 Optional
 			smsReq.setCarrier(request.getCarrier());
@@ -397,9 +397,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				LOGGER.info("## Captcha 문자 발급 성공. : {}", imageRes);
 			}
 		}
-
-		// warterMarkImageString 를 다음 태그의 물음표(???)에 넣으면 이미지 확인 가능
-		// <img alt="Embedded Image" src="data:image/png;base64,???"/>
 
 		response.setImageData(waterMarkImageString);
 		response.setImageSign(waterMarkImageSign);
