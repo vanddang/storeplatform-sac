@@ -997,7 +997,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (bCharge) {
 			sbReserveData.append("tenantId=").append(useUser.getTenantId()).append("&systemId=")
 					.append(purchaseOrderInfo.getSystemId()).append("&userKey=").append(purchaseOrderInfo.getUserKey())
-					.append("&deviceId=").append(purchaseOrderInfo.getPurchaseUser().getDeviceId()).append("&telecom=")
+					.append("&deviceKey=").append(purchaseOrderInfo.getDeviceKey()).append("&deviceId=")
+					.append(purchaseOrderInfo.getPurchaseUser().getDeviceId()).append("&telecom=")
 					.append(purchaseOrderInfo.getPurchaseUser().getTelecom()).append("&useUserKey=")
 					.append(useUser.getUserKey()).append("&useDeviceKey=").append(useUser.getDeviceKey())
 					.append("&useDeviceId=").append(useUser.getDeviceId()).append("&useDeviceModelCd=")
