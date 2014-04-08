@@ -78,307 +78,321 @@ public class SearchUserSCIControllerTest {
 
 	@Test
 	public void testSearchUserByUserKey() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByUserKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-				List<String> userKeyList = new ArrayList<String>();
-				userKeyList.add("IW1023284651220101007215215"); // 회원정보에 등록된 deviceId가 한 개.
-				userKeyList.add("IM142100006719244201304082142"); // 회원정보에 등록된 deviceId가 여러개.
-				userKeyList.add("IW1024171529820110627132506"); // 회원정보 없음.
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByUserKey").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+						List<String> userKeyList = new ArrayList<String>();
+						userKeyList.add("IW1023284651220101007215215"); // 회원정보에 등록된 deviceId가 한 개.
+						userKeyList.add("IM142100006719244201304082142"); // 회원정보에 등록된 deviceId가 여러개.
+						userKeyList.add("IW1024171529820110627132506"); // 회원정보 없음.
 
-				searchUserSacReq.setUserKeyList(userKeyList);
-				return searchUserSacReq;
-			}
-		}).success(SearchUserSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserSacRes res = (SearchUserSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						searchUserSacReq.setUserKeyList(userKeyList);
+						return searchUserSacReq;
+					}
+				}).success(SearchUserSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserSacRes res = (SearchUserSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	/** =============== UserKey 이용한 결제페이지 노출정보조회 =============== */
 	@Test
 	public void TEST_USERKEY_정상_사용자_결제페이지_노출정보조회_통신과금정보없음() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
-				searchUserSacReq.setUserKey("IF102158916420090711152643");
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+						searchUserSacReq.setUserKey("IF102158916420090711152643");
 
-				return searchUserSacReq;
-			}
-		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserSacReq;
+					}
+				}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	@Test
 	public void TEST_USERKEY_정상_사용자_결제페이지_노출정보조회_통신과금정보있음() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
-				searchUserSacReq.setUserKey("US201402071133550360001951");
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+						searchUserSacReq.setUserKey("US201402071133550360001951");
 
-				return searchUserSacReq;
-			}
-		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserSacReq;
+					}
+				}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	@Test
 	public void TEST_USERKEY_정상_사용자_결제페이지_노출정보조회_통합회원이고_OCB이용약관정보없음() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
-				searchUserSacReq.setUserKey("US201402071133550360001951");
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+						searchUserSacReq.setUserKey("US201402071133550360001951");
 
-				return searchUserSacReq;
-			}
-		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserSacReq;
+					}
+				}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	@Test
 	public void TEST_USERKEY_정상_사용자_결제페이지_노출정보조회_통합회원아님() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
-				searchUserSacReq.setUserKey("IW1023857942220110414141217");
-				searchUserSacReq.setDeviceKey("");
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+						searchUserSacReq.setUserKey("IW1023857942220110414141217");
+						searchUserSacReq.setDeviceKey("");
 
-				return searchUserSacReq;
-			}
-		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserSacReq;
+					}
+				}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	/** =============== DeviceKey 이용한 결제페이지 노출정보조회 =============== */
 	@Test
 	public void TEST_DeviceKey_정상_사용자_결제페이지_노출정보조회_통신과금정보없음() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
-				searchUserSacReq.setDeviceKey("01092733218");
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+						searchUserSacReq.setDeviceKey("01092733218");
 
-				return searchUserSacReq;
-			}
-		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserSacReq;
+					}
+				}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	@Test
 	public void TEST_DeviceKey_정상_사용자_결제페이지_노출정보조회_통신과금정보있음() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
-				searchUserSacReq.setDeviceKey("DE201403061448548830002894");
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+						searchUserSacReq.setDeviceKey("DE201403061448548830002894");
 
-				return searchUserSacReq;
-			}
-		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserSacReq;
+					}
+				}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	@Test
 	public void TEST_DeviceKey_정상_사용자_결제페이지_노출정보조회_통합회원이고_OCB이용약관정보없음() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
-				searchUserSacReq.setDeviceKey("DE201403061448548830002894");
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+						searchUserSacReq.setDeviceKey("DE201403061448548830002894");
 
-				return searchUserSacReq;
-			}
-		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserSacReq;
+					}
+				}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	@Test
 	public void TEST_DeviceKey_정상_사용자_결제페이지_노출정보조회_통합회원아님() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
-				searchUserSacReq.setDeviceKey("01031241569");
-				searchUserSacReq.setUserKey("");
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserPayplanet").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserPayplanetSacReq searchUserSacReq = new SearchUserPayplanetSacReq();
+						searchUserSacReq.setDeviceKey("01031241569");
+						searchUserSacReq.setUserKey("");
 
-				return searchUserSacReq;
-			}
-		}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserSacReq;
+					}
+				}).success(SearchUserPayplanetSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserPayplanetSacRes res = (SearchUserPayplanetSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	/** ==================== DevceKey를 이용한 회원정보&디바이스정보 조회 ============ */
 	@Test
 	public void A_TEST_정상_DeviceKeyList_검색() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
 
-				List<SearchUserDeviceSac> userDeviceList = new ArrayList<SearchUserDeviceSac>();
+						List<SearchUserDeviceSac> userDeviceList = new ArrayList<SearchUserDeviceSac>();
 
-				SearchUserDeviceSac schUserDevice = new SearchUserDeviceSac();
-				schUserDevice.setDeviceKey("DE201402131645572670001658");
-				schUserDevice.setUserKey("US201402131645569940002421");
+						SearchUserDeviceSac schUserDevice = new SearchUserDeviceSac();
+						schUserDevice.setDeviceKey("DE201402131645572670001658");
+						schUserDevice.setUserKey("US201402131645569940002421");
 
-				userDeviceList.add(schUserDevice);
+						userDeviceList.add(schUserDevice);
 
-				searchUserDeviceSacReq.setSearchUserDeviceReqList(userDeviceList);
+						searchUserDeviceSacReq.setSearchUserDeviceReqList(userDeviceList);
 
-				return searchUserDeviceSacReq;
-			}
-		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserDeviceSacReq;
+					}
+				}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	@Test
 	public void B_TEST_정상_DeviceKeyList_검색_일부검색결과있음() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
 
-				List<SearchUserDeviceSac> userDeviceList = new ArrayList<SearchUserDeviceSac>();
+						List<SearchUserDeviceSac> userDeviceList = new ArrayList<SearchUserDeviceSac>();
 
-				SearchUserDeviceSac schUserDevice = new SearchUserDeviceSac();
-				schUserDevice.setDeviceKey("DE201402120522137350001556");
-				schUserDevice.setUserKey("US201401271926064310001061");
+						SearchUserDeviceSac schUserDevice = new SearchUserDeviceSac();
+						schUserDevice.setDeviceKey("DE201402120522137350001556");
+						schUserDevice.setUserKey("US201401271926064310001061");
 
-				SearchUserDeviceSac schUserDevice1 = new SearchUserDeviceSac();
-				schUserDevice1.setDeviceKey("DE20140213164557267000165811");
-				schUserDevice1.setUserKey("US20140213164556994000242111");
+						SearchUserDeviceSac schUserDevice1 = new SearchUserDeviceSac();
+						schUserDevice1.setDeviceKey("DE20140213164557267000165811");
+						schUserDevice1.setUserKey("US20140213164556994000242111");
 
-				userDeviceList.add(schUserDevice);
-				userDeviceList.add(schUserDevice1);
+						userDeviceList.add(schUserDevice);
+						userDeviceList.add(schUserDevice1);
 
-				searchUserDeviceSacReq.setSearchUserDeviceReqList(userDeviceList);
+						searchUserDeviceSacReq.setSearchUserDeviceReqList(userDeviceList);
 
-				return searchUserDeviceSacReq;
-			}
-		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserDeviceSacReq;
+					}
+				}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
 	@Test
 	public void B_TEST_정상_DeviceKeyList_검색_실명인증() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
 
-				List<SearchUserDeviceSac> userDeviceList = new ArrayList<SearchUserDeviceSac>();
+						List<SearchUserDeviceSac> userDeviceList = new ArrayList<SearchUserDeviceSac>();
 
-				SearchUserDeviceSac schUserDevice = new SearchUserDeviceSac();
-				schUserDevice.setDeviceKey("01034669429");
-				schUserDevice.setUserKey("IW1425162260520130327171813");
+						SearchUserDeviceSac schUserDevice = new SearchUserDeviceSac();
+						schUserDevice.setDeviceKey("01034669429");
+						schUserDevice.setUserKey("IW1425162260520130327171813");
 
-				userDeviceList.add(schUserDevice);
+						userDeviceList.add(schUserDevice);
 
-				searchUserDeviceSacReq.setSearchUserDeviceReqList(userDeviceList);
+						searchUserDeviceSacReq.setSearchUserDeviceReqList(userDeviceList);
 
-				return searchUserDeviceSacReq;
-			}
-		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						return searchUserDeviceSacReq;
+					}
+				}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 	//
-	//	@Test(expected = StorePlatformException.class)
-	//	public void C_TEST_오류_DeviceKeyList_검색_검색결과없음() throws Exception {
-	//		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-	//			@Override
-	//			public Object requestBody() {
-	//				SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
-	//				List<String> deviceKeyList = new ArrayList<String>();
-	//				deviceKeyList.add("DE20140212040954148000155211");
-	//				deviceKeyList.add("DE20140212052213735000155611");
-	//				deviceKeyList.add("DE20140212145618389000155811");
+	// @Test(expected = StorePlatformException.class)
+	// public void C_TEST_오류_DeviceKeyList_검색_검색결과없음() throws Exception {
+	// new
+	// TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserByDeviceKey").httpMethod(HttpMethod.POST).requestBody(new
+	// RequestBodySetter() {
+	// @Override
+	// public Object requestBody() {
+	// SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+	// List<String> deviceKeyList = new ArrayList<String>();
+	// deviceKeyList.add("DE20140212040954148000155211");
+	// deviceKeyList.add("DE20140212052213735000155611");
+	// deviceKeyList.add("DE20140212145618389000155811");
 	//
-	//				searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
-	//				return searchUserDeviceSacReq;
-	//			}
-	//		}).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
-	//			@Override
-	//			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-	//				SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
-	//				LOGGER.info("response param : {}", res.toString());
-	//			}
-	//		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	// searchUserDeviceSacReq.setDeviceKeyList(deviceKeyList);
+	// return searchUserDeviceSacReq;
+	// }
+	// }).success(SearchUserDeviceSacRes.class, new SuccessCallback() {
+	// @Override
+	// public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+	// SearchUserDeviceSacRes res = (SearchUserDeviceSacRes) result;
+	// LOGGER.info("response param : {}", res.toString());
+	// }
+	// }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	//
-	//	}
+	// }
 
 }

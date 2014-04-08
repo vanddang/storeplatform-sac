@@ -84,8 +84,8 @@ public class DeviceSCIControllerTest {
 		try {
 			new TestCaseTemplate(this.mvc)
 
-			.url("/member/internalSci/test/DeviceSCIController/searchDeviceId/searchDeviceIdSac/v1")
-					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			.url("/member/user/sci/DeviceSCIController/searchDeviceId").httpMethod(HttpMethod.POST)
+					.requestBody(new RequestBodySetter() {
 						@Override
 						public Object requestBody() {
 							SearchDeviceIdSacReq searchDeviceIdSacReq = new SearchDeviceIdSacReq();
@@ -118,8 +118,8 @@ public class DeviceSCIControllerTest {
 	 */
 	@Test
 	public void testSearchChangedDeviceHistory() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchChangedDeviceHistory").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/DeviceSCIController/searchChangedDeviceHistory")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						ChangedDeviceHistorySacReq changedDeviceHistorySacReq = new ChangedDeviceHistorySacReq();
