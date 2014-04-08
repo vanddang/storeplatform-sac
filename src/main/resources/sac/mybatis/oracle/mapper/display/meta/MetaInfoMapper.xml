@@ -261,7 +261,7 @@
 		           AND C.LANG_CD = #{tenantHeader.langCd}
 		           AND C.PROD_ID = D.PROD_ID
 		           AND D.PROD_ID = E.PROD_ID
-		           AND E.TENANT_ID = 'S01'
+		           AND E.TENANT_ID = #{tenantHeader.tenantId}
 		           <if test='prodStatusCd != null'>
 		           AND E.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
 		           </if>
@@ -277,7 +277,7 @@
 		           AND I.CONTENTS_TYPE_CD = 'PD002502'
 		           AND I.PROD_ID = J.PROD_ID
 		           AND J.PROD_ID = K.PROD_ID
-		           AND K.TENANT_ID = 'S01'
+		           AND K.TENANT_ID = #{tenantHeader.tenantId}
 		           <if test='prodStatusCd != null'>
 		           AND K.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
 		           </if>
