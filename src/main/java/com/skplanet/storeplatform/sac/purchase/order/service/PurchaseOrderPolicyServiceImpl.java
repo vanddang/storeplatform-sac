@@ -358,7 +358,15 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE)) {
 				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
 
-				if (this.isSktTestMdnWhiteList(policyList.get(0).getApplyValue(), policyCheckParam.getDeviceId())) {
+				boolean bWhite = false;
+				for (PurchaseTenantPolicy policy : policyList) {
+					if (this.isSktTestMdnWhiteList(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
+						bWhite = true;
+						break;
+					}
+				}
+
+				if (bWhite) {
 					policyResult.setSktTestMdnWhiteList(true);
 					policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW);
 
