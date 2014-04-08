@@ -47,6 +47,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -105,8 +106,8 @@ public class IdpServiceImpl implements IdpService {
 
 		String isParentApprove = ""; // 법정 대리인 동의 여부
 
-		String tenantID = "";
-		String systemID = "";
+		String tenantId = "";
+		String systemId = "";
 		String userKey = ""; // 내부사용자키
 		String imIntSvcNo = ""; // 통합서비스번호
 		String userId = ""; // 사용자 ID
@@ -123,8 +124,8 @@ public class IdpServiceImpl implements IdpService {
 		String prevMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
 		String currentMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
 
-		tenantID = map.get("tenantID").toString();
-		systemID = map.get("systemID").toString();
+		tenantId = map.get("tenantID").toString();
+		systemId = map.get("systemID").toString();
 		imIntSvcNo = map.get("im_int_svc_no").toString();
 		userId = map.get("user_id").toString();
 		joinSstCode = map.get("join_sst_code").toString();
@@ -179,7 +180,7 @@ public class IdpServiceImpl implements IdpService {
 		imResult.setCmd("RXCreateUserIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
 		imResult.setUserId(userId);
-		String[] mbrCaluseAgreeArray = null;
+		String[] mbrClauseAgreeArray = null;
 		String[] tempSplit = joinSiteTotalList.split("\\|");
 		for (int i = 0; i < tempSplit.length; i++) {
 			String[] tmpSplit = tempSplit[i].split(",");
@@ -197,7 +198,7 @@ public class IdpServiceImpl implements IdpService {
 				}
 				if (tmpSplit.length >= 2 && null != tmpSplit[1] && !"".equals(tmpSplit[1])
 						&& !"null".equals(tmpSplit[1])) {
-					mbrCaluseAgreeArray = tmpSplit[1].split("\\^");
+					mbrClauseAgreeArray = tmpSplit[1].split("\\^");
 				}
 				break;
 			}
@@ -213,14 +214,14 @@ public class IdpServiceImpl implements IdpService {
 			CreateUserResponse create = null;
 			// 공통으로 사용되는 요청정보
 			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setTenantID(tenantID);
-			commonRequest.setSystemID(systemID);
+			commonRequest.setTenantID(tenantId);
+			commonRequest.setSystemID(systemId);
 
 			// 사용자 기본정보
 			UserMbr userMbr = new UserMbr();
 
-			userMbr.setTenantID(tenantID); // 테넌트 ID
-			userMbr.setSystemID(systemID); // 테넌트의 시스템 ID
+			userMbr.setTenantID(tenantId); // 테넌트 ID
+			userMbr.setSystemID(systemId); // 테넌트의 시스템 ID
 
 			userMbr.setUserKey(""); // 사용자 Key
 
@@ -285,66 +286,8 @@ public class IdpServiceImpl implements IdpService {
 				createUserRequest.setMbrLglAgent(this.getMbrLglAgent(map)); // 법정대리인
 			}
 
-			// 신규가입인경우만 이용약관이 들어옴.
-			List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
-
-			MbrClauseAgree mca = new MbrClauseAgree();
-
-			mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_ONEID);
-			mca.setIsExtraAgreement("Y");
-			mbrClauseAgreeList.add(mca);
-
-			mca = new MbrClauseAgree();
-			mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID);
-			mca.setIsExtraAgreement("Y");
-			mbrClauseAgreeList.add(mca);
-
-			if (mbrCaluseAgreeArray != null) {
-
-				// TAC001 US010603 Tstore 이용약관동의
-				mca = new MbrClauseAgree();
-				mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE);
-				mca.setIsExtraAgreement("Y");
-				mbrClauseAgreeList.add(mca);
-
-				// TAC002 US010609 통신과금서비스 이용약관
-				mca = new MbrClauseAgree();
-				mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE);
-				mca.setIsExtraAgreement("Y");
-				mbrClauseAgreeList.add(mca);
-
-				// TAC003 US010604 TSTORE캐쉬이용약관
-				mca = new MbrClauseAgree();
-				mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_CASH);
-				mca.setIsExtraAgreement("Y");
-				mbrClauseAgreeList.add(mca);
-
-				// TAC004 US010605 TSTORE개인정보취급방침
-				mca = new MbrClauseAgree();
-				mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_TSTORE);
-				mca.setIsExtraAgreement("Y");
-				mbrClauseAgreeList.add(mca);
-
-				// TAC005 US010611 3자정보제공동의
-				mca = new MbrClauseAgree();
-				mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS);
-				mca.setIsExtraAgreement("Y");
-				mbrClauseAgreeList.add(mca);
-
-				if (mbrCaluseAgreeArray.length < 6) { // 6개 이하인 경우는 선택사항 항목인 US010608이 약관항목에 없는경우 N으로 셋팅
-					// TAC006 US010608 TSTORE정보광고활용
-					mca = new MbrClauseAgree();
-					mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
-					mca.setIsExtraAgreement("N");
-					mbrClauseAgreeList.add(mca);
-				} else {
-					mca = new MbrClauseAgree();
-					mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
-					mca.setIsExtraAgreement("Y");
-					mbrClauseAgreeList.add(mca);
-				}
-
-			}
+			// JOIN_SST_LIST에 TAC001~TAC006이 있는경우 이용약관이 들어옴.
+			List<MbrClauseAgree> mbrClauseAgreeList = this.getMbrClauseAgreeList(tenantId, mbrClauseAgreeArray);
 
 			createUserRequest.setMbrClauseAgreeList(mbrClauseAgreeList);
 			try {
@@ -395,8 +338,8 @@ public class IdpServiceImpl implements IdpService {
 
 		} else { // 전환가입/변경전환/변경 가입 oldId != "null" 이 아닌경우 분기
 			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setTenantID(tenantID);
-			commonRequest.setSystemID(systemID);
+			commonRequest.setTenantID(tenantId);
+			commonRequest.setSystemID(systemId);
 			map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
 
 			if (userId.equals(oldId)) { // 전환가입 userId - oldId 비교시 같은경우
@@ -427,8 +370,13 @@ public class IdpServiceImpl implements IdpService {
 
 					if (searchUserResponse != null) {
 						prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터 연동을 위한 이전 mbrNo셋팅
-						updateUserResponse = this.userSCI
-								.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
+						UpdateUserRequest updateUserRequest = this.getUpdateUserRequest(map, searchUserResponse);
+						// JOIN_SST_LIST에 TAC001~TAC006이 있는경우 이용약관이 들어옴.
+						List<MbrClauseAgree> mbrClauseAgreeList = this.getMbrClauseAgreeList(tenantId,
+								mbrClauseAgreeArray);
+
+						updateUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
+						updateUserResponse = this.userSCI.updateUser(updateUserRequest);
 
 						userKey = updateUserResponse.getUserKey();
 					}
@@ -469,8 +417,14 @@ public class IdpServiceImpl implements IdpService {
 					if (searchUserResponse != null) {
 						prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터 연동을 위한 이전 mbrNo셋팅
 
-						updateUserResponse = this.userSCI
-								.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
+						UpdateUserRequest updateUserRequest = this.getUpdateUserRequest(map, searchUserResponse);
+						// JOIN_SST_LIST에 TAC001~TAC006이 있는경우 이용약관이 들어옴.
+						List<MbrClauseAgree> mbrClauseAgreeList = this.getMbrClauseAgreeList(tenantId,
+								mbrClauseAgreeArray);
+
+						updateUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
+						updateUserResponse = this.userSCI.updateUser(updateUserRequest);
+
 						userKey = updateUserResponse.getUserKey();
 					}
 					LOGGER.debug("변경가입,변경전환 정보 입력 완료");
@@ -479,7 +433,7 @@ public class IdpServiceImpl implements IdpService {
 					ChangeDisplayUserSacReq changeDisplayUserSacReqByUserID = new ChangeDisplayUserSacReq();
 					changeDisplayUserSacReqByUserID.setNewUserId(userId);
 					changeDisplayUserSacReqByUserID.setOldUserId(oldId);
-					changeDisplayUserSacReqByUserID.setTenantId(tenantID);
+					changeDisplayUserSacReqByUserID.setTenantId(tenantId);
 					this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReqByUserID);
 					// 공통_기타 회원ID 변경 끝
 
@@ -551,8 +505,8 @@ public class IdpServiceImpl implements IdpService {
 			gameCenterSacReq.setPreUserKey(userKey);
 			gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
 			gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
-			gameCenterSacReq.setSystemId(systemID);
-			gameCenterSacReq.setTenantId(tenantID);
+			gameCenterSacReq.setSystemId(systemId);
+			gameCenterSacReq.setTenantId(tenantId);
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 		} catch (StorePlatformException spe) {
@@ -1839,8 +1793,8 @@ public class IdpServiceImpl implements IdpService {
 		String joinSiteTotalList = map.get("join_sst_list").toString();// StringUtils.equals("", "");
 		String modifySstCode = map.get("modify_sst_code").toString();
 		SearchUserResponse searchUserResponse = null;
-		String tenantID = map.get("tenantID").toString();
-		String systemID = map.get("systemID").toString();
+		String tenantId = map.get("tenantID").toString();
+		String systemId = map.get("systemID").toString();
 		boolean siteCodeCheck = false;
 
 		imResult.setCmd("RXUpdateDisagreeUserIDP");
@@ -1848,8 +1802,8 @@ public class IdpServiceImpl implements IdpService {
 		imResult.setUserId(userId);
 
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setTenantID(tenantID);
-		commonRequest.setSystemID(systemID);
+		commonRequest.setTenantID(tenantId);
+		commonRequest.setSystemID(systemId);
 
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		searchUserRequest.setCommonRequest(commonRequest);
@@ -1914,8 +1868,8 @@ public class IdpServiceImpl implements IdpService {
 						gameCenterSacReq.setPreUserKey(searchUserResponse.getUserKey());
 						gameCenterSacReq.setMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
 						gameCenterSacReq.setPreMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
-						gameCenterSacReq.setSystemId(systemID);
-						gameCenterSacReq.setTenantId(tenantID);
+						gameCenterSacReq.setSystemId(systemId);
+						gameCenterSacReq.setTenantId(tenantId);
 						gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
 						this.deviceService.insertGameCenterIF(gameCenterSacReq);
 					}
@@ -2120,11 +2074,11 @@ public class IdpServiceImpl implements IdpService {
 		ImResult imResult = new ImResult();
 		String imIntSvcNo = map.get("im_int_svc_no").toString(); // 통합 서비스 번호
 		String userId = map.get("user_id").toString(); // 회원 ID
-		String tenantID = "";
-		String systemID = "";
+		String tenantId = "";
+		String systemId = "";
 
-		tenantID = map.get("tenantID").toString();
-		systemID = map.get("systemID").toString();
+		tenantId = map.get("tenantID").toString();
+		systemId = map.get("systemID").toString();
 
 		imResult.setCmd("RXUpdateUserInfoIDP");
 		imResult.setImIntSvcNo(imIntSvcNo);
@@ -2132,8 +2086,8 @@ public class IdpServiceImpl implements IdpService {
 
 		// 회원정보 조회후 request 넘어온 정보를 셋팅해서 회원정보 수정
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setTenantID(tenantID);
-		commonRequest.setSystemID(systemID);
+		commonRequest.setTenantID(tenantId);
+		commonRequest.setSystemID(systemId);
 
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 
@@ -2198,8 +2152,8 @@ public class IdpServiceImpl implements IdpService {
 		ImResult imResult = new ImResult();
 		imResult.setCmd("RXChangeUserIdIDP");
 
-		String tenantID = "";
-		String systemID = "";
+		String tenantId = "";
+		String systemId = "";
 
 		String imIntSvcNo = map.get("im_int_svc_no").toString();
 		String newUserId = map.get("new_user_id").toString();
@@ -2208,13 +2162,13 @@ public class IdpServiceImpl implements IdpService {
 		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 		imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 
-		tenantID = map.get("tenantID").toString();
-		systemID = map.get("systemID").toString();
+		tenantId = map.get("tenantID").toString();
+		systemId = map.get("systemID").toString();
 		// 1. 통합서비스 번호와 사용자 신규ID 존재 여부 체크
 		if (!"".equals(imIntSvcNo) && !"".equals(newUserId)) {
 			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setTenantID(tenantID);
-			commonRequest.setSystemID(systemID);
+			commonRequest.setTenantID(tenantId);
+			commonRequest.setSystemID(systemId);
 
 			SearchUserRequest searchUserRequest = new SearchUserRequest();
 
@@ -2247,7 +2201,7 @@ public class IdpServiceImpl implements IdpService {
 						UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
 						updateMbrOneIDRequest.setCommonRequest(commonRequest);
 						MbrOneID mbrOneID = new MbrOneID();
-						mbrOneID.setTenantID(tenantID);
+						mbrOneID.setTenantID(tenantId);
 						mbrOneID.setIntgSvcNumber(imIntSvcNo);
 						mbrOneID.setUserID(newUserId);
 
@@ -2262,7 +2216,7 @@ public class IdpServiceImpl implements IdpService {
 							ChangeDisplayUserSacReq changeDisplayUserSacReqByUserID = new ChangeDisplayUserSacReq();
 							changeDisplayUserSacReqByUserID.setNewUserId(newUserId);
 							changeDisplayUserSacReqByUserID.setOldUserId(searchUserResponse.getUserMbr().getUserID());
-							changeDisplayUserSacReqByUserID.setTenantId(tenantID);
+							changeDisplayUserSacReqByUserID.setTenantId(tenantId);
 							this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReqByUserID);
 							// 공통_기타 회원ID 변경 끝
 						}
@@ -2310,8 +2264,8 @@ public class IdpServiceImpl implements IdpService {
 		LOGGER.debug("executeRXUpdateAgreeUserIDP ------- Start");
 
 		String isParentApprove = ""; // 법정 대리인 동의 여부
-		String tenantID = "";
-		String systemID = "";
+		String tenantId = "";
+		String systemId = "";
 		String userKey = ""; // 내부사용자키
 		String imIntSvcNo = ""; // 통합서비스번호
 		String userId = ""; // 사용자 ID
@@ -2329,8 +2283,8 @@ public class IdpServiceImpl implements IdpService {
 		String prevMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
 		String currentMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
 
-		tenantID = map.get("tenantID").toString();
-		systemID = map.get("systemID").toString();
+		tenantId = map.get("tenantID").toString();
+		systemId = map.get("systemID").toString();
 		imIntSvcNo = map.get("im_int_svc_no").toString();
 		userId = map.get("user_id").toString();
 		joinSstCode = map.get("join_sst_code").toString();
@@ -2384,8 +2338,8 @@ public class IdpServiceImpl implements IdpService {
 		imResult.setImIntSvcNo(imIntSvcNo);
 
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setTenantID(tenantID);
-		commonRequest.setSystemID(systemID);
+		commonRequest.setTenantID(tenantId);
+		commonRequest.setSystemID(systemId);
 
 		// LOGGER.debug("JOIN_SST_LIST START");
 
@@ -2399,7 +2353,7 @@ public class IdpServiceImpl implements IdpService {
 		if (checkOcbVal != -1)
 			ocbJoinCodeYn = "Y";
 
-		String[] mbrCaluseAgreeArray = null;
+		String[] mbrClauseAgreeArray = null;
 		String[] tempSplit = joinSiteTotalList.split("\\|");
 		for (int i = 0; i < tempSplit.length; i++) {
 			String[] tmpSplit = tempSplit[i].split(",");
@@ -2416,7 +2370,7 @@ public class IdpServiceImpl implements IdpService {
 				}
 				if (tmpSplit.length >= 2 && null != tmpSplit[1] && !"".equals(tmpSplit[1])
 						&& !"null".equals(tmpSplit[1])) {
-					mbrCaluseAgreeArray = tmpSplit[1].split("\\^");
+					mbrClauseAgreeArray = tmpSplit[1].split("\\^");
 				}
 				break;
 			}
@@ -2501,8 +2455,8 @@ public class IdpServiceImpl implements IdpService {
 						// 사용자 기본정보
 						UserMbr userMbr = new UserMbr();
 
-						userMbr.setTenantID(tenantID); // 테넌트 ID
-						userMbr.setSystemID(systemID); // 테넌트의 시스템 ID
+						userMbr.setTenantID(tenantId); // 테넌트 ID
+						userMbr.setSystemID(systemId); // 테넌트의 시스템 ID
 
 						userMbr.setUserKey(""); // 사용자 Key
 						if (map.get("user_key") != null)
@@ -2574,65 +2528,8 @@ public class IdpServiceImpl implements IdpService {
 						}
 
 						// 신규가입인경우만 이용약관이 들어옴.
-						List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
-
-						MbrClauseAgree mca = new MbrClauseAgree();
-
-						mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_ONEID);
-						mca.setIsExtraAgreement("Y");
-						mbrClauseAgreeList.add(mca);
-
-						mca = new MbrClauseAgree();
-						mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID);
-						mca.setIsExtraAgreement("Y");
-						mbrClauseAgreeList.add(mca);
-
-						if (mbrCaluseAgreeArray != null) {
-
-							// TAC001 US010603 Tstore 이용약관동의
-							mca = new MbrClauseAgree();
-							mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE);
-							mca.setIsExtraAgreement("Y");
-							mbrClauseAgreeList.add(mca);
-
-							// TAC002 US010609 통신과금서비스 이용약관
-							mca = new MbrClauseAgree();
-							mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE);
-							mca.setIsExtraAgreement("Y");
-							mbrClauseAgreeList.add(mca);
-
-							// TAC003 US010604 TSTORE캐쉬이용약관
-							mca = new MbrClauseAgree();
-							mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_CASH);
-							mca.setIsExtraAgreement("Y");
-							mbrClauseAgreeList.add(mca);
-
-							// TAC004 US010605 TSTORE개인정보취급방침
-							mca = new MbrClauseAgree();
-							mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_TSTORE);
-							mca.setIsExtraAgreement("Y");
-							mbrClauseAgreeList.add(mca);
-
-							// TAC005 US010611 3자정보제공동의
-							mca = new MbrClauseAgree();
-							mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS);
-							mca.setIsExtraAgreement("Y");
-							mbrClauseAgreeList.add(mca);
-
-							if (mbrCaluseAgreeArray.length < 6) { // 6개 이하인 경우는 선택사항 항목인 US010608이 약관항목에 없는경우 N으로 셋팅
-								// TAC006 US010608 TSTORE정보광고활용
-								mca = new MbrClauseAgree();
-								mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
-								mca.setIsExtraAgreement("N");
-								mbrClauseAgreeList.add(mca);
-							} else {
-								mca = new MbrClauseAgree();
-								mca.setExtraAgreementID(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
-								mca.setIsExtraAgreement("Y");
-								mbrClauseAgreeList.add(mca);
-							}
-
-						}
+						List<MbrClauseAgree> mbrClauseAgreeList = this.getMbrClauseAgreeList(tenantId,
+								mbrClauseAgreeArray);
 
 						createUserRequest.setMbrClauseAgreeList(mbrClauseAgreeList);
 						try {
@@ -2691,8 +2588,8 @@ public class IdpServiceImpl implements IdpService {
 							gameCenterSacReq.setPreUserKey(userKey);
 							gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
 							gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
-							gameCenterSacReq.setSystemId(systemID);
-							gameCenterSacReq.setTenantId(tenantID);
+							gameCenterSacReq.setSystemId(systemId);
+							gameCenterSacReq.setTenantId(tenantId);
 							gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
 							this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
@@ -2734,8 +2631,15 @@ public class IdpServiceImpl implements IdpService {
 							if (searchUserResponse != null) {
 								prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
 
-								updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
-										searchUserResponse));
+								UpdateUserRequest updateUserRequest = this
+										.getUpdateUserRequest(map, searchUserResponse);
+								// JOIN_SST_LIST에 TAC001~TAC006이 있는경우 이용약관이 들어옴.
+								List<MbrClauseAgree> mbrClauseAgreeList = this.getMbrClauseAgreeList(tenantId,
+										mbrClauseAgreeArray);
+
+								updateUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
+								updateUserResponse = this.userSCI.updateUser(updateUserRequest);
+
 								LOGGER.debug("전환가입 정보 입력 완료");
 								userKey = updateUserResponse.getUserKey();
 
@@ -2744,8 +2648,8 @@ public class IdpServiceImpl implements IdpService {
 								gameCenterSacReq.setPreUserKey(userKey);
 								gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
 								gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
-								gameCenterSacReq.setSystemId(systemID);
-								gameCenterSacReq.setTenantId(tenantID);
+								gameCenterSacReq.setSystemId(systemId);
+								gameCenterSacReq.setTenantId(tenantId);
 								gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
 								this.deviceService.insertGameCenterIF(gameCenterSacReq);
 							}
@@ -2785,8 +2689,14 @@ public class IdpServiceImpl implements IdpService {
 							if (searchUserResponse != null) {
 								prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
 
-								updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
-										searchUserResponse));
+								UpdateUserRequest updateUserRequest = this
+										.getUpdateUserRequest(map, searchUserResponse);
+								// JOIN_SST_LIST에 TAC001~TAC006이 있는경우 이용약관이 들어옴.
+								List<MbrClauseAgree> mbrClauseAgreeList = this.getMbrClauseAgreeList(tenantId,
+										mbrClauseAgreeArray);
+
+								updateUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
+								updateUserResponse = this.userSCI.updateUser(updateUserRequest);
 
 								userKey = updateUserResponse.getUserKey();
 								LOGGER.debug("변경가입,변경전환 정보 입력 완료");
@@ -2795,7 +2705,7 @@ public class IdpServiceImpl implements IdpService {
 								ChangeDisplayUserSacReq changeDisplayUserSacReqByUserID = new ChangeDisplayUserSacReq();
 								changeDisplayUserSacReqByUserID.setNewUserId(userId);
 								changeDisplayUserSacReqByUserID.setOldUserId(oldId);
-								changeDisplayUserSacReqByUserID.setTenantId(tenantID);
+								changeDisplayUserSacReqByUserID.setTenantId(tenantId);
 								this.changeDisplayUserSCI.changeUserId(changeDisplayUserSacReqByUserID);
 								// 공통_기타 회원ID 변경 끝
 							}
@@ -2852,4 +2762,106 @@ public class IdpServiceImpl implements IdpService {
 		return imResult;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 약관정보의 필수약관여부, 약관버전를 정보를 조회함.
+	 * </pre>
+	 * 
+	 * @param tenantID
+	 * @param strList
+	 * @return
+	 */
+	private List<MbrClauseAgree> getMbrClauseAgreeList(String tenantID, String[] mbrClauseAgreeArray) {
+
+		boolean isSelectedClauseAgree = false; // 선택사항 TAC006 US010608값의 선택판단 여부 없을경우 false
+
+		List<MbrClauseAgree> setMbrClauseAgreeList = new ArrayList<MbrClauseAgree>(); // return 시켜줄 약관정보 목록
+		MbrClauseAgree mca = null; // arrayList에 담을 약관정보 초기화
+
+		// 신규가입인경우만 이용약관이 들어옴.
+		List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>(); // 공통약관정보의 필수약관여부, 약관정보를 조회하기 위해 셋팅하는 list
+
+		AgreementInfo setAgreementInfo = null; // 약관동의정보 초기화
+
+		if (mbrClauseAgreeArray != null) {
+
+			// TAC001 Tstore 이용약관동의
+			setAgreementInfo = new AgreementInfo();
+			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE);
+			setAgreementInfo.setIsExtraAgreement("Y");
+			agreementList.add(setAgreementInfo);
+
+			// TAC002 통신과금서비스 이용약관
+			setAgreementInfo = new AgreementInfo();
+			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE);
+			setAgreementInfo.setIsExtraAgreement("Y");
+			agreementList.add(setAgreementInfo);
+
+			// TAC003 TSTORE캐쉬이용약관
+			setAgreementInfo = new AgreementInfo();
+			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_CASH);
+			setAgreementInfo.setIsExtraAgreement("Y");
+			agreementList.add(setAgreementInfo);
+
+			// TAC004 TSTORE개인정보취급방침
+			setAgreementInfo = new AgreementInfo();
+			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_TSTORE);
+			setAgreementInfo.setIsExtraAgreement("Y");
+			agreementList.add(setAgreementInfo);
+
+			// TAC005 3자정보제공동의 11번
+			setAgreementInfo = new AgreementInfo();
+			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS);
+			setAgreementInfo.setIsExtraAgreement("Y");
+			agreementList.add(setAgreementInfo);
+			agreementList.add(setAgreementInfo);
+
+			for (String mbrClauseAgree : mbrClauseAgreeArray) {
+				if (mbrClauseAgree.equals("TAC006")) {// 선택약관
+					isSelectedClauseAgree = true;
+					break;
+				} else {
+					isSelectedClauseAgree = false;
+				}
+			}
+
+			if (!isSelectedClauseAgree) { // mbrClauseAgreeArray 배열에 선택사항 항목인 TAC006이 약관항목에 없는경우 N으로 셋팅
+				// TAC006 TSTORE정보광고활용
+				setAgreementInfo = new AgreementInfo();
+				setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
+				setAgreementInfo.setIsExtraAgreement("N");
+				agreementList.add(setAgreementInfo);
+			} else {
+				setAgreementInfo = new AgreementInfo();
+				setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
+				setAgreementInfo.setIsExtraAgreement("Y");
+				agreementList.add(setAgreementInfo);
+			}
+		}
+
+		setAgreementInfo = new AgreementInfo();
+		setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_ONEID);
+		setAgreementInfo.setIsExtraAgreement("Y");
+		agreementList.add(setAgreementInfo);
+
+		setAgreementInfo = new AgreementInfo();
+		setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID);
+		setAgreementInfo.setIsExtraAgreement("Y");
+		agreementList.add(setAgreementInfo);
+
+		// 약관 맵핑정보 세팅. 약관매핑정보를 조회하여 약관정보를 셋팅함
+		List<AgreementInfo> getAgreementInfoList = this.mcc.getClauseMappingInfo(tenantID, agreementList);
+
+		for (AgreementInfo agreementInfo : getAgreementInfoList) {
+			mca = new MbrClauseAgree();
+			mca.setExtraAgreementID(agreementInfo.getExtraAgreementId());
+			mca.setIsExtraAgreement(agreementInfo.getIsExtraAgreement());
+			mca.setIsMandatory(agreementInfo.getMandAgreeYn());
+			mca.setExtraAgreementVersion(agreementInfo.getExtraAgreementVersion());
+			setMbrClauseAgreeList.add(mca);
+		}
+
+		return setMbrClauseAgreeList;
+	}
 }
