@@ -194,7 +194,7 @@ public class LoginServiceImpl implements LoginService {
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER))) {
 
 				/* 미가입 회원인 경우 로그 남김 */
-				LOGGER.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
+				LOGGER.info(":::: NOT_EXIST_USER authorizeByMdn :::: devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
 				throw ex;
 
 			} else {
@@ -333,7 +333,7 @@ public class LoginServiceImpl implements LoginService {
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER))) {
 
 				/* 미가입 회원인 경우 로그 남김 */
-				LOGGER.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
+				LOGGER.info(":::: NOT_EXIST_USER authorizeByMdn :::: devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
 				throw ex;
 
 			} else {
