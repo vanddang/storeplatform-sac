@@ -203,7 +203,7 @@
             ,PROD_CASE_CD            = NVL(#{prodCaseCd},PROD_CASE_CD)                          /* 상품_유형_코드(DP0063) */
             ,B2B_PROD_YN             = NVL(#{b2bProdYn},B2B_PROD_YN)                            /* B2B_상품_여부 */
             ,DLV_PROD_YN             = NVL(#{dlvProdYn},DLV_PROD_YN)                            /* 배송_상품_여부 */
-            ,MANG_BP_ID              = NVL(#{mangBpId},MANG_BP_ID)                              /* 관리_BP_ID */
+            ,MANG_BP_ID              = #{mangBpId}                                              /* 관리_BP_ID */
             ,UPD_ID                  = NVL(#{updId},UPD_ID)                                     /* 수정_ID */
             ,UPD_DT                  = sysdate                                                  /* 수정_일시 */
         where 1=1
