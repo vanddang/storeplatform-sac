@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="MemberCommon">
 
-    <!-- 필수 약관 동의 목록 조회 -->
+    <!-- 필수 약관 동의 목록 조회
     <select id="getMandAgreeList" parameterType="ClauseDTO" resultType="ClauseDTO">
 		SELECT /* MemberCommonMapper.getMandAgreeList, 필수약관 동의목록 조회, 심대진/다모아, 2014-01-08 */
 		      A.TENANT_ID         AS tenantId
@@ -28,6 +28,7 @@
 		AND A.MAND_AGREE_YN = 'Y'
 		ORDER BY B.CLAUSE_ITEM_CD
     </select>
+     -->
     
     <!-- Tenant 약관코드 조회 -->
     <select id="getTenantClauseCode" parameterType="ClauseDTO" resultType="ClauseDTO">
@@ -181,23 +182,23 @@
         SELECT /* MemberCommonMapper.getOmdCount, OMD 단말여부 확인, 심대진/다모아, 2014-01-17 */
                COUNT(1)
           FROM TB_CM_OMD_DEVICE
-         WHERE UA_CD = #{uacd}
+         WHERE ua_cd = #{uacd}
     </select>
     
     <!-- 공통 약관 코드 정보 조회 -->
     <select id="getClauseItemInfo" parameterType="ClauseDTO" resultType="ClauseDTO">
 		SELECT /* MemberCommonMapper.getClauseItemInfo, 공통 약관 코드 정보 조회, 심대진/다모아, 2014-04-04 */
-			   A.CLAUSE_ID AS clauseId,
-			   A.START_DAY AS startDay,
-			   A.END_DAY AS endDay,
-			   A.CLAUSE_VER AS clauseVer,
-			   B.MAND_AGREE_YN AS mandAgreeYn
-		FROM TB_CM_CLAUSE A, TB_CM_TENANT_CLAUSE B
-		WHERE A.CLAUSE_ID = B.CLAUSE_ID
-		AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN A.START_DAY AND A.END_DAY
-		AND B.USE_YN = 'Y'
-		AND B.TENANT_ID = #{tenantId}
-		AND A.CLAUSE_ID = #{clauseId}
+		       a.clause_id AS clauseId
+		     , a.start_day AS startDay
+		     , a.end_day AS endDay
+		     , a.clause_ver AS clauseVer
+		     , b.mand_agree_yn AS mandAgreeYn
+		 FROM TB_CM_CLAUSE a
+		INNER JOIN TB_CM_TENANT_CLAUSE b ON a.clause_id = b.clause_id
+		WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN a.start_day AND a.end_day
+		  AND b.use_yn = 'Y'
+          AND b.tenant_id = #{tenantId}
+          AND a.clayse_id = #{clauseId}
     </select>
     
 </mapper>
