@@ -257,11 +257,13 @@ public class PurchaseOrderController {
 		this.logger.debug("PRCHS,ORDER,SAC,VERIFY,REQ,{},{}", req, sacRequestHeader);
 
 		String tenantId = null;
-		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
-		if (tenantHeader != null) {
-			tenantId = tenantHeader.getTenantId();
-		} else { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
+		if (StringUtils.isNotBlank(req.getMctSpareParam())) { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
 			tenantId = req.getMctSpareParam();
+		} else {
+			TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
+			if (tenantHeader != null) {
+				tenantId = tenantHeader.getTenantId();
+			}
 		}
 
 		VerifyOrderInfo verifyOrderInfo = new VerifyOrderInfo();
