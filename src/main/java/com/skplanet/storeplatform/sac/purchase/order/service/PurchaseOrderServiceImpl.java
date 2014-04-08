@@ -345,6 +345,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setNoTelSeller(reservedDataMap.get("sellerTelno")); // 판매자 전화번호
 		res.setNmDelivery(reservedDataMap.get("receiveNames")); // 선물수신자 성명
 		res.setNoMdnDelivery(reservedDataMap.get("receiveMdns")); // 선물수신자 MDN
+		if (StringUtils.defaultString(prchsDtlMore.getTenantProdGrpCd()).length() >= 12) {
+			res.setTopMenuId(prchsDtlMore.getTenantProdGrpCd().substring(8, 12)); // 상품 TOP 메뉴 ID
+		}
 
 		// 회원 - 결제 관련 정보 조회
 		SearchUserPayplanetSacRes userPayRes = null;
