@@ -1342,8 +1342,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * </pre>
 	 * 
 	 * @param request
-	 *            SearchUserReq
-	 * @return
+	 *            SearchUserSacReq
+	 * @return SearchUserSacRes
 	 */
 	@Override
 	public SearchUserSacRes searchUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request) {
