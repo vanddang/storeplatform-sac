@@ -327,8 +327,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				comNmLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerCompany(), "");
 				bizNoLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getBizRegNumber(), "");
 				phoneLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getRepPhone(), "");
-				addrLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerAddress() + " "
-						+ searchSellerResponse.getSellerMbr().getSellerDetailAddress(), "");
+				addrLower = StringUtils.isBlank(searchSellerResponse.getSellerMbr().getSellerAddress()) ? "" : searchSellerResponse
+						.getSellerMbr().getSellerAddress();
+				addrLower += StringUtils.isBlank(searchSellerResponse.getSellerMbr().getSellerDetailAddress()) ? "" : " "
+						+ searchSellerResponse.getSellerMbr().getSellerDetailAddress();
 			}
 
 		} else { // 외국인
