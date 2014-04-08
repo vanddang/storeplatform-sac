@@ -18,8 +18,8 @@
     <!-- 약관 상세 조회 -->
     <select id="getClauseDetail" parameterType="ClauseDTO" resultType="ClauseDTO">
 		SELECT    /* MemberCommonMapper.getClauseDetail, 약관상세조회, 강신완/부르칸, 2014-02-12 */
-            clause_id           AS clauseId,
-            clause_item_cd      AS clauseItemCd,
+            clause_id           AS clauseItemCd,
+            clause_item_cd      AS clauseId,
             start_day           AS startDay,
             end_day             AS endDay,
             file_path           AS filePath,
@@ -42,8 +42,8 @@
     <!-- 약관 목록 조회 -->
     <select id="getClauseList" parameterType="ClauseDTO" resultType="ClauseDTO">
         SELECT    /* MemberCommonMapper.getClauseList, 약관목록조회, 강신완/부르칸, 2014-02-12 */
-            A.clause_id           AS clauseId,
-            A.clause_item_cd      AS clauseItemCd,
+            A.clause_id           AS clauseItemCd,
+            A.clause_item_cd      AS clauseId,
             A.start_day           AS startDay,
             A.end_day             AS endDay,
             A.file_path           AS filePath,
