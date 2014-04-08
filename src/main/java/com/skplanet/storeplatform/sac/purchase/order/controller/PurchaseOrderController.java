@@ -297,11 +297,13 @@ public class PurchaseOrderController {
 		}
 
 		String tenantId = null;
-		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
-		if (tenantHeader != null) {
-			tenantId = tenantHeader.getTenantId();
-		} else { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
+		if (StringUtils.isNotBlank(notifyPaymentReq.getMctSpareParam())) { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
 			tenantId = notifyPaymentReq.getMctSpareParam();
+		} else {
+			TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
+			if (tenantHeader != null) {
+				tenantId = tenantHeader.getTenantId();
+			}
 		}
 
 		// ------------------------------------------------------------------------------
