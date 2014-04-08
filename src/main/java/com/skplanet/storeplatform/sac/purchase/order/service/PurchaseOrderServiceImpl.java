@@ -1212,11 +1212,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param prchsDtlMoreList 구매 정보 목록
 	 * 
-	 * @param prchsStatusCd 구매상태
+	 * @param statusCd 구매상태코드
 	 * 
 	 * @return 상품 건수 저장을 위한 목록
 	 */
-	private List<PrchsProdCnt> makePrchsProdCntList(List<PrchsDtlMore> prchsDtlMoreList, String prchsStatusCd) {
+	private List<PrchsProdCnt> makePrchsProdCntList(List<PrchsDtlMore> prchsDtlMoreList, String statusCd) {
 		List<PrchsProdCnt> prchsProdCntList = new ArrayList<PrchsProdCnt>();
 		PrchsProdCnt prchsProdCnt = null;
 
@@ -1240,7 +1240,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			prchsProdCnt.setPrchsId(prchsDtlMore.getPrchsId());
 			prchsProdCnt.setPrchsDt(prchsDtlMore.getPrchsDt());
 			prchsProdCnt.setPrchsClas(prchsDtlMore.getPrchsReqPathCd());
-			prchsProdCnt.setStatusCd(prchsStatusCd);
+			prchsProdCnt.setStatusCd(statusCd);
 
 			prchsProdCnt.setProdId(prchsDtlMore.getProdId());
 			prchsProdCnt.setProdAmt(prchsDtlMore.getProdAmt());
