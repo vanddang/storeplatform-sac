@@ -35,6 +35,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private Double tstoreCashAmt; // T store Cash 잔액
 	private String typeTestMdn; // 법인 및 일반 시험폰 처리 타입: T01, T02, T03
 	private String cdPaymentTemplate; // 결제Page 템플릿 코드: TC01-일반, TC02-정액제(게임캐쉬), TC03-대여/소장, TC04-자동결제, TC05-쇼핑, TC06-선물
+	private String topMenuId; // 상품 TOP 메뉴 ID
 	private String bonusCashPoint; // 보너스 캐쉬 지급 Point
 	private String bonusCashUsableDayCnt; // 보너스 캐쉬 유효기간(일)
 	private String afterAutoPayDt; // 다음 자동 결제일
@@ -273,6 +274,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setCdPaymentTemplate(String cdPaymentTemplate) {
 		this.cdPaymentTemplate = cdPaymentTemplate;
+	}
+
+	/**
+	 * @return the topMenuId
+	 */
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	/**
+	 * @param topMenuId
+	 *            the topMenuId to set
+	 */
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 	/**
