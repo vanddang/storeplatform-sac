@@ -40,41 +40,74 @@
             , A.UPD_DT 
         FROM (
             SELECT 
-                  A.TENANT_ID 
-                , A.TENANT_MENU_ID AS MENU_ID 
-                , A.SYSTEM_ID 
-                , A.MENU_NM 
-                , A.MENU_ENG_NM 
-                , A.MENU_DESC 
-                , A.MENU_DEPTH 
-                , A.INFR_MENU_YN 
-                , A.UP_MENU_ID 
-                , A.EXPO_ORD 
-                , A.TARGET_URL 
-                , A.SEARCH_FILE_PATH 
-                , A.SEARCH_FILE_NM 
-                , A.BODY_FILE_PATH 
-                , A.BODY_FILE_NM 
-                , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
-                , A.MAIN_ON_FILE_PATH 
-                , A.MAIN_ON_FILE_NM 
-                , A.MAIN_OFF_FILE_PATH 
-                , A.MAIN_OFF_FILE_NM 
-                , A.RANK_FILE_PATH 
-                , A.RANK_FILE_NM 
-                , A.USE_YN 
-                , A.MENU_ID_TYPE
-                , A.LNB_FILE_PATH
-                , A.LNB_FILE_NM
-                , A.LNB_FILE_SIZE
-                , A.PRE_CATEGORY_INFO
-                , A.CATEGORY_MENU_YN
-                , A.REG_ID 
-                , A.REG_DT 
-                , A.UPD_ID 
-                , A.UPD_DT 
+                      A.TENANT_ID 
+                    , A.TENANT_MENU_ID AS MENU_ID 
+                    , A.SYSTEM_ID 
+                    , A.MENU_NM 
+                    , A.MENU_ENG_NM 
+                    , A.MENU_DESC 
+                    , A.MENU_DEPTH 
+                    , A.INFR_MENU_YN 
+                    , A.UP_MENU_ID 
+                    , A.EXPO_ORD 
+                    , A.TARGET_URL 
+                    , A.SEARCH_FILE_PATH 
+                    , A.SEARCH_FILE_NM 
+                    , A.BODY_FILE_PATH 
+                    , A.BODY_FILE_NM 
+                    , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+                    , A.MAIN_ON_FILE_PATH 
+                    , A.MAIN_ON_FILE_NM 
+                    , A.MAIN_OFF_FILE_PATH 
+                    , A.MAIN_OFF_FILE_NM 
+                    , A.RANK_FILE_PATH 
+                    , A.RANK_FILE_NM 
+                    , A.USE_YN 
+                    , A.MENU_ID_TYPE
+                    , A.LNB_FILE_PATH
+                    , A.LNB_FILE_NM
+                    , A.LNB_FILE_SIZE
+                    , A.PRE_CATEGORY_INFO
+                    , A.CATEGORY_MENU_YN
+                    , A.REG_ID 
+                    , A.REG_DT 
+                    , A.UPD_ID 
+                    , A.UPD_DT
             FROM (
-                SELECT *
+                SELECT 
+	                  A.TENANT_ID 
+	                , A.TENANT_MENU_ID
+	                , A.SYSTEM_ID 
+	                , A.MENU_NM 
+	                , A.MENU_ENG_NM 
+	                , A.MENU_DESC 
+	                , A.MENU_DEPTH 
+	                , A.INFR_MENU_YN 
+	                , A.UP_MENU_ID 
+	                , A.EXPO_ORD 
+	                , A.TARGET_URL 
+	                , A.SEARCH_FILE_PATH 
+	                , A.SEARCH_FILE_NM 
+	                , A.BODY_FILE_PATH 
+	                , A.BODY_FILE_NM 
+	                , A.BODY_FILE_SIZE
+	                , A.MAIN_ON_FILE_PATH 
+	                , A.MAIN_ON_FILE_NM 
+	                , A.MAIN_OFF_FILE_PATH 
+	                , A.MAIN_OFF_FILE_NM 
+	                , A.RANK_FILE_PATH 
+	                , A.RANK_FILE_NM 
+	                , A.USE_YN 
+	                , A.MENU_ID_TYPE
+	                , A.LNB_FILE_PATH
+	                , A.LNB_FILE_NM
+	                , A.LNB_FILE_SIZE
+	                , A.PRE_CATEGORY_INFO
+	                , A.CATEGORY_MENU_YN
+	                , A.REG_ID 
+	                , A.REG_DT 
+	                , A.UPD_ID 
+	                , A.UPD_DT 
 	            FROM TB_DP_TENANT_MENU A
 	            WHERE A.TENANT_ID = #{tenantId}
 	            AND A.SYSTEM_ID = #{systemId}
