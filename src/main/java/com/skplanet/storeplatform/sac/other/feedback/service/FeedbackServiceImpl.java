@@ -495,61 +495,62 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setEndRow(String.valueOf(count));
 		// 사용후기 카운트.
 		int totalCount = (Integer) this.feedbackRepository.getProdNotiCount(prodNoti);
-		if (totalCount <= 0) {
-			throw new StorePlatformException("SAC_OTH_9001");
-		}
+		// if (totalCount <= 0) {
+		// throw new StorePlatformException("SAC_OTH_9001");
+		// }
 		listFeedbackRes.setNotiTot(String.valueOf(totalCount));
 		// 사용후기 목록.
 		List<ProdNoti> getProdnotiList = this.feedbackRepository.getProdNotiList(prodNoti);
-		if (CollectionUtils.isEmpty(getProdnotiList)) {
-			throw new StorePlatformException("SAC_OTH_9001");
-		}
+		if (!CollectionUtils.isEmpty(getProdnotiList)) {
+			// if (CollectionUtils.isEmpty(getProdnotiList)) {
+			// throw new StorePlatformException("SAC_OTH_9001");
+			// }
+			List<Feedback> notiList = new ArrayList<Feedback>();
+			List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+			Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
+			List<String> userKeyList = new ArrayList<String>();
+			Set<String> userKeySet = new HashSet<String>();
+			// 회원/ 판매자 요청 리스트.
+			for (ProdNoti res : getProdnotiList) {
+				SellerMbrSac sellerMbrSac = new SellerMbrSac();
+				sellerMbrSac.setSellerKey(res.getSellerMbrNo());
+				sellerMbrSacSet.add(sellerMbrSac);
+				userKeySet.add(res.getMbrNo());
+			}
+			// 판매자 조회 요청.
+			sellerMbrSacList.addAll(sellerMbrSacSet);
+			DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+			detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+			DetailInformationSacRes detailInformationSacRes = null;
 
-		List<Feedback> notiList = new ArrayList<Feedback>();
-		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
-		Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
-		List<String> userKeyList = new ArrayList<String>();
-		Set<String> userKeySet = new HashSet<String>();
-		// 회원/ 판매자 요청 리스트.
-		for (ProdNoti res : getProdnotiList) {
-			SellerMbrSac sellerMbrSac = new SellerMbrSac();
-			sellerMbrSac.setSellerKey(res.getSellerMbrNo());
-			sellerMbrSacSet.add(sellerMbrSac);
-			userKeySet.add(res.getMbrNo());
-		}
-		// 판매자 조회 요청.
-		sellerMbrSacList.addAll(sellerMbrSacSet);
-		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
-		DetailInformationSacRes detailInformationSacRes = null;
+			// 판매자 조회.
+			try {
+				detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
+			} catch (Exception e) {
+				detailInformationSacRes = null;
+			}
 
-		// 판매자 조회.
-		try {
-			detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
-		} catch (Exception e) {
-			detailInformationSacRes = null;
-		}
+			// 회원 조회 요청.
+			SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+			userKeyList.addAll(userKeySet);
+			searchUserSacReq.setUserKeyList(userKeyList);
+			SearchUserSacRes searchUserSacRes = null;
 
-		// 회원 조회 요청.
-		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-		userKeyList.addAll(userKeySet);
-		searchUserSacReq.setUserKeyList(userKeyList);
-		SearchUserSacRes searchUserSacRes = null;
+			// 회원 조회.
+			try {
+				searchUserSacRes = this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+			} catch (Exception e) {
+				searchUserSacRes = null;
+			}
 
-		// 회원 조회.
-		try {
-			searchUserSacRes = this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
-		} catch (Exception e) {
-			searchUserSacRes = null;
+			// 응답셋팅.
+			for (ProdNoti res : getProdnotiList) {
+				notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType(), detailInformationSacRes,
+						searchUserSacRes));
+			}
+			// 응답.
+			listFeedbackRes.setNotiList(notiList);
 		}
-
-		// 응답셋팅.
-		for (ProdNoti res : getProdnotiList) {
-			notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType(), detailInformationSacRes,
-					searchUserSacRes));
-		}
-		// 응답.
-		listFeedbackRes.setNotiList(notiList);
 		return listFeedbackRes;
 	}
 
