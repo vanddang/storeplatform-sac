@@ -1808,7 +1808,7 @@
                         ,Z.*
                    FROM
                       (
-                      SELECT  /*+ leading(MCP MCPM PD) use_nl(MCP PD) use_hash(MCP MCPM) */ 
+                      SELECT   
                               ROW_NUMBER( ) OVER( PARTITION BY PR.PROD_ID ORDER BY P.REG_DT DESC ) AS RNUM
                              ,P.PROD_ID
                              ,PR.PROD_ID AS CHNL_PROD_ID
