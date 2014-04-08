@@ -38,7 +38,6 @@ import com.skplanet.storeplatform.sac.api.service.CouponItemService;
 import com.skplanet.storeplatform.sac.api.service.CouponProcessService;
 import com.skplanet.storeplatform.sac.api.service.ShoppingCouponService;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.ErrorData;
@@ -663,26 +662,9 @@ public class ShoppingCouponSacController {
 			List<CouponRes> couponList) {
 		this.log.info("<CouponControl> sendResponseData...");
 
-		boolean success = false;
+		boolean success = true;
 		try {
-
-			// Response 는 무조건 처리 .Response 처리도 DB 화 한다.
-			String xmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
-			StringBuffer xmlSb = null;
-			xmlSb = new StringBuffer();
-			xmlSb.append(xmlHeader);
-			xmlSb.append("<cms>");
 			if (map != null) {
-				xmlSb.append("<rCode><![CDATA[" + map.get("ERROR_CODE") + "]]></rCode>");
-				xmlSb.append("<rMsg><![CDATA["
-						+ CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
-				if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals(""))
-					xmlSb.append("[" + map.get("ERROR_VALUE") + "]");
-				xmlSb.append("]]></rMsg>");
-				xmlSb.append("<txId><![CDATA[" + couponReq.getTxId() + "]]></txId>");
-
-				this.log.debug("-------------------jade 추가 S---------------------------------------------");
-
 				couponRes.setRCode(map.get("ERROR_CODE"));
 				couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
 				if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals("")) {
@@ -690,118 +672,59 @@ public class ShoppingCouponSacController {
 							+ map.get("ERROR_VALUE"));
 				}
 			}
-			this.log.debug("-------------------jade 추가 E---------------------------------------------");
+			switch (TX_TYPE_CODE.get(couponReq.getTxType())) {
+			case BD:
+				break;
+			case CT:
+				break;
+			case CP:
+				StringBuffer couponBuff = new StringBuffer();
+				couponBuff.append(couponReq.getDpCouponInfo().getProdId());
+				couponBuff.append(":");
+				couponBuff.append(couponReq.getDpCouponInfo().getCouponCode());
+				couponRes.setCouponId(couponBuff.toString());
 
-			if (couponReq.checkTxType()) {
-
-				switch (TX_TYPE_CODE.get(couponReq.getTxType())) {
-
-				case BD:
-					xmlSb.append("<rData>");
-					xmlSb.append("<brandCode><![CDATA[" + couponReq.getBrandCode() + "]]></brandCode>");
-					xmlSb.append("</rData>");
-					if (map != null) {
-						map.put("COMMON_CODE", couponReq.getBrandCode());
+				StringBuffer itemBuff = new StringBuffer();
+				for (int i = 0; i < couponReq.getDpItemInfo().size(); i++) {
+					if (i == 0) {
+						itemBuff.append(couponReq.getDpItemInfo().get(i).getProdId());
+						itemBuff.append(":");
+						itemBuff.append(couponReq.getDpItemInfo().get(i).getItemCode());
+					} else {
+						itemBuff.append(",");
+						itemBuff.append(couponReq.getDpItemInfo().get(i).getProdId());
+						itemBuff.append(":");
+						itemBuff.append(couponReq.getDpItemInfo().get(i).getItemCode());
 					}
-					break;
-				case CT:
-					xmlSb.append("<rData>");
-					xmlSb.append("<catalogCode><![CDATA[" + couponReq.getCatalogCode() + "]]></catalogCode>");
-					xmlSb.append("</rData>");
-					if (map != null) {
-						map.put("COMMON_CODE", couponReq.getCatalogCode());
-					}
-					break;
-				case CP:
-					xmlSb.append("<rData>");
-					xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponReq.getCouponCode(), "")
-							+ "]]></couponCode>");
-					xmlSb.append("</rData>");
-					if (map != null) {
-						map.put("COMMON_CODE", StringUtil.nvl(couponReq.getCouponCode(), "")); // 상품추가/수정시에는 xml
-																							   // 전문에 couponcode
-																							   // 가포함되어 마지막에 , put
-																							   // 해준다.
-					}
-					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					StringBuffer couponBuff = new StringBuffer();
-					couponBuff.append(couponReq.getDpCouponInfo().getProdId());
-					couponBuff.append(":");
-					couponBuff.append(couponReq.getDpCouponInfo().getCouponCode());
-					couponRes.setCouponId(couponBuff.toString());
-
-					StringBuffer itemBuff = new StringBuffer();
-					for (int i = 0; i < couponReq.getDpItemInfo().size(); i++) {
-						if (i == 0) {
-							itemBuff.append(couponReq.getDpItemInfo().get(i).getProdId());
-							itemBuff.append(":");
-							itemBuff.append(couponReq.getDpItemInfo().get(i).getItemCode());
-						} else {
-							itemBuff.append(",");
-							itemBuff.append(couponReq.getDpItemInfo().get(i).getProdId());
-							itemBuff.append(":");
-							itemBuff.append(couponReq.getDpItemInfo().get(i).getItemCode());
-						}
-					}
-					couponRes.setItemId(itemBuff.toString());
-					this.log.debug("-------------------jade 추가 E---------------------------------------------");
-					break;
-				case ST:
-					xmlSb.append("<rData>");
-					xmlSb.append("<couponCode><![CDATA[" + couponReq.getCouponCode() + "]]></couponCode>");
-					xmlSb.append("</rData>");
-				case AT:
-					break;
-				case LS:
-					xmlSb.append("<rData>");
-					xmlSb.append("<eventList><![CDATA[");
-					String seperatorComma = "";
-					String eventList = "";
-					int j = 0;
-					if (couponList != null) {
-						for (CouponRes couponInfo : couponList) {
-							if (j > 0)
-								seperatorComma = ",";
-							xmlSb.append(seperatorComma + couponInfo.getCouponCode() + ":" + couponInfo.getSpecialYN());
-							eventList = eventList + seperatorComma + couponInfo.getCouponCode() + ":"
-									+ couponInfo.getSpecialYN();
-
-							j++;
-						}
-					}
-					xmlSb.append("]]></eventList>");
-					xmlSb.append("</rData>");
-					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					couponRes.setEventList(eventList);
-					this.log.debug("-------------------jade 추가 E---------------------------------------------");
-
-					break;
-				case DT:
-					xmlSb.append("<rData>");
-					xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponReq.getCouponCode(), "")
-							+ "]]></couponCode>");
-					xmlSb.append("<eventName><![CDATA[" + StringUtil.nvl(couponRes.getEventName(), "")
-							+ "]]></eventName>");
-					xmlSb.append("<eventStartDate><![CDATA[" + StringUtil.nvl(couponRes.getEventStartDate(), "")
-							+ "]]></eventStartDate>");
-					xmlSb.append("<eventEndDate><![CDATA[" + StringUtil.nvl(couponRes.getEventEndDate(), "")
-							+ "]]></eventEndDate>");
-					xmlSb.append("<eventDcRate><![CDATA[" + StringUtil.nvl(couponRes.getEventDcRate(), "")
-							+ "]]></eventDcRate>");
-					xmlSb.append("</rData>");
-
-					break;
-				default:
-					xmlSb.append("");
-					break;
 				}
-			} else
-				xmlSb.append("");
+				couponRes.setItemId(itemBuff.toString());
+				break;
+			case ST:
+				break;
+			case AT:
+				break;
+			case LS:
 
-			xmlSb.append("</cms>");
+				String seperatorComma = "";
+				String eventList = "";
+				int j = 0;
+				if (couponList != null) {
+					for (CouponRes couponInfo : couponList) {
+						if (j > 0)
+							seperatorComma = ",";
+						eventList = eventList + seperatorComma + couponInfo.getCouponCode() + ":"
+								+ couponInfo.getSpecialYN();
 
-			// this.response = xmlSb.toString();
-
+						j++;
+					}
+				}
+				couponRes.setEventList(eventList);
+				break;
+			case DT:
+				break;
+			default:
+				break;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
