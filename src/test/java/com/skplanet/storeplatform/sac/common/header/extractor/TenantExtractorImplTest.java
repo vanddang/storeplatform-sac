@@ -66,12 +66,12 @@ public class TenantExtractorImplTest {
 	}
 
 	@Test
-	public void testExtractFromDbWithBlankAuthKey() {
+	public void testExtractFromDbWithoutAuthKey() {
 		AuthKey authKey = new AuthKey();
 		authKey.setTenantId("S03");
 		when(this.dbService.selectAuthKey(anyString())).thenReturn(authKey);
 
-		when(this.request.getHeader(CommonConstants.HEADER_AUTH_KEY)).thenReturn("");
+		when(this.request.getHeader(CommonConstants.HEADER_AUTH_KEY)).thenReturn(null);
 		when(this.request.getHeader(CommonConstants.HEADER_SYSTEM_ID)).thenReturn("S09-00001");
 
 		TenantHeader tenant = this.extractor.extract(this.request);
@@ -92,6 +92,23 @@ public class TenantExtractorImplTest {
 		TenantHeader tenant = this.extractor.extract(this.request);
 		assertEquals("S01", tenant.getTenantId());
 		assertEquals("S09-00001", tenant.getSystemId());
+
+		verify(this.request).getHeader(CommonConstants.HEADER_TENANT_ID);
+		verify(this.request).getHeader(CommonConstants.HEADER_SYSTEM_ID);
+	}
+
+	@Test
+	public void testExtractFromDbWithoutSystemId() {
+		AuthKey authKey = new AuthKey();
+		authKey.setTenantId("S03");
+		when(this.dbService.selectAuthKey(anyString())).thenReturn(authKey);
+
+		when(this.request.getHeader(CommonConstants.HEADER_AUTH_KEY)).thenReturn("S033d8874b5d768d093e28fc7d82fffc1d2");
+		when(this.request.getHeader(CommonConstants.HEADER_SYSTEM_ID)).thenReturn(null);
+
+		TenantHeader tenant = this.extractor.extract(this.request);
+		assertEquals("S03", tenant.getTenantId());
+		assertEquals("S01-01002", tenant.getSystemId());
 
 		verify(this.request).getHeader(CommonConstants.HEADER_TENANT_ID);
 		verify(this.request).getHeader(CommonConstants.HEADER_SYSTEM_ID);
