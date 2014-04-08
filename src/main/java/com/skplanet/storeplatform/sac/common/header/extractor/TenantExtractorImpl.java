@@ -64,16 +64,7 @@ public class TenantExtractorImpl implements TenantExtractor {
 		if (StringUtils.isNotBlank(tenantId)) {
 			tenant.setTenantId(tenantId);
 		} else {
-			String authKey = webRequest.getHeader(CommonConstants.HEADER_AUTH_KEY);
-			if (StringUtils.isNotBlank(authKey)) {
-				AuthKey authKeyObj = this.dbService.selectAuthKey(authKey);
-				String tenantIdFromDb = "";
-				//FIXME: tenant 조회 실패 처리
-				if(authKeyObj != null) {
-					tenantIdFromDb = authKeyObj.getTenantId();
-					tenant.setTenantId(tenantIdFromDb);
-				}
-			}
+			this.setTenantIdFromDb(webRequest, tenant);
 		}
 
 		/*
@@ -113,6 +104,24 @@ public class TenantExtractorImpl implements TenantExtractor {
             }
         }
         return this.DEFAULT_LANG;
+    }
+
+    /**
+     * AuthKey로 DB를 조회하여 TenantID 세팅
+     */
+    private void setTenantIdFromDb(NativeWebRequest webRequest, TenantHeader tenant) {
+    	String authKey = webRequest.getHeader(CommonConstants.HEADER_AUTH_KEY);
+    	if (StringUtils.isBlank(authKey)) {
+    		return;
+    	}
+
+    	AuthKey authKeyObj = this.dbService.selectAuthKey(authKey);
+    	if (authKeyObj == null) {
+    		return;
+    	}
+
+		String tenantIdFromDb = authKeyObj.getTenantId();
+		tenant.setTenantId(tenantIdFromDb);
     }
 
 }
