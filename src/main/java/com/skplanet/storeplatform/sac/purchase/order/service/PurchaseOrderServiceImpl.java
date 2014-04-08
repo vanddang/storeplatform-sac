@@ -167,7 +167,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			paymentInfo.setPaymentDt(purchaseOrderInfo.getPrchsDt());
 			paymentInfoList.add(paymentInfo);
 
-			paymentList = this.makePaymentList(prchsDtlMoreList.get(0), paymentInfoList);
+			paymentList = this.makePaymentList(prchsDtlMoreList.get(0), paymentInfoList,
+					PurchaseConstants.PRCHS_STATUS_COMPT);
 		}
 
 		// -----------------------------------------------------------------------------
@@ -709,7 +710,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				PurchaseConstants.PRCHS_STATUS_COMPT);
 
 		// 결제생성 요청 데이터
-		List<Payment> paymentList = this.makePaymentList(prchsDtlMore, notifyPaymentReq.getPaymentInfoList());
+		List<Payment> paymentList = this.makePaymentList(prchsDtlMore, notifyPaymentReq.getPaymentInfoList(),
+				PurchaseConstants.PRCHS_STATUS_COMPT);
 
 		// 자동구매 생성 요청 데이터
 		this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,CHECKAUTO,{},{}", prchsDtlMore.getPrchsProdType(),
@@ -1147,15 +1149,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param paymentInfoList 결제이력 생성 정보
 	 * 
+	 * @param statusCd 구매상태코드
+	 * 
 	 * @return 결제내역 생성 목록
 	 */
-	private List<Payment> makePaymentList(PrchsDtlMore prchsDtlMore, List<PaymentInfo> paymentInfoList) {
+	private List<Payment> makePaymentList(PrchsDtlMore prchsDtlMore, List<PaymentInfo> paymentInfoList, String statusCd) {
 
 		String tenantId = prchsDtlMore.getTenantId();
 		String systemId = prchsDtlMore.getSystemId();
 		String prchsId = prchsDtlMore.getPrchsId();
 		String prchsDt = prchsDtlMore.getPrchsDt();
-		String statusCd = prchsDtlMore.getStatusCd();
 		Double totAmt = prchsDtlMore.getTotAmt();
 		String payUserKey = null;
 		String payDeviceKey = null;
