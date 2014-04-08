@@ -15,17 +15,6 @@ public interface MemberCommonRepository {
 
 	/**
 	 * <pre>
-	 * 필수 약관 동의 목록 조회.
-	 * </pre>
-	 * 
-	 * @param tenantId
-	 *            테넌트 아이디
-	 * @return List<ClauseDTO>
-	 */
-	public List<Clause> searchMandatoryAgreeList(String tenantId);
-
-	/**
-	 * <pre>
 	 * 약관 목록 조회.
 	 * </pre>
 	 * 

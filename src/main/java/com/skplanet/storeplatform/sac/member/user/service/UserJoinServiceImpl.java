@@ -10,8 +10,6 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -63,7 +61,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 
 /**
@@ -603,87 +600,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 회원 가입 MSISDN, MAC (변동성 대상 체크 로직 포함)
 		 */
 		return this.createSaveAndSyncUserJoin(sacHeader, req);
-
-	}
-
-	/**
-	 * <pre>
-	 * 필수 약관 동의 정보를 체크 한다.
-	 * </pre>
-	 * 
-	 * @param agreementList
-	 *            요청 약관 동의 정보
-	 * @param tenantId
-	 *            테넌트 아이디
-	 * @return boolean
-	 */
-	@Deprecated
-	private boolean checkAgree(List<AgreementInfo> agreementList, String tenantId) {
-
-		/**
-		 * DB 약관 목록 조회 sorting
-		 */
-		List<Clause> dbAgreementList = this.mcc.getMandAgreeList(tenantId);
-		if (dbAgreementList.size() == 0) {
-			LOGGER.debug("## 체크할 필수 약관이 존재 하지 않습니다.");
-			return false;
-		}
-		Comparator<Clause> dbComparator = new Comparator<Clause>() {
-			@Override
-			public int compare(Clause value1, Clause value2) {
-				return value1.getClauseItemCd().compareTo(value2.getClauseItemCd());
-			}
-		};
-		Collections.sort(dbAgreementList, dbComparator);
-
-		// sorting data setting
-		StringBuffer sortDbAgreeInfo = new StringBuffer();
-		for (Clause sortInfo : dbAgreementList) {
-			sortDbAgreeInfo.append(sortInfo.getClauseItemCd());
-		}
-		LOGGER.debug("## 필수약관목록 : {}", sortDbAgreeInfo);
-
-		/**
-		 * 요청 약관 목록 조회 sorting
-		 */
-		Comparator<AgreementInfo> comparator = new Comparator<AgreementInfo>() {
-			@Override
-			public int compare(AgreementInfo o1, AgreementInfo o2) {
-				return o1.getExtraAgreementId().compareTo(o2.getExtraAgreementId());
-			}
-		};
-		Collections.sort(agreementList, comparator);
-
-		// sorting data setting
-		StringBuffer sortAgreeInfo = new StringBuffer();
-		for (AgreementInfo info : agreementList) {
-
-			/**
-			 * 약관 동의한것만 비교대상으로 세팅.
-			 */
-			if (StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) {
-
-				/**
-				 * 필수 약관에 포함되는 것만 비교대상으로 세팅.
-				 */
-				for (Clause sortInfo : dbAgreementList) {
-					if (StringUtils.equals(sortInfo.getClauseItemCd(), info.getExtraAgreementId())) {
-						sortAgreeInfo.append(info.getExtraAgreementId());
-					}
-				}
-
-			}
-		}
-		LOGGER.debug("## 요청약관목록 : {}", sortAgreeInfo);
-
-		/**
-		 * 정렬된 DB 약관 목록과 요청 약관 목록을 비교한다.
-		 */
-		if (!StringUtils.equals(sortDbAgreeInfo.toString(), sortAgreeInfo.toString())) {
-			return true;
-		} else {
-			return false;
-		}
 
 	}
 

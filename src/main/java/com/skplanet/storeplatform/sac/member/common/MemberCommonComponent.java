@@ -171,19 +171,6 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * 필수 약관 동의 목록 조회.
-	 * </pre>
-	 * 
-	 * @param tenantId
-	 *            tenantId
-	 * @return List<ClauseDTO>
-	 */
-	public List<Clause> getMandAgreeList(String tenantId) {
-		return this.repository.searchMandatoryAgreeList(tenantId);
-	}
-
-	/**
-	 * <pre>
 	 * 약관 목록 조회.
 	 * </pre>
 	 * 

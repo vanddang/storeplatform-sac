@@ -24,13 +24,6 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 	private CommonDAO commonDAO;
 
 	@Override
-	public List<Clause> searchMandatoryAgreeList(String tenantId) {
-		Clause dto = new Clause();
-		dto.setTenantId(tenantId);
-		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getMandAgreeList", dto);
-	}
-
-	@Override
 	public Device searchPhoneInfo(String deviceModelCd) {
 		Device dto = new Device();
 		dto.setDeviceModelCd(deviceModelCd);
