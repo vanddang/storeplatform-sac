@@ -887,6 +887,11 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 */
 	private void updateAgreement(SacRequestHeader sacHeader, String userKey, List<AgreementInfo> agreementList) {
 
+		/**
+		 * 약관 맵핑정보 세팅.
+		 */
+		this.mcc.getClauseMappingInfo(sacHeader.getTenantHeader().getTenantId(), agreementList);
+
 		UpdateAgreementRequest updateAgreementRequest = new UpdateAgreementRequest();
 		updateAgreementRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		updateAgreementRequest.setUserKey(userKey);
@@ -900,6 +905,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrClauseAgree.setExtraAgreementID(info.getExtraAgreementId());
 			mbrClauseAgree.setExtraAgreementVersion(info.getExtraAgreementVersion());
 			mbrClauseAgree.setIsExtraAgreement(info.getIsExtraAgreement());
+			mbrClauseAgree.setIsMandatory(info.getMandAgreeYn());
 			mbrClauseAgree.setRegDate(DateUtil.getToday("yyyyMMddHHmmss"));
 			mbrClauseAgreeList.add(mbrClauseAgree);
 		}
