@@ -37,7 +37,7 @@
         FROM TB_CM_TENANT_CLAUSE 
         WHERE 1=1
         
-        AND clause_id = #{clauseItemCd}
+        AND clause_id = #{clauseId}
         AND use_yn = 'Y'  
         ORDER BY clause_id ASC
     </select>
@@ -52,7 +52,7 @@
             file_path           AS filePath,
             file_nm             AS fileNm,
             clause_ver          AS clauseVer,
-            up_clause_id        AS upClauseId,
+            up_clause_item_cd   AS upClauseItemCd,
             dp_yn               AS dpYn,
             reg_id              AS regId,
             TO_CHAR(reg_dt, 'YYYYMMDDHH24MISS') AS regDt, 
@@ -61,7 +61,7 @@
          FROM TB_CM_CLAUSE 
         WHERE dp_yn='Y'
         
-        AND clause_item_cd = #{clauseItemCd}
+        AND clause_id = #{clauseId}
                         
         ORDER BY clause_id ASC
     </select>
@@ -76,7 +76,7 @@
             A.file_path           AS filePath,
             A.file_nm             AS fileNm,
             A.clause_ver          AS clauseVer,
-            A.up_clause_id        AS upClauseId,
+            A.up_clause_item_cd   AS upClauseItemCd,
             A.dp_yn               AS dpYn,
             A.reg_id              AS regId,
             TO_CHAR(A.reg_dt, 'YYYYMMDDHH24MISS') AS regDt, 
@@ -85,7 +85,7 @@
          FROM TB_CM_CLAUSE A, TB_CM_TENANT_CLAUSE B
         WHERE A.dp_yn='Y'
         
-        AND A.clause_item_cd = B.clause_id
+        AND A.clause_id = B.clause_id
         AND (
              SELECT TO_CHAR(SYSDATE, 'YYYYMMDD') 
                FROM DUAL
@@ -93,7 +93,7 @@
         
         AND B.tenant_id = #{tenantId}
         AND B.use_yn = 'Y'
-        ORDER BY A.clause_item_cd ASC
+        ORDER BY A.clause_id ASC
     </select>
     
     <!-- 폰 정보 조회 -->

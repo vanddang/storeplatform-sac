@@ -41,7 +41,7 @@ public interface MemberCommonRepository {
 	 * @param clauseItemCd
 	 * @return List<Clause>
 	 */
-	public List<Clause> searchClauseDetail(String clauseItemCd);
+	public List<Clause> searchClauseDetail(String clauseId);
 
 	/**
 	 * <pre>
@@ -51,7 +51,7 @@ public interface MemberCommonRepository {
 	 * @param clauseItemCd
 	 * @return Clause
 	 */
-	public Clause searchTenantClauseCode(String clauseItemCd);
+	public Clause searchTenantClauseCode(String clauseId);
 
 	/**
 	 * <pre>

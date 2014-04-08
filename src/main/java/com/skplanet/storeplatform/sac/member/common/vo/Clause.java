@@ -53,7 +53,7 @@ public class Clause extends CommonInfo {
 
 	private String clauseVer;
 
-	private String upClauseId;
+	private String upClauseItemCd;
 
 	private String dpYn;
 
@@ -218,16 +218,16 @@ public class Clause extends CommonInfo {
 	/**
 	 * @return String : upClauseId
 	 */
-	public String getUpClauseId() {
-		return this.upClauseId;
+	public String getUpClauseItemCd() {
+		return this.upClauseItemCd;
 	}
 
 	/**
 	 * @param upClauseId
 	 *            String : the upClauseId to set
 	 */
-	public void setUpClauseId(String upClauseId) {
-		this.upClauseId = upClauseId;
+	public void setUpClauseItemCd(String upClauseItemCd) {
+		this.upClauseItemCd = upClauseItemCd;
 	}
 
 	/**
