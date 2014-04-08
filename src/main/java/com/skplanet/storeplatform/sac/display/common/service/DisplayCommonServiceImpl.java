@@ -46,7 +46,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	private ExistenceSCI existenceSCI;
 
 	@Value("#{propertiesForSac['display.previewUrlPrefix']}")
-	private final String previewPrefix = "";
+	private String previewPrefix;
 	
 	/** The message source accessor. */
 	@Autowired
@@ -157,7 +157,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Override
 	public String makePreviewUrl(String phyPath) {
 		if (StringUtils.isNotEmpty(phyPath))
-			return this.previewPrefix + phyPath;
+            return this.previewPrefix + phyPath;
 		else
 			return "";
 	}
