@@ -47,6 +47,9 @@ public class RecommendOneday extends CommonInfo {
 	private Integer prodRealreAmt;
 	private Integer prodOffrAmt;
 
+	private String notfctWrtgold;
+	private String imageUrl;
+
 	public Integer getTotalCount() {
 		return this.totalCount;
 	}
@@ -242,6 +245,36 @@ public class RecommendOneday extends CommonInfo {
 	 */
 	public void setSvcGrpNm(String svcGrpNm) {
 		this.svcGrpNm = svcGrpNm;
+	}
+
+	/**
+	 * @return the notfctWrtgold
+	 */
+	public String getNotfctWrtgold() {
+		return this.notfctWrtgold;
+	}
+
+	/**
+	 * @param notfctWrtgold
+	 *            the notfctWrtgold to set
+	 */
+	public void setNotfctWrtgold(String notfctWrtgold) {
+		this.notfctWrtgold = notfctWrtgold;
+	}
+
+	/**
+	 * @return the imageUrl
+	 */
+	public String getImageUrl() {
+		return this.imageUrl;
+	}
+
+	/**
+	 * @param imageUrl
+	 *            the imageUrl to set
+	 */
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 }

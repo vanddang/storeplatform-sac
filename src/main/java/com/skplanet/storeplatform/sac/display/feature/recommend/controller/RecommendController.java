@@ -126,4 +126,24 @@ public class RecommendController {
 		responseVO = this.recommendOnedayService.searchOnedayList(requestVO, header);
 		return responseVO;
 	}
+
+	/**
+	 * <pre>
+	 * 하루에 하나 상품 조회 – GET.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
+	 * @return RecommendTodaySacRes 조회 결과
+	 */
+	@RequestMapping(value = "/oneday/inform/get/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public RecommendOnedaySacRes searchOnedayInformGet(RecommendOnedaySacReq requestVO, SacRequestHeader header) {
+
+		RecommendOnedaySacRes responseVO;
+		responseVO = this.recommendOnedayService.searchOnedayInform(requestVO, header);
+		return responseVO;
+	}
 }

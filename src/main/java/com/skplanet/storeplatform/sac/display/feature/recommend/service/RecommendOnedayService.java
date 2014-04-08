@@ -22,4 +22,17 @@ public interface RecommendOnedayService {
 	 * @return FeatureCategoryVodRes
 	 */
 	RecommendOnedaySacRes searchOnedayList(RecommendOnedaySacReq req, SacRequestHeader header);
+
+	/**
+	 * <pre>
+	 * 하루에 하나 상품 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
+	 * @return FeatureCategoryVodRes
+	 */
+	RecommendOnedaySacRes searchOnedayInform(RecommendOnedaySacReq req, SacRequestHeader header);
 }

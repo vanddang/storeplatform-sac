@@ -18,6 +18,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.Recomm
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -442,6 +444,68 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 			responseVO.setCommonResponse(commonResponse);
 		}
 
+		return responseVO;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
+	 */
+	@Override
+	public RecommendOnedaySacRes searchOnedayInform(RecommendOnedaySacReq requestVO, SacRequestHeader header) {
+		// TODO Auto-generated method stub
+		// 공통 응답 변수 선언
+		RecommendOnedaySacRes responseVO = new RecommendOnedaySacRes();
+		CommonResponse commonResponse = new CommonResponse();
+
+		// 헤더값 세팅
+		requestVO.setTenantId(header.getTenantHeader().getTenantId());
+		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
+		requestVO.setLangCd(header.getTenantHeader().getLangCd());
+
+		// tenantId 필수 파라미터 체크
+		if (StringUtils.isEmpty(requestVO.getTenantId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
+		}
+
+		RecommendOneday recommendOnedayInform;
+
+		recommendOnedayInform = this.commonDAO.queryForObject("FeatureRecommend.selectRecommendOnedayInform",
+				requestVO, RecommendOneday.class);
+
+		List<Product> productList = new ArrayList<Product>();
+
+		if (recommendOnedayInform != null) {
+
+			Product product = new Product();
+			Title title = new Title();
+			List<Source> sourceList = new ArrayList<Source>();
+			Source source = new Source();
+
+			// title 설정
+			title.setText(recommendOnedayInform.getNotfctWrtgold());
+			product.setTitle(title);
+
+			// source 설정
+			source.setUrl(recommendOnedayInform.getImageUrl());
+			source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+			sourceList.add(source);
+			product.setSourceList(sourceList);
+
+			productList.add(product);
+
+			commonResponse.setTotalCount(productList.size());
+			responseVO.setProductList(productList);
+			responseVO.setCommonResponse(commonResponse);
+		} else {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			responseVO.setProductList(productList);
+			responseVO.setCommonResponse(commonResponse);
+		}
 		return responseVO;
 	}
 }

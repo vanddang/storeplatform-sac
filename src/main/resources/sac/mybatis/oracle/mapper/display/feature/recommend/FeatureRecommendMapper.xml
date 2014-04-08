@@ -270,4 +270,19 @@
             WHERE ZZ.RN = 1
 			ORDER BY ZZ.EXPO_DT
     </select>
+    
+    <!-- 유료앱이 무료앱 알림메시지를 조회 -->
+    <select id="selectRecommendOnedayInform" parameterType="RecommendOnedaySacReq" resultType="RecommendOneday">
+        SELECT /* FeatureRecommendMapper.xml, selectRecommendOnedayInform, SAC 전시 , 2014-04-08 */
+		      ONE.NOTFCT_WRTGOLD
+		      , ONE.ICON_FILE_PATH || '/' || ONE.ICON_FILE_NM AS IMAGE_URL 
+		FROM TB_DP_ONEDAY_ONE_APP ONE, TB_DP_PROD TDP
+		WHERE ONE.PROD_ID = TDP.PROD_ID
+        AND   ONE.TENANT_ID = #{tenantId}
+		AND   ONE.EXPO_START_DT <![CDATA[ <= ]]> SYSDATE
+		AND   ONE.EXPO_END_DT > SYSDATE
+		AND   ONE.USE_YN = 'Y'
+		AND   ONE.NOTFCT_YN = 'Y'
+		AND ROWNUM = 1
+    </select>
 </mapper>
