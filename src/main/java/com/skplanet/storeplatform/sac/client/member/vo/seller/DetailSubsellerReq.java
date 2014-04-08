@@ -16,13 +16,21 @@ public class DetailSubsellerReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 서브계정 Key. */
 	@NotBlank
 	private String subSellerKey;
 
+	/**
+	 * @return the subSellerKey
+	 */
 	public String getSubSellerKey() {
 		return this.subSellerKey;
 	}
 
+	/**
+	 * @param subSellerKey
+	 *            the subSellerKey to set
+	 */
 	public void setSubSellerKey(String subSellerKey) {
 		this.subSellerKey = subSellerKey;
 	}
