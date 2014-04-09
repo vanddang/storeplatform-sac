@@ -17,12 +17,29 @@ public class DetailInformationForProductRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 판매자 ID */
+	private String sellerId;
 	/** 판매자 구분 코드 . */
 	private String sellerClass;
 	/** 내국인 여부 . */
 	private String isDomestic;
 	/** 판매자 정보 Value List. */
 	private List<SellerMbrAppSac> sellerMbrList;
+
+	/**
+	 * @return the sellerId
+	 */
+	public String getSellerId() {
+		return this.sellerId;
+	}
+
+	/**
+	 * @param sellerId
+	 *            the sellerId to set
+	 */
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
+	}
 
 	/**
 	 * @return the sellerClass
