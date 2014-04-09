@@ -780,11 +780,11 @@
 		                       ,TO_CHAR(NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT),'YYYYMMDDHH24MISS') AS APPLY_START_DT
 		                       ,TO_CHAR(NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ),'YYYYMMDDHH24MISS') AS APPLY_END_DT      
                                ,TO_CHAR(N.SPRC_APPLY_START_DT,'YYYYMMDDHH24MISS')
-                               ,TO_CHAR(N.SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS')   
-                               ,DECODE(I.PROD_CASE_CD
-                                     , 'DP006301', 'giftcard'
-                                     , 'DP006302', 'exchange'
-                                     , 'DP006303', 'delivery' ) PROD_CASE_CD
+                               ,TO_CHAR(N.SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS')
+                               ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
+                                      WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
+                                      WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+                                 END) PROD_CASE_CD                                  
                                ,J.PROD_CHRG_YN
                                ,I.B2B_PROD_YN
                                ,CONCAT(PI.FILE_PATH,PI.FILE_NM) FILE_PATH 
