@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.shopping.service.ShoppingAsyncService;
@@ -56,7 +55,7 @@ public class ShoppingAsyncController {
 
 	@RequestMapping(value = "/couponAsync/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public BizCouponRes getShoppingAsync(@RequestBody @Validated BizCouponReq request, SacRequestHeader sacRequestHeader) {
+	public int getShoppingAsync(@RequestBody @Validated BizCouponReq request, SacRequestHeader sacRequestHeader) {
 
 		this.logger.debug("######################################");
 		this.logger.debug("######################################");

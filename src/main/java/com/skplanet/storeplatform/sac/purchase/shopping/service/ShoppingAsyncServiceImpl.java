@@ -20,11 +20,11 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponItem;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublish;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponRes;
 import com.skplanet.storeplatform.purchase.client.shopping.sci.ShoppingAsyncSCI;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncItemSc;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncListSc;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncReq;
+import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncRes;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponItem;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublish;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
@@ -44,7 +44,7 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 	private ShoppingAsyncSCI shoppingAsyncSCI;
 
 	@Override
-	public BizCouponRes getShoppingAsync(BizCouponReq request) {
+	public int getShoppingAsync(BizCouponReq request) {
 
 		ShoppingAsyncReq reqSc = new ShoppingAsyncReq();
 		// ShoppingAsyncRes resSc = new ShoppingAsyncRes();
@@ -60,6 +60,9 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 			itemList = new ArrayList<ShoppingAsyncItemSc>();
 
 			listSc.setPrchsId(obj.getPrchsId());
+
+			logger.info("### Biz coupon :: PrchsId : " + obj.getPrchsId());
+
 			listSc.setAvail_startdate(obj.getAvail_startdate());
 			listSc.setAvail_enddate(obj.getAvail_enddate());
 			listSc.setMdn(obj.getMdn());
@@ -83,9 +86,9 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 
 		reqSc.setPublish(prchsList);
 
-		this.shoppingAsyncSCI.updateShoppingAsync(reqSc);
+		ShoppingAsyncRes res = this.shoppingAsyncSCI.updateShoppingAsync(reqSc);
 
-		return new BizCouponRes();
+		return res.getCount();
 
 	}
 
