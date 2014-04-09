@@ -193,9 +193,8 @@ public class LoginServiceImpl implements LoginService {
 		/* 로그인 성공이력 저장 */
 		this.insertLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId());
 
-		/* 일시정지 / 직권중지 인경우 (로그인제한 상태는 MDN로그인시는 샵클 정상이용가능하게 해야하므로 체크하지 않음) */
-		if (StringUtil.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_PAUSE)
-				|| StringUtil.equals(chkDupRes.getUserMbr().getStopStatusCode(), MemberConstants.USER_STOP_STATUS_PAUSE)) {
+		/* 일시정지 인경우 (로그인제한상태 / 직권중지상태는 MDN로그인시는 샵클 정상이용가능하게 해야하므로 체크하지 않음) */
+		if (StringUtil.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_PAUSE)) {
 			res.setUserKey(chkDupRes.getUserMbr().getUserKey());
 			res.setUserType(chkDupRes.getUserMbr().getUserType());
 			res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
@@ -332,9 +331,8 @@ public class LoginServiceImpl implements LoginService {
 		/* 로그인 성공이력 저장 */
 		this.insertLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId());
 
-		/* 일시정지 / 직권중지 인경우 (로그인제한 상태는 MDN로그인시는 샵클 정상이용가능하게 해야하므로 체크하지 않음) */
-		if (StringUtil.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_PAUSE)
-				|| StringUtil.equals(chkDupRes.getUserMbr().getStopStatusCode(), MemberConstants.USER_STOP_STATUS_PAUSE)) {
+		/* 일시정지 인경우 (로그인제한상태 / 직권중지상태는 MDN로그인시는 샵클 정상이용가능하게 해야하므로 체크하지 않음) */
+		if (StringUtil.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_PAUSE)) {
 			res.setUserKey(chkDupRes.getUserMbr().getUserKey());
 			res.setUserType(chkDupRes.getUserMbr().getUserType());
 			res.setUserMainStatus(chkDupRes.getUserMbr().getUserMainStatus());
