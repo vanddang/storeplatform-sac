@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.ocb.sci.OcbSCI;
 import com.skplanet.storeplatform.external.client.ocb.vo.SearchOcbPointEcReq;
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.MemberPoint;
 import com.skplanet.storeplatform.member.client.common.vo.RemoveMemberPointRequest;
@@ -63,47 +62,22 @@ public class UserOcbServiceImpl implements UserOcbService {
 	@Override
 	public CreateOcbInformationRes createOcbInformation(SacRequestHeader sacHeader, CreateOcbInformationReq req) {
 
-		if (StringUtil.equals(req.getRegId(), "tlaeowls")) {
+		if (StringUtils.equals(req.getRegId(), "tlaeowls")) {
 
 			/**
-			 * TODO OCB 카드번호 정보 조회 연동
-			 * 
-			 * TODO 연동 성공시에만 등록할것.
+			 * OCB 카드번호 정보 조회 연동
 			 */
-			try {
-
-				SearchOcbPointEcReq searchOcbPointEcReq = new SearchOcbPointEcReq();
-				searchOcbPointEcReq.setNxMctNo("123"); // 가맹점ID (NxMile에서 발급한 가맹점 번호)
-				searchOcbPointEcReq.setSubMallCorpNo("123"); // 제휴사 사업자등록번호
-				searchOcbPointEcReq.setMctId("123"); // 가맹점 ID
-				searchOcbPointEcReq.setPaymesTpCd("30"); // 인증종류 - 인증종류가 (30 인 경우 OCB 카드번호 입력) (32 인 경우 One Id 입력)
-				searchOcbPointEcReq.setAuthId("3306-3303-1234"); // 인증ID - 인증종류가 (30 인 경우 OCB 카드번호 입력) (32 인 경우 One Id
-																 // 입력)
-				searchOcbPointEcReq.setEnc("enc"); // 암호화 데이터
-				this.ocbSCI.searchOcbPoint(searchOcbPointEcReq);
-
-			} catch (StorePlatformException spe) {
-
-				/**
-				 * TODO 방화벽 뚤리면 익셉션 처리 없앨것.
-				 */
-				LOGGER.info("## >> ERROR Skips....................");
-				LOGGER.info("## >> spe.getErrorInfo().getCode() : {}", spe.getErrorInfo().getCode());
-				LOGGER.info("## >> spe.getErrorInfo().getCode() : {}", spe.getErrorInfo().getCode());
-
-			} catch (Exception e) {
-				LOGGER.info("## >> Exception : {}", e.getMessage());
-				LOGGER.info("## >> Exception : {}", e.getMessage());
-				LOGGER.info("## >> Exception : {}", e.getMessage());
-				LOGGER.info("## >> Exception : {}", e.getMessage());
-				LOGGER.info("## >> Exception : {}", e.getMessage());
-			}
+			SearchOcbPointEcReq searchOcbPointEcReq = new SearchOcbPointEcReq();
+			searchOcbPointEcReq.setAuthId(req.getCardNumber()); // OCB 카드 번호
+			this.ocbSCI.searchOcbPoint(searchOcbPointEcReq);
 
 		}
 
+		/**
+		 * OCB 등록/수정 요청.
+		 */
 		UpdateMemberPointRequest updateMemberPointRequest = new UpdateMemberPointRequest();
 		updateMemberPointRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-
 		MemberPoint memberPoint = new MemberPoint();
 		memberPoint.setUserKey(req.getUserKey()); // 사용자 Key
 		memberPoint.setAuthMethodCode(req.getAuthMethodCode()); // 인증방법 코드
@@ -112,10 +86,6 @@ public class UserOcbServiceImpl implements UserOcbService {
 		memberPoint.setEndDate("99991231115959"); // 사용종료 일시
 		memberPoint.setRegID(req.getRegId()); // 등록자 아이디
 		updateMemberPointRequest.setMemberPoint(memberPoint);
-
-		/**
-		 * OCB 등록/수정 요청.
-		 */
 		UpdateMemberPointResponse updateMemberPointResponse = this.userSCI.updateMemberPoint(updateMemberPointRequest);
 
 		/**
