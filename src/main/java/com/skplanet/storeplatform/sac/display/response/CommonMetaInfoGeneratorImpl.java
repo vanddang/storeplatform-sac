@@ -582,14 +582,15 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		metaInfo.setProdNetAmt(metaInfo.getPlayProdNetAmt());
 		play.setPrice(this.generatePrice(metaInfo));
 
-		Date date = new Date();
+		Date date = DisplayCommonUtil.makeDateUsagePeriod(metaInfo.getUsePeriodUnitCd(),
+				Integer.parseInt(metaInfo.getUsePeriod()));
 		date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-		date.setText(metaInfo.getUsePeriodNm());
+		date.setUnit(metaInfo.getUsePeriodNm());
 		play.setDate(date);
 
 		// 이용기간단위
 		if (StringUtils.isNotEmpty(metaInfo.getPlayUsePeriodUnitCd())) {
-			play.setUsePeriodUnitCd(metaInfo.getStoreUsePeriodUnitCd());
+			play.setUsePeriodUnitCd(metaInfo.getPlayUsePeriodUnitCd());
 		}
 
 		return play;
