@@ -276,6 +276,7 @@
 																	    , TB_DP_TENANT_PROD TP
 																	    , TB_DP_PROD_DESC PD
 																	WHERE LP.LIST_ID IN ('ADM000000033', 'ADM000000034', 'ADM000000035', 'ADM000000036', 'ADM000000041', 'ADM000000042')
+																	  AND LP.EXPO_YN = 'Y'
 																	  AND LP.TENANT_ID = #{tenantId}
 																	  AND LP.LIST_ID = BC.BATCH_ID
 																	  AND LP.TENANT_ID = BC.TENANT_ID
