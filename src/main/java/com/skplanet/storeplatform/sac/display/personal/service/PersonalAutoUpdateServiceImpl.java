@@ -16,10 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
@@ -90,6 +93,13 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 	public PersonalAutoUpdateRes updateAutoUpdateList(PersonalAutoUpdateReq req, SacRequestHeader header,
 			List<String> packageInfoList) {
 
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00038");
+			}
+		});
+
 		CommonResponse commonResponse = new CommonResponse();
 		PersonalAutoUpdateRes res = new PersonalAutoUpdateRes();
 		List<Product> productList = new ArrayList<Product>();
@@ -97,6 +107,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		List<ExistenceRes> listPrchs = null;
+		final List<String> forTlogAppIdList = new ArrayList<String>();
 
 		// 다운로드 서버 상태 조회는 & 앱 버전 정보 활용 조회 처리 & 업그레이드 관리이력 조회는 tenant 단에서 처리하기 때문에 제외
 
@@ -274,6 +285,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 											sPkgNm);
 									mapUpdate.put("PRCHS_ID", prchInfo.getPrchsId());
 									listUpdate.add(mapUpdate);
+									forTlogAppIdList.add(sPid);
 									break;
 								}
 							}
@@ -294,6 +306,12 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 					}
 				}
 
+				new TLogUtil().set(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.app_id(forTlogAppIdList);
+					}
+				});
 				// Response 정보 가공
 				for (Map<String, Object> updateTargetApp : listUpdate) {
 					Product product = new Product();
