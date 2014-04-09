@@ -167,6 +167,8 @@
                  , NVL(PLAY_PROD_AMT, 0) AS PLAY_PROD_AMT
                  , STORE_PROD_CHRG
                  , PLAY_PROD_CHRG
+                 , STORE_USE_PERIOD_UNIT_CD
+                 , PLAY_USE_PERIOD_UNIT_CD                 
                  , DECODE( STORE_DRM_YN, 'Y', STORE_DRM_YN, 'N' ) AS STORE_DRM_YN
                  , DECODE( PLAY_DRM_YN, 'Y', PLAY_DRM_YN, 'N' ) AS PLAY_DRM_YN  
                  , DECODE( HDCP_YN, 'Y', HDCP_YN, 'N' ) AS HDCP_YN
@@ -227,6 +229,8 @@
                          , PLAY_PROD_AMT
                          , STORE_PROD_CHRG
                          , PLAY_PROD_CHRG
+                         , STORE_USE_PERIOD_UNIT_CD
+                         , PLAY_USE_PERIOD_UNIT_CD
                          , STORE_DRM_YN
                          , PLAY_DRM_YN
                          , HDCP_YN
@@ -268,7 +272,9 @@
                                   , MAX( JA.STORE_DRM_YN ) AS STORE_DRM_YN
                                   , MAX( JA.PLAY_DRM_YN ) AS PLAY_DRM_YN
                                   , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS STORE_PROD_CHRG
-                                  , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG                               
+                                  , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG
+                                  , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.USE_PERIOD_UNIT_CD)) AS STORE_USE_PERIOD_UNIT_CD
+                                  , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD
                                   , MAX( JA.HDCP_YN ) AS HDCP_YN
                                   , MAX( JA.HDV_YN ) AS HDV_YN
                                   , MAX( JA.PROD_NM ) AS PROD_NM
