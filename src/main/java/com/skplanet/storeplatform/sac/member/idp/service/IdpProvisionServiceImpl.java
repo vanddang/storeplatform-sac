@@ -128,13 +128,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	@Override
 	public String executeChangeMobileNumber(HashMap<String, String> map) {
 
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00034");
-			}
-		});
-
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
 		String beMdn = StringUtil.nvl(map.get("be_mdn"), "");
@@ -150,6 +143,17 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
 		commonRequest.setSystemID(systemId);
+
+		final String fdsLogBeMdn = beMdn;
+		final String fdsLogMdn = mdn;
+		final String fdsLogSvcMngNum = svcMngNum;
+
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00034").device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
+			}
+		});
 
 		try {
 
@@ -174,17 +178,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userKey = schDeviceRes.getUserMbrDevice().getUserKey();
 				deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
-				/* FDS 로그 */
 				final String fdsLogDeviceKey = deviceKey;
-				final String fdsLogBeMdn = beMdn;
-				final String fdsLogMdn = mdn;
-				final String fdsLogSvcMngNum = svcMngNum;
-
 				new TLogUtil().set(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
-								.device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
+						shuttle.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey);
 					}
 				});
 
@@ -248,17 +246,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userKey = schDeviceRes.getUserMbrDevice().getUserKey();
 				deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
-				/* FDS 로그 */
 				final String fdsLogDeviceKey = deviceKey;
-				final String fdsLogBeMdn = beMdn;
-				final String fdsLogMdn = mdn;
-				final String fdsLogSvcMngNum = svcMngNum;
-
 				new TLogUtil().set(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
-								.device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
+						shuttle.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey);
 					}
 				});
 
