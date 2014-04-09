@@ -784,7 +784,7 @@
                                ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
                                       WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
                                       WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
-                                 END) PROD_CASE_CD                                  
+                                 END) AS PROD_CASE_CD                                  
                                ,J.PROD_CHRG_YN
                                ,I.B2B_PROD_YN
                                ,CONCAT(PI.FILE_PATH,PI.FILE_NM) FILE_PATH 
