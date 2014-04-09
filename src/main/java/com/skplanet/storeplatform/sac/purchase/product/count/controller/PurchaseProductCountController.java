@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.purchase.product.count.vo.PurchaseProductCountSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.product.count.service.PurchaseProductCountService;
@@ -60,7 +61,7 @@ public class PurchaseProductCountController {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", java.util.Locale.KOREA);
 		String currTime = formatter.format(System.currentTimeMillis());
 		sb.append(currTime).append("|").append(guid);
-		String updId = sb.substring(0, 50);
+		String updId = StringUtils.substring(sb.toString(), 0, 50);
 
 		PurchaseProductCountSacParam purchaseProductCountSacParam = new PurchaseProductCountSacParam();
 		purchaseProductCountSacParam.setUpdId(updId);
