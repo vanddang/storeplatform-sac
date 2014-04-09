@@ -115,6 +115,11 @@ public class Coupon extends CommonInfo implements Serializable {
 	private List<Cash> cashList;
 
 	/**
+	 * 할인율 정보 (tmembership)
+	 */
+	private List<Point> pointList;
+
+	/**
 	 * @return Identifier
 	 */
 	public Identifier getIdentifier() {
@@ -397,6 +402,21 @@ public class Coupon extends CommonInfo implements Serializable {
 	 */
 	public void setCashList(List<Cash> cashList) {
 		this.cashList = cashList;
+	}
+
+	/**
+	 * @return the pointList
+	 */
+	public List<Point> getPointList() {
+		return this.pointList;
+	}
+
+	/**
+	 * @param pointList
+	 *            the pointList to set
+	 */
+	public void setPointList(List<Point> pointList) {
+		this.pointList = pointList;
 	}
 
 }
