@@ -1036,14 +1036,11 @@ public class DeviceServiceImpl implements DeviceService {
 		return deviceInfo;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 대표 단말 조회.
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
-	 * detailRepresentationDeviceRes
-	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet
-	 * .storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceReq)
+	 * @param DetailRepresentationDeviceReq
+	 * @return DetailRepresentationDeviceRes
 	 */
 	@Override
 	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader, DetailRepresentationDeviceReq req) {
@@ -1109,13 +1106,11 @@ public class DeviceServiceImpl implements DeviceService {
 		return res;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 대표 단말 설정.
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
-	 * modifyRepresentationDevice
-	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq)
+	 * @param SetMainDeviceReq
+	 * @return SetMainDeviceRes
 	 */
 	@Override
 	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req) {
