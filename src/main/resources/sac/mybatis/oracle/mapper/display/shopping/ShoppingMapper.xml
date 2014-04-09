@@ -123,7 +123,7 @@
                                       </foreach>                        
                         </if>   
                         AND EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -235,7 +235,7 @@
                                       </foreach>                        
                         </if>      
                         AND  EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -378,7 +378,7 @@
                                       </foreach>                        
                         </if>   
                         AND  EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -439,10 +439,10 @@
                    ,PROD_GRD_CD as prodGrdCd
                    ,TO_CHAR(SPRC_APPLY_START_DT,'YYYYMMDDHH24MISS') as applyStartDt   
                    ,TO_CHAR(SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS') as applyEndDt 
-                   ,DECODE(PROD_CASE_CD
-                     , 'DP006301', 'giftcard'
-                     , 'DP006302', 'exchange'
-                     , 'DP006303', 'delivery' ) AS prodCaseCd
+                   ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
+                          WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
+                          WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+                     END) AS PROD_CASE_CD  
                    ,CONCAT(FILE_PATH,FILE_NM) AS FILE_PATH
                    ,'Y' AS specialSale
    	               ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
@@ -566,7 +566,7 @@
                         </if>   
 
                         AND EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -720,7 +720,7 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -947,7 +947,7 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -1101,7 +1101,7 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -1249,7 +1249,7 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -1407,7 +1407,7 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -1461,10 +1461,10 @@
                         ,F.MENU_DESC                                   
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY L.PROD_AMT ASC) as NO
                         ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT 
-                        ,DECODE(I.PROD_CASE_CD
-                              , 'DP006301', 'giftcard'
-                              , 'DP006302', 'exchange'
-                              , 'DP006303', 'delivery' ) PROD_CASE_CD
+                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
+                               WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
+                               WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+                          END) AS PROD_CASE_CD  
                         ,CONCAT(PI.FILE_PATH,PI.FILE_NM) as FILE_PATH
                         ,J.CONTENTS_TYPE_CD 
                         ,(SELECT SRC_CONTENT_ID 
@@ -1529,7 +1529,7 @@
                 AND I.PROD_ID = #{req.specialProdId}
                 </if>
                 AND EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -1543,11 +1543,12 @@
      /* ShoppingMapper.xml.getShoppingEpisodeDetail,쇼핑상세(에피소드) 조회, 김형식/SK플래닛  , 2014-02-04 */
           SELECT  
                 KK.*
-               , DECODE( KK.SPECIAL_SALE_YN,'Y'
-		               , ( CASE WHEN ( ( KK.MTH_PRCHS_CNT >= KK.MTH_MAX_CNT ) OR
-		                               ( KK.DLY_PRCHS_CNT >= KK.DLY_MAX_CNT ) ) THEN 'Y'
-		                    ELSE  'N' END )
-		               , 'N' )AS soldOut 
+               ,(CASE WHEN KK.SPECIAL_SALE_YN ='Y' THEN 
+                         ( CASE WHEN ( ( KK.MTH_PRCHS_CNT >= KK.MTH_MAX_CNT ) OR
+                                       ( KK.DLY_PRCHS_CNT >= KK.DLY_MAX_CNT ) ) THEN 'Y'
+                            ELSE  'N' END )
+                ELSE 'N'
+                END ) AS soldOut        
 		       ,KK.SPECIAL_SALE_YN AS specialSale
 		       ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
            FROM (
@@ -1564,10 +1565,10 @@
                         ,J.PROD_GRD_CD
                         ,J.USE_PERIOD_UNIT_CD
                         ,J.USE_PERIOD
-                        ,DECODE(I.PROD_CASE_CD
-                              , 'DP006301', 'giftcard'
-                              , 'DP006302', 'exchange'
-                              , 'DP006303', 'delivery' ) PROD_CASE_CD
+                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
+                               WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
+                               WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+                          END) AS PROD_CASE_CD  
                         ,TO_CHAR(NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT),'YYYYMMDDHH24MISS') AS APPLY_START_DT
                         ,TO_CHAR(NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ),'YYYYMMDDHH24MISS') AS APPLY_END_DT      
                         ,I.SALE_CNT 
@@ -1691,7 +1692,7 @@
                 AND I.PROD_ID = #{req.specialProdId}
                 </if>
                 AND EXISTS (
-                            SELECT X 
+                            SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -1711,9 +1712,9 @@
                 A.CHNL_PROD_ID AS prodId
                ,A.EPSD_PROD_ID AS partProdId
                ,A.OPT1_NM as prodNm
-               ,A.EXPO_ORD as expoOrd 
-               ,DECODE(A.EXPO_ORD, 1, A.OPT1_NM, A.OPT2_NM ) AS optPdNm
-               ,DECODE(A.EXPO_ORD, 1, 'Y', 'N' ) AS subYn                  
+               ,A.EXPO_ORD as expoOrd
+               ,(CASE WHEN  A.EXPO_ORD = 1 THEN A.OPT1_NM ELSE A.OPT2_NM END) AS optPdNm
+               ,(CASE WHEN  A.EXPO_ORD = 1 THEN 'Y' ELSE 'N' END) AS subYn
                ,C.CONTENTS_TYPE_CD AS contentTypeCd  
                ,NVL((SELECT SP.SPRC_DC_RATE
                       FROM TB_DP_SPRC_PROD SP
@@ -1739,8 +1740,8 @@
                ,D.PROD_NET_AMT
                ,D.DC_AFT_PROD_AMT
                ,B.FIRST_MAX_PRCHS_QTY 
-               ,DECODE(C.CONTENTS_TYPE_CD,'PD002502',E.PROD_STATUS_CD,'') AS PROD_STATUS_CD
-               ,DECODE(C.CONTENTS_TYPE_CD,'PD002502',B.SRC_CONTENT_ID,'')  AS itemCode    
+               ,(CASE WHEN  C.CONTENTS_TYPE_CD = 'PD002502' THEN E.PROD_STATUS_CD ELSE '' END) AS PROD_STATUS_CD
+               ,(CASE WHEN  C.CONTENTS_TYPE_CD = 'PD002502' THEN B.SRC_CONTENT_ID ELSE '' END) AS itemCode
 		FROM  TB_DP_PROD_OPT A
 		     ,TB_DP_SHPG_PROD B 
 		     ,TB_DP_PROD C
@@ -1755,16 +1756,17 @@
 		  AND NVL(B.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
           AND E.EXPO_YN ='Y'                                /* Y : 기본(기본여부) */
           AND E.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
-          AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */	  
-          AND DECODE( A.EXPO_ORD, 1, NVL( A.EXPO_YN, 'N' )
-                                   ,( SELECT TPO2.EXPO_YN
+          AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+          AND (CASE WHEN A.EXPO_ORD=1 THEN NVL( A.EXPO_YN, 'N' ) 
+               ELSE ( SELECT TPO2.EXPO_YN
                                         FROM TB_DP_PROD_OPT TPO2
                                        WHERE TPO2.CHNL_PROD_ID = A.CHNL_PROD_ID
                                          AND TPO2.OPT1_NM = A.OPT1_NM
                                          AND TPO2.EXPO_ORD = 1 
                                          AND ROWNUM =1
-                                     )
-                     ) = 'Y'		  
+                                     ) 
+               END
+              ) = 'Y'	  
 		  AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
 		ORDER BY A.CHNL_PROD_ID
    		        ,A.OPT1_NM
