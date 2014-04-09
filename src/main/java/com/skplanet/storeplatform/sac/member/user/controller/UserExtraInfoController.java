@@ -107,9 +107,9 @@ public class UserExtraInfoController {
 		return res;
 	}
 
-	@RequestMapping(value = "/listAdditionalInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
+	public UserExtraInfoRes listAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) {
 		logger.debug("####################################################");
 		logger.debug("##### 5.1.27. 회원 부가 정보 조회 #####");
 		logger.debug("####################################################");

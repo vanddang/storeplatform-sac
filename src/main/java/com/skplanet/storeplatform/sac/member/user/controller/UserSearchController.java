@@ -149,9 +149,9 @@ public class UserSearchController {
 
 	}
 
-	@RequestMapping(value = "/member/user/searchOneIdInfo/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/member/user/searchOneIdInfo/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public MbrOneidSacRes searchOneIdInfo(SacRequestHeader sacHeader, MbrOneidSacReq req) {
+	public MbrOneidSacRes searchOneIdInfo(SacRequestHeader sacHeader, @RequestBody MbrOneidSacReq req) {
 		LOGGER.debug("####################################################");
 		LOGGER.debug("##### 2.1.35. OneID 정보조회 #####");
 		LOGGER.debug("####################################################");
@@ -223,9 +223,9 @@ public class UserSearchController {
 		return res;
 	}
 
-	@RequestMapping(value = "/member/user/listTermsAgreement/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/member/user/listTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ListTermsAgreementSacRes listTermsAgreement(ListTermsAgreementSacReq req, SacRequestHeader sacHeader) {
+	public ListTermsAgreementSacRes listTermsAgreement(@RequestBody ListTermsAgreementSacReq req, SacRequestHeader sacHeader) {
 		LOGGER.debug("####################################################");
 		LOGGER.debug("##### 2.1.10. Store 약관 동의 목록 조회 #####");
 		LOGGER.debug("####################################################");
