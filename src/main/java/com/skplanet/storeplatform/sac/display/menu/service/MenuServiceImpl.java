@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.display.menu.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuSacReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.MenuDetail;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.menu.vo.Menu;
 
 /**
@@ -57,10 +57,7 @@ public class MenuServiceImpl implements MenuService {
 		// 헤더 값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
-
-		if (StringUtils.isEmpty(requestVO.getSystemId())) {
-			requestVO.setSystemId("S01-01002");
-		}
+		requestVO.setSystemId(DisplayConstants.DP_SHOP_CLIENT_3_0_SYSTEM_ID); // SYSTEM ID 고정(임시)
 
 		MenuListSacRes menuListSacRes = new MenuListSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -133,15 +130,7 @@ public class MenuServiceImpl implements MenuService {
 		// 헤더 값 세팅
 		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		requestVO.setSystemId(requestHeader.getTenantHeader().getSystemId());
-
-		if (StringUtils.isEmpty(requestVO.getSystemId())) {
-			requestVO.setSystemId("S01-01002");
-		}
-
-		// // 필수 파라미터 체크
-		// if (StringUtils.isEmpty(requestVO.getMenuId())) {
-		// throw new StorePlatformException("SAC_DSP_0002", "menuId", requestVO.getMenuId());
-		// }
+		requestVO.setSystemId(DisplayConstants.DP_SHOP_CLIENT_3_0_SYSTEM_ID); // SYSTEM ID 고정(임시)
 
 		MenuDetailSacRes menuDetailSacRes = new MenuDetailSacRes();
 		CommonResponse commonResponse = new CommonResponse();
