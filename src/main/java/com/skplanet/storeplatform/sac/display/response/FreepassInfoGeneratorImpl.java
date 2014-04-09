@@ -146,8 +146,15 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 		Date date = this.generateDate(metaInfo);
 		dateList.add(date);
 
+		date = this.generateUsePeriod(
+				DisplayConstants.DP_DATE_TYPE_USE_PERIOD, 
+				metaInfo.getUsePeriodUnitCd(), 
+				metaInfo.getUsePeriod());
+		if (date != null)
+			dateList.add(date);
+		
 		// 구매일로부터 기간 제한
-		if (StringUtil.nvl(metaInfo.getUsePeriodUnitCd(), "") != "") {
+		/*if (StringUtil.nvl(metaInfo.getUsePeriodUnitCd(), "") != "") {
 			String usePeriodUnitNm = (metaInfo.getUsePeriodUnitCd() == null) ? "" : (metaInfo.getUsePeriodUnitCd()
 					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (metaInfo.getUsePeriodUnitCd()
 					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (metaInfo.getUsePeriodUnitCd()
@@ -164,7 +171,8 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 						+ metaInfo.getUsePeriod());
 				dateList.add(date);
 			}
-		}
+		}*/
+		
 
 		return dateList;
 	}
@@ -212,8 +220,15 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 			cash.setText(metaInfo.getBnsCashAmt());
 			cash.setCashRate(metaInfo.getBnsCashRatio());
 			Date date = new Date();
+			
+			date = this.generateUsePeriod(
+					DisplayConstants.DP_DATE_TYPE_USE_PERIOD, 
+					metaInfo.getBnsUsePeriodUnitCd(), 
+					metaInfo.getBnsUsePeriod());
+
+			
 			// 구매일로부터 기간 제한
-			if (StringUtil.nvl(metaInfo.getBnsUsePeriodUnitCd(), "") != "") {
+			/*if (StringUtil.nvl(metaInfo.getBnsUsePeriodUnitCd(), "") != "") {
 				String bnsUsePeriodUnitNm = (metaInfo.getBnsUsePeriodUnitCd() == null) ? "" : (metaInfo
 						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (metaInfo
 						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (metaInfo
@@ -230,13 +245,53 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 							+ metaInfo.getBnsUsePeriod());
 
 				}
-			}
+			}*/
 			cash.setDate(date);
 
 			cashList.add(cash);
 		}
 
 		return cashList;
+	}
+	
+
+	/**
+	 * <pre>
+	 * 사용기간 Date 변환.
+	 * </pre>
+	 * 
+	 * @param dateType dateType
+	 * @param usePeriodUnitCd usePeriodUnitCd
+	 * @param usePeriod usePeriod
+	 * @return Date
+	 */
+	public Date generateUsePeriod(String dateType, String usePeriodUnitCd, String usePeriod) {
+		Date date = null;
+		// 구매일로부터 기간 제한
+		if (StringUtil.isNotEmpty(usePeriodUnitCd)) {
+			String usePeriodUnitNm = (usePeriodUnitCd == null) ? "" : (usePeriodUnitCd
+				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (usePeriodUnitCd
+				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (usePeriodUnitCd
+				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day" : (usePeriodUnitCd
+				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) ? "month" : (usePeriodUnitCd
+				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) ? "year" : (usePeriodUnitCd
+				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) ? "limit/day" : (usePeriodUnitCd
+				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) ? "limit/month" : (usePeriodUnitCd
+				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year" : (usePeriodUnitCd
+				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
+
+			if (StringUtil.isNotEmpty(usePeriodUnitNm)) {
+				if (!usePeriodUnitNm.equals("unlimit")) {
+					date = new Date(dateType, usePeriodUnitNm + "/" + usePeriod);
+				} else {
+					date = new Date(dateType, usePeriodUnitNm);
+				}
+
+			}
+			
+		}
+
+		return date;
 	}
 
 }
