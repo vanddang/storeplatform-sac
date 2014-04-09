@@ -537,16 +537,12 @@
 		            FROM TB_DP_RECOM_PKG_DTL DP
 		               , TB_DP_PROD_RSHP CP
 		               , TB_DP_MENU_CATEGORY_PROD_MAPG C
-		               , TB_DP_SPRT_DEVICE SH
-		               , TB_CM_DEVICE PI
 		               , TB_DP_PROD P
 		               , TB_DP_TENANT_PROD TP
 		               , TB_DP_PROD P2
 		               , TB_DP_TENANT_PROD TP2
 		           WHERE CP.PROD_ID = DP.PROD_ID  -- CHANNEL ID
 		             AND CP.PROD_ID = C.PROD_ID
-		             AND SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
-		             AND SH.PROD_ID = CP.PART_PROD_ID
 		             AND P.PROD_ID = CP.PART_PROD_ID
 		             AND TP.TENANT_ID = #{tenantHeader.tenantId}
 		             AND TP.PROD_ID = P.PROD_ID
@@ -558,8 +554,6 @@
 		             AND DP.EXPO_YN = 'Y'
 		             AND C.USE_YN = 'Y'
 		             AND C.BASE_YN = 'Y'
-		             AND (PI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PI.DEVICE_MODEL_CD = #{virtualDeviceModel})
-		             AND PI.USE_YN = 'Y'
 		             AND TP.PROD_STATUS_CD = 'PD000403'
 		             AND TP.EXPO_YN = 'Y'
 		             AND TP2.PROD_STATUS_CD = 'PD000403'
