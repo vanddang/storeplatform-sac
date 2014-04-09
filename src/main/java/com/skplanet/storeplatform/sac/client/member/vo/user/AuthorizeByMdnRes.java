@@ -18,52 +18,52 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	/**
 	 * 사용자 고유 Key.
 	 */
-	private String userKey;
+	private String userKey = "";
 
 	/**
 	 * IDP 인증 Key.
 	 */
-	private String userAuthKey;
+	private String userAuthKey = "";
 
 	/**
 	 * 사용자 구분코드.
 	 */
-	private String userType;
+	private String userType = "";
 
 	/**
 	 * 기기 Key.
 	 */
-	private String deviceKey;
+	private String deviceKey = "";
 
 	/**
 	 * 사용자 main 상태코드.
 	 */
-	private String userMainStatus;
+	private String userMainStatus = "";
 
 	/**
 	 * 사용자 sub 상태코드.
 	 */
-	private String userSubStatus;
+	private String userSubStatus = "";
 
 	/**
 	 * 로그인 상태코드.
 	 */
-	private String loginStatusCode;
+	private String loginStatusCode = "";
 
 	/**
 	 * 직권중지 상태코드.
 	 */
-	private String stopStatusCode;
+	private String stopStatusCode = "";
 
 	/**
 	 * 로그인 성공여부(Y/N).
 	 */
-	private String isLoginSuccess;
+	private String isLoginSuccess = "";
 
 	/**
 	 * Tcloud 약관동의 노출 여부
 	 */
-	private String tcloudAgreeViewYn;
+	private String tcloudAgreeViewYn = "";
 
 	/**
 	 * @return userKey

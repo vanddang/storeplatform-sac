@@ -10,7 +10,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 3. Updated by : 반범진. 지티소프트.
  */
-@JsonSerialize(include = Inclusion.NON_EMPTY)
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class AuthorizeByIdRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
@@ -18,67 +18,67 @@ public class AuthorizeByIdRes extends CommonInfo {
 	/**
 	 * 사용자 고유 Key.
 	 */
-	private String userKey;
+	private String userKey = "";
 
 	/**
 	 * IDP 인증 Key.
 	 */
-	private String userAuthKey;
+	private String userAuthKey = "";
 
 	/**
 	 * 기기 Key.
 	 */
-	private String deviceKey;
+	private String deviceKey = "";
 
 	/**
 	 * 사용자 구분코드.
 	 */
-	private String userType;
+	private String userType = "";
 
 	/**
 	 * 사용자 main 상태코드.
 	 */
-	private String userMainStatus;
+	private String userMainStatus = "";
 
 	/**
 	 * 사용자 sub 상태코드.
 	 */
-	private String userSubStatus;
+	private String userSubStatus = "";
 
 	/**
 	 * 가입사이트 코드.
 	 */
-	private String joinSiteCd;
+	private String joinSiteCd = "";
 
 	/**
 	 * 가입사이트 코드 값.
 	 */
-	private String joinSiteNm;
+	private String joinSiteNm = "";
 
 	/**
 	 * 로그인 상태코드.
 	 */
-	private String loginStatusCode;
+	private String loginStatusCode = "";
 
 	/**
 	 * 직권중지 상태코드.
 	 */
-	private String stopStatusCode;
+	private String stopStatusCode = "";
 
 	/**
 	 * 통합아이디 관리번호.
 	 */
-	private String imIntSvcNo;
+	private String imIntSvcNo = "";
 
 	/**
 	 * 로그인 실패 카운트.
 	 */
-	private String loginFailCount;
+	private String loginFailCount = "";
 
 	/**
 	 * 로그인 성공유무(Y/N).
 	 */
-	private String isLoginSuccess;
+	private String isLoginSuccess = "";
 
 	/**
 	 * @return userKey
