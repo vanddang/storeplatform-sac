@@ -212,7 +212,7 @@
 		        , TB_DP_MENU_CATEGORY_PROD_MAPG B
 		        , TB_DP_MENU_CATEGORY_DESC      C
 		        , TB_DP_PROD                    D
-		        , UV_TB_DP_MULTIMDA_PROD        E
+		        , TB_DP_VOD_PROD                E
 		        , TB_DP_PROD_DESC               F
 		        , TB_DP_PROD_RSHP               I
 		        , TB_DP_PROD_IMG                M
@@ -283,7 +283,7 @@
                   TB_DP_MENU_CATEGORY_PROD_MAPG CPM
                 , TB_DP_MENU_CATEGORY C
                 , TB_DP_MENU_CATEGORY_DESC CD 
-                , UV_TB_DP_MULTIMDA_PROD MP
+                , TB_DP_MUSIC_PROD MP
                 , TB_DP_PROD P
                 , TB_DP_PROD_DESC PD
                 , TB_DP_PROD_RSHP CP
@@ -334,11 +334,9 @@
              , D.USE_PERIOD_UNIT_CD
              , D.CID
              , E.COMPT_YN
-             , E.VOD_TITL_NM
              , E.STRM_EPSD_CNT
              , E.ISSUE_DAY
              , E.CHNL_COMP_NM as PUBLISHER
-             , E.AGENCY_NM
              , E.EPSD_CNT
              , E.CHAPTER
              , E.BOOK_PAGE_CNT
@@ -372,7 +370,7 @@
              , TB_DP_MENU_CATEGORY_PROD_MAPG B
              , TB_DP_MENU_CATEGORY_DESC      C
              , TB_DP_PROD                    D
-             , UV_TB_DP_MULTIMDA_PROD        E
+             , TB_DP_EBOOK_PROD              E
              , TB_DP_PROD_DESC               F
              , TB_DP_PROD_RSHP               I
              , TB_DP_PROD_IMG                M
