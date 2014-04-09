@@ -110,12 +110,12 @@ public class Coupon extends CommonInfo implements Serializable {
 	private String saleStatus;
 
 	/**
-	 * > Cash : 캐쉬정보
+	 * > Cash : 캐쉬정보.
 	 */
 	private List<Cash> cashList;
 
 	/**
-	 * 할인율 정보 (tmembership)
+	 * 할인율 정보 (tmembership).
 	 */
 	private List<Point> pointList;
 
