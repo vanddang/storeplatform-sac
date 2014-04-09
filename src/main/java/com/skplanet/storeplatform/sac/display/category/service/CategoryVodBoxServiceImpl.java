@@ -172,6 +172,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					contributor.setChannel(categoryVodBox.getBrdcCompNm());
 				}
 				contributor.setArtist(categoryVodBox.getArtist1Nm());
+				product.setContributor(contributor);
 
 				/*
 				 * contributor.setDate(this.commonMetaInfo.generateDate(DisplayConstants.DP_DATE_BROADCAST,
