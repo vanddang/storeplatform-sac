@@ -673,4 +673,9 @@ public class DisplayConstants {
 	public static final String DC_RATE_TYPE_NORMAL = "normal";
 	/** 할인율 유형 - 정액권 상품 */
 	public static final String DC_RATE_TYPE_FREEPASS = "freepass";
+
+	/**
+	 * SYSTEM ID
+	 */
+	public static final String DP_SHOP_CLIENT_3_0_SYSTEM_ID = "S01-01002"; // Shop Client 3.0 시스템 ID
 }
