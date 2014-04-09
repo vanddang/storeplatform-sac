@@ -142,6 +142,12 @@
 			, PR.TAX_CLSF
 			, DC.LANG_CD
 			, TP.TENANT_ID
+            , CM.CASH_AMT
+            , CM.BNS_CASH_AMT_CLSF_CD
+            , CM.BNS_CASH_AMT
+            , CM.BNS_CASH_RATIO
+            , CM.BNS_USE_PERIOD_UNIT_CD
+            , CM.BNS_USE_PERIOD 			
 		FROM 
 			TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC, 
   			TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
