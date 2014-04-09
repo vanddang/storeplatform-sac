@@ -5,127 +5,127 @@
 	<!-- UA 코드 정보 조회 -->
 	<select id="getUaCode" parameterType="String" resultType="String">
 		SELECT  /* MiscellaneousMapper.getUaCode, UA 코드 정보 조회, 김다슬/인크로스, 2014-01-09 */
-		        UA_CD
-		  FROM  TB_CM_DEVICE
-		 WHERE  DEVICE_MODEL_CD = #{deviceModelNo}
+		        ua_cd
+		  FROM  tb_cm_device
+		 WHERE  device_model_cd = #{deviceModelNo}
 	</select>
 	
 	<!-- 휴대폰 SMS 인증 정보 확인 (인증 코드,Signature,만료시간)-->
 	<select id="searchPhoneAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
        SELECT  /* MiscellaneousMapper.searchPhoneAuthInfo, 휴대폰 SMS 인증 정보 확인 (인증 코드,Signature,만료시간), 김다슬/인크로스, 2014-01-16 */
-               AUTH_SEQ
-             , AUTH_SIGN
-             , AUTH_VALUE
+               auth_seq
+             , auth_sign
+             , auth_value
                <if test="timeToLive!=null">
-             , TO_CHAR(AUTH_VALUE_CREATE_DT - (SYSDATE - (#{timeToLive}/24/60))) AS CURR_DT  /* 인증코드 생성일자-(현재-생존시간) */
+             , TO_CHAR(auth_value_create_dt - (SYSDATE - (#{timeToLive}/24/60))) AS curr_dt  /* 인증코드 생성일자-(현재-생존시간) */
                </if>
-             , TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT 
-             , AUTH_COMPT_YN
-         FROM  TB_CM_SVC_AUTH
-        WHERE  AUTH_TYPE_CD = #{authTypeCd}
-          AND  AUTH_SIGN = #{authSign}
-          AND  AUTH_VALUE = #{authValue}
+             , TO_CHAR(auth_value_create_dt, 'yyyyMMdd hh24:mi:ss') AS auth_value_create_dt 
+             , auth_compt_yn
+         FROM  tb_cm_svc_auth
+        WHERE  auth_type_cd = #{authTypeCd}
+          AND  auth_sign = #{authSign}
+          AND  auth_value = #{authValue}
     </select>
 	
 	<!--  휴대폰 SMS 및 이메일 인증 여부 업데이트(인증성공) -->
     <update id="updateServiceAuthYn" parameterType="String">
-    /* MiscellaneousMapper.updateServiceAuthYn, 휴대폰 SMS 및 이메일 인증 여부 업데이트(인증성공), 김다슬/인크로스, 2014-01-16 */
-    UPDATE  TB_CM_SVC_AUTH
-       SET  AUTH_COMPT_YN = 'Y'
-          , UPD_ID = 'admin'
-          , UPD_DT = SYSDATE
-     WHERE  AUTH_SEQ = #{authSeq}    
+    UPDATE  /* MiscellaneousMapper.updateServiceAuthYn, 휴대폰 SMS 및 이메일 인증 여부 업데이트(인증성공), 김다슬/인크로스, 2014-01-16 */
+            tb_cm_svc_auth
+       SET  auth_compt_yn = 'Y'
+          , upd_id = 'admin'
+          , upd_dt = SYSDATE
+     WHERE  auth_seq = #{authSeq}
     </update>
     
     <!-- 휴대폰 SMS 및 이메일 인증 코드 정보 저장 -->
     <insert id="createServiceAuthCode" parameterType="ServiceAuth">
-    /* MiscellaneousMapper.createServiceAuthCode, 휴대폰 SMS 및 이메일 인증 코드 정보 저장, 김다슬/인크로스, 2014-01-21 */
-    INSERT INTO TB_CM_SVC_AUTH  
-              (
-                 AUTH_SEQ
-                 <if test="mbrNo !=null">
-               , MBR_NO
-                 </if>
-                 <if test="tenantId !=null">
-               , TENANT_ID
-                 </if>
-               , AUTH_TYPE_CD  /* 인증 타입 (CM010901:SMS, CM010902:Email) */
-                 <if test="authSign !=null">
-               , AUTH_SIGN  /* 인증 Signature */
-                 </if>
-               , AUTH_VALUE  /* 인증 코드 */
-                 <if test="authEmail !=null">
-               , AUTH_EMAIL  /* Email 인증일 경우 수신자 Email 주소 포함 */
-                 </if>
-               , AUTH_VALUE_CREATE_DT  /* 인증 코드 생성 일자 */
-               , AUTH_COMPT_YN  /* 인증 여부 - 초기화 */
-               , REG_ID
-               , REG_DT
-               , UPD_ID
-               , UPD_DT
-              )
-        VALUES(
-                 SQ_CM_SVC_AUTH.NEXTVAL
-                 <if test="mbrNo !=null">
-               , #{mbrNo}
-                 </if>
-                 <if test="tenantId !=null">
-               , #{tenantId}
-                 </if>
-               , #{authTypeCd}
-                 <if test="authSign !=null">
-               , #{authSign}
-                 </if>
-               , #{authValue}
-                 <if test="authEmail !=null">
-               , #{authEmail}
-                 </if>
-               , SYSDATE
-               , 'N'
-               , 'admin'
-               , SYSDATE
-               , 'admin'
-               , SYSDATE
-              )
+    INSERT  /* MiscellaneousMapper.createServiceAuthCode, 휴대폰 SMS 및 이메일 인증 코드 정보 저장, 김다슬/인크로스, 2014-01-21 */
+      INTO  tb_cm_svc_auth  
+    (
+      auth_seq
+      <if test="mbrNo !=null">
+    , mbr_no
+      </if>
+      <if test="tenantId !=null">
+    , tenant_id
+      </if>
+    , auth_type_cd  /* 인증 타입 (CM010901:SMS, CM010902:Email) */
+      <if test="authSign !=null">
+    , auth_sign  /* 인증 Signature */
+      </if>
+    , auth_value  /* 인증 코드 */
+      <if test="authEmail !=null">
+    , auth_email  /* Email 인증일 경우 수신자 Email 주소 포함 */
+      </if>
+    , auth_value_create_dt  /* 인증 코드 생성 일자 */
+    , auth_compt_yn  /* 인증 여부 - 초기화 */
+    , reg_id
+    , reg_dt
+    , upd_id
+    , upd_dt
+    )
+    VALUES
+    (
+       sq_cm_svc_auth.NEXTVAL
+       <if test="mbrNo !=null">
+     , #{mbrNo}
+       </if>
+       <if test="tenantId !=null">
+     , #{tenantId}
+       </if>
+     , #{authTypeCd}
+       <if test="authSign !=null">
+     , #{authSign}
+       </if>
+     , #{authValue}
+       <if test="authEmail !=null">
+     , #{authEmail}
+       </if>
+     , SYSDATE
+     , 'N'
+     , 'admin'
+     , SYSDATE
+     , 'admin'
+     , SYSDATE
+     )
     </insert>
     
     
     <!-- 미인증 이메일 코드 존재여부 확인 -->
     <select id="searchEmailAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
     SELECT  /* MiscellaneousMapper.searchEmailAuthYn, 미인증 이메일 코드 존재여부 확인, 김다슬/인크로스, 2014-01-23 */ 
-            AUTH_SEQ
-          , AUTH_VALUE
-      FROM  TB_CM_SVC_AUTH
-     WHERE  MBR_NO = #{mbrNo} 
-       AND  AUTH_EMAIL = #{authEmail}
-       AND  AUTH_COMPT_YN = 'N'
+            auth_seq
+          , auth_value
+      FROM  tb_cm_svc_auth
+     WHERE  mbr_no = #{mbrNo} 
+       AND  auth_email = #{authEmail}
+       AND  auth_compt_yn = 'N'
     </select>
     
     <!-- 기존 이메일 인증코드 만료 시간 연장 -->
     <update id="updateServiceAuthTime" parameterType="String">
-    /* MiscellaneousMapper.updateServiceAuthTime, 기존 이메일 인증코드 만료 시간 연장, 김다슬/인크로스, 2014-02-25 */
-    UPDATE  TB_CM_SVC_AUTH
-       SET  AUTH_VALUE_CREATE_DT = SYSDATE
-          , UPD_ID = 'admin'
-          , UPD_DT = SYSDATE
-     WHERE  AUTH_SEQ = #{authSeq}    
+    UPDATE  /* MiscellaneousMapper.updateServiceAuthTime, 기존 이메일 인증코드 만료 시간 연장, 김다슬/인크로스, 2014-02-25 */  
+            tb_cm_svc_auth
+       SET  auth_value_create_dt = SYSDATE
+          , upd_id = 'admin'
+          , upd_dt = SYSDATE
+     WHERE  auth_seq = #{authSeq}    
     </update>
     
     <!-- 이메일 인증코드 정보 확인 -->
     <select id="searchEmailAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
     SELECT  /* MiscellaneousMapper.searchEmailAuthInfo, 이메일 인증코드 정보 확인, 김다슬/인크로스, 2014-01-23 */
-            AUTH_SEQ
-          , MBR_NO
-          , AUTH_EMAIL
+            auth_seq
+          , mbr_no
+          , auth_email
             <if test="timeToLive!=null">
-          , TO_CHAR(AUTH_VALUE_CREATE_DT -(SYSDATE -#{timeToLive})) AS CURR_DT
+          , TO_CHAR(auth_value_create_dt -(SYSDATE -#{timeToLive})) AS curr_dt
             </if>
-          , TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT
-          , AUTH_COMPT_YN
-      FROM  TB_CM_SVC_AUTH
-     WHERE  AUTH_TYPE_CD = 'CM010902'
-       AND  AUTH_VALUE = #{authValue}
+          , TO_CHAR(auth_value_create_dt, 'yyyyMMdd hh24:mi:ss') AS auth_value_create_dt
+          , auth_compt_yn
+      FROM  tb_cm_svc_auth
+     WHERE  auth_type_cd = 'CM010902'
+       AND  auth_value = #{authValue}
     </select>
-    
     
 </mapper>
