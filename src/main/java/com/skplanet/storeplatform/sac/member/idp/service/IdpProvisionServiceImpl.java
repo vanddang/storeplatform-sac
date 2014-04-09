@@ -167,6 +167,20 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userKey = schDeviceRes.getUserMbrDevice().getUserKey();
 				deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
+				/* FDS 로그 */
+				final String fdsLogDeviceKey = deviceKey;
+				final String fdsLogBeMdn = beMdn;
+				final String fdsLogMdn = mdn;
+				final String fdsLogSvcMngNum = svcMngNum;
+
+				new TLogUtil().set(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL00034").insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
+								.device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
+					}
+				});
+
 				/* 단말 정보 조회 */
 				Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
@@ -226,6 +240,20 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
 				userKey = schDeviceRes.getUserMbrDevice().getUserKey();
 				deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
+
+				/* FDS 로그 */
+				final String fdsLogDeviceKey = deviceKey;
+				final String fdsLogBeMdn = beMdn;
+				final String fdsLogMdn = mdn;
+				final String fdsLogSvcMngNum = svcMngNum;
+
+				new TLogUtil().set(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL00034").insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
+								.device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
+					}
+				});
 
 				/* 단말 정보 조회 */
 				Device device = this.mcc.getPhoneInfoByUacd(uacd);
@@ -367,22 +395,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
 			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
-
-			/* FDS 로그 */
-			final String fdsLogDeviceKey = deviceKey;
-			final String fdsLogBeMdn = beMdn;
-			final String fdsLogMdn = mdn;
-			final String fdsLogSvcMngNum = svcMngNum;
-
-			new TLogUtil().set(new ShuttleSetter() {
-				@Override
-				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL00034").insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
-							.device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
-
-					LOGGER.info(shuttle.toString());
-				}
-			});
 
 		}
 
