@@ -639,13 +639,17 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Date date = new Date();
 				date.setText(DateUtils.parseDate(shopping.getPlanStartDt()),
 						DateUtils.parseDate(shopping.getPlanEndDt()));
-
 				// 데이터 매핑
 				promotion.setIdentifierList(identifierList);
 				promotion.setTitle(title);
 				promotion.setPromotionExplain(shopping.getSubTitlNm());
 				promotion.setUsagePeriod(date.getText());
 				promotion.setSourceList(sourceList);
+
+				Date date1 = new Date();
+				date1.setText(DateUtils.parseDate(shopping.getPrzwnerAnnoDt()));
+				promotion.setReleaseDate(date1.getText());
+				promotion.setGiveaway(shopping.getPlanGiftNm());
 				promotionList.add(i, promotion);
 				totalCount = shopping.getTotalCount();
 			}
@@ -771,6 +775,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 				promotion.setPromotionExplain(shopping.getSubTitlNm());
 				promotion.setUsagePeriod(date.getText());
 				promotion.setSourceList(sourceList);
+				Date date1 = new Date();
+				date1.setText(DateUtils.parseDate(shopping.getPrzwnerAnnoDt()));
+				promotion.setReleaseDate(date1.getText());
+				promotion.setGiveaway(shopping.getPlanGiftNm());
 				promotionList.add(i, promotion);
 			}
 			res.setPromotionList(promotionList);
