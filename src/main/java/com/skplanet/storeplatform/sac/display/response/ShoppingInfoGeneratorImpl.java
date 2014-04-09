@@ -195,7 +195,7 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 					.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
 
 			if (usePeriodUnitNm != "") {
-				date = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_UNIT_NM, usePeriodUnitNm + "/"
+				date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, usePeriodUnitNm + "/"
 						+ metaInfo.getUsePeriod());
 				dateList.add(date);
 			}

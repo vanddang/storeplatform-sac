@@ -146,33 +146,28 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 		Date date = this.generateDate(metaInfo);
 		dateList.add(date);
 
-		date = this.generateUsePeriod(
-				DisplayConstants.DP_DATE_TYPE_USE_PERIOD, 
-				metaInfo.getUsePeriodUnitCd(), 
+		date = this.generateUsePeriod(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, metaInfo.getUsePeriodUnitCd(),
 				metaInfo.getUsePeriod());
 		if (date != null)
 			dateList.add(date);
-		
-		// 구매일로부터 기간 제한
-		/*if (StringUtil.nvl(metaInfo.getUsePeriodUnitCd(), "") != "") {
-			String usePeriodUnitNm = (metaInfo.getUsePeriodUnitCd() == null) ? "" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) ? "month" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) ? "year" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) ? "limit/day" : (metaInfo
-					.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) ? "limit/month" : (metaInfo
-					.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year" : (metaInfo
-					.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
 
-			if (usePeriodUnitNm != "") {
-				date = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_UNIT_NM, usePeriodUnitNm + "/"
-						+ metaInfo.getUsePeriod());
-				dateList.add(date);
-			}
-		}*/
-		
+		// 구매일로부터 기간 제한
+		/*
+		 * if (StringUtil.nvl(metaInfo.getUsePeriodUnitCd(), "") != "") { String usePeriodUnitNm =
+		 * (metaInfo.getUsePeriodUnitCd() == null) ? "" : (metaInfo.getUsePeriodUnitCd()
+		 * .equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (metaInfo.getUsePeriodUnitCd()
+		 * .equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (metaInfo.getUsePeriodUnitCd()
+		 * .equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day" : (metaInfo.getUsePeriodUnitCd()
+		 * .equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) ? "month" : (metaInfo.getUsePeriodUnitCd()
+		 * .equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) ? "year" : (metaInfo.getUsePeriodUnitCd()
+		 * .equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) ? "limit/day" : (metaInfo
+		 * .getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) ? "limit/month" : (metaInfo
+		 * .getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year" : (metaInfo
+		 * .getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
+		 * 
+		 * if (usePeriodUnitNm != "") { date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, usePeriodUnitNm + "/"
+		 * + metaInfo.getUsePeriod()); dateList.add(date); } }
+		 */
 
 		return dateList;
 	}
@@ -220,32 +215,31 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 			cash.setText(metaInfo.getBnsCashAmt());
 			cash.setCashRate(metaInfo.getBnsCashRatio());
 			Date date = new Date();
-			
-			date = this.generateUsePeriod(
-					DisplayConstants.DP_DATE_TYPE_USE_PERIOD, 
-					metaInfo.getBnsUsePeriodUnitCd(), 
+
+			date = this.generateUsePeriod(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, metaInfo.getBnsUsePeriodUnitCd(),
 					metaInfo.getBnsUsePeriod());
 
-			
 			// 구매일로부터 기간 제한
-			/*if (StringUtil.nvl(metaInfo.getBnsUsePeriodUnitCd(), "") != "") {
-				String bnsUsePeriodUnitNm = (metaInfo.getBnsUsePeriodUnitCd() == null) ? "" : (metaInfo
-						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (metaInfo
-						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (metaInfo
-						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day" : (metaInfo
-						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) ? "month" : (metaInfo
-						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) ? "year" : (metaInfo
-						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) ? "limit/day" : (metaInfo
-						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) ? "limit/month" : (metaInfo
-						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year" : (metaInfo
-						.getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
-
-				if (bnsUsePeriodUnitNm != "") {
-					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, bnsUsePeriodUnitNm + "/"
-							+ metaInfo.getBnsUsePeriod());
-
-				}
-			}*/
+			/*
+			 * if (StringUtil.nvl(metaInfo.getBnsUsePeriodUnitCd(), "") != "") { String bnsUsePeriodUnitNm =
+			 * (metaInfo.getBnsUsePeriodUnitCd() == null) ? "" : (metaInfo
+			 * .getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (metaInfo
+			 * .getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (metaInfo
+			 * .getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day" : (metaInfo
+			 * .getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) ? "month" : (metaInfo
+			 * .getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) ? "year" : (metaInfo
+			 * .getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) ? "limit/day" :
+			 * (metaInfo .getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) ?
+			 * "limit/month" : (metaInfo
+			 * .getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year" :
+			 * (metaInfo .getBnsUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar"
+			 * : "";
+			 * 
+			 * if (bnsUsePeriodUnitNm != "") { date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD,
+			 * bnsUsePeriodUnitNm + "/" + metaInfo.getBnsUsePeriod());
+			 * 
+			 * } }
+			 */
 			cash.setDate(date);
 
 			cashList.add(cash);
@@ -253,16 +247,18 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 
 		return cashList;
 	}
-	
 
 	/**
 	 * <pre>
 	 * 사용기간 Date 변환.
 	 * </pre>
 	 * 
-	 * @param dateType dateType
-	 * @param usePeriodUnitCd usePeriodUnitCd
-	 * @param usePeriod usePeriod
+	 * @param dateType
+	 *            dateType
+	 * @param usePeriodUnitCd
+	 *            usePeriodUnitCd
+	 * @param usePeriod
+	 *            usePeriod
 	 * @return Date
 	 */
 	public Date generateUsePeriod(String dateType, String usePeriodUnitCd, String usePeriod) {
@@ -270,15 +266,15 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 		// 구매일로부터 기간 제한
 		if (StringUtil.isNotEmpty(usePeriodUnitCd)) {
 			String usePeriodUnitNm = (usePeriodUnitCd == null) ? "" : (usePeriodUnitCd
-				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (usePeriodUnitCd
-				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (usePeriodUnitCd
-				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day" : (usePeriodUnitCd
-				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) ? "month" : (usePeriodUnitCd
-				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) ? "year" : (usePeriodUnitCd
-				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) ? "limit/day" : (usePeriodUnitCd
-				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) ? "limit/month" : (usePeriodUnitCd
-				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year" : (usePeriodUnitCd
-				.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
+					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (usePeriodUnitCd
+					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (usePeriodUnitCd
+					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day" : (usePeriodUnitCd
+					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) ? "month" : (usePeriodUnitCd
+					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) ? "year" : (usePeriodUnitCd
+					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) ? "limit/day" : (usePeriodUnitCd
+					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) ? "limit/month" : (usePeriodUnitCd
+					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year" : (usePeriodUnitCd
+					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
 
 			if (StringUtil.isNotEmpty(usePeriodUnitNm)) {
 				if (!usePeriodUnitNm.equals("unlimit")) {
@@ -288,7 +284,7 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 				}
 
 			}
-			
+
 		}
 
 		return date;
