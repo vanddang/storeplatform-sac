@@ -309,6 +309,7 @@ public class BannerServceImpl implements BannerService {
 							metaInfo = this.getMetaInfo(header, bannerReq);
 
 							if (metaInfo != null) {
+								bannerDefault.setBnrInfo(metaInfo.getProdId());
 								bannerDefault.setTopMenuId(metaInfo.getTopMenuId());
 								bannerDefault.setTopMenuNm(metaInfo.getTopMenuNm());
 								bannerDefault.setMenuId(metaInfo.getMenuId());
