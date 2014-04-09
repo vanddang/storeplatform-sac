@@ -123,12 +123,9 @@
                                       </foreach>                        
                         </if>   
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT X 
                             FROM  TB_DP_SPRT_DEVICE DV  
-                                 ,TB_CM_DEVICE CM
                             WHERE 1=1
-                              AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                              AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                      
@@ -238,12 +235,9 @@
                                       </foreach>                        
                         </if>      
                         AND  EXISTS (
-                            SELECT 1 
+                            SELECT X 
                             FROM  TB_DP_SPRT_DEVICE DV  
-                                 ,TB_CM_DEVICE CM
                             WHERE 1=1
-                              AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                              AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                        
@@ -384,14 +378,11 @@
                                       </foreach>                        
                         </if>   
                         AND  EXISTS (
-                            SELECT 1 
+                            SELECT X 
                             FROM  TB_DP_SPRT_DEVICE DV  
-                                 ,TB_CM_DEVICE CM
                             WHERE 1=1
-                              AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                              AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
-                              AND PROD_ID =I.PROD_ID
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                              AND PROD_ID = I.PROD_ID
                             )                           
                    ) 
                  WHERE NO =1
@@ -575,13 +566,10 @@
                         </if>   
 
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT X 
                             FROM  TB_DP_SPRT_DEVICE DV  
-                                 ,TB_CM_DEVICE CM
                             WHERE 1=1
-                              AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                              AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo}) 
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                        
                    ) 
@@ -732,12 +720,9 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT X 
                             FROM  TB_DP_SPRT_DEVICE DV  
-                                 ,TB_CM_DEVICE CM
                             WHERE 1=1
-                              AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                              AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                      
@@ -962,14 +947,11 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT X 
                             FROM  TB_DP_SPRT_DEVICE DV  
-                                 ,TB_CM_DEVICE CM
                             WHERE 1=1
-                              AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                              AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
-                              AND PROD_ID =I.PROD_ID
+                              AND PROD_ID = I.PROD_ID
                             )                        
                    ) 
                  WHERE NO =1
@@ -1119,12 +1101,9 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT X 
                             FROM  TB_DP_SPRT_DEVICE DV  
-                                 ,TB_CM_DEVICE CM
                             WHERE 1=1
-                              AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                              AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                      
@@ -1270,13 +1249,10 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT X 
                             FROM  TB_DP_SPRT_DEVICE DV  
-                                 ,TB_CM_DEVICE CM
                             WHERE 1=1
-                              AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                              AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                           
                    ) 
@@ -1431,13 +1407,10 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT X 
                             FROM  TB_DP_SPRT_DEVICE DV  
-                                 ,TB_CM_DEVICE CM
                             WHERE 1=1
-                              AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                              AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                           
                    ) 
@@ -1556,14 +1529,11 @@
                 AND I.PROD_ID = #{req.specialProdId}
                 </if>
                 AND EXISTS (
-                    SELECT 1 
-                    FROM  TB_DP_SPRT_DEVICE DV  
-                         ,TB_CM_DEVICE CM
-                    WHERE 1=1
-                      AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                      AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                      AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
-                      AND PROD_ID = I.PROD_ID
+                            SELECT X 
+                            FROM  TB_DP_SPRT_DEVICE DV  
+                            WHERE 1=1
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                              AND PROD_ID = I.PROD_ID
                     )                                     
            ) 
            WHERE NO =1
@@ -1721,14 +1691,11 @@
                 AND I.PROD_ID = #{req.specialProdId}
                 </if>
                 AND EXISTS (
-                    SELECT 1 
-                    FROM  TB_DP_SPRT_DEVICE DV  
-                         ,TB_CM_DEVICE CM
-                    WHERE 1=1
-                      AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-                      AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                      AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo})  
-                      AND PROD_ID = I.PROD_ID
+                            SELECT X 
+                            FROM  TB_DP_SPRT_DEVICE DV  
+                            WHERE 1=1
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                              AND PROD_ID = I.PROD_ID
                     )                   
                      
            ) KK

@@ -68,6 +68,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -186,9 +187,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
+
 		reqMap.put("req", req);
 		reqMap.put("tenantHeader", tenantHeader);
 		reqMap.put("deviceHeader", deviceHeader);
+		reqMap.put("stdDt", stdDt);
 		reqMap.put("stdDt", stdDt);
 		reqMap.put("lang", tenantHeader.getLangCd());
 
@@ -199,10 +202,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 
+		List<Product> productList = new ArrayList<Product>();
+		if (!this.commonSupportDeviceShopping(header)) {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+			return res;
+		}
+
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getFeatureProductList",
 				reqMap, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
+
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -279,10 +291,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+		List<Product> productList = new ArrayList<Product>();
+		if (!this.commonSupportDeviceShopping(header)) {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+			return res;
+		}
+
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getNewProductList", reqMap,
 				ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -413,10 +434,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+		List<Product> productList = new ArrayList<Product>();
+		if (!this.commonSupportDeviceShopping(header)) {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+			return res;
+		}
+
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getSubProductList", reqMap,
 				ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -475,6 +505,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// offset, Count default setting
 		this.commonOffsetCount(req);
 
+		List<Product> productList = new ArrayList<Product>();
+		if (!this.commonSupportDeviceShopping(header)) {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+			return res;
+		}
+
 		Integer totalCount = 0;
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialPriceProductList", req, MetaInfo.class);
 
@@ -483,7 +522,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;
-			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < resultList.size(); i++) {
 				shopping = resultList.get(i);
@@ -528,7 +566,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			res.setCommonResponse(commonResponse);
 		} else {
 			// 조회 결과 없음
-			List<Product> productList = new ArrayList<Product>();
 			commonResponse.setTotalCount(0);
 			res.setProductList(productList);
 			res.setCommonResponse(commonResponse);
@@ -752,10 +789,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+		List<Product> productList = new ArrayList<Product>();
+		if (!this.commonSupportDeviceShopping(header)) {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+			return res;
+		}
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 				"Shopping.getSpecialSalesProductList", reqMap, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -1022,9 +1067,17 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+		List<Product> productList = new ArrayList<Product>();
+		if (!this.commonSupportDeviceShopping(header)) {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+			return res;
+		}
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getBrandshopProductList",
 				reqMap, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -1235,9 +1288,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+		List<Product> productList = new ArrayList<Product>();
+		if (!this.commonSupportDeviceShopping(header)) {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+			return res;
+		}
+
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getThemeProductList",
 				reqMap, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -1370,10 +1432,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+		List<Product> productList = new ArrayList<Product>();
+		if (!this.commonSupportDeviceShopping(header)) {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+			return res;
+		}
+
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 				"Shopping.getCatagoryAnotherProductList", reqMap, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -1511,10 +1582,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+		List<Product> productList = new ArrayList<Product>();
+		if (!this.commonSupportDeviceShopping(header)) {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+			return res;
+		}
+
 		// ID list 조회
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 				"Shopping.getBrandAnotherProductList", reqMap, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
 		if (productBasicInfoList != null) {
 			if (productBasicInfoList.size() > 0) {
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -1606,6 +1686,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 
+		if (!this.commonSupportDeviceShopping(header)) {
+			return res;
+		}
 		// ID list 조회
 		List<MetaInfo> resultChannelList = this.commonDAO.queryForList("Shopping.getShoppingChannelDetail", reqMap,
 				MetaInfo.class);
@@ -2003,6 +2086,28 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
 			req.setArrayProdGradeCd(arrayProdGradeCd);
+		}
+		return result;
+	}
+
+	/**
+	 * 쇼핑 지원 여부 .
+	 * 
+	 * @param req
+	 *            req
+	 * @return boolean
+	 */
+	private boolean commonSupportDeviceShopping(SacRequestHeader header) {
+		boolean result = true;
+
+		// 단말 지원정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
+				.getModel());
+		if (!supportDevice.getSclShpgSprtYn().equals("Y")) {
+			this.log.debug("----------------------------------------------------------------");
+			this.log.debug("[shopping] supportDevice is empty!");
+			this.log.debug("----------------------------------------------------------------");
+			result = false;
 		}
 		return result;
 	}
