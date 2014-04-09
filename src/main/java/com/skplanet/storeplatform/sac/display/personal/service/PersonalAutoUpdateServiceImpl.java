@@ -215,8 +215,8 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				String userMainStatus = userInfoSac.getUserMainStatus();
 
 				this.log.debug("##### userMainStatus :: {} " + userMainStatus);
-				// TODO osm1021 예외 처리 및 pass가 안 될때 처리 정리 필요
-				// 정상 일시 정지 회원이 아닐 경우 -> 업데이트 내역이 없는 것으로 간주한다.
+				// 정상 일시 정지 회원이 아닐 경우 -> '업데이트 내역이 없습니다.' 에러 발생
+				// 탈퇴 회원일 경우 -> 회원에서 '탈퇴한 회원입니다.'에러 발생하여 그대로 throw 함
 				if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
 						|| DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
 					this.log.debug("##### This user is normal user!!!!");

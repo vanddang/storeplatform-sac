@@ -104,7 +104,6 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		List<HistorySacIn> listPrchs = null;
-		boolean isNormalUser = false;
 
 		String memberType = req.getMemberType();
 		/**************************************************************
@@ -253,10 +252,18 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					long end = System.currentTimeMillis();
 					this.log.info("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserByUserKey takes {} ms",
 							(end - start));
+
 					Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
 					UserInfoSac userInfoSac = userInfo.get(userKey);
 					String userMainStatus = userInfoSac.getUserMainStatus();
 					this.log.debug("##### userMainStatus :: {} " + userMainStatus);
+					if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
+							|| DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
+						this.log.debug("##### This user is normal user!!!!");
+					} else {
+						this.log.debug("##### This user is unnormal user!!!!");
+						throw new StorePlatformException("SAC_DSP_0006");
+					}
 
 					try {
 						this.log.debug("##### Purchase check start!!!!!!!!!");
@@ -408,9 +415,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 						}
 
 					} else {
-						this.log.debug(
-								"##### Tstore user && Has update target But has no whole purchase history or isNormalUser : {}!!!!!!",
-								isNormalUser);
+						this.log.debug("##### Tstore user && Has update target But has no whole purchase history");
 						this.log.debug("##### Add result for only free app!!!!!!!!!!");
 						// 구매내역이 없을 경우 무료상품만 리스트에 포함
 						for (int i = 0; i < listProd.size(); i++) {
