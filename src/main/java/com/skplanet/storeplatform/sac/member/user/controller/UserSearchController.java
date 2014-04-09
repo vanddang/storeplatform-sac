@@ -199,7 +199,7 @@ public class UserSearchController {
 
 	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SearchPasswordSacRes searchId(SacRequestHeader sacHeader, @RequestBody SearchPasswordSacReq req) {
+	public SearchPasswordSacRes searchPassword(SacRequestHeader sacHeader, @RequestBody SearchPasswordSacReq req) {
 		LOGGER.debug("####################################################");
 		LOGGER.debug("##### 2.1.8. PASSWORD 찾기 #####");
 		LOGGER.debug("####################################################");
