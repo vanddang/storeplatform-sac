@@ -44,6 +44,12 @@ public class Date extends CommonInfo implements Serializable {
 	 * 시작 날짜 없이 끝 날짜만 지정하는 경우, 20120913T195630+0900/ ; 끝 날짜 없이 시작 날짜만 지정하는 경우
 	 */
 	private String text;
+	
+	/** 
+	 * 기간 단위
+	 * type = unit/usagePeriod 일 경우 사용 
+	 */
+	private String unit;
 
 	public Date() {
 	}
@@ -52,6 +58,13 @@ public class Date extends CommonInfo implements Serializable {
 		super();
 		this.type = type;
 		this.text = text;
+	}
+	
+	public Date(String type, String text, String unit) {
+		super();
+		this.type = type;
+		this.text = text;
+		this.unit = unit;
 	}
 
 	/**
@@ -98,6 +111,20 @@ public class Date extends CommonInfo implements Serializable {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	/**
+	 * @return the unit
+	 */
+	public String getUnit() {
+		return unit;
+	}
+
+	/**
+	 * @param unit the unit to set
+	 */
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	/**
