@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -175,7 +176,7 @@ public class MetaInfo extends CommonInfo {
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
-	private String updDt;
+	private Date updDt;
 
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
 	private String musicId;
@@ -2589,7 +2590,7 @@ public class MetaInfo extends CommonInfo {
 	/**
 	 * @return the updDt
 	 */
-	public String getUpdDt() {
+	public Date getUpdDt() {
 		return this.updDt;
 	}
 
@@ -2597,7 +2598,7 @@ public class MetaInfo extends CommonInfo {
 	 * @param updDt
 	 *            the updDt to set
 	 */
-	public void setUpdDt(String updDt) {
+	public void setUpdDt(Date updDt) {
 		this.updDt = updDt;
 	}
 

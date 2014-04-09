@@ -633,7 +633,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 		// Date 생성
 		// Date date = this.commonGenerator.generateDate(metaInfo);
-		Date date = this.commonGenerator.generateDate(DisplayConstants.DP_DATE_UPT_NM, metaInfo.getUpdDt());
+		Date date = new Date(DisplayConstants.DP_DATE_UPT_NM, metaInfo.getUpdDt());
 
 		product.setTitle(title);
 		product.setPrice(price);
