@@ -443,7 +443,7 @@ public class IdpServiceImpl implements IdpService {
 					final String fdsUsermbrNoPre = prevMbrNoForgameCenter;
 					final String fdsUsermbrNoPost = currentMbrNoForgameCenter;
 
-					new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
+					new TLogUtil().set(new ShuttleSetter() {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
 							shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
@@ -2227,7 +2227,7 @@ public class IdpServiceImpl implements IdpService {
 						final String fdsUsermbrNoPre = mbrNo;
 						final String fdsUsermbrNoPost = userKey;
 
-						new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
+						new TLogUtil().set(new ShuttleSetter() {
 							@Override
 							public void customize(TLogSentinelShuttle shuttle) {
 								shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
