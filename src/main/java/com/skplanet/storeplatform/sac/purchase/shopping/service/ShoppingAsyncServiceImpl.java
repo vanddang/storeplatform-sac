@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.purchase.shopping.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,8 @@ import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncReq;
 @Service
 public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 
+	private static final Logger logger = LoggerFactory.getLogger(ShoppingAsyncServiceImpl.class);
+
 	@Autowired
 	private ShoppingAsyncSCI shoppingAsyncSCI;
 
@@ -50,9 +54,6 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 
 		ShoppingAsyncItemSc item = null;
 		List<ShoppingAsyncItemSc> itemList = null;
-
-		System.out.println("" + request.getXmlData().getPublish().size());
-		System.out.println("" + request.getXmlData().getPublish().get(0).getItems().size());
 
 		for (BizCouponPublish obj : request.getXmlData().getPublish()) {
 			listSc = new ShoppingAsyncListSc();
@@ -81,9 +82,6 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 		}
 
 		reqSc.setPublish(prchsList);
-
-		System.out.println("###" + reqSc.getPublish().size());
-		System.out.println("###" + reqSc.getPublish().get(0).getItems().size());
 
 		this.shoppingAsyncSCI.updateShoppingAsync(reqSc);
 
