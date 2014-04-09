@@ -167,6 +167,8 @@
 		         , NVL(PLAY_PROD_AMT, 0) AS PLAY_PROD_AMT
 		         , STORE_PROD_CHRG
 		         , PLAY_PROD_CHRG
+	             , STORE_USE_PERIOD_UNIT_CD
+	             , PLAY_USE_PERIOD_UNIT_CD		         
 		         , DECODE( STORE_DRM_YN, 'Y', STORE_DRM_YN, 'N' ) AS STORE_DRM_YN
 		         , DECODE( PLAY_DRM_YN, 'Y', PLAY_DRM_YN, 'N' ) AS PLAY_DRM_YN  
 		         , DECODE( HDCP_YN, 'Y', HDCP_YN, 'N' ) AS HDCP_YN
@@ -174,9 +176,9 @@
 		         , PROD_NM
 		         , REGEXP_REPLACE( CHAPTER, '[^[:digit:]]' ) AS CHAPTER
 		         , ( CASE WHEN CHAPTER IS NOT NULL THEN '회' END ) AS CHAPTER_UNIT
-		         , DECODE( USE_PERIOD_UNIT_CD
-		                 , 'PD00310', NULL
-		                 , CONCAT( USE_PERIOD, USE_PERIOD_UNIT_CD_NM ) ) AS USE_PERIOD_NM
+                 , CASE WHEN USE_PERIOD_UNIT_CD != 'PD00310' THEN (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = USE_PERIOD_UNIT_CD AND LANG_CD = #{langCd})
+                     ELSE '' END AS USE_PERIOD_NM		         
+		         , USE_PERIOD
 		         , USE_PERIOD_UNIT_CD            
 		         , NVL(DWLD_AREA_LIMT_YN , 'N') AS DWLD_AREA_LIMT_YN 
 		         , EPSD_PLAY_TM
@@ -227,6 +229,8 @@
 		                 , PLAY_PROD_AMT
 		                 , STORE_PROD_CHRG
 		                 , PLAY_PROD_CHRG
+		                 , STORE_USE_PERIOD_UNIT_CD
+		                 , PLAY_USE_PERIOD_UNIT_CD
 		                 , STORE_DRM_YN
 		                 , PLAY_DRM_YN
 		                 , HDCP_YN
@@ -268,7 +272,9 @@
 		                          , MAX( JA.STORE_DRM_YN ) AS STORE_DRM_YN
 		                          , MAX( JA.PLAY_DRM_YN ) AS PLAY_DRM_YN
 			                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS STORE_PROD_CHRG
-			                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG		                          
+			                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG
+			                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.USE_PERIOD_UNIT_CD)) AS STORE_USE_PERIOD_UNIT_CD
+			                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD			                      		                          
 		                          , MAX( JA.HDCP_YN ) AS HDCP_YN
 		                          , MAX( JA.HDV_YN ) AS HDV_YN
 		                          , MAX( JA.PROD_NM ) AS PROD_NM
@@ -441,10 +447,10 @@
 		                                       AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
 		                                       AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */
 		                                       <if test="idType == 'episode'">
-		                                       AND J.PROD_ID = #{productId} -- 에피소드 ID 조회
+		                                       AND J.PROD_ID = #{productId} /* 에피소드 ID 조회 */
 		                                       </if>
 		                                       <if test="idType == 'channel'">
-		                                       AND D.PROD_ID= #{productId}    --채널 Id조회
+		                                       AND D.PROD_ID= #{productId}    /* 채널 Id조회 */
 		                                       </if>
 		                                   ) IA
 		                           )JA
