@@ -109,7 +109,9 @@ public class EpubDetail extends CommonInfo {
 	/** 대여 DRM */
 	private String playDrmYn;
     private String playProdStatusCd;
+    private Integer playUsePeriod;
     private String playUsePeriodUnitCd;
+    private String playUsePeriodUnitCdNm;
 
 	/** 챕터 */
 	private String chapter;
@@ -982,6 +984,34 @@ public class EpubDetail extends CommonInfo {
 	 */
 	public void setPlayUsePeriodUnitCd(String playUsePeriodUnitCd) {
 		this.playUsePeriodUnitCd = playUsePeriodUnitCd;
+	}
+	
+	/**
+	 * @return the playUsePeriod
+	 */
+	public Integer getPlayUsePeriod() {
+		return playUsePeriod;
+	}
+
+	/**
+	 * @param playUsePeriod the playUsePeriod to set
+	 */
+	public void setPlayUsePeriod(Integer playUsePeriod) {
+		this.playUsePeriod = playUsePeriod;
+	}
+
+	/**
+	 * @return the playUsePeriodUnitCdNm
+	 */
+	public String getPlayUsePeriodUnitCdNm() {
+		return playUsePeriodUnitCdNm;
+	}
+
+	/**
+	 * @param playUsePeriodUnitCdNm the playUsePeriodUnitCdNm to set
+	 */
+	public void setPlayUsePeriodUnitCdNm(String playUsePeriodUnitCdNm) {
+		this.playUsePeriodUnitCdNm = playUsePeriodUnitCdNm;
 	}
 
 	/**

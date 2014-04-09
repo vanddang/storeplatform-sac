@@ -107,9 +107,9 @@ public class EpubControllerTest {
 
 	
 	@Test
-	public void searchEpubChannel_ebook_1() throws Exception {
+	public void searchEpubChannel_ebook_freeitem() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("channelId", "H001611089");
+		param.put("channelId", "H000494432"); // 무료 아이템 확인
 		param.put("deviceKey", "DE201402201711283140002222");
 		param.put("userKey", "US201402201711282940003170");
 		String json = this.convertMapToJson(param);

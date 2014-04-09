@@ -98,6 +98,9 @@ public class VodDetail extends CommonInfo {
 	private String playDrmYn;
 	/** 바로보기 상품 상태 */
 	private String playProdStatusCd;
+	private Integer playUsePeriod;
+	private String playUsePeriodUnitCd;
+	private String playUsePeriodUnitCdNm;
 
 	/** 챕터 */
 	private String chapter;
@@ -109,10 +112,6 @@ public class VodDetail extends CommonInfo {
 	private String hdvYn;
 	/** 돌비 지원여부 */
 	private String dolbySprtYn;
-
-	/** */
-	private String usagePeriod;
-    private String usageUnitName;
 
 	/** 다운로드 지역제한 */
 	private String dwldAreaLimtYn;
@@ -207,6 +206,7 @@ public class VodDetail extends CommonInfo {
 	// ----------------------------------------
 	/** 사용기간 단위 코드 (PD00310 == 무제한), 무제한인 경우 Store, 그외 Play */
 	private String usePeriodUnitCd;
+	private String usePeriodUnitCdNm;
 	/** 사용기간 (사용기간 단위가 무제한이 아닌 경우 사용) */
 	// FIXME:
 	private Integer usePeriod;
@@ -262,13 +262,6 @@ public class VodDetail extends CommonInfo {
 	private String hdDpPicRatio;
 
 
-    public String getUsageUnitName() {
-        return usageUnitName;
-    }
-
-    public void setUsageUnitName(String usageUnitName) {
-        this.usageUnitName = usageUnitName;
-    }
 
     public String getTopMenuId() {
 		return this.topMenuId;
@@ -768,6 +761,20 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
+	 * @return the usePeriodUnitCdNm
+	 */
+	public String getUsePeriodUnitCdNm() {
+		return usePeriodUnitCdNm;
+	}
+
+	/**
+	 * @param usePeriodUnitCdNm the usePeriodUnitCdNm to set
+	 */
+	public void setUsePeriodUnitCdNm(String usePeriodUnitCdNm) {
+		this.usePeriodUnitCdNm = usePeriodUnitCdNm;
+	}
+
+	/**
 	 * 사용기간 (사용기간 단위가 무제한이 아닌 경우 사용)
 	 *
 	 * @return
@@ -937,14 +944,6 @@ public class VodDetail extends CommonInfo {
 
 	public void setHdcpYn(String hdcpYn) {
 		this.hdcpYn = hdcpYn;
-	}
-
-	public String getUsagePeriod() {
-		return this.usagePeriod;
-	}
-
-	public void setUsagePeriod(String usagePeriod) {
-		this.usagePeriod = usagePeriod;
 	}
 
 	public Integer getEpsdPlayTm() {
@@ -1318,5 +1317,49 @@ public class VodDetail extends CommonInfo {
 		this.genreCdNm = genreCdNm;
 	}
 
+
+	/**
+	 * @return the playUsePeriod
+	 */
+	public Integer getPlayUsePeriod() {
+		return playUsePeriod;
+	}
+
+	/**
+	 * @param playUsePeriod the playUsePeriod to set
+	 */
+	public void setPlayUsePeriod(Integer playUsePeriod) {
+		this.playUsePeriod = playUsePeriod;
+	}
+
+	/**
+	 * @return the playUsePeriodUnitCd
+	 */
+	public String getPlayUsePeriodUnitCd() {
+		return playUsePeriodUnitCd;
+	}
+
+	/**
+	 * @param playUsePeriodUnitCd the playUsePeriodUnitCd to set
+	 */
+	public void setPlayUsePeriodUnitCd(String playUsePeriodUnitCd) {
+		this.playUsePeriodUnitCd = playUsePeriodUnitCd;
+	}
+
+	/**
+	 * @return the playUsePeriodUnitCdNm
+	 */
+	public String getPlayUsePeriodUnitCdNm() {
+		return playUsePeriodUnitCdNm;
+	}
+
+	/**
+	 * @param playUsePeriodUnitCdNm the playUsePeriodUnitCdNm to set
+	 */
+	public void setPlayUsePeriodUnitCdNm(String playUsePeriodUnitCdNm) {
+		this.playUsePeriodUnitCdNm = playUsePeriodUnitCdNm;
+	}
+
+	
 	
 }

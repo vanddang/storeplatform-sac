@@ -653,11 +653,8 @@ public class EpubServiceImpl implements EpubService {
 
 		play.setPrice(this.mapPrice(mapperVO.getPlayProdAmt(), mapperVO.getPlayProdNetAmt()));
 
-		if(StringUtils.isNotEmpty(mapperVO.getUsePeriodNm())) {
-			Date date = new Date();
-			date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-			date.setText(mapperVO.getUsePeriodNm());
-			play.setDate(date);
+		if(mapperVO.getPlayUsePeriod() != null) {
+			play.setDate(DisplayCommonUtil.makeDateUsagePeriod(mapperVO.getPlayUsePeriodUnitCd(), mapperVO.getPlayUsePeriod(), mapperVO.getPlayUsePeriodUnitCdNm()));
 		}
 
 		// 이용기간단위

@@ -63,7 +63,7 @@ public class DisplayCommonUtil {
 		return osVersion;
 	}
 
-    public static Date makeDateUsagePeriod(String tp, Integer period) {
+    public static Date makeDateUsagePeriod(String tp, Integer period, String unit) {
         if(tp == null || tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) {
             return null;
         }
@@ -100,6 +100,6 @@ public class DisplayCommonUtil {
         else
             return null;
 
-        return new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, unitName + "/" + period);
+        return new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, unitName + "/" + period, unit);
     }
 }
