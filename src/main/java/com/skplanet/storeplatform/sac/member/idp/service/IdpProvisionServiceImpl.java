@@ -374,7 +374,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			final String fdsLogMdn = mdn;
 			final String fdsLogSvcMngNum = svcMngNum;
 
-			new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
+			new TLogUtil().set(new ShuttleSetter() {
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
 					shuttle.log_id("TL00034").insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
