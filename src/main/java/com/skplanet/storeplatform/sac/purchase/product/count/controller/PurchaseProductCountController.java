@@ -54,7 +54,7 @@ public class PurchaseProductCountController {
 	@ResponseBody
 	public PurchaseProductCountSacRes executePurchaseProductCount(SacRequestHeader sacRequestHeader,
 			@RequestHeader("x-sac-guid") String guid,
-			@RequestParam(value = "perCnt", required = false, defaultValue = "10") Integer perCnt) {
+			@RequestParam(value = "disPerCnt", required = false, defaultValue = "10") Integer disPerCnt) {
 
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", java.util.Locale.KOREA);
@@ -64,7 +64,7 @@ public class PurchaseProductCountController {
 
 		PurchaseProductCountSacParam purchaseProductCountSacParam = new PurchaseProductCountSacParam();
 		purchaseProductCountSacParam.setUpdId(updId);
-		purchaseProductCountSacParam.setPerCount(perCnt);
+		purchaseProductCountSacParam.setDisPerCount(disPerCnt);
 
 		this.purchaseProductCountService.execPurchaseProductCount(purchaseProductCountSacParam);
 

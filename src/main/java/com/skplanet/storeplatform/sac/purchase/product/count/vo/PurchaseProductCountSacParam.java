@@ -21,21 +21,21 @@ public class PurchaseProductCountSacParam extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String updId;
-	private Integer perCount; // 전시에 한번 요청할 카운트.
+	private Integer disPerCount; // 전시에 한번 요청할 카운트.
 
 	/**
-	 * @return the perCount
+	 * @return the disPerCount
 	 */
-	public Integer getPerCount() {
-		return this.perCount;
+	public Integer getDisPerCount() {
+		return this.disPerCount;
 	}
 
 	/**
-	 * @param perCount
-	 *            the perCount to set
+	 * @param disPerCount
+	 *            the disPerCount to set
 	 */
-	public void setPerCount(Integer perCount) {
-		this.perCount = perCount;
+	public void setDisPerCount(Integer disPerCount) {
+		this.disPerCount = disPerCount;
 	}
 
 	/**

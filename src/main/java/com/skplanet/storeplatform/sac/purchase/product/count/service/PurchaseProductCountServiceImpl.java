@@ -81,7 +81,7 @@ public class PurchaseProductCountServiceImpl implements PurchaseProductCountServ
 			getPrchsProdCntScReq.setUpdId(purchaseProductCountSacParam.getUpdId());
 			getPrchsProdCntScReq.setCurrProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_RESERVE);
 			getPrchsProdCntScReq.setNewProcStatus(PurchaseConstants.PURCHASE_PRODUCT_COUNT_PROC_STATUS_UPDATE);
-			getPrchsProdCntScReq.setPurCnt(purchaseProductCountSacParam.getPerCount());
+			getPrchsProdCntScReq.setDisPurCnt(purchaseProductCountSacParam.getDisPerCount());
 
 			GetPrchsProdCntScRes getPrchsProdCntScRes = this.purchaseProductCountRepository
 					.getPrchsProdCnt(getPrchsProdCntScReq);
