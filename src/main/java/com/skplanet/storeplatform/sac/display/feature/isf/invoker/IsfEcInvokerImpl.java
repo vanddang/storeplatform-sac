@@ -53,7 +53,7 @@ public class IsfEcInvokerImpl implements IsfEcInvoker {
 			this.log.debug("isfReq {}", isfReq);
 		}
 
-		this.log.debug("##### [SAC DSP ISFSCI] SAC EC-ISF Start : ISFSCI.get");
+		this.log.info("##### [SAC DSP ISFSCI] SAC EC-ISF Start : ISFSCI.get");
 		long start = System.currentTimeMillis();
 
 		HttpHeaders headers = new HttpHeaders();
@@ -94,9 +94,9 @@ public class IsfEcInvokerImpl implements IsfEcInvoker {
 			throw new StorePlatformException("SAC_DSP_0010", e);
 		}
 
-		this.log.debug("##### [SAC DSP ISFSCI] SAC EC-ISF End : ISFSCI.get");
+		this.log.info("##### [SAC DSP ISFSCI] SAC EC-ISF End : ISFSCI.get");
 		long end = System.currentTimeMillis();
-		this.log.debug("##### [SAC DSP ISFSCI] SAC EC-ISF ISFSCI.get takes {} ms", (end - start));
+		this.log.info("##### [SAC DSP ISFSCI] SAC EC-ISF ISFSCI.get takes {} ms", (end - start));
 
 		if (this.log.isDebugEnabled()) {
 			this.log.debug(this.getClass().getName() + ".invoke end...... !!");

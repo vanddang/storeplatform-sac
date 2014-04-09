@@ -47,11 +47,10 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 	@Value("#{propertiesForSac['display.previewUrlPrefix']}")
 	private String previewPrefix;
-	
+
 	/** The message source accessor. */
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
-	
 
 	@Override
 	public String getBatchStandardDateString(String tenantId, String listId) {
@@ -117,12 +116,12 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		itemScList.add(itemSc);
 		existenceScReq.setProductList(itemScList);
 
-		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
+		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
 		long start = System.currentTimeMillis();
 		List<ExistenceScRes> resList = this.existenceSCI.searchExistenceList(existenceScReq);
-		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : existenceSCI.searchExistenceList");
+		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : existenceSCI.searchExistenceList");
 		long end = System.currentTimeMillis();
-		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase existenceSCI.searchExistenceList takes {} ms",
+		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase existenceSCI.searchExistenceList takes {} ms",
 				(end - start));
 		return resList != null && resList.size() > 0;
 	}
@@ -143,12 +142,12 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		}
 		existenceScReq.setProductList(itemScList);
 
-		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
+		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
 		long start = System.currentTimeMillis();
 		List<ExistenceScRes> existenceListRes = this.existenceSCI.searchExistenceList(existenceScReq);
-		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : existenceSCI.searchExistenceList");
+		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : existenceSCI.searchExistenceList");
 		long end = System.currentTimeMillis();
-		this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase existenceSCI.searchExistenceList takes {} ms",
+		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase existenceSCI.searchExistenceList takes {} ms",
 				(end - start));
 
 		return existenceListRes;
@@ -157,7 +156,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Override
 	public String makePreviewUrl(String phyPath) {
 		if (StringUtils.isNotEmpty(phyPath))
-            return this.previewPrefix + phyPath;
+			return this.previewPrefix + phyPath;
 		else
 			return "";
 	}
@@ -198,33 +197,33 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 		return (SupportDevice) this.commonDAO.queryForObject("DisplayCommon.getSupportDeviceInfo", deviceModelCd);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
 	 */
-	@Override	
+	@Override
 	public String getEpubChapterUnit(String bookClsfCd) {
-        String chapterUnit = null;
-        if(StringUtils.equals(bookClsfCd, DisplayConstants.DP_BOOK_BOOK)) {
-        	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.book");
-        } else if(StringUtils.equals(bookClsfCd, DisplayConstants.DP_BOOK_SERIAL)) {
-        	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.serial");
-        } else if(StringUtils.equals(bookClsfCd, DisplayConstants.DP_BOOK_MAGAZINE)) {
-        	chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.magazine");
-        }
-        return chapterUnit;
+		String chapterUnit = null;
+		if (StringUtils.equals(bookClsfCd, DisplayConstants.DP_BOOK_BOOK)) {
+			chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.book");
+		} else if (StringUtils.equals(bookClsfCd, DisplayConstants.DP_BOOK_SERIAL)) {
+			chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.serial");
+		} else if (StringUtils.equals(bookClsfCd, DisplayConstants.DP_BOOK_MAGAZINE)) {
+			chapterUnit = this.messageSourceAccessor.getMessage("display.chapter.unit.magazine");
+		}
+		return chapterUnit;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
 	 */
-	@Override	
+	@Override
 	public String getVodChapterUnit() {
 		return this.messageSourceAccessor.getMessage("display.chapter.unit.vod");
 	}

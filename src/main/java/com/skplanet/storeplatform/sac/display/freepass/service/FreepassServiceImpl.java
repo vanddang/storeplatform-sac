@@ -679,14 +679,15 @@ public class FreepassServiceImpl implements FreepassService {
 			historyListSacReq.setProductList(productList);
 
 			// 구매내역 조회 실행
-			this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+			this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 			long start = System.currentTimeMillis();
 
 			// historyCountSacRes = this.historyInternalSCI.searchHistoryCount(historyCountSacReq);
 			historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
-			this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
+			this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
 			long end = System.currentTimeMillis();
-			this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms", (end - start));
+			this.log.info("##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
+					(end - start));
 
 		} catch (Exception ex) {
 			throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);

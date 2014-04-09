@@ -169,7 +169,7 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 				 * 판매자 정보중 회사명 Seller Key는 Null로 Set해서 공개하지 않는다.
 				 */
 
-				this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
+				this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
 				long start = System.currentTimeMillis();
 				try {
 					DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
@@ -191,9 +191,9 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 				} catch (Exception e) {
 					company = "";
 				}
-				this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation");
+				this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation");
 				long end = System.currentTimeMillis();
-				this.log.debug("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformation takes {} ms",
+				this.log.info("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformation takes {} ms",
 						(end - start));
 				metaInfo.setSellerMbrNo(null);
 				metaInfo.setCompany(company);

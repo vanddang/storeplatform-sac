@@ -139,7 +139,7 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 				sellerMbrSac.setSellerBizNumber(inquiryValue);
 				sellerMbrSacList.add(sellerMbrSac);
 				detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
-				this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
+				this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
 				long start = System.currentTimeMillis();
 				try {
 
@@ -161,9 +161,9 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 				} catch (Exception e) {
 					downloadBestSacReq.setArraySellerKey(arraySellerKey);
 				}
-				this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation");
+				this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation");
 				long end = System.currentTimeMillis();
-				this.log.debug("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformation takes {} ms",
+				this.log.info("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformation takes {} ms",
 						(end - start));
 			}
 
