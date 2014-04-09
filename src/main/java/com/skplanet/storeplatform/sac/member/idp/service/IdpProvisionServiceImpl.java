@@ -128,6 +128,13 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	@Override
 	public String executeChangeMobileNumber(HashMap<String, String> map) {
 
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00034");
+			}
+		});
+
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
 		String beMdn = StringUtil.nvl(map.get("be_mdn"), "");
@@ -176,7 +183,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				new TLogUtil().set(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL00034").insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
+						shuttle.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
 								.device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
 					}
 				});
@@ -250,7 +257,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				new TLogUtil().set(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL00034").insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
+						shuttle.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey).device_id_pre(fdsLogBeMdn)
 								.device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
 					}
 				});
