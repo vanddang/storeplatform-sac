@@ -95,7 +95,7 @@ public class SellerSearchController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 기본정보조회 App.
+	 * App 상세 화면에 노출 되는 판매자 정보.
 	 * </pre>
 	 * 
 	 * @param header
@@ -104,10 +104,10 @@ public class SellerSearchController {
 	 *            DetailInformationForProductReq
 	 * @return DetailInformationForProductRes
 	 */
-	@RequestMapping(value = "/detailInformationForProduct/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailInformationForProduct/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailInformationForProductRes detailInformationForProduct(SacRequestHeader header,
-			@Validated DetailInformationForProductReq req) {
+			@RequestBody @Validated DetailInformationForProductReq req) {
 		LOGGER.debug("request param : {}", req.toString());
 
 		return this.sellerSearchService.detailInformationForProduct(header, req);
@@ -124,10 +124,10 @@ public class SellerSearchController {
 	 *            DetailAccountInformationReq
 	 * @return DetailAccountInformationRes
 	 */
-	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header,
-			@Validated DetailAccountInformationReq req) {
+			@RequestBody @Validated DetailAccountInformationReq req) {
 		return this.sellerSearchService.detailAccountInformation(header, req);
 	}
 
@@ -217,10 +217,10 @@ public class SellerSearchController {
 	 *            ListPasswordReminderQuestionReq
 	 * @return ListPasswordReminderQuestionRes
 	 */
-	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
-			@Validated ListPasswordReminderQuestionReq req) {
+			@RequestBody @Validated ListPasswordReminderQuestionReq req) {
 		return this.sellerSearchService.listPasswordReminderQuestion(header, req);
 	}
 
@@ -250,10 +250,10 @@ public class SellerSearchController {
 	 *            SearchAuthKeyReq
 	 * @return DetailInformationRes
 	 */
-	@RequestMapping(value = "/detailInfomationByAuthorizationKey/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailInfomationByAuthorizationKey/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailInfomationByAuthorizationKeySacRes detailInfomationByAuthorizationKey(SacRequestHeader header,
-			@Validated DetailInfomationByAuthorizationKeySacReq req) {
+			@RequestBody @Validated DetailInfomationByAuthorizationKeySacReq req) {
 		return this.sellerSearchService.detailInfomationByAuthorizationKey(header, req);
 	}
 

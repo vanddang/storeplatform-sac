@@ -41,7 +41,7 @@ public class SellerSubController {
 
 	/**
 	 * <pre>
-	 * 5.2.18.	서브계정 등록.
+	 * 2.2.18.	서브계정 등록.
 	 * </pre>
 	 * 
 	 * @param header
@@ -63,7 +63,7 @@ public class SellerSubController {
 
 	/**
 	 * <pre>
-	 * 5.2.19.	서브계정 수정.
+	 * 2.2.19.	서브계정 수정.
 	 * </pre>
 	 * 
 	 * @param header
@@ -83,7 +83,7 @@ public class SellerSubController {
 
 	/**
 	 * <pre>
-	 * 5.2.20.	서브계정 삭제.
+	 * 2.2.20.	서브계정 삭제.
 	 * </pre>
 	 * 
 	 * @param header
@@ -100,7 +100,7 @@ public class SellerSubController {
 
 	/**
 	 * <pre>
-	 * 5.2.21.	서브계정 목록 조회.
+	 * 2.2.21.	서브계정 목록 조회.
 	 * </pre>
 	 * 
 	 * @param header
@@ -109,15 +109,15 @@ public class SellerSubController {
 	 *            ListSubsellerReq
 	 * @return ListSubsellerRes
 	 */
-	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req) {
+	public ListSubsellerRes listSubseller(SacRequestHeader header, @RequestBody @Validated ListSubsellerReq req) {
 		return this.sellerSubService.listSubseller(header, req);
 	}
 
 	/**
 	 * <pre>
-	 * 5.2.22.	서브계정 상세 조회.
+	 * 2.2.22.	서브계정 상세 조회.
 	 * </pre>
 	 * 
 	 * @param header
@@ -126,9 +126,9 @@ public class SellerSubController {
 	 *            DetailSubsellerReq
 	 * @return DetailSubsellerRes
 	 */
-	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req) {
+	public DetailSubsellerRes detailSubseller(SacRequestHeader header, @RequestBody @Validated DetailSubsellerReq req) {
 		return this.sellerSubService.detailSubseller(header, req);
 	}
 

@@ -386,6 +386,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		// RESPONSE
 		DetailInformationForProductRes response = new DetailInformationForProductRes();
+		response.setSellerId(searchSellerResponse.getSellerMbr().getSellerID());
 		response.setIsDomestic(searchSellerResponse.getSellerMbr().getIsDomestic());
 		response.setSellerClass(searchSellerResponse.getSellerMbr().getSellerClass());
 		response.setSellerMbrList(resList);
