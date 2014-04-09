@@ -166,6 +166,7 @@
                     WHERE UPD.TENANT_ID = UP.TENANT_ID
                       AND UPD.PKG_ID = UP.PKG_ID
                       AND UPD.PROD_ID = CP.PROD_ID  -- channel id
+                      AND CP.PROD_RSHP_CD = 'DP010802'
                       AND PP.TENANT_ID = UPD.TENANT_ID
                       AND PP.PROD_ID = UPD.PROD_ID
                       AND P.PROD_ID = UPD.PROD_ID
@@ -192,60 +193,28 @@
                       AND MP.USE_YN = 'Y'
                       AND TP2.PROD_STATUS_CD = 'PD000403'
                       AND TP.TENANT_ID = #{tenantHeader.tenantId}
-		              AND EXISTS (
-		                           SELECT 'X'
-		                             FROM TB_DP_SPRT_DEVICE SH ,
-		                                  TB_CM_DEVICE PHI
-		                            WHERE 1 = 1
-		                            AND   SH.PROD_ID = P2.PROD_ID 
-		                            AND   SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
-		                            AND   (PHI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
-		                            AND   PHI.USE_YN = 'Y'
-		                            AND   DECODE( P.TOP_MENU_ID
-		                                       , 'DP13'
-		                                       , DECODE( PHI.EBOOK_SPRT_YN
-		                                               , 'Y'
-		                                               , DECODE( P2.META_CLSF_CD
-		                                                       , 'CT24'
-		                                                       , DECODE( PHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-		                                                       , 'CT26'
-		                                                       , DECODE( PHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-		                                                       , 1 )
-		                                               , 0 )
-		                                       , 'DP14'
-		                                       , DECODE( PHI.COMIC_SPRT_YN , 'Y', 1 , 0 )
-		                                       , 'DP15'
-		                                       , DECODE( PHI.SCL_SHPG_SPRT_YN, 'Y', 1, 0 )
-		                                       , 'DP16'
-		                                       , DECODE( P2.META_CLSF_CD
-		                                               , 'CT25'
-		                                               , DECODE( PHI.MUSIC_SPRT_YN, 'Y', 1, 0)
-		                                               , 1 )
-		                                       , 1 ) = 1
-		                            AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-		                                       THEN ( SELECT 1
-		                                                FROM TB_DP_SUB_CONTENTS SC
-		                                               WHERE SC.PROD_ID = CP.PART_PROD_ID
-		                                                 AND SC.SALE_YN = 'Y'
-		                                                 AND DECODE( PHI.HDV_SPRT_YN
-		                                                           , 'PD005201'
-		                                                           , DECODE ( SC.DP_PG_QULT_CD
-		                                                                    , 'PD009701', 1
-		                                                                    , 'PD009702', 1
-		                                                                    , DECODE( PHI.SD_VIDEO_SPRT_YN , 'Y', 1 , 0 ) )
-		                                                           , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
-		                                                 AND ROWNUM <![CDATA[<=]]> 1  )
-		                                       ELSE 1
-		                                   END ) = 1
-		                            AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-		                                       THEN DECODE( PHI.VIDEO_DRM_SPRT_YN
-		                                                  , 'PD005200'
-		                                                  , DECODE( NVL( P2.DRM_YN, 'N' ), 'N', 1, 0 )
-		                                                  , 'PD005201'
-		                                                  , 1 )
-		                                       ELSE 1
-		                                   END ) = 1
-		                         )
+                      AND EXISTS (
+            			SELECT 'X' FROM TB_DP_SPRT_DEVICE SH WHERE SH.PROD_ID = P2.PROD_ID
+              			AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
+              			)
+					  AND EXISTS (
+              			SELECT 'X'
+                		FROM TB_CM_DEVICE PHI
+                		WHERE 1 = 1
+                		AND   PHI.DEVICE_MODEL_CD = #{deviceHeader.model}
+                		AND   PHI.USE_YN = 'Y'
+                		AND   'Y' = CASE 
+                			WHEN P.TOP_MENU_ID = 'DP13' THEN PHI.EBOOK_SPRT_YN
+                    		WHEN P.TOP_MENU_ID = 'DP14' THEN PHI.COMIC_SPRT_YN
+                    		WHEN P.TOP_MENU_ID = 'DP15' THEN PHI.SCL_SHPG_SPRT_YN
+                    		WHEN P.TOP_MENU_ID = 'DP16' AND P2.META_CLSF_CD = 'CT25' THEN PHI.MUSIC_SPRT_YN
+                    		WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN
+                    			CASE WHEN PHI.VIDEO_DRM_SPRT_YN = 'N' THEN 
+                        			CASE WHEN P2.DRM_YN ='N' THEN 'Y' ELSE 'N' END
+                        		ELSE 'Y' END
+    		        		ELSE 'Y' END
+                            				
+                		)
                    ) A
                    , TB_DP_PROD_IMG PI
                WHERE PI.PROD_ID = A.PROD_ID
@@ -275,7 +244,7 @@
         </otherwise>
      </choose>
     </select>
-    
+
     <!-- 테마추천 상품 리스트 -->
     <select id="getBasicRecommendPkgProdList" parameterType="Map" resultType="ProductBasicInfo">
     SELECT /* IsfThemeRecommendMapper.xml, getBasicRecommendPkgProdList, 테마추천 운영자 추천 상품 목록 조회 , 윤주영/SK플래닛, 2014-02-25 */
@@ -324,60 +293,28 @@
 		             AND TP2.PROD_STATUS_CD = 'PD000403'
 		             AND TP2.EXPO_YN = 'Y'
 		             AND CP.PROD_RSHP_CD = 'DP010802'
-                     AND EXISTS (
-                                  SELECT 'X'
-                                    FROM TB_DP_SPRT_DEVICE SH ,
-                                         TB_CM_DEVICE PHI
-                                   WHERE 1 = 1
-                                   AND   SH.PROD_ID = CP.PART_PROD_ID
-                                   AND   SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
-                                   AND   (PHI.DEVICE_MODEL_CD = #{deviceHeader.model} OR PHI.DEVICE_MODEL_CD = #{virtualDeviceModel})
-                                   AND   PHI.USE_YN = 'Y'
-                                   AND   DECODE( P.TOP_MENU_ID
-                                              , 'DP13'
-                                              , DECODE( PHI.EBOOK_SPRT_YN
-                                                      , 'Y'
-                                                      , DECODE( P2.META_CLSF_CD
-                                                              , 'CT24'
-                                                              , DECODE( PHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                                              , 'CT26'
-                                                              , DECODE( PHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                                              , 1 )
-                                                      , 0 )
-                                              , 'DP14'
-                                              , DECODE( PHI.COMIC_SPRT_YN , 'Y', 1 , 0 )
-                                              , 'DP15'
-                                              , DECODE( PHI.SCL_SHPG_SPRT_YN, 'Y', 1, 0 )
-                                              , 'DP16'
-                                              , DECODE( P2.META_CLSF_CD
-                                                      , 'CT25'
-                                                      , DECODE( PHI.MUSIC_SPRT_YN, 'Y', 1, 0)
-                                                      , 1 )
-                                              , 1 ) = 1
-                                   AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-                                              THEN ( SELECT 1
-                                                       FROM TB_DP_SUB_CONTENTS SC
-                                                      WHERE SC.PROD_ID = CP.PART_PROD_ID
-                                                        AND SC.SALE_YN = 'Y'
-                                                        AND DECODE( PHI.HDV_SPRT_YN
-                                                                  , 'PD005201'
-                                                                  , DECODE ( SC.DP_PG_QULT_CD
-                                                                           , 'PD009701', 1
-                                                                           , 'PD009702', 1
-                                                                           , DECODE( PHI.SD_VIDEO_SPRT_YN , 'Y', 1 , 0 ) )
-                                                                  , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
-                                                        AND ROWNUM <![CDATA[<=]]> 1  )
-                                              ELSE 1
-                                          END ) = 1
-                                   AND ( CASE WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' )
-                                              THEN DECODE( PHI.VIDEO_DRM_SPRT_YN
-                                                         , 'PD005200'
-                                                         , DECODE( NVL( P.DRM_YN, 'N' ), 'N', 1, 0 )
-                                                         , 'PD005201'
-                                                         , 1 )
-                                              ELSE 1
-                                          END ) = 1
-                                )
+		             AND EXISTS (
+            			SELECT 'X' FROM TB_DP_SPRT_DEVICE SH WHERE SH.PROD_ID = CP.PART_PROD_ID
+              			AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
+              			)
+					  AND EXISTS (
+              			SELECT 'X'
+                		FROM TB_CM_DEVICE PHI
+                		WHERE 1 = 1
+                		AND   PHI.DEVICE_MODEL_CD = #{deviceHeader.model}
+                		AND   PHI.USE_YN = 'Y'
+                		AND   'Y' = CASE 
+                			WHEN P.TOP_MENU_ID = 'DP13' THEN PHI.EBOOK_SPRT_YN
+                    		WHEN P.TOP_MENU_ID = 'DP14' THEN PHI.COMIC_SPRT_YN
+                    		WHEN P.TOP_MENU_ID = 'DP15' THEN PHI.SCL_SHPG_SPRT_YN
+                    		WHEN P.TOP_MENU_ID = 'DP16' AND P.META_CLSF_CD = 'CT25' THEN PHI.MUSIC_SPRT_YN
+                    		WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN
+                    			CASE WHEN PHI.VIDEO_DRM_SPRT_YN = 'N' THEN 
+                        			CASE WHEN P.DRM_YN ='N' THEN 'Y' ELSE 'N' END
+                        		ELSE 'Y' END
+    		        		ELSE 'Y' END
+                            				
+                		)
 		           ) S
 		        WHERE S.RN = 1
 		   ) A
