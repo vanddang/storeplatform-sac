@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -26,6 +27,7 @@ public class HistoryListSacReq extends PurchaseHeaderSacReq {
 	@NotBlank
 	private String endDt; // 조회종료일시
 	private String tenantProdGrpCd; // 테넌트상품분류코드
+	@Size(min = 0, max = 100)
 	private List<ProductListSac> productList; // 조회 상품PID LIST
 	private String prchsCaseCd; // 구매유형코드
 	private String prchsProdType; // 구매상품타입
