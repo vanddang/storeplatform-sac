@@ -117,9 +117,9 @@ public class UserOcbController {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	@RequestMapping(value = "/member/user/getOcbInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/member/user/getOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetOcbInformationRes getOcbInformation(SacRequestHeader sacHeader, @Validated GetOcbInformationReq req) {
+	public GetOcbInformationRes getOcbInformation(SacRequestHeader sacHeader, @Validated @RequestBody GetOcbInformationReq req) {
 
 		LOGGER.debug("###################################");
 		LOGGER.debug("##### 2.1.29 회원 OCB 정보 조회 #####");
