@@ -2093,8 +2093,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 	/**
 	 * 쇼핑 지원 여부 .
 	 * 
-	 * @param req
-	 *            req
+	 * @param header
+	 *            header
 	 * @return boolean
 	 */
 	private boolean commonSupportDeviceShopping(SacRequestHeader header) {
