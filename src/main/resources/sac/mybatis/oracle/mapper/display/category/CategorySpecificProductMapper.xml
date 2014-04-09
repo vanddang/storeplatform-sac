@@ -577,7 +577,7 @@
        SELECT /* CategorySpecificProductMapper.xml, selectMusicMetaList, SAC 전시, 2014-03-03*/
             A.PROD_ID
 		    , B.META_CLSF_CD
-		FROM UV_TB_DP_MULTIMDA_PROD A
+		FROM TB_DP_MUSIC_PROD A
 		    , TB_DP_PROD B
 		    , TB_DP_TENANT_PROD C
 		WHERE 1=1
