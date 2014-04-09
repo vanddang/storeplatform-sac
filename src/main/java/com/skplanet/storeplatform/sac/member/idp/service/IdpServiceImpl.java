@@ -402,6 +402,15 @@ public class IdpServiceImpl implements IdpService {
 				UpdateUserResponse updateUserResponse = null;
 
 				try {
+					/* FDS LOG START */
+					new TLogUtil().set(new ShuttleSetter() {
+						@Override
+						public void customize(TLogSentinelShuttle shuttle) {
+							shuttle.log_id("TL00030");
+						}
+					});
+					/* FDS LOG END */
+
 					SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
 					if (searchUserResponse == null) {
@@ -446,10 +455,8 @@ public class IdpServiceImpl implements IdpService {
 					new TLogUtil().set(new ShuttleSetter() {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
-							shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
-									.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost);
-
-							LOGGER.info(shuttle.toString());
+							shuttle.mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId).usermbr_no_pre(fdsUsermbrNoPre)
+									.usermbr_no_post(fdsUsermbrNoPost);
 						}
 					});
 					/* FDS LOG END */
@@ -2180,6 +2187,15 @@ public class IdpServiceImpl implements IdpService {
 			searchUserRequest.setKeySearchList(keySearchList);
 			searchUserRequest.setCommonRequest(commonRequest);
 			try {
+				/* FDS LOG start */
+				new TLogUtil().set(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL00030");
+					}
+				});
+				/* FDS LOG END */
+
 				// 2. 사용자 정보 조회
 				SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
@@ -2230,10 +2246,8 @@ public class IdpServiceImpl implements IdpService {
 						new TLogUtil().set(new ShuttleSetter() {
 							@Override
 							public void customize(TLogSentinelShuttle shuttle) {
-								shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
-										.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost);
-
-								LOGGER.info(shuttle.toString());
+								shuttle.mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId).usermbr_no_pre(fdsUsermbrNoPre)
+										.usermbr_no_post(fdsUsermbrNoPost);
 							}
 						});
 						/* FDS LOG END */
