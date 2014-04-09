@@ -45,13 +45,17 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.freepass.vo.FreepassProdMap;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
@@ -76,6 +80,12 @@ public class FreepassServiceImpl implements FreepassService {
 
 	@Autowired
 	HistoryInternalSCI historyInternalSCI;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	private CommonMetaInfoGenerator commonGenerator;
 
 	/*
 	 * (non-Javadoc)
@@ -245,6 +255,12 @@ public class FreepassServiceImpl implements FreepassService {
 			}
 
 			coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
+
+			// 티멤버십 DC 정보
+			TmembershipDcInfo info = this.displayCommonService.getTmembershipDcRateForMenu(header.getTenantHeader()
+					.getTenantId(), retMetaInfo.getTopMenuId());
+			List<Point> pointList = this.commonGenerator.generatePoint(info);
+			coupon.setPointList(pointList);
 
 			mapList = this.commonDAO.queryForList("Freepass.selectFreepassMapProduct", req, FreepassProdMap.class);
 
