@@ -403,7 +403,7 @@
                   FROM
                        (
                         SELECT  COUNT(*) OVER() AS TOTAL_CNT       
-                               ,ROW_NUMBER() OVER( ORDER BY DECODE(#{orderedBy},'recent', JA.REG_DT, JA.AVG_EVLU_SCORE ) DESC ) AS RONUM /* 평점순이냐 아니냐에 따라 분기처리 */
+                               ,ROW_NUMBER() OVER( ORDER BY DECODE(#{orderedBy},'popular', JA.AVG_EVLU_SCORE, JA.REG_DT ) DESC ) AS RONUM /* 평점순이냐 아니냐에 따라 분기처리 */
                                ,JA.*
                           FROM
                                (
@@ -1596,7 +1596,7 @@
           FROM
               (
                 SELECT  COUNT(*) OVER() AS TOTAL_COUNT
-                      , ROW_NUMBER() OVER( ORDER BY DECODE(#{orderedBy},'recent', JA.REG_DT, JA.AVG_EVLU_SCORE ) DESC ) AS RNUM
+                      , ROW_NUMBER() OVER( ORDER BY DECODE(#{orderedBy},'popular', JA.AVG_EVLU_SCORE, JA.REG_DT ) DESC ) AS RNUM
                       , JA.PROD_ID
                       , JA.EPSD_PROD_ID AS PART_PROD_ID
                       , JA.META_CLSF_CD
