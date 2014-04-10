@@ -265,7 +265,7 @@
                                   AND LT1.EXPO_YN = 'Y'
                                   AND LP1.PROD_ID NOT IN (SELECT PROD_ID
                                                             FROM (SELECT LP.PROD_ID
-																	    , ROW_NUMBER() OVER(PARTITION BY LP.ETC_CD ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC, LP.EXPO_ORD, LP.EXPO_ORD_SUB, PD.PROD_NM) AS NO
+																	    , ROW_NUMBER() OVER(PARTITION BY LP.LIST_ID ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC, LP.EXPO_ORD, LP.EXPO_ORD_SUB, PD.PROD_NM) AS NO
 																	 FROM TB_DP_LIST_PROD LP
 																	    , (SELECT TENANT_ID, BATCH_ID, STD_DT
 																	         FROM TB_DP_BATCH_COMPT
