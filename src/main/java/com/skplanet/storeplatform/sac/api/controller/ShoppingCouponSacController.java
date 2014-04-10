@@ -82,7 +82,7 @@ public class ShoppingCouponSacController {
 		CouponRes couponRes = new CouponRes();
 
 		try {
-			this.dePloy(couponReq, couponRes);
+			couponRes = this.dePloy(couponReq, couponRes);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -132,7 +132,7 @@ public class ShoppingCouponSacController {
 	 * @throws Exception
 	 *             Exception
 	 */
-	private boolean dePloy(CouponReq couponReq, CouponRes couponRes) throws Exception {
+	private CouponRes dePloy(CouponReq couponReq, CouponRes couponRes) throws Exception {
 
 		this.log.info("<CouponControl> dePloy...");
 
@@ -251,8 +251,13 @@ public class ShoppingCouponSacController {
 				case DT:
 					// 특가 상품 상세 조회 작업을 호출한다.
 					couponRes = this.getSpecialProductDetail(couponReq.getCouponCode());
-					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+					if (couponRes.getRCode().equals("")) {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+					} else {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+						map.put("ERROR_CODE", couponRes.getRCode());
+					}
 
 					break;
 				default:
@@ -285,7 +290,6 @@ public class ShoppingCouponSacController {
 				map.put("ERROR_VALUE", ex.getErrValue());
 				this.sendResponseData(couponReq, map, couponRes, null);
 			}
-			result = false;
 
 		} catch (Exception e) {
 			// Exception 처리.
@@ -295,11 +299,9 @@ public class ShoppingCouponSacController {
 				map.put("ERROR_MSG", e.getMessage());
 				this.sendResponseData(couponReq, map, couponRes, null);
 			}
-			result = false;
-
 		}
 
-		return result;
+		return couponRes;
 	}
 
 	/**
