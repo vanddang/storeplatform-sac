@@ -151,7 +151,6 @@
                              THEN 1 ELSE 0 END) = 1
                            </if>
                            <if test='topMenuId == "DP14"'>
-                           AND F.META_CLSF_CD = 'CT21'  /* COMIC */
                            AND (CASE WHEN (SELECT COMIC_SPRT_YN 
                                      FROM TB_CM_DEVICE CD 
                                     WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
