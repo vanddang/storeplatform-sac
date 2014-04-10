@@ -23,6 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateBizPurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateFreePurchaseSacRes;
@@ -30,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSac
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateFreePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchase;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacRes;
@@ -81,24 +87,19 @@ public class PurchaseOrderController {
 			SacRequestHeader sacRequestHeader) {
 		this.logger.debug("PRCHS,ORDER,SAC,CREATE,REQ,{},{}", sacRequestHeader, req);
 
-		// ------------------------------------------------------------------------------
-		// 요청 값 검증
+		// T Log
+		this.loggingTLog("TL00002", req, sacRequestHeader);
 
+		// 요청 값 검증
 		this.validationService.validatePurchaseRequestParameter(req);
 
-		// ------------------------------------------------------------------------------
 		// 구매진행 정보 세팅
-
 		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
 
-		// ------------------------------------------------------------------------------
 		// 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
-
 		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
 
-		// ------------------------------------------------------------------------------
 		// 진행 처리: 무료구매완료 처리 || 결제Page 요청 준비작업
-
 		if (purchaseOrderInfo.getRealTotAmt() > 0) {
 			// 구매예약
 			this.orderService.createReservedPurchase(purchaseOrderInfo);
@@ -115,9 +116,7 @@ public class PurchaseOrderController {
 			purchaseOrderInfo.setResultType("free");
 		}
 
-		// ------------------------------------------------------------------------------
 		// 응답 세팅
-
 		CreatePurchaseSacRes res = new CreatePurchaseSacRes();
 		res.setResultType(purchaseOrderInfo.getResultType());
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
@@ -155,33 +154,26 @@ public class PurchaseOrderController {
 			SacRequestHeader sacRequestHeader) {
 		this.logger.debug("PRCHS,ORDER,SAC,CREATEFREE,REQ,{},{}", sacRequestHeader, req);
 
-		// ------------------------------------------------------------------------------
-		// 비과금 구매요청 권한 체크
+		// T Log
+		this.loggingTLog("TL00002", req, sacRequestHeader);
 
+		// 비과금 구매요청 권한 체크
 		this.validationService.validateFreeChargeAuth(req.getPrchsReqPathCd());
 
-		// ------------------------------------------------------------------------------
 		// 구매진행 정보 세팅
-
 		req.setTotAmt(0.0);
 		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
 		purchaseOrderInfo.setFreeChargeReq(true); // 비과금 요청
 
-		// ------------------------------------------------------------------------------
 		// 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
-
 		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
 
-		// ------------------------------------------------------------------------------
 		// 비과금 구매완료 처리
-
 		this.orderService.createFreePurchase(purchaseOrderInfo);
 
 		purchaseOrderInfo.setResultType("free");
 
-		// ------------------------------------------------------------------------------
 		// 응답 세팅
-
 		CreateFreePurchaseSacRes res = new CreateFreePurchaseSacRes();
 		res.setResultType(purchaseOrderInfo.getResultType());
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
@@ -207,31 +199,24 @@ public class PurchaseOrderController {
 			SacRequestHeader sacRequestHeader) {
 		this.logger.debug("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}", sacRequestHeader, req);
 
-		// ------------------------------------------------------------------------------
-		// Biz 구매요청 권한 체크
+		// T Log
+		this.loggingTLog("TL00002", req, sacRequestHeader);
 
+		// Biz 구매요청 권한 체크
 		this.validationService.validateBizAuth(req.getPrchsReqPathCd());
 
-		// ------------------------------------------------------------------------------
 		// 구매진행 정보 세팅
-
 		req.setTotAmt(0.0);
 		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
 		purchaseOrderInfo.setFreeChargeReq(true); // 비과금 요청
 
-		// ------------------------------------------------------------------------------
 		// 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
-
 		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
 
-		// ------------------------------------------------------------------------------
 		// 비과금 구매완료 처리
-
 		int count = this.orderService.createFreePurchase(purchaseOrderInfo);
 
-		// ------------------------------------------------------------------------------
 		// 응답 세팅
-
 		CreateBizPurchaseSacRes res = new CreateBizPurchaseSacRes();
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
 		res.setCount(count);
@@ -387,17 +372,67 @@ public class PurchaseOrderController {
 	 */
 	private void preCheckBeforeProcessOrder(PurchaseOrderInfo purchaseOrderInfo) {
 
-		// 회원 적합성 체크
-		this.validationService.validateMember(purchaseOrderInfo);
+		try {
+			// 회원 적합성 체크
+			this.validationService.validateMember(purchaseOrderInfo);
 
-		// 상품 적합성 체크
-		this.validationService.validateProduct(purchaseOrderInfo);
+			// 상품 적합성 체크
+			this.validationService.validateProduct(purchaseOrderInfo);
 
-		// 회원정책 체크 : TestMDN / 구매차단
-		this.policyService.checkUserPolicy(purchaseOrderInfo);
+			// 회원정책 체크 : TestMDN / 구매차단
+			this.policyService.checkUserPolicy(purchaseOrderInfo);
 
-		// 구매 적합성(&가능여부) 체크
-		this.validationService.validatePurchase(purchaseOrderInfo);
+			// 구매 적합성(&가능여부) 체크
+			this.validationService.validatePurchase(purchaseOrderInfo);
+
+		} catch (StorePlatformException e) {
+			ErrorInfo errorInfo = e.getErrorInfo();
+			final String resultCode = errorInfo.getCode();
+			final String resultMessage = errorInfo.getMessage();
+			final String exceptionLog = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id("TL00006").result_code(resultCode).result_message(resultMessage)
+							.exception_log(exceptionLog);
+				}
+			});
+
+			throw e;
+		}
+
+		new TLogUtil().log(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00006").result_code("SUCC");
+			}
+		});
+	}
+
+	private void loggingTLog(String logId, CreatePurchaseSacReq req, SacRequestHeader sacRequestHeader) {
+		if (StringUtils.equals(logId, "TL00002")) { // 구매인입
+			final String systemId = sacRequestHeader.getTenantHeader().getSystemId();
+			final String clientIp = req.getClientIp();
+			final String prchsReqPathCd = req.getPrchsReqPathCd();
+			final String fdsPrchsCaseCd = StringUtils.equals(req.getPrchsCaseCd(),
+					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+			final String networkTypeCd = req.getNetworkTypeCd();
+			final List<String> prodIdList = new ArrayList<String>();
+			final List<Long> prodPriceList = new ArrayList<Long>();
+			for (CreatePurchaseSacReqProduct product : req.getProductList()) {
+				prodIdList.add(product.getProdId());
+				prodPriceList.add((long) product.getProdAmt().doubleValue());
+			}
+
+			new TLogUtil().set(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id("TL00002").library_version("").system_id(systemId).purchase_channel(prchsReqPathCd)
+							.purchase_inflow_channel(fdsPrchsCaseCd).device_ip(clientIp).network_type(networkTypeCd)
+							.product_id(prodIdList).product_price(prodPriceList);
+				}
+			});
+		}
 	}
 
 }

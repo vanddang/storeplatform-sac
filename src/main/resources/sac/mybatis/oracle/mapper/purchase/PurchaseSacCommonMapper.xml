@@ -26,10 +26,10 @@
            AND  proc_pattern_cd = #{procPatternCd}
          </if>
          <if test="ignoreTenantProdGrpCd == null or ignoreTenantProdGrpCd != true">
-           AND  (tenant_prod_grp_cd IS NULL OR #{tenantProdGrpCd, jdbcType=VARCHAR} LIKE tenant_prod_grp_cd || '%')
+           AND  (tenant_prod_grp_cd IS NULL OR #{tenantProdGrpCd, jdbcType=VARCHAR} LIKE CONCAT(tenant_prod_grp_cd, '%'))
          </if>
            AND  SYSDATE BETWEEN start_dt AND expr_dt
-      ORDER BY  policy_prior, policy_id, policy_seq
+      ORDER BY  policy_id, policy_prior, policy_seq
     </select>
     
     <!-- Pay Planet 가맹점 정보 조회 -->
