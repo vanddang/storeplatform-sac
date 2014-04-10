@@ -362,6 +362,8 @@ public class DisplayConstants {
 	// //////////////////////////////////// VOD META CODE //////////////////////////////////////////
 
 	public static final String DP_SERIAL_VOD_META_CLASS_CD = "CT14";
+	public static final String DP_SERIAL_VOD_LANGUAGE_META_CLASS_CD = "CT15";
+	public static final String DP_SERIAL_VOD_SKT_META_CLASS_CD = "CT16";
 
 	// //////////////////////////////////// VOD 화질 유형 //////////////////////////////////////////
 	public static final String DP_VOD_QUALITY_NORMAL = "normal";
@@ -678,4 +680,11 @@ public class DisplayConstants {
 	 * SYSTEM ID
 	 */
 	public static final String DP_SHOP_CLIENT_3_0_SYSTEM_ID = "S01-01002"; // Shop Client 3.0 시스템 ID
+
+	/** COMIC 단행/연재물 */
+	public static final String DP_SERIAL_COMIC_META_CLASS_CD = "CT21";
+	/** COMIC 잡지 */
+	public static final String DP_MAGAZINE_COMIC_META_CLASS_CD = "CT22";
+	/** COMIC 웹툰 */
+	public static final String DP_WEBTOON_COMIC_META_CLASS_CD = "CT23";
 }
