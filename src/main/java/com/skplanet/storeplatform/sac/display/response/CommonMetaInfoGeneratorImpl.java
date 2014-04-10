@@ -452,7 +452,6 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 								+ this.commonService.getVodChapterUnit()));
 
 			} else if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd()) // 채널상품명 + 회차
-					|| DisplayConstants.DP_INTERACTIVE_WEBTOON_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
 					|| DisplayConstants.DP_SERIAL_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
 					|| DisplayConstants.DP_MAGAZINE_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
 					|| DisplayConstants.DP_WEBTOON_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
