@@ -67,5 +67,6 @@
 		      , NVL(SCL_SHPG_SPRT_YN, 'N') AS SCL_SHPG_SPRT_YN
 		  FROM  TB_CM_DEVICE
 		 WHERE  DEVICE_MODEL_CD = #{deviceModelCd}
+		   AND  USE_YN = 'Y'
     </select>
 </mapper>
