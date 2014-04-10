@@ -27,48 +27,58 @@
                , TB_DP_TENANT_PROD TP2
            WHERE 1 = 1
       <if test="pidList  != null">
-           AND PR.PROD_ID IN (
+            AND PR.PROD_ID IN (
               <foreach collection="pidList" item="pid" separator=",">#{pid}</foreach>
-          )
-      </if>
-              AND CP.PROD_ID = PR.PROD_ID
-              AND C.MENU_ID = CP.MENU_ID
-              AND P.PROD_ID = PR.PROD_ID
-              AND TP.PROD_ID = P.PROD_ID
-              AND P2.PROD_ID = PR.PART_PROD_ID -- EPISODE
-              AND TP2.PROD_ID = P2.PROD_ID
-              AND PR.PROD_RSHP_CD = 'DP010802'
-              AND CP.USE_YN = 'Y'
-              AND CP.BASE_YN = 'Y'
-              AND C.USE_YN = 'Y'
-              AND P.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
-              AND TP.TENANT_ID = #{tenantHeader.tenantId}
-              AND TP.PROD_STATUS_CD = 'PD000403'
-              AND TP.EXPO_YN = 'Y'
-              AND TP2.TENANT_ID = #{tenantHeader.tenantId}
-              AND TP2.PROD_STATUS_CD = 'PD000403'
-              AND TP2.EXPO_YN = 'Y'
-			  AND EXISTS (
-            	SELECT 'X' FROM TB_DP_SPRT_DEVICE SH WHERE SH.PROD_ID = P2.PROD_ID
-              	AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
-              	)
-              AND EXISTS (
-              	SELECT 'X'
-                FROM TB_CM_DEVICE PHI
-                WHERE 1 = 1
-                AND   PHI.DEVICE_MODEL_CD = #{deviceHeader.model}
-                AND   PHI.USE_YN = 'Y'
-                AND   'Y' = CASE 
-                	WHEN P.TOP_MENU_ID = 'DP13' THEN PHI.EBOOK_SPRT_YN
-                    WHEN P.TOP_MENU_ID = 'DP14' THEN PHI.COMIC_SPRT_YN
-                    WHEN P.TOP_MENU_ID = 'DP15' THEN PHI.SCL_SHPG_SPRT_YN
-                    WHEN P.TOP_MENU_ID = 'DP16' AND P2.META_CLSF_CD = 'CT25' THEN PHI.MUSIC_SPRT_YN
-                    WHEN P.TOP_MENU_ID IN ( 'DP17', 'DP18' ) THEN
-                    	CASE WHEN PHI.VIDEO_DRM_SPRT_YN = 'N' THEN 
-                        	CASE WHEN P2.DRM_YN ='N' THEN 'Y' ELSE 'N' END
-                        ELSE 'Y' END
-    		        ELSE 'Y' END
                 )
+      </if>
+			AND CP.PROD_ID = PR.PROD_ID
+			AND C.MENU_ID = CP.MENU_ID
+			AND P.PROD_ID = PR.PROD_ID
+			AND TP.PROD_ID = P.PROD_ID
+			AND P2.PROD_ID = PR.PART_PROD_ID -- EPISODE
+			AND TP2.PROD_ID = P2.PROD_ID
+			AND PR.PROD_RSHP_CD = 'DP010802'
+			AND CP.USE_YN = 'Y'
+			AND CP.BASE_YN = 'Y'
+			AND C.USE_YN = 'Y'
+			AND P.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
+			AND TP.TENANT_ID = #{tenantHeader.tenantId}
+			AND TP.PROD_STATUS_CD = 'PD000403'
+			AND TP.EXPO_YN = 'Y'
+			AND TP2.TENANT_ID = #{tenantHeader.tenantId}
+			AND TP2.PROD_STATUS_CD = 'PD000403'
+			AND TP2.EXPO_YN = 'Y'
+            AND EXISTS (
+                        SELECT 'X' 
+                          FROM TB_DP_SPRT_DEVICE SH 
+                         WHERE SH.PROD_ID = P2.PROD_ID
+                           AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
+                       )
+            AND (CASE WHEN P.TOP_MENU_ID = 'DP13' THEN
+                           CASE WHEN #{ebookSprtYn} = 'Y' THEN 1
+                                ELSE 0
+                           END
+                      WHEN P.TOP_MENU_ID = 'DP14' THEN
+                           CASE WHEN #{comicSprtYn} = 'Y' THEN 1 
+                                ELSE 0 
+                           END
+                      WHEN P.TOP_MENU_ID = 'DP15' THEN 0
+                      WHEN P.TOP_MENU_ID = 'DP16' THEN
+                           CASE WHEN P2.META_CLSF_CD = 'CT25' THEN 
+                                CASE WHEN #{musicSprtYn} = 'Y' THEN 1 
+                                     ELSE 0
+                                END
+                                ELSE 1
+                           END
+                      WHEN P.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+                           CASE WHEN #{videoDrmSprtYn} = 'N' THEN
+                                     CASE WHEN P2.DRM_YN ='N' THEN 1
+                                          ELSE 0
+                                     END
+                                ELSE 1
+                           END
+                      ELSE 1
+                END) = 1
            ) S
         WHERE S.RN = 1
     </select>
