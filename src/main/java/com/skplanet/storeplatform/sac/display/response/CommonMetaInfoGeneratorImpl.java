@@ -443,22 +443,26 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			title.setPrefix(metaInfo.getVodTitlNm());
 			title.setText(metaInfo.getProdNm());
 			// 시리즈 상품의 경우
-			if (DisplayConstants.DP_SERIAL_VOD_META_CLASS_CD.equals(metaInfo.getMetaClsfCd()) // 상품명Prefix + 채널상품명 + 회차
-					|| DisplayConstants.DP_SERIAL_VOD_LANGUAGE_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
-					|| DisplayConstants.DP_SERIAL_VOD_SKT_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
-				title.setPostfix((metaInfo.getVodTitlNm() == null ? "" : metaInfo.getVodTitlNm() + " ")
-						+ metaInfo.getProdNm()
-						+ (metaInfo.getChapter() == null ? "" : " " + metaInfo.getChapter()
-								+ this.commonService.getVodChapterUnit()));
+			if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd())) {
+				if (DisplayConstants.DP_SERIAL_VOD_META_CLASS_CD.equals(metaInfo.getMetaClsfCd()) // 상품명Prefix + 채널상품명 +
+																								  // 회차
+						|| DisplayConstants.DP_SERIAL_VOD_LANGUAGE_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
+						|| DisplayConstants.DP_SERIAL_VOD_SKT_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+					title.setPostfix((metaInfo.getVodTitlNm() == null ? "" : metaInfo.getVodTitlNm() + " ")
+							+ metaInfo.getProdNm()
+							+ (metaInfo.getChapter() == null ? "" : " " + metaInfo.getChapter()
+									+ this.commonService.getVodChapterUnit()));
 
-			} else if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd()) // 채널상품명 + 회차
-					|| DisplayConstants.DP_SERIAL_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
-					|| DisplayConstants.DP_MAGAZINE_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
-					|| DisplayConstants.DP_WEBTOON_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
-				title.setPostfix(metaInfo.getProdNm()
-						+ (metaInfo.getChapter() == null ? "" : " "
-								+ metaInfo.getChapter()
-								+ StringUtil.trimToEmpty(this.commonService.getEpubChapterUnit(metaInfo.getBookClsfCd()))));
+				} else if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd()) // 채널상품명 + 회차
+						|| DisplayConstants.DP_SERIAL_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
+						|| DisplayConstants.DP_MAGAZINE_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
+						|| DisplayConstants.DP_WEBTOON_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+					title.setPostfix(metaInfo.getProdNm()
+							+ (metaInfo.getChapter() == null ? "" : " "
+									+ metaInfo.getChapter()
+									+ StringUtil.trimToEmpty(this.commonService.getEpubChapterUnit(metaInfo
+											.getBookClsfCd()))));
+				}
 			}
 		}
 		return title;
