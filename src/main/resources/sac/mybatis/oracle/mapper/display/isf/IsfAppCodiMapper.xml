@@ -90,12 +90,15 @@
 		     , TB_DP_MENU_CATEGORY C
 		     , TB_DP_PROD_DESC PD
 		     , TB_DP_MENU_CATEGORY_DESC DC
+		     , TB_DP_TENANT_PROD TP
 		WHERE P.PROD_ID = PR.PROD_ID
 		AND CP.PROD_ID = P.PROD_ID
 		AND PD.PROD_ID = P.PROD_ID
 		AND CP.MENU_ID = C.MENU_ID
 		AND DC.MENU_ID = C.MENU_ID
+		AND P.PROD_ID = TP.PROD_ID
 		AND DC.LANG_CD = #{tenantHeader.langCd}
+		AND TP.TENANT_ID = #{tenantHeader.tenantId}
 		AND PR.PROD_RSHP_CD = 'DP010802'
 	    <if test="pidList  != null">
 	    AND PR.PART_PROD_ID IN (
