@@ -210,9 +210,8 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					supportList.add(this.commonMetaInfo.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
 							categoryVodBox.getDrmYn()));
 					play.setSupportList(supportList);
-					play.setDate(this.commonMetaInfo.generateDateString(
-							DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_UNIT_NM, categoryVodBox.getUsePeriod()
-									+ categoryVodBox.getUsePeriodUnitNm()));
+					play.setDate(this.commonMetaInfo.generateDateString(DisplayConstants.DP_DATE_USAGE_PERIOD,
+							categoryVodBox.getUsePeriod() + categoryVodBox.getUsePeriodUnitNm()));
 					play.setPrice(this.commonMetaInfo.generatePrice(categoryVodBox.getProdAmt(),
 							categoryVodBox.getProdNetAmt()));
 					identifierList = new ArrayList<Identifier>();
