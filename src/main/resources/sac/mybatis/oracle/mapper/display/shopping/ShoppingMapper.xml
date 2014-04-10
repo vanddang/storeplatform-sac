@@ -761,12 +761,10 @@
                            BRAND_ID 
                          , BRAND_NM AS catalogNm
                          , MENU_ID 
-                          <if test='menuId == null and brandId == null'> 
-                         , '쇼핑 HOT' AS menuNm
-                         </if>
-                         <if test='menuId != null or brandId !=null'>
                          , MENU_NM 
-                         </if>
+                        <if test='menuId == null and brandId == null' >
+                         , '쇼핑 HOT' AS  menuDesc
+                        </if>                          
                          , TOP_MENU_ID 
                          ,(SELECT MENU_NM
                               FROM TB_DP_MENU_CATEGORY_DESC
