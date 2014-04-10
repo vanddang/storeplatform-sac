@@ -79,6 +79,10 @@ public class MenuSacReq extends CommonInfo {
 	@Pattern(regexp = "|Y|N", groups = SearchSubMenuList.class)
 	private String featuredExposureYn; // Featured 여부
 
+	private String stdDt; // 배치 시작일
+
+	private String listId; // 리스트 ID
+
 	/**
 	 * 
 	 * <pre>
@@ -277,6 +281,56 @@ public class MenuSacReq extends CommonInfo {
 	 */
 	public void setFeaturedExposureYn(String featuredExposureYn) {
 		this.featuredExposureYn = featuredExposureYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 배치 시작일.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getStdDt() {
+		return this.stdDt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 배치 시작일.
+	 * </pre>
+	 * 
+	 * @param stdDt
+	 *            String
+	 */
+	public void setStdDt(String stdDt) {
+		this.stdDt = stdDt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 리스트 ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getListId() {
+		return this.listId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 리스트 ID.
+	 * </pre>
+	 * 
+	 * @param listId
+	 *            String
+	 */
+	public void setListId(String listId) {
+		this.listId = listId;
 	}
 
 }
