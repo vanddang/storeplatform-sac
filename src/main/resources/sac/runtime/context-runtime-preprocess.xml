@@ -25,15 +25,11 @@
             <int:header name="httpHeaders" overwrite="true" ref="httpHeaderEnricher" method="enrichHeader" /> 
         </int:header-enricher>             
         <!-- =================================================================================================================================== -->
-        <!-- ACL 1. 검증 -->
-        <!-- =================================================================================================================================== -->
-        <int:filter discard-channel="httpErrorChannel" ref="com.skplanet.storeplatform.sac.runtime.acl.service.AclService" method="validate"/>
-        <!-- =================================================================================================================================== -->
-        <!-- ACL 2. 인증 -->
+        <!-- ACL 1. 인증 -->
         <!-- =================================================================================================================================== -->
         <int:filter discard-channel="httpErrorChannel" ref="com.skplanet.storeplatform.sac.runtime.acl.service.AclService" method="authenticate"/>          
         <!-- =================================================================================================================================== -->
-        <!-- ACL 3. 인가 -->
+        <!-- ACL 2. 인가 -->
         <!-- =================================================================================================================================== -->    
         <int:filter discard-channel="httpErrorChannel" ref="com.skplanet.storeplatform.sac.runtime.acl.service.AclService" method="authorize"/>  
     </int:chain> 
