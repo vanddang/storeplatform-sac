@@ -2,14 +2,13 @@ package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 판매자회원 기본 정보 조회
+ * [REQUEST] 상품상세의 판매자 정보.
  * 
- * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
+ * Updated on : 2014. 4. 10. Updated by : 김다슬, 인크로스.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DetailInformationForProductReq extends CommonInfo {
@@ -17,8 +16,9 @@ public class DetailInformationForProductReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자 key. */
-	@NotBlank
 	private String sellerKey;
+	/** App ID. */
+	private String aid;
 
 	/**
 	 * @return the sellerKey
@@ -35,4 +35,18 @@ public class DetailInformationForProductReq extends CommonInfo {
 		this.sellerKey = sellerKey;
 	}
 
+	/**
+	 * @return the aid
+	 */
+	public String getAid() {
+		return this.aid;
+	}
+
+	/**
+	 * @param aid
+	 *            the aid to set
+	 */
+	public void setAid(String aid) {
+		this.aid = aid;
+	}
 }
