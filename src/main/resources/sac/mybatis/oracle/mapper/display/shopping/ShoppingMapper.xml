@@ -439,9 +439,9 @@
                    ,PROD_GRD_CD as prodGrdCd
                    ,TO_CHAR(SPRC_APPLY_START_DT,'YYYYMMDDHH24MISS') as applyStartDt   
                    ,TO_CHAR(SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS') as applyEndDt 
-                   ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
-                          WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
-                          WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+                   ,(CASE WHEN PROD_CASE_CD='DP006301' THEN 'giftcard' 
+                          WHEN PROD_CASE_CD='DP006302' THEN 'exchange' 
+                          WHEN PROD_CASE_CD='DP006303' THEN 'delivery' 
                      END) AS PROD_CASE_CD  
                    ,CONCAT(FILE_PATH,FILE_NM) AS FILE_PATH
                    ,'Y' AS specialSale
@@ -569,7 +569,7 @@
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
-                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
                             )                        
                    ) 
