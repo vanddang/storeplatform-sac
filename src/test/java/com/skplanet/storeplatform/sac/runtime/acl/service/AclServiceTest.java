@@ -15,8 +15,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.runtime.acl.service.authentication.AuthenticateService;
 import com.skplanet.storeplatform.sac.runtime.acl.service.authorization.AuthorizeService;
-import com.skplanet.storeplatform.sac.runtime.acl.service.verification.VerifyService;
-import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -26,34 +24,15 @@ public class AclServiceTest {
 	private AclService aclService;
 
 	@Mock
-	private VerifyService verifyMock;
-
-	@Mock
 	private AuthenticateService authenticateMock;
 
 	@Mock
 	private AuthorizeService authorizeMock;
 
 	@Before
-	public void setUp() throws Exception {
-	}
-
-	@Test(expected=StorePlatformException.class)
-	public void testValidate() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setInterfaceId("I01000001");
-		headers.setRequestUrl("/member/user/createByMdn/v1");
-		headers.setTimestamp(SacAuthUtil.getTimestamp());
-
-		doThrow(new StorePlatformException("SAC_CMN_0001")).when(this.verifyMock).verifyHeaders(headers);
-		try {
-			this.aclService.validate(headers);
-		} catch (StorePlatformException e) {
-			assertEquals("SAC_CMN_0001", e.getErrorInfo().getCode());
-			throw e;
-		} finally {
-			verify(this.verifyMock).verifyHeaders(headers);
-		}
+	public void setUp() {
+		this.aclService.setAuthentication(true);
+		this.aclService.setAuthorization(true);
 	}
 
 	@Test(expected=StorePlatformException.class)

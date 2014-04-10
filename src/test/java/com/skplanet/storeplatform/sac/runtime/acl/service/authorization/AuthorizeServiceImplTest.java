@@ -45,6 +45,19 @@ public class AuthorizeServiceImplTest {
 	}
 
 	@Test(expected=StorePlatformException.class)
+	public void testCheckInterfaceForNoInterfaceIDHeader() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setServletPath("/member/user/createByAgreement/v1");
+
+		try {
+			this.authorizeService.checkInterface(headers);
+		} catch (StorePlatformException e) {
+			assertEquals("SAC_CMN_0001", e.getErrorInfo().getCode());
+			throw e;
+		}
+	}
+
+	@Test(expected=StorePlatformException.class)
 	public void testCheckInterfaceForNonexistentInterfaceID() {
 		String id = "I01000002";
 		when(this.dbAccessMock.selectInterfaceById(id)).thenReturn(null);
