@@ -302,7 +302,7 @@
         ORDER BY A.RNK1, A.RNK2 
     </select>
 
-    <!-- 세부 카테고리정보 조회 - 이북, 코믹, 방송 -->
+    <!-- 세부 카테고리정보 조회 - 이북, 코믹 -->
     <select id="selectMultiSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT /* MenuCategoryMapper.xml, selectMultiSubCategoryList, SAC 전시 , 2014-03-07 */
 		    COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
@@ -404,29 +404,29 @@
 		                        , TB_DP_PROD_RSHP E
 		                        , TB_DP_SPRT_DEVICE F
 		                        , TB_CM_DEVICE G
-                                , TB_DP_PROD H /* 채널 */  /* 추가 */
-                                , TB_DP_TENANT_PROD I /* 채널 */  /* 추가 */
+                                , TB_DP_PROD H /* 채널 */  
+                                , TB_DP_TENANT_PROD I /* 채널 */  
 		                    WHERE A.MENU_ID = B.MENU_ID
 		                    AND B.PROD_ID = E.PROD_ID
 		                    AND E.PART_PROD_ID = C.PROD_ID
 		                    AND E.PART_PROD_ID = D.PROD_ID
 		                    AND E.PART_PROD_ID = F.PROD_ID
-                            AND E.PROD_ID = H.PROD_ID  /* 추가 */
-                            AND E.PROD_ID = I.PROD_ID  /* 추가 */
-                            AND D.TENANT_ID = I.TENANT_ID  /* 추가 */
-                            AND A.TOP_MENU_ID = C.TOP_MENU_ID  /* 추가 */
-                            AND A.TOP_MENU_ID = H.TOP_MENU_ID  /* 추가 */
+                            AND E.PROD_ID = H.PROD_ID  
+                            AND E.PROD_ID = I.PROD_ID  
+                            AND D.TENANT_ID = I.TENANT_ID  
+                            AND A.TOP_MENU_ID = C.TOP_MENU_ID  
+                            AND A.TOP_MENU_ID = H.TOP_MENU_ID  
 		                    AND A.USE_YN = 'Y'
 		                    AND B.USE_YN = 'Y'
 		                    AND G.USE_YN = 'Y'
 		                    AND D.EXPO_YN = 'Y'
-                            AND I.EXPO_YN = 'Y'  /* 추가 */
+                            AND I.EXPO_YN = 'Y'  
 		                    AND C.SVC_GRP_CD = 'DP000203'
-                            AND H.SVC_GRP_CD = 'DP000203'  /* 추가 */
+                            AND H.SVC_GRP_CD = 'DP000203'  
 		                    AND C.CONTENTS_TYPE_CD = 'PD002502'
-                            AND H.CONTENTS_TYPE_CD = 'PD002501'  /* 추가 */
+                            AND H.CONTENTS_TYPE_CD = 'PD002501'  
 		                    AND D.PROD_STATUS_CD = 'PD000403'
-                            AND I.PROD_STATUS_CD = 'PD000403'  /* 추가 */
+                            AND I.PROD_STATUS_CD = 'PD000403'  
 		                    AND E.PROD_RSHP_CD = 'DP010802'
 		                    
 		                    /* 방송 */
@@ -468,8 +468,8 @@
         ORDER BY A.RNK1, A.RNK2 
     </select>
 
-    <!-- 세부 카테고리정보 조회 - 영화 -->
-    <select id="selectMovieSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
+    <!-- 세부 카테고리정보 조회 - 영화, 방송 -->
+    <select id="selectVodSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
         SELECT /* MenuCategoryMapper.xml, selectMovieSubCategoryList, SAC 전시 , 2014-03-07 */
             COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
             , DECODE(A.INFR_MENU_YN, 'Y'
@@ -562,7 +562,7 @@
                         FROM (
                             SELECT
 			                    DISTINCT 
-			                    CASE WHEN ETC_CD IN ('DP003700','DP003701') THEN 'DP17001'
+			                    CASE WHEN A.TOP_MENU_ID = 'DP17' AND J.ETC_CD IN ('DP003700','DP003701') THEN 'DP17001'
 			                        ELSE A.MENU_ID END MENU_ID
 			                    , B.PROD_ID
                             FROM            
@@ -577,32 +577,32 @@
                                 , TB_DP_TENANT_PROD I /* 채널 */
                                 , TB_DP_LIST_PROD J /* 채널 */
                             WHERE A.MENU_ID = B.MENU_ID
-                            AND A.MENU_ID = J.MENU_ID  /* 추가 */
+                            AND A.MENU_ID = J.MENU_ID  
                             AND B.PROD_ID = E.PROD_ID
                             AND E.PART_PROD_ID = C.PROD_ID
                             AND E.PART_PROD_ID = D.PROD_ID
                             AND E.PART_PROD_ID = F.PROD_ID
-                            AND E.PROD_ID = H.PROD_ID  /* 추가 */
-                            AND E.PROD_ID = I.PROD_ID  /* 추가 */
-                            AND E.PROD_ID = J.PROD_ID  /* 추가 */
-                            AND D.TENANT_ID = J.TENANT_ID  /* 추가 */
-                            AND D.TENANT_ID = I.TENANT_ID  /* 추가 */
-                            AND A.TOP_MENU_ID = C.TOP_MENU_ID  /* 추가 */
-                            AND A.TOP_MENU_ID = H.TOP_MENU_ID  /* 추가 */
+                            AND E.PROD_ID = H.PROD_ID  
+                            AND E.PROD_ID = I.PROD_ID  
+                            AND E.PROD_ID = J.PROD_ID  
+                            AND D.TENANT_ID = J.TENANT_ID  
+                            AND D.TENANT_ID = I.TENANT_ID  
+                            AND A.TOP_MENU_ID = C.TOP_MENU_ID  
+                            AND A.TOP_MENU_ID = H.TOP_MENU_ID  
                             AND A.USE_YN = 'Y'
                             AND B.USE_YN = 'Y'
                             AND G.USE_YN = 'Y'
                             AND D.EXPO_YN = 'Y'
-                            AND I.EXPO_YN = 'Y'  /* 추가 */
-                            AND J.EXPO_YN = 'Y'  /* 추가 */
+                            AND I.EXPO_YN = 'Y'  
+                            AND J.EXPO_YN = 'Y'  
                             AND C.SVC_GRP_CD = 'DP000203'
-                            AND H.SVC_GRP_CD = 'DP000203'  /* 추가 */
+                            AND H.SVC_GRP_CD = 'DP000203'  
                             AND C.CONTENTS_TYPE_CD = 'PD002502'
-                            AND H.CONTENTS_TYPE_CD = 'PD002501'  /* 추가 */
+                            AND H.CONTENTS_TYPE_CD = 'PD002501'  
                             AND D.PROD_STATUS_CD = 'PD000403'
-                            AND I.PROD_STATUS_CD = 'PD000403'  /* 추가 */
+                            AND I.PROD_STATUS_CD = 'PD000403'  
                             AND E.PROD_RSHP_CD = 'DP010802'
-                            AND J.LIST_ID = 'TGR000000002'  /* 추가 */
+                            AND SYSDATE BETWEEN J.EXPO_START_DT AND J.EXPO_END_DT
                             
                             /* VOD */
                             AND CASE WHEN NVL(C.DRM_YN, 'N') = 'Y' AND NVL(G.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
@@ -614,6 +614,9 @@
                             AND B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
                             AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
                             AND G.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+                            AND J.LIST_ID = #{listId} /* 리스트 ID */
+                            AND J.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 배치 시작일 */
+                            
                         ) A
                         GROUP BY A.MENU_ID
                     ) C
@@ -731,7 +734,7 @@
                                 , TB_DP_PROD_RSHP E
                                 , TB_DP_SHPG_PROD F /* 에피 */
                                 , TB_DP_TENANT_PROD G /* 에피 */
-                                , TB_DP_TENANT_PROD_PRICE H /* 에피 */ /* 추가 */
+                                , TB_DP_TENANT_PROD_PRICE H /* 에피 */ 
                                 , TB_DP_SPRT_DEVICE I
                                 , TB_CM_DEVICE J
                             WHERE 1=1
@@ -743,7 +746,7 @@
                             AND E.PART_PROD_ID = G.PROD_ID
                             AND E.PART_PROD_ID = H.PROD_ID
                             AND E.PART_PROD_ID = I.PROD_ID
-                            AND G.TENANT_ID = H.TENANT_ID /* 추가 */
+                            AND G.TENANT_ID = H.TENANT_ID 
                             AND NVL(B.CHNL_CNT, 0) > 0
                             AND A.USE_YN ='Y'
                             AND C.USE_YN ='Y'
@@ -751,7 +754,7 @@
                             AND G.EXPO_YN = 'Y'
                             AND NVL(F.B2B_PROD_YN, 'N') != 'Y'
                             AND G.PROD_STATUS_CD = 'PD000403'
-                            AND SYSDATE BETWEEN  H.APPLY_START_DT AND H.APPLY_END_DT /* 추가 */
+                            AND SYSDATE BETWEEN  H.APPLY_START_DT AND H.APPLY_END_DT 
                             AND J.SCL_SHPG_SPRT_YN = 'Y'
                             AND (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = #{mmDeviceModelCd}) /* 단말모델코드 */
                             AND J.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */

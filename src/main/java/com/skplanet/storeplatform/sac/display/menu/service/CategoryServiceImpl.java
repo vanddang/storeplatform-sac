@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.MenuDetail;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.menu.vo.Menu;
 
 /**
@@ -41,6 +42,9 @@ public class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	/**
 	 * <pre>
@@ -148,14 +152,17 @@ public class CategoryServiceImpl implements CategoryService {
 
 		// 카테고리 조회
 		this.log.debug("카테고리 조회");
-		if (requestVO.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)
-				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)
-				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) { // 이북, 코믹, 방송 카테고리 조회
-			this.log.debug("멀티미디어 카테고리 조회");
+		if (requestVO.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)
+				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) { // 이북, 코믹 카테고리 조회
+			this.log.debug("이북, 코믹 카테고리 조회");
 			resultList = this.commonDAO.queryForList("MenuCategory.selectMultiSubCategoryList", requestVO, Menu.class);
-		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) { // 영화 카테고리 조회
-			this.log.debug("영화 카테고리 조회");
-			resultList = this.commonDAO.queryForList("MenuCategory.selectMovieSubCategoryList", requestVO, Menu.class);
+		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)
+				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) { // 영화, 방송 카테고리 조회
+			this.log.debug("영화, 방송 카테고리 조회");
+			requestVO.setListId(DisplayConstants.DP_NEW_VOD_TRIGGER);
+			requestVO.setStdDt(this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(),
+					DisplayConstants.DP_NEW_VOD_TRIGGER));
+			resultList = this.commonDAO.queryForList("MenuCategory.selectVodSubCategoryList", requestVO, Menu.class);
 		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) { // 뮤직 카테고리 조회
 			this.log.debug("뮤직 카테고리 조회");
 			resultList = this.commonDAO.queryForList("MenuCategory.selectMusicSubCategoryList", requestVO, Menu.class);

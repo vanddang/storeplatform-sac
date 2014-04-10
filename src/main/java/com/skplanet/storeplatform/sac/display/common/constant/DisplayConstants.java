@@ -676,15 +676,25 @@ public class DisplayConstants {
 	/** 할인율 유형 - 정액권 상품 */
 	public static final String DC_RATE_TYPE_FREEPASS = "freepass";
 
-	/**
+	/*
 	 * SYSTEM ID
 	 */
 	public static final String DP_SHOP_CLIENT_3_0_SYSTEM_ID = "S01-01002"; // Shop Client 3.0 시스템 ID
 
-	/** COMIC 단행/연재물 */
+	/*
+	 * COMIC 단행/연재물
+	 */
 	public static final String DP_SERIAL_COMIC_META_CLASS_CD = "CT21";
-	/** COMIC 잡지 */
+	/*
+	 * COMIC 잡지
+	 */
 	public static final String DP_MAGAZINE_COMIC_META_CLASS_CD = "CT22";
-	/** COMIC 웹툰 */
+	/*
+	 * COMIC 웹툰
+	 */
 	public static final String DP_WEBTOON_COMIC_META_CLASS_CD = "CT23";
+	/*
+	 * 트리거_신규상품_영화/방송
+	 */
+	public static final String DP_NEW_VOD_TRIGGER = "TGR000000002";
 }
