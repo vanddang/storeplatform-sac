@@ -95,7 +95,7 @@ public class SellerSearchController {
 
 	/**
 	 * <pre>
-	 * App 상세 화면에 노출 되는 판매자 정보.
+	 * 상품상세의 판매자 정보.
 	 * </pre>
 	 * 
 	 * @param header
@@ -108,8 +108,12 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailInformationForProductRes detailInformationForProduct(SacRequestHeader header,
 			@RequestBody @Validated DetailInformationForProductReq req) {
-		LOGGER.debug("request param : {}", req.toString());
+		LOGGER.info("request param : {}", req);
 
+		if (StringUtils.isBlank(req.getSellerKey()) && StringUtils.isBlank(req.getAid())) {
+
+			throw new StorePlatformException("SAC_MEM_0001", "sellerKey 또는 aid");
+		}
 		return this.sellerSearchService.detailInformationForProduct(header, req);
 	}
 

@@ -268,7 +268,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * App 상세 화면에 노출 되는 판매자 정보.
+	 * 상품상세의 판매자 정보.
 	 * </pre>
 	 * 
 	 * @param header
@@ -280,14 +280,17 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public DetailInformationForProductRes detailInformationForProduct(SacRequestHeader header,
 			DetailInformationForProductReq req) {
-		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
 
+		String sellerKey = StringUtils.isNotBlank(req.getSellerKey()) ? req.getSellerKey() : this.searchSellerKeySCI
+				.searchSellerKeyForAid(req.getAid());
+
+		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
 		// Header 셋팅
 		searchSellerRequest.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		// 검색 조회 셋팅
 		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyString(req.getSellerKey());
+		keySearch.setKeyString(sellerKey);
 		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
