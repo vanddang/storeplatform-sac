@@ -302,9 +302,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchGameCenterRequest scReq = new SearchGameCenterRequest();
 		scReq.setCommonRequest(commonRequest);
 		if (!deviceId.equals("")) {
-			scReq.setWorkCode(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
+			List<String> workCodeList = new ArrayList<String>();
+			String userChange = MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE;
+			String imuserChange = MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE;
+
+			workCodeList.add(userChange);
+			workCodeList.add(imuserChange);
+
+			scReq.setWorkCodeList(workCodeList);
 			scReq.setDeviceID(req.getDeviceId());
-			this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
 		}
 
 		LOGGER.debug("SearchGameCenterRequest : {}", scReq.toString());
