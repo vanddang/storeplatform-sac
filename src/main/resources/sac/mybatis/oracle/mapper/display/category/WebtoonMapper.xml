@@ -314,7 +314,7 @@
         SELECT /* WebtoonMapper.xml, searchWebtoonDetail, SAC 전시, 2014-02-19 */
                B.PROD_NM
              , K.PROD_NM AS CHNL_PROD_NM
-             , B.ARTIST1_NM
+             , K.ARTIST1_NM
              , B.PROD_BASE_DESC
              , B.PROD_DTL_DESC
              , TO_CHAR(A.UPD_DT, 'YYYYMMDDHH24MISS') AS UPD_DT
