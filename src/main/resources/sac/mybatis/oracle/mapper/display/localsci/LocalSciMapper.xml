@@ -10,14 +10,10 @@
 		        SELECT A.SELLER_MBR_NO
 		          FROM TB_DP_PROD        A
 		             , TB_DP_APP_PROD    B
-		             , TB_DP_TENANT_PROD C
 		         WHERE 1=1
 		           AND A.PROD_ID = B.PROD_ID
-		           AND A.PROD_ID = C.PROD_ID
 		           AND A.SVC_GRP_CD = 'DP000201'
 		           AND A.TOP_MENU_ID != 'DP02'   
-		           AND C.TENANT_ID = #{tenantId}
-		           AND C.PROD_STATUS_CD IN ( 'PD000403', 'PD000404', 'PD000409', 'PD000410')
 		           AND B.AID = #{aid}
 		          ORDER BY A.REG_DT DESC
 		        )
