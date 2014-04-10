@@ -442,7 +442,6 @@
              , TB.PROD_ID
              , TB.PART_PROD_ID
              , #{productBasicInfo.contentsTypeCd} as CONTENTS_TYPE_CD
-             , TB.VOD_TITL_NM
              , TB.PROD_NM
              , TB.CHAPTER
              , TB.BOOK_CLSF_CD
@@ -460,7 +459,6 @@
              , TB.ARTIST3_NM
              , TB.ISSUE_DAY
              , TB.CHNL_COMP_NM
-             , TB.AGENCY_NM
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( TB.EPSD_CNT + TB.STRM_EPSD_CNT ) ELSE 1 END ) AS BOOK_COUNT
              , ( CASE WHEN TB.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
@@ -504,11 +502,9 @@
                       , D.USE_PERIOD_UNIT_CD
                       , D.META_CLSF_CD
                       , D.CONTENTS_TYPE_CD
-                      , E.VOD_TITL_NM
                       , E.STRM_EPSD_CNT
                       , E.ISSUE_DAY
                       , E.CHNL_COMP_NM
-                      , E.AGENCY_NM
                       , E.EPSD_CNT
                       , E.COMPT_YN
                       , F.PROD_NM
@@ -535,16 +531,17 @@
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
                       , TB_DP_PROD                    D /* 채널 상품 */
-                      , UV_TB_DP_MULTIMDA_PROD        E /* 채널 상품 */
+                      , TB_DP_EBOOK_PROD              E /* 채널 상품 */
                       , TB_DP_PROD_DESC               F /* 채널 상품 설명 */
                       , TB_DP_TENANT_PROD             G /* 채널 Tenant 상품 */
                       , TB_DP_TENANT_PROD_PRICE       H /* 채널 Tenant 상품 가격 */
                       , TB_DP_PROD_RSHP               I
                       , TB_DP_PROD                    J /* 에피소드 상품 */
-                      , UV_TB_DP_MULTIMDA_PROD        L /* 에피소드 상품 */
+                      , TB_DP_EBOOK_PROD              L /* 에피소드 상품 */
                       , TB_DP_PROD_IMG                M /* 채널 상품 이미지 */
                       , TB_DP_TENANT_PROD_STATS       N /* 채널 Tenant 상품 통계 건수 */
                       , TB_DP_TENANT_PROD_PRICE       O /* 에피소드 Tenant 상품 가격 */
+                      , TB_DP_TENANT_PROD             P /* 에피소드 Tenant 상품 */
                  WHERE A.MENU_ID = B.MENU_ID
                    AND A.MENU_ID = C.MENU_ID
                    AND B.PROD_ID = D.PROD_ID
@@ -557,18 +554,20 @@
                    AND G.TENANT_ID = H.TENANT_ID                      
                    AND G.TENANT_ID = N.TENANT_ID(+)
                    AND G.TENANT_ID = O.TENANT_ID
+                   AND G.TENANT_ID = P.TENANT_ID
                    AND G.PROD_ID = N.PROD_ID(+)           
                    AND I.PART_PROD_ID = J.PROD_ID
                    AND I.PART_PROD_ID = L.PROD_ID
                    AND I.PART_PROD_ID = O.PROD_ID
+                   AND I.PART_PROD_ID = P.PROD_ID
                    AND A.USE_YN = 'Y'        
                    AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                    AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
                    AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                    AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                    AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
-                    <if test='prodStatusCd != null'>
-                   AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
+                   <if test='prodStatusCd != null'>
+                   AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 채널 판매중 */
                    </if>
                    AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                    AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
@@ -579,6 +578,9 @@
                    AND M.EXPO_ORD(+) = 1                        /* 노출순서 */
                    AND M.LANG_CD(+) = #{tenantHeader.langCd}    /* ko : 한국어 */           
                    AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+                   <if test='prodStatusCd != null'>
+                   AND P.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 에피소드 판매중 */
+                   </if>
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    ----------------------------------------------------------------------------- 
@@ -610,7 +612,6 @@
              , TB.PROD_ID
              , TB.PART_PROD_ID
              , #{productBasicInfo.contentsTypeCd} as CONTENTS_TYPE_CD
-             , TB.VOD_TITL_NM
              , TB.PROD_NM
              , TB.CHAPTER
              , TB.BOOK_CLSF_CD
@@ -621,7 +622,6 @@
              , TB.ARTIST3_NM
              , TB.ISSUE_DAY
              , TB.CHNL_COMP_NM
-             , TB.AGENCY_NM
              , DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) AS BOOK_STATUS                          
            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
              , CASE WHEN (TB.CHNL_PERIOD_AMT >= 0  AND STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
@@ -654,11 +654,9 @@
                       , D.USE_PERIOD_UNIT_CD
                       , D.META_CLSF_CD
                       , D.CONTENTS_TYPE_CD
-                      , E.VOD_TITL_NM
                       , E.STRM_EPSD_CNT
                       , E.ISSUE_DAY
                       , E.CHNL_COMP_NM
-                      , E.AGENCY_NM
                       , E.EPSD_CNT
                       , E.COMPT_YN
                       , F.PROD_NM
@@ -685,16 +683,17 @@
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
                       , TB_DP_PROD                    D /* 채널 상품 */
-                      , UV_TB_DP_MULTIMDA_PROD        E /* 채널 상품 */
+                      , TB_DP_EBOOK_PROD              E /* 채널 상품 */
                       , TB_DP_PROD_DESC               F /* 채널 상품 설명 */
                       , TB_DP_TENANT_PROD             G /* 채널 Tenant 상품 */
                       , TB_DP_TENANT_PROD_PRICE       H /* 채널 Tenant 상품 가격 */
                       , TB_DP_PROD_RSHP               I
                       , TB_DP_PROD                    J /* 에피소드 상품 */
-                      , UV_TB_DP_MULTIMDA_PROD        L /* 에피소드 상품 */
+                      , TB_DP_EBOOK_PROD              L /* 에피소드 상품 */
                       , TB_DP_PROD_IMG                M /* 채널 상품 이미지 */
                       , TB_DP_TENANT_PROD_STATS       N /* 채널 Tenant 상품 통계 건수 */
                       , TB_DP_TENANT_PROD_PRICE       O /* 에피소드 Tenant 상품 가격 */
+                      , TB_DP_TENANT_PROD             P /* 에피소드 Tenant 상품 */
                  WHERE A.MENU_ID = B.MENU_ID
                    AND A.MENU_ID = C.MENU_ID
                    AND B.PROD_ID = D.PROD_ID
@@ -707,10 +706,12 @@
                    AND G.TENANT_ID = H.TENANT_ID                      
                    AND G.TENANT_ID = N.TENANT_ID(+)
                    AND G.TENANT_ID = O.TENANT_ID
+                   AND G.TENANT_ID = P.TENANT_ID
                    AND G.PROD_ID = N.PROD_ID(+)           
                    AND I.PART_PROD_ID = J.PROD_ID
                    AND I.PART_PROD_ID = L.PROD_ID
                    AND I.PART_PROD_ID = O.PROD_ID
+                   AND I.PART_PROD_ID = P.PROD_ID
                    AND A.USE_YN = 'Y'        
                    AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                    AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
@@ -718,16 +719,19 @@
                    AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                    AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
                    <if test='prodStatusCd != null'>
-                   AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
+                   AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 채널 판매중 */
                    </if>
                    AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                    AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                    AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
                    AND M.IMG_CD(+) = #{imageCd}                 /* 이미지코드 */
-                   AND M.EXPO_ORD (+)= 1                        /* 노출순서 */
+                   AND M.EXPO_ORD(+) = 1                        /* 노출순서 */
                    AND M.LANG_CD(+) = #{tenantHeader.langCd}    /* ko : 한국어 */           
                    AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+                   <if test='prodStatusCd != null'>
+                   AND P.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 에피소드 판매중 */
+                   </if>
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    ----------------------------------------------------------------------------- 
