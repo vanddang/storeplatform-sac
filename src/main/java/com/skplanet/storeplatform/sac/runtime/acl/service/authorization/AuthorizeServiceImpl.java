@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
@@ -36,6 +37,9 @@ public class AuthorizeServiceImpl implements AuthorizeService {
     public void checkInterface(HttpHeaders header) {
 		String interfaceId = header.getInterfaceId();
 		String servletPath = header.getServletPath();
+
+		if (StringUtils.isBlank(interfaceId))
+			throw new StorePlatformException("SAC_CMN_0001", CommonConstants.HEADER_INTERFACE_ID);
 
 		Interface intf = this.service.selectInterfaceById(interfaceId);
 

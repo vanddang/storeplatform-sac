@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.runtime.acl.service.authentication.AuthenticateService;
 import com.skplanet.storeplatform.sac.runtime.acl.service.authorization.AuthorizeService;
-import com.skplanet.storeplatform.sac.runtime.acl.service.verification.VerifyService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 /**
@@ -30,19 +29,10 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 public class AclService {
 
 	@Autowired
-	private VerifyService verifyService;
-
-	@Autowired
 	private AuthenticateService authenticateService;
 
 	@Autowired
 	private AuthorizeService authorizationService;
-
-	@Value("#{propertiesForSac['skp.common.service.acl']}")
-	private boolean aclYn;
-
-	@Value("#{propertiesForSac['skp.runtime.acl.verification']}")
-	private boolean verificationYn;
 
 	@Value("#{propertiesForSac['skp.runtime.acl.authentication']}")
 	private boolean authentication;
@@ -50,18 +40,12 @@ public class AclService {
 	@Value("#{propertiesForSac['skp.runtime.acl.authorization']}")
 	private boolean authorization;
 
-	/**
-	 * Request를 검증한다. (Interface 및 Timestamp 검사)
-	 */
-	public boolean validate(@Header("httpHeaders") HttpHeaders headers) {
-		if (!this.verificationYn) return true;
+	public void setAuthentication(boolean authentication) {
+		this.authentication = authentication;
+	}
 
-		// Step 1) 필수 헤더 검사
-		this.verifyService.verifyHeaders(headers);
-		// Step 2) 요청 시간 검사
-		this.verifyService.verifyTimestamp(headers);
-
-		return true;
+	public void setAuthorization(boolean authorization) {
+		this.authorization = authorization;
 	}
 
 	/**

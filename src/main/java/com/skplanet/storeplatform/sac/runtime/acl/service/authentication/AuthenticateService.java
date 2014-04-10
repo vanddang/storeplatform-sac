@@ -54,7 +54,7 @@ public interface AuthenticateService {
      *          <li>SAC_CMN_0035 : 테넌트 정보 유효하지 않음</li>
      *      </ul>
      */
-     void checkTenantInfo(AuthKey authKeyInfo);
+ 	void checkTenantInfo(HttpHeaders headers, AuthKey authKeyInfo);
 
     /**
      * System 정보 유효성 체크
@@ -93,4 +93,15 @@ public interface AuthenticateService {
      *      </ul>
      */
     void authIp(System system, HttpHeaders headers);
+
+    /**
+     * 요청 시간 검사 (Replay Attack 탐지)
+     */
+	void verifyTimestamp(HttpHeaders header);
+
+	/**
+	 * GUID 검사
+	 */
+	void verifyGuid(HttpHeaders header);
+
 }

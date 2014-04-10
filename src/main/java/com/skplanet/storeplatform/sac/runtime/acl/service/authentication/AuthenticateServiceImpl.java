@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.util.HmacSha1Util;
 import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
@@ -33,7 +34,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.TenantStatus;
  *
  * 인증
  *
- * Updated on : 2014. 2.105. Updated by : 임근대, SK 플래닛.
+ * Updated on : 2014. 2.05. Updated by : 임근대, SK 플래닛.
  */
 @Service
 public class AuthenticateServiceImpl implements AuthenticateService {
@@ -54,6 +55,10 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 	public void authenticate(HttpHeaders headers) {
 		String pAuthKey = headers.getAuthKey();
 
+		// 필수 헤더({x-sac-auth-key})값이 존재하지 않습니다.
+		if (StringUtils.isBlank(pAuthKey))
+			throw new StorePlatformException("SAC_CMN_0001", CommonConstants.HEADER_AUTH_KEY);
+
         // AuthKey
         // 1. AuthKey 정보 조회
         AuthKey authKeyInfo = this.dataAccessService.selectAuthKey(pAuthKey);
@@ -61,7 +66,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
         this.checkAuthKeyInfo(authKeyInfo);
 
         // Tenant
-        this.checkTenantInfo(authKeyInfo);
+        this.checkTenantInfo(headers, authKeyInfo);
 
         // System
         System system = this.checkSystemInfo(headers);
@@ -72,6 +77,12 @@ public class AuthenticateServiceImpl implements AuthenticateService {
         if(authKeyInfo.getAuthKeyType() != null && authKeyInfo.getAuthKeyType() == AuthKeyType.PROD) {
             // 4.1 AuthType 에 따라 분기
 
+        	// GUID 검사
+        	this.verifyGuid(headers);
+
+        	// 요청시간 검사
+        	this.verifyTimestamp(headers);
+
             if(authKeyInfo.getAuthType() != null && authKeyInfo.getAuthType() == AuthType.IP) {
                 // IP 인증
                 this.authIp(system, headers);
@@ -79,6 +90,8 @@ public class AuthenticateServiceImpl implements AuthenticateService {
                 // MAC 인증 (default)
                 this.authMac(headers, authKeyInfo);
             }
+
+
         }
 
 	}
@@ -121,6 +134,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
     /**
      * Tenant 유효성 체크
+     * @param headers
      * @param authKeyInfo
      *          AuthKey 정보
      * @throws
@@ -131,9 +145,18 @@ public class AuthenticateServiceImpl implements AuthenticateService {
      *      </ul>
      */
     @Override
-    public void checkTenantInfo(AuthKey authKeyInfo) {
+    public void checkTenantInfo(HttpHeaders headers, AuthKey authKeyInfo) {
+    	String tenantId = headers.getTenantId();
 
-        String tenantId = authKeyInfo.getTenantId();
+		/* 나중에 적용 예정
+		if (StringUtils.isBlank(tenantId))
+			throw new StorePlatformException("SAC_CMN_0001", CommonConstants.HEADER_TENANT_ID);
+		*/
+
+    	// 헤더가 테넌트아이디가 없으면 인증키로 DB 조회 (임시 로직)
+    	if (StringUtils.isBlank(tenantId)) {
+    		tenantId = authKeyInfo.getTenantId();
+    	}
 
         // 2. Tenant 정보 조회
         Tenant tenant = this.dataAccessService.selectTenant(tenantId);
@@ -167,8 +190,13 @@ public class AuthenticateServiceImpl implements AuthenticateService {
      */
     @Override
     public System checkSystemInfo(HttpHeaders headers) {
+    	String systemId = headers.getSystemId();
+
+    	if (StringUtils.isBlank(systemId))
+			throw new StorePlatformException("SAC_CMN_0001", CommonConstants.HEADER_SYSTEM_ID);
+
         // 3. System 정보 조회
-        System dbSystem = this.dataAccessService.selectSystem(headers.getSystemId());
+        System dbSystem = this.dataAccessService.selectSystem(systemId);
 
         // 3.1. System 데이터 존재 여부 체크
         if(dbSystem == null || StringUtils.isBlank(dbSystem.getSystemId())) {
@@ -240,6 +268,32 @@ public class AuthenticateServiceImpl implements AuthenticateService {
             throw new StorePlatformException("SAC_CMN_0039");
         }
     }
+
+	@Override
+	public void verifyGuid(HttpHeaders header) {
+		String guid = header.getGuid();
+
+		// 필수 헤더({x-sac-guid})값이 존재하지 않습니다.
+		if (StringUtils.isBlank(guid))
+			throw new StorePlatformException("SAC_CMN_0001", CommonConstants.HEADER_GUID);
+	}
+
+    /**
+     * Replay Attadck 여부 검사
+     */
+	@Override
+	public void verifyTimestamp(HttpHeaders header) {
+		String requestTimestamp = header.getTimestamp();
+
+		// 필수 헤더({x-sac-auth-timestamp})값이 존재하지 않습니다.
+    	if (StringUtils.isBlank(requestTimestamp))
+			throw new StorePlatformException("SAC_CMN_0001", CommonConstants.HEADER_AUTH_TIMESTAMP);
+
+		String nonce = header.getNonce();
+		if (!SacAuthUtil.isValidTimestampAndNonce(requestTimestamp, nonce)) {
+			throw new StorePlatformException("SAC_CMN_0002");
+		}
+	}
 
 
 }
