@@ -439,10 +439,7 @@
                    ,PROD_GRD_CD as prodGrdCd
                    ,TO_CHAR(SPRC_APPLY_START_DT,'YYYYMMDDHH24MISS') as applyStartDt   
                    ,TO_CHAR(SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS') as applyEndDt 
-                   ,(CASE WHEN PROD_CASE_CD='DP006301' THEN 'giftcard' 
-                          WHEN PROD_CASE_CD='DP006302' THEN 'exchange' 
-                          WHEN PROD_CASE_CD='DP006303' THEN 'delivery' 
-                     END) AS PROD_CASE_CD  
+                   ,PROD_CASE_CD  
                    ,CONCAT(FILE_PATH,FILE_NM) AS FILE_PATH
                    ,'Y' AS specialSale
    	               ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
@@ -474,7 +471,10 @@
                                ,J.PROD_GRD_CD   
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT    
-                               ,I.PROD_CASE_CD  
+			                   ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
+			                          WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
+			                          WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+			                     END) AS PROD_CASE_CD                                 
                                ,E.TOP_MENU_ID
                                ,J.META_CLSF_CD       
                                ,PI.FILE_PATH
