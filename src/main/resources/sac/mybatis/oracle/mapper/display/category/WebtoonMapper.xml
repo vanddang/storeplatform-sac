@@ -317,7 +317,7 @@
              , B.ARTIST1_NM
              , B.PROD_BASE_DESC
              , B.PROD_DTL_DESC
-             , B.UPD_DT
+             , TO_CHAR(A.UPD_DT, 'YYYYMMDDHH24MISS') AS UPD_DT
              , C.MENU_ID
              , E.MENU_NM
              , D.TOP_MENU_ID
