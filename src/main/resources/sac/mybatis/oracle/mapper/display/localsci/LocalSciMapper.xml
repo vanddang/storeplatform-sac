@@ -2,15 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="LocalSci">
     <!-- Aid로 Seller Key 조회 -->
-    <select id="getSellerKey" resultType="String">
+    <select id="getSellerKey" parameterType="HashMap" resultType="String">
 		SELECT /* LocalSciMapper.getSellerKey, AID로 SELLER KEY 조회 , 이석희/아이에스플러스, 2014-02-13 */
-			   SELLER_MBR_NO
-		  FROM TB_DP_PROD
-		 WHERE PROD_ID = (
-		                   SELECT PROD_ID
-		                     FROM TB_DP_APP_PROD
-		                    WHERE AID=#{aid}
-		                  )                             
+		       SELLER_MBR_NO
+		  FROM 
+		       (
+		        SELECT A.SELLER_MBR_NO
+		          FROM TB_DP_PROD        A
+		             , TB_DP_APP_PROD    B
+		             , TB_DP_TENANT_PROD C
+		         WHERE 1=1
+		           AND A.PROD_ID = B.PROD_ID
+		           AND A.PROD_ID = C.PROD_ID
+		           AND A.SVC_GRP_CD = 'DP000201'
+		           AND A.TOP_MENU_ID != 'DP02'   
+		           AND C.TENANT_ID = #{tenantId}
+		           AND C.PROD_STATUS_CD IN ( 'PD000403', 'PD000404', 'PD000409', 'PD000410')
+		           AND B.AID = #{aid}
+		          ORDER BY A.REG_DT DESC
+		        )
+		  WHERE ROWNUM =1
     </select>
     
     <!-- 상품 존재 유무 조회 -->

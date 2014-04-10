@@ -9,10 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -37,13 +41,20 @@ public class SearchSellerKeyServiceImpl implements SearchSellerKeyService {
 	 * (String aid)
 	 */
 	@Override
-	public String searchSellerKeyForAid(String aid) {
+	public String searchSellerKeyForAid(String aid, String tenantId) {
 
 		if (StringUtils.isEmpty(aid)) {
 			throw new StorePlatformException("SAC_DSP_0002", "aid", aid);
 		}
+		Map<String, String> map = new HashMap<String, String>();
 
-		String sellerKey = (String) this.commonDAO.queryForObject("LocalSci.getSellerKey", aid);
+		map.put("aid", aid);
+		map.put("tenantId", tenantId);
+		String sellerKey = (String) this.commonDAO.queryForObject("LocalSci.getSellerKey", map);
+
+		if (StringUtil.isEmpty(sellerKey)) {
+			throw new StorePlatformException("SAC_DSP_0017");
+		}
 		return sellerKey;
 	}
 }

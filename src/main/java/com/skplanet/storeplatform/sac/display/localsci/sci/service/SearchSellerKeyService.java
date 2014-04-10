@@ -17,5 +17,5 @@ public interface SearchSellerKeyService {
 	 *            aid
 	 * @return String
 	 */
-	String searchSellerKeyForAid(String aid);
+	String searchSellerKeyForAid(String aid, String tenantId);
 }

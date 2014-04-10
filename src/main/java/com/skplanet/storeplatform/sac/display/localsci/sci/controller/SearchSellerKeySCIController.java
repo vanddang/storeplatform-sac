@@ -8,6 +8,8 @@ import org.springframework.validation.annotation.Validated;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchSellerKeySCI;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.display.localsci.sci.service.SearchSellerKeyService;
 
 /**
@@ -33,7 +35,9 @@ public class SearchSellerKeySCIController implements SearchSellerKeySCI {
 	 */
 	@Override
 	public String searchSellerKeyForAid(@Validated String aid) {
-		return this.searchSellerKeyService.searchSellerKeyForAid(aid);
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+		String tenantId = requestHeader.getTenantHeader().getTenantId();
+		return this.searchSellerKeyService.searchSellerKeyForAid(aid, tenantId);
 	}
 
 }
