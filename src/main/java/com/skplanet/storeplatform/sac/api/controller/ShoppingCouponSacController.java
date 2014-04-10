@@ -251,13 +251,8 @@ public class ShoppingCouponSacController {
 				case DT:
 					// 특가 상품 상세 조회 작업을 호출한다.
 					couponRes = this.getSpecialProductDetail(couponReq.getCouponCode());
-					if (couponRes.getRCode().equals("")) {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", couponRes.getRCode());
-					}
+					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 
 					break;
 				default:
