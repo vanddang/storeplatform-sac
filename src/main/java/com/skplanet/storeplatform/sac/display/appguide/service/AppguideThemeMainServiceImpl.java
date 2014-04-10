@@ -38,6 +38,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
@@ -60,6 +62,9 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 
 	@Autowired
 	private AppInfoGenerator appInfoGenerator;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	@Autowired
 	private CommonMetaInfoGenerator commonMetaInfoGenerator;
@@ -111,25 +116,36 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 		mapReq.put("START_ROW", start);
 		mapReq.put("END_ROW", end);
 
-		List<Appguide> themeMainList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
-				Appguide.class);
-		if (themeMainList == null || themeMainList.isEmpty()) {
-			throw new StorePlatformException("SAC_DSP_0009");
-		}
+		List<Product> productList = new ArrayList<Product>();
 
-		List<String> themeIdList = new ArrayList<String>();
-		for (Appguide t : themeMainList) {
-			themeIdList.add(t.getThemeId());
-		}
-		mapReq.put("themeIdList", themeIdList);
+		// 단말 지원정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(deviceHeader.getModel());
+		if (supportDevice != null) {
+			mapReq.put("ebookSprtYn", supportDevice.getEbookSprtYn());
+			mapReq.put("comicSprtYn", supportDevice.getComicSprtYn());
+			mapReq.put("musicSprtYn", supportDevice.getMusicSprtYn());
+			mapReq.put("videoDrmSprtYn", supportDevice.getVideoDrmSprtYn());
+			mapReq.put("sdVideoSprtYn", supportDevice.getSdVideoSprtYn());
 
-		List<Appguide> themeProductList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendProductList",
-				mapReq, Appguide.class);
-		if (themeProductList == null || themeProductList.isEmpty()) {
-			throw new StorePlatformException("SAC_DSP_0009");
-		}
+			List<Appguide> themeMainList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
+					Appguide.class);
+			if (themeMainList == null || themeMainList.isEmpty()) {
+				throw new StorePlatformException("SAC_DSP_0009");
+			}
 
-		List<Product> productList = this.makeProductList(themeMainList, themeProductList);
+			List<String> themeIdList = new ArrayList<String>();
+			for (Appguide t : themeMainList) {
+				themeIdList.add(t.getThemeId());
+			}
+			mapReq.put("themeIdList", themeIdList);
+
+			List<Appguide> themeProductList = this.commonDAO.queryForList(
+					"Appguide.Theme.getThemeRecommendProductList", mapReq, Appguide.class);
+			if (themeProductList == null || themeProductList.isEmpty()) {
+				throw new StorePlatformException("SAC_DSP_0009");
+			}
+			productList = this.makeProductList(themeMainList, themeProductList);
+		}
 
 		commonResponse.setTotalCount(this.totalCount);
 		responseVO.setCommonResponse(commonResponse);

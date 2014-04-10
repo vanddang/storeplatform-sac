@@ -35,6 +35,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 
 /**
  * App guide 테마 추천 목록 Service 인터페이스(CoreStoreBusiness) 구현체
@@ -52,6 +54,9 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+	@Autowired
+	private DisplayCommonService displayCommonService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -64,10 +69,7 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 			throws StorePlatformException {
 
 		AppguideSacRes responseVO = new AppguideSacRes();
-
 		CommonResponse commonResponse = new CommonResponse();
-
-		// String className = this.getClass().getName();
 
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
 		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
@@ -99,17 +101,27 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 		mapReq.put("START_ROW", start);
 		mapReq.put("END_ROW", end);
 
-		List<Appguide> themeList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
-				Appguide.class);
-		if (themeList == null) {
-			commonResponse.setTotalCount(this.totalCount);
-			responseVO.setCommonResponse(commonResponse);
+		List<Product> productList = new ArrayList<Product>();
 
-			return responseVO;
+		// 단말 지원정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(deviceHeader.getModel());
+		if (supportDevice != null) {
+			mapReq.put("ebookSprtYn", supportDevice.getEbookSprtYn());
+			mapReq.put("comicSprtYn", supportDevice.getComicSprtYn());
+			mapReq.put("musicSprtYn", supportDevice.getMusicSprtYn());
+			mapReq.put("videoDrmSprtYn", supportDevice.getVideoDrmSprtYn());
+			mapReq.put("sdVideoSprtYn", supportDevice.getSdVideoSprtYn());
 
+			List<Appguide> themeList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
+					Appguide.class);
+			if (themeList == null) {
+				commonResponse.setTotalCount(this.totalCount);
+				responseVO.setCommonResponse(commonResponse);
+
+				return responseVO;
+			}
+			productList = this.makeProductList(themeList);
 		}
-
-		List<Product> productList = this.makeProductList(themeList);
 
 		commonResponse.setTotalCount(this.totalCount);
 		responseVO.setCommonResponse(commonResponse);
