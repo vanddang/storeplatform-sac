@@ -427,16 +427,20 @@
                         ,J.USE_PERIOD_UNIT_CD
                         ,J.USE_PERIOD
                         ,J.DRM_YN
-                        ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = I.PROD_ID) AS PHONE_SPRT_YN                                                                        
+                        ,CASE
+                               WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = I.PROD_ID AND DEVICE_MODEL_CD = #{deviceModelNo}) > 0
+                               THEN 'Y'
+                               ELSE 'N'
+                          END AS PHONE_SPRT_YN     
                         ,B.CATALOG_ID
                         ,A.BRAND_ID
                         ,A.BRAND_NM    
                         ,CASE WHEN N.PROD_ID IS NOT NULL THEN 'special:Tstore' ELSE 'shoppingStore' END couponType
                         ,N.CPN_ID AS couponId
-                        ,DECODE(I.PROD_CASE_CD
-                              , 'DP006301', 'giftcard'
-                              , 'DP006302', 'exchange'
-                              , 'DP006303', 'delivery' ) as PROD_CASE_CD  
+                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
+                               WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
+                               WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+                          END) AS PROD_CASE_CD     
                         ,J.CID
                         ,(SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE PROD_ID = H.PROD_ID AND EXPO_YN ='Y' AND TENANT_ID = #{tenantId}  AND ROWNUM =1) chnlProdStatusCd
                         ,K.PROD_STATUS_CD
@@ -515,7 +519,7 @@
 		        IV.* 
 		        ,'freepass' as couponType
 		        ,'thumbnail' AS fileType 
-		        , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS FILE_PATH
+		        , CONCAT(NVL(TIG.FILE_PATH, '') , NVL(TIG.FILE_NM, '')) AS FILE_PATH
 		    FROM (
 		        SELECT  
                       PD.PROD_ID
@@ -542,18 +546,22 @@
                     , PD.USE_PERIOD_UNIT_CD
                     , PD.USE_PERIOD
                     , PD.DRM_YN 
-                    ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = PD.PROD_ID) AS PHONE_SPRT_YN
+                    ,CASE
+                           WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = PD.PROD_ID AND DEVICE_MODEL_CD = #{deviceModelNo}) > 0
+                           THEN 'Y'
+                           ELSE 'N'
+                      END AS PHONE_SPRT_YN                      
                     , DC.LANG_CD
                     , PD.CID
                     , '' chnlProdStatusCd
                     , TP.PROD_STATUS_CD
                     , CM.AUTO_APPR_YN
-                    , DECODE(CM.CMPX_PROD_CLSF_CD
-                             ,'OR004301','movieFreepass'  -- 영화 자동결제
-                             ,'OR004302','seriesFreepass' -- 시리즈 1회결제
-                             ,'OR004303','seriesFreepass/ebook' -- 전권 소장
-                             ,'OR004304','rentalFreepass/ebook' -- 전권 대여                                                
-                            ) AS KIND
+                    ,(CASE WHEN CM.CMPX_PROD_CLSF_CD='OR004301' THEN 'movieFreepass'  -- 영화 자동결제
+                           WHEN CM.CMPX_PROD_CLSF_CD='OR004302' THEN 'seriesFreepass' -- 시리즈 1회결제
+                           WHEN CM.CMPX_PROD_CLSF_CD='OR004303' THEN 'seriesFreepass/ebook' -- 전권 소장 
+                           WHEN CM.CMPX_PROD_CLSF_CD='OR004304' THEN 'rentalFreepass/ebook' -- 전권 대여
+                           WHEN CM.CMPX_PROD_CLSF_CD='OR004305' THEN 'gameCash' -- 게임 캐쉬  
+                      END) AS KIND                       
                     , CM.CMPX_PROD_CLSF_CD AS PLAN_TYPE     
 		        FROM 
 		              TB_DP_PROD PD
