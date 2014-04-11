@@ -37,7 +37,7 @@
 			AND TP.PROD_ID = P.PROD_ID
 			AND P2.PROD_ID = PR.PART_PROD_ID -- EPISODE
 			AND TP2.PROD_ID = P2.PROD_ID
-			AND PR.PROD_RSHP_CD = 'DP010802'
+			AND PR.PROD_RSHP_CD = 'DP010802' /* 채널-에피소드 상품 관계 */
 			AND CP.USE_YN = 'Y'
 			AND CP.BASE_YN = 'Y'
 			AND C.USE_YN = 'Y'
@@ -62,7 +62,10 @@
                            CASE WHEN #{comicSprtYn} = 'Y' THEN 1 
                                 ELSE 0 
                            END
-                      WHEN P.TOP_MENU_ID = 'DP15' THEN 0
+                      WHEN P.TOP_MENU_ID = 'DP15' THEN
+                           CASE WHEN #{sclShpgSprtYn} = 'Y' THEN 1 
+                                ELSE 0 
+                           END
                       WHEN P.TOP_MENU_ID = 'DP16' THEN
                            CASE WHEN P2.META_CLSF_CD = 'CT25' THEN 
                                 CASE WHEN #{musicSprtYn} = 'Y' THEN 1 

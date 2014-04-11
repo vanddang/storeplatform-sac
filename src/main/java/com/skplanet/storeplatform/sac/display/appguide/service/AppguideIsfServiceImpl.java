@@ -199,6 +199,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 					mapReq.put("musicSprtYn", supportDevice.getMusicSprtYn());
 					mapReq.put("videoDrmSprtYn", supportDevice.getVideoDrmSprtYn());
 					mapReq.put("sdVideoSprtYn", supportDevice.getSdVideoSprtYn());
+					mapReq.put("sclShpgSprtYn", supportDevice.getSclShpgSprtYn());
 
 					// 상품 기본 정보 List 조회
 					List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
