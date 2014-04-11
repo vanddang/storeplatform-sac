@@ -29,20 +29,18 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * App guide 테마 추천 메인 Service 인터페이스(CoreStoreBusiness) 구현체
@@ -61,13 +59,13 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	private AppInfoGenerator appInfoGenerator;
+	private MetaInfoService metaInfoService;
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
 
 	@Autowired
-	private CommonMetaInfoGenerator commonMetaInfoGenerator;
+	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	/*
 	 * (non-Javadoc)
@@ -116,7 +114,7 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 		mapReq.put("START_ROW", start);
 		mapReq.put("END_ROW", end);
 
-		List<Product> productList = new ArrayList<Product>();
+		List<Product> themeList = new ArrayList<Product>();
 
 		// 단말 지원정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(deviceHeader.getModel());
@@ -134,152 +132,164 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 				throw new StorePlatformException("SAC_DSP_0009");
 			}
 
-			List<String> themeIdList = new ArrayList<String>();
-			for (Appguide t : themeMainList) {
-				themeIdList.add(t.getThemeId());
-			}
-			mapReq.put("themeIdList", themeIdList);
+			for (Appguide main : themeMainList) {
 
-			List<Appguide> themeProductList = this.commonDAO.queryForList(
-					"Appguide.Theme.getThemeRecommendProductList", mapReq, Appguide.class);
-			if (themeProductList == null || themeProductList.isEmpty()) {
-				throw new StorePlatformException("SAC_DSP_0009");
+				this.totalCount = main.getTotalCount();
+
+				List<Product> productList = new ArrayList<Product>(); // 테마추천별 상품 리스트
+
+				// 테마 정보
+				Product theme = new Product();
+				Identifier themeId = new Identifier();
+				themeId.setText(main.getThemeId());
+				themeId.setType("theme");
+				theme.setIdentifier(themeId);
+
+				Title themeNm = new Title();
+				themeNm.setText(main.getThemeNm());
+				theme.setTitle(themeNm);
+				theme.setThemeType(main.getThemeType());
+
+				if (!StringUtils.isNullOrEmpty(main.getThemeImg())) {
+					List<Source> themeUrlList = new ArrayList<Source>();
+					Source themeUrl = new Source();
+					themeUrl.setUrl(main.getThemeImg());
+					themeUrlList.add(themeUrl);
+					theme.setSourceList(themeUrlList);
+				}
+
+				this.totalCount = main.getTotalCount();
+
+				mapReq.put("themeId", main.getThemeId()); // 앱가이드 테마추천ID
+
+				start = 1;
+				if (!StringUtils.isNullOrEmpty(main.getThemeType()) && main.getThemeType().equals("1")) {
+					end = 5;
+				} else {
+					end = 4;
+				}
+
+				mapReq.put("START_ROW", start);
+				mapReq.put("END_ROW", end);
+
+				// 상품 기본 정보 List 조회
+				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+						"Appguide.Theme.getBasicThemeRecommendProductList", mapReq, ProductBasicInfo.class);
+
+				if (this.log.isDebugEnabled()) {
+					this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
+				}
+				if (!productBasicInfoList.isEmpty()) {
+
+					Product product = null;
+					MetaInfo metaInfo = null;
+
+					Map<String, Object> paramMap = new HashMap<String, Object>();
+					paramMap.put("tenantHeader", tenantHeader);
+					paramMap.put("deviceHeader", deviceHeader);
+					paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 판매중
+
+					// Meta 정보 조회
+					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+
+						String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
+						String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
+						paramMap.put("productBasicInfo", productBasicInfo);
+
+						if (this.log.isDebugEnabled()) {
+							this.log.debug("##### Top Menu Id : {}", topMenuId);
+							this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+						}
+						// 상품 SVC_GRP_CD 조회
+						// DP000203 : 멀티미디어
+						// DP000206 : Tstore 쇼핑
+						// DP000205 : 소셜쇼핑
+						// DP000204 : 폰꾸미기
+						// DP000201 : 애플리캐이션
+						// APP 상품의 경우
+						if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+							paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+							if (this.log.isDebugEnabled()) {
+								this.log.debug("##### Search for app  meta info product");
+							}
+							metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+							if (metaInfo != null) {
+								product = this.responseInfoGenerateFacade.generateAppProduct(metaInfo);
+								productList.add(product);
+							}
+
+						} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
+							// 영화/방송 상품의 경우
+							paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+									|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+								if (this.log.isDebugEnabled()) {
+									this.log.debug("##### Search for Vod  meta info product");
+								}
+								metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+								if (metaInfo != null) {
+									if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+										product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
+									} else {
+										product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
+									}
+									productList.add(product);
+								}
+							} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+									|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
+																								  // 경우
+
+								paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+
+								if (this.log.isDebugEnabled()) {
+									this.log.debug("##### Search for EbookComic specific product");
+								}
+								metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
+								if (metaInfo != null) {
+									if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+										product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
+									} else {
+										product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
+									}
+									productList.add(product);
+								}
+							} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
+
+								paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+								paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+
+								if (this.log.isDebugEnabled()) {
+									this.log.debug("##### Search for music meta info product");
+								}
+								metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap);
+								if (metaInfo != null) {
+									product = this.responseInfoGenerateFacade.generateMusicProduct(metaInfo);
+									productList.add(product);
+								}
+							}
+						} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
+							paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+							paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+
+							if (this.log.isDebugEnabled()) {
+								this.log.debug("##### Search for Shopping  meta info product");
+							}
+							metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
+							if (metaInfo != null) {
+								product = this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
+								productList.add(product);
+							}
+						}
+					}
+				}
+				theme.setSubProductList(productList);
+				themeList.add(theme);
 			}
-			productList = this.makeProductList(themeMainList, themeProductList);
 		}
 
 		commonResponse.setTotalCount(this.totalCount);
 		responseVO.setCommonResponse(commonResponse);
-		responseVO.setProductList(productList);
+		responseVO.setProductList(themeList);
 		return responseVO;
-	}
-
-	private List<Product> makeProductList(List<Appguide> themeMainList, List<Appguide> themeProductList) {
-
-		List<Product> mainListVO = new ArrayList<Product>();
-		List<Product> sublistVO = new ArrayList<Product>();
-
-		for (Appguide main : themeMainList) {
-
-			// 테마 정보
-			Product theme = new Product();
-			Identifier themeId = new Identifier();
-			themeId.setText(main.getThemeId());
-			themeId.setType("theme");
-			theme.setIdentifier(themeId);
-
-			Title themeNm = new Title();
-			themeNm.setText(main.getThemeNm());
-			theme.setTitle(themeNm);
-			theme.setThemeType(main.getThemeType());
-
-			if (!StringUtils.isNullOrEmpty(main.getThemeImg())) {
-				List<Source> themeUrlList = new ArrayList<Source>();
-				Source themeUrl = new Source();
-				themeUrl.setUrl(main.getThemeImg());
-				themeUrlList.add(themeUrl);
-				theme.setSourceList(themeUrlList);
-			}
-
-			this.totalCount = main.getTotalCount();
-
-			for (Appguide mapper : themeProductList) {
-				if (main.getThemeId().equals(mapper.getThemeId())) {
-
-					MetaInfo metaInfo = this.setMetaInfo(mapper);
-
-					// 테마별 상품 정보
-					Product product = new Product();
-					Title title = new Title();
-					App app = new App();
-					Rights rights = new Rights();
-					Source source = new Source();
-
-					// Response VO를 만들기위한 생성자
-					List<Source> sourceList = new ArrayList<Source>();
-
-					title.setText(mapper.getProdNm());
-					product.setTitle(title);
-
-					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 앱 타입일 경우
-						product.setIdentifierList(this.appInfoGenerator.generateIdentifierList(metaInfo));
-						product.setMenuList(this.appInfoGenerator.generateMenuList(metaInfo));
-					} else {
-						product.setIdentifierList(this.commonMetaInfoGenerator.generateIdentifierList(metaInfo));
-						product.setMenuList(this.commonMetaInfoGenerator.generateMenuList(metaInfo));
-					}
-
-					/*
-					 * Rights grade
-					 */
-					rights.setGrade(mapper.getProdGrdCd());
-					product.setRights(rights);
-
-					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-					source.setMediaType(DisplayCommonUtil.getMimeType(mapper.getFilePos()));
-					source.setUrl(mapper.getFilePos());
-					sourceList.add(source);
-					product.setSourceList(sourceList);
-
-					// 상품 SVC_GRP_CD 조회
-					// DP000203 : 멀티미디어
-					// DP000206 : Tstore 쇼핑
-					// DP000205 : 소셜쇼핑
-					// DP000204 : 폰꾸미기
-					// DP000201 : 애플리캐이션
-					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 앱 타입일 경우
-						app.setAid(mapper.getAid());
-						app.setPackageName(mapper.getApkPkg());
-						app.setVersionCode(mapper.getApkVerCd());
-						app.setVersion(mapper.getProdVer()); // 확인 필요
-						product.setApp(app);
-					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 멀티미디어
-						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(mapper.getTopMenuId())
-								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(mapper.getTopMenuId())) { // 영화/방송
-						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(mapper.getTopMenuId())
-								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(mapper.getTopMenuId())) { // Ebook /
-																										  // Comic
-						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(mapper.getTopMenuId())) { // 음원 상품의 경우
-						}
-					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(mapper.getSvcGrpCd())) { // 쇼핑
-					}
-
-					sublistVO.add(product);
-				} // end of if
-			} // end of for
-			theme.setSubProductList(sublistVO);
-			mainListVO.add(theme);
-			sublistVO = new ArrayList<Product>();
-
-		} // end of for
-
-		return mainListVO;
-	}
-
-	private MetaInfo setMetaInfo(Appguide mapper) {
-
-		MetaInfo metaInfo = new MetaInfo();
-
-		// set Indentifier list informations
-		metaInfo.setContentsTypeCd(mapper.getContentsTypeCd());
-		metaInfo.setProdId(mapper.getProdId());
-		metaInfo.setPartProdId(mapper.getPartProdId());
-		metaInfo.setTopMenuId(mapper.getTopMenuId());
-
-		// set menu list
-		if (!StringUtils.isNullOrEmpty(mapper.getTopMenuId())) {
-			metaInfo.setTopMenuId(mapper.getTopMenuId());
-			metaInfo.setTopMenuNm(mapper.getTopMenuNm());
-		}
-		if (!StringUtils.isNullOrEmpty(mapper.getMenuId())) {
-			metaInfo.setMenuId(mapper.getMenuId());
-			metaInfo.setMenuNm(mapper.getMenuNm());
-		}
-		if (!StringUtils.isNullOrEmpty(mapper.getMetaClsfCd())) {
-			metaInfo.setMetaClsfCd(mapper.getMetaClsfCd());
-		}
-
-		return metaInfo;
-
 	}
 }
