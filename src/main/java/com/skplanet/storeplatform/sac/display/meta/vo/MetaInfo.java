@@ -242,7 +242,7 @@ public class MetaInfo extends CommonInfo {
 	private String couponCode; // 쿠폰코드
 	private String itemCode; // 아이템코드
 	private String specialCouponId; // 특가 쿠폰 ID
-
+	private String brandType; // 쇼핑 hot
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
 	private String tagNm;
@@ -3440,6 +3440,21 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setSpecialCouponId(String specialCouponId) {
 		this.specialCouponId = specialCouponId;
+	}
+
+	/**
+	 * @return the brandType
+	 */
+	public String getBrandType() {
+		return this.brandType;
+	}
+
+	/**
+	 * @param brandType
+	 *            the brandType to set
+	 */
+	public void setBrandType(String brandType) {
+		this.brandType = brandType;
 	}
 
 	/**
