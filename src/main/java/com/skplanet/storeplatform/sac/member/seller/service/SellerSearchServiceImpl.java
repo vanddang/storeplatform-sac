@@ -501,7 +501,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) {
 
-		List<SecedeReson> sList = this.commonDAO.queryForList("SellerSearch.lis" + "tWithdrawalReason", header
+		List<SecedeReson> sList = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", header
 				.getTenantHeader().getLangCd(), SecedeReson.class);
 
 		ListWithdrawalReasonRes response = new ListWithdrawalReasonRes();
