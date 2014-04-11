@@ -211,7 +211,7 @@
     		    AND CT.USE_YN = 'Y'
     		    AND TP.PROD_STATUS_CD = 'PD000403'
     		    AND EXISTS ( 
-    		    	SELECT SP.PROD_ID 
+    		    	SELECT RS.PROD_ID 
     		    	FROM TB_DP_PROD_RSHP RS, TB_DP_PROD EP, TB_DP_SUB_CONTENTS SC, TB_DP_TENANT_PROD ET
     		        WHERE RS.PROD_ID=PD.PROD_ID 
     		        AND EXISTS (
@@ -230,6 +230,7 @@
                 			ELSE 'Y' END
                 		AND 'Y' = CASE WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN 
                     			CASE WHEN DV.HDV_SPRT_YN = 'N' THEN (CASE WHEN SC.DP_PG_QULT_CD ='PD009701' OR SC.DP_PG_QULT_CD ='PD009702' THEN 'Y' ELSE 'N' END)
+                    			ELSE 'Y' END
                     		ELSE 'Y' END 
     		            AND 'Y' = CASE WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN DV.VOD_FIXISTT_SPRT_YN
     		            	WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN 
