@@ -45,6 +45,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.IsfEcInvokerImpl;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
 import com.skplanet.storeplatform.sac.display.feature.theme.recommend.vo.ThemeRecommend;
@@ -67,6 +69,9 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 	@Autowired
 	private IsfEcInvokerImpl invoker;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	@Override
 	public ThemeRecommendSacRes searchThemeRecommendList(ThemeRecommendSacReq requestVO, SacRequestHeader requestHeader)
@@ -150,48 +155,58 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		List<ThemeRecommend> listThemeRecommend = new ArrayList<ThemeRecommend>();
 		if (StringUtils.equalsIgnoreCase(requestVO.getFilteredBy(), "short")) {
 
-			List<String> imageCodeList = new ArrayList<String>();
-			imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-			imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-			imageCodeList.add(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-			imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-			imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			mapReq.put("imageCdList", imageCodeList);
+			// 단말 지원정보 조회
+			SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(deviceHeader.getModel());
+			if (supportDevice != null) {
+				mapReq.put("ebookSprtYn", supportDevice.getEbookSprtYn());
+				mapReq.put("comicSprtYn", supportDevice.getComicSprtYn());
+				mapReq.put("musicSprtYn", supportDevice.getMusicSprtYn());
+				mapReq.put("videoDrmSprtYn", supportDevice.getVideoDrmSprtYn());
+				mapReq.put("sdVideoSprtYn", supportDevice.getSdVideoSprtYn());
+				mapReq.put("sclShpgSprtYn", supportDevice.getSclShpgSprtYn());
 
-			// 테마추천 v2 (맞춤테마)
-			if (StringUtils.equalsIgnoreCase(requestVO.getVer(), "v2")) {
-				// 2단, 3단 노출건수 조회
-				int themeCnt = this.commonDAO.queryForInt("Isf.ThemeRecommend.getRecommendViewCount", null);
+				List<String> imageCodeList = new ArrayList<String>();
+				imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+				imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+				imageCodeList.add(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+				imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+				imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+				mapReq.put("imageCdList", imageCodeList);
 
-				// ISF 연동 결과가 있는 경우
-				if (StringUtils.isNotEmpty(ObjectUtils.toString(mapReq.get("multiValueId")))) {
-					mapReq.put("END_ROW", "1"); // 최 상단의 테마는 사용자에 맞는 추천
-					listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList",
-							mapReq, ThemeRecommend.class);
+				// 테마추천 v2 (맞춤테마)
+				if (StringUtils.equalsIgnoreCase(requestVO.getVer(), "v2")) {
+					// 2단, 3단 노출건수 조회
+					int themeCnt = this.commonDAO.queryForInt("Isf.ThemeRecommend.getRecommendViewCount", null);
 
-					// 최 상단에 노출되는 테마는 2번째, 3번째 조회 시 제외 처리
-					if (!listThemeRecommend.isEmpty()) {
-						ThemeRecommend themeRecommend = listThemeRecommend.get(0);
-						mapReq.put("excludePkgId", themeRecommend.getPkgId());
-						mapReq.put("END_ROW", themeCnt - listThemeRecommend.size());
+					// ISF 연동 결과가 있는 경우
+					if (StringUtils.isNotEmpty(ObjectUtils.toString(mapReq.get("multiValueId")))) {
+						mapReq.put("END_ROW", "1"); // 최 상단의 테마는 사용자에 맞는 추천
+						listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList",
+								mapReq, ThemeRecommend.class);
+
+						// 최 상단에 노출되는 테마는 2번째, 3번째 조회 시 제외 처리
+						if (!listThemeRecommend.isEmpty()) {
+							ThemeRecommend themeRecommend = listThemeRecommend.get(0);
+							mapReq.put("excludePkgId", themeRecommend.getPkgId());
+							mapReq.put("END_ROW", themeCnt - listThemeRecommend.size());
+						}
+
+						mapReq.remove("multiValueId");
+
+						// 2번째와 3번째 테마는 DB 우선 노출 항목 노출
+						listThemeRecommend.addAll(this.commonDAO.queryForList(
+								"Isf.ThemeRecommend.getRecomendPkgMainList", mapReq, ThemeRecommend.class));
+						mapReq.put("END_ROW", themeCnt);
+					} else {
+						mapReq.put("END_ROW", themeCnt);
+						listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList",
+								mapReq, ThemeRecommend.class);
 					}
-
-					mapReq.remove("multiValueId");
-
-					// 2번째와 3번째 테마는 DB 우선 노출 항목 노출
-					listThemeRecommend.addAll(this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList",
-							mapReq, ThemeRecommend.class));
-					mapReq.put("END_ROW", themeCnt);
-				} else {
-					mapReq.put("END_ROW", themeCnt);
+				} else { // 기존 테마추천 (4개 고정)
 					listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList",
 							mapReq, ThemeRecommend.class);
 				}
-			} else { // 기존 테마추천 (4개 고정)
-				listThemeRecommend = this.commonDAO.queryForList("Isf.ThemeRecommend.getRecomendPkgMainList", mapReq,
-						ThemeRecommend.class);
 			}
-
 		} else if (StringUtils.equalsIgnoreCase(requestVO.getFilteredBy(), "long")) {
 
 			int start = 1;
