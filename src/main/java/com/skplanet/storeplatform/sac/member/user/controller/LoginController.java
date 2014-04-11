@@ -59,12 +59,10 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
-		LOGGER.debug(":::::::::::::::::::: authorizeByMdn v1 start ::::::::::::::::::::");
 		LOGGER.info(req.toString());
 
 		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdn(requestHeader, req);
 
-		LOGGER.debug(":::::::::::::::::::: authorizeByMdn v1 end ::::::::::::::::::::");
 		return res;
 	}
 
@@ -81,12 +79,9 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
-		LOGGER.debug(":::::::::::::::::::: authorizeByMdn v2 start ::::::::::::::::::::");
 		LOGGER.info(req.toString());
 
 		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdnV2(requestHeader, req);
-
-		LOGGER.debug(":::::::::::::::::::: authorizeByMdn v2 end ::::::::::::::::::::");
 
 		return res;
 
@@ -105,12 +100,9 @@ public class LoginController {
 	@ResponseBody
 	public CheckVariabilityRes checkVariability(SacRequestHeader requestHeader, @Valid @RequestBody CheckVariabilityReq req) {
 
-		LOGGER.debug(":::::::::::::::::::: checkVariability v1 start ::::::::::::::::::::");
 		LOGGER.info(req.toString());
 
 		CheckVariabilityRes res = this.loginService.executCheckVariability(requestHeader, req);
-
-		LOGGER.debug(":::::::::::::::::::: checkVariability v1 start ::::::::::::::::::::");
 
 		return res;
 
@@ -129,12 +121,9 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) {
 
-		LOGGER.debug(":::::::::::::::::::: authorizeById v1 start ::::::::::::::::::::");
 		LOGGER.info(req.toString());
 
 		AuthorizeByIdRes res = this.loginService.executeAuthorizeById(requestHeader, req);
-
-		LOGGER.debug(":::::::::::::::::::: authorizeById v1 end ::::::::::::::::::::");
 
 		return res;
 
@@ -153,12 +142,9 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSimpleByMdnReq req) {
 
-		LOGGER.debug(":::::::::::::::::::: authorizeSimpleByMdn v1 start ::::::::::::::::::::");
 		LOGGER.info(req.toString());
 
 		AuthorizeSimpleByMdnRes res = this.loginService.executeAuthorizeSimpleByMdn(requestHeader, req);
-
-		LOGGER.debug(":::::::::::::::::::: authorizeSimpleByMdn v1 end ::::::::::::::::::::");
 
 		return res;
 
@@ -179,12 +165,9 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
 
-		LOGGER.debug(":::::::::::::::::::: authorizeSaveAndSyncByMac v1 start ::::::::::::::::::::");
 		LOGGER.info(req.toString());
 
 		AuthorizeSaveAndSyncByMacRes res = this.loginService.executeAuthorizeSaveAndSyncByMac(requestHeader, req);
-
-		LOGGER.debug(":::::::::::::::::::: authorizeSaveAndSyncByMac v1 end ::::::::::::::::::::");
 
 		return res;
 
