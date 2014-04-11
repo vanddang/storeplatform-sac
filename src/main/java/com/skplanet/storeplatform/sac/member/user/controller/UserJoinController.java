@@ -65,7 +65,7 @@ public class UserJoinController {
 		LOGGER.debug("##### 2.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
 		LOGGER.debug("####################################################");
 
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
 			throw new StorePlatformException("SAC_MEM_0002", "model");
@@ -76,7 +76,7 @@ public class UserJoinController {
 		 */
 		CreateByMdnRes res = this.svc.createByMdn(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -101,7 +101,7 @@ public class UserJoinController {
 		LOGGER.debug("##### 2.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
 		LOGGER.debug("####################################################");
 
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 
 		CreateByAgreementRes res = null;
 		if (!StringUtils.equals(req.getDeviceId(), "")) {
@@ -130,7 +130,7 @@ public class UserJoinController {
 
 		}
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -155,7 +155,7 @@ public class UserJoinController {
 		LOGGER.debug("##### 2.1.3. ID 회원 간편 가입 (IDP 회원) #####");
 		LOGGER.debug("#############################################");
 
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 
 		CreateBySimpleRes res = null;
 		if (!StringUtils.equals(req.getDeviceId(), "")) {
@@ -184,7 +184,7 @@ public class UserJoinController {
 
 		}
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -209,7 +209,7 @@ public class UserJoinController {
 		LOGGER.debug("##### 2.1.39. Save&Sync 가입 #####");
 		LOGGER.debug("#################################");
 
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
 			throw new StorePlatformException("SAC_MEM_0002", "model");
@@ -220,7 +220,7 @@ public class UserJoinController {
 		 */
 		CreateSaveAndSyncRes res = this.svc.createSaveAndSync(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 

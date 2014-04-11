@@ -57,14 +57,14 @@ public class UserLockController {
 		LOGGER.debug("##### 2.1.36. 회원 계정 잠금 #####");
 		LOGGER.debug("################################");
 
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * 회원 계정 잠금 Biz
 		 */
 		LockAccountSacRes res = this.svc.lockAccount(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
