@@ -168,6 +168,14 @@ public class PurchaseOrderController {
 		// 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
 		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
 
+		// 구매완료 TLog 로그ID 초기세팅
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00015");
+			}
+		});
+
 		// 비과금 구매완료 처리
 		this.orderService.createFreePurchase(purchaseOrderInfo);
 
