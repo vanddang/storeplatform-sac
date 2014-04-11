@@ -25,7 +25,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
@@ -43,8 +42,6 @@ public class NoProvisionServiceImpl implements NoProvisionService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-	@Autowired
-	private DisplayCommonService commonService;
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 	@Autowired
