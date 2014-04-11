@@ -88,7 +88,7 @@ public class PurchaseOrderController {
 		this.logger.debug("PRCHS,ORDER,SAC,CREATE,REQ,{},{}", sacRequestHeader, req);
 
 		// T Log
-		this.loggingTLog("TL00002", req, sacRequestHeader);
+		this.loggingPurchaseReq(req, sacRequestHeader);
 
 		// 요청 값 검증
 		this.validationService.validatePurchaseRequestParameter(req);
@@ -155,7 +155,7 @@ public class PurchaseOrderController {
 		this.logger.debug("PRCHS,ORDER,SAC,CREATEFREE,REQ,{},{}", sacRequestHeader, req);
 
 		// T Log
-		this.loggingTLog("TL00002", req, sacRequestHeader);
+		this.loggingPurchaseReq(req, sacRequestHeader);
 
 		// 비과금 구매요청 권한 체크
 		this.validationService.validateFreeChargeAuth(req.getPrchsReqPathCd());
@@ -200,7 +200,7 @@ public class PurchaseOrderController {
 		this.logger.debug("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}", sacRequestHeader, req);
 
 		// T Log
-		this.loggingTLog("TL00002", req, sacRequestHeader);
+		// this.loggingPurchaseReq(req, sacRequestHeader);
 
 		// Biz 구매요청 권한 체크
 		this.validationService.validateBizAuth(req.getPrchsReqPathCd());
@@ -291,6 +291,14 @@ public class PurchaseOrderController {
 			}
 		}
 
+		// 구매완료 TLog 로그ID 초기세팅
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00015");
+			}
+		});
+
 		// ------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
 		// 구매 확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장
@@ -372,6 +380,8 @@ public class PurchaseOrderController {
 	 */
 	private void preCheckBeforeProcessOrder(PurchaseOrderInfo purchaseOrderInfo) {
 
+		ErrorInfo errorInfo = null;
+
 		try {
 			// 회원 적합성 체크
 			this.validationService.validateMember(purchaseOrderInfo);
@@ -386,53 +396,68 @@ public class PurchaseOrderController {
 			this.validationService.validatePurchase(purchaseOrderInfo);
 
 		} catch (StorePlatformException e) {
-			ErrorInfo errorInfo = e.getErrorInfo();
-			final String resultCode = errorInfo.getCode();
-			final String resultMessage = errorInfo.getMessage();
-			final String exceptionLog = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
-			new TLogUtil().log(new ShuttleSetter() {
-				@Override
-				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL00006").result_code(resultCode).result_message(resultMessage)
-							.exception_log(exceptionLog);
-				}
-			});
+
+			errorInfo = e.getErrorInfo();
 
 			throw e;
+
+		} finally {
+
+			if (errorInfo == null) {
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL00006").result_code("SUCC");
+					}
+				});
+			} else {
+
+				final String resultCode = errorInfo.getCode();
+				final String resultMessage = errorInfo.getMessage();
+				final String exceptionLog = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
+
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL00006").result_code(resultCode).result_message(resultMessage)
+								.exception_log(exceptionLog);
+					}
+				});
+			}
 		}
 
-		new TLogUtil().log(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00006").result_code("SUCC");
-			}
-		});
 	}
 
-	private void loggingTLog(String logId, CreatePurchaseSacReq req, SacRequestHeader sacRequestHeader) {
-		if (StringUtils.equals(logId, "TL00002")) { // 구매인입
-			final String systemId = sacRequestHeader.getTenantHeader().getSystemId();
-			final String clientIp = req.getClientIp();
-			final String prchsReqPathCd = req.getPrchsReqPathCd();
-			final String fdsPrchsCaseCd = StringUtils.equals(req.getPrchsCaseCd(),
-					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
-			final String networkTypeCd = req.getNetworkTypeCd();
-			final List<String> prodIdList = new ArrayList<String>();
-			final List<Long> prodPriceList = new ArrayList<Long>();
-			for (CreatePurchaseSacReqProduct product : req.getProductList()) {
-				prodIdList.add(product.getProdId());
-				prodPriceList.add((long) product.getProdAmt().doubleValue());
-			}
-
-			new TLogUtil().set(new ShuttleSetter() {
-				@Override
-				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL00002").library_version("").system_id(systemId).purchase_channel(prchsReqPathCd)
-							.purchase_inflow_channel(fdsPrchsCaseCd).device_ip(clientIp).network_type(networkTypeCd)
-							.product_id(prodIdList).product_price(prodPriceList);
-				}
-			});
+	/*
+	 * 
+	 * <pre> 구매인입 T Log 작성. </pre>
+	 * 
+	 * @param req 구매요청 VO
+	 * 
+	 * @param sacRequestHeader 요청 헤더
+	 */
+	private void loggingPurchaseReq(CreatePurchaseSacReq req, SacRequestHeader sacRequestHeader) {
+		final String systemId = sacRequestHeader.getTenantHeader().getSystemId();
+		final String clientIp = req.getClientIp();
+		final String prchsReqPathCd = req.getPrchsReqPathCd();
+		final String fdsPrchsCaseCd = StringUtils
+				.equals(req.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+		final String networkTypeCd = req.getNetworkTypeCd();
+		final List<String> prodIdList = new ArrayList<String>();
+		final List<Long> prodPriceList = new ArrayList<Long>();
+		for (CreatePurchaseSacReqProduct product : req.getProductList()) {
+			prodIdList.add(product.getProdId());
+			prodPriceList.add((long) product.getProdAmt().doubleValue());
 		}
+
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00002").system_id(systemId).purchase_channel(prchsReqPathCd)
+						.purchase_inflow_channel(fdsPrchsCaseCd).device_ip(clientIp).network_type(networkTypeCd)
+						.product_id(prodIdList).product_price(prodPriceList);
+			}
+		});
 	}
 
 }

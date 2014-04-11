@@ -12,10 +12,8 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishDetailEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcReq;
@@ -47,6 +46,8 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
@@ -229,6 +230,68 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			} catch (Exception e) {
 				throw new StorePlatformException("SAC_PUR_7212", e);
 			}
+
+		} else { // TAKTODO:: 일단은 Biz 쿠폰 발급 경우는 T Log 제외
+			// -------------------------------------------------------------------------------------------
+			// 구매완료 TLog
+			final String imei = purchaseOrderInfo.getImei();
+			String telecom = purchaseOrderInfo.getPurchaseUser().getTelecom();
+			final String mno_type = StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT) ? "SKT" : (StringUtils
+					.equals(telecom, PurchaseConstants.TELECOM_KT) ? "KT" : (StringUtils.equals(telecom,
+					PurchaseConstants.TELECOM_UPLUS) ? "U+" : "")); // SKT, KT, U+
+			final String usermbr_no = purchaseOrderInfo.getPurchaseUser().getUserKey();
+			final String system_id = purchaseOrderInfo.getSystemId();
+			final String purchase_channel = purchaseOrderInfo.getPrchsReqPathCd();
+			final String purchase_inflow_channel = StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
+					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+			final String purchase_id = purchaseOrderInfo.getPrchsId();
+			final String purchase_id_recv = StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
+					PurchaseConstants.PRCHS_CASE_GIFT_CD) ? purchaseOrderInfo.getPrchsId() : "";
+
+			final List<String> allProdIdList = new ArrayList<String>(); // SAC OUT 용
+
+			for (PrchsDtlMore prchsInfo : prchsDtlMoreList) { // 상품 수 만큼 로깅
+				final List<String> prodIdList = new ArrayList<String>();
+				prodIdList.add(prchsInfo.getProdId());
+				final String purchase_prod_num = String.valueOf(prchsInfo.getPrchsDtlId());
+				final String purchase_prod_num_recv = StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
+						PurchaseConstants.PRCHS_CASE_GIFT_CD) ? String.valueOf(prchsInfo.getPrchsDtlId()) : "";
+				final String tid = prchsInfo.getTid();
+				final String tx_id = prchsInfo.getTxId();
+				final String use_start_time = ""; // TAKTODO
+				final String use_end_time = ""; // TAKTODO
+				final String download_expired_time = ""; // TAKTODO
+				final Long product_qty = (long) prchsInfo.getProdQty();
+				final String coupon_publish_code = "";
+				final String coupon_code = "";
+				final String coupon_item_code = "";
+				final String auto_payment_yn = "N";
+
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.imei(imei).mno_type(mno_type).usermbr_no(usermbr_no).system_id(system_id)
+								.purchase_channel(purchase_channel).purchase_inflow_channel(purchase_inflow_channel)
+								.product_id(prodIdList).purchase_id(purchase_id).purchase_prod_num(purchase_prod_num)
+								.purchase_id_recv(purchase_id_recv).purchase_prod_num_recv(purchase_prod_num_recv)
+								.tid(tid).tx_id(tx_id).use_start_time(use_start_time).use_end_time(use_end_time)
+								.download_expired_time(download_expired_time).product_qty(product_qty)
+								.coupon_publish_code(coupon_publish_code).coupon_code(coupon_code)
+								.coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
+					}
+				});
+
+				allProdIdList.add(prchsInfo.getProdId()); // SAC OUT 용
+			}
+
+			// SAC OUT 용
+			new TLogUtil().set(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.product_id(allProdIdList);
+				}
+			});
+
 		}
 
 		return count;
@@ -305,16 +368,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// 예약된 구매정보 조회
 
-		SearchReservedPurchaseListScReq reqSearch = new SearchReservedPurchaseListScReq();
-		reqSearch.setTenantId(verifyOrderInfo.getTenantId());
-		reqSearch.setPrchsId(verifyOrderInfo.getPrchsId());
+		List<PrchsDtlMore> prchsDtlMoreList = this.searchReservedPurchaseList(verifyOrderInfo.getTenantId(),
+				verifyOrderInfo.getPrchsId());
 
-		SearchReservedPurchaseListScRes searchPurchaseListRes = this.purchaseOrderSearchSCI
-				.searchReservedPurchaseList(reqSearch);
-		List<PrchsDtlMore> prchsDtlMoreList = searchPurchaseListRes.getPrchsDtlMoreList();
-		if (prchsDtlMoreList.size() < 1) {
-			throw new StorePlatformException("SAC_PUR_7101");
-		}
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
 		// ------------------------------------------------------------------------------------------------
@@ -324,30 +380,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		Map<String, String> reservedDataMap = this.parseReservedData(prchsDtlMore.getPrchsResvDesc());
 
 		VerifyOrderSacRes res = new VerifyOrderSacRes();
-		res.setMdn(reservedDataMap.get("deviceId")); // 결제 MDN
-		res.setFlgMbrStatus(PurchaseConstants.VERIFYORDER_USER_STATUS_NORMAL); // [fix] 회원상태: 1-정상
-		res.setFlgProductStatus(PurchaseConstants.VERIFYORDER_PRODUCT_STATUS_NORMAL); // [fix] 상품상태: 1-정상
-		res.setBonusCashPoint(reservedDataMap.get("bonusCashPoint")); // 보너스 캐쉬 지급 Point
-		res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusCashUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
-		res.setAfterAutoPayDt(reservedDataMap.get("afterAutoPayDt")); // 다음 자동 결제일
-		res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
-		res.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt")); // 이용기간(일)
-		res.setLoanPid(reservedDataMap.get("loanPid")); // 대여하기 상품 ID
-		if (StringUtils.isNotBlank(reservedDataMap.get("loanAmt"))) {
-			res.setLoanAmt(Double.parseDouble(reservedDataMap.get("loanAmt"))); // 대여하기 상품 금액
-		}
-		res.setOwnPid(reservedDataMap.get("ownPid")); // 소장하기 상품 ID
-		if (StringUtils.isNotBlank(reservedDataMap.get("ownAmt"))) {
-			res.setOwnAmt(Double.parseDouble(reservedDataMap.get("ownAmt"))); // 소장하기 상품 금액
-		}
-		res.setNmSeller(reservedDataMap.get("sellerNm")); // 판매자명
-		res.setEmailSeller(reservedDataMap.get("sellerEmail")); // 판매자 이메일 주소
-		res.setNoTelSeller(reservedDataMap.get("sellerTelno")); // 판매자 전화번호
-		res.setNmDelivery(reservedDataMap.get("receiveNames")); // 선물수신자 성명
-		res.setNoMdnDelivery(reservedDataMap.get("receiveMdns")); // 선물수신자 MDN
-		if (StringUtils.defaultString(prchsDtlMore.getTenantProdGrpCd()).length() >= 12) {
-			res.setTopMenuId(prchsDtlMore.getTenantProdGrpCd().substring(8, 12)); // 상품 TOP 메뉴 ID
-		}
 
 		// 회원 - 결제 관련 정보 조회
 		SearchUserPayplanetSacRes userPayRes = null;
@@ -364,35 +396,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// SKT 후불 관련 정책 체크: SKT시험폰, MVNO, 법인폰, 한도금액 조회
 
-		SktPaymentPolicyCheckResult policyResult = null;
+		SktPaymentPolicyCheckResult policyResult = this.checkSktPaymentPolicy(prchsDtlMore,
+				reservedDataMap.get("telecom"), reservedDataMap.get("deviceId"), reservedDataMap.get("useDeviceId"));
 
-		StringBuffer sbPaymentMtdAmtRate = new StringBuffer(64); // 결제수단 재정의
 		String testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_NORMAL;
-		double sktAvailableAmt = 0.0;
-		if (StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT)) {
-			SktPaymentPolicyCheckParam policyCheckParam = new SktPaymentPolicyCheckParam();
-			policyCheckParam.setDeviceId(reservedDataMap.get("deviceId"));
-			policyCheckParam.setPaymentTotAmt(prchsDtlMore.getTotAmt());
-			policyCheckParam.setTenantProdGrpCd(prchsDtlMore.getTenantProdGrpCd());
-			if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-				policyCheckParam.setTenantId(prchsDtlMore.getTenantId());
-				policyCheckParam.setUserKey(prchsDtlMore.getSendInsdUsermbrNo());
-				policyCheckParam.setDeviceKey(prchsDtlMore.getSendInsdDeviceId());
-				policyCheckParam.setRecvTenantId(prchsDtlMore.getUseTenantId());
-				policyCheckParam.setRecvUserKey(prchsDtlMore.getUseInsdUsermbrNo());
-				policyCheckParam.setRecvDeviceKey(prchsDtlMore.getUseInsdDeviceId());
-				policyCheckParam.setRecvDeviceId(reservedDataMap.get("useDeviceId"));
-			} else {
-				policyCheckParam.setTenantId(prchsDtlMore.getTenantId());
-				policyCheckParam.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
-				policyCheckParam.setDeviceKey(prchsDtlMore.getUseInsdDeviceId());
-			}
+		String sktPaymethodInfo = null;
 
-			try {
-				policyResult = this.purchaseOrderPolicyService.checkSktPaymentPolicy(policyCheckParam);
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_PUR_7209", e);
-			}
+		if (policyResult != null) {
 
 			// SKT후불 결제정보 재정의 원인
 			res.setTypeSktLimit(policyResult.getSktLimitType());
@@ -404,34 +414,27 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE;
 			}
 
-			// SKT 결제 금액
-			sktAvailableAmt = policyResult.getSktRestAmt();
+			// SKT 결제 가능 금액
+			double sktAvailableAmt = policyResult.getSktRestAmt();
 
 			// SKT 후불 재조정
 			if (StringUtils.equals(testMdnType, PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE)) {
-				sbPaymentMtdAmtRate.append("11:0:0");
+				sktPaymethodInfo = "11:0:0";
 			} else {
 				if (sktAvailableAmt > 0.0) {
-					sbPaymentMtdAmtRate.append("11:").append(sktAvailableAmt).append(":100");
+					sktPaymethodInfo = "11:" + sktAvailableAmt + ":100";
 				} else {
-					sbPaymentMtdAmtRate.append("11:0:0");
+					sktPaymethodInfo = "11:0:0";
 				}
 			}
-
-		} else {
-			sbPaymentMtdAmtRate.append("11:0:0"); // SKT 외 통신사
 		}
 
-		res.setTypeTestMdn(testMdnType); // 법인 및 일반 시험폰 처리 타입 (T01, T02, T03)
+		// 법인 및 일반 시험폰 처리 타입 (T01, T02, T03)
+		res.setTypeTestMdn(testMdnType);
 
 		// 결제수단 별 가능 거래금액/비율 조정 정보
-		String paymentAdjustInfo = this.purchaseOrderPolicyService.getAvailablePaymethodAdjustInfo(
-				prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd());
-		if (paymentAdjustInfo != null) {
-			sbPaymentMtdAmtRate.append(";").append(
-					paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(prchsDtlMore.getTotAmt())));
-		}
-		res.setCdMaxAmtRate(sbPaymentMtdAmtRate.toString());
+		res.setCdMaxAmtRate(this.adjustPaymethod(sktPaymethodInfo, prchsDtlMore.getTenantId(),
+				prchsDtlMore.getTenantProdGrpCd(), prchsDtlMore.getTotAmt().doubleValue()));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제수단 정렬 재조정
@@ -441,154 +444,77 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// T store 쿠폰 조회
 
-		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
-			res.setNoCouponList("NULL");
-
-		} else {
-
-			Set<String> prodIdSet = new HashSet<String>();
-			for (PrchsDtlMore productInfo : prchsDtlMoreList) {
-				prodIdSet.add(productInfo.getProdId());
-			}
-			List<ProdId> prodIdList = new ArrayList<ProdId>();
-			ProdId prodIdObj = null;
-			for (String prodId : prodIdSet) {
-				prodIdObj = new ProdId();
-				prodIdObj.setProdId(prodId);
-				prodIdList.add(prodIdObj);
-			}
-			UserCouponListEcReq userCouponListEcReq = new UserCouponListEcReq();
-			userCouponListEcReq.setUserKey(reservedDataMap.get("userKey"));
-			userCouponListEcReq.setMdn(reservedDataMap.get("deviceId"));
-			// userCouponListEcReq.setCouponType("");
-			userCouponListEcReq.setProdIdList(prodIdList);
-
-			UserCouponListEcRes tstoreCouponListEcRes = null;
-			try {
-				tstoreCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_PUR_7210", e);
-			}
-
-			if (StringUtils.equals(tstoreCouponListEcRes.getResultCd(),
-					PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
-				throw new StorePlatformException("SAC_PUR_7206", tstoreCouponListEcRes.getResultCd(),
-						tstoreCouponListEcRes.getResultMsg());
-			}
-
-			if (CollectionUtils.isNotEmpty(tstoreCouponListEcRes.getCouponList())) {
-				StringBuffer sbTstoreCoupon = new StringBuffer(256);
-
-				for (Coupon coupon : tstoreCouponListEcRes.getCouponList()) {
-					if (sbTstoreCoupon.length() > 0) {
-						sbTstoreCoupon.append(";");
-					}
-					sbTstoreCoupon.append(coupon.getCouponId()).append(":").append(coupon.getCouponName()).append(":")
-							.append(coupon.getCouponAmt()).append(":").append(coupon.getMakeHost()).append(":")
-							.append(coupon.getCouponType());
-				}
-
-				res.setNoCouponList(sbTstoreCoupon.toString());
-
-			} else {
-				res.setNoCouponList("NULL");
-			}
+		List<String> prodIdList = new ArrayList<String>();
+		for (PrchsDtlMore productInfo : prchsDtlMoreList) {
+			prodIdList.add(productInfo.getProdId());
 		}
+		res.setNoCouponList(this.searchTstoreCouponList(reservedDataMap.get("userKey"),
+				reservedDataMap.get("deviceId"), prodIdList));
 
 		// ------------------------------------------------------------------------------------------------
 		// T store Cash 조회
 
-		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
-			res.setTstoreCashAmt(0.0);
-
-		} else {
-
-			TStoreCashEcReq tStoreCashEcReq = new TStoreCashEcReq();
-			tStoreCashEcReq.setUserKey(reservedDataMap.get("userKey"));
-			tStoreCashEcReq.setType(PurchaseConstants.TSTORE_CASH_SVC_TYPE_INQUIRY); // 서비스 타입 : 조회
-			tStoreCashEcReq.setDetailType(PurchaseConstants.TSTORE_CASH_SVC_DETAIL_TYPE_INQUIRY); // 서비스 상세 타입 : 조회
-			tStoreCashEcReq.setChannel(PurchaseConstants.TSTORE_CASH_SVC_CHANNEL_SAC); // 서비스 채널 : SAC
-			tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_ALL); // 상품군 : 전체
-
-			TStoreCashEcRes tStoreCashEcRes = null;
-			try {
-				tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_PUR_7211", e);
-			}
-
-			if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
-				throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
-						tStoreCashEcRes.getResultMsg());
-			}
-			List<Cash> tstoreCashList = tStoreCashEcRes.getCashList();
-			double cashAmt = 0.0;
-			for (Cash cash : tstoreCashList) {
-				cashAmt += Double.parseDouble(cash.getAmt());
-			}
-			res.setTstoreCashAmt(cashAmt);
-		}
+		res.setTstoreCashAmt(this.searchTstoreCashAmt(reservedDataMap.get("userKey")));
 
 		// ------------------------------------------------------------------------------------------------
 		// OCB 적립율
 
-		StringBuffer sbOcbAccum = new StringBuffer(64);
+		// 시험폰, SKP법인폰 여부
+		boolean testOrCorp = (policyResult != null ? (policyResult.isSktTestMdn() || policyResult.isSkpCorporation()) : false);
 
-		// 쇼핑상품, VOD정액제 상품 제외
-		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING) == false
-				&& StringUtils.equals(prchsDtlMore.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING) == false) {
-			if (policyResult != null) {
-				// 시험폰, SKP법인폰 결제 제외
-				if (policyResult.isSktTestMdn() || policyResult.isSkpCorporation()) {
-					sbOcbAccum.append("11:0.0;");
-				} else {
-					sbOcbAccum.append("11:4.0;");
-				}
-			}
-			sbOcbAccum.append("12:4.0;13:4.0;14:4.0;25:4.0"); // 다날, 신용카드, PayPin, T store Cash
-		}
-
-		res.setCdOcbSaveInfo(sbOcbAccum.toString());
+		res.setCdOcbSaveInfo(this.adjustOcbSaveInfo(reservedDataMap.get("telecom"), prchsDtlMore.getTenantProdGrpCd(),
+				testOrCorp));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제Page 템플릿
 
-		String tenantProdGrpCd = prchsDtlMore.getTenantProdGrpCd();
-		if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			res.setCdPaymentTemplate(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GIFT); // 선물: TC06
-
-		} else {
-			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				res.setCdPaymentTemplate(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING); // 쇼핑: TC05
-
-			} else if (StringUtils
-					.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
-					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
-				res.setCdPaymentTemplate(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY); // 자동결제: TC04
-
-			} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)
-					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
-				res.setCdPaymentTemplate(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN); // 대여/소장: TC03
-
-			} else if (StringUtils.startsWith(tenantProdGrpCd,
-					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-				res.setCdPaymentTemplate(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE); // 정액제(게임캐쉬): TC02
-
-			} else {
-				res.setCdPaymentTemplate(PurchaseConstants.PAYMENT_PAGE_TEMPLATE_NORMAL); // 일반: TC01
-			}
-		}
+		res.setCdPaymentTemplate(this.adjustPaymentPageTemplate(prchsDtlMore.getPrchsCaseCd(),
+				prchsDtlMore.getTenantProdGrpCd(), prchsDtlMoreList.size()));
 
 		// ------------------------------------------------------------------------------------------------
 		// (다날) 컨텐츠 종류: 실물 / 디지털 : 쇼핑상품만 실물로 처리
 
-		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			res.setTypeDanalContent(PurchaseConstants.DANAL_CONTENT_TYPE_REAL);
 		} else {
 			res.setTypeDanalContent(PurchaseConstants.DANAL_CONTENT_TYPE_DIGITAL);
+		}
+
+		// ------------------------------------------------------------------------------------------------
+		// 기타 응답 값
+
+		res.setMdn(reservedDataMap.get("deviceId")); // 결제 MDN
+		res.setFlgMbrStatus(PurchaseConstants.VERIFYORDER_USER_STATUS_NORMAL); // [fix] 회원상태: 1-정상
+		res.setFlgProductStatus(PurchaseConstants.VERIFYORDER_PRODUCT_STATUS_NORMAL); // [fix] 상품상태: 1-정상
+		res.setBonusCashPoint(reservedDataMap.get("bonusCashPoint")); // 보너스 캐쉬 지급 Point
+		res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusCashUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
+		res.setAfterAutoPayDt(reservedDataMap.get("afterAutoPayDt")); // 다음 자동 결제일
+		// TAKTODO:: 대여/소장 전시Part 협의 완료 전 까지 Dummy세팅
+		if (StringUtils.equals(res.getCdPaymentTemplate(), PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN)) {
+			res.setDwldAvailableDayCnt("7"); // 다운로드 가능기간(일) : Dummy값 7
+			res.setUsePeriodCnt("7"); // 이용기간(일) : Dummy값 7
+			res.setLoanPid(prchsDtlMore.getProdId()); // 대여하기 상품 ID : Dummy값 요청상품ID
+			res.setLoanAmt(prchsDtlMore.getProdAmt()); // 대여하기 상품 금액 : Dummy값 요청상품가격
+			res.setOwnPid(prchsDtlMore.getProdId()); // 소장하기 상품 ID : Dummy값 요청상품ID
+			res.setOwnAmt(prchsDtlMore.getProdAmt()); // 소장하기 상품 금액 : Dummy값 요청상품가격
+		}
+		// res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
+		// res.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt")); // 이용기간(일)
+		// res.setLoanPid(reservedDataMap.get("loanPid")); // 대여하기 상품 ID
+		// if (StringUtils.isNotBlank(reservedDataMap.get("loanAmt"))) {
+		// res.setLoanAmt(Double.parseDouble(reservedDataMap.get("loanAmt"))); // 대여하기 상품 금액
+		// }
+		// res.setOwnPid(reservedDataMap.get("ownPid")); // 소장하기 상품 ID
+		// if (StringUtils.isNotBlank(reservedDataMap.get("ownAmt"))) {
+		// res.setOwnAmt(Double.parseDouble(reservedDataMap.get("ownAmt"))); // 소장하기 상품 금액
+		// }
+		res.setNmSeller(reservedDataMap.get("sellerNm")); // 판매자명
+		res.setEmailSeller(reservedDataMap.get("sellerEmail")); // 판매자 이메일 주소
+		res.setNoTelSeller(reservedDataMap.get("sellerTelno")); // 판매자 전화번호
+		res.setNmDelivery(reservedDataMap.get("receiveNames")); // 선물수신자 성명
+		res.setNoMdnDelivery(reservedDataMap.get("receiveMdns")); // 선물수신자 MDN
+		if (StringUtils.defaultString(prchsDtlMore.getTenantProdGrpCd()).length() >= 12) {
+			res.setTopMenuId(prchsDtlMore.getTenantProdGrpCd().substring(8, 12)); // 상품 TOP 메뉴 ID
 		}
 
 		return res;
@@ -610,15 +536,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------
 		// 구매 예약 건 조회
 
-		SearchReservedPurchaseListScReq reqSearch = new SearchReservedPurchaseListScReq();
-		reqSearch.setTenantId(tenantId);
-		reqSearch.setPrchsId(notifyPaymentReq.getPrchsId());
-
-		SearchReservedPurchaseListScRes res = this.purchaseOrderSearchSCI.searchReservedPurchaseList(reqSearch);
-		List<PrchsDtlMore> prchsDtlMoreList = res.getPrchsDtlMoreList();
-		if (prchsDtlMoreList.size() < 1) {
-			throw new StorePlatformException("SAC_PUR_7101");
-		}
+		List<PrchsDtlMore> prchsDtlMoreList = this.searchReservedPurchaseList(tenantId, notifyPaymentReq.getPrchsId());
 
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
@@ -730,7 +648,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		confirmPurchaseScReq.setSystemId(prchsDtlMore.getSystemId());
 		confirmPurchaseScReq.setUseUserKey(prchsDtlMore.getUseInsdUsermbrNo());
 		confirmPurchaseScReq.setPrchsId(prchsDtlMore.getPrchsId());
-		confirmPurchaseScReq.setCurrencyCd(prchsDtlMore.getCurrencyCd());
 		confirmPurchaseScReq.setNetworkTypeCd(prchsDtlMore.getNetworkTypeCd());
 
 		confirmPurchaseScReq.setPrchsProdCntList(prchsProdCntList); // 건수집계
@@ -756,6 +673,64 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// 중복된 구매요청 체크
 			throw (this.isDuplicateKeyException(e) ? new StorePlatformException("SAC_PUR_6110") : e);
 		}
+
+		// -------------------------------------------------------------------------------------------
+		// 구매완료 TLog
+		final String imei = reservedDataMap.get("imei");
+		final String mno_type = StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) ? "SKT" : (StringUtils
+				.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_KT) ? "KT" : (StringUtils.equals(
+				reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_UPLUS) ? "U+" : "")); // SKT, KT, U+
+		final String usermbr_no = reservedDataMap.get("userKey");
+		final String system_id = prchsDtlMore.getSystemId();
+		final String purchase_channel = prchsDtlMore.getPrchsReqPathCd();
+		final String purchase_inflow_channel = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+				PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+		final String purchase_id = prchsDtlMore.getPrchsId();
+		final String purchase_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+				PurchaseConstants.PRCHS_CASE_GIFT_CD) ? prchsDtlMore.getPrchsId() : "";
+
+		final List<String> allProdIdList = new ArrayList<String>(); // SAC OUT 용
+
+		for (PrchsDtlMore prchsInfo : prchsDtlMoreList) { // 상품 수 만큼 로깅
+			final List<String> prodIdList = new ArrayList<String>();
+			prodIdList.add(prchsInfo.getProdId());
+			final String purchase_prod_num = reservedDataMap.get("imei");
+			final String purchase_prod_num_recv = reservedDataMap.get("imei");
+			final String tid = prchsDtlMore.getTid();
+			final String tx_id = prchsDtlMore.getTxId();
+			final String use_start_time = prchsDtlMore.getUseStartDt();
+			final String use_end_time = prchsDtlMore.getUseExprDt();
+			final String download_expired_time = prchsDtlMore.getDwldExprDt();
+			final Long product_qty = (long) prchsDtlMore.getProdQty();
+			final String coupon_publish_code = prchsDtlMore.getCpnPublishCd();
+			final String coupon_code = reservedDataMap.get("couponCode");
+			final String coupon_item_code = reservedDataMap.get("itemCode");
+			final String auto_payment_yn = reservedDataMap.get("autoPrchsYn");
+
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.imei(imei).mno_type(mno_type).usermbr_no(usermbr_no).system_id(system_id)
+							.purchase_channel(purchase_channel).purchase_inflow_channel(purchase_inflow_channel)
+							.product_id(prodIdList).purchase_id(purchase_id).purchase_prod_num(purchase_prod_num)
+							.purchase_id_recv(purchase_id_recv).purchase_prod_num_recv(purchase_prod_num_recv).tid(tid)
+							.tx_id(tx_id).use_start_time(use_start_time).use_end_time(use_end_time)
+							.download_expired_time(download_expired_time).product_qty(product_qty)
+							.coupon_publish_code(coupon_publish_code).coupon_code(coupon_code)
+							.coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
+				}
+			});
+
+			allProdIdList.add(prchsInfo.getProdId()); // SAC OUT 용
+		}
+
+		// SAC OUT 용
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.product_id(allProdIdList);
+			}
+		});
 
 		this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,END");
 		return prchsDtlMoreList;
@@ -982,7 +957,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private List<PrchsDtlMore> makePrchsDtlMoreList(PurchaseOrderInfo purchaseOrderInfo) {
 		// 구매예약 시 저장할 데이터 (공통)
 		// tenantId, systemId, networkTypeCd, currencyCd
-		// 결제자: userKey, deviceKey, deviceId, telecom
+		// 결제자: userKey, deviceKey, deviceId, telecom, imei
 		// 보유자: useUserKey, useDeviceKey, useDeviceId, useDeviceModelCd
 		PurchaseUserDevice useUser = null;
 		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
@@ -999,11 +974,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					.append(purchaseOrderInfo.getSystemId()).append("&userKey=").append(purchaseOrderInfo.getUserKey())
 					.append("&deviceKey=").append(purchaseOrderInfo.getDeviceKey()).append("&deviceId=")
 					.append(purchaseOrderInfo.getPurchaseUser().getDeviceId()).append("&telecom=")
-					.append(purchaseOrderInfo.getPurchaseUser().getTelecom()).append("&useUserKey=")
-					.append(useUser.getUserKey()).append("&useDeviceKey=").append(useUser.getDeviceKey())
-					.append("&useDeviceId=").append(useUser.getDeviceId()).append("&useDeviceModelCd=")
-					.append(useUser.getDeviceModelCd()).append("&networkTypeCd=")
-					.append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
+					.append(purchaseOrderInfo.getPurchaseUser().getTelecom()).append("&imei=")
+					.append(purchaseOrderInfo.getImei()).append("&useUserKey=").append(useUser.getUserKey())
+					.append("&useDeviceKey=").append(useUser.getDeviceKey()).append("&useDeviceId=")
+					.append(useUser.getDeviceId()).append("&useDeviceModelCd=").append(useUser.getDeviceModelCd())
+					.append("&networkTypeCd=").append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
 					.append(purchaseOrderInfo.getCurrencyCd());
 			if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 				sbReserveData.append("&receiveNames=").append(StringUtils.defaultString(useUser.getUserName()))
@@ -1089,7 +1064,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				prchsDtlMore.setUseFixrateProdId(product.getUseFixrateProdId());
 				prchsDtlMore.setDrmYn(product.getDrmYn());
 				prchsDtlMore.setAlarmYn(PurchaseConstants.USE_Y);
-				prchsDtlMore.setCurrencyCd(purchaseOrderInfo.getCurrencyCd());
 				/* IAP */
 				prchsDtlMore.setTid(product.getTid()); // 부분유료화 개발사 구매Key
 				prchsDtlMore.setTxId(product.getTxId()); // 부분유료화 전자영수증 번호
@@ -1359,4 +1333,292 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		return false;
 	}
+
+	// =========================================================================================================================================================================
+	// RE~
+
+	/*
+	 * 
+	 * <pre> 구매 예약 정보 목록 조회. </pre>
+	 * 
+	 * @param tenantId 테넌트 ID
+	 * 
+	 * @param prchsId 조회할 구매 ID
+	 * 
+	 * @return 구매 예약 정보 목록
+	 */
+	private List<PrchsDtlMore> searchReservedPurchaseList(String tenantId, String prchsId) {
+		SearchReservedPurchaseListScReq reqSearch = new SearchReservedPurchaseListScReq();
+		reqSearch.setTenantId(tenantId);
+		reqSearch.setPrchsId(prchsId);
+
+		SearchReservedPurchaseListScRes searchPurchaseListRes = this.purchaseOrderSearchSCI
+				.searchReservedPurchaseList(reqSearch);
+		List<PrchsDtlMore> prchsDtlMoreList = searchPurchaseListRes.getPrchsDtlMoreList();
+		if (prchsDtlMoreList.size() < 1) {
+			throw new StorePlatformException("SAC_PUR_7101");
+		}
+
+		return prchsDtlMoreList;
+	}
+
+	/*
+	 * 
+	 * <pre> T Store 쿠폰 목록 조회. </pre>
+	 * 
+	 * @param userKey 내부 회원 NO
+	 * 
+	 * @param deviceId MDN
+	 * 
+	 * @param prodIdList 구매상품ID 목록
+	 * 
+	 * @return T Store 쿠폰 목록
+	 */
+	private String searchTstoreCouponList(String userKey, String deviceId, List<String> prodIdList) {
+		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
+		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+			return "NULL";
+		}
+
+		List<ProdId> prodIdObjList = new ArrayList<ProdId>();
+		ProdId prodIdObj = null;
+		for (String prodId : prodIdList) {
+			prodIdObj = new ProdId();
+			prodIdObj.setProdId(prodId);
+			prodIdObjList.add(prodIdObj);
+		}
+
+		UserCouponListEcReq userCouponListEcReq = new UserCouponListEcReq();
+		userCouponListEcReq.setUserKey(userKey);
+		userCouponListEcReq.setMdn(deviceId);
+		// userCouponListEcReq.setCouponType("");
+		userCouponListEcReq.setProdIdList(prodIdObjList);
+
+		UserCouponListEcRes tstoreCouponListEcRes = null;
+		try {
+			tstoreCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7210", e);
+		}
+
+		if (StringUtils.equals(tstoreCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
+			throw new StorePlatformException("SAC_PUR_7206", tstoreCouponListEcRes.getResultCd(),
+					tstoreCouponListEcRes.getResultMsg());
+		}
+
+		if (CollectionUtils.isNotEmpty(tstoreCouponListEcRes.getCouponList())) {
+			StringBuffer sbTstoreCoupon = new StringBuffer(256);
+
+			for (Coupon coupon : tstoreCouponListEcRes.getCouponList()) {
+				if (sbTstoreCoupon.length() > 0) {
+					sbTstoreCoupon.append(";");
+				}
+				sbTstoreCoupon.append(coupon.getCouponId()).append(":").append(coupon.getCouponName()).append(":")
+						.append(coupon.getCouponAmt()).append(":").append(coupon.getMakeHost()).append(":")
+						.append(coupon.getCouponType());
+			}
+
+			return sbTstoreCoupon.toString();
+
+		} else {
+			return "NULL";
+		}
+	}
+
+	/*
+	 * 
+	 * <pre> T Store Cash 잔액 조회. </pre>
+	 * 
+	 * @param userKey 내부 회원 NO
+	 * 
+	 * @return T Store Cash 잔액
+	 */
+	private double searchTstoreCashAmt(String userKey) {
+		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
+		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+			return 0.0;
+		}
+
+		TStoreCashEcReq tStoreCashEcReq = new TStoreCashEcReq();
+		tStoreCashEcReq.setUserKey(userKey);
+		tStoreCashEcReq.setType(PurchaseConstants.TSTORE_CASH_SVC_TYPE_INQUIRY); // 서비스 타입 : 조회
+		tStoreCashEcReq.setDetailType(PurchaseConstants.TSTORE_CASH_SVC_DETAIL_TYPE_INQUIRY); // 서비스 상세 타입 : 조회
+		tStoreCashEcReq.setChannel(PurchaseConstants.TSTORE_CASH_SVC_CHANNEL_SAC); // 서비스 채널 : SAC
+		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_ALL); // 상품군 : 전체
+
+		TStoreCashEcRes tStoreCashEcRes = null;
+		try {
+			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7211", e);
+		}
+
+		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
+					tStoreCashEcRes.getResultMsg());
+		}
+
+		List<Cash> tstoreCashList = tStoreCashEcRes.getCashList();
+		double cashAmt = 0.0;
+		for (Cash cash : tstoreCashList) {
+			cashAmt += Double.parseDouble(cash.getAmt());
+		}
+
+		return cashAmt;
+	}
+
+	/*
+	 * 
+	 * <pre> 결제수단 별 OCB 적립율 산정. </pre>
+	 * 
+	 * @param telecom 통신사
+	 * 
+	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
+	 * 
+	 * @param testOrCorp 시험폰 또는 SKP법인폰 여부
+	 * 
+	 * @return 결제수단 별 OCB 적립율
+	 */
+	private String adjustOcbSaveInfo(String telecom, String tenantProdGrpCd, boolean testOrCorp) {
+
+		// 쇼핑상품, VOD정액제 상품 제외
+		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
+				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
+				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
+			return "";
+
+		} else {
+			StringBuffer sbOcbAccum = new StringBuffer(64);
+
+			if (StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT)) {
+				sbOcbAccum.append(testOrCorp ? "11:0.0;" : "11:4.0;"); // 시험폰, SKP법인폰 결제 제외
+			} else {
+				sbOcbAccum.append("12:4.0;"); // 다날
+			}
+
+			sbOcbAccum.append("13:4.0;14:4.0;25:4.0"); // 신용카드, PayPin, T store Cash
+
+			return sbOcbAccum.toString();
+		}
+	}
+
+	/*
+	 * 
+	 * <pre> 결제Page 템플릿 코드 정의. </pre>
+	 * 
+	 * @param prchsCaseCd 구매/선물 구분 코드
+	 * 
+	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
+	 * 
+	 * @param prchsProdCnt 구매하는 상품 갯수
+	 * 
+	 * @return 결제Page 템플릿 코드
+	 */
+	private String adjustPaymentPageTemplate(String prchsCaseCd, String tenantProdGrpCd, int prchsProdCnt) {
+		if (StringUtils.equals(prchsCaseCd, PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GIFT; // 선물: TC06
+
+		} else {
+			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING; // 쇼핑: TC05
+
+			} else if (StringUtils
+					.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
+					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
+
+			} else if (prchsProdCnt == 1
+					&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
+							.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))) {
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN; // 대여/소장: TC03
+
+			} else if (StringUtils.startsWith(tenantProdGrpCd,
+					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE; // 정액제(게임캐쉬): TC02
+
+			} else {
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_NORMAL; // 일반: TC01
+			}
+		}
+	}
+
+	/*
+	 * 
+	 * <pre> SKT 결제 정책 체크. </pre>
+	 * 
+	 * @param prchsDtlMore 구매 정보
+	 * 
+	 * @param telecom 통신사
+	 * 
+	 * @param payDeviceId 결제 MDN
+	 * 
+	 * @param useDeviceId 이용 MDN
+	 * 
+	 * @return 결제 정책 체크 결과
+	 */
+	private SktPaymentPolicyCheckResult checkSktPaymentPolicy(PrchsDtlMore prchsDtlMore, String telecom,
+			String payDeviceId, String useDeviceId) {
+		if (StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT) == false) {
+			return null;
+		}
+
+		SktPaymentPolicyCheckParam policyCheckParam = new SktPaymentPolicyCheckParam();
+		policyCheckParam.setDeviceId(payDeviceId);
+		policyCheckParam.setPaymentTotAmt(prchsDtlMore.getTotAmt());
+		policyCheckParam.setTenantProdGrpCd(prchsDtlMore.getTenantProdGrpCd());
+		if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			policyCheckParam.setTenantId(prchsDtlMore.getTenantId());
+			policyCheckParam.setUserKey(prchsDtlMore.getSendInsdUsermbrNo());
+			policyCheckParam.setDeviceKey(prchsDtlMore.getSendInsdDeviceId());
+			policyCheckParam.setRecvTenantId(prchsDtlMore.getUseTenantId());
+			policyCheckParam.setRecvUserKey(prchsDtlMore.getUseInsdUsermbrNo());
+			policyCheckParam.setRecvDeviceKey(prchsDtlMore.getUseInsdDeviceId());
+			policyCheckParam.setRecvDeviceId(useDeviceId);
+		} else {
+			policyCheckParam.setTenantId(prchsDtlMore.getTenantId());
+			policyCheckParam.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
+			policyCheckParam.setDeviceKey(prchsDtlMore.getUseInsdDeviceId());
+		}
+
+		try {
+			return this.purchaseOrderPolicyService.checkSktPaymentPolicy(policyCheckParam);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7209", e);
+		}
+	}
+
+	/*
+	 * 
+	 * <pre> 결제 수단 재정의. </pre>
+	 * 
+	 * @param sktPaymethodInfo SKT결제 재정의 정보
+	 * 
+	 * @param tenantId 테넌트ID
+	 * 
+	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
+	 * 
+	 * @param payAmt 결제할 금액
+	 * 
+	 * @return 재정의 된 결제 수단 정보
+	 */
+	public String adjustPaymethod(String sktPaymethodInfo, String tenantId, String tenantProdGrpCd, double payAmt) {
+		// 결제수단 별 가능 거래금액/비율 조정 정보
+		String paymentAdjustInfo = this.purchaseOrderPolicyService.getAvailablePaymethodAdjustInfo(tenantId,
+				tenantProdGrpCd);
+		if (paymentAdjustInfo == null) {
+			throw new StorePlatformException("SAC_PUR_7103");
+		}
+
+		StringBuffer sbPaymethodInfo = new StringBuffer(64);
+
+		if (StringUtils.isNotBlank(sktPaymethodInfo)) {
+			sbPaymethodInfo.append(sktPaymethodInfo).append(";12:0:0");
+		} else {
+			sbPaymethodInfo.append("11:0:0");
+		}
+		sbPaymethodInfo.append(";").append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
+
+		return sbPaymethodInfo.toString();
+	}
+
 }
