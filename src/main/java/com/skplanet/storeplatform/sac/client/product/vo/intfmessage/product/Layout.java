@@ -34,6 +34,10 @@ public class Layout extends CommonInfo implements Serializable {
 	private Title title; // 베너제목
 	private Source source; // 베너 resource 정보
 	private Menu menu; // 메뉴 정보
+	/**
+	 * > Code : 대분류, 소분류 카테고리코드 > name : shoppingStore > type(option) : 대분류 카테고리시 topClass > categoryExplian : 카테고리 설명.
+	 */
+	private List<Menu> menuList;
 
 	/* 웹툰 회차별 정보에 채널 정보노출 필요로 추가 */
 	/**
@@ -181,6 +185,21 @@ public class Layout extends CommonInfo implements Serializable {
 
 	public void setSourceList(List<Source> sourceList) {
 		this.sourceList = sourceList;
+	}
+
+	/**
+	 * @return the menuList
+	 */
+	public List<Menu> getMenuList() {
+		return this.menuList;
+	}
+
+	/**
+	 * @param menuList
+	 *            the menuList to set
+	 */
+	public void setMenuList(List<Menu> menuList) {
+		this.menuList = menuList;
 	}
 
 }
