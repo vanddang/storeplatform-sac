@@ -58,10 +58,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameReques
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
@@ -122,12 +120,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private UserSearchService userSearchService;
-
-	@Autowired
-	private ChangeDisplayUserSCI changeDisplayUserSCI;
-
-	@Autowired
-	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
 
 	@Autowired
 	@Resource(name = "memberAddDeviceAmqpTemplate")
