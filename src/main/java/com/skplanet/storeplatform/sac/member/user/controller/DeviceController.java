@@ -72,7 +72,6 @@ public class DeviceController {
 	@ResponseBody
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) {
 
-		LOGGER.debug(":::::::::::::::::::: listDevice v1 start ::::::::::::::::::::");
 		LOGGER.info(req.toString());
 
 		/* userKey, userId 조회 요청한 걸로 판단하여 isMainDevice 필수 파라메터 체크 */
@@ -81,8 +80,6 @@ public class DeviceController {
 		}
 
 		ListDeviceRes res = this.deviceService.listDevice(requestHeader, (ListDeviceReq) ConvertMapperUtils.convertObject(req));
-
-		LOGGER.debug(":::::::::::::::::::: listDevice v1 end ::::::::::::::::::::");
 
 		if (res.getDeviceInfoList() == null) {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
@@ -103,7 +100,6 @@ public class DeviceController {
 	@ResponseBody
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) {
 
-		LOGGER.debug(":::::::::::::::::::: createDevice v1 start ::::::::::::::::::::");
 		LOGGER.info(req.toString());
 
 		/* 휴대기기 정보 필수 파라메터 체크 */
@@ -144,8 +140,6 @@ public class DeviceController {
 		/* 변경된 정보 idp 연동 */
 		this.userService.updateProfileIdp(requestHeader, res.getUserKey(), req.getUserAuthKey());
 
-		LOGGER.debug(":::::::::::::::::::: createDevice v1 end ::::::::::::::::::::");
-
 		return res;
 	}
 
@@ -162,7 +156,6 @@ public class DeviceController {
 	@ResponseBody
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) {
 
-		LOGGER.debug(":::::::::::::::::::: modifyDevice v1 start ::::::::::::::::::::");
 		LOGGER.info(req.toString());
 
 		if (StringUtil.isBlank(req.getUserKey())) {
@@ -175,8 +168,6 @@ public class DeviceController {
 		}
 
 		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);
-
-		LOGGER.debug(":::::::::::::::::::: modifyDevice v1 end ::::::::::::::::::::");
 
 		return res;
 	}
