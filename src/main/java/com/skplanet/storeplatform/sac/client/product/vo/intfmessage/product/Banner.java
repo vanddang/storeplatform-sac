@@ -35,6 +35,7 @@ public class Banner extends CommonInfo implements Serializable {
 	private String type;
 	private String imgSizeCd;
 	private Title title;
+	private String bannerExplain;
 	private List<Menu> menuList;
 	private List<Source> sourceList;
 	private Date date;
@@ -100,6 +101,21 @@ public class Banner extends CommonInfo implements Serializable {
 	 */
 	public void setTitle(Title title) {
 		this.title = title;
+	}
+
+	/**
+	 * @return the bannerExplain
+	 */
+	public String getBannerExplain() {
+		return this.bannerExplain;
+	}
+
+	/**
+	 * @param bannerExplain
+	 *            the bannerExplain to set
+	 */
+	public void setBannerExplain(String bannerExplain) {
+		this.bannerExplain = bannerExplain;
 	}
 
 	/**
