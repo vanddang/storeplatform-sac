@@ -344,6 +344,9 @@
             , MCI.ARTIST_ID
             , MCI.REG_DT
           </if>
+          <if test='chartClsfCd == null or chartClsfCd == ""'>
+            , PD.ARTIST1_ID AS ARTIST_ID
+          </if>
          FROM TB_DP_MUSIC_PROD MP
           <if test='chartClsfCd != null and chartClsfCd != ""'>
             , TB_DP_MUSIC_CHART MCI
