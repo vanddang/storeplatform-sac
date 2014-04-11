@@ -26,7 +26,7 @@
               , TB.VER_MAJOR || '.' || TB.VER_MINOR AS PROD_VER
               , TB.APK_PKG_NM
               , TB.APK_VER
---              , TB.FILE_SIZE
+              , TB.FILE_SIZE
 --              , TB.FILE_PATH
               , TB.IMAGE_PATH
               , TB.IMAGE_SIZE
@@ -68,7 +68,7 @@
                       , I.SUB_CONTENTS_ID
                       , J.APK_PKG_NM
                       , J.APK_VER
---                      , J.FILE_SIZE
+                      , J.FILE_SIZE
 --                      , J.FILE_PATH
                       , K.FILE_PATH AS IMAGE_PATH
                       , K.FILE_SIZE AS IMAGE_SIZE
