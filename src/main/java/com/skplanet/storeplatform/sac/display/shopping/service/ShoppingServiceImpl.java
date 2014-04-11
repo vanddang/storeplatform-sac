@@ -921,6 +921,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setMenuList(menuList);
 				product.setTitle(title);
 				product.setSourceList(sourceList);
+				product.setBrandType(shopping.getBrandType());
 				productList.add(i, product);
 				commonResponse.setTotalCount(shopping.getTotalCount());
 			}
@@ -1042,7 +1043,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 			// Response VO를 만들기위한 생성자
 			Layout layOut = null;
-			Menu menu = null;
 
 			for (int i = 0; i < resultList.size(); i++) {
 				shopping = resultList.get(i);
@@ -1050,12 +1050,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품명)
 				Title title = this.commonGenerator.generateTitle(shopping);
 				// 메뉴정보
-				menu = new Menu();
-				menu.setId(shopping.getMenuId());
-				menu.setName(shopping.getMenuNm());
-				// 데이터 매핑
+				List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
+
 				layOut.setTitle(title);
-				layOut.setMenu(menu);
+				layOut.setMenuList(menuList);
 			}
 
 			res.setLayOut(layOut);
