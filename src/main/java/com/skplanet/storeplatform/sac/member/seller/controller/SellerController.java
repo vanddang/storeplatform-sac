@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -42,6 +44,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveFlurrySacRes
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
 
 /**
@@ -52,6 +55,8 @@ import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
 @Controller
 @RequestMapping(value = "/member/seller")
 public class SellerController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SellerController.class);
 
 	@Autowired
 	private SellerService sellerService;
@@ -70,6 +75,7 @@ public class SellerController {
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateRes createSeller(SacRequestHeader header, @RequestBody @Validated CreateReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.createSeller(header, req);
 	}
 
@@ -87,6 +93,7 @@ public class SellerController {
 	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.authorize(header, req);
 	}
 
@@ -104,6 +111,8 @@ public class SellerController {
 	@RequestMapping(value = "/authorizeSimple/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeRes authorizeSimple(SacRequestHeader header, @RequestBody @Validated AuthorizeSimpleReq req) {
+
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.authorizeSimple(header, req);
 	}
 
@@ -122,6 +131,7 @@ public class SellerController {
 	@ResponseBody
 	public ModifyInformationSacRes modifyInformation(SacRequestHeader header,
 			@RequestBody @Validated ModifyInformationSacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.modifyInformation(header, req);
 	}
 
@@ -140,6 +150,7 @@ public class SellerController {
 	@ResponseBody
 	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
 			@RequestBody @Validated ModifyAccountInformationSacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.modifyAccountInformation(header, req);
 	}
 
@@ -157,6 +168,7 @@ public class SellerController {
 	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyEmailSacRes modifyEmail(SacRequestHeader header, @RequestBody @Validated ModifyEmailSacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.modifyEmail(header, req);
 	}
 
@@ -174,6 +186,7 @@ public class SellerController {
 	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyPasswordSacRes modifyPassword(SacRequestHeader header, @RequestBody @Validated ModifyPasswordSacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.modifyPassword(header, req);
 	}
 
@@ -191,6 +204,7 @@ public class SellerController {
 	@RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ConfirmRes confirm(SacRequestHeader header, @RequestBody @Validated ConfirmReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.confirm(header, req);
 	}
 
@@ -209,6 +223,7 @@ public class SellerController {
 	@ResponseBody
 	public ConversionClassSacRes conversionClass(SacRequestHeader header,
 			@RequestBody @Validated ConversionClassSacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.conversionClass(header, req);
 	}
 
@@ -226,6 +241,7 @@ public class SellerController {
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.lockAccount(header, req);
 	}
 
@@ -243,6 +259,7 @@ public class SellerController {
 	@RequestMapping(value = "/modifyRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, @RequestBody @Validated ModifyRealNameSacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.modifyRealName(header, req);
 	}
 
@@ -260,6 +277,7 @@ public class SellerController {
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.withdraw(header, req);
 	}
 
@@ -278,6 +296,7 @@ public class SellerController {
 	@ResponseBody
 	public RemoveAuthorizationKeySacRes removeAuthorizationKey(SacRequestHeader header,
 			@RequestBody @Validated RemoveAuthorizationKeySacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.removeAuthorizationKey(header, req);
 	}
 
@@ -295,6 +314,7 @@ public class SellerController {
 	@RequestMapping(value = "/removeFlurry/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, @RequestBody @Validated RemoveFlurrySacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.removeFlurry(header, req);
 	}
 
@@ -312,6 +332,7 @@ public class SellerController {
 	@RequestMapping(value = "/createFlurry/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateFlurrySacRes createFlurry(SacRequestHeader header, @RequestBody @Validated CreateFlurrySacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.createFlurry(header, req);
 	}
 
@@ -330,6 +351,7 @@ public class SellerController {
 	@ResponseBody
 	public ModifyWaitEmailSacRes modifyWaitEmail(SacRequestHeader header,
 			@RequestBody @Validated ModifyWaitEmailSacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.modifyWaitEmail(header, req);
 	}
 
@@ -347,6 +369,7 @@ public class SellerController {
 	@RequestMapping(value = "/modifyFlurry/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyFlurrySacRes modifyFlurry(SacRequestHeader header, @RequestBody @Validated ModifyFlurrySacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerService.ModifyFlurry(header, req);
 	}
 

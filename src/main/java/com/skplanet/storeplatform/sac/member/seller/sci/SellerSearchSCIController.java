@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInf
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
 /**
@@ -54,7 +55,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 	public @ResponseBody
 	DetailInformationSacRes detailInformation(@Validated DetailInformationSacReq request) {
 
-		LOGGER.debug("Internal SCI detailInformation() Request : {}", request);
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 		DetailInformationSacRes response = this.sellerSearchService.detailInformationList(requestHeader, request);
 		LOGGER.debug("Internal SCI detailInformation() Response : {}", response);

@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
 /**
@@ -48,14 +49,14 @@ public class DeviceSCIController implements DeviceSCI {
 	@Override
 	@RequestMapping(value = "/searchDeviceId", method = RequestMethod.POST)
 	public @ResponseBody
-	SearchDeviceIdSacRes searchDeviceId(@RequestBody @Validated SearchDeviceIdSacReq requestVO) {
+	SearchDeviceIdSacRes searchDeviceId(@RequestBody @Validated SearchDeviceIdSacReq request) {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		LOGGER.info("RequestParameter : {}", requestHeader, requestVO);
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
 
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
-				requestVO.getDeviceKey(), requestVO.getUserKey());
+				request.getDeviceKey(), request.getUserKey());
 
 		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
 		if (deviceInfo != null && StringUtils.isNotBlank(deviceInfo.getDeviceId())) {
@@ -65,7 +66,7 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
 
-		LOGGER.info("ResponseParameter : {}", responseVO);
+		LOGGER.debug("ResponseParameter : {}", responseVO);
 		return responseVO;
 	}
 
@@ -83,11 +84,10 @@ public class DeviceSCIController implements DeviceSCI {
 	public @ResponseBody
 	ChangedDeviceHistorySacRes searchChangedDeviceHistory(@RequestBody @Validated ChangedDeviceHistorySacReq request) {
 
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
 		// 공통 파라미터 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] RequestHeader : {}, \nRequestParameter : {}",
-				requestHeader, request);
 		if (StringUtils.isBlank(request.getDeviceId()) && StringUtils.isBlank(request.getDeviceKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId 또는 deviceKey");
 		}
@@ -95,7 +95,7 @@ public class DeviceSCIController implements DeviceSCI {
 		ChangedDeviceHistorySacRes changedDeviceHistoryRes = this.deviceService.searchChangedDeviceHistory(
 				requestHeader, request);
 
-		LOGGER.info("[DeviceSCIController.searchChangedDeviceHistory] ResponseParameter : {}", changedDeviceHistoryRes);
+		LOGGER.debug("[DeviceSCIController.searchChangedDeviceHistory] ResponseParameter : {}", changedDeviceHistoryRes);
 		return changedDeviceHistoryRes;
 
 	}

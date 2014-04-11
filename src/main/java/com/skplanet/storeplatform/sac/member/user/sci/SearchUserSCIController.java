@@ -41,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserOcbService;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 
@@ -74,13 +75,13 @@ public class SearchUserSCIController implements SearchUserSCI {
 	@ResponseBody
 	public SearchUserSacRes searchUserByUserKey(@RequestBody @Validated SearchUserSacReq request) {
 
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("nRequestParameter : {}", requestHeader, request);
 
 		SearchUserSacRes searchUserSacRes = this.userSearchService.searchUserByUserKey(requestHeader, request);
 
-		LOGGER.info("ResponseParameter : {}", searchUserSacRes);
+		LOGGER.debug("ResponseParameter : {}", searchUserSacRes);
 		return searchUserSacRes;
 	}
 

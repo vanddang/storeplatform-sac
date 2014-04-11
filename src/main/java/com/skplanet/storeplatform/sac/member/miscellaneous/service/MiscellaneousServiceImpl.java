@@ -137,10 +137,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 */
 	@Override
 	public GetOpmdRes getOpmd(GetOpmdReq req) {
-		LOGGER.info("## Request : {}", req);
 		GetOpmdRes res = new GetOpmdRes();
 		res.setMsisdn(this.commonComponent.getOpmdMdnInfo(req.getMsisdn()));
-		LOGGER.info("## Response : {}", res);
+		LOGGER.debug("## Response : {}", res);
 		return res;
 	}
 
@@ -163,7 +162,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = this.commonComponent.getSCCommonRequest(requestHeader);
-		LOGGER.info("## Request {}", req);
 
 		GetUaCodeRes response = new GetUaCodeRes();
 		/* 파라미터로 MSISDN만 넘어온 경우 */
@@ -183,7 +181,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			searchUserRequest.setKeySearchList(keySearchList);
 
 			/* deviceId(msisdn)로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
-			LOGGER.debug("[MiscellaneousService.getUaCode] SC Member Request {}");
 			SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
 			if (searchUserResponse == null || searchUserResponse.getUserMbr() == null) {
@@ -217,7 +214,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				throw new StorePlatformException("SAC_MEM_3401", "deviceModelNo", deviceModelNo);
 			}
 		}
-		LOGGER.info("## Response {}", response);
 		return response;
 	}
 
@@ -237,7 +233,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			GetPhoneAuthorizationCodeReq request) {
 		// 헤더는 controller 에서 SacRequestHeader 셋팅된걸 사용한다. (tennatId, systemId 사용시에만 선언)
 
-		LOGGER.info("## Request : {}", request);
 		String authCode = "";
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
@@ -302,7 +297,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		response.setPhoneSign(authSign);
 
-		LOGGER.info("## Response : {}", response);
+		LOGGER.debug("## Response : {}", response);
 		return response;
 	}
 
@@ -320,7 +315,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request) {
 
-		LOGGER.info("## Request : {}", request);
 		ConfirmPhoneAuthorizationCodeRes res = new ConfirmPhoneAuthorizationCodeRes();
 		String authCode = request.getPhoneAuthCode();
 		String authSign = request.getPhoneSign();
@@ -354,7 +348,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
 		}
 		res.setUserPhone(userPhone);
-		LOGGER.info("## Response : {}", res);
+		LOGGER.debug("## Response : {}", res);
 		return res;
 	}
 
@@ -402,7 +396,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		response.setImageSign(waterMarkImageSign);
 		response.setSignData(signData);
 
-		LOGGER.info("## Response {}", response);
+		LOGGER.debug("## Response {}", response);
 		return response;
 	}
 
@@ -447,7 +441,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(SacRequestHeader sacRequestHeader,
 			GetEmailAuthorizationCodeReq request) {
 
-		LOGGER.info("## SAC 이메일 인증 코드 생성 Request : {}", request);
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 		ServiceAuth serviceAuthReq = new ServiceAuth();
 		serviceAuthReq.setAuthEmail(request.getUserEmail());
@@ -487,7 +480,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		// 4. 인증코드 Response
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
 		response.setEmailAuthCode(authCode);
-		LOGGER.info("## SAC 이메일 인증 코드생성 response : {}", response.getEmailAuthCode());
+		LOGGER.debug("## SAC 이메일 인증 코드생성 response : {}", response.getEmailAuthCode());
 
 		return response;
 	}
@@ -505,7 +498,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request) {
 
 		// 1. 인증 코드로 DB 확인하여 , 회원 key, 회원 email 조회
-		LOGGER.info("## Request : {}", request);
 		String authValue = request.getEmailAuthCode();
 		String timeToLive = request.getTimeToLive();
 
@@ -538,7 +530,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		response.setUserEmail(serviceAuthInfo.getAuthEmail());
 		response.setUserKey(serviceAuthInfo.getMbrNo());
 
-		LOGGER.info("## Response : {}", response);
+		LOGGER.debug("## Response : {}", response);
 		return response;
 	}
 
@@ -556,7 +548,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
 
-		LOGGER.info("## Request {}", request);
 		JoinSupServiceRequestEcReq joinSupServiceEcReq = new JoinSupServiceRequestEcReq();
 		joinSupServiceEcReq.setSvcCode(request.getSvcCode());
 		joinSupServiceEcReq.setUserMdn(request.getMsisdn());
@@ -600,7 +591,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) {
 
-		LOGGER.info("## Request {}", request);
 		ServiceSubscriptionCheckEcReq serviceSubscriptionCheckEcReq = new ServiceSubscriptionCheckEcReq();
 		serviceSubscriptionCheckEcReq.setUserMdn(request.getMsisdn());
 		serviceSubscriptionCheckEcReq.setSvcCode(request.getSvcCode());
@@ -613,7 +603,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		response.setMsisdn(serviceSubscriptionCheckEcRes.getUserMdn());
 		response.setSvcCode(serviceSubscriptionCheckEcRes.getSvcCode());
 		response.setSvcJoinResult(serviceSubscriptionCheckEcRes.getSvcResult());
-		LOGGER.info("## Response {}", response);
+		LOGGER.debug("## Response {}", response);
 
 		return response;
 	}
@@ -629,7 +619,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 */
 	@Override
 	public GetModelCodeRes getModelCode(GetModelCodeReq request) {
-		LOGGER.info("## Request : {}", request);
 		GetModelCodeRes response = new GetModelCodeRes();
 		String uaCd = request.getUaCd();
 		String msisdn = request.getMsisdn();
@@ -663,7 +652,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		} else {
 			throw new StorePlatformException("SAC_MEM_3402", errorKey, errorValue);
 		}
-		LOGGER.info("## Response : {}", response);
+		LOGGER.debug("## Response : {}", response);
 
 		return response;
 	}
@@ -680,7 +669,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public AuthorizeAccountRes authorizeAccount(AuthorizeAccountReq request) {
 
-		LOGGER.info("## Request : {}", request);
 		// 1. EC (Inicis 연동) 파라미터 전달, 결제계좌 정보 인증 요청
 		InicisAuthAccountEcReq inicisAuthAccountEcReq = new InicisAuthAccountEcReq();
 		inicisAuthAccountEcReq.setAcctNm(request.getBankAcctName());

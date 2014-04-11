@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
 /**
@@ -65,6 +66,7 @@ public class SellerSearchController {
 	@ResponseBody
 	private DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header,
 			@RequestBody @Validated DuplicateByIdEmailReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 		return this.sellerSearchService.duplicateByIdEmail(header, req);
 	}
 
@@ -83,7 +85,7 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailInformationRes detailInformation(SacRequestHeader header,
 			@RequestBody @Validated DetailInformationReq req) {
-		LOGGER.debug("request param : {}", req.toString());
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(req.getSellerId()) && StringUtils.isBlank(req.getAid())
 				&& StringUtils.isBlank(req.getSellerKey())) {
@@ -108,7 +110,7 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailInformationForProductRes detailInformationForProduct(SacRequestHeader header,
 			@RequestBody @Validated DetailInformationForProductReq req) {
-		LOGGER.info("request param : {}", req);
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(req.getSellerKey()) && StringUtils.isBlank(req.getAid())) {
 
@@ -132,6 +134,8 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header,
 			@RequestBody @Validated DetailAccountInformationReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+
 		return this.sellerSearchService.detailAccountInformation(header, req);
 	}
 
@@ -147,6 +151,7 @@ public class SellerSearchController {
 	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) {
+		LOGGER.info("Request");
 		LOGGER.debug("------------------------------------language : {}", header.getTenantHeader().getLangCd());
 		return this.sellerSearchService.listWithdrawalReason(header);
 	}
@@ -165,6 +170,8 @@ public class SellerSearchController {
 	@RequestMapping(value = "/searchId/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchIdRes searchId(SacRequestHeader header, @RequestBody @Validated SearchIdReq req) {
+
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
 
 		// sellerBizNumber, sellerCompany, sellerEmail, sellerPhone 중 하나 필수.
 		if (StringUtils.isBlank(req.getSellerBizNumber()) && StringUtils.isBlank(req.getSellerCompany())
@@ -189,6 +196,8 @@ public class SellerSearchController {
 	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchPasswordRes searchPassword(SacRequestHeader header, @RequestBody @Validated SearchPasswordReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+
 		return this.sellerSearchService.searchPassword(header, req);
 	}
 
@@ -207,6 +216,9 @@ public class SellerSearchController {
 	@ResponseBody
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			@RequestBody @Validated CheckPasswordReminderQuestionReq req) {
+
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+
 		return this.sellerSearchService.checkPasswordReminderQuestion(header, req);
 	}
 
@@ -225,6 +237,8 @@ public class SellerSearchController {
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
 			@RequestBody @Validated ListPasswordReminderQuestionReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+
 		return this.sellerSearchService.listPasswordReminderQuestion(header, req);
 	}
 
@@ -240,6 +254,8 @@ public class SellerSearchController {
 	@RequestMapping(value = "/listPasswordReminderQuestionAll/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListPasswordReminderQuestionAllRes listPasswordReminderQuestionAll(SacRequestHeader header) {
+
+		LOGGER.info("Request");
 		return this.sellerSearchService.listPasswordReminderQuestionAll(header);
 	}
 
@@ -258,6 +274,8 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailInfomationByAuthorizationKeySacRes detailInfomationByAuthorizationKey(SacRequestHeader header,
 			@RequestBody @Validated DetailInfomationByAuthorizationKeySacReq req) {
+		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+
 		return this.sellerSearchService.detailInfomationByAuthorizationKey(header, req);
 	}
 
@@ -273,6 +291,8 @@ public class SellerSearchController {
 	@RequestMapping(value = "/listBanksByCountry/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListBanksByCountryRes ListBanksByCountry(SacRequestHeader header) {
+		LOGGER.info("Request");
+
 		return this.sellerSearchService.listBanksByCountry(header);
 	}
 
