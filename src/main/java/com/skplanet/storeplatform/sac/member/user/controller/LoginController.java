@@ -59,7 +59,7 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
-		LOGGER.info(req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdn(requestHeader, req);
 
@@ -79,7 +79,7 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
-		LOGGER.info(req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdnV2(requestHeader, req);
 
@@ -100,7 +100,7 @@ public class LoginController {
 	@ResponseBody
 	public CheckVariabilityRes checkVariability(SacRequestHeader requestHeader, @Valid @RequestBody CheckVariabilityReq req) {
 
-		LOGGER.info(req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		CheckVariabilityRes res = this.loginService.executCheckVariability(requestHeader, req);
 
@@ -121,7 +121,7 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) {
 
-		LOGGER.info(req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		AuthorizeByIdRes res = this.loginService.executeAuthorizeById(requestHeader, req);
 
@@ -142,7 +142,7 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSimpleByMdnReq req) {
 
-		LOGGER.info(req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		AuthorizeSimpleByMdnRes res = this.loginService.executeAuthorizeSimpleByMdn(requestHeader, req);
 
@@ -165,7 +165,7 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
 
-		LOGGER.info(req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		AuthorizeSaveAndSyncByMacRes res = this.loginService.executeAuthorizeSaveAndSyncByMac(requestHeader, req);
 

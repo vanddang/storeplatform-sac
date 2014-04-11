@@ -72,7 +72,7 @@ public class DeviceController {
 	@ResponseBody
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) {
 
-		LOGGER.info(req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		/* userKey, userId 조회 요청한 걸로 판단하여 isMainDevice 필수 파라메터 체크 */
 		if (StringUtil.isBlank(req.getDeviceId()) && StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getIsMainDevice())) {
@@ -100,7 +100,7 @@ public class DeviceController {
 	@ResponseBody
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) {
 
-		LOGGER.info(req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		/* 휴대기기 정보 필수 파라메터 체크 */
 		if (StringUtil.isBlank(req.getUserAuthKey())) {
@@ -156,7 +156,7 @@ public class DeviceController {
 	@ResponseBody
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) {
 
-		LOGGER.info(req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		if (StringUtil.isBlank(req.getUserKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
