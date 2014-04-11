@@ -37,7 +37,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     @Qualifier("sac")
     private CommonDAO commonDAO;
 
-    @Autowired
+    @Autowired(required = false)
     PlandasjTemplate<String, String> plandasjTemplate;
 
     private static final String APP_SVC_GRP_CD = "DP000201";

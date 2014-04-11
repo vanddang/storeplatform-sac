@@ -223,27 +223,27 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getFreepassMetaInfo(Map<String, Object> paramMap) {
-//        if(isUseCache()) {
-//            FreepassMetaParam param = new FreepassMetaParam();
-//            ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
-//            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
-//
-//            param.setChannelId(basicInfo.getProdId());
-//            param.setLangCd(tenantHeader.getLangCd());
-//            param.setTenantId(tenantHeader.getTenantId());
-//
-//            FreepassMeta ffMeta = productInfoManager.getFreepassMeta(param);
-//            if(ffMeta == null) {
-//                logger.warn("메타데이터를 읽을 수 없습니다 - Freepass#{}", basicInfo.getProdId());
-//                return null;
-//            }
-//
-//            MetaInfo me = new MetaInfo();
-//            MetaBeanUtils.setProperties(ffMeta, me);
-//
-//            return me;
-//        }
-//        else
+        if(isUseCache()) {
+            FreepassMetaParam param = new FreepassMetaParam();
+            ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
+            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+
+            param.setChannelId(basicInfo.getProdId());
+            param.setLangCd(tenantHeader.getLangCd());
+            param.setTenantId(tenantHeader.getTenantId());
+
+            FreepassMeta ffMeta = productInfoManager.getFreepassMeta(param);
+            if(ffMeta == null) {
+                logger.warn("메타데이터를 읽을 수 없습니다 - Freepass#{}", basicInfo.getProdId());
+                return null;
+            }
+
+            MetaInfo me = new MetaInfo();
+            MetaBeanUtils.setProperties(ffMeta, me);
+
+            return me;
+        }
+        else
 		    return this.commonDAO.queryForObject("MetaInfo.getFreepassMetaInfo", paramMap, MetaInfo.class);
 	}
 
