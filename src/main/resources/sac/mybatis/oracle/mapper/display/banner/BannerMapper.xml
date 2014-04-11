@@ -12,6 +12,7 @@
 		      , JA.BNR_INFO
 		      , JA.EXPO_ORD
 		      , JA.EXPO_STATUS_CD
+		      , JA.BNR_DESC
 		      , JA.IMG_PATH
 		      , TO_CHAR(JA.REG_DT, 'YYYYMMDDHH24MISS') AS REG_DT
               , (SELECT  TOP_MENU_ID
@@ -58,6 +59,7 @@
 		              , IA.EXPO_ORD
 		              , IA.EXPO_ORD_SUB
 		              , IA.EXPO_STATUS_CD
+		              , IA.BNR_DESC
 		              , IA.IMG_PATH
 		              , IA.REG_DT
 		          FROM (SELECT  COUNT(A.BNR_SEQ) OVER() AS TOTAL_COUNT
@@ -70,6 +72,7 @@
 		                      , B.EXPO_ORD
 		                      , B.EXPO_ORD_SUB
 		                      , B.EXPO_STATUS_CD
+		                      , B.BNR_DESC
 		                      , C.IMG_SIZE_CD
 		                      , C.IMG_PATH
 		                  FROM  TB_DP_BNR      A

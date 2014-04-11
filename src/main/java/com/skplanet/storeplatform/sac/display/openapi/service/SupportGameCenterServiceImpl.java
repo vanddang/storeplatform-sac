@@ -33,7 +33,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
@@ -51,8 +50,6 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-	@Autowired
-	private DisplayCommonService commonService;
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 	@Autowired
@@ -119,6 +116,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 		/*
 		 * AID로 상품ID 가져오기
 		 */
+		@SuppressWarnings("rawtypes")
 		List<Map> prodIdList = null;
 		prodIdList = this.commonDAO.queryForList("OpenApi.getProductIdByAid", paramMap, Map.class);
 
@@ -229,25 +227,19 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 
 				if (purchaseFlag && historyRes != null) {
 					String prchsId = null; // 구매ID
-					String prchsDt = null; // 구매일시
-					String useExprDt = null; // 이용 만료일시
 					String dwldExprDt = null; // 다운로드 만료일시
 					String prchsCaseCd = null; // 선물 여부
 					String prchsState = null; // 구매상태
 					String prchsProdId = null; // 구매 상품ID
-					String puchsPrice = null; // 구매 상품금액
 
 					this.log.debug("############# historyRes.getTotalCnt() : " + historyRes.getTotalCnt());
 					if (historyRes.getTotalCnt() > 0) {
 						// 구매 내역이 존재하는 경우
 						for (int i = 0; i < historyRes.getTotalCnt(); i++) {
 							prchsId = historyRes.getHistoryList().get(i).getPrchsId();
-							prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
-							useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
 							dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
 							prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
-							puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 
 							this.log.debug("#################### prchsId : prchsProdId : prodId : dwldExprDt => ###### "
 									+ prchsId + " : " + prchsProdId + " : " + metaInfo.getProdId() + " : " + dwldExprDt);

@@ -22,6 +22,7 @@ public class BannerDefault {
 	private String bnrInfoTypeCd;
 	private String bnrInfo;
 	private String bnrNm;
+	private String bnrDesc;
 	private String imgPath;
 	private String regDt;
 	private String menuId;
@@ -137,6 +138,21 @@ public class BannerDefault {
 	 */
 	public void setBnrNm(String bnrNm) {
 		this.bnrNm = bnrNm;
+	}
+
+	/**
+	 * @return the bnrDesc
+	 */
+	public String getBnrDesc() {
+		return this.bnrDesc;
+	}
+
+	/**
+	 * @param bnrDesc
+	 *            the bnrDesc to set
+	 */
+	public void setBnrDesc(String bnrDesc) {
+		this.bnrDesc = bnrDesc;
 	}
 
 	/**

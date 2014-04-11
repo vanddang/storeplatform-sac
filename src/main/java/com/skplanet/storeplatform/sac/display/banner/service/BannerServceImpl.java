@@ -571,6 +571,9 @@ public class BannerServceImpl implements BannerService {
 				metaInfo.setProdNm(bannerDf.getBnrNm());
 				banner.setTitle(this.commonMetaInfoGenerator.generateTitle(metaInfo));
 
+				// 배너 설명 정보
+				banner.setBannerExplain(bannerDf.getBnrDesc());
+
 				// 이미지 정보
 				metaInfo.setImagePath(bannerDf.getImgPath());
 				banner.setSourceList(this.commonMetaInfoGenerator.generateBannerSourceList(metaInfo));
