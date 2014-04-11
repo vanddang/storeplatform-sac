@@ -257,7 +257,7 @@ public class DeviceController {
 
 		LOGGER.info("");
 		LOGGER.info("");
-		LOGGER.info("===== 컨트롤러 휴대기기 단말 삭제 Start Request : {}", req.toString());
+		LOGGER.info("===== 컨트롤러 - 휴대기기 단말 삭제 Start Request : {}", req.toString());
 		LOGGER.info("");
 		LOGGER.info("");
 
@@ -293,7 +293,7 @@ public class DeviceController {
 
 		LOGGER.info("");
 		LOGGER.info("");
-		LOGGER.info("===== 컨트롤러 > 단말 AOM 지원여부확인 Start Request : {}", req.toString());
+		LOGGER.info("===== 컨트롤러 - 단말 AOM 지원여부확인 Start Request : {}", req.toString());
 		LOGGER.info("");
 		LOGGER.info("");
 

@@ -95,7 +95,12 @@ public class UserExtraInfoController {
 			}
 		}
 
+		logger.info("");
+		logger.info("");
 		logger.info("회원 부가 정보 삭제 Start Request : {}", req.toString());
+		logger.info("");
+		logger.info("");
+
 		UserExtraInfoRes res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
 
 		return res;
@@ -114,9 +119,19 @@ public class UserExtraInfoController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
+		logger.info("");
+		logger.info("");
 		logger.info("회원 부가 정보 조회 Start Request : {}", req.toString());
+		logger.info("");
+		logger.info("");
+
 		UserExtraInfoRes res = this.userExtraService.listAdditionalInformation(req, sacHeader);
+
+		logger.info("");
+		logger.info("");
 		logger.info("회원 부가 정보 조회 Final Response : {}", res.getUserKey());
+		logger.info("");
+		logger.info("");
 
 		return res;
 	}

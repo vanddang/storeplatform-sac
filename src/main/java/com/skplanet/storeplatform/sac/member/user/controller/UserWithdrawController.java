@@ -47,9 +47,19 @@ public class UserWithdrawController {
 		logger.debug("##### 5.1.24. 회원 탈퇴 (ID/MDN 기반) #####");
 		logger.debug("####################################################");
 
+		logger.info("");
+		logger.info("");
 		logger.info("###### 회원탈퇴 Start Request : {}", req.toString());
+		logger.info("");
+		logger.info("");
+
 		WithdrawRes res = this.svc.executeWithdraw(sacHeader, req);
+
+		logger.info("");
+		logger.info("");
 		logger.info("####### 회원탈퇴 Final Response : {}", res.toString());
+		logger.info("");
+		logger.info("");
 
 		return res;
 	}

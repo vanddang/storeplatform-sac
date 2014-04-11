@@ -67,11 +67,19 @@ public class UserSearchController {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("회원가입여부조회 Start Request : {}", req);
+		LOGGER.info("");
+		LOGGER.info("");
 
 		ExistRes res = this.svc.exist(sacHeader, req);
 
-		LOGGER.info("회원가입여부조회 Fianl Response : {}", res);
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("회원가입여부조회 Fianl Response : {}", res.getUserKey());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		return res;
 	}
@@ -83,17 +91,25 @@ public class UserSearchController {
 		LOGGER.debug("##### 5.1.12. 회원 프로비저닝 이력 조회 #####");
 		LOGGER.debug("####################################################");
 
-		LOGGER.info("============================================ GetProvisioningHistoryReq : {}", req.toString());
-
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
 		if ("".equals(deviceId)) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
 
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("회원 프로비저닝 이력조회 Startl Request : {}", req.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+
 		GetProvisioningHistoryRes res = this.svc.getProvisioningHistory(sacHeader, req);
+
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("회원 프로비저닝 이력조회 Final Response : {}", res.toString());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		return res;
 	}
@@ -110,9 +126,19 @@ public class UserSearchController {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("회원정보조회 Start Request : {}", req.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+
 		DetailRes res = this.svc.detail(sacHeader, req);
+
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("회원정보조회 Final Response : {}", res.getUserKey());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		return res;
 	}
@@ -164,9 +190,19 @@ public class UserSearchController {
 
 		req.setUserKey(userKey);
 
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("OneID 정보조회 Start Request : {}", req.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+
 		MbrOneidSacRes res = this.svc.searchUserOneId(sacHeader, req);
+
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("OneID 정보조회 Final Response : {}", res.toString());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		return res;
 	}
@@ -190,9 +226,19 @@ public class UserSearchController {
 		req.setDeviceId(deviceId);
 		req.setUserEmail(userEmail);
 
-		LOGGER.info("ID찾기 Start Response : {}", req.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("ID찾기 Start Request : {}", req.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+
 		SearchIdSacRes res = this.svc.searchId(sacHeader, req);
+
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("ID찾기 Final Response : {}", res.toString());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		return res;
 	}
@@ -216,9 +262,19 @@ public class UserSearchController {
 		req.setUserEmail(userEmail);
 		req.setUserPhone(userPhone);
 
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("패스워드찾기 Start Request : {}", req.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+
 		SearchPasswordSacRes res = this.svc.searchPassword(sacHeader, req);
+
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("패스워드찾기 Final Response : {}", res.toString());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		return res;
 	}
@@ -236,9 +292,19 @@ public class UserSearchController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("Store약관동의목록조회 Start Request : {}", req.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+
 		ListTermsAgreementSacRes res = this.svc.listTermsAgreement(sacHeader, req);
-		LOGGER.info("Store약관동의목록조회 Final Request : {}", res.getUserKey());
+
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("Store약관동의목록조회 Final Response : {}", res.getUserKey());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		return res;
 	}
@@ -250,9 +316,19 @@ public class UserSearchController {
 		LOGGER.debug("##### 2.1.37. 각 단말의 OS별 누적 가입자 수 조회 #####");
 		LOGGER.debug("####################################################");
 
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("각 단말의 OS별 누적 가입자수 조회 Start");
+		LOGGER.info("");
+		LOGGER.info("");
+
 		ListDailyPhoneOsSacRes dailyPhoneOsList = this.svc.listDailyPhoneOs(sacHeader);
+
+		LOGGER.info("");
+		LOGGER.info("");
 		LOGGER.info("각 단말의 OS별 누적 가입자수 조회 Final");
+		LOGGER.info("");
+		LOGGER.info("");
 
 		return dailyPhoneOsList;
 	}
