@@ -78,14 +78,8 @@ public class MusicServiceImpl implements MusicService {
         List<RelatedProduct> relProdList = this.commonDAO.queryForList("MusicDetail.getRelatedProductList", relProdListReq, RelatedProduct.class);
 
         
-        String topMenuId = "";
-        for (MenuItem mi : menuList) {
-            if(mi.isInfrMenu()) {
-            	topMenuId = mi.getMenuId();
-            	break;
-            }
-		}
-        
+        String topMenuId = menuList.get(0).getTopMenuId();
+
         //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), topMenuId);
         if(tmembershipDcInfo != null) {
