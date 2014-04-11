@@ -333,11 +333,6 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private List<Point> pointList;
 
-	/**
-	 * 브랜드타입 (쇼핑 HOT).
-	 */
-	private String brandType;
-
 	public String getPartProductType() {
 		return this.partProductType;
 	}
@@ -1295,21 +1290,6 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setPointList(List<Point> pointList) {
 		this.pointList = pointList;
-	}
-
-	/**
-	 * @return the brandType
-	 */
-	public String getBrandType() {
-		return this.brandType;
-	}
-
-	/**
-	 * @param brandType
-	 *            the brandType to set
-	 */
-	public void setBrandType(String brandType) {
-		this.brandType = brandType;
 	}
 
 }
