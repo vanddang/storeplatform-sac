@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -506,16 +507,20 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 7. MQ 연동 */
 		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-		if (StringUtil.isNotBlank(previousUserKey) && StringUtil.isNotBlank(previousDeviceKey)) {
-			mqInfo.setOldUserKey(previousUserKey);
-			mqInfo.setOldDeviceKey(previousDeviceKey);
+		try {
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+			if (StringUtil.isNotBlank(previousUserKey) && StringUtil.isNotBlank(previousDeviceKey)) {
+				mqInfo.setOldUserKey(previousUserKey);
+				mqInfo.setOldDeviceKey(previousDeviceKey);
+			}
+			mqInfo.setUserKey(userKey);
+			mqInfo.setDeviceKey(deviceKey);
+			mqInfo.setDeviceId(deviceInfo.getDeviceId());
+			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+		} catch (AmqpException ex) {
+			LOGGER.info("MQ process fail {}", mqInfo);
 		}
-		mqInfo.setUserKey(userKey);
-		mqInfo.setDeviceKey(deviceKey);
-		mqInfo.setDeviceId(deviceInfo.getDeviceId());
-		mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-		this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 
 		return deviceKey;
 
@@ -687,12 +692,16 @@ public class DeviceServiceImpl implements DeviceService {
 
 			/* MQ 연동 */
 			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-			mqInfo.setUserKey(createDeviceRes.getUserKey());
-			mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
-			mqInfo.setDeviceId(deviceInfo.getDeviceId());
-			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+			try {
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+				mqInfo.setUserKey(createDeviceRes.getUserKey());
+				mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
+				mqInfo.setDeviceId(deviceInfo.getDeviceId());
+				mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+			} catch (AmqpException ex) {
+				LOGGER.info("MQ process fail {}", mqInfo);
+			}
 		}
 
 		return createDeviceRes.getDeviceKey();
@@ -928,12 +937,16 @@ public class DeviceServiceImpl implements DeviceService {
 
 			/* MQ 연동 */
 			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-			mqInfo.setUserKey(createDeviceRes.getUserKey());
-			mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
-			mqInfo.setDeviceId(deviceInfo.getDeviceId());
-			mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-			this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+			try {
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+				mqInfo.setUserKey(createDeviceRes.getUserKey());
+				mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
+				mqInfo.setDeviceId(deviceInfo.getDeviceId());
+				mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+			} catch (AmqpException ex) {
+				LOGGER.info("MQ process fail {}", mqInfo);
+			}
 		}
 
 		return createDeviceRes.getDeviceKey();
