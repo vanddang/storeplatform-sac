@@ -572,6 +572,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
+		/* deviceKey로 휴대기기 정보 업데이트시 로깅을 위해 조회한 deviceId를 셋팅 */
 		if (StringUtil.isBlank(deviceInfo.getDeviceId())) {
 			deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
 		}
@@ -594,7 +595,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String isRecvSms = deviceInfo.getIsRecvSms(); // sms 수신여부
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
 
-		LOGGER.info(":::::::::::::::::: {} device update field start ::::::::::::::::::", deviceInfo.getDeviceId());
+		LOGGER.info(":::::::::::::::::: {} updateDeviceInfo field start ::::::::::::::::::", deviceInfo.getDeviceId());
 
 		if (StringUtil.isNotBlank(deviceInfo.getDeviceId()) && !StringUtil.equals(deviceInfo.getDeviceId(), userMbrDevice.getDeviceID())) {
 			LOGGER.info("[deviceId] {} -> {}", userMbrDevice.getDeviceID(), deviceInfo.getDeviceId());
@@ -664,7 +665,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 휴대기기 변경 이력 코드 */
 		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
 
-		LOGGER.info(":::::::::::::::::: {} device update field end ::::::::::::::::::", deviceInfo.getDeviceId());
+		LOGGER.info(":::::::::::::::::: {} updateDeviceInfo field end ::::::::::::::::::", deviceInfo.getDeviceId());
 
 		/* 기기정보 업데이트 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
@@ -738,7 +739,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getDeviceExtraInfoList()); // rooting 여부
 		String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
 
-		LOGGER.info(":::::::::::::::::: {} device update field start ::::::::::::::::::", deviceInfo.getDeviceId());
+		LOGGER.info(":::::::::::::::::: {} updateDeviceInfoForLogin field start ::::::::::::::::::", deviceInfo.getDeviceId());
 
 		if (StringUtil.isNotBlank(deviceModelNo) && !StringUtil.equals(deviceModelNo, dbDeviceInfo.getDeviceModelNo())) {
 
@@ -899,7 +900,7 @@ public class DeviceServiceImpl implements DeviceService {
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
 
-		LOGGER.info(":::::::::::::::::: {} device update field end ::::::::::::::::::", deviceInfo.getDeviceId());
+		LOGGER.info(":::::::::::::::::: {} updateDeviceInfoForLogin field end ::::::::::::::::::", deviceInfo.getDeviceId());
 
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
