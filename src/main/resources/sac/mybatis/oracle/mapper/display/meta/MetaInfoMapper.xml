@@ -341,11 +341,11 @@
           <if test='chartClsfCd != null and chartClsfCd != ""'>
             , MCI.RANK_CHG_CNT
             , MCI.RANK_CHG_CLSF_CD
-            , MCI.ARTIST_ID
+            , (SELECT DA.ARTIST_ID FROM TB_DP_ARTIST DA WHERE DA.ARTIST_ID = MCI.ARTIST_ID AND ROWNUM = 1) AS ARTIST_ID
             , MCI.REG_DT
           </if>
           <if test='chartClsfCd == null or chartClsfCd == ""'>
-            , PD.ARTIST1_ID AS ARTIST_ID
+            , (SELECT DA.ARTIST_ID FROM TB_DP_ARTIST DA WHERE DA.ARTIST_ID = PD.ARTIST1_ID AND ROWNUM = 1) AS ARTIST_ID
           </if>
          FROM TB_DP_MUSIC_PROD MP
           <if test='chartClsfCd != null and chartClsfCd != ""'>
