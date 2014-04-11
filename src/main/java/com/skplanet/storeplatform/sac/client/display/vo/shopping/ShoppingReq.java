@@ -49,6 +49,7 @@ public class ShoppingReq extends CommonInfo {
 	private String virtualDeviceModelNo; // android_standard2
 	private String type; // type: channel, episode
 	private String prodRshpCd; // 채널 에피소드 관계
+	private String brandType; // 브랜드 타입
 
 	private Integer offset; // offset
 	private Integer count; // count
@@ -489,6 +490,21 @@ public class ShoppingReq extends CommonInfo {
 	 */
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	/**
+	 * @return the brandType
+	 */
+	public String getBrandType() {
+		return this.brandType;
+	}
+
+	/**
+	 * @param brandType
+	 *            the brandType to set
+	 */
+	public void setBrandType(String brandType) {
+		this.brandType = brandType;
 	}
 
 	/**
