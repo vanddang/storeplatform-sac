@@ -302,6 +302,106 @@
         ORDER BY A.RNK1, A.RNK2 
     </select>
 
+    <!-- 세부 카테고리정보 조회 - 이북 임시 쿼리 -->
+    <select id="selectEbookSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
+        SELECT /* MenuCategoryMapper.xml, selectEbookSubCategoryList, SAC 전시 , 2014-04-11 */
+            COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
+            , DECODE(A.INFR_MENU_YN, 'Y'
+                , SUM(A.MENU_PROD_CNT) OVER ( PARTITION BY SUBSTR(A.MENU_ID, 0, 7 ) )
+                , A.MENU_PROD_CNT) MENU_PROD_CNT
+            , A.TENANT_ID 
+            , A.MENU_ID 
+            , A.SYSTEM_ID 
+            , A.MENU_NM 
+            , A.MENU_ENG_NM 
+            , A.MENU_DESC 
+            , A.MENU_DEPTH 
+            , A.INFR_MENU_YN 
+            , A.UP_MENU_ID 
+            , A.EXPO_ORD 
+            , A.TARGET_URL 
+            , A.SEARCH_FILE_PATH 
+            , A.SEARCH_FILE_NM 
+            , A.BODY_FILE_PATH 
+            , A.BODY_FILE_NM 
+            , A.BODY_FILE_SIZE
+            , A.MAIN_ON_FILE_PATH 
+            , A.MAIN_ON_FILE_NM 
+            , A.MAIN_OFF_FILE_PATH 
+            , A.MAIN_OFF_FILE_NM 
+            , A.RANK_FILE_PATH 
+            , A.RANK_FILE_NM 
+            , A.USE_YN 
+            , A.MENU_ID_TYPE
+            , A.LNB_FILE_PATH
+            , A.LNB_FILE_NM
+            , A.LNB_FILE_SIZE
+            , A.PRE_CATEGORY_INFO
+            , A.CATEGORY_MENU_YN
+            , A.REG_ID 
+            , A.REG_DT 
+            , A.UPD_ID 
+            , A.UPD_DT  
+        FROM (
+            SELECT 
+                 0 AS MENU_PROD_CNT
+                , A.TENANT_ID 
+                , A.TENANT_MENU_ID AS MENU_ID 
+                , A.SYSTEM_ID 
+                , A.MENU_NM 
+                , A.MENU_ENG_NM 
+                , A.MENU_DESC 
+                , A.MENU_DEPTH 
+                , A.INFR_MENU_YN 
+                , A.UP_MENU_ID 
+                , A.EXPO_ORD 
+                , A.TARGET_URL 
+                , A.SEARCH_FILE_PATH 
+                , A.SEARCH_FILE_NM 
+                , A.BODY_FILE_PATH 
+                , A.BODY_FILE_NM 
+                , NVL(A.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
+                , A.MAIN_ON_FILE_PATH 
+                , A.MAIN_ON_FILE_NM 
+                , A.MAIN_OFF_FILE_PATH 
+                , A.MAIN_OFF_FILE_NM 
+                , A.RANK_FILE_PATH 
+                , A.RANK_FILE_NM 
+                , A.USE_YN 
+                , A.MENU_ID_TYPE
+                , A.LNB_FILE_PATH
+                , A.LNB_FILE_NM
+                , A.LNB_FILE_SIZE
+                , A.PRE_CATEGORY_INFO
+                , A.CATEGORY_MENU_YN
+                , A.REG_ID 
+                , A.REG_DT 
+                , A.UPD_ID 
+                , A.UPD_DT  
+                , ( SELECT CASE WHEN MENU_DEPTH = 1 THEN 0 ELSE EXPO_ORD END EXPO_ORD
+                    FROM TB_DP_TENANT_MENU
+                    WHERE TENANT_MENU_ID = SUBSTR(A.TENANT_MENU_ID, 0, 7 )
+                    AND SYSTEM_ID = A.SYSTEM_ID) AS RNK1
+                , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( A.TENANT_MENU_ID, 0, 7 )
+                                             ORDER BY A.MENU_DEPTH
+                                                    , A.EXPO_ORD
+                                                    , A.MENU_NM ) AS RNK2
+            FROM 
+                TB_DP_TENANT_MENU A
+                , TB_DP_MENU_CATEGORY B
+            WHERE A.TENANT_MENU_ID = B.MENU_ID
+            AND A.USE_YN = 'Y'
+            AND B.USE_YN = 'Y'
+            AND B.TOP_MENU_ID = #{topMenuId}
+            AND A.TENANT_ID = #{tenantId} /* 테넌트ID */
+            AND A.SYSTEM_ID = #{systemId} /* 시스템ID */
+            <if test='featuredExposureYn == "N"'>
+            AND NVL(A.CATEGORY_MENU_YN, 'Y') = 'Y'
+            </if> 
+        ) A  
+        ORDER BY A.RNK1, A.RNK2 
+    </select>
+
     <!-- 세부 카테고리정보 조회 - 이북, 코믹 -->
     <select id="selectMultiSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
 		SELECT /* MenuCategoryMapper.xml, selectMultiSubCategoryList, SAC 전시 , 2014-03-07 */
@@ -470,7 +570,7 @@
 
     <!-- 세부 카테고리정보 조회 - 영화, 방송 -->
     <select id="selectVodSubCategoryList" parameterType="MenuSacReq" resultType="Menu">
-        SELECT /* MenuCategoryMapper.xml, selectMovieSubCategoryList, SAC 전시 , 2014-03-07 */
+        SELECT /* MenuCategoryMapper.xml, selectVodSubCategoryList, SAC 전시 , 2014-03-07 */
             COUNT(A.MENU_ID) OVER() AS TOTAL_COUNT
             , DECODE(A.INFR_MENU_YN, 'Y'
                 , SUM(A.MENU_PROD_CNT) OVER ( PARTITION BY SUBSTR(A.MENU_ID, 0, 7 ) )
