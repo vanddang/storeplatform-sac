@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -1095,9 +1096,13 @@ public class SellerServiceImpl implements SellerService {
 		WithdrawRes response = new WithdrawRes();
 		response.setSellerKey(req.getSellerKey());
 
-		this.sellerWithdrawAmqpTemplate.convertSendAndReceive(new Message(Command.CANCEL_ACCOUNT,
-				new CancelAccountRequest(req.getSellerKey())));
-
+		Message<CancelAccountRequest> amqpRequest = new Message<CancelAccountRequest>(Command.CANCEL_ACCOUNT,
+				new CancelAccountRequest(req.getSellerKey()));
+		try {
+			this.sellerWithdrawAmqpTemplate.convertSendAndReceive(amqpRequest);
+		} catch (AmqpException ex) {
+			LOGGER.info("MQ process fail {}", amqpRequest);
+		}
 		LOGGER.debug("############ SellerServiceImpl.withdraw() [END] ############");
 		return response;
 
