@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.controller;
 
+import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
 import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.service.TempProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class DisplayCacheController {
 
     @Autowired
-    private ProductInfoManager productInfoManager;
+    private CacheEvictManager cacheEvictManager;
 
     @Autowired
     private TempProductInfoManager tempProductInfoManager;
@@ -41,7 +42,19 @@ public class DisplayCacheController {
         param.setTenantId("S01");
         param.setLangCd("ko");
 
-        productInfoManager.evictAppMeta(param);
+        cacheEvictManager.evictAppMeta(param);
+        // TODO 캐쉬에 족보(상품ID=상품유형)를 관리하고 있을까나?
+    }
+
+    @RequestMapping(value = "/evict/all", method = RequestMethod.GET)
+    public void evictAllMeta(@RequestParam(required = true) String prodType) {
+        if(prodType.equals("app")) {
+            cacheEvictManager.evictAllAppMeta();
+        }
+        else if(prodType.equals("music")) {
+            cacheEvictManager.evictAllMusicMeta();
+        }
+
     }
 
     @RequestMapping(value = "/evict/oldApp", method = RequestMethod.GET)

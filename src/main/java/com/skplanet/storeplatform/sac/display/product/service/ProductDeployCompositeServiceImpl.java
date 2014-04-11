@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.product.service;
 
 import com.skplanet.icms.refactoring.deploy.*;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
 import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
@@ -46,7 +47,7 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 	private AmqpTemplate cmsAmqpTemplate;
 
     @Autowired
-    private ProductInfoManager productInfoManager;
+    private CacheEvictManager cacheEvictManager;
 
     @Value("#{propertiesForSac['skp.common.service.language']}")
     private String SERVICE_LANG;
@@ -109,7 +110,7 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
                     for(DPTenantProductVO tenProd : message.getDpProductTotal().getDpTenantProduct()) {
                         if(StringUtils.isNotEmpty(this.SERVICE_LANG)) {
                             for(String langCd : this.SERVICE_LANG.split(",")) {
-                                this.productInfoManager.evictAppMeta(new AppMetaParam(tenProd.getTenantId(), langCd, tenProd.getProdId()));
+                                this.cacheEvictManager.evictAppMeta(new AppMetaParam(tenProd.getTenantId(), langCd, tenProd.getProdId()));
                             }
                         }
                     }

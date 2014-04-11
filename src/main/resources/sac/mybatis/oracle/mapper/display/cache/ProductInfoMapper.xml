@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ProductInfo">
-    <!--<resultMap id="AppMetaInfoMap" type="MetaInfo" autoMapping="true">-->
-        <!--<association property="support" javaType="java.util.HashMap">-->
-            <!--<result column="DRM_YN" property="drm" />-->
-            <!--<result column="PART_PARENT_CLSF_CD" property="iab" />-->
-        <!--</association>-->
-    <!--</resultMap>-->
 
-    <select id="getAppInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.AppMeta">
+    <select id="getAppMeta" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.AppMeta">
         SELECT
-            /* ProductInfoMapper.xml, getAppInfo, 정희원, 2014-03-05 */
+            /* ProductInfoMapper.xml, getAppMeta, 정희원, 2014-03-05 */
               PROD.PROD_ID
             , PROD.PROD_ID AS PART_PROD_ID
             , PROD.PROD_CHRG_YN AS PROD_CHRG
@@ -59,8 +53,8 @@
               AND PROD.SVC_GRP_CD = #{svcGrpCd}  -- DP000201 : App
     </select>
 
-    <select id="getAppInfoList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.AppMeta">
-        SELECT /* ProductInfoMapper.xml, getAppInfo, 정희원, 2014-04-07 */
+    <select id="getAppMetaList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.AppMeta">
+        SELECT /* ProductInfoMapper.xml, getAppMetaList, 정희원, 2014-04-07 */
             PROD.PROD_ID
             , PROD.PROD_ID AS PART_PROD_ID
             , PROD.PROD_CHRG_YN AS PROD_CHRG
@@ -131,12 +125,268 @@
               AND PROD.SVC_GRP_CD = #{svcGrpCd}  -- DP000201 : App
     </select>
 
+    <select id="getMusicMeta" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.MusicMeta">
+        SELECT /* ProductInfoMapper.xml, getMusicMeta, SAC : 정희원 , 2014-04-09 */
+            CPD.PROD_ID,
+            EPD.PROD_ID AS PART_PROD_ID,
+            TPRC.PROD_AMT,
+            PDESC.PROD_NM,
+            <![CDATA[
+             NVL((CASE WHEN (TS.AVG_EVLU_SCORE > 0 AND TS.AVG_EVLU_SCORE < 1) THEN 1
+                   WHEN TS.AVG_EVLU_SCORE > 5 THEN 5
+                   ELSE ROUND(TS.AVG_EVLU_SCORE, 1)
+                   END)
+                  , 0) AS AVG_EVLU_SCORE,
+            ]]>
+            NVL(TS.PRCHS_CNT, 0) AS PRCHS_CNT,
+            NVL(TS.PATICPERS_CNT, 0) AS PATICPERS_CNT,
+            PDESC.ARTIST1_NM,
+            PDESC.ARTIST2_NM,
+            PDESC.ARTIST3_NM,
+            'Y' AS MP3_SPRT_YN,
+            MM.BELL_SPRT_YN,
+            MM.COLORRING_SPRT_YN,
+            MM.AGENCY_NM,
+            MM.CHNL_COMP_NM,
+            MM.OUTSD_CONTENTS_ID,
+            MM.ISSUE_DAY,
+            PI.FILE_PATH || PI.FILE_NM AS FILE_PATH,
+            PI.FILE_NM,
+            PI.FILE_SIZE,
+            EPD.CONTENTS_TYPE_CD,
+            TP.PROD_STATUS_CD,
+            PDESC.PROD_BASE_DESC,
+            PDESC.PROD_DTL_DESC,
+            CPD.PROD_GRD_CD,
+            CPD.META_CLSF_CD,
+            MM.ALBUM_TYPE_NM,
+            MC.MENU_ID,
+            MD.MENU_NM,
+            MD.MENU_DESC,
+            CPD.TOP_MENU_ID,
+            TMD.MENU_NM AS TOP_MENU_NM,
+            TMD.MENU_DESC AS TOP_MENU_DESC,
+            MCH.RANK_CHG_CNT,
+            MCH.RANK_CHG_CLSF_CD,
+            MCH.ARTIST_ID,
+            MCH.REG_DT
+        FROM TB_DP_PROD CPD
+            INNER JOIN TB_DP_PROD_RSHP RS
+                ON RS.PROD_ID = CPD.PROD_ID
+            INNER JOIN TB_DP_PROD EPD
+                ON EPD.PROD_ID = RS.PART_PROD_ID
+            INNER JOIN TB_DP_MUSIC_PROD MM
+                ON EPD.PROD_ID = MM.PROD_ID
+            INNER JOIN TB_DP_PROD_DESC PDESC
+                ON PDESC.PROD_ID = EPD.PROD_ID
+            INNER JOIN TB_DP_MENU_CATEGORY_PROD_MAPG MCM
+                ON MCM.PROD_ID = CPD.PROD_ID AND MCM.USE_YN = 'Y' AND MCM.BASE_YN = 'Y'
+            INNER JOIN TB_DP_MENU_CATEGORY MC
+                ON MC.MENU_ID = MCM.MENU_ID AND MC.USE_YN = 'Y'
+            INNER JOIN TB_DP_MENU_CATEGORY_DESC MD
+                ON MD.MENU_ID = MCM.MENU_ID
+            INNER JOIN TB_DP_MENU_CATEGORY_DESC TMD
+                ON TMD.MENU_ID = CPD.TOP_MENU_ID
+            INNER JOIN TB_DP_PROD_IMG PI
+                ON PI.PROD_ID = CPD.PROD_ID AND PI.EXPO_ORD = 1 AND PI.LANG_CD = PDESC.LANG_CD AND PI.IMG_CD = #{imageCd} -- 'DP000162'
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID = EPD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD CTP
+                ON CTP.PROD_ID = CPD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+                ON TPRC.PROD_ID = EPD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
+                ON TS.PROD_ID = CPD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_MUSIC_CHART MCH
+                ON MCH.PROD_ID = EPD.PROD_ID AND MCH.CHART_CLSF_CD = #{chartClsfCd} AND MCH.RANK_START_DAY = #{rankStartDay}
+        WHERE 1=1
+              AND CPD.CONTENTS_TYPE_CD = 'PD002501'
+              AND EPD.CONTENTS_TYPE_CD = 'PD002502'
+              AND RS.PROD_RSHP_CD = 'DP010802'
+              AND CPD.SVC_TYPE_CD = #{svcTypeCd}
+              AND EPD.SVC_TYPE_CD = CPD.SVC_TYPE_CD
+              AND CPD.SVC_GRP_CD = 'DP000203'
+              AND EPD.SVC_GRP_CD = 'DP000203'
+              AND MD.LANG_CD = #{langCd}
+              AND TMD.LANG_CD = MD.LANG_CD
+              AND TP.EXPO_YN = 'Y'
+              AND TP.TENANT_ID = #{tenantId}
+              AND PDESC.LANG_CD = MD.LANG_CD
+              AND CPD.PROD_ID = #{channelId}
+    </select>
+
+    <select id="getMusicMetaList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.MusicMeta">
+        SELECT /* ProductInfoMapper.xml, getMusicMetaList, SAC : 정희원 , 2014-04-09 */
+            CPD.PROD_ID,
+            EPD.PROD_ID AS PART_PROD_ID,
+            TPRC.PROD_AMT,
+            PDESC.PROD_NM,
+            <![CDATA[
+                 NVL((CASE WHEN (TS.AVG_EVLU_SCORE > 0 AND TS.AVG_EVLU_SCORE < 1) THEN 1
+                       WHEN TS.AVG_EVLU_SCORE > 5 THEN 5
+                       ELSE ROUND(TS.AVG_EVLU_SCORE, 1)
+                       END)
+                      , 0) AS AVG_EVLU_SCORE,
+                ]]>
+            NVL(TS.PRCHS_CNT, 0) AS PRCHS_CNT,
+            NVL(TS.PATICPERS_CNT, 0) AS PATICPERS_CNT,
+            PDESC.ARTIST1_NM,
+            PDESC.ARTIST2_NM,
+            PDESC.ARTIST3_NM,
+            'Y' AS MP3_SPRT_YN,
+            MM.BELL_SPRT_YN,
+            MM.COLORRING_SPRT_YN,
+            MM.AGENCY_NM,
+            MM.CHNL_COMP_NM,
+            MM.OUTSD_CONTENTS_ID,
+            MM.ISSUE_DAY,
+            PI.FILE_PATH || PI.FILE_NM AS FILE_PATH,
+            PI.FILE_NM,
+            PI.FILE_SIZE,
+            EPD.CONTENTS_TYPE_CD,
+            TP.PROD_STATUS_CD,
+            PDESC.PROD_BASE_DESC,
+            PDESC.PROD_DTL_DESC,
+            CPD.PROD_GRD_CD,
+            CPD.META_CLSF_CD,
+            MM.ALBUM_TYPE_NM,
+            MC.MENU_ID,
+            MD.MENU_NM,
+            MD.MENU_DESC,
+            CPD.TOP_MENU_ID,
+            TMD.MENU_NM AS TOP_MENU_NM,
+            TMD.MENU_DESC AS TOP_MENU_DESC,
+            MCH.RANK_CHG_CNT,
+            MCH.RANK_CHG_CLSF_CD,
+            MCH.ARTIST_ID,
+            MCH.REG_DT
+        FROM TB_DP_PROD CPD
+            INNER JOIN TB_DP_PROD_RSHP RS
+            ON RS.PROD_ID = CPD.PROD_ID
+            INNER JOIN TB_DP_PROD EPD
+            ON EPD.PROD_ID = RS.PART_PROD_ID
+            INNER JOIN TB_DP_MUSIC_PROD MM
+            ON EPD.PROD_ID = MM.PROD_ID
+            INNER JOIN TB_DP_PROD_DESC PDESC
+            ON PDESC.PROD_ID = EPD.PROD_ID
+            INNER JOIN TB_DP_MENU_CATEGORY_PROD_MAPG MCM
+            ON MCM.PROD_ID = CPD.PROD_ID AND MCM.USE_YN = 'Y' AND MCM.BASE_YN = 'Y'
+            INNER JOIN TB_DP_MENU_CATEGORY MC
+            ON MC.MENU_ID = MCM.MENU_ID AND MC.USE_YN = 'Y'
+            INNER JOIN TB_DP_MENU_CATEGORY_DESC MD
+            ON MD.MENU_ID = MCM.MENU_ID
+            INNER JOIN TB_DP_MENU_CATEGORY_DESC TMD
+            ON TMD.MENU_ID = CPD.TOP_MENU_ID
+            INNER JOIN TB_DP_PROD_IMG PI
+            ON PI.PROD_ID = CPD.PROD_ID AND PI.EXPO_ORD = 1 AND PI.LANG_CD = PDESC.LANG_CD AND PI.IMG_CD = #{imageCd} -- 'DP000162'
+            INNER JOIN TB_DP_TENANT_PROD TP
+            ON TP.PROD_ID = EPD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD CTP
+            ON CTP.PROD_ID = CPD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+            ON TPRC.PROD_ID = EPD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
+            ON TS.PROD_ID = CPD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_MUSIC_CHART MCH
+            ON MCH.PROD_ID = EPD.PROD_ID AND MCH.CHART_CLSF_CD = #{chartClsfCd} AND MCH.RANK_START_DAY = #{rankStartDay}
+        WHERE 1=1
+            AND CPD.CONTENTS_TYPE_CD = 'PD002501'
+            AND EPD.CONTENTS_TYPE_CD = 'PD002502'
+            AND RS.PROD_RSHP_CD = 'DP010802'
+            AND CPD.SVC_TYPE_CD = #{svcTypeCd}
+            AND EPD.SVC_TYPE_CD = CPD.SVC_TYPE_CD
+            AND CPD.SVC_GRP_CD = 'DP000203'
+            AND EPD.SVC_GRP_CD = 'DP000203'
+            AND MD.LANG_CD = #{langCd}
+            AND TMD.LANG_CD = MD.LANG_CD
+            AND TP.EXPO_YN = 'Y'
+            AND TP.TENANT_ID = #{tenantId}
+            AND PDESC.LANG_CD = MD.LANG_CD
+            AND CPD.PROD_ID IN <foreach collection="prodIdList" open="(" close=")" separator="," item="v">#{v}</foreach>
+    </select>
+
+    <select id="getFreepassMeta" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.FreepassMeta">
+        SELECT /* ProductInfoMapper.xml, getFreepassMeta, SAC : 정희원 , 2014-04-10 */
+            CPROD.PROD_ID
+            , CPROD.TOP_MENU_ID
+            , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = CPROD.TOP_MENU_ID AND LANG_CD = CPDESC.LANG_CD) AS TOP_MENU_NM
+            , CPROD.META_CLSF_CD
+            , CPROD.PROD_CHRG_YN
+            , CPROD.SELLER_MBR_NO
+            , CPROD.SVC_GRP_CD
+            , CPROD.SVC_TYPE_CD
+            , CPROD.PROD_GRD_CD
+            , CPROD.CID
+            , CPROD.MALL_CD
+            , CPROD.FEE_CASE_CD
+            , CPROD.FEE_UNIT_CD
+            , CPROD.USE_PERIOD_UNIT_CD
+            , CPROD.USE_PERIOD
+            , CPROD.DRM_YN
+            , CPROD.DRM_SET_CD
+            , CPROD.DRM_SET_VALUE
+            , CPROD.CONTENTS_TYPE_CD
+            , CXPROD.CMPX_PROD_CLSF_CD
+            , CPDESC.PROD_INTR_DSCR
+            , TPRC.PROD_AMT
+            , CPDESC.PROD_NM
+            , CPDESC.PROD_ALIAS
+            , CPDESC.PROD_BASE_DESC
+            , CPDESC.PROD_DTL_DESC
+            , CPDESC.PROD_USE_MTD
+            , CXPROD.AUTO_APPR_YN
+            , CXPROD.MAX_SALE_CNT
+            , CXPROD.SALE_POC_CD
+            , CXPROD.DUP_PRCHS_LIMT_YN
+            , TP.PROD_STATUS_CD
+            , TP.EXPO_YN
+            , TP.EXPO_ORD
+            , TO_CHAR(TPRC.APPLY_START_DT, 'YYYYMMDDHH24MISS') AS APPLY_START_DT
+            , TO_CHAR(TPRC.APPLY_END_DT, 'YYYYMMDDHH24MISS') AS APPLY_END_DT
+            , TPRC.CHNL_UNLMT_AMT
+            , TPRC.CHNL_PERIOD_AMT
+            , TPRC.PROD_NET_AMT
+            , TPRC.DC_RATE
+            , TPRC.DC_AMT
+            , TPRC.DC_AFT_PROD_AMT
+            , TPRC.TAX_CLSF
+            , CPDESC.LANG_CD
+            , CXPROD.CASH_AMT
+            , CXPROD.BNS_CASH_AMT_CLSF_CD
+            , CXPROD.BNS_CASH_AMT
+            , CXPROD.BNS_CASH_RATIO
+            , CXPROD.BNS_USE_PERIOD_UNIT_CD
+            , CXPROD.BNS_USE_PERIOD
+            , NVL(BIMG.FILE_PATH, '') || NVL(BIMG.FILE_NM, '') AS BANNER_FILE_PATH
+            , NVL(TIMG.FILE_PATH, '') || NVL(TIMG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
+        FROM TB_DP_PROD CPROD
+            INNER JOIN TB_DP_CMPX_PROD CXPROD
+                ON CXPROD.PROD_ID = CPROD.PROD_ID
+            INNER JOIN TB_DP_PROD_DESC CPDESC
+                ON CPDESC.PROD_ID = CPROD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID = CPROD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+                ON TPRC.PROD_ID = CPROD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_PROD_IMG BIMG
+                ON BIMG.PROD_ID = CPROD.PROD_ID AND BIMG.LANG_CD = CPDESC.LANG_CD AND BIMG.IMG_CD = 'DP000197' -- Banner
+            LEFT OUTER JOIN TB_DP_PROD_IMG TIMG
+                ON TIMG.PROD_ID = CPROD.PROD_ID AND TIMG.LANG_CD = CPDESC.LANG_CD AND TIMG.IMG_CD = 'DP000199' -- Thumbnail
+        WHERE 1=1
+              AND CPROD.SVC_GRP_CD = #{svcGrpCd} -- 'DP000207'
+              AND CPROD.PROD_ID = #{prodId}
+              AND CPDESC.LANG_CD = #{langCd}
+              AND TP.TENANT_ID = #{tenantId}
+              AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
+    </select>
+
     <select id="getSubContent" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.SubContent">
         SELECT
             /* ProductInfoMapper.xml, getSubContent, 정희원, 2014-03-05 */
             SC.SUB_CONTENTS_ID,
             SC.APK_PKG_NM,
-            SC.APK_VER
+            SC.APK_VER,
+            SC.FILE_SIZE
         FROM TB_DP_SPRT_DEVICE SD
             INNER JOIN TB_DP_SUB_CONTENTS SC
                 ON SC.PROD_ID = SD.PROD_ID AND SC.SUB_CONTENTS_ID = SD.SUB_CONTENTS_ID

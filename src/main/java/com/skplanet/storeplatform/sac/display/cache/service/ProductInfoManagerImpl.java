@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.cache.service;
 import com.skplanet.spring.data.plandasj.PlandasjTemplate;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
@@ -39,52 +40,108 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     @Autowired
     PlandasjTemplate<String, String> plandasjTemplate;
 
+    private static final String APP_SVC_GRP_CD = "DP000201";
+    private static final String APP_IMG_CD = "DP000101";
+    private static final String MUSIC_SVC_GRP_CD = "DP000203";
+    private static final String MUSIC_IMG_CD = "DP000162";
+    private static final String MUSIC_SVC_TP_CD = "DP001111";
+    private static final String SHOPPING_SVC_GRP_CD = "DP000206";
+    private static final String FREEPASS_SVC_GRP_CD = "DP000207";
+
     @Override
     @Cacheable(value = "sac:display:product:app", key = "#param.getCacheKey()", unless = "#result == null")
     public AppMeta getAppMeta(AppMetaParam param) {
-        final String SVC_GRP_CD = "DP000201";
-        final String IMAGE_CD = "DP000101";
 
         Map<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("channelId", param.getChannelId());
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("tenantId", param.getTenantId());
-        reqMap.put("imageCd", IMAGE_CD);
-        reqMap.put("svcGrpCd", SVC_GRP_CD);
+        reqMap.put("imageCd", APP_IMG_CD);
+        reqMap.put("svcGrpCd", APP_SVC_GRP_CD);
 
-        return commonDAO.queryForObject("ProductInfo.getAppInfo", reqMap, AppMeta.class);
+        return commonDAO.queryForObject("ProductInfo.getAppMeta", reqMap, AppMeta.class);
     }
 
     @Override
     public List<AppMeta> getAppMetaList(String langCd, String tenantId, List<String> prodIdList, String deviceModelCd) {
-        final String SVC_GRP_CD = "DP000201";
-        final String IMAGE_CD = "DP000101";
 
         Map<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("prodIdList", prodIdList);  // MyBatis에서는 foreach에서 목록이 역순으로 생성됨.
         reqMap.put("langCd", langCd);
         reqMap.put("tenantId", tenantId);
         reqMap.put("deviceModelCd", deviceModelCd);
-        reqMap.put("imageCd", IMAGE_CD);
-        reqMap.put("svcGrpCd", SVC_GRP_CD);
+        reqMap.put("imageCd", APP_IMG_CD);
+        reqMap.put("svcGrpCd", APP_SVC_GRP_CD);
 
-        return commonDAO.queryForList("ProductInfo.getAppInfoList", reqMap, AppMeta.class);
+        return commonDAO.queryForList("ProductInfo.getAppMetaList", reqMap, AppMeta.class);
     }
 
     @Override
-    @CacheEvict(value = "sac:display:product:app", key = "#param.getCacheKey()")
-    public void evictAppMeta(AppMetaParam param) {
-        // TODO subContent, menuInfo도 함께
+    @Cacheable(value = "sac:display:product:music", key = "#param.getCacheKey()", unless = "#result == null")
+    public MusicMeta getMusicMeta(MusicMetaParam param) {
+
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("channelId", param.getChannelId());
+        reqMap.put("langCd", param.getLangCd());
+        reqMap.put("tenantId", param.getTenantId());
+        reqMap.put("imageCd", MUSIC_IMG_CD);
+        reqMap.put("svcGrpCd", MUSIC_SVC_GRP_CD);
+        reqMap.put("svcTypeCd", MUSIC_SVC_TP_CD);
+
+        if(StringUtils.isNotEmpty(param.getChartClsfCd()) && StringUtils.isNotEmpty(param.getRankStartDay())) {
+            reqMap.put("chartClsfCd", param.getChartClsfCd());
+            reqMap.put("rankStartDay", param.getRankStartDay());
+        } else {
+            reqMap.put("chartClsfCd", "");
+            reqMap.put("rankStartDay", "");
+        }
+
+        return commonDAO.queryForObject("ProductInfo.getMusicMeta", reqMap, MusicMeta.class);
     }
 
     @Override
-    @CacheEvict(value = "sac:display:product:app", allEntries = true)
-    public void evictAllAppMeta() { }
+    public List<MusicMeta> getMusicMetaList(String langCd, String tenantId, String chartClsfCd, String stdDt, List<String> prodIdList) {
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("prodIdList", prodIdList);
+        reqMap.put("langCd", langCd);
+        reqMap.put("tenantId", tenantId);
+        reqMap.put("imageCd", MUSIC_IMG_CD);
+        reqMap.put("svcGrpCd", MUSIC_SVC_GRP_CD);
+        reqMap.put("svcTypeCd", MUSIC_SVC_TP_CD);
+
+        if(StringUtils.isNotEmpty(chartClsfCd) && StringUtils.isNotEmpty(stdDt)) {
+            reqMap.put("chartClsfCd", chartClsfCd);
+            reqMap.put("rankStartDay", stdDt);
+        } else {
+            reqMap.put("chartClsfCd", "");
+            reqMap.put("rankStartDay", "");
+        }
+
+        return commonDAO.queryForList("ProductInfo.getMusicMetaList", reqMap, MusicMeta.class);
+    }
 
     @Override
-    @Cacheable(value = "sac:display:product:mm", key = "#param.getCacheKey()", unless = "#result == null")
-    public MultimediaMeta getMultimediaMeta(MultimediaMetaParam param) {
-        return null;
+    @Cacheable(value = "sac:display:product:shopping", key = "#param.getCacheKey()", unless = "#result == null")
+    public ShoppingMeta getShoppingMeta(ShoppingMetaParam param) {
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("prodId", param.getChannelId());
+        reqMap.put("langCd", param.getLangCd());
+        reqMap.put("tenantId", param.getTenantId());
+        reqMap.put("svcGrpCd", SHOPPING_SVC_GRP_CD);
+
+        return commonDAO.queryForObject("ProductInfo.getShoppingMeta", reqMap, ShoppingMeta.class);
+    }
+
+    @Override
+    @Cacheable(value = "sac:display:product:freepass", key = "#param.getCacheKey()", unless = "#result == null")
+    public FreepassMeta getFreepassMeta(FreepassMetaParam param) {
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("prodId", param.getChannelId());
+        reqMap.put("langCd", param.getLangCd());
+        reqMap.put("tenantId", param.getTenantId());
+        reqMap.put("svcGrpCd", FREEPASS_SVC_GRP_CD);
+
+        return commonDAO.queryForObject("ProductInfo.getFreepassMeta", reqMap, FreepassMeta.class);
     }
 
     @Override

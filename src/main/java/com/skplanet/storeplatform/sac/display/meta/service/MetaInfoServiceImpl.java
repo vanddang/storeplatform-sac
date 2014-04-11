@@ -1,15 +1,12 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
-import java.lang.reflect.Method;
 import java.util.*;
 
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMeta;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.SubContent;
-import com.skplanet.storeplatform.sac.display.cache.vo.MenuInfo;
+import com.skplanet.storeplatform.sac.display.cache.vo.*;
+import com.skplanet.storeplatform.sac.display.meta.util.MetaBeanUtils;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,13 +37,12 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getAppMetaInfo(java.util.Map)
 	 */
 	@Override
 	public MetaInfo getAppMetaInfo(Map<String, Object> paramMap) {
-        Boolean useCache = (Boolean) RequestContextHolder.currentRequestAttributes().getAttribute("useCache", RequestAttributes.SCOPE_REQUEST);
-        if(useCache) {
+        if(isUseCache()) {
             AppMetaParam param = new AppMetaParam();
             ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
             TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
@@ -66,12 +62,15 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             MenuInfo menuInfo = productInfoManager.getMenuInfo(tenantHeader.getLangCd(), basicInfo.getMenuId(), basicInfo.getProdId());
 
             MetaInfo me = new MetaInfo();
-            setProperties(menuInfo, me); // MenuInfo
-            setProperties(subContent, me); // SubContent
-            setProperties(app, me); // App
+            MetaBeanUtils.setProperties(menuInfo, me); // MenuInfo
+            MetaBeanUtils.setProperties(subContent, me); // SubContent
+            MetaBeanUtils.setProperties(app, me); // App
 
+            me.setRegDt(null);
             if(app.getPartParentClsfCd() != null) {
                 me.setPartParentClsfCd("PD012301".equals(app.getPartParentClsfCd()) ? "Y" : "N");
+            } else {
+                me.setPartParentClsfCd("N");
             }
             me.setSubContentsId(null);
 
@@ -112,7 +111,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
                 logger.warn("메타데이터를 읽을 수 없습니다 - App#{}", prodId);
             } else {
                 MetaInfo me = new MetaInfo();
-                setProperties(app, me);
+                MetaBeanUtils.setProperties(app, me);
 
                 if(app.getPartParentClsfCd() != null) {
                     me.setPartParentClsfCd("PD012301".equals(app.getPartParentClsfCd()) ? "Y" : "N");
@@ -133,7 +132,33 @@ public class MetaInfoServiceImpl implements MetaInfoService {
          */
 	@Override
 	public MetaInfo getMusicMetaInfo(Map<String, Object> paramMap) {
-		return this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
+        if(isUseCache()) {
+            MusicMetaParam param = new MusicMetaParam();
+            ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
+            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+
+            param.setChannelId(basicInfo.getProdId());
+            param.setLangCd(tenantHeader.getLangCd());
+            param.setTenantId(tenantHeader.getTenantId());
+
+            if(paramMap.containsKey("chartClsfCd") && paramMap.containsKey("stdDt")) {
+                param.setChartClsfCd((String)paramMap.get("chartClsfCd"));
+                param.setRankStartDay((String)paramMap.get("stdDt"));
+            }
+
+            MusicMeta music = productInfoManager.getMusicMeta(param);
+            if(music == null) {
+                logger.warn("메타데이터를 읽을 수 없습니다 - Music#{}", basicInfo.getProdId());
+                return null;
+            }
+
+            MetaInfo me = new MetaInfo();
+            MetaBeanUtils.setProperties(music, me);
+
+            return me;
+        }
+        else
+		    return this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
 	}
 
 	/*
@@ -173,8 +198,23 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getShoppingMetaInfo(Map<String, Object> paramMap) {
-		return this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
-	}
+//        if (isUseCache()) {
+//            ShoppingMetaParam param = new ShoppingMetaParam();
+//
+//            ShoppingMeta meta = productInfoManager.getShoppingMeta(param);
+//            if (meta == null) {
+//                logger.warn("메타데이터를 읽을 수 없습니다 - Shopping#{}", param.getChannelId());
+//                return null;
+//            }
+//
+//            MetaInfo me = new MetaInfo();
+//            MetaBeanUtils.setProperties(meta, me);
+//
+//            return me;
+//        }
+//        else
+            return this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -183,32 +223,32 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getFreepassMetaInfo(Map<String, Object> paramMap) {
-		return this.commonDAO.queryForObject("MetaInfo.getFreepassMetaInfo", paramMap, MetaInfo.class);
+//        if(isUseCache()) {
+//            FreepassMetaParam param = new FreepassMetaParam();
+//            ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
+//            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+//
+//            param.setChannelId(basicInfo.getProdId());
+//            param.setLangCd(tenantHeader.getLangCd());
+//            param.setTenantId(tenantHeader.getTenantId());
+//
+//            FreepassMeta ffMeta = productInfoManager.getFreepassMeta(param);
+//            if(ffMeta == null) {
+//                logger.warn("메타데이터를 읽을 수 없습니다 - Freepass#{}", basicInfo.getProdId());
+//                return null;
+//            }
+//
+//            MetaInfo me = new MetaInfo();
+//            MetaBeanUtils.setProperties(ffMeta, me);
+//
+//            return me;
+//        }
+//        else
+		    return this.commonDAO.queryForObject("MetaInfo.getFreepassMetaInfo", paramMap, MetaInfo.class);
 	}
 
-    private static <T> void setProperties(T prop, MetaInfo meta) {
-        if(prop == null || meta == null)
-            return;
-
-        for(Method mtd : prop.getClass().getDeclaredMethods()) {
-            if(mtd.getName().startsWith("get")) {
-                String fld = mtd.getName().substring(3);
-                try {
-                    Object v = mtd.invoke(prop);
-                    // value가 null인 경우 Assign을 하지 않음
-                    if(v != null) {
-                        Method setMtd = MetaInfo.class.getDeclaredMethod("set"+fld, mtd.getReturnType());
-                        setMtd.invoke(meta, mtd.invoke(prop));
-                    }
-                }
-                catch(NoSuchMethodException nsme) {
-
-                }
-                catch(Exception e) {
-                    throw new RuntimeException();
-                }
-            }
-        }
+    private boolean isUseCache() {
+        return (Boolean) RequestContextHolder.currentRequestAttributes().getAttribute("useCache", RequestAttributes.SCOPE_REQUEST);
     }
 
 }

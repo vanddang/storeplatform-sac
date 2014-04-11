@@ -35,7 +35,7 @@ public class AppMeta extends CommonInfo {
     private String prodBaseDesc;
     private Integer prodAmt;
     private String imagePath;
-    private String imageSize;
+    private Integer imageSize;
     private Integer paticpersCnt;
     private Integer prchsCnt;
     private Double avgEvluScore;
@@ -236,11 +236,11 @@ public class AppMeta extends CommonInfo {
         this.imagePath = imagePath;
     }
 
-    public String getImageSize() {
+    public Integer getImageSize() {
         return imageSize;
     }
 
-    public void setImageSize(String imageSize) {
+    public void setImageSize(Integer imageSize) {
         this.imageSize = imageSize;
     }
 

@@ -15,22 +15,14 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * <p>
  * DESC
  * </p>
- * Updated on : 2014. 03. 05 Updated by : 정희원, SK 플래닛.
+ * Updated on : 2014. 04. 11 Updated by : 정희원, SK 플래닛.
  */
-public class AppMetaParam extends CommonInfo {
-    private static long serialVersionUID = 1L;
+public class ShoppingMetaParam extends CommonInfo {
+    private static final long serialVersionUID = 1L;
 
     private String langCd;
     private String channelId;
     private String tenantId;
-
-    public AppMetaParam(String tenantId, String langCd, String channelId) {
-        this.langCd = langCd;
-        this.channelId = channelId;
-        this.tenantId = tenantId;
-    }
-
-    public AppMetaParam() {}
 
     public String getLangCd() {
         return langCd;

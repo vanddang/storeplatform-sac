@@ -15,22 +15,33 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * <p>
  * DESC
  * </p>
- * Updated on : 2014. 03. 05 Updated by : 정희원, SK 플래닛.
+ * Updated on : 2014. 04. 09 Updated by : 정희원, SK 플래닛.
  */
-public class AppMetaParam extends CommonInfo {
-    private static long serialVersionUID = 1L;
+public class MusicMetaParam extends CommonInfo {
+    private static final long serialVersionUID = 1L;
 
     private String langCd;
     private String channelId;
     private String tenantId;
 
-    public AppMetaParam(String tenantId, String langCd, String channelId) {
-        this.langCd = langCd;
-        this.channelId = channelId;
-        this.tenantId = tenantId;
+    private String chartClsfCd;
+    private String rankStartDay;
+
+    public String getChartClsfCd() {
+        return chartClsfCd;
     }
 
-    public AppMetaParam() {}
+    public void setChartClsfCd(String chartClsfCd) {
+        this.chartClsfCd = chartClsfCd;
+    }
+
+    public String getRankStartDay() {
+        return rankStartDay;
+    }
+
+    public void setRankStartDay(String rankStartDay) {
+        this.rankStartDay = rankStartDay;
+    }
 
     public String getLangCd() {
         return langCd;

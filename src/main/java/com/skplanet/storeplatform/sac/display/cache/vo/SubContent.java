@@ -23,6 +23,15 @@ public class SubContent extends CommonInfo {
     private String subContentsId;
     private String apkPkgNm;
     private String apkVer;
+    private Integer fileSize;
+
+    public Integer getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(Integer fileSize) {
+        this.fileSize = fileSize;
+    }
 
     public String getSubContentsId() {
         return subContentsId;

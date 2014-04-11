@@ -32,22 +32,27 @@ public interface ProductInfoManager {
     List<AppMeta> getAppMetaList(String langCd, String tenantId, List<String> prodIdList, String deviceModelCd);
 
     /**
-     * 캐싱된 메타정보를 Evict한다.
-     * @param param
-     */
-    void evictAppMeta(AppMetaParam param);
-
-    /**
-     * 앱 메타 캐쉬 정보를 모두 Evict한다.
-     */
-    void evictAllAppMeta();
-
-    /**
-     * 멀티미디어 메타정보 조회
+     * 음악 메타 정보 조회
      * @param param
      * @return
      */
-    MultimediaMeta getMultimediaMeta(MultimediaMetaParam param);
+    MusicMeta getMusicMeta(MusicMetaParam param);
+
+    List<MusicMeta> getMusicMetaList(String langCd, String tenantId, String chartClsfCd, String stdDt, List<String> prodIdList);
+
+    /**
+     * 쇼핑상품 조회
+     * @param param
+     * @return
+     */
+    ShoppingMeta getShoppingMeta(ShoppingMetaParam param);
+
+    /**
+     * 정액권 상품 조회
+     * @param param
+     * @return
+     */
+    FreepassMeta getFreepassMeta(FreepassMetaParam param);
 
     /**
      * 서브컨텐트 정보를 조회한다. APP상품에서 이용한다.
