@@ -39,7 +39,7 @@ public class VodGeneratorImpl implements VodGenerator {
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 	@Autowired
-	private DisplayCommonService commonService;	
+	private DisplayCommonService commonService;
 
 	/*
 	 * (non-Javadoc)
@@ -91,11 +91,13 @@ public class VodGeneratorImpl implements VodGenerator {
 		Chapter chapter = new Chapter();
 		Time time = new Time();
 		time.setText(metaInfo.getEpsdPlayTm());
-		chapter.setUnit(commonService.getVodChapterUnit());
+		chapter.setUnit(this.commonService.getVodChapterUnit());
 		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
 			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
 		}
-		vod.setChapter(chapter);
+		if (!DisplayConstants.DP_VOD_SHORT_STORY_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+			vod.setChapter(chapter);
+		}
 		vod.setRunningTime(time);
 		vod.setVideoInfoList(this.generateVideoInfoList(metaInfo));
 		return vod;
