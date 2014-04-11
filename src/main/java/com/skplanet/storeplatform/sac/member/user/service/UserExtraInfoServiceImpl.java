@@ -57,6 +57,12 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("===== 컨트롤러 > 회원 부가 정보 등록/수정 > 사용자조회 > Request : {}", req.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+
 		UserInfo searchUser = this.searchUser(req, sacHeader);
 
 		/* 입력받은 profileCode 정상인지 확인 */
@@ -199,15 +205,25 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		updateReq.setMbrMangItemPtcr(ptcrList);
 		updateReq.setCommonRequest(commonRequest);
 
-		LOGGER.debug("###### SC API ptcrList Req : {}", ptcrList.toString());
-		LOGGER.debug("###### SC API update Req : {}", updateReq.getUserKey());
-		LOGGER.debug("###### SC API update Req : {}", updateReq.getMbrMangItemPtcr().toString());
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("===== ServiceImpl > 회원 부가 정보 등록/수정 > Request > ptcrList : {}", ptcrList.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("===== ServiceImpl > 회원 부가 정보 등록/수정 > Request > userKey : {}", updateReq.getUserKey());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		UpdateManagementResponse updateRes = this.userSCI.updateManagement(updateReq);
 
-		LOGGER.debug("###### SC API Success Code : {}", updateRes.getCommonResponse().getResultCode());
-		LOGGER.debug("###### SC API Success Msg : {}", updateRes.getCommonResponse().getResultMessage());
-		LOGGER.debug("###### SC API Success Res : {}", updateRes.getUserKey());
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("===== ServiceImpl > 회원 부가 정보 등록/수정 > Response > : {}", updateRes.getUserKey());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		res.setUserKey(updateRes.getUserKey());

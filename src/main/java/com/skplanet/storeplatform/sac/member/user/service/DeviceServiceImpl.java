@@ -1072,7 +1072,20 @@ public class DeviceServiceImpl implements DeviceService {
 			listReq.setIsMainDevice("Y");
 
 			try {
+				LOGGER.info("");
+				LOGGER.info("");
+				LOGGER.info("#####		대표단말조회 Req : {}", listReq.toString());
+				LOGGER.info("");
+				LOGGER.info("");
+
 				listRes = this.listDevice(requestHeader, listReq);
+
+				LOGGER.info("");
+				LOGGER.info("");
+				LOGGER.info("#####		대표단말조회 Res : {}", listRes.toString());
+				LOGGER.info("");
+				LOGGER.info("");
+
 			} catch (StorePlatformException ex) {
 				if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 					throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
@@ -1113,10 +1126,6 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
 
-		LOGGER.debug("###### Start detailRepresentationDevice Request : {}", req.toString());
-		LOGGER.debug("###### Fianl detailRepresentationDevice Response : {}", listRes.getDeviceInfoList().toString());
-		LOGGER.debug("###### Fianl detailRepresentationDevice Response Size : {}", listRes.getDeviceInfoList().size());
-
 		return res;
 	}
 
@@ -1138,15 +1147,27 @@ public class DeviceServiceImpl implements DeviceService {
 		if (req.getDeviceId() != null) {
 			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId()); // TODO
 			req.setDeviceId(opmdMdn);
-			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("##### ServiceImpl - 모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+			LOGGER.info("");
+			LOGGER.info("");
 
 			ListDeviceReq deviceReq = new ListDeviceReq();
 			deviceReq.setUserKey(req.getUserKey());
 			deviceReq.setDeviceId(req.getDeviceId());
+
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("#####	ServiceImpl - 디바이스상세조회 Request : {}", deviceReq.toString());
+			LOGGER.info("");
+			LOGGER.info("");
+
 			ListDeviceRes deviceRes = this.listDevice(requestHeader, deviceReq);
 
 			if (deviceRes.getDeviceInfoList() != null) {
-				LOGGER.info("대표단말설정 deviceKey : {}", deviceRes.getDeviceInfoList().get(0).getDeviceKey());
+
 				String deviceKey = deviceRes.getDeviceInfoList().get(0).getDeviceKey();
 				req.setDeviceKey(deviceKey);
 			}
@@ -1161,16 +1182,32 @@ public class DeviceServiceImpl implements DeviceService {
 		/* userKey, deviceKey 회원존재여부 체크 */
 		ExistReq existReq = new ExistReq();
 		existReq.setUserKey(req.getUserKey());
-		ExistRes existRes = this.userSearchService.exist(requestHeader, existReq);
 
-		LOGGER.debug("###### 2. exist Request : {}", existReq.toString());
-		LOGGER.debug("###### 2. exist Respone : {}", existRes.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("######		회원존재여부 Request : {}", existReq.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+
+		ExistRes existRes = this.userSearchService.exist(requestHeader, existReq);
 
 		if (existRes.getUserKey() != null) {
 			setMainDeviceRequest.setDeviceKey(req.getDeviceKey());
 			setMainDeviceRequest.setUserKey(req.getUserKey());
 
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("######		대표단말설정 Request : {}", req.toString());
+			LOGGER.info("");
+			LOGGER.info("");
+
 			SetMainDeviceResponse res = this.deviceSCI.setMainDevice(setMainDeviceRequest);
+
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("######		대표단말설정 Response : {}", res.getDeviceKey());
+			LOGGER.info("");
+			LOGGER.info("");
 
 			setMainDeviceRes.setDeviceKey(res.getDeviceKey());
 		}
@@ -1184,8 +1221,6 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req) {
 
-		LOGGER.info("============================================ DeviceServiceImpl.removeDevice() Start");
-
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -1198,7 +1233,12 @@ public class DeviceServiceImpl implements DeviceService {
 			List<RemoveDeviceListSacReq> deviceIdList = new ArrayList<RemoveDeviceListSacReq>();
 			for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
 				String opmdMdn = this.commService.getOpmdMdnInfo(id.getDeviceId());
-				LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+
+				LOGGER.info("");
+				LOGGER.info("");
+				LOGGER.info("======	ServiceImpl 모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+				LOGGER.info("");
+				LOGGER.info("");
 
 				RemoveDeviceListSacReq deviceId = new RemoveDeviceListSacReq();
 				deviceId.setDeviceId(opmdMdn);
@@ -1213,6 +1253,12 @@ public class DeviceServiceImpl implements DeviceService {
 		List<String> removeKeyList = new ArrayList<String>();
 		for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
 
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("===== ServiceImpl 휴대기기삭제 > 회원정보조회 > Requset > deviceId : {}", id.getDeviceId());
+			LOGGER.info("");
+			LOGGER.info("");
+
 			UserInfo userInfo = this.commService.getUserBaseInfo("deviceId", id.getDeviceId(), requestHeader);
 
 			/* 휴대기기 조회 */
@@ -1220,10 +1266,18 @@ public class DeviceServiceImpl implements DeviceService {
 			String isPrimary = "";
 			String deviceKey = "";
 
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("===== ServiceImpl 휴대기기삭제 > 휴대기기조회 > Request > deviceId : {}", id.getDeviceId());
+			LOGGER.info("===== ServiceImpl 휴대기기삭제 > 휴대기기조회 > Request > userKey : {}", req.getUserKey());
+			LOGGER.info("");
+			LOGGER.info("");
+
 			deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, id.getDeviceId(), req.getUserKey());
 			if (deviceInfo == null) {
 				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 			}
+
 			isPrimary = deviceInfo.getIsPrimary();
 			deviceKey = deviceInfo.getDeviceKey();
 
@@ -1254,16 +1308,30 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
-			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-			mqInfo.setUserKey(deviceInfo.getUserKey());
-			mqInfo.setDeviceKey(deviceInfo.getDeviceKey());
-			mqInfo.setDeviceId(deviceInfo.getDeviceId());
-			mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
-			mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
 
-			LOGGER.info("======== 휴대기기 삭제 MQ 연동 mqInfo : {}", mqInfo.toString());
+			try {
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+				mqInfo.setUserKey(deviceInfo.getUserKey());
+				mqInfo.setDeviceKey(deviceInfo.getDeviceKey());
+				mqInfo.setDeviceId(deviceInfo.getDeviceId());
+				mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
+				mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
 
-			this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
+				LOGGER.info("");
+				LOGGER.info("");
+				LOGGER.info("======== 휴대기기 삭제 MQ 연동 mqInfo : {}", mqInfo.toString());
+				LOGGER.info("");
+				LOGGER.info("");
+
+				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+			} catch (AmqpException ex) {
+				LOGGER.info("");
+				LOGGER.info("");
+				LOGGER.info("===== ServiceImpl 휴대기기삭제 > MQ연동 Fail {}", mqInfo.toString());
+				LOGGER.info("");
+				LOGGER.info("");
+
+			}
 
 		}
 
@@ -1272,6 +1340,14 @@ public class DeviceServiceImpl implements DeviceService {
 		removeDeviceRequest.setCommonRequest(commonRequest);
 		removeDeviceRequest.setUserKey(req.getUserKey());
 		removeDeviceRequest.setDeviceKey(removeKeyList);
+
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("===== ServiceImpl 휴대기기삭제 > Request > deviceKey : {}", removeKeyList.toString());
+		LOGGER.info("===== ServiceImpl 휴대기기삭제 > Request > userKey : {}", req.getUserKey());
+		LOGGER.info("");
+		LOGGER.info("");
+
 		RemoveDeviceResponse removeDeviceResponse = this.deviceSCI.removeDevice(removeDeviceRequest);
 
 		/* 게임센터 연동 */
@@ -1282,6 +1358,14 @@ public class DeviceServiceImpl implements DeviceService {
 			gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
 			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
+
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("===== ServiceImpl 휴대기기삭제 > 게임센터연동 > Request > deviceId : {}", id.getDeviceId());
+			LOGGER.info("===== ServiceImpl 휴대기기삭제 > 게임센터연동 > Request > userKey : {}", req.getUserKey());
+			LOGGER.info("");
+			LOGGER.info("");
+
 			this.insertGameCenterIF(gameCenterSacReq);
 		}
 
@@ -1295,9 +1379,6 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 		removeDeviceRes.setDeviceKeyList(resDeviceKeyList);
 		removeDeviceRes.setRemoveDeviceCount(String.valueOf(removeDeviceResponse.getDelDeviceCount()));
-
-		LOGGER.debug("######################## 결과 : " + removeDeviceRes.toString());
-		LOGGER.debug("######################## DeviceServiceImpl 휴대기기 삭제 End ############################");
 
 		return removeDeviceRes;
 	}
@@ -1325,10 +1406,22 @@ public class DeviceServiceImpl implements DeviceService {
 		if (!req.getDeviceId().equals("")) {
 			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
-			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+			LOGGER.info("");
+			LOGGER.info("");
 
 			DetailReq detailReq = new DetailReq();
 			detailReq.setDeviceId(req.getDeviceId());
+
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("===== ServiceImpl 단말AOM > 사용자조회 > Request > deviceId : {}", detailReq.getDeviceId());
+			LOGGER.info("");
+			LOGGER.info("");
+
 			DetailRes detailRes = this.userSearchService.searchUser(detailReq, sacHeader);
 			UserInfo deviceIdUser = detailRes.getUserInfo();
 
@@ -1337,7 +1430,12 @@ public class DeviceServiceImpl implements DeviceService {
 			listDeviceReq.setDeviceId(req.getDeviceId());
 			listDeviceReq.setIsMainDevice("N");
 
-			LOGGER.debug("============================================ listDeviceReq {}", listDeviceReq.toString());
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("===== ServiceImpl 단말AOM > 휴대기기조회 > Request > deviceId : {}", req.getDeviceId());
+			LOGGER.info("===== ServiceImpl 단말AOM > 휴대기기조회 > Request > userKey : {}", deviceIdUser.getUserKey());
+			LOGGER.info("");
+			LOGGER.info("");
 
 			listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
 
@@ -1346,11 +1444,17 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
 		else if (!req.getUserKey().equals("")) {
-			this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 			// 대표단말 조회
 			DetailRepresentationDeviceReq detailRepresentationDeviceReq = new DetailRepresentationDeviceReq();
 			detailRepresentationDeviceReq.setUserKey(req.getUserKey());
+
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("===== ServiceImpl 단말AOM > 대표단말조회 > Request > userKey : {}", req.getUserKey());
+			LOGGER.info("");
+			LOGGER.info("");
+
 			DetailRepresentationDeviceRes detailRepresentationDeviceRes = this
 					.detailRepresentationDeviceRes(sacHeader, detailRepresentationDeviceReq);
 
@@ -1368,9 +1472,14 @@ public class DeviceServiceImpl implements DeviceService {
 		/* PhoneInfo 조회 */
 		SupportAomRes res = new SupportAomRes();
 		if (listDeviceRes.getDeviceInfoList() != null) {
-			Device device = this.commService.getPhoneInfo(listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
 
-			LOGGER.info("============================================Phoneinfo getAomSprtYn Res {}", device.getAomSprtYn());
+			LOGGER.info("");
+			LOGGER.info("");
+			LOGGER.info("===== ServiceImpl 단말AOM > 폰인포조회 > Request > deviceModelNo : {}", listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
+			LOGGER.info("");
+			LOGGER.info("");
+
+			Device device = this.commService.getPhoneInfo(listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
 
 			res.setIsAomSupport(device.getAomSprtYn());
 

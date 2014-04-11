@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -176,11 +177,21 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		/* MQ 연동 */
 		logger.info("회원탈퇴 MQ 연동 Start");
 		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
-		mqInfo.setUserId(schUserRes.getUserMbr().getUserID());
-		mqInfo.setUserKey(schUserRes.getUserKey());
-		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 
-		this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+		try {
+			mqInfo.setUserId(schUserRes.getUserMbr().getUserID());
+			mqInfo.setUserKey(schUserRes.getUserKey());
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+
+			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+		} catch (AmqpException ex) {
+			logger.info("");
+			logger.info("");
+			logger.info("===== ServiceImpl - 회원탈퇴 > MQ연동 Fail : {}", mqInfo.toString());
+			logger.info("");
+			logger.info("");
+		}
+
 		logger.info("회원탈퇴 MQ 연동 End");
 
 		return withdrawRes;

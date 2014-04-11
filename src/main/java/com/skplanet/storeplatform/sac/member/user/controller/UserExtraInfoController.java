@@ -43,9 +43,12 @@ public class UserExtraInfoController {
 	@RequestMapping(value = "/modifyAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public UserExtraInfoRes modifyAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) {
-		logger.debug("####################################################");
-		logger.debug("##### 5.1.25. 회원 부가 정보 등록/수정 #####");
-		logger.debug("####################################################");
+
+		logger.info("");
+		logger.info("");
+		logger.info("===== 컨트롤러 > 회원 부가 정보 등록/수정 Start Request : {}", req.toString());
+		logger.info("");
+		logger.info("");
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String extraProfile = "";
@@ -68,9 +71,13 @@ public class UserExtraInfoController {
 
 		}
 
-		logger.info("회원 부가 정보 등록/수정 Start Request : {}", req.toString());
 		UserExtraInfoRes res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
-		logger.info("회원 부가 정보 등록/수정 Final Response: {}", res.getUserKey());
+
+		logger.info("");
+		logger.info("");
+		logger.info("===== 컨트롤러 > 회원 부가 정보 등록/수정 Final Response : {}", res.getUserKey());
+		logger.info("");
+		logger.info("");
 
 		return res;
 	}

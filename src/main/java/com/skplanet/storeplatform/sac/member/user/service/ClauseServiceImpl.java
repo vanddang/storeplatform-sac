@@ -47,7 +47,11 @@ public class ClauseServiceImpl implements ClauseService {
 	public ListClauseSacRes listClause(SacRequestHeader sacHeader) {
 		List<Clause> clauseList = this.commService.getListClause(sacHeader.getTenantHeader().getTenantId());
 
-		LOGGER.debug("ListClauseSacRes : ", clauseList.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("#####		MemberCommonMapper.XML --> getListClause Success");
+		LOGGER.info("");
+		LOGGER.info("");
 
 		List<ClauseSacRes> clauseSacResList = new ArrayList<ClauseSacRes>();
 		for (Clause clause : clauseList) {
@@ -82,10 +86,20 @@ public class ClauseServiceImpl implements ClauseService {
 			throw new StorePlatformException("SAC_MEM_1105", clauseItemCd);
 		}
 
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("#####		MemberCommonMapper.XML --> getTenantClauseCode Success");
+		LOGGER.info("");
+		LOGGER.info("");
+
 		/* Tenant에 등록된 코드면 TB_CM_CLAUSE 조회 */
 		List<Clause> clauseList = this.commService.getDetailClauseList(clauseItemCd);
 
-		LOGGER.debug("ListClauseSacRes : ", clauseList.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("#####		MemberCommonMapper.XML --> getDetailClauseList Success");
+		LOGGER.info("");
+		LOGGER.info("");
 
 		if (clauseList.size() == 0) {
 			throw new StorePlatformException("SAC_MEM_0002", req.getClauseItemCd());

@@ -41,15 +41,20 @@ public class ClauseController {
 	@RequestMapping(value = "/member/user/listClause/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListClauseSacRes listClause(SacRequestHeader sacHeader) {
-		LOGGER.debug("####################################################");
-		LOGGER.debug("##### 2.1.32. 약관목록 조회 #####");
-		LOGGER.debug("####################################################");
 
-		LOGGER.info("약관목록조회 Start");
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("######		약관목록조회 Start		#####");
+		LOGGER.info("");
+		LOGGER.info("");
 
 		ListClauseSacRes res = this.svc.listClause(sacHeader);
 
-		LOGGER.info("약관목록조회 Final Response : {}", res.getClauseList().get(0).toString());
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("#####		약관목록조회 Final Response Index(0) : {}", res.getClauseList().get(0).toString());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		return res;
 	}
@@ -57,9 +62,6 @@ public class ClauseController {
 	@RequestMapping(value = "/member/user/detailClause/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailClauseSacRes detailClause(DetailClauseSacReq req) {
-		LOGGER.debug("####################################################");
-		LOGGER.debug("##### 2.1.33. 약관목록 상세조회 #####");
-		LOGGER.debug("####################################################");
 
 		/*
 		 * 2014-04-08 데이터베이스 SPSAC.TB_CM_CLAUSE 칼럼 변경 clauseItemCd --> cluaseId로
@@ -73,11 +75,19 @@ public class ClauseController {
 			throw new StorePlatformException("SAC_MEM_0001", "clauseItemCd()");
 		}
 
-		LOGGER.info("약관목록 상세조회 Start Request : {}", req.toString());
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("#####		약관목록 상세조회 Start Request : {}", req.toString());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		DetailClauseSacRes res = this.svc.detailClauseList(req);
 
-		LOGGER.info("약관목록 상세조회 Final Response : {}", res.getDetailClauseList().get(0).toString());
+		LOGGER.info("");
+		LOGGER.info("");
+		LOGGER.info("#####		약관목록 상세조회 Final Response Index(0) : {}", res.getDetailClauseList().get(0).toString());
+		LOGGER.info("");
+		LOGGER.info("");
 
 		return res;
 	}
