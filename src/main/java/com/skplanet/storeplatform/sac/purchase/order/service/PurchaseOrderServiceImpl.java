@@ -1601,7 +1601,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @return 재정의 된 결제 수단 정보
 	 */
-	public String adjustPaymethod(String sktPaymethodInfo, String tenantId, String tenantProdGrpCd, double payAmt) {
+	private String adjustPaymethod(String sktPaymethodInfo, String tenantId, String tenantProdGrpCd, double payAmt) {
 		// 결제수단 별 가능 거래금액/비율 조정 정보
 		String paymentAdjustInfo = this.purchaseOrderPolicyService.getAvailablePaymethodAdjustInfo(tenantId,
 				tenantProdGrpCd);
