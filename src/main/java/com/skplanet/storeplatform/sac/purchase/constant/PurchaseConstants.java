@@ -156,4 +156,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_SUCCESS = "S";
 	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_FAIL = "F";
 
+	/** Interface ID */
+	public static final String INTERFACE_ID_TL00027 = "TL00027"; // Biz쿠폰 비동기 응답
+
 }

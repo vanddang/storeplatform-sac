@@ -17,14 +17,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponItem;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublish;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.shopping.sci.ShoppingAsyncSCI;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncItemSc;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncListSc;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncReq;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncRes;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponItem;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublish;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
@@ -77,6 +81,30 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 				item.setExtraData(objItem.getExtraData());
 
 				itemList.add(item);
+
+				/******************************
+				 * TLOG Setting Start
+				 ******************************/
+				final String purchase_id = obj.getPrchsId();
+				final String use_start_time = obj.getAvail_startdate();
+				final String use_end_time = obj.getAvail_enddate();
+				final String coupon_publish_code = objItem.getPublishCode();
+				final String coupon_code = request.getCouponCode();
+				final String coupon_item_code = objItem.getItemCode();
+
+				new TLogUtil().set(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL00027).purchase_id(purchase_id)
+								.use_start_time(use_start_time).use_end_time(use_end_time)
+								.download_expired_time(use_end_time).coupon_publish_code(coupon_publish_code)
+								.coupon_code(coupon_code).coupon_item_code(coupon_item_code);
+					}
+				});
+				/******************************
+				 * TLOG Setting End
+				 ******************************/
+
 			}
 			listSc.setItems(itemList);
 
