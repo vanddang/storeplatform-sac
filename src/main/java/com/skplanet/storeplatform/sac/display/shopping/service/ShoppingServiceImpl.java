@@ -921,7 +921,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setMenuList(menuList);
 				product.setTitle(title);
 				product.setSourceList(sourceList);
-				product.setBrandType(shopping.getBrandType());
+				// product.setBrandType(shopping.getBrandType());
 				productList.add(i, product);
 				commonResponse.setTotalCount(shopping.getTotalCount());
 			}
