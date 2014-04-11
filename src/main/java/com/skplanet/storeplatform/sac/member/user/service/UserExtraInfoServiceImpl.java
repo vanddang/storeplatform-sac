@@ -173,10 +173,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		RemoveManagementResponse removeRes = this.userSCI.removeManagement(removeReq);
 
-		LOGGER.debug("###### removeUserExtra SC API Success Res : {}", removeRes.getCommonResponse().getResultCode());
-		LOGGER.debug("###### removeUserExtra SC API Success Res : {}", removeRes.getCommonResponse().getResultMessage());
-		LOGGER.debug("###### removeUserExtra SC API Success Res : {}", removeRes.getUserKey());
-
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		res.setUserKey(removeRes.getUserKey());
 

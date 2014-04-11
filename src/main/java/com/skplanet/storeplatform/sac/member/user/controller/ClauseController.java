@@ -50,12 +50,6 @@ public class ClauseController {
 
 		ListClauseSacRes res = this.svc.listClause(sacHeader);
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("#####		약관목록조회 Final Response Index(0) : {}", res.getClauseList().get(0).toString());
-		LOGGER.info("");
-		LOGGER.info("");
-
 		return res;
 	}
 
@@ -82,12 +76,6 @@ public class ClauseController {
 		LOGGER.info("");
 
 		DetailClauseSacRes res = this.svc.detailClauseList(req);
-
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("#####		약관목록 상세조회 Final Response Index(0) : {}", res.getDetailClauseList().get(0).toString());
-		LOGGER.info("");
-		LOGGER.info("");
 
 		return res;
 	}

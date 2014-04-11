@@ -1080,12 +1080,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 				listRes = this.listDevice(requestHeader, listReq);
 
-				LOGGER.info("");
-				LOGGER.info("");
-				LOGGER.info("#####		대표단말조회 Res : {}", listRes.toString());
-				LOGGER.info("");
-				LOGGER.info("");
-
 			} catch (StorePlatformException ex) {
 				if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 					throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
@@ -1203,12 +1197,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 			SetMainDeviceResponse res = this.deviceSCI.setMainDevice(setMainDeviceRequest);
 
-			LOGGER.info("");
-			LOGGER.info("");
-			LOGGER.info("######		대표단말설정 Response : {}", res.getDeviceKey());
-			LOGGER.info("");
-			LOGGER.info("");
-
 			setMainDeviceRes.setDeviceKey(res.getDeviceKey());
 		}
 
@@ -1316,12 +1304,6 @@ public class DeviceServiceImpl implements DeviceService {
 				mqInfo.setDeviceId(deviceInfo.getDeviceId());
 				mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
 				mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
-
-				LOGGER.info("");
-				LOGGER.info("");
-				LOGGER.info("======== 휴대기기 삭제 MQ 연동 mqInfo : {}", mqInfo.toString());
-				LOGGER.info("");
-				LOGGER.info("");
 
 				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 			} catch (AmqpException ex) {
@@ -1439,7 +1421,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 			listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
 
-			LOGGER.debug("============================================ listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());
 		}
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */

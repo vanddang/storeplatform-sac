@@ -54,9 +54,6 @@ public class UserExtraInfoController {
 		String extraProfile = "";
 		String extraProfilValue = "";
 
-		logger.debug("###### modifyAdditionalInformation Req Object : {}", req.getUserKey());
-		logger.debug("###### modifyAdditionalInformation Req List : {}", req.getUserExtraInfoList().toString());
-
 		if (userKey.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
@@ -73,21 +70,12 @@ public class UserExtraInfoController {
 
 		UserExtraInfoRes res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
 
-		logger.info("");
-		logger.info("");
-		logger.info("===== 컨트롤러 > 회원 부가 정보 등록/수정 Final Response : {}", res.getUserKey());
-		logger.info("");
-		logger.info("");
-
 		return res;
 	}
 
 	@RequestMapping(value = "/removeAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public UserExtraInfoRes removeAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) {
-		logger.debug("####################################################");
-		logger.debug("##### 5.1.26. 회원 부가 정보 삭제 #####");
-		logger.debug("####################################################");
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String extraProfile = "";
@@ -109,7 +97,6 @@ public class UserExtraInfoController {
 
 		logger.info("회원 부가 정보 삭제 Start Request : {}", req.toString());
 		UserExtraInfoRes res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
-		logger.info("회원 부가 정보 삭제 Final Request : {}", res.getUserKey());
 
 		return res;
 	}

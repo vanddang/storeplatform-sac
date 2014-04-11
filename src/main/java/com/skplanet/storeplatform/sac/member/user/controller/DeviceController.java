@@ -201,12 +201,6 @@ public class DeviceController {
 
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("###### 컨트롤러 - 대표단말설정 Final Respone : {}", res.getDeviceKey());
-		LOGGER.info("");
-		LOGGER.info("");
-
 		return res;
 	}
 
@@ -234,12 +228,6 @@ public class DeviceController {
 		}
 
 		DetailRepresentationDeviceRes res = this.deviceService.detailRepresentationDeviceRes(requestHeader, req);
-
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("###### 대표단말조회 Fianl Respone : {}", res.getDeviceInfo());
-		LOGGER.info("");
-		LOGGER.info("");
 
 		return res;
 	}
@@ -287,12 +275,6 @@ public class DeviceController {
 		/* IDP 회원정보 수정 */
 		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("===== 컨트롤러 휴대기기삭제 Final Response : {}", res.getDeviceKeyList().toString());
-		LOGGER.info("");
-		LOGGER.info("");
-
 		return res;
 	}
 
@@ -322,12 +304,6 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey or deviceId");
 		}
 		SupportAomRes res = this.deviceService.getSupportAom(requestHeader, req);
-
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("===== 컨트롤러 > 단말 AOM 지원여부확인 Final Response : {}", res.getIsAomSupport());
-		LOGGER.info("");
-		LOGGER.info("");
 
 		return res;
 	}
