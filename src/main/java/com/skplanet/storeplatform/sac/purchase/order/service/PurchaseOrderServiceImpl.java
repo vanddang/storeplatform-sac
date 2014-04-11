@@ -248,6 +248,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			final String purchase_id_recv = StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
 					PurchaseConstants.PRCHS_CASE_GIFT_CD) ? purchaseOrderInfo.getPrchsId() : "";
 
+			new TLogUtil().set(new ShuttleSetter() { // SAC OUT 용
+						@Override
+						public void customize(TLogSentinelShuttle shuttle) {
+							shuttle.imei(imei).mno_type(mno_type).usermbr_no(usermbr_no).system_id(system_id)
+									.purchase_channel(purchase_channel)
+									.purchase_inflow_channel(purchase_inflow_channel).purchase_id(purchase_id)
+									.purchase_id_recv(purchase_id_recv);
+						}
+					});
+
 			final List<String> allProdIdList = new ArrayList<String>(); // SAC OUT 용
 
 			for (PrchsDtlMore prchsInfo : prchsDtlMoreList) { // 상품 수 만큼 로깅
@@ -270,11 +280,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.imei(imei).mno_type(mno_type).usermbr_no(usermbr_no).system_id(system_id)
-								.purchase_channel(purchase_channel).purchase_inflow_channel(purchase_inflow_channel)
-								.product_id(prodIdList).purchase_id(purchase_id).purchase_prod_num(purchase_prod_num)
-								.purchase_id_recv(purchase_id_recv).purchase_prod_num_recv(purchase_prod_num_recv)
-								.tid(tid).tx_id(tx_id).use_start_time(use_start_time).use_end_time(use_end_time)
+						shuttle.product_id(prodIdList).purchase_prod_num(purchase_prod_num)
+								.purchase_prod_num_recv(purchase_prod_num_recv).tid(tid).tx_id(tx_id)
+								.use_start_time(use_start_time).use_end_time(use_end_time)
 								.download_expired_time(download_expired_time).product_qty(product_qty)
 								.coupon_publish_code(coupon_publish_code).coupon_code(coupon_code)
 								.coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
@@ -689,6 +697,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		final String purchase_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
 				PurchaseConstants.PRCHS_CASE_GIFT_CD) ? prchsDtlMore.getPrchsId() : "";
 
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.imei(imei).mno_type(mno_type).usermbr_no(usermbr_no).system_id(system_id)
+						.purchase_channel(purchase_channel).purchase_inflow_channel(purchase_inflow_channel)
+						.purchase_id(purchase_id).purchase_id_recv(purchase_id_recv);
+			}
+		});
+
 		final List<String> allProdIdList = new ArrayList<String>(); // SAC OUT 용
 
 		for (PrchsDtlMore prchsInfo : prchsDtlMoreList) { // 상품 수 만큼 로깅
@@ -710,11 +727,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			new TLogUtil().log(new ShuttleSetter() {
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.imei(imei).mno_type(mno_type).usermbr_no(usermbr_no).system_id(system_id)
-							.purchase_channel(purchase_channel).purchase_inflow_channel(purchase_inflow_channel)
-							.product_id(prodIdList).purchase_id(purchase_id).purchase_prod_num(purchase_prod_num)
-							.purchase_id_recv(purchase_id_recv).purchase_prod_num_recv(purchase_prod_num_recv).tid(tid)
-							.tx_id(tx_id).use_start_time(use_start_time).use_end_time(use_end_time)
+					shuttle.product_id(prodIdList).purchase_prod_num(purchase_prod_num)
+							.purchase_prod_num_recv(purchase_prod_num_recv).tid(tid).tx_id(tx_id)
+							.use_start_time(use_start_time).use_end_time(use_end_time)
 							.download_expired_time(download_expired_time).product_qty(product_qty)
 							.coupon_publish_code(coupon_publish_code).coupon_code(coupon_code)
 							.coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
