@@ -237,6 +237,8 @@ public class DisplayConstants {
 	public static final String DP_SOLDOUT = "soldout";
 
 	public static final String DP_CONTINUE = "continue";
+
+	public static final String DP_SHOPPING_BRAND_HOT = "hot";
 	/**
 	 * 채널-에피스도 상품 관계 코드.
 	 */
