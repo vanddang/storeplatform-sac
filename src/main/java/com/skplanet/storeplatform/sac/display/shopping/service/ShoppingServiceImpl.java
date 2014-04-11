@@ -869,21 +869,33 @@ public class ShoppingServiceImpl implements ShoppingService {
 		this.commonOffsetCount(req);
 		resultList = new ArrayList<MetaInfo>();
 
+		if (StringUtils.isEmpty(req.getBrandType())) {
+			req.setBrandType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
+		}
+
+		if (!DisplayConstants.DP_VOD_QUALITY_NORMAL.equals(req.getBrandType())
+				&& !DisplayConstants.DP_SHOPPING_BRAND_HOT.equals(req.getBrandType())) {
+			throw new StorePlatformException("SAC_DSP_0003", "brandType", req.getBrandType());
+		}
+
 		if (!StringUtils.isEmpty(req.getMenuId())) {
 			menuIdFlag = true;
 			resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
 		} else {
-			req.setMenuId(null);
-			hotBrandList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
-			for (MetaInfo hotBrandShopping : hotBrandList) {
-				resultList.add(hotBrandShopping);
-			}
-			menuBrandList = this.commonDAO.queryForList("Shopping.getShoppingBrandMenuList", req, MetaInfo.class);
-			for (int i = 0; i < menuBrandList.size(); i++) {
-				req.setMenuId(menuBrandList.get(i).getMenuId());
-				detailList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
-				for (MetaInfo detailShopping : detailList) {
-					resultList.add(detailShopping);
+			if (req.getBrandType().equals(DisplayConstants.DP_SHOPPING_BRAND_HOT)) {
+				req.setMenuId(null);
+				hotBrandList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
+				for (MetaInfo hotBrandShopping : hotBrandList) {
+					resultList.add(hotBrandShopping);
+				}
+			} else {
+				menuBrandList = this.commonDAO.queryForList("Shopping.getShoppingBrandMenuList", req, MetaInfo.class);
+				for (int i = 0; i < menuBrandList.size(); i++) {
+					req.setMenuId(menuBrandList.get(i).getMenuId());
+					detailList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
+					for (MetaInfo detailShopping : detailList) {
+						resultList.add(detailShopping);
+					}
 				}
 			}
 		}
@@ -921,7 +933,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setMenuList(menuList);
 				product.setTitle(title);
 				product.setSourceList(sourceList);
-				// product.setBrandType(shopping.getBrandType());
 				productList.add(i, product);
 				commonResponse.setTotalCount(shopping.getTotalCount());
 			}
