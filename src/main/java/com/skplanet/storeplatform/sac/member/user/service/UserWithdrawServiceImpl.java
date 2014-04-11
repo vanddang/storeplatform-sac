@@ -187,7 +187,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		} catch (AmqpException ex) {
 			logger.info("");
 			logger.info("");
-			logger.info("===== ServiceImpl - 회원탈퇴 > MQ연동 Fail : {}", mqInfo.toString());
+			logger.info("===== ServiceImpl - 회원탈퇴 > MQ연동 Fail : {}", mqInfo);
 			logger.info("");
 			logger.info("");
 		}

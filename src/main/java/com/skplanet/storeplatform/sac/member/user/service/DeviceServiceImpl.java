@@ -1309,7 +1309,7 @@ public class DeviceServiceImpl implements DeviceService {
 			} catch (AmqpException ex) {
 				LOGGER.info("");
 				LOGGER.info("");
-				LOGGER.info("===== ServiceImpl 휴대기기삭제 > MQ연동 Fail {}", mqInfo.toString());
+				LOGGER.info("===== ServiceImpl 휴대기기삭제 > MQ연동 Fail {}", mqInfo);
 				LOGGER.info("");
 				LOGGER.info("");
 
