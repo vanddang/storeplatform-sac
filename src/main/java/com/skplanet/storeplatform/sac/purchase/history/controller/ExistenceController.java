@@ -99,8 +99,8 @@ public class ExistenceController {
 				throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
 			}
 		}
-
 		req.setTenantId(header.getTenantId());
+		req.setSystemId(header.getSystemId());
 		req.setUserKey(existenceSacReq.getUserKey());
 		req.setDeviceKey(existenceSacReq.getDeviceKey());
 		req.setPrchsId(existenceSacReq.getPrchsId());

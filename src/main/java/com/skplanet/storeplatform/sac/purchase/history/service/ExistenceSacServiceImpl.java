@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
@@ -51,8 +54,15 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	@Override
 	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceScReq) {
 
+		new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00005"); // T Log 보장을 위해 log_id 선 세팅
+			}
+		});
+
 		// 기구매내역 조회함
-		List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceScReq);
+		final List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceScReq);
 		// 구매상태가 구매완료건만을 넣기 위한 리스트
 		List<ExistenceScRes> existenceListScRes = new ArrayList<ExistenceScRes>();
 		// 내부구매처리시 기구매 체크는 inputValue = true
@@ -62,7 +72,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 				.searchPurchaseTenantPolicyList(existenceScReq.getTenantId(), "",
 						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
 
-		for (ExistenceScRes existenceScRes : resultList) {
+		for (final ExistenceScRes existenceScRes : resultList) {
 			String flag = "";
 			this.logger.debug("existenceScRes.getStatusCd() : {}", existenceScRes.getStatusCd());
 
@@ -82,6 +92,31 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 					existenceListScRes.add(existenceScRes);
 				}
 			}
+
+			// TLog
+			final List<String> prodIdList = new ArrayList<String>();
+			final List<Long> prodAmtList = new ArrayList<Long>();
+			final String systemId = existenceScReq.getSystemId();
+			prodIdList.add(existenceScRes.getProdId());
+			prodAmtList.add((long) existenceScRes.getProdAmt());
+
+			// new TLogUtil().set(new ShuttleSetter() {
+			// @Override
+			// public void customize(TLogSentinelShuttle shuttle) {
+			// shuttle.system_id(systemId).purchase_channel(existenceScRes.getPrchsReqPathCd())
+			// .purchase_inflow_channel(existenceScRes.getPrchsCaseCd()).product_id(prodIdList)
+			// .product_price(prodAmtList)
+			// }
+			// });
+			new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
+
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.system_id(systemId).purchase_channel(existenceScRes.getPrchsReqPathCd())
+							.purchase_inflow_channel(existenceScRes.getPrchsCaseCd()).product_id(prodIdList)
+							.product_price(prodAmtList);
+				}
+			});
 		}
 
 		return existenceListScRes;
