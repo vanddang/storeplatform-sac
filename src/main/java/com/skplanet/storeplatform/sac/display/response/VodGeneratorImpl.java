@@ -95,7 +95,8 @@ public class VodGeneratorImpl implements VodGenerator {
 		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
 			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
 		}
-		if (!DisplayConstants.DP_VOD_SHORT_STORY_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+		if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd())
+				&& !DisplayConstants.DP_VOD_SHORT_STORY_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
 			vod.setChapter(chapter);
 		}
 		vod.setRunningTime(time);
