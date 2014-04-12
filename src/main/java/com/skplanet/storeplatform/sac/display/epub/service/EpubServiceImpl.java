@@ -404,12 +404,13 @@ public class EpubServiceImpl implements EpubService {
     /**
      * Mapping Source List
      * @param mapperVO
+     * @param screenshotList
      * @return
      */
     private List<Source> mapSourceList(EpubDetail mapperVO, List<ProductImage> screenshotList) {
         Source source;
-        List<Source> sourceList;
-        sourceList = new ArrayList<Source>();
+        List<Source> sourceList = new ArrayList<Source>();;
+        // 대표 이미지 (thumbnail)
         if (StringUtils.isNotEmpty(mapperVO.getImgPath()) && StringUtils.isNotEmpty(mapperVO.getImgNm())) {
         	source = new Source();
         	String imagePath = mapperVO.getImgPath() + mapperVO.getImgNm();
@@ -424,12 +425,12 @@ public class EpubServiceImpl implements EpubService {
         if(screenshotList != null) {
 			for (ProductImage screenshotImage : screenshotList) {
 				String imagePath = screenshotImage.getFilePath() + screenshotImage.getFileNm();
-				Source screenshotSource = new Source();
-				screenshotSource.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
-				screenshotSource.setSize(screenshotImage.getFileSize());
-				screenshotSource.setMediaType(DisplayCommonUtil.getMimeType(imagePath));
-				screenshotSource.setUrl(imagePath);
-				sourceList.add(screenshotSource);
+				source = new Source();
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
+				source.setSize(screenshotImage.getFileSize());
+				source.setMediaType(DisplayCommonUtil.getMimeType(imagePath));
+				source.setUrl(imagePath);
+				sourceList.add(source);
 			}
         }
         

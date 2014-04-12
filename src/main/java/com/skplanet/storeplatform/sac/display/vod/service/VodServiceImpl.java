@@ -574,32 +574,38 @@ public class VodServiceImpl implements VodService {
 	}
 
     /**
-     * SourceList
+     * Mapping Source List
      * @param mapperVO
      * @param screenshotList
      * @return
      */
 	private List<Source> mapSourceList(VodDetail mapperVO, List<ProductImage> screenshotList) {
-		// 대표 이미지 (thumbnail)
+		Source source;
 		List<Source> sourceList = new ArrayList<Source>();
-		if(StringUtils.isNotEmpty(mapperVO.getImgPath())) {
-			Source source = new Source();
-			source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgNm()));
-			source.setSize(mapperVO.getImgSize());
-			source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-			source.setUrl(mapperVO.getImgPath()+mapperVO.getImgNm());
-			sourceList.add(source);
-		}
-
+		// 대표 이미지 (thumbnail)
+        if (StringUtils.isNotEmpty(mapperVO.getImgPath()) && StringUtils.isNotEmpty(mapperVO.getImgNm())) {
+        	source = new Source();
+        	String imagePath = mapperVO.getImgPath() + mapperVO.getImgNm();
+            source.setMediaType(DisplayCommonUtil.getMimeType(imagePath));
+            source.setSize(mapperVO.getImgSize());
+            source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+            source.setUrl(imagePath);
+            sourceList.add(source);
+        }
+        
 		// screenshot
-		for (ProductImage screenshotImage : screenshotList) {
-			Source screenshotSource = new Source();
-			screenshotSource.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
-			screenshotSource.setSize(screenshotImage.getFileSize());
-			screenshotSource.setMediaType(DisplayCommonUtil.getMimeType(screenshotImage.getFileNm()));
-			screenshotSource.setUrl(screenshotImage.getFilePath() + screenshotImage.getFileNm());
-			sourceList.add(screenshotSource);
+		if(screenshotList != null) {
+			for (ProductImage screenshotImage : screenshotList) {
+				String imagePath = screenshotImage.getFilePath() + screenshotImage.getFileNm();
+				source = new Source();
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
+				source.setSize(screenshotImage.getFileSize());
+				source.setMediaType(DisplayCommonUtil.getMimeType(imagePath));
+				source.setUrl(imagePath);
+				sourceList.add(source);
+			}
 		}
+		
 		return sourceList;
 	}
 
@@ -743,6 +749,9 @@ public class VodServiceImpl implements VodService {
 				subProduct.setProductDetailExplain(mapperVO.getProdDtlDesc());
 				subProduct.setProductIntroduction(mapperVO.getProdIntrDscr());
 
+				List<Source> sourceList = this.mapSourceList(mapperVO, null);
+				subProduct.setSourceList(sourceList);
+				
                 //SupportList
 				List<Support> supportList = this.mapSupportList(mapperVO);
 				subProduct.setSupportList(supportList);
