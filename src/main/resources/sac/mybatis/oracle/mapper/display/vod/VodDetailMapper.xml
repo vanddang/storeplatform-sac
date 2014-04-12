@@ -118,23 +118,31 @@
     </select>
     
     <select id="selectSourceList" parameterType="map" resultType="ProductImage">
-        SELECT A.*
-          FROM (
-			SELECT
-				FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
-			FROM TB_DP_PROD_IMG
-			WHERE PROD_ID = #{channelId}
-			  AND LANG_CD = #{langCd}
-			  AND IMG_CD IN ( 'DP000137', 'DP000138', 'DP000139', 'DP000140' )
-			UNION ALL
-			SELECT 
-				FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
-			FROM TB_DP_PROD_IMG
-			WHERE PROD_ID = #{channelId}
-	          AND LANG_CD = #{langCd}
-			  AND IMG_CD IN ( 'DP000128', 'DP000129', 'DP000130', 'DP000131' )
-		) A
-		ORDER BY EXPO_ORD
+		
+		SELECT /* VodDetailMapper.xml, selectSourceList, SAC : 임근대 , 2014-01-28 */
+           FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+      	FROM (  
+		      SELECT A.*
+		          , ROW_NUMBER() OVER ( PARTITION BY IMG_CD_SEQ ORDER BY EXPO_ORD  )  AS RN
+		        FROM (
+					SELECT
+						FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+                   		, DECODE( IMG_CD, 'DP000137', 1, 'DP000138', 2, 'DP000139', 3, 'DP000140', 4 ) AS IMG_CD_SEQ
+					FROM TB_DP_PROD_IMG
+					WHERE PROD_ID = #{channelId}
+					  AND LANG_CD = #{langCd}
+					  AND IMG_CD IN ( 'DP000137', 'DP000138', 'DP000139', 'DP000140' )
+					UNION ALL
+					SELECT 
+						FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+						, DECODE( IMG_CD, 'DP000128', 1, 'DP000129', 2, 'DP000130', 3, 'DP000131', 4 ) AS IMG_CD_SEQ
+					FROM TB_DP_PROD_IMG
+					WHERE PROD_ID = #{channelId}
+			          AND LANG_CD = #{langCd}
+					  AND IMG_CD IN ( 'DP000128', 'DP000129', 'DP000130', 'DP000131' )
+		      	) A
+		    )
+		  WHERE RN = 1
     </select>
     
     <select id="selectVodSeries" parameterType="map" resultType="VodDetail">

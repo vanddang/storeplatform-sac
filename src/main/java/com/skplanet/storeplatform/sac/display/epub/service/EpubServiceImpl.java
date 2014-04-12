@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -71,10 +70,6 @@ public class EpubServiceImpl implements EpubService {
 
     @Autowired
     private DisplayCommonService commonService;
-
-	/** The message source accessor. */
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
     
     /*
      * (non-Javadoc)
@@ -117,10 +112,7 @@ public class EpubServiceImpl implements EpubService {
 			}
 			
             //코믹의 경우 ScreenShot 제공
-            List<ProductImage> screenshotList = null;
-            if(epubDetail != null && StringUtils.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID, epubDetail.getTopMenuId())) {
-            	screenshotList = getScreenshotList(req.getChannelId(), req.getLangCd());
-            }
+            List<ProductImage> screenshotList = getScreenshotList(epubDetail.getTopMenuId(), req.getChannelId(), req.getLangCd());
             
 			this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
 
@@ -190,8 +182,8 @@ public class EpubServiceImpl implements EpubService {
             
             //코믹의 경우 ScreenShot 제공
             List<ProductImage> screenshotList = null;
-            if(epubDetail != null && StringUtils.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID, epubDetail.getTopMenuId())) {
-            	screenshotList = getScreenshotList(req.getChannelId(), req.getLangCd());
+            if(epubDetail != null) {
+            	screenshotList = getScreenshotList(epubDetail.getTopMenuId(), req.getChannelId(), req.getLangCd());
             }
             
             this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
@@ -233,11 +225,17 @@ public class EpubServiceImpl implements EpubService {
 	 * @param param
 	 * @return
 	 */
-	private List<ProductImage> getScreenshotList(String channelId, String langCd) {
+	private List<ProductImage> getScreenshotList(String topMenuId, String channelId, String langCd) {
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("channelId", channelId);
 		param.put("langCd", langCd);
-		List<ProductImage> screenshotList = this.commonDAO.queryForList("EpubDetail.selectSourceList", param, ProductImage.class);
+		List<ProductImage> screenshotList = null;
+		
+		if(StringUtils.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID, topMenuId)) {
+			screenshotList = this.commonDAO.queryForList("EpubDetail.selectComicSourceList", param, ProductImage.class);
+		} else if(StringUtils.equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID, topMenuId)) {
+				screenshotList = this.commonDAO.queryForList("EpubDetail.selectEbookSourceList", param, ProductImage.class);
+		}
 		return screenshotList;
 	}
 
@@ -772,7 +770,7 @@ public class EpubServiceImpl implements EpubService {
                 subProduct.setProductIntroduction(mapperVO.getProdIntrDscr());
                 subProduct.setMenuList(mapMenuList(mapperVO));
                 subProduct.setRights(mapRights(mapperVO, param, existenceMap));
-
+                subProduct.setSourceList(this.mapSourceList(mapperVO, null));
                 subProduct.setBook(mapBook(mapperVO));
                 subProduct.setDateList(mapDateList(mapperVO, sdf));
                 subProjectList.add(subProduct);

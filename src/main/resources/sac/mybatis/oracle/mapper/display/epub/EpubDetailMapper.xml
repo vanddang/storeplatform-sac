@@ -9,17 +9,58 @@
 		WHERE PROD_ID = #{channelId}
 	</select>    
     
-	<select id="selectSourceList" parameterType="map" resultType="ProductImage">
-      SELECT A.*
-        FROM (
-			SELECT
-				FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
-			FROM TB_DP_PROD_IMG
-			WHERE PROD_ID = #{channelId}
-			  AND LANG_CD = #{langCd}
-			  AND IMG_CD IN ( 'DP000154', 'DP000155', 'DP000156', 'DP000157' )
-		) A
-		ORDER BY EXPO_ORD
+	<select id="selectEbookSourceList" parameterType="map" resultType="ProductImage">
+		SELECT /* EpubDetailMapper.xml, selectEbookSourceList, SAC : 임근대 , 2014-01-28 */
+           FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+      	FROM (  
+		      SELECT A.*
+		          , ROW_NUMBER() OVER ( PARTITION BY IMG_CD_SEQ ORDER BY EXPO_ORD  )  AS RN
+		        FROM (
+		        SELECT
+		          FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+		        , DECODE( IMG_CD, 'DP000187', 1, 'DP000188', 2, 'DP000189', 3 ) AS IMG_CD_SEQ
+		        FROM TB_DP_PROD_IMG
+		        WHERE PROD_ID = #{channelId}
+		          AND LANG_CD = #{langCd}
+		          AND IMG_CD IN ( 'DP000187', 'DP000188', 'DP000189' )
+		        UNION ALL
+		        SELECT
+		          FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+		        , DECODE( IMG_CD, 'DP000154', 1, 'DP000155', 2, 'DP000156', 3 ) AS IMG_CD_SEQ
+		        FROM TB_DP_PROD_IMG
+		        WHERE PROD_ID = #{channelId}
+		          AND LANG_CD = #{langCd}
+		          AND IMG_CD IN ( 'DP000154', 'DP000155', 'DP000156' )
+		      ) A
+		    )
+		  WHERE RN = 1
+	</select>
+    
+	<select id="selectComicSourceList" parameterType="map" resultType="ProductImage">
+		SELECT /* EpubDetailMapper.xml, selectComicSourceList, SAC : 임근대 , 2014-01-28 */
+           FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+      	FROM (  
+		      SELECT A.*
+		          , ROW_NUMBER() OVER ( PARTITION BY IMG_CD_SEQ ORDER BY EXPO_ORD  )  AS RN
+		        FROM (
+		        SELECT
+		          FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+		        , DECODE( IMG_CD, 'DP000187', 1, 'DP000188', 2, 'DP000189', 3 ) AS IMG_CD_SEQ
+		        FROM TB_DP_PROD_IMG
+		        WHERE PROD_ID = #{channelId}
+		          AND LANG_CD = #{langCd}
+		          AND IMG_CD IN ( 'DP000187', 'DP000188', 'DP000189' )
+		        UNION ALL
+		        SELECT
+		          FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+		        , DECODE( IMG_CD, 'DP000154', 1, 'DP000155', 2, 'DP000156', 3 ) AS IMG_CD_SEQ
+		        FROM TB_DP_PROD_IMG
+		        WHERE PROD_ID = #{channelId}
+		          AND LANG_CD = #{langCd}
+		          AND IMG_CD IN ( 'DP000154', 'DP000155', 'DP000156' )
+		      ) A
+		    )
+		  WHERE RN = 1
 	</select>
     
     <select id="selectEpubChannel" parameterType="map" resultType="EpubDetail">

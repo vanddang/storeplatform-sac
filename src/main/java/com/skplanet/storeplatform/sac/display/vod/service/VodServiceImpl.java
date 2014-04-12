@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,10 +72,6 @@ public class VodServiceImpl implements VodService {
 
     @Autowired
     private DisplayCommonService commonService;
-    
-	/** The message source accessor. */
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
 
 	/*
 	 * (non-Javadoc)
