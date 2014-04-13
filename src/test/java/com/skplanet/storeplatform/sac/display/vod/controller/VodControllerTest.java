@@ -41,7 +41,7 @@ public class VodControllerTest {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
-
+	
 	@Test
 	public void searchVodDetail_방송_recent_baseChapter() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -52,8 +52,37 @@ public class VodControllerTest {
 		param.put("count", 20);
 		String json = this.convertMapToJson(param);
 		
+		StopWatch stopWatch = new StopWatch(); 
+		stopWatch.start("searchVodDetail_영화searchVodDetail_영화_recent_baseChapter");
+		
+		this.mvc.perform(post("/display/vod/detail/v1")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				;
+		
+		stopWatch.stop();
+		System.out.println(stopWatch.prettyPrint());
+	}
+
+	@Test
+	public void searchVodDetail_영화() throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("channelId", "H002620805"); // [0411] 무간도
+		param.put("orderedBy", "recent");
+		param.put("baseChapter", 10);
+		param.put("offset", 1);
+		param.put("count", 20);
+		String json = this.convertMapToJson(param);
+		
     	StopWatch stopWatch = new StopWatch(); 
-    	stopWatch.start("searchVodDetail_영화searchVodDetail_영화_recent_baseChapter");
+    	stopWatch.start("searchVodDetail_영화");
     	
 		this.mvc.perform(post("/display/vod/detail/v1")
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))

@@ -253,7 +253,7 @@
 		                  , MAX( T1.USE_PERIOD ) AS USE_PERIOD
 		                  , MAX( T1.USE_PERIOD_UNIT_CD ) AS USE_PERIOD_UNIT_CD
 		                  , MAX( T1.DWLD_AREA_LIMT_YN ) AS DWLD_AREA_LIMT_YN
-		                  , MAX( T1.EPSD_PLAY_TM ) AS EPSD_PLAY_TM
+		                  , MAX( T1.PLAY_TM ) AS EPSD_PLAY_TM
 		                  , MAX( T1.PROD_GRD_CD ) AS PROD_GRD_CD
 		                  , MAX( T1.DOLBY_SPRT_YN ) AS DOLBY_SPRT_YN
 		                  , MAX( T1.DOLBY_YN ) AS DOLBY_YN
@@ -298,7 +298,7 @@
 		                        , DSC.PROD_NM, DSC.PROD_BASE_DESC, DSC.PROD_DTL_DESC, DSC.PROD_INTR_DSCR, DSC.ARTIST1_NM, DSC.ARTIST2_NM, DSC.ARTIST3_NM, MP.VOD_TITL_NM
 		                        , MP.GENRE_CD, MP.ISSUE_DAY, MP.BRDC_COMP_CD, MP.SVC_START_DT, MP.CHNL_COMP_NM
 		                        , MP.HDCP_YN, MP.HDV_YN, MP.DOLBY_SPRT_YN, DV.DOLBY_SPRT_YN AS DOLBY_YN
-		                        , SC.EPSD_PLAY_TM, PD.PROD_GRD_CD
+		                        , MP.PLAY_TM, PD.PROD_GRD_CD
 		                        , MP.DWLD_AREA_LIMT_YN, MP.DWLD_NETWORK_CD, MP.STRM_NETWORK_CD
 		                        , MP.SAMPL_URL, MP.SC_SAMPL_URL
 		                        , SC.FILE_PATH
