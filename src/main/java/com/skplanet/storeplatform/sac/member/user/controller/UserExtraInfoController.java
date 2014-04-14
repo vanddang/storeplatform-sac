@@ -44,11 +44,7 @@ public class UserExtraInfoController {
 	@ResponseBody
 	public UserExtraInfoRes modifyAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
-		logger.info("");
-		logger.info("");
-		logger.info("===== 컨트롤러 > 회원 부가 정보 등록/수정 Start Request : {}", req.toString());
-		logger.info("");
-		logger.info("");
+		logger.info("회원 부가 정보 등록/수정 Request : {}", req.toString());
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String extraProfile = "";
@@ -70,6 +66,8 @@ public class UserExtraInfoController {
 
 		UserExtraInfoRes res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
 
+		logger.info("회원 부가 정보 등록/수정 Response : {}", res.getUserKey());
+
 		return res;
 	}
 
@@ -84,9 +82,6 @@ public class UserExtraInfoController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
-		logger.debug("###### removeAdditionalInformation Req Object : {}", req.getUserKey());
-		logger.debug("###### removeAdditionalInformation Req List : {}", req.getUserExtraInfoList().toString());
-
 		for (UserExtraInfo infoReq : req.getUserExtraInfoList()) {
 			extraProfile = StringUtil.nvl(infoReq.getExtraProfile(), "");
 
@@ -95,13 +90,11 @@ public class UserExtraInfoController {
 			}
 		}
 
-		logger.info("");
-		logger.info("");
-		logger.info("회원 부가 정보 삭제 Start Request : {}", req.toString());
-		logger.info("");
-		logger.info("");
+		logger.info("회원 부가 정보 삭제 Request : {}", req.toString());
 
 		UserExtraInfoRes res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
+
+		logger.info("회원 부가 정보 삭제 Response : {}", res.getUserKey());
 
 		return res;
 	}
@@ -119,19 +112,11 @@ public class UserExtraInfoController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
-		logger.info("");
-		logger.info("");
-		logger.info("회원 부가 정보 조회 Start Request : {}", req.toString());
-		logger.info("");
-		logger.info("");
+		logger.info("회원 부가 정보 조회 Request : {}", req.toString());
 
 		UserExtraInfoRes res = this.userExtraService.listAdditionalInformation(req, sacHeader);
 
-		logger.info("");
-		logger.info("");
-		logger.info("회원 부가 정보 조회 Final Response : {}", res.getUserKey());
-		logger.info("");
-		logger.info("");
+		logger.info("회원 부가 정보 조회 Response : {}", res.getUserKey());
 
 		return res;
 	}

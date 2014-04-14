@@ -57,11 +57,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("===== 컨트롤러 > 회원 부가 정보 등록/수정 > 사용자조회 > Request : {}", req.toString());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("회원 부가 정보 등록/수정 > 사용자조회 > Request : {}", req.toString());
 
 		UserInfo searchUser = this.searchUser(req, sacHeader);
 
@@ -150,9 +146,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 
-		LOGGER.debug("###### removeUserExtra Req : {}", req.getUserKey());
-		LOGGER.debug("###### removeUserExtra Req : {}", req.getUserExtraInfoList().toString());
-
 		for (UserExtraInfo info : req.getUserExtraInfoList()) {
 			MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
 			ptcr.setExtraProfile(info.getExtraProfile());
@@ -166,10 +159,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		removeReq.setUserKey(req.getUserKey());
 		removeReq.setMbrMangItemPtcr(ptcrList);
 		removeReq.setCommonRequest(commonRequest);
-
-		LOGGER.debug("###### removeUserExtra SC API ptcrList Req : {}", ptcrList.toString());
-		LOGGER.debug("###### removeUserExtra SC API update Req : {}", removeReq.getUserKey());
-		LOGGER.debug("###### removeUserExtra SC API update Req : {}", removeReq.getMbrMangItemPtcr().toString());
 
 		RemoveManagementResponse removeRes = this.userSCI.removeManagement(removeReq);
 
@@ -201,25 +190,13 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		updateReq.setMbrMangItemPtcr(ptcrList);
 		updateReq.setCommonRequest(commonRequest);
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("===== ServiceImpl > 회원 부가 정보 등록/수정 > Request > ptcrList : {}", ptcrList.toString());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("ServiceImpl > 회원 부가 정보 등록/수정 > Request > ptcrList : {}", ptcrList.toString());
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("===== ServiceImpl > 회원 부가 정보 등록/수정 > Request > userKey : {}", updateReq.getUserKey());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("ServiceImpl > 회원 부가 정보 등록/수정 > Request > userKey : {}", updateReq.getUserKey());
 
 		UpdateManagementResponse updateRes = this.userSCI.updateManagement(updateReq);
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("===== ServiceImpl > 회원 부가 정보 등록/수정 > Response > : {}", updateRes.getUserKey());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("ServiceImpl > 회원 부가 정보 등록/수정 > Response > : {}", updateRes.getUserKey());
 
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		res.setUserKey(updateRes.getUserKey());
