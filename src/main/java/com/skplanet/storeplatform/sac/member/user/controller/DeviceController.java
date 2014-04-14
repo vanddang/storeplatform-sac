@@ -185,11 +185,7 @@ public class DeviceController {
 	@ResponseBody
 	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req) {
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("###### 컨트롤러 - 대표단말설정 Start Request : {}", req.toString());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("대표단말설정 Request : {}", req.toString());
 
 		if (StringUtil.nvl(req.getUserKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
@@ -200,6 +196,8 @@ public class DeviceController {
 		}
 
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
+
+		LOGGER.info("대표단말설정 Response : {}", res.getDeviceKey());
 
 		return res;
 	}
@@ -217,17 +215,15 @@ public class DeviceController {
 	@ResponseBody
 	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @RequestBody DetailRepresentationDeviceReq req) {
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("###### 대표단말조회 Start Request : {}", req.toString());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("대표단말조회 Request : {}", req.toString());
 
 		if (StringUtil.nvl(req.getUserKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
 		DetailRepresentationDeviceRes res = this.deviceService.detailRepresentationDeviceRes(requestHeader, req);
+
+		LOGGER.info("대표단말조회 Response : {}", res.getDeviceInfo().getUserKey());
 
 		return res;
 	}
@@ -255,11 +251,7 @@ public class DeviceController {
 			}
 		}
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("===== 컨트롤러 - 휴대기기 단말 삭제 Start Request : {}", req.toString());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("휴대기기 단말 삭제 Request : {}", req.toString());
 
 		if (userAuthKey.equals("") || userKey.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userAuthKey && userKey");
@@ -274,6 +266,8 @@ public class DeviceController {
 
 		/* IDP 회원정보 수정 */
 		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
+
+		LOGGER.info("휴대기기 단말 삭제 Response : {}", res.getDeviceKeyList().get(0).getDeviceKey());
 
 		return res;
 	}
@@ -291,11 +285,7 @@ public class DeviceController {
 	@ResponseBody
 	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, @RequestBody SupportAomReq req) {
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("===== 컨트롤러 - 단말 AOM 지원여부확인 Start Request : {}", req.toString());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("단말 AOM 지원여부확인 Request : {}", req.toString());
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
@@ -304,6 +294,8 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey or deviceId");
 		}
 		SupportAomRes res = this.deviceService.getSupportAom(requestHeader, req);
+
+		LOGGER.info("단말 AOM 지원여부확인 Response : {}", res.getIsAomSupport());
 
 		return res;
 	}

@@ -42,13 +42,9 @@ public class ClauseController {
 	@ResponseBody
 	public ListClauseSacRes listClause(SacRequestHeader sacHeader) {
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("######		약관목록조회 Start		#####");
-		LOGGER.info("");
-		LOGGER.info("");
-
 		ListClauseSacRes res = this.svc.listClause(sacHeader);
+
+		LOGGER.info("약관목록조회 > Response > cluaseItemCd : {}", res.getClauseList().get(0).getClauseItemCd());
 
 		return res;
 	}
@@ -69,13 +65,11 @@ public class ClauseController {
 			throw new StorePlatformException("SAC_MEM_0001", "clauseItemCd()");
 		}
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("#####		약관목록 상세조회 Start Request : {}", req.toString());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("약관목록 상세조회 Request : {}", req.toString());
 
 		DetailClauseSacRes res = this.svc.detailClauseList(req);
+
+		LOGGER.info("약관목록 상세조회 Response clauseItemCd : {}", res.getDetailClauseList().get(0).getClauseItemCd());
 
 		return res;
 	}
