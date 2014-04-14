@@ -990,22 +990,24 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public DeviceInfo setDeviceHeader(DeviceHeader deviceheader, DeviceInfo deviceInfo) {
 
-		String model = deviceheader.getModel(); // 단말모델코드
-		String osVersion = deviceheader.getOs(); // OS버젼
-		String svcVersion = deviceheader.getSvc(); // SC버젼
+		if (deviceheader != null) {
+			String model = deviceheader.getModel(); // 단말모델코드
+			String osVersion = deviceheader.getOs(); // OS버젼
+			String svcVersion = deviceheader.getSvc(); // SC버젼
 
-		if (StringUtil.isBlank(deviceInfo.getDeviceModelNo()) && StringUtil.isNotBlank(model)) {
-			deviceInfo.setDeviceModelNo(model);
-		}
+			if (StringUtil.isBlank(deviceInfo.getDeviceModelNo()) && StringUtil.isNotBlank(model)) {
+				deviceInfo.setDeviceModelNo(model);
+			}
 
-		if (StringUtil.isNotBlank(osVersion)) {
-			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
-					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo));
-		}
+			if (StringUtil.isNotBlank(osVersion)) {
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+						osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo));
+			}
 
-		if (StringUtil.isNotBlank(svcVersion)) {
-			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
-					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo));
+			if (StringUtil.isNotBlank(svcVersion)) {
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
+						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo));
+			}
 		}
 
 		return deviceInfo;
