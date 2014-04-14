@@ -872,12 +872,8 @@ public class DeviceServiceImpl implements DeviceService {
 					if (StringUtil.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
 						String icasImei = this.getIcasImei(deviceInfo.getDeviceId());
-						if (StringUtil.equals(nativeId, icasImei)) {
-							deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->").append(icasImei);
-							userMbrDevice.setNativeID(icasImei);
-						} else {
-							throw new StorePlatformException("SAC_MEM_1503");
-						}
+						deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->").append(icasImei);
+						userMbrDevice.setNativeID(icasImei);
 
 					} else {
 
