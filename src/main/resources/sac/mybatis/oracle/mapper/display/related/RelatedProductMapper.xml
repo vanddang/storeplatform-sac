@@ -35,7 +35,7 @@
              , J.FILE_SIZE
              , #{productBasicInfo.contentsTypeCd} as CONTENTS_TYPE_CD
              , K.PROD_STATUS_CD
-             , I.REG_DT
+             , TO_CHAR(I.REG_DT,'YYYYMMDDHH24MISS') AS REG_DT
              , NVL(L.PATICPERS_CNT, 0) AS PATICPERS_CNT
              , NVL(L.PRCHS_CNT, 0) AS DWLD_CNT
              , NVL(L.PRCHS_CNT, 0) AS PRCHS_CNT
