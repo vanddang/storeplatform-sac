@@ -52,6 +52,10 @@
                 <property name="paramName" value="selectLanguage" />
             </bean>
         </mvc:interceptor>   
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="com.skplanet.storeplatform.sac.runtime.interceptor.InternalControllerCallCheckingInterceptor"/>
+        </mvc:interceptor> 
          <!-- set "SacRequestHeader" of response header   -->
         <mvc:interceptor>
             <mvc:mapping path="/**" />
