@@ -350,7 +350,10 @@ public class EpubServiceImpl implements EpubService {
 		product.setTableOfContents(mapperVO.getBookTbctns());
 
 		//aboutWriter (작가 소개) - prodBaseDesc 컬럼
-		product.setAboutWriter(mapperVO.getProdBaseDesc());
+		//04/14. AS-IS 이북에서만 저자설명 노출  
+		if(StringUtils.equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID, mapperVO.getTopMenuId())) {
+			product.setAboutWriter(mapperVO.getProdBaseDesc());
+		}
 
         // 이용권한 정보
         product.setRights(this.mapRights(mapperVO, param, null));
