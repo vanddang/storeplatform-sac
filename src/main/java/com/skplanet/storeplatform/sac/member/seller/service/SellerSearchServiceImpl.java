@@ -45,6 +45,10 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerReques
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.purchase.client.history.sci.HistorySCI;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountScReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchSellerKeySCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
@@ -806,6 +810,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	}
 
+	@Autowired
+	private DeviceSCI deviceSCI;
+
+	@Autowired
+	private HistorySCI historySCI;
+
 	/**
 	 * <pre>
 	 * 나라별 해외 은행 정보 조회.
@@ -818,7 +828,18 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public ListBanksByCountryRes listBanksByCountry(SacRequestHeader header) {
-
+		try {
+			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+			searchDeviceRequest.setUserKey("12345");
+			this.deviceSCI.searchDevice(searchDeviceRequest);
+		} catch (Exception ex) {
+		}
+		try {
+			HistoryCountScReq request = new HistoryCountScReq();
+			request.setDeviceKey("1111");
+			this.historySCI.searchHistoryCount(request);
+		} catch (Exception ex) {
+		}
 		ListBanksByCountryRes response = new ListBanksByCountryRes();
 		response.setBanksByCountry((List<BanksByCountry>) this.commonDAO.queryForList(
 				"SellerSearch.listBanksByCountry", BanksByCountry.class));
