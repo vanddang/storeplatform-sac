@@ -72,7 +72,7 @@ public class DeviceController {
 	@ResponseBody
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) {
 
-		LOGGER.info("Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/* userKey, userId 조회 요청한 걸로 판단하여 isMainDevice 필수 파라메터 체크 */
 		if (StringUtil.isBlank(req.getDeviceId()) && StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getIsMainDevice())) {
@@ -84,6 +84,9 @@ public class DeviceController {
 		if (res.getDeviceInfoList() == null) {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
+
+		LOGGER.info("Response : {}, device cnt : {}", res.getUserKey(), res.getDeviceInfoList().size());
+
 		return res;
 	}
 
@@ -100,7 +103,7 @@ public class DeviceController {
 	@ResponseBody
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) {
 
-		LOGGER.info("Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/* 휴대기기 정보 필수 파라메터 체크 */
 		if (StringUtil.isBlank(req.getUserAuthKey())) {
@@ -140,6 +143,8 @@ public class DeviceController {
 		/* 변경된 정보 idp 연동 */
 		this.userService.updateProfileIdp(requestHeader, res.getUserKey(), req.getUserAuthKey());
 
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
 		return res;
 	}
 
@@ -156,7 +161,7 @@ public class DeviceController {
 	@ResponseBody
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) {
 
-		LOGGER.info("Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtil.isBlank(req.getUserKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
@@ -168,6 +173,8 @@ public class DeviceController {
 		}
 
 		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 	}
