@@ -124,16 +124,20 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 			requestVO.setBatchId("MELON_DP004902");
 		}
 
-		// 배치완료 기준일시 조회
-		String stdDt = this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(),
-				requestVO.getBatchId());
-
-		// 기준일시 체크
+		// 웹 랭킹 음원일 경우 stdDt 넘어옴
+		String stdDt = requestVO.getStdDt();
 		if (StringUtils.isEmpty(stdDt)) {
-			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
-		} else {
-			// 뮤직 배치일자는 년월일만 필요
-			requestVO.setStdDt(stdDt.substring(0, 8));
+			// 배치완료 기준일시 조회
+			stdDt = this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(),
+					requestVO.getBatchId());
+
+			// 기준일시 체크
+			if (StringUtils.isEmpty(stdDt)) {
+				throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+			} else {
+				// 뮤직 배치일자는 년월일만 필요
+				requestVO.setStdDt(stdDt.substring(0, 8));
+			}
 		}
 
 		List<ProductBasicInfo> productBasicInfoList;
