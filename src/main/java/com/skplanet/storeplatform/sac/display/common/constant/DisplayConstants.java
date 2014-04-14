@@ -604,6 +604,7 @@ public class DisplayConstants {
 	public static final String DP_AUTOPAY_NORMAL = "normal"; // 일반결제
 	public static final String DP_FREEPASS_CASH = "cash"; // 게임 캐쉬
 	public static final String DP_FREEPASS_BONUS = "bonus"; // 게임 보너스
+	public static final String DP_FREEPASS_TB_DP_CMPX_PROD_CODE = "OR004305"; // 게임 캐쉬 코드
 
 	/**
 	 * OpenApi Release Type.
