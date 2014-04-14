@@ -303,7 +303,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		String nameTop = null;
 		// 하단
 		String nameLower = null;
-		String comNmLower = null;
+		String compNmLower = null;
 		String emailLower = null;
 		String bizNoLower = null;
 		String addrLower = null;
@@ -316,54 +316,61 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
 					.getSellerMbr().getSellerClass())) {
 				nameTop = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getCharger(), "");
-				nameLower = StringUtils.defaultString(StringUtils.isBlank(searchSellerResponse.getSellerMbr()
-						.getSellerName()) ? searchSellerResponse.getSellerMbr().getCharger() : searchSellerResponse
-						.getSellerMbr().getSellerName(), "");
+				nameLower = StringUtils
+						.defaultString( // first:sellerName, second:charger, default:""
+								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerName()) ? searchSellerResponse
+										.getSellerMbr().getSellerName() : searchSellerResponse.getSellerMbr()
+										.getCharger(), "");
 			}
-			// 개인, 법인 사업자
+			// 개인 사업자, 법인 사업자
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, searchSellerResponse
 					.getSellerMbr().getSellerClass())
 					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS,
 							searchSellerResponse.getSellerMbr().getSellerClass())) {
 				nameTop = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerCompany(), "");
+
+				compNmLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerCompany(), "");
 				nameLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getCeoName(), "");
-				comNmLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerCompany(), "");
 				bizNoLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getBizRegNumber(), "");
 				phoneLower = StringUtils
-						.defaultString(
+						.defaultString( // first:repPhone, second:cordedTelephone, default:""
 								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getRepPhone()) ? searchSellerResponse
 										.getSellerMbr().getRepPhone() : searchSellerResponse.getSellerMbr()
 										.getCordedTelephone(), "");
-				addrLower = StringUtils.isBlank(searchSellerResponse.getSellerMbr().getSellerAddress()) ? "" : searchSellerResponse
-						.getSellerMbr().getSellerAddress();
-				addrLower += StringUtils.isBlank(searchSellerResponse.getSellerMbr().getSellerDetailAddress()) ? "" : " "
-						+ searchSellerResponse.getSellerMbr().getSellerDetailAddress();
+				addrLower = StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerAddress()) ? searchSellerResponse
+						.getSellerMbr().getSellerAddress() : "";
+				addrLower += StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerDetailAddress()) ? " "
+						+ searchSellerResponse.getSellerMbr().getSellerDetailAddress() : "";
 			}
 
 		} else { // 외국인
 			nameTop = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerCompany(), "");
+
+			// 개인 ( 판매자명, 이메일 )
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
 					.getSellerMbr().getSellerClass())) {
 
-				nameLower = StringUtils.defaultString(
-						StringUtils.isBlank(searchSellerResponse.getSellerMbr().getSellerName()) ? searchSellerResponse
-								.getSellerMbr().getSellerCompany() : searchSellerResponse.getSellerMbr()
-								.getSellerName(), "");
+				nameLower = StringUtils
+						.defaultString( // first:sellerName, second:sellerCompany, default:""
+								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerName()) ? searchSellerResponse
+										.getSellerMbr().getSellerName() : searchSellerResponse.getSellerMbr()
+										.getSellerCompany(), "");
 			}
-			// 개인, 법인 사업자
+			// 개인 사업자, 법인 사업자 ( 상호명, 이메일 )
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, searchSellerResponse
 					.getSellerMbr().getSellerClass())
 					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS,
 							searchSellerResponse.getSellerMbr().getSellerClass())) {
 
-				comNmLower = StringUtils
-						.defaultString(
-								StringUtils.isBlank(searchSellerResponse.getSellerMbr().getSellerCompany()) ? searchSellerResponse
-										.getSellerMbr().getSellerName() : searchSellerResponse.getSellerMbr()
-										.getSellerCompany(), "");
+				compNmLower = StringUtils
+						.defaultString( // first:sellerCompany, second:sellerName, default:""
+								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerCompany()) ? searchSellerResponse
+										.getSellerMbr().getSellerCompany() : searchSellerResponse.getSellerMbr()
+										.getSellerName(), "");
 			}
 		}
 
+		// first:repEmail, second:customerEmail, third:sellerEmail, default:""
 		if (StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getRepEmail())) {
 			emailLower = searchSellerResponse.getSellerMbr().getRepEmail();
 		} else if (StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getCustomerEmail())) {
@@ -385,7 +392,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		sellerMbrSac.setAppStat(MemberConstants.SellerConstants.SELLER_APP_DISPLAY_LOWER);
 		resList.add(1, sellerMbrSac);
 		sellerMbrSac.setSellerName(nameLower);
-		sellerMbrSac.setSellerCompany(comNmLower);
+		sellerMbrSac.setSellerCompany(compNmLower);
 		sellerMbrSac.setSellerEmail(emailLower);
 		sellerMbrSac.setBizRegNumber(bizNoLower);
 		sellerMbrSac.setSellerAddress(addrLower);
