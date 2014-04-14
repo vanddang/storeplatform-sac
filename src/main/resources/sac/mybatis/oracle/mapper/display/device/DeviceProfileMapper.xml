@@ -12,7 +12,7 @@
              <result column="MAGAZINE_SPRT_YN" property="magazine" />
              <result column="MUSIC_SPRT_YN" property="music" />
              <result column="AOM_SPRT_YN" property="aom" />
-             <result column="STRM_SPRT_YN" property="drm" />
+             <result column="SKT_DRM_SPRT_YN" property="drm" />
              <result column="STRM_SPRT_YN" property="view" />
              <result column="WEBTOON_SPRT_YN" property="webtoon" />
              <result column="VOD_FIXISTT_SPRT_YN" property="freepassVod" />
