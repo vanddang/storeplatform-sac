@@ -418,7 +418,7 @@ public class DeviceServiceImpl implements DeviceService {
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		if (StringUtil.isBlank(createDeviceRes.getDeviceKey())) {
-			throw new StorePlatformException("SAC_MEM_1507"); // 휴대기기 등록에 실패하였습니다.
+			throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 등록에 실패하였습니다.
 		}
 
 		/* 2. 기등록된 회원이 존재하는지 확인 */
@@ -663,7 +663,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		deviceInfoChangeLog.append("[deviceDetail]").append(ConvertMapperUtils.convertObjectToJson(deviceInfo.getDeviceExtraInfoList()));
+		deviceInfoChangeLog.append("[deviceExtraInfo]").append(ConvertMapperUtils.convertObjectToJson(deviceInfo.getDeviceExtraInfoList()));
 
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
@@ -906,7 +906,7 @@ public class DeviceServiceImpl implements DeviceService {
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
 
-		deviceInfoChangeLog.append("[deviceDetail]").append(ConvertMapperUtils.convertObjectToJson(deviceInfo.getDeviceExtraInfoList()));
+		deviceInfoChangeLog.append("[deviceExtraInfo]").append(ConvertMapperUtils.convertObjectToJson(deviceInfo.getDeviceExtraInfoList()));
 
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
