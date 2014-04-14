@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * DESC
+ * CacheEvictManagerImpl
  * </p>
  * Updated on : 2014. 04. 09 Updated by : 정희원, SK 플래닛.
  */
@@ -42,6 +42,18 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     @Override
     @CacheEvict(value = "sac:display:product:music", allEntries = true)
     public void evictAllMusicMeta() {
+
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:product:shopping", allEntries = true)
+    public void evictAllShoppingMeta() {
+
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:product:freepass", allEntries = true)
+    public void evictAllFreepassMeta() {
 
     }
 }

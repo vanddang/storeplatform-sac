@@ -14,7 +14,7 @@ import com.skplanet.storeplatform.sac.display.cache.vo.MusicMetaParam;
 
 /**
  * <p>
- * DESC
+ * CacheEvictManager
  * </p>
  * Updated on : 2014. 04. 09 Updated by : 정희원, SK 플래닛.
  */
@@ -34,5 +34,9 @@ public interface CacheEvictManager {
     void evictMusicMeta(MusicMetaParam param);
 
     void evictAllMusicMeta();
+
+    void evictAllShoppingMeta();
+
+    void evictAllFreepassMeta();
 
 }

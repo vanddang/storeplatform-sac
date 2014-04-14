@@ -21,7 +21,7 @@ public class ShoppingMetaParam extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
     private String langCd;
-    private String channelId;
+    private String catalogId;
     private String tenantId;
 
     public String getLangCd() {
@@ -32,12 +32,12 @@ public class ShoppingMetaParam extends CommonInfo {
         this.langCd = langCd;
     }
 
-    public String getChannelId() {
-        return channelId;
+    public String getCatalogId() {
+        return catalogId;
     }
 
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
+    public void setCatalogId(String catalogId) {
+        this.catalogId = catalogId;
     }
 
     public String getTenantId() {
@@ -49,6 +49,6 @@ public class ShoppingMetaParam extends CommonInfo {
     }
 
     public String getCacheKey() {
-        return channelId + "_" + langCd + "_" + tenantId;
+        return catalogId + "_" + langCd + "_" + tenantId;
     }
 }

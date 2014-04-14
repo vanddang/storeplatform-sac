@@ -15,11 +15,9 @@ import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +122,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     @Cacheable(value = "sac:display:product:shopping", key = "#param.getCacheKey()", unless = "#result == null")
     public ShoppingMeta getShoppingMeta(ShoppingMetaParam param) {
         Map<String, Object> reqMap = new HashMap<String, Object>();
-        reqMap.put("prodId", param.getChannelId());
+        reqMap.put("catalogId", param.getCatalogId());
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("tenantId", param.getTenantId());
         reqMap.put("svcGrpCd", SHOPPING_SVC_GRP_CD);

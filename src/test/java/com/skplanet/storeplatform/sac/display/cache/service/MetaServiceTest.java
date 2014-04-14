@@ -171,7 +171,33 @@ public class MetaServiceTest {
 
     @Test
     public void shoppingTest() {
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        DeviceHeader deviceHeader = new DeviceHeader();
+        TenantHeader tenantHeader = new TenantHeader();
+        reqMap.put("deviceHeader", deviceHeader);
+        reqMap.put("tenantHeader", tenantHeader);
+        deviceHeader.setModel(DEVICE_MODEL_CD);
+        tenantHeader.setLangCd("ko");
+        tenantHeader.setTenantId("S01");
+        reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
+        reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
+        reqMap.put("productBasicInfo", productBasicInfo);
+//        productBasicInfo.setCatalogId("CL00007545");
+        productBasicInfo.setCatalogId("CL00000404");
+        productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+        RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
+        MetaInfo meta1 = metaInfoService.getShoppingMetaInfo(reqMap);
+        logger.info("Meta1={}", meta1);
+
+        RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
+        cacheEvictManager.evictAllAppMeta();
+        MetaInfo meta2 = metaInfoService.getShoppingMetaInfo(reqMap);
+        logger.info("Meta2={}", meta2);
+
+        beanDiff(meta1, meta2);
     }
 
     private void beanDiff(Object obj1, Object obj2) {

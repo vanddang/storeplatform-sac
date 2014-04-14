@@ -198,21 +198,29 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getShoppingMetaInfo(Map<String, Object> paramMap) {
-//        if (isUseCache()) {
-//            ShoppingMetaParam param = new ShoppingMetaParam();
-//
-//            ShoppingMeta meta = productInfoManager.getShoppingMeta(param);
-//            if (meta == null) {
-//                logger.warn("메타데이터를 읽을 수 없습니다 - Shopping#{}", param.getChannelId());
-//                return null;
-//            }
-//
-//            MetaInfo me = new MetaInfo();
-//            MetaBeanUtils.setProperties(meta, me);
-//
-//            return me;
-//        }
-//        else
+        if (isUseCache()) {
+            ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
+            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+
+            ShoppingMetaParam param = new ShoppingMetaParam();
+            param.setTenantId(tenantHeader.getTenantId());
+            param.setLangCd(tenantHeader.getLangCd());
+            param.setCatalogId(basicInfo.getCatalogId());
+
+            ShoppingMeta meta = productInfoManager.getShoppingMeta(param);
+            if (meta == null) {
+                logger.warn("메타데이터를 읽을 수 없습니다 - Shopping#{}", param.getCatalogId());
+                return null;
+            }
+
+            MetaInfo me = new MetaInfo();
+            MetaBeanUtils.setProperties(meta, me);
+            me.setNo("1");
+            me.setFileSize(0);
+
+            return me;
+        }
+        else
             return this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
     }
 
