@@ -3,10 +3,13 @@ package com.skplanet.storeplatform.sac.member.idp.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -48,8 +51,14 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.idp.constant.IdpConstants;
@@ -347,7 +356,8 @@ public class IdpServiceImpl implements IdpService {
 				SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 				KeySearch keySearch = new KeySearch();
-				keySearch.setKeyType("MBR_ID");
+				keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
+
 				keySearch.setKeyString(map.get("old_id").toString());
 				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 				keySearchList.add(keySearch);
@@ -393,7 +403,8 @@ public class IdpServiceImpl implements IdpService {
 				SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 				KeySearch keySearch = new KeySearch();
-				keySearch.setKeyType("MBR_ID");
+				keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
+
 				keySearch.setKeyString(map.get("old_id").toString());
 				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 				keySearchList.add(keySearch);
@@ -788,7 +799,7 @@ public class IdpServiceImpl implements IdpService {
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 		keySearch.setKeyString((String) map.get("user_id"));
 
 		keySearchList.add(keySearch);
@@ -926,7 +937,7 @@ public class IdpServiceImpl implements IdpService {
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 		LOGGER.debug("rXCreateUserIdIDP ------- get user_id");
 		LOGGER.debug("rXCreateUserIdIDP ------- user_id = " + map.get("user_id").toString());
 		if (null != map.get("user_id")) {
@@ -1359,7 +1370,7 @@ public class IdpServiceImpl implements IdpService {
 		keySearch.setKeyString(imIntSvcNo); // 통합 서비스 번호
 		keySearchList.add(keySearch);
 		keySearch = new KeySearch();
-		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 		keySearch.setKeyString(userId); // 사용자 ID추가
 		keySearchList.add(keySearch);
 
@@ -1472,7 +1483,7 @@ public class IdpServiceImpl implements IdpService {
 		keySearch.setKeyString(imIntSvcNo); // 통합 서비스 번호
 		keySearchList.add(keySearch);
 		keySearch = new KeySearch();
-		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 		keySearch.setKeyString(userId); // 사용자 ID추가
 		keySearchList.add(keySearch);
 
@@ -1534,7 +1545,12 @@ public class IdpServiceImpl implements IdpService {
 				mqInfo.setUserKey(searchUserResponse.getUserKey());
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 
-				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+				try {
+					this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+				} catch (Exception e) {
+
+				}
+
 			}
 
 		} catch (StorePlatformException spe) {
@@ -1573,7 +1589,7 @@ public class IdpServiceImpl implements IdpService {
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 		keySearch.setKeyString(userId);
 
 		keySearchList.add(keySearch);
@@ -1652,7 +1668,7 @@ public class IdpServiceImpl implements IdpService {
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 		keySearch.setKeyString(userId);
 
 		keySearchList.add(keySearch);
@@ -1732,7 +1748,7 @@ public class IdpServiceImpl implements IdpService {
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 		keySearch.setKeyString(userId);
 
 		keySearchList.add(keySearch);
@@ -1822,7 +1838,7 @@ public class IdpServiceImpl implements IdpService {
 		keySearch.setKeyString(imIntSvcNo); // 통합 서비스 번호
 		keySearchList.add(keySearch);
 		keySearch = new KeySearch();
-		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 		keySearch.setKeyString(userId); // 사용자 ID추가
 		keySearchList.add(keySearch);
 
@@ -1885,8 +1901,11 @@ public class IdpServiceImpl implements IdpService {
 					mqInfo.setUserId(userId);
 					mqInfo.setUserKey(searchUserResponse.getUserKey());
 					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					try {
+						this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+					} catch (Exception e) {
 
-					this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+					}
 				}
 
 			} catch (StorePlatformException spe) {
@@ -2099,7 +2118,7 @@ public class IdpServiceImpl implements IdpService {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 		keySearch.setKeyString(userId);
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -2346,6 +2365,13 @@ public class IdpServiceImpl implements IdpService {
 		}
 
 		boolean siteCodeCheck = false; // 이용동의 사이트중 tstore가 있는지 없는지 체크하기 위한 boolean 변수
+
+		// MDN합치기 관련 추가변수 20140410 START
+		String mdnJsonStringInfo = ""; // mdnJsonStringInfo : mdn합치기 정보
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> jsonParsingMap = new HashMap<String, String>();
+		// MDN합치기 관련 추가변수 20140410 END
+
 		ImResult imResult = new ImResult();
 		imResult.setCmd("RXUpdateAgreeUserIDP");
 		imResult.setUserId(userId);
@@ -2390,6 +2416,10 @@ public class IdpServiceImpl implements IdpService {
 			}
 		}
 
+		if (map.get("mdnJsonInfo") != null) { // mdnJsonInfo가 null이 아닌경우 전달된 mdnJsonInfo data 셋팅
+			mdnJsonStringInfo = map.get("mdnJsonInfo").toString();
+		}
+
 		if (null != map.get("old_id")) { // null check
 			oldId = map.get("old_id").toString();
 		}
@@ -2416,11 +2446,12 @@ public class IdpServiceImpl implements IdpService {
 					SearchUserResponse searchUserResponse = null;
 					try {
 						searchUserResponse = this.userSCI.searchUser(searchUserRequest);
+						userKey = searchUserResponse.getUserKey();
 					} catch (StorePlatformException spe) {
 						searchUserResponse = null; // 정보가 없을경우 null로 셋팅
 					}
 
-					if (searchUserResponse != null) {
+					if (searchUserResponse != null) { // 통합서비스 번호로 조회된 회원정보가 있는경우
 
 						map.put("im_reg_date", "");
 						UpdateUserRequest updateUserRequest = new UpdateUserRequest();
@@ -2460,7 +2491,8 @@ public class IdpServiceImpl implements IdpService {
 								return imResult;
 							}
 						}
-					} else {
+
+					} else { // 통합서비스 번호로 조회된 회원정보가 없는경우
 						LOGGER.debug("JOIN NEW DATA INSERT START");
 						CreateUserRequest createUserRequest = new CreateUserRequest();
 						CreateUserResponse create = null;
@@ -2541,7 +2573,6 @@ public class IdpServiceImpl implements IdpService {
 							createUserRequest.setMbrLglAgent(this.getMbrLglAgent(map)); // 법정대리인
 						}
 
-						// 신규가입인경우만 이용약관이 들어옴.
 						List<MbrClauseAgree> mbrClauseAgreeList = this.getMbrClauseAgreeList(tenantId,
 								mbrClauseAgreeArray);
 
@@ -2588,6 +2619,7 @@ public class IdpServiceImpl implements IdpService {
 							this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
 							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
+
 						} catch (StorePlatformException spe) {
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
@@ -2613,6 +2645,124 @@ public class IdpServiceImpl implements IdpService {
 							return imResult;
 						}
 					}
+
+					// MDN합치기 기능추가 20140410 START
+					if (!mdnJsonStringInfo.equals("")) { // MDN 정보가 있는경우 MDN합치기 수행
+						try {
+							jsonParsingMap = mapper.readValue(mdnJsonStringInfo,
+									new TypeReference<HashMap<String, String>>() {
+									});
+						} catch (Exception e) {
+							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+							return imResult;
+						}
+
+						String deviceId = jsonParsingMap.get("mdn").toString(); // mdn
+						String telecomTypeByMdnInfo = jsonParsingMap.get("carrier").toString(); // carrier
+						String userKeyByMdnInfo = jsonParsingMap.get("user_key").toString(); // user_key
+						String svcMngNumByMdnInfo = jsonParsingMap.get("svc_mng_num").toString();// svc_mng_num
+						String modelIdByMdnInfo = jsonParsingMap.get("model_id").toString(); // model_id
+						String insdUserKeyByMdnInfo = ""; // 내부사용자키
+						String telecomValueByMdnInfo = ""; // 통신사코드정보
+						String isPrimary = "N"; // 대표단말여부
+
+						if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_SKT)) {
+							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_SKT;
+						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_KT)) {
+							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_KT;
+						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_LGT)) {
+							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_LGT;
+						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_OMD)) {
+							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_OMD;
+						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_NSH)) {
+							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_NSH;
+						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_NON)) {
+							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_NON;
+						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_IOS)) {
+							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_IOS;
+						}
+
+						// MDN정보 USERMBR_NO로 INSD_USERMBR_NO를 조회하기위해 사용자 목록을 조회함.
+						List<KeySearch> keySearchListByMdnInfo = new ArrayList<KeySearch>();
+						KeySearch keySearchByMdnInfo = new KeySearch();
+						keySearchByMdnInfo.setKeyType(MemberConstants.KEY_TYPE_USERMBR_NO);
+						keySearchByMdnInfo.setKeyString(userKeyByMdnInfo); // MBR_NO - USERMBR_NO
+						keySearchListByMdnInfo.add(keySearchByMdnInfo);
+						SearchUserRequest searchUserRequestByMdnInfo = new SearchUserRequest();
+						searchUserRequestByMdnInfo.setCommonRequest(commonRequest);
+						searchUserRequestByMdnInfo.setKeySearchList(keySearchListByMdnInfo);
+						SearchUserResponse searchUserResponseByMdnInfo = null;
+
+						searchUserResponseByMdnInfo = this.userSCI.searchUser(searchUserRequestByMdnInfo);
+
+						if (searchUserResponseByMdnInfo != null) {
+							insdUserKeyByMdnInfo = searchUserResponseByMdnInfo.getUserKey();
+
+							SacRequestHeader requestHeader = new SacRequestHeader();
+							TenantHeader tenant = new TenantHeader();
+							tenant.setSystemId(systemId);
+							tenant.setTenantId(tenantId);
+							requestHeader.setTenantHeader(tenant);
+
+							DeviceInfo getDeviceInfo = this.deviceService.searchDevice(requestHeader,
+									MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, insdUserKeyByMdnInfo);
+
+							ListDeviceReq req = new ListDeviceReq();
+
+							req.setUserKey(insdUserKeyByMdnInfo);
+							req.setIsMainDevice("Y");
+
+							if (searchUserResponse != null) {
+								ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, req);
+								if (listDeviceRes != null) {
+									isPrimary = "N";
+								} else {
+									isPrimary = "Y";
+								}
+							} else {
+								isPrimary = "Y"; // 이용동의로 신규가입할 경우 대표기기 여부는 Y로 셋팅
+							}
+
+							// 휴대기기 등록시 MDN_JSON_DATA 정보중 MDN,CARRIER,SVC_MNG_NUM, MODEL_ID정보는 REQUEST PARAM
+							if (getDeviceInfo != null) {
+
+								// 휴대기기등록
+								getDeviceInfo.setDeviceId(deviceId);
+								getDeviceInfo.setDeviceTelecom(telecomValueByMdnInfo);
+								getDeviceInfo.setSvcMangNum(svcMngNumByMdnInfo);
+								getDeviceInfo.setIsPrimary(isPrimary);
+
+								if (getDeviceInfo.getDeviceExtraInfoList() != null) { // 부가속성
+
+									for (int i = 0; i < getDeviceInfo.getDeviceExtraInfoList().size(); i++) {
+										DeviceExtraInfo checkInfo = getDeviceInfo.getDeviceExtraInfoList().get(i);
+										if (checkInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD)) {
+											getDeviceInfo.getDeviceExtraInfoList().get(i)
+													.setExtraProfileValue(modelIdByMdnInfo);
+										}
+									}
+								}
+
+								String afterDeviceKey = this.deviceService.insertDeviceInfo(systemId, tenantId,
+										userKey, getDeviceInfo);
+
+								// insertDeviceInfo 호출시 deviceKey가 새로 생성되는데 새로 생성된 값을 updateDeviceInfo
+								// api호출해서 부가속성을 모두 바꿔줘야함.
+								getDeviceInfo.setDeviceKey(afterDeviceKey);
+								if (getDeviceInfo.getDeviceExtraInfoList() != null) { // 부가속성
+									for (int i = 0; i < getDeviceInfo.getDeviceExtraInfoList().size(); i++) {
+										getDeviceInfo.getDeviceExtraInfoList().get(i).setDeviceKey(afterDeviceKey);
+									}
+								}
+
+								this.deviceService.updateDeviceInfo(requestHeader, getDeviceInfo);
+
+							}
+						}
+					}
+					// MDN합치기 기능추가 20140410 END
+
 				} else { // 신규가입이 아닌경우 전환가입/변경전환/변경 가입 oldId != "null" 이 아닌경우 분기
 					map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
 
@@ -2621,7 +2771,7 @@ public class IdpServiceImpl implements IdpService {
 						SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 						KeySearch keySearch = new KeySearch();
-						keySearch.setKeyType("MBR_ID");
+						keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 						keySearch.setKeyString(map.get("old_id").toString());
 						List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 						keySearchList.add(keySearch);
@@ -2679,7 +2829,7 @@ public class IdpServiceImpl implements IdpService {
 						SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 						KeySearch keySearch = new KeySearch();
-						keySearch.setKeyType("MBR_ID");
+						keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 						keySearch.setKeyString(map.get("old_id").toString());
 						List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 						keySearchList.add(keySearch);
