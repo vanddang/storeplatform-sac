@@ -61,14 +61,14 @@ public class UserOcbController {
 		LOGGER.debug("##### 2.1.29 회원 OCB 정보 등록/수정 #####");
 		LOGGER.debug("########################################");
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * 회원 OCB 정보 등록/수정 Biz
 		 */
 		CreateOcbInformationRes res = this.svc.createOcbInformation(sacHeader, req);
 
-		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -93,14 +93,14 @@ public class UserOcbController {
 		LOGGER.debug("##### 2.1.29 회원 OCB 정보 삭제 #####");
 		LOGGER.debug("###################################");
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * 회원 OCB 정보 삭제 Biz
 		 */
 		RemoveOcbInformationRes res = this.svc.removeOcbInformation(sacHeader, req);
 
-		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -125,14 +125,14 @@ public class UserOcbController {
 		LOGGER.debug("##### 2.1.29 회원 OCB 정보 조회 #####");
 		LOGGER.debug("###################################");
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * 회원 OCB 정보 조회 Biz
 		 */
 		GetOcbInformationRes res = this.svc.getOcbInformation(sacHeader, req);
 
-		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 

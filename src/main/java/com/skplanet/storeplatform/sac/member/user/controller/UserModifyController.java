@@ -70,14 +70,14 @@ public class UserModifyController {
 		LOGGER.debug("##### 2.1.13. 회원 정보 수정 #####");
 		LOGGER.debug("#################################");
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * 회원 정보 수정 Biz
 		 */
 		ModifyRes res = this.svc.modify(sacHeader, req);
 
-		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -102,14 +102,14 @@ public class UserModifyController {
 		LOGGER.debug("##### 2.1.14. 비밀번호 수정 #####");
 		LOGGER.debug("################################");
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * 비밀번호 수정 Biz
 		 */
 		ModifyPasswordRes res = this.svc.modifyPassword(sacHeader, req);
 
-		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -134,14 +134,14 @@ public class UserModifyController {
 		LOGGER.debug("##### 2.1.15. 이메일 주소 수정 #####");
 		LOGGER.debug("##################################");
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * 이메일 주소 Biz
 		 */
 		ModifyEmailRes res = this.svc.modifyEmail(sacHeader, req);
 
-		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -166,14 +166,14 @@ public class UserModifyController {
 		LOGGER.debug("##### 2.1.16 Store 약관 동의 등록 #####");
 		LOGGER.debug("#####################################");
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * Store 약관 동의 등록 Biz
 		 */
 		CreateTermsAgreementRes res = this.svc.createTermsAgreement(sacHeader, req);
 
-		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -198,14 +198,14 @@ public class UserModifyController {
 		LOGGER.debug("##### 2.1.17 Store 약관 동의 수정 #####");
 		LOGGER.debug("#####################################");
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * Store 약관 동의 수정 Biz
 		 */
 		ModifyTermsAgreementRes res = this.svc.modifyTermsAgreement(sacHeader, req);
 
-		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -230,7 +230,7 @@ public class UserModifyController {
 		LOGGER.debug("##### 2.1.18 실명 인증 정보 등록 #####");
 		LOGGER.debug("####################################");
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_OWN)
 				|| StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_PARENT)) { // 본인 or 법정대리인
@@ -251,7 +251,7 @@ public class UserModifyController {
 		 */
 		CreateRealNameRes res = this.svc.createRealName(sacHeader, req);
 
-		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 

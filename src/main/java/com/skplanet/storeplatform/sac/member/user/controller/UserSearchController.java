@@ -162,14 +162,14 @@ public class UserSearchController {
 		LOGGER.debug("##### 2.1.34 DeviceId를 이용하여 회원 정보 조회 #####");
 		LOGGER.debug("##################################################");
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * DeviceId를 이용하여 회원 정보 조회 Biz
 		 */
 		DetailByDeviceIdSacRes res = this.svc.detailByDeviceId(sacHeader, req);
 
-		LOGGER.info("Response : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
