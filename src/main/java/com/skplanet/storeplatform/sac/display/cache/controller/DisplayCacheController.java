@@ -57,6 +57,9 @@ public class DisplayCacheController {
         else if(prodType.equals("shopping")) {
             cacheEvictManager.evictAllShoppingMeta();
         }
+        else if(prodType.equals("freepass")) {
+            cacheEvictManager.evictAllFreepassMeta();
+        }
     }
 
     @RequestMapping(value = "/evict/oldApp", method = RequestMethod.GET)
