@@ -342,7 +342,7 @@
             , MCI.RANK_CHG_CNT
             , MCI.RANK_CHG_CLSF_CD
             , (SELECT DA.ARTIST_ID FROM TB_DP_ARTIST DA WHERE DA.ARTIST_ID = MCI.ARTIST_ID AND ROWNUM = 1) AS ARTIST_ID
-            , MCI.REG_DT
+            , TO_CHAR(MCI.REG_DT, 'YYYYMMDDHH24MISS') AS REG_DT
           </if>
           <if test='chartClsfCd == null or chartClsfCd == ""'>
             , (SELECT DA.ARTIST_ID FROM TB_DP_ARTIST DA WHERE DA.ARTIST_ID = PD.ARTIST1_ID AND ROWNUM = 1) AS ARTIST_ID
