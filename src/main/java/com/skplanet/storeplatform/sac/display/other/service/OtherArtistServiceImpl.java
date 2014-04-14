@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 
 /**
@@ -37,7 +37,7 @@ public class OtherArtistServiceImpl implements OtherArtistService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	private CommonMetaInfoGeneratorImpl commonGenerator;
+	private CommonMetaInfoGenerator commonGenerator;
 
 	@Autowired
 	private MusicInfoGenerator musicGenerator;

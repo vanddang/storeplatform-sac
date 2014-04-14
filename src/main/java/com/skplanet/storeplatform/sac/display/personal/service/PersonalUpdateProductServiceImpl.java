@@ -50,10 +50,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 
 /**
  * 업데이트 대상 목록 조회 Service 구현체
@@ -69,9 +67,6 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 	private CommonDAO commonDAO;
 
 	@Autowired
-	private ExistenceSacService existenceSacService;
-
-	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 
 	@Autowired
@@ -82,9 +77,6 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 	@Autowired
 	SearchUserSCI searchUserSCI;
-
-	@Autowired
-	MetaInfoService metaInfoService;
 
 	/*
 	 * (non-Javadoc)

@@ -51,7 +51,6 @@ import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 
 /**
  * 자동 Update 목록 조회 Service 구현체
@@ -65,9 +64,6 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-
-	@Autowired
-	private ExistenceSacService existenceSacService;
 
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
