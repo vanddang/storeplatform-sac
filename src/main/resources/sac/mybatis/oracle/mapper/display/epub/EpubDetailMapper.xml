@@ -4,9 +4,11 @@
 
     <select id="selectProdRshp" parameterType="map" resultType="string">
 		SELECT /* EpubDetailMapper.xml, selectProdRshp, SAC : 임근대 , 2014-01-28 */
-			PART_PROD_ID
-	  	FROM TB_DP_PROD_RSHP
-		WHERE PROD_ID = #{channelId}
+			A.PART_PROD_ID
+	  	FROM TB_DP_PROD_RSHP A, TB_DP_PROD B
+		WHERE A.PROD_ID = #{channelId}
+      	  AND A.PART_PROD_ID = B.PROD_ID
+          AND B.SVC_GRP_CD = 'DP000203'  AND B.CONTENTS_TYPE_CD = 'PD002502' AND B.SVC_TYPE_CD = 'DP001116'
 	</select>    
     
 	<select id="selectEbookSourceList" parameterType="map" resultType="ProductImage">
@@ -205,11 +207,10 @@
 			FROM (
 			  SELECT T4.* 
 			  FROM (
-			      SELECT T3.*, ROWNUM AS RNUM
+			      SELECT T3.*, COUNT(*) OVER () TOTAL_COUNT, ROWNUM AS RNUM
 			      FROM (
-			            SELECT
-			                  COUNT(*) OVER () TOTAL_COUNT
-			                , T2.CHAPTER
+			            SELECT 
+			            	  T2.CHAPTER
 			                , MAX( T2.PROD_ID ) AS PROD_ID
 			                , MAX( T2.CID ) AS CID
 			                , MAX( T2.TENANT_ID ) AS TENANT_ID
@@ -298,14 +299,6 @@
 		                      <if test="baseChapter != null">
 		                      AND MP.CHAPTER > #{baseChapter}
 		                      </if>
-							  <if test="orderedBy == 'nonPayment'">
-							  <if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
-							  AND J.PROD_ID NOT IN  
-							  	<foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
-								#{item}
-								</foreach>
-							  </if>
-							  </if>
 			              ) T1
 			              WHERE RN = 1
 			          ) T2
@@ -317,6 +310,19 @@
 	                  ORDER BY T2.CHAPTER ASC
 	                  </if>
 			    ) T3
+	            WHERE 1=1    
+			   	<if test="orderedBy == 'nonPayment'">
+			   	<if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
+			   	AND T3.PLAY_PROD_ID NOT IN  
+				  <foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
+				  #{item}
+				  </foreach>
+			   	AND T3.STORE_PROD_ID NOT IN  
+				  <foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
+				  #{item}
+				  </foreach>
+			   	</if>
+			   	</if>
 			  ) T4
 			  WHERE T4.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 			) T

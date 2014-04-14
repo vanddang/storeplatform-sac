@@ -43,6 +43,37 @@ public class VodControllerTest {
 
 	
 	@Test
+	public void searchVodDetail_구매상품_테스트() throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("channelId", "H002620881");
+		param.put("orderedBy", "nonPayment");
+		param.put("deviceKey", "DE2014040715091992415039728");
+		param.put("userKey", "IW1313847620140407150915");
+		param.put("baseChapter", 0);
+		param.put("offset", 1);
+		param.put("count", 10);
+		String json = this.convertMapToJson(param);
+		
+		StopWatch stopWatch = new StopWatch(); 
+		stopWatch.start("searchVodDetail_구매상품_테스트");
+		
+		this.mvc.perform(post("/display/vod/detail/v1")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				;
+		
+		stopWatch.stop();
+		System.out.println(stopWatch.prettyPrint());
+	}
+	
+	@Test
 	public void searchVodDetail_방송_recent_baseChapter() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("channelId", "H001220250"); // 왕가네 식구들
@@ -53,7 +84,7 @@ public class VodControllerTest {
 		String json = this.convertMapToJson(param);
 		
 		StopWatch stopWatch = new StopWatch(); 
-		stopWatch.start("searchVodDetail_영화searchVodDetail_영화_recent_baseChapter");
+		stopWatch.start("searchVodDetail_방송_recent_baseChapter");
 		
 		this.mvc.perform(post("/display/vod/detail/v1")
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
