@@ -1069,11 +1069,7 @@ public class DeviceServiceImpl implements DeviceService {
 			listReq.setIsMainDevice("Y");
 
 			try {
-				LOGGER.info("");
-				LOGGER.info("");
-				LOGGER.info("#####		대표단말조회 Req : {}", listReq.toString());
-				LOGGER.info("");
-				LOGGER.info("");
+				LOGGER.info("대표단말조회 Req : {}", listReq.toString());
 
 				listRes = this.listDevice(requestHeader, listReq);
 
@@ -1139,21 +1135,11 @@ public class DeviceServiceImpl implements DeviceService {
 			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId()); // TODO
 			req.setDeviceId(opmdMdn);
 
-			LOGGER.info("");
-			LOGGER.info("");
-			LOGGER.info("##### ServiceImpl - 모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
-			LOGGER.info("");
-			LOGGER.info("");
-
 			ListDeviceReq deviceReq = new ListDeviceReq();
 			deviceReq.setUserKey(req.getUserKey());
 			deviceReq.setDeviceId(req.getDeviceId());
 
-			LOGGER.info("");
-			LOGGER.info("");
-			LOGGER.info("#####	ServiceImpl - 디바이스상세조회 Request : {}", deviceReq.toString());
-			LOGGER.info("");
-			LOGGER.info("");
+			LOGGER.info("ServiceImpl - 디바이스상세조회 Request : {}", deviceReq.toString());
 
 			ListDeviceRes deviceRes = this.listDevice(requestHeader, deviceReq);
 
@@ -1174,11 +1160,7 @@ public class DeviceServiceImpl implements DeviceService {
 		ExistReq existReq = new ExistReq();
 		existReq.setUserKey(req.getUserKey());
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("######		회원존재여부 Request : {}", existReq.toString());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("회원존재여부 Request : {}", existReq.toString());
 
 		ExistRes existRes = this.userSearchService.exist(requestHeader, existReq);
 
@@ -1186,11 +1168,7 @@ public class DeviceServiceImpl implements DeviceService {
 			setMainDeviceRequest.setDeviceKey(req.getDeviceKey());
 			setMainDeviceRequest.setUserKey(req.getUserKey());
 
-			LOGGER.info("");
-			LOGGER.info("");
-			LOGGER.info("######		대표단말설정 Request : {}", req.toString());
-			LOGGER.info("");
-			LOGGER.info("");
+			LOGGER.info("대표단말설정 Request : {}", req.toString());
 
 			SetMainDeviceResponse res = this.deviceSCI.setMainDevice(setMainDeviceRequest);
 
@@ -1219,12 +1197,6 @@ public class DeviceServiceImpl implements DeviceService {
 			for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
 				String opmdMdn = this.commService.getOpmdMdnInfo(id.getDeviceId());
 
-				LOGGER.info("");
-				LOGGER.info("");
-				LOGGER.info("======	ServiceImpl 모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
-				LOGGER.info("");
-				LOGGER.info("");
-
 				RemoveDeviceListSacReq deviceId = new RemoveDeviceListSacReq();
 				deviceId.setDeviceId(opmdMdn);
 
@@ -1240,7 +1212,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			LOGGER.info("");
 			LOGGER.info("");
-			LOGGER.info("===== ServiceImpl 휴대기기삭제 > 회원정보조회 > Requset > deviceId : {}", id.getDeviceId());
+			LOGGER.info("ServiceImpl 휴대기기삭제 > 회원정보조회 > Requset > deviceId : {}", id.getDeviceId());
 			LOGGER.info("");
 			LOGGER.info("");
 
@@ -1251,12 +1223,8 @@ public class DeviceServiceImpl implements DeviceService {
 			String isPrimary = "";
 			String deviceKey = "";
 
-			LOGGER.info("");
-			LOGGER.info("");
-			LOGGER.info("===== ServiceImpl 휴대기기삭제 > 휴대기기조회 > Request > deviceId : {}", id.getDeviceId());
-			LOGGER.info("===== ServiceImpl 휴대기기삭제 > 휴대기기조회 > Request > userKey : {}", req.getUserKey());
-			LOGGER.info("");
-			LOGGER.info("");
+			LOGGER.info("ServiceImpl 휴대기기삭제 > 휴대기기조회 > Request > deviceId : {}", id.getDeviceId());
+			LOGGER.info("ServiceImpl 휴대기기삭제 > 휴대기기조회 > Request > userKey : {}", req.getUserKey());
 
 			deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, id.getDeviceId(), req.getUserKey());
 			if (deviceInfo == null) {
@@ -1304,11 +1272,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
 			} catch (AmqpException ex) {
-				LOGGER.info("");
-				LOGGER.info("");
-				LOGGER.info("===== ServiceImpl 휴대기기삭제 > MQ연동 Fail {}", mqInfo);
-				LOGGER.info("");
-				LOGGER.info("");
+				LOGGER.info("ServiceImpl 휴대기기삭제 > MQ연동 Fail {}", mqInfo);
 
 			}
 
@@ -1320,12 +1284,8 @@ public class DeviceServiceImpl implements DeviceService {
 		removeDeviceRequest.setUserKey(req.getUserKey());
 		removeDeviceRequest.setDeviceKey(removeKeyList);
 
-		LOGGER.info("");
-		LOGGER.info("");
-		LOGGER.info("===== ServiceImpl 휴대기기삭제 > Request > deviceKey : {}", removeKeyList.toString());
-		LOGGER.info("===== ServiceImpl 휴대기기삭제 > Request > userKey : {}", req.getUserKey());
-		LOGGER.info("");
-		LOGGER.info("");
+		LOGGER.info("ServiceImpl 휴대기기삭제 > Request > deviceKey : {}", removeKeyList.toString());
+		LOGGER.info("ServiceImpl 휴대기기삭제 > Request > userKey : {}", req.getUserKey());
 
 		RemoveDeviceResponse removeDeviceResponse = this.deviceSCI.removeDevice(removeDeviceRequest);
 
@@ -1340,8 +1300,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 			LOGGER.info("");
 			LOGGER.info("");
-			LOGGER.info("===== ServiceImpl 휴대기기삭제 > 게임센터연동 > Request > deviceId : {}", id.getDeviceId());
-			LOGGER.info("===== ServiceImpl 휴대기기삭제 > 게임센터연동 > Request > userKey : {}", req.getUserKey());
+			LOGGER.info("ServiceImpl 휴대기기삭제 > 게임센터연동 > Request > deviceId : {}", id.getDeviceId());
+			LOGGER.info("ServiceImpl 휴대기기삭제 > 게임센터연동 > Request > userKey : {}", req.getUserKey());
 			LOGGER.info("");
 			LOGGER.info("");
 
@@ -1386,20 +1346,10 @@ public class DeviceServiceImpl implements DeviceService {
 			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 
-			LOGGER.info("");
-			LOGGER.info("");
-			LOGGER.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
-			LOGGER.info("");
-			LOGGER.info("");
-
 			DetailReq detailReq = new DetailReq();
 			detailReq.setDeviceId(req.getDeviceId());
 
-			LOGGER.info("");
-			LOGGER.info("");
-			LOGGER.info("===== ServiceImpl 단말AOM > 사용자조회 > Request > deviceId : {}", detailReq.getDeviceId());
-			LOGGER.info("");
-			LOGGER.info("");
+			LOGGER.info("ServiceImpl 단말AOM > 사용자조회 > Request > deviceId : {}", detailReq.getDeviceId());
 
 			DetailRes detailRes = this.userSearchService.searchUser(detailReq, sacHeader);
 			UserInfo deviceIdUser = detailRes.getUserInfo();
@@ -1409,12 +1359,8 @@ public class DeviceServiceImpl implements DeviceService {
 			listDeviceReq.setDeviceId(req.getDeviceId());
 			listDeviceReq.setIsMainDevice("N");
 
-			LOGGER.info("");
-			LOGGER.info("");
-			LOGGER.info("===== ServiceImpl 단말AOM > 휴대기기조회 > Request > deviceId : {}", req.getDeviceId());
-			LOGGER.info("===== ServiceImpl 단말AOM > 휴대기기조회 > Request > userKey : {}", deviceIdUser.getUserKey());
-			LOGGER.info("");
-			LOGGER.info("");
+			LOGGER.info("ServiceImpl 단말AOM > 휴대기기조회 > Request > deviceId : {}", req.getDeviceId());
+			LOGGER.info("ServiceImpl 단말AOM > 휴대기기조회 > Request > userKey : {}", deviceIdUser.getUserKey());
 
 			listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
 
@@ -1429,7 +1375,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			LOGGER.info("");
 			LOGGER.info("");
-			LOGGER.info("===== ServiceImpl 단말AOM > 대표단말조회 > Request > userKey : {}", req.getUserKey());
+			LOGGER.info("ServiceImpl 단말AOM > 대표단말조회 > Request > userKey : {}", req.getUserKey());
 			LOGGER.info("");
 			LOGGER.info("");
 
@@ -1441,7 +1387,7 @@ public class DeviceServiceImpl implements DeviceService {
 			listDeviceReq.setDeviceId(detailRepresentationDeviceRes.getDeviceInfo().getDeviceId());
 			listDeviceReq.setIsMainDevice("Y");
 
-			LOGGER.info("============================================ listDeviceReq {}", listDeviceReq.toString());
+			LOGGER.info("listDeviceReq {}", listDeviceReq.toString());
 
 			listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
 
@@ -1453,7 +1399,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			LOGGER.info("");
 			LOGGER.info("");
-			LOGGER.info("===== ServiceImpl 단말AOM > 폰인포조회 > Request > deviceModelNo : {}", listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
+			LOGGER.info("ServiceImpl 단말AOM > 폰인포조회 > Request > deviceModelNo : {}", listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
 			LOGGER.info("");
 			LOGGER.info("");
 
