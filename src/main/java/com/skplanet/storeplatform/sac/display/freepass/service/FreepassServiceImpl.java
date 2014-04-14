@@ -752,6 +752,7 @@ public class FreepassServiceImpl implements FreepassService {
 		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		paramMap.put("deviceModelCd", req.getDeviceModelCd());
+		paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
 		PaymentInfo paymentInfo = null;
 		for (int i = 0; i < prodIdList.size(); i++) {
 			paramMap.put("prodId", prodIdList.get(i));

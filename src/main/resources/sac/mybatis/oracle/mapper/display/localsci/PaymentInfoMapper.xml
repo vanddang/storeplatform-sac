@@ -57,7 +57,7 @@
                         ,K.PROD_STATUS_CD
                         ,J.PROD_GRD_CD
 			            ,CASE
-			                   WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = #{prodId} AND DEVICE_MODEL_CD = #{deviceModelCd}) > 0
+			                   WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = #{prodId} AND (DEVICE_MODEL_CD = #{deviceModelCd} or DEVICE_MODEL_CD = #{dpAnyPhone4mm})) > 0
 			                   THEN 'Y'
 			                   ELSE 'N'
 			              END AS PROD_SPRT_YN                                                  
@@ -204,7 +204,7 @@
                     , TP.PROD_STATUS_CD
                     , PD.PROD_GRD_CD
 		            ,CASE
-		                 WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = #{prodId} AND DEVICE_MODEL_CD = #{deviceModelCd}) > 0
+		                 WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = #{prodId} AND (DEVICE_MODEL_CD = #{deviceModelCd} or DEVICE_MODEL_CD = #{dpAnyPhone4mm})) > 0
 		                 THEN 'Y'
 		                 ELSE 'N'
 		             END AS PROD_SPRT_YN                                    

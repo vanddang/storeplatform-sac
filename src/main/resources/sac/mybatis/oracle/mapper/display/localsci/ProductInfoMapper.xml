@@ -428,7 +428,7 @@
                         ,J.USE_PERIOD
                         ,J.DRM_YN
                         ,CASE
-                               WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = I.PROD_ID AND DEVICE_MODEL_CD = #{deviceModelNo}) > 0
+                               WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = I.PROD_ID AND (DEVICE_MODEL_CD = #{deviceModelNo} or DEVICE_MODEL_CD = #{dpAnyPhone4mm} )) > 0
                                THEN 'Y'
                                ELSE 'N'
                           END AS PHONE_SPRT_YN     
@@ -547,7 +547,7 @@
                     , PD.USE_PERIOD
                     , PD.DRM_YN 
                     ,CASE
-                           WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = PD.PROD_ID AND DEVICE_MODEL_CD = #{deviceModelNo}) > 0
+                           WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = PD.PROD_ID AND (DEVICE_MODEL_CD = #{deviceModelNo} or DEVICE_MODEL_CD = #{dpAnyPhone4mm} )) > 0
                            THEN 'Y'
                            ELSE 'N'
                       END AS PHONE_SPRT_YN                      
