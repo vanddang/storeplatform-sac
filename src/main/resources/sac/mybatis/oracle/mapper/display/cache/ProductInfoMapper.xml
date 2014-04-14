@@ -169,7 +169,7 @@
             MCH.RANK_CHG_CNT,
             MCH.RANK_CHG_CLSF_CD,
             MCH.ARTIST_ID,
-            MCH.REG_DT
+            TO_CHAR(MCH.REG_DT, 'YYYYMMDDHH24MISS') AS REG_DT
         FROM TB_DP_PROD CPD
             INNER JOIN TB_DP_PROD_RSHP RS
                 ON RS.PROD_ID = CPD.PROD_ID
@@ -259,7 +259,7 @@
             MCH.RANK_CHG_CNT,
             MCH.RANK_CHG_CLSF_CD,
             MCH.ARTIST_ID,
-            MCH.REG_DT
+            TO_CHAR(MCH.REG_DT, 'YYYYMMDDHH24MISS') AS REG_DT
         FROM TB_DP_PROD CPD
             INNER JOIN TB_DP_PROD_RSHP RS
             ON RS.PROD_ID = CPD.PROD_ID
