@@ -68,19 +68,8 @@ public class UserOcbServiceImpl implements UserOcbService {
 			 * OCB 카드번호 정보 조회 연동
 			 */
 			SearchOcbPointEcReq searchOcbPointEcReq = new SearchOcbPointEcReq();
-			searchOcbPointEcReq.setAuthId(req.getCardNumber()); // OCB 카드 번호
+			searchOcbPointEcReq.setOcbCardNum(req.getCardNumber()); // OCB 카드 번호
 			this.ocbSCI.searchOcbPoint(searchOcbPointEcReq);
-
-		}
-
-		if (StringUtils.equals(req.getRegId(), "tlaeowls1")) {
-
-			/**
-			 * OCB 카드번호 정보 조회 연동
-			 */
-			SearchOcbPointEcReq searchOcbPointEcReq = new SearchOcbPointEcReq();
-			searchOcbPointEcReq.setAuthId(req.getCardNumber()); // OCB 카드 번호
-			this.ocbSCI.ocbTest1(searchOcbPointEcReq);
 
 		}
 
