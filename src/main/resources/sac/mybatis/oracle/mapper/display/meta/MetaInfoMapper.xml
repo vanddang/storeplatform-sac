@@ -950,8 +950,8 @@
 	ON TIG.LANG_CD = IV.LANG_CD 
 	   AND IV.PROD_ID = TIG.PROD_ID 
        AND TIG.IMG_CD = (
-            CASE WHEN IV.BNS_CASH_AMT_CLSF_CD IN ('OR004301','OR004302') THEN  #{thumbnailImageCd}
-                 WHEN IV.BNS_CASH_AMT_CLSF_CD IN ('OR004303','OR004304') THEN  #{ebookThumbnailImageCd}
+            CASE WHEN IV.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN  #{thumbnailImageCd}
+                 WHEN IV.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN  #{ebookThumbnailImageCd}
             END
        )	
     </select>
