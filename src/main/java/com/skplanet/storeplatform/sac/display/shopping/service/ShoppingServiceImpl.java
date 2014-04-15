@@ -2141,11 +2141,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>();
 		List<String> prodIdList = req.getProdIdList();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
+		// / 단말 지원 정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
 		paramMap.put("lang", req.getLangCd());
 		paramMap.put("tenantId", req.getTenantId());
 		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		paramMap.put("deviceModelCd", req.getDeviceModelCd());
+		paramMap.put("supportDevice", supportDevice);
 		paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
 		PaymentInfo paymentInfo = null;
 		for (int i = 0; i < prodIdList.size(); i++) {

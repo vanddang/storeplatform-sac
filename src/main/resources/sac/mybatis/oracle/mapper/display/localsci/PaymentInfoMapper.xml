@@ -56,11 +56,17 @@
                         ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
                         ,K.PROD_STATUS_CD
                         ,J.PROD_GRD_CD
-			            ,CASE
-			                   WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = #{prodId} AND (DEVICE_MODEL_CD = #{deviceModelCd} or DEVICE_MODEL_CD = #{dpAnyPhone4mm})) > 0
-			                   THEN 'Y'
-			                   ELSE 'N'
-			              END AS PROD_SPRT_YN                                                  
+                        ,CASE
+                               WHEN (
+                                    SELECT COUNT(*) 
+                                      FROM TB_DP_SPRT_DEVICE 
+                                     WHERE PROD_ID = I.PROD_ID 
+                                       AND (DEVICE_MODEL_CD = #{deviceModelCd} or DEVICE_MODEL_CD = #{dpAnyPhone4mm} )
+                                       AND 'Y' = #{supportDevice.sclShpgSprtYn}
+                                    ) > 0
+                               THEN 'Y'
+                               ELSE 'N'
+                          END AS PROD_SPRT_YN     
                         ,J.DRM_YN 
                         ,J.USE_PERIOD_UNIT_CD
                         ,J.USE_PERIOD
