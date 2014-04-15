@@ -128,6 +128,8 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 						// 상품분류코드는 SVC_GRP_CD||TOP_MENU_ID 로 제공
 						paymentInfo.setTenantProdGrpCd(paymentProdType.getSvcGrpCd() + "||"
 								+ paymentProdType.getTopMenuId());
+						// In-App 여부
+						paymentInfo.setInAppYn(paymentProdType.getInAppYn());
 
 						// 이용가능한 정액권목록 제공
 						paymentInfo.setAvailableFixrateProdIdList(this.freepassService
