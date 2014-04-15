@@ -39,6 +39,37 @@ public class PaymentInfoSCITest {
 
 	/**
 	 * <pre>
+	 * 결제 시 필요한 In-App 상품 메타 정보 조회.
+	 * </pre>
+	 * 
+	 */
+	// @Test
+	public void searchInAppPaymentInfo() {
+		try {
+			PaymentInfoSacReq req = new PaymentInfoSacReq();
+			List<String> prodIdList = new ArrayList<String>();
+			prodIdList.add("0900062560");
+			prodIdList.add("0000048502");
+			req.setProdIdList(prodIdList);
+			req.setTenantId("S01");
+			req.setLangCd("ko");
+			req.setDeviceModelCd("SHW-M100S");
+
+			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
+			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
+			for (int i = 0; i < paymentInfoList.size(); i++) {
+				PaymentInfo paymentInfo = paymentInfoList.get(i);
+				this.log.debug("##### searchPaymentInfo paymentInfo[{}] : {}", i, paymentInfo.toString());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * <pre>
 	 * 결제 시 필요한 APP 상품 메타 정보 조회.
 	 * </pre>
 	 * 
@@ -54,7 +85,37 @@ public class PaymentInfoSCITest {
 			req.setProdIdList(prodIdList);
 			req.setTenantId("S01");
 			req.setLangCd("ko");
-			req.setDeviceModelCd("SHW-M100S");
+			// req.setDeviceModelCd("SHW-M100S");
+
+			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
+			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
+			for (int i = 0; i < paymentInfoList.size(); i++) {
+				PaymentInfo paymentInfo = paymentInfoList.get(i);
+				this.log.debug("##### searchPaymentInfo paymentInfo[{}] : {}", i, paymentInfo.toString());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * 결제 시 필요한 eBook 상품 메타 정보 조회.
+	 * </pre>
+	 * 
+	 */
+	@Test
+	public void searchEbookPaymentInfo() {
+		try {
+			PaymentInfoSacReq req = new PaymentInfoSacReq();
+			List<String> prodIdList = new ArrayList<String>();
+			prodIdList.add("H000044543");
+			req.setProdIdList(prodIdList);
+			req.setTenantId("S01");
+			req.setLangCd("ko");
+			// req.setDeviceModelCd("SHW-M100S");
 
 			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
 			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
@@ -106,7 +167,7 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	// @Test
 	public void searchFreePassPaymentInfo() {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();

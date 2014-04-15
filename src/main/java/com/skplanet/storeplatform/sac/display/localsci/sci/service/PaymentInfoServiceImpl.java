@@ -16,6 +16,8 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Paymen
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
 import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 
@@ -35,10 +37,13 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	ShoppingService shoppingService;
+	private ShoppingService shoppingService;
 
 	@Autowired
-	FreepassService freepassService;
+	private FreepassService freepassService;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	/**
 	 * <pre>
@@ -74,6 +79,23 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 			req.setDeviceModelCd("NULL");
 		}
 
+		// 단말 지원정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
+		if (supportDevice == null) {
+			req.setEbookSprtYn("Y");
+			req.setComicSprtYn("Y");
+			req.setMusicSprtYn("Y");
+			req.setVideoDrmSprtYn("Y");
+			req.setSdVideoSprtYn("Y");
+		} else {
+			req.setEbookSprtYn(supportDevice.getEbookSprtYn());
+			req.setComicSprtYn(supportDevice.getComicSprtYn());
+			req.setMusicSprtYn(supportDevice.getMusicSprtYn());
+			req.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
+			req.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+		}
+		req.setDpAnyPhone4mm(DisplayConstants.DP_ANY_PHONE_4MM);
+
 		// 파라미터 유효 값 체크
 		if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
 			throw new StorePlatformException("SAC_DSP_0004", "prodIdList",
@@ -87,8 +109,8 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 		if (paymentProdType == null) {
 			throw new StorePlatformException("SAC_DSP_0005", "[상품 군 조회]" + prodIdList.get(0));
 		} else {
-			this.log.debug("##### searchProdType result : {}, {}", paymentProdType.getTopMenuId(),
-					paymentProdType.getSvcGrpCd());
+			this.log.debug("##### searchProdType result : {}, {}, {}", paymentProdType.getTopMenuId(),
+					paymentProdType.getSvcGrpCd(), paymentProdType.getInAppYn());
 
 			if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(paymentProdType.getSvcGrpCd())) { // 쇼핑 상품
 				paymentInfoList = this.shoppingService.getShoppingforPayment(req);

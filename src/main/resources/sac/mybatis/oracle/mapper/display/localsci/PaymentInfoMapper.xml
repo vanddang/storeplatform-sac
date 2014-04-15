@@ -3,46 +3,73 @@
 <mapper namespace="PaymentInfo">
     <!-- 상품 군 조회 -->
     <select id="searchProdType" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
-		SELECT /* PaymentInfoMapper.xml, searchProdType, SAC 전시, 2014-02-27 */ 
-		       TOP_MENU_ID
-		      ,SVC_GRP_CD
-		FROM   TB_DP_PROD
-		WHERE  PROD_ID = #{prodId}
+        SELECT /* PaymentInfoMapper.xml, searchProdType, SAC 전시, 2014-04-14 */ 
+               CASE WHEN B.PART_PARENT_CLSF_CD = 'PD012302' -- In-App 자식 상품
+                    THEN (SELECT TOP_MENU_ID FROM TB_DP_PROD WHERE PROD_ID = C.PROD_ID)
+                    ELSE A.TOP_MENU_ID
+               END AS TOP_MENU_ID
+              ,A.SVC_GRP_CD
+              ,CASE WHEN B.PART_PARENT_CLSF_CD = 'PD012302'
+                    THEN 'Y'
+                    ELSE 'N'
+               END AS IN_APP_YN
+        FROM   TB_DP_PROD A
+              ,TB_DP_APP_PROD B
+              ,TB_DP_PROD_RSHP C
+        WHERE  A.PROD_ID = B.PROD_ID(+)
+        AND    A.PROD_ID = C.PART_PROD_ID(+)
+        AND    C.PROD_RSHP_CD(+) = 'DP010801' /* DP010801 : 부모-자식 관계 */
+        AND    A.PROD_ID = #{prodId}
     </select>
     
     <select id="searchPaymentInfo" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
-        SELECT /* PaymentInfoMapper.xml, searchPaymentInfo, SAC 전시, 2014-02-27 */
-		       A.PROD_ID
-		      ,B.PROD_NM
-		      ,D.PROD_AMT
-		      ,C.PROD_STATUS_CD
-		      ,A.PROD_GRD_CD
-		      ,CASE
-                   WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = #{prodId} AND DEVICE_MODEL_CD = #{deviceModelCd}) > 0
-                   THEN 'Y'
-                   ELSE 'N'
+        SELECT /* PaymentInfoMapper.xml, searchPaymentInfo, SAC 전시, 2014-04-14 */
+               A.PROD_ID
+              ,B.PROD_NM
+              ,D.PROD_AMT
+              ,C.PROD_STATUS_CD
+              ,A.PROD_GRD_CD
+              ,CASE WHEN (CASE WHEN A.TOP_MENU_ID = 'DP13' THEN
+                                    CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
+                               WHEN A.TOP_MENU_ID = 'DP14' THEN
+                                    CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END
+                               WHEN A.TOP_MENU_ID = 'DP15' THEN 0
+                               WHEN A.TOP_MENU_ID = 'DP16' THEN
+                                    CASE WHEN A.META_CLSF_CD = 'CT25' THEN
+                                              CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END ELSE 1 END
+                               WHEN A.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+                                    CASE WHEN NVL(A.DRM_YN, 'N') = 'Y' AND #{videoDrmSprtYn} = 'N' THEN 0
+                                         ELSE CASE WHEN #{sdVideoSprtYn} = 'Y' THEN 1 ELSE 0 END END
+                               ELSE 1
+                           END ) = 1 -- 단말 지원정보
+                         AND (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = A.PROD_ID AND (DEVICE_MODEL_CD = #{deviceModelCd} OR DEVICE_MODEL_CD = #{dpAnyPhone4mm}) ) > 0
+                    THEN 'Y'
+                    ELSE 'N'
                END AS PROD_SPRT_YN
-		      ,A.DRM_YN
-		      ,A.USE_PERIOD_UNIT_CD
-		      ,A.USE_PERIOD
-		      ,(SELECT AID FROM TB_DP_APP_PROD WHERE PROD_ID = A.PROD_ID) AS AID
-		      ,A.MALL_CD
-		      ,(SELECT OUTSD_CONTENTS_ID FROM UV_TB_DP_MULTIMDA_PROD WHERE PROD_ID = A.PROD_ID) AS OUTSD_CONTENTS_ID
-		      ,A.SELLER_MBR_NO
-		      ,A.EXPO_SELLER_NM AS SELLER_NM
-		      ,A.EXPO_SELLER_EMAIL AS SELLER_EMAIL
-		      ,A.EXPO_SELLER_TELNO AS SELLER_TELNO
-		FROM   TB_DP_PROD              A
-		      ,TB_DP_PROD_DESC         B
-		      ,TB_DP_TENANT_PROD       C
-		      ,TB_DP_TENANT_PROD_PRICE D
-		WHERE  A.PROD_ID = B.PROD_ID
-		AND    B.LANG_CD = #{langCd}
-		AND    A.PROD_ID = C.PROD_ID
-		AND    C.TENANT_ID = #{tenantId}
-		AND    C.PROD_ID = D.PROD_ID
-		AND    C.TENANT_ID = D.TENANT_ID
-		AND    A.PROD_ID = #{prodId}
+              ,A.DRM_YN
+              ,A.USE_PERIOD_UNIT_CD
+              ,A.USE_PERIOD
+              ,(SELECT AID FROM TB_DP_APP_PROD WHERE PROD_ID = A.PROD_ID) AS AID
+              ,A.MALL_CD
+              ,F.OUTSD_CONTENTS_ID
+              ,A.SELLER_MBR_NO
+              ,A.EXPO_SELLER_NM AS SELLER_NM
+              ,A.EXPO_SELLER_EMAIL AS SELLER_EMAIL
+              ,A.EXPO_SELLER_TELNO AS SELLER_TELNO
+              ,F.POSS_LEND_CLSF_CD
+        FROM   TB_DP_PROD              A
+              ,TB_DP_PROD_DESC         B
+              ,TB_DP_TENANT_PROD       C
+              ,TB_DP_TENANT_PROD_PRICE D
+              ,UV_TB_DP_MULTIMDA_PROD  F
+        WHERE  A.PROD_ID = B.PROD_ID
+        AND    B.LANG_CD = #{langCd}
+        AND    A.PROD_ID = C.PROD_ID
+        AND    C.TENANT_ID = #{tenantId}
+        AND    C.PROD_ID = D.PROD_ID
+        AND    C.TENANT_ID = D.TENANT_ID
+        AND    A.PROD_ID = F.PROD_ID(+)
+        AND    A.PROD_ID = #{prodId}
     </select>
     
     <select id="getShoppingMetaInfo" parameterType="Map" resultType="PaymentInfo">
@@ -66,7 +93,7 @@
                                     ) > 0
                                THEN 'Y'
                                ELSE 'N'
-                          END AS PROD_SPRT_YN     
+                          END AS PROD_SPRT_YN                                                  
                         ,J.DRM_YN 
                         ,J.USE_PERIOD_UNIT_CD
                         ,J.USE_PERIOD
@@ -74,9 +101,9 @@
                         ,J.MALL_CD  
                         ,'' as outsdContentsId      
                         ,J.SELLER_MBR_NO 
-			            ,J.EXPO_SELLER_NM AS SELLER_NM
-			            ,J.EXPO_SELLER_EMAIL AS SELLER_EMAIL
-			            ,J.EXPO_SELLER_TELNO AS SELLER_TELNO                        
+                        ,J.EXPO_SELLER_NM AS SELLER_NM
+                        ,J.EXPO_SELLER_EMAIL AS SELLER_EMAIL
+                        ,J.EXPO_SELLER_TELNO AS SELLER_TELNO                        
                         ,(SELECT SRC_CONTENT_ID 
                             FROM TB_DP_SHPG_PROD 
                            WHERE prod_id=H.PROD_ID 
@@ -209,8 +236,8 @@
                     , PR.PROD_AMT
                     , TP.PROD_STATUS_CD
                     , PD.PROD_GRD_CD
-		            ,CASE
-		                 WHEN ( 
+                    ,CASE
+                         WHEN ( 
                                SELECT COUNT(*) 
                                  FROM  TB_DP_SPRT_DEVICE SP
                                       ,TB_CM_DEVICE DV
@@ -224,11 +251,11 @@
                                                  WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
                                             ELSE 'Y' END
                                        ELSE 'Y' END
-		                          AND (SP.DEVICE_MODEL_CD = #{deviceModelCd} or SP.DEVICE_MODEL_CD = #{dpAnyPhone4mm})
-		                       )> 0
-		                 THEN 'Y'
-		                 ELSE 'N'
-		             END AS PROD_SPRT_YN                                    
+                                  AND (SP.DEVICE_MODEL_CD = #{deviceModelCd} or SP.DEVICE_MODEL_CD = #{dpAnyPhone4mm})
+                               )> 0
+                         THEN 'Y'
+                         ELSE 'N'
+                     END AS PROD_SPRT_YN                                    
                     , PD.DRM_YN
                     , PD.USE_PERIOD_UNIT_CD
                     , PD.USE_PERIOD
@@ -244,9 +271,9 @@
                     , PD.USE_PERIOD_UNIT_CD AS autoPrchsPeriodUnitCd
                     , PD.USE_PERIOD AS autoPrchsPeriodValue 
                     , '' AS autoPrchsLastDt           
-		            , CM.BNS_CASH_AMT
-		            , CM.BNS_USE_PERIOD_UNIT_CD
-		            , CM.BNS_USE_PERIOD                    
+                    , CM.BNS_CASH_AMT
+                    , CM.BNS_USE_PERIOD_UNIT_CD
+                    , CM.BNS_USE_PERIOD                    
                 FROM 
                       TB_DP_PROD PD
                     , TB_DP_CMPX_PROD CM
@@ -267,10 +294,10 @@
     
     <select id="getExclusiveFixrateProdIdList" parameterType="Map" resultType="String">
           /* PaymentInfoMapper.xml, getExclusiveFixrateProdIdList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
-			SELECT 
-			       DUP_PRCHS_LIMT_PROD_ID 
-			  FROM TB_DP_DUP_PRCHS_LIMT
-			 WHERE PROD_ID =#{productId} 
+            SELECT 
+                   DUP_PRCHS_LIMT_PROD_ID 
+              FROM TB_DP_DUP_PRCHS_LIMT
+             WHERE PROD_ID =#{productId} 
     </select>            
     
 </mapper>
