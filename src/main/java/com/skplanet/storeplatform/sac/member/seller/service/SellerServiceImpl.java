@@ -92,6 +92,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 
 /**
  * 판매자 회원의 가입/수정/탈퇴/인증 기능정의
@@ -448,6 +449,7 @@ public class SellerServiceImpl implements SellerService {
 		// Response Debug
 		LOGGER.debug("==>>[SAC] AuthorizeRes.toString() : {}", res.toString());
 		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
+		LOGGER.info("{} : {}", res.getClass().getSimpleName(), ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
 
@@ -1374,4 +1376,7 @@ public class SellerServiceImpl implements SellerService {
 		return res;
 	}
 
+	public static void main(String[] args) {
+		System.out.println(CreateRes.class.getSimpleName());
+	}
 }
