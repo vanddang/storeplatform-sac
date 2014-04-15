@@ -139,7 +139,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public GetOpmdRes getOpmd(GetOpmdReq req) {
 		GetOpmdRes res = new GetOpmdRes();
 		res.setMsisdn(this.commonComponent.getOpmdMdnInfo(req.getMsisdn()));
-		LOGGER.debug("## Response : {}", res);
 		return res;
 	}
 
@@ -369,7 +368,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
 
-		LOGGER.info("## SAC->IDP Request.");
 		WaterMarkAuthImageEcRes waterMarkAuthImageEcRes = this.idpSCI.warterMarkImageUrl();
 
 		if (waterMarkAuthImageEcRes != null && StringUtils.isNotBlank(waterMarkAuthImageEcRes.getImageUrl())) {
@@ -388,7 +386,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			if (imageRes != null && StringUtils.isNotBlank(imageRes.getImgData())) {
 				waterMarkImageString = imageRes.getImgData();
-				LOGGER.info("## Captcha 문자 발급 성공. : {}", imageRes);
 			}
 		}
 
@@ -396,7 +393,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		response.setImageSign(waterMarkImageSign);
 		response.setSignData(signData);
 
-		LOGGER.debug("## Response {}", response);
 		return response;
 	}
 
@@ -412,15 +408,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) {
 
-		LOGGER.info("## SAC->IDP Request.");
-
 		WaterMarkAuthEcReq waterMarkAuthEcReq = new WaterMarkAuthEcReq();
 		waterMarkAuthEcReq.setUserCode(request.getAuthCode());
 		waterMarkAuthEcReq.setImageSign(request.getImageSign());
 		waterMarkAuthEcReq.setSignData(request.getSignData());
 
 		this.idpSCI.waterMarkAuth(waterMarkAuthEcReq);
-		LOGGER.info("## Captcha 문자 확인 성공.");
 
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 		return response;
@@ -450,37 +443,32 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		ServiceAuth authYnInfo = this.commonDao.queryForObject("Miscellaneous.searchEmailAuthYn", serviceAuthReq,
 				ServiceAuth.class);
 
-		String authCode = null;
-		if (authYnInfo == null || MemberConstants.USE_N.equals(authYnInfo.getAuthComptYn())) {
+		// 2. 이메일 인증 코드 생성 - GUID 수준의 난수
+		String authCode = UUID.randomUUID().toString().replace("-", "");
+		LOGGER.debug("## authCode : {}", authCode);
 
-			// 2. 이메일 인증 코드 생성 - GUID 수준의 난수
-			authCode = UUID.randomUUID().toString().replace("-", "");
-			LOGGER.debug("## authCode : {}", authCode);
+		// 3. DB에 저장(TB_CM_SVC_AUTH)
+		ServiceAuth serviceAuthInfo = new ServiceAuth();
+		serviceAuthInfo.setAuthValue(authCode);
+		serviceAuthInfo.setAuthEmail(request.getUserEmail());
 
-			// 3. DB에 저장(TB_CM_SVC_AUTH) - 인증서비스 코드, 인증코드, 회원Key, 인증 Email 주소
-			ServiceAuth serviceAuthInfo = new ServiceAuth();
+		if (authYnInfo == null) {
 			serviceAuthInfo.setTenantId(tenantId);
-			serviceAuthInfo.setAuthTypeCd("CM010902");
-			serviceAuthInfo.setAuthValue(authCode);
 			serviceAuthInfo.setMbrNo(request.getUserKey());
+			serviceAuthInfo.setAuthTypeCd("CM010902");
 			serviceAuthInfo.setAuthSign("EmailAuthorization"); // 의미 없음. DB에 AUTH_SIGN 이 "NOT NULL"로 정의되어있음.
-			serviceAuthInfo.setAuthEmail(request.getUserEmail());
 
 			this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
-
-			LOGGER.debug("[MiscellaneousService.getEmailAuthorizationCode] 인증코드 신규발급. authCode : {}", authCode);
+			LOGGER.debug("인증코드 신규발급. authCode : {}", authCode);
 		} else {
-			// 미인증 상태의 인증코드 존재.
-			authCode = authYnInfo.getAuthValue();
-			LOGGER.debug("[MiscellaneousService.getEmailAuthorizationCode] 기존 발급된 인증코드 전달. authCode : {}", authCode);
-			// 인증 시간이 만료된 코드도 있으므로, 인증코드 생성시간 업데이트.
-			this.commonDao.update("Miscellaneous.updateServiceAuthTime", authYnInfo.getAuthSeq());
+			// 미인증 상태의 인증코드 존재 - 신규 발급 코드로 업데이트.
+			serviceAuthInfo.setAuthSeq(authYnInfo.getAuthSeq());
+			this.commonDao.update("Miscellaneous.updateServiceAuthCode", serviceAuthInfo);
 		}
 
 		// 4. 인증코드 Response
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
 		response.setEmailAuthCode(authCode);
-		LOGGER.debug("## SAC 이메일 인증 코드생성 response : {}", response.getEmailAuthCode());
 
 		return response;
 	}
@@ -522,7 +510,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			String authSeq = serviceAuthInfo.getAuthSeq();
 			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
-			LOGGER.info("## 인증 완료.");
+			LOGGER.debug("## 인증 완료.");
 		} else {
 			throw new StorePlatformException("SAC_MEM_3003"); // 해당 인증코드가 DB Table에 존재하지 않음.
 		}
@@ -530,7 +518,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		response.setUserEmail(serviceAuthInfo.getAuthEmail());
 		response.setUserKey(serviceAuthInfo.getMbrNo());
 
-		LOGGER.debug("## Response : {}", response);
 		return response;
 	}
 

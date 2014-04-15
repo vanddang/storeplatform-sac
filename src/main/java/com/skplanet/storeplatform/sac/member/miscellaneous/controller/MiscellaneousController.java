@@ -75,7 +75,7 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, @Validated @RequestBody GetUaCodeReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
 		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
 		if (StringUtils.isBlank(request.getDeviceModelNo()) && StringUtils.isBlank(request.getMsisdn())) {
@@ -88,6 +88,7 @@ public class MiscellaneousController {
 
 		GetUaCodeRes response = this.service.getUaCode(requestHeader, request);
 
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
 		return response;
 	}
 
@@ -106,7 +107,7 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Validated @RequestBody GetOpmdReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
 		// CommonComponent 호출 시에는 mdn Check 불필요하므로, Controller에서 유효성 검사.
 		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
@@ -114,6 +115,7 @@ public class MiscellaneousController {
 		}
 
 		GetOpmdRes response = this.service.getOpmd(request);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
 		return response;
 	}
 
@@ -133,13 +135,14 @@ public class MiscellaneousController {
 	public GetPhoneAuthorizationCodeRes getPhoneAutorizationCode(SacRequestHeader requestHeader,
 			@Validated @RequestBody GetPhoneAuthorizationCodeReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
 		if (!ValidationCheckUtils.isMdn(request.getRecvMdn())) {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
 		GetPhoneAuthorizationCodeRes response = this.service.getPhoneAuthorizationCode(requestHeader, request);
 
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
 		return response;
 
 	}
@@ -160,13 +163,14 @@ public class MiscellaneousController {
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(SacRequestHeader requestHeader,
 			@Validated @RequestBody ConfirmPhoneAuthorizationCodeReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
 		if (!ValidationCheckUtils.isMdn(request.getUserPhone())) {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
 		ConfirmPhoneAuthorizationCodeRes response = this.service.confirmPhoneAutorizationCode(request);
 
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
 		return response;
 
 	}
@@ -183,8 +187,10 @@ public class MiscellaneousController {
 	public GetCaptchaRes getCaptcha() {
 
 		LOGGER.info("Request");
-		GetCaptchaRes res = this.service.getCaptcha();
-		return res;
+		GetCaptchaRes response = this.service.getCaptcha();
+
+		LOGGER.info("Response : {\"imageSign\":\"{}\"}", response.getImageSign());
+		return response;
 	}
 
 	/**
@@ -200,9 +206,10 @@ public class MiscellaneousController {
 	@ResponseBody
 	public ConfirmCaptchaRes confirmCaptcha(@Validated @RequestBody ConfirmCaptchaReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
-		ConfirmCaptchaRes res = this.service.confirmCaptcha(request);
-		return res;
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		ConfirmCaptchaRes response = this.service.confirmCaptcha(request);
+		LOGGER.info("Response Success.");
+		return response;
 	}
 
 	/**
@@ -220,10 +227,12 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(SacRequestHeader requestHeader,
 			@Validated @RequestBody GetEmailAuthorizationCodeReq request) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
-		GetEmailAuthorizationCodeRes res = this.service.getEmailAuthorizationCode(requestHeader, request);
-		return res;
+		GetEmailAuthorizationCodeRes response = this.service.getEmailAuthorizationCode(requestHeader, request);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
+		return response;
 
 	}
 
@@ -241,9 +250,10 @@ public class MiscellaneousController {
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(
 			@Validated @RequestBody ConfirmEmailAuthorizationCodeReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
-		ConfirmEmailAuthorizationCodeRes res = this.service.confirmEmailAuthorizationCode(request);
-		return res;
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		ConfirmEmailAuthorizationCodeRes response = this.service.confirmEmailAuthorizationCode(request);
+		LOGGER.info("Response : {\"userKey\":\"{}\"}", response.getUserKey());
+		return response;
 	}
 
 	/**
@@ -258,12 +268,14 @@ public class MiscellaneousController {
 	@RequestMapping(value = "/createAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
 		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
-		return this.service.createAdditionalService(request);
+		CreateAdditionalServiceRes response = this.service.createAdditionalService(request);
+		LOGGER.info("Response : {\"msisdn\":\"{}\"}", response.getMsisdn());
+		return response;
 	}
 
 	/**
@@ -279,12 +291,14 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetAdditionalServiceRes getAdditionalService(@Validated @RequestBody GetAdditionalServiceReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
 		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
-		return this.service.getAdditionalService(request);
+		GetAdditionalServiceRes response = this.service.getAdditionalService(request);
+		LOGGER.info("Response : {\"svcJoinResult\":\"{}\"}", response.getSvcJoinResult());
+		return response;
 	}
 
 	/**
@@ -300,7 +314,7 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetModelCodeRes getModelCode(@RequestBody @Validated GetModelCodeReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
 		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
 		if (StringUtils.isBlank(request.getUaCd()) && StringUtils.isBlank(request.getMsisdn())) {
@@ -310,7 +324,9 @@ public class MiscellaneousController {
 			if (!ValidationCheckUtils.isMdn(request.getMsisdn()))
 				throw new StorePlatformException("SAC_MEM_3004");
 		}
-		return this.service.getModelCode(request);
+		GetModelCodeRes response = this.service.getModelCode(request);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
+		return response;
 	}
 
 	/**
@@ -326,8 +342,11 @@ public class MiscellaneousController {
 	@ResponseBody
 	public AuthorizeAccountRes authorizeAccount(@RequestBody @Validated AuthorizeAccountReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
-		return this.service.authorizeAccount(request);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		AuthorizeAccountRes response = this.service.authorizeAccount(request);
+
+		LOGGER.info("Response Success.");
+		return response;
 	}
 
 	/**
@@ -345,8 +364,10 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header,
 			@RequestBody @Validated GetIndividualPolicyReq request) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
-		return this.service.getIndividualPolicy(header, request);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		GetIndividualPolicyRes response = this.service.getIndividualPolicy(header, request);
+		LOGGER.info("Response : {\"policyListSize\":\"{}\"}", response.getPolicyList().size());
+		return response;
 	}
 
 	/**
@@ -364,8 +385,10 @@ public class MiscellaneousController {
 	@ResponseBody
 	public CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header,
 			@RequestBody @Validated CreateIndividualPolicyReq request) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
-		return this.service.createIndividualPolicy(header, request);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		CreateIndividualPolicyRes response = this.service.createIndividualPolicy(header, request);
+		LOGGER.info("Response : {\"key\":\"{}\"}", response.getKey());
+		return response;
 	}
 
 	/**
@@ -383,7 +406,9 @@ public class MiscellaneousController {
 	@ResponseBody
 	public RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header,
 			@RequestBody @Validated RemoveIndividualPolicyReq request) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
-		return this.service.removeIndividualPolicy(header, request);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		RemoveIndividualPolicyRes response = this.service.removeIndividualPolicy(header, request);
+		LOGGER.info("Response : {\"key\":\"{}\"}", response.getKey());
+		return response;
 	}
 }
