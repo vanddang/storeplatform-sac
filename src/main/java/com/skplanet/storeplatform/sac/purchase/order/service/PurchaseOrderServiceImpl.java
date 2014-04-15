@@ -36,11 +36,11 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemD
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCouponSCI;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreNotiSCI;
-import com.skplanet.storeplatform.external.client.tstore.vo.Cash;
 import com.skplanet.storeplatform.external.client.tstore.vo.Coupon;
 import com.skplanet.storeplatform.external.client.tstore.vo.ProdId;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashEcReq;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListEcReq;
@@ -248,18 +248,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			final String purchase_id_recv = StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
 					PurchaseConstants.PRCHS_CASE_GIFT_CD) ? purchaseOrderInfo.getPrchsId() : "";
 
-			new TLogUtil().set(new ShuttleSetter() { // SAC OUT 용
-						@Override
-						public void customize(TLogSentinelShuttle shuttle) {
-							shuttle.imei(imei).mno_type(mno_type).usermbr_no(usermbr_no).system_id(system_id)
-									.purchase_channel(purchase_channel)
-									.purchase_inflow_channel(purchase_inflow_channel).purchase_id(purchase_id)
-									.purchase_id_recv(purchase_id_recv);
-						}
-					});
-
-			final List<String> allProdIdList = new ArrayList<String>(); // SAC OUT 용
-
 			for (PrchsDtlMore prchsInfo : prchsDtlMoreList) { // 상품 수 만큼 로깅
 				final List<String> prodIdList = new ArrayList<String>();
 				prodIdList.add(prchsInfo.getProdId());
@@ -280,25 +268,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.product_id(prodIdList).purchase_prod_num(purchase_prod_num)
-								.purchase_prod_num_recv(purchase_prod_num_recv).tid(tid).tx_id(tx_id)
-								.use_start_time(use_start_time).use_end_time(use_end_time)
+						shuttle.log_id("TL00015").imei(imei).mno_type(mno_type).usermbr_no(usermbr_no)
+								.system_id(system_id).purchase_channel(purchase_channel)
+								.purchase_inflow_channel(purchase_inflow_channel).purchase_id(purchase_id)
+								.purchase_id_recv(purchase_id_recv).product_id(prodIdList)
+								.purchase_prod_num(purchase_prod_num).purchase_prod_num_recv(purchase_prod_num_recv)
+								.tid(tid).tx_id(tx_id).use_start_time(use_start_time).use_end_time(use_end_time)
 								.download_expired_time(download_expired_time).product_qty(product_qty)
 								.coupon_publish_code(coupon_publish_code).coupon_code(coupon_code)
 								.coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
 					}
 				});
-
-				allProdIdList.add(prchsInfo.getProdId()); // SAC OUT 용
 			}
-
-			// SAC OUT 용
-			new TLogUtil().set(new ShuttleSetter() {
-				@Override
-				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.product_id(allProdIdList);
-				}
-			});
 
 		}
 
@@ -670,9 +651,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			ConfirmPurchaseScRes confirmPurchaseScRes = this.purchaseOrderSCI.confirmPurchase(confirmPurchaseScReq);
 			this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,CNT,{}", confirmPurchaseScRes.getCount());
-			if (confirmPurchaseScRes.getCount() < 1) {
-				throw new StorePlatformException("SAC_PUR_7202");
-			}
 
 		} catch (StorePlatformException e) {
 			// 쇼핑쿠폰발급 취소 등
@@ -706,8 +684,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		});
 
-		final List<String> allProdIdList = new ArrayList<String>(); // SAC OUT 용
-
 		for (PrchsDtlMore prchsInfo : prchsDtlMoreList) { // 상품 수 만큼 로깅
 			final List<String> prodIdList = new ArrayList<String>();
 			prodIdList.add(prchsInfo.getProdId());
@@ -735,17 +711,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							.coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
 				}
 			});
-
-			allProdIdList.add(prchsInfo.getProdId()); // SAC OUT 용
 		}
-
-		// SAC OUT 용
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.product_id(allProdIdList);
-			}
-		});
 
 		this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,END");
 		return prchsDtlMoreList;
@@ -1454,14 +1420,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			return 0.0;
 		}
 
-		TStoreCashEcReq tStoreCashEcReq = new TStoreCashEcReq();
+		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
 		tStoreCashEcReq.setUserKey(userKey);
-		tStoreCashEcReq.setType(PurchaseConstants.TSTORE_CASH_SVC_TYPE_INQUIRY); // 서비스 타입 : 조회
-		tStoreCashEcReq.setDetailType(PurchaseConstants.TSTORE_CASH_SVC_DETAIL_TYPE_INQUIRY); // 서비스 상세 타입 : 조회
-		tStoreCashEcReq.setChannel(PurchaseConstants.TSTORE_CASH_SVC_CHANNEL_SAC); // 서비스 채널 : SAC
 		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_ALL); // 상품군 : 전체
 
-		TStoreCashEcRes tStoreCashEcRes = null;
+		TStoreCashBalanceEcRes tStoreCashEcRes = null;
 		try {
 			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
 		} catch (Exception e) {
@@ -1473,9 +1436,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					tStoreCashEcRes.getResultMsg());
 		}
 
-		List<Cash> tstoreCashList = tStoreCashEcRes.getCashList();
+		List<TStoreCashBalanceDetailEcRes> tstoreCashList = tStoreCashEcRes.getCashList();
 		double cashAmt = 0.0;
-		for (Cash cash : tstoreCashList) {
+		for (TStoreCashBalanceDetailEcRes cash : tstoreCashList) {
 			cashAmt += Double.parseDouble(cash.getAmt());
 		}
 
