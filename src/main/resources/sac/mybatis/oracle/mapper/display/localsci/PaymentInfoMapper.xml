@@ -204,7 +204,22 @@
                     , TP.PROD_STATUS_CD
                     , PD.PROD_GRD_CD
 		            ,CASE
-		                 WHEN (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = #{prodId} AND (DEVICE_MODEL_CD = #{deviceModelCd} or DEVICE_MODEL_CD = #{dpAnyPhone4mm})) > 0
+		                 WHEN ( 
+                               SELECT COUNT(*) 
+                                 FROM  TB_DP_SPRT_DEVICE SP
+                                      ,TB_CM_DEVICE DV
+                                WHERE  SP.DEVICE_MODEL_CD = DV.DEVICE_MODEL_CD
+                                  AND  SP.PROD_ID = PD.PROD_ID 
+                                  AND  DV.USE_YN = 'Y'
+                                  AND  'Y' = CASE 
+                                       WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
+                                       WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
+                                            CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
+                                                 WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                                            ELSE 'Y' END
+                                       ELSE 'Y' END
+		                          AND (SP.DEVICE_MODEL_CD = #{deviceModelCd} or SP.DEVICE_MODEL_CD = #{dpAnyPhone4mm})
+		                       )> 0
 		                 THEN 'Y'
 		                 ELSE 'N'
 		             END AS PROD_SPRT_YN                                    
