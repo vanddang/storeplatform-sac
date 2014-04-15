@@ -312,6 +312,10 @@
         <typeAlias alias="FreePassInfoSacReq"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq" />
         <typeAlias alias="FreePassInfo"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo" />
 
+        <!-- 소장/대여 상품 정보 조회(LocalSCI)-->
+        <typeAlias alias="PossLendProductInfoSacReq"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfoSacReq" />
+        <typeAlias alias="PossLendProductInfo"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo" />
+ 
         
         <!-- 특정 작가별 상품 조회 -->
         <typeAlias alias="AuthorProductSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.related.AuthorProductSacReq" />
