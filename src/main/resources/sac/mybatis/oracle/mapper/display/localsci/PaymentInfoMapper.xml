@@ -171,8 +171,8 @@
                 AND I.PROD_ID = L.PROD_ID
                 AND I.PROD_ID = M.PROD_ID
                 AND K.TENANT_ID = L.TENANT_ID
-                AND C.CATALOG_ID = PI.PROD_ID
-                AND PI.IMG_CD = #{imageCd}
+                AND C.CATALOG_ID = PI.PROD_ID(+)
+                AND PI.IMG_CD(+) = #{imageCd}
                 AND PI.EXPO_ORD ='1'           
                 AND I.PROD_ID = N.PROD_ID(+)    
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
