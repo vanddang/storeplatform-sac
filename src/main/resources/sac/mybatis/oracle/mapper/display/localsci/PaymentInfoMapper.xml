@@ -223,6 +223,9 @@
                     , PD.USE_PERIOD_UNIT_CD AS autoPrchsPeriodUnitCd
                     , PD.USE_PERIOD AS autoPrchsPeriodValue 
                     , '' AS autoPrchsLastDt           
+		            , CM.BNS_CASH_AMT
+		            , CM.BNS_USE_PERIOD_UNIT_CD
+		            , CM.BNS_USE_PERIOD                    
                 FROM 
                       TB_DP_PROD PD
                     , TB_DP_CMPX_PROD CM
