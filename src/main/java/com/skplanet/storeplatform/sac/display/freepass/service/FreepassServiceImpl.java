@@ -162,7 +162,7 @@ public class FreepassServiceImpl implements FreepassService {
 				reqMap.put("deviceHeader", header.getDeviceHeader());
 				reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 				reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-
+				reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 					reqMap.put("productBasicInfo", productBasicInfo);
 					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
@@ -213,6 +213,7 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setDeviceModelCd(header.getDeviceHeader().getModel());
 			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+			req.setEbookThumbnailImageCd(DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 			req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
 			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
@@ -409,7 +410,7 @@ public class FreepassServiceImpl implements FreepassService {
 				reqMapC.put("deviceHeader", header.getDeviceHeader());
 				reqMapC.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 				reqMapC.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-
+				reqMapC.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 				reqMapP.put("tenantHeader", header.getTenantHeader());
 				reqMapP.put("deviceHeader", header.getDeviceHeader());
 				reqMapP.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
@@ -558,7 +559,7 @@ public class FreepassServiceImpl implements FreepassService {
 				reqMap.put("deviceHeader", header.getDeviceHeader());
 				reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
 				reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-
+				reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 					reqMap.put("productBasicInfo", productBasicInfo);
 					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
