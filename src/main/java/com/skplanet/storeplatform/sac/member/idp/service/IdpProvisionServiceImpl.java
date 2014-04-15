@@ -796,7 +796,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String userKey = null;
 		String deviceKey = null;
 		String result = null;
-		String changeCaseCode = null;
+		String changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE;
 		String gameCenterWorkCd = null;
 
 		CommonRequest commonRequest = new CommonRequest();
