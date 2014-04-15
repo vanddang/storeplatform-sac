@@ -15,7 +15,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -40,7 +39,7 @@ public class AclDataAccessServiceBatis implements AclDataAccessService {
         this.commonDAO = commonDAO;
     }
 
-    @Cacheable(value = "sac:runtime:selectInterfaceById")
+    // @Cacheable(value = "sac:runtime:selectInterfaceById")
     @Override
     public Interface selectInterfaceById(String interfaceId) {
         return this.commonDAO.queryForObject("Interface.detail", interfaceId, Interface.class);
@@ -49,31 +48,31 @@ public class AclDataAccessServiceBatis implements AclDataAccessService {
     /* (non-Javadoc)
      * @see com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService#selectAuthInfoByAuthKey(java.lang.String)
      */
-    @Cacheable(value = "sac:runtime:selectAuthKey")
+    // @Cacheable(value = "sac:runtime:selectAuthKey")
     @Override
     public AuthKey selectAuthKey(String authKey) {
         return this.commonDAO.queryForObject("AuthKey.selectAuthKey", authKey, AuthKey.class);
     }
 
-    @Cacheable(value = "sac:runtime:selectTenant")
+    // @Cacheable(value = "sac:runtime:selectTenant")
     @Override
     public Tenant selectTenant(String tenantId) {
         return this.commonDAO.queryForObject("AclTenant.selectTenant", tenantId, Tenant.class);
     }
 
-    @Cacheable(value = "sac:runtime:selectSystem")
+    // @Cacheable(value = "sac:runtime:selectSystem")
     @Override
     public System selectSystem(String systemId) {
         return this.commonDAO.queryForObject("System.selectSystem", systemId, System.class);
     }
 
-    @Cacheable(value = "sac:runtime:selectSystemByIp")
+    // @Cacheable(value = "sac:runtime:selectSystemByIp")
     @Override
     public System selectSystemByIp(System system) {
         return this.commonDAO.queryForObject("System.selectSystemByIp", system, System.class);
     }
 
-    @Cacheable(value = "sac:runtime:selectUsableInterface")
+    // @Cacheable(value = "sac:runtime:selectUsableInterface")
     @Override
     public String selectUsableInterface(String authKey, String interfaceId) {
         Map<String, String> param = new HashMap<String, String>();
