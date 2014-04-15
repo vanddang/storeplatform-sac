@@ -781,7 +781,17 @@
                              ,MC.MENU_ID
                              ,MCD.MENU_NM
                              ,MC.TOP_MENU_ID
-                             ,(SELECT COUNT(CT.CATALOG_ID) FROM TB_DP_SHPG_CATALOG CT WHERE CT.BRAND_ID = SB.BRAND_ID AND NVL(CT.CHNL_CNT, 0) > 0) AS CNT
+                             ,(
+			                    SELECT COUNT(CT.CATALOG_ID)
+			                      FROM TB_DP_SHPG_CATALOG CT
+			                          ,TB_DP_PROD_CATALOG_MAPG CM
+			                          ,TB_DP_SHPG_PROD SP
+			                     WHERE CT.CATALOG_ID =CM.CATALOG_ID
+			                       AND CM.PROD_ID = SP.PROD_ID
+			                       AND NVL(SP.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+			                       AND CT.BRAND_ID = SB.BRAND_ID
+			                       AND NVL(CT.CHNL_CNT, 0) > 0
+                              ) AS CNT
                         FROM  TB_DP_SHPG_BRAND SB
                              ,TB_DP_MENU_CATEGORY MC
                              ,TB_DP_MENU_CATEGORY_DESC MCD
