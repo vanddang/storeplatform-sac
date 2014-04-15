@@ -436,7 +436,7 @@
                                                AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 에피소드타입 */  
                                                AND J.TOP_MENU_ID IN ('DP17', 'DP18')
                                                AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
-                                               AND DECODE( L.SD_VIDEO_SPRT_YN , 'Y' , DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( L.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1   
+                                               AND DECODE( L.SD_VIDEO_SPRT_YN , 'Y' , DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( L.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1                                              
                                                AND (CASE WHEN L.VIDEO_DRM_SPRT_YN = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
                                                          ELSE 'SUPPORT' END) = 'SUPPORT' /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */                                                                                                                                     
                                                AND L.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
@@ -445,12 +445,12 @@
                                                AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
                                                AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
                                                AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
-                                               AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */
+                                               AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */                                               
                                                <if test="idType == 'episode'">
-                                               AND J.PROD_ID = #{productId} -- 에피소드 ID 조회
+                                               AND J.PROD_ID = #{productId} /* 에피소드 ID 조회 */
                                                </if>
                                                <if test="idType == 'channel'">
-                                               AND D.PROD_ID= #{productId}    --채널 Id조회
+                                               AND D.PROD_ID= #{productId}    /* 채널 Id조회 */
                                                </if>
                                            ) IA
                                    )JA
