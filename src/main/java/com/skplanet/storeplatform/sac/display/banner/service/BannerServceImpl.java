@@ -309,7 +309,12 @@ public class BannerServceImpl implements BannerService {
 							metaInfo = this.getMetaInfo(header, bannerReq);
 
 							if (metaInfo != null) {
-								bannerDefault.setBnrInfo(metaInfo.getProdId());
+								// 쇼핑상품은 카탈로그ID, 일반상품은 채널상품ID를 내려준다.
+								if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) {
+									bannerDefault.setBnrInfo(metaInfo.getCatalogId());
+								} else {
+									bannerDefault.setBnrInfo(metaInfo.getProdId());
+								}
 								bannerDefault.setTopMenuId(metaInfo.getTopMenuId());
 								bannerDefault.setTopMenuNm(metaInfo.getTopMenuNm());
 								bannerDefault.setMenuId(metaInfo.getMenuId());
