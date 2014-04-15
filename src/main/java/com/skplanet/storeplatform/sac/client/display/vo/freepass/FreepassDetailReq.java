@@ -18,7 +18,8 @@ public class FreepassDetailReq {
 
 	private String topMenuId; // 최상위메뉴ID
 	private String kind; // 자유이용권 종류
-	@NotNull @NotBlank
+	@NotNull
+	@NotBlank
 	private String productId; // 상품ID
 	private String menuId; // 메뉴ID
 	private String channelId; // 채널상품ID
@@ -26,16 +27,16 @@ public class FreepassDetailReq {
 	private int count; // count
 	private String bannerImageCd; // 배너이미지
 	private String thumbnailImageCd; // 썸네일이미지
+	private String ebookThumbnailImageCd; // (이북,코믹)썸네일이미지
 	private String prodStatusCd; // 상품상태
 	private String standardModelCd; // 상품상태
-	
-	
+
 	// common req 전까지 임시
 	private String tenantId; // 테넌트ID
 	private String langCd; // 언어
 	private String deviceModelCd; // 단말모델
-	
-	//구매내역 체크
+
+	// 구매내역 체크
 	private String userKey; // 사용자키
 	private String deviceKey; // 단말키
 
@@ -46,11 +47,12 @@ public class FreepassDetailReq {
 	 * @return the topMenuId
 	 */
 	public String getTopMenuId() {
-		return topMenuId;
+		return this.topMenuId;
 	}
 
 	/**
-	 * @param topMenuId the topMenuId to set
+	 * @param topMenuId
+	 *            the topMenuId to set
 	 */
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
@@ -60,11 +62,12 @@ public class FreepassDetailReq {
 	 * @return the kind
 	 */
 	public String getKind() {
-		return kind;
+		return this.kind;
 	}
 
 	/**
-	 * @param kind the kind to set
+	 * @param kind
+	 *            the kind to set
 	 */
 	public void setKind(String kind) {
 		this.kind = kind;
@@ -74,11 +77,12 @@ public class FreepassDetailReq {
 	 * @return the productId
 	 */
 	public String getProductId() {
-		return productId;
+		return this.productId;
 	}
 
 	/**
-	 * @param productId the productId to set
+	 * @param productId
+	 *            the productId to set
 	 */
 	public void setProductId(String productId) {
 		this.productId = productId;
@@ -88,11 +92,12 @@ public class FreepassDetailReq {
 	 * @return the menuId
 	 */
 	public String getMenuId() {
-		return menuId;
+		return this.menuId;
 	}
 
 	/**
-	 * @param menuId the menuId to set
+	 * @param menuId
+	 *            the menuId to set
 	 */
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
@@ -102,11 +107,12 @@ public class FreepassDetailReq {
 	 * @return the channelId
 	 */
 	public String getChannelId() {
-		return channelId;
+		return this.channelId;
 	}
 
 	/**
-	 * @param channelId the channelId to set
+	 * @param channelId
+	 *            the channelId to set
 	 */
 	public void setChannelId(String channelId) {
 		this.channelId = channelId;
@@ -116,11 +122,12 @@ public class FreepassDetailReq {
 	 * @return the offset
 	 */
 	public int getOffset() {
-		return offset;
+		return this.offset;
 	}
 
 	/**
-	 * @param offset the offset to set
+	 * @param offset
+	 *            the offset to set
 	 */
 	public void setOffset(int offset) {
 		this.offset = offset;
@@ -130,11 +137,12 @@ public class FreepassDetailReq {
 	 * @return the count
 	 */
 	public int getCount() {
-		return count;
+		return this.count;
 	}
 
 	/**
-	 * @param count the count to set
+	 * @param count
+	 *            the count to set
 	 */
 	public void setCount(int count) {
 		this.count = count;
@@ -144,25 +152,42 @@ public class FreepassDetailReq {
 	 * @return the bannerImageCd
 	 */
 	public String getBannerImageCd() {
-		return bannerImageCd;
+		return this.bannerImageCd;
 	}
 
 	/**
-	 * @param bannerImageCd the bannerImageCd to set
+	 * @param bannerImageCd
+	 *            the bannerImageCd to set
 	 */
 	public void setBannerImageCd(String bannerImageCd) {
 		this.bannerImageCd = bannerImageCd;
 	}
 
 	/**
-	 * @return the thumbnailImageCd
+	 * @return the ebookThumbnailImageCd
 	 */
-	public String getThumbnailImageCd() {
-		return thumbnailImageCd;
+	public String getEbookThumbnailImageCd() {
+		return this.ebookThumbnailImageCd;
 	}
 
 	/**
-	 * @param thumbnailImageCd the thumbnailImageCd to set
+	 * @param ebookThumbnailImageCd
+	 *            the ebookThumbnailImageCd to set
+	 */
+	public void setEbookThumbnailImageCd(String ebookThumbnailImageCd) {
+		this.ebookThumbnailImageCd = ebookThumbnailImageCd;
+	}
+
+	/**
+	 * @return the thumbnailImageCd
+	 */
+	public String getThumbnailImageCd() {
+		return this.thumbnailImageCd;
+	}
+
+	/**
+	 * @param thumbnailImageCd
+	 *            the thumbnailImageCd to set
 	 */
 	public void setThumbnailImageCd(String thumbnailImageCd) {
 		this.thumbnailImageCd = thumbnailImageCd;
@@ -172,11 +197,12 @@ public class FreepassDetailReq {
 	 * @return the prodStatusCd
 	 */
 	public String getProdStatusCd() {
-		return prodStatusCd;
+		return this.prodStatusCd;
 	}
 
 	/**
-	 * @param prodStatusCd the prodStatusCd to set
+	 * @param prodStatusCd
+	 *            the prodStatusCd to set
 	 */
 	public void setProdStatusCd(String prodStatusCd) {
 		this.prodStatusCd = prodStatusCd;
@@ -186,11 +212,12 @@ public class FreepassDetailReq {
 	 * @return the standardModelCd
 	 */
 	public String getStandardModelCd() {
-		return standardModelCd;
+		return this.standardModelCd;
 	}
 
 	/**
-	 * @param standardModelCd the standardModelCd to set
+	 * @param standardModelCd
+	 *            the standardModelCd to set
 	 */
 	public void setStandardModelCd(String standardModelCd) {
 		this.standardModelCd = standardModelCd;
@@ -200,11 +227,12 @@ public class FreepassDetailReq {
 	 * @return the tenantId
 	 */
 	public String getTenantId() {
-		return tenantId;
+		return this.tenantId;
 	}
 
 	/**
-	 * @param tenantId the tenantId to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
@@ -214,11 +242,12 @@ public class FreepassDetailReq {
 	 * @return the langCd
 	 */
 	public String getLangCd() {
-		return langCd;
+		return this.langCd;
 	}
 
 	/**
-	 * @param langCd the langCd to set
+	 * @param langCd
+	 *            the langCd to set
 	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
@@ -228,11 +257,12 @@ public class FreepassDetailReq {
 	 * @return the deviceModelCd
 	 */
 	public String getDeviceModelCd() {
-		return deviceModelCd;
+		return this.deviceModelCd;
 	}
 
 	/**
-	 * @param deviceModelCd the deviceModelCd to set
+	 * @param deviceModelCd
+	 *            the deviceModelCd to set
 	 */
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
@@ -242,11 +272,12 @@ public class FreepassDetailReq {
 	 * @return the dummy
 	 */
 	public String getDummy() {
-		return dummy;
+		return this.dummy;
 	}
 
 	/**
-	 * @param dummy the dummy to set
+	 * @param dummy
+	 *            the dummy to set
 	 */
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
@@ -263,11 +294,12 @@ public class FreepassDetailReq {
 	 * @return the userKey
 	 */
 	public String getUserKey() {
-		return userKey;
+		return this.userKey;
 	}
 
 	/**
-	 * @param userKey the userKey to set
+	 * @param userKey
+	 *            the userKey to set
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
@@ -277,15 +309,15 @@ public class FreepassDetailReq {
 	 * @return the deviceKey
 	 */
 	public String getDeviceKey() {
-		return deviceKey;
+		return this.deviceKey;
 	}
 
 	/**
-	 * @param deviceKey the deviceKey to set
+	 * @param deviceKey
+	 *            the deviceKey to set
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
 	}
-	
-	
+
 }
