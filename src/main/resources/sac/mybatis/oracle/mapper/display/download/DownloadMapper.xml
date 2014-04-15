@@ -4,6 +4,21 @@
 <!-- 패키지명으로 상품 ID 조회 -->
     <select id="getProductIdForPackageName" resultType="String">
      SELECT /* DownloadMapper.getProductIdForPackageName, 패키지명으로 상품 ID 조회, 이석희/아이에스플러스, 2014-01-23 */
+             B.PROD_ID
+           , A.APK_PKG_NM
+       FROM  TB_DP_SUB_CONTENTS            A
+             INNER JOIN TB_DP_PROD         B
+                     ON A.PROD_ID = B.PROD_ID
+             INNER JOIN TB_DP_APP_PROD     C
+                     ON B.PROD_ID = C.PROD_ID
+             INNER JOIN TB_DP_SPRT_DEVICE  D
+                     ON D.PROD_ID = B.PROD_ID
+                    AND A.SUB_CONTENTS_ID =D.SUB_CONTENTS_ID        
+      WHERE  1=1
+        AND  D.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+        AND  A.APK_PKG_NM = #{packageName}        
+     /*     
+     SELECT 
              A.PROD_ID
            , D.APK_PKG_NM
        FROM  TB_DP_PROD                    A
@@ -14,8 +29,9 @@
         AND  D.SUB_CONTENTS_ID = C.SUB_CONTENTS_ID
         AND  C.PROD_ID = A.PROD_ID
         AND  A.PROD_ID = B.PROD_ID        
-        AND  C.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
-        AND  D.APK_PKG_NM = #{packageName}                          
+        AND  C.DEVICE_MODEL_CD = 'SHW-M110S' /* 단말모델코드 */
+        AND  D.APK_PKG_NM = 'com.incross.monsterpuppet'
+     */                          
     </select>
 
     <!-- 상품정보요청(for download) App -->
