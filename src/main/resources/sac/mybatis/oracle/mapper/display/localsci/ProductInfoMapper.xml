@@ -636,6 +636,14 @@
 		        AND TP.TENANT_ID = PR.TENANT_ID
 		        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 		    ) IV  LEFT OUTER JOIN TB_DP_PROD_IMG TIG
-               ON TIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = TIG.PROD_ID AND TIG.IMG_CD = #{imageCd}
+               ON TIG.LANG_CD = IV.LANG_CD 
+               AND IV.PROD_ID = TIG.PROD_ID 
+               AND TIG.IMG_CD = (
+                    CASE WHEN IV.PLAN_TYPE IN ('OR004301','OR004302') THEN  #{imageCd}
+                         WHEN IV.PLAN_TYPE IN ('OR004303','OR004304') THEN  #{ebookImageCd}
+                    END
+                    )
+               
+              
     </select>
 </mapper>
