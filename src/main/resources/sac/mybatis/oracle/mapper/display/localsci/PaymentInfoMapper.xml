@@ -261,6 +261,7 @@
                     , PD.USE_PERIOD
                     , '' as aid 
                     , CONCAT(CONCAT(PD.SVC_GRP_CD, '||' ),PD.TOP_MENU_ID) as tenantProdGrpCd
+                    , CM.CMPX_PROD_CLSF_CD
                     , PD.MALL_CD
                     ,'' AS outsdContentsId
                     , PD.SELLER_MBR_NO 
