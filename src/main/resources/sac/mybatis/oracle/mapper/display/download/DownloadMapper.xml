@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Download">
 <!-- 패키지명으로 상품 ID 조회 -->
-    <select id="getProductIdForPackageName" resultType="String">    
-     SELECT 
+    <select id="getProductIdForPackageName" resultType="String">
+     SELECT /* DownloadMapper.getProductIdForPackageName, 패키지명으로 상품 ID 조회, 이석희/아이에스플러스, 2014-01-23 */
              A.PROD_ID
            , D.APK_PKG_NM
        FROM  TB_DP_PROD                    A
@@ -14,9 +14,8 @@
         AND  D.SUB_CONTENTS_ID = C.SUB_CONTENTS_ID
         AND  C.PROD_ID = A.PROD_ID
         AND  A.PROD_ID = B.PROD_ID        
-        AND  C.DEVICE_MODEL_CD = 'SHW-M110S' /* 단말모델코드 */
-        AND  D.APK_PKG_NM = 'com.incross.monsterpuppet'
-                          
+        AND  C.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+        AND  D.APK_PKG_NM = #{packageName}                          
     </select>
 
     <!-- 상품정보요청(for download) App -->
