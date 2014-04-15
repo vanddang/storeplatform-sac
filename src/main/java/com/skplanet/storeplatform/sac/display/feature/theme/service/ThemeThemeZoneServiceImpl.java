@@ -399,8 +399,8 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				List<Identifier> identifierList = null;
 				Title title = null;
 
-				List<Source> sourceList = null;
-				Source source = null;
+				// List<Source> sourceList = null;
+				// Source source = null;
 
 				ThemeThemeZoneInfo ThemeThemeZoneInfo = null;
 				Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -428,12 +428,12 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 					product.setTitle(title);
 
 					// source 정보
-					source = new Source();
-					sourceList = new ArrayList<Source>();
-					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(ThemeThemeZoneInfo.getImgPath());
-					sourceList.add(source);
-					product.setSourceList(sourceList);
+					/*
+					 * source = new Source(); sourceList = new ArrayList<Source>();
+					 * source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+					 * source.setUrl(ThemeThemeZoneInfo.getImgPath()); sourceList.add(source);
+					 * product.setSourceList(sourceList);
+					 */
 
 					// 데이터 매핑
 					productList.add(i, product);
