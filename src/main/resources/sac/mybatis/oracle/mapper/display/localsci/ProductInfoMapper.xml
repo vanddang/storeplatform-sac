@@ -195,8 +195,7 @@
 		       , D.CID       
 		       , E.OUTSD_CONTENTS_ID
 		       , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
-		            FROM TB_DP_SPRT_DEVICE A,
-		                 TB_CM_DEVICE B
+		            FROM TB_DP_SPRT_DEVICE A
 		           WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
 		              AND A.PROD_ID = I.PART_PROD_ID 
 		              AND (CASE WHEN NVL(D.DRM_YN, 'N') = 'Y' AND #{supportDevice.videoDrmSprtYn} = 'N' THEN 0
@@ -288,8 +287,7 @@
                   AND IMG.IMG_CD = #{imageCd}) AS FILE_PATH
             , P.CID
             , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
-                    FROM TB_DP_SPRT_DEVICE A,
-                         TB_CM_DEVICE B
+                    FROM TB_DP_SPRT_DEVICE A
                    WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
                       AND A.PROD_ID = CP.PART_PROD_ID 
                       AND (
@@ -388,8 +386,7 @@
 		     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( E.EPSD_CNT + E.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
 		     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( E.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
              ,  (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
-                    FROM TB_DP_SPRT_DEVICE A,
-                         TB_CM_DEVICE B
+                    FROM TB_DP_SPRT_DEVICE A
                    WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
                       AND A.PROD_ID = I.PART_PROD_ID 
                       AND (
