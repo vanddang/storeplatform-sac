@@ -240,10 +240,8 @@
                          WHEN ( 
                                SELECT COUNT(*) 
                                  FROM  TB_DP_SPRT_DEVICE SP
-                                      ,TB_CM_DEVICE DV
-                                WHERE  SP.DEVICE_MODEL_CD = DV.DEVICE_MODEL_CD
+                                WHERE  1=1
                                   AND  SP.PROD_ID = PD.PROD_ID 
-                                  AND  DV.USE_YN = 'Y'
                                   AND  'Y' = CASE 
                                        WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN #{supportDevice.vodFixisttSprtYn}
                                        WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
