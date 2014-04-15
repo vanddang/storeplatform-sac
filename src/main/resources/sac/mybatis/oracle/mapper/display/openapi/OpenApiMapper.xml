@@ -81,12 +81,12 @@
 		                       ) IA
 		               ) JA                       
 		         WHERE JA.RNUM BETWEEN #{offset} AND #{count} /* param : offset, count */    
-		       )                     KA
-		        , TB_DP_PROD_IMG     KB              
-		 WHERE KA.PART_PROD_ID = KB.PROD_ID               
-		   AND KB.EXPO_ORD = '1'
-		   AND KB.LANG_CD = #{langCd}
-		   AND KB.IMG_CD = #{imageCd}
+		       )                               KA
+                LEFT OUTER JOIN TB_DP_PROD_IMG KB
+                             ON KA.PART_PROD_ID  = KB.PROD_ID
+                            AND KB.IMG_CD   = #{imageCd}
+                            AND KB.EXPO_ORD = '1'
+                            AND KB.LANG_CD  = #{langCd}  
     </select>
     
      <select id="searchNewAppList" parameterType="NewAppRecommendSacReq" resultType="MetaInfo">
@@ -348,9 +348,11 @@
 		                                    SELECT 'DP0001E4' AS IMG_CD FROM DUAL
 		                               ) IB
 		                    )                JA
-		                    , TB_DP_PROD_IMG JB
-		                 WHERE JA.PROD_ID = JB.PROD_ID(+)
-		                   AND JA.IMG_CD  = JB.IMG_CD(+)
+                             LEFT OUTER JOIN TB_DP_PROD_IMG JB
+                                     ON JA.PROD_ID = JB.PROD_ID
+                                    AND JA.IMG_CD  = JB.IMG_CD
+                                    AND JB.EXPO_ORD = '1'
+                                    AND JB.LANG_CD  = #{langCd} 		                    
 		               ) KA
                  WHERE KA.RNUM <![CDATA[ <= 8 ]]> 
                )
