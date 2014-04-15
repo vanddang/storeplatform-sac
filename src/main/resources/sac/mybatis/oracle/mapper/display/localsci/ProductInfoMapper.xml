@@ -194,7 +194,18 @@
 		       , M.FILE_SIZE
 		       , D.CID       
 		       , E.OUTSD_CONTENTS_ID
-		       , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = I.PART_PROD_ID) AS PHONE_SPRT_YN
+		       , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
+		            FROM TB_DP_SPRT_DEVICE A,
+		                 TB_CM_DEVICE B
+		           WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
+		              AND A.PROD_ID = I.PART_PROD_ID 
+		              AND (CASE WHEN NVL(D.DRM_YN, 'N') = 'Y' AND #{supportDevice.videoDrmSprtYn} = 'N' THEN 0
+                           ELSE 
+                                CASE WHEN #{supportDevice.sdVideoSprtYn} = 'Y' THEN 1 
+                                ELSE 0
+                                END
+                           END) = 1
+		              ) AS PHONE_SPRT_YN
 		       , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId} AND TENANT1.EXPO_YN ='Y') as chnlProdStatusCd
 		       , TENANT.PROD_STATUS_CD
 		  <![CDATA[
@@ -276,7 +287,20 @@
                 WHERE IMG.PROD_ID = P.PROD_ID 
                   AND IMG.IMG_CD = #{imageCd}) AS FILE_PATH
             , P.CID
-            ,(SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = CP.PART_PROD_ID) AS PHONE_SPRT_YN
+            , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
+                    FROM TB_DP_SPRT_DEVICE A,
+                         TB_CM_DEVICE B
+                   WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
+                      AND A.PROD_ID = CP.PART_PROD_ID 
+                      AND (
+                      CASE WHEN #{productBasicInfo.metaClsfCd} = 'CT25' THEN
+                           CASE WHEN #{supportDevice.musicSprtYn} = 'Y' THEN 1
+                           ELSE 0
+                           END
+                      ELSE 1
+                      END
+                      ) = 1
+            ) AS PHONE_SPRT_YN
             , MP.OUTSD_CONTENTS_ID AS SONG_ID
             , TENANT.PROD_STATUS_CD
             FROM 
@@ -363,7 +387,24 @@
              , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) OR E.BOOK_CLSF_CD = 'DP004302' THEN 'serial' END ) AS BOOK_TYPE
 		     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( E.EPSD_CNT + E.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
 		     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( E.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
-             , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') FROM TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelNo} AND PROD_ID = I.PART_PROD_ID) AS PHONE_SPRT_YN
+             ,  (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
+                    FROM TB_DP_SPRT_DEVICE A,
+                         TB_CM_DEVICE B
+                   WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
+                      AND A.PROD_ID = I.PART_PROD_ID 
+                      AND (
+                      CASE WHEN #{productBasicInfo.topMenuId} = 'DP13' THEN
+	                       CASE WHEN #{supportDevice.ebookSprtYn} = 'Y' THEN 1 
+	                       ELSE 0 
+	                       END
+                           WHEN #{productBasicInfo.topMenuId} = 'DP14' THEN
+                           CASE WHEN #{supportDevice.comicSprtYn} = 'Y' THEN 1 
+                           ELSE 0 
+                           END
+                      ELSE 1
+                      END   
+                      ) = 1
+                ) AS PHONE_SPRT_YN
              , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId} AND TENANT1.EXPO_YN ='Y') as chnlProdStatusCd
              , TENANT.PROD_STATUS_CD                          
          FROM  TB_DP_MENU_CATEGORY           A

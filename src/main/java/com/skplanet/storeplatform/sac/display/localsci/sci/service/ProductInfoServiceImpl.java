@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Produc
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 
 /**
@@ -56,12 +57,17 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 		this.log.debug("##### parameter cnt : {}", prodIdList.size());
 
 		if (productBasicInfoList != null) {
+			// / 단말 지원 정보 조회
+			SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelNo());
+
 			this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
 			Map<String, Object> paramMap = new HashMap<String, Object>();
 			paramMap.put("lang", req.getLang());
 			paramMap.put("deviceModelNo", req.getDeviceModelNo());
 			paramMap.put("tenantId", req.getTenantId());
 			paramMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+			paramMap.put("supportDevice", supportDevice);
+			paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 				String topMenuId = productBasicInfo.getTopMenuId();
 				String svcGrpCd = productBasicInfo.getSvcGrpCd();
@@ -150,7 +156,6 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 				} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
 					paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 					paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-					paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
 					this.log.debug("##### Search for Shopping specific product");
 					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getShoppingMetaInfo", paramMap,
 							ProductInfo.class);
@@ -159,7 +164,6 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					}
 				} else if (DisplayConstants.DP_TSTORE_FREEPASS_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 정액 상품의 경우
 					paramMap.put("imageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-					paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
 					this.log.debug("##### Search for freePass  product");
 					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getFreePassMetaInfo", paramMap,
 							ProductInfo.class);
