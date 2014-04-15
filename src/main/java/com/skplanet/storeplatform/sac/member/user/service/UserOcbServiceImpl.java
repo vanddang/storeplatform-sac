@@ -62,13 +62,21 @@ public class UserOcbServiceImpl implements UserOcbService {
 	@Override
 	public CreateOcbInformationRes createOcbInformation(SacRequestHeader sacHeader, CreateOcbInformationReq req) {
 
+		/**
+		 * OCB 연동시에 대시가 없는 상태로 연동 되기 때문에 데이타를 변환함.
+		 */
+		String ocbCardNumber = req.getCardNumber().replaceAll("-", "");
+
+		/**
+		 * TODO 규격서 배포 완료시 if 로직 삭제해야함.
+		 */
 		if (StringUtils.equals(req.getRegId(), "tlaeowls")) {
 
 			/**
 			 * OCB 카드번호 정보 조회 연동
 			 */
 			SearchOcbPointEcReq searchOcbPointEcReq = new SearchOcbPointEcReq();
-			searchOcbPointEcReq.setOcbCardNum(req.getCardNumber()); // OCB 카드 번호
+			searchOcbPointEcReq.setOcbCardNum(ocbCardNumber); // OCB 카드 번호
 			this.ocbSCI.searchOcbPoint(searchOcbPointEcReq);
 
 		}
@@ -81,7 +89,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 		MemberPoint memberPoint = new MemberPoint();
 		memberPoint.setUserKey(req.getUserKey()); // 사용자 Key
 		memberPoint.setAuthMethodCode(req.getAuthMethodCode()); // 인증방법 코드
-		memberPoint.setCardNumber(req.getCardNumber()); // 카드 번호
+		memberPoint.setCardNumber(ocbCardNumber); // 카드 번호
 		memberPoint.setStartDate(DateUtil.getToday("yyyyMMddHHmmss")); // 사용시작 일시
 		memberPoint.setEndDate("99991231115959"); // 사용종료 일시
 		memberPoint.setRegID(req.getRegId()); // 등록자 아이디
