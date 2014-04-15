@@ -90,7 +90,6 @@
      )
     </insert>
     
-    
     <!-- 미인증 이메일 코드 존재여부 확인 -->
     <select id="searchEmailAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
     SELECT  /* MiscellaneousMapper.searchEmailAuthYn, 미인증 이메일 코드 존재여부 확인, 김다슬/인크로스, 2014-01-23 */ 
@@ -98,20 +97,21 @@
           , auth_value
       FROM  tb_cm_svc_auth
      WHERE  mbr_no = #{mbrNo} 
-       AND  auth_email = #{authEmail}
        AND  auth_compt_yn = 'N'
     </select>
     
-    <!-- 기존 이메일 인증코드 만료 시간 연장 -->
-    <update id="updateServiceAuthTime" parameterType="String">
-    UPDATE  /* MiscellaneousMapper.updateServiceAuthTime, 기존 이메일 인증코드 만료 시간 연장, 김다슬/인크로스, 2014-02-25 */  
+    <!--  이메일 인증 코드 업데이트 -->
+    <update id="updateServiceAuthCode" parameterType="ServiceAuth">
+    UPDATE  /* MiscellaneousMapper.updateServiceAuthCode, 이메일 인증 코드 업데이트, 김다슬/인크로스, 2014-04-15 */
             tb_cm_svc_auth
-       SET  auth_value_create_dt = SYSDATE
+       SET  auth_value = #{authValue}
+          , auth_email = #{authEmail}
+          , auth_value_create_dt = SYSDATE
           , upd_id = 'admin'
           , upd_dt = SYSDATE
-     WHERE  auth_seq = #{authSeq}    
+     WHERE  auth_seq = #{authSeq}
     </update>
-    
+  
     <!-- 이메일 인증코드 정보 확인 -->
     <select id="searchEmailAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
     SELECT  /* MiscellaneousMapper.searchEmailAuthInfo, 이메일 인증코드 정보 확인, 김다슬/인크로스, 2014-01-23 */
