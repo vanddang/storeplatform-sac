@@ -164,6 +164,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					}
 				} else if (DisplayConstants.DP_TSTORE_FREEPASS_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 정액 상품의 경우
 					paramMap.put("imageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+					paramMap.put("ebookImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 					this.log.debug("##### Search for freePass  product");
 					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getFreePassMetaInfo", paramMap,
 							ProductInfo.class);
