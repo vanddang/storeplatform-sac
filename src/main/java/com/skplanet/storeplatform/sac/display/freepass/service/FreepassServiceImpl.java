@@ -50,6 +50,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.freepass.vo.FreepassProdMap;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -747,11 +748,15 @@ public class FreepassServiceImpl implements FreepassService {
 		List<String> prodIdList = req.getProdIdList();
 		List<String> exclusiveFixrateProdIdList = new ArrayList<String>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
+		// / 단말 지원 정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
+
 		paramMap.put("lang", req.getLangCd());
 		paramMap.put("tenantId", req.getTenantId());
 		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		paramMap.put("deviceModelCd", req.getDeviceModelCd());
+		paramMap.put("supportDevice", supportDevice);
 		paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
 		PaymentInfo paymentInfo = null;
 		for (int i = 0; i < prodIdList.size(); i++) {
