@@ -65,9 +65,6 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 		Device device = new Device();
 		if (deviceProfile != null) {
 			Map<String, Object> supportedHardwareMap = deviceProfile.getSupportedHardwareMap();
-			String dpi = header.getDeviceHeader().getDpi();
-			// dpi 세팅
-			supportedHardwareMap.put("dpi", dpi);
 
 			String sComp = deviceProfile.getCmntCompCd();
 			StringBuilder sb = new StringBuilder();
