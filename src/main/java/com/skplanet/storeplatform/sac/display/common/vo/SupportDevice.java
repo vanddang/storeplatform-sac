@@ -31,6 +31,8 @@ public class SupportDevice extends CommonInfo {
 
 	private String sclShpgSprtYn; // Tstore 쇼핑 상품 지원여부
 
+	private String vodFixisttSprtYn; // Tstore 정액권 상품 지원여부
+
 	/**
 	 * @return the ebookSprtYn
 	 */
@@ -120,4 +122,20 @@ public class SupportDevice extends CommonInfo {
 	public void setSclShpgSprtYn(String sclShpgSprtYn) {
 		this.sclShpgSprtYn = sclShpgSprtYn;
 	}
+
+	/**
+	 * @return the vodFixisttSprtYn
+	 */
+	public String getVodFixisttSprtYn() {
+		return this.vodFixisttSprtYn;
+	}
+
+	/**
+	 * @param vodFixisttSprtYn
+	 *            the vodFixisttSprtYn to set
+	 */
+	public void setVodFixisttSprtYn(String vodFixisttSprtYn) {
+		this.vodFixisttSprtYn = vodFixisttSprtYn;
+	}
+
 }
