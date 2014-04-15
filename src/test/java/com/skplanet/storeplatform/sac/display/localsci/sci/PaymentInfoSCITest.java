@@ -136,7 +136,7 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	// @Test
+	@Test
 	public void searchShoppingPaymentInfo() {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();
