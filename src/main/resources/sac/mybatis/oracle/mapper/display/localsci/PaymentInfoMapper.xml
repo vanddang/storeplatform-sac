@@ -41,7 +41,7 @@
                                     CASE WHEN NVL(A.DRM_YN, 'N') = 'Y' AND #{videoDrmSprtYn} = 'N' THEN 0
                                          ELSE CASE WHEN #{sdVideoSprtYn} = 'Y' THEN 1 ELSE 0 END END
                                ELSE 1
-                           END ) = 1 -- 단말 지원정보
+                          END) = 1 -- 단말 지원정보
                          AND (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = A.PROD_ID AND (DEVICE_MODEL_CD = #{deviceModelCd} OR DEVICE_MODEL_CD = #{dpAnyPhone4mm}) ) > 0
                     THEN 'Y'
                     ELSE 'N'
