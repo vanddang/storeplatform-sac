@@ -44,6 +44,11 @@
      
     <!-- defined interceptors -->
     <mvc:interceptors>
+        <!-- set "x-sac-result-code" of response header   -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="com.skplanet.storeplatform.framework.web.interceptor.SacResultCodeHeaderInterceptor"/>
+        </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/**" />
             <bean class="com.skplanet.storeplatform.framework.web.interceptor.ReferenceLocaleChangeInterceptor">
@@ -61,11 +66,6 @@
             <mvc:mapping path="/**" />
             <bean class="com.skplanet.storeplatform.sac.common.header.intercepter.SacRequestHeaderIntercepter"/>
         </mvc:interceptor> 
-        <!-- set "x-sac-result-code" of response header   -->
-        <mvc:interceptor>
-            <mvc:mapping path="/**" />
-            <bean class="com.skplanet.storeplatform.framework.web.interceptor.SacResultCodeHeaderInterceptor"/>
-        </mvc:interceptor>
         <!-- defined request logging  -->
         <mvc:interceptor>
             <mvc:mapping path="/**" />
