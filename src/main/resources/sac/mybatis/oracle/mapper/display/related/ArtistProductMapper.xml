@@ -46,7 +46,7 @@
                 , TB_DP_SPRT_DEVICE F
                 , TB_CM_DEVICE G
                 , TB_DP_TENANT_PROD_STATS H
-                , UV_TB_DP_MULTIMDA_PROD I
+                , TB_DP_MUSIC_PROD I
             WHERE A.PROD_ID = B.PROD_ID
             AND B.MENU_ID = C.MENU_ID
             AND A.PROD_ID = D.PROD_ID
