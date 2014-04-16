@@ -253,7 +253,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		if (tenantId.equals("S01")) { // 티스토어
 			messageText += "tstore";
 			messageSender += "tstore";
-		} else if (tenantId.equals("S00") && systemId.equals("S00-01001")) { // 개발자
+		} else if (tenantId.equals("S00") && systemId.equals("S00-02001")) { // 개발자
 			messageText += "dev";
 			messageSender += "dev";
 		} else { // default
