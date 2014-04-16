@@ -480,7 +480,8 @@ public class IdpServiceImpl implements IdpService {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
 							shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
-									.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost);
+									.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost)
+									.result_code("SUCC");
 
 							LOGGER.info(shuttle.toString());
 						}
@@ -2294,7 +2295,8 @@ public class IdpServiceImpl implements IdpService {
 							@Override
 							public void customize(TLogSentinelShuttle shuttle) {
 								shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
-										.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost);
+										.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost)
+										.result_code("SUCC");
 
 								LOGGER.info(shuttle.toString());
 							}
