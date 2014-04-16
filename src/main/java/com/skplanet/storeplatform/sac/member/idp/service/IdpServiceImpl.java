@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
@@ -95,6 +96,9 @@ public class IdpServiceImpl implements IdpService {
 	@Resource(name = "memberRetireAmqpTemplate")
 	@Autowired
 	private AmqpTemplate memberRetireAmqpTemplate;
+
+	@Value("#{propertiesForSac['member.ogg.internal.method.iscall']}")
+	public boolean isCall;
 
 	/*
 	 * 
@@ -345,6 +349,23 @@ public class IdpServiceImpl implements IdpService {
 			}
 			LOGGER.debug("JOIN ONEID DATA INSERT COMPLETE");
 
+			try {
+				/* 게임센터 연동 */
+				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+				gameCenterSacReq.setUserKey(userKey);
+				gameCenterSacReq.setPreUserKey(userKey);
+				gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
+				gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
+				gameCenterSacReq.setSystemId(systemId);
+				gameCenterSacReq.setTenantId(tenantId);
+				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
+				this.deviceService.insertGameCenterIF(gameCenterSacReq);
+			} catch (StorePlatformException spe) {
+				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+				return imResult;
+			}
+
 		} else { // 전환가입/변경전환/변경 가입 oldId != "null" 이 아닌경우 분기
 			CommonRequest commonRequest = new CommonRequest();
 			commonRequest.setTenantID(tenantId);
@@ -413,14 +434,6 @@ public class IdpServiceImpl implements IdpService {
 				UpdateUserResponse updateUserResponse = null;
 
 				try {
-					/* FDS LOG START */
-					new TLogUtil().set(new ShuttleSetter() {
-						@Override
-						public void customize(TLogSentinelShuttle shuttle) {
-							shuttle.log_id("TL00030");
-						}
-					});
-					/* FDS LOG END */
 
 					SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
@@ -463,11 +476,13 @@ public class IdpServiceImpl implements IdpService {
 					final String fdsUsermbrNoPre = prevMbrNoForgameCenter;
 					final String fdsUsermbrNoPost = currentMbrNoForgameCenter;
 
-					new TLogUtil().set(new ShuttleSetter() {
+					new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
-							shuttle.mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId).usermbr_no_pre(fdsUsermbrNoPre)
-									.usermbr_no_post(fdsUsermbrNoPost);
+							shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
+									.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost);
+
+							LOGGER.info(shuttle.toString());
 						}
 					});
 					/* FDS LOG END */
@@ -475,6 +490,17 @@ public class IdpServiceImpl implements IdpService {
 				} catch (StorePlatformException spe) {
 					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+
+					new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
+						@Override
+						public void customize(TLogSentinelShuttle shuttle) {
+							shuttle.log_id("TL00030").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
+									.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("");
+
+							LOGGER.info(shuttle.toString());
+						}
+					});
+
 					return imResult;
 				}
 			}
@@ -514,23 +540,34 @@ public class IdpServiceImpl implements IdpService {
 			}
 
 			LOGGER.debug("ONEID DATA UPDATE COMPLETE");
-		}
 
-		try {
-			/* 게임센터 연동 */
-			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(userKey);
-			gameCenterSacReq.setPreUserKey(userKey);
-			gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
-			gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
-			gameCenterSacReq.setSystemId(systemId);
-			gameCenterSacReq.setTenantId(tenantId);
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
-			this.deviceService.insertGameCenterIF(gameCenterSacReq);
-		} catch (StorePlatformException spe) {
-			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
-			return imResult;
+			if (this.isCall) { // OGG 시에만 사용하고 그 이후에는 불필요 로직 property로 사용함
+				try {
+					/* 게임센터 연동 */
+					GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+					gameCenterSacReq.setUserKey(userKey);
+					gameCenterSacReq.setPreUserKey(userKey);
+					gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
+					gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
+					gameCenterSacReq.setSystemId(systemId);
+					gameCenterSacReq.setTenantId(tenantId);
+					gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
+					this.deviceService.insertGameCenterIF(gameCenterSacReq);
+				} catch (StorePlatformException spe) {
+					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+					return imResult;
+				}
+			}
+
+			/**
+			 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.) //20140415 현재 구매쪽에서 null처리 안되있으므로 처리 되면 반영할것
+			 */
+			// if (this.isCall) {
+			// String newMbrNo = map.get("user_key").toString();
+			// String prevMbrNo = prevMbrNoForgameCenter;
+			// this.mcc.excuteInternalMethod(this.isCall, systemId, tenantId, newMbrNo, prevMbrNo, null, null);
+			// }
 		}
 
 		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
@@ -2206,15 +2243,6 @@ public class IdpServiceImpl implements IdpService {
 			searchUserRequest.setKeySearchList(keySearchList);
 			searchUserRequest.setCommonRequest(commonRequest);
 			try {
-				/* FDS LOG start */
-				new TLogUtil().set(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL00030");
-					}
-				});
-				/* FDS LOG END */
-
 				// 2. 사용자 정보 조회
 				SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
@@ -2262,11 +2290,13 @@ public class IdpServiceImpl implements IdpService {
 						final String fdsUsermbrNoPre = mbrNo;
 						final String fdsUsermbrNoPost = userKey;
 
-						new TLogUtil().set(new ShuttleSetter() {
+						new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
 							@Override
 							public void customize(TLogSentinelShuttle shuttle) {
-								shuttle.mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId).usermbr_no_pre(fdsUsermbrNoPre)
-										.usermbr_no_post(fdsUsermbrNoPost);
+								shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
+										.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost);
+
+								LOGGER.info(shuttle.toString());
 							}
 						});
 						/* FDS LOG END */
@@ -2276,6 +2306,17 @@ public class IdpServiceImpl implements IdpService {
 			} catch (StorePlatformException spe) {
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+
+				new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL00030").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
+								.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("");
+
+						LOGGER.info(shuttle.toString());
+					}
+				});
+
 				return imResult;
 			}
 
@@ -2627,7 +2668,7 @@ public class IdpServiceImpl implements IdpService {
 						}
 						LOGGER.debug("JOIN ONEID DATA INSERT COMPLETE");
 
-						try { /* 게임센터 연동 */
+						try { /* 게임센터 연동 : 신규가입인경우 as-is src에서 신규가입 데이터를 입력하고 user_id로 조회하여 회원정보 있으면 게임센터 연동함 */
 
 							GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 							gameCenterSacReq.setUserKey(userKey);
@@ -2807,15 +2848,18 @@ public class IdpServiceImpl implements IdpService {
 								LOGGER.debug("전환가입 정보 입력 완료");
 								userKey = updateUserResponse.getUserKey();
 
-								GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-								gameCenterSacReq.setUserKey(userKey);
-								gameCenterSacReq.setPreUserKey(userKey);
-								gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
-								gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
-								gameCenterSacReq.setSystemId(systemId);
-								gameCenterSacReq.setTenantId(tenantId);
-								gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
-								this.deviceService.insertGameCenterIF(gameCenterSacReq);
+								// 전환가입시 게임센터 연동을 함
+								if (this.isCall) { // OGG 시에만 사용하고 그 이후에는 불필요 로직 property로 사용함
+									GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+									gameCenterSacReq.setUserKey(userKey);
+									gameCenterSacReq.setPreUserKey(userKey);
+									gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
+									gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
+									gameCenterSacReq.setSystemId(systemId);
+									gameCenterSacReq.setTenantId(tenantId);
+									gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
+									this.deviceService.insertGameCenterIF(gameCenterSacReq);
+								}
 							}
 
 						} catch (StorePlatformException spe) {
@@ -2916,6 +2960,15 @@ public class IdpServiceImpl implements IdpService {
 					}
 
 					LOGGER.debug("ONEID DATA UPDATE COMPLETE");
+
+					/**
+					 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.) //20140415 현재 구매쪽에서 null처리 안되있으므로 처리 되면 반영할것
+					 */
+					// if (this.isCall) {
+					// String newMbrNo = map.get("user_key").toString();
+					// String prevMbrNo = prevMbrNoForgameCenter;
+					// this.mcc.excuteInternalMethod(this.isCall, systemId, tenantId, newMbrNo, prevMbrNo, null, null);
+					// }
 				}
 
 			}
