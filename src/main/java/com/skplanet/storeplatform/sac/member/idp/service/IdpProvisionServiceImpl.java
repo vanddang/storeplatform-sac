@@ -392,15 +392,27 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 			final String fdsResult = result;
 			final String fdsResultMsg = resultMsg;
-			new TLogUtil().log(new ShuttleSetter() {
-				@Override
-				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL00034").result_code(fdsResult).result_message(fdsResultMsg).insd_usermbr_no(fdsLogUserKey)
-							.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
-							.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
-							.request_system_id(fdsSystemId);
-				}
-			});
+
+			if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_SUCCESS_CODE)) {
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL00034").result_code(fdsResult).result_message(fdsResultMsg).insd_usermbr_no(fdsLogUserKey)
+								.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
+								.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
+								.request_system_id(fdsSystemId);
+					}
+				});
+			} else {
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL00034").result_code(fdsResult).result_message(fdsResultMsg).insd_usermbr_no(fdsLogUserKey)
+								.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).request_system_id(fdsSystemId);
+					}
+				});
+			}
+
 		}
 
 		return result;
