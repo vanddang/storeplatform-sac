@@ -15,8 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -37,7 +41,6 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
-import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
@@ -51,9 +54,9 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
@@ -68,6 +71,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdn
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceAmqpSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -92,9 +97,6 @@ public class LoginServiceImpl implements LoginService {
 	private MemberCommonComponent commService;
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private UserSCI userSCI;
 
 	@Autowired
@@ -109,9 +111,6 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private IdpSCI idpSCI;
 
-	@Autowired
-	private DeviceSCI deviceSCI;
-
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	private String tempUserAuthKey;
 
@@ -119,7 +118,8 @@ public class LoginServiceImpl implements LoginService {
 	public boolean isCallChangeKey;
 
 	@Autowired
-	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
+	@Resource(name = "memberAddDeviceAmqpTemplate")
+	private AmqpTemplate memberAddDeviceAmqpTemplate;
 
 	/*
 	 * (non-Javadoc)
@@ -181,7 +181,7 @@ public class LoginServiceImpl implements LoginService {
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER))) {
 
 				/* 미가입 회원인 경우 로그 남김 */
-				LOGGER.info(":::: NOT_EXIST_USER authorizeByMdn :::: devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
+				LOGGER.info("NOT_EXIST_USER authorizeByMdn devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
 				throw ex;
 
 			} else {
@@ -319,7 +319,7 @@ public class LoginServiceImpl implements LoginService {
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER))) {
 
 				/* 미가입 회원인 경우 로그 남김 */
-				LOGGER.info(":::: NOT_EXIST_USER authorizeByMdn :::: devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
+				LOGGER.info("NOT_EXIST_USER authorizeByMdn devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
 				throw ex;
 
 			} else {
@@ -382,7 +382,7 @@ public class LoginServiceImpl implements LoginService {
 		String userKey = null;
 		String isSaveAndSyncTarget = null; // 변동성 mdn 유무
 
-		LOGGER.info("### {} 회원 여부 : {}", req.getDeviceId(), chkDupRes.getIsRegistered());
+		LOGGER.info("{} 회원 여부 : {}", req.getDeviceId(), chkDupRes.getIsRegistered());
 
 		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
 
@@ -433,8 +433,8 @@ public class LoginServiceImpl implements LoginService {
 
 			userKey = saveAndSync.getUserKey();
 		}
-		LOGGER.info("### {} 변동성 여부 : {}", req.getDeviceId(), isSaveAndSyncTarget);
-		LOGGER.info("### {} 변동성 체크 성공 여부 : {}", req.getDeviceId(), isVariability);
+		LOGGER.info("{} 변동성 여부 : {}", req.getDeviceId(), isSaveAndSyncTarget);
+		LOGGER.info("{} 변동성 체크 성공 여부 : {}", req.getDeviceId(), isVariability);
 
 		if (StringUtil.equals(isVariability, "Y")) {
 
@@ -458,7 +458,7 @@ public class LoginServiceImpl implements LoginService {
 
 			if (StringUtil.isBlank(userAuthMethod.getUserId()) && StringUtil.equals(userAuthMethod.getIsRealName(), "N")) { // 인증수단이 없는경우
 
-				LOGGER.info("### {} 추가인증수단 없음, IDP/SC회원 탈퇴처리", req.getDeviceId());
+				LOGGER.info("{} 추가인증수단 없음, IDP/SC회원 탈퇴처리", req.getDeviceId());
 
 				/* SC회원탈퇴 */
 				RemoveUserRequest removeUserReq = new RemoveUserRequest();
@@ -532,7 +532,7 @@ public class LoginServiceImpl implements LoginService {
 
 					if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_OK)) {
 
-						LOGGER.info(":::: SC_INVALID_USER authorizeById :::: userId : {}, {}", userId);
+						LOGGER.info("SC_INVALID_USER authorizeById userId : {}", userId);
 						throw new StorePlatformException("SAC_MEM_1200"); // 원아이디 이용동의 간편가입 대상 정보가 상이합니다.
 
 					} else if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입 상태인 경우 EC에서 성공으로 처리하여 joinSstList 받는다.
@@ -580,7 +580,7 @@ public class LoginServiceImpl implements LoginService {
 								break;
 							}
 						}
-						LOGGER.info(":::: {} 가가입 상태 사이트 정보 : {}, {}, {}", chkDupRes.getMbrOneID().getUserID(), joinSst, joinSstCd, joinSstNm);
+						LOGGER.info("{} invalid user site info : {}, {}, {}", userId, joinSst, joinSstCd, joinSstNm);
 
 						if (StringUtil.isBlank(joinSstCd)) {
 							joinSstCd = "90000"; // One ID
@@ -664,7 +664,7 @@ public class LoginServiceImpl implements LoginService {
 
 				} else if (StringUtil.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
 
-					LOGGER.info(":::: IDP_INVALID_USER authorizeById :::: userId : {}, {}", userId);
+					LOGGER.info("IDP_INVALID_USER authorizeById userId : {}, {}", userId);
 					throw new StorePlatformException("SAC_MEM_1202"); // 원아이디 회원상태정보가 상이합니다.
 
 				}
@@ -688,7 +688,7 @@ public class LoginServiceImpl implements LoginService {
 						+ ImIdpConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
 					/* 미존재 회원인 경우 로그 남김 */
-					LOGGER.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
+					LOGGER.info("NOT_EXIST_USER authorizeById userId : {}, {}", userId, userType);
 					throw ex;
 
 				} else if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
@@ -740,7 +740,7 @@ public class LoginServiceImpl implements LoginService {
 						+ IdpConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
 					/* 미존재 회원인 경우 로그 남김 */
-					LOGGER.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
+					LOGGER.info("NOT_EXIST_USER authorizeById userId : {}, {}", userId, userType);
 					throw ex;
 
 				} else {
@@ -885,7 +885,7 @@ public class LoginServiceImpl implements LoginService {
 			newDeviceKey = mdnDeviceInfo.getDeviceKey();
 			newUserKey = mdnDeviceInfo.getUserKey();
 
-			LOGGER.info("::: {} 기가입된 MDN, 구매이관 대상", req.getDeviceId());
+			LOGGER.info("{} 기가입된 MDN, 구매이관 대상", req.getDeviceId());
 
 		} else { // 회원이 아닌경우 변동성 대상체크
 
@@ -897,12 +897,12 @@ public class LoginServiceImpl implements LoginService {
 				newDeviceKey = saveAndSync.getDeviceKey();
 				newUserKey = saveAndSync.getUserKey();
 
-				LOGGER.info("::: {} 변동성 대상 MDN, 구매이관 대상", req.getDeviceId());
+				LOGGER.info("{} 변동성 대상 MDN, 구매이관 대상", req.getDeviceId());
 
 			} else { // 변동성 대상이 아닌 경우
 
 				isJoinMdn = "Y";
-				LOGGER.info("::: {} 신규가입처리대상", req.getDeviceId());
+				LOGGER.info("{} 신규가입처리대상", req.getDeviceId());
 
 			}
 
@@ -918,7 +918,7 @@ public class LoginServiceImpl implements LoginService {
 			RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 			removeUserRequest.setCommonRequest(commonRequest);
 			removeUserRequest.setUserKey(oldUserKey);
-			removeUserRequest.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_DEVICE);
+			removeUserRequest.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
 			removeUserRequest.setSecedeReasonMessage("Save&Sync인증탈퇴");
 			this.userSCI.remove(removeUserRequest);
 
@@ -989,15 +989,6 @@ public class LoginServiceImpl implements LoginService {
 				}
 			}
 
-			/* mbrNo 변경 */
-			UserMbr userMbr = new UserMbr();
-			userMbr.setUserKey(oldUserKey);
-			userMbr.setImMbrNo(joinForWapEcRes.getUserKey());
-			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-			updateUserRequest.setCommonRequest(commonRequest);
-			updateUserRequest.setUserMbr(userMbr);
-			this.userSCI.updateUser(updateUserRequest);
-
 			/* 가가입 상태인 mac 회원정보를 정상상태로 */
 			this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null, MemberConstants.MAIN_STATUS_NORMAL,
 					MemberConstants.SUB_STATUS_NORMAL);
@@ -1030,9 +1021,47 @@ public class LoginServiceImpl implements LoginService {
 
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
+			/* mbrNo 변경 */
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserKey(oldUserKey);
+			userMbr.setImMbrNo(joinForWapEcRes.getUserKey());
+			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+			updateUserRequest.setCommonRequest(commonRequest);
+			updateUserRequest.setUserMbr(userMbr);
+			this.userSCI.updateUser(updateUserRequest);
+
 			/* usermbr_no가 변경된경우 OGG 연동을 위해 전시/기타, 구매 파트 키 변경 */
-			this.commService.excuteInternalMethod(this.isCallChangeKey, requestHeader.getTenantHeader().getSystemId(), requestHeader
-					.getTenantHeader().getTenantId(), joinForWapEcRes.getUserKey(), oldUserKey, oldDeviceKey, oldDeviceKey);
+			if (this.isCallChangeKey) {
+				this.commService.excuteInternalMethod(this.isCallChangeKey, requestHeader.getTenantHeader().getSystemId(), requestHeader
+						.getTenantHeader().getTenantId(), joinForWapEcRes.getUserKey(), oldUserKey, oldDeviceKey, oldDeviceKey);
+
+				/* 게임센터 연동 */
+				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+				gameCenterSacReq.setUserKey(joinForWapEcRes.getUserKey());
+				gameCenterSacReq.setMbrNo(joinForWapEcRes.getUserKey());
+				gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
+				gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+				gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+				gameCenterSacReq.setPreUserKey(oldUserKey);
+				gameCenterSacReq.setPreMbrNo(oldUserKey);
+				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
+				this.deviceService.insertGameCenterIF(gameCenterSacReq);
+
+				/* MQ 연동 */
+				CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+				try {
+					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					mqInfo.setOldUserKey(oldUserKey);
+					mqInfo.setOldDeviceKey(oldDeviceKey);
+					mqInfo.setUserKey(joinForWapEcRes.getUserKey());
+					mqInfo.setDeviceKey(oldDeviceKey);
+					mqInfo.setDeviceId(deviceInfo.getDeviceId());
+					mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+					this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+				} catch (AmqpException ex) {
+					LOGGER.info("MQ process fail {}", mqInfo);
+				}
+			}
 
 			res.setDeviceKey(oldDeviceKey);
 			res.setUserKey(oldUserKey);
@@ -1261,6 +1290,8 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	private String isAgreementByAgreementCode(SacRequestHeader requestHeader, String userKey, String agreementCode) {
 
+		String isAgreeYn = "N";
+
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
@@ -1269,15 +1300,22 @@ public class LoginServiceImpl implements LoginService {
 		schAgreeListReq.setCommonRequest(commonRequest);
 		schAgreeListReq.setUserKey(userKey);
 
-		SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
-		for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
-			if (StringUtil.equals(agreeInfo.getExtraAgreementID(), agreementCode)) {
-				return agreeInfo.getIsExtraAgreement();
-			}
+		try {
+			SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
+			for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
+				if (StringUtil.equals(agreeInfo.getExtraAgreementID(), agreementCode)) {
+					isAgreeYn = agreeInfo.getIsExtraAgreement();
+					break;
+				}
 
+			}
+		} catch (StorePlatformException ex) {
+			if (!StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+				throw ex;
+			}
 		}
 
-		return "N";
+		return isAgreeYn;
 
 	}
 

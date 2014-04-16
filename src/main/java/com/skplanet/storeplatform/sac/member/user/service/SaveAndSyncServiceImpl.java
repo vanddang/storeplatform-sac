@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
@@ -61,6 +62,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	@Value("#{propertiesForSac['member.ogg.internal.method.iscall']}")
 	public boolean isCall;
 
+	@Autowired
+	private DeviceService deviceService;
+
 	@Override
 	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId) {
 
@@ -76,6 +80,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		checkSaveNSyncRequest.setDeviceID(deviceId);
 		CheckSaveNSyncResponse checkSaveNSyncResponse = this.deviceSCI.checkSaveNSync(checkSaveNSyncRequest);
 
+		LOGGER.info("##### checkSaveNSyncResponse : {}", checkSaveNSyncResponse);
+
 		String isActive = checkSaveNSyncResponse.getIsActive(); // 정상여부.
 		String isSaveNSync = checkSaveNSyncResponse.getIsSaveNSync(); // 변동성대상여부.
 		String deviceKey = checkSaveNSyncResponse.getDeviceKey(); // 휴대기기 Key.
@@ -83,6 +89,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		String preDeviceId = checkSaveNSyncResponse.getPreDeviceID(); // 이전 MSISDN.
 		String nowDeviceId = checkSaveNSyncResponse.getDeviceID(); // 현재 MSISDN.
 
+		String newMbrNo = null;
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
 			LOGGER.info("## >> ★★★  변동성 대상!!!");
@@ -99,7 +106,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * IDP 무선회원 가입
 				 */
-				String mbrNo = this.joinForWap(deviceId);
+				newMbrNo = this.joinForWap(deviceId);
 
 				/**
 				 * 기존 IDP 모바일 회원 탈퇴.
@@ -109,7 +116,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * 회원 MBR_NO 업데이트
 				 */
-				this.modifyMbrNo(sacHeader, userKey, deviceKey, deviceId, mbrNo);
+				this.modifyMbrNo(sacHeader, userKey, deviceKey, deviceId, newMbrNo);
 
 			} else {
 
@@ -118,7 +125,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
 				 */
-				this.reviveUser(sacHeader, userKey, deviceId, deviceKey);
+				newMbrNo = this.reviveUser(sacHeader, userKey, deviceId, deviceKey);
 
 			}
 
@@ -129,11 +136,32 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		}
 
 		/**
+		 * 게임센터 연동.
+		 */
+		if (this.isCall) {
+			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			gameCenterSacReq.setUserKey(newMbrNo);
+			gameCenterSacReq.setMbrNo(newMbrNo);
+			gameCenterSacReq.setDeviceId(deviceId);
+			gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
+			gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
+			gameCenterSacReq.setPreDeviceId(preDeviceId);
+			gameCenterSacReq.setPreUserKey(userKey);
+			gameCenterSacReq.setPreMbrNo(userKey);
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
+			this.deviceService.insertGameCenterIF(gameCenterSacReq);
+		}
+
+		/**
 		 * 결과 setting.
 		 */
 		SaveAndSync saveAndSync = new SaveAndSync();
 		saveAndSync.setIsSaveAndSyncTarget(isSaveNSync); // 변동성 대상 여부 (Y/N)
-		saveAndSync.setUserKey(userKey); // 사용자 Key
+		if (this.isCall) {
+			saveAndSync.setUserKey(newMbrNo);
+		} else {
+			saveAndSync.setUserKey(userKey);
+		}
 		saveAndSync.setDeviceKey(deviceKey); // 휴대기기 Key
 		LOGGER.info("## >> SaveAndSync : {}", saveAndSync);
 
@@ -168,8 +196,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		} catch (StorePlatformException spe) {
 
 			/**
-			 * 가가입일 경우 처리. (이경우에 걸리게 되면 테넌트에서 모바일전용회원가입을 시킨다. [** 신규 가입처리 되므로 회원정보가 복구 되지 않는다. 이때 회원이 클레임을 걸경우 수동으로
-			 * 처리하기로함.])
+			 * 가가입일 경우 처리. (이경우에 걸리게 되면 테넌트에서 모바일전용회원가입을 시킨다. [** 신규 가입처리 되므로
+			 * 회원정보가 복구 되지 않는다. 이때 회원이 클레임을 걸경우 수동으로 처리하기로함.])
 			 */
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
@@ -220,8 +248,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 *            기기 ID
 	 * @param deviceKey
 	 *            기기 Key
+	 * @return newMbrNo 신규가입된 IDP Key
 	 */
-	private void reviveUser(SacRequestHeader sacHeader, String userKey, String deviceId, String deviceKey) {
+	private String reviveUser(SacRequestHeader sacHeader, String userKey, String deviceId, String deviceKey) {
 
 		/**
 		 * IDP 모바일 회원 가입.
@@ -241,7 +270,10 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
 		 */
-		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), newMbrNo, userKey, deviceKey, deviceKey);
+		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), newMbrNo,
+				userKey, deviceKey, deviceKey);
+
+		return newMbrNo;
 
 	}
 
@@ -262,22 +294,6 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	private void modifyMbrNo(SacRequestHeader sacHeader, String userKey, String deviceKey, String deviceId, String mbrNo) {
 
 		/**
-		 * SC 사용자 회원 기본정보 수정 요청.
-		 */
-		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-		updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-		UserMbr userMbr = new UserMbr();
-		userMbr.setUserKey(userKey);
-		userMbr.setImMbrNo(mbrNo); // MBR_NO
-		updateUserRequest.setUserMbr(userMbr);
-		this.userSCI.updateUser(updateUserRequest);
-
-		/**
-		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
-		 */
-		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), mbrNo, userKey, deviceKey, deviceKey);
-
-		/**
 		 * SC 단말 Device 업데이트.
 		 */
 		CreateDeviceRequest createDeviceRequest = new CreateDeviceRequest();
@@ -291,6 +307,23 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		createDeviceRequest.setUserMbrDevice(userMbrDevice);
 
 		this.deviceSCI.createDevice(createDeviceRequest);
+
+		/**
+		 * 신규가입한 mbr_no값으로 수정 요청.
+		 */
+		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+		updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserKey(userKey);
+		userMbr.setImMbrNo(mbrNo); // MBR_NO
+		updateUserRequest.setUserMbr(userMbr);
+		this.userSCI.updateUser(updateUserRequest);
+
+		/**
+		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
+		 */
+		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), mbrNo,
+				userKey, deviceKey, deviceKey);
 
 	}
 }
