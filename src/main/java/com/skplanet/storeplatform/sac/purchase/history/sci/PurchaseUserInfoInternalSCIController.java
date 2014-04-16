@@ -3,10 +3,12 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.sci;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.UserInfoScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.UserInfoScRes;
@@ -44,6 +46,19 @@ public class PurchaseUserInfoInternalSCIController implements PurchaseUserInfoIn
 
 		this.logger.debug("@@@@@@ UserInfoScReq reqConvert @@@@@@@");
 		UserInfoScReq req = new UserInfoScReq();
+
+		if (StringUtils.isBlank(userInfoSacInReq.getTenantId())) {
+			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+		}
+		if (StringUtils.isBlank(userInfoSacInReq.getSystemId())) {
+			throw new StorePlatformException("SAC_PUR_0001", "SystemId");
+		}
+		if (StringUtils.isBlank(userInfoSacInReq.getUserKey())) {
+			throw new StorePlatformException("SAC_PUR_0001", "UserKey");
+		}
+		if (StringUtils.isBlank(userInfoSacInReq.getNewUserKey())) {
+			throw new StorePlatformException("SAC_PUR_0001", "NewUserKey");
+		}
 
 		req.setTenantId(userInfoSacInReq.getTenantId());
 		req.setSystemId(userInfoSacInReq.getSystemId());

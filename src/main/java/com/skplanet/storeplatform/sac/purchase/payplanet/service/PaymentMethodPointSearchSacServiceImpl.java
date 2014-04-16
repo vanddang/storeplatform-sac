@@ -134,6 +134,8 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		res.setCode(dotoriEcRes.getCode());
 		res.setMsg(dotoriEcRes.getMsg());
 		res.setCntDotori(dotoriEcRes.getCntDotori());
+		res.setMtypeDotori(dotoriEcRes.getMtypeDotori());
+		res.setMidDotori(dotoriEcRes.getMidDotori());
 		this.logger.debug("PRCHS,DOTORI,SAC,RES,{}", res);
 		return res;
 	}
@@ -164,6 +166,9 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		res.setCode(cultureEcRes.getCode());
 		res.setMsg(cultureEcRes.getMsg());
 		res.setCulturePoint(cultureEcRes.getCulturePoint());
+		res.setCultureCustId(cultureEcRes.getCultureCustId());
+		res.setCultureCertNo(cultureEcRes.getCultureCertNo());
+		res.setCultureAuthType(cultureEcRes.getCultureAuthType());
 		this.logger.debug("PRCHS,CULTURE,SAC,RES,{}", res);
 		return res;
 	}
