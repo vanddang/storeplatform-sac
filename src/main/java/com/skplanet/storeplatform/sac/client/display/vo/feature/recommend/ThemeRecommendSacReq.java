@@ -46,7 +46,6 @@ public class ThemeRecommendSacReq extends CommonInfo {
 	@NotBlank
 	private String deviceId; // 기기ID
 
-	@Pattern(regexp = "v2")
 	private String ver; // New UI 지원
 
 	private int offset = 1; // 시작점 ROW
