@@ -423,6 +423,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				 * 상품 정보
 				 ************************************************************************************************/
 
+				identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+						metaInfo.getProdId()));
 				identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
 						metaInfo.getProdId()));
 				product.setIdentifierList(identifierList); // 상품 Id

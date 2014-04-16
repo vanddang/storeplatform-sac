@@ -15,7 +15,8 @@
         AND  C.PROD_ID = A.PROD_ID
         AND  A.PROD_ID = B.PROD_ID        
         AND  C.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
-        AND  D.APK_PKG_NM = #{packageName}                          
+        AND  D.APK_PKG_NM = #{packageName}   
+        AND  ROWNUM <![CDATA[<=]]> 1                     
     </select>
 
     <!-- 상품정보요청(for download) App -->
@@ -114,8 +115,8 @@
                             AND  G.TENANT_ID = H.TENANT_ID
                             AND  G.PROD_ID = H.PROD_ID
                             AND  B.PROD_ID = I.PROD_ID
-                            AND  A.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
-                            AND  B.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
+--                            AND  A.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
+--                            AND  B.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
                             AND  D.SVC_GRP_CD = 'DP000201'            /* DP000201 : 애플리캐이션 */
                             AND  D.PROD_ID = #{productId}             /* param : product Id */
                             AND  F.LANG_CD = #{langCd}                     /* ko : 한국어 */
@@ -425,7 +426,7 @@
                                                AND N.TENANT_ID = O.TENANT_ID                                         
                                                AND J.PROD_ID = P.PROD_ID
                                                AND J.PROD_ID = Q.PROD_ID                                     
-                                               AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
+--                                               AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                                AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                                                AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                                                AND D.TOP_MENU_ID IN ('DP17', 'DP18')
@@ -856,7 +857,7 @@
                    AND J.PROD_ID = P.PROD_ID
                    AND J.PROD_ID = Q.PROD_ID 
                    AND J.PROD_ID = R.PROD_ID                                    
-                   AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
+                   --AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                    AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                    AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                    AND D.TOP_MENU_ID = 'DP16'

@@ -405,17 +405,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						metaInfo.getProdId());
 				identifierList.add(identifier);
 
-				if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)) {
-					// 채널로 요청한 경우
-					metaInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-				} else {
-					// 에피소드로 요청한 경우
-					metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+				metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
-					identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-							metaInfo.getEspdProdId());
-					identifierList.add(identifier);
-				}
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+						metaInfo.getEspdProdId());
+				identifierList.add(identifier);
 
 				// CID
 				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD,
