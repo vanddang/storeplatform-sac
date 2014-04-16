@@ -68,18 +68,11 @@ public class UserOcbServiceImpl implements UserOcbService {
 		String ocbCardNumber = req.getCardNumber().replaceAll("-", "");
 
 		/**
-		 * TODO 규격서 배포 완료시 if 로직 삭제해야함.
+		 * OCB 카드번호 정보 조회 연동
 		 */
-		if (StringUtils.equals(req.getRegId(), "tlaeowls")) {
-
-			/**
-			 * OCB 카드번호 정보 조회 연동
-			 */
-			SearchOcbPointEcReq searchOcbPointEcReq = new SearchOcbPointEcReq();
-			searchOcbPointEcReq.setOcbCardNum(ocbCardNumber); // OCB 카드 번호
-			this.ocbSCI.searchOcbPoint(searchOcbPointEcReq);
-
-		}
+		SearchOcbPointEcReq searchOcbPointEcReq = new SearchOcbPointEcReq();
+		searchOcbPointEcReq.setOcbCardNum(ocbCardNumber); // OCB 카드 번호
+		this.ocbSCI.searchOcbPoint(searchOcbPointEcReq);
 
 		/**
 		 * OCB 등록/수정 요청.
