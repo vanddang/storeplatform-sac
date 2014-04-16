@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * 브랜드샵 리스트 조회 Input Value Object.
  * 
- * Updated on : 2014. 2. 25. Updated by : 이승훈, 엔텔스.
+ * Updated on : 2014. 4. 16. Updated by : 이승훈, 엔텔스.
  */
 public class BrandshopListSacReq extends CommonInfo {
 

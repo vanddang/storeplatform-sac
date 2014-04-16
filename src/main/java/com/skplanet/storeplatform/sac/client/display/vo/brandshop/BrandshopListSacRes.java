@@ -23,7 +23,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 /**
  * 브랜드샵 조회 List Value Object.
  * 
- * Updated on : 2014. 2. 7. Updated by : 이승훈, 엔텔스.
+ * Updated on : 2014. 4. 16. Updated by : 이승훈, 엔텔스.
  */
 public class BrandshopListSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
