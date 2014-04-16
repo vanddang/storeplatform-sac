@@ -23,6 +23,8 @@ public class DotoriSacRes extends CommonInfo {
 	private String code;
 	private String msg;
 	private String cntDotori;
+	private String mtypeDotori;
+	private String midDotori;
 
 	/**
 	 * @return the code
@@ -67,6 +69,36 @@ public class DotoriSacRes extends CommonInfo {
 	 */
 	public void setCntDotori(String cntDotori) {
 		this.cntDotori = cntDotori;
+	}
+
+	/**
+	 * @return the mtypeDotori
+	 */
+	public String getMtypeDotori() {
+		return this.mtypeDotori;
+	}
+
+	/**
+	 * @param mtypeDotori
+	 *            the mtypeDotori to set
+	 */
+	public void setMtypeDotori(String mtypeDotori) {
+		this.mtypeDotori = mtypeDotori;
+	}
+
+	/**
+	 * @return the midDotori
+	 */
+	public String getMidDotori() {
+		return this.midDotori;
+	}
+
+	/**
+	 * @param midDotori
+	 *            the midDotori to set
+	 */
+	public void setMidDotori(String midDotori) {
+		this.midDotori = midDotori;
 	}
 
 }

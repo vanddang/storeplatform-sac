@@ -23,6 +23,9 @@ public class CultureSacRes extends CommonInfo {
 	private String code;
 	private String msg;
 	private String culturePoint;
+	private String cultureCustId;
+	private String cultureCertNo;
+	private String cultureAuthType;
 
 	/**
 	 * @return the code
@@ -67,6 +70,51 @@ public class CultureSacRes extends CommonInfo {
 	 */
 	public void setCulturePoint(String culturePoint) {
 		this.culturePoint = culturePoint;
+	}
+
+	/**
+	 * @return the cultureCustId
+	 */
+	public String getCultureCustId() {
+		return this.cultureCustId;
+	}
+
+	/**
+	 * @param cultureCustId
+	 *            the cultureCustId to set
+	 */
+	public void setCultureCustId(String cultureCustId) {
+		this.cultureCustId = cultureCustId;
+	}
+
+	/**
+	 * @return the cultureCertNo
+	 */
+	public String getCultureCertNo() {
+		return this.cultureCertNo;
+	}
+
+	/**
+	 * @param cultureCertNo
+	 *            the cultureCertNo to set
+	 */
+	public void setCultureCertNo(String cultureCertNo) {
+		this.cultureCertNo = cultureCertNo;
+	}
+
+	/**
+	 * @return the cultureAuthType
+	 */
+	public String getCultureAuthType() {
+		return this.cultureAuthType;
+	}
+
+	/**
+	 * @param cultureAuthType
+	 *            the cultureAuthType to set
+	 */
+	public void setCultureAuthType(String cultureAuthType) {
+		this.cultureAuthType = cultureAuthType;
 	}
 
 }
