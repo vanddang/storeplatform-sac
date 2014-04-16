@@ -506,53 +506,47 @@
                 SPROD.B2B_PROD_YN,
                 CONCAT(PI.FILE_PATH, PI.FILE_NM)                                                  FILE_PATH,
                 PI.FILE_NM
-            FROM
-                TB_DP_PROD EPROD
-                INNER JOIN TB_DP_PROD_RSHP RSHP
-                    ON RSHP.PART_PROD_ID = EPROD.PROD_ID
+            FROM TB_DP_SHPG_CATALOG SC
+                INNER JOIN TB_DP_SHPG_CATALOG_DESC SCD
+                    ON SCD.CATALOG_ID = SC.CATALOG_ID
+                INNER JOIN TB_DP_SHPG_BRAND SBRD
+                    ON SBRD.BRAND_ID = SC.BRAND_ID
+                INNER JOIN TB_DP_PROD_CATALOG_MAPG PCM  -- chnlId - catId
+                    ON PCM.CATALOG_ID = SC.CATALOG_ID
                 INNER JOIN TB_DP_SHPG_PROD SPROD
-                    ON SPROD.PROD_ID = RSHP.PROD_ID
-                -- TENANT
+                    ON SPROD.PROD_ID = PCM.PROD_ID
+                INNER JOIN TB_DP_PROD_RSHP RSHP
+                    ON RSHP.PROD_ID = SPROD.PROD_ID
+                INNER JOIN TB_DP_PROD EPROD
+                    ON EPROD.PROD_ID = RSHP.PART_PROD_ID
                 INNER JOIN TB_DP_TENANT_PROD TPROD
                     ON TPROD.PROD_ID = EPROD.PROD_ID
                 INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
                     ON TPRC.PROD_ID = EPROD.PROD_ID AND TPRC.TENANT_ID = TPROD.TENANT_ID
-                -- CATALOG
-                INNER JOIN TB_DP_PROD_CATALOG_MAPG PCM  -- chnlId - catId
-                    ON PCM.PROD_ID = EPROD.PROD_ID
-                INNER JOIN TB_DP_SHPG_CATALOG SC
-                    ON SC.CATALOG_ID = PCM.CATALOG_ID
-                INNER JOIN TB_DP_SHPG_CATALOG_DESC SCD
-                    ON SCD.CATALOG_ID = PCM.CATALOG_ID
-                INNER JOIN TB_DP_SHPG_BRAND SBRD
-                    ON SBRD.BRAND_ID = SC.BRAND_ID
-                -- MENU
                 INNER JOIN TB_DP_MENU_SHPG_MAPG MSM
                     ON MSM.CATALOG_ID = PCM.CATALOG_ID
                 INNER JOIN TB_DP_MENU_CATEGORY MC
                     ON MC.MENU_ID = MSM.MENU_ID
                 INNER JOIN TB_DP_MENU_CATEGORY_DESC MCD
                     ON MCD.MENU_ID = MSM.MENU_ID AND MCD.LANG_CD = SCD.LANG_CD
-                -- IMG
                 LEFT OUTER JOIN TB_DP_PROD_IMG PI
                     ON PI.PROD_ID = SC.CATALOG_ID AND PI.IMG_CD = 'DP0001A3' AND PI.EXPO_ORD = 1 AND
-                       PI.LANG_CD = SCD.LANG_CD
+                       PI.LANG_CD = #{langCd}
                 LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TSTAT
                     ON TSTAT.PROD_ID = EPROD.PROD_ID AND TSTAT.TENANT_ID = TPROD.TENANT_ID
-                -- PRICE
                 LEFT OUTER JOIN TB_DP_SPRC_PROD SPP
                     ON SPP.PROD_ID = EPROD.PROD_ID
                        AND SPP.EXPO_YN = 'Y'
                        AND SPP.CPN_ID IS NOT NULL
                        AND SYSDATE BETWEEN SPP.SPRC_APPLY_START_DT AND SPP.SPRC_APPLY_END_DT
             WHERE 1 = 1
+                  AND SC.CATALOG_ID = #{catalogId}
                   AND EPROD.SVC_GRP_CD = #{svcGrpCd}
                   AND RSHP.PROD_RSHP_CD = 'DP010802'
                   AND TPROD.TENANT_ID = #{tenantId}
                   AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
                   AND NVL(SPROD.B2B_PROD_YN, 'N') != 'Y'
                   AND NVL(SC.CHNL_CNT, 0) > 0
-                  AND SC.CATALOG_ID = #{catalogId}
                   AND PCM.BASE_YN = 'Y'
                   AND PCM.USE_YN = 'Y'
                   AND SCD.LANG_CD = #{langCd}
