@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -10,7 +8,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 2.2.4. 판매자 회원 단순 인증 [REQUEST]
+ * 2.2.29. 판매자 회원 단순 인증 [REQUEST]
  * 
  * Updated on : 2014. 2. 9. Updated by : 한서구, 부르칸.
  */

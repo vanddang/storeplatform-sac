@@ -14,15 +14,15 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class DuplicateByIdEmailRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
-
-	public DuplicateByIdEmailRes() {
-		super();
-	}
-
-	public DuplicateByIdEmailRes(String isRegistered) {
-		super();
-		this.isRegistered = isRegistered;
-	}
+	//
+	// public DuplicateByIdEmailRes() {
+	// super();
+	// }
+	//
+	// public DuplicateByIdEmailRes(String isRegistered) {
+	// super();
+	// this.isRegistered = isRegistered;
+	// }
 
 	/** 사용유무(Y/N). */
 	private String isRegistered;
