@@ -385,11 +385,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			final String fdsLogSvcMngNum = svcMngNum;
 			final String fdsLogDeviceKey = deviceKey;
 			final String fdsSystemId = systemId;
-
-			if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_SUCCESS_CODE)) {
-				result = "SUCC";
-				resultMsg = "";
-			}
 			final String fdsResult = result;
 			final String fdsResultMsg = resultMsg;
 
@@ -397,7 +392,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL00034").result_code(fdsResult).result_message(fdsResultMsg).insd_usermbr_no(fdsLogUserKey)
+						shuttle.log_id("TL00034").result_code("SUCC").result_message("").insd_usermbr_no(fdsLogUserKey)
 								.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
 								.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
 								.request_system_id(fdsSystemId);
