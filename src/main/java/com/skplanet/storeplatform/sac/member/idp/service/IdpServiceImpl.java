@@ -476,13 +476,14 @@ public class IdpServiceImpl implements IdpService {
 					final String fdsUsermbrNoPre = prevMbrNoForgameCenter;
 					final String fdsUsermbrNoPost = currentMbrNoForgameCenter;
 					final String fdsUserId = userId;
+					final String fdsSystemId = systemId;
 
 					new TLogUtil().log(new ShuttleSetter() {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
 							shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
 									.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost)
-									.result_code("SUCC").mbr_id(fdsUserId);
+									.result_code("SUCC").mbr_id(fdsUserId).request_system_id(fdsSystemId);
 						}
 					});
 					/* FDS LOG END */
@@ -491,13 +492,14 @@ public class IdpServiceImpl implements IdpService {
 					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 					final String fdsUserId = userId;
+					final String fdsSystemId = systemId;
 
 					new TLogUtil().log(new ShuttleSetter() {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
 							shuttle.log_id("TL00030").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
 									.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("")
-									.mbr_id(fdsUserId);
+									.mbr_id(fdsUserId).request_system_id(fdsSystemId);
 						}
 					});
 
@@ -2290,13 +2292,14 @@ public class IdpServiceImpl implements IdpService {
 						final String fdsUsermbrNoPre = mbrNo;
 						final String fdsUsermbrNoPost = userKey;
 						final String fdsUserId = newUserId;
+						final String fdsSystemId = systemId;
 
 						new TLogUtil().log(new ShuttleSetter() {
 							@Override
 							public void customize(TLogSentinelShuttle shuttle) {
 								shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
 										.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost)
-										.result_code("SUCC").mbr_id(fdsUserId);
+										.result_code("SUCC").mbr_id(fdsUserId).request_system_id(fdsSystemId);
 							}
 						});
 						/* FDS LOG END */
@@ -2307,13 +2310,14 @@ public class IdpServiceImpl implements IdpService {
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 				final String fdsUserId = newUserId;
+				final String fdsSystemId = systemId;
 
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
 						shuttle.log_id("TL00030").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
 								.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("")
-								.mbr_id(fdsUserId);
+								.mbr_id(fdsUserId).request_system_id(fdsSystemId);
 					}
 				});
 
