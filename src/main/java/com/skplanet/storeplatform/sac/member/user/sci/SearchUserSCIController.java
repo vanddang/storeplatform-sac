@@ -75,13 +75,12 @@ public class SearchUserSCIController implements SearchUserSCI {
 	@ResponseBody
 	public SearchUserSacRes searchUserByUserKey(@RequestBody @Validated SearchUserSacReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
 		SearchUserSacRes searchUserSacRes = this.userSearchService.searchUserByUserKey(requestHeader, request);
-
-		LOGGER.debug("ResponseParameter : {}", searchUserSacRes);
+		LOGGER.debug("Response > UserInfo count : {}", searchUserSacRes.getUserInfo().size());
 		return searchUserSacRes;
 	}
 
@@ -99,10 +98,9 @@ public class SearchUserSCIController implements SearchUserSCI {
 	@ResponseBody
 	public SearchUserPayplanetSacRes searchUserPayplanet(@RequestBody @Validated SearchUserPayplanetSacReq request) {
 
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[SearchUserSCIController.searchUserPayplanet] RequestHeader : {}, \nRequestParameter : {}",
-				requestHeader, request);
 
 		String deviceKey = StringUtil.nvl(request.getDeviceKey(), "");
 		String userKey = StringUtil.nvl(request.getUserKey(), "");
@@ -188,10 +186,9 @@ public class SearchUserSCIController implements SearchUserSCI {
 	@ResponseBody
 	public SearchUserDeviceSacRes searchUserByDeviceKey(@RequestBody @Validated SearchUserDeviceSacReq request) {
 
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[SearchUserSCIController.searchUserByDeviceKey] RequestHeader : {}, \nRequestParameter : {}",
-				requestHeader, request);
 
 		// Respone 를 가지고 오기 위한 devceKeyList Setting
 		List<String> deviceKeyList = new ArrayList<String>();

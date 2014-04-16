@@ -59,6 +59,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
@@ -1153,7 +1154,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return AuthorizeRes
 	 */
 	@Override
-	public AuthorizeRes authorizeSimple(SacRequestHeader header, AuthorizeSimpleReq req) {
+	public AuthorizeSimpleRes authorizeSimple(SacRequestHeader header, AuthorizeSimpleReq req) {
 
 		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
 		// SC 공통 헤더 생성
@@ -1171,7 +1172,7 @@ public class SellerServiceImpl implements SellerService {
 		/** 1-1. SC-로그인인증 Call. */
 		LoginSellerResponse schRes = this.sellerSCI.loginSeller(loginSellerRequest);
 
-		AuthorizeRes response = new AuthorizeRes();
+		AuthorizeSimpleRes response = new AuthorizeSimpleRes();
 
 		if (schRes.getIsLoginSuccess() == null)
 			response.setIsLoginSuccess("N");

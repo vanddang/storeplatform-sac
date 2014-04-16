@@ -66,8 +66,10 @@ public class SellerSearchController {
 	@ResponseBody
 	private DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header,
 			@RequestBody @Validated DuplicateByIdEmailReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
-		return this.sellerSearchService.duplicateByIdEmail(header, req);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		DuplicateByIdEmailRes res = this.sellerSearchService.duplicateByIdEmail(header, req);
+		LOGGER.info("Response > isRegistered : {}", res.getIsRegistered());
+		return res;
 	}
 
 	/**
@@ -85,14 +87,15 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailInformationRes detailInformation(SacRequestHeader header,
 			@RequestBody @Validated DetailInformationReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(req.getSellerId()) && StringUtils.isBlank(req.getAid())
 				&& StringUtils.isBlank(req.getSellerKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "aid, sellerKey, sellerId");
 		}
-
-		return this.sellerSearchService.detailInformation(header, req);
+		DetailInformationRes res = this.sellerSearchService.detailInformation(header, req);
+		LOGGER.info("Response > sellerKey : {}", res.getSellerMbr().getSellerKey());
+		return res;
 	}
 
 	/**
@@ -110,13 +113,16 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailInformationForProductRes detailInformationForProduct(SacRequestHeader header,
 			@RequestBody @Validated DetailInformationForProductReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(req.getSellerKey()) && StringUtils.isBlank(req.getAid())) {
 
 			throw new StorePlatformException("SAC_MEM_0001", "sellerKey 또는 aid");
 		}
-		return this.sellerSearchService.detailInformationForProduct(header, req);
+
+		DetailInformationForProductRes res = this.sellerSearchService.detailInformationForProduct(header, req);
+		LOGGER.info("Response > sellerId : {}", res.getSellerId());
+		return res;
 	}
 
 	/**
@@ -134,9 +140,11 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header,
 			@RequestBody @Validated DetailAccountInformationReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		return this.sellerSearchService.detailAccountInformation(header, req);
+		DetailAccountInformationRes res = this.sellerSearchService.detailAccountInformation(header, req);
+		LOGGER.info("Response > sellerKey : {}", res.getSellerAccount().getSellerKey());
+		return res;
 	}
 
 	/**
@@ -151,9 +159,11 @@ public class SellerSearchController {
 	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) {
-		LOGGER.info("Request");
-		LOGGER.debug("------------------------------------language : {}", header.getTenantHeader().getLangCd());
-		return this.sellerSearchService.listWithdrawalReason(header);
+		LOGGER.info("Request > LangCd {}", header.getTenantHeader().getLangCd());
+
+		ListWithdrawalReasonRes res = this.sellerSearchService.listWithdrawalReason(header);
+		LOGGER.info("Request > SecedeReson count {}", res.getSecedeResonList().size());
+		return res;
 	}
 
 	/**
@@ -171,15 +181,16 @@ public class SellerSearchController {
 	@ResponseBody
 	public SearchIdRes searchId(SacRequestHeader header, @RequestBody @Validated SearchIdReq req) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		// sellerBizNumber, sellerCompany, sellerEmail, sellerPhone 중 하나 필수.
 		if (StringUtils.isBlank(req.getSellerBizNumber()) && StringUtils.isBlank(req.getSellerCompany())
 				&& StringUtils.isBlank(req.getSellerEmail()) && StringUtils.isBlank(req.getSellerPhone())) {
 			throw new StorePlatformException("SAC_MEM_0001", "sellerBizNumber, sellerCompany, sellerEmail, sellerPhone");
 		}
-
-		return this.sellerSearchService.searchId(header, req);
+		SearchIdRes res = this.sellerSearchService.searchId(header, req);
+		LOGGER.info("Response > sellerId count : {}", res.getSellerMbr().size());
+		return res;
 	}
 
 	/**
@@ -196,9 +207,10 @@ public class SellerSearchController {
 	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchPasswordRes searchPassword(SacRequestHeader header, @RequestBody @Validated SearchPasswordReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
-
-		return this.sellerSearchService.searchPassword(header, req);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		SearchPasswordRes res = this.sellerSearchService.searchPassword(header, req);
+		LOGGER.info("Response Success.");
+		return res;
 	}
 
 	/**
@@ -217,9 +229,10 @@ public class SellerSearchController {
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			@RequestBody @Validated CheckPasswordReminderQuestionReq req) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
-
-		return this.sellerSearchService.checkPasswordReminderQuestion(header, req);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		CheckPasswordReminderQuestionRes res = this.sellerSearchService.checkPasswordReminderQuestion(header, req);
+		LOGGER.info("Response > isCorrect : {}", res.getIsCorrect());
+		return res;
 	}
 
 	/**
@@ -237,9 +250,10 @@ public class SellerSearchController {
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
 			@RequestBody @Validated ListPasswordReminderQuestionReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
-
-		return this.sellerSearchService.listPasswordReminderQuestion(header, req);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		ListPasswordReminderQuestionRes res = this.sellerSearchService.listPasswordReminderQuestion(header, req);
+		LOGGER.info("Response > PwdHint count : {}", res.getSellerMbrPwdHintList().size());
+		return res;
 	}
 
 	/**
@@ -255,8 +269,10 @@ public class SellerSearchController {
 	@ResponseBody
 	public ListPasswordReminderQuestionAllRes listPasswordReminderQuestionAll(SacRequestHeader header) {
 
-		LOGGER.info("Request");
-		return this.sellerSearchService.listPasswordReminderQuestionAll(header);
+		LOGGER.info("Request Success.");
+		ListPasswordReminderQuestionAllRes res = this.sellerSearchService.listPasswordReminderQuestionAll(header);
+		LOGGER.info("Response > PwdHint count : {}", res.getSellerMbrPwdHintList().size());
+		return res;
 	}
 
 	/**
@@ -274,9 +290,11 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailInfomationByAuthorizationKeySacRes detailInfomationByAuthorizationKey(SacRequestHeader header,
 			@RequestBody @Validated DetailInfomationByAuthorizationKeySacReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
-
-		return this.sellerSearchService.detailInfomationByAuthorizationKey(header, req);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		DetailInfomationByAuthorizationKeySacRes res = this.sellerSearchService.detailInfomationByAuthorizationKey(
+				header, req);
+		LOGGER.info("Response > sellerKey : {}", res.getSellerMbr().getSellerKey());
+		return res;
 	}
 
 	/**
@@ -291,9 +309,11 @@ public class SellerSearchController {
 	@RequestMapping(value = "/listBanksByCountry/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListBanksByCountryRes ListBanksByCountry(SacRequestHeader header) {
-		LOGGER.info("Request");
+		LOGGER.info("Request Success.");
 
-		return this.sellerSearchService.listBanksByCountry(header);
+		ListBanksByCountryRes res = this.sellerSearchService.listBanksByCountry(header);
+		LOGGER.info("Response > BanksByCountry count : {}", res.getBanksByCountry().size());
+		return res;
 	}
 
 }

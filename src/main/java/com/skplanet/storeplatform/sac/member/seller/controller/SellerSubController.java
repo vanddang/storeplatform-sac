@@ -54,14 +54,16 @@ public class SellerSubController {
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(req.getSubSellerPw())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerPW");
 		} else if (StringUtils.isBlank(req.getSubSellerId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerId");
 		}
-		return this.sellerSubService.createSubseller(header, req);
+		CreateSubsellerRes res = this.sellerSubService.createSubseller(header, req);
+		LOGGER.info("Response > subSellerKey : {}", res.getSubSellerKey());
+		return res;
 	}
 
 	/**
@@ -78,12 +80,15 @@ public class SellerSubController {
 	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	UpdateSubsellerRes modifySubseller(SacRequestHeader header, @RequestBody @Validated UpdateSubsellerReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(req.getSubSellerKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerKey");
 		}
-		return this.sellerSubService.updateSubseller(header, req);
+
+		UpdateSubsellerRes res = this.sellerSubService.updateSubseller(header, req);
+		LOGGER.info("Response > subSellerKey : {}", res.getSubSellerKey());
+		return res;
 	}
 
 	/**
@@ -100,9 +105,10 @@ public class SellerSubController {
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
-
-		return this.sellerSubService.removeSubseller(header, req);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		RemoveSubsellerRes res = this.sellerSubService.removeSubseller(header, req);
+		LOGGER.info("Response > RemoveCnt : {}", res.getRemoveCnt());
+		return res;
 	}
 
 	/**
@@ -119,9 +125,11 @@ public class SellerSubController {
 	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ListSubsellerRes listSubseller(SacRequestHeader header, @RequestBody @Validated ListSubsellerReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		return this.sellerSubService.listSubseller(header, req);
+		ListSubsellerRes res = this.sellerSubService.listSubseller(header, req);
+		LOGGER.info("Response > SubAccountCount : {}", res.getSubAccountCount());
+		return res;
 	}
 
 	/**
@@ -138,9 +146,10 @@ public class SellerSubController {
 	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailSubsellerRes detailSubseller(SacRequestHeader header, @RequestBody @Validated DetailSubsellerReq req) {
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(req));
-
-		return this.sellerSubService.detailSubseller(header, req);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		DetailSubsellerRes res = this.sellerSubService.detailSubseller(header, req);
+		LOGGER.info("Response > subSellerKey : {}", res.getSubSellerMbr().getSubSellerKey());
+		return res;
 	}
 
 }

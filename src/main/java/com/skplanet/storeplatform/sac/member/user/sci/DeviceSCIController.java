@@ -53,21 +53,21 @@ public class DeviceSCIController implements DeviceSCI {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
 		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				request.getDeviceKey(), request.getUserKey());
 
-		SearchDeviceIdSacRes responseVO = new SearchDeviceIdSacRes();
+		SearchDeviceIdSacRes response = new SearchDeviceIdSacRes();
 		if (deviceInfo != null && StringUtils.isNotBlank(deviceInfo.getDeviceId())) {
-			responseVO.setDeviceId(deviceInfo.getDeviceId());
-			responseVO.setDeviceTelecom(deviceInfo.getDeviceTelecom());
+			response.setDeviceId(deviceInfo.getDeviceId());
+			response.setDeviceTelecom(deviceInfo.getDeviceTelecom());
 		} else {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
 
-		LOGGER.debug("ResponseParameter : {}", responseVO);
-		return responseVO;
+		LOGGER.info("Response > deviceId : {}", response.getDeviceId());
+		return response;
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class DeviceSCIController implements DeviceSCI {
 	public @ResponseBody
 	ChangedDeviceHistorySacRes searchChangedDeviceHistory(@RequestBody @Validated ChangedDeviceHistorySacReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		// 공통 파라미터 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
@@ -92,11 +92,9 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId 또는 deviceKey");
 		}
 
-		ChangedDeviceHistorySacRes changedDeviceHistoryRes = this.deviceService.searchChangedDeviceHistory(
-				requestHeader, request);
-
-		LOGGER.debug("[DeviceSCIController.searchChangedDeviceHistory] ResponseParameter : {}", changedDeviceHistoryRes);
-		return changedDeviceHistoryRes;
+		ChangedDeviceHistorySacRes response = this.deviceService.searchChangedDeviceHistory(requestHeader, request);
+		LOGGER.info("Response > isChanged : {}", response.getIsChanged());
+		return response;
 
 	}
 }

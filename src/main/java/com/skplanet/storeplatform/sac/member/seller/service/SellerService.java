@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.member.seller.service;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeSimpleRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
@@ -77,9 +78,9 @@ public interface SellerService {
 	 *            SacRequestHeader
 	 * @param req
 	 *            AuthorizeReq
-	 * @return AuthorizeRes
+	 * @return AuthorizeSimpleRes
 	 */
-	public AuthorizeRes authorizeSimple(SacRequestHeader header, AuthorizeSimpleReq req);
+	public AuthorizeSimpleRes authorizeSimple(SacRequestHeader header, AuthorizeSimpleReq req);
 
 	/**
 	 * <pre>

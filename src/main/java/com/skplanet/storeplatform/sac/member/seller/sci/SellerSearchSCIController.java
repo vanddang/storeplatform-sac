@@ -55,10 +55,10 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 	public @ResponseBody
 	DetailInformationSacRes detailInformation(@Validated DetailInformationSacReq request) {
 
-		LOGGER.info("Request : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 		DetailInformationSacRes response = this.sellerSearchService.detailInformationList(requestHeader, request);
-		LOGGER.debug("Internal SCI detailInformation() Response : {}", response);
+		LOGGER.debug("Response > sellerMbr count {}", response.getSellerMbrListMap().size());
 		return response;
 
 	}
