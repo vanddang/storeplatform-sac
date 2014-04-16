@@ -288,6 +288,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 *            사용자 Key
 	 * @param deviceKey
 	 *            휴대기기 Key
+	 * @param deviceId
+	 *            휴대기기 mdn
 	 * @param mbrNo
 	 *            IDP Key
 	 */
