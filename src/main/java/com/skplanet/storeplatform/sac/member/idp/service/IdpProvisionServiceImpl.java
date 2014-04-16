@@ -141,20 +141,10 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String deviceKey = null;
 		String modelCd = null;
 		String result = null;
+		String resultMsg = null;
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
 		commonRequest.setSystemID(systemId);
-
-		final String fdsLogBeMdn = beMdn;
-		final String fdsLogMdn = mdn;
-		final String fdsLogSvcMngNum = svcMngNum;
-
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00034").device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum);
-			}
-		});
 
 		try {
 
@@ -178,14 +168,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
 				userKey = schDeviceRes.getUserMbrDevice().getUserKey();
 				deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
-
-				final String fdsLogDeviceKey = deviceKey;
-				new TLogUtil().set(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey);
-					}
-				});
 
 				/* 단말 정보 조회 */
 				Device device = this.mcc.getPhoneInfoByUacd(uacd);
@@ -246,14 +228,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				beMdn = schDeviceRes.getUserMbrDevice().getDeviceID();
 				userKey = schDeviceRes.getUserMbrDevice().getUserKey();
 				deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
-
-				final String fdsLogDeviceKey = deviceKey;
-				new TLogUtil().set(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey);
-					}
-				});
 
 				/* 단말 정보 조회 */
 				Device device = this.mcc.getPhoneInfoByUacd(uacd);
@@ -364,14 +338,17 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
+			resultMsg = IdpConstants.IDP_RESPONSE_SUCCESS_MSG;
 
 		} catch (StorePlatformException ex) {
 
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				result = IdpConstants.IDP_RESPONSE_NO_DATA;
+				resultMsg = IdpConstants.IDP_RESPONSE_NO_DATA_MSG;
 			} else {
 				result = IdpConstants.IDP_RESPONSE_FAIL_CODE;
+				resultMsg = IdpConstants.IDP_RESPONSE_FAIL_MSG;
 			}
 
 		} finally {
@@ -401,6 +378,22 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			// changeDeviceLog.setIsChanged(isChanged);
 			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
 
+			/* TLog 남김 */
+			final String fdsLogUserKey = userKey;
+			final String fdsLogBeMdn = beMdn;
+			final String fdsLogMdn = mdn;
+			final String fdsLogSvcMngNum = svcMngNum;
+			final String fdsLogDeviceKey = deviceKey;
+			final String fdsResult = result;
+			final String fdsResultMsg = resultMsg;
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id("TL00034").result_code(fdsResult).result_message(fdsResultMsg).insd_usermbr_no(fdsLogUserKey)
+							.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
+							.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey);
+				}
+			});
 		}
 
 		return result;
