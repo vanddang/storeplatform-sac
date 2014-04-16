@@ -247,6 +247,7 @@ public class MetaServiceTest {
         reqMap.put("productBasicInfo", productBasicInfo);
 //        productBasicInfo.setCatalogId("CL00007545");
         productBasicInfo.setCatalogId("CL00000404");
+//        productBasicInfo.setCatalogId("CL00030277");
         productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 
         RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
