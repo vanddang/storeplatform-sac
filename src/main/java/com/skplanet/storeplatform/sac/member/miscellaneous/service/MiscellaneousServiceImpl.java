@@ -539,17 +539,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		joinSupServiceEcReq.setUserMdn(request.getMsisdn());
 		joinSupServiceEcReq.setUserSvcMngNum(request.getSvcMngNum());
 
+		final String deviceId = joinSupServiceEcReq.getUserMdn();
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00041");
+				shuttle.log_id("TL00041").device_id(deviceId);
 			}
 		});
 
 		JoinSupServiceRequestEcRes joinSupServiceEcRes = this.idpSCI.joinSupServiceRequest(joinSupServiceEcReq);
 
 		final String serviceCode = joinSupServiceEcRes.getSvcCode();
-
 		/* FDS LOG START */
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
