@@ -174,114 +174,114 @@
     <!-- 하루에 하나 상품 조회 -->
     <select id="selectRecommendOnedayList" parameterType="RecommendOnedaySacReq" resultType="RecommendOneday">
         SELECT /* FeatureRecommendMapper.xml, selectRecommendOnedayList, SAC 전시 , 2014-02-28 */
-            ZZ.TENANT_ID
-		    , ZZ.ONE_SEQ
-		    , ZZ.EXPO_DT
-		    , ZZ.EXPO_START_DT
-		    , ZZ.EXPO_END_DT
-		    , ZZ.PART_CHRGMONY_APP_YN
-		    , ZZ.FREE_ITEM_AMT        
-		    , ZZ.PROD_REALRE_AMT        
-		    , ZZ.PROD_OFFR_AMT                         
-		    , ZZ.MENU_ID
-		    , ZZ.PROD_ID
-		    , ZZ.PART_PROD_ID
-		    , ZZ.TOP_MENU_ID
-		    , ZZ.META_CLSF_CD
-		    , ZZ.SVC_GRP_CD
-		    , ZZ.SVC_GRP_NM     
-		    , ZZ.CONTENTS_TYPE_CD
-		    FROM
-		    (
-			     SELECT
-				    ONE.TENANT_ID
-	             , ONE.SEQ AS ONE_SEQ
-				 , ONE.EXPO_DT
-	             , TO_CHAR(ONE.EXPO_START_DT,'YYYYMMDDHHmiss') AS EXPO_START_DT
-	             , TO_CHAR(ONE.EXPO_END_DT,'YYYYMMDDHHmiss') AS EXPO_END_DT
-	             , ONE.PART_CHRGMONY_APP_YN
-	             , NVL(ONE.FREE_ITEM_AMT, 0) AS FREE_ITEM_AMT        
-	             , NVL(ONE.PROD_REALRE_AMT, 0) AS PROD_REALRE_AMT        
-	             , NVL(ONE.PROD_OFFR_AMT, 0) AS PROD_OFFR_AMT                         
-	             , TDMC.MENU_ID
-				 , PROD.PROD_ID
-				 , TBPR.PART_PROD_ID
-				 , TDMC.TOP_MENU_ID
-				 , PROD.META_CLSF_CD
-	             , PROD.SVC_GRP_CD
-	             , FC_GET_CM_CD_NM(PROD.SVC_GRP_CD,#{langCd}) AS SVC_GRP_NM     
-				 , PROD.CONTENTS_TYPE_CD
-				 , ROW_NUMBER( ) OVER ( PARTITION BY ONE.SEQ
-				                             ORDER BY TBPR.REG_DT DESC) AS RN
-				FROM TB_DP_ONEDAY_ONE_APP ONE
-				    , TB_DP_PROD PROD
-				    , TB_DP_MENU_CATEGORY_PROD_MAPG TDMM
-				    , TB_DP_MENU_CATEGORY TDMC
-				    , TB_DP_PROD_RSHP TBPR
-				    , TB_DP_PROD_DESC TDPD
-				    , TB_DP_TENANT_PROD TDTP
-				WHERE ONE.PROD_ID = PROD.PROD_ID
-					AND ONE.PROD_ID = TDPD.PROD_ID
-					AND ONE.PROD_ID = TDTP.PROD_ID
-                    AND ONE.PROD_ID = TBPR.PROD_ID
-	                AND TBPR.PROD_RSHP_CD  = 'DP010802'
-					AND PROD.PROD_ID = TDMM.PROD_ID
-					AND TDMM.USE_YN = 'Y'
-					AND TDMM.MENU_ID = TDMC.MENU_ID
-					AND TDMC.USE_YN = 'Y'
-					AND ONE.TENANT_ID = #{tenantId}
-					AND TDTP.TENANT_ID = #{tenantId}
-					AND ONE.USE_YN = 'Y'
-					AND TDTP.EXPO_YN = 'Y'
-	                <if test="menuId != null and menuId != ''">
-	                AND TDMM.MENU_ID = #{menuId}
-	                </if>
-	                <if test="arrayProdGradeCd != null">
-	                   AND PROD.PROD_GRD_CD IN
-	                     <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
-	                       #{prodGradeCd}
-	                     </foreach>
-	                 </if>                 
-	                <if test='searchType == "S"'>    
-	                    AND ONE.SEQ = #{seq}
-	                </if>
-	                <if test='searchType != "S"'>    
-		                <if test='searchType == "A"'>         
-		                AND ONE.EXPO_DT <![CDATA[ >= ]]>
-		                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE -8, 'YYYYMMDD')
-		                        ELSE  TO_CHAR(SYSDATE -7, 'YYYYMMDD')
-		                    END
-		                AND ONE.EXPO_DT <![CDATA[ <= ]]>
-		                    CASE WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE +3, 'YYYYMMDD')
-		                        ELSE  TO_CHAR(SYSDATE +4, 'YYYYMMDD')
-		                    END
-		                </if>
-		                <if test='searchType != "A"'>   
-		                     <if test="periodStart != null">
-		                         AND ONE.EXPO_DT <![CDATA[ >= ]]> #{periodStart}
-		                     </if>
-		                     <if test="periodEnd != null">
-		                         AND ONE.EXPO_DT <![CDATA[ <= ]]> #{periodEnd}
-		                     </if>
-		                </if>
-		              </if>
-		    ) ZZ
-            WHERE ZZ.RN = 1
-			ORDER BY ZZ.EXPO_DT
+                aa.tenant_id             /*  테넌트 ID  */
+              , aa.one_seq               /*  일련번호  */
+              , aa.expo_dt               /*  노출 일자  */
+              , aa.expo_start_dt         /*  노출 시작 일시  */
+              , aa.expo_end_dt           /*  노출 종료 일시  */
+              , aa.part_chrgmony_app_yn  /*  부분 유료화 앱 여부  */
+              , aa.free_item_amt         /*  무료 아이템 금액  */
+              , aa.prod_realre_amt       /*  상품 실재 금액  */
+              , aa.prod_offr_amt         /*  상품 제공 금액  */
+              , aa.menu_id               /*  메뉴 ID  */
+              , aa.prod_id               /*  상품 ID  */
+              , aa.part_prod_id          /*  부분 상품 ID  */
+              , aa.top_menu_id           /*  탑 메뉴 ID  */
+              , aa.meta_clsf_cd          /*  메타 구분 코드  */
+              , aa.svc_grp_cd            /*  서비스 그룹 코드  */
+              , aa.svc_grp_nm            /*  서비스 그룹 명  */
+              , aa.contents_type_cd      /*  컨텐츠 타입 코드  */
+          FROM
+              (
+              SELECT
+                      a.tenant_id
+                    , a.seq as one_seq
+                    , a.expo_dt
+                    , to_char(a.expo_start_dt,'YYYYMMDDHHmiss') AS expo_start_dt
+                    , to_char(a.expo_end_dt,'YYYYMMDDHHmiss') AS expo_end_dt
+                    , a.part_chrgmony_app_yn
+                    , NVL(a.free_item_amt, 0) AS free_item_amt
+                    , NVL(a.prod_realre_amt, 0) AS prod_realre_amt
+                    , NVL(a.prod_offr_amt, 0) AS prod_offr_amt
+                    , d.menu_id
+                    , b.prod_id
+                    , e.part_prod_id
+                    , d.top_menu_id
+                    , b.meta_clsf_cd
+                    , b.svc_grp_cd
+                    , FC_GET_CM_CD_NM(b.svc_grp_cd, #{langCd}) AS svc_grp_nm
+                    , b.contents_type_cd
+                    , ROW_NUMBER() OVER ( PARTITION BY a.seq ORDER BY e.reg_dt DESC) AS rn
+                FROM  tb_dp_oneday_one_app a           /*  하루하나앱  */
+                    , tb_dp_prod b                     /*  상품  */
+                    , tb_dp_menu_category_prod_mapg c  /*  메뉴 카탈로그 상품 매핑  */
+                    , tb_dp_menu_category d            /*  메뉴 카탈로그  */
+                    , tb_dp_prod_rshp e                /*  상품 관계  */
+                    , tb_dp_tenant_prod g              /*  테넌트 상품  */
+               WHERE  a.prod_id = b.prod_id
+                 AND  a.prod_id = g .prod_id
+                 AND  a.prod_id = e.prod_id
+                 AND  e.prod_rshp_cd = 'DP010802'
+                 AND  b.prod_id = c.prod_id
+                 AND  c.use_yn = 'Y'
+                 AND  c.menu_id = d.menu_id
+                 AND  d.use_yn = 'Y'
+                 AND  a.tenant_id = #{tenantId}
+                 AND  g .tenant_id = #{tenantId}
+                 AND  a.use_yn = 'Y'
+                 AND  g .expo_yn = 'Y'
+                 <if test="menuId != null and menuId != ''">
+                 AND  c.menu_id = #{menuId}
+                 </if>
+                 <if test="arrayProdGradeCd != null">
+                 AND  b.prod_grd_cd in
+                     <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                     #{prodGradeCd}
+                     </foreach>
+                 </if>
+                 <if test='searchType == "S"'>
+                 AND  a.seq = #{seq}
+                 </if>
+                 <if test='searchType != "S"'>
+                     <if test='searchType == "A"'>
+                     AND  a.expo_dt <![CDATA[ >= ]]>
+                          CASE
+                              WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 THEN TO_CHAR(SYSDATE -8, 'YYYYMMDD')
+                              ELSE  TO_CHAR(SYSDATE -7, 'YYYYMMDD')
+                          END
+                     AND  a.expo_dt <![CDATA[ <= ]]>
+                          CASE
+                              WHEN TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) <![CDATA[ < ]]> 11 then TO_CHAR(SYSDATE +3, 'YYYYMMDD')
+                              ELSE  TO_CHAR(SYSDATE +4, 'YYYYMMDD')
+                          END
+                     </if>
+                     <if test='searchType != "A"'>
+                         <if test="periodStart != null">
+                         AND  a.expo_dt <![CDATA[ >= ]]> #{periodStart}
+                         </if>
+                         <if test="periodEnd != null">
+                         AND a.expo_dt <![CDATA[ <= ]]> #{periodEnd}
+                         </if>
+                     </if>
+                 </if>
+                 ) aa
+         WHERE  aa.rn = 1
+      ORDER BY  aa.expo_dt
     </select>
     
     <!-- 유료앱이 무료앱 알림메시지를 조회 -->
     <select id="selectRecommendOnedayInform" parameterType="RecommendOnedaySacReq" resultType="RecommendOneday">
-        SELECT /* FeatureRecommendMapper.xml, selectRecommendOnedayInform, SAC 전시 , 2014-04-08 */
-		      ONE.NOTFCT_WRTGOLD
-		      , ONE.ICON_FILE_PATH || '/' || ONE.ICON_FILE_NM AS IMAGE_URL 
-		FROM TB_DP_ONEDAY_ONE_APP ONE, TB_DP_PROD TDP
-		WHERE ONE.PROD_ID = TDP.PROD_ID
-        AND   ONE.TENANT_ID = #{tenantId}
-		AND   ONE.EXPO_START_DT <![CDATA[ <= ]]> SYSDATE
-		AND   ONE.EXPO_END_DT > SYSDATE
-		AND   ONE.USE_YN = 'Y'
-		AND   ONE.NOTFCT_YN = 'Y'
-		AND ROWNUM = 1
+    SELECT /* FeatureRecommendMapper.xml, selectRecommendOnedayInform, SAC 전시 , 2014-04-08 */
+		       a.notfct_wrtgold                                                        /*  알림문구  */
+             , CONCAT (CONCAT ( a.icon_file_path, '/'), a.icon_file_nm ) as image_url  /*  이미지경로  */
+      FROM tb_dp_oneday_one_app a  /*  하루하나앱  */
+         , tb_dp_prod b            /*  상품  */
+     WHERE  a.prod_id = b.prod_id
+       AND  a.tenant_id = #{tenantId}
+       AND  a.expo_start_dt <![CDATA[ <= ]]> SYSDATE
+       AND  a.expo_end_dt > SYSDATE
+       AND  a.use_yn = 'Y'
+       AND  a.notfct_yn = 'Y'
+       AND  ROWNUM = 1
     </select>
 </mapper>
