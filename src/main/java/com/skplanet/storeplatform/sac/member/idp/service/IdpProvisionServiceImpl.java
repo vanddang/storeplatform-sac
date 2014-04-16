@@ -385,6 +385,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			final String fdsLogSvcMngNum = svcMngNum;
 			final String fdsLogDeviceKey = deviceKey;
 			final String fdsSystemId = systemId;
+
+			if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_SUCCESS_CODE)) {
+				result = "SUCC";
+				resultMsg = "";
+			}
 			final String fdsResult = result;
 			final String fdsResultMsg = resultMsg;
 			new TLogUtil().log(new ShuttleSetter() {
