@@ -88,6 +88,7 @@
                        AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
                        AND B.PROD_ID = C.PROD_ID
                        AND C.PROD_RSHP_CD = 'DP010802'
+                       AND G.PROD_STATUS_CD = 'PD000403'
                        AND B.PROD_ID = D.PROD_ID
                        AND D.USE_YN = 'Y'
                        AND D.MENU_ID = E.MENU_ID
@@ -186,7 +187,6 @@
                                           <if test='b2bProd != "A"'>
                                           AND SP.B2B_PROD_YN = #{b2bProd}
                                           </if>
-                                          AND SP.B2B_PROD_YN = 'Y'
                                           AND ROWNUM <![CDATA[ <= ]]> 1  )
                                 ELSE 1
                             END ) = 1
@@ -213,62 +213,129 @@
     
     <!-- 테마존 테마 리스트 -->
     <select id="selectThemeThemeZone" parameterType="ThemeThemeZoneSacReq" resultType="ThemeThemeZone">
-	   SELECT  /* ThemeThemeZoneMapper.XML, selectThemeThemeZone, SAC 전시, 2014-03-24 */ 
-          AA.LIST_ID
-          , AA.LIST_NM 
-          , AA.IMG_PATH
-          , AA.TOTAL_COUNT
-	      FROM
-	      (
-	        SELECT 
-	        TDL.LIST_ID
-            , TDL.LIST_NM 
-            , TDL.IMG_PATH
-            , COUNT(TDL.LIST_ID) OVER () AS TOTAL_COUNT
-            , ROW_NUMBER() OVER(ORDER BY TDL.EXPO_ORD, TDL.EXPO_ORD_SUB) AS RNUM
-	        FROM TB_DP_LIST TDL
-            WHERE TDL.LIST_ID like 'TAR%'
-            AND TDL.TENANT_ID = #{tenantId}
-	        AND TDL.EXPO_YN = 'Y'
-	        AND EXISTS (
-	            SELECT  
-	              1
-	              FROM TB_DP_LIST_PROD TDLP
-	                  , TB_DP_PROD_RSHP A
-	                  , TB_DP_MENU_CATEGORY_PROD_MAPG B
-	                  , TB_DP_MENU_CATEGORY C
-	                  , TB_DP_PROD D  
-	                  , TB_DP_TENANT_PROD E
-                      , TB_DP_SPRT_DEVICE F
-	            WHERE TDL.LIST_ID = TDLP.LIST_ID
-                  AND SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT
-                  AND TDLP.TENANT_ID = #{tenantId}
-                  AND E.TENANT_ID = #{tenantId}
-	              AND TDLP.EXPO_YN = 'Y'
-	              AND TDLP.PROD_ID = A.PROD_ID
-	              AND A.PART_PROD_ID = D.PROD_ID    
-	              AND A.PROD_RSHP_CD = 'DP010802'
-	              AND A.PROD_ID = B.PROD_ID
-	              AND B.USE_YN = 'Y'
-	              AND B.MENU_ID = C.MENU_ID
-	              AND C.USE_YN = 'Y'
-	              AND D.PROD_ID = E.PROD_ID
-                  AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{anyDeviceModelCd})
-                  AND A.PART_PROD_ID = F.PROD_ID
-                  AND  (CASE WHEN D.TOP_MENU_ID = 'DP13' THEN
-                                  CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
-                             WHEN D.TOP_MENU_ID = 'DP14' THEN
-                                  CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END
-                             WHEN D.TOP_MENU_ID = 'DP15' THEN 0
-                             WHEN D.TOP_MENU_ID = 'DP16' THEN
-                                  CASE WHEN D.META_CLSF_CD = 'CT25' THEN
-                                            CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END ELSE 1 END
-                             WHEN D.TOP_MENU_ID IN ('DP17', 'DP18') THEN
-                                  CASE WHEN NVL(D.DRM_YN, 'N') = 'Y' AND #{videoDrmSprtYn} = 'N' THEN 0
-                                       ELSE CASE WHEN #{sdVideoSprtYn} = 'Y' THEN 1 ELSE 0 END END
-                             ELSE 1 END) = 1
-                )
-        ) AA
-        WHERE RNUM BETWEEN #{offset} AND #{count}
+      SELECT /* ThemeThemeZoneMapper.XML, selectThemeThemeZone, SAC 전시, 2014-03-24 */
+              BB.LIST_ID
+           ,  BB.LIST_NM
+           ,  BB.IMG_PATH
+           ,  BB.TOTAL_COUNT
+       FROM
+          (
+            SELECT 
+                     AA.LIST_ID
+                  ,  AA.LIST_NM
+                  ,  AA.IMG_PATH
+                  ,  COUNT(AA.LIST_ID) OVER () AS TOTAL_COUNT
+                  ,  ROW_NUMBER() OVER(ORDER BY AA.EXPO_ORD, AA.EXPO_ORD_SUB) AS RNUM
+              FROM (
+                      SELECT   
+                              TDL.LIST_ID
+                           ,  TDL.LIST_NM
+                           ,  TDL.IMG_PATH
+                           ,  TDL.EXPO_ORD
+                           ,  TDL.EXPO_ORD_SUB
+                           ,  ROW_NUMBER() OVER(PARTITION BY TDL.LIST_ID ORDER BY TDL.LIST_ID ) AS RN
+                       FROM  TB_DP_LIST TDL
+                      WHERE  TDL.LIST_ID LIKE 'TAR%'
+                        AND  TDL.TENANT_ID = #{tenantId}
+                        AND  TDL.EXPO_YN = 'Y'
+                   AND  EXISTS (
+                        SELECT 1
+                          FROM   TB_DP_LIST_PROD TDLP
+                              ,  TB_DP_PROD_RSHP A
+                              ,  TB_DP_MENU_CATEGORY_PROD_MAPG B
+                              ,  TB_DP_MENU_CATEGORY C
+                              ,  TB_DP_PROD D
+                              ,  TB_DP_TENANT_PROD E
+                              ,  TB_DP_SPRT_DEVICE F
+                              ,  TB_DP_TENANT_PROD G
+                         WHERE  TDL.LIST_ID = TDLP.LIST_ID
+                           AND  SYSDATE BETWEEN TDLP.EXPO_START_DT
+                           AND  TDLP.EXPO_END_DT
+                           AND  TDLP.TENANT_ID = #{tenantId}
+                           AND  E.TENANT_ID = #{tenantId}
+                           AND  G.TENANT_ID = #{tenantId}
+                           AND  TDLP.EXPO_YN = 'Y'
+                           AND  TDLP.PROD_ID = A.PROD_ID
+                           AND  A.PART_PROD_ID = D.PROD_ID
+                           AND  A.PROD_RSHP_CD = 'DP010802'
+                           AND E.PROD_STATUS_CD = 'PD000403'
+                           AND  A.PROD_ID = G.PROD_ID
+                           AND  G.PROD_STATUS_CD = 'PD000403'
+                           AND  A.PROD_ID = B.PROD_ID
+                           AND  B.USE_YN = 'Y'
+                           AND  B.MENU_ID = C.MENU_ID
+                           AND  C.USE_YN = 'Y'
+                           AND  D.PROD_ID = E.PROD_ID
+                           AND (F.DEVICE_MODEL_CD = #{deviceModelCd} OR F.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                           AND  A.PART_PROD_ID = F.PROD_ID
+                           AND  (CASE WHEN D.TOP_MENU_ID = 'DP13' THEN
+                                           CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
+                                      WHEN D.TOP_MENU_ID = 'DP14' THEN
+                                           CASE WHEN #{comicSprtYn} = 'Y' THEN 1 ELSE 0 END
+                                      WHEN D.TOP_MENU_ID = 'DP15' THEN 0
+                                      WHEN D.TOP_MENU_ID = 'DP16' THEN
+                                           CASE WHEN D.META_CLSF_CD = 'CT25' THEN
+                                                CASE WHEN #{musicSprtYn} = 'Y' THEN 1 ELSE 0 END ELSE 1 END
+                                      WHEN D.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+                                           CASE WHEN NVL(D.DRM_YN, 'N') = 'Y' AND #{videoDrmSprtYn} = 'N' THEN 0
+                                                ELSE CASE WHEN #{sdVideoSprtYn} = 'Y' THEN 1 ELSE 0 END END
+                                      ELSE 1 END) = 1    
+                     )
+                      UNION ALL
+                      SELECT  TDL.LIST_ID
+                           ,  TDL.LIST_NM
+                           ,  TDL.IMG_PATH
+                           ,  TDL.EXPO_ORD
+                           ,  TDL.EXPO_ORD_SUB
+                           ,  ROW_NUMBER() OVER(PARTITION BY TDL.LIST_ID ORDER BY TDL.LIST_ID DESC) AS RN
+                        FROM  TB_DP_LIST TDL
+                       WHERE  TDL.LIST_ID LIKE 'TAR%'
+                         AND  TDL.TENANT_ID = #{tenantId}
+                         AND  TDL.EXPO_YN = 'Y'
+                         AND  EXISTS (
+                              SELECT  1
+                                FROM  TB_DP_LIST_PROD TDLP
+                                    , TB_DP_PROD_RSHP A
+                                    , TB_DP_SHPG_CATALOG      B /* 쇼핑 카탈로그 */
+                                    , TB_DP_PROD_CATALOG_MAPG C /* 카탈로그-상품 매핑 */
+                                    , TB_DP_PROD D  
+                                    , TB_DP_TENANT_PROD E
+                                WHERE  TDL.LIST_ID = TDLP.LIST_ID
+                                  AND  TDLP.TENANT_ID = #{tenantId}
+                                  AND  E.TENANT_ID = #{tenantId}
+                                  AND  TDLP.EXPO_YN = 'Y'
+                                  AND  A.PROD_RSHP_CD = 'DP010802'
+                                  AND  TDLP.PROD_ID = B.CATALOG_ID  
+                                  AND  B.CATALOG_ID = C.CATALOG_ID
+                                  AND  A.PROD_ID = C.PROD_ID
+                                  AND  C.BASE_YN = 'Y'
+                                  AND  C.USE_YN = 'Y'
+                                  AND  A.PROD_ID = D.PROD_ID
+                                  AND  D.PROD_ID = E.PROD_ID   
+                                  AND  E.EXPO_YN = 'Y'
+                                  AND  EXISTS (
+                                       SELECT 1 
+                                         FROM  TB_DP_SPRT_DEVICE DV  
+                                            ,  TB_CM_DEVICE CM
+                                        WHERE  1=1
+                                          AND  DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
+                                          AND  CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
+                                          AND  ( DV.DEVICE_MODEL_CD = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = #{anyDeviceModelCd} )
+                                          AND  DV.PROD_ID = D.PROD_ID
+                                               ) 
+                                  AND ( CASE WHEN D.TOP_MENU_ID IN ( 'DP28' )
+                                             THEN ( SELECT 1
+                                                      FROM  TB_DP_SHPG_PROD SP
+                                                     WHERE  SP.PROD_ID = D.PROD_ID
+                                                       AND  SP.SALE_YN = 'Y'
+                                                       AND  SP.B2B_PROD_YN = 'Y'
+                                                       AND  ROWNUM <![CDATA[ <= ]]> 1  )
+                                             ELSE 1
+                                          END ) = 1
+                                   )
+                     ) AA
+                 WHERE RN = 1 
+            ) BB
+       WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>
 </mapper>
