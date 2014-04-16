@@ -475,13 +475,14 @@ public class IdpServiceImpl implements IdpService {
 					final String fdsMbrId = userId;
 					final String fdsUsermbrNoPre = prevMbrNoForgameCenter;
 					final String fdsUsermbrNoPost = currentMbrNoForgameCenter;
+					final String fdsUserId = userId;
 
 					new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
 							shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
 									.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost)
-									.result_code("SUCC");
+									.result_code("SUCC").mbr_id(fdsUserId);
 
 							LOGGER.info(shuttle.toString());
 						}
@@ -491,12 +492,14 @@ public class IdpServiceImpl implements IdpService {
 				} catch (StorePlatformException spe) {
 					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+					final String fdsUserId = userId;
 
 					new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
 							shuttle.log_id("TL00030").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
-									.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("");
+									.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("")
+									.mbr_id(fdsUserId);
 
 							LOGGER.info(shuttle.toString());
 						}
@@ -2290,13 +2293,14 @@ public class IdpServiceImpl implements IdpService {
 						final String fdsMbrId = newUserId;
 						final String fdsUsermbrNoPre = mbrNo;
 						final String fdsUsermbrNoPost = userKey;
+						final String fdsUserId = newUserId;
 
 						new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
 							@Override
 							public void customize(TLogSentinelShuttle shuttle) {
 								shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
 										.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost)
-										.result_code("SUCC");
+										.result_code("SUCC").mbr_id(fdsUserId);
 
 								LOGGER.info(shuttle.toString());
 							}
@@ -2308,12 +2312,14 @@ public class IdpServiceImpl implements IdpService {
 			} catch (StorePlatformException spe) {
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+				final String fdsUserId = newUserId;
 
 				new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
 						shuttle.log_id("TL00030").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
-								.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("");
+								.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("")
+								.mbr_id(fdsUserId);
 
 						LOGGER.info(shuttle.toString());
 					}
@@ -2710,20 +2716,15 @@ public class IdpServiceImpl implements IdpService {
 						String telecomValueByMdnInfo = ""; // 통신사코드정보
 						String isPrimary = "N"; // 대표단말여부
 
-						if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_SKT)) {
+						// MDN_CARRIER_DEVICE_TELECOM_SKT
+						if (telecomTypeByMdnInfo.equals(MemberConstants.MDN_CARRIER_DEVICE_TELECOM_SKT)) {
 							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_SKT;
-						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_KT)) {
+						} else if (telecomTypeByMdnInfo.equals(MemberConstants.MDN_CARRIER_DEVICE_TELECOM_KTF)) {
 							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_KT;
-						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_LGT)) {
+						} else if (telecomTypeByMdnInfo.equals(MemberConstants.MDN_CARRIER_DEVICE_TELECOM_LGT)) {
 							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_LGT;
-						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_OMD)) {
-							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_OMD;
-						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_NSH)) {
-							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_NSH;
-						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_NON)) {
+						} else if (telecomTypeByMdnInfo.equals(MemberConstants.MDN_CARRIER_DEVICE_TELECOM_NON_SKT)) {
 							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_NON;
-						} else if (telecomTypeByMdnInfo.equals(MemberConstants.NM_DEVICE_TELECOM_IOS)) {
-							telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_IOS;
 						}
 
 						// MDN정보 USERMBR_NO로 INSD_USERMBR_NO를 조회하기위해 사용자 목록을 조회함.
