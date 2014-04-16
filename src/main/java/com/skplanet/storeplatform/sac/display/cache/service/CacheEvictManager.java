@@ -35,6 +35,8 @@ public interface CacheEvictManager {
 
     void evictAllMusicMeta();
 
+    void evictAllVodMeta();
+
     void evictAllShoppingMeta();
 
     void evictAllFreepassMeta();

@@ -40,6 +40,8 @@ public interface ProductInfoManager {
 
     List<MusicMeta> getMusicMetaList(String langCd, String tenantId, String chartClsfCd, String stdDt, List<String> prodIdList);
 
+    VodMeta getVodMeta(VodMetaParam param);
+
     /**
      * 쇼핑상품 조회
      * @param param

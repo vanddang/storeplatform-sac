@@ -273,6 +273,7 @@
 		           AND F.TENANT_ID = G.TENANT_ID(+)
 		           AND B.PROD_ID = H.PROD_ID(+)
 		           AND #{imageCd} = H.IMG_CD(+)
+                   AND #{tenantHeader.langCd} = H.LANG_CD(+)
 		           AND A.PART_PROD_ID = I.PROD_ID
 		           AND I.CONTENTS_TYPE_CD = 'PD002502'
 		           AND I.PROD_ID = J.PROD_ID

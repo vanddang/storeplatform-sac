@@ -305,6 +305,160 @@
             AND CPD.PROD_ID IN <foreach collection="prodIdList" open="(" close=")" separator="," item="v">#{v}</foreach>
     </select>
 
+    <select id="getVodMeta" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.VodMeta"><![CDATA[
+        SELECT
+        R.UP_MENU_ID
+        , R.TOP_MENU_ID
+        , R.MENU_ID
+        , R.MENU_NM
+        , R.MENU_DESC
+        , R.META_CLSF_CD
+        , R.COMPT_YN
+        , R.PROD_ID
+        , R.PART_PROD_ID
+        , R.VOD_TITL_NM
+        , R.PROD_NM
+        , R.CHAPTER
+        , R.SAMPL_URL
+        , R.SC_SAMPL_URL
+        , R.PROD_BASE_DESC
+        , R.PROD_GRD_CD
+        , R.ARTIST1_NM
+        , R.ARTIST2_NM
+        , R.ISSUE_DAY
+        , R.CHNL_COMP_NM
+        , R.AGENCY_NM
+        , NVL(R.HDV_YN, 'N') AS HDV_YN
+        , NVL(R.DOLBY_SPRT_YN, 'N') AS DOLBY_SPRT_YN
+        , R.EXPO_SELLER_EMAIL
+        , R.EXPO_SELLER_NM
+        , R.EXPO_SELLER_TELNO
+        , ( CASE WHEN R.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
+        , ( CASE WHEN R.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
+        , CASE WHEN (R.CHNL_PERIOD_AMT >= 0  AND R.STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
+        ELSE NVL(R.CHNL_UNLMT_AMT, 0)
+        END AS CHNL_PROD_AMT  /* 채널 대표 가격 */
+        , NVL(R.PROD_AMT, 0) AS EPSD_PROD_AMT  /* 에피소드 가격 */
+        , R.PROD_NET_AMT
+        , R.PROD_CHRG_YN AS PROD_CHRG
+        , NVL(R.PATICPERS_CNT, 0) AS PATICPERS_CNT
+        , NVL(R.PRCHS_CNT, 0) AS PRCHS_CNT
+        , NVL((CASE WHEN (R.AVG_EVLU_SCORE > 0 AND R.AVG_EVLU_SCORE < 1) THEN 1
+        WHEN R.AVG_EVLU_SCORE > 5 THEN 5
+        ELSE ROUND(R.AVG_EVLU_SCORE, 1)
+        END), 0) AS AVG_EVLU_SCORE
+        , R.FILE_PATH || R.FILE_NM AS FILE_PATH
+        , R.TOP_MENU_NM
+        -- , R.FILE_SIZE
+        , R.PROD_DTL_DESC
+        , R.PROD_STATUS_CD
+        , FC_GET_CM_CD_NM(R.BRDC_COMP_CD, 'ko') AS BRDC_COMP_NM
+        FROM
+        (
+            SELECT
+            RSHP.PROD_ID
+            , RSHP.PART_PROD_ID
+            , CPROD.PROD_GRD_CD
+            , CPROD.USE_PERIOD_UNIT_CD
+            , CPROD.META_CLSF_CD
+            , CPROD.CONTENTS_TYPE_CD
+            , CPROD.EXPO_SELLER_EMAIL
+            , CPROD.EXPO_SELLER_NM
+            , CPROD.EXPO_SELLER_TELNO
+            , CPROD.DRM_YN
+            , CPDESC.PROD_NM
+            , CPDESC.ARTIST1_NM
+            , CPDESC.ARTIST2_NM
+            , CPDESC.PROD_BASE_DESC
+            , CPDESC.PROD_DTL_DESC
+            , CVOD.COMPT_YN
+            , CVOD.VOD_TITL_NM
+            , CVOD.STRM_EPSD_CNT
+            , CVOD.EPSD_CNT
+            , CVOD.CHNL_COMP_NM
+            , CVOD.AGENCY_NM
+            , CVOD.HDV_YN
+            , CVOD.DOLBY_SPRT_YN
+            , CVOD.BRDC_COMP_CD
+            , CTPROD.TENANT_ID
+            , CTPROD.PROD_STATUS_CD
+            , CTPRC.CHNL_PERIOD_AMT
+            , CTPRC.CHNL_UNLMT_AMT
+            , CTSTAT.AVG_EVLU_SCORE
+            , CTSTAT.PATICPERS_CNT
+            , CTSTAT.PRCHS_CNT
+            , CPI.FILE_PATH
+            , CPI.FILE_NM
+            , CPI.FILE_SIZE
+            , EPROD.PROD_CHRG_YN
+            , EVOD.CHAPTER
+            , EVOD.SAMPL_URL
+            , EVOD.SC_SAMPL_URL
+            , EVOD.ISSUE_DAY
+            , ETPRC.PROD_AMT
+            , ETPRC.PROD_NET_AMT
+            , EMCPM.MENU_ID
+            , EMC.UP_MENU_ID
+            , EMC.TOP_MENU_ID
+            , EMCD.MENU_NM
+            , EMCD.MENU_DESC
+            , TMCD.MENU_NM AS TOP_MENU_NM
+        FROM TB_DP_PROD_RSHP RSHP
+          INNER JOIN TB_DP_TENANT_PROD CTPROD
+            ON CTPROD.PROD_ID = RSHP.PROD_ID
+          INNER JOIN TB_DP_PROD_DESC CPDESC
+            ON CPDESC.PROD_ID = CTPROD.PROD_ID
+          LEFT OUTER JOIN TB_DP_PROD_IMG CPI
+            ON CPI.PROD_ID = CTPROD.PROD_ID AND CPI.IMG_CD = 'DP000101' AND CPI.LANG_CD = #{langCd}
+          LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS CTSTAT
+            ON CTSTAT.PROD_ID = CTPROD.PROD_ID AND CTSTAT.TENANT_ID = CTPROD.TENANT_ID
+          INNER JOIN TB_DP_TENANT_PROD_PRICE CTPRC
+            ON CTPRC.PROD_ID = CTPROD.PROD_ID AND CTPRC.TENANT_ID = CTPROD.TENANT_ID
+          INNER JOIN TB_DP_PROD CPROD
+            ON CPROD.PROD_ID = CTPROD.PROD_ID
+          INNER JOIN TB_DP_VOD_PROD CVOD
+            ON CVOD.PROD_ID = CTPROD.PROD_ID
+          INNER JOIN TB_DP_PROD EPROD
+            ON EPROD.PROD_ID = RSHP.PART_PROD_ID
+          INNER JOIN TB_DP_VOD_PROD EVOD
+            ON EVOD.PROD_ID = EPROD.PROD_ID
+          INNER JOIN TB_DP_TENANT_PROD ETPROD
+            ON ETPROD.PROD_ID = EPROD.PROD_ID AND ETPROD.TENANT_ID = CTPROD.TENANT_ID
+          INNER JOIN TB_DP_TENANT_PROD_PRICE ETPRC
+            ON ETPRC.PROD_ID = EPROD.PROD_ID AND ETPRC.TENANT_ID = CTPROD.TENANT_ID
+          INNER JOIN TB_DP_MENU_CATEGORY_PROD_MAPG EMCPM
+            ON EMCPM.PROD_ID = EPROD.PROD_ID
+          INNER JOIN TB_DP_MENU_CATEGORY EMC
+            ON EMC.MENU_ID = EMCPM.MENU_ID
+          INNER JOIN TB_DP_MENU_CATEGORY_DESC EMCD
+            ON EMCD.MENU_ID = EMCPM.MENU_ID AND EMCD.LANG_CD = CPDESC.LANG_CD
+          INNER JOIN TB_DP_MENU_CATEGORY_DESC TMCD
+            ON TMCD.MENU_ID = CPROD.TOP_MENU_ID AND TMCD.LANG_CD = CPDESC.LANG_CD
+        WHERE 1 = 1 ]]>
+            AND RSHP.PROD_RSHP_CD = 'DP010802'
+            <if test="prodIdType == 'CHANNEL'">
+            AND RSHP.PROD_ID = #{prodId}
+            </if>
+            <if test="prodIdType == 'EPISODE'">
+                AND RSHP.PART_PROD_ID = #{prodId}
+            </if>
+            AND CPROD.CONTENTS_TYPE_CD = 'PD002501'
+            AND EPROD.CONTENTS_TYPE_CD = 'PD002502'
+            AND CPDESC.LANG_CD = #{langCd}
+            AND CTPROD.TENANT_ID = #{tenantId}
+            AND CTPROD.EXPO_YN = 'Y'
+            AND SYSDATE BETWEEN CTPRC.APPLY_START_DT AND CTPRC.APPLY_END_DT
+            AND ETPROD.EXPO_YN = 'Y'
+            AND SYSDATE BETWEEN ETPRC.APPLY_START_DT AND ETPRC.APPLY_END_DT
+            AND EMCPM.BASE_YN = 'Y'
+            AND EMCPM.USE_YN = 'Y'
+            AND EMC.USE_YN = 'Y'
+            ORDER BY EVOD.CHAPTER DESC, EPROD.REG_DT DESC
+        ) R
+        WHERE 1=1
+        AND ROWNUM = 1
+    </select>
+
     <select id="getShoppingMeta" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.ShoppingMeta">
         SELECT /* ProductInfoMapper.xml, getShoppingMeta, SAC : 정희원 , 2014-04-14 */
             *
@@ -475,7 +629,12 @@
             LEFT OUTER JOIN TB_DP_PROD_IMG BIMG
                 ON BIMG.PROD_ID = CPROD.PROD_ID AND BIMG.LANG_CD = CPDESC.LANG_CD AND BIMG.IMG_CD = 'DP000197' -- Banner
             LEFT OUTER JOIN TB_DP_PROD_IMG TIMG
-                ON TIMG.PROD_ID = CPROD.PROD_ID AND TIMG.LANG_CD = CPDESC.LANG_CD AND TIMG.IMG_CD = 'DP000199' -- Thumbnail
+                ON TIMG.PROD_ID = CPROD.PROD_ID AND TIMG.LANG_CD = CPDESC.LANG_CD
+                   AND TIMG.IMG_CD = (
+                               CASE WHEN CXPROD.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN 'DP000199' -- thumbnail
+                               WHEN CXPROD.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN 'DP000153' -- ebook thumbnail
+                               END
+                       )
         WHERE 1=1
               AND CPROD.SVC_GRP_CD = #{svcGrpCd} -- 'DP000207'
               AND CPROD.PROD_ID = #{prodId}
