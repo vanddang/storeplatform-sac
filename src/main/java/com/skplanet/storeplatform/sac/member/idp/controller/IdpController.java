@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.idp.service.IdpProvisionService;
 import com.skplanet.storeplatform.sac.member.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
@@ -52,9 +53,10 @@ public class IdpController {
 	public ProvisioningRes provisioning(@RequestBody ProvisioningReq provisioningReq) {
 		ProvisioningRes provisioningRes = new ProvisioningRes();
 		try {
-			LOGGER.info("#### E/C => SAC [Inbound] Start ####");
-			LOGGER.info("provisioning - cmd : {}, query string : {}", provisioningReq.getCmd(),
+			LOGGER.debug("#### E/C => SAC [Inbound] Start ####");
+			LOGGER.debug("provisioning - cmd : {}, query string : {}", provisioningReq.getCmd(),
 					provisioningReq.getReqParam());
+			LOGGER.info("Inbound Param : {}", ConvertMapperUtils.convertObjectToJson(provisioningReq));
 			String cmd = provisioningReq.getCmd();
 			boolean isIm = (cmd.indexOf("RX") == 0);
 			if (isIm) {
@@ -69,7 +71,7 @@ public class IdpController {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		LOGGER.info("#### E/C => SAC [Inbound] End ####");
+		LOGGER.debug("#### E/C => SAC [Inbound] End ####");
 		return provisioningRes;
 	}
 }
