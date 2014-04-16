@@ -3,17 +3,19 @@
 <mapper namespace="PossLendProductInfo">
     <!-- 소장/대여 상품 조회 -->
     <select id="searchPossLendProductInfo" parameterType="PossLendProductInfoSacReq" resultType="PossLendProductInfo">
-		SELECT /* PossLendProductInfo.xml, searchPossLendProductInfo, SAC 전시, 2014-04-15 */
-		       A.PROD_ID      AS POSS_PROD_ID
+		SELECT /* PossLendProductInfo.xml, searchPossLendProductInfo, SAC 전시, 2014-04-16 */
+		       A.PROD_ID              AS POSS_PROD_ID
 		      ,B.POSS_LEND_CLSF_CD
-		      ,C.PROD_NM      AS POSS_PROD_NM 
-		      ,E.PROD_AMT     AS POSS_PROD_AMT
-		      ,F.PROD_ID      AS LEND_PROD_ID
+		      ,C.PROD_NM              AS POSS_PROD_NM 
+		      ,E.PROD_AMT             AS POSS_PROD_AMT
+		      ,F.PROD_ID              AS LEND_PROD_ID
 		      ,G.POSS_LEND_CLSF_CD
-		      ,H.PROD_NM      AS LEND_PROD_NM
-		      ,J.PROD_AMT     AS LEND_PROD_AMT
+		      ,H.PROD_NM              AS LEND_PROD_NM
+		      ,J.PROD_AMT             AS LEND_PROD_AMT
 		      ,F.USE_PERIOD_UNIT_CD
 		      ,F.USE_PERIOD
+		      ,F.USE_PERIOD_UNIT_CD   AS DOWN_POSSIBLE_PERIOD_UNIT_CD
+		      ,F.USE_PERIOD           AS DOWN_POSSIBLE_PERIOD
 		FROM   TB_DP_PROD              A /* 소장 상품 */
 		      ,UV_TB_DP_MULTIMDA_PROD  B /* 소장 상품 */
 		      ,TB_DP_PROD_DESC         C /* 소장 상품 설명 */
