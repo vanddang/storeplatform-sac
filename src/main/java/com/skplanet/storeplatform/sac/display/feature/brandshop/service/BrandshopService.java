@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.feature.brandshop.service;
 
+import com.skplanet.storeplatform.sac.client.display.vo.brandshop.BrandshopListSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.brandshop.BrandshopListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.brandshop.BrandshopSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.brandshop.BrandshopSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -33,5 +35,5 @@ public interface BrandshopService {
 	 *            BrandshopSacReq
 	 * @return BrandShopRes
 	 */
-	BrandshopSacRes searchBrandshopList(BrandshopSacReq req, SacRequestHeader header);
+	BrandshopListSacRes searchBrandshopList(BrandshopListSacReq req, SacRequestHeader header);
 }

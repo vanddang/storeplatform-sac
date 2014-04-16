@@ -90,6 +90,25 @@
         ORDER BY RNUM
     </select>
     
+    <!-- 브렌드샵 테마 상품 Layout 조회 -->
+    <select id="selectBrandshopInfo" parameterType="BrandshopSacReq" resultType="Brandshop">
+        SELECT  /* BrandshopMapper.XML, selectBrandshopInfo, SAC 전시, 2014-04-16 */    
+                BRAND_SHOP_NO AS BRAND_ID
+              , BRAND_SHOP_NM
+              , CATEGORY_NO
+              , (SELECT  MENU_NM
+                   FROM  TB_DP_MENU_CATEGORY_DESC
+                  WHERE  MENU_ID = CATEGORY_NO 
+                    AND  LANG_CD = 'ko'
+                    AND  ROWNUM = 1) AS MENU_NM    
+              , CONCAT( BNR_IMG_PATH, BNR_IMG_NM ) AS LOG_IMG_POS
+              , BNR_IMG_NM
+              , BNR_IMG_SIZE
+              , EXPO_ORD
+          FROM  TB_DP_BRAND_SHOP
+         WHERE  BRAND_SHOP_NO = #{brandshopId}
+    </select>
+    
     <!-- 브렌드샵 테마 상품 조회 -->
     <select id="selectBrandshopList" parameterType="BrandshopSacReq" resultType="ProductBasicInfo">
         SELECT  /* BrandshopMapper.XML, selectBrandshopList, SAC 전시, 2014-02-28 */    

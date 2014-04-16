@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.brandshop.BrandshopListSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.brandshop.BrandshopListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.brandshop.BrandshopSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.brandshop.BrandshopSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -59,7 +61,7 @@ public class BrandshopController {
 	 */
 	@RequestMapping(value = "/display/feature/brandshop/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BrandshopSacRes searchBrandshopList(@Validated BrandshopSacReq req, SacRequestHeader header) {
+	public BrandshopListSacRes searchBrandshopList(@Validated BrandshopListSacReq req, SacRequestHeader header) {
 		return this.BrandshopService.searchBrandshopList(req, header);
 
 	}
