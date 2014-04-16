@@ -285,9 +285,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		smsReq.setRecvMdn(request.getRecvMdn());
 		smsReq.setTeleSvcId(request.getTeleSvcId());
 		smsReq.setMsg(messageText);
-		if (StringUtils.isBlank(request.getCarrier())) { // 통신사정보 Optional
-			smsReq.setCarrier(request.getCarrier());
-		}
+		// 통신사정보 Optional
+		smsReq.setCarrier(StringUtils.defaultIfBlank(request.getCarrier(), null));
 
 		LOGGER.debug("[MiscellaneousService.getPhoneAuthorizationCode] SAC->SMS 발송 Request : {}", smsReq);
 		this.messageSCI.smsSend(smsReq);
