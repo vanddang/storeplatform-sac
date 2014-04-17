@@ -37,6 +37,15 @@ public class AppDetail extends CommonInfo {
     private String isDeviceSupp;
     private Date saleStrtDt;
     private String svcGrpCd;
+    private String drmYn;
+
+    public String getDrmYn() {
+        return drmYn;
+    }
+
+    public void setDrmYn(String drmYn) {
+        this.drmYn = drmYn;
+    }
 
     public String getSvcGrpCd() {
         return svcGrpCd;
