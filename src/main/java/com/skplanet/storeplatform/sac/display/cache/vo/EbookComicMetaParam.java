@@ -56,4 +56,8 @@ public class EbookComicMetaParam extends CommonInfo {
     public void setContentType(ContentType contentType) {
         this.contentType = contentType;
     }
+
+    public String getCacheKey() {
+        return prodId + "_" + tenantId + "_" + langCd;
+    }
 }
