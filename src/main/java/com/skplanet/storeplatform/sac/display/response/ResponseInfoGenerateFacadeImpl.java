@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Sale
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -65,6 +67,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 	@Autowired
 	private FreepassInfoGenerator freepassGenerator;
+
+	@Autowired
+	private DisplayCommonService commonService;
 
 	/*
 	 * (non-Javadoc)
@@ -831,6 +836,15 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
+		// Date 생성
+		List<Date> dateList = new ArrayList<Date>();
+		dateList.add(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, metaInfo.getRegDt()));
+		product.setDateList(dateList);
+		// previewSourceList 생성
+		List<Source> previewSourceList = this.commonGenerator.generateVodSourceList(metaInfo);
+		product.setPreviewSourceList(previewSourceList);
+		// 상품 유/무료 구분
+		product.setProdChrgYn(metaInfo.getProdChrg());
 		return product;
 	}
 
@@ -857,11 +871,26 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
+		// Date 생성
+		List<Date> dateList = new ArrayList<Date>();
+		dateList.add(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, metaInfo.getRegDt()));
+		product.setDateList(dateList);
 		// previewSourceList 생성
 		List<Source> previewSourceList = this.commonGenerator.generateVodSourceList(metaInfo);
-		// 방송용 Vod 설정
-		Vod vod = this.vodGenerator.generateVod(metaInfo);
 		product.setPreviewSourceList(previewSourceList);
+
+		// 방송용 Vod 설정
+		Vod vod = new Vod();
+		Chapter chapter = new Chapter();
+		chapter.setUnit(this.commonService.getVodChapterUnit());
+		if (StringUtils.isNotEmpty(metaInfo.getChapter())) {
+			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
+		}
+		if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd())
+				&& !DisplayConstants.DP_VOD_SHORT_STORY_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+			vod.setChapter(chapter);
+		}
+
 		product.setVod(vod);
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());

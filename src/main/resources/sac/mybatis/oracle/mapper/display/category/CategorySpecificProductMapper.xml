@@ -299,7 +299,9 @@
               , LA.CID
               , LA.SVC_GRP_CD
               , LA.SVC_GRP_NM
-              , FC_GET_CM_CD_NM(LA.BRDC_COMP_CD, #{tenantHeader.langCd}) AS BRDC_COMP_NM
+              , FC_GET_CM_CD_NM(LA.BRDC_COMP_CD, #{tenantHeader.langCd}) AS BRDC_COMP_NM         
+              , LA.GENRE_CD
+              , TO_CHAR(LA.REG_DT,'YYYYMMDDHH24MISS') REG_DT
           FROM (          
                 SELECT 
                     JA.TENANT_ID
@@ -348,7 +350,9 @@
                     , JA.CID
                     , JA.SVC_GRP_CD                    
                     , JA.SVC_GRP_NM                    
-                    , JA.BRDC_COMP_CD  
+                    , JA.BRDC_COMP_CD          
+                    , JA.GENRE_CD
+                    , JA.REG_DT
                 FROM (SELECT G.TENANT_ID
                            , A.MENU_ID
                            , A.UP_MENU_ID
@@ -400,7 +404,9 @@
                          </if>                           
                            , D.SVC_GRP_CD                    
                            , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM   
-                           , E.BRDC_COMP_CD    
+                           , E.BRDC_COMP_CD          
+                           , E.GENRE_CD
+                           , D.REG_DT
                         FROM TB_DP_MENU_CATEGORY           A
                            , TB_DP_MENU_CATEGORY_PROD_MAPG B
                            , TB_DP_MENU_CATEGORY_DESC      C
