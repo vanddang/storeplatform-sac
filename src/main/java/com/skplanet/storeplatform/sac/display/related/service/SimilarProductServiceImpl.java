@@ -98,7 +98,7 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 		MetaInfo retMetaInfo = null;
 		Product product = null;
 
-		List<ProductBasicInfo> similarProductList = null;
+		List<ProductBasicInfo> similarProductList = new ArrayList<ProductBasicInfo>();
 		List<Product> productList = null;
 
 		// 단말 지원정보 조회

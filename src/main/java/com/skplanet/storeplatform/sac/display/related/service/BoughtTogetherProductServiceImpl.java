@@ -99,7 +99,7 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 		MetaInfo retMetaInfo = null;
 		Product product = null;
 
-		List<ProductBasicInfo> boughtTogetherProductList = null;
+		List<ProductBasicInfo> boughtTogetherProductList = new ArrayList<ProductBasicInfo>();
 		List<Product> productList = null;
 
 		// 단말 지원정보 조회
