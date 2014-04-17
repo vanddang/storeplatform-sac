@@ -132,10 +132,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 		}
 		mapReq.put("PKG_LIST", listPkgNm);
 		mapReq.put("deviceHeader", deviceHeader);
-		mapReq.put("tenantHeader", tenantHeader);
-		mapReq.put("contentsTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-		mapReq.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-		mapReq.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		mapReq.put("parentClsfCd", DisplayConstants.DP_PART_PARENT_CLSF_CD);
 
 		List<Map> updateTargetList = this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", mapReq,
 				Map.class);

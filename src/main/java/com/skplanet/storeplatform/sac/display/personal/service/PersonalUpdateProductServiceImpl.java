@@ -123,6 +123,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		}
 		mapReq.put("PKG_LIST", listPkgNm);
 		mapReq.put("deviceHeader", deviceHeader);
+		mapReq.put("parentClsfCd", DisplayConstants.DP_PART_PARENT_CLSF_CD);
 		// List<Object> listPkg = queryForList("updateAlarm.getRecentFromPkgNm", mapReq);
 		List<Map> updateTargetList = this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", mapReq,
 				Map.class);
