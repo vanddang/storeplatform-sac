@@ -328,7 +328,6 @@
                                                       FROM  TB_DP_SHPG_PROD SP
                                                      WHERE  SP.PROD_ID = D.PROD_ID
                                                        AND  SP.SALE_YN = 'Y'
-                                                       AND  SP.B2B_PROD_YN = 'Y'
                                                        AND  ROWNUM <![CDATA[ <= ]]> 1  )
                                              ELSE 1
                                           END ) = 1
