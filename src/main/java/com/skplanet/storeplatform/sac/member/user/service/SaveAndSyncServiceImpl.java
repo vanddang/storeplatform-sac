@@ -89,12 +89,13 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		String preDeviceId = checkSaveNSyncResponse.getPreDeviceID(); // 이전 MSISDN.
 		String nowDeviceId = checkSaveNSyncResponse.getDeviceID(); // 현재 MSISDN.
 
+		SaveAndSync saveAndSync = new SaveAndSync();
 		String newMbrNo = null;
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
-			LOGGER.info("## >> ★★★  변동성 대상!!!");
-			LOGGER.info("## >> ★★★  nowDeviceId : {}", nowDeviceId);
-			LOGGER.info("## >> ★★★  preDeviceId  : {}", preDeviceId);
+			LOGGER.info("변동성 대상!!!");
+			LOGGER.info("nowDeviceId : {}", nowDeviceId);
+			LOGGER.info("preDeviceId  : {}", preDeviceId);
 
 			/**
 			 * 변동성 대상 회원의 상태를 확인한다.
@@ -129,41 +130,41 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 			}
 
+			/**
+			 * 게임센터 연동.
+			 */
+			if (this.isCall) {
+				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+				gameCenterSacReq.setUserKey(newMbrNo);
+				gameCenterSacReq.setMbrNo(newMbrNo);
+				gameCenterSacReq.setDeviceId(deviceId);
+				gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
+				gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
+				gameCenterSacReq.setPreDeviceId(preDeviceId);
+				gameCenterSacReq.setPreUserKey(userKey);
+				gameCenterSacReq.setPreMbrNo(userKey);
+				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
+				this.deviceService.insertGameCenterIF(gameCenterSacReq);
+			}
+
+			if (this.isCall) {
+				saveAndSync.setUserKey(newMbrNo);
+			} else {
+				saveAndSync.setUserKey(userKey);
+			}
+			saveAndSync.setDeviceKey(deviceKey); // 휴대기기 Key		
+
 		} else {
 
-			LOGGER.info("## >> ★★★  변동성 대상 아님!!!");
+			LOGGER.info("변동성 대상 아님!!!");
 
-		}
-
-		/**
-		 * 게임센터 연동.
-		 */
-		if (this.isCall) {
-			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(newMbrNo);
-			gameCenterSacReq.setMbrNo(newMbrNo);
-			gameCenterSacReq.setDeviceId(deviceId);
-			gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
-			gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
-			gameCenterSacReq.setPreDeviceId(preDeviceId);
-			gameCenterSacReq.setPreUserKey(userKey);
-			gameCenterSacReq.setPreMbrNo(userKey);
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
-			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 		}
 
 		/**
 		 * 결과 setting.
 		 */
-		SaveAndSync saveAndSync = new SaveAndSync();
 		saveAndSync.setIsSaveAndSyncTarget(isSaveNSync); // 변동성 대상 여부 (Y/N)
-		if (this.isCall) {
-			saveAndSync.setUserKey(newMbrNo);
-		} else {
-			saveAndSync.setUserKey(userKey);
-		}
-		saveAndSync.setDeviceKey(deviceKey); // 휴대기기 Key
-		LOGGER.info("## >> SaveAndSync : {}", saveAndSync);
+		LOGGER.info("SaveAndSync Response: {}", saveAndSync);
 
 		return saveAndSync;
 
@@ -187,7 +188,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			/**
 			 * (IDP 연동) 무선회원 가입 요청 (cmd - joinForWap).
 			 */
-			LOGGER.info("## IDP 모바일 회원 가입 요청.");
+			LOGGER.info("IDP 모바일 회원 가입 요청.");
 			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 			joinForWapEcReq.setUserMdn(deviceId);
 			joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT); // 이동 통신사
@@ -228,7 +229,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * IDP 모바일 회원 가입 탈퇴 요청.
 		 */
-		LOGGER.info("## IDP 모바일 회원 가입 탈퇴 요청.");
+		LOGGER.info("IDP 모바일 회원 가입 탈퇴 요청.");
 		SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
 		ecReq.setUserMdn(preDeviceId);
 		this.idpSCI.secedeForWap(ecReq);
@@ -265,7 +266,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		reviveUserRequest.setImMbrNo(newMbrNo);
 		reviveUserRequest.setUserKey(userKey);
 		ReviveUserResponse reviveUserResponse = this.deviceSCI.reviveUser(reviveUserRequest);
-		LOGGER.info("## >> reviveUserResponse : {}", reviveUserResponse);
+		LOGGER.info("reviveUserResponse : {}", reviveUserResponse);
 
 		/**
 		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
