@@ -106,12 +106,12 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		String deviceKey = ebookReq.getDeviceKey();
 		String userKey = ebookReq.getUserKey();
 
-		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("[getDownloadEbookInfo] idType : {}", idType);
-		this.logger.debug("[getDownloadEbookInfo] productId : {}", productId);
-		this.logger.debug("[getDownloadEbookInfo] deviceKey : {}", deviceKey);
-		this.logger.debug("[getDownloadEbookInfo] userKey : {}", userKey);
-		this.logger.debug("----------------------------------------------------------------");
+		this.logger.info("----------------------------------------------------------------");
+		this.logger.info("[getDownloadEbookInfo] idType : {}", idType);
+		this.logger.info("[getDownloadEbookInfo] productId : {}", productId);
+		this.logger.info("[getDownloadEbookInfo] deviceKey : {}", deviceKey);
+		this.logger.info("[getDownloadEbookInfo] userKey : {}", userKey);
+		this.logger.info("----------------------------------------------------------------");
 
 		// ID유형 유효값 체크
 		if (!"channel".equals(idType) && !"episode".equals(idType)) {
@@ -219,10 +219,10 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					this.logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
 				}
 
-				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("[getDownloadEbookInfo] purchasePassFlag : {}", purchasePassFlag);
-				this.logger.debug("[getDownloadEbookInfo] historyRes : {}", historyRes);
-				this.logger.debug("----------------------------------------------------------------");
+				this.logger.info("----------------------------------------------------------------");
+				this.logger.info("[getDownloadEbookInfo] purchasePassFlag : {}", purchasePassFlag);
+				this.logger.info("[getDownloadEbookInfo] historyRes : {}", historyRes);
+				this.logger.info("----------------------------------------------------------------");
 
 				if (purchasePassFlag && historyRes != null) {
 					String prchsId = null; // 구매ID
@@ -265,16 +265,16 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 								}
 							}
 
-							this.logger.debug("----------------------------------------------------------------");
-							this.logger.debug("[getDownloadEbookInfo] prchsId : {}", prchsId);
-							this.logger.debug("[getDownloadEbookInfo] prchsDt : {}", prchsDt);
-							this.logger.debug("[getDownloadEbookInfo] useExprDt : {}", useExprDt);
-							this.logger.debug("[getDownloadEbookInfo] dwldExprDt : {}", dwldExprDt);
-							this.logger.debug("[getDownloadEbookInfo] prchsCaseCd : {}", prchsCaseCd);
-							this.logger.debug("[getDownloadEbookInfo] prchsState : {}", prchsState);
-							this.logger.debug("[getDownloadEbookInfo] prchsProdId : {}", prchsProdId);
-							this.logger.debug("[getDownloadEbookInfo] prchsPrice : {}", prchsPrice);
-							this.logger.debug("----------------------------------------------------------------");
+							this.logger.info("----------------------------------------------------------------");
+							this.logger.info("[getDownloadEbookInfo] prchsId : {}", prchsId);
+							this.logger.info("[getDownloadEbookInfo] prchsDt : {}", prchsDt);
+							this.logger.info("[getDownloadEbookInfo] useExprDt : {}", useExprDt);
+							this.logger.info("[getDownloadEbookInfo] dwldExprDt : {}", dwldExprDt);
+							this.logger.info("[getDownloadEbookInfo] prchsCaseCd : {}", prchsCaseCd);
+							this.logger.info("[getDownloadEbookInfo] prchsState : {}", prchsState);
+							this.logger.info("[getDownloadEbookInfo] prchsProdId : {}", prchsProdId);
+							this.logger.info("[getDownloadEbookInfo] prchsPrice : {}", prchsPrice);
+							this.logger.info("----------------------------------------------------------------");
 
 							metaInfo.setPurchaseId(prchsId);
 							metaInfo.setPurchaseProdId(prchsProdId);

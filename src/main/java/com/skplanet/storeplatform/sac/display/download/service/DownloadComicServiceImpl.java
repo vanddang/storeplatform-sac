@@ -105,11 +105,11 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		String deviceKey = comicReq.getDeviceKey();
 		String userKey = comicReq.getUserKey();
 
-		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("[getDownloadComicInfo] productId : {}", productId);
-		this.logger.debug("[getDownloadComicInfo] deviceKey : {}", deviceKey);
-		this.logger.debug("[getDownloadComicInfo] userKey : {}", userKey);
-		this.logger.debug("----------------------------------------------------------------");
+		this.logger.info("----------------------------------------------------------------");
+		this.logger.info("[getDownloadComicInfo] productId : {}", productId);
+		this.logger.info("[getDownloadComicInfo] deviceKey : {}", deviceKey);
+		this.logger.info("[getDownloadComicInfo] userKey : {}", userKey);
+		this.logger.info("----------------------------------------------------------------");
 
 		// 헤더정보 세팅
 		comicReq.setTenantId(header.getTenantHeader().getTenantId());
@@ -205,10 +205,10 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					this.logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
 				}
 
-				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("[getDownloadComicInfo] purchasePassFlag : {}", purchasePassFlag);
-				this.logger.debug("[getDownloadComicInfo] historyRes : {}", historyRes);
-				this.logger.debug("----------------------------------------------------------------");
+				this.logger.info("----------------------------------------------------------------");
+				this.logger.info("[getDownloadComicInfo] purchasePassFlag : {}", purchasePassFlag);
+				this.logger.info("[getDownloadComicInfo] historyRes : {}", historyRes);
+				this.logger.info("----------------------------------------------------------------");
 
 				if (purchasePassFlag && historyRes != null) {
 					String prchsId = null; // 구매ID
@@ -251,16 +251,16 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 								}
 							}
 
-							this.logger.debug("----------------------------------------------------------------");
-							this.logger.debug("[getDownloadComicInfo] prchsId : {}", prchsId);
-							this.logger.debug("[getDownloadComicInfo] prchsDt : {}", prchsDt);
-							this.logger.debug("[getDownloadComicInfo] useExprDt : {}", useExprDt);
-							this.logger.debug("[getDownloadComicInfo] dwldExprDt : {}", dwldExprDt);
-							this.logger.debug("[getDownloadComicInfo] prchsCaseCd : {}", prchsCaseCd);
-							this.logger.debug("[getDownloadComicInfo] prchsState : {}", prchsState);
-							this.logger.debug("[getDownloadComicInfo] prchsProdId : {}", prchsProdId);
-							this.logger.debug("[getDownloadComicInfo] prchsPrice : {}", prchsPrice);
-							this.logger.debug("----------------------------------------------------------------");
+							this.logger.info("----------------------------------------------------------------");
+							this.logger.info("[getDownloadComicInfo] prchsId : {}", prchsId);
+							this.logger.info("[getDownloadComicInfo] prchsDt : {}", prchsDt);
+							this.logger.info("[getDownloadComicInfo] useExprDt : {}", useExprDt);
+							this.logger.info("[getDownloadComicInfo] dwldExprDt : {}", dwldExprDt);
+							this.logger.info("[getDownloadComicInfo] prchsCaseCd : {}", prchsCaseCd);
+							this.logger.info("[getDownloadComicInfo] prchsState : {}", prchsState);
+							this.logger.info("[getDownloadComicInfo] prchsProdId : {}", prchsProdId);
+							this.logger.info("[getDownloadComicInfo] prchsPrice : {}", prchsPrice);
+							this.logger.info("----------------------------------------------------------------");
 
 							metaInfo.setPurchaseId(prchsId);
 							metaInfo.setPurchaseProdId(prchsProdId);
