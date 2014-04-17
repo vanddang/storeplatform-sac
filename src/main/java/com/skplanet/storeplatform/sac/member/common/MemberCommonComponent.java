@@ -50,6 +50,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementList
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
@@ -1116,5 +1117,72 @@ public class MemberCommonComponent {
 		if (DateUtils.yearsBetween(ownDate, parentDate) < 20) {
 			throw new StorePlatformException("SAC_MEM_0005", ownDate, parentDate);
 		}
+	}
+
+	/**
+	 * <pre>
+	 * 법정대리인 유효성 체크.
+	 * </pre>
+	 * 
+	 * @param ownBirth
+	 *            본인의 생년월일 (yyyymmdd)
+	 * @param parentBirth
+	 *            법정대리인 생년월일 (yyyymmdd)
+	 */
+	public void checkParentBirth(String ownBirth, String parentBirth) {
+
+		/**
+		 * 본인 생년월일 필수 파라미터 체크 (userBirthDay).
+		 */
+		if (StringUtils.isBlank(ownBirth)) {
+			throw new StorePlatformException("SAC_MEM_0002", "userBirthDay");
+		}
+
+		/**
+		 * 법정대리인 생년월일 필수 파라미터 체크 (parentBirthDay).
+		 */
+		if (StringUtils.isBlank(parentBirth)) {
+			throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
+		}
+
+		try {
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+			/**
+			 * 법정대리인 만19세 이상인지 체크.
+			 */
+			Calendar todayCal = DateUtil.getCalendar(DateUtil.getToday("yyyyMMdd"));
+			todayCal.add(Calendar.YEAR, -19); // 19년 감소
+			String year_19 = sdf.format(todayCal.getTime());
+
+			if (Integer.parseInt(parentBirth) > Integer.parseInt(year_19)) {
+				throw new StorePlatformException("SAC_MEM_0004", parentBirth);
+			}
+
+			/**
+			 * 법정대리인과 회원의 나이차이가 20살 이상 인지 체크.
+			 */
+			Calendar ownCal = DateUtil.getCalendar(ownBirth);
+			ownCal.add(Calendar.YEAR, -20); // 20년 감소
+			String year_20 = sdf.format(ownCal.getTime());
+
+			if (Integer.parseInt(parentBirth) > Integer.parseInt(year_20)) {
+				throw new StorePlatformException("SAC_MEM_0005", ownBirth, parentBirth);
+			}
+
+		} catch (Exception e) {
+			throw new StorePlatformException(e.getMessage());
+		}
+
+	}
+
+	public static void main(String[] args) {
+
+		MemberCommonComponent mcc = new MemberCommonComponent();
+
+		// mcc.checkLglAgent("20000101", "19750417");
+		mcc.checkParentBirth("20000101", "19800101");
+
 	}
 }
