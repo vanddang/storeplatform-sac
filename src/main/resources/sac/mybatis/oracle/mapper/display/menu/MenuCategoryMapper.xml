@@ -528,24 +528,9 @@
 		                    AND D.PROD_STATUS_CD = 'PD000403'
                             AND I.PROD_STATUS_CD = 'PD000403'  
 		                    AND E.PROD_RSHP_CD = 'DP010802'
-		                    
-		                    /* 방송 */
-		                    <if test="topMenuId == 'DP17' or topMenuId == 'DP18'">
-			                AND CASE WHEN NVL(C.DRM_YN, 'N') = 'Y' AND NVL(G.VIDEO_DRM_SPRT_YN, 'N') = 'N' THEN 0 
-			                    ELSE CASE WHEN NVL(G.SD_VIDEO_SPRT_YN, 'N') = 'Y' THEN 1 ELSE 0 END 
-			                    END = 1              
-		                    </if>
-		                    
-		                    /* 이북 */
-		                    <if test="topMenuId == 'DP13'">
-		                    AND G.EBOOK_SPRT_YN = 'Y'
-		                    </if>
-		                    
-		                    /* 코믹 */
-		                    <if test="topMenuId == 'DP14'">
-		                    AND G.COMIC_SPRT_YN = 'Y'
-		                    </if>
-		                    
+                            AND CASE WHEN A.TOP_MENU_ID = 'DP13' AND G.EBOOK_SPRT_YN = 'Y' THEN 1
+                                WHEN A.TOP_MENU_ID = 'DP14' AND G.COMIC_SPRT_YN = 'Y' THEN 1
+                                ELSE 0 END = 1
 		                    AND D.TENANT_ID = #{tenantId} /* 테넌트ID */
 		                    AND A.TOP_MENU_ID = #{topMenuId} /* 메뉴ID */
                             AND B.MENU_ID LIKE #{topMenuId}||'%' /* 메뉴ID */
