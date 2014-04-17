@@ -102,7 +102,7 @@ public class AppzineDetailServiceImpl implements AppzineDetailService {
 			 */
 			appzine.setBackgroundImagePath(appzineDetail.getBgImgPath());
 			appzine.setThemeHtml(appzineDetail.getThemeHtml());
-			appzine.setThemeUpImage(appzineDetail.getExpoYn());
+			appzine.setThemeUpImage(appzineDetail.getThemeUpImg());
 			appzine.setPopularTitleImage480(appzineDetail.getPopularTitlImg480());
 			appzine.setPopularTitleImage800(appzineDetail.getPopularTitlImg800());
 			appzine.setNewTitleImage480(appzineDetail.getNewTitlImg480());
