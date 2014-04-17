@@ -485,7 +485,7 @@
         SELECT  /* DownloadMapper.selectDownloadEbookInfo, eBook 상품 정보 조회, 이태희/부르칸, 2014-03-17 */
                 KA.*
               , DECODE(KA.META_CLSF_CD, 'CT26', NVL(KA.MALL_CD, 'MM001308'), KA.MALL_CD) AS MALL_CD
-              , FC_GET_IMAGE(DECODE(KA.META_CLSF_CD, 'CT19', KA.PROD_ID, KA.PART_PROD_ID), #{imageCd}) AS DLM_IMAGE_PATH
+              , FC_GET_IMAGE(DECODE(KA.META_CLSF_CD, 'CT19', KA.PROD_ID, KA.PART_PROD_ID), #{imageCd}, #{langCd}) AS DLM_IMAGE_PATH
               , CONCAT(KB.FILE_PATH, KB.FILE_NM) AS IMAGE_PATH
               , KB.FILE_SIZE AS IMAGE_SIZE
               , (SELECT MENU_NM
@@ -673,7 +673,7 @@
         SELECT  /* DownloadMapper.selectDownloadComicInfo, Comic 상품 정보 조회, 이태희/부르칸, 2014-03-17 */
                 JA.*
               , DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free') AS PROD_CHRG
-              , FC_GET_IMAGE(JA.PART_PROD_ID, 'DP000194') AS DLM_IMAGE_PATH
+              , FC_GET_IMAGE(JA.PART_PROD_ID, 'DP000194', #{langCd}) AS DLM_IMAGE_PATH
               , DECODE(JA.META_CLSF_CD, 'CT26', NVL(JA.MALL_CD, 'MM001308'), JA.MALL_CD) AS MALL_CD
               , CONCAT(JB.FILE_PATH, JB.FILE_NM) AS IMAGE_PATH
               , JB.FILE_SIZE AS IMAGE_SIZE
