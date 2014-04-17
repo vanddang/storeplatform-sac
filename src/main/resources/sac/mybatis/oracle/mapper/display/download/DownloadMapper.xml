@@ -3,8 +3,8 @@
 <mapper namespace="Download">
 <!-- 패키지명으로 상품 ID 조회 -->
     <select id="getProductIdForPackageName" resultType="String">
-    /* DownloadMapper.getProductIdForPackageName, 패키지명으로 상품 ID 조회, 이석희/아이에스플러스, 2014-01-23 */
-    SELECT PROD_ID
+    SELECT /* DownloadMapper.getProductIdForPackageName, 패키지명으로 상품 ID 조회, 이석희/아이에스플러스, 2014-01-23 */
+           PROD_ID
          , APK_PKG_NM
       FROM (
 		     SELECT  A.PROD_ID
