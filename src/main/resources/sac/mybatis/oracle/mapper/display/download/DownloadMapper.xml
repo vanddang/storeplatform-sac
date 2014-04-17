@@ -133,7 +133,8 @@
                             AND  I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
                             AND  J.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
                             AND  J.USE_YN ='Y'
-                            AND DECODE( J.UA_CD , '9999' , NVL2( E.PART_PARENT_CLSF_CD, 0, 1 ) + DECODE( D.DRM_YN, 'N', 1, 0 ) + DECODE( D.PROD_CHRG_YN, 'N', 1, 0 ) , 3 ) = 3    
+                            AND DECODE( J.UA_CD , '9999' , NVL2( E.PART_PARENT_CLSF_CD, 0, 1 ) + DECODE( D.DRM_YN, 'N', 1, 0 ) + DECODE( D.PROD_CHRG_YN, 'N', 1, 0 ) , 3 ) = 3
+                            AND (E.PART_PARENT_CLSF_CD = 'PD012301' OR E.PART_PARENT_CLSF_CD is null)    
                        )                   KA
                       , TB_DP_SUB_CONTENTS KB
                       , TB_DP_PROD_IMG     KC
