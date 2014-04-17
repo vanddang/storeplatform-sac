@@ -565,11 +565,11 @@ public class IdpServiceImpl implements IdpService {
 			/**
 			 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.) //20140415 현재 구매쪽에서 null처리 안되있으므로 처리 되면 반영할것
 			 */
-			// if (this.isCall) {
-			// String newMbrNo = map.get("user_key").toString();
-			// String prevMbrNo = prevMbrNoForgameCenter;
-			// this.mcc.excuteInternalMethod(this.isCall, systemId, tenantId, newMbrNo, prevMbrNo, null, null);
-			// }
+			if (this.isCall) {
+				String newMbrNo = map.get("user_key").toString();
+				String prevMbrNo = prevMbrNoForgameCenter;
+				this.mcc.excuteInternalMethod(this.isCall, systemId, tenantId, newMbrNo, prevMbrNo, null, null);
+			}
 		}
 
 		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
@@ -2963,11 +2963,11 @@ public class IdpServiceImpl implements IdpService {
 					/**
 					 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.) //20140415 현재 구매쪽에서 null처리 안되있으므로 처리 되면 반영할것
 					 */
-					// if (this.isCall) {
-					// String newMbrNo = map.get("user_key").toString();
-					// String prevMbrNo = prevMbrNoForgameCenter;
-					// this.mcc.excuteInternalMethod(this.isCall, systemId, tenantId, newMbrNo, prevMbrNo, null, null);
-					// }
+					if (this.isCall) {
+						String newMbrNo = map.get("user_key").toString();
+						String prevMbrNo = prevMbrNoForgameCenter;
+						this.mcc.excuteInternalMethod(this.isCall, systemId, tenantId, newMbrNo, prevMbrNo, null, null);
+					}
 				}
 
 			}
