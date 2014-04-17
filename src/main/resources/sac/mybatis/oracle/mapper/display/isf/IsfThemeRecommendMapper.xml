@@ -167,8 +167,8 @@
                       AND UPD.PKG_ID = UP.PKG_ID
                       AND UPD.PROD_ID = CP.PROD_ID  -- channel id
                       AND CP.PROD_RSHP_CD = 'DP010802'
-                      AND PP.TENANT_ID = UPD.TENANT_ID
-                      AND PP.PROD_ID = UPD.PROD_ID
+                      AND PP.TENANT_ID(+) = UPD.TENANT_ID
+                      AND PP.PROD_ID(+) = UPD.PROD_ID
                       AND P.PROD_ID = UPD.PROD_ID
                       AND TP.TENANT_ID = UP.TENANT_ID
                       AND TP.PROD_ID = P.PROD_ID
