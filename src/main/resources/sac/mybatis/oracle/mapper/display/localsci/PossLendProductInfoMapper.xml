@@ -24,7 +24,7 @@
 		      ,TB_DP_PROD              F /* 대여 상품 */
 		      ,UV_TB_DP_MULTIMDA_PROD  G /* 대여 상품 */
 		      ,TB_DP_PROD_DESC         H /* 대여 상품 설명 */
-		      ,TB_DP_TENANT_PROD       I /* 소장 상품 */
+		      ,TB_DP_TENANT_PROD       I /* 대여 상품 */
 		      ,TB_DP_TENANT_PROD_PRICE J /* 대여 상품 가격 */
 		WHERE  A.PROD_ID = B.PROD_ID
 		AND    A.PROD_ID = C.PROD_ID
