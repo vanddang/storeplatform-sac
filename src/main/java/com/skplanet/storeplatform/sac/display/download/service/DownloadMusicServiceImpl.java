@@ -174,7 +174,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 					} catch (Exception ex) {
 						purchaseFlag = false;
-						this.log.debug("[DownloadMusicServiceImpl] Purchase History Search Exception : {}");
+						this.log.info("[DownloadMusicServiceImpl] Purchase History Search Exception : {}");
 						this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 						// throw new StorePlatformException("SAC_DSP_2001", ex);
 					}
@@ -219,15 +219,15 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 									}
 								}
 
-								this.log.debug("----------------------------------------------------------------");
-								this.log.debug("[DownloadMusicServiceImpl] prchsId : {}", prchsId);
-								this.log.debug("[DownloadMusicServiceImpl] prchsDt : {}", prchsDt);
-								this.log.debug("[DownloadMusicServiceImpl] useExprDt : {}", useExprDt);
-								this.log.debug("[DownloadMusicServiceImpl] dwldExprDt : {}", dwldExprDt);
-								this.log.debug("[DownloadMusicServiceImpl] prchsCaseCd : {}", prchsCaseCd);
-								this.log.debug("[DownloadMusicServiceImpl] prchsState : {}", prchsState);
-								this.log.debug("[DownloadMusicServiceImpl] prchsProdId : {}", prchsProdId);
-								this.log.debug("----------------------------------------------------------------");
+								this.log.info("----------------------------------------------------------------");
+								this.log.info("[DownloadMusicServiceImpl] prchsId : {}", prchsId);
+								this.log.info("[DownloadMusicServiceImpl] prchsDt : {}", prchsDt);
+								this.log.info("[DownloadMusicServiceImpl] useExprDt : {}", useExprDt);
+								this.log.info("[DownloadMusicServiceImpl] dwldExprDt : {}", dwldExprDt);
+								this.log.info("[DownloadMusicServiceImpl] prchsCaseCd : {}", prchsCaseCd);
+								this.log.info("[DownloadMusicServiceImpl] prchsState : {}", prchsState);
+								this.log.info("[DownloadMusicServiceImpl] prchsProdId : {}", prchsProdId);
+								this.log.info("----------------------------------------------------------------");
 
 								metaInfo.setPurchaseId(prchsId);
 								metaInfo.setPurchaseProdId(prchsProdId);
@@ -266,7 +266,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 												(end - start));
 									} catch (Exception ex) {
 										memberFlag = false;
-										this.log.debug("[DownloadMusicServiceImpl] Device Search Exception : {}");
+										this.log.info("[DownloadMusicServiceImpl] Device Search Exception : {}");
 										this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 										// throw new StorePlatformException("SAC_DSP_1001", ex);
 									}
@@ -309,9 +309,9 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 										try {
 											String decData = new String(decrypt, "UTF-8");
-											this.log.debug("----------------------------------------------------------------");
-											this.log.debug("[DownloadMusicServiceImpl] decData : {}", decData);
-											this.log.debug("----------------------------------------------------------------");
+											this.log.info("----------------------------------------------------------------");
+											this.log.info("[DownloadMusicServiceImpl] decData : {}", decData);
+											this.log.info("----------------------------------------------------------------");
 										} catch (UnsupportedEncodingException e) {
 											e.printStackTrace();
 										}
