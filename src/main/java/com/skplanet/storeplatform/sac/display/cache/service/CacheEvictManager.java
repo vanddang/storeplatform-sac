@@ -37,6 +37,8 @@ public interface CacheEvictManager {
 
     void evictAllVodMeta();
 
+    void evictAllEbookComicMeta();
+
     void evictAllShoppingMeta();
 
     void evictAllFreepassMeta();

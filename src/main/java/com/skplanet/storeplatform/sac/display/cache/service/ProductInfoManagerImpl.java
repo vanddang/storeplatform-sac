@@ -136,6 +136,23 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
+    @Cacheable(value = "sac:display:product:ebookcomic", key = "#param.getCacheKey()", unless = "#result == null")
+    public EbookComicMeta getEbookComicMeta(EbookComicMetaParam param) {
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("prodId", param.getProdId());
+        reqMap.put("langCd", param.getLangCd());
+        reqMap.put("tenantId", param.getTenantId());
+        if(param.getContentType() == ContentType.Channel)
+            reqMap.put("prodIdType", "CHANNEL");
+        else if(param.getContentType() == ContentType.Episode)
+            reqMap.put("prodIdType", "EPISODE");
+        else
+            throw new RuntimeException("prodIdType cannot be null.");
+
+        return commonDAO.queryForObject("ProductInfo.getEbookComicMeta", reqMap, EbookComicMeta.class);
+    }
+
+    @Override
     @Cacheable(value = "sac:display:product:shopping", key = "#param.getCacheKey()", unless = "#result == null")
     public ShoppingMeta getShoppingMeta(ShoppingMetaParam param) {
         Map<String, Object> reqMap = new HashMap<String, Object>();

@@ -213,7 +213,43 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getEbookComicMetaInfo(Map<String, Object> paramMap) {
-		return this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
+        if (isUseCache()) {
+            ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
+            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+
+            EbookComicMetaParam param = new EbookComicMetaParam();
+            param.setTenantId(tenantHeader.getTenantId());
+            param.setLangCd(tenantHeader.getLangCd());
+            param.setContentType(ContentType.forCode(basicInfo.getContentsTypeCd()));
+            if (param.getContentType() == ContentType.Channel) {
+                param.setProdId(basicInfo.getProdId());
+            } else if (param.getContentType() == ContentType.Episode) {
+                param.setProdId(basicInfo.getPartProdId());
+            }
+
+            EbookComicMeta meta = productInfoManager.getEbookComicMeta(param);
+
+            if (meta == null) {
+                logger.warn("메타데이터를 읽을 수 없습니다 - EbookComic#{}", param.getProdId());
+                return null;
+            }
+
+            MetaInfo me = new MetaInfo();
+            MetaBeanUtils.setProperties(meta, me);
+
+            me.setContentsTypeCd(param.getContentType().getCode());
+            if (param.getContentType() == ContentType.Channel) {
+                me.setProdAmt(meta.getChnlProdAmt());
+                me.setProdNetAmt(meta.getChnlProdNetAmt());
+            } else if (param.getContentType() == ContentType.Episode) {
+                me.setProdAmt(meta.getEpsdProdAmt());
+                me.setProdNetAmt(meta.getEpsdProdNetAmt());
+            }
+
+            return me;
+        }
+        else
+		    return this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
 	}
 
 	/*

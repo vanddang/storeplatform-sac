@@ -306,7 +306,7 @@
     </select>
 
     <select id="getVodMeta" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.VodMeta"><![CDATA[
-        SELECT
+        SELECT /* ProductInfoMapper.xml, getVodMeta, SAC : 정희원 , 2014-04-16 */
         R.UP_MENU_ID
         , R.TOP_MENU_ID
         , R.MENU_ID
@@ -336,17 +336,17 @@
         , ( CASE WHEN R.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
         , ( CASE WHEN R.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
         , CASE WHEN (R.CHNL_PERIOD_AMT >= 0  AND R.STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
-        ELSE NVL(R.CHNL_UNLMT_AMT, 0)
-        END AS CHNL_PROD_AMT  /* 채널 대표 가격 */
+           ELSE NVL(R.CHNL_UNLMT_AMT, 0)
+          END AS CHNL_PROD_AMT  /* 채널 대표 가격 */
         , NVL(R.PROD_AMT, 0) AS EPSD_PROD_AMT  /* 에피소드 가격 */
         , R.PROD_NET_AMT
         , R.PROD_CHRG_YN AS PROD_CHRG
         , NVL(R.PATICPERS_CNT, 0) AS PATICPERS_CNT
         , NVL(R.PRCHS_CNT, 0) AS PRCHS_CNT
         , NVL((CASE WHEN (R.AVG_EVLU_SCORE > 0 AND R.AVG_EVLU_SCORE < 1) THEN 1
-        WHEN R.AVG_EVLU_SCORE > 5 THEN 5
-        ELSE ROUND(R.AVG_EVLU_SCORE, 1)
-        END), 0) AS AVG_EVLU_SCORE
+          WHEN R.AVG_EVLU_SCORE > 5 THEN 5
+            ELSE ROUND(R.AVG_EVLU_SCORE, 1)
+          END), 0) AS AVG_EVLU_SCORE
         , R.FILE_PATH || R.FILE_NM AS FILE_PATH
         , R.TOP_MENU_NM
         -- , R.FILE_SIZE
@@ -457,6 +457,153 @@
         ) R
         WHERE 1=1
         AND ROWNUM = 1
+    </select>
+
+    <select id="getEbookComicMeta" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.EbookComicMeta"><![CDATA[
+        SELECT /* ProductInfoMapper.xml, getEbookComicMeta, SAC : 정희원 , 2014-04-17 */
+            TB.UP_MENU_ID
+            , (SELECT MENU_NM
+                FROM TB_DP_MENU_CATEGORY_DESC
+                WHERE MENU_ID = TB.TOP_MENU_ID
+                AND LANG_CD = TB.LANG_CD
+                AND ROWNUM = 1) AS TOP_MENU_NM
+            , TB.TOP_MENU_ID
+            , TB.MENU_ID
+            , TB.MENU_NM
+            , TB.MENU_DESC
+            , TB.META_CLSF_CD
+            , TB.PROD_ID
+            , TB.PART_PROD_ID
+            , TB.PROD_NM
+            , TB.CHAPTER
+            , TB.BOOK_CLSF_CD
+            , CASE WHEN TB.TOP_MENU_ID = 'DP13'
+                THEN TB.PROD_DTL_DESC
+                ELSE TB.PROD_BASE_DESC
+            END AS PROD_BASE_DESC
+            , CASE WHEN TB.TOP_MENU_ID = 'DP13'
+                THEN TB.PROD_BASE_DESC
+                ELSE TB.PROD_DTL_DESC
+            END AS PROD_DTL_DESC
+            , TB.PROD_GRD_CD
+            , TB.ARTIST1_NM
+            , TB.ARTIST2_NM
+            , TB.ARTIST3_NM
+            , TB.ISSUE_DAY
+            , TB.CHNL_COMP_NM
+            , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
+            , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( TB.EPSD_CNT + TB.STRM_EPSD_CNT ) ELSE 1 END ) AS BOOK_COUNT
+            , ( CASE WHEN TB.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
+            , ( CASE WHEN TB.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
+            , TB.COMPT_YN
+            , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
+            , CASE WHEN (TB.CHNL_UNLMT_AMT >= 0  AND TB.EPSD_CNT > 0) THEN CHNL_UNLMT_AMT
+            ELSE NVL(TB.CHNL_PERIOD_AMT, 0) END AS CHNL_PROD_AMT
+            , NVL(TB.PROD_AMT, 0) AS EPSD_PROD_AMT
+            , NVL(TB.CHNL_PROD_NET_AMT, 0) AS CHNL_PROD_NET_AMT
+            , NVL(TB.EPSD_PROD_NET_AMT, 0) AS EPSD_PROD_NET_AMT
+            , NVL(TB.PATICPERS_CNT, 0) AS PATICPERS_CNT
+            , NVL(TB.PRCHS_CNT, 0) AS DWLD_CNT
+            , NVL(TB.PRCHS_CNT, 0) AS PRCHS_CNT
+            , NVL((CASE WHEN (TB.AVG_EVLU_SCORE > 0 AND TB.AVG_EVLU_SCORE < 1) THEN 1
+            WHEN TB.AVG_EVLU_SCORE > 5 THEN 5
+            ELSE ROUND(TB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
+            , TB.PROD_CHRG_YN AS PROD_CHRG
+            , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
+            , TB.PROD_STATUS_CD ]]>
+        FROM (
+            SELECT
+                CMC.UP_MENU_ID,
+                CMC.TOP_MENU_ID,
+                CMC.MENU_ID,
+                CMCM.PROD_ID,
+                RSHP.PART_PROD_ID,
+                CMCD.MENU_NM,
+                CMCD.MENU_DESC,
+                CPROD.PROD_GRD_CD,
+                CPROD.USE_PERIOD_UNIT_CD,
+                CPROD.META_CLSF_CD,
+                CPROD.CONTENTS_TYPE_CD,
+                CEBOOK.STRM_EPSD_CNT,
+                CEBOOK.ISSUE_DAY,
+                CEBOOK.CHNL_COMP_NM,
+                CEBOOK.EPSD_CNT,
+                CEBOOK.COMPT_YN,
+                CPDESC.PROD_NM,
+                CPDESC.ARTIST1_NM,
+                CPDESC.ARTIST2_NM,
+                CPDESC.ARTIST3_NM,
+                CPDESC.PROD_BASE_DESC,
+                CPDESC.PROD_DTL_DESC,
+                CTPRC.CHNL_PERIOD_AMT,
+                CTPRC.CHNL_UNLMT_AMT,
+                EPROD.DRM_YN,
+                EPROD.PROD_CHRG_YN,
+                EEBOOK.CHAPTER,
+                EEBOOK.BOOK_CLSF_CD,
+                CPI.FILE_PATH,
+                CPI.FILE_NM,
+                CTSTAT.PATICPERS_CNT,
+                CTSTAT.PRCHS_CNT,
+                CTSTAT.AVG_EVLU_SCORE,
+                ETPRC.PROD_AMT,
+                CTPRC.PROD_NET_AMT AS CHNL_PROD_NET_AMT,
+                ETPRC.PROD_NET_AMT AS EPSD_PROD_NET_AMT,
+                CTPROD.PROD_STATUS_CD,
+                CPDESC.LANG_CD
+            FROM TB_DP_PROD_RSHP RSHP
+                INNER JOIN TB_DP_TENANT_PROD CTPROD
+                ON CTPROD.PROD_ID = RSHP.PROD_ID
+                INNER JOIN TB_DP_TENANT_PROD_PRICE CTPRC
+                ON CTPRC.PROD_ID = RSHP.PROD_ID AND CTPRC.TENANT_ID = CTPROD.TENANT_ID
+                INNER JOIN TB_DP_PROD_DESC CPDESC
+                ON CPDESC.PROD_ID = RSHP.PROD_ID
+                INNER JOIN TB_DP_PROD CPROD
+                ON CPROD.PROD_ID = RSHP.PROD_ID
+                INNER JOIN TB_DP_EBOOK_PROD CEBOOK
+                ON CEBOOK.PROD_ID = RSHP.PROD_ID
+                LEFT OUTER JOIN TB_DP_PROD_IMG CPI
+                ON CPI.PROD_ID = CEBOOK.PROD_ID AND CPI.IMG_CD = 'DP006207' AND CPI.LANG_CD = #{langCd} AND CPI.EXPO_ORD = 1
+                INNER JOIN TB_DP_TENANT_PROD ETPROD
+                ON ETPROD.PROD_ID = RSHP.PART_PROD_ID AND ETPROD.TENANT_ID = CTPROD.TENANT_ID
+                INNER JOIN TB_DP_TENANT_PROD_PRICE ETPRC
+                ON ETPRC.PROD_ID = RSHP.PART_PROD_ID AND ETPRC.TENANT_ID = CTPROD.TENANT_ID
+                INNER JOIN TB_DP_PROD EPROD
+                ON EPROD.PROD_ID = RSHP.PART_PROD_ID
+                INNER JOIN TB_DP_EBOOK_PROD EEBOOK
+                ON EEBOOK.PROD_ID = RSHP.PART_PROD_ID
+                INNER JOIN TB_DP_MENU_CATEGORY_PROD_MAPG CMCM
+                ON CMCM.PROD_ID = RSHP.PROD_ID
+                INNER JOIN TB_DP_MENU_CATEGORY CMC
+                ON CMC.MENU_ID = CMCM.MENU_ID
+                INNER JOIN TB_DP_MENU_CATEGORY_DESC CMCD
+                ON CMCD.MENU_ID = CMCM.MENU_ID AND CMCD.LANG_CD = CPDESC.LANG_CD
+                LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS CTSTAT
+                ON CTSTAT.PROD_ID = RSHP.PROD_ID AND CTSTAT.TENANT_ID = CTPROD.TENANT_ID
+            WHERE 1 = 1
+                AND RSHP.PROD_RSHP_CD = 'DP010802'
+                AND CTPROD.TENANT_ID = #{tenantId}
+                AND CPDESC.LANG_CD = #{langCd}
+        <if test="prodIdType == 'CHANNEL'">
+                AND RSHP.PROD_ID = #{prodId}
+        </if>
+        <if test="prodIdType == 'EPISODE'">
+                AND RSHP.PART_PROD_ID = #{prodId}
+        </if>
+                AND CPROD.CONTENTS_TYPE_CD = 'PD002501'
+                AND EPROD.CONTENTS_TYPE_CD = 'PD002502'
+                AND CPROD.SVC_GRP_CD = 'DP000203'
+                AND SYSDATE BETWEEN CTPRC.APPLY_START_DT AND CTPRC.APPLY_END_DT
+                AND SYSDATE BETWEEN ETPRC.APPLY_START_DT AND ETPRC.APPLY_END_DT
+                AND CMCM.BASE_YN = 'Y'
+                AND CMCM.USE_YN = 'Y'
+                AND CMC.USE_YN = 'Y'
+            ORDER BY
+                EEBOOK.CHAPTER DESC
+                , NVL(EPROD.USE_PERIOD_UNIT_CD, 'PD00310') DESC
+                , EPROD.UPD_DT DESC
+        ) TB
+        WHERE ROWNUM = 1
     </select>
 
     <select id="getShoppingMeta" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.ShoppingMeta">

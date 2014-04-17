@@ -42,6 +42,8 @@ public interface ProductInfoManager {
 
     VodMeta getVodMeta(VodMetaParam param);
 
+    EbookComicMeta getEbookComicMeta(EbookComicMetaParam param);
+
     /**
      * 쇼핑상품 조회
      * @param param
