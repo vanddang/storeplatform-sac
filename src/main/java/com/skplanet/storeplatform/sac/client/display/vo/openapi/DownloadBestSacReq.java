@@ -37,7 +37,6 @@ public class DownloadBestSacReq extends CommonInfo {
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출될 ROW 개수
 
-	private String dummy; // dummy check
 	private String[] arraySellerKey; // SellerKey Array
 
 	/**
@@ -188,21 +187,6 @@ public class DownloadBestSacReq extends CommonInfo {
 	 */
 	public void setCount(Integer count) {
 		this.count = count;
-	}
-
-	/**
-	 * @return the dummy
-	 */
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	/**
-	 * @param dummy
-	 *            the dummy to set
-	 */
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
 	}
 
 	/**

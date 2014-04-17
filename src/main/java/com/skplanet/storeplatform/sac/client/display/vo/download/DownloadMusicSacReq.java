@@ -31,7 +31,6 @@ public class DownloadMusicSacReq extends CommonInfo {
 	private String productId; // 상품Id
 	private String deviceKey; // 디바이스키
 	private String userKey; // 사용자고유키
-	private String dummy; // dummy data check
 	private String imageCd; // 이미지 코드
 	private String prchsDt; // 구매일시
 	private String dwldExprDt; // 다운로드 만료일시
@@ -229,31 +228,6 @@ public class DownloadMusicSacReq extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param dummy
-	 *            dummy
-	 */
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
 	}
 
 	/**
