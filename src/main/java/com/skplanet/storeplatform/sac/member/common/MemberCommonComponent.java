@@ -71,7 +71,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
-import com.skplanet.storeplatform.sac.member.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
@@ -1100,23 +1099,16 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * 법정대리인 나이 체크 로직(사용자,판매자 공통).
+	 * 법정대리인 유효성 체크.
 	 * </pre>
 	 * 
-	 * @param ownDate
-	 *            회원의 생년월일(yyyymmdd)
-	 * @param parentDate
-	 *            법정대리인 생년월일(yyyymmdd)
+	 * @param ownBirth
+	 *            본인의 생년월일 (yyyymmdd)
+	 * @param parentBirth
+	 *            법정대리인 생년월일 (yyyymmdd)
 	 */
-	public void checkLglAgent(String ownDate, String parentDate) {
-		// 1. 요청 법정대리인 만19세미만 유무 확인
-		if (DateUtils.getOnlyAge(parentDate) < 20) {
-			throw new StorePlatformException("SAC_MEM_0004", parentDate);
-		}
-		// 2. 요청 법정대리인과 회원이 20살 이상 차이 유무 확인
-		if (DateUtils.yearsBetween(ownDate, parentDate) < 20) {
-			throw new StorePlatformException("SAC_MEM_0005", ownDate, parentDate);
-		}
+	public void checkParentBirth(String ownBirth, String parentBirth) {
+		this.checkParentBirth(ownBirth, parentBirth, null);
 	}
 
 	/**
@@ -1128,21 +1120,25 @@ public class MemberCommonComponent {
 	 *            본인의 생년월일 (yyyymmdd)
 	 * @param parentBirth
 	 *            법정대리인 생년월일 (yyyymmdd)
+	 * @param type
+	 *            사용 구분 (사용자, 판매자)
 	 */
-	public void checkParentBirth(String ownBirth, String parentBirth) {
+	public void checkParentBirth(String ownBirth, String parentBirth, String type) {
 
-		/**
-		 * 본인 생년월일 필수 파라미터 체크 (userBirthDay).
-		 */
-		if (StringUtils.isBlank(ownBirth)) {
-			throw new StorePlatformException("SAC_MEM_0002", "userBirthDay");
-		}
+		if (type != null) {
+			/**
+			 * 본인 생년월일 필수 파라미터 체크 (userBirthDay).
+			 */
+			if (StringUtils.isBlank(ownBirth)) {
+				throw new StorePlatformException("SAC_MEM_0002", "userBirthDay");
+			}
 
-		/**
-		 * 법정대리인 생년월일 필수 파라미터 체크 (parentBirthDay).
-		 */
-		if (StringUtils.isBlank(parentBirth)) {
-			throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
+			/**
+			 * 법정대리인 생년월일 필수 파라미터 체크 (parentBirthDay).
+			 */
+			if (StringUtils.isBlank(parentBirth)) {
+				throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
+			}
 		}
 
 		try {
