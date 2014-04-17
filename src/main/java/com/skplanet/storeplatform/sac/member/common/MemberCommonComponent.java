@@ -1109,7 +1109,7 @@ public class MemberCommonComponent {
 	 */
 	public void checkLglAgent(String ownDate, String parentDate) {
 		// 1. 요청 법정대리인 만19세미만 유무 확인
-		if (DateUtils.getOnlyAge(ownDate) < 20) {
+		if (DateUtils.getOnlyAge(parentDate) < 20) {
 			throw new StorePlatformException("SAC_MEM_0004", parentDate);
 		}
 		// 2. 요청 법정대리인과 회원이 20살 이상 차이 유무 확인
