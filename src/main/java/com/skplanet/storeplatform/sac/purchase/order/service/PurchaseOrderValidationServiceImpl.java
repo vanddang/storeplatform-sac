@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchS
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -383,6 +384,23 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 			purchaseOrderInfo.setRealTotAmt(totAmt);
 		}
+
+		// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
+		if (purchaseOrderInfo.getPurchaseProductList().size() == 1
+				&& purchaseOrderInfo.getRealTotAmt() > 0.0
+				&& (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils.startsWith(
+						purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
+				&& StringUtils.endsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) == false) {
+			purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
+
+			PossLendProductInfo possLendProductInfo = this.purchaseDisplayRepository.searchPossLendProductInfo(
+					tenantId, langCd, purchaseProduct.getProdId(), purchaseProduct.getPossLendClsfCd());
+			if (possLendProductInfo != null) {
+				purchaseProduct.setPossLendProductInfo(possLendProductInfo);
+			}
+		}
 	}
 
 	/**
@@ -425,6 +443,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String existTenantId = useUser.getTenantId();
 		String existUserKey = useUser.getUserKey();
 		String existDeviceKey = bDeviceBased ? useUser.getDeviceKey() : null;
+
+		String removeWhenExistPossLendProdId = null; // 소장/대여 상품 정보 중 구매요청 상품 외 상품은 기구매 시 제외하고 구매 진행
 
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
 			// 연령체크 안함: 생년월일도 * 문자 포함으로 확인불가
@@ -561,9 +581,27 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			} else { // 기구매 체크 대상 추가: 쇼핑상품은 동일상품 중복구매 허용
 
-				existenceProdIdList.add(product.getProdId());
+				// 소장/대여 상품 기구매 처리
+				PossLendProductInfo possLendProductInfo = product.getPossLendProductInfo();
+
+				if (possLendProductInfo == null) {
+					existenceProdIdList.add(product.getProdId());
+
+				} else {
+					existenceProdIdList.add(possLendProductInfo.getPossProdId());
+					existenceProdIdList.add(possLendProductInfo.getLendProdId());
+
+					if (StringUtils.equals(product.getPossLendClsfCd(),
+							PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)) {
+						removeWhenExistPossLendProdId = possLendProductInfo.getLendProdId();
+					} else {
+						removeWhenExistPossLendProdId = possLendProductInfo.getPossProdId();
+					}
+				}
 			}
 		}
+
+		boolean bRemovePossLend = false;
 
 		// 기구매 체크
 		// TAKTEST:: 로컬 테스트, 상용 성능테스트
@@ -576,6 +614,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 				for (ExistenceScRes checkRes : checkPurchaseResultList) {
 					if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
+						if (StringUtils.equals(checkRes.getProdId(), removeWhenExistPossLendProdId)) {
+							continue;
+						}
+
 						throw new StorePlatformException("SAC_PUR_6101");
 					}
 
@@ -584,6 +626,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 		}
 
+		if (bRemovePossLend) {
+			purchaseOrderInfo.getPurchaseProductList().get(0).setPossLendProductInfo(null);
+		}
 	}
 
 	/*

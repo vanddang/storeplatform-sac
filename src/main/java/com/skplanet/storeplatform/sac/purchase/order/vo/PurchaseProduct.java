@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.order.vo;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 
 /**
  * 
@@ -18,7 +19,9 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Paymen
  * Updated on : 2014. 2. 28. Updated by : 이승택, nTels.
  */
 public class PurchaseProduct extends PaymentInfo {
-	private static final long serialVersionUID = 201403041L;
+	private static final long serialVersionUID = 1L;
+
+	private PossLendProductInfo possLendProductInfo; // 소장/대여 상품 정보
 
 	private String bonusCashPoint; // 보너스 캐쉬 지급 Point
 	private String bonusCashUsableDayCnt; // 보너스 캐쉬 유효기간(일)
@@ -56,6 +59,21 @@ public class PurchaseProduct extends PaymentInfo {
 	private String timbreSctn; // 음질_구간
 	private String menuId; // 메뉴_ID
 	private String genreClsfCd; // 장르_구분_코드
+
+	/**
+	 * @return the possLendProductInfo
+	 */
+	public PossLendProductInfo getPossLendProductInfo() {
+		return this.possLendProductInfo;
+	}
+
+	/**
+	 * @param possLendProductInfo
+	 *            the possLendProductInfo to set
+	 */
+	public void setPossLendProductInfo(PossLendProductInfo possLendProductInfo) {
+		this.possLendProductInfo = possLendProductInfo;
+	}
 
 	/**
 	 * @return the bonusCashPoint

@@ -64,6 +64,7 @@ import com.skplanet.storeplatform.purchase.client.order.vo.ReservePurchaseScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseListScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseListScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
@@ -479,24 +480,24 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusCashUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		res.setAfterAutoPayDt(reservedDataMap.get("afterAutoPayDt")); // 다음 자동 결제일
 		// TAKTODO:: 대여/소장 전시Part 협의 완료 전 까지 Dummy세팅
-		if (StringUtils.equals(res.getCdPaymentTemplate(), PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN)) {
-			res.setDwldAvailableDayCnt("7"); // 다운로드 가능기간(일) : Dummy값 7
-			res.setUsePeriodCnt("7"); // 이용기간(일) : Dummy값 7
-			res.setLoanPid(prchsDtlMore.getProdId()); // 대여하기 상품 ID : Dummy값 요청상품ID
-			res.setLoanAmt(prchsDtlMore.getProdAmt()); // 대여하기 상품 금액 : Dummy값 요청상품가격
-			res.setOwnPid(prchsDtlMore.getProdId()); // 소장하기 상품 ID : Dummy값 요청상품ID
-			res.setOwnAmt(prchsDtlMore.getProdAmt()); // 소장하기 상품 금액 : Dummy값 요청상품가격
+		// if (StringUtils.equals(res.getCdPaymentTemplate(), PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN)) {
+		// res.setDwldAvailableDayCnt("7"); // 다운로드 가능기간(일) : Dummy값 7
+		// res.setUsePeriodCnt("7"); // 이용기간(일) : Dummy값 7
+		// res.setLoanPid(prchsDtlMore.getProdId()); // 대여하기 상품 ID : Dummy값 요청상품ID
+		// res.setLoanAmt(prchsDtlMore.getProdAmt()); // 대여하기 상품 금액 : Dummy값 요청상품가격
+		// res.setOwnPid(prchsDtlMore.getProdId()); // 소장하기 상품 ID : Dummy값 요청상품ID
+		// res.setOwnAmt(prchsDtlMore.getProdAmt()); // 소장하기 상품 금액 : Dummy값 요청상품가격
+		// }
+		res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
+		res.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt")); // 이용기간(일)
+		res.setLoanPid(reservedDataMap.get("loanPid")); // 대여하기 상품 ID
+		if (StringUtils.isNotBlank(reservedDataMap.get("loanAmt"))) {
+			res.setLoanAmt(Double.parseDouble(reservedDataMap.get("loanAmt"))); // 대여하기 상품 금액
 		}
-		// res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
-		// res.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt")); // 이용기간(일)
-		// res.setLoanPid(reservedDataMap.get("loanPid")); // 대여하기 상품 ID
-		// if (StringUtils.isNotBlank(reservedDataMap.get("loanAmt"))) {
-		// res.setLoanAmt(Double.parseDouble(reservedDataMap.get("loanAmt"))); // 대여하기 상품 금액
-		// }
-		// res.setOwnPid(reservedDataMap.get("ownPid")); // 소장하기 상품 ID
-		// if (StringUtils.isNotBlank(reservedDataMap.get("ownAmt"))) {
-		// res.setOwnAmt(Double.parseDouble(reservedDataMap.get("ownAmt"))); // 소장하기 상품 금액
-		// }
+		res.setOwnPid(reservedDataMap.get("ownPid")); // 소장하기 상품 ID
+		if (StringUtils.isNotBlank(reservedDataMap.get("ownAmt"))) {
+			res.setOwnAmt(Double.parseDouble(reservedDataMap.get("ownAmt"))); // 소장하기 상품 금액
+		}
 		res.setNmSeller(reservedDataMap.get("sellerNm")); // 판매자명
 		res.setEmailSeller(reservedDataMap.get("sellerEmail")); // 판매자 이메일 주소
 		res.setNoTelSeller(reservedDataMap.get("sellerTelno")); // 판매자 전화번호
@@ -527,24 +528,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		List<PrchsDtlMore> prchsDtlMoreList = this.searchReservedPurchaseList(tenantId, notifyPaymentReq.getPrchsId());
 
-		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
-
-		// ------------------------------------------------------------------------------
-		// 결제 금액 체크
-
-		double checkAmt = 0.0;
-		for (PaymentInfo paymentInfo : notifyPaymentReq.getPaymentInfoList()) {
-			checkAmt += paymentInfo.getPaymentAmt();
-		}
-		if (checkAmt != prchsDtlMore.getTotAmt().doubleValue()
-				|| prchsDtlMore.getTotAmt().doubleValue() != notifyPaymentReq.getTotAmt()) {
-			throw new StorePlatformException("SAC_PUR_5106");
-		}
-
 		// ------------------------------------------------------------------------------
 		// 구매예약 시, 추가 저장해 두었던 데이터 추출
 
-		Map<String, String> reservedDataMap = this.parseReservedData(prchsDtlMore.getPrchsResvDesc());
+		Map<String, String> reservedDataMap = this.parseReservedData(prchsDtlMoreList.get(0).getPrchsResvDesc());
 
 		// 특가 상품 여부
 		String sprcProdYn = StringUtils.isNotBlank(reservedDataMap.get("specialCouponId")) ? PurchaseConstants.USE_Y : PurchaseConstants.USE_N;
@@ -566,7 +553,37 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				createPurchaseInfo.setInsdDeviceId(createPurchaseInfo.getUseInsdDeviceId());
 			}
 		}
-		prchsDtlMore = prchsDtlMoreList.get(0);
+		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
+
+		// 소장/대여 TAB으로 구매요청이 아닌 상품 구매 시
+		if (StringUtils.isNotBlank(notifyPaymentReq.getProdId())
+				&& StringUtils.isNotBlank(reservedDataMap.get("ownPid"))
+				&& StringUtils.isNotBlank(reservedDataMap.get("loanPid"))
+				&& (StringUtils.equals(notifyPaymentReq.getProdId(), prchsDtlMore.getProdId()) == false)) {
+
+			if (StringUtils.equals(notifyPaymentReq.getProdId(), reservedDataMap.get("ownPid")) == false
+					&& StringUtils.equals(notifyPaymentReq.getProdId(), reservedDataMap.get("loanPid")) == false) {
+				throw new StorePlatformException("SAC_PUR_7101");
+			}
+			prchsDtlMore.setUsePeriodUnitCd(reservedDataMap.get("usePeriodUnitCd"));
+			prchsDtlMore
+					.setUsePeriod(Integer.parseInt(StringUtils.defaultString(reservedDataMap.get("usePeriod"), "0")));
+			prchsDtlMore.setProdId(notifyPaymentReq.getProdId());
+			prchsDtlMore.setProdAmt(notifyPaymentReq.getTotAmt());
+			prchsDtlMore.setTotAmt(notifyPaymentReq.getTotAmt());
+		}
+
+		// ------------------------------------------------------------------------------
+		// 결제 금액 체크
+
+		double checkAmt = 0.0;
+		for (PaymentInfo paymentInfo : notifyPaymentReq.getPaymentInfoList()) {
+			checkAmt += paymentInfo.getPaymentAmt();
+		}
+		if (checkAmt != prchsDtlMore.getTotAmt().doubleValue()
+				|| prchsDtlMore.getTotAmt().doubleValue() != notifyPaymentReq.getTotAmt()) {
+			throw new StorePlatformException("SAC_PUR_5106");
+		}
 
 		// -------------------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
@@ -638,6 +655,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		confirmPurchaseScReq.setUseUserKey(prchsDtlMore.getUseInsdUsermbrNo());
 		confirmPurchaseScReq.setPrchsId(prchsDtlMore.getPrchsId());
 		confirmPurchaseScReq.setNetworkTypeCd(prchsDtlMore.getNetworkTypeCd());
+		// 소장/대여 TAB 상품
+		confirmPurchaseScReq.setProdId(prchsDtlMore.getProdId()); // 상품ID
+		confirmPurchaseScReq.setProdAmt(prchsDtlMore.getProdAmt()); // 상품 가격
+		confirmPurchaseScReq.setTotAmt(prchsDtlMore.getTotAmt()); // 총 결제 금액
+		confirmPurchaseScReq.setUsePeriodUnitCd(prchsDtlMore.getUsePeriodUnitCd()); // 사용기간 단위
+		confirmPurchaseScReq.setUsePeriod(prchsDtlMore.getUsePeriod()); // 사용기간 값
 
 		confirmPurchaseScReq.setPrchsProdCntList(prchsProdCntList); // 건수집계
 		confirmPurchaseScReq.setPaymentList(paymentList); // 결제
@@ -1073,13 +1096,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							.append("&bonusCashUsableDayCnt=")
 							.append(StringUtils.defaultString(product.getBonusCashUsableDayCnt()))
 							.append("&afterAutoPayDt=").append(StringUtils.defaultString(product.getAfterAutoPayDt()))
-							.append("&dwldAvailableDayCnt=")
-							.append(StringUtils.defaultString(product.getDwldAvailableDayCnt()))
-							.append("&usePeriodCnt=").append(StringUtils.defaultString(product.getUsePeriodCnt()))
-							.append("&loanPid=").append(StringUtils.defaultString(product.getLoanPid()))
-							.append("&loanAmt=").append(StringUtils.defaultString(product.getLoanAmt()))
-							.append("&ownPid=").append(StringUtils.defaultString(product.getOwnPid()))
-							.append("&ownAmt=").append(StringUtils.defaultString(product.getOwnAmt()))
 							.append("&sellerNm=").append(StringUtils.defaultString(product.getSellerNm()))
 							.append("&sellerEmail=").append(StringUtils.defaultString(product.getSellerEmail()))
 							.append("&sellerTelno=").append(StringUtils.defaultString(product.getSellerTelno()))
@@ -1090,6 +1106,46 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							.append(StringUtils.defaultString(product.getAutoPrchsYN())).append("&specialCouponId=")
 							.append(StringUtils.defaultString(product.getSpecialSaleCouponId()))
 							.append("&specialCouponAmt=").append(product.getSpecialCouponAmt());
+
+					// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
+					if (purchaseOrderInfo.getPurchaseProductList().size() == 1
+							&& (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+									PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils.startsWith(
+									purchaseOrderInfo.getTenantProdGrpCd(),
+									PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
+							&& StringUtils.endsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+									PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) == false) {
+
+						PossLendProductInfo possLendProductInfo = product.getPossLendProductInfo();
+						if (possLendProductInfo == null) {
+							if (StringUtils.equals(product.getPossLendClsfCd(),
+									PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)) {
+								sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=&loanPid=&loanAmt=0")
+										.append("&ownPid=").append(product.getProdId()).append("&ownAmt=")
+										.append(product.getProdAmt());
+							} else {
+								sbReserveData.append("&dwldAvailableDayCnt=").append(product.getUsePeriod())
+										.append("&usePeriodCnt=").append(product.getUsePeriod()).append("&loanPid=")
+										.append(product.getProdId()).append("&loanAmt=").append(product.getProdAmt())
+										.append("&ownPid=&ownAmt=0");
+							}
+
+						} else {
+							sbReserveData.append("&usePeriodUnitCd=").append(possLendProductInfo.getUsePeriodUnitCd())
+									.append("&usePeriod=").append(possLendProductInfo.getUsePeriod())
+									.append("&dwldAvailableDayCnt=")
+									.append(possLendProductInfo.getDownPossiblePeriod()).append("&usePeriodCnt=")
+									.append(possLendProductInfo.getUsePeriod()).append("&loanPid=")
+									.append(possLendProductInfo.getLendProdId()).append("&loanAmt=")
+									.append(possLendProductInfo.getLendProdAmt()).append("&ownPid=")
+									.append(possLendProductInfo.getPossProdId()).append("&ownAmt=")
+									.append(possLendProductInfo.getPossProdAmt());
+						}
+
+					} else {
+						sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=&loanPid=&loanAmt=0&ownPid=&ownAmt=0");
+					}
+
 					prchsDtlMore.setPrchsResvDesc(sbReserveData.toString());
 				}
 

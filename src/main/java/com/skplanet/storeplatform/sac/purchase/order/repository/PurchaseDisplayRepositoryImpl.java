@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,15 @@ import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PossLendProductInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfoSacRes;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 
@@ -38,6 +43,8 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 
 	@Autowired
 	private PaymentInfoSCI purchaseProductSCI;
+	@Autowired
+	private PossLendProductInfoSCI possLendProductInfoSCI;
 	@Autowired
 	private FreePassInfoSCI freepassInfoSCI;
 
@@ -80,9 +87,11 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			}
 
 			purchaseProduct = new PurchaseProduct();
+
 			// ////////////////////////// 상품 군 조회 변수 ////////////////////////////
 			purchaseProduct.setTopMenuId(displayInfo.getTopMenuId());
 			purchaseProduct.setSvcGrpCd(displayInfo.getSvcGrpCd());
+			purchaseProduct.setInAppYn(displayInfo.getInAppYn());
 			// ////////////////////////// APP,멀티미디어 상품 변수 ////////////////////////////
 			purchaseProduct.setProdId(displayInfo.getProdId());
 			purchaseProduct.setProdNm(displayInfo.getProdNm());
@@ -105,6 +114,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setSellerNm(displayInfo.getSellerNm());
 			purchaseProduct.setSellerEmail(displayInfo.getSellerEmail());
 			purchaseProduct.setSellerTelno(displayInfo.getSellerTelno());
+			purchaseProduct.setPossLendClsfCd(displayInfo.getPossLendClsfCd());
 			// ////////////////////////// 쇼핑 상품 변수 ////////////////////////////
 			purchaseProduct.setCouponCode(displayInfo.getCouponCode());
 			purchaseProduct.setItemCode(displayInfo.getItemCode());
@@ -124,11 +134,56 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setAutoPrchsLastDt(displayInfo.getAutoPrchsLastDt());
 			purchaseProduct.setExclusiveFixrateProdExistYn(displayInfo.getExclusiveFixrateProdExistYn());
 			purchaseProduct.setExclusiveFixrateProdIdList(displayInfo.getExclusiveFixrateProdIdList());
+			purchaseProduct.setCmpxProdClsfCd(displayInfo.getCmpxProdClsfCd());
+			purchaseProduct.setBnsCashAmt(displayInfo.getBnsCashAmt());
+			purchaseProduct.setBnsUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
+			purchaseProduct.setBnsUsePeriod(displayInfo.getUsePeriod());
 
 			purchaseProductMap.put(displayInfo.getProdId(), purchaseProduct);
 		}
 
 		return purchaseProductMap;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 소장/대여 상품 정보 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param langCd
+	 *            언어코드
+	 * @param prodId
+	 *            조회할 상품ID
+	 * @param possLendClsfCd
+	 *            해당 상품ID의 소장/대여 구분 코드
+	 * @return 상품ID에 매핑되는 상품정보를 담은 Map
+	 */
+	@Override
+	public PossLendProductInfo searchPossLendProductInfo(String tenantId, String langCd, String prodId,
+			String possLendClsfCd) {
+		PossLendProductInfoSacReq req = new PossLendProductInfoSacReq();
+		req.setTenantId(tenantId);
+		req.setLangCd(langCd);
+		List<String> possLendClsfCdList = new ArrayList<String>();
+		possLendClsfCdList.add(possLendClsfCd);
+		req.setPossLendClsfCdList(possLendClsfCdList);
+		List<String> prodIdList = new ArrayList<String>();
+		prodIdList.add(prodId);
+		req.setProdIdList(prodIdList);
+
+		PossLendProductInfoSacRes res = this.possLendProductInfoSCI.searchPossLendProductInfo(req);
+		PossLendProductInfo possLendProductInfo = res.getPossLendProductInfoList().get(0);
+
+		if (StringUtils.isEmpty(possLendProductInfo.getPossProdId())
+				|| StringUtils.isEmpty(possLendProductInfo.getLendProdId())) {
+			return null;
+
+		} else {
+			return possLendProductInfo;
+		}
 	}
 
 	/**
