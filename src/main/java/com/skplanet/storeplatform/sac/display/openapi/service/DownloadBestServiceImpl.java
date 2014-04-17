@@ -108,106 +108,103 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 		String inquiryValue = downloadBestSacReq.getInquiryValue();
 		String prodCharge = downloadBestSacReq.getProdCharge();
 
-		if (downloadBestSacReq.getDummy() == null) {
-			// dummy 호출이 아닐때
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(listId)) {
-				throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
-			}
-
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(inquiryType)) {
-				throw new StorePlatformException("SAC_DSP_0002", "inquiryType", inquiryType);
-			}
-
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(inquiryValue)) {
-				throw new StorePlatformException("SAC_DSP_0002", "inquiryValue", inquiryValue);
-			}
-
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(prodCharge)) {
-				throw new StorePlatformException("SAC_DSP_0002", "prodCharge", prodCharge);
-			}
-
-			if ("2".equals(inquiryType)) {
-				// 사업자 등록번호로 Selley Key 조회
-				String[] arraySellerKey = null;
-				DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-				List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
-				SellerMbrSac sellerMbrSac = new SellerMbrSac();
-				sellerMbrSac.setSellerBizNumber(inquiryValue);
-				sellerMbrSacList.add(sellerMbrSac);
-				detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
-				this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
-				long start = System.currentTimeMillis();
-				try {
-
-					DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
-							.detailInformation(detailInformationSacReq);
-
-					Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
-					// sellerMbrSac = new SellerMbrSac();
-					while (it.hasNext()) {
-						String key = it.next();
-						List<SellerMbrSac> sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
-						arraySellerKey = new String[sellerMbrs.size()];
-						for (int i = 0; i < sellerMbrs.size(); i++) {
-							arraySellerKey[i] = sellerMbrs.get(i).getSellerKey();
-						}
-					}
-					// 조회된 Seller Key setting
-					downloadBestSacReq.setArraySellerKey(arraySellerKey);
-				} catch (Exception e) {
-					downloadBestSacReq.setArraySellerKey(arraySellerKey);
-				}
-				this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation");
-				long end = System.currentTimeMillis();
-				this.log.info("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformation takes {} ms",
-						(end - start));
-			}
-
-			List<MetaInfo> downloadBestList = null;
-			// OpenApi 다운로드 Best 상품 조회
-			downloadBestList = this.commonDAO.queryForList("OpenApi.searchDownloadBestList", downloadBestSacReq,
-					MetaInfo.class);
-
-			if (downloadBestList.size() != 0) {
-
-				Iterator<MetaInfo> iterator = downloadBestList.iterator();
-				List<Identifier> identifierList = new ArrayList<Identifier>();
-				while (iterator.hasNext()) {
-
-					MetaInfo metaInfo = iterator.next();
-
-					product = new Product();
-
-					Identifier identifier = this.commonGenerator.generateIdentifier(
-							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
-					identifierList.add(identifier);
-					product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo)); // 상품 ID
-
-					/*
-					 * 상품 이미지
-					 */
-					product.setSourceList(this.commonGenerator.generateSourceList(
-							DisplayCommonUtil.getMimeType(metaInfo.getImagePath()),
-							DisplayConstants.DP_SOURCE_TYPE_ORIGINAL, metaInfo.getImagePath()));
-
-					product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품가격
-					product.setAccrual(this.commonGenerator.generateAccrual(metaInfo)); // 참여자 정보
-					product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
-					product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
-					product.setProductExplain(metaInfo.getProdBaseDesc()); // 상품 설명
-					product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
-
-					productList.add(product);
-
-					commonResponse.setTotalCount(metaInfo.getTotalCount());
-				}
-			}
-
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(listId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
 		}
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(inquiryType)) {
+			throw new StorePlatformException("SAC_DSP_0002", "inquiryType", inquiryType);
+		}
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(inquiryValue)) {
+			throw new StorePlatformException("SAC_DSP_0002", "inquiryValue", inquiryValue);
+		}
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(prodCharge)) {
+			throw new StorePlatformException("SAC_DSP_0002", "prodCharge", prodCharge);
+		}
+
+		if ("2".equals(inquiryType)) {
+			// 사업자 등록번호로 Selley Key 조회
+			String[] arraySellerKey = null;
+			DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+			List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+			SellerMbrSac sellerMbrSac = new SellerMbrSac();
+			sellerMbrSac.setSellerBizNumber(inquiryValue);
+			sellerMbrSacList.add(sellerMbrSac);
+			detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+			this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
+			long start = System.currentTimeMillis();
+			try {
+
+				DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
+						.detailInformation(detailInformationSacReq);
+
+				Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
+				// sellerMbrSac = new SellerMbrSac();
+				while (it.hasNext()) {
+					String key = it.next();
+					List<SellerMbrSac> sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
+					arraySellerKey = new String[sellerMbrs.size()];
+					for (int i = 0; i < sellerMbrs.size(); i++) {
+						arraySellerKey[i] = sellerMbrs.get(i).getSellerKey();
+					}
+				}
+				// 조회된 Seller Key setting
+				downloadBestSacReq.setArraySellerKey(arraySellerKey);
+			} catch (Exception e) {
+				downloadBestSacReq.setArraySellerKey(arraySellerKey);
+			}
+			this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation");
+			long end = System.currentTimeMillis();
+			this.log.info("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformation takes {} ms",
+					(end - start));
+		}
+
+		List<MetaInfo> downloadBestList = null;
+		// OpenApi 다운로드 Best 상품 조회
+		downloadBestList = this.commonDAO.queryForList("OpenApi.searchDownloadBestList", downloadBestSacReq,
+				MetaInfo.class);
+
+		if (downloadBestList.size() != 0) {
+
+			Iterator<MetaInfo> iterator = downloadBestList.iterator();
+			List<Identifier> identifierList = new ArrayList<Identifier>();
+			while (iterator.hasNext()) {
+
+				MetaInfo metaInfo = iterator.next();
+
+				product = new Product();
+
+				Identifier identifier = this.commonGenerator.generateIdentifier(
+						DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
+				identifierList.add(identifier);
+				product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo)); // 상품 ID
+
+				/*
+				 * 상품 이미지
+				 */
+				product.setSourceList(this.commonGenerator.generateSourceList(
+						DisplayCommonUtil.getMimeType(metaInfo.getImagePath()),
+						DisplayConstants.DP_SOURCE_TYPE_ORIGINAL, metaInfo.getImagePath()));
+
+				product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품가격
+				product.setAccrual(this.commonGenerator.generateAccrual(metaInfo)); // 참여자 정보
+				product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
+				product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
+				product.setProductExplain(metaInfo.getProdBaseDesc()); // 상품 설명
+				product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
+
+				productList.add(product);
+
+				commonResponse.setTotalCount(metaInfo.getTotalCount());
+			}
+		}
+
 		response.setCommonResponse(commonResponse);
 		response.setProductList(productList);
 		return response;

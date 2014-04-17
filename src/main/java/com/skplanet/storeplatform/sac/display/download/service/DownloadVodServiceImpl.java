@@ -115,330 +115,325 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		List<Identifier> identifierList = null;
 		Product product = new Product();
 
-		if (downloadVodSacReq.getDummy() == null) {
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(idType)) {
+			throw new StorePlatformException("SAC_DSP_0002", "idType", idType);
+		}
+		if (StringUtils.isEmpty(productId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
+		}
+		// if (StringUtils.isEmpty(deviceKey)) {
+		// throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
+		// }
+		// if (StringUtils.isEmpty(userKey)) {
+		// throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
+		// }
 
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(idType)) {
-				throw new StorePlatformException("SAC_DSP_0002", "idType", idType);
+		// ID유형 유효값 체크
+		if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)
+				&& !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
+			throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
+		}
+
+		// 다운로드 Vod 상품 조회
+		MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq,
+				MetaInfo.class);
+
+		product = new Product();
+
+		if (metaInfo != null) {
+
+			if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)) {
+				if (DisplayConstants.DP_SERIAL_VOD_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+					throw new StorePlatformException("SAC_DSP_0013");
+				}
 			}
-			if (StringUtils.isEmpty(productId)) {
-				throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
-			}
-			// if (StringUtils.isEmpty(deviceKey)) {
-			// throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
-			// }
-			// if (StringUtils.isEmpty(userKey)) {
-			// throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-			// }
 
-			// ID유형 유효값 체크
-			if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)
-					&& !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
-				throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
-			}
+			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
+				// 구매내역 조회를 위한 생성자
+				ProductListSacIn productListSacIn = null;
+				List<ProductListSacIn> productList = null;
+				HistoryListSacInReq historyReq = null;
+				HistoryListSacInRes historyRes = null;
+				boolean purchaseFlag = true;
 
-			// 다운로드 Vod 상품 조회
-			MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq,
-					MetaInfo.class);
+				try {
+					productListSacIn = new ProductListSacIn();
+					productList = new ArrayList<ProductListSacIn>();
 
-			product = new Product();
+					// 소장 상품ID
+					productListSacIn.setProdId(metaInfo.getStoreProdId());
+					productList.add(productListSacIn);
 
-			if (metaInfo != null) {
+					// 대여 상품ID
+					productListSacIn = new ProductListSacIn();
+					productListSacIn.setProdId(metaInfo.getPlayProdId());
+					productList.add(productListSacIn);
 
-				if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)) {
-					if (DisplayConstants.DP_SERIAL_VOD_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
-						throw new StorePlatformException("SAC_DSP_0013");
-					}
+					historyReq = new HistoryListSacInReq();
+					historyReq.setTenantId(downloadVodSacReq.getTenantId());
+					historyReq.setUserKey(downloadVodSacReq.getUserKey());
+					historyReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
+					historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+					historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+					historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+					historyReq.setEndDt(sysDate);
+					historyReq.setOffset(1);
+					historyReq.setCount(1000);
+					historyReq.setProductList(productList);
+
+					// 구매내역 조회 실행
+					this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+					long start = System.currentTimeMillis();
+					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
+					this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
+					long end = System.currentTimeMillis();
+					this.log.info(
+							"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
+							(end - start));
+
+				} catch (Exception ex) {
+					purchaseFlag = false;
+					this.log.info("[DownloadVodServiceImpl] Purchase History Search Exception : {}");
+					this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+					// throw new StorePlatformException("SAC_DSP_2001", ex);
 				}
 
-				if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
-					// 구매내역 조회를 위한 생성자
-					ProductListSacIn productListSacIn = null;
-					List<ProductListSacIn> productList = null;
-					HistoryListSacInReq historyReq = null;
-					HistoryListSacInRes historyRes = null;
-					boolean purchaseFlag = true;
+				if (purchaseFlag && historyRes != null) {
 
-					try {
-						productListSacIn = new ProductListSacIn();
-						productList = new ArrayList<ProductListSacIn>();
+					String prchsId = null; // 구매ID
+					String prchsDt = null; // 구매일시
+					String useExprDt = null; // 이용 만료일시
+					String dwldExprDt = null; // 다운로드 만료일시
+					String prchsCaseCd = null; // 선물 여부
+					String prchsState = null; // 구매상태
+					String prchsProdId = null; // 구매 상품ID
+					String puchsPrice = null; // 구매 상품금액
+					String drmYn = null; // 구매상품 Drm여부
 
-						// 소장 상품ID
-						productListSacIn.setProdId(metaInfo.getStoreProdId());
-						productList.add(productListSacIn);
+					if (historyRes.getTotalCnt() > 0) {
+						List<Purchase> purchaseList = new ArrayList<Purchase>();
+						List<Encryption> encryptionList = new ArrayList<Encryption>();
 
-						// 대여 상품ID
-						productListSacIn = new ProductListSacIn();
-						productListSacIn.setProdId(metaInfo.getPlayProdId());
-						productList.add(productListSacIn);
+						for (int i = 0; i < historyRes.getTotalCnt(); i++) {
+							prchsId = historyRes.getHistoryList().get(i).getPrchsId();
+							prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
+							useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
+							dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
+							prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
+							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
+							puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
+							drmYn = historyRes.getHistoryList().get(i).getDrmYn();
 
-						historyReq = new HistoryListSacInReq();
-						historyReq.setTenantId(downloadVodSacReq.getTenantId());
-						historyReq.setUserKey(downloadVodSacReq.getUserKey());
-						historyReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
-						historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-						historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-						historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-						historyReq.setEndDt(sysDate);
-						historyReq.setOffset(1);
-						historyReq.setCount(1000);
-						historyReq.setProductList(productList);
+							// 구매상태 확인
+							downloadVodSacReq.setPrchsDt(prchsDt);
+							downloadVodSacReq.setDwldExprDt(dwldExprDt);
+							prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
+									downloadVodSacReq);
 
-						// 구매내역 조회 실행
-						this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
-						long start = System.currentTimeMillis();
-						historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
-						this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
-						long end = System.currentTimeMillis();
-						this.log.info(
-								"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
-								(end - start));
-
-					} catch (Exception ex) {
-						purchaseFlag = false;
-						this.log.info("[DownloadVodServiceImpl] Purchase History Search Exception : {}");
-						this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-						// throw new StorePlatformException("SAC_DSP_2001", ex);
-					}
-
-					if (purchaseFlag && historyRes != null) {
-
-						String prchsId = null; // 구매ID
-						String prchsDt = null; // 구매일시
-						String useExprDt = null; // 이용 만료일시
-						String dwldExprDt = null; // 다운로드 만료일시
-						String prchsCaseCd = null; // 선물 여부
-						String prchsState = null; // 구매상태
-						String prchsProdId = null; // 구매 상품ID
-						String puchsPrice = null; // 구매 상품금액
-						String drmYn = null; // 구매상품 Drm여부
-
-						if (historyRes.getTotalCnt() > 0) {
-							List<Purchase> purchaseList = new ArrayList<Purchase>();
-							List<Encryption> encryptionList = new ArrayList<Encryption>();
-
-							for (int i = 0; i < historyRes.getTotalCnt(); i++) {
-								prchsId = historyRes.getHistoryList().get(i).getPrchsId();
-								prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
-								useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
-								dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
-								prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
-								prchsProdId = historyRes.getHistoryList().get(i).getProdId();
-								puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
-								drmYn = historyRes.getHistoryList().get(i).getDrmYn();
-
-								// 구매상태 확인
-								downloadVodSacReq.setPrchsDt(prchsDt);
-								downloadVodSacReq.setDwldExprDt(dwldExprDt);
-								prchsState = (String) this.commonDAO.queryForObject(
-										"Download.getDownloadPurchaseState", downloadVodSacReq);
-
-								// 구매상태 만료여부 확인
-								if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
-									// 구매 및 선물 여부 확인
-									if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
-										prchsState = "payment";
-									} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
-										prchsState = "gift";
-									}
+							// 구매상태 만료여부 확인
+							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+								// 구매 및 선물 여부 확인
+								if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsCaseCd)) {
+									prchsState = "payment";
+								} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsCaseCd)) {
+									prchsState = "gift";
 								}
-								metaInfo.setPurchaseId(prchsId);
-								metaInfo.setPurchaseProdId(prchsProdId);
-								metaInfo.setPurchaseDt(prchsDt);
-								metaInfo.setPurchaseState(prchsState);
-								metaInfo.setPurchaseDwldExprDt(dwldExprDt);
-								metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
+							}
+							metaInfo.setPurchaseId(prchsId);
+							metaInfo.setPurchaseProdId(prchsProdId);
+							metaInfo.setPurchaseDt(prchsDt);
+							metaInfo.setPurchaseState(prchsState);
+							metaInfo.setPurchaseDwldExprDt(dwldExprDt);
+							metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
 
-								// 구매 정보
-								purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
+							// 구매 정보
+							purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
 
-								/************************************************************************************************
-								 * 구매 정보에 따른 암호화 시작
-								 ************************************************************************************************/
+							/************************************************************************************************
+							 * 구매 정보에 따른 암호화 시작
+							 ************************************************************************************************/
+							this.log.info("----------------------------------------------------------------");
+							this.log.info("[DownloadVodServiceImpl] prchsState	:	{}", prchsState);
+							this.log.info("----------------------------------------------------------------");
+
+							// 구매상태 만료 여부 확인
+							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+								this.log.info("----------------------------  start set Purchase Info  ------------------------------------");
+								String deviceId = null; // Device Id
+								String deviceIdType = null; // Device Id 유형
+								SearchDeviceIdSacReq deviceReq = null;
+								SearchDeviceIdSacRes deviceRes = null;
+								boolean memberFlag = true;
+
+								try {
+									deviceReq = new SearchDeviceIdSacReq();
+									deviceReq.setUserKey(downloadVodSacReq.getUserKey());
+									deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
+
+									// 기기정보 조회
+									this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
+									long start = System.currentTimeMillis();
+									deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
+									this.log.info("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
+									long end = System.currentTimeMillis();
+									this.log.info(
+											"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
+											(end - start));
+									this.log.info("---------------------------------------------------------------");
+									this.log.info("[DownloadVodServiceImpl] deviceRes.getDeviceId{} : "
+											+ deviceRes.getDeviceId());
+									this.log.info("---------------------------------------------------------------");
+								} catch (Exception ex) {
+									memberFlag = false;
+									this.log.info("[DownloadVodServiceImpl] Device Search Exception : {}");
+									this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+									// throw new StorePlatformException("SAC_DSP_1001", ex);
+								}
+
 								this.log.info("----------------------------------------------------------------");
-								this.log.info("[DownloadVodServiceImpl] prchsState	:	{}", prchsState);
+								this.log.info("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
+								this.log.info("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
 								this.log.info("----------------------------------------------------------------");
 
-								// 구매상태 만료 여부 확인
-								if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
-									this.log.info("----------------------------  start set Purchase Info  ------------------------------------");
-									String deviceId = null; // Device Id
-									String deviceIdType = null; // Device Id 유형
-									SearchDeviceIdSacReq deviceReq = null;
-									SearchDeviceIdSacRes deviceRes = null;
-									boolean memberFlag = true;
+								if (memberFlag && deviceRes != null) {
+									this.log.info("----------------------------------------------------------------");
+									this.log.info("[DownloadVodServiceImpl] Start Encription");
+
+									deviceId = deviceRes.getDeviceId();
+									this.log.info("[DownloadVodServiceImpl] deviceId	: {}", deviceId);
+									deviceIdType = this.commonService.getDeviceIdType(deviceId);
+									this.log.info("[DownloadVodServiceImpl] deviceIdType	:	{}", deviceIdType);
+									this.log.info("[DownloadVodServiceImpl] reqExpireDate	:	{}", reqExpireDate);
+									this.log.info("[DownloadVodServiceImpl] useExprDt	:	{}", useExprDt);
+									this.log.info("[DownloadVodServiceImpl] userKey	:	{}", userKey);
+									this.log.info("[DownloadVodServiceImpl] deviceKey	:	{}", deviceKey);
+
+									metaInfo.setExpiredDate(reqExpireDate);
+									metaInfo.setUseExprDt(useExprDt);
+									metaInfo.setUserKey(userKey);
+									metaInfo.setDeviceKey(deviceKey);
+									metaInfo.setDeviceType(deviceIdType);
+									metaInfo.setDeviceSubKey(deviceId);
+
+									// drmYn 구매내역에서 조회한 DrmYn
+									if (StringUtils.isNotEmpty(drmYn)) {
+										metaInfo.setStoreDrmYn(drmYn);
+										metaInfo.setPlayDrmYn(drmYn);
+									}
+
+									// 소장, 대여 구분(Store : 소장, Play : 대여)
+									if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+										metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+										metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+									} else {
+										metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+										metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+									}
+
+									// 암호화 정보 (JSON)
+									EncryptionContents contents = this.encryptionGenerator
+											.generateEncryptionContents(metaInfo);
+
+									this.log.info("[DownloadVodServiceImpl] contents	:	{}", contents);
+
+									// JSON 파싱
+									MarshallingHelper marshaller = new JacksonMarshallingHelper();
+									byte[] jsonData = marshaller.marshal(contents);
+
+									// JSON 암호화
+									byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+									String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+									// 암호화 정보 (AES-128)
+									Encryption encryption = new Encryption();
+									encryption.setProductId(prchsProdId);
+									byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
+									encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
+									encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
+									encryption.setToken(encryptString);
+									encryptionList.add(encryption);
+									this.log.info("[DownloadVodServiceImpl] keyIndex	:	{}",
+											String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
+
+									this.log.info("[DownloadVodServiceImpl] Token	:	{}", encryptString);
+
+									// JSON 복호화
+									byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+									byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
 
 									try {
-										deviceReq = new SearchDeviceIdSacReq();
-										deviceReq.setUserKey(downloadVodSacReq.getUserKey());
-										deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
-
-										// 기기정보 조회
-										this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
-										long start = System.currentTimeMillis();
-										deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-										this.log.info("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
-										long end = System.currentTimeMillis();
-										this.log.info(
-												"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
-												(end - start));
-										this.log.info("---------------------------------------------------------------");
-										this.log.info("[DownloadVodServiceImpl] deviceRes.getDeviceId{} : "
-												+ deviceRes.getDeviceId());
-										this.log.info("---------------------------------------------------------------");
-									} catch (Exception ex) {
-										memberFlag = false;
-										this.log.info("[DownloadVodServiceImpl] Device Search Exception : {}");
-										this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-										// throw new StorePlatformException("SAC_DSP_1001", ex);
-									}
-
-									this.log.info("----------------------------------------------------------------");
-									this.log.info("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
-									this.log.info("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
-									this.log.info("----------------------------------------------------------------");
-
-									if (memberFlag && deviceRes != null) {
+										String decData = new String(decrypt, "UTF-8");
 										this.log.info("----------------------------------------------------------------");
-										this.log.info("[DownloadVodServiceImpl] Start Encription");
-
-										deviceId = deviceRes.getDeviceId();
-										this.log.info("[DownloadVodServiceImpl] deviceId	: {}", deviceId);
-										deviceIdType = this.commonService.getDeviceIdType(deviceId);
-										this.log.info("[DownloadVodServiceImpl] deviceIdType	:	{}", deviceIdType);
-										this.log.info("[DownloadVodServiceImpl] reqExpireDate	:	{}", reqExpireDate);
-										this.log.info("[DownloadVodServiceImpl] useExprDt	:	{}", useExprDt);
-										this.log.info("[DownloadVodServiceImpl] userKey	:	{}", userKey);
-										this.log.info("[DownloadVodServiceImpl] deviceKey	:	{}", deviceKey);
-
-										metaInfo.setExpiredDate(reqExpireDate);
-										metaInfo.setUseExprDt(useExprDt);
-										metaInfo.setUserKey(userKey);
-										metaInfo.setDeviceKey(deviceKey);
-										metaInfo.setDeviceType(deviceIdType);
-										metaInfo.setDeviceSubKey(deviceId);
-
-										// drmYn 구매내역에서 조회한 DrmYn
-										if (StringUtils.isNotEmpty(drmYn)) {
-											metaInfo.setStoreDrmYn(drmYn);
-											metaInfo.setPlayDrmYn(drmYn);
-										}
-
-										// 소장, 대여 구분(Store : 소장, Play : 대여)
-										if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-											metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-											metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
-										} else {
-											metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-											metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
-										}
-
-										// 암호화 정보 (JSON)
-										EncryptionContents contents = this.encryptionGenerator
-												.generateEncryptionContents(metaInfo);
-
-										this.log.info("[DownloadVodServiceImpl] contents	:	{}", contents);
-
-										// JSON 파싱
-										MarshallingHelper marshaller = new JacksonMarshallingHelper();
-										byte[] jsonData = marshaller.marshal(contents);
-
-										// JSON 암호화
-										byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-										String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
-
-										// 암호화 정보 (AES-128)
-										Encryption encryption = new Encryption();
-										encryption.setProductId(prchsProdId);
-										byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
-										encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
-										encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper
-												.getSacRandomNo()));
-										encryption.setToken(encryptString);
-										encryptionList.add(encryption);
-										this.log.info("[DownloadVodServiceImpl] keyIndex	:	{}",
-												String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
-
-										this.log.info("[DownloadVodServiceImpl] Token	:	{}", encryptString);
-
-										// JSON 복호화
-										byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-										byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-
-										try {
-											String decData = new String(decrypt, "UTF-8");
-											this.log.info("----------------------------------------------------------------");
-											this.log.info("[DownloadVodServiceImpl] decData : {}", decData);
-											this.log.info("decData	:	{}", decData);
-											this.log.info("----------------------------------------------------------------");
-										} catch (UnsupportedEncodingException e) {
-											e.printStackTrace();
-										}
-										this.log.info("[DownloadVodServiceImpl] End Encription");
+										this.log.info("[DownloadVodServiceImpl] decData : {}", decData);
+										this.log.info("decData	:	{}", decData);
 										this.log.info("----------------------------------------------------------------");
+									} catch (UnsupportedEncodingException e) {
+										e.printStackTrace();
 									}
-									this.log.info("----------------------------  end set Purchase Info  ------------------------------------");
+									this.log.info("[DownloadVodServiceImpl] End Encription");
+									this.log.info("----------------------------------------------------------------");
 								}
+								this.log.info("----------------------------  end set Purchase Info  ------------------------------------");
 							}
-							// 구매 정보
-							product.setPurchaseList(purchaseList);
-							this.log.info("----------------------------------------------------------------");
-							this.log.info("[DownloadVodServiceImpl]	encryptionList.size : {}" + encryptionList.size());
-							// 암호화 정보
-							if (!encryptionList.isEmpty()) {
-								this.log.info("[DownloadVodServiceImpl]	setDl : {}");
-								product.setDl(encryptionList);
-							}
-							this.log.info("----------------------------------------------------------------");
 						}
+						// 구매 정보
+						product.setPurchaseList(purchaseList);
+						this.log.info("----------------------------------------------------------------");
+						this.log.info("[DownloadVodServiceImpl]	encryptionList.size : {}" + encryptionList.size());
+						// 암호화 정보
+						if (!encryptionList.isEmpty()) {
+							this.log.info("[DownloadVodServiceImpl]	setDl : {}");
+							product.setDl(encryptionList);
+						}
+						this.log.info("----------------------------------------------------------------");
 					}
 				}
-
-				/************************************************************************************************
-				 * 상품 정보
-				 ************************************************************************************************/
-
-				identifierList = new ArrayList<Identifier>();
-				Identifier identifier = new Identifier();
-
-				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
-						metaInfo.getProdId());
-				identifierList.add(identifier);
-
-				metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-
-				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-						metaInfo.getEspdProdId());
-				identifierList.add(identifier);
-
-				// CID
-				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD,
-						metaInfo.getCid());
-				identifierList.add(identifier);
-
-				product.setIdentifierList(identifierList); // 상품 ID
-				// product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
-				supportList = new ArrayList<Support>();
-				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM,
-						metaInfo.getHdcpYn()));
-				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM,
-						metaInfo.getHdvYn()));
-				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM, "Y"));
-				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM,
-						metaInfo.getDolbySprtYn()));
-				product.setSupportList(supportList);
-				product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
-				product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
-				product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
-				product.setVod(this.vodGenerator.generateVod(metaInfo)); // VOD 정보
-				product.setRights(this.commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
-				product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
-
-				commonResponse.setTotalCount(1);
-			} else {
-				throw new StorePlatformException("SAC_DSP_0009");
 			}
 
+			/************************************************************************************************
+			 * 상품 정보
+			 ************************************************************************************************/
+
+			identifierList = new ArrayList<Identifier>();
+			Identifier identifier = new Identifier();
+
+			identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+					metaInfo.getProdId());
+			identifierList.add(identifier);
+
+			metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+
+			identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+					metaInfo.getEspdProdId());
+			identifierList.add(identifier);
+
+			// CID
+			identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD,
+					metaInfo.getCid());
+			identifierList.add(identifier);
+
+			product.setIdentifierList(identifierList); // 상품 ID
+			// product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+			supportList = new ArrayList<Support>();
+			supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM,
+					metaInfo.getHdcpYn()));
+			supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM,
+					metaInfo.getHdvYn()));
+			supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM, "Y"));
+			supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM,
+					metaInfo.getDolbySprtYn()));
+			product.setSupportList(supportList);
+			product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
+			product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
+			product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
+			product.setVod(this.vodGenerator.generateVod(metaInfo)); // VOD 정보
+			product.setRights(this.commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
+			product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
+
+			commonResponse.setTotalCount(1);
+		} else {
+			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
 		response.setCommonResponse(commonResponse);
