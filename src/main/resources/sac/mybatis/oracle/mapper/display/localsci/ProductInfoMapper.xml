@@ -158,9 +158,7 @@
                    AND  B.PROD_ID = #{productBasicInfo.prodId}        /* 상품ID */
                    AND  D.PROD_ID = RSHP.PART_PROD_ID
                    AND  RSHP.PROD_ID = DESC2.PROD_ID
-                   AND  (CASE WHEN E.PART_PARENT_CLSF_CD = 'PD012302' THEN 'DP010801'
-                              ELSE 'DP010802'
-                         END) = RSHP.PROD_RSHP_CD
+                   AND  RSHP.PROD_RSHP_CD = #{rshpCd}
        ) TB
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="ProductInfo">
@@ -250,6 +248,7 @@
 			     AND D.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 채널타입 */
 			     AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
 			     AND I.PART_PROD_ID = #{productBasicInfo.partProdId}
+			     AND I.PROD_RSHP_CD = #{rshpCd}
 	</select>
     
     <select id="getMusicMetaInfo" parameterType="Map" resultType="ProductInfo">
