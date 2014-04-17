@@ -32,6 +32,7 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	private String resultMsg; // 결제처리결과 메시지
 	@NotBlank
 	private String prchsId; // 구매 ID
+	private String prodId;
 	@NotNull
 	private double totAmt; // 결제 총 금액
 	private String mctSpareParam; // 가맹점 파라미터
@@ -127,6 +128,21 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	 */
 	public void setPaymentInfoList(List<PaymentInfo> paymentInfoList) {
 		this.paymentInfoList = paymentInfoList;
+	}
+
+	/**
+	 * @return the prodId
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            the prodId to set
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
 }

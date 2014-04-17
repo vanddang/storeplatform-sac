@@ -37,6 +37,7 @@ public class PaymentInfo extends CommonInfo {
 	private String cpnType; // 이용한 쿠폰 타입
 	private String cpnMakeHost; // 이용한 쿠폰 생성주체
 	private String moid; // 테넌트 결제수단 관리 정보
+	private String sktTestDeviceYn; // SKT 시험폰 결제 여부
 
 	/**
 	 * @return the tid
@@ -186,6 +187,21 @@ public class PaymentInfo extends CommonInfo {
 	 */
 	public void setMoid(String moid) {
 		this.moid = moid;
+	}
+
+	/**
+	 * @return the sktTestDeviceYn
+	 */
+	public String getSktTestDeviceYn() {
+		return this.sktTestDeviceYn;
+	}
+
+	/**
+	 * @param sktTestDeviceYn
+	 *            the sktTestDeviceYn to set
+	 */
+	public void setSktTestDeviceYn(String sktTestDeviceYn) {
+		this.sktTestDeviceYn = sktTestDeviceYn;
 	}
 
 }
