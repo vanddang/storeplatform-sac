@@ -146,6 +146,9 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYPLANET_TELECOM_LGT = "L"; // LG U+
 	public static final String PAYPLANET_TELECOM_UNKNOWN = "X"; // Unknown
 
+	/** Pay Planet 결제 취소 사유 */
+	public static final String PAYPLANET_PAYMENT_CANCEL_REASON_VOC = "E01"; // VOC 운영 취소.
+
 	/** T Store 결제 성공 코드 */
 	public static final String TSTORE_PAYMENT_CANCEL_SUCCESS = "0000";
 
