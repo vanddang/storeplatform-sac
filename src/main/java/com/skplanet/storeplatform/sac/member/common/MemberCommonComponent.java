@@ -70,6 +70,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
+import com.skplanet.storeplatform.sac.member.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
@@ -567,8 +568,10 @@ public class MemberCommonComponent {
 			List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
 			for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-				LOGGER.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
-				LOGGER.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
+				LOGGER.debug("============================================ UserExtraInfo CODE : {}",
+						ptcr.getExtraProfile());
+				LOGGER.debug("============================================ UserExtraInfo VALUE : {}",
+						ptcr.getExtraProfileValue());
 
 				UserExtraInfo extra = new UserExtraInfo();
 				extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -774,8 +777,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -1018,8 +1020,8 @@ public class MemberCommonComponent {
 	 * @param previousDeviceKey
 	 *            이전 휴대기기 Key
 	 */
-	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey, String previousUserKey, String deviceKey,
-			String previousDeviceKey) {
+	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey,
+			String previousUserKey, String deviceKey, String previousDeviceKey) {
 
 		if (isCall) {
 
@@ -1093,5 +1095,26 @@ public class MemberCommonComponent {
 
 		return agreementList;
 
+	}
+
+	/**
+	 * <pre>
+	 * 법정대리인 나이 체크 로직(사용자,판매자 공통).
+	 * </pre>
+	 * 
+	 * @param ownDate
+	 *            회원의 생년월일(yyyymmdd)
+	 * @param parentDate
+	 *            법정대리인 생년월일(yyyymmdd)
+	 */
+	public void checkLglAgent(String ownDate, String parentDate) {
+		// 1. 요청 법정대리인 만19세미만 유무 확인
+		if (DateUtils.getOnlyAge(ownDate) < 20) {
+			throw new StorePlatformException("SAC_MEM_0004", parentDate);
+		}
+		// 2. 요청 법정대리인과 회원이 20살 이상 차이 유무 확인
+		if (DateUtils.yearsBetween(ownDate, parentDate) < 20) {
+			throw new StorePlatformException("SAC_MEM_0005", ownDate, parentDate);
+		}
 	}
 }
