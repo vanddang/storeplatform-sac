@@ -26,7 +26,6 @@ public class DateUtils {
 	 * 
 	 * @param None
 	 * @return String yyyyMMdd 형식의 현재날짜
-	 * @exception Exception
 	 */
 	public static String getCurrentDateString() {
 		return getCurrentDateString("yyyyMMdd");
@@ -39,7 +38,6 @@ public class DateUtils {
 	 * 
 	 * @param None
 	 * @return String HHmmss 형식의 현재 시각
-	 * @exception Exception
 	 */
 	public static String getCurrentTimeString() {
 		return getCurrentDateString("HHmmss");
@@ -53,7 +51,6 @@ public class DateUtils {
 	 * @param pattern
 	 *            SimpleDateFormat 에 적용할 pattern
 	 * @return String pattern 형식의 현재날짜
-	 * @exception Exception
 	 */
 	public static String getCurrentDateString(String pattern) {
 		return convertToString(getCurrentTimeStamp(), pattern);
@@ -67,7 +64,6 @@ public class DateUtils {
 	 * @param dateData
 	 *            yyyyMMdd 형식의 날짜
 	 * @return String yyyy/MM/dd 형식의 해당 날짜
-	 * @exception Exception
 	 */
 	public static String convertFormat(String dateData) {
 		return convertFormat(dateData, "yyyy/MM/dd");
@@ -83,9 +79,7 @@ public class DateUtils {
 	 * @param format
 	 *            SimpleDateFormat 에 적용할 pattern
 	 * @return String pattern 형식의 해당 날짜
-	 * @exception Exception
 	 */
-
 	public static String convertFormat(String dateData, String format) {
 
 		return convertToString(convertToTimestamp(dateData), format);
@@ -99,16 +93,14 @@ public class DateUtils {
 	 * 
 	 * @param None
 	 * @return Timestamp 현재 Timestamp 값
-	 * @exception Exception
 	 */
-
 	public static Timestamp getCurrentTimeStamp() {
 		try {
 			Calendar cal = new GregorianCalendar();
 			Timestamp result = new Timestamp(cal.getTime().getTime());
 			return result;
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][getCurrentTimeStamp]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 
 	}
@@ -120,7 +112,6 @@ public class DateUtils {
 	 * 
 	 * @param None
 	 * @return Timestamp 현재 Timestamp 값
-	 * @exception Exception
 	 */
 	public static String getCurrentTime(String timeZone, String formant) {
 		try {
@@ -131,14 +122,31 @@ public class DateUtils {
 			df.setTimeZone(tz);
 			return df.format(date);
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][getCurrentTime]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param timeZone
+	 * @return String
+	 */
 	public static String getCurrentTime(String timeZone) {
 		return getCurrentTime(timeZone, "yyyyMMddHHmmss");
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param dateData
+	 * @param toFormat
+	 * @return String
+	 */
 	public static String convertFormatU(String dateData, String toFormat) {
 		String yearString = dateData.substring(6, 10);
 		String monthString = dateData.substring(0, 2);
@@ -156,7 +164,6 @@ public class DateUtils {
 	 * @param dateData
 	 *            Timestamp 형식의 날짜
 	 * @return String yyyy/MM/dd 형식의 Timestamp 날짜
-	 * @exception Exception
 	 */
 	public static String convertToString(Timestamp dateData) {
 
@@ -174,7 +181,6 @@ public class DateUtils {
 	 * @param pattern
 	 *            SimpleDateFormat 에 적용할 pattern
 	 * @return String yyyy/MM/dd 형식의 Timestamp 날짜
-	 * @exception None
 	 */
 	public static String convertToString(Timestamp dateData, String pattern) {
 		return convertToString(dateData, pattern, java.util.Locale.KOREA);
@@ -193,7 +199,6 @@ public class DateUtils {
 	 * @param locale
 	 *            국가별 LOCALE
 	 * @return String pattern 형식의 Timestamp 날짜
-	 * @exception Exception
 	 */
 	public static String convertToString(Timestamp dateData, String pattern, java.util.Locale locale) {
 		try {
@@ -220,7 +225,6 @@ public class DateUtils {
 	 * @param dateData
 	 *            yyyyMMdd 형식의 날짜
 	 * @return Timestamp 형식의 해당 날짜
-	 * @exception Exception
 	 */
 	public static Timestamp convertToTimestamp(String dateData) {
 
@@ -257,7 +261,7 @@ public class DateUtils {
 			return new Timestamp(cal.getTime().getTime());
 
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][convertToTimestamp]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 
 	}
@@ -270,7 +274,6 @@ public class DateUtils {
 	 * @param dateData
 	 *            yyyyMMddHHmmss 형식의 날짜시각
 	 * @return Timestamp 형식의 해당 날짜시각
-	 * @exception Exception
 	 */
 	public static Timestamp convertToTimestampHMS(String dateData) {
 		try {
@@ -300,7 +303,7 @@ public class DateUtils {
 			return new Timestamp(cal.getTime().getTime());
 
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][convertToTimestampHMS]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 
 	}
@@ -316,11 +319,11 @@ public class DateUtils {
 	 *            string representation of the date format. For example, "yyyy-MM-dd".
 	 * @return date java.util.Date
 	 */
-	private static java.util.Date check(String s, String format) throws java.text.ParseException {
+	private static java.util.Date check(String s, String format) {
 		if (s == null)
-			throw new java.text.ParseException("date string to check is null", 0);
-		if (format == null) // StorePlatformException
-			throw new java.text.ParseException("format string to check date is null", 0);
+			throw new StorePlatformException("SAC_MEM_0096");
+		if (format == null)
+			throw new StorePlatformException("SAC_MEM_0096");
 
 		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat(format, java.util.Locale.KOREA);
 		java.util.Date date = null;
@@ -331,12 +334,11 @@ public class DateUtils {
 			 * throw new java.text.ParseException( e.getMessage() + " with format \"" + format + "\"",
 			 * e.getErrorOffset() );
 			 */
-			throw new java.text.ParseException(" wrong date:\"" + s + "\" with format \"" + format + "\"", 0);
-			// StorePlatformException
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 
 		if (!formatter.format(date).equals(s)) // StorePlatformException
-			throw new java.text.ParseException("Out of bound date:\"" + s + "\" with format \"" + format + "\"", 0);
+			throw new StorePlatformException("SAC_MEM_0097");
 		return date;
 	}
 
@@ -348,7 +350,6 @@ public class DateUtils {
 	 * @param s
 	 *            date string you want to check with default format "yyyyMMdd"
 	 * @return boolean true 날짜 형식이 맞고, 존재하는 날짜일 때 false 날짜 형식이 맞지 않거나, 존재하지 않는 날짜일 때
-	 * @exception Exception
 	 */
 	public static boolean isValid(String s) {
 		return DateUtils.isValid(s, "yyyyMMdd");
@@ -364,7 +365,6 @@ public class DateUtils {
 	 * @param format
 	 *            string representation of the date format. For example, "yyyy-MM-dd".
 	 * @return boolean true 날짜 형식이 맞고, 존재하는 날짜일 때 false 날짜 형식이 맞지 않거나, 존재하지 않는 날짜일 때
-	 * @exception Exception
 	 */
 	public static boolean isValid(String s, String format) {
 		try {
@@ -401,7 +401,6 @@ public class DateUtils {
 	 *         (java.util.Calendar.SATURDAY 와 비교) 예) String s = "20000529"; int dayOfWeek = whichDay(s, format); if
 	 *         (dayOfWeek == java.util.Calendar.MONDAY) logger.debug(" 월요일: " + dayOfWeek); if (dayOfWeek ==
 	 *         java.util.Calendar.TUESDAY) logger.debug(" 화요일: " + dayOfWeek);
-	 * @exception Exception
 	 */
 	public static int whichDay(String s) {
 		return whichDay(s, "yyyyMMdd");
@@ -423,7 +422,6 @@ public class DateUtils {
 	 *         (java.util.Calendar.SATURDAY 와 비교) 예) String s = "2000-05-29"; int dayOfWeek = whichDay(s, "yyyy-MM-dd");
 	 *         if (dayOfWeek == java.util.Calendar.MONDAY) logger.debug(" 월요일: " + dayOfWeek); if (dayOfWeek ==
 	 *         java.util.Calendar.TUESDAY) logger.debug(" 화요일: " + dayOfWeek);
-	 * @exception Exception
 	 */
 	public static int whichDay(String s, String format) {
 		return whichDay(s, format, java.util.Locale.KOREA);
@@ -462,7 +460,6 @@ public class DateUtils {
 	 * @param String
 	 *            to date string
 	 * @return int 날짜 형식이 맞고, 존재하는 날짜일 때 2개 일자 사이의 나이 리턴 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static int daysBetween(String from, String to) {
 		return daysBetween(from, to, "yyyyMMdd");
@@ -478,20 +475,15 @@ public class DateUtils {
 	 * @param String
 	 *            to date string
 	 * @return int 날짜 형식이 맞고, 존재하는 날짜일 때 2개 일자 사이의 일자 리턴 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static int daysBetween(String from, String to, String format) {
-		try {
 
-			java.util.Date d1 = check(from, format);
-			java.util.Date d2 = check(to, format);
+		java.util.Date d1 = check(from, format);
+		java.util.Date d2 = check(to, format);
 
-			long duration = d2.getTime() - d1.getTime();
+		long duration = d2.getTime() - d1.getTime();
 
-			return (int) (duration / (1000 * 60 * 60 * 24));
-		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][daysBetween]" + e.getMessage(), e);
-		}
+		return (int) (duration / (1000 * 60 * 60 * 24));
 	}
 
 	/**
@@ -505,7 +497,6 @@ public class DateUtils {
 	 * @param String
 	 *            to date string
 	 * @return int 날짜 형식이 맞고, 존재하는 날짜일 때 2개 일자 사이의 나이 리턴 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static int yearsBetween(String from, String to) {
 		return yearsBetween(from, to, "yyyyMMdd");
@@ -523,7 +514,6 @@ public class DateUtils {
 	 * @param format
 	 *            string representation of the date format. For example, "yyyy-MM-dd".
 	 * @return int 날짜 형식이 맞고, 존재하는 날짜일 때 2개 일자 사이의 나이 리턴 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static int yearsBetween(String from, String to, String format) {
 		return daysBetween(from, to, format) / 365;
@@ -538,7 +528,6 @@ public class DateUtils {
 	 *            date string
 	 * @param int 더할 분수
 	 * @return String 날짜 형식이 맞고, 존재하는 날짜일 때 분수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception LException
 	 */
 	public static String addMinute(String s, int minute) {
 		return addMinute(s, minute, "yyyyMMddHHmm");
@@ -556,7 +545,6 @@ public class DateUtils {
 	 * @param format
 	 *            string representation of the date format. For example, "yyyy-MM-dd".
 	 * @return int 날짜 형식이 맞고, 존재하는 날짜일 때 분수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static String addMinute(String s, int minute, String format) {
 		try {
@@ -566,7 +554,7 @@ public class DateUtils {
 			date.setTime(date.getTime() + ((long) minute * 1000 * 60));
 			return formatter.format(date);
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][addMinute]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 	}
 
@@ -579,7 +567,6 @@ public class DateUtils {
 	 *            date string
 	 * @param int 더할 초수
 	 * @return String 날짜 형식이 맞고, 존재하는 날짜일 때 초수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static String addSecond(String s, int second) {
 		return addSecond(s, second, "yyyyMMddHHmmss");
@@ -597,7 +584,6 @@ public class DateUtils {
 	 * @param format
 	 *            string representation of the date format. For example, "yyyy-MM-dd".
 	 * @return int 날짜 형식이 맞고, 존재하는 날짜일 때 초수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static String addSecond(String s, int second, String format) {
 		try {
@@ -607,7 +593,7 @@ public class DateUtils {
 			date.setTime(date.getTime() + ((long) second * 1000));
 			return formatter.format(date);
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][addSecond]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 	}
 
@@ -620,7 +606,6 @@ public class DateUtils {
 	 *            date string
 	 * @param int 더할 millisecond
 	 * @return String 날짜 형식이 맞고, 존재하는 날짜일 때 초수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static String addMilliSecond(String s, int milliSecond) {
 		return addMilliSecond(s, milliSecond, "yyyyMMddHHmmss");
@@ -638,7 +623,6 @@ public class DateUtils {
 	 * @param format
 	 *            string representation of the date format. For example, "yyyy-MM-dd".
 	 * @return int 날짜 형식이 맞고, 존재하는 날짜일 때 초수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static String addMilliSecond(String s, int milliSecond, String format) {
 		try {
@@ -649,7 +633,7 @@ public class DateUtils {
 			date.setTime(date.getTime() + (milliSecond));
 			return formatter.format(date);
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][addMilliSecond]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 	}
 
@@ -662,7 +646,6 @@ public class DateUtils {
 	 *            date string
 	 * @param int 더할 일수
 	 * @return String 날짜 형식이 맞고, 존재하는 날짜일 때 일수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static String addDays(String s, int day) {
 		return addDays(s, day, "yyyyMMdd");
@@ -680,7 +663,6 @@ public class DateUtils {
 	 * @param format
 	 *            string representation of the date format. For example, "yyyy-MM-dd".
 	 * @return int 날짜 형식이 맞고, 존재하는 날짜일 때 일수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static String addDays(String s, int day, String format) {
 		try {
@@ -690,7 +672,7 @@ public class DateUtils {
 			date.setTime(date.getTime() + ((long) day * 1000 * 60 * 60 * 24));
 			return formatter.format(date);
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][addDays]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 	}
 
@@ -703,7 +685,6 @@ public class DateUtils {
 	 *            date string
 	 * @param int 더할 월수
 	 * @return String 날짜 형식이 맞고, 존재하는 날짜일 때 월수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static String addMonths(String s, int month) {
 		return addMonths(s, month, "yyyyMMdd");
@@ -720,7 +701,6 @@ public class DateUtils {
 	 * @param format
 	 *            string representation of the date format. For example, "yyyy-MM-dd".
 	 * @return String 날짜 형식이 맞고, 존재하는 날짜일 때 월수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static String addMonths(String s, int addMonth, String format) {
 		try {
@@ -753,18 +733,15 @@ public class DateUtils {
 					+ String.valueOf(twoDf.format(day));
 			java.util.Date targetDate = null;
 
-			try {
-				targetDate = check(tempDate, "yyyyMMdd");
-			} catch (java.text.ParseException pe) {
-				day = lastDay(year, month);
-				tempDate = String.valueOf(fourDf.format(year)) + String.valueOf(twoDf.format(month))
-						+ String.valueOf(twoDf.format(day));
-				targetDate = check(tempDate, "yyyyMMdd");
-			}
+			targetDate = check(tempDate, "yyyyMMdd");
+			// day = lastDay(year, month);
+			// tempDate = String.valueOf(fourDf.format(year)) + String.valueOf(twoDf.format(month))
+			// + String.valueOf(twoDf.format(day));
+			// targetDate = check(tempDate, "yyyyMMdd");
 
 			return formatter.format(targetDate);
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][addMonths]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 	}
 
@@ -777,7 +754,6 @@ public class DateUtils {
 	 *            s string
 	 * @param int 더할 년수
 	 * @return String 날짜 형식이 맞고, 존재하는 날짜일 때 년수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 
 	public static String addYears(String s, int year) {
@@ -795,7 +771,6 @@ public class DateUtils {
 	 * @param format
 	 *            string representation of the date format. For example, "yyyy-MM-dd".
 	 * @return String 날짜 형식이 맞고, 존재하는 날짜일 때 년수 더하기 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static String addYears(String s, int year, String format) {
 		try {
@@ -805,7 +780,7 @@ public class DateUtils {
 			date.setTime(date.getTime() + ((long) year * 1000 * 60 * 60 * 24 * (365)));
 			return formatter.format(date);
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][addYears]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 	}
 
@@ -833,7 +808,7 @@ public class DateUtils {
 				current.setTime(current.getTime() + ((long) nAdd * 1000 * 60));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 		return formatter.format(current);
 	}
@@ -848,7 +823,6 @@ public class DateUtils {
 	 * @param String
 	 *            to date string
 	 * @return int 날짜 형식이 맞고, 존재하는 날짜일 때 2개 일자 사이의 개월수 리턴 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static int monthsBetween(String from, String to) {
 		return monthsBetween(from, to, "yyyyMMdd");
@@ -864,7 +838,6 @@ public class DateUtils {
 	 * @param String
 	 *            to date string
 	 * @return int 날짜 형식이 맞고, 존재하는 날짜일 때 2개 일자 사이의개월수 리턴 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
 	public static int monthsBetween(String from, String to, String format) {
 		try {
@@ -895,7 +868,7 @@ public class DateUtils {
 
 			return result;
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][monthsBetween]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 	}
 
@@ -907,9 +880,7 @@ public class DateUtils {
 	 * @param String
 	 *            src string
 	 * @return String 날짜 형식이 맞고, 존재하는 날짜일 때 그달의 마지말 날을 구함 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
-
 	public static String lastDayOfMonth(String src) {
 		return lastDayOfMonth(src, "yyyyMMdd");
 	}
@@ -922,9 +893,7 @@ public class DateUtils {
 	 * @param format
 	 *            string representation of the date format. For example, "yyyy-MM-dd".
 	 * @return String 날짜 형식이 맞고, 존재하는 날짜일 때 그달의 마지말 날을 구함 형식이 잘못 되었거나 존재하지 않는 날짜: java.text.ParseException 발생
-	 * @exception Exception
 	 */
-
 	public static String lastDayOfMonth(String src, String format) {
 		try {
 
@@ -947,7 +916,7 @@ public class DateUtils {
 
 			return formatter.format(targetDate);
 		} catch (Exception e) {
-			throw new StorePlatformException("[DateUtil][lastDayOfMonth]" + e.getMessage(), e);
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 	}
 
@@ -958,9 +927,8 @@ public class DateUtils {
 	 * 
 	 * @param year
 	 * @param month
-	 * @throws java.text.ParseException
 	 */
-	private static int lastDay(int year, int month) throws java.text.ParseException {
+	private static int lastDay(int year, int month) {
 		int day = 0;
 		switch (month) {
 		case 1:
@@ -1038,7 +1006,7 @@ public class DateUtils {
 	 *            - format
 	 * @param returnFormat
 	 *            - 리턴받고자하는 format
-	 * @return
+	 * @return String
 	 */
 	public static String getDateFormatedString(String dateStr, String dateFormat, String returnFormat) {
 		Date date = null;
@@ -1047,7 +1015,7 @@ public class DateUtils {
 		try {
 			date = formatter.parse(dateStr);
 		} catch (ParseException e) {
-			throw new StorePlatformException("");
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 		return returnFormatter.format(date);
 	}
@@ -1081,7 +1049,15 @@ public class DateUtils {
 		return frslt;
 	}
 
-	// CRONTAB 시간 표현으로 변경 (day, hour, minute)
+	/**
+	 * <pre>
+	 *  CRONTAB 시간 표현으로 변경 (day, hour, minute).
+	 * </pre>
+	 * 
+	 * @param timeType
+	 * @param toTime
+	 * @return String
+	 */
 	public static String getCrontabTime(String timeType, String toTime) {
 		String convertTime = "";
 
@@ -1228,15 +1204,12 @@ public class DateUtils {
 		}
 
 		if (!isCorrectArg) {
-			System.out.println("'" + argDate + "'는 올바르지 않은 년월일 형식입니다.");
-			throw new IllegalArgumentException("'" + argDate + "'는 올바르지 않은 년월일 형식입니다.");
+			throw new StorePlatformException("SAC_MEM_0097");
 		}
 
 		if (subArg.length() != 8) {
 			if (subArg.length() != 6 && subArg.length() != 10) {
-				System.out.println("'" + argDate + "'는 올바르지 않은 년월일 형식입니다.");
-				throw new IllegalArgumentException("'" + argDate + "'는 올바르지 않은 년월일 형식입니다.");
-				// StorePlatformException
+				throw new StorePlatformException("SAC_MEM_0097");
 			}
 
 			if (subArg.length() == 6) {
