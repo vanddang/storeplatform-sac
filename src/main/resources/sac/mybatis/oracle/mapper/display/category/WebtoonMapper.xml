@@ -483,7 +483,7 @@
                       , J.UPD_DT
                       , L.CHAPTER                      
                       , L.BOOK_CLSF_CD
-                      , FC_GET_IMAGE(I.PART_PROD_ID, #{imageCd}) AS FILE_PATH
+                      , CONCAT ( M.FILE_PATH, M.FILE_NM) AS FILE_PATH
                       , N.PATICPERS_CNT
                       , N.PRCHS_CNT
                       , N.AVG_EVLU_SCORE              
@@ -499,6 +499,7 @@
                       , TB_DP_PROD_RSHP               I
                       , TB_DP_PROD                    J /* 에피소드 상품 */
                       , UV_TB_DP_MULTIMDA_PROD        L /* 에피소드 상품 */
+                      , TB_DP_PROD_IMG                M /* 채널 상품 이미지 */
                       , TB_DP_PROD_DESC               F /* 에피소드 상품 설명 */
                       , TB_DP_TENANT_PROD             G /* 채널 Tenant 상품 */
                       , TB_DP_TENANT_PROD             G1 /* 에피소드 Tenant 상품 */
@@ -514,7 +515,8 @@
                    AND G.TENANT_ID = H.TENANT_ID     
                    AND G.TENANT_ID = O.TENANT_ID           
                    AND G1.TENANT_ID = N.TENANT_ID(+)
-                   AND G1.PROD_ID = N.PROD_ID(+)              
+                   AND G1.PROD_ID = N.PROD_ID(+)         
+                   AND J.PROD_ID = M.PROD_ID(+)     
                    AND I.PART_PROD_ID = G1.PROD_ID           
                    AND I.PART_PROD_ID = J.PROD_ID
                    AND I.PART_PROD_ID = L.PROD_ID
@@ -533,7 +535,8 @@
                    AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                    AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */             
-                   AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+                   AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT      
+                   AND M.IMG_CD(+) = #{imageCd}                 /* 이미지코드 */
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    ----------------------------------------------------------------------------- 
