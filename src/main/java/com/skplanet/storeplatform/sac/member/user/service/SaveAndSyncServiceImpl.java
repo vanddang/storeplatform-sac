@@ -145,13 +145,12 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				gameCenterSacReq.setPreMbrNo(userKey);
 				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
 				this.deviceService.insertGameCenterIF(gameCenterSacReq);
-			}
 
-			if (this.isCall) {
-				saveAndSync.setUserKey(newMbrNo);
+				saveAndSync.setUserKey(newMbrNo); // OGG연동시에는 mbr_no가 userKey가 된다.
 			} else {
 				saveAndSync.setUserKey(userKey);
 			}
+
 			saveAndSync.setDeviceKey(deviceKey); // 휴대기기 Key		
 
 		} else {
