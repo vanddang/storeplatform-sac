@@ -123,7 +123,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 		if (metaInfo != null) {
 			this.logger.info("----------------------------------------------------------------");
-			this.logger.info("[getDownloadEbookInfo] scid : {}", metaInfo.getSubContentsId());
+			this.logger.info("[getDownloadComicInfo] scid : {}", metaInfo.getSubContentsId());
 			this.logger.info("----------------------------------------------------------------");
 
 			Product product = new Product();
