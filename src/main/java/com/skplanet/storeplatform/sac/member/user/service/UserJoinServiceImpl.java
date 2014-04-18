@@ -907,7 +907,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 				}
 
-				LOGGER.debug(">> ## ICAS 연동 :::: icasImei : {}", icasImei);
+				LOGGER.info(">> ## ICAS 연동 [icasImei={}]", icasImei);
 				if (!StringUtils.equals(icasImei, req.getNativeId())) {
 					throw new StorePlatformException("SAC_MEM_1503");
 				}
@@ -1211,9 +1211,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 		} catch (StorePlatformException spe) {
+			
 			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
-			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
-			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
+			
 		}
 
 	}
