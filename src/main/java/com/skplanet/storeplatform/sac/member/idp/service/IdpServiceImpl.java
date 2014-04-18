@@ -544,7 +544,7 @@ public class IdpServiceImpl implements IdpService {
 
 					ListDeviceReq req = new ListDeviceReq();
 
-					req.setUserKey(userKey);
+					req.setUserKey(currentMbrNoForgameCenter);
 					req.setIsMainDevice("N");
 
 					ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, req);
@@ -555,7 +555,8 @@ public class IdpServiceImpl implements IdpService {
 							GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 							gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
 							gameCenterSacReq.setPreDeviceId(deviceInfo.getDeviceId());
-							// Post UserKey를 가져오려했으나 sc쪽에 userKey는 수정후에도 넘겨받는값 userKey updateUserRequest의 userkKey를 그대로
+							// Post UserKey를 가져오려했으나 sc쪽에 userKey는 수정후에도 넘겨받는값 userKey updateUserRequest의 userkKey를
+							// 그대로
 							// 리턴해주고있어서현재 param으로 넘어온 mbrNo 그대로 셋팅해주고 있음 임시로직이기 때문에 문제 없음.
 							gameCenterSacReq.setUserKey(currentMbrNoForgameCenter);
 							gameCenterSacReq.setPreUserKey(userKey);
@@ -568,6 +569,7 @@ public class IdpServiceImpl implements IdpService {
 						}
 					}
 				} catch (StorePlatformException spe) {
+					LOGGER.info("{} 의 휴대기기 정보가 없음 : {}", oldId, spe.getErrorInfo().getCode());
 					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 					return imResult;
