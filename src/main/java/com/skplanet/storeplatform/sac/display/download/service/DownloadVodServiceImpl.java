@@ -135,6 +135,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
 		}
 
+		this.log.info("----------------------------------------------------------------");
+		this.log.info("[DownloadVodServiceImpl] idType : {}", idType);
+		this.log.info("[DownloadVodServiceImpl] productId : {}", productId);
+		this.log.info("[DownloadVodServiceImpl] deviceKey : {}", deviceKey);
+		this.log.info("[DownloadVodServiceImpl] userKey : {}", userKey);
+		this.log.info("----------------------------------------------------------------");
+
 		// 다운로드 Vod 상품 조회
 		MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq,
 				MetaInfo.class);
@@ -142,12 +149,18 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		product = new Product();
 
 		if (metaInfo != null) {
-
 			if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)) {
 				if (DisplayConstants.DP_SERIAL_VOD_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
 					throw new StorePlatformException("SAC_DSP_0013");
 				}
 			}
+
+			this.log.info("----------------------------------------------------------------");
+			this.log.info("[DownloadVodServiceImpl] NORMAL scid : {}", metaInfo.getNmSubContsId());
+			this.log.info("[DownloadVodServiceImpl] SD scid : {}", metaInfo.getSdSubContsId());
+			this.log.info("[DownloadVodServiceImpl] HD scid : {}", metaInfo.getHdSubContsId());
+			this.log.info("[DownloadVodServiceImpl] CID : {}", metaInfo.getCid());
+			this.log.info("----------------------------------------------------------------");
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
 				// 구매내역 조회를 위한 생성자
@@ -198,6 +211,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 					// throw new StorePlatformException("SAC_DSP_2001", ex);
 				}
+
+				this.log.info("---------------------------------------------------------------------");
+				this.log.info("[DownloadVodServiceImpl] purchaseFlag :{}", purchaseFlag);
+				this.log.info("[DownloadVodServiceImpl] historyRes :{}", historyRes);
+				this.log.info("---------------------------------------------------------------------");
 
 				if (purchaseFlag && historyRes != null) {
 
@@ -380,7 +398,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						// 구매 정보
 						product.setPurchaseList(purchaseList);
 						this.log.info("----------------------------------------------------------------");
-						this.log.info("[DownloadVodServiceImpl]	encryptionList.size : {}" + encryptionList.size());
 						// 암호화 정보
 						if (!encryptionList.isEmpty()) {
 							this.log.info("[DownloadVodServiceImpl]	setDl : {}");

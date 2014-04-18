@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,11 +126,16 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		// throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
 		// }
 
+		this.log.info("----------------------------------------------------------------");
+		this.log.info("[DownloadMusicServiceImpl] productId : {}", productId);
+		this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", deviceKey);
+		this.log.info("[DownloadMusicServiceImpl] userKey : {}", userKey);
+		this.log.info("----------------------------------------------------------------");
+
 		// 다운로드 Music 상품 조회
 		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.getDownloadMusicInfo",
 				downloadMusicSacReq);
 		if (metaInfo != null) {
-
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
 				// 구매내역 조회를 위한 생성자
 				ProductListSacIn productListSacIn = null;
@@ -176,6 +180,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					// throw new StorePlatformException("SAC_DSP_2001", ex);
 				}
 
+				this.log.info("---------------------------------------------------------------------");
+				this.log.info("[DownloadMusicServiceImpl] purchaseFlag :{}", purchaseFlag);
+				this.log.info("[DownloadMusicServiceImpl] historyRes :{}", historyRes);
+				this.log.info("---------------------------------------------------------------------");
 				if (purchaseFlag && historyRes != null) {
 
 					String prchsId = null; // 구매ID
@@ -224,6 +232,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							this.log.info("[DownloadMusicServiceImpl] prchsCaseCd : {}", prchsCaseCd);
 							this.log.info("[DownloadMusicServiceImpl] prchsState : {}", prchsState);
 							this.log.info("[DownloadMusicServiceImpl] prchsProdId : {}", prchsProdId);
+							this.log.info("[DownloadMusicServiceImpl] prchsPrice : {}", puchsPrice);
 							this.log.info("----------------------------------------------------------------");
 
 							metaInfo.setPurchaseId(prchsId);
@@ -268,6 +277,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 									// throw new StorePlatformException("SAC_DSP_1001", ex);
 								}
 
+								this.log.info("----------------------------------------------------------------");
+								this.log.info("[DownloadMusicServiceImpl] memberFlag	:	{}", memberFlag);
+								this.log.info("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
+								this.log.info("----------------------------------------------------------------");
 								if (memberFlag && deviceRes != null) {
 									deviceId = deviceRes.getDeviceId();
 									deviceIdType = this.commonService.getDeviceIdType(deviceId);
@@ -300,17 +313,17 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 									encryptionList.add(encryption);
 
 									// JSON 복호화
-									byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-									byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-
-									try {
-										String decData = new String(decrypt, "UTF-8");
-										this.log.info("----------------------------------------------------------------");
-										this.log.info("[DownloadMusicServiceImpl] decData : {}", decData);
-										this.log.info("----------------------------------------------------------------");
-									} catch (UnsupportedEncodingException e) {
-										e.printStackTrace();
-									}
+									// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+									// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+									//
+									// try {
+									// String decData = new String(decrypt, "UTF-8");
+									// this.log.info("----------------------------------------------------------------");
+									// this.log.info("[DownloadMusicServiceImpl] decData : {}", decData);
+									// this.log.info("----------------------------------------------------------------");
+									// } catch (UnsupportedEncodingException e) {
+									// e.printStackTrace();
+									// }
 								}
 							}
 						}
@@ -372,33 +385,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 			// 이용등급 정보
 			product.setRights(this.commonGenerator.generateRights(metaInfo));
-
-			// // 구매 정보
-			// if (StringUtils.isNotEmpty(prchsId)) {
-			// purchase.setState(prchsState);
-			// List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
-			//
-			// identifier = new Identifier();
-			// identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-			// identifier.setText(prchsId);
-			// purchaseIdentifierList.add(identifier);
-			//
-			// identifier = new Identifier();
-			// identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			// identifier.setText(prchsProdId);
-			// purchaseIdentifierList.add(identifier);
-			//
-			// purchase.setIdentifierList(purchaseIdentifierList);
-			//
-			// date = new Date();
-			// date.setType("date/purchase");
-			// date.setText(DateUtils.parseDate(prchsDt));
-			// List<Date> dateList = new ArrayList<Date>();
-			// dateList.add(date);
-			// purchase.setDateList(dateList);
-			// product.setPurchase(purchase);
-			//
-			// }
 
 			commonResponse.setTotalCount(1);
 		} else {

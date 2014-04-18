@@ -170,12 +170,20 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
 			}
 		}
+		this.log.info("----------------------------------------------------------------");
+		this.log.info("[DownloadAppServiceImpl] productId : {}", productId);
+		this.log.info("[DownloadAppServiceImpl] deviceKey : {}", deviceKey);
+		this.log.info("[DownloadAppServiceImpl] userKey : {}", userKey);
+		this.log.info("----------------------------------------------------------------");
 
 		// 다운로드 앱 상품 조회
 		MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadAppInfo", downloadAppSacReq,
 				MetaInfo.class);
 
 		if (metaInfo != null) {
+			this.log.info("----------------------------------------------------------------");
+			this.log.info("[DownloadAppServiceImpl] scid : {}", metaInfo.getSubContentsId());
+			this.log.info("----------------------------------------------------------------");
 			identifierList = new ArrayList<Identifier>();
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
@@ -217,14 +225,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 				} catch (Exception ex) {
 					purchaseFlag = false;
-					this.log.debug("[DownloadAppServiceImpl] Purchase History Search Exception : {}");
+					this.log.info("[DownloadAppServiceImpl] Purchase History Search Exception : {}");
 					this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 					// throw new StorePlatformException("SAC_DSP_2001", ex);
 				}
 
-				this.log.debug("---------------------------------------------------------------------");
-				this.log.debug("[DownloadAppServiceImpl] purchaseFlag :{}", purchaseFlag);
-				this.log.debug("---------------------------------------------------------------------");
+				this.log.info("---------------------------------------------------------------------");
+				this.log.info("[DownloadAppServiceImpl] purchaseFlag :{}", purchaseFlag);
+				this.log.info("[DownloadAppServiceImpl] historyRes :{}", historyRes);
+				this.log.info("---------------------------------------------------------------------");
 				if (purchaseFlag && historyRes != null) {
 
 					String prchsId = null; // 구매ID
@@ -267,6 +276,17 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								}
 							}
 
+							this.log.info("----------------------------------------------------------------");
+							this.log.info("[DownloadAppServiceImpl] prchsId : {}", prchsId);
+							this.log.info("[DownloadAppServiceImpl] prchsDt : {}", prchsDt);
+							this.log.info("[DownloadAppServiceImpl] useExprDt : {}", useExprDt);
+							this.log.info("[DownloadAppServiceImpl] dwldExprDt : {}", dwldExprDt);
+							this.log.info("[DownloadAppServiceImpl] prchsCaseCd : {}", prchsCaseCd);
+							this.log.info("[DownloadAppServiceImpl] prchsState : {}", prchsState);
+							this.log.info("[DownloadAppServiceImpl] prchsProdId : {}", prchsProdId);
+							this.log.info("[DownloadAppServiceImpl] prchsPrice : {}", puchsPrice);
+							this.log.info("----------------------------------------------------------------");
+
 							metaInfo.setPurchaseId(prchsId);
 							metaInfo.setPurchaseProdId(prchsProdId);
 							metaInfo.setPurchaseDt(prchsDt);
@@ -305,10 +325,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 											(end - start));
 								} catch (Exception ex) {
 									memberFlag = false;
-									this.log.debug("[DownloadAppServiceImpl] SearchDevice Id Search Exception : {}");
+									this.log.info("[DownloadAppServiceImpl] SearchDevice Id Search Exception : {}");
 									this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 									// throw new StorePlatformException("SAC_DSP_1001", ex);
 								}
+
+								this.log.info("----------------------------------------------------------------");
+								this.log.info("[DownloadAppServiceImpl] memberFlag	:	{}", memberFlag);
+								this.log.info("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
+								this.log.info("----------------------------------------------------------------");
 
 								if (memberFlag && deviceRes != null) {
 									deviceId = deviceRes.getDeviceId();
@@ -340,18 +365,18 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 												this.log.info(
 														"##### [SAC DSP LocalSCI] SAC Member uapsSCI.getMappingInfo takes {} ms",
 														(end - start));
-												this.log.debug("#########################################################");
+												this.log.info("-------------------------------------------------------------");
 												for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-													this.log.debug("[DownloadAppServiceImpl] serviceCd	:{}",
+													this.log.info("[DownloadAppServiceImpl] serviceCd	:{}",
 															uapsEcRes.getServiceCD()[k]);
 													if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING.equals(uapsEcRes
 															.getServiceCD()[k])) {
 														metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
 													}
 												}
-												this.log.debug("#########################################################");
+												this.log.info("-------------------------------------------------------------");
 											} catch (Exception e) {
-												this.log.debug("[DownloadAppServiceImpl] :	PacketFee Is Not Half");
+												this.log.info("[DownloadAppServiceImpl] :	PacketFee Is Not Half");
 											}
 										}
 									}
@@ -383,9 +408,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 									try {
 										String decData = new String(decrypt, "UTF-8");
-										this.log.debug("----------------------------------------------------------------");
-										this.log.debug("[DownloadAppServiceImpl] decData : {}", decData);
-										this.log.debug("----------------------------------------------------------------");
+										this.log.info("----------------------------------------------------------------");
+										this.log.info("[DownloadAppServiceImpl] decData : {}", decData);
+										this.log.info("----------------------------------------------------------------");
 									} catch (UnsupportedEncodingException e) {
 										e.printStackTrace();
 									}
