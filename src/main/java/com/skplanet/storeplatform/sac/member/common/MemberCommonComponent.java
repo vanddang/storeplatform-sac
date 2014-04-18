@@ -1131,7 +1131,7 @@ public class MemberCommonComponent {
 		 * 날짜 형식 체크(yyyyMMdd).
 		 */
 		if (!DateUtil.isDate(ownBirth) || !DateUtil.isDate(parentBirth)) {
-			throw new StorePlatformException("[dateFormat error]");
+			throw new StorePlatformException("[dateFormat error (yyyyMMdd)]");
 		}
 
 		if (type != null) {
