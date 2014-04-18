@@ -26,7 +26,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncReques
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
@@ -68,9 +67,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	@Override
 	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId) {
 
-		LOGGER.info("===================================");
-		LOGGER.info("===== 변동성 대상 체크 공통 모듈 =====");
-		LOGGER.info("===================================");
+		LOGGER.debug("===================================");
+		LOGGER.debug("===== 변동성 대상 체크 공통 모듈 =====");
+		LOGGER.debug("===================================");
 
 		/**
 		 * SC 변동성 대상 체크. (번호변경 OR 번호이동)
@@ -80,8 +79,6 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		checkSaveNSyncRequest.setDeviceID(deviceId);
 		CheckSaveNSyncResponse checkSaveNSyncResponse = this.deviceSCI.checkSaveNSync(checkSaveNSyncRequest);
 
-		LOGGER.info("##### checkSaveNSyncResponse : {}", checkSaveNSyncResponse);
-
 		String isActive = checkSaveNSyncResponse.getIsActive(); // 정상여부.
 		String isSaveNSync = checkSaveNSyncResponse.getIsSaveNSync(); // 변동성대상여부.
 		String deviceKey = checkSaveNSyncResponse.getDeviceKey(); // 휴대기기 Key.
@@ -89,13 +86,13 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		String preDeviceId = checkSaveNSyncResponse.getPreDeviceID(); // 이전 MSISDN.
 		String nowDeviceId = checkSaveNSyncResponse.getDeviceID(); // 현재 MSISDN.
 
+		LOGGER.info("isActive : {}", isActive, "|isSaveNSync : {}", isSaveNSync, "|deviceKey : {}", deviceKey, "|userKey : {}", userKey, "|preDeviceId : {}", preDeviceId, "|nowDeviceId : {}", nowDeviceId);
+
 		SaveAndSync saveAndSync = new SaveAndSync();
 		String newMbrNo = null;
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
-			LOGGER.info("변동성 대상!!!");
-			LOGGER.info("nowDeviceId : {}", nowDeviceId);
-			LOGGER.info("preDeviceId  : {}", preDeviceId);
+			LOGGER.info("변동성 대상");
 
 			/**
 			 * 변동성 대상 회원의 상태를 확인한다.
@@ -151,11 +148,11 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				saveAndSync.setUserKey(userKey);
 			}
 
-			saveAndSync.setDeviceKey(deviceKey); // 휴대기기 Key		
+			saveAndSync.setDeviceKey(deviceKey); // 휴대기기 Key
 
 		} else {
 
-			LOGGER.info("변동성 대상 아님!!!");
+			LOGGER.info("변동성 대상 아님");
 
 		}
 
@@ -163,7 +160,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		 * 결과 setting.
 		 */
 		saveAndSync.setIsSaveAndSyncTarget(isSaveNSync); // 변동성 대상 여부 (Y/N)
-		LOGGER.info("SaveAndSync Response: {}", saveAndSync);
+		LOGGER.info("{}", saveAndSync);
 
 		return saveAndSync;
 
@@ -187,7 +184,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			/**
 			 * (IDP 연동) 무선회원 가입 요청 (cmd - joinForWap).
 			 */
-			LOGGER.info("IDP 모바일 회원 가입 요청.");
+			LOGGER.info("IDP 모바일 회원 가입 요청. [{}]", deviceId);
 			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 			joinForWapEcReq.setUserMdn(deviceId);
 			joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT); // 이동 통신사
@@ -196,8 +193,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		} catch (StorePlatformException spe) {
 
 			/**
-			 * 가가입일 경우 처리. (이경우에 걸리게 되면 테넌트에서 모바일전용회원가입을 시킨다. [** 신규 가입처리 되므로
-			 * 회원정보가 복구 되지 않는다. 이때 회원이 클레임을 걸경우 수동으로 처리하기로함.])
+			 * 가가입일 경우 처리. (이경우에 걸리게 되면 테넌트에서 모바일전용회원가입을 시킨다. [** 신규 가입처리 되므로 회원정보가 복구 되지 않는다. 이때 회원이 클레임을 걸경우 수동으로
+			 * 처리하기로함.])
 			 */
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
@@ -225,13 +222,23 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 */
 	private void secedeForWap(String preDeviceId) {
 
-		/**
-		 * IDP 모바일 회원 가입 탈퇴 요청.
-		 */
-		LOGGER.info("IDP 모바일 회원 가입 탈퇴 요청.");
-		SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-		ecReq.setUserMdn(preDeviceId);
-		this.idpSCI.secedeForWap(ecReq);
+		try {
+
+			/**
+			 * IDP 모바일 회원 가입 탈퇴 요청.
+			 */
+			LOGGER.info("IDP 모바일 회원 가입 탈퇴 요청. [{}]", preDeviceId);
+			SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+			ecReq.setUserMdn(preDeviceId);
+			this.idpSCI.secedeForWap(ecReq);
+
+		} catch (StorePlatformException spe) {
+
+			LOGGER.info("## IDP 회원 탈퇴 Error 시에 Skip......");
+			LOGGER.info("## errorCode : {}", spe.getErrorInfo().getCode());
+			LOGGER.info("## errorMsg  : {}", spe.getErrorInfo().getMessage());
+
+		}
 
 	}
 
@@ -260,12 +267,12 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * SC 회원 복구 요청.
 		 */
+		LOGGER.info("회원 복구요청 [newMbrNo : {}]", newMbrNo, "[userKey : {}]", userKey);
 		ReviveUserRequest reviveUserRequest = new ReviveUserRequest();
 		reviveUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		reviveUserRequest.setImMbrNo(newMbrNo);
 		reviveUserRequest.setUserKey(userKey);
-		ReviveUserResponse reviveUserResponse = this.deviceSCI.reviveUser(reviveUserRequest);
-		LOGGER.info("reviveUserResponse : {}", reviveUserResponse);
+		this.deviceSCI.reviveUser(reviveUserRequest);
 
 		/**
 		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
@@ -328,4 +335,5 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				userKey, deviceKey, deviceKey);
 
 	}
+
 }
