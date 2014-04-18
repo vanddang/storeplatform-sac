@@ -316,7 +316,7 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public DetailRes getUserDetailInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.info("###### MCC 회원상세정보조회 Start : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
+		LOGGER.debug("###### MCC 회원상세정보조회 Start : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
 		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
