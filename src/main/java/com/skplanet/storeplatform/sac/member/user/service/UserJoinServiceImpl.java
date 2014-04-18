@@ -98,7 +98,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 법정대리인 나이 유효성 체크.
 		 */
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
-			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay(), "사용자");
+
+			if (StringUtils.isBlank(req.getOwnBirth())) {
+				throw new StorePlatformException("SAC_MEM_0002", "ownBirth");
+			}
+
+			if (StringUtils.isBlank(req.getParentBirthDay())) {
+				throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
+			}
+
+			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay());
 		}
 
 		/**

@@ -458,10 +458,18 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 				} else if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_PARENT)) { // 법정대리인
 
+					if (StringUtils.isBlank(req.getUserBirthDay())) {
+						throw new StorePlatformException("SAC_MEM_0002", "userBirthDay");
+					}
+
+					if (StringUtils.isBlank(req.getParentBirthDay())) {
+						throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
+					}
+
 					/**
 					 * 법정대리인 나이 유효성 체크.
 					 */
-					this.mcc.checkParentBirth(req.getUserBirthDay(), req.getParentBirthDay(), "사용자");
+					this.mcc.checkParentBirth(req.getUserBirthDay(), req.getParentBirthDay());
 
 					try {
 
@@ -695,6 +703,24 @@ public class UserModifyServiceImpl implements UserModifyService {
 			return updateRealNameResponse.getUserKey();
 
 		} else if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_PARENT)) { // 법정대리인
+
+			if (StringUtils.isBlank(req.getUserBirthDay())) {
+				throw new StorePlatformException("SAC_MEM_0002", "userBirthDay");
+			}
+
+			if (StringUtils.isBlank(req.getParentBirthDay())) {
+				throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
+			}
+
+			/**
+			 * 법정대리인 나이 유효성 체크.
+			 */
+			this.mcc.checkParentBirth(req.getUserBirthDay(), req.getParentBirthDay());
+
+			/**
+			 * 법정대리인 나이 유효성 체크.
+			 */
+			this.mcc.checkParentBirth(req.getUserBirthDay(), req.getParentBirthDay());
 
 			/**
 			 * 실명인증 기본 setting.
