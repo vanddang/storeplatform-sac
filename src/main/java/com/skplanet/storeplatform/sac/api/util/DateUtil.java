@@ -111,10 +111,8 @@ public class DateUtil {
 	 * @param textDate
 	 *            일자값을 가진 8자리 문자열 예) '20010806'
 	 * @return Calendar 객체
-	 * @throws Exception
-	 *             Exception
 	 */
-	public static Calendar getCalendar(String textDate) throws Exception {
+	public static Calendar getCalendar(String textDate) {
 		// dateCheck(textDate);
 		int year = Integer.parseInt(textDate.substring(0, 4));
 		int month = Integer.parseInt(textDate.substring(4, 6));
