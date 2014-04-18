@@ -680,7 +680,7 @@ public class FreepassServiceImpl implements FreepassService {
 		ProductListSacIn productListSacIn = new ProductListSacIn();
 		List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
 		HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
-		HistoryListSacInRes historyListSacRes;
+		HistoryListSacInRes historyListSacRes = null;
 
 		try {
 			// 정액제 상품ID
@@ -708,8 +708,8 @@ public class FreepassServiceImpl implements FreepassService {
 					(end - start));
 
 		} catch (Exception ex) {
-			//ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로 처리한다.
-			log.info("FREEPASS 상세 조회시 기구매 체크 연동 오류");
+			// ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로 처리한다.
+			this.log.info("FREEPASS 상세 조회시 기구매 체크 연동 오류");
 		}
 		return historyListSacRes;
 	}
