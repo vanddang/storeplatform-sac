@@ -61,7 +61,7 @@ public class ShoppingAsyncController {
 	@ResponseBody
 	public int getShoppingAsync(@RequestBody @Validated BizCouponReq request, SacRequestHeader sacRequestHeader) {
 
-		new TLogUtil().set(new ShuttleSetter() {
+		new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
 				shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL00027); // T Log 보장을 위해 log_id 선 세팅

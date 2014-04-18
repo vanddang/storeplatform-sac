@@ -92,7 +92,7 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 				final String coupon_code = request.getCouponCode();
 				final String coupon_item_code = objItem.getItemCode();
 
-				new TLogUtil().set(new ShuttleSetter() {
+				new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
 						shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL00027).purchase_id(purchase_id)
