@@ -134,6 +134,10 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				throw new StorePlatformException("SAC_DSP_0013");
 			}
 
+			this.logger.info("----------------------------------------------------------------");
+			this.logger.info("[getDownloadEbookInfo] scid : {}", metaInfo.getSubContentsId());
+			this.logger.info("----------------------------------------------------------------");
+
 			Product product = new Product();
 
 			// 상품 ID 정보
@@ -315,6 +319,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 									memberPassFlag = false;
 									this.logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
 								}
+
+								this.logger.info("----------------------------------------------------------------");
+								this.logger.info("[getDownloadEbookInfo] memberPassFlag : {}", memberPassFlag);
+								this.logger.info("[getDownloadEbookInfo] deviceRes : {}", deviceRes);
+								this.logger.info("----------------------------------------------------------------");
 
 								if (memberPassFlag && deviceRes != null) {
 									deviceId = deviceRes.getDeviceId();
