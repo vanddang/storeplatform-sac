@@ -282,6 +282,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			if (purchaseProduct == null) {
 				throw new StorePlatformException("SAC_PUR_5101");
 			}
+
 			// 상품 판매상태 체크
 			if (StringUtils.equals(purchaseProduct.getProdStatusCd(), PurchaseConstants.PRODUCT_STATUS_SALE) == false
 					&& StringUtils.equals(purchaseProduct.getProdStatusCd(),
@@ -294,6 +295,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				purchaseProduct.setProdQty(1);
 				purchaseProductList.add(purchaseProduct);
 				continue;
+			}
+
+			// IAP 여부 체크
+			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+					&& StringUtils.equals(purchaseProduct.getInAppYn(), PurchaseConstants.USE_Y) == false) {
+				throw new StorePlatformException("SAC_PUR_5111");
 			}
 
 			// 상품 지원 여부 체크

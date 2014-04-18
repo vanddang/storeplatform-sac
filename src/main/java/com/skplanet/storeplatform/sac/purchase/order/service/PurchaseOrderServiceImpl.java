@@ -557,6 +557,36 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
+		// 구매완료 TLog 중간 세팅
+		final String imei = reservedDataMap.get("imei");
+		final String mno_type = StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) ? "SKT" : (StringUtils
+				.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_KT) ? "KT" : (StringUtils.equals(
+				reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_UPLUS) ? "U+" : "")); // SKT, KT, U+
+		final String usermbr_no = reservedDataMap.get("userKey");
+		final String system_id = prchsDtlMore.getSystemId();
+		final String purchase_channel = prchsDtlMore.getPrchsReqPathCd();
+		final String purchase_inflow_channel = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+				PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+		final String purchase_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+				PurchaseConstants.PRCHS_CASE_GIFT_CD) ? prchsDtlMore.getPrchsId() : "";
+		final String coupon_code = reservedDataMap.get("couponCode");
+		final String coupon_item_code = reservedDataMap.get("itemCode");
+		final String auto_payment_yn = StringUtils.defaultIfBlank(reservedDataMap.get("autoPrchsYn"), "N");
+		final List<String> prodIdTempList = new ArrayList<String>();
+		for (PrchsDtlMore tempPrchsDtlMore : prchsDtlMoreList) {
+			prodIdTempList.add(tempPrchsDtlMore.getProdId());
+		}
+
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.product_id(prodIdTempList).imei(imei).mno_type(mno_type).usermbr_no(usermbr_no)
+						.system_id(system_id).purchase_channel(purchase_channel)
+						.purchase_inflow_channel(purchase_inflow_channel).purchase_id_recv(purchase_id_recv)
+						.coupon_code(coupon_code).coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
+			}
+		});
+
 		// 소장/대여 TAB으로 구매요청이 아닌 상품 구매 시
 		if (StringUtils.isNotBlank(notifyPaymentReq.getProdId())
 				&& StringUtils.isNotBlank(reservedDataMap.get("ownPid"))
@@ -686,44 +716,21 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		// -------------------------------------------------------------------------------------------
-		// 구매완료 TLog
-		final String imei = reservedDataMap.get("imei");
-		final String mno_type = StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) ? "SKT" : (StringUtils
-				.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_KT) ? "KT" : (StringUtils.equals(
-				reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_UPLUS) ? "U+" : "")); // SKT, KT, U+
-		final String usermbr_no = reservedDataMap.get("userKey");
-		final String system_id = prchsDtlMore.getSystemId();
-		final String purchase_channel = prchsDtlMore.getPrchsReqPathCd();
-		final String purchase_inflow_channel = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-				PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
-		final String purchase_id = prchsDtlMore.getPrchsId();
-		final String purchase_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-				PurchaseConstants.PRCHS_CASE_GIFT_CD) ? prchsDtlMore.getPrchsId() : "";
+		// 구매완료 TLog 상품 별 로깅
 
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.imei(imei).mno_type(mno_type).usermbr_no(usermbr_no).system_id(system_id)
-						.purchase_channel(purchase_channel).purchase_inflow_channel(purchase_inflow_channel)
-						.purchase_id(purchase_id).purchase_id_recv(purchase_id_recv);
-			}
-		});
-
-		for (PrchsDtlMore prchsInfo : prchsDtlMoreList) { // 상품 수 만큼 로깅
+		for (PrchsDtlMore prchsInfo : prchsDtlMoreList) {
 			final List<String> prodIdList = new ArrayList<String>();
 			prodIdList.add(prchsInfo.getProdId());
-			final String purchase_prod_num = reservedDataMap.get("imei");
-			final String purchase_prod_num_recv = reservedDataMap.get("imei");
-			final String tid = prchsDtlMore.getTid();
-			final String tx_id = prchsDtlMore.getTxId();
-			final String use_start_time = prchsDtlMore.getUseStartDt();
-			final String use_end_time = prchsDtlMore.getUseExprDt();
-			final String download_expired_time = prchsDtlMore.getDwldExprDt();
-			final Long product_qty = (long) prchsDtlMore.getProdQty();
-			final String coupon_publish_code = prchsDtlMore.getCpnPublishCd();
-			final String coupon_code = reservedDataMap.get("couponCode");
-			final String coupon_item_code = reservedDataMap.get("itemCode");
-			final String auto_payment_yn = reservedDataMap.get("autoPrchsYn");
+			final String purchase_prod_num = String.valueOf(prchsInfo.getPrchsDtlId());
+			final String purchase_prod_num_recv = StringUtils.equals(prchsInfo.getPrchsCaseCd(),
+					PurchaseConstants.PRCHS_CASE_GIFT_CD) ? String.valueOf(prchsInfo.getPrchsDtlId()) : "";
+			final String tid = prchsInfo.getTid();
+			final String tx_id = prchsInfo.getTxId();
+			final String use_start_time = prchsInfo.getUseStartDt();
+			final String use_end_time = prchsInfo.getUseExprDt();
+			final String download_expired_time = prchsInfo.getDwldExprDt();
+			final Long product_qty = (long) prchsInfo.getProdQty();
+			final String coupon_publish_code = prchsInfo.getCpnPublishCd();
 
 			new TLogUtil().log(new ShuttleSetter() {
 				@Override
@@ -732,8 +739,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							.purchase_prod_num_recv(purchase_prod_num_recv).tid(tid).tx_id(tx_id)
 							.use_start_time(use_start_time).use_end_time(use_end_time)
 							.download_expired_time(download_expired_time).product_qty(product_qty)
-							.coupon_publish_code(coupon_publish_code).coupon_code(coupon_code)
-							.coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
+							.coupon_publish_code(coupon_publish_code);
 				}
 			});
 		}

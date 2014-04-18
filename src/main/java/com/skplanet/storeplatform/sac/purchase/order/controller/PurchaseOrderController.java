@@ -292,10 +292,11 @@ public class PurchaseOrderController {
 		}
 
 		// 구매완료 TLog 로그ID 초기세팅
+		final String prchsId = notifyPaymentReq.getPrchsId();
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00015");
+				shuttle.log_id("TL00015").purchase_id(prchsId);
 			}
 		});
 

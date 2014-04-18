@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.order.vo;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
+import com.skplanet.storeplatform.sac.display.localsci.sci.vo.IapProductInfo;
 
 /**
  * 
@@ -22,16 +23,11 @@ public class PurchaseProduct extends PaymentInfo {
 	private static final long serialVersionUID = 1L;
 
 	private PossLendProductInfo possLendProductInfo; // 소장/대여 상품 정보
+	private IapProductInfo iapProductInfo; // IAP 상품 정보
 
 	private String bonusCashPoint; // 보너스 캐쉬 지급 Point
 	private String bonusCashUsableDayCnt; // 보너스 캐쉬 유효기간(일)
 	private String afterAutoPayDt; // 다음 자동 결제일
-	private String dwldAvailableDayCnt; // 다운로드 가능기간(일)
-	private String usePeriodCnt; // 이용기간(일)
-	private String loanPid; // 대여하기 상품 ID
-	private String loanAmt; // 대여하기 상품 금액
-	private String ownPid; // 소장하기 상품 ID
-	private String ownAmt; // 소장하기 상품 금액
 
 	private double specialCouponAmt;
 	private int prodQty;
@@ -73,6 +69,21 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setPossLendProductInfo(PossLendProductInfo possLendProductInfo) {
 		this.possLendProductInfo = possLendProductInfo;
+	}
+
+	/**
+	 * @return the iapProductInfo
+	 */
+	public IapProductInfo getIapProductInfo() {
+		return this.iapProductInfo;
+	}
+
+	/**
+	 * @param iapProductInfo
+	 *            the iapProductInfo to set
+	 */
+	public void setIapProductInfo(IapProductInfo iapProductInfo) {
+		this.iapProductInfo = iapProductInfo;
 	}
 
 	/**
@@ -118,96 +129,6 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setAfterAutoPayDt(String afterAutoPayDt) {
 		this.afterAutoPayDt = afterAutoPayDt;
-	}
-
-	/**
-	 * @return the dwldAvailableDayCnt
-	 */
-	public String getDwldAvailableDayCnt() {
-		return this.dwldAvailableDayCnt;
-	}
-
-	/**
-	 * @param dwldAvailableDayCnt
-	 *            the dwldAvailableDayCnt to set
-	 */
-	public void setDwldAvailableDayCnt(String dwldAvailableDayCnt) {
-		this.dwldAvailableDayCnt = dwldAvailableDayCnt;
-	}
-
-	/**
-	 * @return the usePeriodCnt
-	 */
-	public String getUsePeriodCnt() {
-		return this.usePeriodCnt;
-	}
-
-	/**
-	 * @param usePeriodCnt
-	 *            the usePeriodCnt to set
-	 */
-	public void setUsePeriodCnt(String usePeriodCnt) {
-		this.usePeriodCnt = usePeriodCnt;
-	}
-
-	/**
-	 * @return the loanPid
-	 */
-	public String getLoanPid() {
-		return this.loanPid;
-	}
-
-	/**
-	 * @param loanPid
-	 *            the loanPid to set
-	 */
-	public void setLoanPid(String loanPid) {
-		this.loanPid = loanPid;
-	}
-
-	/**
-	 * @return the loanAmt
-	 */
-	public String getLoanAmt() {
-		return this.loanAmt;
-	}
-
-	/**
-	 * @param loanAmt
-	 *            the loanAmt to set
-	 */
-	public void setLoanAmt(String loanAmt) {
-		this.loanAmt = loanAmt;
-	}
-
-	/**
-	 * @return the ownPid
-	 */
-	public String getOwnPid() {
-		return this.ownPid;
-	}
-
-	/**
-	 * @param ownPid
-	 *            the ownPid to set
-	 */
-	public void setOwnPid(String ownPid) {
-		this.ownPid = ownPid;
-	}
-
-	/**
-	 * @return the ownAmt
-	 */
-	public String getOwnAmt() {
-		return this.ownAmt;
-	}
-
-	/**
-	 * @param ownAmt
-	 *            the ownAmt to set
-	 */
-	public void setOwnAmt(String ownAmt) {
-		this.ownAmt = ownAmt;
 	}
 
 	/**

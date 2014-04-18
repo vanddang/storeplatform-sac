@@ -19,10 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.IapProductInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PossLendProductInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
@@ -45,6 +48,8 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	private PaymentInfoSCI purchaseProductSCI;
 	@Autowired
 	private PossLendProductInfoSCI possLendProductInfoSCI;
+	@Autowired
+	private IapProductInfoSCI iapProductInfoSCI;
 	@Autowired
 	private FreePassInfoSCI freepassInfoSCI;
 
@@ -159,7 +164,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	 *            조회할 상품ID
 	 * @param possLendClsfCd
 	 *            해당 상품ID의 소장/대여 구분 코드
-	 * @return 상품ID에 매핑되는 상품정보를 담은 Map
+	 * @return 소장/대여 상품 정보 VO
 	 */
 	@Override
 	public PossLendProductInfo searchPossLendProductInfo(String tenantId, String langCd, String prodId,
@@ -184,6 +189,24 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 		} else {
 			return possLendProductInfo;
 		}
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * IAP 상품정보 조회.
+	 * </pre>
+	 * 
+	 * @param partProdId
+	 *            IAP 상품ID
+	 * @return IAP 상품정보 VO
+	 */
+	public IapProductInfoRes searchIapProductInfo(String partProdId) {
+		IapProductInfoRes res = this.iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq(partProdId));
+
+		// TAKTODO:: 상품 유형 구분 코드 AS-IS / TO-BE 통일 확인 후 처리
+
+		return res;
 	}
 
 	/**
