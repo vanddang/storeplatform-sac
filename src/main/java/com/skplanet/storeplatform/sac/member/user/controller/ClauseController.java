@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListClauseSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.ClauseService;
 
 /**
@@ -44,7 +45,7 @@ public class ClauseController {
 
 		ListClauseSacRes res = this.svc.listClause(sacHeader);
 
-		LOGGER.info("약관목록조회 > Response > cluaseItemCd : {}", res.getClauseList().get(0).getClauseItemCd());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getClauseList().get(0).getClauseItemCd()));
 
 		return res;
 	}
@@ -65,11 +66,11 @@ public class ClauseController {
 			throw new StorePlatformException("SAC_MEM_0001", "clauseItemCd()");
 		}
 
-		LOGGER.info("약관목록 상세조회 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		DetailClauseSacRes res = this.svc.detailClauseList(req);
 
-		LOGGER.info("약관목록 상세조회 Response clauseItemCd : {}", res.getDetailClauseList().get(0).getClauseItemCd());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDetailClauseList().get(0).getClauseItemCd()));
 
 		return res;
 	}

@@ -169,6 +169,8 @@ public class SearchUserSCIController implements SearchUserSCI {
 		payplanetSacRes.setOcbCardNumber(StringUtil.setTrim(ocbCardNumber));
 		payplanetSacRes.setOcbAgreementYn(ocbAgreementYn);
 
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(payplanetSacRes));
+
 		return payplanetSacRes;
 	}
 
@@ -209,8 +211,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
 		searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
-		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader,
-				searchUserDeviceReq);
+		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader, searchUserDeviceReq);
 
 		Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
 		UserDeviceInfoSac userDeviceInfoSac;
@@ -252,8 +253,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
 		searchUserDeviceSacRes.setUserDeviceInfo(resMap);
 
-		LOGGER.debug("[SearchUserSCIController.searchUserByDeviceKey] ResponseParameter : {}",
-				searchUserDeviceSacRes.toString());
+		LOGGER.info("Response: {}", ConvertMapperUtils.convertObjectToJson("Success"));
 
 		return searchUserDeviceSacRes;
 	}

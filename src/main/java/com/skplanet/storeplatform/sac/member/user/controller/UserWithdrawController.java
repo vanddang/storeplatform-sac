@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserWithdrawService;
 
 /**
@@ -33,7 +34,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserWithdrawService;
 @Controller
 public class UserWithdrawController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserWithdrawController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserWithdrawController.class);
 
 	ObjectMapper objMapper = new ObjectMapper();
 
@@ -43,15 +44,12 @@ public class UserWithdrawController {
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public WithdrawRes exist(@RequestBody WithdrawReq req, SacRequestHeader sacHeader) {
-		logger.debug("####################################################");
-		logger.debug("##### 5.1.24. 회원 탈퇴 (ID/MDN 기반) #####");
-		logger.debug("####################################################");
 
-		logger.info("회원탈퇴 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		WithdrawRes res = this.svc.executeWithdraw(sacHeader, req);
 
-		logger.info("####### 회원탈퇴 Response : {}", res.getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
 
 		return res;
 	}

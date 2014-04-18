@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserExtraInfoService;
 
 /**
@@ -35,7 +36,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserExtraInfoService;
 @Controller
 public class UserExtraInfoController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserExtraInfoController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserExtraInfoController.class);
 
 	@Autowired
 	private UserExtraInfoService userExtraService;
@@ -44,7 +45,7 @@ public class UserExtraInfoController {
 	@ResponseBody
 	public UserExtraInfoRes modifyAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
-		logger.info("회원 부가 정보 등록/수정 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String extraProfile = "";
@@ -66,7 +67,7 @@ public class UserExtraInfoController {
 
 		UserExtraInfoRes res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
 
-		logger.info("회원 부가 정보 등록/수정 Response : {}", res.getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
 
 		return res;
 	}
@@ -90,11 +91,11 @@ public class UserExtraInfoController {
 			}
 		}
 
-		logger.info("회원 부가 정보 삭제 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		UserExtraInfoRes res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
 
-		logger.info("회원 부가 정보 삭제 Response : {}", res.getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
 
 		return res;
 	}
@@ -102,9 +103,6 @@ public class UserExtraInfoController {
 	@RequestMapping(value = "/listAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public UserExtraInfoRes listAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) {
-		logger.debug("####################################################");
-		logger.debug("##### 5.1.27. 회원 부가 정보 조회 #####");
-		logger.debug("####################################################");
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
@@ -112,11 +110,11 @@ public class UserExtraInfoController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
-		logger.info("회원 부가 정보 조회 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		UserExtraInfoRes res = this.userExtraService.listAdditionalInformation(req, sacHeader);
 
-		logger.info("회원 부가 정보 조회 Response : {}", res.getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
 
 		return res;
 	}

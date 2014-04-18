@@ -71,6 +71,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
@@ -262,7 +263,7 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.info("###### MCC 회원기본정보조회 Start : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(keyValue));
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
 		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -297,7 +298,7 @@ public class MemberCommonComponent {
 		// 사용자 정보 세팅
 		UserInfo userInfo = this.userInfo(schUserRes);
 
-		LOGGER.info("###### MCC 회원기본정보조회 Fianl : {}", userInfo.toString());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(userInfo.getUserKey()));
 
 		return userInfo;
 	}
@@ -316,7 +317,7 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public DetailRes getUserDetailInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.debug("###### MCC 회원상세정보조회 Start : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(keyValue));
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
 		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -384,7 +385,7 @@ public class MemberCommonComponent {
 		/* 징계정보 세팅 */
 		detailRes.setUserMbrPnsh(mbrPnsh);
 
-		LOGGER.info("###### MCC 회원상세정보조회 Fianl : {}", detailRes.getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(detailRes.getUserKey()));
 
 		return detailRes;
 	}
@@ -568,11 +569,6 @@ public class MemberCommonComponent {
 			List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
 			for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-				LOGGER.debug("============================================ UserExtraInfo CODE : {}",
-						ptcr.getExtraProfile());
-				LOGGER.debug("============================================ UserExtraInfo VALUE : {}",
-						ptcr.getExtraProfileValue());
-
 				UserExtraInfo extra = new UserExtraInfo();
 				extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
 				extra.setExtraProfileValue(StringUtil.setTrim(ptcr.getExtraProfileValue()));
@@ -596,7 +592,7 @@ public class MemberCommonComponent {
 	 */
 	public UserExtraInfoRes getUserExtraInfo(String userKey, SacRequestHeader sacHeader) {
 
-		LOGGER.info("###### MCC 회원부가정보조회 Start : {}", userKey);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(userKey));
 
 		DetailReq req = new DetailReq();
 		req.setUserKey(userKey);
@@ -619,15 +615,10 @@ public class MemberCommonComponent {
 
 		SearchManagementListResponse schUserExtraRes = this.userSCI.searchManagementList(searchUserExtraRequest);
 
-		LOGGER.debug("############ 부가정보 리스트 Size : {}", schUserExtraRes.getMbrMangItemPtcrList().size());
-
 		/* 유저키 세팅 */
 		extraRes.setUserKey(schUserExtraRes.getUserKey());
 		/* 부가정보 값 세팅 */
 		for (MbrMangItemPtcr ptcr : schUserExtraRes.getMbrMangItemPtcrList()) {
-
-			LOGGER.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
-			LOGGER.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
 
 			UserExtraInfo extra = new UserExtraInfo();
 			extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -641,7 +632,7 @@ public class MemberCommonComponent {
 
 		UserExtraInfoRes res = extraRes;
 
-		LOGGER.info("###### MCC 회원부가정보조회 Fianl : {}", res.getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
 
 		return res;
 	}
@@ -777,7 +768,8 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
+			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -1020,8 +1012,8 @@ public class MemberCommonComponent {
 	 * @param previousDeviceKey
 	 *            이전 휴대기기 Key
 	 */
-	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey,
-			String previousUserKey, String deviceKey, String previousDeviceKey) {
+	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey, String previousUserKey, String deviceKey,
+			String previousDeviceKey) {
 
 		if (isCall) {
 

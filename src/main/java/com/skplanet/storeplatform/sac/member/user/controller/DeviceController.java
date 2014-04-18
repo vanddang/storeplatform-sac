@@ -192,7 +192,7 @@ public class DeviceController {
 	@ResponseBody
 	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req) {
 
-		LOGGER.info("대표단말설정 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtil.nvl(req.getUserKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
@@ -204,7 +204,7 @@ public class DeviceController {
 
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
 
-		LOGGER.info("대표단말설정 Response : {}", res.getDeviceKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDeviceKey()));
 
 		return res;
 	}
@@ -222,7 +222,7 @@ public class DeviceController {
 	@ResponseBody
 	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @RequestBody DetailRepresentationDeviceReq req) {
 
-		LOGGER.info("대표단말조회 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtil.nvl(req.getUserKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
@@ -230,7 +230,7 @@ public class DeviceController {
 
 		DetailRepresentationDeviceRes res = this.deviceService.detailRepresentationDeviceRes(requestHeader, req);
 
-		LOGGER.info("대표단말조회 Response : {}", res.getDeviceInfo().getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDeviceInfo().getUserKey()));
 
 		return res;
 	}
@@ -258,7 +258,7 @@ public class DeviceController {
 			}
 		}
 
-		LOGGER.info("휴대기기 단말 삭제 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (userAuthKey.equals("") || userKey.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userAuthKey && userKey");
@@ -274,7 +274,7 @@ public class DeviceController {
 		/* IDP 회원정보 수정 */
 		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
-		LOGGER.info("휴대기기 단말 삭제 Response : {}", res.getDeviceKeyList().get(0).getDeviceKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDeviceKeyList().get(0).getDeviceKey()));
 
 		return res;
 	}
@@ -292,7 +292,7 @@ public class DeviceController {
 	@ResponseBody
 	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, @RequestBody SupportAomReq req) {
 
-		LOGGER.info("단말 AOM 지원여부확인 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
@@ -302,7 +302,7 @@ public class DeviceController {
 		}
 		SupportAomRes res = this.deviceService.getSupportAom(requestHeader, req);
 
-		LOGGER.info("단말 AOM 지원여부확인 Response : {}", res.getIsAomSupport());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getIsAomSupport()));
 
 		return res;
 	}

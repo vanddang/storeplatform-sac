@@ -164,7 +164,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		if (req.getDeviceId() != null) {
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
-			LOGGER.debug("============================================ getOpmdMdnInfo: {}", opmdMdn);
 		}
 
 		String userKey = StringUtil.setTrim(req.getUserKey());
@@ -184,8 +183,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		// 회원정보 세팅
 		DetailRes detailRes = this.searchUser(detailReq, sacHeader);
-
-		LOGGER.debug("============================================ userInfo Request : {}", detailReq.toString());
 
 		result.setUserKey(StringUtil.setTrim(detailRes.getUserInfo().getUserKey()));
 		result.setUserType(StringUtil.setTrim(detailRes.getUserInfo().getUserType()));
@@ -215,7 +212,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		if (req.getDeviceId() != null) {
 			String opmdMdnInfo = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdnInfo);
-			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdnInfo);
 		}
 
 		/* 회원 기본 정보 */
@@ -294,7 +290,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		if (req.getDeviceId() != null) {
 			String opmdMdnInfo = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdnInfo);
-			LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdnInfo);
 		}
 
 		/* 회원 기본 정보 */
@@ -312,8 +307,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 			scReq.setWorkCodeList(workCodeList);
 			scReq.setDeviceID(req.getDeviceId());
 		}
-
-		LOGGER.debug("SearchGameCenterRequest : {}", scReq.toString());
 
 		SearchGameCenterResponse scRes = this.userSCI.searchGameCenter(scReq);
 		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
@@ -505,7 +498,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 				String opmdMdn = this.mcc.getOpmdMdnInfo(req.getUserPhone());
 				req.setUserPhone(opmdMdn);
-				LOGGER.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 
 				ListDeviceReq scReq = new ListDeviceReq();
 				scReq.setUserKey(info.getUserKey());

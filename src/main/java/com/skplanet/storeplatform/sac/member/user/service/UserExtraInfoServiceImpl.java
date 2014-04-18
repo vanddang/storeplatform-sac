@@ -56,9 +56,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
-		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		LOGGER.info("회원 부가 정보 등록/수정 > 사용자조회 > Request : {}", req.toString());
-
 		UserInfo searchUser = this.searchUser(req, sacHeader);
 
 		/* 입력받은 profileCode 정상인지 확인 */
@@ -190,13 +187,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		updateReq.setMbrMangItemPtcr(ptcrList);
 		updateReq.setCommonRequest(commonRequest);
 
-		LOGGER.info("ServiceImpl > 회원 부가 정보 등록/수정 > Request > ptcrList : {}", ptcrList.toString());
-
-		LOGGER.info("ServiceImpl > 회원 부가 정보 등록/수정 > Request > userKey : {}", updateReq.getUserKey());
-
 		UpdateManagementResponse updateRes = this.userSCI.updateManagement(updateReq);
-
-		LOGGER.info("ServiceImpl > 회원 부가 정보 등록/수정 > Response > : {}", updateRes.getUserKey());
 
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		res.setUserKey(updateRes.getUserKey());

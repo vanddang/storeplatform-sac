@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividu
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 
 /**
@@ -58,7 +59,7 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
-		LOGGER.info("[MiscellaneousSCIController.getIndividualPolicy] RequestHeader : {}, \nRequestParameter : {}", requestHeader, req);
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		List<PolicyCode> codeList = new ArrayList<PolicyCode>();
 		for (int i = 0; i < req.getPolicyCodeList().size(); i++) {
@@ -90,7 +91,7 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 		}
 		sacRes.setPolicyList(infoSacList);
 
-		LOGGER.info("[MiscellaneousSCIController.getIndividualPolicy] ResponseParameter : {}", sacRes.toString());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(sacRes.getPolicyList().get(0).getKey()));
 
 		return sacRes;
 

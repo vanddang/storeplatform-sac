@@ -58,20 +58,17 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/exist/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ExistRes exist(@RequestBody ExistReq req, SacRequestHeader sacHeader) {
-		LOGGER.debug("####################################################");
-		LOGGER.debug("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
-		LOGGER.debug("####################################################");
 
 		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")
 				&& StringUtil.nvl(req.getUserId(), "").equals("") && StringUtil.nvl(req.getUserKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
-		LOGGER.info("회원가입여부조회 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		ExistRes res = this.svc.exist(sacHeader, req);
 
-		LOGGER.info("회원가입여부조회 Response : {}", res.getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
 
 		return res;
 	}
@@ -79,9 +76,6 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/getProvisioningHistory/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetProvisioningHistoryRes getProvisioningHistory(@RequestBody GetProvisioningHistoryReq req, SacRequestHeader sacHeader) {
-		LOGGER.debug("####################################################");
-		LOGGER.debug("##### 5.1.12. 회원 프로비저닝 이력 조회 #####");
-		LOGGER.debug("####################################################");
 
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
@@ -89,11 +83,11 @@ public class UserSearchController {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
 
-		LOGGER.info("회원 프로비저닝 이력조회 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		GetProvisioningHistoryRes res = this.svc.getProvisioningHistory(sacHeader, req);
 
-		LOGGER.info("회원 프로비저닝 이력조회 Response : {}", res.getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
 
 		return res;
 	}
@@ -101,20 +95,17 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailRes detail(@RequestBody DetailReq req, SacRequestHeader sacHeader) {
-		LOGGER.debug("####################################################");
-		LOGGER.debug("##### 5.1.9. 회원 정보 조회 #####");
-		LOGGER.debug("####################################################");
 
 		if (StringUtil.nvl(req.getDeviceKey(), "").equals("") && StringUtil.nvl(req.getDeviceId(), "").equals("")
 				&& StringUtil.nvl(req.getUserId(), "").equals("") && StringUtil.nvl(req.getUserKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
 		}
 
-		LOGGER.info("회원정보조회 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		DetailRes res = this.svc.detail(sacHeader, req);
 
-		LOGGER.info("회원정보조회 Response : {}", res.getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
 
 		return res;
 	}
@@ -166,11 +157,11 @@ public class UserSearchController {
 
 		req.setUserKey(userKey);
 
-		LOGGER.info("OneID 정보조회 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		MbrOneidSacRes res = this.svc.searchUserOneId(sacHeader, req);
 
-		LOGGER.info("OneID 정보조회 Response : {}", res.getIsRealName());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getIsRealName()));
 
 		return res;
 	}
@@ -178,11 +169,7 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/searchId/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchIdSacRes searchId(SacRequestHeader sacHeader, @RequestBody SearchIdSacReq req) {
-		LOGGER.debug("####################################################");
-		LOGGER.debug("##### 2.1.7. ID 찾기 #####");
-		LOGGER.debug("####################################################");
-
-		LOGGER.info("============================================ SearchIdSacReq : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 		String userEmail = StringUtil.nvl(req.getUserEmail(), "");
@@ -194,11 +181,9 @@ public class UserSearchController {
 		req.setDeviceId(deviceId);
 		req.setUserEmail(userEmail);
 
-		LOGGER.info("ID찾기 Request : {}", req.toString());
-
 		SearchIdSacRes res = this.svc.searchId(sacHeader, req);
 
-		LOGGER.info("ID찾기 Response : {}", res.getMessage());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getSearchIdList().get(0).getImSvcNo()));
 
 		return res;
 	}
@@ -206,9 +191,6 @@ public class UserSearchController {
 	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchPasswordSacRes searchPassword(SacRequestHeader sacHeader, @RequestBody SearchPasswordSacReq req) {
-		LOGGER.debug("####################################################");
-		LOGGER.debug("##### 2.1.8. PASSWORD 찾기 #####");
-		LOGGER.debug("####################################################");
 
 		String userId = StringUtil.nvl(req.getUserId(), "");
 		String userEmail = StringUtil.nvl(req.getUserEmail(), "");
@@ -222,11 +204,11 @@ public class UserSearchController {
 		req.setUserEmail(userEmail);
 		req.setUserPhone(userPhone);
 
-		LOGGER.info("패스워드찾기 Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		SearchPasswordSacRes res = this.svc.searchPassword(sacHeader, req);
 
-		LOGGER.info("패스워드찾기 Response : {}", res.getMessage());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getSendMean()));
 
 		return res;
 	}
@@ -244,11 +226,11 @@ public class UserSearchController {
 			throw new StorePlatformException("SAC_MEM_0001", "userKey");
 		}
 
-		LOGGER.info("Store약관동의목록조회 Start Request : {}", req.toString());
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		ListTermsAgreementSacRes res = this.svc.listTermsAgreement(sacHeader, req);
 
-		LOGGER.info("Store약관동의목록조회 Final Response : {}", res.getUserKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
 
 		return res;
 	}
@@ -262,7 +244,7 @@ public class UserSearchController {
 
 		ListDailyPhoneOsSacRes dailyPhoneOsList = this.svc.listDailyPhoneOs(sacHeader);
 
-		LOGGER.info("누적 가입자수 조회 Resposne : {}", dailyPhoneOsList.getDailyPhoneList().get(0).getModelName());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(dailyPhoneOsList.getDailyPhoneList().get(0).getModelName()));
 
 		return dailyPhoneOsList;
 	}

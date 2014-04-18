@@ -43,6 +43,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 
 /**
  * 회원탈퇴 관련 인터페이스 구현체
@@ -124,21 +125,18 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		WithdrawRes withdrawRes = new WithdrawRes();
 
 		/* 통합회원 연동 */
-
-		logger.info("회원탈퇴 userType : {}", schUserRes.getUserMbr().getUserType());
+		logger.info("userType : {}", ConvertMapperUtils.convertObjectToJson(schUserRes.getUserMbr().getUserType()));
 
 		if (schUserRes.getUserMbr().getImSvcNo() != null) {
 
 			this.oneIdUser(requestHeader, schUserRes, req);
 
-			logger.info("oneIdUser Discard Success req : ", req.toString());
 			withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 		} else {
 			if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
 
 				this.idpMobileUser(requestHeader, schUserRes, req);
 
-				logger.info("secedeUser4Wap Success req : ", req.toString());
 				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 			}
 			/* IDP 아이디 회원 */
@@ -146,7 +144,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 				this.idpIdUser(requestHeader, schUserRes, req);
 
-				logger.info("secedeUser Success req ", req.toString());
 				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 			}
 		}
@@ -180,7 +177,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 		} catch (AmqpException ex) {
-			logger.info("ServiceImpl - 회원탈퇴 > MQ연동 Fail : {}", mqInfo);
+			logger.info("MQ process fail {}", mqInfo);
 		}
 
 		return withdrawRes;
@@ -196,8 +193,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		String userId = StringUtil.nvl(req.getUserId(), "");
 		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-
-		logger.info("회원정보조회 SearchUser Request : {}", req.toString());
 
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		schUserReq.setCommonRequest(commonRequest);
