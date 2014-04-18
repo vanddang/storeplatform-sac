@@ -106,9 +106,9 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		String userKey = comicReq.getUserKey();
 
 		this.logger.info("----------------------------------------------------------------");
-		this.logger.info("[getDownloadComicInfo] productId : {}", productId);
-		this.logger.info("[getDownloadComicInfo] deviceKey : {}", deviceKey);
-		this.logger.info("[getDownloadComicInfo] userKey : {}", userKey);
+		this.logger.info("[getDownloadComicInfoLog] productId : {}", productId);
+		this.logger.info("[getDownloadComicInfoLog] deviceKey : {}", deviceKey);
+		this.logger.info("[getDownloadComicInfoLog] userKey : {}", userKey);
 		this.logger.info("----------------------------------------------------------------");
 
 		// 헤더정보 세팅
@@ -123,7 +123,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 		if (metaInfo != null) {
 			this.logger.info("----------------------------------------------------------------");
-			this.logger.info("[getDownloadComicInfo] scid : {}", metaInfo.getSubContentsId());
+			this.logger.info("[getDownloadComicInfoLog] scid : {}", metaInfo.getSubContentsId());
 			this.logger.info("----------------------------------------------------------------");
 
 			Product product = new Product();
@@ -210,8 +210,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				}
 
 				this.logger.info("----------------------------------------------------------------");
-				this.logger.info("[getDownloadComicInfo] purchasePassFlag : {}", purchasePassFlag);
-				this.logger.info("[getDownloadComicInfo] historyRes : {}", historyRes);
+				this.logger.info("[getDownloadComicInfoLog] purchasePassFlag : {}", purchasePassFlag);
+				this.logger.info("[getDownloadComicInfoLog] historyRes : {}", historyRes);
 				this.logger.info("----------------------------------------------------------------");
 
 				if (purchasePassFlag && historyRes != null) {
@@ -256,14 +256,14 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 							}
 
 							this.logger.info("----------------------------------------------------------------");
-							this.logger.info("[getDownloadComicInfo] prchsId : {}", prchsId);
-							this.logger.info("[getDownloadComicInfo] prchsDt : {}", prchsDt);
-							this.logger.info("[getDownloadComicInfo] useExprDt : {}", useExprDt);
-							this.logger.info("[getDownloadComicInfo] dwldExprDt : {}", dwldExprDt);
-							this.logger.info("[getDownloadComicInfo] prchsCaseCd : {}", prchsCaseCd);
-							this.logger.info("[getDownloadComicInfo] prchsState : {}", prchsState);
-							this.logger.info("[getDownloadComicInfo] prchsProdId : {}", prchsProdId);
-							this.logger.info("[getDownloadComicInfo] prchsPrice : {}", prchsPrice);
+							this.logger.info("[getDownloadComicInfoLog] prchsId : {}", prchsId);
+							this.logger.info("[getDownloadComicInfoLog] prchsDt : {}", prchsDt);
+							this.logger.info("[getDownloadComicInfoLog] useExprDt : {}", useExprDt);
+							this.logger.info("[getDownloadComicInfoLog] dwldExprDt : {}", dwldExprDt);
+							this.logger.info("[getDownloadComicInfoLog] prchsCaseCd : {}", prchsCaseCd);
+							this.logger.info("[getDownloadComicInfoLog] prchsState : {}", prchsState);
+							this.logger.info("[getDownloadComicInfoLog] prchsProdId : {}", prchsProdId);
+							this.logger.info("[getDownloadComicInfoLog] prchsPrice : {}", prchsPrice);
 							this.logger.info("----------------------------------------------------------------");
 
 							metaInfo.setPurchaseId(prchsId);
@@ -307,8 +307,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 								}
 
 								this.logger.info("----------------------------------------------------------------");
-								this.logger.info("[getDownloadComicInfo] memberPassFlag : {}", memberPassFlag);
-								this.logger.info("[getDownloadComicInfo] deviceRes : {}", deviceRes);
+								this.logger.info("[getDownloadComicInfoLog] memberPassFlag : {}", memberPassFlag);
+								this.logger.info("[getDownloadComicInfoLog] deviceRes : {}", deviceRes);
 								this.logger.info("----------------------------------------------------------------");
 
 								if (memberPassFlag && deviceRes != null) {
@@ -354,7 +354,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 									try {
 										String decData = new String(decrypt, "UTF-8");
-										this.logger.info("[getDownloadComicInfo] decData : {}", decData);
+										this.logger.info("[getDownloadComicInfoLog] decData : {}", decData);
 									} catch (UnsupportedEncodingException e) {
 										e.printStackTrace();
 									}

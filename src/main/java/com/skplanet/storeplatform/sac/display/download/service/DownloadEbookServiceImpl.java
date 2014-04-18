@@ -107,10 +107,10 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		String userKey = ebookReq.getUserKey();
 
 		this.logger.info("----------------------------------------------------------------");
-		this.logger.info("[getDownloadEbookInfo] idType : {}", idType);
-		this.logger.info("[getDownloadEbookInfo] productId : {}", productId);
-		this.logger.info("[getDownloadEbookInfo] deviceKey : {}", deviceKey);
-		this.logger.info("[getDownloadEbookInfo] userKey : {}", userKey);
+		this.logger.info("[getDownloadEbookInfoLog] idType : {}", idType);
+		this.logger.info("[getDownloadEbookInfoLog] productId : {}", productId);
+		this.logger.info("[getDownloadEbookInfoLog] deviceKey : {}", deviceKey);
+		this.logger.info("[getDownloadEbookInfoLog] userKey : {}", userKey);
 		this.logger.info("----------------------------------------------------------------");
 
 		// ID유형 유효값 체크
@@ -135,7 +135,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			}
 
 			this.logger.info("----------------------------------------------------------------");
-			this.logger.info("[getDownloadEbookInfo] scid : {}", metaInfo.getSubContentsId());
+			this.logger.info("[getDownloadEbookInfoLog] scid : {}", metaInfo.getSubContentsId());
 			this.logger.info("----------------------------------------------------------------");
 
 			Product product = new Product();
@@ -224,8 +224,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				}
 
 				this.logger.info("----------------------------------------------------------------");
-				this.logger.info("[getDownloadEbookInfo] purchasePassFlag : {}", purchasePassFlag);
-				this.logger.info("[getDownloadEbookInfo] historyRes : {}", historyRes);
+				this.logger.info("[getDownloadEbookInfoLog] purchasePassFlag : {}", purchasePassFlag);
+				this.logger.info("[getDownloadEbookInfoLog] historyRes : {}", historyRes);
 				this.logger.info("----------------------------------------------------------------");
 
 				if (purchasePassFlag && historyRes != null) {
@@ -270,14 +270,14 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							}
 
 							this.logger.info("----------------------------------------------------------------");
-							this.logger.info("[getDownloadEbookInfo] prchsId : {}", prchsId);
-							this.logger.info("[getDownloadEbookInfo] prchsDt : {}", prchsDt);
-							this.logger.info("[getDownloadEbookInfo] useExprDt : {}", useExprDt);
-							this.logger.info("[getDownloadEbookInfo] dwldExprDt : {}", dwldExprDt);
-							this.logger.info("[getDownloadEbookInfo] prchsCaseCd : {}", prchsCaseCd);
-							this.logger.info("[getDownloadEbookInfo] prchsState : {}", prchsState);
-							this.logger.info("[getDownloadEbookInfo] prchsProdId : {}", prchsProdId);
-							this.logger.info("[getDownloadEbookInfo] prchsPrice : {}", prchsPrice);
+							this.logger.info("[getDownloadEbookInfoLog] prchsId : {}", prchsId);
+							this.logger.info("[getDownloadEbookInfoLog] prchsDt : {}", prchsDt);
+							this.logger.info("[getDownloadEbookInfoLog] useExprDt : {}", useExprDt);
+							this.logger.info("[getDownloadEbookInfoLog] dwldExprDt : {}", dwldExprDt);
+							this.logger.info("[getDownloadEbookInfoLog] prchsCaseCd : {}", prchsCaseCd);
+							this.logger.info("[getDownloadEbookInfoLog] prchsState : {}", prchsState);
+							this.logger.info("[getDownloadEbookInfoLog] prchsProdId : {}", prchsProdId);
+							this.logger.info("[getDownloadEbookInfoLog] prchsPrice : {}", prchsPrice);
 							this.logger.info("----------------------------------------------------------------");
 
 							metaInfo.setPurchaseId(prchsId);
@@ -321,8 +321,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 								}
 
 								this.logger.info("----------------------------------------------------------------");
-								this.logger.info("[getDownloadEbookInfo] memberPassFlag : {}", memberPassFlag);
-								this.logger.info("[getDownloadEbookInfo] deviceRes : {}", deviceRes);
+								this.logger.info("[getDownloadEbookInfoLog] memberPassFlag : {}", memberPassFlag);
+								this.logger.info("[getDownloadEbookInfoLog] deviceRes : {}", deviceRes);
 								this.logger.info("----------------------------------------------------------------");
 
 								if (memberPassFlag && deviceRes != null) {
@@ -378,7 +378,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 									try {
 										String decData = new String(decrypt, "UTF-8");
-										this.logger.info("[getDownloadEbookInfo] decData : {}", decData);
+										this.logger.info("[getDownloadEbookInfoLog] decData : {}", decData);
 									} catch (UnsupportedEncodingException e) {
 										e.printStackTrace();
 									}
