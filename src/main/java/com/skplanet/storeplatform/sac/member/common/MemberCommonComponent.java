@@ -1108,46 +1108,14 @@ public class MemberCommonComponent {
 	 *            법정대리인 생년월일 (yyyymmdd)
 	 */
 	public void checkParentBirth(String ownBirth, String parentBirth) {
-		this.checkParentBirth(ownBirth, parentBirth, null);
-	}
 
-	/**
-	 * <pre>
-	 * 법정대리인 유효성 체크.
-	 * </pre>
-	 * 
-	 * @param ownBirth
-	 *            본인의 생년월일 (yyyymmdd)
-	 * @param parentBirth
-	 *            법정대리인 생년월일 (yyyymmdd)
-	 * @param type
-	 *            사용 구분 (사용자, 판매자)
-	 */
-	public void checkParentBirth(String ownBirth, String parentBirth, String type) {
-
-		LOGGER.info("법정대리인 유효성체크. [ownBirth={},parentBirth={},type={}]", ownBirth, parentBirth, type);
+		LOGGER.info("법정대리인 유효성체크. [ownBirth={},parentBirth={}]", ownBirth, parentBirth);
 
 		/**
 		 * 날짜 형식 체크(yyyyMMdd).
 		 */
 		if (!DateUtil.isDate(ownBirth) || !DateUtil.isDate(parentBirth)) {
 			throw new StorePlatformException("[dateFormat error (yyyyMMdd)]");
-		}
-
-		if (type != null) {
-			/**
-			 * 본인 생년월일 필수 파라미터 체크 (userBirthDay).
-			 */
-			if (StringUtils.isBlank(ownBirth)) {
-				throw new StorePlatformException("SAC_MEM_0002", "userBirthDay");
-			}
-
-			/**
-			 * 법정대리인 생년월일 필수 파라미터 체크 (parentBirthDay).
-			 */
-			if (StringUtils.isBlank(parentBirth)) {
-				throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
-			}
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
