@@ -2742,15 +2742,23 @@ public class IdpServiceImpl implements IdpService {
 							ListDeviceReq req = new ListDeviceReq();
 
 							req.setUserKey(insdUserKeyByMdnInfo);
-							req.setIsMainDevice("Y");
+							req.setIsMainDevice("N");
 
 							if (searchUserResponse != null) {
 								ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, req);
-								if (listDeviceRes != null) {
-									isPrimary = "N";
-								} else {
-									isPrimary = "Y";
+
+								for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
+									if (StringUtils.equals(deviceInfo.getIsPrimary(), "Y")) {
+										isPrimary = "Y";
+									} else {
+										isPrimary = "N";
+									}
+
+									// 게임센터 연동
+									GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+									this.deviceService.insertGameCenterIF(gameCenterSacReq);
 								}
+
 							} else {
 								isPrimary = "Y"; // 이용동의로 신규가입할 경우 대표기기 여부는 Y로 셋팅
 							}
