@@ -306,7 +306,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// }
 			// }
 
-			// TAKTODO:: 링&벨은 일단 상품 가격을 요청가격으로
+			// 링&벨은 상품 가격을 요청한 가격으로 세팅
 			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
 					PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
 				purchaseProduct.setProdAmt(reqProduct.getProdAmt());
@@ -315,7 +315,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// 상품 가격 체크
 			nowPurchaseProdAmt = StringUtils.isBlank(purchaseProduct.getSpecialSaleCouponId()) ? purchaseProduct
 					.getProdAmt() : purchaseProduct.getSpecialSaleAmt();
-			if (reqProduct.getProdAmt() != nowPurchaseProdAmt) {
+
+			if (StringUtils.equals(purchaseOrderInfo.getIgnoreReqAmtYn(), PurchaseConstants.USE_Y) == false
+					&& reqProduct.getProdAmt() != nowPurchaseProdAmt) {
 				throw new StorePlatformException("SAC_PUR_5105");
 			}
 
@@ -379,7 +381,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		if (purchaseOrderInfo.isFreeChargeReq()) {
 			purchaseOrderInfo.setRealTotAmt(0.0);
 		} else {
-			if (totAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
+			if (StringUtils.equals(purchaseOrderInfo.getIgnoreReqAmtYn(), PurchaseConstants.USE_Y) == false
+					&& totAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
 				throw new StorePlatformException("SAC_PUR_5106");
 			}
 			purchaseOrderInfo.setRealTotAmt(totAmt);
