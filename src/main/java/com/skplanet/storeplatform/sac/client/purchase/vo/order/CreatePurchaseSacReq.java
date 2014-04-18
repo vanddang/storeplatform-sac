@@ -50,6 +50,7 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String prchsReqPathCd; // 구매 요청 경로 코드
 	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String currencyCd; // 통화 코드
+	private String ignoreReqAmtYn; // Y : 요청한 금액을 무시하고 서버 상품 금액 기준으로 구매 처리
 	@NotNull(groups = { GroupCreatePurchase.class })
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private Double totAmt; // 총 결제 금액
@@ -176,6 +177,21 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	 */
 	public void setCurrencyCd(String currencyCd) {
 		this.currencyCd = currencyCd;
+	}
+
+	/**
+	 * @return the ignoreReqAmtYn
+	 */
+	public String getIgnoreReqAmtYn() {
+		return this.ignoreReqAmtYn;
+	}
+
+	/**
+	 * @param ignoreReqAmtYn
+	 *            the ignoreReqAmtYn to set
+	 */
+	public void setIgnoreReqAmtYn(String ignoreReqAmtYn) {
+		this.ignoreReqAmtYn = ignoreReqAmtYn;
 	}
 
 	/**
