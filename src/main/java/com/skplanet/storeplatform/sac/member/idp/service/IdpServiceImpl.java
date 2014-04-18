@@ -2762,24 +2762,6 @@ public class IdpServiceImpl implements IdpService {
 										} else {
 											isPrimary = "N";
 										}
-
-										if (this.isCall) {
-											// 게임센터 연동
-											GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-											gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
-											gameCenterSacReq.setPreDeviceId(deviceInfo.getDeviceId());
-											// Post UserKey를 가져오려했으나 sc쪽에 userKey는 수정후에도 넘겨받는값 userKey
-											// updateUserRequest의 userkKey를 그대로
-											// 리턴해주고있어서현재 param으로 넘어온 mbrNo 그대로 셋팅해주고 있음 임시로직이기 때문에 문제 없음.
-											gameCenterSacReq.setUserKey(currentMbrNoForgameCenter);
-											gameCenterSacReq.setPreUserKey(userKey);
-											gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
-											gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
-											gameCenterSacReq.setSystemId(systemId);
-											gameCenterSacReq.setTenantId(tenantId);
-											gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
-											this.deviceService.insertGameCenterIF(gameCenterSacReq);
-										}
 									}
 
 								} else {
