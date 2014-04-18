@@ -174,6 +174,36 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		// -----------------------------------------------------------------------------
+		// Biz 쿠폰 발급 요청
+
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
+			List<BizCouponPublishDetailEcReq> bizCouponPublishDetailEcList = new ArrayList<BizCouponPublishDetailEcReq>();
+
+			BizCouponPublishDetailEcReq bizCouponPublishDetailEcReq = null;
+			String prchsId = purchaseOrderInfo.getPrchsId();
+			for (PurchaseUserDevice receiver : purchaseOrderInfo.getReceiveUserList()) {
+				bizCouponPublishDetailEcReq = new BizCouponPublishDetailEcReq();
+				bizCouponPublishDetailEcReq.setPrchsId(prchsId);
+				bizCouponPublishDetailEcReq.setMdn(receiver.getDeviceId());
+				bizCouponPublishDetailEcList.add(bizCouponPublishDetailEcReq);
+			}
+
+			BizCouponPublishEcReq bizCouponPublishEcReq = new BizCouponPublishEcReq();
+			bizCouponPublishEcReq.setAdminId(purchaseOrderInfo.getPurchaseUser().getUserId());
+			bizCouponPublishEcReq.setMdn(purchaseOrderInfo.getPurchaseUser().getDeviceId());
+			bizCouponPublishEcReq.setCouponCode(purchaseOrderInfo.getPurchaseProductList().get(0).getCouponCode());
+			bizCouponPublishEcReq.setBizCouponPublishDetailList(bizCouponPublishDetailEcList);
+
+			this.logger.debug("PRCHS,ORDER,SAC,CREATEBIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
+
+			try {
+				this.shoppingSCI.createBizCouponPublish(bizCouponPublishEcReq);
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_PUR_7212", e);
+			}
+		}
+
+		// -----------------------------------------------------------------------------
 		// 무료구매 완료 요청
 
 		MakeFreePurchaseScReq makeFreePurchaseScReq = new MakeFreePurchaseScReq();
@@ -203,38 +233,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
-		// -----------------------------------------------------------------------------
-		// Biz 쿠폰 발급 요청
+		// -------------------------------------------------------------------------------------------
+		// 구매완료 TLog
+		// TAKTODO:: 일단은 Biz 쿠폰 발급 경우는 T Log 제외
 
-		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
-			List<BizCouponPublishDetailEcReq> bizCouponPublishDetailEcList = new ArrayList<BizCouponPublishDetailEcReq>();
-
-			BizCouponPublishDetailEcReq bizCouponPublishDetailEcReq = null;
-			String prchsId = purchaseOrderInfo.getPrchsId();
-			for (PurchaseUserDevice receiver : purchaseOrderInfo.getReceiveUserList()) {
-				bizCouponPublishDetailEcReq = new BizCouponPublishDetailEcReq();
-				bizCouponPublishDetailEcReq.setPrchsId(prchsId);
-				bizCouponPublishDetailEcReq.setMdn(receiver.getDeviceId());
-				bizCouponPublishDetailEcList.add(bizCouponPublishDetailEcReq);
-			}
-
-			BizCouponPublishEcReq bizCouponPublishEcReq = new BizCouponPublishEcReq();
-			bizCouponPublishEcReq.setAdminId(purchaseOrderInfo.getPurchaseUser().getUserId());
-			bizCouponPublishEcReq.setMdn(purchaseOrderInfo.getPurchaseUser().getDeviceId());
-			bizCouponPublishEcReq.setCouponCode(purchaseOrderInfo.getPurchaseProductList().get(0).getCouponCode());
-			bizCouponPublishEcReq.setBizCouponPublishDetailList(bizCouponPublishDetailEcList);
-
-			this.logger.debug("PRCHS,ORDER,SAC,CREATEBIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
-
-			try {
-				this.shoppingSCI.createBizCouponPublish(bizCouponPublishEcReq);
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_PUR_7212", e);
-			}
-
-		} else { // TAKTODO:: 일단은 Biz 쿠폰 발급 경우는 T Log 제외
-			// -------------------------------------------------------------------------------------------
-			// 구매완료 TLog
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON) == false) {
 			final String imei = purchaseOrderInfo.getImei();
 			String telecom = purchaseOrderInfo.getPurchaseUser().getTelecom();
 			final String mno_type = StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT) ? "SKT" : (StringUtils
@@ -281,7 +284,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					}
 				});
 			}
-
 		}
 
 		return count;
@@ -1206,6 +1208,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			payment.setMoid(paymentInfo.getMoid());
 
 			payment.setPaymentMtdCd(PaymethodUtil.convert2StoreCode(paymentInfo.getPaymentMtdCd()));
+			if (StringUtils.equals(payment.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER)
+					&& StringUtils.equals(paymentInfo.getSktTestDeviceYn(), PurchaseConstants.USE_Y)) {
+				payment.setPaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_SKT_TEST_DEVICE);
+			}
 			payment.setPaymentAmt(paymentInfo.getPaymentAmt());
 			payment.setPaymentDt(paymentInfo.getPaymentDt());
 			payment.setStatusCd(statusCd);
