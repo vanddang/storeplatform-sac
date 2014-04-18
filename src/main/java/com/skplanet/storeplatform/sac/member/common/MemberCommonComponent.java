@@ -1057,7 +1057,7 @@ public class MemberCommonComponent {
 	 */
 	public List<AgreementInfo> getClauseMappingInfo(String tenantId, List<AgreementInfo> agreementList) {
 
-		LOGGER.info("## >> Before : {}", agreementList);
+		LOGGER.debug("## >> Before : {}", agreementList);
 
 		if (agreementList.size() > 0) {
 
@@ -1091,7 +1091,7 @@ public class MemberCommonComponent {
 
 		}
 
-		LOGGER.info("## >> After : {}", agreementList);
+		LOGGER.info("DB와 맵핑후 약관정보 : {}", agreementList);
 
 		return agreementList;
 
