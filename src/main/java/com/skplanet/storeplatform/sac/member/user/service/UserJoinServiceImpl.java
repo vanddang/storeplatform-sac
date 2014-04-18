@@ -260,6 +260,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
 		AgreeUserEcRes agreeUserEcRes = this.imIdpSCI.agreeUser(agreeUserEcReq);
 
+		LOGGER.info("## >> joinSstList : {}", agreeUserEcRes.getJoinSstList());
+
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
 		/**
@@ -370,6 +372,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		agreeUserEcReq.setModifyReqDate(DateUtil.getToday("yyyyMMdd"));
 		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
 		AgreeUserEcRes agreeUserEcRes = this.imIdpSCI.agreeUser(agreeUserEcReq);
+
+		LOGGER.info("## >> joinSstList : {}", agreeUserEcRes.getJoinSstList());
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -1211,9 +1215,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 		} catch (StorePlatformException spe) {
-			
+
 			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
-			
+
 		}
 
 	}
@@ -1236,7 +1240,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 
 		 * ec) 41100,null,20130923,212917,tstore000001741|90300,null,20130917,113426,null
 		 */
-		LOGGER.info("## >> joinSstList : {}", agreeUserEcRes.getJoinSstList());
+		LOGGER.debug("## >> joinSstList : {}", agreeUserEcRes.getJoinSstList());
 		String[] joinSstList = agreeUserEcRes.getJoinSstList().replaceAll(" ", "").split("\\|");
 		for (String joinInfo : joinSstList) {
 
@@ -1244,7 +1248,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 이용동의 사이트 코드만 추출.
 			 */
 			String joinSstCode = joinInfo.split(",")[0];
-			LOGGER.info("## >> 이용동의 사이트 코드 : {}", joinSstCode);
+			LOGGER.debug("## >> 이용동의 사이트 코드 : {}", joinSstCode);
 			if (StringUtils.equals(joinSstCode, MemberConstants.SSO_SST_CD_OCB_WEB)) {
 				ocbJoinCodeYn = MemberConstants.USE_Y;
 			}
