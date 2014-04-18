@@ -122,6 +122,10 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 		metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadComicInfo", comicReq);
 
 		if (metaInfo != null) {
+			this.logger.info("----------------------------------------------------------------");
+			this.logger.info("[getDownloadEbookInfo] scid : {}", metaInfo.getSubContentsId());
+			this.logger.info("----------------------------------------------------------------");
+
 			Product product = new Product();
 
 			// 상품 ID 정보
@@ -301,6 +305,11 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 									memberPassFlag = false;
 									this.logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
 								}
+
+								this.logger.info("----------------------------------------------------------------");
+								this.logger.info("[getDownloadComicInfo] memberPassFlag : {}", memberPassFlag);
+								this.logger.info("[getDownloadComicInfo] deviceRes : {}", deviceRes);
+								this.logger.info("----------------------------------------------------------------");
 
 								if (memberPassFlag && deviceRes != null) {
 									deviceId = deviceRes.getDeviceId();
