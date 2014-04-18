@@ -458,6 +458,11 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 				} else if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_PARENT)) { // 법정대리인
 
+					/**
+					 * 법정대리인 나이 유효성 체크.
+					 */
+					this.mcc.checkParentBirth(req.getUserBirthDay(), req.getParentBirthDay(), "사용자");
+
 					try {
 
 						/**
@@ -475,15 +480,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 						// 법정대리인동의여부 Y=동의, N=미동의 (Y만 가능)
 						updateGuardianEcReq.setIsParentApprove(MemberConstants.USE_Y);
 						updateGuardianEcReq.setParentName(req.getUserName());
-						updateGuardianEcReq.setParentBirthday(req.getUserBirthDay());
+						updateGuardianEcReq.setParentBirthday(req.getParentBirthDay()); // 법정대리인 생년월일
 						updateGuardianEcReq.setParentEmail(req.getParentEmail());
 						if (req.getRealNameDate().length() == 14) {
 							// 법정대리인동의일자(YYYYMMDD)
 							updateGuardianEcReq.setParentApproveDate(DateUtil.changeDateStringtoEight(req.getRealNameDate()));
-							LOGGER.info("## >> 법정대리인동의일자 : {}", updateGuardianEcReq.getParentApproveDate());
 						} else {
 							updateGuardianEcReq.setParentApproveDate(req.getRealNameDate());
-							LOGGER.info("## >> 법정대리인동의일자 : {}", updateGuardianEcReq.getParentApproveDate());
 						}
 						this.imIdpSCI.updateGuardian(updateGuardianEcReq);
 

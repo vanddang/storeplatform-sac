@@ -95,6 +95,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
 
 		/**
+		 * 법정대리인 나이 유효성 체크.
+		 */
+		this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay(), "사용자");
+
+		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
 		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
