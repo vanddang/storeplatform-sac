@@ -550,7 +550,9 @@ public class IdpServiceImpl implements IdpService {
 					/* 게임센터 연동 */
 
 					GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-					gameCenterSacReq.setUserKey(currentMbrNoForgameCenter);
+					//Post UserKey를 가져오려했으나 sc쪽에 userKey는 수정후에도 넘겨받는값 userKey updateUserRequest의 userkKey를 그대로 리턴해주고 있어서
+					//현재 param으로 넘어온 mbrNo 그대로 셋팅해주고 있음 임시로직이기 때문에 문제 없음.
+					gameCenterSacReq.setUserKey(currentMbrNoForgameCenter); 
 					gameCenterSacReq.setPreUserKey(userKey);
 					gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
 					gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
@@ -2852,6 +2854,8 @@ public class IdpServiceImpl implements IdpService {
 								// 전환가입시 게임센터 연동을 함
 								if (this.isCall) { // OGG 시에만 사용하고 그 이후에는 불필요 로직 property로 사용함
 									GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+									//Post UserKey를 가져오려했으나 sc쪽에 userKey는 수정후에도 넘겨받는값 userKey updateUserRequest의 userkKey를 그대로 리턴해주고 있어서
+									//현재 param으로 넘어온 mbrNo 그대로 셋팅해주고 있음 임시로직이기 때문에 문제 없음.									
 									gameCenterSacReq.setUserKey(currentMbrNoForgameCenter);
 									gameCenterSacReq.setPreUserKey(userKey);
 									gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
