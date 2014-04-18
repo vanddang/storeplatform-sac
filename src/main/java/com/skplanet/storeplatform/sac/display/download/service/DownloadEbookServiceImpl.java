@@ -129,7 +129,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadEbookInfo", ebookReq);
 
 		if (metaInfo != null) {
-			if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+			if ("channel".equals(idType) && DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
 				// 단품인 상품만 조회가능 합니다.
 				throw new StorePlatformException("SAC_DSP_0013");
 			}
