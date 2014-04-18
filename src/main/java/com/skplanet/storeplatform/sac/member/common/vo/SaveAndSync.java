@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.member.common.vo;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -80,4 +83,8 @@ public class SaveAndSync extends CommonInfo {
 		this.deviceKey = deviceKey;
 	}
 
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+	}
 }
