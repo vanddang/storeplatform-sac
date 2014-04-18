@@ -410,6 +410,7 @@ public class IdpServiceImpl implements IdpService {
 						updateUserResponse = this.userSCI.updateUser(updateUserRequest);
 
 						userKey = updateUserResponse.getUserKey();
+
 					}
 					LOGGER.debug("전환가입 정보 입력 완료");
 
@@ -459,6 +460,7 @@ public class IdpServiceImpl implements IdpService {
 						updateUserResponse = this.userSCI.updateUser(updateUserRequest);
 
 						userKey = updateUserResponse.getUserKey();
+
 					}
 					LOGGER.debug("변경가입,변경전환 정보 입력 완료");
 
@@ -546,8 +548,9 @@ public class IdpServiceImpl implements IdpService {
 			if (this.isCall) { // OGG 시에만 사용하고 그 이후에는 불필요 로직 property로 사용함
 				try {
 					/* 게임센터 연동 */
+
 					GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-					gameCenterSacReq.setUserKey(userKey);
+					gameCenterSacReq.setUserKey(currentMbrNoForgameCenter);
 					gameCenterSacReq.setPreUserKey(userKey);
 					gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
 					gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
@@ -2834,7 +2837,6 @@ public class IdpServiceImpl implements IdpService {
 
 							if (searchUserResponse != null) {
 								prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo(); // 게임센터연동을위한기존mbrNo셋팅
-
 								UpdateUserRequest updateUserRequest = this
 										.getUpdateUserRequest(map, searchUserResponse);
 								// JOIN_SST_LIST에 TAC001~TAC006이 있는경우 이용약관이 들어옴.
@@ -2850,7 +2852,7 @@ public class IdpServiceImpl implements IdpService {
 								// 전환가입시 게임센터 연동을 함
 								if (this.isCall) { // OGG 시에만 사용하고 그 이후에는 불필요 로직 property로 사용함
 									GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-									gameCenterSacReq.setUserKey(userKey);
+									gameCenterSacReq.setUserKey(currentMbrNoForgameCenter);
 									gameCenterSacReq.setPreUserKey(userKey);
 									gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
 									gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
