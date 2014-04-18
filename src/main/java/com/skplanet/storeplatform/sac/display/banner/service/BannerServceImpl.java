@@ -41,7 +41,7 @@ import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 public class BannerServceImpl implements BannerService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private final int BANNER_MAX_COUNT = 20; // 요청 가능한 배너 최대 개수
+	private final int BANNER_MAX_COUNT = 100; // 요청 가능한 배너 최대 개수
 	private final int HOME_BANNER_COUNT = 12; // Home 배너 12개 (모바일웹 정사각형 배너)
 	private final int GAME_BANNER_COUNT = 2; // 게임 배너 2개 (모바일웹 정사각형 배너)
 	private final int FUN_BANNER_COUNT = 2; // Fun 배너 2개 (모바일웹 정사각형 배너)
