@@ -1144,12 +1144,4 @@ public class MemberCommonComponent {
 
 	}
 
-	public static void main(String[] args) {
-
-		MemberCommonComponent mcc = new MemberCommonComponent();
-
-		// mcc.checkLglAgent("20000101", "19750417");
-		mcc.checkParentBirth("20000101", "19800101");
-
-	}
 }
