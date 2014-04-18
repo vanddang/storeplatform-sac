@@ -97,7 +97,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 법정대리인 나이 유효성 체크.
 		 */
-		this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay(), "사용자");
+		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+			this.mcc.checkParentBirth(req.getOwnBirth(), req.getParentBirthDay(), "사용자");
+		}
 
 		/**
 		 * 모번호 조회 (989 일 경우만)

@@ -1125,6 +1125,15 @@ public class MemberCommonComponent {
 	 */
 	public void checkParentBirth(String ownBirth, String parentBirth, String type) {
 
+		LOGGER.info("법정대리인 유효성체크. [ownBirth={},parentBirth={},type={}]", ownBirth, parentBirth, type);
+
+		/**
+		 * 날짜 형식 체크(yyyyMMdd).
+		 */
+		if (!DateUtil.isDate(ownBirth) || !DateUtil.isDate(parentBirth)) {
+			throw new StorePlatformException("[dateFormat error]");
+		}
+
 		if (type != null) {
 			/**
 			 * 본인 생년월일 필수 파라미터 체크 (userBirthDay).
@@ -1141,34 +1150,28 @@ public class MemberCommonComponent {
 			}
 		}
 
-		try {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		/**
+		 * 법정대리인 만19세 이상인지 체크.
+		 */
+		Calendar todayCal = DateUtil.getCalendar(DateUtil.getToday("yyyyMMdd"));
+		todayCal.add(Calendar.YEAR, -19); // 19년 감소
+		String year_19 = sdf.format(todayCal.getTime());
 
-			/**
-			 * 법정대리인 만19세 이상인지 체크.
-			 */
-			Calendar todayCal = DateUtil.getCalendar(DateUtil.getToday("yyyyMMdd"));
-			todayCal.add(Calendar.YEAR, -19); // 19년 감소
-			String year_19 = sdf.format(todayCal.getTime());
+		if (Integer.parseInt(parentBirth) > Integer.parseInt(year_19)) {
+			throw new StorePlatformException("SAC_MEM_0004", parentBirth);
+		}
 
-			if (Integer.parseInt(parentBirth) > Integer.parseInt(year_19)) {
-				throw new StorePlatformException("SAC_MEM_0004", parentBirth);
-			}
+		/**
+		 * 법정대리인과 회원의 나이차이가 20살 이상 인지 체크.
+		 */
+		Calendar ownCal = DateUtil.getCalendar(ownBirth);
+		ownCal.add(Calendar.YEAR, -20); // 20년 감소
+		String year_20 = sdf.format(ownCal.getTime());
 
-			/**
-			 * 법정대리인과 회원의 나이차이가 20살 이상 인지 체크.
-			 */
-			Calendar ownCal = DateUtil.getCalendar(ownBirth);
-			ownCal.add(Calendar.YEAR, -20); // 20년 감소
-			String year_20 = sdf.format(ownCal.getTime());
-
-			if (Integer.parseInt(parentBirth) > Integer.parseInt(year_20)) {
-				throw new StorePlatformException("SAC_MEM_0005", ownBirth, parentBirth);
-			}
-
-		} catch (Exception e) {
-			throw new StorePlatformException(e.getMessage());
+		if (Integer.parseInt(parentBirth) > Integer.parseInt(year_20)) {
+			throw new StorePlatformException("SAC_MEM_0005", ownBirth, parentBirth);
 		}
 
 	}
