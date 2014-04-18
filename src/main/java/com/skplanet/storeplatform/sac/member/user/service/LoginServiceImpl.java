@@ -1061,10 +1061,13 @@ public class LoginServiceImpl implements LoginService {
 				} catch (AmqpException ex) {
 					LOGGER.info("MQ process fail {}", mqInfo);
 				}
+
+				res.setUserKey(joinForWapEcRes.getUserKey());
+			} else {
+				res.setUserKey(oldUserKey);
 			}
 
 			res.setDeviceKey(oldDeviceKey);
-			res.setUserKey(oldUserKey);
 
 		}
 
