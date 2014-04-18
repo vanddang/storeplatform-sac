@@ -49,6 +49,13 @@
 		                      , (SELECT LIST_NM FROM TB_DP_LIST WHERE TENANT_ID = 'S01' AND LIST_ID = JA.BNR_INFO)
 		                      ,  BNR_NM)
 		             ELSE BNR_NM END AS BNR_NM
+		      , CASE WHEN JA.BNR_INFO_TYPE_CD = 'DP010311' THEN
+		                 /* 상황별 추천리스트 연결 */
+		                 (SELECT CASE WHEN SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT THEN 'Y' ELSE 'N' END
+		                    FROM TB_DP_RECOM_PKG
+		                   WHERE TENANT_ID = #{tenantId}
+		                     AND PKG_ID = JA.BNR_INFO)
+		             ELSE 'N' END AS SITU_RECOMM_YN
 		  FROM (SELECT  IA.TOTAL_COUNT
 		              , IA.BNR_MENU_ID
 		              , IA.BNR_SEQ

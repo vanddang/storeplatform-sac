@@ -34,6 +34,7 @@ public class BannerDefault {
 	private String sampleUrl;
 	private String sampleUrlHq;
 	private String prodCaseCd;
+	private String situRecommYn;
 
 	/**
 	 * @return the totalCount
@@ -318,5 +319,20 @@ public class BannerDefault {
 	 */
 	public void setProdCaseCd(String prodCaseCd) {
 		this.prodCaseCd = prodCaseCd;
+	}
+
+	/**
+	 * @return the situRecommYn
+	 */
+	public String getSituRecommYn() {
+		return this.situRecommYn;
+	}
+
+	/**
+	 * @param situRecommYn
+	 *            the situRecommYn to set
+	 */
+	public void setSituRecommYn(String situRecommYn) {
+		this.situRecommYn = situRecommYn;
 	}
 }

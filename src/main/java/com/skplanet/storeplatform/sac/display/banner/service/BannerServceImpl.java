@@ -440,6 +440,13 @@ public class BannerServceImpl implements BannerService {
 							}
 						}
 					}
+					// 배너타입 : 상황별 추천
+				} else if (DisplayConstants.DP_BANNER_SITUATIONAL_RECOMM_CD.equals(bnrType)) {
+					// 테마의 노출 유효기간 확인 (양해엽 매니저님 요청 2014.04.18)
+					if ("Y".equals(bannerDefault.getSituRecommYn())) {
+						++passCnt;
+						resultList.add(bannerDefault);
+					}
 				} else {
 					++passCnt;
 					resultList.add(bannerDefault);
