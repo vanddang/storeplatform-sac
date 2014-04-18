@@ -54,13 +54,6 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	@Override
 	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceScReq) {
 
-		new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00005"); // T Log 보장을 위해 log_id 선 세팅
-			}
-		});
-
 		// 기구매내역 조회함
 		final List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceScReq);
 		// 구매상태가 구매완료건만을 넣기 위한 리스트
@@ -96,23 +89,14 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 			// TLog
 			final List<String> prodIdList = new ArrayList<String>();
 			final List<Long> prodAmtList = new ArrayList<Long>();
-			final String systemId = existenceScReq.getSystemId();
 			prodIdList.add(existenceScRes.getProdId());
 			prodAmtList.add((long) existenceScRes.getProdAmt());
 
-			// new TLogUtil().set(new ShuttleSetter() {
-			// @Override
-			// public void customize(TLogSentinelShuttle shuttle) {
-			// shuttle.system_id(systemId).purchase_channel(existenceScRes.getPrchsReqPathCd())
-			// .purchase_inflow_channel(existenceScRes.getPrchsCaseCd()).product_id(prodIdList)
-			// .product_price(prodAmtList)
-			// }
-			// });
-			new TLogUtil().logger(LoggerFactory.getLogger("TLOG_LOGGER")).log(new ShuttleSetter() {
+			new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
 
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.system_id(systemId).purchase_channel(existenceScRes.getPrchsReqPathCd())
+					shuttle.purchase_channel(existenceScRes.getPrchsReqPathCd())
 							.purchase_inflow_channel(existenceScRes.getPrchsCaseCd()).product_id(prodIdList)
 							.product_price(prodAmtList);
 				}

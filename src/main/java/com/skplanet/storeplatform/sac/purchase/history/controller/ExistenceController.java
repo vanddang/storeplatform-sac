@@ -23,7 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
@@ -64,8 +67,18 @@ public class ExistenceController {
 	@ResponseBody
 	public ExistenceListSacRes searchExistenceList(@RequestBody @Validated ExistenceSacReq existenceSacReq,
 			SacRequestHeader requestHeader) {
-		this.logger.debug("PRCHS,ExistenceController,SAC,REQ,{},{}", existenceSacReq, requestHeader);
+
 		TenantHeader header = requestHeader.getTenantHeader();
+		final String systemId = header.getSystemId();
+
+		new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00005").system_id(systemId); // T Log 보장을 위해 log_id 선 세팅
+			}
+		});
+
+		this.logger.debug("PRCHS,ExistenceController,SAC,REQ,{},{}", existenceSacReq, requestHeader);
 
 		ExistenceListSacRes existenceListSacRes = new ExistenceListSacRes();
 

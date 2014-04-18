@@ -17,7 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
@@ -52,9 +55,13 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 	@ResponseBody
 	public ExistenceListRes searchExistenceList(ExistenceReq existenceReq) {
 		this.logger.debug("PRCHS,ExistenceInternalSCIController,SAC,REQ,{}", existenceReq);
-		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-		this.logger.debug("@@@@@@ Start Internal searchExistenceList @@@@@@");
-		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+		new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00005"); // T Log 보장을 위해 log_id 선 세팅
+			}
+		});
 		// 필수값 체크
 		if (existenceReq.getTenantId() == null || existenceReq.getTenantId().equals("")) {
 			throw new StorePlatformException("SAC_PUR_0001", "TenantId");

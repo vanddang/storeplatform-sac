@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRes;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScReq;
@@ -58,9 +61,22 @@ public class GiftController {
 	@ResponseBody
 	public GiftConfirmSacRes modifyGiftConfirm(@RequestBody @Validated GiftConfirmSacReq giftConfirmSacReq,
 			SacRequestHeader requestHeader) {
-		this.logger.debug("PRCHS,GiftController,SAC,REQ,{},{}", giftConfirmSacReq, requestHeader);
+
 		// 헤더 정보
 		TenantHeader header = requestHeader.getTenantHeader();
+		// 시스템아이디
+		final String systemId = header.getSystemId();
+		// usembr_no
+		final String userKey = giftConfirmSacReq.getUserKey();
+
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL00009").system_id(systemId).usermbr_no(userKey);
+			}
+		});
+
+		this.logger.debug("PRCHS,GiftController,SAC,REQ,{},{}", giftConfirmSacReq, requestHeader);
 
 		// reqConvert처리 -> SC선물수신처리 -> resConvert 처리후 리턴
 		return this.resConfirmConvert(this.giftService.updateGiftConfirm(this.reqConfirmConvert(giftConfirmSacReq,
