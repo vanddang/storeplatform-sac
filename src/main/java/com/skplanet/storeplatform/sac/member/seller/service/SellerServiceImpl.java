@@ -1010,6 +1010,7 @@ public class SellerServiceImpl implements SellerService {
 	 */
 	@Override
 	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, ModifyRealNameSacReq req) {
+
 		LOGGER.debug("############ SellerServiceImpl.modifyRealName() [START] ############");
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 		// SessionKey 유효성 체크
@@ -1021,6 +1022,11 @@ public class SellerServiceImpl implements SellerService {
 		updateRealNameSellerRequest.setSellerKey(req.getSellerKey());
 
 		if (StringUtils.equals(MemberConstants.AUTH_TYPE_OWN, req.getIsOwn())) {
+
+			if (StringUtils.isBlank(req.getSellerBirthDay())) {
+				throw new StorePlatformException("SAC_MEM_0002", "sellerBirthDay");
+			}
+
 			// 실명인증 정보
 			MbrAuth mbrAuth = new MbrAuth();
 			mbrAuth.setBirthDay(req.getSellerBirthDay());
@@ -1040,6 +1046,22 @@ public class SellerServiceImpl implements SellerService {
 			updateRealNameSellerRequest.setMbrAuth(mbrAuth);
 
 		} else if (StringUtils.equals(MemberConstants.AUTH_TYPE_PARENT, req.getIsOwn())) {
+
+			if (StringUtils.isBlank(req.getParentBirthDay())) {
+				throw new StorePlatformException("SAC_MEM_0002", "parentBirthDay");
+			}
+
+			// 수정 가능 회원 Check
+			SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
+					MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
+
+			// 실명인증정보에서 생년월일이 없을 경우, 회원 테이블의 생년월일 셋팅
+			String ownBirth = StringUtils.isBlank(searchSellerResponse.getMbrAuth().getBirthDay()) ? searchSellerResponse
+					.getSellerMbr().getSellerBirthDay() : searchSellerResponse.getMbrAuth().getBirthDay();
+
+			// 법정대리인 나이 체크
+			this.component.checkParentBirth(ownBirth, req.getParentBirthDay());
+
 			// 법정 대리인 정보
 			MbrLglAgent mbrLglAgent = new MbrLglAgent();
 			mbrLglAgent.setParentBirthDay(req.getParentBirthDay());
