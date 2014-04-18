@@ -718,11 +718,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 			this.mcc.checkParentBirth(req.getUserBirthDay(), req.getParentBirthDay());
 
 			/**
-			 * 법정대리인 나이 유효성 체크.
-			 */
-			this.mcc.checkParentBirth(req.getUserBirthDay(), req.getParentBirthDay());
-
-			/**
 			 * 실명인증 기본 setting.
 			 */
 			UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
@@ -737,7 +732,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 */
 			MbrLglAgent mbrLglAgent = new MbrLglAgent();
 			mbrLglAgent.setIsParent(MemberConstants.USE_Y); // 법정대리인 여부
-			mbrLglAgent.setParentBirthDay(req.getUserBirthDay()); // 법정대리인 생년월일
+			mbrLglAgent.setParentBirthDay(req.getParentBirthDay()); // 법정대리인 생년월일
 			mbrLglAgent.setParentMDN(req.getUserPhone()); // 법정대리인 전화번호
 			mbrLglAgent.setParentTelecom(req.getDeviceTelecom()); // 법정대리인 이동 통신사
 			mbrLglAgent.setParentCI(req.getUserCi()); // 법정대리인 CI
