@@ -86,7 +86,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		String preDeviceId = checkSaveNSyncResponse.getPreDeviceID(); // 이전 MSISDN.
 		String nowDeviceId = checkSaveNSyncResponse.getDeviceID(); // 현재 MSISDN.
 
-		LOGGER.info("isActive : {}", isActive, "|isSaveNSync : {}", isSaveNSync, "|deviceKey : {}", deviceKey, "|userKey : {}", userKey, "|preDeviceId : {}", preDeviceId, "|nowDeviceId : {}", nowDeviceId);
+		LOGGER.info("isActive={},isSaveNSync={},deviceKey={},userKey={},preDeviceId={},nowDeviceId={}", isActive, isSaveNSync, deviceKey, userKey, preDeviceId, nowDeviceId);
 
 		SaveAndSync saveAndSync = new SaveAndSync();
 		String newMbrNo = null;
@@ -267,7 +267,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * SC 회원 복구 요청.
 		 */
-		LOGGER.info("회원 복구요청 [newMbrNo : {}]", newMbrNo, "[userKey : {}]", userKey);
+		LOGGER.info("회원 복구요청 [newMbrNo={},userKey={}]", newMbrNo, userKey);
 		ReviveUserRequest reviveUserRequest = new ReviveUserRequest();
 		reviveUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		reviveUserRequest.setImMbrNo(newMbrNo);
