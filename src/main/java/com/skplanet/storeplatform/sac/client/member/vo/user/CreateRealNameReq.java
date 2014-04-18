@@ -80,7 +80,12 @@ public class CreateRealNameReq extends CommonInfo {
 	private String userName = "";
 
 	/**
-	 * 사용자/법정대리인 생년월일
+	 * 법정대리인 생년월일
+	 */
+	private String parentBirthDay = "";
+
+	/**
+	 * 본인 생년월일
 	 */
 	@NotEmpty
 	private String userBirthDay = "";
@@ -274,6 +279,21 @@ public class CreateRealNameReq extends CommonInfo {
 	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	/**
+	 * @return String : parentBirthDay
+	 */
+	public String getParentBirthDay() {
+		return this.parentBirthDay;
+	}
+
+	/**
+	 * @param parentBirthDay
+	 *            String : the parentBirthDay to set
+	 */
+	public void setParentBirthDay(String parentBirthDay) {
+		this.parentBirthDay = parentBirthDay;
 	}
 
 	/**
