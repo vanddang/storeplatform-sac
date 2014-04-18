@@ -2756,7 +2756,7 @@ public class IdpServiceImpl implements IdpService {
 
 									// 게임센터 연동
 									GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-									this.deviceService.insertGameCenterIF(gameCenterSacReq);
+									//deviceService.insertGameCenterIF(gameCenterSacReq)
 								}
 
 							} else {
