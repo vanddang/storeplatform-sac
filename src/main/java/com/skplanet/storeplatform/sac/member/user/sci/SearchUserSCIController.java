@@ -29,12 +29,15 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserP
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDevice;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
@@ -80,8 +83,46 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
 		SearchUserSacRes searchUserSacRes = this.userSearchService.searchUserByUserKey(requestHeader, request);
-		LOGGER.debug("Response > UserInfo count : {}", searchUserSacRes.getUserInfo().size());
+		LOGGER.info("Response > UserInfo count : {}", searchUserSacRes.getUserInfo().size());
 		return searchUserSacRes;
+	}
+
+	/**
+	 * <pre>
+	 * deviceId를 이용한 회원정보 조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            UserInfoSacReq
+	 * @return UserInfoSacRes
+	 */
+	@Override
+	@RequestMapping(value = "/searchUserBydeviceId", method = RequestMethod.POST)
+	@ResponseBody
+	public UserInfoSacRes searchUserBydeviceId(@RequestBody @Validated UserInfoSacReq request) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+
+		DetailReq detailReq = new DetailReq();
+		detailReq.setDeviceId(request.getDeviceId());
+		SearchExtentReq searchExtentReq = new SearchExtentReq();
+		searchExtentReq.setDeviceInfoYn(MemberConstants.USE_Y);
+		searchExtentReq.setUserInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtentReq);
+
+		// 사용자 회원 기본정보 조회 SAC 내부 메서드 호출
+		DetailRes detailRes = this.userSearchService.detail(requestHeader, detailReq);
+
+		UserInfoSacRes response = new UserInfoSacRes();
+		response.setUserKey(detailRes.getUserKey());
+		LOGGER.debug("detailRes.getDeviceInfoList() : {}", detailRes.getDeviceInfoList());
+		response.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+		response.setUserMainStatus(detailRes.getUserInfo().getUserMainStatus());
+		response.setUserSubStatus(detailRes.getUserInfo().getUserSubStatus());
+
+		LOGGER.info("Response > userKey : {}", response.getUserKey());
+		return response;
 	}
 
 	/**
@@ -211,7 +252,8 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
 		searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
-		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader, searchUserDeviceReq);
+		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader,
+				searchUserDeviceReq);
 
 		Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
 		UserDeviceInfoSac userDeviceInfoSac;

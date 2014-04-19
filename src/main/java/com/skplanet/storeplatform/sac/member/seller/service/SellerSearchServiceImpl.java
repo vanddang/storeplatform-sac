@@ -717,7 +717,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * 2.2.27.	판매자 회원 인증키 조회.
+	 * 판매자 회원 인증키 조회.
 	 * </pre>
 	 * 
 	 * @param header
