@@ -70,7 +70,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 		List<WebtoonDetail> resultList = this.commonDAO.queryForList("Webtoon.searchWebtoonDetail", req,
 				WebtoonDetail.class);
 
-		if (resultList == null || (resultList != null && resultList.size() == 0)) {
+		if ((resultList == null) || (resultList != null && resultList.size() == 0)) {
 			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
