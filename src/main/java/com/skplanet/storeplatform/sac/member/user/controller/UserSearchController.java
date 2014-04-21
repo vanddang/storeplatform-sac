@@ -161,7 +161,7 @@ public class UserSearchController {
 
 		MbrOneidSacRes res = this.svc.searchUserOneId(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getIsRealName()));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson("SUCC"));
 
 		return res;
 	}

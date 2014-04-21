@@ -230,7 +230,7 @@ public class DeviceController {
 
 		DetailRepresentationDeviceRes res = this.deviceService.detailRepresentationDeviceRes(requestHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDeviceInfo().getUserKey()));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDeviceInfo().getDeviceKey()));
 
 		return res;
 	}
