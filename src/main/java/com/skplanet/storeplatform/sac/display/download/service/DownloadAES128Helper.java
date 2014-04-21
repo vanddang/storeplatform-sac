@@ -61,7 +61,7 @@ public class DownloadAES128Helper {
 			cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
 			rtnStrByte = cipher.doFinal(b);
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0001", "데이터 암호화 ", e);
+			throw new StorePlatformException("SAC_DSP_0018");
 		}
 
 		return rtnStrByte;
@@ -97,7 +97,7 @@ public class DownloadAES128Helper {
 			cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
 			rtnStrByte = cipher.doFinal(b);
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0001", "데이터 복호화 ", e);
+			throw new StorePlatformException("SAC_DSP_0019");
 		}
 
 		return rtnStrByte;
@@ -154,7 +154,7 @@ public class DownloadAES128Helper {
 		try {
 			md = MessageDigest.getInstance("SHA-1");
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0001", "getDigest ", e);
+			throw new StorePlatformException("SAC_DSP_0020");
 		}
 		return md.digest(b);
 	}
