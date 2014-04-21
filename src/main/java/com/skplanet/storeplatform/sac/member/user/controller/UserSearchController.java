@@ -136,7 +136,7 @@ public class UserSearchController {
 		 */
 		DetailByDeviceIdSacRes res = this.svc.detailByDeviceId(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : deviceId={},userKey={},deviceKey={}", res.getDeviceId(), res.getUserKey(), res.getDeviceKey());
 
 		return res;
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.member.vo.common.OcbInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationReq;
@@ -132,7 +133,15 @@ public class UserOcbController {
 		 */
 		GetOcbInformationRes res = this.svc.getOcbInformation(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		if (res.getOcbInfoList().size() > 0) {
+
+			for (OcbInfo info : res.getOcbInfoList()) {
+
+				LOGGER.info("Response : {}", info.getUserKey());
+
+			}
+
+		}
 
 		return res;
 

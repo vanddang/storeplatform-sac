@@ -1191,7 +1191,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			 * 조회된 데이타가 없을경우 Skip.
 			 */
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-				LOGGER.info("## 조회된 사용자 정책이 없습니다. [{}]", spe.getErrorInfo().getCode());
+				LOGGER.debug("## 조회된 사용자 정책이 없습니다. [{}]", spe.getErrorInfo().getCode());
 				/**
 				 * Data가 없을 경우 Element 는 생성하는걸로...
 				 */
@@ -1393,10 +1393,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
-	 * searchUserByDeviceKey(com.skplanet.storeplatform
-	 * .sac.client.member.vo.user.SearchUserDeviceReq)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByDeviceKey(com.skplanet.storeplatform .sac.client.member.vo.user.SearchUserDeviceReq)
 	 */
 	@Override
 	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceReq request) {
