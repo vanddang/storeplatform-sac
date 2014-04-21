@@ -246,7 +246,7 @@ public class UserSearchController {
 
 		ListDailyPhoneOsSacRes dailyPhoneOsList = this.svc.listDailyPhoneOs(sacHeader);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(dailyPhoneOsList.getDailyPhoneList().size()));
+		LOGGER.info("Response Size : {}", ConvertMapperUtils.convertObjectToJson(dailyPhoneOsList.getDailyPhoneList().size()));
 
 		return dailyPhoneOsList;
 	}
