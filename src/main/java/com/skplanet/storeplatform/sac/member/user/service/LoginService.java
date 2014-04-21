@@ -74,6 +74,7 @@ public interface LoginService {
 	 *            AuthorizeForAutoUpdateReq
 	 * @return AuthorizeByIdRes
 	 */
+	@Deprecated
 	public AuthorizeSimpleByMdnRes executeAuthorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req);
 
 	/**
