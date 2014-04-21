@@ -83,7 +83,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
 		SearchUserSacRes searchUserSacRes = this.userSearchService.searchUserByUserKey(requestHeader, request);
-		LOGGER.info("Response > UserInfo count : {}", searchUserSacRes.getUserInfo().size());
+		LOGGER.info("Response : {}", searchUserSacRes.getUserInfo().size());
 		return searchUserSacRes;
 	}
 
@@ -122,7 +122,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		response.setUserSubStatus(detailRes.getUserInfo().getUserSubStatus());
 		response.setLoginStatus(detailRes.getUserInfo().getLoginStatusCode());
 
-		LOGGER.info("Response > userKey : {}", response.getUserKey());
+		LOGGER.info("Response : {}", response.getUserKey());
 		return response;
 	}
 
