@@ -44,26 +44,27 @@ public class AuthorizeServiceImpl implements AuthorizeService {
 		Interface intf = this.service.selectInterfaceById(interfaceId);
 
 		if (intf == null || StringUtils.isBlank(intf.getInterfaceId())) {
-			throw new StorePlatformException("SAC_CMN_0061");
+			throw new StorePlatformException("SAC_CMN_0061", interfaceId);
 		}
 
 		if (intf.getStatus() != InterfaceStatus.AVAILABLE) {
-			throw new StorePlatformException("SAC_CMN_0062");
+			throw new StorePlatformException("SAC_CMN_0062", interfaceId);
 		}
 
 		String pathFromDb = intf.getUrl();
 		if (!StringUtils.equalsIgnoreCase(servletPath, pathFromDb)) {
-			throw new StorePlatformException("SAC_CMN_0063");
+			throw new StorePlatformException("SAC_CMN_0063", servletPath);
 		}
 
 	}
 
     @Override
     public void checkMapping(HttpHeaders header) {
-		String interefaceId = this.service.selectUsableInterface(header.getAuthKey(), header.getInterfaceId());
+    	String interfaceId = header.getInterfaceId();
+		String interfaceIdFromDb = this.service.selectUsableInterface(header.getAuthKey(), header.getInterfaceId());
 
-        if(StringUtils.isEmpty(interefaceId))
-            throw new StorePlatformException("SAC_CMN_0064");
+        if(StringUtils.isEmpty(interfaceIdFromDb))
+            throw new StorePlatformException("SAC_CMN_0064", interfaceId);
 	}
 
 }
