@@ -87,7 +87,6 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 		CreateSubSellerResponse schRes = this.sellerSCI.createSubSeller(schReq);
 
-		LOGGER.info(schRes.getSellerKey());
 		CreateSubsellerRes response = new CreateSubsellerRes();
 
 		response.setSubSellerKey(schRes.getSellerKey());
@@ -134,7 +133,6 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 		CreateSubSellerResponse schRes = this.sellerSCI.createSubSeller(schReq);
 
-		LOGGER.info(schRes.getSellerKey());
 		UpdateSubsellerRes response = new UpdateSubsellerRes();
 
 		response.setSubSellerKey(schRes.getSellerKey());
