@@ -56,7 +56,7 @@ public class IdpController {
 			LOGGER.debug("#### E/C => SAC [Inbound] Start ####");
 			LOGGER.debug("provisioning - cmd : {}, query string : {}", provisioningReq.getCmd(),
 					provisioningReq.getReqParam());
-			LOGGER.info("Inbound Param : {}", ConvertMapperUtils.convertObjectToJson(provisioningReq));
+			LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(provisioningReq));
 			String cmd = provisioningReq.getCmd();
 			boolean isIm = (cmd.indexOf("RX") == 0);
 			if (isIm) {
@@ -72,6 +72,7 @@ public class IdpController {
 			throw new RuntimeException(e);
 		}
 		LOGGER.debug("#### E/C => SAC [Inbound] End ####");
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(provisioningRes));
 		return provisioningRes;
 	}
 }

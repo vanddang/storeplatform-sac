@@ -79,7 +79,7 @@ public class SellerController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		CreateRes res = this.sellerService.createSeller(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerMbr().getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerMbr().getSellerKey());
 		return res;
 	}
 
@@ -99,7 +99,7 @@ public class SellerController {
 	public AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		AuthorizeRes res = this.sellerService.authorize(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerMbr().getSellerKey());
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
 
@@ -141,7 +141,7 @@ public class SellerController {
 			@RequestBody @Validated ModifyInformationSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		ModifyInformationSacRes res = this.sellerService.modifyInformation(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -163,7 +163,7 @@ public class SellerController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		ModifyAccountInformationSacRes res = this.sellerService.modifyAccountInformation(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -183,7 +183,7 @@ public class SellerController {
 	public ModifyEmailSacRes modifyEmail(SacRequestHeader header, @RequestBody @Validated ModifyEmailSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		ModifyEmailSacRes res = this.sellerService.modifyEmail(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -203,7 +203,7 @@ public class SellerController {
 	public ModifyPasswordSacRes modifyPassword(SacRequestHeader header, @RequestBody @Validated ModifyPasswordSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		ModifyPasswordSacRes res = this.sellerService.modifyPassword(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -223,7 +223,7 @@ public class SellerController {
 	public ConfirmRes confirm(SacRequestHeader header, @RequestBody @Validated ConfirmReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		ConfirmRes res = this.sellerService.confirm(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -244,7 +244,7 @@ public class SellerController {
 			@RequestBody @Validated ConversionClassSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		ConversionClassSacRes res = this.sellerService.conversionClass(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -264,7 +264,7 @@ public class SellerController {
 	public LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		LockAccountRes res = this.sellerService.lockAccount(header, req);
-		LOGGER.info("Response > sellerId : {}", res.getSellerId());
+		LOGGER.info("Response : {}", res.getSellerId());
 		return res;
 	}
 
@@ -284,7 +284,7 @@ public class SellerController {
 	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, @RequestBody @Validated ModifyRealNameSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		ModifyRealNameSacRes res = this.sellerService.modifyRealName(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -304,7 +304,7 @@ public class SellerController {
 	public WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		WithdrawRes res = this.sellerService.withdraw(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -325,7 +325,7 @@ public class SellerController {
 			@RequestBody @Validated RemoveAuthorizationKeySacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		RemoveAuthorizationKeySacRes res = this.sellerService.removeAuthorizationKey(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -345,7 +345,7 @@ public class SellerController {
 	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, @RequestBody @Validated RemoveFlurrySacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		RemoveFlurrySacRes res = this.sellerService.removeFlurry(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -365,7 +365,7 @@ public class SellerController {
 	public CreateFlurrySacRes createFlurry(SacRequestHeader header, @RequestBody @Validated CreateFlurrySacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		CreateFlurrySacRes res = this.sellerService.createFlurry(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -386,7 +386,7 @@ public class SellerController {
 			@RequestBody @Validated ModifyWaitEmailSacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		ModifyWaitEmailSacRes res = this.sellerService.modifyWaitEmail(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 
@@ -407,7 +407,7 @@ public class SellerController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		ModifyFlurrySacRes res = this.sellerService.ModifyFlurry(header, req);
-		LOGGER.info("Response > sellerKey : {}", res.getSellerKey());
+		LOGGER.info("Response : {}", res.getSellerKey());
 		return res;
 	}
 

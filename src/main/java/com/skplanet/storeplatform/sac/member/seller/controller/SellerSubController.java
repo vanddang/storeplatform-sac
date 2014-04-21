@@ -62,7 +62,7 @@ public class SellerSubController {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerId");
 		}
 		CreateSubsellerRes res = this.sellerSubService.createSubseller(header, req);
-		LOGGER.info("Response > subSellerKey : {}", res.getSubSellerKey());
+		LOGGER.info("Response : {}", res.getSubSellerKey());
 		return res;
 	}
 
@@ -87,7 +87,7 @@ public class SellerSubController {
 		}
 
 		UpdateSubsellerRes res = this.sellerSubService.updateSubseller(header, req);
-		LOGGER.info("Response > subSellerKey : {}", res.getSubSellerKey());
+		LOGGER.info("Response : {}", res.getSubSellerKey());
 		return res;
 	}
 
@@ -107,7 +107,7 @@ public class SellerSubController {
 	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		RemoveSubsellerRes res = this.sellerSubService.removeSubseller(header, req);
-		LOGGER.info("Response > RemoveCnt : {}", res.getRemoveCnt());
+		LOGGER.info("Response : {}", res.getRemoveCnt());
 		return res;
 	}
 
@@ -128,7 +128,7 @@ public class SellerSubController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		ListSubsellerRes res = this.sellerSubService.listSubseller(header, req);
-		LOGGER.info("Response > SubAccountCount : {}", res.getSubAccountCount());
+		LOGGER.info("Response : {}", res.getSubAccountCount());
 		return res;
 	}
 
@@ -148,7 +148,7 @@ public class SellerSubController {
 	public DetailSubsellerRes detailSubseller(SacRequestHeader header, @RequestBody @Validated DetailSubsellerReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		DetailSubsellerRes res = this.sellerSubService.detailSubseller(header, req);
-		LOGGER.info("Response > subSellerKey : {}", res.getSubSellerMbr().getSubSellerKey());
+		LOGGER.info("Response : {}", res.getSubSellerMbr().getSubSellerKey());
 		return res;
 	}
 

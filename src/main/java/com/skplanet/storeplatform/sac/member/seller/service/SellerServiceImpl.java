@@ -450,7 +450,7 @@ public class SellerServiceImpl implements SellerService {
 		// Response Debug
 		LOGGER.debug("==>>[SAC] AuthorizeRes.toString() : {}", res.toString());
 		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
-		LOGGER.info("{} : {}", res.getClass().getSimpleName(), ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.debug("{} : {}", res.getClass().getSimpleName(), ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
 

@@ -58,7 +58,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 		DetailInformationSacRes response = this.sellerSearchService.detailInformationList(requestHeader, request);
-		LOGGER.debug("Response > sellerMbr count {}", response.getSellerMbrListMap().size());
+		LOGGER.info("Response : {}", response.getSellerMbrListMap().size());
 		return response;
 
 	}
