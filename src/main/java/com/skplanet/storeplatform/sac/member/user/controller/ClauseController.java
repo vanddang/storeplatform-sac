@@ -43,7 +43,7 @@ public class ClauseController {
 	@ResponseBody
 	public ListClauseSacRes listClause(SacRequestHeader sacHeader) {
 
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(""));
+		LOGGER.info("Request : {}");
 
 		ListClauseSacRes res = this.svc.listClause(sacHeader);
 

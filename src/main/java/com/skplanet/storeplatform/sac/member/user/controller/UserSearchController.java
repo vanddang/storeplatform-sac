@@ -242,7 +242,7 @@ public class UserSearchController {
 		LOGGER.debug("##### 2.1.37. 각 단말의 OS별 누적 가입자 수 조회 #####");
 		LOGGER.debug("####################################################");
 
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(""));
+		LOGGER.info("Request : {}");
 
 		ListDailyPhoneOsSacRes dailyPhoneOsList = this.svc.listDailyPhoneOs(sacHeader);
 
