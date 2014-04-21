@@ -57,7 +57,7 @@ public class SellerSubController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(req.getSubSellerPw())) {
-			throw new StorePlatformException("SAC_MEM_0001", "subSellerPW");
+			throw new StorePlatformException("SAC_MEM_0001", "subSellerPw");
 		} else if (StringUtils.isBlank(req.getSubSellerId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerId");
 		}
