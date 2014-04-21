@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -51,6 +52,15 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 	@Autowired
 	private AppInfoGenerator appInfoGenerator;
 
+	@Value("#{propertiesForSac['web.poc.domain']}")
+	private String webPocDomain;
+
+	@Value("#{propertiesForSac['web.poc.game.detail.url']}")
+	private String webPocGameDetailUrl;
+
+	@Value("#{propertiesForSac['web.poc.apps.detail.url']}")
+	private String webPocAppsDetailUrl;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -65,14 +75,15 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 
 		String tenantId = tenantHeader.getTenantId();
 		String langCd = tenantHeader.getLangCd();
-		String imageCd = DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD;
-		String webPocUrl = DisplayConstants.DP_OPENAPI_APP_URL;
+		String imageCd = DisplayConstants.DP_APP_REPRESENT_IMAGE_CD;
+		String webPocGameUrl = this.webPocDomain + this.webPocGameDetailUrl;
+		String webPocAppsUrl = this.webPocDomain + this.webPocAppsDetailUrl;
 		String scUrl = DisplayConstants.DP_OPENAPI_SC_URL;
 		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
 
 		// appDetailByPackageNameSacReq.setTenantId(tenantHeader.getTenantId());
 		// appDetailByPackageNameSacReq.setLangCd(tenantHeader.getLangCd());
-		// appDetailByPackageNameSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
+		// appDetailByPackageNameSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 		// appDetailByPackageNameSacReq.setWebPocUrl(DisplayConstants.DP_OPENAPI_APP_URL);
 		// appDetailByPackageNameSacReq.setScUrl(DisplayConstants.DP_OPENAPI_SC_URL);
 
@@ -88,7 +99,8 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		this.log.debug("####### tenantId : " + tenantId);
 		this.log.debug("####### langCd : " + langCd);
 		this.log.debug("####### imageCd : " + imageCd);
-		this.log.debug("####### webPocUrl : " + webPocUrl);
+		this.log.debug("####### webPocGameUrl : " + webPocGameUrl);
+		this.log.debug("####### webPocAppsUrl : " + webPocAppsUrl);
 		this.log.debug("####### scUrl : " + scUrl);
 		this.log.debug("####### packageName : " + packageName);
 		this.log.debug("####### rshpCd : " + rshpCd);
@@ -130,7 +142,8 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		paramMap.put("tenantId", tenantId);
 		paramMap.put("langCd", langCd);
 		paramMap.put("imageCd", imageCd);
-		paramMap.put("webPocUrl", webPocUrl);
+		paramMap.put("webPocGameUrl", webPocGameUrl);
+		paramMap.put("webPocAppsUrl", webPocAppsUrl);
 		paramMap.put("scUrl", scUrl);
 		paramMap.put("productId", productId);
 		paramMap.put("rshpCd", rshpCd);

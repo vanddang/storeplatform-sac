@@ -75,7 +75,7 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 
 		newAppRecommendSacReq.setTenantId(tenantHeader.getTenantId());
 		newAppRecommendSacReq.setLangCd(tenantHeader.getLangCd());
-		newAppRecommendSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
+		newAppRecommendSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 		newAppRecommendSacReq.setPreviewImagecd(DisplayConstants.DP_OPENAPI_APP_PREVIEW_IMAGE_CD);
 
 		NewAppRecommendSacRes response = new NewAppRecommendSacRes();

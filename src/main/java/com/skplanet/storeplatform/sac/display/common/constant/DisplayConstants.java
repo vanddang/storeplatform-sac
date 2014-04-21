@@ -352,8 +352,6 @@ public class DisplayConstants {
 
 	public static final String DP_SHOPPING_REPRESENT_DETAIL_IMAGE_CD = "DP0001B4";
 
-	public static final String DP_OPENAPI_APP_REPRESENT_IMAGE_CD = "DP000125";
-
 	public static final String DP_OPENAPI_APP_PREVIEW_IMAGE_CD = "DP000116";
 
 	// 정액제 배너이미지
@@ -659,7 +657,7 @@ public class DisplayConstants {
 	/**
 	 * OPENAPI APP URL
 	 */
-	public static final String DP_OPENAPI_APP_URL = "http://www.tstore.co.kr/userpoc/game/viewProduct.omp?insDpCatNo=";
+	public static final String DP_OPENAPI_APP_URL = "http://www.tstore.co.kr/userpoc/game/view?pid=";
 
 	public static final String DP_OPENAPI_SC_URL = "http://tsto.re/";
 

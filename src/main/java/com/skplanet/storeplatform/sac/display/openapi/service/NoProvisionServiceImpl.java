@@ -61,7 +61,7 @@ public class NoProvisionServiceImpl implements NoProvisionService {
 
 		String tenantId = tenantHeader.getTenantId();
 		String langCd = tenantHeader.getLangCd();
-		String imageCd = DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD;
+		String imageCd = DisplayConstants.DP_APP_REPRESENT_IMAGE_CD;
 		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
 
 		NoProvisionSacRes response = new NoProvisionSacRes();

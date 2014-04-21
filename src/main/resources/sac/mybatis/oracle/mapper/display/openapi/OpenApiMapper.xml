@@ -1916,18 +1916,11 @@
                PRODDESC.PROD_NM
               ,PROD.EXPO_SELLER_NM
 		      ,PRODDESC.PROD_BASE_DESC
-		      ,(   #{appUrl}
-		        || PROD.TOP_MENU_ID
-		        || CHR (38)
-		        || 'insProdId='
-		        || PROD.PROD_ID
-		        || CHR (38)
-		        || 'prodGrdCd='
-		        || PROD.PROD_GRD_CD
-		        || CHR (38)
-		        || 't_top='
-		        || PROD.TOP_MENU_ID)
-		          AS WEB_URL
+		      
+		      ,(CASE WHEN PROD.TOP_MENU_ID = 'DP01' THEN #{gameUrl} || PROD.PROD_ID
+		            ELSE #{appUrl} || PROD.PROD_ID
+               END) AS WEB_URL
+
 		      ,PROD.REG_DT
 		      ,APPPROD.AID
 		      ,IMG.FILE_PATH AS IMAGE_PATH
@@ -1942,7 +1935,7 @@
 	       AND IMG.EXPO_ORD = '1'
 	       AND IMG.LANG_CD = #{tenantHeader.langCd}
 	       AND  (APPPROD.PART_PARENT_CLSF_CD = 'PD012301' OR APPPROD.PART_PARENT_CLSF_CD is null)
-	      <if test='admin != "Y"'>
+	      <if test='req.admin != "Y"'>
            AND  PROD.REG_ID = #{req.sellerId}
            AND  PROD.SELLER_MBR_NO = #{req.sellerKey}
           </if>
@@ -2199,17 +2192,9 @@
                     ) AS PREVIEW_URL
                 , (
                     SELECT
-                        #{webPocUrl}
-                        || MCPM.MENU_ID
-                        || CHR (38)
-                        || 'insProdId='
-                        || DP.PROD_ID
-                        || CHR (38)
-                        || 'prodGrdCd='
-                        || DP.PROD_GRD_CD
-                        || CHR (38)
-                        || 't_top='
-                        || DP.TOP_MENU_ID
+		               CASE WHEN DP.TOP_MENU_ID = 'DP01' THEN #{webPocGameUrl} || DP.PROD_ID
+		                    ELSE #{webPocAppsUrl} || DP.PROD_ID
+		               END
                     FROM
                         TB_DP_PROD_RSHP DPR, TB_DP_MENU_CATEGORY_PROD_MAPG MCPM
                     WHERE

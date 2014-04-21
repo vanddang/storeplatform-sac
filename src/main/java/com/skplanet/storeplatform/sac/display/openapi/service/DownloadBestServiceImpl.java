@@ -76,7 +76,7 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 
 		downloadBestSacReq.setTenantId(tenantHeader.getTenantId());
 		downloadBestSacReq.setLangCd(tenantHeader.getLangCd());
-		downloadBestSacReq.setImageCd(DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
+		downloadBestSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 
 		DownloadBestSacRes response = new DownloadBestSacRes();
 		CommonResponse commonResponse = new CommonResponse();

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -47,6 +48,15 @@ public class SellerAppDetailServiceImpl implements SellerAppDetailService {
 	@Autowired
 	private AppInfoGenerator appGenerator;
 
+	@Value("#{propertiesForSac['web.poc.domain']}")
+	private String webPocDomain;
+
+	@Value("#{propertiesForSac['web.poc.game.detail.url']}")
+	private String webPocGameDetailUrl;
+
+	@Value("#{propertiesForSac['web.poc.apps.detail.url']}")
+	private String webPocAppsDetailUrl;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -66,8 +76,9 @@ public class SellerAppDetailServiceImpl implements SellerAppDetailService {
 		paramMap.put("tenantHeader", tenantHeader);
 		paramMap.put("req", req);
 		paramMap.put("partClsfCd", DisplayConstants.DP_PART_PARENT_CLSF_CD);
-		paramMap.put("appUrl", DisplayConstants.DP_OPENAPI_APP_URL);
-		paramMap.put("imageCd", DisplayConstants.DP_OPENAPI_APP_REPRESENT_IMAGE_CD);
+		paramMap.put("gameUrl", this.webPocDomain + this.webPocGameDetailUrl);
+		paramMap.put("appUrl", this.webPocDomain + this.webPocAppsDetailUrl);
+		paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 		MetaInfo metaInfo = this.commonDAO.queryForObject("OpenApi.getAppDetail", paramMap, MetaInfo.class);
 
 		if (metaInfo != null) {
