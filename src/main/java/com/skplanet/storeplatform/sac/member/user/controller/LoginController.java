@@ -60,11 +60,11 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
-		LOGGER.info("요청 : Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdn(requestHeader, req);
 
-		LOGGER.info("응답 : Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 	}
@@ -82,11 +82,11 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
-		LOGGER.info("요청 : Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdnV2(requestHeader, req);
 
-		LOGGER.info("응답 : Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -105,11 +105,11 @@ public class LoginController {
 	@ResponseBody
 	public CheckVariabilityRes checkVariability(SacRequestHeader requestHeader, @Valid @RequestBody CheckVariabilityReq req) {
 
-		LOGGER.info("요청 : Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		CheckVariabilityRes res = this.loginService.executCheckVariability(requestHeader, req);
 
-		LOGGER.info("응답 : Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -128,11 +128,11 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) {
 
-		LOGGER.info("요청 : Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeByIdRes res = this.loginService.executeAuthorizeById(requestHeader, req);
 
-		LOGGER.info("응답 : Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -152,11 +152,11 @@ public class LoginController {
 	@Deprecated
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSimpleByMdnReq req) {
 
-		LOGGER.info("요청 : Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeSimpleByMdnRes res = this.loginService.executeAuthorizeSimpleByMdn(requestHeader, req);
 
-		LOGGER.info("응답 : Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
@@ -177,11 +177,11 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
 
-		LOGGER.info("요청 : Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeSaveAndSyncByMacRes res = this.loginService.executeAuthorizeSaveAndSyncByMac(requestHeader, req);
 
-		LOGGER.info("응답 : Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 
