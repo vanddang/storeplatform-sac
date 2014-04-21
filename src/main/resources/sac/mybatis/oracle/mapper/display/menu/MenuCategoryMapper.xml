@@ -172,7 +172,7 @@
             , A.UPD_ID 
             , A.UPD_DT  
 		FROM (
-		    SELECT 
+		    SELECT /*+ index(A PK_DP_TENANT_MENU) */
 		         NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
 		        , A.TENANT_ID 
 		        , A.TENANT_MENU_ID AS MENU_ID 
@@ -207,7 +207,8 @@
 		        , A.REG_DT 
 		        , A.UPD_ID 
 		        , A.UPD_DT  
-                , ( SELECT CASE WHEN MENU_DEPTH = 1 THEN 0 ELSE EXPO_ORD END EXPO_ORD
+                , ( SELECT /*+ index_ss(TB_DP_TENANT_MENU PK_DP_TENANT_MENU) */ 
+                        CASE WHEN MENU_DEPTH = 1 THEN 0 ELSE EXPO_ORD END EXPO_ORD
                     FROM TB_DP_TENANT_MENU
                     WHERE TENANT_MENU_ID = SUBSTR(A.TENANT_MENU_ID, 0, 7 )
                     AND SYSTEM_ID = A.SYSTEM_ID) AS RNK1
@@ -219,7 +220,7 @@
 		        TB_DP_TENANT_MENU A
 		        , TB_DP_MENU_CATEGORY B
 		        , (
-		                SELECT 
+		                SELECT /*+ leading(f c b e) use_nl(A) */
 		                    C.MENU_ID
 		                    , COUNT(C.MENU_ID) MENU_PROD_CNT
 		                FROM
