@@ -379,10 +379,8 @@ public class LoginServiceImpl implements LoginService {
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		String isVariability = "Y"; // 변동성 체크 성공 유무
+		String isSaveAndSyncTarget = "N"; // 변동성 mdn 유무
 		String userKey = null;
-		String isSaveAndSyncTarget = null; // 변동성 mdn 유무
-
-		LOGGER.info("{} 회원 여부 : {}", req.getDeviceId(), chkDupRes.getIsRegistered());
 
 		if (StringUtil.equals(chkDupRes.getIsRegistered(), "Y")) {
 
@@ -433,10 +431,10 @@ public class LoginServiceImpl implements LoginService {
 
 			userKey = saveAndSync.getUserKey();
 		}
-		LOGGER.info("{} 변동성 여부 : {}", req.getDeviceId(), isSaveAndSyncTarget);
-		LOGGER.info("{} 변동성 체크 성공 여부 : {}", req.getDeviceId(), isVariability);
 
 		if (StringUtil.equals(isVariability, "Y")) {
+
+			LOGGER.info("{} 변동성 체크 성공", req.getDeviceId());
 
 			/* 휴대기기 정보 수정 (통신사, GMAIL) */
 			DeviceInfo paramDeviceInfo = new DeviceInfo();
@@ -453,12 +451,14 @@ public class LoginServiceImpl implements LoginService {
 
 		} else {
 
+			LOGGER.info("{} 변동성 체크 실패", req.getDeviceId());
+
 			/* 인증수단 조회 */
 			UserAuthMethod userAuthMethod = this.searchUserAuthMethod(requestHeader, req.getDeviceId(), userKey);
 
 			if (StringUtil.isBlank(userAuthMethod.getUserId()) && StringUtil.equals(userAuthMethod.getIsRealName(), "N")) { // 인증수단이 없는경우
 
-				LOGGER.info("{} 추가인증수단 없음, IDP/SC회원 탈퇴처리", req.getDeviceId());
+				LOGGER.info("{} 추가인증수단 없음, 탈퇴처리", req.getDeviceId());
 
 				/* SC회원탈퇴 */
 				RemoveUserRequest removeUserReq = new RemoveUserRequest();
@@ -885,7 +885,7 @@ public class LoginServiceImpl implements LoginService {
 			newDeviceKey = mdnDeviceInfo.getDeviceKey();
 			newUserKey = mdnDeviceInfo.getUserKey();
 
-			LOGGER.info("{} 기가입된 MDN, 구매이관 대상", req.getDeviceId());
+			LOGGER.info("{} 기가입된 deviceId", req.getDeviceId());
 
 		} else { // 회원이 아닌경우 변동성 대상체크
 
@@ -896,8 +896,6 @@ public class LoginServiceImpl implements LoginService {
 				isVariability = "Y";
 				newDeviceKey = saveAndSync.getDeviceKey();
 				newUserKey = saveAndSync.getUserKey();
-
-				LOGGER.info("{} 변동성 대상 MDN, 구매이관 대상", req.getDeviceId());
 
 			} else { // 변동성 대상이 아닌 경우
 
@@ -921,6 +919,7 @@ public class LoginServiceImpl implements LoginService {
 			removeUserRequest.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
 			removeUserRequest.setSecedeReasonMessage("Save&Sync인증탈퇴");
 			this.userSCI.remove(removeUserRequest);
+			LOGGER.info("{} 탈퇴 처리", req.getMacAddress());
 
 			/* 휴대기기 정보 수정 */
 			DeviceInfo deviceInfo = new DeviceInfo();
@@ -962,6 +961,7 @@ public class LoginServiceImpl implements LoginService {
 		} else if (StringUtil.equals(isJoinMdn, "Y")) {
 
 			/* IDP 모바일전용회원 가입 */
+			LOGGER.info("{} IDP 모바일 회원 가입 요청", req.getDeviceId());
 			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 			joinForWapEcReq.setUserMdn(req.getDeviceId());
 			joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT);
@@ -994,6 +994,7 @@ public class LoginServiceImpl implements LoginService {
 					MemberConstants.SUB_STATUS_NORMAL);
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
+			LOGGER.info("{} -> {} deviceId 변경", req.getMacAddress(), req.getDeviceId());
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setUserKey(oldUserKey);
 			deviceInfo.setDeviceKey(oldDeviceKey);
@@ -1022,6 +1023,7 @@ public class LoginServiceImpl implements LoginService {
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 			/* mbrNo 변경 */
+			LOGGER.info("{} 신규가입한 IDP userKey 업데이트 newMbrNo={}", req.getDeviceId(), joinForWapEcRes.getUserKey());
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserKey(oldUserKey);
 			userMbr.setImMbrNo(joinForWapEcRes.getUserKey());
@@ -1225,9 +1227,9 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setIsMobile(isMobile);
 		loginReq.setIsAutoLogin(StringUtil.equals(isAutoUpdate, "Y") ? isAutoUpdate : "N");
 
-		//		if(StringUtil.isNotBlank(loginReason)){
-		//			loginReq.setLoginReason(loginReason);
-		//		}
+		if (StringUtil.isNotBlank(loginReason)) {
+			loginReq.setLoginReason(loginReason);
+		}
 
 		String svcVersion = requestHeader.getDeviceHeader().getSvc();
 		if (StringUtil.isNotBlank(svcVersion)) {

@@ -1406,6 +1406,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		GameCenterSacRes gameCenterSacRes = new GameCenterSacRes();
 		gameCenterSacRes.setUserKey(gameCenterSacReq.getUserKey());
+
 		return gameCenterSacRes;
 
 	}
