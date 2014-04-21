@@ -191,7 +191,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 로그인 성공이력 저장 */
-		this.insertLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), req.getIsAutoUpdate());
+		this.insertLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), req.getIsAutoUpdate(), req.getLoginReason());
 
 		/* 일시정지 인경우 (로그인제한상태 / 직권중지상태는 MDN로그인시는 샵클 정상이용가능하게 해야하므로 체크하지 않음) */
 		if (StringUtil.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_PAUSE)) {
@@ -329,7 +329,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 로그인 성공이력 저장 */
-		this.insertLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), req.getIsAutoUpdate());
+		this.insertLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), req.getIsAutoUpdate(), req.getLoginReason());
 
 		/* 일시정지 인경우 (로그인제한상태 / 직권중지상태는 MDN로그인시는 샵클 정상이용가능하게 해야하므로 체크하지 않음) */
 		if (StringUtil.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_PAUSE)) {
@@ -677,7 +677,7 @@ public class LoginServiceImpl implements LoginService {
 				if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
-					LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N");
+					LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N", null);
 
 					/* 로그인 결과 */
 					res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
@@ -729,7 +729,7 @@ public class LoginServiceImpl implements LoginService {
 				if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
-					LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N");
+					LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N", null);
 
 					/* 로그인 결과 */
 					res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
@@ -752,7 +752,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 로그인 성공이력 저장 */
-		this.insertLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N");
+		this.insertLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null);
 
 		/* 일시정지 / 로그인제한 / 직권중지 상태인 경우 */
 		if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
@@ -1206,10 +1206,12 @@ public class LoginServiceImpl implements LoginService {
 	 *            클라이언트 ip
 	 * @param isAutoUpdate
 	 *            자동업데이트여부
+	 * @param loginReason
+	 *            로그인 사유
 	 * @return LoginUserResponse
 	 */
 	private LoginUserResponse insertLoginHistory(SacRequestHeader requestHeader, String userId, String userPw, String isSuccess, String isMobile,
-			String ipAddress, String isAutoUpdate) {
+			String ipAddress, String isAutoUpdate, String loginReason) {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
@@ -1222,8 +1224,12 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setIsOneID("Y");
 		loginReq.setIsMobile(isMobile);
 		loginReq.setIsAutoLogin(StringUtil.equals(isAutoUpdate, "Y") ? isAutoUpdate : "N");
-		String svcVersion = requestHeader.getDeviceHeader().getSvc();
 
+		//		if(StringUtil.isNotBlank(loginReason)){
+		//			loginReq.setLoginReason(loginReason);
+		//		}
+
+		String svcVersion = requestHeader.getDeviceHeader().getSvc();
 		if (StringUtil.isNotBlank(svcVersion)) {
 			loginReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
 		}
