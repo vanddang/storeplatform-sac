@@ -107,7 +107,7 @@ public class SellerSubController {
 	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		RemoveSubsellerRes res = this.sellerSubService.removeSubseller(header, req);
-		LOGGER.info("Response : {}", res.getRemoveCnt());
+		LOGGER.info("Response : remove count : {}", res.getRemoveCnt());
 		return res;
 	}
 
@@ -128,7 +128,7 @@ public class SellerSubController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		ListSubsellerRes res = this.sellerSubService.listSubseller(header, req);
-		LOGGER.info("Response : {}", res.getSubAccountCount());
+		LOGGER.info("Response : {}, subSeller count : {}", res.getSellerKey(), res.getSubAccountCount());
 		return res;
 	}
 
