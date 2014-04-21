@@ -264,7 +264,7 @@ public class SellerController {
 	public LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		LockAccountRes res = this.sellerService.lockAccount(header, req);
-		LOGGER.info("Response : {}", res.getSellerId());
+		LOGGER.info("Response : sellerId : {}", res.getSellerId());
 		return res;
 	}
 
