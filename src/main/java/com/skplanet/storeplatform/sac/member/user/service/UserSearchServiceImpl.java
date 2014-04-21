@@ -458,8 +458,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchIdSacRes res = new SearchIdSacRes();
 		res.setSearchIdList(sacList);
 
-		LOGGER.debug("SearchIdSacRes : ", res.toString());
-
 		return res;
 	}
 
@@ -591,8 +589,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 			res.setUserPw("");
 			res.setSendMean("03");
 		}
-
-		LOGGER.info("SearchIdSacRes : ", res.toString());
 
 		return res;
 	}
@@ -1393,8 +1389,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
-	 * searchUserByDeviceKey(com.skplanet.storeplatform .sac.client.member.vo.user.SearchUserDeviceReq)
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByDeviceKey(com.skplanet.storeplatform
+	 * .sac.client.member.vo.user.SearchUserDeviceReq)
 	 */
 	@Override
 	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceReq request) {
