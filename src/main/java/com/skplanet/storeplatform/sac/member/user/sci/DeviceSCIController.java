@@ -66,7 +66,7 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 		}
 
-		LOGGER.info("Response > deviceId : {}", response.getDeviceId());
+		LOGGER.info("Response : {}", response.getDeviceId());
 		return response;
 	}
 
@@ -93,7 +93,7 @@ public class DeviceSCIController implements DeviceSCI {
 		}
 
 		ChangedDeviceHistorySacRes response = this.deviceService.searchChangedDeviceHistory(requestHeader, request);
-		LOGGER.info("Response > isChanged : {}", response.getIsChanged());
+		LOGGER.info("Response : {}", response.getIsChanged());
 		return response;
 
 	}
