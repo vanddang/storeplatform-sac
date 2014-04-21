@@ -119,7 +119,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 		/* SC 회원 존재 여부 */
 		SearchUserResponse schUserRes = this.searchUser(requestHeader, req);
-		logger.info("schUserRes ", schUserRes.toString());
 
 		/* Return Value */
 		WithdrawRes withdrawRes = new WithdrawRes();

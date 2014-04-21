@@ -43,9 +43,11 @@ public class ClauseController {
 	@ResponseBody
 	public ListClauseSacRes listClause(SacRequestHeader sacHeader) {
 
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(""));
+
 		ListClauseSacRes res = this.svc.listClause(sacHeader);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getClauseList().get(0).getClauseItemCd()));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getClauseList().size()));
 
 		return res;
 	}
@@ -70,7 +72,7 @@ public class ClauseController {
 
 		DetailClauseSacRes res = this.svc.detailClauseList(req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDetailClauseList().get(0).getClauseItemCd()));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDetailClauseList().size()));
 
 		return res;
 	}

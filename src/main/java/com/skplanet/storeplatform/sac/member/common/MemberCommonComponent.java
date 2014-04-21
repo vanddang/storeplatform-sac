@@ -263,7 +263,7 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(keyValue));
+		LOGGER.info("회원기본정보조회 Request : {}", ConvertMapperUtils.convertObjectToJson(keyValue));
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
 		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -298,7 +298,7 @@ public class MemberCommonComponent {
 		// 사용자 정보 세팅
 		UserInfo userInfo = this.userInfo(schUserRes);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(userInfo.getUserKey()));
+		LOGGER.info("회원기본정보조회 Response : {}", ConvertMapperUtils.convertObjectToJson(userInfo.getUserKey()));
 
 		return userInfo;
 	}
@@ -317,7 +317,7 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public DetailRes getUserDetailInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(keyValue));
+		LOGGER.info("회원상세정보조회 Request : {}", ConvertMapperUtils.convertObjectToJson(keyValue));
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
 		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -385,7 +385,7 @@ public class MemberCommonComponent {
 		/* 징계정보 세팅 */
 		detailRes.setUserMbrPnsh(mbrPnsh);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(detailRes.getUserKey()));
+		LOGGER.info("회원상세정보조회 Response : {}", ConvertMapperUtils.convertObjectToJson(detailRes.getUserKey()));
 
 		return detailRes;
 	}
@@ -592,7 +592,7 @@ public class MemberCommonComponent {
 	 */
 	public UserExtraInfoRes getUserExtraInfo(String userKey, SacRequestHeader sacHeader) {
 
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(userKey));
+		LOGGER.info("회원부가정보조회 Request : {}", ConvertMapperUtils.convertObjectToJson(userKey));
 
 		DetailReq req = new DetailReq();
 		req.setUserKey(userKey);
@@ -632,7 +632,7 @@ public class MemberCommonComponent {
 
 		UserExtraInfoRes res = extraRes;
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
+		LOGGER.info("회원부가정보조회 Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
 
 		return res;
 	}
