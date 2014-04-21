@@ -188,7 +188,7 @@ public class MiscellaneousController {
 
 		LOGGER.info("Request :");
 		GetCaptchaRes response = this.service.getCaptcha();
-		LOGGER.info("Response : {}", response.getImageSign());
+		LOGGER.info("Response : imageSign : {}", response.getImageSign());
 		return response;
 	}
 
@@ -273,7 +273,7 @@ public class MiscellaneousController {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
 		CreateAdditionalServiceRes response = this.service.createAdditionalService(request);
-		LOGGER.info("Response : {}", response.getMsisdn());
+		LOGGER.info("Response : msisdn : {}", response.getMsisdn());
 		return response;
 	}
 
@@ -296,7 +296,7 @@ public class MiscellaneousController {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
 		GetAdditionalServiceRes response = this.service.getAdditionalService(request);
-		LOGGER.info("Response : {}", response.getSvcJoinResult());
+		LOGGER.info("Response : join result : {}", response.getSvcJoinResult());
 		return response;
 	}
 
@@ -365,7 +365,7 @@ public class MiscellaneousController {
 			@RequestBody @Validated GetIndividualPolicyReq request) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		GetIndividualPolicyRes response = this.service.getIndividualPolicy(header, request);
-		LOGGER.info("Response : {}", response.getPolicyList().size());
+		LOGGER.info("Response : policy count : {}", response.getPolicyList().size());
 		return response;
 	}
 
