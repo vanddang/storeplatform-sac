@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.TenantStatus;
  * 인증
  *
  * Updated on : 2014. 2.05. Updated by : 임근대, SK 플래닛.
+ * Last Updated on : 2014. 4. 21. Updated by : 서대영, SK 플래닛.
  */
 @Service
 public class AuthenticateServiceImpl implements AuthenticateService {
@@ -112,22 +113,21 @@ public class AuthenticateServiceImpl implements AuthenticateService {
      */
     @Override
     public void checkAuthKeyInfo(AuthKey authKeyInfo) throws StorePlatformException {
-        // 1.1. AuthKey 데이터 존재 여부 체크
-        if(authKeyInfo == null || StringUtils.isBlank(authKeyInfo.getAuthKey())) {
-            // 인증키 정보 없음
-            throw new StorePlatformException("SAC_CMN_0031");
+    	String authKey = authKeyInfo == null ? "" : authKeyInfo.getAuthKey();
+
+    	// 1.1. AuthKey 존재 여부 체크
+        if(StringUtils.isBlank(authKey)) {
+            throw new StorePlatformException("SAC_CMN_0031", authKey);
         }
 
         // 1.2. AuthKey 상태 체크
         if(authKeyInfo.getStatus() != AuthKeyStatus.AVAILABLE) {
-            // 인증키가 유효하지 않음
-            throw new StorePlatformException("SAC_CMN_0032");
+            throw new StorePlatformException("SAC_CMN_0032", authKey);
         }
 
         // 1.3. AuthKey 사용기간 체크
         if(!StringUtils.equals("Y", authKeyInfo.getUsableDateYn())) {
-            // 기간 만료
-            throw new StorePlatformException("SAC_CMN_0033");
+            throw new StorePlatformException("SAC_CMN_0033", authKey);
         }
     }
 
@@ -163,13 +163,12 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
         // 2.1. Tenant 데이터 존재 여부 체크
         if(tenant ==  null || StringUtils.isBlank(tenant.getTenantId())) {
-			throw new StorePlatformException("SAC_CMN_0034");
+			throw new StorePlatformException("SAC_CMN_0034", tenantId);
         }
 
         // 2.2. Tenant 상태 체크
         if(tenant.getStatus() != TenantStatus.AVAILABLE) {
-            //Tenant 상태가 유효하지 않음.
-			throw new StorePlatformException("SAC_CMN_0035");
+			throw new StorePlatformException("SAC_CMN_0035", tenantId);
         }
 
     }
@@ -201,13 +200,13 @@ public class AuthenticateServiceImpl implements AuthenticateService {
         // 3.1. System 데이터 존재 여부 체크
         if(dbSystem == null || StringUtils.isBlank(dbSystem.getSystemId())) {
             // System 정보가 없음
-            throw new StorePlatformException("SAC_CMN_0036");
+            throw new StorePlatformException("SAC_CMN_0036", systemId);
         }
 
         // 3.2. System 상태 체크
         if(dbSystem.getStatus() != SystemStatus.AVAILABLE) {
             // System 상태가 유효하지 않음.
-            throw new StorePlatformException("SAC_CMN_0037");
+            throw new StorePlatformException("SAC_CMN_0037", systemId);
         }
 
         return dbSystem;
