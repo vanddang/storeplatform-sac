@@ -662,7 +662,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		inicisAuthAccountEcReq.setAcctNo(request.getBankAccount());
 
 		InicisAuthAccountEcRes inicisAuthAccountEcRes = this.inicisSCI.authAccount(inicisAuthAccountEcReq);
-		LOGGER.info("## 계좌인증 성공. Inicis ResultCode : {}", inicisAuthAccountEcRes.getResultCode());
+		LOGGER.debug("## 계좌인증 성공. Inicis ResultCode : {}", inicisAuthAccountEcRes.getResultCode());
 
 		return new AuthorizeAccountRes();
 
