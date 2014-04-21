@@ -55,6 +55,11 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	private String isAutoUpdate;
 
 	/**
+	 * 로그인 사유.
+	 */
+	private String loginReason;
+
+	/**
 	 * 휴대기기 부가정보 리스트.
 	 */
 	private List<DeviceExtraInfo> deviceExtraInfoList;
@@ -177,6 +182,21 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	 */
 	public void setIsNativeIdAuth(String isNativeIdAuth) {
 		this.isNativeIdAuth = isNativeIdAuth;
+	}
+
+	/**
+	 * @return loginReason
+	 */
+	public String getLoginReason() {
+		return this.loginReason;
+	}
+
+	/**
+	 * @param loginReason
+	 *            String
+	 */
+	public void setLoginReason(String loginReason) {
+		this.loginReason = loginReason;
 	}
 
 }
