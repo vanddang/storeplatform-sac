@@ -58,7 +58,6 @@ public class HistoryListController {
 	public HistoryListSacRes searchHistoryList(@RequestBody @Validated HistoryListSacReq request,
 			SacRequestHeader sacRequestHeader) {
 
-		// this.purchaseCommonUtils.getBindingValid(bindingResult);
 		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
 		return this.historyListService.searchHistoryList(request);
@@ -78,7 +77,6 @@ public class HistoryListController {
 	public HistoryCountSacRes searchHistoryCount(@RequestBody HistoryCountSacReq request,
 			SacRequestHeader sacRequestHeader) {
 
-		// this.purchaseCommonUtils.getBindingValid(bindingResult);
 		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
 		return this.historyListService.searchHistoryCount(request);
