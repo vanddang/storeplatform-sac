@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
@@ -1650,7 +1649,7 @@ public class IdpServiceImpl implements IdpService {
 
 		String idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
-		String delYN = "N";
+		String delYN = "Y";
 		UserMbr getUserMbr = null;
 		try {
 			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
@@ -1681,15 +1680,16 @@ public class IdpServiceImpl implements IdpService {
 				imResult.setResultText(idpResultText);
 				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 				imResult.setUserId(userId);
-				imResult.setIsCancelAble(delYN);
-				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
-						LocaleContextHolder.getLocale());
-				String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
-				LOGGER.debug("rXPreCheckDeleteUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
-				imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
-				imResult.setTermRsnCd(IdpConstants.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
-				imResult.setCancelEtc("(" + userId + ")" + IdpConstants.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
-
+				imResult.setIsCancelAble(delYN); // delYn 이 N이면 필수이기 때문에 Y로 셋팅 하단 셋팅 안함.
+				/*
+				 * String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
+				 * LocaleContextHolder.getLocale()); String cancelUrl =
+				 * this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
+				 * LOGGER.debug("rXPreCheckDeleteUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
+				 * imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
+				 * imResult.setTermRsnCd(IdpConstants.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE); imResult.setCancelEtc("("
+				 * + userId + ")" + IdpConstants.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
+				 */
 			}
 
 		}
@@ -1729,7 +1729,7 @@ public class IdpServiceImpl implements IdpService {
 
 		String idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
-		String delYN = "N";
+		String delYN = "Y";
 		UserMbr getUserMbr = null;
 		try {
 			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
@@ -1760,14 +1760,15 @@ public class IdpServiceImpl implements IdpService {
 				imResult.setResultText(idpResultText);
 				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 				imResult.setUserId(userId);
-				imResult.setIsCancelAble(delYN);
-				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
-						LocaleContextHolder.getLocale());
-				String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
-				LOGGER.debug("RXPreCheckDisagreeUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
-				imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
-				imResult.setTermRsnCd(IdpConstants.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
-				imResult.setCancelEtc("(" + userId + ")" + IdpConstants.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
+				imResult.setIsCancelAble(delYN); // delYn 이 N이면 필수이기 때문에 Y로 셋팅 하단 셋팅 안함.
+				// String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
+				// LocaleContextHolder.getLocale());
+				// String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl",
+				// LocaleContextHolder.getLocale());
+				// LOGGER.debug("RXPreCheckDisagreeUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
+				// imResult.setCancelRetUrl("");
+				// imResult.setTermRsnCd(IdpConstants.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
+				// imResult.setCancelEtc("(" + userId + ")" + IdpConstants.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
 			}
 		}
 
