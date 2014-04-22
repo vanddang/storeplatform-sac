@@ -508,6 +508,16 @@
             , TP.PROD_STATUS_CD
             , P.REG_DT
             , P.SELLER_MBR_NO
+            , PD.PROD_BASE_DESC
+            , NVL(PS.PATICPERS_CNT, 0) AS PATICPERS_CNT
+            , NVL(PS.PRCHS_CNT, 0) AS PRCHS_CNT
+            <![CDATA[       
+            , NVL((CASE WHEN (PS.AVG_EVLU_SCORE > 0 AND PS.AVG_EVLU_SCORE < 1) THEN 1
+                        WHEN PS.AVG_EVLU_SCORE > 5 THEN 5
+                        ELSE ROUND(PS.AVG_EVLU_SCORE, 1) 
+                    END)
+                 , 0) AS AVG_EVLU_SCORE
+            ]]>  
          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
             , P2.CID     -- 채널 상품 ID 조회       
          </if>
@@ -533,6 +543,7 @@
             , TB_DP_PROD P2
             , TB_DP_TENANT_PROD TP2
             , TB_DP_PROD_IMG PI
+            , TB_DP_TENANT_PROD_STATS PS
         WHERE MP.PROD_ID = CP.PART_PROD_ID
           AND P.PROD_ID = CP.PART_PROD_ID
           AND CPM.PROD_ID = CP.PROD_ID
@@ -574,6 +585,8 @@
           AND TP.TENANT_ID = #{tenantHeader.tenantId}
           AND PD.LANG_CD = #{tenantHeader.langCd}
           AND CD.LANG_CD = #{tenantHeader.langCd}
+          AND TP2.PROD_ID = PS.PROD_ID(+)
+          AND TP2.TENANT_ID = PS.TENANT_ID(+)
           AND ROWNUM = 1
        
     </select>
