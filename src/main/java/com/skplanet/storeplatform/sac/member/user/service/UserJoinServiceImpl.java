@@ -260,7 +260,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
 		AgreeUserEcRes agreeUserEcRes = this.imIdpSCI.agreeUser(agreeUserEcReq);
 
-		LOGGER.info("## >> joinSstList : {}", agreeUserEcRes.getJoinSstList());
+		LOGGER.info("joinSstList : {}", agreeUserEcRes.getJoinSstList());
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -373,7 +373,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
 		AgreeUserEcRes agreeUserEcRes = this.imIdpSCI.agreeUser(agreeUserEcReq);
 
-		LOGGER.info("## >> joinSstList : {}", agreeUserEcRes.getJoinSstList());
+		LOGGER.info("joinSstList : {}", agreeUserEcRes.getJoinSstList());
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -911,7 +911,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 				}
 
-				LOGGER.info(">> ## ICAS 연동 [icasImei={}]", icasImei);
+				LOGGER.info("ICAS 연동 [icasImei={}]", icasImei);
 				if (!StringUtils.equals(icasImei, req.getNativeId())) {
 					throw new StorePlatformException("SAC_MEM_1503");
 				}
@@ -1216,7 +1216,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		} catch (StorePlatformException spe) {
 
-			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
+			LOGGER.info("미동의 회원정보 업데이트 실패....Skip...........");
 
 		}
 
