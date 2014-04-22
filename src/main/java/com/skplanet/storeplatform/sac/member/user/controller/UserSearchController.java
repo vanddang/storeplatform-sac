@@ -183,7 +183,7 @@ public class UserSearchController {
 
 		SearchIdSacRes res = this.svc.searchId(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getSearchIdList().get(0).getImSvcNo()));
+		LOGGER.info("Response ID : {}", ConvertMapperUtils.convertObjectToJson(res.getSearchIdList().get(0).getUserId()));
 
 		return res;
 	}
@@ -208,7 +208,7 @@ public class UserSearchController {
 
 		SearchPasswordSacRes res = this.svc.searchPassword(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getSendMean()));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson("SUCC"));
 
 		return res;
 	}
