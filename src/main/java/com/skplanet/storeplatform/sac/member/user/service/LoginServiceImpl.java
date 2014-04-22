@@ -997,7 +997,7 @@ public class LoginServiceImpl implements LoginService {
 					MemberConstants.SUB_STATUS_NORMAL);
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
-			LOGGER.info("{} macAddress -> {} 변경", req.getDeviceId(), req.getMacAddress(), req.getDeviceId());
+			LOGGER.info("{} {} -> {} 변경", req.getDeviceId(), req.getMacAddress(), req.getDeviceId());
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setUserKey(oldUserKey);
 			deviceInfo.setDeviceKey(oldDeviceKey);
