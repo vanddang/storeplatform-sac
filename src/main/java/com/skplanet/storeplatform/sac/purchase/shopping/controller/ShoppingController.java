@@ -67,18 +67,7 @@ public class ShoppingController {
 	@RequestMapping(value = "/getCouponUseStatus/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CouponUseStatusSacRes getCouponUseStatus(SacRequestHeader sacRequestHeader,
-			@RequestBody @Validated CouponUseStatusSacReq couponUseStatusSacReq, BindingResult bindingResult) {
-
-		// Request Parameter Validation.
-		if (bindingResult.hasErrors()) {
-			if (bindingResult.hasFieldErrors()) {
-				FieldError fieldError = bindingResult.getFieldError();
-				if (StringUtils.equals("NotBlank", fieldError.getCode())) {
-					throw new StorePlatformException("SAC_PUR_2000", bindingResult.getFieldError().getField());
-				}
-			}
-			throw new StorePlatformException("SAC_PUR_9999");
-		}
+			@RequestBody @Validated CouponUseStatusSacReq couponUseStatusSacReq) {
 
 		CouponUseStatusSacParam couponUseStatusSacParam = this.convertReqForGetCouponUseStatus(sacRequestHeader,
 				couponUseStatusSacReq);
