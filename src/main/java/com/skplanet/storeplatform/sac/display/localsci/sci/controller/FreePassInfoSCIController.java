@@ -45,7 +45,7 @@ public class FreePassInfoSCIController implements FreePassInfoSCI {
 	 * 
 	 * @param req
 	 *            파라미터
-	 * @return FreePassInfoRes 상품 메타 정보 리스트
+	 * @return EpisodeInfoSacRes 상품 메타 정보 리스트
 	 */
 	@Override
 	public EpisodeInfoSacRes searchEpisodeList(@Validated EpisodeInfoReq req) {
