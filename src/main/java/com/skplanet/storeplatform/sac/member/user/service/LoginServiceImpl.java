@@ -115,7 +115,7 @@ public class LoginServiceImpl implements LoginService {
 	private String tempUserAuthKey;
 
 	@Value("#{propertiesForSac['member.ogg.internal.method.iscall']}")
-	public boolean isCallChangeKey;
+	private boolean isCallChangeKey;
 
 	@Autowired
 	@Resource(name = "memberAddDeviceAmqpTemplate")
@@ -1165,7 +1165,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return String
 	 */
-	public SearchUserResponse searchUser(SacRequestHeader requestHeader, String keyType, String keyString) {
+	private SearchUserResponse searchUser(SacRequestHeader requestHeader, String keyType, String keyString) {
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
