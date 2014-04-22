@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.display.cache.controller;
 
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
-import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.service.TempProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +59,21 @@ public class DisplayCacheController {
         else if(prodType.equals("freepass")) {
             cacheEvictManager.evictAllFreepassMeta();
         }
+        else if(prodType.equals("vod")) {
+            cacheEvictManager.evictAllVodMeta();
+        }
+        else if(prodType.equals("ebookcomic")) {
+            cacheEvictManager.evictAllEbookComicMeta();
+        }
+        else if(prodType.equals("all")) {
+            cacheEvictManager.evictAllAppMeta();
+            cacheEvictManager.evictAllMusicMeta();
+            cacheEvictManager.evictAllShoppingMeta();
+            cacheEvictManager.evictAllFreepassMeta();
+            cacheEvictManager.evictAllVodMeta();
+            cacheEvictManager.evictAllEbookComicMeta();
+        }
+
     }
 
     @RequestMapping(value = "/evict/oldApp", method = RequestMethod.GET)
