@@ -92,8 +92,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
 			LOGGER.info("{} 변동성 대상({})", deviceId, StringUtils.equals(isActive, "Y") ? "번호변경" : "번호이동");
-			LOGGER.info("isActive={},isSaveNSync={},deviceKey={},userKey={},preDeviceId={},nowDeviceId={}", isActive, isSaveNSync, deviceKey,
-					userKey, preDeviceId, nowDeviceId);
+			LOGGER.info("{} CheckSaveNSyncResponse : isActive={},isSaveNSync={},deviceKey={},userKey={},preDeviceId={},nowDeviceId={}", deviceId,
+					isActive, isSaveNSync, deviceKey, userKey, preDeviceId, nowDeviceId);
 
 			/**
 			 * 변동성 대상 회원의 상태를 확인한다.
