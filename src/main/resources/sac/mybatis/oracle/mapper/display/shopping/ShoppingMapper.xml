@@ -817,9 +817,9 @@
                           AND MCD.LANG_CD =#{langCd}
                    )WHERE CNT>0
                     ORDER BY
-                              <if test='menuId == null and brandId == null' > 
-                               DP_ORD ,
-                             </if>                          
+                          <if test='menuId == null and brandId == null' > 
+                           DP_ORD ,
+                          </if>                          
                     MENU_ID , BRAND_NM
                 )
             )KK
