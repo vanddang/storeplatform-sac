@@ -60,6 +60,14 @@
                     <path>/</path>
                     <warSourceDirectory>${basedir}/webapp</warSourceDirectory>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+<!--                     <includeGroupIds>com.skplanet</includeGroupIds> -->
+                   <includeArtifactIds>storeplatform-framework,storeplatform-test,storeplatform-guidgenerator,storeplatform-sac-client,storeplatform-sac-client-internal,external-component-client,storecomponent-member,storecomponent-member-client,storecomponent-purchase,storecomponent-purchase-client,storeplatform-sac-acl,storeplatform-cmsapp-interface-model</includeArtifactIds>
+                </configuration>
             </plugin>       			
 		</plugins>
 	</build> 
