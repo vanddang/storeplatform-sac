@@ -147,12 +147,12 @@
 		                           AND A.PROD_ID = C.PROD_ID
 		                           AND A.PROD_ID = D.PROD_ID
 		                           AND A.PROD_ID = E.PROD_ID
-		                           AND A.PROD_ID = F.PROD_ID
+		                           AND A.PROD_ID = F.PROD_ID(+)
 		                           AND A.PROD_ID = G.PROD_ID
 		                           AND A.PROD_ID = I.PROD_ID
 		                           AND E.TENANT_ID = #{tenantId}
-		                           AND E.TENANT_ID = F.TENANT_ID
-		                           AND F.TENANT_ID = G.TENANT_ID
+		                           AND F.TENANT_ID(+) = #{tenantId}
+		                           AND G.TENANT_ID = #{tenantId}
 		                           AND I.MENU_ID = J.MENU_ID
 		                           AND A.TOP_MENU_ID != 'DP02'
 		                           AND A.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
@@ -252,12 +252,12 @@
 		                           AND A.PROD_ID = C.PROD_ID
 		                           AND A.PROD_ID = D.PROD_ID
 		                           AND A.PROD_ID = E.PROD_ID
-		                           AND A.PROD_ID = F.PROD_ID
+		                           AND A.PROD_ID = F.PROD_ID(+)
 		                           AND A.PROD_ID = G.PROD_ID
 		                           AND A.PROD_ID = I.PROD_ID
 		                           AND E.TENANT_ID = #{tenantId}
-		                           AND E.TENANT_ID = F.TENANT_ID
-		                           AND E.TENANT_ID = G.TENANT_ID
+		                           AND F.TENANT_ID(+) = #{tenantId}
+		                           AND G.TENANT_ID = #{tenantId}
 		                           AND I.MENU_ID = J.MENU_ID
 		                           AND A.TOP_MENU_ID IN ( 'DP01', 'DP03', 'DP04', 'DP08') /*일반 앱만*/
 		                           AND A.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
