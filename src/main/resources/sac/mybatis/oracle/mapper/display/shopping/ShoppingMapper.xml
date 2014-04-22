@@ -1771,12 +1771,12 @@
           AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
           AND (CASE WHEN A.EXPO_ORD=1 THEN NVL( A.EXPO_YN, 'N' ) 
                ELSE ( SELECT TPO2.EXPO_YN
-                                        FROM TB_DP_PROD_OPT TPO2
-                                       WHERE TPO2.CHNL_PROD_ID = A.CHNL_PROD_ID
-                                         AND TPO2.OPT1_NM = A.OPT1_NM
-                                         AND TPO2.EXPO_ORD = 1 
-                                         AND ROWNUM =1
-                                     ) 
+                        FROM TB_DP_PROD_OPT TPO2
+                       WHERE TPO2.CHNL_PROD_ID = A.CHNL_PROD_ID
+                         AND TPO2.OPT1_NM = A.OPT1_NM
+                         AND TPO2.EXPO_ORD = 1 
+                         AND ROWNUM =1
+                     ) 
                END
               ) = 'Y'	  
 		  AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
