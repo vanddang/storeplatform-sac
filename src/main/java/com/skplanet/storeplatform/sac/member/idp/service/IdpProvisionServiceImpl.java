@@ -395,7 +395,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						shuttle.log_id("TL00034").result_code("SUCC").result_message("").insd_usermbr_no(fdsLogUserKey)
 								.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
 								.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
-								.request_system_id(fdsSystemId);
+								.request_system_id(fdsSystemId).exception_log("");
 					}
 				});
 			} else {
