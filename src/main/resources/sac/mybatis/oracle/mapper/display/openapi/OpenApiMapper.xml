@@ -1200,8 +1200,8 @@
 		                                   AND C.PROD_ID = I.PROD_ID
 		                                   AND I.PROD_ID = J.PROD_ID
 		                                   AND B.PROD_ID = K.PROD_ID
-		                                   AND I.PROD_ID = M.PROD_ID
-		                                   AND E.TENANT_ID = M.TENANT_ID
+		                                   AND I.PROD_ID = M.PROD_ID(+)
+		                                   AND M.TENANT_ID(+) = #{tenantId}
 		                                   <if test='topMenuId == "DP14" and listId == "RNK000000003"'>
 		                                   AND B.PROD_CHRG_YN     = 'N' /* Comic 일때 조건 추가. Ebook은 아님  */		                                   
 		                                   </if>
