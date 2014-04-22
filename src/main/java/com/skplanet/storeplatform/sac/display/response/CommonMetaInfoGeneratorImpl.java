@@ -593,7 +593,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	public Play generatePlay(MetaInfo metaInfo) {
 		Play play = new Play();
 
-		if (DisplayConstants.DP_RIGHTS_PLAY.equals(metaInfo.getStoreProdId())) {
+		if (DisplayConstants.DP_RIGHTS_PLAY.equals(metaInfo.getPlayProdId())) {
 			ArrayList<Support> supportList = new ArrayList<Support>();
 			supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
 			play.setSupportList(supportList);
