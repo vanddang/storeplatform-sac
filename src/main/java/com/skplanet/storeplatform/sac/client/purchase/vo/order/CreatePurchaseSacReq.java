@@ -14,6 +14,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -61,6 +62,8 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String prchsCaseCd; // 구매 유형 코드
 	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@Size(min = 20, max = 20, groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class,
+			GroupCreateBizPurchase.class })
 	private String tenantProdGrpCd; // 테넌트 상품 분류 코드
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String deviceModelCd; // 디바이스 모델 코드
