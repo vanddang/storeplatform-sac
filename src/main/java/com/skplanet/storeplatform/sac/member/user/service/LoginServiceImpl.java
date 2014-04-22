@@ -476,6 +476,9 @@ public class LoginServiceImpl implements LoginService {
 
 				/* 회원 정보가 존재 하지 않습니다. */
 				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
+
+			} else {
+				LOGGER.info("{} 추가인증수단 userId : {}, 실명인증여부 : {}", req.getDeviceId(), userAuthMethod.getUserId(), userAuthMethod.getIsRealName());
 			}
 
 			res.setUserAuthMethod(userAuthMethod);
@@ -994,7 +997,7 @@ public class LoginServiceImpl implements LoginService {
 					MemberConstants.SUB_STATUS_NORMAL);
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
-			LOGGER.info("{} -> {} deviceId 변경", req.getMacAddress(), req.getDeviceId());
+			LOGGER.info("{} macAddress -> {} 변경", req.getDeviceId(), req.getMacAddress(), req.getDeviceId());
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setUserKey(oldUserKey);
 			deviceInfo.setDeviceKey(oldDeviceKey);
@@ -1023,7 +1026,7 @@ public class LoginServiceImpl implements LoginService {
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 			/* mbrNo 변경 */
-			LOGGER.info("{} 신규가입한 IDP userKey 업데이트 newMbrNo={}", req.getDeviceId(), joinForWapEcRes.getUserKey());
+			LOGGER.info("{} 신규가입한 IDP userKey로 업데이트 newMbrNo={}", req.getDeviceId(), joinForWapEcRes.getUserKey());
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserKey(oldUserKey);
 			userMbr.setImMbrNo(joinForWapEcRes.getUserKey());
