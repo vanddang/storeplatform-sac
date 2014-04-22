@@ -71,7 +71,6 @@
         AND IMG_CD IN
             <foreach collection="imgCds" separator="," item="v" open="(" close=")">#{v}</foreach>
         AND LANG_CD = #{langCd}
-        ORDER BY EXPO_ORD
     </select>
 
     <select id="getUpdateHistoryList" parameterType="com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam" resultType="com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory">
