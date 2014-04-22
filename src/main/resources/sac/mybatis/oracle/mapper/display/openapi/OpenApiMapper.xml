@@ -58,6 +58,7 @@
 		                           AND A.TENANT_ID = G.TENANT_ID
 		                           AND B.TOP_MENU_ID != 'DP02'
 		                           AND B.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
+		                           AND C.LANG_CD  = #{langCd}
 		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
 		                           AND E.PROD_STATUS_CD ='PD000403'
 		                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
@@ -150,14 +151,15 @@
 		                           AND A.PROD_ID = F.PROD_ID(+)
 		                           AND A.PROD_ID = G.PROD_ID
 		                           AND A.PROD_ID = I.PROD_ID
-		                           AND E.TENANT_ID = #{tenantId}
-		                           AND F.TENANT_ID(+) = #{tenantId}
-		                           AND G.TENANT_ID = #{tenantId}
 		                           AND I.MENU_ID = J.MENU_ID
 		                           AND A.TOP_MENU_ID != 'DP02'
 		                           AND A.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
+		                           AND C.LANG_CD  = #{langCd}
 		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
 		                           AND E.PROD_STATUS_CD ='PD000403'
+                                   AND E.TENANT_ID = #{tenantId}
+                                   AND F.TENANT_ID(+) = #{tenantId}
+                                   AND G.TENANT_ID = #{tenantId}		                           
 		                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
 		                           AND I.USE_YN ='Y'
                                    AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 7,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')
@@ -255,14 +257,15 @@
 		                           AND A.PROD_ID = F.PROD_ID(+)
 		                           AND A.PROD_ID = G.PROD_ID
 		                           AND A.PROD_ID = I.PROD_ID
-		                           AND E.TENANT_ID = #{tenantId}
-		                           AND F.TENANT_ID(+) = #{tenantId}
-		                           AND G.TENANT_ID = #{tenantId}
 		                           AND I.MENU_ID = J.MENU_ID
 		                           AND A.TOP_MENU_ID IN ( 'DP01', 'DP03', 'DP04', 'DP08') /*일반 앱만*/
 		                           AND A.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
+		                           AND C.LANG_CD  = #{langCd}
 		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
 		                           AND E.PROD_STATUS_CD ='PD000403'
+                                   AND E.TENANT_ID = #{tenantId}
+                                   AND F.TENANT_ID(+) = #{tenantId}
+                                   AND G.TENANT_ID = #{tenantId}		                           
 		                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
 		                           AND I.USE_YN ='Y'
                                    AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 1,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')   
@@ -467,6 +470,7 @@
                                        AND B.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
+                                   AND D.LANG_CD  = #{langCd}
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.TENANT_ID = #{tenantId}
@@ -638,6 +642,7 @@
                                      AND B.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
+                                   AND D.LANG_CD  = #{langCd}
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
@@ -782,6 +787,7 @@
                                          AND B.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
+                                   AND D.LANG_CD  = #{langCd}
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
@@ -924,6 +930,7 @@
                                          AND B.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
+                                   AND D.LANG_CD  = #{langCd}
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
@@ -1067,6 +1074,7 @@
                                          AND B.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
+                                   AND D.LANG_CD  = #{langCd}
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
