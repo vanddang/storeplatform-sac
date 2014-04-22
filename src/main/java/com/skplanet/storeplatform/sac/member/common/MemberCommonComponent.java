@@ -1022,7 +1022,7 @@ public class MemberCommonComponent {
 			changeDisplayUserSacReq.setNewUseKey(userKey);
 			changeDisplayUserSacReq.setOldUserKey(previousUserKey);
 			changeDisplayUserSacReq.setTenantId(tenantId);
-			LOGGER.info("changeDisplayUserSCI.changeUserKey request : {}", changeDisplayUserSacReq.toString());
+			LOGGER.info("changeDisplayUserSCI.changeUserKey request : {}", changeDisplayUserSacReq);
 			this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
 
 			/* 2. 구매 파트 userKey, deviceKey 변경 */
@@ -1033,7 +1033,7 @@ public class MemberCommonComponent {
 			userInfoSacInReq.setDeviceKey(previousDeviceKey);
 			userInfoSacInReq.setUserKey(previousUserKey);
 			userInfoSacInReq.setNewUserKey(userKey);
-			LOGGER.info("purchaseUserInfoInternalSCI.updateUserDevice request : {}", userInfoSacInReq.toString());
+			LOGGER.info("purchaseUserInfoInternalSCI.updateUserDevice request : {}", userInfoSacInReq);
 			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
 
 		}
