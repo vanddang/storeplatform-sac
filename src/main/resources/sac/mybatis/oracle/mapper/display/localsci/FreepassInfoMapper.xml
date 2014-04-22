@@ -57,16 +57,25 @@
                   WHERE (A.DEVICE_MODEL_CD = #{deviceModelCd} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
                      AND A.PROD_ID = PD.PROD_ID 
                      AND (
-                     CASE WHEN PD.TOP_MENU_ID = 'DP13' THEN
-                          CASE WHEN #{supportDevice.ebookSprtYn} = 'Y' THEN 1 
-                          ELSE 0 
-                          END
-                          WHEN PD.TOP_MENU_ID = 'DP14' THEN
-                          CASE WHEN #{supportDevice.comicSprtYn} = 'Y' THEN 1 
-                          ELSE 0 
-                          END
-                     ELSE 1
-                     END   
+                       CASE WHEN PM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN 
+								CASE WHEN NVL(PD.DRM_YN, 'N') = 'Y' AND #{supportDevice.videoDrmSprtYn} = 'N' THEN 0
+								     ELSE 
+		                            CASE WHEN #{supportDevice.sdVideoSprtYn} = 'Y' THEN 1 
+		                            ELSE 0
+		                            END
+		                         END
+		                    WHEN PM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN    
+                             CASE WHEN PD.TOP_MENU_ID = 'DP13' THEN
+                                  CASE WHEN #{supportDevice.ebookSprtYn} = 'Y' THEN 1 
+                                  ELSE 0 
+                                  END
+                                  WHEN PD.TOP_MENU_ID = 'DP14' THEN
+                                  CASE WHEN #{supportDevice.comicSprtYn} = 'Y' THEN 1 
+                                  ELSE 0 
+                                  END
+                             ELSE 1
+                             END
+                        END		                    
                      ) = 1
                ) AS PHONE_SPRT_YN            
             , PD.DRM_YN
@@ -77,13 +86,24 @@
             , TB_DP_PROD_DESC DC
             , TB_DP_TENANT_PROD TP
             , TB_DP_TENANT_PROD_PRICE PR
-            ,(SELECT A.PROD_ID 
-                   , B.PART_PROD_ID
-                FROM TB_DP_FIXRATE_PROD_MAPG A
+            ,(SELECT  A.PROD_ID 
+                    , B.PART_PROD_ID
+                    , C.CMPX_PROD_CLSF_CD
+                FROM  TB_DP_FIXRATE_PROD_MAPG A
                      ,TB_DP_PROD_RSHP B
                      ,TB_DP_CMPX_PROD C
+                     ,TB_DP_PROD_DESC D
+                     ,TB_DP_TENANT_PROD E
+                     ,TB_DP_TENANT_PROD_PRICE F
                WHERE A.PART_PROD_ID = B.PROD_ID
                  AND A.PROD_ID = C.PROD_ID
+                 AND A.PROD_ID = D.PROD_ID
+                 AND A.PROD_ID = E.PROD_ID
+                 AND A.PROD_ID = F.PROD_ID
+		         AND D.LANG_CD = #{langCd} 
+		         AND E.TENANT_ID = #{tenantId}
+		         AND E.TENANT_ID = F.TENANT_ID 
+		         AND SYSDATE BETWEEN F.APPLY_START_DT AND F.APPLY_END_DT              
                  AND B.PROD_RSHP_CD =#{prodRshpCd}
                  AND A.PROD_ID =#{prodId}
              )PM             
