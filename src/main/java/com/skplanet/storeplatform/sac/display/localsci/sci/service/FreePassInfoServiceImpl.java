@@ -55,7 +55,7 @@ public class FreePassInfoServiceImpl implements FreePassInfoService {
 
 	/**
 	 * <pre>
-	 * 정액권 상품을 이용하여 개별 상품 조회.
+	 * 정액권의 에피소드 상품 목록 조회.
 	 * </pre>
 	 * 
 	 * @param req
