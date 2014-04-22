@@ -612,7 +612,7 @@ public class DisplayConstants {
 
 	/** 사용자구분코드. */
 	public static final String MEMBER_MAIN_STATUS_NORMAL = "US010201"; // 정상
-	public static final String MEMBER_MAIN_STATUS_PAUSE = "US010204"; // 계정잠금/7일이용정지/30일이용정지/영구이용정지
+	public static final String MEMBER_MAIN_STATUS_PAUSE = "US010204"; // 7일이용정지/30일이용정지/영구이용정지
 
 	/**
 	 * 일반 컬러링 메타 클래스 코드.
