@@ -481,13 +481,14 @@ public class IdpServiceImpl implements IdpService {
 					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 					final String fdsUserId = userId;
 					final String fdsSystemId = systemId;
-
+					final String fdsUserKey = currentMbrNoForgameCenter; // userMbr_no
 					new TLogUtil().log(new ShuttleSetter() {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
 							shuttle.log_id("TL00030").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
 									.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("")
-									.mbr_id(fdsUserId).request_system_id(fdsSystemId);
+									.mbr_id(fdsUserId).request_system_id(fdsSystemId).mbr_id_post(fdsUserId)
+									.usermbr_no_post(fdsUserKey);
 						}
 					});
 
@@ -2326,13 +2327,15 @@ public class IdpServiceImpl implements IdpService {
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 				final String fdsUserId = newUserId;
 				final String fdsSystemId = systemId;
+				final String fdsUserKey = userKey;
 
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
 						shuttle.log_id("TL00030").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
 								.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("")
-								.mbr_id(fdsUserId).request_system_id(fdsSystemId);
+								.mbr_id(fdsUserId).request_system_id(fdsSystemId).mbr_id_post(fdsUserId)
+								.usermbr_no_post(fdsUserKey);
 					}
 				});
 
