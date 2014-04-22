@@ -92,7 +92,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
 			LOGGER.info("{} 변동성 대상({})", deviceId, StringUtils.equals(isActive, "Y") ? "번호변경" : "번호이동");
-			LOGGER.info("checkSaveNSyncResponse : {}", checkSaveNSyncResponse);
+			LOGGER.info("checkSaveNSyncResponse : {}", checkSaveNSyncResponse.toString());
 
 			/**
 			 * 변동성 대상 회원의 상태를 확인한다.
@@ -181,7 +181,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			/**
 			 * (IDP 연동) 무선회원 가입 요청 (cmd - joinForWap).
 			 */
-			LOGGER.info("{} IDP 모바일 회원 가입 요청", deviceId);
+			LOGGER.info("{} IDP 모바일 회원 가입", deviceId);
 			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 			joinForWapEcReq.setUserMdn(deviceId);
 			joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT); // 이동 통신사
@@ -224,16 +224,16 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			/**
 			 * IDP 모바일 회원 가입 탈퇴 요청.
 			 */
-			LOGGER.info("{} IDP 모바일 회원 탈퇴 요청", preDeviceId);
+			LOGGER.info("{} IDP 모바일 회원 탈퇴", preDeviceId);
 			SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
 			ecReq.setUserMdn(preDeviceId);
 			this.idpSCI.secedeForWap(ecReq);
 
 		} catch (StorePlatformException spe) {
 
-			LOGGER.info("## IDP 회원 탈퇴 Error 시에 Skip......");
-			LOGGER.info("## errorCode : {}", spe.getErrorInfo().getCode());
-			LOGGER.info("## errorMsg  : {}", spe.getErrorInfo().getMessage());
+			LOGGER.info("{} IDP 모바일 회원 탈퇴 오류", preDeviceId);
+			LOGGER.info("errorCode : {}", spe.getErrorInfo().getCode());
+			LOGGER.info("errorMsg  : {}", spe.getErrorInfo().getMessage());
 
 		}
 
@@ -264,7 +264,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * SC 회원 복구 요청.
 		 */
-		LOGGER.info("{} 신규가입한 IDP userKey로 회원 복구 newMbrNo={}", deviceId, newMbrNo);
+		LOGGER.info("{} 신규가입한 IDP userKey로 회원 복구 처리 newMbrNo={}", deviceId, newMbrNo);
 		ReviveUserRequest reviveUserRequest = new ReviveUserRequest();
 		reviveUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		reviveUserRequest.setImMbrNo(newMbrNo);
