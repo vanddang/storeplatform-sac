@@ -1240,7 +1240,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
 
-			LOGGER.info("## 회원 정보가 존재 하지 않습니다. userKey, deviceKey, deviceTelecom 정보 없이 내려줌.");
+			LOGGER.info("회원 정보가 존재 하지 않습니다. userKey, deviceKey, deviceTelecom 정보 없이 내려줌.");
 			return response;
 
 		}
