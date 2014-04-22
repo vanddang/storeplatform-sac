@@ -76,6 +76,7 @@ public class FreePassInfoServiceImpl implements FreePassInfoService {
 		paramMap.put("tenantId", req.getTenantId());
 		paramMap.put("prodId", req.getProdId());
 		paramMap.put("supportDevice", supportDevice);
+		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
 
 		List<EpisodeInfoRes> freePassInfoResList = null;

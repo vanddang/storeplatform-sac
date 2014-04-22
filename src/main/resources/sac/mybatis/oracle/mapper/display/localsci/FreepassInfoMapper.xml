@@ -84,7 +84,7 @@
                      ,TB_DP_CMPX_PROD C
                WHERE A.PART_PROD_ID = B.PROD_ID
                  AND A.PROD_ID = C.PROD_ID
-                 AND B.PROD_RSHP_CD ='DP010802'
+                 AND B.PROD_RSHP_CD =#{prodRshpCd}
                  AND A.PROD_ID =#{prodId}
              )PM             
         WHERE PD.PROD_ID = PM.PART_PROD_ID
