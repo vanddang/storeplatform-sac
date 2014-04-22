@@ -186,7 +186,7 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetCaptchaRes getCaptcha() {
 
-		LOGGER.info("Request :");
+		LOGGER.info("Request : {}");
 		GetCaptchaRes response = this.service.getCaptcha();
 		LOGGER.info("Response : imageSign : {}", response.getImageSign());
 		return response;
@@ -386,7 +386,7 @@ public class MiscellaneousController {
 			@RequestBody @Validated CreateIndividualPolicyReq request) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		CreateIndividualPolicyRes response = this.service.createIndividualPolicy(header, request);
-		LOGGER.info("Response : {}", response.getKey());
+		LOGGER.info("Response : policy key {}", response.getKey());
 		return response;
 	}
 
@@ -407,7 +407,7 @@ public class MiscellaneousController {
 			@RequestBody @Validated RemoveIndividualPolicyReq request) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		RemoveIndividualPolicyRes response = this.service.removeIndividualPolicy(header, request);
-		LOGGER.info("Response : {}", response.getKey());
+		LOGGER.info("Response : policy key : {}", response.getKey());
 		return response;
 	}
 }

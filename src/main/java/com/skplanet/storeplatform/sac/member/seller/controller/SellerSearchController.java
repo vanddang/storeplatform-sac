@@ -269,7 +269,7 @@ public class SellerSearchController {
 	@ResponseBody
 	public ListPasswordReminderQuestionAllRes listPasswordReminderQuestionAll(SacRequestHeader header) {
 
-		LOGGER.info("Request :");
+		LOGGER.info("Request : {}");
 		ListPasswordReminderQuestionAllRes res = this.sellerSearchService.listPasswordReminderQuestionAll(header);
 		LOGGER.info("Response : password Hint count : {}", res.getSellerMbrPwdHintList().size());
 		return res;
@@ -309,7 +309,7 @@ public class SellerSearchController {
 	@RequestMapping(value = "/listBanksByCountry/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListBanksByCountryRes ListBanksByCountry(SacRequestHeader header) {
-		LOGGER.info("Request :");
+		LOGGER.info("Request : {}");
 
 		ListBanksByCountryRes res = this.sellerSearchService.listBanksByCountry(header);
 		LOGGER.info("Response : bank count :  {}", res.getBanksByCountry().size());
