@@ -16,9 +16,7 @@ public class PersonalAutoUpdateReq extends CommonInfo {
 	private String packageInfo;
 	private Integer updLimitCnt;
 	@NotBlank
-	private String deviceKey;
-	@NotBlank
-	private String userKey;
+	private String deviceId;
 
 	/**
 	 * @return the packageInfo
@@ -51,33 +49,18 @@ public class PersonalAutoUpdateReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the deviceKey
+	 * @return the deviceId
 	 */
-	public String getDeviceKey() {
-		return this.deviceKey;
+	public String getDeviceId() {
+		return this.deviceId;
 	}
 
 	/**
-	 * @param deviceKey
-	 *            the deviceKey to set
+	 * @param deviceId
+	 *            the deviceId to set
 	 */
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
-	}
-
-	/**
-	 * @return the userKey
-	 */
-	public String getUserKey() {
-		return this.userKey;
-	}
-
-	/**
-	 * @param userKey
-	 *            the userKey to set
-	 */
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 }
