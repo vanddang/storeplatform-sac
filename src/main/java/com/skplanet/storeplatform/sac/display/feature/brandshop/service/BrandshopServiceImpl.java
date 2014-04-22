@@ -161,7 +161,7 @@ public class BrandshopServiceImpl implements BrandshopService {
 					menuList = new ArrayList<Menu>(); // 메뉴 리스트
 					menu.setId(brandshopInfo.getCategoryNo());
 					menu.setName(brandshopInfo.getMenuNm());
-					// menu.setType("topClass");
+					menu.setType("topClass");
 					menuList.add(menu);
 					product.setMenuList(menuList);
 
@@ -291,7 +291,7 @@ public class BrandshopServiceImpl implements BrandshopService {
 				menuList = new ArrayList<Menu>(); // 메뉴 리스트
 				menu.setId(brandshopLayoutInfo.getCategoryNo());
 				menu.setName(brandshopLayoutInfo.getMenuNm());
-				// menu.setType("topClass");
+				menu.setType("topClass");
 				menuList.add(menu);
 				layout.setMenuList(menuList);
 
