@@ -264,7 +264,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * SC 회원 복구 요청.
 		 */
-		LOGGER.info("{} 회원 복구요청 [newMbrNo={},userKey={}]", deviceId, newMbrNo, userKey);
+		LOGGER.info("{} 신규가입한 IDP userKey로 회원 복구 newMbrNo={}", deviceId, newMbrNo);
 		ReviveUserRequest reviveUserRequest = new ReviveUserRequest();
 		reviveUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		reviveUserRequest.setImMbrNo(newMbrNo);
