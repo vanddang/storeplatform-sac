@@ -781,6 +781,9 @@
                              ,MC.MENU_ID
                              ,MCD.MENU_NM
                              ,MC.TOP_MENU_ID
+                              <if test='menuId == null and brandId == null' > 
+                             ,PM.DP_ORD
+                             </if>                             
                              ,(
 			                    SELECT COUNT(CT.CATALOG_ID)
 			                      FROM TB_DP_SHPG_CATALOG CT
@@ -813,7 +816,11 @@
                           </if>
                           AND MCD.LANG_CD =#{langCd}
                    )WHERE CNT>0
-                    ORDER BY MENU_ID , BRAND_NM
+                    ORDER BY
+                              <if test='menuId == null and brandId == null' > 
+                               DP_ORD ,
+                             </if>                          
+                    MENU_ID , BRAND_NM
                 )
             )KK
         )
