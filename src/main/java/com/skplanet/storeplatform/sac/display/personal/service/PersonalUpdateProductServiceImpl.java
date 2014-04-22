@@ -250,8 +250,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					UserInfoSac userInfoSac = userInfo.get(userKey);
 					String userMainStatus = userInfoSac.getUserMainStatus();
 					this.log.debug("##### userMainStatus :: {} " + userMainStatus);
-					if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
-							|| DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
+					if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)) {
 						this.log.debug("##### This user is normal user!!!!");
 					} else {
 						this.log.debug("##### This user is unnormal user!!!!");

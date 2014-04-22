@@ -26,9 +26,8 @@ import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
@@ -42,7 +41,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.History;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -88,11 +86,11 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 	@Override
 	public PersonalAutoUpdateRes updateAutoUpdateList(PersonalAutoUpdateReq req, SacRequestHeader header,
 			List<String> packageInfoList) {
-
+		final String deviceId = req.getDeviceId();
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00038");
+				shuttle.log_id("TL00038").device_id(deviceId);
 			}
 		});
 
@@ -201,28 +199,34 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 			if (!listPid.isEmpty()) {
 
 				this.log.debug("##### check user status");
-				String userKey = req.getUserKey();
-				this.log.debug("##### userKey :: {} " + userKey);
-				SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-				List<String> userKeyList = new ArrayList<String>();
-				userKeyList.add(userKey);
-				searchUserSacReq.setUserKeyList(userKeyList);
+				this.log.debug("##### deviceId :: {} " + deviceId);
+				UserInfoSacReq userInfoSacReq = new UserInfoSacReq();
+				userInfoSacReq.setDeviceId(deviceId);
 				this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
 				long start = System.currentTimeMillis();
-				SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
+				UserInfoSacRes userInfoSacRes = this.searchUserSCI.searchUserBydeviceId(userInfoSacReq);
 				this.log.info("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserByUserKey");
 				long end = System.currentTimeMillis();
 				this.log.info("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserByUserKey takes {} ms",
 						(end - start));
-				Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
-				UserInfoSac userInfoSac = userInfo.get(userKey);
-				String userMainStatus = userInfoSac.getUserMainStatus();
 
-				this.log.debug("##### userMainStatus :: {} " + userMainStatus);
-				// 정상 일시 정지 회원이 아닐 경우 -> '업데이트 내역이 없습니다.' 에러 발생
+				String userMainStatus = userInfoSacRes.getUserMainStatus();
+				final String userKey = userInfoSacRes.getUserKey();
+				final String deviceKey = userInfoSacRes.getDeviceKey();
+				this.log.debug("##### userKey :: {} " + userKey);
+				this.log.debug("##### deviceKey :: {} " + deviceKey);
+
+				new TLogUtil().set(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.insd_usermbr_no(userKey).insd_device_id(deviceKey);
+					}
+				});
+
+				// 회원에 의하면 정상은 UserMainStatus를 참고
+				// 정상 회원일이 아닐 경우 -> '업데이트 내역이 없습니다' 에러 발생
 				// 탈퇴 회원일 경우 -> 회원에서 '탈퇴한 회원입니다.'에러 발생하여 그대로 throw 함
-				if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)
-						|| DisplayConstants.MEMBER_MAIN_STATUS_PAUSE.equals(userMainStatus)) {
+				if (DisplayConstants.MEMBER_MAIN_STATUS_NORMAL.equals(userMainStatus)) {
 					this.log.debug("##### This user is normal user!!!!");
 				} else {
 					this.log.debug("##### This user is unnormal user!!!!");
@@ -240,8 +244,8 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 
 					}
 					existenceReq.setTenantId(tenantHeader.getTenantId());
-					existenceReq.setUserKey(req.getUserKey());
-					existenceReq.setDeviceKey(req.getDeviceKey());
+					existenceReq.setUserKey(userKey);
+					existenceReq.setDeviceKey(deviceKey);
 					existenceReq.setExistenceItem(existenceItemList);
 
 					this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceInternalSacSCI.searchExistenceList");
@@ -276,7 +280,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 									this.log.debug(
 											"#####  Exist purchase history of {}! Hence add purchase id to update target!!!!!!!!!",
 											sPkgNm);
-									mapUpdate.put("PRCHS_ID", prchInfo.getPrchsId());
+									// mapUpdate.put("PRCHS_ID", prchInfo.getPrchsId());
 									listUpdate.add(mapUpdate);
 									forTlogAppIdList.add(sPid);
 									break;
@@ -324,13 +328,12 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 					title.setText((String) updateTargetApp.get("PROD_NM"));
 					product.setTitle(title);
 
-					// 구매 정보는 구매 내역이 있는 App만 표시한다.
-					if (!StringUtils.isEmpty(prchId)) {
-						Purchase purchage = this.commonGenerator.generatePurchase(
-								(String) updateTargetApp.get("PRCHS_ID"), (String) updateTargetApp.get("PROD_ID"),
-								null, null, null);
-						product.setPurchase(purchage);
-					}
+					// if (!StringUtils.isEmpty(prchId)) {
+					// Purchase purchage = this.commonGenerator.generatePurchase(
+					// (String) updateTargetApp.get("PRCHS_ID"), (String) updateTargetApp.get("PROD_ID"),
+					// null, null, null);
+					// product.setPurchase(purchage);
+					// }
 
 					App app = this.appGenerator.generateApp((String) updateTargetApp.get("AID"),
 							(String) updateTargetApp.get("APK_PKG_NM"),
