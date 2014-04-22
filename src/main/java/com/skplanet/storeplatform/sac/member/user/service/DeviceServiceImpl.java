@@ -1529,9 +1529,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (!isEquals) {
-			LOGGER.info("{} 변동성 체크 실패 원인 {} 정보가 다름. request : {}, db : {}", deviceId, equalsType, reqVal, dbVal);
-		}
+		LOGGER.info("{} {} 일치여부 : {}, request : {}, db : {}", deviceId, equalsType, isEquals, reqVal, dbVal);
 
 		return isEquals;
 	}
