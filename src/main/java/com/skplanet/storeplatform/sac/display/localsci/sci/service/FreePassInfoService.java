@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
 
@@ -21,4 +23,15 @@ public interface FreePassInfoService {
 	 * @return FreepassDrmInfo 정액제 상품 DRM 정보
 	 */
 	FreePassInfo searchFreePassDrmInfo(FreePassInfoSacReq req);
+
+	/**
+	 * <pre>
+	 * 정액권 상품을 이용하여 개별 상품 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            파라미터
+	 * @return FreePassInfoRes 상품 메타 정보 리스트
+	 */
+	EpisodeInfoSacRes searchEpisodeList(EpisodeInfoReq req);
 }

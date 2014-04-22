@@ -41,4 +41,60 @@
     ) IV 
     </select>    
     
+  <select id="searchEpisodeList" parameterType="Map" resultType="EpisodeInfoRes">
+   /* FreePassInfoMapper.xml, searchEpisodeList,정액권 상품을 이용하여 개별 상품 조회 , 김형식/SK플래닛, 2014-04-22 */
+    SELECT  
+        IV.*
+    FROM (
+        SELECT  
+              PD.PROD_ID
+            , DC.PROD_NM
+            , PR.PROD_AMT
+            , TP.PROD_STATUS_CD 
+            , PD.PROD_GRD_CD
+            ,  (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
+                   FROM TB_DP_SPRT_DEVICE A
+                  WHERE (A.DEVICE_MODEL_CD = #{deviceModelCd} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
+                     AND A.PROD_ID = PD.PROD_ID 
+                     AND (
+                     CASE WHEN PD.TOP_MENU_ID = 'DP13' THEN
+                          CASE WHEN #{supportDevice.ebookSprtYn} = 'Y' THEN 1 
+                          ELSE 0 
+                          END
+                          WHEN PD.TOP_MENU_ID = 'DP14' THEN
+                          CASE WHEN #{supportDevice.comicSprtYn} = 'Y' THEN 1 
+                          ELSE 0 
+                          END
+                     ELSE 1
+                     END   
+                     ) = 1
+               ) AS PHONE_SPRT_YN            
+            , PD.DRM_YN
+            , PD.USE_PERIOD_UNIT_CD
+            , PD.USE_PERIOD            
+        FROM 
+              TB_DP_PROD PD
+            , TB_DP_PROD_DESC DC
+            , TB_DP_TENANT_PROD TP
+            , TB_DP_TENANT_PROD_PRICE PR
+            ,(SELECT A.PROD_ID 
+                   , B.PART_PROD_ID
+                FROM TB_DP_FIXRATE_PROD_MAPG A
+                     ,TB_DP_PROD_RSHP B
+                     ,TB_DP_CMPX_PROD C
+               WHERE A.PART_PROD_ID = B.PROD_ID
+                 AND A.PROD_ID = C.PROD_ID
+                 AND B.PROD_RSHP_CD ='DP010802'
+                 AND A.PROD_ID =#{prodId}
+             )PM             
+        WHERE PD.PROD_ID = PM.PART_PROD_ID
+        AND PD.PROD_ID = DC.PROD_ID
+        AND PD.PROD_ID = TP.PROD_ID
+        AND PD.PROD_ID = PR.PROD_ID
+        AND DC.LANG_CD = #{langCd} 
+        AND TP.TENANT_ID = #{tenantId}
+        AND TP.TENANT_ID = PR.TENANT_ID
+        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+    ) IV 
+    </select>    
 </mapper>

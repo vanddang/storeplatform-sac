@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -11,6 +13,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
 
@@ -39,7 +44,7 @@ public class FreePassInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	// @Test
 	public void searchFreePassDrmInfo() {
 		try {
 			FreePassInfoSacReq req = new FreePassInfoSacReq();
@@ -57,6 +62,40 @@ public class FreePassInfoSCITest {
 			this.log.debug("##### FreePassInfo getTopMenuId[{}] : {}", res.getTopMenuId());
 			this.log.debug("##### FreePassInfo getUsePeriod[{}] : {}", res.getUsePeriod());
 			this.log.debug("##### FreePassInfo getUsePeriodUnitCd[{}] : {}", res.getUsePeriodUnitCd());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * 정액권 상품을 이용하여 개별 상품 조회.
+	 * </pre>
+	 * 
+	 */
+	@Test
+	public void getFreepassList() {
+		try {
+			EpisodeInfoReq req = new EpisodeInfoReq();
+			// Q/A 값은 H001610176
+			// 개발은 FR00000103
+			req.setProdId("FR00000103");
+			req.setTenantId("S01");
+			req.setLangCd("ko");
+			req.setDeviceModelCd("SHW-M100S");
+
+			EpisodeInfoSacRes res = this.freePassInfoSCI.searchEpisodeList(req);
+			List<EpisodeInfoRes> freePassInfoResList = res.getFreePassInfoRes();
+			for (EpisodeInfoRes vo : freePassInfoResList) {
+				this.log.debug("##### FreePassInfo getProdId[{}] : {}", vo.getProdId());
+				this.log.debug("##### FreePassInfo getDrmYn[{}] : {}", vo.getDrmYn());
+				this.log.debug("##### FreePassInfo getProdSprtYn[{}] : {}", vo.getProdSprtYn());
+				this.log.debug("##### FreePassInfo getProdStatusCd[{}] : {}", vo.getProdStatusCd());
+				this.log.debug("##### FreePassInfo getUsePeriod[{}] : {}", vo.getUsePeriod());
+				this.log.debug("##### FreePassInfo getUsePeriodUnitCd[{}] : {}", vo.getUsePeriodUnitCd());
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

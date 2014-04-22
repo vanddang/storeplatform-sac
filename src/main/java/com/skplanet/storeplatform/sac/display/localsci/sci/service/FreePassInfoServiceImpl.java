@@ -1,5 +1,9 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +11,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 
 /**
  * 
@@ -23,6 +33,9 @@ public class FreePassInfoServiceImpl implements FreePassInfoService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	/**
 	 * <pre>
@@ -40,4 +53,35 @@ public class FreePassInfoServiceImpl implements FreePassInfoService {
 		return freepassDrmInfo;
 	}
 
+	/**
+	 * <pre>
+	 * 정액권 상품을 이용하여 개별 상품 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            파라미터
+	 * @return FreePassInfoRes 상품 메타 정보 리스트
+	 */
+	@Override
+	public EpisodeInfoSacRes searchEpisodeList(EpisodeInfoReq req) {
+
+		// / 단말 지원 정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
+
+		EpisodeInfoSacRes res = new EpisodeInfoSacRes();
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("langCd", req.getLangCd());
+		paramMap.put("deviceModelCd", req.getDeviceModelCd());
+		paramMap.put("tenantId", req.getTenantId());
+		paramMap.put("prodId", req.getProdId());
+		paramMap.put("supportDevice", supportDevice);
+		paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
+
+		List<EpisodeInfoRes> freePassInfoResList = null;
+		freePassInfoResList = this.commonDAO.queryForList("FreePassInfo.searchEpisodeList", paramMap,
+				EpisodeInfoRes.class);
+		res.setFreePassInfoRes(freePassInfoResList);
+		return res;
+	}
 }
