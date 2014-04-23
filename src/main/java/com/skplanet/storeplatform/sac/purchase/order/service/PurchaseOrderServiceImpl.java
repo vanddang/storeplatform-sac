@@ -692,7 +692,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			if (Integer.parseInt(reservedDataMap.get("bonusPoint")) > 0) {
 				Date prchsDtDate = null;
 				try {
-					prchsDtDate = DateUtils.parseDate(prchsDtlMore.getPrchsDt(), "yyyyMMddHHmmss");
+					prchsDtDate = DateUtils.parseDate(prchsDtlMore.getUseStartDt(), "yyyyMMddHHmmss");
 				} catch (ParseException e) {
 					throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
 				}
@@ -1216,7 +1216,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							.append("&bonusPointUsePeriod=")
 							.append(StringUtils.defaultString(String.valueOf(product.getBnsUsePeriod()), "0"))
 							.append("&bonusPointUsableDayCnt=")
-							.append(StringUtils.defaultString(product.getBonusCashUsableDayCnt()))
+							.append(StringUtils.defaultString(String.valueOf(product.getBnsUsePeriod()), "0"))
 							.append("&afterAutoPayDt=").append(StringUtils.defaultString(product.getAfterAutoPayDt()))
 							.append("&sellerNm=").append(StringUtils.defaultString(product.getSellerNm()))
 							.append("&sellerEmail=").append(StringUtils.defaultString(product.getSellerEmail()))
