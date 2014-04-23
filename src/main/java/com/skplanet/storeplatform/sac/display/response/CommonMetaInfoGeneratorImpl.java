@@ -648,6 +648,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			purchase.setIdentifierList(identifierList);
 
 			List<Date> dateList = new ArrayList<Date>();
+			;
 
 			if (StringUtils.isNotEmpty(prchDt)) {
 				dateList.add(this.generateDate(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM, prchDt));
@@ -655,7 +656,10 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			if (StringUtils.isNotEmpty(dwldExprDt)) {
 				dateList.add(this.generateDate(DisplayConstants.DP_DATE_DOWNLOAD_EXPIRED_NM, dwldExprDt));
 			}
-			purchase.setDateList(dateList);
+
+			if (!dateList.isEmpty()) {
+				purchase.setDateList(dateList);
+			}
 		}
 
 		purchase.setState(prchState);
