@@ -96,13 +96,6 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 
 		// prodGradeCd 배열로 변경
 		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
-			// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
-			// try {
-			// requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
-			// } catch (Exception ex) {
-			// throw new StorePlatformException("SAC_DSP_9999", ex);
-			// }
-
 			String[] prodGradeCdArr = StringUtils.split(requestVO.getProdGradeCd(), "+");
 			requestVO.setProdGradeCdArr(prodGradeCdArr);
 		}
