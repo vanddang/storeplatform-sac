@@ -122,6 +122,9 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		} else if (filteredBy.equals("ring")) { // 컬러링
 			requestVO.setChartClsfCd("DP004902");
 			requestVO.setBatchId("MELON_DP004902");
+		} else if (filteredBy.equals("mainTop")) { // 메인TOP
+			requestVO.setBatchId("RNK000000025");
+			requestVO.setListId("RNK000000025");
 		}
 
 		// 웹 랭킹 음원일 경우 stdDt 넘어옴
@@ -135,15 +138,25 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 			if (StringUtils.isEmpty(stdDt)) {
 				throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
 			} else {
-				// 뮤직 배치일자는 년월일만 필요
-				requestVO.setStdDt(stdDt.substring(0, 8));
+				if (!filteredBy.equals("mainTop")) {
+					// 뮤직 챠트 배치일자는 년월일만 필요
+					requestVO.setStdDt(stdDt.substring(0, 8));
+				} else {
+					// 메인TOP 의 경우는 stdDt 전체 필요
+					requestVO.setStdDt(stdDt);
+				}
 			}
 		}
 
 		List<ProductBasicInfo> productBasicInfoList;
 
-		productBasicInfoList = this.commonDAO.queryForList("MusicMain.getMusicMainList", requestVO,
-				ProductBasicInfo.class);
+		if (filteredBy.equals("mainTop")) {
+			productBasicInfoList = this.commonDAO.queryForList("MusicMain.getMusicMainTopList", requestVO,
+					ProductBasicInfo.class);
+		} else {
+			productBasicInfoList = this.commonDAO.queryForList("MusicMain.getMusicMainList", requestVO,
+					ProductBasicInfo.class);
+		}
 
 		List<Product> productList = new ArrayList<Product>();
 

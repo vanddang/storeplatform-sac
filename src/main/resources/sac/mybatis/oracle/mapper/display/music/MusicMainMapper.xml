@@ -93,4 +93,77 @@
           ORDER BY RNUM
     </select>
     
+    <!-- Music Main TOP -->
+    <select id="getMusicMainTopList" parameterType="MusicContentsSacReq" resultType="ProductBasicInfo">
+        SELECT /* MusicMainMapper.xml, getMusicMainTopList, SAC 전시 , 2014-04-22 */
+               B.TENANT_ID
+             , B.MENU_ID
+             , B.PROD_ID
+             , B.PART_PROD_ID
+             , B.TOP_MENU_ID
+             , B.META_CLSF_CD
+             , B.CONTENTS_TYPE_CD
+             , B.TOTAL_COUNT
+          FROM (SELECT A.TENANT_ID
+                     , A.MENU_ID
+                     , A.PROD_ID
+                     , A.PART_PROD_ID
+                     , A.TOP_MENU_ID
+                     , A.META_CLSF_CD
+                     , A.CONTENTS_TYPE_CD
+                     , COUNT(A.PART_PROD_ID) OVER () AS TOTAL_COUNT
+                     , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
+                  FROM (SELECT A.TENANT_ID
+                             , E.MENU_ID
+                             , C.PROD_ID
+                             , C.PART_PROD_ID
+                             , E.TOP_MENU_ID
+                             , F.META_CLSF_CD
+                             , F.CONTENTS_TYPE_CD
+                             , B.EXPO_ORD_ALWAYS_YN
+                             , B.EXPO_ORD
+                             , B.EXPO_ORD_SUB
+                          FROM TB_DP_LIST A
+                             , TB_DP_LIST_PROD B
+                             , TB_DP_PROD_RSHP C
+                             , TB_DP_MENU_CATEGORY_PROD_MAPG D
+                             , TB_DP_MENU_CATEGORY E
+                             , TB_DP_PROD F  /* 에피소드 */
+                             , TB_DP_TENANT_PROD G
+                             , TB_DP_SPRT_DEVICE H
+                         WHERE A.LIST_ID = B.LIST_ID
+                           AND A.TENANT_ID = B.TENANT_ID
+                           AND A.EXPO_YN = 'Y'
+                           AND B.EXPO_YN = 'Y'
+                           AND A.TENANT_ID = #{tenantId}
+                           AND A.LIST_ID = #{listId}
+                           AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+                           AND B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                           AND B.PROD_ID = C.PART_PROD_ID  /* 에피소드 */
+                           AND C.PROD_RSHP_CD = 'DP010802'
+                           AND B.PROD_ID = D.PROD_ID
+                           AND D.USE_YN = 'Y'
+                           AND D.MENU_ID = E.MENU_ID
+                           AND E.USE_YN = 'Y'
+                           AND E.TOP_MENU_ID = 'DP16'
+                           AND C.PART_PROD_ID = F.PROD_ID
+                           AND F.CONTENTS_TYPE_CD = 'PD002502'
+                           AND F.PROD_ID = G.PROD_ID
+                           AND G.TENANT_ID = #{tenantId}
+                           AND G.EXPO_YN = 'Y'
+                           AND G.PROD_STATUS_CD = 'PD000403'
+                           AND C.PART_PROD_ID = H.PROD_ID
+                           AND (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                           AND F.META_CLSF_CD = 'CT25'
+                           AND (CASE WHEN (SELECT MUSIC_SPRT_YN 
+                                     FROM TB_CM_DEVICE CD 
+                                    WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                      AND CD.USE_YN = 'Y') = 'Y'  
+                             THEN 1 ELSE 0 END) = 1
+                      ) A
+              ) B
+         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+         ORDER BY RNUM
+    </select>
+    
 </mapper>
