@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupS
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipUseStatusRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -195,4 +196,24 @@ public class OtherController {
 		}
 		return this.otherAIDListService.searchProductListByAID(req, header, aIdList);
 	}
+
+	/**
+	 * <pre>
+	 * T맴버십 할인 사용여부
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @return OtherTMembershipUseStatusRes
+	 */
+	@RequestMapping(value = "/tmemebership/useStatus/get/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public OtherTMembershipUseStatusRes searchTMembershipUseStatus(SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchTMembershipUseStatus Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.otherTMembershipService.searchTMembershipUseStatus(header);
+	}
+
 }

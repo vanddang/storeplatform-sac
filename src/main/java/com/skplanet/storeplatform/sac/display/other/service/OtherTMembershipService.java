@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.other.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipUseStatusRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -33,4 +34,17 @@ public interface OtherTMembershipService {
 	 *            header
 	 */
 	OtherTMembershipRes searchTMembership(OtherTMembershipReq req, SacRequestHeader header);
+
+	/**
+	 * <pre>
+	 * T맴버십 할인 사용여부 조회
+	 * </pre>
+	 * 
+	 * @return OtherTMembershipUseStatusRes
+	 * 
+	 * @param header
+	 *            header
+	 */
+	OtherTMembershipUseStatusRes searchTMembershipUseStatus(SacRequestHeader header);
+
 }

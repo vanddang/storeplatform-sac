@@ -9,23 +9,29 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipUseStatusRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
@@ -44,6 +50,10 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 
 	@Autowired
 	private DisplayCommonService commonService;
+
+	@Autowired
+	@Qualifier("sac")
+	private CommonDAO commonDAO;
 
 	/**
 	 * <pre>
@@ -139,5 +149,33 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 		tmembershipRes.setCommonResponse(commonRes);
 
 		return tmembershipRes;
+	}
+
+	/**
+	 * <pre>
+	 * T맴버십 할인 사용여부 조회
+	 * </pre>
+	 * 
+	 * @return OtherTMembershipRes
+	 * 
+	 * @param header
+	 *            header
+	 */
+	@Override
+	public OtherTMembershipUseStatusRes searchTMembershipUseStatus(SacRequestHeader header) {
+
+		Double tMemberShipDcRate;
+		OtherTMembershipUseStatusRes res = new OtherTMembershipUseStatusRes();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantHeader", tenantHeader);
+		tMemberShipDcRate = (Double) this.commonDAO.queryForObject("OtherTmembership.searchTMembershipUseStatus",
+				paramMap);
+		if (tMemberShipDcRate == null || tMemberShipDcRate <= 0) {
+			res.setUseStatus("N");
+		} else if (tMemberShipDcRate > 0) {
+			res.setUseStatus("Y");
+		}
+		return res;
 	}
 }
