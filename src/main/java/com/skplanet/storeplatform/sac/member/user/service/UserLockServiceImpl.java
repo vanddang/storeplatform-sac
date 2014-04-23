@@ -20,8 +20,11 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
+import com.skplanet.storeplatform.external.client.shopping.util.DateUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
+import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
@@ -81,6 +84,11 @@ public class UserLockServiceImpl implements UserLockService {
 			 * 회원 계정 잠금
 			 */
 			this.updateLoginStatus(sacHeader, req.getUserId());
+
+			/**
+			 * OneID 정보 업데이트
+			 */
+			this.updateOneIdInfo(sacHeader, chkDupRes.getUserMbr().getImSvcNo());
 
 		} else {
 
@@ -185,6 +193,43 @@ public class UserLockServiceImpl implements UserLockService {
 
 		this.userSCI.updateStatus(updStatusUserReq);
 		LOGGER.debug("## 회원 계정 잠금 DB 설정 완료!!");
+
+	}
+
+	/**
+	 * <pre>
+	 * T-store 미동의 회원 정보 업데이트.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param imSvcNo
+	 *            OneID 통합서비스 관리번호
+	 */
+	private void updateOneIdInfo(SacRequestHeader sacHeader, String imSvcNo) {
+
+		try {
+
+			LOGGER.info("OneID 정보 업데이트 : {}", imSvcNo);
+
+			/**
+			 * 미동의 회원 정보 업데이트.
+			 */
+			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+			updateMbrOneIDRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+			MbrOneID mbrOneID = new MbrOneID();
+			mbrOneID.setIntgSvcNumber(imSvcNo); // OneID 통합서비스 관리번호
+			mbrOneID.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE); // 로그인 상태코드
+			mbrOneID.setUpdateDate(DateUtil.getToday("yyyyMMddHHmmss")); // 업데이트 날짜
+
+			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+		} catch (StorePlatformException spe) {
+
+			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
+
+		}
 
 	}
 

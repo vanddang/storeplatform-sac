@@ -1211,6 +1211,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrOneID.setEntryDate(agreeUserEcRes.getJoinDate() + agreeUserEcRes.getJoinTime()); // 가입일시
 			mbrOneID.setMemberCaseCode(agreeUserEcRes.getUserType()); // 가입자 유형코드
 			mbrOneID.setIntgSiteCode(agreeUserEcRes.getJoinSstCode()); // 가입 서비스 사이트 코드
+			mbrOneID.setUpdateDate(DateUtil.getToday("yyyyMMddHHmmss")); // 업데이트 날짜
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
