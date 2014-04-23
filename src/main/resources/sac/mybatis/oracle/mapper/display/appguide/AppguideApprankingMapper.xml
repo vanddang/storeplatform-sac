@@ -48,7 +48,9 @@
                                 AND LP.LIST_ID = #{listId}       
                                 AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                 AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
-                                --AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
+		                       <if test="menuId != null and menuId != ''">
+		                        AND LP.MENU_ID = #{menuId}
+		                       </if>
                                 AND LP.TENANT_ID = LT.TENANT_ID
                                 AND LP.LIST_ID = LT.LIST_ID
                                 AND LT.EXPO_YN = 'Y'
@@ -62,9 +64,6 @@
                           , TB_DP_PROD_DESC H  /* 채널 */
                       WHERE A.PROD_ID = B.PROD_ID
                         AND B.PROD_RSHP_CD = 'DP010802'
-                       <if test="menuId != null and menuId != ''">
-                        AND A.MENU_ID = #{menuId}
-                       </if>
                        <if test='prodCharge != "A"'>
                          AND  E.PROD_CHRG_YN = #{prodCharge}       /* 상품유료여부 */
                        </if>
