@@ -140,6 +140,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setExclusiveFixrateProdExistYn(displayInfo.getExclusiveFixrateProdExistYn());
 			purchaseProduct.setExclusiveFixrateProdIdList(displayInfo.getExclusiveFixrateProdIdList());
 			purchaseProduct.setCmpxProdClsfCd(displayInfo.getCmpxProdClsfCd());
+			// 게임캐쉬
 			purchaseProduct.setBnsCashAmt(displayInfo.getBnsCashAmt());
 			purchaseProduct.setBnsUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
 			purchaseProduct.setBnsUsePeriod(displayInfo.getUsePeriod());
@@ -201,12 +202,9 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	 *            IAP 상품ID
 	 * @return IAP 상품정보 VO
 	 */
+	@Override
 	public IapProductInfoRes searchIapProductInfo(String partProdId) {
-		IapProductInfoRes res = this.iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq(partProdId));
-
-		// TAKTODO:: 상품 유형 구분 코드 AS-IS / TO-BE 통일 확인 후 처리
-
-		return res;
+		return this.iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq(partProdId));
 	}
 
 	/**
@@ -234,5 +232,25 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 		req.setEpisodeProdId(episodeProdId);
 
 		return this.freepassInfoSCI.searchFreePassDrmInfo(req);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 정액권의 에피소드 상품 목록 조회 (이북/코믹 전권 소장/대여 상품에 딸린 에피소드 상품 목록 조회).
+	 * </pre>
+	 * 
+	 * @param tenantid
+	 *            테넌트ID
+	 * @param langCd
+	 *            언어코드
+	 * @param deviceModelCd
+	 *            디바이스 모델 코드
+	 * @param prodId
+	 *            이북/코믹 전권 소장/대여 상품ID
+	 */
+	public void searchEpisodeList(String tenantid, String langCd, String deviceModelCd, String prodId) {
+		;
+
 	}
 }

@@ -59,6 +59,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private boolean freeChargeReq; // 비과금 요청 여부
 	private boolean testMdn; // Store 관리 Test MDN 여부
 	private boolean blockPayment; // 구매차단 여부
+	private boolean gift; // 선물 여부
 	private String freePaymentMtdCd; // 무료구매처리 시 결제수단 코드 : 결제이력 생성하는 경우에만 세팅
 	private String specialCouponId; // 쇼핑 특가 상품 쿠폰ID
 	private double specialCouponAmt; // 쇼핑 특가 상품 쿠폰 금액
@@ -81,6 +82,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String encKey; // Pay Planet 암호화
 	private String paymentPageUrl; // 결제Page_URL
 	private PaymentPageParam paymentPageParam; // 결제Page_요청_파라미터
+
+	// ------------------------------------------------------------------------
+	// 상품 속성
+	private boolean possibleDuplication; // 중복 구매 가능 여부
+	private boolean gamecash; // 게임캐쉬 상품 여부
+	private boolean shopping; // 쇼핑 상품 여부
+	private boolean bizShopping; // BIZ 쇼핑 상품 여부
+	private boolean ringbell; // 컬러링&벨소리 상품 여부
+	private boolean iap; // IAP 상품 여부
+	private boolean existCommercialIap; // IAP 정식판 전환상품 존재 여부
+	private boolean vod; // VOD 상품 여부
+	private boolean ebookcomic; // 이북/코믹 상품 여부
+	private boolean flat; // 정액 상품 여부
+	private boolean vodFlat; // VOD정액 상품 여부
+	private boolean ebookcomicFlat; // 이북/코믹 전권 소장/대여 상품 여부
 
 	// ================================================================================================
 
@@ -672,6 +688,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	}
 
 	/**
+	 * @return the gift
+	 */
+	public boolean isGift() {
+		return this.gift;
+	}
+
+	/**
+	 * @param gift
+	 *            the gift to set
+	 */
+	public void setGift(boolean gift) {
+		this.gift = gift;
+	}
+
+	/**
 	 * @return the freePaymentMtdCd
 	 */
 	public String getFreePaymentMtdCd() {
@@ -714,6 +745,186 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setSpecialCouponAmt(double specialCouponAmt) {
 		this.specialCouponAmt = specialCouponAmt;
+	}
+
+	/**
+	 * @return the possibleDuplication
+	 */
+	public boolean isPossibleDuplication() {
+		return this.possibleDuplication;
+	}
+
+	/**
+	 * @param possibleDuplication
+	 *            the possibleDuplication to set
+	 */
+	public void setPossibleDuplication(boolean possibleDuplication) {
+		this.possibleDuplication = possibleDuplication;
+	}
+
+	/**
+	 * @return the gamecash
+	 */
+	public boolean isGamecash() {
+		return this.gamecash;
+	}
+
+	/**
+	 * @param gamecash
+	 *            the gamecash to set
+	 */
+	public void setGamecash(boolean gamecash) {
+		this.gamecash = gamecash;
+	}
+
+	/**
+	 * @return the shopping
+	 */
+	public boolean isShopping() {
+		return this.shopping;
+	}
+
+	/**
+	 * @param shopping
+	 *            the shopping to set
+	 */
+	public void setShopping(boolean shopping) {
+		this.shopping = shopping;
+	}
+
+	/**
+	 * @return the bizShopping
+	 */
+	public boolean isBizShopping() {
+		return this.bizShopping;
+	}
+
+	/**
+	 * @param bizShopping
+	 *            the bizShopping to set
+	 */
+	public void setBizShopping(boolean bizShopping) {
+		this.bizShopping = bizShopping;
+	}
+
+	/**
+	 * @return the ringbell
+	 */
+	public boolean isRingbell() {
+		return this.ringbell;
+	}
+
+	/**
+	 * @param ringbell
+	 *            the ringbell to set
+	 */
+	public void setRingbell(boolean ringbell) {
+		this.ringbell = ringbell;
+	}
+
+	/**
+	 * @return the iap
+	 */
+	public boolean isIap() {
+		return this.iap;
+	}
+
+	/**
+	 * @param iap
+	 *            the iap to set
+	 */
+	public void setIap(boolean iap) {
+		this.iap = iap;
+	}
+
+	/**
+	 * @return the existCommercialIap
+	 */
+	public boolean isExistCommercialIap() {
+		return this.existCommercialIap;
+	}
+
+	/**
+	 * @param existCommercialIap
+	 *            the existCommercialIap to set
+	 */
+	public void setExistCommercialIap(boolean existCommercialIap) {
+		this.existCommercialIap = existCommercialIap;
+	}
+
+	/**
+	 * @return the vod
+	 */
+	public boolean isVod() {
+		return this.vod;
+	}
+
+	/**
+	 * @param vod
+	 *            the vod to set
+	 */
+	public void setVod(boolean vod) {
+		this.vod = vod;
+	}
+
+	/**
+	 * @return the ebookcomic
+	 */
+	public boolean isEbookcomic() {
+		return this.ebookcomic;
+	}
+
+	/**
+	 * @param ebookcomic
+	 *            the ebookcomic to set
+	 */
+	public void setEbookcomic(boolean ebookcomic) {
+		this.ebookcomic = ebookcomic;
+	}
+
+	/**
+	 * @return the flat
+	 */
+	public boolean isFlat() {
+		return this.flat;
+	}
+
+	/**
+	 * @param flat
+	 *            the flat to set
+	 */
+	public void setFlat(boolean flat) {
+		this.flat = flat;
+	}
+
+	/**
+	 * @return the vodFlat
+	 */
+	public boolean isVodFlat() {
+		return this.vodFlat;
+	}
+
+	/**
+	 * @param vodFlat
+	 *            the vodFlat to set
+	 */
+	public void setVodFlat(boolean vodFlat) {
+		this.vodFlat = vodFlat;
+	}
+
+	/**
+	 * @return the ebookcomicFlat
+	 */
+	public boolean isEbookcomicFlat() {
+		return this.ebookcomicFlat;
+	}
+
+	/**
+	 * @param ebookcomicFlat
+	 *            the ebookcomicFlat to set
+	 */
+	public void setEbookcomicFlat(boolean ebookcomicFlat) {
+		this.ebookcomicFlat = ebookcomicFlat;
 	}
 
 }

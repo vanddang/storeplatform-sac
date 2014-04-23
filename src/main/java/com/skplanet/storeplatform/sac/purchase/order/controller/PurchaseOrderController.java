@@ -347,6 +347,7 @@ public class PurchaseOrderController {
 		purchaseOrderInfo.setDeviceModelCd(createPurchaseSacReq.getDeviceModelCd()); // 디바이스 모델 코드
 		purchaseOrderInfo.setTelecomCd(createPurchaseSacReq.getTelecomCd()); // 통신사
 		if (StringUtils.equals(createPurchaseSacReq.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			purchaseOrderInfo.setGift(true); // 선물 여부
 			if (createPurchaseSacReq.getReceiverList() == null) {
 				purchaseOrderInfo.setRecvTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID
 				purchaseOrderInfo.setRecvUserKey(createPurchaseSacReq.getRecvUserKey()); // 선물수신 내부 회원 번호
@@ -371,6 +372,42 @@ public class PurchaseOrderController {
 
 		purchaseOrderInfo.setTotAmt(createPurchaseSacReq.getTotAmt()); // 총 결제 금액
 		purchaseOrderInfo.setRealTotAmt(createPurchaseSacReq.getTotAmt()); // 최종 결제 총 금액
+
+		// 상품 속성
+
+		String tenantProdGrpCd = purchaseOrderInfo.getTenantProdGrpCd();
+
+		if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
+			purchaseOrderInfo.setFlat(true); // 정액 상품 여부
+		}
+
+		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)) {
+			purchaseOrderInfo.setVod(true); // VOD 상품 여부
+			if (purchaseOrderInfo.isFlat()) {
+				purchaseOrderInfo.setVodFlat(true); // VOD정액 상품 여부
+			}
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
+			purchaseOrderInfo.setEbookcomic(true); // 이북/코믹 상품 여부
+			if (purchaseOrderInfo.isFlat()) {
+				purchaseOrderInfo.setEbookcomicFlat(true); // 이북/코믹 전권 소장/대여 상품 여부
+			}
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			purchaseOrderInfo.setShopping(true); // 쇼핑 상품 여부
+			purchaseOrderInfo.setPossibleDuplication(true); // 중복 구매 가능 여부
+			if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
+				purchaseOrderInfo.setBizShopping(true); // BIZ 쇼핑 상품 여부
+			}
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+			purchaseOrderInfo.setIap(true); // IAP 상품 여부
+			// TAKTODO:: possibleDuplication: 중복 구매 가능 여부
+			// TAKTODO:: iapCommercial: IAP 정식판 전환상품 존재 여부
+
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
+			purchaseOrderInfo.setRingbell(true); // 컬러링&벨소리 상품 여부
+
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+			purchaseOrderInfo.setGamecash(true); // 게임캐쉬 상품 여부
+		}
 
 		return purchaseOrderInfo;
 	}

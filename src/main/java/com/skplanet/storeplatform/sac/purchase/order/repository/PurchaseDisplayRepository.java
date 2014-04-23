@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 
@@ -61,6 +62,18 @@ public interface PurchaseDisplayRepository {
 	 */
 	public PossLendProductInfo searchPossLendProductInfo(String tenantId, String langCd, String prodId,
 			String possLendClsfCd);
+
+	/**
+	 * 
+	 * <pre>
+	 * IAP 상품정보 조회.
+	 * </pre>
+	 * 
+	 * @param partProdId
+	 *            IAP 상품ID
+	 * @return IAP 상품정보 VO
+	 */
+	public IapProductInfoRes searchIapProductInfo(String partProdId);
 
 	/**
 	 * 

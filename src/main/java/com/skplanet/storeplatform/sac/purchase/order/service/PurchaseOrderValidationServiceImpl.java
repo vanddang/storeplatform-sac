@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchS
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
@@ -105,9 +106,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 부분유료화 정보
 		if (StringUtils.startsWith(req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
 			for (CreatePurchaseSacReqProduct product : req.getProductList()) {
-				if (StringUtils.isBlank(product.getTid()) || StringUtils.isBlank(product.getTxId())
-						|| StringUtils.isBlank(product.getPartChrgVer())
-						|| StringUtils.isBlank(product.getPartChrgProdNm())) {
+				if (StringUtils.isBlank(product.getTid()) || StringUtils.isBlank(product.getPartChrgVer())) {
 					throw new StorePlatformException("SAC_PUR_5100");
 				}
 			}
@@ -199,7 +198,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// ----------------------------------------------------------------------------------------------
 		// 선물 수신 회원/기기
 
-		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+		if (purchaseOrderInfo.isGift()) {
 
 			// 조회
 			PurchaseUserDevice receiveUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(
@@ -234,13 +233,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// String systemId = purchaseOrderInfo.getSystemId();
 		String langCd = purchaseOrderInfo.getLangCd();
 		String useDeviceModelCd = null;
-		if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-				PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+		if (purchaseOrderInfo.isShopping()) {
 			useDeviceModelCd = purchaseOrderInfo.getPurchaseUser().getDeviceModelCd();
 		} else {
-			useDeviceModelCd = (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
-					PurchaseConstants.PRCHS_CASE_GIFT_CD) ? purchaseOrderInfo.getReceiveUser().getDeviceModelCd() : purchaseOrderInfo
-					.getPurchaseUser().getDeviceModelCd());
+			useDeviceModelCd = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getReceiveUser().getDeviceModelCd() : purchaseOrderInfo
+					.getPurchaseUser().getDeviceModelCd();
 		}
 
 		// 상품 정보 조회
@@ -291,15 +288,14 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// Biz 쿠폰 경우 이하 상품 체크 Skip
-			if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
+			if (purchaseOrderInfo.isBizShopping()) {
 				purchaseProduct.setProdQty(1);
 				purchaseProductList.add(purchaseProduct);
 				continue;
 			}
 
 			// IAP 여부 체크
-			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-					PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+			if (purchaseOrderInfo.isIap()
 					&& StringUtils.equals(purchaseProduct.getInAppYn(), PurchaseConstants.USE_Y) == false) {
 				throw new StorePlatformException("SAC_PUR_5111");
 			}
@@ -315,8 +311,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// }
 
 			// 링&벨은 상품 가격을 요청한 가격으로 세팅
-			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-					PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
+			if (purchaseOrderInfo.isRingbell()) {
 				purchaseProduct.setProdAmt(reqProduct.getProdAmt());
 			}
 
@@ -340,16 +335,44 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			// 요청 시 받은 상품 정보 세팅
 			/* IAP */
-			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-					PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
-				// contentsType // 컨텐츠_타입
+			if (purchaseOrderInfo.isIap()) {
 				purchaseProduct.setTid(reqProduct.getTid()); // 부분유료화 개발사 구매Key
 				purchaseProduct.setTxId(reqProduct.getTxId()); // 부분유료화 전자영수증 번호
 				purchaseProduct.setPartChrgVer(reqProduct.getPartChrgVer()); // 부분_유료_버전
-				purchaseProduct.setPartChrgProdNm(reqProduct.getPartChrgProdNm()); // 부분_유료_상품_명
+				purchaseProduct.setPartChrgProdNm(StringUtils.isBlank(reqProduct.getPartChrgProdNm()) ? purchaseProduct
+						.getProdNm() : reqProduct.getPartChrgProdNm()); // 부분_유료_상품_명
 
-			} else if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-					PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
+				// IAP상품 정보 조회
+				IapProductInfoRes iapInfo = this.purchaseDisplayRepository.searchIapProductInfo(reqProduct.getProdId());
+				if (iapInfo == null) {
+					throw new StorePlatformException("SAC_PUR_5101");
+				}
+				purchaseProduct.setParentProdId(iapInfo.getParentProdId()); // 부모 상품ID
+				purchaseProduct.setContentsType(iapInfo.getProdKind()); // 상품 유형 (컨텐츠_타입)
+				if (StringUtils.equals(iapInfo.getProdKind(), "PK0002")) { // 소멸성 건당 상품
+					purchaseOrderInfo.setPossibleDuplication(true); // 중복 구매 가능 여부
+				}
+				purchaseOrderInfo.setTenantProdGrpCd(purchaseOrderInfo.getTenantProdGrpCd().replaceAll("DP00",
+						iapInfo.getMenuId().substring(0, 4))); // IAP 테넌트 상품 분류 코드 세팅
+
+				// 정식판 전환 상품 조회
+				if (StringUtils.equals(iapInfo.getHasFullProdYn(), PurchaseConstants.USE_Y)
+						&& StringUtils.isNotBlank(iapInfo.getFullAid())) {
+					purchaseOrderInfo.setExistCommercialIap(true); // IAP 정식판 전환상품 존재 여부
+
+					List<String> fullProdIdList = new ArrayList<String>();
+					fullProdIdList.add(iapInfo.getFullAid());
+					Map<String, PurchaseProduct> fullProductMap = this.purchaseDisplayRepository
+							.searchPurchaseProductList(tenantId, langCd, useDeviceModelCd, fullProdIdList);
+					if (fullProductMap == null || fullProductMap.size() < 1) {
+						throw new StorePlatformException("SAC_PUR_5101");
+					}
+
+					purchaseProduct.setFullIapProductInfo(fullProductMap.get(iapInfo.getFullAid()));
+
+				}
+
+			} else if (purchaseOrderInfo.isRingbell()) {
 				/* Ring & Bell */
 				purchaseProduct.setRnBillCd(reqProduct.getRnPid()); // RN 상품 ID
 				purchaseProduct.setInfoUseFee(reqProduct.getInfoUseFee()); // 정보_이용_요금 (ISU_AMT_ADD)
@@ -397,13 +420,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
-		if (purchaseOrderInfo.getPurchaseProductList().size() == 1
-				&& purchaseOrderInfo.getRealTotAmt() > 0.0
-				&& (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils.startsWith(
-						purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
-				&& StringUtils.endsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) == false) {
+		if (purchaseOrderInfo.getPurchaseProductList().size() == 1 && purchaseOrderInfo.getRealTotAmt() > 0.0
+				&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
+				&& purchaseOrderInfo.isFlat() == false) {
+
 			purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
 
 			PossLendProductInfo possLendProductInfo = this.purchaseDisplayRepository.searchPossLendProductInfo(
@@ -431,17 +451,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		// Biz 쿠폰 경우 이하 체크 Skip
-		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
+		if (purchaseOrderInfo.isBizShopping()) {
 			return;
 		}
 
 		// 이용자(구매자 + 선물수신자) 조회
-		PurchaseUserDevice useUser = null;
-		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			useUser = purchaseOrderInfo.getReceiveUser();
-		} else {
-			useUser = purchaseOrderInfo.getPurchaseUser();
-		}
+		PurchaseUserDevice useUser = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getReceiveUser() : purchaseOrderInfo
+				.getPurchaseUser();
 
 		// 디바이스(mdn) 기반 상품 여부 조회
 		boolean bDeviceBased = this.purchaseOrderPolicyService.isDeviceBasedPurchaseHistory(useUser.getTenantId(),
@@ -555,8 +571,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// 쇼핑 상품 추가 체크
-			if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-					PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			if (purchaseOrderInfo.isShopping()) {
 				if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) { // TAKTODO:: 특가상품 구매 건수 체크
 					SearchShoppingSpecialCountScReq specialReq = new SearchShoppingSpecialCountScReq();
 					specialReq.setTenantId(purchaseOrderInfo.getTenantId());
@@ -590,7 +605,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				this.checkAvailableCouponPublish(product.getCouponCode(), product.getItemCode(), product.getProdQty(),
 						purchaseOrderInfo.getPurchaseUser().getDeviceId());
 
-			} else { // 기구매 체크 대상 추가: 쇼핑상품은 동일상품 중복구매 허용
+			}
+
+			// 기구매 체크 대상 추가
+			if (product.getFullIapProductInfo() != null) { // IAP 정식판 전환 상품 존재 경우, 해당 상품으로 기구매체크 대신
+				existenceProdIdList.add(product.getFullIapProductInfo().getProdId());
+
+			} else if (purchaseOrderInfo.isPossibleDuplication() == false) {
 
 				// 소장/대여 상품 기구매 처리
 				PossLendProductInfo possLendProductInfo = product.getPossLendProductInfo();
@@ -602,12 +623,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					existenceProdIdList.add(possLendProductInfo.getPossProdId());
 					existenceProdIdList.add(possLendProductInfo.getLendProdId());
 
-					if (StringUtils.equals(product.getPossLendClsfCd(),
-							PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)) {
-						removeWhenExistPossLendProdId = possLendProductInfo.getLendProdId();
-					} else {
-						removeWhenExistPossLendProdId = possLendProductInfo.getPossProdId();
-					}
+					removeWhenExistPossLendProdId = StringUtils.equals(product.getPossLendClsfCd(),
+							PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION) ? possLendProductInfo.getLendProdId() : possLendProductInfo
+							.getPossProdId();
 				}
 			}
 		}
@@ -626,6 +644,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				for (ExistenceScRes checkRes : checkPurchaseResultList) {
 					if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
 						if (StringUtils.equals(checkRes.getProdId(), removeWhenExistPossLendProdId)) {
+							bRemovePossLend = true;
 							continue;
 						}
 
@@ -707,7 +726,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 * 
 	 * @return 기구매 체크 결과
 	 */
-	public List<ExistenceScRes> searchExistence(String tenantId, String userKey, String deviceKey,
+	private List<ExistenceScRes> searchExistence(String tenantId, String userKey, String deviceKey,
 			List<String> prodIdList) {
 
 		List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
@@ -729,4 +748,5 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		return this.existenceSCI.searchExistenceList(existenceScReq);
 	}
+
 }

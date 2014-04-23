@@ -9,8 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +43,19 @@ import com.skplanet.storeplatform.external.client.tstore.vo.ProdId;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceDetailEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeConfirmDetailEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeConfirmEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeConfirmEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.DateUtils;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
@@ -154,7 +164,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 구매집계 요청 데이터: Biz 쿠폰 발급 요청 경우는 제외
 		List<PrchsProdCnt> prchsProdCntList = null;
-		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON) == false) {
+		if (purchaseOrderInfo.isBizShopping() == false) {
 			prchsProdCntList = this.makePrchsProdCntList(prchsDtlMoreList, PurchaseConstants.PRCHS_STATUS_COMPT);
 		}
 
@@ -176,7 +186,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -----------------------------------------------------------------------------
 		// Biz 쿠폰 발급 요청
 
-		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON)) {
+		if (purchaseOrderInfo.isBizShopping()) {
 			List<BizCouponPublishDetailEcReq> bizCouponPublishDetailEcList = new ArrayList<BizCouponPublishDetailEcReq>();
 
 			BizCouponPublishDetailEcReq bizCouponPublishDetailEcReq = null;
@@ -237,7 +247,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 구매완료 TLog
 		// TAKTODO:: 일단은 Biz 쿠폰 발급 경우는 T Log 제외
 
-		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON) == false) {
+		if (purchaseOrderInfo.isBizShopping() == false) {
 			final String imei = purchaseOrderInfo.getImei();
 			String telecom = purchaseOrderInfo.getPurchaseUser().getTelecom();
 			final String mno_type = StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT) ? "SKT" : (StringUtils
@@ -249,15 +259,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			final String purchase_inflow_channel = StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
 					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
 			final String purchase_id = purchaseOrderInfo.getPrchsId();
-			final String purchase_id_recv = StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
-					PurchaseConstants.PRCHS_CASE_GIFT_CD) ? purchaseOrderInfo.getPrchsId() : "";
+			final String purchase_id_recv = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getPrchsId() : "";
 
 			for (PrchsDtlMore prchsInfo : prchsDtlMoreList) { // 상품 수 만큼 로깅
 				final List<String> prodIdList = new ArrayList<String>();
 				prodIdList.add(prchsInfo.getProdId());
 				final String purchase_prod_num = String.valueOf(prchsInfo.getPrchsDtlId());
-				final String purchase_prod_num_recv = StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
-						PurchaseConstants.PRCHS_CASE_GIFT_CD) ? String.valueOf(prchsInfo.getPrchsDtlId()) : "";
+				final String purchase_prod_num_recv = purchaseOrderInfo.isGift() ? String.valueOf(prchsInfo
+						.getPrchsDtlId()) : "";
 				final String tid = prchsInfo.getTid();
 				final String tx_id = prchsInfo.getTxId();
 				final String use_start_time = ""; // TAKTODO
@@ -478,8 +487,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setMdn(reservedDataMap.get("deviceId")); // 결제 MDN
 		res.setFlgMbrStatus(PurchaseConstants.VERIFYORDER_USER_STATUS_NORMAL); // [fix] 회원상태: 1-정상
 		res.setFlgProductStatus(PurchaseConstants.VERIFYORDER_PRODUCT_STATUS_NORMAL); // [fix] 상품상태: 1-정상
-		res.setBonusCashPoint(reservedDataMap.get("bonusCashPoint")); // 보너스 캐쉬 지급 Point
-		res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusCashUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
+		res.setBonusCashPoint(reservedDataMap.get("bonusPoint")); // 보너스 캐쉬 지급 Point
+		res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		res.setAfterAutoPayDt(reservedDataMap.get("afterAutoPayDt")); // 다음 자동 결제일
 		// TAKTODO:: 대여/소장 전시Part 협의 완료 전 까지 Dummy세팅
 		// if (StringUtils.equals(res.getCdPaymentTemplate(), PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN)) {
@@ -662,6 +671,75 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				+ tstoreNotiPublishType);
 
 		// -------------------------------------------------------------------------------------------
+		// 게임캐쉬 충전 예약
+
+		List<TStoreCashChargeReserveDetailEcRes> cashReserveResList = null; // 충전 확정 용도
+
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+
+			List<TStoreCashChargeReserveDetailEcReq> cashReserveList = new ArrayList<TStoreCashChargeReserveDetailEcReq>();
+
+			// 게임 Cash
+			TStoreCashChargeReserveDetailEcReq tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
+			tStoreCashChargeReserveDetailEcReq.setProductGroup("01"); // 00:전체,01:Application,02:Multimedia,03:Shopping
+			tStoreCashChargeReserveDetailEcReq.setAmt(String.valueOf(prchsDtlMore.getProdAmt()));
+			tStoreCashChargeReserveDetailEcReq.setDate(prchsDtlMore.getUseExprDt()); // 사용 유효기간(만료일시 - yyyyMMddHHmmss)
+			tStoreCashChargeReserveDetailEcReq.setCashCls("02"); // T store Cash 충전형 - 01 : Point, 02 : Cash
+			cashReserveList.add(tStoreCashChargeReserveDetailEcReq);
+
+			// 보너스 Point
+			if (Integer.parseInt(reservedDataMap.get("bonusPoint")) > 0) {
+				Date prchsDtDate = null;
+				try {
+					prchsDtDate = DateUtils.parseDate(prchsDtlMore.getPrchsDt(), "yyyyMMddHHmmss");
+				} catch (ParseException e) {
+					throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
+				}
+				String usePeriodUnitCd = reservedDataMap.get("bonusPointUsePeriodUnitCd");
+				int usePeriod = Integer.parseInt(reservedDataMap.get("bonusPointUsePeriod"));
+				if (StringUtils.equals(usePeriodUnitCd, "PD00312")) { // 일
+					prchsDtDate = DateUtils.addDays(prchsDtDate, usePeriod);
+				} else {
+					throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
+				}
+
+				String bonusPointExprDt = DateFormatUtils.format(prchsDtDate, "yyyyMMddHHmmss");
+
+				tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
+				tStoreCashChargeReserveDetailEcReq.setProductGroup("01");
+				tStoreCashChargeReserveDetailEcReq.setAmt(reservedDataMap.get("bonusPoint"));
+				tStoreCashChargeReserveDetailEcReq.setDate(bonusPointExprDt);
+				tStoreCashChargeReserveDetailEcReq.setCashCls("01");
+				cashReserveList.add(tStoreCashChargeReserveDetailEcReq);
+			}
+
+			TStoreCashChargeReserveEcReq tStoreCashChargeReserveEcReq = new TStoreCashChargeReserveEcReq();
+			tStoreCashChargeReserveEcReq.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
+			tStoreCashChargeReserveEcReq.setCashList(cashReserveList);
+
+			TStoreCashChargeReserveEcRes tStoreCashChargeReserveEcRes = this.tStoreCashSCI
+					.reserveCharge(tStoreCashChargeReserveEcReq);
+
+			if (StringUtils.equals(tStoreCashChargeReserveEcRes.getResultCd(), "0000") == false) {
+				throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
+			}
+
+			// 충전 확정 용도
+			cashReserveResList = tStoreCashChargeReserveEcRes.getCashList();
+		}
+
+		// -------------------------------------------------------------------------------------------
+		// 이북/코믹 전권 소장/대여 에피소드 상품 목록 조회
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE)
+				|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_COMIC_FIXRATE)) {
+			;
+
+		}
+
+		// -------------------------------------------------------------------------------------------
 		// 구매확정 요청 데이터 생성
 
 		// 구매집계 요청 데이터
@@ -713,6 +791,34 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			// 중복된 구매요청 체크
 			throw (this.isDuplicateKeyException(e) ? new StorePlatformException("SAC_PUR_6110") : e);
+		}
+
+		// -------------------------------------------------------------------------------------------
+		// 게임캐쉬 충전 확정
+
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+
+			List<TStoreCashChargeConfirmDetailEcReq> cashConfirmList = new ArrayList<TStoreCashChargeConfirmDetailEcReq>();
+
+			for (TStoreCashChargeReserveDetailEcRes cashReserveRes : cashReserveResList) {
+				TStoreCashChargeConfirmDetailEcReq tStoreCashChargeConfirmDetailEcReq = new TStoreCashChargeConfirmDetailEcReq();
+				tStoreCashChargeConfirmDetailEcReq.setOrderNo(prchsDtlMore.getPrchsId());
+				tStoreCashChargeConfirmDetailEcReq.setIdentifier(cashReserveRes.getIdentifier());
+				tStoreCashChargeConfirmDetailEcReq.setCashCls(cashReserveRes.getCashCls());
+				tStoreCashChargeConfirmDetailEcReq.setProductGroup(cashReserveRes.getProductGroup());
+				cashConfirmList.add(tStoreCashChargeConfirmDetailEcReq);
+			}
+
+			TStoreCashChargeConfirmEcReq tStoreCashChargeConfirmEcReq = new TStoreCashChargeConfirmEcReq();
+			tStoreCashChargeConfirmEcReq.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
+			tStoreCashChargeConfirmEcReq.setCashList(cashConfirmList);
+			TStoreCashChargeConfirmEcRes tStoreCashChargeConfirmEcRes = this.tStoreCashSCI
+					.confirmCharge(tStoreCashChargeConfirmEcReq);
+
+			if (StringUtils.equals(tStoreCashChargeConfirmEcRes.getResultCd(), "0000") == false) {
+				throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
+			}
 		}
 
 		// -------------------------------------------------------------------------------------------
@@ -937,8 +1043,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			try {
 				this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);
 			} catch (Exception e) {
-				// TAKTODO:: 이 때 발생하는 예외처리는 어떻게? 로깅만?
-				this.logger.debug("PRCHS,ORDER,SAC,REVERT,COUPON,ERROR,{}", e.getMessage());
+				// 이 때 발생하는 예외는 로깅만.
+				this.logger.info("PRCHS,ORDER,SAC,REVERT,COUPON,ERROR,{}", e.getMessage());
 			}
 		}
 
@@ -971,12 +1077,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// tenantId, systemId, networkTypeCd, currencyCd
 		// 결제자: userKey, deviceKey, deviceId, telecom, imei
 		// 보유자: useUserKey, useDeviceKey, useDeviceId, useDeviceModelCd
-		PurchaseUserDevice useUser = null;
-		if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			useUser = purchaseOrderInfo.getReceiveUser();
-		} else {
-			useUser = purchaseOrderInfo.getPurchaseUser();
-		}
+		PurchaseUserDevice useUser = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getReceiveUser() : purchaseOrderInfo
+				.getPurchaseUser();
 
 		boolean bCharge = purchaseOrderInfo.getRealTotAmt() > 0.0;
 
@@ -992,7 +1094,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					.append(useUser.getDeviceId()).append("&useDeviceModelCd=").append(useUser.getDeviceModelCd())
 					.append("&networkTypeCd=").append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
 					.append(purchaseOrderInfo.getCurrencyCd());
-			if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			if (purchaseOrderInfo.isGift()) {
 				sbReserveData.append("&receiveNames=").append(StringUtils.defaultString(useUser.getUserName()))
 						.append("&receiveMdns=").append(useUser.getDeviceId()); // 선물수신자 성명, 선물수신자 MDN
 			}
@@ -1004,8 +1106,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		List<PrchsDtlMore> prchsDtlMoreList = new ArrayList<PrchsDtlMore>();
 		PrchsDtlMore prchsDtlMore = null;
 
-		int prchsDtlCnt = 1, i = 0;
+		// 구매이력 추가 생성 건
+		List<PurchaseProduct> workProductList = new ArrayList<PurchaseProduct>(
+				purchaseOrderInfo.getPurchaseProductList());
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
+			if (product.getFullIapProductInfo() != null) { // IAP 정식판 전환 상품
+				workProductList.add(product.getFullIapProductInfo());
+			}
+		}
+
+		int prchsDtlCnt = 1, i = 0;
+		for (PurchaseProduct product : workProductList) {
 			for (i = 0; i < product.getProdQty(); i++) {
 				prchsDtlMore = new PrchsDtlMore();
 
@@ -1015,7 +1126,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				prchsDtlMore.setSystemId(purchaseOrderInfo.getSystemId());
 				prchsDtlMore.setPrchsId(purchaseOrderInfo.getPrchsId());
 				prchsDtlMore.setPrchsDt(purchaseOrderInfo.getPrchsDt());
-				if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+				if (purchaseOrderInfo.isGift()) {
 					prchsDtlMore.setSendInsdUsermbrNo(purchaseOrderInfo.getUserKey());
 					prchsDtlMore.setSendInsdDeviceId(purchaseOrderInfo.getDeviceKey());
 					prchsDtlMore.setUseTenantId(purchaseOrderInfo.getTenantId());
@@ -1051,8 +1162,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				prchsDtlMore.setCurrencyCd(purchaseOrderInfo.getCurrencyCd()); // PRCHS
 				prchsDtlMore.setNetworkTypeCd(purchaseOrderInfo.getNetworkTypeCd()); // PRCHS
 
-				if (purchaseOrderInfo.getTenantProdGrpCd().endsWith(
-						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
+				if (purchaseOrderInfo.isFlat()) {
 					prchsDtlMore.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_AUTH); // 권한 상품
 				} else {
 					prchsDtlMore.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_UNIT); // 단위 상품
@@ -1080,6 +1190,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				prchsDtlMore.setTid(product.getTid()); // 부분유료화 개발사 구매Key
 				prchsDtlMore.setTxId(product.getTxId()); // 부분유료화 전자영수증 번호
 				prchsDtlMore.setParentProdId(product.getParentProdId()); // 부모_상품_ID
+				prchsDtlMore.setContentsType(product.getContentsType()); // 컨텐츠_타입
 				prchsDtlMore.setPartChrgVer(product.getPartChrgVer()); // 부분_유료_버전
 				prchsDtlMore.setPartChrgProdNm(product.getPartChrgProdNm()); // 부분_유료_상품_명
 				/* Ring & Bell */
@@ -1087,7 +1198,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				prchsDtlMore.setInfoUseFee(product.getInfoUseFee()); // 정보_이용_요금 (ISU_AMT_ADD)
 				prchsDtlMore.setCid(product.getCid()); // 컨텐츠ID
 				prchsDtlMore.setContentsClsf(product.getContentsClsf()); // 컨텐츠_구분
-				prchsDtlMore.setContentsType(product.getContentsType()); // 컨텐츠_타입
 				prchsDtlMore.setPrchsType(product.getPrchsType()); // 구매_타입
 				prchsDtlMore.setTimbreClsf(product.getTimbreClsf()); // 음질_구분
 				prchsDtlMore.setTimbreSctn(product.getTimbreSctn()); // 음질_구간
@@ -1100,8 +1210,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					sbReserveData.append("&aid=").append(StringUtils.defaultString(product.getAid()))
 							.append("&couponCode=").append(StringUtils.defaultString(product.getCouponCode()))
 							.append("&itemCode=").append(StringUtils.defaultString(product.getItemCode()))
-							.append("&bonusCashPoint=").append(StringUtils.defaultString(product.getBonusCashPoint()))
-							.append("&bonusCashUsableDayCnt=")
+							.append("&bonusPoint=").append(StringUtils.defaultString(product.getBnsCashAmt(), "0"))
+							.append("&bonusPointUsePeriodUnitCd=").append(product.getBnsUsePeriodUnitCd())
+							.append("&bonusPointUsePeriod=")
+							.append(StringUtils.defaultString(String.valueOf(product.getBnsUsePeriod()), "0"))
+							.append("&bonusPointUsableDayCnt=")
 							.append(StringUtils.defaultString(product.getBonusCashUsableDayCnt()))
 							.append("&afterAutoPayDt=").append(StringUtils.defaultString(product.getAfterAutoPayDt()))
 							.append("&sellerNm=").append(StringUtils.defaultString(product.getSellerNm()))
@@ -1117,12 +1230,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 					// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1
-							&& (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-									PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils.startsWith(
-									purchaseOrderInfo.getTenantProdGrpCd(),
-									PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
-							&& StringUtils.endsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-									PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) == false) {
+							&& purchaseOrderInfo.getRealTotAmt() > 0.0
+							&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
+							&& purchaseOrderInfo.isFlat() == false) {
 
 						PossLendProductInfo possLendProductInfo = product.getPossLendProductInfo();
 						if (possLendProductInfo == null) {

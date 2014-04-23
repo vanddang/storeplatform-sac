@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.purchase.order.vo;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
-import com.skplanet.storeplatform.sac.display.localsci.sci.vo.IapProductInfo;
 
 /**
  * 
@@ -23,9 +22,9 @@ public class PurchaseProduct extends PaymentInfo {
 	private static final long serialVersionUID = 1L;
 
 	private PossLendProductInfo possLendProductInfo; // 소장/대여 상품 정보
-	private IapProductInfo iapProductInfo; // IAP 상품 정보
+	private PurchaseProduct fullIapProductInfo; // IAP 정식판 전환 상품 정보
 
-	private String bonusCashPoint; // 보너스 캐쉬 지급 Point
+	/* 게임 캐쉬 */
 	private String bonusCashUsableDayCnt; // 보너스 캐쉬 유효기간(일)
 	private String afterAutoPayDt; // 다음 자동 결제일
 
@@ -72,33 +71,18 @@ public class PurchaseProduct extends PaymentInfo {
 	}
 
 	/**
-	 * @return the iapProductInfo
+	 * @return the fullIapProductInfo
 	 */
-	public IapProductInfo getIapProductInfo() {
-		return this.iapProductInfo;
+	public PurchaseProduct getFullIapProductInfo() {
+		return this.fullIapProductInfo;
 	}
 
 	/**
-	 * @param iapProductInfo
-	 *            the iapProductInfo to set
+	 * @param fullIapProductInfo
+	 *            the fullIapProductInfo to set
 	 */
-	public void setIapProductInfo(IapProductInfo iapProductInfo) {
-		this.iapProductInfo = iapProductInfo;
-	}
-
-	/**
-	 * @return the bonusCashPoint
-	 */
-	public String getBonusCashPoint() {
-		return this.bonusCashPoint;
-	}
-
-	/**
-	 * @param bonusCashPoint
-	 *            the bonusCashPoint to set
-	 */
-	public void setBonusCashPoint(String bonusCashPoint) {
-		this.bonusCashPoint = bonusCashPoint;
+	public void setFullIapProductInfo(PurchaseProduct fullIapProductInfo) {
+		this.fullIapProductInfo = fullIapProductInfo;
 	}
 
 	/**
