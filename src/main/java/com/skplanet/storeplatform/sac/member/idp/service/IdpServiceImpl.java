@@ -112,7 +112,9 @@ public class IdpServiceImpl implements IdpService {
 	public ImResult executeRXCreateUserIDP(HashMap<String, String> map) {
 		// System.out.println("rXCreateUserIDP ------- ");
 		/*
-		 * map 정보중 리턴값중 이용동의 사이트정보의 old_id 값 null을 판단 신규가입 , 전환가입/변경가입/변경전환 분기처리
+		 * map 정보중 리턴값중 이용동의 사이트정보의 old_id 값 null을 판단 신규가입 , 전환가입/변경가입/변경전환 분기처리 RX에 실명 인증 정보가 존재 하면 -> TB_US_MBR_AUTH
+		 * 테이블에 데이터 Insert -> TB_US_USERMBR_ONEID 테이블에 실명인증 여부, CI 존재 여부 "Y"로 업데이트 -> TB_US_USERMBR 테이블의 실명인증 여부는 절대
+		 * 수정하지 않음 *
 		 */
 
 		LOGGER.debug("executeRXCreateUserIDP ------- Start");
@@ -611,9 +613,8 @@ public class IdpServiceImpl implements IdpService {
 		// 실명 인증 여부 신규가입인경우 Tstore에서 실명인증을 받아야 구매할수 있으므로 N 으로 셋팅이 되서 TB_US_USERMBR의 실명인증여부를 SC에서 N으로 수정함
 		if (isNewYn.equals("N")) {
 			setMbrAuth.setIsRealName("N");
-		} else {
-			setMbrAuth.setIsRealName("Y");
 		}
+		// 수정시에도 현재 메소드를 사용하는데 setMbrAuth.setIsRealName에 값을 셋팅하지 않아야 전환가입,변경가입-변경전환에서 사용가능
 
 		if (hashMap.get("user_ci") != null) { // user_ci 회원테이블에서 필수값이므로 " "공백을 셋팅해줘야 인서트가 됨.
 			if (!hashMap.get("user_ci").toString().equals("")) {
@@ -739,10 +740,8 @@ public class IdpServiceImpl implements IdpService {
 		if (hashMap.get("emailYn") != null)
 			getUserMbr.setIsRecvEmail(hashMap.get("emailYn").toString()); // 이메일 수신여부 (Y/N)
 
-		if (searchUserResponse.getMbrAuth() != null) {
-			if (searchUserResponse.getMbrAuth().getIsRealName().equals(MemberConstants.USE_Y)) {
-				getMbrAuth = searchUserResponse.getMbrAuth();
-			}
+		if (hashMap.get("is_rname_auth") != null) {
+			getMbrAuth = this.getMbrAuthByNew(hashMap, "Y"); // 전환가입,변경가입,변경전환시에는 Y로 넘겨줘서 실명인증여부를
 		}
 
 		updateUserRequest.setCommonRequest(commonRequest);
