@@ -500,7 +500,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 				ListDeviceReq scReq = new ListDeviceReq();
 				scReq.setUserKey(info.getUserKey());
 				scReq.setDeviceId(req.getUserPhone());
-				scReq.setIsMainDevice("N");
+				scReq.setIsMainDevice("Y");
 
 				ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, scReq);
 
