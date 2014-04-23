@@ -88,14 +88,6 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			throw new StorePlatformException("SAC_DSP_0003", "listId", listId, "topMenuId", topMenuId);
 		}
 
-		// if (!StringUtils.isEmpty(requestVO.getFilteredBy())) {
-		// try {
-		// requestVO.setFilteredBy(URLEncoder.encode(requestVO.getFilteredBy(), "UTF-8"));
-		// } catch (Exception ex) {
-		// throw new StorePlatformException("SAC_DSP_9999", ex);
-		// }
-		// }
-
 		// 시작점 ROW Default 세팅
 		if (requestVO.getOffset() == null) {
 			requestVO.setOffset(1);
@@ -123,13 +115,6 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 
 		// prodGradeCd 배열로 변경
 		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
-			// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
-			// try {
-			// requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
-			// } catch (Exception ex) {
-			// throw new StorePlatformException("SAC_DSP_9999", ex);
-			// }
-
 			String[] prodGradeCdArr = StringUtils.split(requestVO.getProdGradeCd(), "+");
 			requestVO.setProdGradeCdArr(prodGradeCdArr);
 		}
