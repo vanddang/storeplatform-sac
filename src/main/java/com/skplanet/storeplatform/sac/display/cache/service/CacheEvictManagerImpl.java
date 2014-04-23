@@ -68,4 +68,10 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     public void evictAllFreepassMeta() {
 
     }
+
+    @Override
+    @CacheEvict(value = "sac:display:product:webtoon", allEntries = true)
+    public void evictAllWebtoonMeta() {
+
+    }
 }

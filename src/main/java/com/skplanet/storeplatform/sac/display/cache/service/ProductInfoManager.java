@@ -59,6 +59,13 @@ public interface ProductInfoManager {
     FreepassMeta getFreepassMeta(FreepassMetaParam param);
 
     /**
+     * 웹툰 상품 조회
+     * @param param
+     * @return
+     */
+    WebtoonMeta getWebtoonMeta(WebtoonMetaParam param);
+
+    /**
      * 서브컨텐트 정보를 조회한다. APP상품에서 이용한다.
      * @param prodId
      * @param deviceModelCd

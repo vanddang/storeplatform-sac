@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * <p>
- * DESC
+ * DisplayCacheController
  * </p>
  * Updated on : 2014. 04. 03 Updated by : 정희원, SK 플래닛.
  */
@@ -65,6 +65,9 @@ public class DisplayCacheController {
         else if(prodType.equals("ebookcomic")) {
             cacheEvictManager.evictAllEbookComicMeta();
         }
+        else if(prodType.equals("webtoon")) {
+            cacheEvictManager.evictAllWebtoonMeta();
+        }
         else if(prodType.equals("all")) {
             cacheEvictManager.evictAllAppMeta();
             cacheEvictManager.evictAllMusicMeta();
@@ -72,6 +75,7 @@ public class DisplayCacheController {
             cacheEvictManager.evictAllFreepassMeta();
             cacheEvictManager.evictAllVodMeta();
             cacheEvictManager.evictAllEbookComicMeta();
+            cacheEvictManager.evictAllWebtoonMeta();
         }
 
     }

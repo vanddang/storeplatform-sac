@@ -259,8 +259,42 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getWebtoonMetaInfo(Map<String, Object> paramMap) {
-		return this.commonDAO.queryForObject("MetaInfo.getWebtoonMetaInfo", paramMap, MetaInfo.class);
-	}
+        if (isUseCache()) {
+            ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
+            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+
+            WebtoonMetaParam param = new WebtoonMetaParam();
+            param.setTenantId(tenantHeader.getTenantId());
+            param.setLangCd(tenantHeader.getLangCd());
+            param.setContentType(ContentType.forCode(basicInfo.getContentsTypeCd()));
+            if (param.getContentType() == ContentType.Channel) {
+                param.setProdId(basicInfo.getProdId());
+            } else if (param.getContentType() == ContentType.Episode) {
+                param.setProdId(basicInfo.getPartProdId());
+            }
+
+            WebtoonMeta meta = productInfoManager.getWebtoonMeta(param);
+
+            if (meta == null) {
+                logger.warn("메타데이터를 읽을 수 없습니다 - Webtoon#{}", param.getProdId());
+                return null;
+            }
+
+            MetaInfo me = new MetaInfo();
+            MetaBeanUtils.setProperties(meta, me);
+
+            me.setContentsTypeCd(param.getContentType().getCode());
+            if (param.getContentType() == ContentType.Channel) {
+                me.setProdAmt(meta.getChnlProdAmt());
+            } else if (param.getContentType() == ContentType.Episode) {
+                me.setProdAmt(meta.getEpsdProdAmt());
+            }
+
+            return me;
+        }
+        else
+            return this.commonDAO.queryForObject("MetaInfo.getWebtoonMetaInfo", paramMap, MetaInfo.class);
+    }
 
 	/*
 	 * (non-Javadoc)

@@ -153,6 +153,24 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
+    @Cacheable(value = "sac:display:product:webtoon", key = "#param.getCacheKey()", unless = "#result == null")
+    public WebtoonMeta getWebtoonMeta(WebtoonMetaParam param) {
+        // NOTICE EbookComic, Webtoon은 조회방법은 동일하지만 요구되는 응답값이 다르다.
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        reqMap.put("prodId", param.getProdId());
+        reqMap.put("langCd", param.getLangCd());
+        reqMap.put("tenantId", param.getTenantId());
+        if(param.getContentType() == ContentType.Channel)
+            reqMap.put("prodIdType", "CHANNEL");
+        else if(param.getContentType() == ContentType.Episode)
+            reqMap.put("prodIdType", "EPISODE");
+        else
+            throw new RuntimeException("prodIdType cannot be null.");
+
+        return commonDAO.queryForObject("ProductInfo.getWebtoonMeta", reqMap, WebtoonMeta.class);
+    }
+
+    @Override
     @Cacheable(value = "sac:display:product:shopping", key = "#param.getCacheKey()", unless = "#result == null")
     public ShoppingMeta getShoppingMeta(ShoppingMetaParam param) {
         Map<String, Object> reqMap = new HashMap<String, Object>();

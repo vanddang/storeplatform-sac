@@ -43,4 +43,6 @@ public interface CacheEvictManager {
 
     void evictAllFreepassMeta();
 
+    void evictAllWebtoonMeta();
+
 }

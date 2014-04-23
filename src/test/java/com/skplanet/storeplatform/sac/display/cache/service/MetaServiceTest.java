@@ -291,6 +291,66 @@ public class MetaServiceTest {
     }
 
     @Test
+    public void webtoonTestByChannel() {
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        DeviceHeader deviceHeader = new DeviceHeader();
+        TenantHeader tenantHeader = new TenantHeader();
+        reqMap.put("deviceHeader", deviceHeader);
+        reqMap.put("tenantHeader", tenantHeader);
+        deviceHeader.setModel(DEVICE_MODEL_CD);
+        tenantHeader.setLangCd("ko");
+        tenantHeader.setTenantId("S01");
+        reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
+        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
+        reqMap.put("productBasicInfo", productBasicInfo);
+        productBasicInfo.setProdId("H900681904");
+        productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+
+        this.cacheEvictManager.evictAllWebtoonMeta();
+
+        RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
+        MetaInfo meta1 = metaInfoService.getEbookComicMetaInfo(reqMap);
+        logger.info("Meta1={}", meta1);
+
+        RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
+        cacheEvictManager.evictAllAppMeta();
+        MetaInfo meta2 = metaInfoService.getEbookComicMetaInfo(reqMap);
+        logger.info("Meta2={}", meta2);
+
+        beanDiff(meta1, meta2);
+    }
+
+    @Test
+    public void webtoonTestByEpisode() {
+        Map<String, Object> reqMap = new HashMap<String, Object>();
+        DeviceHeader deviceHeader = new DeviceHeader();
+        TenantHeader tenantHeader = new TenantHeader();
+        reqMap.put("deviceHeader", deviceHeader);
+        reqMap.put("tenantHeader", tenantHeader);
+        deviceHeader.setModel(DEVICE_MODEL_CD);
+        tenantHeader.setLangCd("ko");
+        tenantHeader.setTenantId("S01");
+        reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
+        ProductBasicInfo productBasicInfo = new ProductBasicInfo();
+        reqMap.put("productBasicInfo", productBasicInfo);
+        productBasicInfo.setPartProdId("H001562778");
+        productBasicInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+
+        this.cacheEvictManager.evictAllWebtoonMeta();
+
+        RequestContextHolder.currentRequestAttributes().setAttribute("useCache", false, RequestAttributes.SCOPE_REQUEST);
+        MetaInfo meta1 = metaInfoService.getEbookComicMetaInfo(reqMap);
+        logger.info("Meta1={}", meta1);
+
+        RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
+        cacheEvictManager.evictAllAppMeta();
+        MetaInfo meta2 = metaInfoService.getEbookComicMetaInfo(reqMap);
+        logger.info("Meta2={}", meta2);
+
+        beanDiff(meta1, meta2);
+    }
+
+    @Test
     public void shoppingTest() {
         Map<String, Object> reqMap = new HashMap<String, Object>();
         DeviceHeader deviceHeader = new DeviceHeader();
