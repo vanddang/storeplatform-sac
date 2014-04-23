@@ -607,10 +607,9 @@ public class IdpServiceImpl implements IdpService {
 	 * @return
 	 */
 	private MbrAuth getMbrAuthByNew(HashMap<String, String> hashMap, String isNewYn) {
-		// 프로비저닝으로 내려온 실명인증은 재 인증을 해야함으로 Garbage method 될수 있음 일단 구현해놓음.
 		MbrAuth setMbrAuth = new MbrAuth();
 
-		// 실명 인증 여부 신규가입인경우 Tstore에서 실명인증을 받아야 구매할수 있으므로 N 으로 셋팅이 되서 TB_US_USERMBR의 실명인증여부를 SC에서 N으로 수정함
+		// 실명 인증 여부 신규가입인경우 Tstore에서 실명인증을 받아야 구매할수 있으므로 N 으로 셋팅이 되서 TB_US_USERMBR회원테이블의 실명인증여부를 SC에서 N으로 수정함
 		if (isNewYn.equals("N")) {
 			setMbrAuth.setIsRealName("N");
 		}
@@ -741,7 +740,8 @@ public class IdpServiceImpl implements IdpService {
 			getUserMbr.setIsRecvEmail(hashMap.get("emailYn").toString()); // 이메일 수신여부 (Y/N)
 
 		if (hashMap.get("is_rname_auth") != null) {
-			getMbrAuth = this.getMbrAuthByNew(hashMap, "Y"); // 전환가입,변경가입,변경전환시에는 Y로 넘겨줘서 실명인증여부를
+			getMbrAuth = this.getMbrAuthByNew(hashMap, "Y"); // 전환가입,변경가입,변경전환시에는 Y로 넘겨줘서
+															 // 실명인증여부를수정못하게함(setMbrAuth.setIsRealName셋팅을 하지 않음)
 		}
 
 		updateUserRequest.setCommonRequest(commonRequest);
