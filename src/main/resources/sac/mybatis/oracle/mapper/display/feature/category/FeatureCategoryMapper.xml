@@ -657,7 +657,7 @@
                                                         )
                                                  )
                                </if>
-                               <if test='filteredBy == "ebook+gener"'>  /* 이북 장르 */
+                               <if test='filteredBy == "ebook+genre"'>  /* 이북 장르 */
                            AND E.MENU_ID IN (SELECT MENU_ID
                                                FROM TB_DP_MENU_CATEGORY
                                               WHERE (MENU_ID LIKE 'DP13004%'
