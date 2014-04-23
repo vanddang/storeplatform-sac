@@ -683,7 +683,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// 게임 Cash
 			TStoreCashChargeReserveDetailEcReq tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
 			tStoreCashChargeReserveDetailEcReq.setProductGroup("01"); // 00:전체,01:Application,02:Multimedia,03:Shopping
-			tStoreCashChargeReserveDetailEcReq.setAmt(String.valueOf(prchsDtlMore.getProdAmt()));
+			tStoreCashChargeReserveDetailEcReq.setAmt(String.valueOf((int) prchsDtlMore.getProdAmt().doubleValue()));
 			tStoreCashChargeReserveDetailEcReq.setDate(prchsDtlMore.getUseExprDt()); // 사용 유효기간(만료일시 - yyyyMMddHHmmss)
 			tStoreCashChargeReserveDetailEcReq.setCashCls("02"); // T store Cash 충전형 - 01 : Point, 02 : Cash
 			cashReserveList.add(tStoreCashChargeReserveDetailEcReq);
@@ -708,7 +708,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 				tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
 				tStoreCashChargeReserveDetailEcReq.setProductGroup("01");
-				tStoreCashChargeReserveDetailEcReq.setAmt(reservedDataMap.get("bonusPoint"));
+				tStoreCashChargeReserveDetailEcReq.setAmt(String.valueOf(Integer.parseInt(reservedDataMap
+						.get("bonusPoint"))));
 				tStoreCashChargeReserveDetailEcReq.setDate(bonusPointExprDt);
 				tStoreCashChargeReserveDetailEcReq.setCashCls("01");
 				cashReserveList.add(tStoreCashChargeReserveDetailEcReq);
