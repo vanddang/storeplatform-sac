@@ -1096,6 +1096,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			mbrOneID.setIntgSvcNumber(imSvcNo); // OneID 통합서비스 관리번호
 			mbrOneID.setIsRealName(MemberConstants.USE_Y); // 실명인증 여부
 			mbrOneID.setIsCi(MemberConstants.USE_Y); // CI 존재 여부(Y/N)
+			mbrOneID.setUpdateDate(DateUtil.getToday("yyyyMMddHHmmss")); // 업데이트 날짜
 
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
