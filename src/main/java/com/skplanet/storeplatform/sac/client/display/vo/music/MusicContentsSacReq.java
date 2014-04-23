@@ -26,7 +26,7 @@ public class MusicContentsSacReq extends CommonInfo {
 	private static final long serialVersionUID = 11123123145L;
 
 	@NotBlank
-	@Pattern(regexp = "^top|^recent|^genre|^ring|^bell")
+	@Pattern(regexp = "^top|^recent|^genre|^ring|^bell|^mainTop")
 	private String filteredBy; // 차트 구분 코드
 
 	private String imageCd; // 이미지 사이즈 코드
@@ -58,6 +58,8 @@ public class MusicContentsSacReq extends CommonInfo {
 	private String batchId;
 
 	private String stdDt; // 배치일자
+
+	private String listId;
 
 	/**
 	 * 
@@ -433,4 +435,30 @@ public class MusicContentsSacReq extends CommonInfo {
 	public void setAnyDeviceModelCd(String anyDeviceModelCd) {
 		this.anyDeviceModelCd = anyDeviceModelCd;
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 리스트ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getListId() {
+		return this.listId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 리스트ID.
+	 * </pre>
+	 * 
+	 * @param listId
+	 *            listId
+	 */
+	public void setListId(String listId) {
+		this.listId = listId;
+	}
+
 }
