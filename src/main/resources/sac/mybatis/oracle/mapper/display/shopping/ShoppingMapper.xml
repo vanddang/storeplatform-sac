@@ -771,7 +771,7 @@
                            ) AS TOP_MENU_NM                      
 	                     ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
 	                        WHERE PROD_ID = BRAND_ID AND IMG_CD =#{imageCd}
-	                      )FILE_PATH
+	                      ) AS FILE_PATH
                  FROM (
                     SELECT *
                     FROM (
