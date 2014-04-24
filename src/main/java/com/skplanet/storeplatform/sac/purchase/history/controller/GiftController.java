@@ -72,7 +72,7 @@ public class GiftController {
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00009").system_id(systemId).usermbr_no(userKey);
+				shuttle.log_id("TL_SAC_PUR_0004").system_id(systemId).usermbr_no(userKey);
 			}
 		});
 
