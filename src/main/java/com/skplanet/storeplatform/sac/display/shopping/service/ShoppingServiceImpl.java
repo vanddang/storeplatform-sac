@@ -130,7 +130,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		if (StringUtils.isEmpty(req.getListId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
+			throw new StorePlatformException("SAC_DSP_0003", "listId", req.getListId());
 		}
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
@@ -264,7 +264,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
+			throw new StorePlatformException("SAC_DSP_0003", "tenantId", req.getTenantId());
 		}
 
 		if (StringUtils.isEmpty(req.getProdCharge())) {
@@ -350,7 +350,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		if (StringUtils.isEmpty(req.getMenuId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "menuId", req.getMenuId());
+			throw new StorePlatformException("SAC_DSP_0003", "menuId", req.getMenuId());
 		}
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
@@ -600,7 +600,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setPromotionImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD);
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(req.getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
+			throw new StorePlatformException("SAC_DSP_0003", "tenantId", req.getTenantId());
 		}
 
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
@@ -696,7 +696,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		MetaInfo shopping = null;
 
 		if (StringUtils.isEmpty(req.getPlanId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "planId", req.getPlanId());
+			throw new StorePlatformException("SAC_DSP_0003", "planId", req.getPlanId());
 		}
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
@@ -871,7 +871,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
+			throw new StorePlatformException("SAC_DSP_0003", "tenantId", req.getTenantId());
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
@@ -986,7 +986,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		if (StringUtils.isEmpty(req.getBrandId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "blandId", req.getBrandId());
+			throw new StorePlatformException("SAC_DSP_0003", "blandId", req.getBrandId());
 		}
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
@@ -1161,7 +1161,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
+			throw new StorePlatformException("SAC_DSP_0003", "tenantId", req.getTenantId());
 		}
 
 		// offset, Count default setting
@@ -1240,7 +1240,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		if (StringUtils.isEmpty(req.getThemeId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "themeId", req.getThemeId());
+			throw new StorePlatformException("SAC_DSP_0003", "themeId", req.getThemeId());
 		}
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
@@ -1385,10 +1385,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		if (StringUtils.isEmpty(req.getExceptId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "exceptId", req.getExceptId());
+			throw new StorePlatformException("SAC_DSP_0003", "exceptId", req.getExceptId());
 		}
 		if (StringUtils.isEmpty(req.getMenuId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "menuId", req.getMenuId());
+			throw new StorePlatformException("SAC_DSP_0003", "menuId", req.getMenuId());
 		}
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
@@ -1531,7 +1531,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		if (StringUtils.isEmpty(req.getBrandId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "brandId", req.getBrandId());
+			throw new StorePlatformException("SAC_DSP_0003", "brandId", req.getBrandId());
 		}
 
 		if (StringUtils.isEmpty(req.getExceptId())) {
@@ -1685,7 +1685,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 
 		if (StringUtils.isEmpty(req.getProductId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
+			throw new StorePlatformException("SAC_DSP_0003", "productId", req.getProductId());
 		}
 		if (StringUtils.isEmpty(req.getSpecialProdId())) { // 특가 상품이 아닌경우
 			if ("episode".equals(req.getType())) {
