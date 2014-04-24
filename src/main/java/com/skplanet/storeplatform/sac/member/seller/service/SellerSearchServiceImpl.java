@@ -316,8 +316,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
 					.getSellerMbr().getSellerClass())) {
 				nameTop = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getCharger(), "");
+				// first:sellerName, second:charger, default:""
 				nameLower = StringUtils
-						.defaultString( // first:sellerName, second:charger, default:""
+						.defaultString(
 								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerName()) ? searchSellerResponse
 										.getSellerMbr().getSellerName() : searchSellerResponse.getSellerMbr()
 										.getCharger(), "");
@@ -332,8 +333,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				compNmLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerCompany(), "");
 				nameLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getCeoName(), "");
 				bizNoLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getBizRegNumber(), "");
+				// first:repPhone, second:cordedTelephone, default:""
 				phoneLower = StringUtils
-						.defaultString( // first:repPhone, second:cordedTelephone, default:""
+						.defaultString(
 								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getRepPhone()) ? searchSellerResponse
 										.getSellerMbr().getRepPhone() : searchSellerResponse.getSellerMbr()
 										.getCordedTelephone(), "");
@@ -349,9 +351,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			// 개인 ( 판매자명, 이메일 )
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
 					.getSellerMbr().getSellerClass())) {
-
+				// first:sellerName, second:sellerCompany, default:""
 				nameLower = StringUtils
-						.defaultString( // first:sellerName, second:sellerCompany, default:""
+						.defaultString(
 								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerName()) ? searchSellerResponse
 										.getSellerMbr().getSellerName() : searchSellerResponse.getSellerMbr()
 										.getSellerCompany(), "");
@@ -361,9 +363,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 					.getSellerMbr().getSellerClass())
 					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS,
 							searchSellerResponse.getSellerMbr().getSellerClass())) {
-
+				// first:sellerCompany, second:sellerName, default:""
 				compNmLower = StringUtils
-						.defaultString( // first:sellerCompany, second:sellerName, default:""
+						.defaultString(
 								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerCompany()) ? searchSellerResponse
 										.getSellerMbr().getSellerCompany() : searchSellerResponse.getSellerMbr()
 										.getSellerName(), "");
