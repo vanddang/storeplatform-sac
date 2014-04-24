@@ -269,7 +269,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD, false);
 
 		if (CollectionUtils.isNotEmpty(policyList)) {
-			return policyList.get(0).getApplyValue();
+			return StringUtils.defaultString(policyList.get(0).getApplyValue(), "");
 		}
 
 		// TAKTODO:: 임시용, 정책 테이블에 관련 정책 추가 후 정책 테이블 조회로 변경
