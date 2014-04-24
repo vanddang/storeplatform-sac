@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.display.vo.openapi;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -16,6 +18,7 @@ public class SellerAppDetailReq extends CommonInfo {
 	 * 관리자 여부.
 	 */
 	@NotBlank
+	@Pattern(regexp = "^Y|^N")
 	private String admin;
 	/**
 	 * 판매자ID.
