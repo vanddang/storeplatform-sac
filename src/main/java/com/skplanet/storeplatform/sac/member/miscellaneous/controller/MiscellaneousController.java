@@ -355,7 +355,7 @@ public class MiscellaneousController {
 	 * 
 	 * @param header
 	 *            SacRequestHeader
-	 * @param req
+	 * @param request
 	 *            GetIndividualPolicyReq
 	 * @return GetIndividualPolicyRes
 	 */
@@ -376,7 +376,7 @@ public class MiscellaneousController {
 	 * 
 	 * @param header
 	 *            SacRequestHeader
-	 * @param req
+	 * @param request
 	 *            CreateIndividualPolicyReq
 	 * @return CreateIndividualPolicyRes
 	 */
@@ -397,7 +397,7 @@ public class MiscellaneousController {
 	 * 
 	 * @param header
 	 *            SacRequestHeader
-	 * @param req
+	 * @param request
 	 *            RemoveIndividualPolicyReq
 	 * @return RemoveIndividualPolicyRes
 	 */

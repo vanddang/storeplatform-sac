@@ -129,9 +129,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * OPMD 모회선 번호 조회.
 	 * </pre>
 	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param request
+	 * @param req
 	 *            GetOpmdReq
 	 * @return GetOpmdRes
 	 */
@@ -149,7 +147,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @param request
+	 * @param req
 	 *            GetUaCodeReq
 	 * @return GetUaCodeRes
 	 */
@@ -221,7 +219,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * 휴대폰 인증 SMS 발송.
 	 * </pre>
 	 * 
-	 * @param requestHeader
+	 * @param sacRequestHeader
 	 *            SacRequestHeader
 	 * @param request
 	 *            GetPhoneAuthorizationCodeReq
@@ -304,8 +302,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * 휴대폰 인증 코드 확인.
 	 * </pre>
 	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
 	 * @param request
 	 *            ConfirmPhoneAuthorizationCodeReq
 	 * @return ConfirmPhoneAuthorizationCodeRes
@@ -423,7 +419,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * 이메일 인증 코드 생성.
 	 * </pre>
 	 * 
-	 * @param requestHeader
+	 * @param sacRequestHeader
 	 *            SacRequestHeader
 	 * @param request
 	 *            GetEmailAuthorizationCodeReq
