@@ -131,9 +131,6 @@ public class FreepassServiceImpl implements FreepassService {
 				req.setCount(20);
 			}
 
-			if (StringUtils.isEmpty(req.getKind()))
-				throw new StorePlatformException("SAC_DSP_0003", "kind", req.getKind());
-
 			// 페이지당 노출될 ROW 개수 Default 세팅
 			if ("All".equals(req.getKind())) {
 				req.setKind("");
@@ -225,9 +222,6 @@ public class FreepassServiceImpl implements FreepassService {
 			if (req.getCount() == 0) {
 				req.setCount(20);
 			}
-
-			if (StringUtils.isEmpty(req.getProductId()))
-				throw new StorePlatformException("SAC_DSP_0003", "productId", req.getProductId());
 
 			retMetaInfo = this.commonDAO.queryForObject("Freepass.selectFreepassDetail", req, MetaInfo.class);
 
@@ -518,13 +512,6 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-			}
-			if (StringUtils.isEmpty(req.getProductId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
-			}
 
 			// 시작점 ROW Default 세팅
 			if (req.getOffset() == 0) {
