@@ -27,6 +27,11 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
+/**
+ * 탈퇴 사유 목록 조회.
+ * 
+ * Updated on : 2014. 4. 24. Updated by : Rejoice, Burkhan
+ */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -58,7 +63,7 @@ public class ListWithdrawalReasonTest {
 	 * </pre>
 	 */
 	@Test
-	public void ListWithdrawalReason() {
+	public void listWithdrawalReason() {
 
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/listWithdrawalReason/v1")
 				.httpMethod(HttpMethod.GET).addHeaders("Accept-Language", "ko")

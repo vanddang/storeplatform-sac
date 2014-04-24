@@ -27,6 +27,11 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
+/**
+ * 서브계정 목록 조회.
+ * 
+ * Updated on : 2014. 4. 24. Updated by : Rejoice, Burkhan
+ */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)

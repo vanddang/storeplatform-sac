@@ -80,7 +80,7 @@ public class DetailInformationUrlSCITest {
 	 * </pre>
 	 */
 	@Test
-	public void shouldOptianUserCarrer() throws Exception {
+	public void shouldOptianUserCarrer() {
 		new TestCaseTemplate(this.mvc).url("/member/seller/sci/detailInformation").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override

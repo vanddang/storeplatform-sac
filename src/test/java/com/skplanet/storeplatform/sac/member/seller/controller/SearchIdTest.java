@@ -29,6 +29,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
+/**
+ * 판매자 ID찾기.
+ * 
+ * Updated on : 2014. 4. 24. Updated by : Rejoice, Burkhan
+ */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)

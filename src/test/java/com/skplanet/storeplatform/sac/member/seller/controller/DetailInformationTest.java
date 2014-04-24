@@ -26,6 +26,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
+/**
+ * 판매자 기본정보 조회(모든키존재).
+ * 
+ * Updated on : 2014. 4. 24. Updated by : Rejoice, Burkhan
+ */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)

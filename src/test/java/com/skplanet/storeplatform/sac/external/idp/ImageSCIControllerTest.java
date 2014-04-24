@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.member.miscellaneous;
+package com.skplanet.storeplatform.sac.external.idp;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -19,18 +19,28 @@ import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageRes;
 
+/**
+ * ImageUrl To String Data.
+ * 
+ * Updated on : 2014. 4. 24. Updated by : Rejoice, Burkhan
+ */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class ImageUrlDataTest {
+public class ImageSCIControllerTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImageUrlDataTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ImageSCIControllerTest.class);
 
 	@Autowired
 	private ImageSCI imageSCI;
 
+	/**
+	 * <pre>
+	 * Get ImageUrlStringData.
+	 * </pre>
+	 */
 	@Test
 	public void testImageUrlData() {
 

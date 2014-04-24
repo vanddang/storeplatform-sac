@@ -33,6 +33,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordRemin
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
+/**
+ * Password 보안 질문 확인.
+ * 
+ * Updated on : 2014. 4. 24. Updated by : Rejoice, Burkhan
+ */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -64,7 +69,7 @@ public class CheckPasswordReminderQuestionTest {
 	 * </pre>
 	 */
 	@Test
-	public void CheckPasswordReminderQuestion() {
+	public void checkPasswordReminderQuestion() {
 
 		new TestCaseTemplate(this.mockMvc)
 				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/checkPasswordReminderQuestion/v1")

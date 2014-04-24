@@ -27,6 +27,11 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
+/**
+ * 나라별 해외은행 정보.
+ * 
+ * Updated on : 2014. 4. 24. Updated by : Rejoice, Burkhan
+ */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -58,7 +63,7 @@ public class ListBanksByCountryTest {
 	 * </pre>
 	 */
 	@Test
-	public void ListBanksByCountry() {
+	public void listBanksByCountry() {
 
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/listBanksByCountry/v1")
 				.httpMethod(HttpMethod.GET).success(ListBanksByCountryRes.class, new SuccessCallback() {

@@ -27,6 +27,11 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
+/**
+ * Password 보안 질문 조회 All.
+ * 
+ * Updated on : 2014. 4. 24. Updated by : Rejoice, Burkhan
+ */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -58,7 +63,7 @@ public class ListPasswordReminderQuestionAllTest {
 	 * </pre>
 	 */
 	@Test
-	public void ListPasswordReminderQuestionAll() {
+	public void listPasswordReminderQuestionAll() {
 
 		new TestCaseTemplate(this.mockMvc)
 				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/listPasswordReminderQuestionAll/v1")
