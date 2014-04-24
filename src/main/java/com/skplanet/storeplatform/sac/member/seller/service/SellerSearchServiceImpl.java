@@ -446,9 +446,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			}
 
 		SellerAccount sellerAccount = new SellerAccount();
+		sellerAccount.setSellerKey(schRes.getSellerKey());
 		if (schRes.getSellerMbr() != null) {
 			// 판매자 정보
-			sellerAccount.setSellerKey(schRes.getSellerMbr().getSellerKey());
 			sellerAccount.setSellerBizAddress(schRes.getSellerMbr().getSellerBizAddress());
 			sellerAccount.setSellerBizDetailAddress(schRes.getSellerMbr().getSellerBizDetailAddress());
 			sellerAccount.setSellerBizZip(schRes.getSellerMbr().getSellerBizZip());
