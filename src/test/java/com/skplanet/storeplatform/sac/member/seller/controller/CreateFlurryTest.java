@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq.FlurryAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 2.2.32. Flurry 등록/수정.
@@ -74,7 +75,8 @@ public class CreateFlurryTest {
 	 */
 	@After
 	public void after() {
-
+		// Debug - Flurry 등록/수정 결과
+		LOGGER.debug("[RESPONSE(SAC)-가입] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
 	}
 
 	/**
