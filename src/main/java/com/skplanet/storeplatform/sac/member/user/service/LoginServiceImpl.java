@@ -675,14 +675,22 @@ public class LoginServiceImpl implements LoginService {
 
 				}
 
-				/* IDP 로그인이 정상으로 되었으나 로그인상태코드, 직원중지코드가 정지상태인경우 정상으로 업데이트 */
-				if (StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)
-						|| StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
-					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL,
-							MemberConstants.USER_STOP_STATUS_NOMAL, null, null);
-					this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_NOMAL,
-							MemberConstants.USER_STOP_STATUS_NOMAL);
+				/* IDP 로그인이 정상으로 되었으나 직원중지코드가 정지상태인경우 정상으로 업데이트 */
+				if (StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
+					LOGGER.info("{} 직권중지코드가 상이하여 업데이트(stopStatusCode : {} -> {})", userId, stopStatusCode, MemberConstants.USER_STOP_STATUS_NOMAL);
+					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null, MemberConstants.USER_STOP_STATUS_NOMAL, null,
+							null);
+					this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), null, MemberConstants.USER_STOP_STATUS_NOMAL);
 					stopStatusCode = MemberConstants.USER_STOP_STATUS_NOMAL;
+				}
+
+				/* IDP 로그인이 정상으로 되었으나 로그인상태코드가 정지상태인경우 정상으로 업데이트 */
+				if (StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+					LOGGER.info("{} 로그인제한상태코드가 상이하여 업데이트(loginStatusCode : {} -> {})", userId, loginStatusCode,
+							MemberConstants.USER_LOGIN_STATUS_NOMAL);
+					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null,
+							null);
+					this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_NOMAL, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
@@ -714,6 +722,8 @@ public class LoginServiceImpl implements LoginService {
 								+ ImIdpConstants.IDP_RES_CODE_SUSPEND_02)) { // 직권중지 상태인 경우
 
 					if (!StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) { // IDP와 직권중지상태 코드가 다를경우 직권중지상태로 업데이트
+						LOGGER.info("{} 직권중지상태코드가 상이하여 업데이트(stopStatusCode : {} -> {})", userId, stopStatusCode,
+								MemberConstants.USER_STOP_STATUS_PAUSE);
 						this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null, MemberConstants.USER_STOP_STATUS_PAUSE, null,
 								null);
 						this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), null, MemberConstants.USER_STOP_STATUS_PAUSE);
@@ -724,6 +734,8 @@ public class LoginServiceImpl implements LoginService {
 						+ ImIdpConstants.IDP_RES_CODE_LOGIN_RESTRICT)) { // 로그인제한 상태인 경우
 
 					if (!StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) { // IDP와 로그인 제한상태 코드가 다를경우 로그인 제한상태로 업데이트
+						LOGGER.info("{} 로그인제한상태코드가 상이하여 업데이트(loginStatusCode : {} -> {})", userId, loginStatusCode,
+								MemberConstants.USER_LOGIN_STATUS_PAUSE);
 						this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_PAUSE, null,
 								null, null);
 						this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_PAUSE, null);
