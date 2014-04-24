@@ -95,7 +95,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		// 요청 값 세팅
 		this.log.debug("요청 값 세팅");
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
-		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
+		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 999999);
 		requestVO.setDuration(requestVO.getDuration() != null ? requestVO.getDuration() : 30);
 		requestVO.setChapter(requestVO.getChapter() != null ? requestVO.getChapter() : 0);
 		requestVO.setRegDate(requestVO.getRegDate() != null ? requestVO.getRegDate() : new SimpleDateFormat(
