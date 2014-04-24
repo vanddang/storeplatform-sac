@@ -107,16 +107,22 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 
 		List<MetaInfo> bestDownloadMMList = null;
 
-		if (StringUtils.isEmpty(listId)) {
-			if (StringUtils.isEmpty(orderedBy)) {
-				throw new StorePlatformException("SAC_DSP_0002", "orderedBy", orderedBy);
-			}
-		}
-
 		if (StringUtils.isNotEmpty(orderedBy)) {
 			if (!DisplayConstants.DP_ORDEREDBY_TYPE_RECENT.equals(orderedBy)
 					&& !DisplayConstants.DP_ORDEREDBY_TYPE_POPULAR.equals(orderedBy)) {
 				throw new StorePlatformException("SAC_DSP_0015", "recent|popular", orderedBy);
+			}
+		}
+
+		if (StringUtils.isNotEmpty(listId)) {
+			if (StringUtils.isNotEmpty(orderedBy)) {
+				throw new StorePlatformException("SAC_DSP_0021");
+			}
+		}
+
+		if (StringUtils.isNotEmpty(orderedBy)) {
+			if (StringUtils.isNotEmpty(listId)) {
+				throw new StorePlatformException("SAC_DSP_0022");
 			}
 		}
 
@@ -171,9 +177,6 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 					|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) { // VOD
 				bestDownloadMMSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 
-				if (StringUtils.isEmpty(listId)) {
-					throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
-				}
 				// VOD 신규
 				if ("TGR000000002".equals(listId)) {
 					this.log.debug("---------------------------------------------------------------------");
@@ -184,9 +187,6 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 				}
 			}
 		} else {
-			if (StringUtils.isEmpty(orderedBy)) {
-				throw new StorePlatformException("SAC_DSP_0002", "orderedBy", orderedBy);
-			}
 
 			if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
 				this.log.debug("---------------------------------------------------------------------");

@@ -19,9 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
@@ -103,30 +101,8 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 		count = offset + count - 1;
 		downloadBestSacReq.setCount(count); // set count
 
-		String listId = downloadBestSacReq.getListId();
 		String inquiryType = downloadBestSacReq.getInquiryType();
 		String inquiryValue = downloadBestSacReq.getInquiryValue();
-		String prodCharge = downloadBestSacReq.getProdCharge();
-
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(listId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
-		}
-
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(inquiryType)) {
-			throw new StorePlatformException("SAC_DSP_0002", "inquiryType", inquiryType);
-		}
-
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(inquiryValue)) {
-			throw new StorePlatformException("SAC_DSP_0002", "inquiryValue", inquiryValue);
-		}
-
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(prodCharge)) {
-			throw new StorePlatformException("SAC_DSP_0002", "prodCharge", prodCharge);
-		}
 
 		if ("2".equals(inquiryType)) {
 			// 사업자 등록번호로 Selley Key 조회

@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq;
@@ -101,11 +100,6 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 		Product product = null;
 
 		String releaseType = newAppRecommendSacReq.getReleaseType();
-
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(releaseType)) {
-			throw new StorePlatformException("SAC_DSP_0002", "releaseType", releaseType);
-		}
 
 		List<MetaInfo> newAppRecommend = null;
 		// OpenApi 신규 앱 추천 상품 조회

@@ -113,21 +113,7 @@ public class BestDownloadAppServiceImpl implements BestDownloadAppService {
 		count = offset + count - 1;
 		bestDownloadAppSacReq.setCount(count); // set count
 
-		// '+'로 연결 된 상품등급코드를 배열로 전달
-		// if (!"DPAPP".equals(bestDownloadAppSacReq.getTopMenuId())) {
-		// if (StringUtils.isNotEmpty(bestDownloadAppSacReq.getTopMenuId())) {
-		// String[] arrayTopMenuId = bestDownloadAppSacReq.getTopMenuId().split("\\+");
-		// bestDownloadAppSacReq.setArrayTopMenuId(arrayTopMenuId);
-		// }
-		// }
-
 		List<MetaInfo> bestDownloadAppList = null;
-
-		if (StringUtils.isEmpty(listId)) {
-			if (StringUtils.isEmpty(orderedBy)) {
-				throw new StorePlatformException("SAC_DSP_0002", "orderedBy", orderedBy);
-			}
-		}
 
 		if (StringUtils.isNotEmpty(orderedBy)) {
 			if (!DisplayConstants.DP_ORDEREDBY_TYPE_RECENT.equals(orderedBy)
