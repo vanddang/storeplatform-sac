@@ -71,11 +71,6 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
 		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
-		// tenantId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
-		}
-
 		// 상품 등급 코드 설정
 		if (StringUtils.isNotEmpty(requestVO.getProdGradeCd())) {
 			String[] arrayProdGradeCd = requestVO.getProdGradeCd().split("\\+");
@@ -465,11 +460,6 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 		requestVO.setTenantId(header.getTenantHeader().getTenantId());
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
 		requestVO.setLangCd(header.getTenantHeader().getLangCd());
-
-		// tenantId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
-		}
 
 		RecommendOneday recommendOnedayInform;
 

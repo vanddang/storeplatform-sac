@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeEpubSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -68,10 +66,6 @@ public class ThemeEpubServiceImpl implements ThemeEpubService {
 
 		if (req.getDummy() == null) {
 
-			// 필수 파라미터 체크 channelId
-			if (StringUtils.isEmpty(req.getFilteredBy())) {
-				throw new StorePlatformException("SAC_DSP_0002", "filteredBy", req.getFilteredBy());
-			}
 			String filteredBy = req.getFilteredBy();
 			int offset = 1; // default
 			int count = 20; // default
@@ -91,8 +85,6 @@ public class ThemeEpubServiceImpl implements ThemeEpubService {
 				req.setBnrMenuId("DP010913"); // DP010913 ebook 테마 배너
 			} else if ("comic".equals(filteredBy)) {
 				req.setBnrMenuId("DP010914"); // DP010914 코믹 테마 배너
-			} else {
-				throw new StorePlatformException("SAC_DSP_0002", "filteredBy", req.getFilteredBy());
 			}
 
 			CommonResponse commonResponse = new CommonResponse();
