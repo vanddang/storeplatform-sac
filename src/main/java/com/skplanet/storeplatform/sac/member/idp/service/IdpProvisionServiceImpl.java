@@ -341,6 +341,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			resultMsg = IdpConstants.IDP_RESPONSE_SUCCESS_MSG;
 
 		} catch (StorePlatformException ex) {
+			LOGGER.error(ex.getMessage(), ex);
 
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
@@ -376,7 +377,12 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+
+			try {
+				this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			} catch (StorePlatformException ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 
 			/* TLog 남김 */
 			final String fdsLogUserKey = userKey;
@@ -747,6 +753,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} catch (StorePlatformException ex) {
 
+			LOGGER.error(ex.getMessage(), ex);
+
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				result = IdpConstants.IDP_RESPONSE_NO_DATA;
@@ -778,7 +786,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			try {
+				this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			} catch (StorePlatformException ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 		}
 
 		return result;
@@ -907,6 +919,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} catch (StorePlatformException ex) {
 
+			LOGGER.error(ex.getMessage(), ex);
+
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				result = IdpConstants.IDP_RESPONSE_NO_DATA;
@@ -938,7 +952,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			try {
+				this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			} catch (StorePlatformException ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 		}
 		return result;
 	}
@@ -1015,6 +1033,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} catch (StorePlatformException ex) {
 
+			LOGGER.error(ex.getMessage(), ex);
+
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				result = IdpConstants.IDP_RESPONSE_NO_DATA;
@@ -1045,7 +1065,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			// changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			try {
+				this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			} catch (StorePlatformException ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 		}
 
 		return result;
@@ -1390,7 +1414,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			}
 
 		} catch (StorePlatformException ex) {
-			ex.printStackTrace();
+
+			LOGGER.error(ex.getMessage(), ex);
+
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				result = IdpConstants.IDP_RESPONSE_NO_DATA;
@@ -1421,7 +1447,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			// changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			try {
+				this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			} catch (StorePlatformException ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 		}
 
 		return result;
@@ -1481,6 +1511,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 		} catch (StorePlatformException ex) {
 
+			LOGGER.error(ex.getMessage(), ex);
+
 			if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)
 					|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 				result = IdpConstants.IDP_RESPONSE_NO_DATA;
@@ -1522,8 +1554,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			// changeDeviceLog.setDeviceKey(deviceKey);
 			// changeDeviceLog.setDeviceCode(deviceCode);
 			// changeDeviceLog.setIsChanged(isChanged);
-
-			this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			try {
+				this.insertChangedDeviceHis(commonRequest, changeDeviceLog);
+			} catch (StorePlatformException ex) {
+				LOGGER.error(ex.getMessage(), ex);
+			}
 		}
 
 		return result;
