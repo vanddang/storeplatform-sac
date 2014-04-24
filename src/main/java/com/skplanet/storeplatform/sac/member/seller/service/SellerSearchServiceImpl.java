@@ -445,24 +445,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				documentList.add(document);
 			}
 
-		// 판매자 정산정보
 		SellerAccount sellerAccount = new SellerAccount();
-		if (schRes.getSellerAccount() != null) {
-			sellerAccount.setSellerKey(schRes.getSellerAccount().getSellerKey());
-			sellerAccount.setAbaCode(schRes.getSellerAccount().getAbaCode());
-			sellerAccount.setAccountRealDate(schRes.getSellerAccount().getAccountRealDate());
-			sellerAccount.setBankAccount(schRes.getSellerAccount().getBankAccount());
-			sellerAccount.setBankAcctName(schRes.getSellerAccount().getBankAcctName());
-			sellerAccount.setBankAddress(schRes.getSellerAccount().getBankAddress());
-			sellerAccount.setBankBranch(schRes.getSellerAccount().getBankBranch());
-			sellerAccount.setBankBranchCode(schRes.getSellerAccount().getBankBranchCode());
-			sellerAccount.setBankCode(schRes.getSellerAccount().getBankCode());
-			sellerAccount.setBankLocation(schRes.getSellerAccount().getBankLocation());
-			sellerAccount.setBankName(schRes.getSellerAccount().getBankName());
-			sellerAccount.setIbanCode(schRes.getSellerAccount().getIbanCode());
-			sellerAccount.setSwiftCode(schRes.getSellerAccount().getSwiftCode());
-			sellerAccount.setTpinCode(schRes.getSellerAccount().getTpinCode());
-			sellerAccount.setBankBsb(schRes.getSellerAccount().getBankBsb());
+		if (schRes.getSellerMbr() != null) {
+			// 판매자 정보
+			sellerAccount.setSellerKey(schRes.getSellerMbr().getSellerKey());
 			sellerAccount.setSellerBizAddress(schRes.getSellerMbr().getSellerBizAddress());
 			sellerAccount.setSellerBizDetailAddress(schRes.getSellerMbr().getSellerBizDetailAddress());
 			sellerAccount.setSellerBizZip(schRes.getSellerMbr().getSellerBizZip());
@@ -471,8 +457,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerAccount.setSellerBizCorpNumber(schRes.getSellerMbr().getSellerBizCorpNumber());
 			sellerAccount.setVendorCode(schRes.getSellerMbr().getVendorCode());
 			sellerAccount.setIsBizRegistered(schRes.getSellerMbr().getIsBizRegistered());
-			sellerAccount.setBizRegNumber(schRes.getSellerMbr().getBizRegNumber());
-			sellerAccount.setBizUnregReason(schRes.getSellerMbr().getBizUnregReason());
 			sellerAccount.setIsBizTaxable(schRes.getSellerMbr().getIsBizTaxable());
 			sellerAccount.setBizGrade(schRes.getSellerMbr().getBizGrade());
 			sellerAccount.setIsDeductible(schRes.getSellerMbr().getIsDeductible());
@@ -484,6 +468,25 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerAccount.setSellerBizPhone(schRes.getSellerMbr().getCustomerPhone());
 			sellerAccount.setCeoBirthDay(schRes.getSellerMbr().getCeoBirthDay());
 			sellerAccount.setCeoName(schRes.getSellerMbr().getCeoName());
+			sellerAccount.setBizRegNumber(schRes.getSellerMbr().getBizRegNumber());
+			sellerAccount.setBizUnregReason(schRes.getSellerMbr().getBizUnregReason());
+		}
+		if (schRes.getSellerAccount() != null) {
+			// 정산정보
+			sellerAccount.setBankAccount(schRes.getSellerAccount().getBankAccount());
+			sellerAccount.setBankCode(schRes.getSellerAccount().getBankCode());
+			sellerAccount.setBankAcctName(schRes.getSellerAccount().getBankAcctName());
+			sellerAccount.setBankName(schRes.getSellerAccount().getBankName());
+			sellerAccount.setBankBranchCode(schRes.getSellerAccount().getBankBranchCode());
+			sellerAccount.setBankBranch(schRes.getSellerAccount().getBankBranch());
+			sellerAccount.setSwiftCode(schRes.getSellerAccount().getSwiftCode());
+			sellerAccount.setAbaCode(schRes.getSellerAccount().getAbaCode());
+			sellerAccount.setIbanCode(schRes.getSellerAccount().getIbanCode());
+			sellerAccount.setBankAddress(schRes.getSellerAccount().getBankAddress());
+			sellerAccount.setBankLocation(schRes.getSellerAccount().getBankLocation());
+			sellerAccount.setTpinCode(schRes.getSellerAccount().getTpinCode());
+			sellerAccount.setAccountRealDate(schRes.getSellerAccount().getAccountRealDate());
+			sellerAccount.setBankBsb(schRes.getSellerAccount().getBankBsb());
 			sellerAccount.setChangedCd(schRes.getSellerAccount().getChangedCd()); // 전환 유형코드
 		}
 
