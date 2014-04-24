@@ -9,9 +9,6 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class CreateAuthKeyReq extends CommonInfo {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4017679478547899647L;
 
 	/** 판매자 키. */
@@ -21,28 +18,48 @@ public class CreateAuthKeyReq extends CommonInfo {
 	/** IP 주송. */
 	private String ipAddress;
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
+	/**
+	 * @return the expireDate
+	 */
 	public String getExpireDate() {
 		return this.expireDate;
 	}
 
+	/**
+	 * @param expireDate
+	 *            the expireDate to set
+	 */
 	public void setExpireDate(String expireDate) {
 		this.expireDate = expireDate;
 	}
 
+	/**
+	 * @return the ipAddress
+	 */
 	public String getIpAddress() {
 		return this.ipAddress;
 	}
 
+	/**
+	 * @param ipAddress
+	 *            the ipAddress to set
+	 */
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
-
 }

@@ -19,12 +19,19 @@ public class SearchIdRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자 정보 Value Object 목록. */
-	private List<SellerMbrSac> sellerMbr;// 판매자정보
+	private List<SellerMbrSac> sellerMbr;
 
+	/**
+	 * @return the sellerMbr
+	 */
 	public List<SellerMbrSac> getSellerMbr() {
 		return this.sellerMbr;
 	}
 
+	/**
+	 * @param sellerMbr
+	 *            the sellerMbr to set
+	 */
 	public void setSellerMbr(List<SellerMbrSac> sellerMbr) {
 		this.sellerMbr = sellerMbr;
 	}

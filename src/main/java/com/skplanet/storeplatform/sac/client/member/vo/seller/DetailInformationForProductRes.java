@@ -17,7 +17,7 @@ public class DetailInformationForProductRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/** 판매자 ID */
+	/** 판매자 ID. */
 	private String sellerId;
 	/** 판매자 구분 코드 . */
 	private String sellerClass;

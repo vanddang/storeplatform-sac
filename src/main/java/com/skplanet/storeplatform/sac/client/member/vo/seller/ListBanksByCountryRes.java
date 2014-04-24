@@ -21,10 +21,17 @@ public class ListBanksByCountryRes extends CommonInfo {
 	/** 나라별 해외은행 정보. */
 	private List<BanksByCountry> banksByCountry;
 
+	/**
+	 * @return the banksByCountry
+	 */
 	public List<BanksByCountry> getBanksByCountry() {
 		return this.banksByCountry;
 	}
 
+	/**
+	 * @param banksByCountry
+	 *            the banksByCountry to set
+	 */
 	public void setBanksByCountry(List<BanksByCountry> banksByCountry) {
 		this.banksByCountry = banksByCountry;
 	}

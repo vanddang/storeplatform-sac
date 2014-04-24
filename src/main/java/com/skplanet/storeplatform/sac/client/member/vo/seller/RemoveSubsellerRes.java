@@ -17,10 +17,17 @@ public class RemoveSubsellerRes extends CommonInfo {
 
 	private int removeCnt;
 
+	/**
+	 * @return the removeCnt
+	 */
 	public int getRemoveCnt() {
 		return this.removeCnt;
 	}
 
+	/**
+	 * @param removeCnt
+	 *            the removeCnt to set
+	 */
 	public void setRemoveCnt(int removeCnt) {
 		this.removeCnt = removeCnt;
 	}

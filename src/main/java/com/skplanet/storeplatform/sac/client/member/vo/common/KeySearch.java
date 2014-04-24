@@ -15,21 +15,37 @@ public class KeySearch extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 검색값. */
 	private String keyString;
+	/** 검색 구분값. */
 	private String keyType;
 
+	/**
+	 * @return the keyString
+	 */
 	public String getKeyString() {
 		return this.keyString;
 	}
 
+	/**
+	 * @param keyString
+	 *            the keyString to set
+	 */
 	public void setKeyString(String keyString) {
 		this.keyString = keyString;
 	}
 
+	/**
+	 * @return the keyType
+	 */
 	public String getKeyType() {
 		return this.keyType;
 	}
 
+	/**
+	 * @param keyType
+	 *            the keyType to set
+	 */
 	public void setKeyType(String keyType) {
 		this.keyType = keyType;
 	}

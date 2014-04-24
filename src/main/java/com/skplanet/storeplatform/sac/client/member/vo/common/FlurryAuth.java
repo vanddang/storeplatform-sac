@@ -30,42 +30,77 @@ public class FlurryAuth extends CommonInfo {
 	/** 수정일시. */
 	private String updateDate; // UPD_DT 수정일시
 
+	/**
+	 * @return the sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
 
+	/**
+	 * @return the accessCode
+	 */
 	public String getAccessCode() {
 		return this.accessCode;
 	}
 
+	/**
+	 * @param accessCode
+	 *            the accessCode to set
+	 */
 	public void setAccessCode(String accessCode) {
 		this.accessCode = accessCode;
 	}
 
+	/**
+	 * @return the authToken
+	 */
 	public String getAuthToken() {
 		return this.authToken;
 	}
 
+	/**
+	 * @param authToken
+	 *            the authToken to set
+	 */
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
 	}
 
+	/**
+	 * @return the regDate
+	 */
 	public String getRegDate() {
 		return this.regDate;
 	}
 
+	/**
+	 * @param regDate
+	 *            the regDate to set
+	 */
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
 
+	/**
+	 * @return the updateDate
+	 */
 	public String getUpdateDate() {
 		return this.updateDate;
 	}
 
+	/**
+	 * @param updateDate
+	 *            the updateDate to set
+	 */
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
 	}

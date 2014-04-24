@@ -18,18 +18,32 @@ public class SellerRight extends CommonInfo {
 	private String rightProfile;
 	private String rightProfileValue;
 
+	/**
+	 * @return the rightProfile
+	 */
 	public String getRightProfile() {
 		return this.rightProfile;
 	}
 
+	/**
+	 * @param rightProfile
+	 *            the rightProfile to set
+	 */
 	public void setRightProfile(String rightProfile) {
 		this.rightProfile = rightProfile;
 	}
 
+	/**
+	 * @return the rightProfileValue
+	 */
 	public String getRightProfileValue() {
 		return this.rightProfileValue;
 	}
 
+	/**
+	 * @param rightProfileValue
+	 *            the rightProfileValue to set
+	 */
 	public void setRightProfileValue(String rightProfileValue) {
 		this.rightProfileValue = rightProfileValue;
 	}

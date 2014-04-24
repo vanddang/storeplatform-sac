@@ -16,11 +16,19 @@ public class DuplicateBySubsellerIdReq extends CommonInfo {
 
 	private String keyString;
 
+	/**
+	 * @return the keyString
+	 */
 	public String getKeyString() {
 		return this.keyString;
 	}
 
+	/**
+	 * @param keyString
+	 *            the keyString to set
+	 */
 	public void setKeyString(String keyString) {
 		this.keyString = keyString;
 	}
+
 }
