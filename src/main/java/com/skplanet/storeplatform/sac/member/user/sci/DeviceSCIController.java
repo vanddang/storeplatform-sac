@@ -48,8 +48,8 @@ public class DeviceSCIController implements DeviceSCI {
 	 */
 	@Override
 	@RequestMapping(value = "/searchDeviceId", method = RequestMethod.POST)
-	public @ResponseBody
-	SearchDeviceIdSacRes searchDeviceId(@RequestBody @Validated SearchDeviceIdSacReq request) {
+	@ResponseBody
+	public SearchDeviceIdSacRes searchDeviceId(@RequestBody @Validated SearchDeviceIdSacReq request) {
 
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
@@ -81,8 +81,9 @@ public class DeviceSCIController implements DeviceSCI {
 	 */
 	@Override
 	@RequestMapping(value = "/searchChangedDeviceHistory", method = RequestMethod.POST)
-	public @ResponseBody
-	ChangedDeviceHistorySacRes searchChangedDeviceHistory(@RequestBody @Validated ChangedDeviceHistorySacReq request) {
+	@ResponseBody
+	public ChangedDeviceHistorySacRes searchChangedDeviceHistory(
+			@RequestBody @Validated ChangedDeviceHistorySacReq request) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		// 공통 파라미터 셋팅

@@ -52,8 +52,8 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 	 */
 	@Override
 	@RequestMapping(value = "/detailInformation", method = RequestMethod.POST)
-	public @ResponseBody
-	DetailInformationSacRes detailInformation(@Validated DetailInformationSacReq request) {
+	@ResponseBody
+	public DetailInformationSacRes detailInformation(@Validated DetailInformationSacReq request) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
