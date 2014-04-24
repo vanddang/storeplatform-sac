@@ -52,8 +52,8 @@ public class SellerSubController {
 	 * @return CreateSubsellerRes
 	 */
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
+	@ResponseBody
+	public CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(req.getSubSellerPw())) {
@@ -78,8 +78,8 @@ public class SellerSubController {
 	 * @return CreateSubsellerRes
 	 */
 	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	UpdateSubsellerRes modifySubseller(SacRequestHeader header, @RequestBody @Validated UpdateSubsellerReq req) {
+	@ResponseBody
+	public UpdateSubsellerRes modifySubseller(SacRequestHeader header, @RequestBody @Validated UpdateSubsellerReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		if (StringUtils.isBlank(req.getSubSellerKey())) {
@@ -103,8 +103,8 @@ public class SellerSubController {
 	 * @return RemoveSubsellerRes
 	 */
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req) {
+	@ResponseBody
+	public RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		RemoveSubsellerRes res = this.sellerSubService.removeSubseller(header, req);
 		LOGGER.info("Response : remove count : {}", res.getRemoveCnt());
