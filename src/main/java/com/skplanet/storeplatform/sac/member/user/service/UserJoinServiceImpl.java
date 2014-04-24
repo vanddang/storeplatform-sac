@@ -1217,7 +1217,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		} catch (StorePlatformException spe) {
 
-			LOGGER.info("미동의 회원정보 업데이트 실패....Skip...........");
+			LOGGER.info("미동의 회원정보 업데이트 실패 [{}]", agreeUserEcRes.getImIntSvcNo());
+			throw spe;
 
 		}
 

@@ -1103,7 +1103,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		} catch (StorePlatformException spe) {
 
-			LOGGER.info("## >> 미동의 회원정보 업데이트 실패....Skip...........");
+			LOGGER.info("미동의 회원정보 업데이트 실패 [{}]", imSvcNo);
+			throw spe;
 
 		}
 
