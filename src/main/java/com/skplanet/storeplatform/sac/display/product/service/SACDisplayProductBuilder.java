@@ -325,9 +325,16 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
                 }
 
                 // 앱 기본 단말 추가
+                String anySubContentsId = null;
+                if(displaySupportPhoneList.size() > 0) {
+                    anySubContentsId = displaySupportPhoneList.get(0).getSubContentsId();
+                }
+                else {
+                    log.warn("ProdId#{}에 대해 anySubContentsId을 지정할 수 없습니다.", prodId);
+                }
                 DPSprtDeviceVO anyPhone = new DPSprtDeviceVO();
                 anyPhone.setDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4APP);
-                anyPhone.setSubContentsId(null);
+                anyPhone.setSubContentsId(anySubContentsId);
                 anyPhone.setRegId("admin");
                 anyPhone.setUpdId("admin");
                 anyPhone.setProdId(prodId);
