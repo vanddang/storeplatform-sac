@@ -652,8 +652,9 @@ public class LoginServiceImpl implements LoginService {
 					this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
 
 					/* 로그인 상태코드 정상처리 */
-					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null);
-					this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_NOMAL);
+					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null,
+							null);
+					this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_NOMAL, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
@@ -672,6 +673,17 @@ public class LoginServiceImpl implements LoginService {
 					LOGGER.info("IDP_INVALID_USER authorizeById userId : {}, {}", userId);
 					throw new StorePlatformException("SAC_MEM_1202"); // 원아이디 회원상태정보가 상이합니다.
 
+				}
+
+				/* IDP 로그인이 정상으로 되었으나 로그인상태코드, 직원중지코드가 정지상태인경우 정상으로 업데이트 */
+				if (StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)
+						|| StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL,
+							MemberConstants.USER_STOP_STATUS_NOMAL, null, null);
+					this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_NOMAL,
+							MemberConstants.USER_STOP_STATUS_NOMAL);
+					stopStatusCode = MemberConstants.USER_STOP_STATUS_NOMAL;
+					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
 				/* 단말정보 update */
@@ -699,9 +711,24 @@ public class LoginServiceImpl implements LoginService {
 				} else if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 						+ ImIdpConstants.IDP_RES_CODE_SUSPEND)
 						|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-								+ ImIdpConstants.IDP_RES_CODE_LOGIN_RESTRICT)) { // 로그인 제한 / 직권중지 응답은 스킵처리, 하단에서 SC회원정보를 보고 처리
+								+ ImIdpConstants.IDP_RES_CODE_SUSPEND_02)) { // 직권중지 상태인 경우
 
-					LOGGER.info("SUSPEND or LOGIN_RESTRICT authorizeById userId : {}", userId);
+					if (!StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) { // IDP와 직권중지상태 코드가 다를경우 직권중지상태로 업데이트
+						this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null, MemberConstants.USER_STOP_STATUS_PAUSE, null,
+								null);
+						this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), null, MemberConstants.USER_STOP_STATUS_PAUSE);
+						stopStatusCode = MemberConstants.USER_STOP_STATUS_PAUSE;
+					}
+
+				} else if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+						+ ImIdpConstants.IDP_RES_CODE_LOGIN_RESTRICT)) { // 로그인제한 상태인 경우
+
+					if (!StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) { // IDP와 로그인 제한상태 코드가 다를경우 로그인 제한상태로 업데이트
+						this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_PAUSE, null,
+								null, null);
+						this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_PAUSE, null);
+						loginStatusCode = MemberConstants.USER_LOGIN_STATUS_PAUSE;
+					}
 
 				} else {
 					throw ex;
@@ -716,7 +743,8 @@ public class LoginServiceImpl implements LoginService {
 				/* 잠금해지 요청인 경우 */
 				if (StringUtil.equals(req.getReleaseLock(), "Y") && StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 					/* 로그인 상태코드 정상처리 */
-					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null);
+					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null,
+							null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
@@ -997,7 +1025,7 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			/* 가가입 상태인 mac 회원정보를 정상상태로 */
-			this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null, MemberConstants.MAIN_STATUS_NORMAL,
+			this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null, null, MemberConstants.MAIN_STATUS_NORMAL,
 					MemberConstants.SUB_STATUS_NORMAL);
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
@@ -1260,13 +1288,15 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @param loginStatusCode
 	 *            로그인 상태코드
+	 * @param stopStatusCode
+	 *            직권중지 상태코드
 	 * @param userMainStatus
 	 *            메인 상태코드
 	 * @param userSubStatus
 	 *            서브메인 상태코드
 	 */
-	private void updateStatus(SacRequestHeader requestHeader, String keyType, String keyString, String loginStatusCode, String userMainStatus,
-			String userSubStatus) {
+	private void updateStatus(SacRequestHeader requestHeader, String keyType, String keyString, String loginStatusCode, String stopStatusCode,
+			String userMainStatus, String userSubStatus) {
 
 		UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
@@ -1283,6 +1313,9 @@ public class LoginServiceImpl implements LoginService {
 		updStatusUserReq.setKeySearchList(keySearchList);
 		if (StringUtil.isNotBlank(loginStatusCode)) {
 			updStatusUserReq.setLoginStatusCode(loginStatusCode);
+		}
+		if (StringUtil.isNotBlank(stopStatusCode)) {
+			updStatusUserReq.setStopStatusCode(stopStatusCode);
 		}
 		if (StringUtil.isNotBlank(userMainStatus)) {
 			updStatusUserReq.setUserMainStatus(userMainStatus);
@@ -1306,14 +1339,17 @@ public class LoginServiceImpl implements LoginService {
 	 *            OneID 통합서비스 관리번호
 	 * @param loginStatusCode
 	 *            로그인 상태코드
+	 * @param stopStatusCode
+	 *            직권중지 상태코드
 	 */
-	private void updateOneIdInfo(SacRequestHeader sacHeader, String imSvcNo, String loginStatusCode) {
+	private void updateOneIdInfo(SacRequestHeader sacHeader, String imSvcNo, String loginStatusCode, String stopStatusCode) {
 
 		UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
 		updateMbrOneIDRequest.setCommonRequest(this.commService.getSCCommonRequest(sacHeader));
 		MbrOneID mbrOneID = new MbrOneID();
 		mbrOneID.setIntgSvcNumber(imSvcNo);
 		mbrOneID.setLoginStatusCode(loginStatusCode);
+		mbrOneID.setStopStatusCode(stopStatusCode);
 		mbrOneID.setUpdateDate(DateUtil.getToday("yyyyMMddHHmmss"));
 
 		updateMbrOneIDRequest.setMbrOneID(mbrOneID);
