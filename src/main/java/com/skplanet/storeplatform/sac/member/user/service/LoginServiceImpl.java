@@ -41,6 +41,8 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
+import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
+import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
@@ -651,7 +653,7 @@ public class LoginServiceImpl implements LoginService {
 
 					/* 로그인 상태코드 정상처리 */
 					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null);
-
+					this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_NOMAL);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
@@ -697,8 +699,10 @@ public class LoginServiceImpl implements LoginService {
 				} else if (StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 						+ ImIdpConstants.IDP_RES_CODE_SUSPEND)
 						|| StringUtil.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-								+ ImIdpConstants.IDP_RES_CODE_LOGIN_RESTRICT)) {
-					/* 로그인 제한 / 직권중지 응답은 스킵처리, 하단에서 SC회원정보를 보고 처리 */
+								+ ImIdpConstants.IDP_RES_CODE_LOGIN_RESTRICT)) { // 로그인 제한 / 직권중지 응답은 스킵처리, 하단에서 SC회원정보를 보고 처리
+
+					LOGGER.info("SUSPEND or LOGIN_RESTRICT authorizeById userId : {}", userId);
+
 				} else {
 					throw ex;
 				}
@@ -1288,6 +1292,32 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		this.userSCI.updateStatus(updStatusUserReq);
+
+	}
+
+	/**
+	 * <pre>
+	 * 원아이디 회원 정보 업데이트.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param imSvcNo
+	 *            OneID 통합서비스 관리번호
+	 * @param loginStatusCode
+	 *            로그인 상태코드
+	 */
+	private void updateOneIdInfo(SacRequestHeader sacHeader, String imSvcNo, String loginStatusCode) {
+
+		UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+		updateMbrOneIDRequest.setCommonRequest(this.commService.getSCCommonRequest(sacHeader));
+		MbrOneID mbrOneID = new MbrOneID();
+		mbrOneID.setIntgSvcNumber(imSvcNo);
+		mbrOneID.setLoginStatusCode(loginStatusCode);
+		mbrOneID.setUpdateDate(DateUtil.getToday("yyyyMMddHHmmss"));
+
+		updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+		this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 	}
 
