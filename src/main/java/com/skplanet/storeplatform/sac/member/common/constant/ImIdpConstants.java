@@ -98,6 +98,8 @@ public final class ImIdpConstants {
 
 	/** 직권중지 상태 (2403). */
 	public static final String IDP_RES_CODE_SUSPEND = "2403X000";
+	/** 직권중지 상태 (2403). */
+	public static final String IDP_RES_CODE_SUSPEND_02 = "2403N021";
 
 	/** 가 가입 상태인 사용자 (2101). */
 	public static final String IDP_RES_CODE_WAIT_JOIN = "2101X000";
