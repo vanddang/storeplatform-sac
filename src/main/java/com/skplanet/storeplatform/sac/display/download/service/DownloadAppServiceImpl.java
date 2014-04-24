@@ -135,28 +135,20 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		Product product = new Product();
 		Component component = new Component();
 
-		if (StringUtils.isEmpty(filteredBy)) {
-			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
-		}
-
-		// if (StringUtils.isEmpty(deviceKey)) {
-		// throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
-		// }
-		//
-		// if (StringUtils.isEmpty(userKey)) {
-		// throw new StorePlatformException("SAC_DSP_0002", "userKey", productId);
+		// if (StringUtils.isEmpty(filteredBy)) {
+		// throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
 		// }
 
 		// 조회 유효값 체크
-		if (!"package".equals(filteredBy) && !"id".equals(filteredBy)) {
-			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
-		}
+		// if (!"package".equals(filteredBy) && !"id".equals(filteredBy)) {
+		// throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
+		// }
 
 		// 파라미터 체크
 		if ("package".equals(filteredBy)) {
-			if (StringUtils.isEmpty(packageName)) {
-				throw new StorePlatformException("SAC_DSP_0002", "packageName", packageName);
-			}
+			// if (StringUtils.isEmpty(packageName)) {
+			// throw new StorePlatformException("SAC_DSP_0002", "packageName", packageName);
+			// }
 
 			productId = (String) this.commonDAO
 					.queryForObject("Download.getProductIdForPackageName", downloadAppSacReq);
@@ -166,9 +158,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				throw new StorePlatformException("SAC_DSP_0005", packageName);
 			}
 		} else {
-			if (StringUtils.isEmpty(productId)) {
-				throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
-			}
+			// if (StringUtils.isEmpty(productId)) {
+			// throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
+			// }
 		}
 		this.log.info("----------------------------------------------------------------");
 		this.log.info("[DownloadAppServiceImpl] productId : {}", productId);

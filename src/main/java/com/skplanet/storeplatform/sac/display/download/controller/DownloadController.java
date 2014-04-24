@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,6 +53,11 @@ public class DownloadController {
 
 	@Autowired
 	private DownloadComicService downloadComicService;
+
+	@InitBinder("downloadAppSacReq")
+	public void initDownloadAppSacReqBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new DownloadAppSacReqValidator());
+	}
 
 	/**
 	 * 
