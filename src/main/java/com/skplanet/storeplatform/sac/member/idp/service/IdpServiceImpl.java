@@ -309,6 +309,7 @@ public class IdpServiceImpl implements IdpService {
 				create = this.userSCI.create(createUserRequest); // 가입정보 등록
 				userKey = create.getUserKey();
 			} catch (StorePlatformException spe) {
+				LOGGER.error(spe.getMessage(), spe);
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 				return imResult;
@@ -345,6 +346,7 @@ public class IdpServiceImpl implements IdpService {
 			try {
 				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 			} catch (StorePlatformException spe) {
+				LOGGER.error(spe.getMessage(), spe);
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 				return imResult;
@@ -403,6 +405,7 @@ public class IdpServiceImpl implements IdpService {
 					LOGGER.debug("전환가입 정보 입력 완료");
 
 				} catch (StorePlatformException spe) {
+					LOGGER.error(spe.getMessage(), spe);
 					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 					return imResult;
@@ -479,6 +482,7 @@ public class IdpServiceImpl implements IdpService {
 					/* FDS LOG END */
 
 				} catch (StorePlatformException spe) {
+					LOGGER.error(spe.getMessage(), spe);
 					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 					final String fdsUserId = userId;
@@ -527,6 +531,7 @@ public class IdpServiceImpl implements IdpService {
 				this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 			} catch (StorePlatformException spe) {
+				LOGGER.error(spe.getMessage(), spe);
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 				return imResult;
@@ -571,6 +576,7 @@ public class IdpServiceImpl implements IdpService {
 						}
 					}
 				} catch (StorePlatformException spe) {
+					LOGGER.error(spe.getMessage(), spe);
 					LOGGER.info("{} 의 휴대기기 정보가 없음 : {}", oldId, spe.getErrorInfo().getCode());
 					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
@@ -824,6 +830,7 @@ public class IdpServiceImpl implements IdpService {
 
 		String idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+		String userId = map.get("user_id").toString();
 
 		// 휴대폰 번호가 초기값이면 변경하지 않음
 		String getUserTn = map.get("user_tn").toString();
@@ -852,7 +859,7 @@ public class IdpServiceImpl implements IdpService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
-		keySearch.setKeyString((String) map.get("user_id"));
+		keySearch.setKeyString(userId);
 
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
@@ -876,6 +883,7 @@ public class IdpServiceImpl implements IdpService {
 				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
 		} catch (StorePlatformException spe) {
+			LOGGER.error(spe.getMessage(), spe);
 			idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 			idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		}
@@ -908,11 +916,11 @@ public class IdpServiceImpl implements IdpService {
 		commonRequest.setSystemID((String) map.get("systemID"));
 		commonRequest.setTenantID((String) map.get("tenantID"));
 		updateUserVo.setCommonRequest(commonRequest);
-
+		String imIntSvcNo = map.get("im_int_svc_no").toString();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType("INTG_SVC_NO");
-		keySearch.setKeyString((String) map.get("im_int_svc_no"));
+		keySearch.setKeyString(imIntSvcNo);
 
 		keySearchList.add(keySearch);
 		updateUserVo.setKeySearchList(keySearchList);
@@ -927,6 +935,7 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
 		} catch (StorePlatformException spe) {
+			LOGGER.error(spe.getMessage(), spe);
 			LOGGER.debug("RXSetLoginConditionIDP ------- update state excetion error code = "
 					+ spe.getErrorInfo().getCode());
 		}
@@ -949,6 +958,7 @@ public class IdpServiceImpl implements IdpService {
 				idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
 		} catch (StorePlatformException spe) {
+			LOGGER.error(spe.getMessage(), spe);
 			idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 			idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		}
@@ -1001,29 +1011,33 @@ public class IdpServiceImpl implements IdpService {
 		String idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
+		SearchUserResponse searchUserResponse = null;
+
 		try {
-			this.userSCI.searchUser(searchUserRequest);
+			searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 		} catch (StorePlatformException spe) {
+			searchUserResponse = null;
+		}
 
-			// 회원 존재 여부 확인
-			// 회원이 존재 하지 않을때 one id 테이블에 추가
-			if (spe.getErrorInfo().getCode().endsWith(MemberConstants.RESULT_NOT_FOUND_USER_KEY)) {
-				// one id 가입 정보 등록
-				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-				updateMbrOneIDRequest.setCommonRequest(commonRequest);
-				MbrOneID mbrOneID = new MbrOneID();
-				mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no").toString());
-				// 통합회원 유형 코드
-				mbrOneID.setIntgMbrCaseCode(map.get("im_mem_type_cd").toString());
-				// 가입자 상태코드
-				if (null != map.get("user_status_code"))
-					mbrOneID.setEntryStatusCode(map.get("user_status_code").toString());
-				// 사용자 실명 인증여부
-				if (null != map.get("is_rname_auth"))
-					mbrOneID.setIsRealName(map.get("is_rname_auth").toString());
-				mbrOneID.setUserID(map.get("user_id").toString());
-				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-
+		// 회원 존재 여부 확인
+		// 회원이 존재 하지 않을때 one id 테이블에 추가
+		if (searchUserResponse == null) {
+			// one id 가입 정보 등록
+			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+			updateMbrOneIDRequest.setCommonRequest(commonRequest);
+			MbrOneID mbrOneID = new MbrOneID();
+			mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no").toString());
+			// 통합회원 유형 코드
+			mbrOneID.setIntgMbrCaseCode(map.get("im_mem_type_cd").toString());
+			// 가입자 상태코드
+			if (null != map.get("user_status_code"))
+				mbrOneID.setEntryStatusCode(map.get("user_status_code").toString());
+			// 사용자 실명 인증여부
+			if (null != map.get("is_rname_auth"))
+				mbrOneID.setIsRealName(map.get("is_rname_auth").toString());
+			mbrOneID.setUserID(map.get("user_id").toString());
+			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+			try {
 				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 				if (updateMbrOneIDResponse != null) {
@@ -1033,9 +1047,16 @@ public class IdpServiceImpl implements IdpService {
 						idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 					}
 				}
+			} catch (StorePlatformException spe) {
+				LOGGER.error(spe.getMessage(), spe);
+				imResult.setResult(idpResult);
+				imResult.setResultText(idpResultText);
+				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+				LOGGER.debug("rXCreateUserIdIDP ------- return value setting");
+				return imResult;
 			}
-
 		}
+
 		imResult.setCmd("RXCreateUserIdIDP");
 		imResult.setResult(idpResult);
 		imResult.setResultText(idpResultText);
@@ -1062,12 +1083,13 @@ public class IdpServiceImpl implements IdpService {
 		commonRequest.setSystemID((String) map.get("systemID"));
 		commonRequest.setTenantID((String) map.get("tenantID"));
 		updateUserVo.setCommonRequest(commonRequest);
+		String imIntSvcNo = map.get("im_int_svc_no").toString();
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType("INTG_SVC_NO");
 		// keySearch.setKeyType("MBR_ID");
-		keySearch.setKeyString((String) map.get("im_int_svc_no"));
+		keySearch.setKeyString(imIntSvcNo);
 
 		keySearchList.add(keySearch);
 		updateUserVo.setKeySearchList(keySearchList);
@@ -1082,7 +1104,9 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
 		} catch (StorePlatformException spe) {
-
+			LOGGER.error(spe.getMessage(), spe);
+			LOGGER.info("RXSetSuspendUserIdIDP 직권중지상태정보배포회원정보수정실패 : {} : {} : {}", imIntSvcNo, spe.getErrorInfo()
+					.getCode(), spe.getErrorInfo().getMessage());
 		}
 
 		// 미동의 회원 정보 수정
@@ -1104,6 +1128,7 @@ public class IdpServiceImpl implements IdpService {
 				}
 			}
 		} catch (StorePlatformException spe) {
+			LOGGER.error(spe.getMessage(), spe);
 			idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 			idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		}
@@ -1257,6 +1282,7 @@ public class IdpServiceImpl implements IdpService {
 				}
 			}
 		} catch (StorePlatformException spe) {
+			LOGGER.error(spe.getMessage(), spe);
 			idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 			idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		}
@@ -1368,6 +1394,7 @@ public class IdpServiceImpl implements IdpService {
 				}
 			}
 		} catch (StorePlatformException spe) {
+			LOGGER.error(spe.getMessage(), spe);
 			idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
 			idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		}
@@ -1480,10 +1507,11 @@ public class IdpServiceImpl implements IdpService {
 				mbrOneID.setEntryStatusCode(MemberConstants.JOIN_STATUS_CODE_NORMAL);// 정상
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
-			this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+			this.userSCI.createAgreeSite(updateMbrOneIDRequest); // check 20140424
 
 			LOGGER.debug("ONEID DATA MERGE COMPLETE");
 		} catch (StorePlatformException spe) {
+			LOGGER.error(spe.getMessage(), spe);
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 			return imResult;
@@ -1571,7 +1599,7 @@ public class IdpServiceImpl implements IdpService {
 				this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
 			}
 		} catch (StorePlatformException spe) {
-
+			LOGGER.error(spe.getMessage(), spe);
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 			return imResult;
@@ -1600,12 +1628,13 @@ public class IdpServiceImpl implements IdpService {
 				try {
 					this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 				} catch (Exception e) {
-
+					LOGGER.error(e.getMessage(), e);
 				}
 
 			}
 
 		} catch (StorePlatformException spe) {
+			LOGGER.error(spe.getMessage(), spe);
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 			return imResult;
@@ -1958,12 +1987,12 @@ public class IdpServiceImpl implements IdpService {
 					try {
 						this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 					} catch (Exception e) {
-
+						LOGGER.error(e.getMessage(), e);
 					}
 				}
 
 			} catch (StorePlatformException spe) {
-
+				LOGGER.error(spe.getMessage(), spe);
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 				return imResult;
@@ -2076,6 +2105,7 @@ public class IdpServiceImpl implements IdpService {
 			}
 
 		} catch (StorePlatformException spe) {
+			LOGGER.error(spe.getMessage(), spe);
 			LOGGER.debug("RXUpdateUserPwdIDP error code = " + spe.getErrorInfo().getCode());
 		}
 
@@ -2209,6 +2239,7 @@ public class IdpServiceImpl implements IdpService {
 			}
 
 		} catch (StorePlatformException spe) {
+			LOGGER.error(spe.getMessage(), spe);
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 			return imResult;
@@ -2322,6 +2353,7 @@ public class IdpServiceImpl implements IdpService {
 					}
 				}
 			} catch (StorePlatformException spe) {
+				LOGGER.error(spe.getMessage(), spe);
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 				imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 				final String fdsUserId = newUserId;
@@ -2548,6 +2580,7 @@ public class IdpServiceImpl implements IdpService {
 								this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 							} catch (StorePlatformException spe) {
+								LOGGER.error(spe.getMessage(), spe);
 								imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 								imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 								return imResult;
@@ -2643,6 +2676,7 @@ public class IdpServiceImpl implements IdpService {
 							create = this.userSCI.create(createUserRequest); // 가입정보 등록
 							userKey = create.getUserKey();
 						} catch (StorePlatformException spe) {
+							LOGGER.error(spe.getMessage(), spe);
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 							return imResult;
@@ -2683,6 +2717,7 @@ public class IdpServiceImpl implements IdpService {
 							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
 
 						} catch (StorePlatformException spe) {
+							LOGGER.error(spe.getMessage(), spe);
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 							return imResult;
@@ -2701,6 +2736,7 @@ public class IdpServiceImpl implements IdpService {
 									new TypeReference<HashMap<String, String>>() {
 									});
 						} catch (Exception e) {
+							LOGGER.error(e.getMessage(), e);
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 							return imResult;
@@ -2819,6 +2855,7 @@ public class IdpServiceImpl implements IdpService {
 								}
 							}
 						} catch (StorePlatformException spe) {
+							LOGGER.error(spe.getMessage(), spe);
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 							return imResult;
@@ -2871,6 +2908,7 @@ public class IdpServiceImpl implements IdpService {
 							}
 
 						} catch (StorePlatformException spe) {
+							LOGGER.error(spe.getMessage(), spe);
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 							return imResult;
@@ -2926,6 +2964,7 @@ public class IdpServiceImpl implements IdpService {
 								// 공통_기타 회원ID 변경 끝
 							}
 						} catch (StorePlatformException spe) {
+							LOGGER.error(spe.getMessage(), spe);
 							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 							return imResult;
@@ -2962,6 +3001,7 @@ public class IdpServiceImpl implements IdpService {
 						this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
 					} catch (StorePlatformException spe) {
+						LOGGER.error(spe.getMessage(), spe);
 						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 						imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 						return imResult;
@@ -3017,6 +3057,7 @@ public class IdpServiceImpl implements IdpService {
 									null);
 						}
 					} catch (StorePlatformException spe) {
+						LOGGER.error(spe.getMessage(), spe);
 						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 						imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 						return imResult;
