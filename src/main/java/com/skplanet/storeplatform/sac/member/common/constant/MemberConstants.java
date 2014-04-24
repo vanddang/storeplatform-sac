@@ -56,9 +56,9 @@ public final class MemberConstants {
 	public static final String SUB_STATUS_SEVEN_PAUSE = "US010308"; // 7일 이용정지
 	public static final String SUB_STATUS_THIRTY_PAUSE = "US010309"; // 30일 이용정지
 	public static final String SUB_STATUS_ETERNAL_PAUSE = "US010310"; // 영구 이용정지
-	public static final String SUB_STATUS_TURN_MOTION = "US010311"; // 전환 신청
-	public static final String SUB_STATUS_SEVEN_MOTION_AGAIN = "US010312"; // 전환 재신청
-	public static final String SUB_STATUS_TURN_REJECT = "US010313"; // 전환 거절
+	public static final String SUB_STATUS_TURN_MOTION = "US010311"; // 개발자유형전환 신청
+	public static final String SUB_STATUS_SEVEN_MOTION_AGAIN = "US010312"; // 개발자유형전환 재신청
+	public static final String SUB_STATUS_TURN_REJECT = "US010313"; // 개발자유형전환 거절
 	public static final String SUB_STATUS_CHANGE_USER = "US010314"; // 변동처리대상
 	public static final String SUB_STATUS_ACCT_JOIN_REJECT = "US010315"; // 정산정보승인거절
 	public static final String SUB_STATUS_SECEDE_REJECT = "US010316"; // 탈퇴거절
