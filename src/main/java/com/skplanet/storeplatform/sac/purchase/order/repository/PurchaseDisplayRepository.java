@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order.repository;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
@@ -92,4 +93,23 @@ public interface PurchaseDisplayRepository {
 	 * @return 정액제 상품 DRM 정보
 	 */
 	public FreePassInfo searchFreePassDrmInfo(String tenantId, String langCd, String fixrateProdId, String episodeProdId);
+
+	/**
+	 * 
+	 * <pre>
+	 * 이북/코믹 전권 소장/대여 상품에 딸린 에피소드 상품 목록 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param langCd
+	 *            언어코드
+	 * @param deviceModelCd
+	 *            디바이스 모델 코드
+	 * @param prodId
+	 *            이북/코믹 전권 소장/대여 상품ID
+	 * @return 에피소드 상품 목록
+	 */
+	public List<EpisodeInfoRes> searchEbookComicEpisodeList(String tenantId, String langCd, String deviceModelCd,
+			String prodId);
 }

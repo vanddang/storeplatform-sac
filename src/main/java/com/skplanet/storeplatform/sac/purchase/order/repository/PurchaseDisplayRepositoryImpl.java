@@ -22,6 +22,9 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreeP
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.IapProductInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PossLendProductInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoReq;
@@ -237,10 +240,10 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	/**
 	 * 
 	 * <pre>
-	 * 정액권의 에피소드 상품 목록 조회 (이북/코믹 전권 소장/대여 상품에 딸린 에피소드 상품 목록 조회).
+	 * 이북/코믹 전권 소장/대여 상품에 딸린 에피소드 상품 목록 조회.
 	 * </pre>
 	 * 
-	 * @param tenantid
+	 * @param tenantId
 	 *            테넌트ID
 	 * @param langCd
 	 *            언어코드
@@ -248,9 +251,26 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	 *            디바이스 모델 코드
 	 * @param prodId
 	 *            이북/코믹 전권 소장/대여 상품ID
+	 * @return 에피소드 상품 목록
 	 */
-	public void searchEpisodeList(String tenantid, String langCd, String deviceModelCd, String prodId) {
-		;
+	public List<EpisodeInfoRes> searchEbookComicEpisodeList(String tenantId, String langCd, String deviceModelCd,
+			String prodId) {
+		EpisodeInfoReq episodeInfoReq = new EpisodeInfoReq();
+		episodeInfoReq.setTenantId(tenantId);
+		episodeInfoReq.setLangCd(langCd);
+		episodeInfoReq.setDeviceModelCd(deviceModelCd);
+		episodeInfoReq.setProdId(prodId);
+		EpisodeInfoSacRes episodeInfoSacRes = this.freepassInfoSCI.searchEpisodeList(episodeInfoReq);
 
+		List<EpisodeInfoRes> episodeList = new ArrayList<EpisodeInfoRes>();
+		for (EpisodeInfoRes episode : episodeInfoSacRes.getFreePassInfoRes()) {
+			if (StringUtils.equals(episode.getProdStatusCd(), PurchaseConstants.PRODUCT_STATUS_SALE) == false) {
+				continue;
+			}
+
+			episodeList.add(episode);
+		}
+
+		return episodeList;
 	}
 }

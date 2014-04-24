@@ -74,6 +74,7 @@ import com.skplanet.storeplatform.purchase.client.order.vo.ReservePurchaseScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseListScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseListScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
@@ -89,6 +90,7 @@ import com.skplanet.storeplatform.sac.purchase.interworking.service.Interworking
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSacReq;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
@@ -133,6 +135,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private PurchaseTenantPolicyService purchaseTenantPolicyService;
 	@Autowired
 	private PurchaseMemberRepository purchaseMemberRepository;
+	@Autowired
+	private PurchaseDisplayRepository purchaseDisplayRepository;
 
 	/**
 	 * 
@@ -487,18 +491,29 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setMdn(reservedDataMap.get("deviceId")); // 결제 MDN
 		res.setFlgMbrStatus(PurchaseConstants.VERIFYORDER_USER_STATUS_NORMAL); // [fix] 회원상태: 1-정상
 		res.setFlgProductStatus(PurchaseConstants.VERIFYORDER_PRODUCT_STATUS_NORMAL); // [fix] 상품상태: 1-정상
-		res.setBonusCashPoint(reservedDataMap.get("bonusPoint")); // 보너스 캐쉬 지급 Point
-		res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
-		res.setAfterAutoPayDt(reservedDataMap.get("afterAutoPayDt")); // 다음 자동 결제일
-		// TAKTODO:: 대여/소장 전시Part 협의 완료 전 까지 Dummy세팅
-		// if (StringUtils.equals(res.getCdPaymentTemplate(), PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN)) {
-		// res.setDwldAvailableDayCnt("7"); // 다운로드 가능기간(일) : Dummy값 7
-		// res.setUsePeriodCnt("7"); // 이용기간(일) : Dummy값 7
-		// res.setLoanPid(prchsDtlMore.getProdId()); // 대여하기 상품 ID : Dummy값 요청상품ID
-		// res.setLoanAmt(prchsDtlMore.getProdAmt()); // 대여하기 상품 금액 : Dummy값 요청상품가격
-		// res.setOwnPid(prchsDtlMore.getProdId()); // 소장하기 상품 ID : Dummy값 요청상품ID
-		// res.setOwnAmt(prchsDtlMore.getProdAmt()); // 소장하기 상품 금액 : Dummy값 요청상품가격
-		// }
+		res.setTopMenuId(prchsDtlMore.getTenantProdGrpCd().substring(8, 12)); // 상품 TOP 메뉴 ID
+		// 게임캐쉬
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+			Date autoDate = null;
+			try {
+				autoDate = DateUtils.parseDate(prchsDtlMore.getUseStartDt(), "yyyyMMddHHmmss");
+			} catch (ParseException e) {
+				throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
+			}
+			String usePeriodUnitCd = reservedDataMap.get("autoPrchsPeriodUnitCd");
+			int autoPeriod = Integer.parseInt(reservedDataMap.get("autoPrchsPeriodValue"));
+			if (StringUtils.equals(usePeriodUnitCd, "PD00312")) { // 일
+				autoDate = DateUtils.addDays(autoDate, autoPeriod + 1);
+			} else {
+				throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
+			}
+
+			res.setAfterAutoPayDt(DateFormatUtils.format(autoDate, "yyyyMMdd") + "000000"); // 다음 자동 결제일
+			res.setBonusCashPoint(reservedDataMap.get("bonusPoint")); // 보너스 캐쉬 지급 Point
+			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
+		}
+		// 대여/소장
 		res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
 		res.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt")); // 이용기간(일)
 		res.setLoanPid(reservedDataMap.get("loanPid")); // 대여하기 상품 ID
@@ -509,14 +524,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.isNotBlank(reservedDataMap.get("ownAmt"))) {
 			res.setOwnAmt(Double.parseDouble(reservedDataMap.get("ownAmt"))); // 소장하기 상품 금액
 		}
+		// 판매자
 		res.setNmSeller(reservedDataMap.get("sellerNm")); // 판매자명
 		res.setEmailSeller(reservedDataMap.get("sellerEmail")); // 판매자 이메일 주소
 		res.setNoTelSeller(reservedDataMap.get("sellerTelno")); // 판매자 전화번호
+		// 선물 수신자
 		res.setNmDelivery(reservedDataMap.get("receiveNames")); // 선물수신자 성명
 		res.setNoMdnDelivery(reservedDataMap.get("receiveMdns")); // 선물수신자 MDN
-		if (StringUtils.defaultString(prchsDtlMore.getTenantProdGrpCd()).length() >= 12) {
-			res.setTopMenuId(prchsDtlMore.getTenantProdGrpCd().substring(8, 12)); // 상품 TOP 메뉴 ID
-		}
 
 		return res;
 	}
@@ -732,12 +746,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// -------------------------------------------------------------------------------------------
 		// 이북/코믹 전권 소장/대여 에피소드 상품 목록 조회
+
+		List<EpisodeInfoRes> episodeList = null;
+
 		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE)
 				|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_COMIC_FIXRATE)) {
-			;
-
+			episodeList = this.purchaseDisplayRepository.searchEbookComicEpisodeList(tenantId,
+					prchsDtlMore.getCurrencyCd(), reservedDataMap.get("useDeviceModelCd"), prchsDtlMore.getProdId());
 		}
 
 		// -------------------------------------------------------------------------------------------
@@ -759,6 +776,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			autoPrchsList = this.makeAutoPrchsList(prchsDtlMore);
 		}
 
+		// 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터
+		List<PrchsDtlMore> ebookComicEpisodeList = null;
+		if (CollectionUtils.isNotEmpty(episodeList)) {
+			ebookComicEpisodeList = this.makeEbookComicEpisodeList(prchsDtlMore, episodeList);
+		}
+
 		// 구매확정 데이터
 		ConfirmPurchaseScReq confirmPurchaseScReq = new ConfirmPurchaseScReq();
 		confirmPurchaseScReq.setTenantId(prchsDtlMore.getTenantId());
@@ -777,6 +800,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		confirmPurchaseScReq.setPaymentList(paymentList); // 결제
 		confirmPurchaseScReq.setAutoPrchsList(autoPrchsList); // 자동구매
 		confirmPurchaseScReq.setShoppingCouponList(shoppingCouponList); // 쇼핑발급 목록
+		confirmPurchaseScReq.setEbookComicEpisodeList(ebookComicEpisodeList);
 
 		// -------------------------------------------------------------------------------------------
 		// 구매확정 요청
@@ -1217,6 +1241,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							.append(StringUtils.defaultString(String.valueOf(product.getBnsUsePeriod()), "0"))
 							.append("&bonusPointUsableDayCnt=")
 							.append(StringUtils.defaultString(String.valueOf(product.getBnsUsePeriod()), "0"))
+							.append("&autoPrchsPeriodUnitCd=").append(product.getAutoPrchsPeriodUnitCd())
+							.append("&autoPrchsPeriodValue=")
+							.append(StringUtils.defaultString(String.valueOf(product.getAutoPrchsPeriodValue()), "0"))
 							.append("&afterAutoPayDt=").append(StringUtils.defaultString(product.getAfterAutoPayDt()))
 							.append("&sellerNm=").append(StringUtils.defaultString(product.getSellerNm()))
 							.append("&sellerEmail=").append(StringUtils.defaultString(product.getSellerEmail()))
@@ -1448,6 +1475,73 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		autoPrchsList.add(autoPrchs);
 
 		return autoPrchsList;
+	}
+
+	/*
+	 * <pre> 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록 생성. </pre>
+	 * 
+	 * @param ebookflatInfo 이북/코믹 전권 소장/대여 구매 정보 VO
+	 * 
+	 * @param episodeList 이북/코믹 전권 소장/대여 에피소드 상품 정보 VO
+	 * 
+	 * @return 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록
+	 */
+	private List<PrchsDtlMore> makeEbookComicEpisodeList(PrchsDtlMore ebookflatInfo, List<EpisodeInfoRes> episodeList) {
+
+		// 구매생성 요청 데이터 세팅
+		List<PrchsDtlMore> prchsDtlMoreList = new ArrayList<PrchsDtlMore>();
+		PrchsDtlMore prchsDtlMore = null;
+
+		int prchsDtlCnt = 2;
+		for (EpisodeInfoRes episode : episodeList) {
+			prchsDtlMore = new PrchsDtlMore();
+
+			prchsDtlMore.setPrchsDtlId(prchsDtlCnt++);
+
+			prchsDtlMore.setTenantId(ebookflatInfo.getTenantId());
+			prchsDtlMore.setSystemId(ebookflatInfo.getSystemId());
+			prchsDtlMore.setPrchsId(ebookflatInfo.getPrchsId());
+			prchsDtlMore.setPrchsDt(ebookflatInfo.getPrchsDt());
+			prchsDtlMore.setUseTenantId(ebookflatInfo.getUseTenantId());
+			prchsDtlMore.setUseInsdUsermbrNo(ebookflatInfo.getUseInsdUsermbrNo());
+			prchsDtlMore.setUseInsdDeviceId(ebookflatInfo.getUseInsdDeviceId());
+			prchsDtlMore.setSendInsdUsermbrNo(ebookflatInfo.getSendInsdUsermbrNo());
+			prchsDtlMore.setSendInsdDeviceId(ebookflatInfo.getSendInsdDeviceId());
+			prchsDtlMore.setTotAmt(ebookflatInfo.getTotAmt());
+			prchsDtlMore.setPrchsReqPathCd(ebookflatInfo.getPrchsReqPathCd());
+			prchsDtlMore.setClientIp(ebookflatInfo.getClientIp());
+			prchsDtlMore.setUseHidingYn(PurchaseConstants.USE_N);
+			prchsDtlMore.setSendHidingYn(PurchaseConstants.USE_N);
+			prchsDtlMore.setPrchsCaseCd(ebookflatInfo.getPrchsCaseCd());
+			prchsDtlMore.setTenantProdGrpCd(ebookflatInfo.getTenantProdGrpCd().substring(0, 12)
+					+ PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT);
+			prchsDtlMore.setCurrencyCd(ebookflatInfo.getCurrencyCd());
+			prchsDtlMore.setNetworkTypeCd(ebookflatInfo.getNetworkTypeCd());
+			prchsDtlMore.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_UNIT); // 단위 상품
+			prchsDtlMore.setProdId(episode.getProdId());
+			prchsDtlMore.setProdAmt(episode.getProdAmt());
+			prchsDtlMore.setProdQty(1);
+			prchsDtlMore.setResvCol01(ebookflatInfo.getResvCol01());
+			prchsDtlMore.setResvCol02(ebookflatInfo.getResvCol02());
+			prchsDtlMore.setResvCol03(ebookflatInfo.getResvCol03());
+			prchsDtlMore.setResvCol04(ebookflatInfo.getResvCol04());
+			prchsDtlMore.setResvCol05(ebookflatInfo.getResvCol05());
+			prchsDtlMore.setUseStartDt(ebookflatInfo.getUseStartDt());
+			prchsDtlMore.setUseExprDt(ebookflatInfo.getUseExprDt());
+			prchsDtlMore.setDwldStartDt(ebookflatInfo.getDwldStartDt());
+			prchsDtlMore.setDwldExprDt(ebookflatInfo.getDwldExprDt());
+			prchsDtlMore.setUseFixrateProdId(ebookflatInfo.getProdId());
+			prchsDtlMore.setDrmYn(ebookflatInfo.getDrmYn());
+			prchsDtlMore.setAlarmYn(PurchaseConstants.USE_Y);
+			prchsDtlMore.setRegId(ebookflatInfo.getRegId());
+			prchsDtlMore.setRegDt(ebookflatInfo.getRegDt());
+			prchsDtlMore.setUpdId(ebookflatInfo.getUpdId());
+			prchsDtlMore.setUpdDt(ebookflatInfo.getUpdDt());
+
+			prchsDtlMoreList.add(prchsDtlMore);
+		}
+
+		return prchsDtlMoreList;
 	}
 
 	/*
