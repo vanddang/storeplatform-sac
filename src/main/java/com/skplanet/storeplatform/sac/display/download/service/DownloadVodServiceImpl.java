@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,20 +114,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		List<Identifier> identifierList = null;
 		Product product = new Product();
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(idType)) {
-			throw new StorePlatformException("SAC_DSP_0002", "idType", idType);
-		}
-		if (StringUtils.isEmpty(productId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
-		}
-		// if (StringUtils.isEmpty(deviceKey)) {
-		// throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
-		// }
-		// if (StringUtils.isEmpty(userKey)) {
-		// throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-		// }
-
 		// ID유형 유효값 체크
 		if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)
 				&& !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
@@ -195,6 +180,21 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					historyReq.setCount(1000);
 					historyReq.setProductList(productList);
 
+					this.log.info("----------------------------------------------------------------");
+					this.log.info("********************	구매 요청 파라미터	***************************");
+					this.log.info("[DownloadVodServiceImpl] tenantId : {}", historyReq.getTenantId());
+					this.log.info("[DownloadVodServiceImpl] userKey : {}", historyReq.getUserKey());
+					this.log.info("[DownloadVodServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+					this.log.info("[DownloadVodServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+					this.log.info("[DownloadVodServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+					this.log.info("[DownloadVodServiceImpl] startDt : {}", historyReq.getStartDt());
+					this.log.info("[DownloadVodServiceImpl] endDt : {}", historyReq.getEndDt());
+					this.log.info("[DownloadVodServiceImpl] offset : {}", historyReq.getOffset());
+					this.log.info("[DownloadVodServiceImpl] count : {}", historyReq.getCount());
+					this.log.info("[DownloadVodServiceImpl] store prodId : {}", productList.get(0).getProdId());
+					this.log.info("[DownloadVodServiceImpl] play prodId : {}", productList.get(1).getProdId());
+					this.log.info("----------------------------------------------------------------");
+
 					// 구매내역 조회 실행
 					this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 					long start = System.currentTimeMillis();
@@ -214,7 +214,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 				this.log.info("---------------------------------------------------------------------");
 				this.log.info("[DownloadVodServiceImpl] purchaseFlag :{}", purchaseFlag);
-				this.log.info("[DownloadVodServiceImpl] historyRes :{}", historyRes);
+				this.log.info("[DownloadVodServiceImpl] historyRes :{}", historyRes.toString());
+				this.log.info("[DownloadVodServiceImpl] historyRes totalCnt :{}", historyRes.getTotalCnt());
 				this.log.info("---------------------------------------------------------------------");
 
 				if (purchaseFlag && historyRes != null) {
@@ -288,6 +289,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									deviceReq = new SearchDeviceIdSacReq();
 									deviceReq.setUserKey(downloadVodSacReq.getUserKey());
 									deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
+									this.log.info("----------------------------------------------------------------");
+									this.log.info("*******************회원 단말 정보 조회 파라미터*********************");
+									this.log.info("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
+									this.log.info("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+									this.log.info("----------------------------------------------------------------");
 
 									// 기기정보 조회
 									this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
@@ -311,7 +317,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 								this.log.info("----------------------------------------------------------------");
 								this.log.info("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
-								this.log.info("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
+								this.log.info("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes.toString());
 								this.log.info("----------------------------------------------------------------");
 
 								if (memberFlag && deviceRes != null) {
@@ -371,26 +377,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
 									encryption.setToken(encryptString);
 									encryptionList.add(encryption);
-									this.log.info("[DownloadVodServiceImpl] keyIndex	:	{}",
-											String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
 
-									this.log.info("[DownloadVodServiceImpl] Token	:	{}", encryptString);
-
-									// JSON 복호화
-									byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-									byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-
-									try {
-										String decData = new String(decrypt, "UTF-8");
-										this.log.info("----------------------------------------------------------------");
-										this.log.info("[DownloadVodServiceImpl] decData : {}", decData);
-										this.log.info("decData	:	{}", decData);
-										this.log.info("----------------------------------------------------------------");
-									} catch (UnsupportedEncodingException e) {
-										e.printStackTrace();
-									}
-									this.log.info("[DownloadVodServiceImpl] End Encription");
-									this.log.info("----------------------------------------------------------------");
+									this.log.info("-------------------------------------------------------------");
+									this.log.info("[DownloadVodServiceImpl] token : {}", encryption.getToken());
+									this.log.info("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+									this.log.info("--------------------------------------------------------------");
 								}
 								this.log.info("----------------------------  end set Purchase Info  ------------------------------------");
 							}

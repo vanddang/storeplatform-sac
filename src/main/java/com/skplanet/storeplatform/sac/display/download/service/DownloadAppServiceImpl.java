@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,20 +134,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		Product product = new Product();
 		Component component = new Component();
 
-		// if (StringUtils.isEmpty(filteredBy)) {
-		// throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
-		// }
-
-		// 조회 유효값 체크
-		// if (!"package".equals(filteredBy) && !"id".equals(filteredBy)) {
-		// throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
-		// }
-
 		// 파라미터 체크
 		if ("package".equals(filteredBy)) {
-			// if (StringUtils.isEmpty(packageName)) {
-			// throw new StorePlatformException("SAC_DSP_0002", "packageName", packageName);
-			// }
 
 			productId = (String) this.commonDAO
 					.queryForObject("Download.getProductIdForPackageName", downloadAppSacReq);
@@ -157,10 +144,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			if (StringUtils.isEmpty(productId)) {
 				throw new StorePlatformException("SAC_DSP_0005", packageName);
 			}
-		} else {
-			// if (StringUtils.isEmpty(productId)) {
-			// throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
-			// }
 		}
 		this.log.info("----------------------------------------------------------------");
 		this.log.info("[DownloadAppServiceImpl] productId : {}", productId);
@@ -205,6 +188,20 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					historyReq.setCount(1000);
 					historyReq.setProductList(productList);
 
+					this.log.info("----------------------------------------------------------------");
+					this.log.info("********************	구매 요청 파라미터	***************************");
+					this.log.info("[DownloadAppServiceImpl] tenantId : {}", historyReq.getTenantId());
+					this.log.info("[DownloadAppServiceImpl] userKey : {}", historyReq.getUserKey());
+					this.log.info("[DownloadAppServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+					this.log.info("[DownloadAppServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+					this.log.info("[DownloadAppServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+					this.log.info("[DownloadAppServiceImpl] startDt : {}", historyReq.getStartDt());
+					this.log.info("[DownloadAppServiceImpl] endDt : {}", historyReq.getEndDt());
+					this.log.info("[DownloadAppServiceImpl] offset : {}", historyReq.getOffset());
+					this.log.info("[DownloadAppServiceImpl] count : {}", historyReq.getCount());
+					this.log.info("[DownloadAppServiceImpl] prodId : {}", productList.get(0).getProdId());
+					this.log.info("----------------------------------------------------------------");
+
 					// 구매내역 조회 실행
 					this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 					long start = System.currentTimeMillis();
@@ -224,7 +221,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 				this.log.info("---------------------------------------------------------------------");
 				this.log.info("[DownloadAppServiceImpl] purchaseFlag :{}", purchaseFlag);
-				this.log.info("[DownloadAppServiceImpl] historyRes :{}", historyRes);
+				this.log.info("[DownloadAppServiceImpl] historyRes :{}", historyRes.toString());
+				this.log.info("[DownloadAppServiceImpl] historyRes totalCnt :{}", historyRes.getTotalCnt());
 				this.log.info("---------------------------------------------------------------------");
 				if (purchaseFlag && historyRes != null) {
 
@@ -306,6 +304,12 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 									deviceReq.setUserKey(downloadAppSacReq.getUserKey());
 									deviceReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
 
+									this.log.info("----------------------------------------------------------------");
+									this.log.info("*******************회원 단말 정보 조회 파라미터*********************");
+									this.log.info("[DownloadAppServiceImpl] userKey : {}", deviceReq.getUserKey());
+									this.log.info("[DownloadAppServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+									this.log.info("----------------------------------------------------------------");
+
 									// 기기정보 조회
 									this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
 									long start = System.currentTimeMillis();
@@ -324,7 +328,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 								this.log.info("----------------------------------------------------------------");
 								this.log.info("[DownloadAppServiceImpl] memberFlag	:	{}", memberFlag);
-								this.log.info("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
+								this.log.info("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes.toString());
 								this.log.info("----------------------------------------------------------------");
 
 								if (memberFlag && deviceRes != null) {
@@ -349,6 +353,12 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 												UapsEcReq uapsEcReq = new UapsEcReq();
 												uapsEcReq.setDeviceId(deviceId);
 												uapsEcReq.setType("mdn");
+												this.log.info("----------------------------------------------------------------");
+												this.log.info("********************UAPS 정보 조회************************");
+												this.log.info("[DownloadAppServiceImpl] DeviceId : {}",
+														uapsEcReq.getDeviceId());
+												this.log.info("[DownloadAppServiceImpl] Type : {}", uapsEcReq.getType());
+												this.log.info("----------------------------------------------------------------");
 												this.log.info("##### [SAC DSP LocalSCI] SAC EC Start : uapsSCI.getMappingInfo");
 												long start = System.currentTimeMillis();
 												UserEcRes uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
@@ -394,18 +404,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 									encryption.setToken(encryptString);
 									encryptionList.add(encryption);
 
-									// JSON 복호화
-									byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-									byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-
-									try {
-										String decData = new String(decrypt, "UTF-8");
-										this.log.info("----------------------------------------------------------------");
-										this.log.info("[DownloadAppServiceImpl] decData : {}", decData);
-										this.log.info("----------------------------------------------------------------");
-									} catch (UnsupportedEncodingException e) {
-										e.printStackTrace();
-									}
+									this.log.info("-------------------------------------------------------------");
+									this.log.info("[DownloadAppServiceImpl] token : {}", encryption.getToken());
+									this.log.info("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+									this.log.info("-------------------------------------------------------------");
 								}
 							}
 						}

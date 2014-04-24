@@ -115,17 +115,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		Product product = new Product();
 		Music music = null;
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(productId)) {
-			throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
-		}
-		// if (StringUtils.isEmpty(deviceKey)) {
-		// throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
-		// }
-		// if (StringUtils.isEmpty(userKey)) {
-		// throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-		// }
-
 		this.log.info("----------------------------------------------------------------");
 		this.log.info("[DownloadMusicServiceImpl] productId : {}", productId);
 		this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", deviceKey);
@@ -163,6 +152,20 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					historyReq.setCount(1000);
 					historyReq.setProductList(productList);
 
+					this.log.info("----------------------------------------------------------------");
+					this.log.info("********************	구매 요청 파라미터	***************************");
+					this.log.info("[DownloadMusicServiceImpl] tenantId : {}", historyReq.getTenantId());
+					this.log.info("[DownloadMusicServiceImpl] userKey : {}", historyReq.getUserKey());
+					this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+					this.log.info("[DownloadMusicServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+					this.log.info("[DownloadMusicServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+					this.log.info("[DownloadMusicServiceImpl] startDt : {}", historyReq.getStartDt());
+					this.log.info("[DownloadMusicServiceImpl] endDt : {}", historyReq.getEndDt());
+					this.log.info("[DownloadMusicServiceImpl] offset : {}", historyReq.getOffset());
+					this.log.info("[DownloadMusicServiceImpl] count : {}", historyReq.getCount());
+					this.log.info("[DownloadMusicServiceImpl] prodId : {}", productList.get(0).getProdId());
+					this.log.info("----------------------------------------------------------------");
+
 					// 구매내역 조회 실행
 					this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 					long start = System.currentTimeMillis();
@@ -182,7 +185,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 				this.log.info("---------------------------------------------------------------------");
 				this.log.info("[DownloadMusicServiceImpl] purchaseFlag :{}", purchaseFlag);
-				this.log.info("[DownloadMusicServiceImpl] historyRes :{}", historyRes);
+				this.log.info("[DownloadMusicServiceImpl] historyRes :{}", historyRes.toString());
+				this.log.info("[DownloadMusicServiceImpl] historyRes totalCnt :{}", historyRes.getTotalCnt());
 				this.log.info("---------------------------------------------------------------------");
 				if (purchaseFlag && historyRes != null) {
 
@@ -260,6 +264,11 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 									deviceReq = new SearchDeviceIdSacReq();
 									deviceReq.setUserKey(downloadMusicSacReq.getUserKey());
 									deviceReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
+									this.log.info("----------------------------------------------------------------");
+									this.log.info("*******************회원 단말 정보 조회 파라미터*********************");
+									this.log.info("[DownloadMusicServiceImpl] userKey : {}", deviceReq.getUserKey());
+									this.log.info("[DownloadMusicServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+									this.log.info("----------------------------------------------------------------");
 
 									// 기기정보 조회
 									this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
@@ -279,7 +288,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 								this.log.info("----------------------------------------------------------------");
 								this.log.info("[DownloadMusicServiceImpl] memberFlag	:	{}", memberFlag);
-								this.log.info("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
+								this.log.info("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes.toString());
 								this.log.info("----------------------------------------------------------------");
 								if (memberFlag && deviceRes != null) {
 									deviceId = deviceRes.getDeviceId();
