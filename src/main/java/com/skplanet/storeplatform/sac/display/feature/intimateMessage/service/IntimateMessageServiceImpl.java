@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageAppCodiSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageAppCodiSacRes;
@@ -98,15 +97,6 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		this.logger.debug("[searchIntimateMessageList] deviceId : {}", deviceKey);
 		this.logger.debug("----------------------------------------------------------------");
 
-		if ("all".equals(messageReq.getMsgType())) {
-			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(userKey)) {
-				throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
-			}
-			if (StringUtils.isEmpty(deviceKey)) {
-				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
-			}
-		}
 		// offset Default 값 세팅
 		if (messageReq.getOffset() == null) {
 			messageReq.setOffset(1);

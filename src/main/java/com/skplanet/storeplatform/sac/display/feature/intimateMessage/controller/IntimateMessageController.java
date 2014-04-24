@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +32,11 @@ public class IntimateMessageController {
 	@Autowired
 	private IntimateMessageService intimateMessageService;
 
+	@InitBinder("intimateMessageSacReq")
+	public void initIntimateMessageSacReqBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new IntimateMessageSacReqValidator());
+	}
+
 	/**
 	 * <pre>
 	 * IntimateMessage 조회.
@@ -44,13 +51,13 @@ public class IntimateMessageController {
 	@RequestMapping(value = "/intimateMessage/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public IntimateMessageSacRes searchIntimateMessageList(SacRequestHeader header,
-			@RequestBody @Validated IntimateMessageSacReq messageReq) {
+			@RequestBody @Validated IntimateMessageSacReq intimateMessageSacReq) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("[searchIntimateMessageList] SacRequestHeader\n{}", header.toString());
-		this.logger.debug("[searchIntimateMessageList] IntimateMessageSacReq\n{}", messageReq.toString());
+		this.logger.debug("[searchIntimateMessageList] IntimateMessageSacReq\n{}", intimateMessageSacReq.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.intimateMessageService.searchIntimateMessageList(header, messageReq);
+		return this.intimateMessageService.searchIntimateMessageList(header, intimateMessageSacReq);
 	}
 
 	/**
@@ -67,12 +74,12 @@ public class IntimateMessageController {
 	@RequestMapping(value = "/intimateMessage/appCodi/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public IntimateMessageAppCodiSacRes searchIntimateMessageAppCodiList(SacRequestHeader header,
-			@Validated IntimateMessageAppCodiSacReq messageReq) {
+			@Validated IntimateMessageAppCodiSacReq appCodiReq) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("[searchIntimateMessageAppCodiList] SacRequestHeader\n{}", header.toString());
-		this.logger.debug("[searchIntimateMessageAppCodiList] IntimateMessageAppCodiSacReq\n{}", messageReq.toString());
+		this.logger.debug("[searchIntimateMessageAppCodiList] IntimateMessageAppCodiSacReq\n{}", appCodiReq.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.intimateMessageService.searchIntimateMessageAppCodiList(header, messageReq);
+		return this.intimateMessageService.searchIntimateMessageAppCodiList(header, appCodiReq);
 	}
 }
