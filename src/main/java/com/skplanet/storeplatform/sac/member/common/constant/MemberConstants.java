@@ -27,7 +27,7 @@ public final class MemberConstants {
 	public static final String SC_ERROR_NO_DATA = "SC_MEM_9982"; // SC 검색결과 없음
 	public static final String SC_ERROR_NO_USERKEY = "SC_MEM_9995"; // 회원키 없음
 
-	/** SAC회원 결과 코드 */
+	/** SAC회원 결과 코드. */
 	public static final String SAC_ERROR_NO_ONEID = "SAC_MEM_1302"; // OneID 회원이 아님
 
 	/** EC IDP 에러 코드 문자열. */
@@ -63,12 +63,7 @@ public final class MemberConstants {
 	public static final String SUB_STATUS_ACCT_JOIN_REJECT = "US010315"; // 정산정보승인거절
 	public static final String SUB_STATUS_SECEDE_REJECT = "US010316"; // 탈퇴거절
 	public static final String SUB_STATUS_ID_REUSE = "US010317"; // ID재사용
-	@Deprecated
-	public static final String SUB_STATUS_JOIN_APPLY_ETC = "US010304"; // 가입승인 만료
-	@Deprecated
-	public static final String SUB_STATUS_EMAIL_CERT_WATING = "US010306"; // 이메일변경 승인 대기
-	@Deprecated
-	public static final String SUB_STATUS_LOGIN_PAUSE = "US010307"; // 계정잠금
+	public static final String SUB_STATUS_ASSOCIATE_MEMBER = "US010318"; // 준회원
 
 	/** 검색 구분자. */
 	public static final String KEY_TYPE_INSD_USERMBR_NO = "INSD_USERMBR_NO"; // 내부 사용자 키
@@ -233,13 +228,13 @@ public final class MemberConstants {
 	public static final String GAMECENTER_WORK_CD_IMUSER_CHANGE = "US003207"; // 통합회원전환
 
 	/**
-	 * 가입자 상태 코드
+	 * 가입자 상태 코드.
 	 */
 	public static final String JOIN_STATUS_CODE_NORMAL = "10"; // 정상
 	public static final String JOIN_STATUS_CODE_HALF_AUTH = "11"; // 가인증
 
 	/**
-	 * 로그인시 휴대기기 정보 비교 필드
+	 * 로그인시 휴대기기 정보 비교 필드.
 	 */
 	public static final String LOGIN_DEVICE_EQUALS_DEVICE_TELECOM = "deviceTelecom";
 	public static final String LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT = "deviceAccount";
