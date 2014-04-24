@@ -79,6 +79,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 	@Override
 	public HistoryListSacRes searchHistoryList(HistoryListSacReq request) {
 		this.logger.debug("HistoryListSacRes : {}", request);
+		this.logger.info("HistoryListSac Request Param : {}", request);
 
 		// SC request/response VO
 		HistoryListScReq scRequest = new HistoryListScReq();
@@ -328,9 +329,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 				useDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
 			} catch (Exception e) {
 				useInfo = false;
-				this.logger.debug("---------------------------------------------------");
-				this.logger.debug("------Use Device Info null");
-				this.logger.debug("---------------------------------------------------");
+				this.logger.info("---------------------------------------------------");
+				this.logger.info("------Use Device Info null");
+				this.logger.info("---------------------------------------------------");
 			}
 		}
 
@@ -345,9 +346,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 				sendDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
 			} catch (Exception e) {
 				sendInfo = false;
-				this.logger.debug("---------------------------------------------------");
-				this.logger.debug("------Send Device Info null");
-				this.logger.debug("---------------------------------------------------");
+				this.logger.info("---------------------------------------------------");
+				this.logger.info("------Send Device Info null");
+				this.logger.info("---------------------------------------------------");
 			}
 		}
 
