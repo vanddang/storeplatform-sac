@@ -89,7 +89,7 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	public Rights generateRights(MetaInfo metaInfo) {
 		Rights rights = new Rights();
 		rights.setGrade(metaInfo.getProdGrdCd());
-		Date date = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM, DateUtils.parseDate(metaInfo
+		Date date = new Date(DisplayConstants.DP_DATE_SALE_PERIOD_DURATION, DateUtils.parseDate(metaInfo
 				.getApplyStartDt()), DateUtils.parseDate(metaInfo.getApplyEndDt()));
 		rights.setDate(date);
 		return rights;
@@ -162,7 +162,7 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	@Override
 	public Date generateDate(MetaInfo metaInfo) {
 
-		Date date = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM, DateUtils.parseDate(metaInfo
+		Date date = new Date(DisplayConstants.DP_DATE_SALE_PERIOD_DURATION, DateUtils.parseDate(metaInfo
 				.getApplyStartDt()), DateUtils.parseDate(metaInfo.getApplyEndDt()));
 
 		return date;

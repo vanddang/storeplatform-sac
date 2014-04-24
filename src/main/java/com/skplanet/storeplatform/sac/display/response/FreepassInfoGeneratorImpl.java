@@ -126,7 +126,7 @@ public class FreepassInfoGeneratorImpl implements FreepassInfoGenerator {
 	@Override
 	public Date generateDate(MetaInfo metaInfo) {
 
-		Date date = new Date(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM, DateUtils.parseDate(metaInfo
+		Date date = new Date(DisplayConstants.DP_DATE_SALE_PERIOD_DURATION, DateUtils.parseDate(metaInfo
 				.getApplyStartDt()), DateUtils.parseDate(metaInfo.getApplyEndDt()));
 
 		return date;

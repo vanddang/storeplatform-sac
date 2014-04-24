@@ -395,7 +395,7 @@ public class DisplayConstants {
 	public static final String DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR = "PD00317"; // 사용기간 단위 코드(당년 )
 	public static final String DP_USE_PERIOD_UNIT_CD_MINUTE = "PD00318"; // 사용기간 단위 코드(분 )
 	public static final String DP_USE_PERIOD_UNIT_CD_CALENDAR = "PD00319"; // 사용기간 단위 코드(기간선택)
-	
+
 	// ////////////////////////////////// 날짜 유형 //////////////////////////////////////////
 	/** 사용기간-FROM/TO. */
 	public static final String DP_DATE_USAGE_PERIOD = "duration/usagePeriod";
@@ -418,18 +418,7 @@ public class DisplayConstants {
 	/** 구매 날짜. */
 	public static final String DP_DATE_PURCHASE = "date/purchase";
 
-	
 	// ////////////////////////////////// Shopping Rights Type 정보 //////////////////////////////////////////
-	/**
-	 * Shopping Rights Type 정보.
-	 */
-	public static final String DP_SHOPPING_RIGHTS_TYPE_NM = "duration/salePeriod";
-
-	public static final String DP_SHOPPING_RIGHTS_TYPE_UNIT_NM = "unit/usagePeriod";
-
-	public static final String DP_SHOPPING_PURCHASE_TYPE_NM = "date/purchase";
-
-	public static final String DP_DATE_PUBLISHED_NM = "date/published";
 
 	public static final String DP_DATE_DOWNLOAD_EXPIRED_NM = "date/downloadExpired";
 

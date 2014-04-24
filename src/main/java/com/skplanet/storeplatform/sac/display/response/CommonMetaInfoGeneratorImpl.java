@@ -651,7 +651,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			;
 
 			if (StringUtils.isNotEmpty(prchDt)) {
-				dateList.add(this.generateDate(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM, prchDt));
+				dateList.add(this.generateDate(DisplayConstants.DP_DATE_PURCHASE, prchDt));
 			}
 			if (StringUtils.isNotEmpty(dwldExprDt)) {
 				dateList.add(this.generateDate(DisplayConstants.DP_DATE_DOWNLOAD_EXPIRED_NM, dwldExprDt));
