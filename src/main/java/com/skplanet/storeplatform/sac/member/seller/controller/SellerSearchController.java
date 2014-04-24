@@ -64,7 +64,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	private DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header,
+	public DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header,
 			@RequestBody @Validated DuplicateByIdEmailReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		DuplicateByIdEmailRes res = this.sellerSearchService.duplicateByIdEmail(header, req);
