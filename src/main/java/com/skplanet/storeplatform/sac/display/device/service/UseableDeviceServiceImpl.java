@@ -96,20 +96,12 @@ public class UseableDeviceServiceImpl implements UseableDeviceService {
 		// 서비스 그룹 코드가 어플리케이션(DP000201) 일때
 		if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(req.getSvcGrpCd())) {
 
-			if (StringUtils.isEmpty(req.getProductId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
-			}
-
 			usableDeviceList = this.commonDAO.queryForList("UseableDevice.selectUseableDeviceForApp", req,
 					MetaInfo.class);
 		} else if (DisplayConstants.DP_SOCIAL_SHOPPING_PROD_SVC_GRP_CD.equals(req.getSvcGrpCd())) { // 서비스 그룹코드
 			usableDeviceList = this.commonDAO.queryForList("UseableDevice.selectUseableDeviceForShopping", req,
 					MetaInfo.class);
 		} else {
-
-			if (StringUtils.isEmpty(req.getProductId())) {
-				throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
-			}
 
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("productId", req.getProductId());

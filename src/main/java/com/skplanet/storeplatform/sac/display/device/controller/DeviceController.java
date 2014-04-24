@@ -16,6 +16,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,6 +59,11 @@ public class DeviceController {
 
 	@Autowired
 	private DeviceChangeService deviceChangeService;
+
+	@InitBinder("useableDeviceSacReq")
+	public void initUseableDeviceSacReqBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new UseableDeviceSacReqValidator());
+	}
 
 	/**
 	 * <pre>
@@ -111,8 +118,9 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/useableDevice/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public UseableDeviceSacRes searchUseableDeviceList(@Validated UseableDeviceSacReq req, SacRequestHeader header) {
-		return this.useableDeviceService.searchUseableDeviceList(req, header);
+	public UseableDeviceSacRes searchUseableDeviceList(@Validated UseableDeviceSacReq useableDeviceSacReq,
+			SacRequestHeader header) {
+		return this.useableDeviceService.searchUseableDeviceList(useableDeviceSacReq, header);
 	}
 
 	/**
