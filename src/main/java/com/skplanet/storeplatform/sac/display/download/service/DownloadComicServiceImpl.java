@@ -192,6 +192,19 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					historyReq.setCount(1000);
 					historyReq.setProductList(productList);
 
+					this.logger.info("----------------------------------------------------------------");
+					this.logger.info("[DownloadComicLog] 구매내역 조회 요청 파라미터");
+					this.logger.info("----------------------------------------------------------------");
+					this.logger.info("[DownloadComicLog] tenantId : {}", historyReq.getTenantId());
+					this.logger.info("[DownloadComicLog] userKey : {}", historyReq.getUserKey());
+					this.logger.info("[DownloadComicLog] deviceKey : {}", historyReq.getDeviceKey());
+					this.logger.info("[DownloadComicLog] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+					this.logger.info("[DownloadComicLog] prchsProdType : {}", historyReq.getPrchsProdType());
+					this.logger.info("[DownloadComicLog] startDt : {}", historyReq.getStartDt());
+					this.logger.info("[DownloadComicLog] endDt : {}", historyReq.getEndDt());
+					this.logger.info("[DownloadComicLog] productList : {}", historyReq.getProductList().toString());
+					this.logger.info("----------------------------------------------------------------");
+
 					// 구매내역 조회 실행
 					this.logger
 							.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
@@ -291,6 +304,13 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 									deviceReq = new SearchDeviceIdSacReq();
 									deviceReq.setUserKey(comicReq.getUserKey());
 									deviceReq.setDeviceKey(comicReq.getDeviceKey());
+
+									this.logger.info("--------------------------------------------------------------");
+									this.logger.info("[DownloadComicLog] 단말정보 조회 요청 파라미터");
+									this.logger.info("--------------------------------------------------------------");
+									this.logger.info("[DownloadComicLog] userKey : {}", deviceReq.getUserKey());
+									this.logger.info("[DownloadComicLog] deviceKey : {}", deviceReq.getDeviceKey());
+									this.logger.info("--------------------------------------------------------------");
 
 									// 기기정보 조회
 									this.logger
