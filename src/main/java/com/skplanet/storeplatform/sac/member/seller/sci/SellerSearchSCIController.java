@@ -46,7 +46,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 	 * 판매자회원 기본정보조회.
 	 * </pre>
 	 * 
-	 * @param req
+	 * @param request
 	 *            DetailInformationSacReq
 	 * @return DetailInformationRes
 	 */

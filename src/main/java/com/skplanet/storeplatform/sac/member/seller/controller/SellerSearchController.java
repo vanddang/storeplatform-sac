@@ -308,7 +308,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/listBanksByCountry/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListBanksByCountryRes ListBanksByCountry(SacRequestHeader header) {
+	public ListBanksByCountryRes listBanksByCountry(SacRequestHeader header) {
 		LOGGER.info("Request : {}");
 
 		ListBanksByCountryRes res = this.sellerSearchService.listBanksByCountry(header);
