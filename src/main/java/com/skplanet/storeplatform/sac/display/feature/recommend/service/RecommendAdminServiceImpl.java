@@ -79,11 +79,6 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		// requestVO.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4APP);
 		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
-		// tenantId 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
-		}
-
 		// 시작점 ROW Default 세팅
 		if (requestVO.getOffset() == null) {
 			requestVO.setOffset(1);
@@ -99,7 +94,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 
 		// 기준일시 체크
 		if (StringUtils.isEmpty(stdDt)) {
-			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
 		} else {
 			requestVO.setStdDt(stdDt);
 		}

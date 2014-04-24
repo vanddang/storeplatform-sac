@@ -108,7 +108,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		String stdDt = this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(), listId);
 
 		if (StringUtils.isEmpty(stdDt)) {
-			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
 		} else {
 			requestVO.setStdDt(stdDt);
 		}

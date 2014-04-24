@@ -93,16 +93,6 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		MusicContentsSacRes responseVO = new MusicContentsSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		// filteredBy 필수 파라미터 체크
-		// if (StringUtils.isEmpty(filteredBy)) {
-		// throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
-		// }
-
-		// tenantId 필수 파라미터 체크
-		// if (StringUtils.isEmpty(requestVO.getTenantId())) {
-		// throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
-		// }
-
 		// 챠트구분, 배치ID 세팅
 		if (filteredBy.equals("top")) { // TOP 뮤직
 			requestVO.setChartClsfCd("DP004901");
@@ -136,7 +126,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 
 			// 기준일시 체크
 			if (StringUtils.isEmpty(stdDt)) {
-				throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
 			} else {
 				if (!filteredBy.equals("mainTop")) {
 					// 뮤직 챠트 배치일자는 년월일만 필요

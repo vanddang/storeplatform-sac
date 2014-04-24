@@ -96,7 +96,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), listId);
 
 		if (StringUtils.isEmpty(stdDt)) {
-			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
 		} else {
 			req.setStdDt(stdDt);
 		}

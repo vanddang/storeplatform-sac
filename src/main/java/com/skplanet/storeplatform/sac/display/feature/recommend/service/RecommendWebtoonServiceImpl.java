@@ -80,11 +80,6 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 		req.setDeviceModelCd(header.getDeviceHeader().getModel());
 		req.setLangCd(header.getTenantHeader().getLangCd());
 
-		// tenantId 필수 파라미터 체크
-		if (StringUtils.isEmpty(req.getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-		}
-
 		// 시작점 ROW Default 세팅
 		if (req.getOffset() == null) {
 			req.setOffset(1);
@@ -99,7 +94,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 
 		// 기준일시 체크
 		if (StringUtils.isEmpty(stdDt)) {
-			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
 		} else {
 			req.setStdDt(stdDt);
 		}
