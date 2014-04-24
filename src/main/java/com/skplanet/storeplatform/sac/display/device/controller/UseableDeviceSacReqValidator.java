@@ -18,9 +18,9 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
  * <p>
- * DownloadReqValidator
+ * UseableDeviceSacReqValidator
  * </p>
- * Updated on : 2014. 04. 23 Updated by : 백승현, 인크로스.
+ * Updated on : 2014. 04. 24 Updated by : 이석희, 아이에스 플러스.
  */
 
 public class UseableDeviceSacReqValidator implements Validator {
