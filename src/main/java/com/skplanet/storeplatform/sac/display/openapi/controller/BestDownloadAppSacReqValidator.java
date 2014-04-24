@@ -33,10 +33,9 @@ public class BestDownloadAppSacReqValidator implements Validator {
 	public void validate(Object o, Errors errors) {
 		BestDownloadAppSacReq vo = (BestDownloadAppSacReq) o;
 
-		if (StringUtils.isEmpty(vo.getListId())) {
-			if (StringUtils.isEmpty(vo.getOrderedBy())) {
-				errors.rejectValue("orderedBy", "NotEmpty", new Object[] { "orderedBy" }, "orderedBy");
-			}
+		if (StringUtils.isEmpty(vo.getListId()) && StringUtils.isEmpty(vo.getOrderedBy())) {
+			errors.rejectValue("listId", "NotEmpty", new Object[] { "listId" }, "listId");
+			errors.rejectValue("orderedBy", "NotEmpty", new Object[] { "orderedBy" }, "orderedBy");
 		}
 	}
 }
