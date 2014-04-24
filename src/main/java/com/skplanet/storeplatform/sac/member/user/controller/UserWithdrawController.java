@@ -43,7 +43,7 @@ public class UserWithdrawController {
 
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public WithdrawRes exist(@RequestBody WithdrawReq req, SacRequestHeader sacHeader) {
+	public WithdrawRes withdraw(@RequestBody WithdrawReq req, SacRequestHeader sacHeader) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
