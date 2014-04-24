@@ -220,26 +220,6 @@ public class DisplayConstants {
 	public static final String DP_COLOR_SUPPORT_NM = "color";
 
 	/**
-	 * Shopping Rights Type 정보.
-	 */
-	public static final String DP_SHOPPING_RIGHTS_TYPE_NM = "duration/salePeriod";
-
-	public static final String DP_SHOPPING_RIGHTS_TYPE_UNIT_NM = "unit/usagePeriod";
-
-	public static final String DP_SHOPPING_PURCHASE_TYPE_NM = "date/purchase";
-
-	public static final String DP_DATE_PUBLISHED_NM = "date/published";
-
-	public static final String DP_DATE_DOWNLOAD_EXPIRED_NM = "date/downloadExpired";
-
-	public static final String DP_DATE_UPT_NM = "date/upt";
-
-	public static final String DP_SOLDOUT = "soldout";
-
-	public static final String DP_CONTINUE = "continue";
-
-	public static final String DP_SHOPPING_BRAND_HOT = "hot";
-	/**
 	 * 채널-에피스도 상품 관계 코드.
 	 */
 	public static final String DP_CHANNEL_EPISHODE_RELATIONSHIP_CD = "DP010802";
@@ -385,21 +365,6 @@ public class DisplayConstants {
 
 	public static final String DP_VOD_DOLBY_NM = "dolby";
 
-	// ////////////////////////////////// 날짜 유형 //////////////////////////////////////////
-	public static final String DP_DATE_USAGE_PERIOD = "duration/usagePeriod";
-	/** 등록 날짜. */
-	public static final String DP_DATE_REG = "date/reg";
-	/** 판매등록 날짜. */
-	public static final String DP_DATE_SALE_REG = "date/saleReg";
-	/** 개봉일. */
-	public static final String DP_DATE_RELEASE = "date/release";
-	/** 출판일. */
-	public static final String DP_DATE_PUBLISH = "date/publish";
-	/** 방송 날짜. */
-	public static final String DP_DATE_BROADCAST = "date/broadcast";
-	/** 발행일. */
-	public static final String DP_DATE_ISSUE = "date/issue";
-
 	// ////////////////////////////////// 도서 유형 //////////////////////////////////////////
 	/** 단행본. */
 	public static final String DP_BOOK_BOOK = "DP004301";
@@ -430,8 +395,55 @@ public class DisplayConstants {
 	public static final String DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR = "PD00317"; // 사용기간 단위 코드(당년 )
 	public static final String DP_USE_PERIOD_UNIT_CD_MINUTE = "PD00318"; // 사용기간 단위 코드(분 )
 	public static final String DP_USE_PERIOD_UNIT_CD_CALENDAR = "PD00319"; // 사용기간 단위 코드(기간선택)
+	
+	// ////////////////////////////////// 날짜 유형 //////////////////////////////////////////
+	/** 사용기간-FROM/TO. */
+	public static final String DP_DATE_USAGE_PERIOD = "duration/usagePeriod";
+	/** 사용기간-단위. */
 	public static final String DP_DATE_TYPE_USE_PERIOD = "unit/usagePeriod";
+	/** 등록 날짜. */
+	public static final String DP_DATE_REG = "date/reg";
+	/** 판매등록 날짜. */
+	public static final String DP_DATE_SALE_REG = "date/saleReg";
+	/** 개봉일. */
+	public static final String DP_DATE_RELEASE = "date/release";
+	/** 출판일. */
+	public static final String DP_DATE_PUBLISH = "date/publish";
+	/** 방송 날짜. */
+	public static final String DP_DATE_BROADCAST = "date/broadcast";
+	/** 발행일. */
+	public static final String DP_DATE_ISSUE = "date/issue";
+	/** 판매기간-FROM/TO. */
+	public static final String DP_DATE_SALE_PERIOD_DURATION = "duration/salePeriod";
+	/** 구매 날짜. */
+	public static final String DP_DATE_PURCHASE = "date/purchase";
 
+	
+	// ////////////////////////////////// Shopping Rights Type 정보 //////////////////////////////////////////
+	/**
+	 * Shopping Rights Type 정보.
+	 */
+	public static final String DP_SHOPPING_RIGHTS_TYPE_NM = "duration/salePeriod";
+
+	public static final String DP_SHOPPING_RIGHTS_TYPE_UNIT_NM = "unit/usagePeriod";
+
+	public static final String DP_SHOPPING_PURCHASE_TYPE_NM = "date/purchase";
+
+	public static final String DP_DATE_PUBLISHED_NM = "date/published";
+
+	public static final String DP_DATE_DOWNLOAD_EXPIRED_NM = "date/downloadExpired";
+
+	public static final String DP_DATE_UPT_NM = "date/upt";
+
+	public static final String DP_SOLDOUT = "soldout";
+
+	public static final String DP_CONTINUE = "continue";
+
+	public static final String DP_SHOPPING_BRAND_HOT = "hot";
+
+	/**
+	 * For Download.
+	 */
 	public static final String DP_FORDOWNLOAD_ENCRYPT_DIGEST = "HexString"; // for download 암호화 digest
 
 	public static final String DP_FORDOWNLOAD_ENCRYPT_TYPE = "AES128"; // for download 암호화 방식
