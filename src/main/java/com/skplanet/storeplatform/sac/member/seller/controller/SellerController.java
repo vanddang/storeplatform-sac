@@ -18,6 +18,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateChangeSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateChangeSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
@@ -406,8 +408,28 @@ public class SellerController {
 	public ModifyFlurrySacRes modifyFlurry(SacRequestHeader header, @RequestBody @Validated ModifyFlurrySacReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		ModifyFlurrySacRes res = this.sellerService.ModifyFlurry(header, req);
+		ModifyFlurrySacRes res = this.sellerService.modifyFlurry(header, req);
 		LOGGER.info("Response : {}", res.getSellerKey());
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.35. 판매자회원 전환가입.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateChangeSacReq
+	 * @return CreateChangeSacRes
+	 */
+	@RequestMapping(value = "/createChange/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateChangeSacRes createChange(SacRequestHeader header, @RequestBody @Validated CreateChangeSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		CreateChangeSacRes res = this.sellerService.createChange(header, req);
+		LOGGER.info("Response : {}", res.getSellerMbr().getSellerKey());
 		return res;
 	}
 

@@ -64,6 +64,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateChangeSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateChangeSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
@@ -567,13 +569,13 @@ public class SellerServiceImpl implements SellerService {
 				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
 
 		// 메인, 서브 상태
-		if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
-				.getSellerMainStatus())
-				|| !StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
-						.getSellerSubStatus())) {
-			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-					searchSellerResponse.getSellerMbr().getSellerSubStatus());
-		}
+		// if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+		// .getSellerMainStatus())
+		// || !StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+		// .getSellerSubStatus())) {
+		// throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+		// searchSellerResponse.getSellerMbr().getSellerSubStatus());
+		// }
 
 		// 무료
 		if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY, searchSellerResponse.getSellerMbr()
@@ -1375,7 +1377,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyFlurrySacRes
 	 */
 	@Override
-	public ModifyFlurrySacRes ModifyFlurry(SacRequestHeader header, ModifyFlurrySacReq req) {
+	public ModifyFlurrySacRes modifyFlurry(SacRequestHeader header, ModifyFlurrySacReq req) {
 		// 1. CommonRequest Setting
 		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [START] ############");
 		// SC공통 헤더
@@ -1399,7 +1401,220 @@ public class SellerServiceImpl implements SellerService {
 		return res;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(CreateRes.class.getSimpleName());
+	/**
+	 * <pre>
+	 * 2.2.35. 판매자회원 전환가입.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateChangeSacReq
+	 * @return CreateChangeSacRes
+	 */
+	@Override
+	public CreateChangeSacRes createChange(SacRequestHeader header, CreateChangeSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.createChange() [START] ############");
+		// SC공통 헤더
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+
+		// 수정 가능 회원 Check
+		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
+				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
+
+		// 요청 가능 여부 확인 (준회원 확인)
+		if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+				.getSellerMainStatus())
+				&& !StringUtils.equals(MemberConstants.SUB_STATUS_ASSOCIATE_MEMBER, searchSellerResponse.getSellerMbr()
+						.getSellerSubStatus())) {
+			throw new StorePlatformException("SAC_MEM_2012", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
+		}
+
+		/** 1. Email 중복체크 [REQUEST] 생성 및 주입 */
+		if (StringUtils.isNotBlank(req.getSellerEmail())) {
+
+			CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
+
+			/** 1-2. SC 헤더 셋팅 */
+			checkDuplicationSellerRequest.setCommonRequest(commonRequest);
+
+			KeySearch keySearch = new KeySearch();
+			keySearch.setKeyType(MemberConstants.KEY_TYPE_EMAIL);
+			keySearch.setKeyString(req.getSellerEmail());
+			List<KeySearch> keySearchs = new ArrayList<KeySearch>();
+			keySearchs.add(keySearch);
+			checkDuplicationSellerRequest.setKeySearchList(keySearchs);
+			//
+			/** 1-3. SC회원(Email 중복) Call */
+			if (StringUtils.equals(MemberConstants.USE_Y,
+					this.sellerSCI.checkDuplicationSeller(checkDuplicationSellerRequest).getIsRegistered())) {
+				throw new StorePlatformException("SAC_MEM_2012", req.getSellerEmail());
+			}
+		}
+
+		/** 2. SC회원 Req 생성 및 주입. */
+		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
+
+		/** 2-1. 실명인증정보 생성 및 주입 [시작]. */
+		MbrAuth mbrAuth = new MbrAuth();
+		// 실명인증여부
+		mbrAuth.setIsRealName(MemberConstants.USE_Y);
+		// CI
+		mbrAuth.setCi(req.getSellerCI());
+		// DI
+		mbrAuth.setDi(req.getSellerDI());
+		//
+		mbrAuth.setMemberCategory(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY);
+		// 인증방법코드
+		mbrAuth.setRealNameMethod(req.getRealNameMethod());
+		// 통신사 코드
+		mbrAuth.setTelecom(req.getSellerTelecom());
+		// 무선 전화번호
+		mbrAuth.setPhone(req.getSellerPhone());
+		// 생년월일
+		mbrAuth.setBirthDay(req.getSellerBirthDay());
+		// 성별
+		mbrAuth.setSex(req.getSellerSex());
+		// 회원명
+		mbrAuth.setName(StringUtils.isBlank(searchSellerResponse.getMbrAuth().getName()) ? searchSellerResponse
+				.getSellerMbr().getSellerName() : searchSellerResponse.getMbrAuth().getName());
+		// 실명 인증사이트
+		mbrAuth.setRealNameSite(commonRequest.getSystemID());
+		// 실명 인증 일시
+		mbrAuth.setRealNameDate(req.getRealNameDate());
+		// 내국인 여부
+		mbrAuth.setIsDomestic(req.getIsDomestic());
+		// TenantId 추가
+		mbrAuth.setTenantID(header.getTenantHeader().getTenantId());
+
+		updateSellerRequest.setMbrAuth(mbrAuth);
+
+		LOGGER.debug("==>>[SC] updateSellerRequest.MbrAuth.toString() : {}", mbrAuth.toString());
+		/** 실명인증정보 생성 및 주입 [끝]. */
+
+		/** 2-1. 보안질문 리스트 주입 - [시작]. */
+		List<PWReminder> pWReminderList = null;
+
+		if (req.getPwReminderList() != null) {
+			pWReminderList = new ArrayList<PWReminder>();
+			for (int i = 0; i < req.getPwReminderList().size(); i++) {
+				PWReminder pwReminder = new PWReminder();
+				pwReminder.setAnswerString(req.getPwReminderList().get(i).getAnswerString());
+				pwReminder.setQuestionID(req.getPwReminderList().get(i).getQuestionId());
+				pwReminder.setQuestionMessage(req.getPwReminderList().get(i).getQuestionMessage());
+				pWReminderList.add(pwReminder);
+				LOGGER.debug("==>>[SC] updateSellerRequest.PWReminder[{}].toString() : {}", i, pwReminder.toString());
+			}
+			updateSellerRequest.setPWReminderList(pWReminderList);
+			LOGGER.debug("==>>[SC] updateSellerRequest.pWReminderList.toString() : {}", pWReminderList.toString());
+		}
+		/** 보안질문 리스트 주입 - [끝]. */
+
+		/** 2-2. 판매자 회원 비밀번호 생성 및 주입. */
+		// 판매자 회원 PW
+		MbrPwd mbrPwd = new MbrPwd();
+		mbrPwd.setMemberPW(req.getSellerPw());
+		// @TODO 비밀번호 수정관련 SC 수정이 필요...
+		// updateSellerRequest.setMbrPwd(mbrPwd);
+		LOGGER.debug("==>>[SC] updateSellerRequest.MbrPwd.toString() : {}", mbrPwd.toString());
+
+		/** 2-3. 판매자 회원 정보 생성 및 주입 - [시작]. */
+		SellerMbr sellerMbr = new SellerMbr();
+		// 판매자구분코드
+		sellerMbr.setSellerClass(req.getSellerClass());
+		// 판매자 분류코드
+		sellerMbr.setSellerCategory(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY);
+		// 판매자 main 상태 코드
+		sellerMbr.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
+		// 판매자 sub 상태 코드
+		sellerMbr.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+		// 통신사 코드
+		sellerMbr.setSellerTelecom(req.getSellerTelecom());
+		// 무선 국가번호
+		sellerMbr.setSellerPhoneCountry(req.getSellerPhoneCountry());
+		// 무선 전화번호
+		sellerMbr.setSellerPhone(req.getSellerPhone());
+		// 유선 전화번호
+		sellerMbr.setCordedTelephoneCountry(req.getCordedTelephoneCountry());
+		// 유선 전화번호
+		sellerMbr.setCordedTelephone(req.getCordedTelephone());
+		// SMS 수신여부
+		sellerMbr.setIsRecvSMS(req.getIsRecvSms());
+		if (StringUtils.isNotBlank(req.getSellerEmail())) {
+			// 판매자 이메일
+			sellerMbr.setSellerEmail(req.getSellerEmail());
+		}
+		// 이메일 수신여부
+		sellerMbr.setIsRecvEmail(req.getIsRecvEmail());
+		// 쇼핑 노출명
+		sellerMbr.setSellerNickName(req.getSellerNickName());
+		// 성별
+		sellerMbr.setSellerSex(req.getSellerSex());
+		// 생년월일
+		sellerMbr.setSellerBirthDay(req.getSellerBirthDay());
+		// 주민번호
+		sellerMbr.setSellerSSNumber(req.getSellerSSNumber());
+		// 우편번호
+		sellerMbr.setSellerZip(req.getSellerZip());
+		// 주소
+		sellerMbr.setSellerAddress(req.getSellerAddress());
+		// 상세주소
+		sellerMbr.setSellerDetailAddress(req.getSellerDetailAddress());
+		// 도시
+		sellerMbr.setSellerCity(req.getSellerCity());
+		// 지역
+		sellerMbr.setSellerState(req.getSellerState());
+		// 국내판매자 여부
+		sellerMbr.setIsDomestic(req.getIsDomestic());
+		// 실명인증여부
+		sellerMbr.setIsRealName(MemberConstants.USE_Y);
+		// 국가코드
+		sellerMbr.setSellerCountry(req.getSellerCountry());
+		// 언어코드
+		sellerMbr.setSellerLanguage(req.getSellerLanguage());
+		// 회사명
+		sellerMbr.setSellerCompany(req.getSellerCompany());
+		// 사업자 등록번호
+		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
+		// 담당자 이메일
+		sellerMbr.setCustomerEmail(req.getCustomerEmail());
+		sellerMbr.setRepEmail(req.getRepEmail());
+		sellerMbr.setRepPhone(req.getRepPhone());
+		sellerMbr.setRepPhoneArea(req.getRepPhoneArea());
+		// 법인등록번호
+		sellerMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
+		sellerMbr.setStopStatusCode(MemberConstants.USER_STOP_STATUS_NOMAL);
+		// 담당자 명
+		sellerMbr.setCharger(req.getCharger());
+		sellerMbr.setWebsite(req.getWebsite());
+
+		updateSellerRequest.setSellerMbr(sellerMbr);
+		// Debug
+		LOGGER.debug("==>>[SC] updateSellerRequest.SellerMbr.toString() : {}", sellerMbr.toString());
+		/** 판매자 회원 정보 생성 및 주입 - [끝]. */
+
+		/** 2-4. 회원 전환 가입을 위한 공통 헤더 주입. */
+		updateSellerRequest.setCommonRequest(commonRequest);
+
+		LOGGER.debug("==>>[SC] updateSellerRequest.toString() : {}", updateSellerRequest.toString());
+
+		/** 2-5. SC회원[updateSeller] Call. */
+		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
+
+		/** 3. 전환가입 결과 [RESPONSE] 생성 및 주입. */
+		CreateChangeSacRes res = new CreateChangeSacRes();
+		SellerMbrSac resMbr = new SellerMbrSac();
+		resMbr.setSellerId(updateSellerResponse.getSellerID());
+		resMbr.setSellerKey(updateSellerResponse.getSellerKey());
+		// resMbr.setSellerMainStatus(updateSellerResponse.getSellerMainStatus());
+		// resMbr.setSellerSubStatus(updateSellerResponse.getSellerSubStatus());
+		res.setSellerMbr(resMbr);
+		// Debug
+		LOGGER.debug("==>>[SAC] CreateChangeSacRes.toString() : \n{}", res.toString());
+
+		LOGGER.debug("############ SellerServiceImpl.createChange() [END] ############");
+		return res;
 	}
+
 }

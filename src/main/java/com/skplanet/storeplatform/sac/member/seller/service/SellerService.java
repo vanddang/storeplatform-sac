@@ -8,6 +8,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateChangeSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateChangeSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
@@ -263,5 +265,18 @@ public interface SellerService {
 	 *            ModifyFlurrySacReq
 	 * @return ModifyFlurrySacRes
 	 */
-	public ModifyFlurrySacRes ModifyFlurry(SacRequestHeader header, ModifyFlurrySacReq req);
+	public ModifyFlurrySacRes modifyFlurry(SacRequestHeader header, ModifyFlurrySacReq req);
+
+	/**
+	 * <pre>
+	 * 2.2.35. 판매자회원 전환가입.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateChangeSacReq
+	 * @return CreateChangeSacRes
+	 */
+	public CreateChangeSacRes createChange(SacRequestHeader header, CreateChangeSacReq req);
 }
