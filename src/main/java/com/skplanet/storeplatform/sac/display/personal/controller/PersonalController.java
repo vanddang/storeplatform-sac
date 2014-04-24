@@ -12,11 +12,18 @@ package com.skplanet.storeplatform.sac.display.personal.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,6 +66,13 @@ public class PersonalController {
 	@Autowired
 	private RecommendNewMemberProductService recommendNewMemberProductService;
 
+	@InitBinder("personalUpdateProductReq")
+	public void personalUpdateProductReqBinder(WebDataBinder dataBinder) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator springValidatorAdapter = new SpringValidatorAdapter(factory.getValidator());
+		dataBinder.setValidator(new PersonalUpdateProductReqValidator(springValidatorAdapter));
+	}
+
 	/**
 	 * <pre>
 	 * 업데이트 대상 목록 조회.
@@ -72,22 +86,15 @@ public class PersonalController {
 	 */
 	@RequestMapping(value = "/update/product/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public PersonalUpdateProductRes searchUpdateProductList(@Validated @RequestBody PersonalUpdateProductReq req,
-			SacRequestHeader header) {
-		if ("updatedList".equals(req.getMemberType())) {
-			if (StringUtils.isEmpty(req.getUserKey())) {
-				throw new StorePlatformException("SAC_DSP_0002", "userKye", req.getUserKey());
-			}
-			if (StringUtils.isEmpty(req.getDeviceKey())) {
-				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", req.getDeviceKey());
-			}
-		}
-		List<String> packageInfoList = Arrays.asList(StringUtils.split(req.getPackageInfo(), "+"));
+	public PersonalUpdateProductRes searchUpdateProductList(
+			@Validated @RequestBody PersonalUpdateProductReq personalUpdateProductReq, SacRequestHeader header) {
+		List<String> packageInfoList = Arrays.asList(StringUtils.split(personalUpdateProductReq.getPackageInfo(), "+"));
 		if (packageInfoList.size() > DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT) {
 			throw new StorePlatformException("SAC_DSP_0004", "packageInfo",
 					DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT);
 		}
-		return this.personalUpdateProductService.searchUpdateProductList(req, header, packageInfoList);
+		return this.personalUpdateProductService.searchUpdateProductList(personalUpdateProductReq, header,
+				packageInfoList);
 	}
 
 	/**
