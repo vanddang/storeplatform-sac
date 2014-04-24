@@ -34,6 +34,10 @@ public class UseableDeviceSacReqValidator implements Validator {
 	public void validate(Object o, Errors errors) {
 		UseableDeviceSacReq vo = (UseableDeviceSacReq) o;
 
+		if (StringUtils.isEmpty(vo.getSvcGrpCd())) {
+			errors.rejectValue("svcGrpCd", "NotEmpty", new Object[] { "svcGrpCd" }, "svcGrpCd");
+		}
+
 		if (!DisplayConstants.DP_SOCIAL_SHOPPING_PROD_SVC_GRP_CD.equals(vo.getSvcGrpCd())) {
 			if (StringUtils.isEmpty(vo.getProductId())) {
 				errors.rejectValue("productId", "NotEmpty", new Object[] { "productId" }, "productId");
