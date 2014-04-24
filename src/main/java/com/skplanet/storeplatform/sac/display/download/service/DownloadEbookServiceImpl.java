@@ -216,7 +216,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					this.logger.info("[DownloadEbookLog] prchsProdType : {}", historyReq.getPrchsProdType());
 					this.logger.info("[DownloadEbookLog] startDt : {}", historyReq.getStartDt());
 					this.logger.info("[DownloadEbookLog] endDt : {}", historyReq.getEndDt());
-					this.logger.info("[DownloadEbookLog] productList : {}", historyReq.getProductList().toString());
+					this.logger.info("[DownloadEbookLog] prodId[0] : {}", productList.get(0).getProdId());
+					this.logger.info("[DownloadEbookLog] prodId[1] : {}", productList.get(1).getProdId());
 					this.logger.info("----------------------------------------------------------------");
 
 					// 구매내역 조회 실행

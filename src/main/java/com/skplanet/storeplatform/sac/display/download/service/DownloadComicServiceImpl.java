@@ -202,7 +202,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					this.logger.info("[DownloadComicLog] prchsProdType : {}", historyReq.getPrchsProdType());
 					this.logger.info("[DownloadComicLog] startDt : {}", historyReq.getStartDt());
 					this.logger.info("[DownloadComicLog] endDt : {}", historyReq.getEndDt());
-					this.logger.info("[DownloadComicLog] productList : {}", historyReq.getProductList().toString());
+					this.logger.info("[DownloadComicLog] prodId : {}", productList.get(0).getProdId());
 					this.logger.info("----------------------------------------------------------------");
 
 					// 구매내역 조회 실행
