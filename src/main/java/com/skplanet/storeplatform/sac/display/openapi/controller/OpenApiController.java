@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -126,6 +128,16 @@ public class OpenApiController {
 
 	@Autowired
 	private SupportGameCenterService supportGameCenterService;
+
+	@InitBinder("bestDownloadAppSacReq")
+	public void initBestDownloadAppSacReqBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new BestDownloadAppSacReqValidator());
+	}
+
+	@InitBinder("bestDownloadMMSacReq")
+	public void initBestDownloadMMSacReqBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new BestDownloadMMSacReqValidator());
+	}
 
 	/**
 	 * <pre>
