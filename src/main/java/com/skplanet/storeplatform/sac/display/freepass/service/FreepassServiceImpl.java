@@ -238,10 +238,12 @@ public class FreepassServiceImpl implements FreepassService {
 
 			// 구매 여부 조회
 			if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
-				HistoryListSacInRes historyListSacRes = this.getPrchsInfo(req, retMetaInfo);
+				//공통 메서드로 변경 20140424
+				boolean purchaseYn = displayCommonService.checkPurchase(
+						req.getTenantId(), req.getUserKey(), req.getDeviceKey(), req.getProductId());
 
 				// 구매가 있을 경우 : 판매중지,판매중,팬매종료는 노출함
-				if (historyListSacRes == null || historyListSacRes.getTotalCnt() <= 0) {
+				if (!purchaseYn) {
 					if (DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
 							|| DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())) {
 						throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(),
@@ -651,7 +653,7 @@ public class FreepassServiceImpl implements FreepassService {
 
 	/**
 	 * <pre>
-	 * 기구매 체크.
+	 * 기구매 체크. => 공통메서드로 변경되어 추후 삭제 예정
 	 * </pre>
 	 * 
 	 * @param req
