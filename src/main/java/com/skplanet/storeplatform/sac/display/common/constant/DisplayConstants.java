@@ -516,8 +516,11 @@ public class DisplayConstants {
 	public static final String DP_BANNER_MOBILE_CLIENT_CD = "MBI000000003"; // 배너관리 > 모바일 클라이언트
 
 	// ////////////////////////////////////// rights //////////////////////////////////////////
+	public static final String DP_RIGHTS_ALLOW_FREEPASS = "freepass";
 	public static final String DP_RIGHTS_ALLOW_DOMESTIC = "domestic"; // dwldAreaLimitYn 다운로드 지역제한 == 'Y' 일 경우 domestic
-																	  // 리턴
+	public static final String DP_RIGHTS_ALLOW_SUBSCRIPTION = "subscription";
+	public static final String DP_RIGHTS_ALLOW_FEEDBACK = "feedback";
+	// 리턴
 	/** 바로보기/대여. */
 	public static final String DP_RIGHTS_PLAY = "play";
 	/** 다운로드/소장. */
