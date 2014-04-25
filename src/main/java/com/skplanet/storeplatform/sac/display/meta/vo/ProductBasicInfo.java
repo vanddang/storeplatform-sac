@@ -27,6 +27,9 @@ public class ProductBasicInfo extends CommonInfo {
 	private String catalogId;
 	private String brandId;
 
+	// 웹툰 관련
+	private String seriallyWkdy;
+
 	/**
 	 * @return the totalCount
 	 */
@@ -221,6 +224,21 @@ public class ProductBasicInfo extends CommonInfo {
 	 */
 	public void setFirstProdId(String firstProdId) {
 		this.firstProdId = firstProdId;
+	}
+
+	/**
+	 * @return the seriallyWkdy
+	 */
+	public String getSeriallyWkdy() {
+		return this.seriallyWkdy;
+	}
+
+	/**
+	 * @param seriallyWkdy
+	 *            the seriallyWkdy to set
+	 */
+	public void setSeriallyWkdy(String seriallyWkdy) {
+		this.seriallyWkdy = seriallyWkdy;
 	}
 
 }
