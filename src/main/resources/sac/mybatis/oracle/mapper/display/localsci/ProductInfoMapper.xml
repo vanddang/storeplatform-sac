@@ -165,7 +165,9 @@
                              CASE WHEN  E.PART_PARENT_CLSF_CD = 'PD012302' THEN
                                         #{inAppRshpCd}
                                   ELSE  #{rshpCd} 
-                             END) 
+                             END)
+                   AND B.BASE_YN = 'Y'
+                   AND B.USE_YN = 'Y'               
        ) TB
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="ProductInfo">
@@ -250,6 +252,7 @@
 			     AND B.PROD_ID = TENANT.PROD_ID
 			     AND TENANT.TENANT_ID = #{tenantId}
 			     AND B.BASE_YN = 'Y'
+			     AND B.USE_YN = 'Y'    
 			     AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
 			     AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
 			     AND D.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 채널타입 */
@@ -337,6 +340,8 @@
           AND PD.LANG_CD = #{lang}
           AND CD.LANG_CD = #{lang}
           AND CP.PROD_RSHP_CD = #{rshpCd}
+          AND CPM.BASE_YN = 'Y'
+          AND CPM.USE_YN = 'Y'    
     </select>
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="ProductInfo">
         SELECT TA.*
@@ -438,6 +443,8 @@
 	          ----------------------------------------------------------------------------- 
 	          AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
 	          AND I.PROD_RSHP_CD = #{rshpCd}
+	          AND B.BASE_YN = 'Y'
+	          AND B.USE_YN = 'Y'
 	     ) TA
     </select>
     <select id="getShoppingMetaInfo" parameterType="Map" resultType="ProductInfo">
