@@ -42,7 +42,7 @@ import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
  * Updated on : 2014. 2. 3. Updated by : 김경복, 부르칸
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })

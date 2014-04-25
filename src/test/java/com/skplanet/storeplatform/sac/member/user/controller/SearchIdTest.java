@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 //import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })

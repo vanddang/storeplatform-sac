@@ -35,7 +35,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
  * Updated on : 2014. 1. 14. Updated by : 한서구, 부르칸.
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })

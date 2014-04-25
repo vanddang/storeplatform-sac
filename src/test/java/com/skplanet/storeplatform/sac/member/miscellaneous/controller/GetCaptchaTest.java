@@ -32,7 +32,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaR
  * Updated on : 2014. 1. 13. Updated by : 김다슬, 인크로스.
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })

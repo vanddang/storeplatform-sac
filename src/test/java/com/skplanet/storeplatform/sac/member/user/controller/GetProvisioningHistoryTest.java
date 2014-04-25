@@ -30,7 +30,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHisto
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })

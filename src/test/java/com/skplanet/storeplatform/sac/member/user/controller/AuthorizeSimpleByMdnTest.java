@@ -45,7 +45,7 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
  * Updated on : 2014. 2. 28. Updated by : 반범진, 지티소프트
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })

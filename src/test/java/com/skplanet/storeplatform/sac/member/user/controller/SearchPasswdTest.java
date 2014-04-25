@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })

@@ -59,7 +59,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
  * Updated on : 2014. 1. 23. Updated by : 강신완, 부르칸.
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })

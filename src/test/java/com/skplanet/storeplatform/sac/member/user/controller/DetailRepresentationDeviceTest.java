@@ -37,7 +37,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentation
  * Updated on : 2014. 1. 16. Updated by : 강신완, 부르칸.
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })

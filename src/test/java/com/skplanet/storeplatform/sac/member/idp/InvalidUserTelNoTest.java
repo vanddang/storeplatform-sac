@@ -34,7 +34,7 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
  * Updated on : 2014. 1. 17. Updated by : 이정숙, 인크로스
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })

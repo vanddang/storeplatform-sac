@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -52,7 +50,6 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
  * Updated on : 2014. 1. 8. Updated by : 반범진, 지티소프트
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -102,7 +99,7 @@ public class AuthorizeByMdnTest {
 						public Object requestBody() {
 
 							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-							req.setDeviceId("01066786220");
+							req.setDeviceId("01066786221");
 							req.setDeviceIdType("msisdn");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
 
@@ -344,7 +341,7 @@ public class AuthorizeByMdnTest {
 							req.setDeviceIdType("msisdn");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
 							req.setNativeId("A0000031648EE9");
-							//req.setIsNativeIdAuth("Y");
+							// req.setIsNativeIdAuth("Y");
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
 								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
@@ -634,7 +631,7 @@ public class AuthorizeByMdnTest {
 							req.setDeviceIdType("msisdn");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
 							req.setNativeId("358362045580842");
-							//req.setIsNativeIdAuth("Y");
+							// req.setIsNativeIdAuth("Y");
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
 								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
@@ -670,7 +667,7 @@ public class AuthorizeByMdnTest {
 		tenantHeader.setTenantId("S01");
 
 		DeviceHeader deviceHeader = new DeviceHeader();
-		//deviceHeader.setModel("SHW-M440S");
+		// deviceHeader.setModel("SHW-M440S");
 		deviceHeader.setModel("SHW-M110S");
 		deviceHeader.setOs("1.0");
 
@@ -682,18 +679,18 @@ public class AuthorizeByMdnTest {
 		req.setDeviceId("01066786220");
 		req.setDeviceIdType("msisdn");
 		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
-		//		req.setNativeId("358362045580842");
-		//		req.setDeviceAccount("vanddang444@gmail.com");
-		//		req.setIsAutoUpdate("N");
+		// req.setNativeId("358362045580842");
+		// req.setDeviceAccount("vanddang444@gmail.com");
+		// req.setIsAutoUpdate("N");
 		//
-		//		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-		//		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-		//		deviceExtraInfo = new DeviceExtraInfo();
-		//		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
-		//		deviceExtraInfo.setExtraProfileValue("N");
-		//		deviceExtraInfoList.add(deviceExtraInfo);
+		// List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		// DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		// deviceExtraInfo = new DeviceExtraInfo();
+		// deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+		// deviceExtraInfo.setExtraProfileValue("N");
+		// deviceExtraInfoList.add(deviceExtraInfo);
 		//
-		//		req.setDeviceExtraInfoList(deviceExtraInfoList);
+		// req.setDeviceExtraInfoList(deviceExtraInfoList);
 
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
