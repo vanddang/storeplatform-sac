@@ -33,7 +33,7 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 
 	@NotBlank
 	@Pattern(regexp = "^Y|^N")
-	private String forceCancelYn;
+	private String shoppingForceCancelYn;
 
 	@NotBlank
 	@Pattern(regexp = "^Y|^N")
@@ -58,19 +58,12 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 		this.cancelReqPathCd = cancelReqPathCd;
 	}
 
-	/**
-	 * @return the forceCancelYn
-	 */
-	public String getForceCancelYn() {
-		return this.forceCancelYn;
+	public String getShoppingForceCancelYn() {
+		return this.shoppingForceCancelYn;
 	}
 
-	/**
-	 * @param forceCancelYn
-	 *            the forceCancelYn to set
-	 */
-	public void setForceCancelYn(String forceCancelYn) {
-		this.forceCancelYn = forceCancelYn;
+	public void setShoppingForceCancelYn(String shoppingForceCancelYn) {
+		this.shoppingForceCancelYn = shoppingForceCancelYn;
 	}
 
 	/**
