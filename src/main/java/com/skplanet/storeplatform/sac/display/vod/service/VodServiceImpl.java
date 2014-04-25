@@ -347,8 +347,18 @@ public class VodServiceImpl implements VodService {
 	private Rights mapRights(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
 		Rights rights = new Rights();
 		rights.setGrade(mapperVO.getProdGrdCd());
-		rights.setAllow(mapperVO.getDwldAreaLimtYn());
-
+		
+		
+		// 영화,TV방송에 대한 allow 설정
+		if (StringUtils.equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID, mapperVO.getTopMenuId())
+				|| StringUtils.equals(DisplayConstants.DP_TV_TOP_MENU_ID, mapperVO.getTopMenuId())
+				|| StringUtils.equals(DisplayConstants.DP_VOD_TOP_MENU_ID, mapperVO.getTopMenuId())) {
+			if (StringUtils.equals(mapperVO.getDwldAreaLimtYn(), "Y")) {
+				rights.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_DOMESTIC);
+			}
+		}
+		
+		//rights.setAllow(mapperVO.getDwldAreaLimtYn());
 		/** dwldAreaLimitYn 다운로드 지역제한 == 'Y' 일 경우 domestic 리턴 */
 		/*
 		if(StringUtils.isNotEmpty(mapperVO.getDwldAreaLimtYn())

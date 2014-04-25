@@ -587,7 +587,16 @@ public class EpubServiceImpl implements EpubService {
 	 */
 	private Rights mapRights(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceScRes> existenceMap) {
 		Rights rights = new Rights();
-		rights.setAllow(mapperVO.getDwldAreaLimtYn());
+		//rights.setAllow(mapperVO.getDwldAreaLimtYn());
+		
+		// eBook 상품에 대한 allow 설정
+		if (StringUtils.equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID, mapperVO.getTopMenuId())) {
+			if (StringUtils.equals(DisplayConstants.DP_SUBSCRIPTION_CD, mapperVO.getChnlClsfCd())) {
+				rights.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_SUBSCRIPTION);
+			}
+		}
+
+		
 		rights.setGrade(mapperVO.getProdGrdCd());
 		// 소장 정보
 		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
