@@ -292,11 +292,16 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 구매 정보 조회. */
 		this.purchaseCancelRepository.setPurchaseDetailInfo(purchaseCancelSacParam, purchaseCancelDetailSacParam);
+		if (purchaseCancelDetailSacParam.getPrchsSacParam() == null
+				|| StringUtils.isBlank(purchaseCancelDetailSacParam.getPrchsSacParam().getPrchsId())) {
+			throw new StorePlatformException("SAC_PUR_8100");
+		}
 		if (purchaseCancelDetailSacParam.getPaymentSacParamList() == null
 				|| purchaseCancelDetailSacParam.getPaymentSacParamList().size() < 1) {
 			// 구매 상세 정보가 없으면 구매 취소 불가.
 			// throw new StorePlatformException("SAC_PUR_8100");
 			// TCASH는 구매 상세 정보가 없어도 구매 취소 가능.
+			// TCASH는 구매 정보가 있어야 함.
 		}
 
 		/** 구매 정보 체크. */
