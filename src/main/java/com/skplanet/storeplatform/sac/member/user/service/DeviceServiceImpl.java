@@ -696,7 +696,7 @@ public class DeviceServiceImpl implements DeviceService {
 				mqInfo.setUserKey(createDeviceRes.getUserKey());
 				mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
 				mqInfo.setDeviceId(deviceInfo.getDeviceId());
-				if (StringUtil.isBlank(deviceTelecom)) { // MQ연동시 deviceTelecom은 필수이므로 파라메터에 없으면 DB에 정보를 넣어준다.
+				if (StringUtil.isBlank(deviceTelecom)) { // MQ연동시 deviceTelecom은 필수이므로 파라메터에 없으면 DB 정보를 넣어준다.
 					mqInfo.setMnoCd(userMbrDevice.getDeviceTelecom());
 				} else {
 					mqInfo.setMnoCd(deviceTelecom);
