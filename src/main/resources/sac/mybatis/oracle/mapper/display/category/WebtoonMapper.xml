@@ -134,13 +134,13 @@
                                    AND LP.LIST_ID = #{listId}
                                    AND LT.EXPO_YN = LP.EXPO_YN
                                ) A  /* 채널 */
-                             , UV_TB_DP_MULTIMDA_PROD B  /* 채널 */
+                             , TB_DP_EBOOK_PROD B  /* 채널 */
                              , TB_DP_PROD_RSHP C
                              , TB_DP_MENU_CATEGORY_PROD_MAPG D
                              , TB_DP_MENU_CATEGORY E
                              , TB_DP_PROD F
                              , TB_DP_TENANT_PROD G
-                             , UV_TB_DP_MULTIMDA_PROD H  /* 에피소드 */
+                             , TB_DP_EBOOK_PROD H  /* 에피소드 */
                          WHERE A.PROD_ID = B.PROD_ID
                            AND 0 <![CDATA[ < ]]> NVL(B.EPSD_CNT, 0)
                            AND C.PROD_ID = B.PROD_ID
@@ -342,7 +342,7 @@
              , TB_DP_MENU_CATEGORY D
              , TB_DP_MENU_CATEGORY_DESC E  /* MENU_ID */
              , TB_DP_MENU_CATEGORY_DESC F  /* TOP_MENU_ID */
-             , UV_TB_DP_MULTIMDA_PROD G
+             , TB_DP_EBOOK_PROD G
              , TB_DP_PROD_RSHP H
              , TB_DP_SUB_CONTENTS I
              , (SELECT PROD_ID, AVG_EVLU_SCORE, PATICPERS_CNT
@@ -377,7 +377,7 @@
 		          FROM TB_DP_PROD_RSHP A
 		             , TB_DP_PROD_RSHP B
 		             , TB_DP_TENANT_PROD C
-		             , UV_TB_DP_MULTIMDA_PROD D
+		             , TB_DP_EBOOK_PROD D
 		         WHERE A.PART_PROD_ID = #{prodId}
 		           AND A.PROD_ID = B.PROD_ID
 		           AND B.PART_PROD_ID = C.PROD_ID
