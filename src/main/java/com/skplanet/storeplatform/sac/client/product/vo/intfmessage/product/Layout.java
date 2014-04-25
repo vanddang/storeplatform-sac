@@ -15,6 +15,7 @@ import java.util.List;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -34,6 +35,7 @@ public class Layout extends CommonInfo implements Serializable {
 	private Title title; // 베너제목
 	private Source source; // 베너 resource 정보
 	private Menu menu; // 메뉴 정보
+	private Date date; // 날짜 정보
 	/**
 	 * > Code : 대분류, 소분류 카테고리코드 > name : shoppingStore > type(option) : 대분류 카테고리시 topClass > categoryExplian : 카테고리 설명.
 	 */
@@ -200,6 +202,21 @@ public class Layout extends CommonInfo implements Serializable {
 	 */
 	public void setMenuList(List<Menu> menuList) {
 		this.menuList = menuList;
+	}
+
+	/**
+	 * @return the date
+	 */
+	public Date getDate() {
+		return this.date;
+	}
+
+	/**
+	 * @param date
+	 *            the date to set
+	 */
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 }
