@@ -675,8 +675,8 @@ public class LoginServiceImpl implements LoginService {
 
 				}
 
-				/* IDP 로그인이 정상으로 되었으나 직원중지코드가 정지상태인경우 정상으로 업데이트 */
-				if (StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
+				/* IDP 로그인이 정상으로 되었으나 직원중지코드가 정상이 아닌경우 정상으로 업데이트 */
+				if (!StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_NOMAL)) {
 					LOGGER.info("{} 직권중지코드가 상이하여 업데이트(stopStatusCode : {} -> {})", userId, stopStatusCode, MemberConstants.USER_STOP_STATUS_NOMAL);
 					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null, MemberConstants.USER_STOP_STATUS_NOMAL, null,
 							null);
@@ -684,8 +684,8 @@ public class LoginServiceImpl implements LoginService {
 					stopStatusCode = MemberConstants.USER_STOP_STATUS_NOMAL;
 				}
 
-				/* IDP 로그인이 정상으로 되었으나 로그인상태코드가 정지상태인경우 정상으로 업데이트 */
-				if (StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+				/* IDP 로그인이 정상으로 되었으나 로그인상태코드가 정상이 아닌경우 정상으로 업데이트 */
+				if (!StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
 					LOGGER.info("{} 로그인제한상태코드가 상이하여 업데이트(loginStatusCode : {} -> {})", userId, loginStatusCode,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL);
 					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null,
