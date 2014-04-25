@@ -46,6 +46,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSelle
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateFlurryRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateFlurryResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateNewPasswordSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdatePasswordSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateRealNameSellerRequest;
@@ -799,6 +800,8 @@ public class SellerServiceImpl implements SellerService {
 		updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 		updateStatusSellerRequest.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
+		// 계정승인시 회원가입일 등록
+		updateStatusSellerRequest.setIsNewEntry(MemberConstants.USE_Y);
 
 		/** 2. 공통 헤더 생성 및 주입. */
 		updateStatusSellerRequest.setCommonRequest(commonRequest);
@@ -840,14 +843,18 @@ public class SellerServiceImpl implements SellerService {
 		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
 				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
 
-		// 요청 불가 상태
-		// if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
-		// .getSellerMainStatus())
-		// || !StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
-		// .getSellerSubStatus())) {
-		// throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-		// searchSellerResponse.getSellerMbr().getSellerSubStatus());
-		// }
+		// 요청 가능 상태 => [메인 : 정상], [서브 : 정상, 승인거절, 전환거절]
+		if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+				.getSellerMainStatus())
+				|| !(StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+						.getSellerSubStatus())
+						|| StringUtils.equals(MemberConstants.SUB_STATUS_ACCT_JOIN_REJECT, searchSellerResponse
+								.getSellerMbr().getSellerSubStatus()) || StringUtils.equals(
+						MemberConstants.SUB_STATUS_TURN_REJECT, searchSellerResponse.getSellerMbr()
+								.getSellerSubStatus()))) {
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
+		}
 
 		UpgradeSellerRequest upgradeSellerRequest = new UpgradeSellerRequest();
 
@@ -1511,16 +1518,10 @@ public class SellerServiceImpl implements SellerService {
 		}
 		/** 보안질문 리스트 주입 - [끝]. */
 
-		/** 2-2. 판매자 회원 비밀번호 생성 및 주입. */
-		// 판매자 회원 PW
-		MbrPwd mbrPwd = new MbrPwd();
-		mbrPwd.setMemberPW(req.getSellerPw());
-		// @TODO 비밀번호 수정관련 SC 수정이 필요...
-		// updateSellerRequest.setMbrPwd(mbrPwd);
-		LOGGER.debug("==>>[SC] updateSellerRequest.MbrPwd.toString() : {}", mbrPwd.toString());
-
 		/** 2-3. 판매자 회원 정보 생성 및 주입 - [시작]. */
 		SellerMbr sellerMbr = new SellerMbr();
+		// 판매자 회원 키
+		sellerMbr.setSellerKey(req.getSellerKey());
 		// 판매자구분코드
 		sellerMbr.setSellerClass(req.getSellerClass());
 		// 판매자 분류코드
@@ -1602,13 +1603,27 @@ public class SellerServiceImpl implements SellerService {
 		/** 2-5. SC회원[updateSeller] Call. */
 		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
 
+		/** 판매자 회원 비밀번호 생성 및 주입. */
+		UpdateNewPasswordSellerRequest updateNewPasswordSellerRequest = new UpdateNewPasswordSellerRequest();
+		updateNewPasswordSellerRequest.setCommonRequest(commonRequest);
+
+		MbrPwd mbrPwd = new MbrPwd();
+		mbrPwd.setMemberID(searchSellerResponse.getSellerMbr().getSellerID());
+		mbrPwd.setMemberPW(req.getSellerPw());
+		updateNewPasswordSellerRequest.setMbrPwd(mbrPwd);
+
+		LOGGER.debug("==>>[SC] updateSellerRequest.MbrPwd.toString() : {}", mbrPwd.toString());
+
+		/** SC회원[updateNewPasswordSeller] Call. */
+		this.sellerSCI.updateNewPasswordSeller(updateNewPasswordSellerRequest);
+
 		/** 3. 전환가입 결과 [RESPONSE] 생성 및 주입. */
 		CreateChangeSacRes res = new CreateChangeSacRes();
 		SellerMbrSac resMbr = new SellerMbrSac();
 		resMbr.setSellerId(updateSellerResponse.getSellerID());
 		resMbr.setSellerKey(updateSellerResponse.getSellerKey());
-		// resMbr.setSellerMainStatus(updateSellerResponse.getSellerMainStatus());
-		// resMbr.setSellerSubStatus(updateSellerResponse.getSellerSubStatus());
+		resMbr.setSellerMainStatus(updateSellerResponse.getSellerMainStatus());
+		resMbr.setSellerSubStatus(updateSellerResponse.getSellerSubStatus());
 		res.setSellerMbr(resMbr);
 		// Debug
 		LOGGER.debug("==>>[SAC] CreateChangeSacRes.toString() : \n{}", res.toString());
