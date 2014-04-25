@@ -1429,12 +1429,11 @@ public class SellerServiceImpl implements SellerService {
 		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
 				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
 
-		// 요청 가능 여부 확인 (준회원 확인)
-		if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
-				.getSellerMainStatus())
-				&& !StringUtils.equals(MemberConstants.SUB_STATUS_ASSOCIATE_MEMBER, searchSellerResponse.getSellerMbr()
-						.getSellerSubStatus())) {
-			throw new StorePlatformException("SAC_MEM_2012", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+		// 요청 가능 여부 확인 (준회원 확인 - [메인 : 정상, 서브 : 준회원])
+		if (!(StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+				.getSellerMainStatus()) && StringUtils.equals(MemberConstants.SUB_STATUS_ASSOCIATE_MEMBER,
+				searchSellerResponse.getSellerMbr().getSellerSubStatus()))) {
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
 					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 		}
 

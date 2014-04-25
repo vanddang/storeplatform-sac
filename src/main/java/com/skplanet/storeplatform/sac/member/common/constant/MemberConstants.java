@@ -63,7 +63,7 @@ public final class MemberConstants {
 	public static final String SUB_STATUS_ACCT_JOIN_REJECT = "US010315"; // 정산정보승인거절
 	public static final String SUB_STATUS_SECEDE_REJECT = "US010316"; // 탈퇴거절
 	public static final String SUB_STATUS_ID_REUSE = "US010317"; // ID재사용
-	public static final String SUB_STATUS_ASSOCIATE_MEMBER = "US010318"; // 준회원
+	public static final String SUB_STATUS_ASSOCIATE_MEMBER = "US010319"; // 준회원
 
 	/** 검색 구분자. */
 	public static final String KEY_TYPE_INSD_USERMBR_NO = "INSD_USERMBR_NO"; // 내부 사용자 키
