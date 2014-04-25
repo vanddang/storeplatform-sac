@@ -273,9 +273,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 						.getPrchsDtlId()) : "";
 				final String tid = prchsInfo.getTid();
 				final String tx_id = prchsInfo.getTxId();
-				final String use_start_time = ""; // TAKTODO
-				final String use_end_time = ""; // TAKTODO
-				final String download_expired_time = ""; // TAKTODO
+				final String use_start_time = prchsInfo.getPrchsDt();
+				final String use_end_time = this.calculateUseDate(prchsInfo.getPrchsDt(),
+						prchsInfo.getUsePeriodUnitCd(), prchsInfo.getUsePeriod());
+				final String download_expired_time = use_end_time;
 				final Long product_qty = (long) prchsInfo.getProdQty();
 				final String coupon_publish_code = "";
 				final String coupon_code = "";
@@ -495,21 +496,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 게임캐쉬
 		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-			Date autoDate = null;
-			try {
-				autoDate = DateUtils.parseDate(prchsDtlMore.getUseStartDt(), "yyyyMMddHHmmss");
-			} catch (ParseException e) {
-				throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
-			}
-			String usePeriodUnitCd = reservedDataMap.get("autoPrchsPeriodUnitCd");
-			int autoPeriod = Integer.parseInt(reservedDataMap.get("autoPrchsPeriodValue"));
-			if (StringUtils.equals(usePeriodUnitCd, "PD00312")) { // 일
-				autoDate = DateUtils.addDays(autoDate, autoPeriod + 1);
-			} else {
-				throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
-			}
-
-			res.setAfterAutoPayDt(DateFormatUtils.format(autoDate, "yyyyMMdd") + "000000"); // 다음 자동 결제일
+			String afterAutoPayDt = this.calculateUseDate(prchsDtlMore.getUseStartDt(),
+					reservedDataMap.get("autoPrchsPeriodUnitCd"),
+					Integer.parseInt(reservedDataMap.get("autoPrchsPeriodValue")));
+			res.setAfterAutoPayDt(afterAutoPayDt.substring(0, 8) + "000000"); // 다음 자동 결제일
 			res.setBonusCashPoint(reservedDataMap.get("bonusPoint")); // 보너스 캐쉬 지급 Point
 			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		}
@@ -704,21 +694,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			// 보너스 Point
 			if (Integer.parseInt(reservedDataMap.get("bonusPoint")) > 0) {
-				Date prchsDtDate = null;
-				try {
-					prchsDtDate = DateUtils.parseDate(prchsDtlMore.getUseStartDt(), "yyyyMMddHHmmss");
-				} catch (ParseException e) {
-					throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
-				}
-				String usePeriodUnitCd = reservedDataMap.get("bonusPointUsePeriodUnitCd");
-				int usePeriod = Integer.parseInt(reservedDataMap.get("bonusPointUsePeriod"));
-				if (StringUtils.equals(usePeriodUnitCd, "PD00312")) { // 일
-					prchsDtDate = DateUtils.addDays(prchsDtDate, usePeriod);
-				} else {
-					throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
-				}
 
-				String bonusPointExprDt = DateFormatUtils.format(prchsDtDate, "yyyyMMddHHmmss");
+				String bonusPointExprDt = this.calculateUseDate(prchsDtlMore.getUseStartDt(),
+						reservedDataMap.get("bonusPointUsePeriodUnitCd"),
+						Integer.parseInt(reservedDataMap.get("bonusPointUsePeriod")));
 
 				tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
 				tStoreCashChargeReserveDetailEcReq.setProductGroup("01");
@@ -737,7 +716,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					.reserveCharge(tStoreCashChargeReserveEcReq);
 
 			if (StringUtils.equals(tStoreCashChargeReserveEcRes.getResultCd(), "0000") == false) {
-				throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
+				throw new StorePlatformException("SAC_PUR_7213", tStoreCashChargeReserveEcRes.getResultCd());
 			}
 
 			// 충전 확정 용도
@@ -842,7 +821,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					.confirmCharge(tStoreCashChargeConfirmEcReq);
 
 			if (StringUtils.equals(tStoreCashChargeConfirmEcRes.getResultCd(), "0000") == false) {
-				throw new StorePlatformException("SAC_PUR_XXXX"); // TAKTODO
+				throw new StorePlatformException("SAC_PUR_7214", tStoreCashChargeConfirmEcRes.getResultCd());
 			}
 		}
 
@@ -1870,6 +1849,52 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		sbPaymethodInfo.append(";").append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
 
 		return sbPaymethodInfo.toString();
+	}
+
+	/*
+	 * 
+	 * <pre> 기준일로부터 이용 일자 계산. </pre>
+	 * 
+	 * @param startDt 기준일(시작일)
+	 * 
+	 * @param periodUnitCd 이용기간 단위 코드
+	 * 
+	 * @param periodVal 이용기간 값
+	 * 
+	 * @return 계산된 이용 일자
+	 */
+	private String calculateUseDate(String startDt, String periodUnitCd, int periodVal) {
+
+		if (StringUtils.equals(periodUnitCd, "PD00310")) { // 무제한
+			return "99991231235959";
+		} else if (StringUtils.equals(periodUnitCd, "PD00315")) { // 당일
+			return startDt.substring(0, 8) + "235959";
+		} else if (StringUtils.equals(periodUnitCd, "PD00317")) { // 당년
+			return startDt.substring(0, 4) + "1231235959";
+		} else {
+			Date checkDate = null;
+			try {
+				checkDate = DateUtils.parseDate(startDt, "yyyyMMddHHmmss");
+			} catch (ParseException e) {
+				throw new StorePlatformException("SAC_PUR_7216", startDt);
+			}
+
+			if (StringUtils.equals(periodUnitCd, "PD00312")) { // 일
+				checkDate = DateUtils.addDays(checkDate, periodVal);
+			} else if (StringUtils.equals(periodUnitCd, "PD00311")) { // 시간
+				checkDate = DateUtils.addHours(checkDate, periodVal);
+			} else if (StringUtils.equals(periodUnitCd, "PD00313")) { // 월
+				checkDate = DateUtils.addMonths(checkDate, periodVal);
+			} else if (StringUtils.equals(periodUnitCd, "PD00314")) { // 년
+				checkDate = DateUtils.addYears(checkDate, periodVal);
+			} else if (StringUtils.equals(periodUnitCd, "PD00316")) { // 당월
+				checkDate = DateUtils.addSeconds(DateUtils.ceiling(checkDate, Calendar.MONTH), -1);
+			} else {
+				throw new StorePlatformException("SAC_PUR_7215", periodUnitCd);
+			}
+
+			return DateFormatUtils.format(checkDate, "yyyyMMddHHmmss");
+		}
 	}
 
 }

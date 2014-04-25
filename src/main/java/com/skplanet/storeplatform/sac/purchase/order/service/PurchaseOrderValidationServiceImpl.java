@@ -402,10 +402,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 상품 조회 갯수 체크
 		// if (purchaseOrderInfo.getCreatePurchaseReq().getProductList().size() != purchaseOrderInfo
 		// .getPurchaseProductList().size()) {
-		// throw new StorePlatformException("SAC_PUR_9999");
+		// throw new StorePlatformException("SAC_PUR_5112");
 		// }
 		if (purchaseOrderInfo.getPurchaseProductList().size() < 1) {
-			throw new StorePlatformException("SAC_PUR_9999");
+			throw new StorePlatformException("SAC_PUR_5112"); // 조회된 상품 개수가 정상적이지 않습니다.
 		}
 
 		// 결제 총 금액 & 상품 가격 총합 체크 : // 비과금 요청 경우, 결제금액 체크 생략
