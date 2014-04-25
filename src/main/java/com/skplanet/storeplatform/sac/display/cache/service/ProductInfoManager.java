@@ -67,19 +67,15 @@ public interface ProductInfoManager {
 
     /**
      * 서브컨텐트 정보를 조회한다. APP상품에서 이용한다.
-     * @param prodId
-     * @param deviceModelCd
+     * @param param
      * @return
      */
-    SubContent getSubContent(String prodId, String deviceModelCd);
+    SubContent getSubContent(SubContentParam param);
 
     /**
      * 메뉴 정보를 조회한다.
-     *
-     * @param langCd
-     * @param menuId
-     * @param prodId
+     * @param param
      * @return
      */
-    MenuInfo getMenuInfo(String langCd, String menuId, String prodId);
+    MenuInfo getMenuInfo(MenuInfoParam param);
 }

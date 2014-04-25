@@ -58,8 +58,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
                 return null;
             }
 
-            SubContent subContent = productInfoManager.getSubContent(basicInfo.getProdId(), deviceHeader.getModel());
-            MenuInfo menuInfo = productInfoManager.getMenuInfo(tenantHeader.getLangCd(), basicInfo.getMenuId(), basicInfo.getProdId());
+            SubContent subContent = productInfoManager.getSubContent(new SubContentParam(basicInfo.getProdId(), deviceHeader.getModel()));
+            MenuInfo menuInfo = productInfoManager.getMenuInfo(new MenuInfoParam(basicInfo.getProdId(), basicInfo.getMenuId(), tenantHeader.getLangCd()));
 
             MetaInfo me = new MetaInfo();
             MetaBeanUtils.setProperties(menuInfo, me); // MenuInfo

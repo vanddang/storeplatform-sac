@@ -195,23 +195,23 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
-    @Cacheable(value = "sac:display:subcontent", unless = "#result == null")
-    public SubContent getSubContent(String prodId, String deviceModelCd) {
+    @Cacheable(value = "sac:display:subcontent", key = "#param.getCacheKey()", unless = "#result == null")
+    public SubContent getSubContent(SubContentParam param) {
         Map<String, String> reqMap = new HashMap<String, String>();
-        reqMap.put("prodId", prodId);
-        reqMap.put("deviceModelCd", deviceModelCd);
+        reqMap.put("prodId", param.getChannelId());
+        reqMap.put("deviceModelCd", param.getDeviceModel());
 
         return commonDAO.queryForObject("ProductInfo.getSubContent", reqMap, SubContent.class);
     }
 
     @Override
-    @Cacheable(value = "sac:display:menuinfo", unless = "#result == null")
-    public MenuInfo getMenuInfo(String langCd, String menuId, String prodId) {
+    @Cacheable(value = "sac:display:menuinfo", key = "#param.getCacheKey()", unless = "#result == null")
+    public MenuInfo getMenuInfo(MenuInfoParam param) {
         Map<String, String> reqMap = new HashMap<String, String>();
-        reqMap.put("prodId", prodId);
-        if(menuId != null)
-            reqMap.put("menuId", menuId);
-        reqMap.put("langCd", langCd);
+        reqMap.put("prodId", param.getChannelId());
+        if(param.getMenuId() != null)
+            reqMap.put("menuId", param.getMenuId());
+        reqMap.put("langCd", param.getLangCd());
         // TODO 몇Depth메뉴인지 판단을 해야 함
         return commonDAO.queryForObject("ProductInfo.getMenuInfo", reqMap, MenuInfo.class);
     }

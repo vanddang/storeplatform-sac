@@ -28,6 +28,12 @@ public class VodMetaParam extends CommonInfo {
 
     public VodMetaParam() {}
 
+    public VodMetaParam(String prodId, String langCd, String tenantId) {
+        this.prodId = prodId;
+        this.langCd = langCd;
+        this.tenantId = tenantId;
+    }
+
     public String getLangCd() {
         return langCd;
     }
@@ -61,6 +67,6 @@ public class VodMetaParam extends CommonInfo {
     }
 
     public String getCacheKey() {
-        return prodId + "_" + tenantId + "_" + langCd;
+        return prodId + "_" + langCd + "_" + tenantId;
     }
 }

@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
- * DESC
+ * ShoppingMetaParam
  * </p>
  * Updated on : 2014. 04. 11 Updated by : 정희원, SK 플래닛.
  */
@@ -23,6 +23,14 @@ public class ShoppingMetaParam extends CommonInfo {
     private String langCd;
     private String catalogId;
     private String tenantId;
+
+    public ShoppingMetaParam() {}
+
+    public ShoppingMetaParam(String catalogId, String langCd, String tenantId) {
+        this.catalogId = catalogId;
+        this.langCd = langCd;
+        this.tenantId = tenantId;
+    }
 
     public String getLangCd() {
         return langCd;

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CacheSupport">
+
+    <select id="getSupportDeviceList" parameterType="String" resultType="String">
+        SELECT /* CacheSupport.xml, getSupportDeviceList, 정희원, 2014-04-25 */
+            SD.DEVICE_MODEL_CD
+        FROM TB_DP_SPRT_DEVICE SD
+        WHERE 1=1
+              AND SD.PROD_ID = #{value}
+    </select>
+
+    <select id="getMenuList" parameterType="String" resultType="String">
+        SELECT /* CacheSupport.xml, getMenuList, 정희원, 2014-04-25 */
+            MENU_ID
+        FROM TB_DP_MENU_CATEGORY_PROD_MAPG MCM
+        WHERE 1=1
+              AND MCM.PROD_ID = #{value}
+    </select>
+
+</mapper>

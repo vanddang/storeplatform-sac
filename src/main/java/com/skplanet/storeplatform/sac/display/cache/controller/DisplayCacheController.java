@@ -10,13 +10,16 @@
 package com.skplanet.storeplatform.sac.display.cache.controller;
 
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
-import com.skplanet.storeplatform.sac.display.cache.service.TempProductInfoManager;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
+import com.skplanet.storeplatform.sac.display.cache.service.CacheSupportService;
+import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * <p>
@@ -32,17 +35,63 @@ public class DisplayCacheController {
     private CacheEvictManager cacheEvictManager;
 
     @Autowired
-    private TempProductInfoManager tempProductInfoManager;
+    private CacheSupportService cacheSupportService;
+
+    @Value("#{propertiesForSac['skp.common.service.language']}")
+    private String SERVICE_LANG;
+
+    private final String[] TENANT_LIST = new String[]{"S01"};
 
     @RequestMapping(value = "/evict", method = RequestMethod.GET)
-    public void evictAppMeta(@RequestParam(required = true) String prodId) {
-        AppMetaParam param = new AppMetaParam();
-        param.setChannelId(prodId);
-        param.setTenantId("S01");
-        param.setLangCd("ko");
+    public void evictAppMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
+        String[] prodIdList = prodId.split(" ");
+        String[] langList = SERVICE_LANG.split(",");
+        List<String> supportDeviceList = null;
+        List<String> menuList = null;
 
-        cacheEvictManager.evictAppMeta(param);
-        // TODO 캐쉬에 족보(상품ID=상품유형)를 관리하고 있을까나?
+        for(String _prodId : prodIdList) {
+            if(prodType.equals("app")) {
+                supportDeviceList = cacheSupportService.getSupportDeviceList(_prodId);
+                menuList = cacheSupportService.getMenuList(_prodId);
+            }
+            for(String tenant : TENANT_LIST) {
+                for(String langCd : langList) {
+                    if(prodType.equals("app")) {
+                        this.cacheEvictManager.evictAppMeta(new AppMetaParam(_prodId, langCd, tenant));
+
+                        if(supportDeviceList != null) {
+                            for (String deviceModel : supportDeviceList) {
+                                this.cacheEvictManager.evictSubContent(new SubContentParam(_prodId, deviceModel));
+                            }
+                        }
+
+                        if (menuList != null) {
+                            for (String menuId : menuList) {
+                                this.cacheEvictManager.evictMenuInfo(new MenuInfoParam(_prodId, menuId, langCd));
+                            }
+                        }
+                    }
+                    else if(prodType.equals("music")) {
+                        this.cacheEvictManager.evictMusicMeta(new MusicMetaParam(_prodId, langCd, tenant));
+                    }
+                    else if(prodType.equals("shopping")) {
+                        this.cacheEvictManager.evictShoppingMeta(new ShoppingMetaParam(_prodId, langCd, tenant));
+                    }
+                    else if(prodType.equals("freepass")) {
+                        this.cacheEvictManager.evictFreepassMeta(new FreepassMetaParam(_prodId, langCd, tenant));
+                    }
+                    else if(prodType.equals("vod")) {
+                        this.cacheEvictManager.evictVodMeta(new VodMetaParam(_prodId, langCd, tenant));
+                    }
+                    else if(prodType.equals("ebookcomic")) {
+                        this.cacheEvictManager.evictEbookComicMeta(new EbookComicMetaParam(_prodId, langCd, tenant));
+                    }
+                    else if(prodType.equals("webtoon")) {
+                        this.cacheEvictManager.evictWebtoonMeta(new WebtoonMetaParam(_prodId, langCd, tenant));
+                    }
+                }
+            }
+        }
     }
 
     @RequestMapping(value = "/evict/all", method = RequestMethod.GET)
@@ -80,8 +129,4 @@ public class DisplayCacheController {
 
     }
 
-    @RequestMapping(value = "/evict/oldApp", method = RequestMethod.GET)
-    public void evictOldAppMeta() {
-        this.tempProductInfoManager.evictAllOldAppMeta();
-    }
 }

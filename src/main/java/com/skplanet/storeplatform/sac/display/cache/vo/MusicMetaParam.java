@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
- * DESC
+ * MusicMetaParam
  * </p>
  * Updated on : 2014. 04. 09 Updated by : 정희원, SK 플래닛.
  */
@@ -26,6 +26,14 @@ public class MusicMetaParam extends CommonInfo {
 
     private String chartClsfCd;
     private String rankStartDay;
+
+    public MusicMetaParam() {}
+
+    public MusicMetaParam(String channelId, String langCd, String tenantId) {
+        this.channelId = channelId;
+        this.langCd = langCd;
+        this.tenantId = tenantId;
+    }
 
     public String getChartClsfCd() {
         return chartClsfCd;

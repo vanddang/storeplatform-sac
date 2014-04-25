@@ -9,8 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.MusicMetaParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.*;
 
 /**
  * <p>
@@ -26,12 +25,26 @@ public interface CacheEvictManager {
      */
     void evictAppMeta(AppMetaParam param);
 
+    void evictSubContent(SubContentParam param);
+
+    void evictMenuInfo(MenuInfoParam param);
+
+    void evictMusicMeta(MusicMetaParam param);
+
+    void evictVodMeta(VodMetaParam param);
+
+    void evictEbookComicMeta(EbookComicMetaParam param);
+
+    void evictWebtoonMeta(WebtoonMetaParam param);
+
+    void evictShoppingMeta(ShoppingMetaParam param);
+
+    void evictFreepassMeta(FreepassMetaParam param);
+
     /**
      * 앱 메타 캐쉬 정보를 모두 Evict한다.
      */
     void evictAllAppMeta();
-
-    void evictMusicMeta(MusicMetaParam param);
 
     void evictAllMusicMeta();
 
@@ -39,10 +52,9 @@ public interface CacheEvictManager {
 
     void evictAllEbookComicMeta();
 
+    void evictAllWebtoonMeta();
+
     void evictAllShoppingMeta();
 
     void evictAllFreepassMeta();
-
-    void evictAllWebtoonMeta();
-
 }

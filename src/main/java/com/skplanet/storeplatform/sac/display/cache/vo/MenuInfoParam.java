@@ -13,31 +13,23 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
- * AppMetaParam
+ * MenuInfoParam
  * </p>
- * Updated on : 2014. 03. 05 Updated by : 정희원, SK 플래닛.
+ * Updated on : 2014. 04. 25 Updated by : 정희원, SK 플래닛.
  */
-public class AppMetaParam extends CommonInfo {
-    private static long serialVersionUID = 1L;
+public class MenuInfoParam extends CommonInfo {
+    private static final long serialVersionUID = 1L;
 
-    private String langCd;
     private String channelId;
-    private String tenantId;
+    private String langCd;
+    private String menuId;
 
-    public AppMetaParam(String channelId, String langCd, String tenantId) {
-        this.langCd = langCd;
+    public MenuInfoParam() {}
+
+    public MenuInfoParam(String channelId, String menuId, String langCd) {
         this.channelId = channelId;
-        this.tenantId = tenantId;
-    }
-
-    public AppMetaParam() {}
-
-    public String getLangCd() {
-        return langCd;
-    }
-
-    public void setLangCd(String langCd) {
         this.langCd = langCd;
+        this.menuId = menuId;
     }
 
     public String getChannelId() {
@@ -48,15 +40,23 @@ public class AppMetaParam extends CommonInfo {
         this.channelId = channelId;
     }
 
-    public String getTenantId() {
-        return tenantId;
+    public String getLangCd() {
+        return langCd;
     }
 
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
+    public void setLangCd(String langCd) {
+        this.langCd = langCd;
+    }
+
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
     }
 
     public String getCacheKey() {
-        return channelId + "_" + langCd + "_" + tenantId;
+        return channelId + "_" + menuId + "_" + langCd;
     }
 }

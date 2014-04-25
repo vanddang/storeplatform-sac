@@ -13,31 +13,21 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
- * FreepassMetaParam
+ * SubContentParam
  * </p>
- * Updated on : 2014. 04. 10 Updated by : 정희원, SK 플래닛.
+ * Updated on : 2014. 04. 25 Updated by : 정희원, SK 플래닛.
  */
-public class FreepassMetaParam extends CommonInfo {
+public class SubContentParam extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
-    private String langCd;
     private String channelId;
-    private String tenantId;
+    private String deviceModel;
 
-    public FreepassMetaParam() {}
+    public SubContentParam() {}
 
-    public FreepassMetaParam(String channelId, String langCd, String tenantId) {
+    public SubContentParam(String channelId, String deviceModel) {
         this.channelId = channelId;
-        this.langCd = langCd;
-        this.tenantId = tenantId;
-    }
-
-    public String getLangCd() {
-        return langCd;
-    }
-
-    public void setLangCd(String langCd) {
-        this.langCd = langCd;
+        this.deviceModel = deviceModel;
     }
 
     public String getChannelId() {
@@ -48,15 +38,15 @@ public class FreepassMetaParam extends CommonInfo {
         this.channelId = channelId;
     }
 
-    public String getTenantId() {
-        return tenantId;
+    public String getDeviceModel() {
+        return deviceModel;
     }
 
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
+    public void setDeviceModel(String deviceModel) {
+        this.deviceModel = deviceModel;
     }
 
     public String getCacheKey() {
-        return channelId + "_" + langCd + "_" + tenantId;
+        return channelId + "_" + deviceModel;
     }
 }

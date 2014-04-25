@@ -9,10 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.MusicMetaParam;
+import com.skplanet.storeplatform.sac.display.cache.vo.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -26,18 +28,60 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     @Override
     @CacheEvict(value = "sac:display:product:app", key = "#param.getCacheKey()")
     public void evictAppMeta(AppMetaParam param) {
-        // TODO subContent, menuInfo도 함께
+
     }
 
     @Override
-    @CacheEvict(value = {"sac:display:product:app","sac:display:subcontent","sac:display:menuinfo"}, allEntries = true)
-    public void evictAllAppMeta() { }
+    @CacheEvict(value = "sac:display:subcontent", key = "#param.getCacheKey()")
+    public void evictSubContent(SubContentParam param) {
+
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:menuinfo", key = "#param.getCacheKey()")
+    public void evictMenuInfo(MenuInfoParam param) {
+
+    }
 
     @Override
     @CacheEvict(value = "sac:display:product:music", key = "#param.getCacheKey()")
     public void evictMusicMeta(MusicMetaParam param) {
 
     }
+
+    @Override
+    @CacheEvict(value = "sac:display:product:music", key = "#param.getCacheKey()")
+    public void evictVodMeta(VodMetaParam param) {
+
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:product:ebookcomic", key = "#param.getCacheKey()")
+    public void evictEbookComicMeta(EbookComicMetaParam param) {
+
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:product:webtoon", key = "#param.getCacheKey()")
+    public void evictWebtoonMeta(WebtoonMetaParam param) {
+
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:product:shopping", key = "#param.getCacheKey()")
+    public void evictShoppingMeta(ShoppingMetaParam param) {
+
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:product:freepass", key = "#param.getCacheKey()")
+    public void evictFreepassMeta(FreepassMetaParam param) {
+
+    }
+
+    @Override
+    @CacheEvict(value = {"sac:display:product:app","sac:display:subcontent","sac:display:menuinfo"}, allEntries = true)
+    public void evictAllAppMeta() { }
 
     @Override
     @CacheEvict(value = "sac:display:product:music", allEntries = true)
@@ -58,6 +102,12 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
+    @CacheEvict(value = "sac:display:product:webtoon", allEntries = true)
+    public void evictAllWebtoonMeta() {
+
+    }
+
+    @Override
     @CacheEvict(value = "sac:display:product:shopping", allEntries = true)
     public void evictAllShoppingMeta() {
 
@@ -69,9 +119,4 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
 
     }
 
-    @Override
-    @CacheEvict(value = "sac:display:product:webtoon", allEntries = true)
-    public void evictAllWebtoonMeta() {
-
-    }
 }

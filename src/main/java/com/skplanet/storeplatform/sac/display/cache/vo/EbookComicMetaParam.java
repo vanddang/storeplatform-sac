@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
- * DESC
+ * EbookComicMetaParam
  * </p>
  * Updated on : 2014. 04. 17 Updated by : 정희원, SK 플래닛.
  */
@@ -24,6 +24,14 @@ public class EbookComicMetaParam extends CommonInfo {
     private String prodId;
     private String tenantId;
     private ContentType contentType;
+
+    public EbookComicMetaParam() {}
+
+    public EbookComicMetaParam(String prodId, String langCd, String tenantId) {
+        this.prodId = prodId;
+        this.langCd = langCd;
+        this.tenantId = tenantId;
+    }
 
     public String getLangCd() {
         return langCd;
@@ -58,6 +66,6 @@ public class EbookComicMetaParam extends CommonInfo {
     }
 
     public String getCacheKey() {
-        return prodId + "_" + tenantId + "_" + langCd;
+        return prodId + "_" + langCd + "_" + tenantId;
     }
 }
