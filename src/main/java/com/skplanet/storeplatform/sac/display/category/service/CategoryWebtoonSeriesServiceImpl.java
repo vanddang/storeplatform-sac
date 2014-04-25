@@ -144,6 +144,7 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 				reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
 				MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
 				layout = new Layout();
+				Date date = new Date();
 				if (retMetaInfo != null) {
 					Identifier identifier = null;
 					List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -153,12 +154,15 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
 					identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
 							productBasicInfo.getFirstProdId());
 					identifierList.add(identifier);
+					date.setType("week/serially");
+					date.setText(productBasicInfo.getSeriallyWkdy());
 
 					layout.setIdentifierList(identifierList);
 					layout.setTitle(this.commonGenerator.generateTitle(retMetaInfo));
 					layout.setProductExplain(retMetaInfo.getProdBaseDesc());
 					layout.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo));
 					layout.setSourceList(this.commonGenerator.generateSourceList(retMetaInfo));
+					layout.setDate(date);
 					layout.setContributor(this.ebookComicGenerator.generateComicContributor(retMetaInfo));
 				}
 			}
