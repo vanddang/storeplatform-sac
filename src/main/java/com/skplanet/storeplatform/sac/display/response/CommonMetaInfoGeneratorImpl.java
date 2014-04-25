@@ -377,7 +377,26 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Override
 	public Rights generateRights(MetaInfo metaInfo) {
 		Rights rights = new Rights();
-		rights.setAllow(metaInfo.getDwldAreaLimtYn());
+
+		// 영화,TV방송에 대한 allow 설정
+		if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
+				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+			if (StringUtils.isNotEmpty(metaInfo.getDwldAreaLimtYn())) {
+				if ("Y".equals(metaInfo.getDwldAreaLimtYn())) {
+					rights.setAllow("domestic");
+				}
+			}
+		}
+
+		// eBook 상품에 대한 allow 설정
+		if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+			if (StringUtils.isNotEmpty(metaInfo.getChnlClsfCd())) {
+				if (DisplayConstants.DP_SUBSCRIPTION_CD.equals(metaInfo.getChnlClsfCd())) {
+					rights.setAllow("subscription");
+				}
+			}
+		}
+
 		rights.setGrade(metaInfo.getProdGrdCd());
 
 		// 소장 정보

@@ -176,6 +176,16 @@ public class DisplayConstants {
 	 */
 	public static final String DP_EPISODE_CONTENT_TYPE_CD = "PD002502";
 
+	/**
+	 * 구독상품
+	 */
+	public static final String DP_SUBSCRIPTION_CD = "DP001401";
+
+	/**
+	 * 비구독상품
+	 */
+	public static final String DP_NOT_SUBSCRIPTION_CD = "DP001402";
+
 	// //////////////////////////////////////Content Type Code //////////////////////////////////////////
 	/**
 	 * 판매상태.

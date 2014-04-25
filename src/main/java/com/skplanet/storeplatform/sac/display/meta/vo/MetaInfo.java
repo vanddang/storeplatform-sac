@@ -173,6 +173,7 @@ public class MetaInfo extends CommonInfo {
 	private String scSamplUrl;
 	private String mallCd;
 	private String brdcCompNm;
+	private String chnlClsfCd;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -4099,6 +4100,21 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setEspdProdId(String espdProdId) {
 		this.espdProdId = espdProdId;
+	}
+
+	/**
+	 * @return the chnlClsfCd
+	 */
+	public String getChnlClsfCd() {
+		return this.chnlClsfCd;
+	}
+
+	/**
+	 * @param chnlClsfCd
+	 *            the chnlClsfCd to set
+	 */
+	public void setChnlClsfCd(String chnlClsfCd) {
+		this.chnlClsfCd = chnlClsfCd;
 	}
 
 }
