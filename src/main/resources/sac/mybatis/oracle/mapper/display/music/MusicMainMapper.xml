@@ -72,6 +72,12 @@
                    AND B.PROD_ID = D.PROD_ID
                    AND D.CONTENTS_TYPE_CD = 'PD002502'
                    AND D.META_CLSF_CD = 'CT25'
+                   <if test='prodGradeCd != null and prodGradeCd != ""'>
+                   AND D.PROD_GRD_CD IN
+                       <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                       #{prodGradeCd}  
+                       </foreach> /* 상품등급코드 */
+                   </if>
                    AND D.PROD_ID = E.PROD_ID
                    AND E.LANG_CD = #{langCd}
                    AND E.PROD_ID = F.PROD_ID
@@ -146,6 +152,12 @@
                            AND D.MENU_ID = E.MENU_ID
                            AND E.USE_YN = 'Y'
                            AND E.TOP_MENU_ID = 'DP16'
+                           <if test='prodGradeCd != null and prodGradeCd != ""'>
+                           AND F.PROD_GRD_CD IN
+                               <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                               #{prodGradeCd}  
+                               </foreach> /* 상품등급코드 */
+                           </if>
                            AND C.PART_PROD_ID = F.PROD_ID
                            AND F.CONTENTS_TYPE_CD = 'PD002502'
                            AND F.PROD_ID = G.PROD_ID

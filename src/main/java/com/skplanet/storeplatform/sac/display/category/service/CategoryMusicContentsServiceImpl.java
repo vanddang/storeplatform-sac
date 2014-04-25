@@ -138,6 +138,12 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 			}
 		}
 
+		// prodGradeCd 배열로 변경
+		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
+			String[] prodGradeCdArr = StringUtils.split(requestVO.getProdGradeCd(), "+");
+			requestVO.setProdGradeCdArr(prodGradeCdArr);
+		}
+
 		List<ProductBasicInfo> productBasicInfoList;
 
 		if (filteredBy.equals("mainTop")) {
