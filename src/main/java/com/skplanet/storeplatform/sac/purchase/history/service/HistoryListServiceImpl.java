@@ -79,7 +79,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 	@Override
 	public HistoryListSacRes searchHistoryList(HistoryListSacReq request) {
 		this.logger.debug("HistoryListSacRes : {}", request);
-		this.logger.info("HistoryListSac Request Param : {}", request.toString());
+		this.logger.info("HistoryListSac Request Param : {}", request);
 
 		// SC request/response VO
 		HistoryListScReq scRequest = new HistoryListScReq();
