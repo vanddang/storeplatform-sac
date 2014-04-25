@@ -27,12 +27,14 @@
     <context:component-scan base-package="com.skplanet.storeplatform.sac.runtime" name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator"/>
     
     <context:component-scan base-package="com.skplanet.storeplatform.sac" name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator"/>
-
+   
     <bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
         <constructor-arg ref="messageSource" />
     </bean> 
     
-    <bean class="com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor" /> 
+    <bean class="com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor" />  
+    
+    <bean class="com.skplanet.storeplatform.sac.common.support.SacSystemErrorCodeTranslator" /> 
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
@@ -49,4 +51,5 @@
         <property name="defaultEncoding" value="utf-8" />
         <property name="cacheSeconds" value="60"/>
     </bean> 
+     
 </beans>
