@@ -382,10 +382,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// 구매인증 응답 데이터 처리
 
+		VerifyOrderSacRes res = new VerifyOrderSacRes();
+
 		// 예약 저장해둔 데이터 추출
 		Map<String, String> reservedDataMap = this.parseReservedData(prchsDtlMore.getPrchsResvDesc());
-
-		VerifyOrderSacRes res = new VerifyOrderSacRes();
 
 		// 회원 - 결제 관련 정보 조회
 		SearchUserPayplanetSacRes userPayRes = null;
@@ -1759,7 +1759,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			} else if (prchsProdCnt == 1
 					&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
-							.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))) {
+							.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
+					&& StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) == false) {
 				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN; // 대여/소장: TC03
 
 			} else if (StringUtils.startsWith(tenantProdGrpCd,
