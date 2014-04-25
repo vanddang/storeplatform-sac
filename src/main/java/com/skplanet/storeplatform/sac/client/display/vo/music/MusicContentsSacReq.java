@@ -61,6 +61,10 @@ public class MusicContentsSacReq extends CommonInfo {
 
 	private String listId;
 
+	private String prodGradeCd; // 상품등급코드
+
+	private String[] prodGradeCdArr; // 상품등급코드 배열
+
 	/**
 	 * 
 	 * <pre>
@@ -461,4 +465,53 @@ public class MusicContentsSacReq extends CommonInfo {
 		this.listId = listId;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상품등급코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getProdGradeCd() {
+		return this.prodGradeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품등급코드.
+	 * </pre>
+	 * 
+	 * @param prodGradeCd
+	 *            prodGradeCd
+	 */
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품등급코드 배열.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String[] getProdGradeCdArr() {
+		return this.prodGradeCdArr == null ? null : this.prodGradeCdArr.clone();
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품등급코드 배열.
+	 * </pre>
+	 * 
+	 * @param prodGradeCdArr
+	 *            prodGradeCdArr
+	 */
+	public void setProdGradeCdArr(String[] prodGradeCdArr) {
+		this.prodGradeCdArr = prodGradeCdArr == null ? null : prodGradeCdArr.clone();
+	}
 }
