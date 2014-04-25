@@ -563,10 +563,10 @@ public class VodServiceImpl implements VodService {
 		contributor.setDirector(mapperVO.getArtist2Nm()); 	//감독
 		contributor.setArtist(mapperVO.getArtist1Nm()); 	//출연
 		contributor.setCompany(mapperVO.getChnlCompNm());	//제공업체
+		/*
 		contributor.setAgency(mapperVO.getAgencyNm());		//기획사
 		contributor.setPublisher(mapperVO.getChnlCompNm()); //배급사
-
-		//기획사
+		*/
 		if(StringUtils.equals(mapperVO.getTopMenuId(), DisplayConstants.DP_TV_TOP_MENU_ID)) { // TV 방송
 			contributor.setChannel(mapperVO.getBrdcCompCdNm()); //방송사
 		}
