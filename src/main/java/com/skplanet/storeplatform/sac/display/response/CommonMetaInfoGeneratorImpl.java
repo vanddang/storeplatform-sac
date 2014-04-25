@@ -380,10 +380,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		// 영화,TV방송에 대한 allow 설정
 		if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
-				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
+				|| DisplayConstants.DP_VOD_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
 			if (StringUtils.isNotEmpty(metaInfo.getDwldAreaLimtYn())) {
 				if ("Y".equals(metaInfo.getDwldAreaLimtYn())) {
-					rights.setAllow("domestic");
+					rights.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_DOMESTIC);
 				}
 			}
 		}
@@ -392,7 +393,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
 			if (StringUtils.isNotEmpty(metaInfo.getChnlClsfCd())) {
 				if (DisplayConstants.DP_SUBSCRIPTION_CD.equals(metaInfo.getChnlClsfCd())) {
-					rights.setAllow("subscription");
+					rights.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_SUBSCRIPTION);
 				}
 			}
 		}
