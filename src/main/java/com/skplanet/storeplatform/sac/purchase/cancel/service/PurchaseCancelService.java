@@ -62,4 +62,19 @@ public interface PurchaseCancelService {
 	PurchaseCancelDetailSacResult executePurchaseCancelForTCash(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
 
+	/**
+	 * 
+	 * <pre>
+	 * 망상 구매 취소 Service.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelSacParam
+	 *            purchaseCancelSacParam
+	 * @param purchaseCancelDetailSacParam
+	 *            purchaseCancelDetailSacParam
+	 * @return PurchaseCancelDetailSacResult
+	 */
+	PurchaseCancelDetailSacResult executePurchaseCancelForPaymentError(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
+
 }

@@ -25,10 +25,20 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 	private Integer prchsCancelByType; // 구매 취소 요청자 구분(사용자 / 운영자).
 	private Integer prchsCancelServiceType = 0; // 기본 : 0, TCASH : 1
 	private String cancelReqPathCd;
-	private String forceCancelYn;
+	private String shoppingForceCancelYn;
 	private String sktLimitUserCancelYn;
 
+	private Boolean ignorePayment = false;
+
 	private List<PurchaseCancelDetailSacParam> prchsCancelList;
+
+	public Boolean getIgnorePayment() {
+		return this.ignorePayment;
+	}
+
+	public void setIgnorePayment(Boolean ignorePayment) {
+		this.ignorePayment = ignorePayment;
+	}
 
 	/**
 	 * @return the prchsCancelByType
@@ -75,19 +85,12 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 		this.cancelReqPathCd = cancelReqPathCd;
 	}
 
-	/**
-	 * @return the forceCancelYn
-	 */
-	public String getForceCancelYn() {
-		return this.forceCancelYn;
+	public String getShoppingForceCancelYn() {
+		return this.shoppingForceCancelYn;
 	}
 
-	/**
-	 * @param forceCancelYn
-	 *            the forceCancelYn to set
-	 */
-	public void setForceCancelYn(String forceCancelYn) {
-		this.forceCancelYn = forceCancelYn;
+	public void setShoppingForceCancelYn(String shoppingForceCancelYn) {
+		this.shoppingForceCancelYn = shoppingForceCancelYn;
 	}
 
 	/**

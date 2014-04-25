@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.cancel.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,8 @@ import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelBy
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelDetailSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelDetailSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForPaymentErrorSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForPaymentErrorSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForTCashSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForTCashSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -100,6 +103,38 @@ public class PurchaseCancelController {
 	}
 
 	/**
+	 * 
+	 * <pre>
+	 * 결제 실패 시 구매 취소.
+	 * </pre>
+	 * 
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @param purchaseCancelForPaymentErrorSacReq
+	 *            purchaseCancelForPaymentErrorSacReq
+	 * @return PurchaseCancelForPaymentErrorSacRes
+	 */
+	@RequestMapping(value = "/paymentError/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public PurchaseCancelForPaymentErrorSacRes cancelPurchaseForPaymentError(SacRequestHeader sacRequestHeader,
+			@RequestBody @Validated PurchaseCancelForPaymentErrorSacReq purchaseCancelForPaymentErrorSacReq) {
+
+		PurchaseCancelSacParam purchaseCancelSacParam = this.convertReqForCancelPurchaseForPaymentError(
+				sacRequestHeader, purchaseCancelForPaymentErrorSacReq);
+
+		PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = this.purchaseCancelService
+				.executePurchaseCancelForPaymentError(purchaseCancelSacParam, purchaseCancelSacParam
+						.getPrchsCancelList().get(0));
+
+		if (!StringUtils.equals("SAC_PUR_0000", purchaseCancelDetailSacResult.getResultCd())) {
+			throw new StorePlatformException("SAC_PUR_8999");
+		}
+
+		return this.convertResForCancelPurchaseForPaymentError(purchaseCancelDetailSacResult);
+
+	}
+
+	/**
 	 * <pre>
 	 * T Cash 충전 취소.
 	 * </pre>
@@ -149,8 +184,20 @@ public class PurchaseCancelController {
 		}
 
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByUserSacReq.getCancelReqPathCd());
-		purchaseCancelSacParam.setForceCancelYn("N");
+		purchaseCancelSacParam.setShoppingForceCancelYn("N");
 		purchaseCancelSacParam.setSktLimitUserCancelYn("N");
+
+		if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_REFUND,
+				purchaseCancelSacParam.getCancelReqPathCd())
+				|| StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_FORCE_CANCEL,
+						purchaseCancelSacParam.getCancelReqPathCd())
+				|| StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_PAYMENT_NOT_SYNC,
+						purchaseCancelSacParam.getCancelReqPathCd())
+				|| StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_PAYMENT_ERROR_CANCEL,
+						purchaseCancelSacParam.getCancelReqPathCd())) {
+			throw new StorePlatformException("SAC_PUR_8102");
+		}
+		purchaseCancelSacParam.setIgnorePayment(false);
 		// request user type setting.
 		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_USER);
 
@@ -159,7 +206,6 @@ public class PurchaseCancelController {
 		for (PurchaseCancelDetailSacReq purchaseCancelDetailSacReq : purchaseCancelByUserSacReq.getPrchsCancelList()) {
 
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
-
 			purchaseCancelDetailSacParam.setPrchsId(purchaseCancelDetailSacReq.getPrchsId());
 
 			prchsCancelList.add(purchaseCancelDetailSacParam);
@@ -234,8 +280,20 @@ public class PurchaseCancelController {
 		}
 
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByAdminSacReq.getCancelReqPathCd());
-		purchaseCancelSacParam.setForceCancelYn(purchaseCancelByAdminSacReq.getForceCancelYn());
+		purchaseCancelSacParam.setShoppingForceCancelYn(purchaseCancelByAdminSacReq.getShoppingForceCancelYn());
 		purchaseCancelSacParam.setSktLimitUserCancelYn(purchaseCancelByAdminSacReq.getSktLimitUserCancelYn());
+		if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_REFUND,
+				purchaseCancelSacParam.getCancelReqPathCd())
+				|| StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_FORCE_CANCEL,
+						purchaseCancelSacParam.getCancelReqPathCd())
+				|| StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_PAYMENT_NOT_SYNC,
+						purchaseCancelSacParam.getCancelReqPathCd())
+				|| StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_PAYMENT_ERROR_CANCEL,
+						purchaseCancelSacParam.getCancelReqPathCd())) {
+			purchaseCancelSacParam.setIgnorePayment(true);
+		} else {
+			purchaseCancelSacParam.setIgnorePayment(false);
+		}
 
 		// request admin type setting.
 		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_ADMIN);
@@ -297,6 +355,60 @@ public class PurchaseCancelController {
 
 	}
 
+	private PurchaseCancelSacParam convertReqForCancelPurchaseForPaymentError(SacRequestHeader sacRequestHeader,
+			PurchaseCancelForPaymentErrorSacReq purchaseCancelForPaymentErrorSacReq) {
+
+		PurchaseCancelSacParam purchaseCancelSacParam = new PurchaseCancelSacParam();
+
+		// common parameter setting.
+		if (!ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelForPaymentErrorSacReq,
+				purchaseCancelSacParam)) {
+			throw new StorePlatformException("SAC_PUR_9901");
+		}
+
+		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelForPaymentErrorSacReq.getCancelReqPathCd());
+		purchaseCancelSacParam.setShoppingForceCancelYn("N");
+		purchaseCancelSacParam.setSktLimitUserCancelYn("N");
+		purchaseCancelSacParam.setIgnorePayment(true);
+
+		// request admin type setting.
+		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_ADMIN);
+
+		// parameter setting.
+		List<PurchaseCancelDetailSacParam> prchsCancelList = new ArrayList<PurchaseCancelDetailSacParam>();
+		PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
+
+		purchaseCancelDetailSacParam.setPrchsId(purchaseCancelForPaymentErrorSacReq.getPrchsId());
+
+		prchsCancelList.add(purchaseCancelDetailSacParam);
+
+		purchaseCancelSacParam.setPrchsCancelList(prchsCancelList);
+
+		return purchaseCancelSacParam;
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * convertResForCancelPurchaseForPaymentError.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelDetailSacResult
+	 *            purchaseCancelDetailSacResult
+	 * @return PurchaseCancelDetailSacResult
+	 */
+	private PurchaseCancelForPaymentErrorSacRes convertResForCancelPurchaseForPaymentError(
+			PurchaseCancelDetailSacResult purchaseCancelDetailSacResult) {
+
+		PurchaseCancelForPaymentErrorSacRes purchaseCancelForPaymentErrorSacRes = new PurchaseCancelForPaymentErrorSacRes();
+
+		purchaseCancelForPaymentErrorSacRes.setPrchsId(purchaseCancelDetailSacResult.getPrchsId());
+
+		return purchaseCancelForPaymentErrorSacRes;
+
+	}
+
 	/**
 	 * 
 	 * <pre>
@@ -321,8 +433,10 @@ public class PurchaseCancelController {
 		}
 
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelForTCashSacReq.getCancelReqPathCd());
-		purchaseCancelSacParam.setForceCancelYn("N");
+		purchaseCancelSacParam.setShoppingForceCancelYn("N");
 		purchaseCancelSacParam.setSktLimitUserCancelYn("N");
+		purchaseCancelSacParam.setIgnorePayment(false);
+
 		// request user type setting.
 		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_ADMIN);
 		purchaseCancelSacParam.setPrchsCancelServiceType(PurchaseConstants.PRCHS_CANCEL_SERVICE_TCASH);

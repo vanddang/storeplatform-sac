@@ -48,8 +48,6 @@ import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.product.count.sci.PurchaseCountSCI;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.InsertPurchaseProductCountScReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdatePurchaseCountSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UpdatePurchaseCountSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
@@ -88,9 +86,6 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	private DeviceSCI deviceSCI;
 
 	@Autowired
-	private UpdatePurchaseCountSCI updatePurchaseCountSCI;
-
-	@Autowired
 	private TStoreCashSCI tStoreCashSCI;
 
 	@Autowired
@@ -112,23 +107,21 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		PurchaseScRes purchaseScRes = this.purchaseCancelSCI.getPurchase(purchaseScReq);
 		if (purchaseScRes == null || purchaseScRes.getPrchs() == null
 				|| StringUtils.isBlank(purchaseScRes.getPrchs().getPrchsId())) {
-			// 구매 정보가 존재하지 않을 경우 취소 불가.
-			throw new StorePlatformException("SAC_PUR_8100");
+			// 구매 상세가 기준이기 때문에 구매 테이블은 체크하지 말아라. 2014-04-25 최상훈c.
 		}
 
 		// 구매 정보 가져와서 셋팅.
-		// 구매 정보.
 		purchaseCancelDetailSacParam.setPrchsSacParam(this.convertResForPrchsSacParam(purchaseScRes.getPrchs()));
 
-		// 구매 상세 정보.
+		// 구매 상세 정보. (AS-IS T Cash의 경우 구매 상세 정보가 없을 수 있다.)
 		List<PrchsDtlSacParam> prchsDtlSacParamList = new ArrayList<PrchsDtlSacParam>();
 		if (purchaseScRes.getPrchsDtlList() != null) {
 			for (PrchsDtl prchsDtl : purchaseScRes.getPrchsDtlList()) {
 				PrchsDtlSacParam prchsDtlSacParam = this.converResForPrchsDtlSacParam(prchsDtl);
 				prchsDtlSacParamList.add(prchsDtlSacParam);
 			}
-			purchaseCancelDetailSacParam.setPrchsDtlSacParamList(prchsDtlSacParamList);
 		}
+		purchaseCancelDetailSacParam.setPrchsDtlSacParamList(prchsDtlSacParamList);
 
 		// 결제 상세 정보.
 		List<PaymentSacParam> paymentSacParamList = new ArrayList<PaymentSacParam>();
@@ -317,38 +310,43 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		// 구매 상품 건수 업데이트 시 특가상품 여부 확인.
 		boolean specialSaleYn = false;
 		List<PurchaseCancelPaymentDetailScReq> purchaseCancelPaymentDetailScReqList = new ArrayList<PurchaseCancelPaymentDetailScReq>();
-		for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
-			PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
-			purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
-			purchaseCancelPaymentDetailScReq.setSystemId(purchaseCancelSacParam.getSystemId());
-			purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-			purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
-			purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
-			if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
-					&& purchaseCancelDetailSacParam.gettStorePayCancelResultList().size() > 0) {
-				for (PayCancelResult payCancelResult : purchaseCancelDetailSacParam.gettStorePayCancelResultList()) {
-					if (StringUtils.equals(payCancelResult.getPayCls(), paymentSacParam.getPaymentMtdCd())) {
-						if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
-								payCancelResult.getPayCancelResultCd())) {
-							// T Store 결제 취소 실패이면
-							purchaseCancelPaymentDetailScReq
-									.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
+
+		if (purchaseCancelDetailSacParam.getPaymentSacParamList() != null
+				&& purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0
+				&& !purchaseCancelSacParam.getIgnorePayment()) {
+			for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
+				PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
+				purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
+				purchaseCancelPaymentDetailScReq.setSystemId(purchaseCancelSacParam.getSystemId());
+				purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+				purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
+				purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+				if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
+						&& purchaseCancelDetailSacParam.gettStorePayCancelResultList().size() > 0) {
+					for (PayCancelResult payCancelResult : purchaseCancelDetailSacParam.gettStorePayCancelResultList()) {
+						if (StringUtils.equals(payCancelResult.getPayCls(), paymentSacParam.getPaymentMtdCd())) {
+							if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
+									payCancelResult.getPayCancelResultCd())) {
+								// T Store 결제 취소 실패이면
+								purchaseCancelPaymentDetailScReq
+										.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
+							}
+							purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(payCancelResult
+									.getPayCancelResultCd());
 						}
-						purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(payCancelResult
-								.getPayCancelResultCd());
 					}
 				}
+
+				purchaseCancelPaymentDetailScReqList.add(purchaseCancelPaymentDetailScReq);
+
+				// 구매 상품 건수 업데이트 시 특가상품 여부 확인.
+				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_COUPON, paymentSacParam.getPaymentMtdCd())
+						&& StringUtils.equals(PurchaseConstants.COUPON_TYPE_SPECIAL_PRICE_PRODUCT,
+								paymentSacParam.getCpnType())) {
+					specialSaleYn = true;
+				}
+
 			}
-
-			purchaseCancelPaymentDetailScReqList.add(purchaseCancelPaymentDetailScReq);
-
-			// 구매 상품 건수 업데이트 시 특가상품 여부 확인.
-			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_COUPON, paymentSacParam.getPaymentMtdCd())
-					&& StringUtils.equals(PurchaseConstants.COUPON_TYPE_SPECIAL_PRICE_PRODUCT,
-							paymentSacParam.getCpnType())) {
-				specialSaleYn = true;
-			}
-
 		}
 
 		// 상품 구매수 업데이트 위한 정보 셋팅.
@@ -410,21 +408,38 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	}
 
 	@Override
-	public void updatePurchaseCount(PurchaseCancelSacParam purchaseCancelSacParam,
-			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
+	public PurchaseCancelDetailSacParam updatePurchaseCancelForPaymentError(
+			PurchaseCancelSacParam purchaseCancelSacParam, PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
 
-		List<UpdatePurchaseCountSacReq> updatePurchaseCountSacReqList = new ArrayList<UpdatePurchaseCountSacReq>();
+		PurchaseCancelScReq purchaseCancelScReq = new PurchaseCancelScReq();
 
-		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
-			UpdatePurchaseCountSacReq updatePurchaseCountSacReq = new UpdatePurchaseCountSacReq();
-			updatePurchaseCountSacReq.setTenantId(prchsDtlSacParam.getUseTenantId());
-			updatePurchaseCountSacReq.setProductId(prchsDtlSacParam.getProdId());
-			updatePurchaseCountSacReq.setPurchaseCount(-prchsDtlSacParam.getProdQty());
+		// 결제 취소 데이터 없음. 객체만 생성해준다.
+		List<PurchaseCancelPaymentDetailScReq> purchaseCancelPaymentDetailScReqList = new ArrayList<PurchaseCancelPaymentDetailScReq>();
 
-			updatePurchaseCountSacReqList.add(updatePurchaseCountSacReq);
-		}
+		// 구매 상품 건수 업데이트 없음. 객체만 생성해준다.
+		// 상품 구매수 업데이트 위한 정보 셋팅.
+		InsertPurchaseProductCountScReq insertPurchaseProductCountScReq = new InsertPurchaseProductCountScReq();
+		List<PrchsProdCnt> prchsProdCntList = new ArrayList<PrchsProdCnt>();
+		insertPurchaseProductCountScReq.setPrchsProdCntList(prchsProdCntList);
 
-		this.updatePurchaseCountSCI.updatePurchaseCount(updatePurchaseCountSacReqList);
+		// 인입 된 사람의 정보를 넣어준다.
+		purchaseCancelScReq.setTenantId(purchaseCancelSacParam.getTenantId());
+		purchaseCancelScReq.setSystemId(purchaseCancelSacParam.getSystemId());
+		// 구매 취소 정보를 넣어준다.
+		purchaseCancelScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+		purchaseCancelScReq.setCancelReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
+		purchaseCancelScReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_FAIL);
+		purchaseCancelScReq.setPurchaseCancelPaymentDetailScReqList(purchaseCancelPaymentDetailScReqList);
+		purchaseCancelScReq.setInsertPurchaseProductCountScReq(insertPurchaseProductCountScReq);
+
+		PurchaseCancelScRes purchaseCancelScRes = this.purchaseCancelSCI.updatePurchaseCancel(purchaseCancelScReq);
+
+		purchaseCancelDetailSacParam.setPaymentCancelCnt(purchaseCancelScRes.getPaymentCancelCnt());
+		purchaseCancelDetailSacParam.setPrchsDtlCancelCnt(purchaseCancelScRes.getPrchsDtlCancelCnt());
+		purchaseCancelDetailSacParam.setPrchsCancelCnt(purchaseCancelScRes.getPrchsCancelCnt());
+		purchaseCancelDetailSacParam.setPrchsProdCntCnt(purchaseCancelScRes.getPrchsProdCntCnt());
+
+		return purchaseCancelDetailSacParam;
 
 	}
 
@@ -472,6 +487,10 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		PrchsSacParam prchsSacParam = new PrchsSacParam();
 
+		if (prchs == null) {
+			return prchsSacParam;
+		}
+
 		prchsSacParam.setTenantId(prchs.getTenantId());
 		prchsSacParam.setPrchsId(prchs.getPrchsId());
 		prchsSacParam.setInsdUsermbrNo(prchs.getInsdUsermbrNo());
@@ -499,6 +518,10 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	private PrchsDtlSacParam converResForPrchsDtlSacParam(PrchsDtl prchsDtl) {
 
 		PrchsDtlSacParam prchsDtlSacParam = new PrchsDtlSacParam();
+
+		if (prchsDtl == null) {
+			return prchsDtlSacParam;
+		}
 
 		prchsDtlSacParam.setTenantId(prchsDtl.getTenantId());
 		prchsDtlSacParam.setPrchsId(prchsDtl.getPrchsId());
@@ -595,6 +618,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
 		tStoreCashChargeCancelDetailEcReq.setOrderNo(paymentSacParam.getPrchsId());
 		tStoreCashChargeCancelDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_ALL);
+		cashList.add(tStoreCashChargeCancelDetailEcReq);
 
 		tStoreCashChargeCancelEcReq.setUserKey(paymentSacParam.getInsdUsermbrNo());
 		tStoreCashChargeCancelEcReq.setCashList(cashList);

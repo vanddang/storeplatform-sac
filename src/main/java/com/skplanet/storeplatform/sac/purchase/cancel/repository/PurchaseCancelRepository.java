@@ -93,16 +93,18 @@ public interface PurchaseCancelRepository {
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
 
 	/**
+	 * 
 	 * <pre>
-	 * 구매 취소 시 상품 구매 개수 차감 처리 해 준다.
+	 * 망에러 구매취소 일 때 구매 DB 업데이트.
 	 * </pre>
 	 * 
 	 * @param purchaseCancelSacParam
 	 *            purchaseCancelSacParam
 	 * @param purchaseCancelDetailSacParam
 	 *            purchaseCancelDetailSacParam
+	 * @return PurchaseCancelDetailSacParam
 	 */
-	void updatePurchaseCount(PurchaseCancelSacParam purchaseCancelSacParam,
+	PurchaseCancelDetailSacParam updatePurchaseCancelForPaymentError(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
 
 	/**
