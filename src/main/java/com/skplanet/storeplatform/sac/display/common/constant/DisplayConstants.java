@@ -220,7 +220,12 @@ public class DisplayConstants {
 	public static final String DP_COLOR_SUPPORT_NM = "color";
 
 	/**
-	 * 채널-에피스도 상품 관계 코드.
+	 * 부모-자식 상품 관계 코드
+	 */
+	public static final String DP_PARENT_CHILD_RELATIONSHIP_CD = "DP010801";
+
+	/**
+	 * 채널-에피소드 상품 관계 코드
 	 */
 	public static final String DP_CHANNEL_EPISHODE_RELATIONSHIP_CD = "DP010802";
 

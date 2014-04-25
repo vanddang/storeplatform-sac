@@ -86,6 +86,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 				// APP 상품의 경우
 				if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 					paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+					paramMap.put("inAppRshpCd", DisplayConstants.DP_PARENT_CHILD_RELATIONSHIP_CD);
 					this.log.debug("##### Search for app product");
 					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getAppMetaInfo", paramMap,
 							ProductInfo.class);
