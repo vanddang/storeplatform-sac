@@ -1929,7 +1929,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							}
 
 							// 에피소드 날짜 권한 정보
-							episodeProduct.setDateList(this.shoppingGenerator.generateDateList(episodeShopping));
+							// episodeProduct.setDateList(this.shoppingGenerator.generateDateList(episodeShopping));
 							episodeRights = new Rights();
 
 							// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
@@ -1938,7 +1938,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							}
 
 							episodeRights.setGrade(episodeShopping.getProdGrdCd());
-							episodeRights.setDateList(episodeDateList);
+							episodeRights.setDateList(this.shoppingGenerator.generateDateList(episodeShopping));
 							episodeProduct.setRights(episodeRights);
 
 							// saleOption 셋팅
