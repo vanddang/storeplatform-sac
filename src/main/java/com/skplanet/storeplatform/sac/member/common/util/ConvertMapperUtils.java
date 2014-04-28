@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 
 /**
  * Convert Mapper Util
