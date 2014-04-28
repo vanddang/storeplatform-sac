@@ -90,10 +90,13 @@ public class ConvertMapperUtils {
 				fields[i].setAccessible(true);
 				// Field Name
 				keyAttribute = fields[i].getName();
+				// SetMethod Name 추출
 				methodString = setMethodPrefix + keyAttribute.substring(0, 1).toUpperCase() + keyAttribute.substring(1);
 
 				// Methods [for - Start]
 				for (int j = 0; j < methods.length; j++) {
+					// 접근 허용
+					methods[j].setAccessible(true);
 					// Set Method
 					if (StringUtils.equals(methodString, methods[j].getName())) {
 
