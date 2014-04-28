@@ -554,7 +554,6 @@
                 AND I.PROD_ID = N.PROD_ID(+)   
                 AND I.PROD_ID = OPT.EPSD_PROD_ID(+)     
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
-                AND NVL(B.CHNL_CNT, 0) > 0          
                 AND C.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND M.LANG_CD =#{lang}          /* ko : 한국어 */
@@ -563,7 +562,6 @@
                 AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                 AND I.PROD_ID = #{productBasicInfo.partProdId}        /* 상품ID */
