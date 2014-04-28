@@ -539,7 +539,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00041").device_id(deviceId);
+				shuttle.log_id("TL_SAC_MEM_0003").device_id(deviceId);
 			}
 		});
 
