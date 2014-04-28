@@ -573,7 +573,7 @@
 		    FROM (
 		        SELECT  
                       PD.PROD_ID
-                    , '' as PART_PROD_ID
+                    , PD.PROD_ID as PART_PROD_ID
                     , DC.PROD_NM
                     , PD.TOP_MENU_ID
                     , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
