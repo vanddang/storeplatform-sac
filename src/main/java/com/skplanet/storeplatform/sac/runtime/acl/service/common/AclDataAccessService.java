@@ -83,4 +83,11 @@ public interface AclDataAccessService {
 	 */
 	System selectSystemByIp(System system);
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
+	void flushCache();
+
 }
