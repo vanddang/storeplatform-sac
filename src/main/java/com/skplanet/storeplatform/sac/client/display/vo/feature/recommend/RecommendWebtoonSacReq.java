@@ -30,7 +30,7 @@ public class RecommendWebtoonSacReq extends CommonInfo {
 	private String upMenuId; // 상위 메뉴아이디
 	private String menuId; // 메뉴아이디
 	@NotBlank
-	@Pattern(regexp = "^ADM000000016")
+	@Pattern(regexp = "^ADM000000060|^ADM000000061|^ADM000000062|^ADM000000063|^ADM000000064|^ADM000000065|^ADM000000066|^ADM000000067")
 	private String listId; // 리스트아이디
 	private String weekDayCd; // 요일별 구분 코드
 	private String langCd; // 언어코드
