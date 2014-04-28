@@ -30,7 +30,7 @@ public class AclCacheController {
 	@Autowired
 	private AclDataAccessService service;
 
-	@RequestMapping(value = "/flushCacheForAcl", method = RequestMethod.GET)
+	@RequestMapping(value = "/flushAcl", method = RequestMethod.GET)
 	@ResponseBody
 	public String flushCacheForAcl() {
 		// 한방에 모두 캐쉬함. 추후 세분화 필요.
