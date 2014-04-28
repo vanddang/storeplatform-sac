@@ -463,6 +463,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setTstoreCashAmt(this.searchTstoreCashAmt(reservedDataMap.get("userKey")));
 
 		// ------------------------------------------------------------------------------------------------
+		// 게임캐쉬 조회
+
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAME)) {
+			res.setGameCashAmt(this.searchGameCashAmt(reservedDataMap.get("userKey")));
+		}
+
+		// ------------------------------------------------------------------------------------------------
 		// OCB 적립율
 
 		// 시험폰, SKP법인폰 여부
@@ -1684,6 +1691,45 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
 		tStoreCashEcReq.setUserKey(userKey);
 		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_ALL); // 상품군 : 전체
+
+		TStoreCashBalanceEcRes tStoreCashEcRes = null;
+		try {
+			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7211", e);
+		}
+
+		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
+					tStoreCashEcRes.getResultMsg());
+		}
+
+		List<TStoreCashBalanceDetailEcRes> tstoreCashList = tStoreCashEcRes.getCashList();
+		double cashAmt = 0.0;
+		for (TStoreCashBalanceDetailEcRes cash : tstoreCashList) {
+			cashAmt += Double.parseDouble(cash.getAmt());
+		}
+
+		return cashAmt;
+	}
+
+	/*
+	 * 
+	 * <pre> 게임캐쉬 잔액 조회. </pre>
+	 * 
+	 * @param userKey 내부 회원 NO
+	 * 
+	 * @return 게임캐쉬 잔액
+	 */
+	private double searchGameCashAmt(String userKey) {
+		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
+		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+			return 0.0;
+		}
+
+		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
+		tStoreCashEcReq.setUserKey(userKey);
+		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_APP); // 상품군 : 전체
 
 		TStoreCashBalanceEcRes tStoreCashEcRes = null;
 		try {
