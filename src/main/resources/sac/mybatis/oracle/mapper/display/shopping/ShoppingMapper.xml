@@ -67,7 +67,7 @@
                                        AND  TDLP.LIST_ID   = #{req.listId}     /* ADM000000014 : 쇼핑 추천, RNK000000006 쇼핑 인기 */
                                        AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
-                                       AND  TO_CHAR(TDLP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                       AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')  
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                
                                  ,(SELECT /*+ ORDERED */
@@ -318,7 +318,7 @@
                                        AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000006 쇼핑 인기 */
                                        AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
-                                       AND  TO_CHAR(TDLP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                       AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
                                  </if>
@@ -899,7 +899,7 @@
                                        AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000006 쇼핑 인기 */
                                        AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
-                                       AND  TO_CHAR(TDLP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                       AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
                                  </if>                                 
@@ -1200,7 +1200,7 @@
                                        AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000006 쇼핑 인기 */
                                        AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
-                                       AND  TO_CHAR(TDLP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                       AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
                                  </if>
@@ -1356,7 +1356,7 @@
                                        AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000006 쇼핑 인기 */
                                        AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
-                                       AND  TO_CHAR(TDLP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                       AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
                                  </if>
