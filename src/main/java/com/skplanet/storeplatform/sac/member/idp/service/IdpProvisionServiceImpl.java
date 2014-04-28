@@ -326,7 +326,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					LOGGER.info("MQ process fail {}", mqInfo);
 				}
 
-				/* 사용자제한정책 mdn 변경(as-is 구매한도/선물수신한도 변경용) */
+				/* 사용자제한정책 mdn 변경(as-is 구매한도/선물수신한도 / 단말테스터 변경용) */
 				UpdatePolicyKeyRequest updPolicyKeyReq = new UpdatePolicyKeyRequest();
 				updPolicyKeyReq.setCommonRequest(commonRequest);
 				updPolicyKeyReq.setOldLimitPolicyKey(beMdn);
@@ -384,7 +384,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				LOGGER.error(ex.getMessage(), ex);
 			}
 
-			/* TLog 남김 */
+			/* TLog 남김(SAC 회원 device_ID변경) */
 			final String fdsLogUserKey = userKey;
 			final String fdsLogBeMdn = beMdn;
 			final String fdsLogMdn = mdn;
@@ -398,7 +398,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL00034").result_code("SUCC").result_message("").insd_usermbr_no(fdsLogUserKey)
+						shuttle.log_id("TL_SAC_MEM_0002").result_code("SUCC").result_message("").insd_usermbr_no(fdsLogUserKey)
 								.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
 								.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
 								.request_system_id(fdsSystemId).exception_log("");
@@ -408,7 +408,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL00034").result_code(fdsResult).result_message(fdsResultMsg).insd_usermbr_no(fdsLogUserKey)
+						shuttle.log_id("TL_SAC_MEM_0002").result_code(fdsResult).result_message(fdsResultMsg).insd_usermbr_no(fdsLogUserKey)
 								.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
 								.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
 								.request_system_id(fdsSystemId).exception_log("");
