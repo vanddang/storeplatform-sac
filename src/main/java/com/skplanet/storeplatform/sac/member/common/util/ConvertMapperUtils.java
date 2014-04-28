@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 
 /**
  * Convert Mapper Util
@@ -135,15 +134,4 @@ public class ConvertMapperUtils {
 		}
 		return returnStr;
 	}
-
-	public static void main(String[] args) {
-		CreateReq req = new CreateReq();
-
-		req.setSellerPw("11312312");
-		req.setSellerId("test");
-		req.setIsRecvEmail("awdadawd");
-		System.out.println(convertObjectToJson(req));
-		System.out.println(req.toString());
-	}
-
 }
