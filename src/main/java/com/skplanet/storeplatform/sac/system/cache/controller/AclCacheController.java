@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 
 /**
- * 캐쉬 컨트롤러
+ * ACL 캐쉬 컨트롤러
  *
  * Created on : 2014. 4. 28.
  * Created by : 서대영, SK 플래닛.
  */
 @Controller
 @RequestMapping(value = "/system/cache")
-public class CacheController {
+public class AclCacheController {
 
 	@Autowired
 	private AclDataAccessService service;
