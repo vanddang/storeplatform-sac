@@ -42,7 +42,6 @@ public class RemoveFeedbackSacReq extends CommonInfo {
 	/**
 	 * 사용후기 번호.
 	 */
-	@NotBlank
 	private String notiSeq;
 
 	/**
