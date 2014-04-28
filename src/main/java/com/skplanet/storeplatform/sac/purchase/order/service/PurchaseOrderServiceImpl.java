@@ -286,7 +286,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL00015").imei(imei).mno_type(mno_type).usermbr_no(usermbr_no)
+						shuttle.log_id("TL_SAC_PUR_0005").imei(imei).mno_type(mno_type).usermbr_no(usermbr_no)
 								.system_id(system_id).purchase_channel(purchase_channel)
 								.purchase_inflow_channel(purchase_inflow_channel).purchase_id(purchase_id)
 								.purchase_id_recv(purchase_id_recv).product_id(prodIdList)

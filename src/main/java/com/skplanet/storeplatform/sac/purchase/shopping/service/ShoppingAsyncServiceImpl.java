@@ -95,7 +95,7 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 				new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL00027).purchase_id(purchase_id)
+						shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006).purchase_id(purchase_id)
 								.use_start_time(use_start_time).use_end_time(use_end_time)
 								.download_expired_time(use_end_time).coupon_publish_code(coupon_publish_code)
 								.coupon_code(coupon_code).coupon_item_code(coupon_item_code);

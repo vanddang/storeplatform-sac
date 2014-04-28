@@ -296,7 +296,7 @@ public class PurchaseOrderController {
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00015").purchase_id(prchsId);
+				shuttle.log_id("TL_SAC_PUR_0005").purchase_id(prchsId);
 			}
 		});
 
@@ -447,7 +447,7 @@ public class PurchaseOrderController {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL00006").result_code("SUCC");
+						shuttle.log_id("TL_SAC_PUR_0003").result_code("SUCC");
 					}
 				});
 			} else {
@@ -459,7 +459,7 @@ public class PurchaseOrderController {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL00006").result_code(resultCode).result_message(resultMessage)
+						shuttle.log_id("TL_SAC_PUR_0003").result_code(resultCode).result_message(resultMessage)
 								.exception_log(exceptionLog);
 					}
 				});
@@ -493,7 +493,7 @@ public class PurchaseOrderController {
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00002").system_id(systemId).purchase_channel(prchsReqPathCd)
+				shuttle.log_id("TL_SAC_PUR_0001").system_id(systemId).purchase_channel(prchsReqPathCd)
 						.purchase_inflow_channel(fdsPrchsCaseCd).device_ip(clientIp).network_type(networkTypeCd)
 						.product_id(prodIdList).product_price(prodPriceList);
 			}
