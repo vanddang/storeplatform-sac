@@ -115,6 +115,9 @@ public class ConvertMapperUtils {
 								}
 								// MASKING_VALUE => invoke
 								obj.getClass().getMethod(methodString, String.class).invoke(returnObj, rv.toString());
+								break;
+							} else {
+								methods[j].invoke(returnObj, fields[i].get(obj));
 							}
 
 						}// ReflectionFields [for - End]
@@ -137,6 +140,8 @@ public class ConvertMapperUtils {
 		CreateReq req = new CreateReq();
 
 		req.setSellerPw("11312312");
+		req.setSellerId("test");
+		req.setIsRecvEmail("awdadawd");
 		System.out.println(convertObjectToJson(req));
 		System.out.println(req.toString());
 	}
