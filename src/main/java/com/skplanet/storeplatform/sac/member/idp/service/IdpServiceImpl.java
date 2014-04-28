@@ -474,7 +474,7 @@ public class IdpServiceImpl implements IdpService {
 					new TLogUtil().log(new ShuttleSetter() {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
-							shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
+							shuttle.log_id("TL_SAC_MEM_0001").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
 									.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost)
 									.result_code("SUCC").mbr_id(fdsUserId).request_system_id(fdsSystemId);
 						}
@@ -491,7 +491,7 @@ public class IdpServiceImpl implements IdpService {
 					new TLogUtil().log(new ShuttleSetter() {
 						@Override
 						public void customize(TLogSentinelShuttle shuttle) {
-							shuttle.log_id("TL00030").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
+							shuttle.log_id("TL_SAC_MEM_0001").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
 									.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("")
 									.mbr_id(fdsUserId).request_system_id(fdsSystemId).mbr_id_post(fdsUserId)
 									.usermbr_no_post(fdsUserKey);
@@ -2343,7 +2343,7 @@ public class IdpServiceImpl implements IdpService {
 						new TLogUtil().log(new ShuttleSetter() {
 							@Override
 							public void customize(TLogSentinelShuttle shuttle) {
-								shuttle.log_id("TL00030").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
+								shuttle.log_id("TL_SAC_MEM_0001").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
 										.usermbr_no_pre(fdsUsermbrNoPre).usermbr_no_post(fdsUsermbrNoPost)
 										.result_code("SUCC").mbr_id(fdsUserId).request_system_id(fdsSystemId);
 							}
@@ -2363,7 +2363,7 @@ public class IdpServiceImpl implements IdpService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL00030").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
+						shuttle.log_id("TL_SAC_MEM_0001").result_code(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE)
 								.result_message(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT).exception_log("")
 								.mbr_id(fdsUserId).request_system_id(fdsSystemId).mbr_id_post(fdsUserId)
 								.usermbr_no_post(fdsUserKey);
