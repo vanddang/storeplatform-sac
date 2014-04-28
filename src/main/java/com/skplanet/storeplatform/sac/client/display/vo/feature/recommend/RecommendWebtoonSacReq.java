@@ -32,7 +32,6 @@ public class RecommendWebtoonSacReq extends CommonInfo {
 	@NotBlank
 	@Pattern(regexp = "^ADM000000060|^ADM000000061|^ADM000000062|^ADM000000063|^ADM000000064|^ADM000000065|^ADM000000066|^ADM000000067")
 	private String listId; // 리스트아이디
-	private String weekDayCd; // 요일별 구분 코드
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
 	private String stdDt;
@@ -189,31 +188,6 @@ public class RecommendWebtoonSacReq extends CommonInfo {
 	 */
 	public void setListId(String listId) {
 		this.listId = listId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 요일 구분 코드.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getWeekDayCd() {
-		return this.weekDayCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 요일 구분 코드.
-	 * </pre>
-	 * 
-	 * @param weekDayCd
-	 *            weekDayCd
-	 */
-	public void setWeekDayCd(String weekDayCd) {
-		this.weekDayCd = weekDayCd;
 	}
 
 	/**
