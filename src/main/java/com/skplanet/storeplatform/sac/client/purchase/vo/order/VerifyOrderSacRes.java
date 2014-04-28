@@ -33,6 +33,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String noOcbCard; // OCB 카드번호
 	private String noCouponList; // 쿠폰 List
 	private Double tstoreCashAmt; // T store Cash 잔액
+	private Double gameCashAmt; // 게임캐쉬 잔액
 	private String typeTestMdn; // 법인 및 일반 시험폰 처리 타입: T01, T02, T03
 	private String cdPaymentTemplate; // 결제Page 템플릿 코드: TC01-일반, TC02-정액제(게임캐쉬), TC03-대여/소장, TC04-자동결제, TC05-쇼핑, TC06-선물
 	private String topMenuId; // 상품 TOP 메뉴 ID
@@ -41,6 +42,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String afterAutoPayDt; // 다음 자동 결제일
 	private String dwldAvailableDayCnt; // 다운로드 가능기간(일)
 	private String usePeriodCnt; // 이용기간(일)
+	private String basePid; // 기본 상품 ID (대여/소장 TAB 하이라이트 처리)
 	private String loanPid; // 대여하기 상품 ID
 	private Double loanAmt; // 대여하기 상품 금액
 	private String ownPid; // 소장하기 상품 ID
@@ -247,6 +249,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	}
 
 	/**
+	 * @return the gameCashAmt
+	 */
+	public Double getGameCashAmt() {
+		return this.gameCashAmt;
+	}
+
+	/**
+	 * @param gameCashAmt
+	 *            the gameCashAmt to set
+	 */
+	public void setGameCashAmt(Double gameCashAmt) {
+		this.gameCashAmt = gameCashAmt;
+	}
+
+	/**
 	 * @return the typeTestMdn
 	 */
 	public String getTypeTestMdn() {
@@ -364,6 +381,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setUsePeriodCnt(String usePeriodCnt) {
 		this.usePeriodCnt = usePeriodCnt;
+	}
+
+	/**
+	 * @return the basePid
+	 */
+	public String getBasePid() {
+		return this.basePid;
+	}
+
+	/**
+	 * @param basePid
+	 *            the basePid to set
+	 */
+	public void setBasePid(String basePid) {
+		this.basePid = basePid;
 	}
 
 	/**
