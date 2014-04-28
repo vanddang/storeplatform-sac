@@ -252,7 +252,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
 						SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
 						for (LimitTarget limitTarget : policyResponse.getLimitTargetList()) {
-							if (StringUtil.equals(limitTarget.getPolicyApplyValue(), mdn)) {
+							if (StringUtil.equals(limitTarget.getLimitPolicyKey(), mdn)) {
 								isTestModel = "Y";
 								break;
 							}
@@ -645,7 +645,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
 
 					for (LimitTarget limitTarget : policyResponse.getLimitTargetList()) {
-						if (limitTarget.getPolicyApplyValue().equals(mdn)) {
+						if (limitTarget.getLimitPolicyKey().equals(mdn)) {
 							isTestModel = "Y";
 							break;
 						}
