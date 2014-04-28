@@ -74,6 +74,8 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 				this.logger.debug("@@@@@@@@@@@@ interpark Start @@@@@@@@@@@@");
 				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+				req.setTransClasCd(PurchaseConstants.TRANS_CLAS_MALL_CD);
+				req.setTransClasValue(interworkingSac.getMallCd());
 				updateCount += this.interworkingSCI.createInterworking(req);
 			}
 			// cine21 상품인지 확인(구매상품이의 판매자회원번호가 cine21이면 전송테이블에 저장)
@@ -86,6 +88,7 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 					req.setTransClasCd(PurchaseConstants.TRANS_CLAS_SELLER_MBR_NO);
 					req.setTransClasValue(interworkingSac.getSellermbrNo());
 					// 전송테이블에 저장
+					updateCount += this.interworkingSCI.createInterworking(req);
 					updateCount += this.interworkingSCI.createInterworking(req);
 				}
 			}
