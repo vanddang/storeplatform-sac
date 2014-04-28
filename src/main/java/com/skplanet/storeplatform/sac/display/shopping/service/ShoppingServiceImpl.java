@@ -1288,6 +1288,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 		String stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 				req.getThemeId());
 
+		// 기준일시 체크
+		if (StringUtils.isEmpty(stdDt)) {
+			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+		}
 		// 테마 정보 가져오기
 		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, MetaInfo.class);
 
