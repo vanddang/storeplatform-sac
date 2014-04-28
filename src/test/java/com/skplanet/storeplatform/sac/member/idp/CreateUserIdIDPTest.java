@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -66,7 +64,7 @@ public class CreateUserIdIDPTest {
 					public Object requestBody() {
 						ProvisioningReq req = new ProvisioningReq();
 						req.setCmd("RXCreateUserIdIDP");
-						HashMap resultMap = new HashMap();
+						HashMap<String, String> resultMap = new HashMap<String, String>();
 
 						resultMap.put("systemID", "S001");
 						resultMap.put("tenantID", "S01");
@@ -76,6 +74,8 @@ public class CreateUserIdIDPTest {
 						resultMap.put("user_id", "1234");
 						resultMap.put("idp_id", "test01");
 						resultMap.put("im_mem_type_cd", "100");
+						resultMap.put("user_status_code", "10");
+						resultMap.put("is_rname_auth", "Y");
 
 						req.setReqParam(resultMap);
 
