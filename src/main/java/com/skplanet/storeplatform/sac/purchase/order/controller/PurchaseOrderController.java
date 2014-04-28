@@ -400,8 +400,8 @@ public class PurchaseOrderController {
 			}
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
 			purchaseOrderInfo.setIap(true); // IAP 상품 여부
-			// TAKTODO:: possibleDuplication: 중복 구매 가능 여부
-			// TAKTODO:: iapCommercial: IAP 정식판 전환상품 존재 여부
+			// possibleDuplication: 중복 구매 가능 여부 - 상품 정합성 체크 (상품 조회) 시 세팅
+			// iapCommercial: IAP 정식판 전환상품 존재 여부 - 상품 정합성 체크 (상품 조회) 시 세팅
 
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
 			purchaseOrderInfo.setRingbell(true); // 컬러링&벨소리 상품 여부

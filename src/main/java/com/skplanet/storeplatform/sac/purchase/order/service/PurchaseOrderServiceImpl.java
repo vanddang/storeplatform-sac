@@ -504,6 +504,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		}
 		// 대여/소장
+		if (StringUtils.isNotBlank(reservedDataMap.get("loanPid"))
+				&& StringUtils
+						.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)) {
+			res.setBasePid(reservedDataMap.get("loanPid"));
+		} else {
+			res.setBasePid(prchsDtlMore.getProdId());
+		}
 		res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
 		res.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt")); // 이용기간(일)
 		res.setLoanPid(reservedDataMap.get("loanPid")); // 대여하기 상품 ID
@@ -514,10 +521,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.isNotBlank(reservedDataMap.get("ownAmt"))) {
 			res.setOwnAmt(Double.parseDouble(reservedDataMap.get("ownAmt"))); // 소장하기 상품 금액
 		}
-		// 판매자
-		res.setNmSeller(reservedDataMap.get("sellerNm")); // 판매자명
-		res.setEmailSeller(reservedDataMap.get("sellerEmail")); // 판매자 이메일 주소
-		res.setNoTelSeller(reservedDataMap.get("sellerTelno")); // 판매자 전화번호
+		// TAKTODO:: 쇼핑 판매자 정보 조회 - 일단은 기본값
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			res.setNmSeller("Tstore"); // 판매자명
+			res.setEmailSeller("cscenter@tstore.co.kr"); // 판매자 이메일 주소
+			res.setNoTelSeller("1600-6573"); // 판매자 전화번호
+		}
 		// 선물 수신자
 		res.setNmDelivery(reservedDataMap.get("receiveNames")); // 선물수신자 성명
 		res.setNoMdnDelivery(reservedDataMap.get("receiveMdns")); // 선물수신자 MDN
