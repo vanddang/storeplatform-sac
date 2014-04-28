@@ -249,19 +249,24 @@ public class FeedbackServiceImpl implements FeedbackService {
 			}
 		}
 
-		// 사용후기 삭제, DEL_YN = 'Y'.
-		ProdNoti prodNoti = new ProdNoti();
-		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		prodNoti.setNotiSeq(removeFeedbackSacReq.getNotiSeq());
-		prodNoti.setMbrNo(removeFeedbackSacReq.getUserKey());
-		int affectedRow = (Integer) this.feedbackRepository.deleteProdNoti(prodNoti);
-		if (affectedRow <= 0) {
-			throw new StorePlatformException("SAC_OTH_9104");
+		String notiSeq = "";
+
+		// notiSeq가 존재할 경우 사용후기 삭제, DEL_YN = 'Y'.
+		if (StringUtils.isNotEmpty(removeFeedbackSacReq.getNotiSeq())) {
+			ProdNoti prodNoti = new ProdNoti();
+			prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+			prodNoti.setNotiSeq(removeFeedbackSacReq.getNotiSeq());
+			prodNoti.setMbrNo(removeFeedbackSacReq.getUserKey());
+			int affectedRow = (Integer) this.feedbackRepository.deleteProdNoti(prodNoti);
+			if (affectedRow <= 0) {
+				throw new StorePlatformException("SAC_OTH_9104");
+			}
+			notiSeq = removeFeedbackSacReq.getNotiSeq();
 		}
 
 		RemoveFeedbackSacRes removeFeedbackSacRes = new RemoveFeedbackSacRes();
 		removeFeedbackSacRes.setProdId(removeFeedbackSacReq.getProdId());
-		removeFeedbackSacRes.setNotiSeq(removeFeedbackSacReq.getNotiSeq());
+		removeFeedbackSacRes.setNotiSeq(notiSeq);
 
 		return removeFeedbackSacRes;
 	}
