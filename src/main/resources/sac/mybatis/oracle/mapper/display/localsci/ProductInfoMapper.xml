@@ -87,14 +87,14 @@
               , (CASE
 		           WHEN TB.PART_PARENT_CLSF_CD = 'PD012302'
 		           THEN
-		              (SELECT CONCAT (FILE_PATH, FILE_NM)
+		              (SELECT FILE_PATH
 		                 FROM TB_DP_PROD_IMG IMG
 		                WHERE     IMG.PROD_ID = TB.PROD_ID
 		                      AND IMG.EXPO_ORD = 1
 		                      AND IMG.LANG_CD = 'ko'
 		                      AND IMG.IMG_CD = #{imageCd})
 		           ELSE
-		              (SELECT CONCAT (FILE_PATH, FILE_NM)
+		              (SELECT FILE_PATH
 		                 FROM TB_DP_PROD_IMG IMG
 		                WHERE     IMG.PROD_ID = TB.PART_PROD_ID
 		                      AND IMG.EXPO_ORD = 1
