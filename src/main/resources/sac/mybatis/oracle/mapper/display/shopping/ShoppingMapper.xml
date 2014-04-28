@@ -1027,7 +1027,7 @@
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
                    ,EXPO_ORD as expoOrd
-                   ,#{channelContentTypeCd} as contentsTypeCd
+                   ,#{channelContentTypeCd}  as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -1042,7 +1042,7 @@
                                ,H.PART_PROD_ID  
                                ,M.EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
-                               ,M.EXPO_ORD_SUB      
+                               ,M.EXPO_ORD_SUB
                                ,I.REG_DT   
                           FROM 
                                   TB_DP_SHPG_BRAND A
@@ -1057,7 +1057,29 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 ,TB_DP_LIST_PROD M
+                                ,(
+                                    SELECT  TDLP.TENANT_ID
+                                          , TDLP.LIST_ID
+                                          , TDLP.MENU_ID
+                                          , TDLP.PROD_ID
+                                          , TDLP.EXPO_ORD_ALWAYS_YN
+                                          , TDLP.EXPO_ORD
+                                          , TDLP.EXPO_ORD_SUB
+                                          , TDLP.PRCHS_QTY  
+                                          , TDLP.DWLD_QTY                                      
+                                      FROM  
+                                            TB_DP_LIST_PROD TDLP
+                                           ,TB_DP_LIST TDL
+                                     WHERE 1=1
+                                       AND  TDLP.TENANT_ID = TDL.TENANT_ID
+                                       AND  TDLP.LIST_ID   = TDL.LIST_ID
+                                       AND  TDLP.TENANT_ID = #{tenantHeader.tenantId}    /* 테넌트ID */
+                                       AND  TDLP.LIST_ID   = #{req.themeId}     
+                                       AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+                                       AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
+                                       AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')  
+                                       AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
+                                  ) M                                
                                  ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
@@ -1083,13 +1105,11 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
+                        AND K.TENANT_ID = M.TENANT_ID
                         AND K.TENANT_ID = L.TENANT_ID 
-                        AND B.CATALOG_ID = M.PROD_ID
-                        AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
-                        AND M.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
-                        AND M.LIST_ID = #{req.themeId}  
+                        AND B.CATALOG_ID = M.PROD_ID   
                         AND I.PROD_ID = N.PROD_ID(+)     
-                        AND H.PROD_RSHP_CD =#{prodRshpCd}     /*채널-에피소드 상품 관계*/
+                        AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
                         AND NVL(B.CHNL_CNT, 0) > 0                  
                         AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
                         AND F.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
@@ -1111,7 +1131,7 @@
                                       <foreach collection="req.arrayProdGradeCd" item="req.prodGradeCd" separator="," open="(" close=")">
                                         #{req.prodGradeCd}
                                       </foreach>                        
-                        </if>      
+                        </if>   
                         AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
@@ -1125,7 +1145,7 @@
                       EXPO_ORD_ALWAYS_YN DESC
                     , EXPO_ORD   
                     , EXPO_ORD_SUB 
-                    , CATALOG_NM ASC                        
+                    , CATALOG_NM ASC
                ) 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>    

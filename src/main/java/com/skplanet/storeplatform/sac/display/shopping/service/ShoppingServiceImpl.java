@@ -1284,6 +1284,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
+		// 배치완료 기준일시 조회
+		String stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
+				req.getThemeId());
 
 		// 테마 정보 가져오기
 		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, MetaInfo.class);
@@ -1311,6 +1314,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			// DB 조회 파라미터 생성
 			Map<String, Object> reqMap = new HashMap<String, Object>();
 			reqMap.put("req", req);
+			reqMap.put("stdDt", stdDt);
 			reqMap.put("tenantHeader", tenantHeader);
 			reqMap.put("deviceHeader", deviceHeader);
 			reqMap.put("lang", tenantHeader.getLangCd());
