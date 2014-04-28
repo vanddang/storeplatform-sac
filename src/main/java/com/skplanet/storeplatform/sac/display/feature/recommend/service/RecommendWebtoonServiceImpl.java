@@ -99,23 +99,6 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			req.setStdDt(stdDt);
 		}
 
-		// 리스트Id별 요일 셋팅 ADM000000060~ADM000000066/DP010101~DP010107 (일~토)
-		if (("ADM000000060").equals(req.getListId())) {
-			req.setWeekDayCd("DP010101");
-		} else if (("ADM000000061").equals(req.getListId())) {
-			req.setWeekDayCd("DP010102");
-		} else if (("ADM000000062").equals(req.getListId())) {
-			req.setWeekDayCd("DP010103");
-		} else if (("ADM000000063").equals(req.getListId())) {
-			req.setWeekDayCd("DP010104");
-		} else if (("ADM000000064").equals(req.getListId())) {
-			req.setWeekDayCd("DP010105");
-		} else if (("ADM000000065").equals(req.getListId())) {
-			req.setWeekDayCd("DP010106");
-		} else if (("ADM000000066").equals(req.getListId())) {
-			req.setWeekDayCd("DP010107");
-		}
-
 		// Integer totalCount = 0;
 
 		List<ProductBasicInfo> productBasicInfoList;

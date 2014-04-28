@@ -158,9 +158,6 @@
                            AND 'PD000403' = G.PROD_STATUS_CD
                            AND 'Y' = G.EXPO_YN
                            AND H.PROD_ID = C.PART_PROD_ID
-                           <if test="weekDayCd != null and weekDayCd != ''">
-                           AND H.SERIALLY_WKDY LIKE CONCAT('%', CONCAT((SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd}), '%'))  /* DP010101 ~DP010107  :일~토*/
-                           </if>
                            AND A.PROD_ID = C.PROD_ID 
                            AND C.PART_PROD_ID = F.PROD_ID 
                            AND H.PROD_ID = D.PROD_ID 
