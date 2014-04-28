@@ -178,7 +178,6 @@
                 AND PI.EXPO_ORD ='1'           
                 AND I.PROD_ID = N.PROD_ID(+)    
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
-                AND NVL(B.CHNL_CNT, 0) > 0          
                 AND C.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND M.LANG_CD =#{lang}          /* ko : 한국어 */
