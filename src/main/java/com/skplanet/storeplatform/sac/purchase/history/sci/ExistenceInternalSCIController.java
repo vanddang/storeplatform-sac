@@ -59,7 +59,7 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL00005"); // T Log 보장을 위해 log_id 선 세팅
+				shuttle.log_id("TL_SAC_PUR_0002"); // T Log 보장을 위해 log_id 선 세팅
 			}
 		});
 		// 필수값 체크
