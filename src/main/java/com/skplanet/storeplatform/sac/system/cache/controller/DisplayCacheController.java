@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.display.cache.controller;
+package com.skplanet.storeplatform.sac.system.cache.controller;
 
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheSupportService;
@@ -28,7 +28,7 @@ import java.util.List;
  * Updated on : 2014. 04. 03 Updated by : 정희원, SK 플래닛.
  */
 @Controller
-@RequestMapping(value = "/display/cache")
+@RequestMapping(value = "/system/cache")
 public class DisplayCacheController {
 
     @Autowired
@@ -42,12 +42,17 @@ public class DisplayCacheController {
 
     private final String[] TENANT_LIST = new String[]{"S01"};
 
-    @RequestMapping(value = "/evict", method = RequestMethod.GET)
+    @RequestMapping(value = "/evictProductMeta", method = RequestMethod.GET)
     public void evictAppMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
         String[] prodIdList = prodId.split(" ");
         String[] langList = SERVICE_LANG.split(",");
         List<String> supportDeviceList = null;
         List<String> menuList = null;
+
+        if(prodId.toLowerCase().equals("all")) {
+            this.evictAllMeta(prodType);
+            return;
+        }
 
         for(String _prodId : prodIdList) {
             if(prodType.equals("app")) {
@@ -94,8 +99,7 @@ public class DisplayCacheController {
         }
     }
 
-    @RequestMapping(value = "/evict/all", method = RequestMethod.GET)
-    public void evictAllMeta(@RequestParam(required = true) String prodType) {
+    private void evictAllMeta(@RequestParam(required = true) String prodType) {
         if(prodType.equals("app")) {
             cacheEvictManager.evictAllAppMeta();
         }
