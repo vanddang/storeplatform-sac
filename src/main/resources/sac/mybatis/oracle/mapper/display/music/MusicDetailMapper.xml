@@ -31,7 +31,8 @@
             EPD.CID,
             MM.ALBUM_TYPE_NM,
             SD.DEVICE_MODEL_CD,
-            CPD.SVC_GRP_CD
+            CPD.SVC_GRP_CD,
+            NVL((SELECT MUSIC_SPRT_YN FROM TB_CM_DEVICE CM2 WHERE CM2.DEVICE_MODEL_CD = #{deviceModelCd}), 'N') AS MUSIC_SPRT_YN
         FROM TB_DP_PROD CPD
             INNER JOIN TB_DP_PROD_RSHP RS
                 ON RS.PROD_ID = CPD.PROD_ID
@@ -44,6 +45,7 @@
                         INNER JOIN TB_DP_SPRT_DEVICE ISD
                             ON ISD.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                     WHERE ISD.DEVICE_MODEL_CD IN <foreach collection="deviceModelCds" separator="," item="v" open="(" close=")">#{v}</foreach>
+                          AND ISD.PROD_ID = EPD.PROD_ID
                           AND USE_YN = 'Y'
                           AND MUSIC_SPRT_YN = 'Y'
                           AND ROWNUM = 1

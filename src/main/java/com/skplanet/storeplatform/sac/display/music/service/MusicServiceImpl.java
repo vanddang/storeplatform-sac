@@ -64,6 +64,9 @@ public class MusicServiceImpl implements MusicService {
         if(musicDetail.getDeviceModelCd() == null)
             throw new StorePlatformException("SAC_DSP_0012", param.getDeviceModelCd());
 
+        if(musicDetail.getMusicSprtYn().equals("N"))
+            throw new StorePlatformException("SAC_DSP_0012", param.getDeviceModelCd());
+
         // 메뉴 목록 조회
 		List<MenuItem> menuList = this.commonService.getMenuItemList(param.getChannelId(), param.getLangCd());
 

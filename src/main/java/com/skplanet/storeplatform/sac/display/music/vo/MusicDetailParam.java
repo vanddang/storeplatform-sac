@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.music.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 import java.util.Arrays;
@@ -19,7 +20,9 @@ import java.util.List;
  *
  * Updated on : 2014. 01. 07 Updated by : 정희원, SK 플래닛.
  */
-public class MusicDetailParam {
+public class MusicDetailParam extends CommonInfo {
+
+    private static final long serialVersionUID = 1L;
 
     private String channelId;
     private String langCd;

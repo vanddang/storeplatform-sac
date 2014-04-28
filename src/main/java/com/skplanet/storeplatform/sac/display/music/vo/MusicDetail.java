@@ -41,6 +41,15 @@ public class MusicDetail extends CommonInfo {
     private String cid;
     private String deviceModelCd;
     private String svcGrpCd;
+    private String musicSprtYn;
+
+    public String getMusicSprtYn() {
+        return musicSprtYn;
+    }
+
+    public void setMusicSprtYn(String musicSprtYn) {
+        this.musicSprtYn = musicSprtYn;
+    }
 
     public String getSvcGrpCd() {
         return svcGrpCd;
