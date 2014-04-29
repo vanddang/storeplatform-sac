@@ -18,7 +18,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.util.StopWatch;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
@@ -28,7 +27,7 @@ import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
 
 /**
- * VOD Service
+ * Epub Service
  *
  * Updated on : 2014. 01. 09
  * Updated by : 임근대, SK 플래닛.
@@ -114,7 +113,7 @@ public class EpubServiceImplTest {
         param.put("channelId", "H900063921");
         param.put("langCd", "ko");
         param.put("deviceModel", "SHV-E110S");
-        param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+        param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
         
 		EpubDetail result = this.commonDAO.queryForObject("EpubDetail.selectEpubChannel", param, EpubDetail.class);
@@ -128,13 +127,12 @@ public class EpubServiceImplTest {
         param.put("channelId", "H900063921");
         param.put("langCd", "ko");
         param.put("deviceModel", "SHV-E110S");
-        param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+        param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
         
         //param.put("bookTypeCd", "");
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
         param.put("orderedBy", DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
-        param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
         param.put("offset", 1);
         param.put("count", 20);
     	
@@ -149,12 +147,11 @@ public class EpubServiceImplTest {
     	param.put("channelId", "H001431104");
     	param.put("langCd", "ko");
     	param.put("deviceModel", "SHV-E110S");
-    	param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+    	param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
     	param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
     	//param.put("bookTypeCd", "");
-    	param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
     	param.put("orderedBy", "nonPayment");
-    	param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+    	param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
     	param.put("offset", 1);
     	param.put("count", 20);
     	
@@ -176,12 +173,11 @@ public class EpubServiceImplTest {
     	param.put("channelId", "H001431104");
     	param.put("langCd", "ko");
     	param.put("deviceModel", "SHV-E110S");
-    	param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+    	param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
     	param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
     	//param.put("bookTypeCd", "");
     	param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
     	param.put("orderedBy", "nonPayment");
-    	param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
     	param.put("offset", 1);
     	param.put("count", 20);
 
@@ -204,12 +200,10 @@ public class EpubServiceImplTest {
     	param.put("channelId", "H900063921");
     	param.put("langCd", "ko");
     	param.put("deviceModel", "SHV-E110S");
-    	param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+    	param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
     	param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
     	//param.put("bookTypeCd", "");
-    	param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
     	param.put("orderedBy", "recent");
-    	param.put("imgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
     	param.put("offset", 1);
     	param.put("count", 20);
     	
