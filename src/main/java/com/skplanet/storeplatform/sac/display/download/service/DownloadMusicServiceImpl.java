@@ -194,6 +194,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					String prchsId = null; // 구매ID
 					String prchsDt = null; // 구매일시
 					String useExprDt = null; // 이용 만료일시
+					String dwldStartDt = null; // 다운로드 시작일시
 					String dwldExprDt = null; // 다운로드 만료일시
 					String prchsCaseCd = null; // 선물 여부
 					String prchsState = null; // 구매상태
@@ -208,6 +209,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							prchsId = historyRes.getHistoryList().get(i).getPrchsId();
 							prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
 							useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
+							dwldStartDt = historyRes.getHistoryList().get(i).getDwldStartDt();
 							dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
 							prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
@@ -215,6 +217,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 							// 구매상태 확인
 							downloadMusicSacReq.setPrchsDt(prchsDt);
+							downloadMusicSacReq.setDwldStartDt(dwldStartDt);
 							downloadMusicSacReq.setDwldExprDt(dwldExprDt);
 							// prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
 							// downloadMusicSacReq);

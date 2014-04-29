@@ -224,6 +224,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					String prchsId = null; // 구매ID
 					String prchsDt = null; // 구매일시
 					String useExprDt = null; // 이용 만료일시
+					String dwldStartDt = null; // 다운로드 시작일시
 					String dwldExprDt = null; // 다운로드 만료일시
 					String prchsCaseCd = null; // 선물 여부
 					String prchsState = null; // 구매상태
@@ -239,6 +240,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							prchsId = historyRes.getHistoryList().get(i).getPrchsId();
 							prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
 							useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
+							dwldStartDt = historyRes.getHistoryList().get(i).getDwldStartDt();
 							dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
 							prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
@@ -247,6 +249,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 							// 구매상태 확인
 							downloadVodSacReq.setPrchsDt(prchsDt);
+							downloadVodSacReq.setDwldStartDt(dwldStartDt);
 							downloadVodSacReq.setDwldExprDt(dwldExprDt);
 							// prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
 							// downloadVodSacReq);
@@ -263,6 +266,19 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									prchsState = "gift";
 								}
 							}
+
+							this.log.info("----------------------------------------------------------------");
+							this.log.info("[DownloadVodServiceImpl] prchsId : {}", prchsId);
+							this.log.info("[DownloadVodServiceImpl] prchsDt : {}", prchsDt);
+							this.log.info("[DownloadVodServiceImpl] useExprDt : {}", useExprDt);
+							this.log.info("[DownloadVodServiceImpl] dwldStartDt : {}", dwldStartDt);
+							this.log.info("[DownloadVodServiceImpl] dwldExprDt : {}", dwldExprDt);
+							this.log.info("[DownloadVodServiceImpl] prchsCaseCd : {}", prchsCaseCd);
+							this.log.info("[DownloadVodServiceImpl] prchsState : {}", prchsState);
+							this.log.info("[DownloadVodServiceImpl] prchsProdId : {}", prchsProdId);
+							this.log.info("[DownloadVodServiceImpl] prchsPrice : {}", puchsPrice);
+							this.log.info("----------------------------------------------------------------");
+
 							metaInfo.setPurchaseId(prchsId);
 							metaInfo.setPurchaseProdId(prchsProdId);
 							metaInfo.setPurchaseDt(prchsDt);
