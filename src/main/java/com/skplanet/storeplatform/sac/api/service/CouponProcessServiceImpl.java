@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.api.service;
 
+import static com.skplanet.storeplatform.sac.display.common.ProductType.Shopping;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,6 +49,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
+import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
@@ -71,6 +74,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 	@Autowired
 	private SellerSearchSCI sellerSearchSCI;
+
+	@Autowired
+	private CacheEvictHelperComponent cacheEvictHelperComponent;
 
 	@Override
 	public boolean insertCouponInfo(CouponReq couponReq) {
@@ -179,8 +185,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			if (!this.setCallSpSettRegProd(couponInfo, itemInfoList, spRegistProdList, couponReq.getCudType())) {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
-
 			this.log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■");
+
+			this.log.info("■■■■■ cacheEvictShoppingMeta 시작 ■■■■■");
+			this.cacheEvictShoppingMeta(couponInfo, couponReq);
+			this.log.info("■■■■■ cacheEvictShoppingMeta 완료 ■■■■■");
 
 		} else {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponReq is NULL!!", null);
@@ -1086,6 +1095,21 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		}
 		return true;
 	} // End validateCatalog
+
+	/**
+	 * cash flush .
+	 * 
+	 * @param couponInfo
+	 *            couponInfo
+	 * @param couponReq
+	 *            couponReq
+	 * @return
+	 */
+	private void cacheEvictShoppingMeta(DpCouponInfo couponInfo, CouponReq couponReq) {
+		if ("U".equalsIgnoreCase(couponReq.getCudType())) {
+			this.cacheEvictHelperComponent.evictProductMeta(Shopping, couponInfo.getStoreCatalogCode());
+		}
+	}
 
 	/**
 	 * 쇼핑쿠폰 상품 상태 변경.

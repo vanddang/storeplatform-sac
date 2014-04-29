@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.api.service;
 
+import static com.skplanet.storeplatform.sac.display.common.ProductType.Shopping;
+
 import java.awt.Image;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,6 +27,7 @@ import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
+import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
 
 /**
  * <pre>
@@ -39,6 +42,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private BrandCatalogService brandCatalogService;
+
+	@Autowired
+	private CacheEvictHelperComponent cacheEvictHelperComponent;
 
 	public final BrandCatalogProdImgInfo brandCatalogProdImgInfo;
 
@@ -97,6 +103,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 			// 이미지 리사이즈 처리
 			this.brandImgResize(dpBrandInfo);
+
+			// cash flush
+			this.cacheEvictShoppingMeta(dpBrandInfo, null);
 
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), message, null);
@@ -325,6 +334,9 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 			// 카탈로그 태그정보 처리
 			this.catalogTagList(dpCatalogInfo);
+
+			// cash flush
+			this.cacheEvictShoppingMeta(null, dpCatalogInfo);
 
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), message, null);
@@ -683,6 +695,31 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				if (this.brandCatalogService.getBrandCatalogChangeCudType(null, dpCatalogInfo.getCatalogId()) > 0) {
 					dpCatalogInfo.setCudType("U");
 				}
+			}
+		}
+	}
+
+	/**
+	 * cash flush .
+	 * 
+	 * @param dpBrandInfo
+	 *            dpBrandInfo
+	 * @param dpCatalogInfo
+	 *            dpCatalogInfo
+	 * @return
+	 */
+	private void cacheEvictShoppingMeta(DpBrandInfo dpBrandInfo, DpCatalogInfo dpCatalogInfo) {
+		// 브랜드 cash flush
+		if (dpBrandInfo != null) {
+			if ("U".equalsIgnoreCase(dpBrandInfo.getCudType())) {
+				this.cacheEvictHelperComponent.evictProductMetaByBrand(dpBrandInfo.getCreateBrandId());
+			}
+		}
+
+		// 카탈로그 cash flush
+		if (dpCatalogInfo != null) {
+			if ("U".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
+				this.cacheEvictHelperComponent.evictProductMeta(Shopping, dpCatalogInfo.getCreateCatalogId());
 			}
 		}
 	}
