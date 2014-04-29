@@ -87,4 +87,6 @@ public interface MemberCommonRepository {
 	 * @return Clause
 	 */
 	public Clause getClauseItemInfo(String tenantId, String clauseId);
+
+	public Object testClause(String type);
 }

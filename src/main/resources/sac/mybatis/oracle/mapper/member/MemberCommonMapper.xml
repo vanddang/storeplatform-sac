@@ -173,4 +173,79 @@
           AND a.clause_id = #{clauseId}
     </select>
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <!-- 테스트1 -->
+    <select id="test1" parameterType="ClauseDTO" resultType="ClauseDTO">
+        SELECT /* MemberCommonMapper.getClauseItemInfo, 공통 약관 코드 정보 조회, 심대진/다모아, 2014-04-29 */
+               a.clause_id AS clauseId
+             , a.start_day AS startDay
+             , a.end_day AS endDay
+             , a.clause_ver AS clauseVer
+             , b.mand_agree_yn AS mandAgreeYn
+         FROM TB_CM_CLAUSE a
+        INNER JOIN TB_CM_TENANT_CLAUSE b ON a.clause_id = b.clause_id
+        WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[>=]]> a.start_day
+          AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
+          AND b.use_yn = 'Y'
+          AND b.tenant_id = 'S01'
+          AND a.clause_id = 'US010603'
+    </select>
+    
+    <!-- 테스트2 -->
+    <select id="test2" parameterType="ClauseDTO" resultType="ClauseDTO">
+        SELECT /* MemberCommonMapper.getClauseItemInfo, 공통 약관 코드 정보 조회, 심대진/다모아, 2014-04-29 */
+               a.clause_id AS clauseId
+             , a.start_day AS startDay
+             , a.end_day AS endDay
+             , a.clause_ver AS clauseVer
+             , b.mand_agree_yn AS mandAgreeYn
+         FROM TB_CM_CLAUSE a
+        INNER JOIN TB_CM_TENANT_CLAUSE b ON a.clause_id = b.clause_id
+        WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[>=]]> a.start_day
+          AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
+          AND a.end_day != TO_CHAR(SYSDATE, 'YYYYMMDD')
+          AND b.use_yn = 'Y'
+          AND b.tenant_id = 'S01'
+          AND a.clause_id = 'US010603'
+    </select>
+    
+    <!-- 테스트3 -->
+    <select id="test3" parameterType="ClauseDTO" resultType="ClauseDTO">
+        SELECT    /* MemberCommonMapper.getClauseList, 약관목록조회, 강신완/부르칸, 2014-04-29 */
+            A.clause_id           AS clauseItemCd,
+            A.clause_item_cd      AS clauseId,
+            A.start_day           AS startDay,
+            A.end_day             AS endDay,
+            A.file_path           AS filePath,
+            A.file_nm             AS fileNm,
+            A.clause_ver          AS clauseVer,
+            A.up_clause_item_cd   AS upClauseItemCd,
+            A.dp_yn               AS dpYn,
+            A.reg_id              AS regId,
+            TO_CHAR(A.reg_dt, 'YYYYMMDDHH24MISS') AS regDt, 
+            A.upd_id AS updId, 
+            TO_CHAR(A.upd_dt, 'YYYYMMDDHH24MISS') AS updDt 
+         FROM TB_CM_CLAUSE A, TB_CM_TENANT_CLAUSE B
+        WHERE A.dp_yn='Y'
+        AND A.clause_id = B.clause_id
+		AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[>=]]> a.start_day
+		AND TO_CHAR(SYSDATE, 'YYYYMMDD') <![CDATA[<]]> a.end_day
+        AND B.tenant_id = 'S01'
+        AND B.use_yn = 'Y'
+        ORDER BY A.clause_id ASC
+    </select>
+    
 </mapper>
