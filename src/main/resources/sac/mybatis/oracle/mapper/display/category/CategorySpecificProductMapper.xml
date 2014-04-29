@@ -268,8 +268,14 @@
               , LA.EXPO_SELLER_EMAIL
               , LA.EXPO_SELLER_NM
               , LA.EXPO_SELLER_TELNO
+              <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
               , ( CASE WHEN LA.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
               , ( CASE WHEN LA.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
+              </if>
+              <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+              , ( CASE WHEN LA.USE_PERIOD_UNIT_CD = 'PD00310' THEN 'Y' END ) AS SUPPORT_STORE
+              , ( CASE WHEN LA.USE_PERIOD_UNIT_CD != 'PD00310' THEN 'Y' END ) AS SUPPORT_PLAY
+              </if>   
             <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
               , CASE WHEN (LA.CHNL_PERIOD_AMT >= 0  AND LA.STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
                      ELSE NVL(LA.CHNL_UNLMT_AMT, 0) END AS PROD_AMT -- 채널 대표 가격
@@ -362,7 +368,7 @@
                            , C.MENU_NM
                            , C.MENU_DESC
                            , D.PROD_GRD_CD
-                           , D.USE_PERIOD_UNIT_CD
+                           , J.USE_PERIOD_UNIT_CD
                            , D.META_CLSF_CD
                            , D.CONTENTS_TYPE_CD
                            , D.EXPO_SELLER_EMAIL
@@ -647,8 +653,14 @@
              , TB.AGENCY_NM
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( TB.EPSD_CNT + TB.STRM_EPSD_CNT ) ELSE 1 END ) AS BOOK_COUNT
+              <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
              , ( CASE WHEN TB.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
              , ( CASE WHEN TB.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
+              </if>
+              <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+             , ( CASE WHEN TB.USE_PERIOD_UNIT_CD = 'PD00310' THEN 'Y' END ) AS SUPPORT_STORE
+             , ( CASE WHEN TB.USE_PERIOD_UNIT_CD != 'PD00310' THEN 'Y' END ) AS SUPPORT_PLAY
+              </if>      
              , TB.COMPT_YN
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS                          
            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
@@ -692,7 +704,7 @@
                       , C.MENU_NM
                       , C.MENU_DESC
                       , D.PROD_GRD_CD
-                      , D.USE_PERIOD_UNIT_CD
+                      , J.USE_PERIOD_UNIT_CD
                       , D.META_CLSF_CD
                       , D.CONTENTS_TYPE_CD
                       , E.VOD_TITL_NM
