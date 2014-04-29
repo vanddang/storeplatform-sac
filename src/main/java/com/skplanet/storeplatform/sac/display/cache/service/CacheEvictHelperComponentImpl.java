@@ -126,4 +126,10 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
             cacheEvictManager.evictAllWebtoonMeta();
         }
     }
+
+    @Override
+    public void evictProductMetaByBrand(String brandId) {
+        List<String> list = cacheSupportService.getCatalogListByBrand(brandId);
+        this.evictProductMeta(Shopping, list);
+    }
 }
