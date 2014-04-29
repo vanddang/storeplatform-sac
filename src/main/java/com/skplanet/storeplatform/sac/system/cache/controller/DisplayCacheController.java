@@ -34,15 +34,20 @@ public class DisplayCacheController {
 
     @RequestMapping(value = "/evictProductMeta", method = RequestMethod.GET)
     public void evictAppMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
-        String[] prodIdList = prodId.split(" ");
-
-        ProductType productType;
-        try {
-            productType = ProductType.forName(prodType);
-            this.cacheEvictHelperComponent.evictProductMeta(productType, Arrays.asList(prodIdList));
+        if(prodId.equals("all")) {
+            this.cacheEvictHelperComponent.evictProductMetaAll(ProductType.forName(prodType));
         }
-        catch(IllegalStateException e) {
-            //throw new StorePlatformException("");
+        else {
+            String[] prodIdList = prodId.split(" ");
+
+            ProductType productType;
+            try {
+                productType = ProductType.forName(prodType);
+                this.cacheEvictHelperComponent.evictProductMeta(productType, Arrays.asList(prodIdList));
+            }
+            catch(IllegalStateException e) {
+                //throw new StorePlatformException("");
+            }
         }
     }
 }
