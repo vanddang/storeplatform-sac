@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -88,6 +89,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	 * .storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader header, DownloadEbookSacReq ebookReq) {
 		// 현재일시 및 요청만료일시 조회
@@ -273,8 +275,9 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							// 구매상태 확인
 							ebookReq.setPrchsDt(prchsDt);
 							ebookReq.setDwldExprDt(dwldExprDt);
-							prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
-									ebookReq);
+
+							prchsState = (String) ((HashMap) this.commonDAO.queryForObject(
+									"Download.getDownloadPurchaseState", ebookReq)).get("PURCHASE_STATE");
 
 							// 구매상태 만료여부 확인
 							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {

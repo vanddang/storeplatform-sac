@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -88,6 +89,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 	 * .storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader header, DownloadComicSacReq comicReq) {
 		// 현재일시 및 만료일시 조회
@@ -258,8 +260,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 							// 구매상태 확인
 							comicReq.setPrchsDt(prchsDt);
 							comicReq.setDwldExprDt(dwldExprDt);
-							prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
-									comicReq);
+							prchsState = (String) ((HashMap) this.commonDAO.queryForObject(
+									"Download.getDownloadPurchaseState", comicReq)).get("PURCHASE_STATE");
 
 							// 구매상태 만료여부 확인
 							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
