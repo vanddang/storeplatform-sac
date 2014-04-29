@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
@@ -66,4 +67,16 @@ public interface PurchaseMemberRepository {
 	 * @return
 	 */
 	public Map<String, IndividualPolicyInfoSac> getPurchaseUserPolicy(String deviceKey, List<String> policyCodeList);
+
+	/**
+	 * 
+	 * <pre>
+	 * 판매자 회원 정보 조회.
+	 * </pre>
+	 * 
+	 * @param sellerKey
+	 *            판매자 내부 회원 번호
+	 * @return 판매자 정보
+	 */
+	public SellerMbrSac searchSellerInfo(String sellerKey);
 }

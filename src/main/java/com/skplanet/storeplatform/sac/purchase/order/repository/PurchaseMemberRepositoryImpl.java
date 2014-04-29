@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,10 @@ import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.Ge
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacReq.PolicyCode;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
@@ -45,6 +50,8 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	@Autowired
 	private SearchUserSCI searchUserSCI;
+	@Autowired
+	private SellerSearchSCI sellerSearchSCI;
 	@Autowired
 	private DeviceSCI deviceSCI;
 	@Autowired
@@ -178,6 +185,37 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		}
 
 		return resMap;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 판매자 회원 정보 조회.
+	 * </pre>
+	 * 
+	 * @param sellerKey
+	 *            판매자 내부 회원 번호
+	 * @return 판매자 정보
+	 */
+	@Override
+	public SellerMbrSac searchSellerInfo(String sellerKey) {
+		SellerMbrSac sellerMbrSac = new SellerMbrSac();
+		sellerMbrSac.setSellerKey(sellerKey);
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		sellerMbrSacList.add(sellerMbrSac);
+
+		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+
+		DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
+				.detailInformation(detailInformationSacReq);
+		Map<String, List<SellerMbrSac>> sellerMap = detailInformationSacRes.getSellerMbrListMap();
+		List<SellerMbrSac> sellerList = sellerMap.get(sellerKey);
+		if (CollectionUtils.isNotEmpty(sellerList)) {
+			return sellerList.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	/*

@@ -199,18 +199,29 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 선물 수신 회원/기기
 
 		if (purchaseOrderInfo.isGift()) {
+			PurchaseUserDevice receiveUserDevice = null;
 
-			// 조회
-			PurchaseUserDevice receiveUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(
-					purchaseOrderInfo.getRecvTenantId(), purchaseOrderInfo.getRecvUserKey(),
-					purchaseOrderInfo.getRecvDeviceKey());
-			if (receiveUserDevice == null) {
-				throw new StorePlatformException("SAC_PUR_4103");
-			}
+			// 비회원 경우
+			if (StringUtils.equals(purchaseOrderInfo.getRecvUserKey(), PurchaseConstants.NONMEMBER_COMMON_USERKEY)) {
+				receiveUserDevice = new PurchaseUserDevice();
+				receiveUserDevice.setTenantId(purchaseOrderInfo.getRecvTenantId());
+				receiveUserDevice.setUserKey(purchaseOrderInfo.getRecvUserKey());
+				receiveUserDevice.setDeviceId(purchaseOrderInfo.getRecvDeviceKey());
+				receiveUserDevice.setDeviceKey(purchaseOrderInfo.getRecvDeviceKey());
 
-			// 회원상태 체크
-			if (StringUtils.equals(receiveUserDevice.getUserMainStatus(), PurchaseConstants.USER_STATUS_NORMAL) == false) {
-				throw new StorePlatformException("SAC_PUR_4104");
+			} else {
+				// 조회
+				receiveUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(
+						purchaseOrderInfo.getRecvTenantId(), purchaseOrderInfo.getRecvUserKey(),
+						purchaseOrderInfo.getRecvDeviceKey());
+				if (receiveUserDevice == null) {
+					throw new StorePlatformException("SAC_PUR_4103");
+				}
+
+				// 회원상태 체크
+				if (StringUtils.equals(receiveUserDevice.getUserMainStatus(), PurchaseConstants.USER_STATUS_NORMAL) == false) {
+					throw new StorePlatformException("SAC_PUR_4104");
+				}
 			}
 
 			purchaseOrderInfo.setReceiveUser(receiveUserDevice);
@@ -546,26 +557,23 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						// 무료구매 처리 데이터 세팅
 						purchaseOrderInfo.setRealTotAmt(0.0);
 
-						if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
-								PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
-							// OR000612-정액권
-							purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_FIXRATE);
-
-						} else if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
-								PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
-							// OR000613-시리즈패스권
-							purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_SERIESPASS);
-
-						} else if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
-								PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
-							// OR000617-이북/코믹 전권 소장
-							purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_OWN);
-
-						} else if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
-								PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
-							// OR000618-이북/코믹 전권 대여
-							purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_LOAN);
-						}
+						/*
+						 * 정액권 이용 경우, 결제이력 생성 안 함 if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
+						 * PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) { // OR000612-정액권
+						 * purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_FIXRATE);
+						 * 
+						 * } else if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
+						 * PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) { // OR000613-시리즈패스권
+						 * purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_SERIESPASS);
+						 * 
+						 * } else if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
+						 * PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) { // OR000617-이북/코믹 전권 소장
+						 * purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_OWN);
+						 * 
+						 * } else if (StringUtils.equals(freepassInfo.getCmpxProdClsfCd(),
+						 * PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) { // OR000618-이북/코믹 전권 대여
+						 * purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_LOAN); }
+						 */
 					}
 				}
 			}
@@ -748,5 +756,4 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		return this.existenceSCI.searchExistenceList(existenceScReq);
 	}
-
 }
