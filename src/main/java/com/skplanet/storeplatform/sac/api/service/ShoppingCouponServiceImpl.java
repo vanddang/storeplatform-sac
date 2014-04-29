@@ -712,6 +712,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		// 브랜드 cash flush
 		if (dpBrandInfo != null) {
 			if ("U".equalsIgnoreCase(dpBrandInfo.getCudType())) {
+				this.log.info("Brand Update cash Brand Id : " + dpBrandInfo.getCreateBrandId());
 				this.cacheEvictHelperComponent.evictProductMetaByBrand(dpBrandInfo.getCreateBrandId());
 			}
 		}
@@ -719,6 +720,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		// 카탈로그 cash flush
 		if (dpCatalogInfo != null) {
 			if ("U".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
+				this.log.info("Catalog Update cash Catalog Id : " + dpCatalogInfo.getCreateCatalogId());
 				this.cacheEvictHelperComponent.evictProductMeta(Shopping, dpCatalogInfo.getCreateCatalogId());
 			}
 		}

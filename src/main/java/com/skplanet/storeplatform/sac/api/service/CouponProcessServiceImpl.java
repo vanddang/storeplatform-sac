@@ -1107,6 +1107,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	private void cacheEvictShoppingMeta(DpCouponInfo couponInfo, CouponReq couponReq) {
 		if ("U".equalsIgnoreCase(couponReq.getCudType())) {
+			this.log.info("Product Upate cash Catalog Id : " + couponInfo.getStoreCatalogCode());
 			this.cacheEvictHelperComponent.evictProductMeta(Shopping, couponInfo.getStoreCatalogCode());
 		}
 	}
