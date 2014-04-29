@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -253,8 +254,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							// 구매상태 확인
 							downloadAppSacReq.setPrchsDt(prchsDt);
 							downloadAppSacReq.setDwldExprDt(dwldExprDt);
-							prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
-									downloadAppSacReq);
+							// prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
+							// downloadAppSacReq);
+							prchsState = (String) ((HashMap) this.commonDAO.queryForObject(
+									"Download.getDownloadPurchaseState", downloadAppSacReq)).get("PURCHASE_STATE");
 
 							// 구매상태 만료여부 확인
 							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
