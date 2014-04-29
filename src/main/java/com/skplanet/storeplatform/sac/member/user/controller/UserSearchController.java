@@ -68,7 +68,7 @@ public class UserSearchController {
 
 		ExistRes res = this.svc.exist(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
+		LOGGER.info("Response : {}", res.getUserKey());
 
 		return res;
 	}
@@ -87,7 +87,7 @@ public class UserSearchController {
 
 		GetProvisioningHistoryRes res = this.svc.getProvisioningHistory(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
+		LOGGER.info("Response : {}", res.getUserKey());
 
 		return res;
 	}
@@ -105,7 +105,7 @@ public class UserSearchController {
 
 		DetailRes res = this.svc.detail(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
+		LOGGER.info("Response : {}", res.getUserKey());
 
 		return res;
 	}
@@ -161,7 +161,7 @@ public class UserSearchController {
 
 		MbrOneidSacRes res = this.svc.searchUserOneId(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson("SUCC"));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 	}
@@ -183,7 +183,7 @@ public class UserSearchController {
 
 		SearchIdSacRes res = this.svc.searchId(sacHeader, req);
 
-		LOGGER.info("Response ID : {}", ConvertMapperUtils.convertObjectToJson(res.getSearchIdList().get(0).getUserId()));
+		LOGGER.info("Response ID : {}", res.getSearchIdList().get(0).getUserId());
 
 		return res;
 	}
@@ -208,7 +208,7 @@ public class UserSearchController {
 
 		SearchPasswordSacRes res = this.svc.searchPassword(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson("SUCC"));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 	}
@@ -230,7 +230,7 @@ public class UserSearchController {
 
 		ListTermsAgreementSacRes res = this.svc.listTermsAgreement(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
+		LOGGER.info("Response : {}, size : {}", res.getUserKey(), res.getAgreementList().size());
 
 		return res;
 	}
@@ -244,10 +244,10 @@ public class UserSearchController {
 
 		LOGGER.info("Request : {}");
 
-		ListDailyPhoneOsSacRes dailyPhoneOsList = this.svc.listDailyPhoneOs(sacHeader);
+		ListDailyPhoneOsSacRes res = this.svc.listDailyPhoneOs(sacHeader);
 
-		LOGGER.info("Response Size : {}", ConvertMapperUtils.convertObjectToJson(dailyPhoneOsList.getDailyPhoneList().size()));
+		LOGGER.info("Response Size : {}", res.getDailyPhoneList().size());
 
-		return dailyPhoneOsList;
+		return res;
 	}
 }

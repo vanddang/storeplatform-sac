@@ -47,7 +47,7 @@ public class ClauseController {
 
 		ListClauseSacRes res = this.svc.listClause(sacHeader);
 
-		LOGGER.info("Response Size : {}", ConvertMapperUtils.convertObjectToJson(res.getClauseList().size()));
+		LOGGER.info("Response Size : {}", res.getClauseList().size());
 
 		return res;
 	}
@@ -72,7 +72,7 @@ public class ClauseController {
 
 		DetailClauseSacRes res = this.svc.detailClauseList(req);
 
-		LOGGER.info("Response Size : {}", ConvertMapperUtils.convertObjectToJson(res.getDetailClauseList().size()));
+		LOGGER.info("Response Size : {}", res.getDetailClauseList().size());
 
 		return res;
 	}

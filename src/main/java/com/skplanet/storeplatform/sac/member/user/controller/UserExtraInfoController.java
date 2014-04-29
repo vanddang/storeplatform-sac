@@ -67,7 +67,7 @@ public class UserExtraInfoController {
 
 		UserExtraInfoRes res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
+		LOGGER.info("Response : {}", res.getUserKey());
 
 		return res;
 	}
@@ -95,7 +95,7 @@ public class UserExtraInfoController {
 
 		UserExtraInfoRes res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
+		LOGGER.info("Response : {}", res.getUserKey());
 
 		return res;
 	}
@@ -114,7 +114,7 @@ public class UserExtraInfoController {
 
 		UserExtraInfoRes res = this.userExtraService.listAdditionalInformation(req, sacHeader);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
+		LOGGER.info("Response : {}", res.getUserKey());
 
 		return res;
 	}

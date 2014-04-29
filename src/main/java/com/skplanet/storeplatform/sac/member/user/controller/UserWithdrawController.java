@@ -49,7 +49,7 @@ public class UserWithdrawController {
 
 		WithdrawRes res = this.svc.executeWithdraw(sacHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 	}
