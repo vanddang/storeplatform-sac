@@ -114,8 +114,12 @@ public class VodGeneratorImpl implements VodGenerator {
 	@Override
 	public List<Support> generateSupportList(MetaInfo metaInfo) {
 		List<Support> supportList = new ArrayList<Support>();
-		Support support = this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM,
-				metaInfo.getHdvYn());
+		Support support = new Support();
+		support = this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM, metaInfo.getHdvYn());
+		supportList.add(support);
+		support = new Support();
+		support = this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM,
+				metaInfo.getDolbySprtYn());
 		supportList.add(support);
 		return supportList;
 	}
