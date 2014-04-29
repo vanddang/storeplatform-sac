@@ -12,6 +12,9 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String ENV_SERVER_LEVEL_DEV = "dev"; // System 설정 서버 단계 property: 개발기
 	public static final String ENV_SERVER_LEVEL_LOCAL = "local"; // System 설정 서버 단계 property: 로컬
 
+	/** 비회원 처리용 UserKey */
+	public static final String NONMEMBER_COMMON_USERKEY = "NONMEMBER";
+
 	/** 회원Part 조회 결과 에러 코드 */
 	public static final String SACINNER_MEMBER_RESULT_NOTFOUND = "SC_MEM_9982";
 
