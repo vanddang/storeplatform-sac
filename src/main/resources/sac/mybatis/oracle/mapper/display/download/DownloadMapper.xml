@@ -665,7 +665,7 @@
     <select id="getDownloadPurchaseState" parameterType="DownloadEbookSacReq" resultType="java.util.HashMap">
         SELECT  /* DownloadMapper.getDownloadPurchaseState, for download 대여 상품 구매상태 조회, 이태희/부르칸, 2014-03-17 */
                 TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') AS SYS_DATE
-              , CASE WHEN TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') BETWEEN #{prchsDt} AND #{dwldExprDt} THEN 'payment' ELSE 'expired' END AS PURCHASE_STATE
+              , CASE WHEN TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') BETWEEN #{dwldStartDt} AND #{dwldExprDt} THEN 'payment' ELSE 'expired' END AS PURCHASE_STATE
           FROM DUAL
     </select>
     

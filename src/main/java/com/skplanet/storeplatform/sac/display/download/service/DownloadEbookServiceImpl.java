@@ -251,6 +251,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					String prchsId = null; // 구매ID
 					String prchsDt = null; // 구매일시
 					String useExprDt = null; // 이용 만료일시
+					String dwldStartDt = null; // 다운로드 시작일시
 					String dwldExprDt = null; // 다운로드 만료일시
 					String prchsCaseCd = null; // 선물 여부
 					String prchsState = null; // 구매상태
@@ -266,6 +267,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							prchsId = historyRes.getHistoryList().get(i).getPrchsId();
 							prchsDt = historyRes.getHistoryList().get(i).getPrchsDt();
 							useExprDt = historyRes.getHistoryList().get(i).getUseExprDt();
+							dwldStartDt = historyRes.getHistoryList().get(i).getDwldStartDt();
 							dwldExprDt = historyRes.getHistoryList().get(i).getDwldExprDt();
 							prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
@@ -273,7 +275,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							drmYn = historyRes.getHistoryList().get(i).getDrmYn();
 
 							// 구매상태 확인
-							ebookReq.setPrchsDt(prchsDt);
+							ebookReq.setDwldStartDt(dwldStartDt);
 							ebookReq.setDwldExprDt(dwldExprDt);
 
 							prchsState = (String) ((HashMap) this.commonDAO.queryForObject(
