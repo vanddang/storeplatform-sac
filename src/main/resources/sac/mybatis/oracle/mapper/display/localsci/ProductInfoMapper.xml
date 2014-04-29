@@ -342,14 +342,21 @@
     </select>
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="ProductInfo">
         SELECT TA.*
-      , (CASE WHEN TA.IMAGE_PATH IS NULL 
-             THEN  (SELECT CONCAT (FILE_PATH, FILE_NM)
-                      FROM TB_DP_PROD_IMG IMG
-                     WHERE     IMG.PROD_ID =  TA.PROD_ID
-                           AND IMG.EXPO_ORD = 1
-                           AND IMG.LANG_CD = #{lang}
-                           AND IMG.IMG_CD = #{chnlImageCd})
-             END ) AS FILE_PATH      
+      , (CASE WHEN #{productBasicInfo.topMenuId} = 'DP14' AND TA.CONTENTS_TYPE_CD = 'PD002502'
+             THEN ( SELECT CONCAT (FILE_PATH, FILE_NM)
+                              FROM TB_DP_PROD_IMG IMG
+                             WHERE     IMG.PROD_ID =  TA.PART_PROD_ID
+                                   AND IMG.EXPO_ORD = 1
+                                   AND IMG.LANG_CD = #{lang}
+                                   AND IMG.IMG_CD = #{imageCd})
+             ELSE ( SELECT CONCAT (FILE_PATH, FILE_NM)
+                              FROM TB_DP_PROD_IMG IMG
+                             WHERE     IMG.PROD_ID =  TA.PROD_ID
+                                   AND IMG.EXPO_ORD = 1
+                                   AND IMG.LANG_CD = #{lang}
+                                   AND IMG.IMG_CD = #{chnlImageCd})
+             END
+        ) AS FILE_PATH
         FROM(
 	        SELECT /* ProductInfoMapper.getEbookComicMetaInfo, ebook/Comic 상품메타 조회, 오승민/인크로스, 2014-03-10 */
 	               A.UP_MENU_ID
@@ -414,7 +421,6 @@
 	                ) AS PHONE_SPRT_YN
 	             , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId} AND TENANT1.EXPO_YN ='Y') as chnlProdStatusCd
 	             , TENANT.PROD_STATUS_CD 
-	             , ( SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG IMG WHERE IMG.PROD_ID = I.PART_PROD_ID  AND  IMG.EXPO_ORD = 1 AND  IMG.LANG_CD = #{lang} AND  IMG.IMG_CD = #{imageCd}) AS IMAGE_PATH                         
 	         FROM  TB_DP_MENU_CATEGORY           A
 	             , TB_DP_MENU_CATEGORY_PROD_MAPG B
 	             , TB_DP_MENU_CATEGORY_DESC      C
