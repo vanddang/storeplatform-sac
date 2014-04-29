@@ -295,6 +295,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 							this.logger.info("[DownloadEbookLog] prchsId : {}", prchsId);
 							this.logger.info("[DownloadEbookLog] prchsDt : {}", prchsDt);
 							this.logger.info("[DownloadEbookLog] useExprDt : {}", useExprDt);
+							this.logger.info("[DownloadEbookLog] dwldStartDt : {}", dwldStartDt);
 							this.logger.info("[DownloadEbookLog] dwldExprDt : {}", dwldExprDt);
 							this.logger.info("[DownloadEbookLog] prchsCaseCd : {}", prchsCaseCd);
 							this.logger.info("[DownloadEbookLog] prchsState : {}", prchsState);

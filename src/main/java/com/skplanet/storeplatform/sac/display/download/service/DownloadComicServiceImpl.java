@@ -279,6 +279,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 							this.logger.info("[DownloadComicLog] prchsId : {}", prchsId);
 							this.logger.info("[DownloadComicLog] prchsDt : {}", prchsDt);
 							this.logger.info("[DownloadComicLog] useExprDt : {}", useExprDt);
+							this.logger.info("[DownloadComicLog] dwldStartDt : {}", dwldStartDt);
 							this.logger.info("[DownloadComicLog] dwldExprDt : {}", dwldExprDt);
 							this.logger.info("[DownloadComicLog] prchsCaseCd : {}", prchsCaseCd);
 							this.logger.info("[DownloadComicLog] prchsState : {}", prchsState);
