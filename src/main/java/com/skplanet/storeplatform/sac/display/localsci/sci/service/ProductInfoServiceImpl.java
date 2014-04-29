@@ -106,14 +106,8 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 						}
 					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
-						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-							paramMap.put("chnlImageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-						} else {
-							paramMap.put("chnlImageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-							paramMap.put("imageCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD);
-						}
-						paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+						paramMap.put("chnlImageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+						paramMap.put("imageCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD);
 						this.log.debug("##### Search for EbookComic specific product");
 						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getEbookComicMetaInfo",
 								paramMap, ProductInfo.class);
