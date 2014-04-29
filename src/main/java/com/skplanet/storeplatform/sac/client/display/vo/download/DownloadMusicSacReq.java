@@ -33,6 +33,7 @@ public class DownloadMusicSacReq extends CommonInfo {
 	private String userKey; // 사용자고유키
 	private String imageCd; // 이미지 코드
 	private String prchsDt; // 구매일시
+	private String dwldStartDt; // 다운로드 시작일시
 	private String dwldExprDt; // 다운로드 만료일시
 
 	/**
@@ -258,6 +259,21 @@ public class DownloadMusicSacReq extends CommonInfo {
 	 */
 	public void setPrchsDt(String prchsDt) {
 		this.prchsDt = prchsDt;
+	}
+
+	/**
+	 * @return the dwldStartDt
+	 */
+	public String getDwldStartDt() {
+		return this.dwldStartDt;
+	}
+
+	/**
+	 * @param dwldStartDt
+	 *            the dwldStartDt to set
+	 */
+	public void setDwldStartDt(String dwldStartDt) {
+		this.dwldStartDt = dwldStartDt;
 	}
 
 	/**
