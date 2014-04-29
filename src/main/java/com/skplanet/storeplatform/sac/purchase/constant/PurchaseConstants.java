@@ -162,4 +162,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** Interface ID */
 	public static final String INTERFACE_ID_TL_SAC_PUR_0006 = "TL_SAC_PUR_0006"; // Biz쿠폰 비동기 응답
 
+	/** 비회원 구분 userKey */
+	public static final String NON_MEMBER = "NONMEMBER";
+
 }
