@@ -18,4 +18,13 @@
               AND MCM.PROD_ID = #{value}
     </select>
 
+    <select id="getCatalogListByBrand" parameterType="String" resultType="String">
+        SELECT /* CacheSupport.xml, getCatalogListByBrand, 정희원, 2014-04-29 */
+            CATALOG_ID
+        FROM
+            TB_DP_SHPG_CATALOG SC
+        WHERE 1=1
+              AND SC.BRAND_ID = #{value}
+    </select>
+
 </mapper>

@@ -9,16 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
+import com.skplanet.storeplatform.sac.display.common.ProductType;
+
 import java.util.List;
 
 /**
  * <p>
- * DESC
+ * CacheEvictHelperComponent
  * </p>
  * Updated on : 2014. 04. 28 Updated by : 정희원, SK 플래닛.
  */
 public interface CacheEvictHelperComponent {
-    void evictProductMeta(String prodType, List<String> prodIdList);
-    void evictProductMeta(String prodType, String prodId);
-    void evictProductMetaAll(String prodType);
+    void evictProductMeta(ProductType prodType, List<String> prodIdList);
+    void evictProductMeta(ProductType prodType, String prodId);
+    void evictProductMetaAll(ProductType prodType);
 }

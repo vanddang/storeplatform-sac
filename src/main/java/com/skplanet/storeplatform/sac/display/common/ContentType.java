@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.display.cache.vo;
+package com.skplanet.storeplatform.sac.display.common;
 
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 

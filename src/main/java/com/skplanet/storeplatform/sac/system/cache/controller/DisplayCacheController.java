@@ -10,18 +10,14 @@
 package com.skplanet.storeplatform.sac.system.cache.controller;
 
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
-import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
-import com.skplanet.storeplatform.sac.display.cache.service.CacheSupportService;
-import com.skplanet.storeplatform.sac.display.cache.vo.*;
+import com.skplanet.storeplatform.sac.display.common.ProductType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * <p>
@@ -40,14 +36,13 @@ public class DisplayCacheController {
     public void evictAppMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
         String[] prodIdList = prodId.split(" ");
 
-        if(prodId.toLowerCase().equals("all")) {
-            this.cacheEvictHelperComponent.evictProductMetaAll(prodType);
-            return;
+        ProductType productType;
+        try {
+            productType = ProductType.forName(prodType);
+            this.cacheEvictHelperComponent.evictProductMeta(productType, Arrays.asList(prodIdList));
         }
-
-        this.cacheEvictHelperComponent.evictProductMeta(prodType, Arrays.asList(prodIdList));
-
+        catch(IllegalStateException e) {
+            //throw new StorePlatformException("");
+        }
     }
-
-
 }

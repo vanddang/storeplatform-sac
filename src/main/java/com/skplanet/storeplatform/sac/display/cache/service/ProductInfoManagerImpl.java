@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.cache.service;
 import com.skplanet.spring.data.plandasj.PlandasjTemplate;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
+import com.skplanet.storeplatform.sac.display.common.ContentType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

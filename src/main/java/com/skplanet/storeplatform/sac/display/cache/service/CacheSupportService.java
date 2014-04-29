@@ -32,4 +32,11 @@ public interface CacheSupportService {
      * @return
      */
     List<String> getMenuList(String prodId);
+
+    /**
+     * 브랜드에 해당하는 카탈로그 목록을 조회한다.
+     * @param brandId
+     * @return
+     */
+    List<String> getCatalogListByBrand(String brandId);
 }

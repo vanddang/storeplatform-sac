@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.display.meta.util.ProductType;
 
 /**
  * <p>

@@ -37,4 +37,9 @@ public class CacheSupportServiceImpl implements CacheSupportService {
     public List<String> getMenuList(String prodId) {
         return this.commonDAO.queryForList("CacheSupport.getMenuList", prodId, String.class);
     }
+
+    @Override
+    public List<String> getCatalogListByBrand(String brandId) {
+        return this.commonDAO.queryForList("CacheSupport.getCatalogListByBrand", brandId, String.class);
+    }
 }

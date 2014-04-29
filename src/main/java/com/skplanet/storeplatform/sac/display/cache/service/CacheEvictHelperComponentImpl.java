@@ -10,16 +10,18 @@
 package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
+import com.skplanet.storeplatform.sac.display.common.ProductType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import static com.skplanet.storeplatform.sac.display.common.ProductType.*;
 
 /**
  * <p>
- * DESC
+ * CacheEvictHelperComponentImpl
  * </p>
  * Updated on : 2014. 04. 28 Updated by : 정희원, SK 플래닛.
  */
@@ -38,19 +40,22 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
     private final String[] TENANT_LIST = new String[]{"S01"};
 
     @Override
-    public void evictProductMeta(String prodType, List<String> prodIdList) {
+    public void evictProductMeta(ProductType prodType, List<String> prodIdList) {
         String[] langList = SERVICE_LANG.split(",");
         List<String> supportDeviceList = null;
         List<String> menuList = null;
 
+        if(prodType == null)
+            throw new IllegalStateException("prodType cannot be null.");
+
         for(String _prodId : prodIdList) {
-            if(prodType.equals("app")) {
+            if(prodType == App) {
                 supportDeviceList = cacheSupportService.getSupportDeviceList(_prodId);
                 menuList = cacheSupportService.getMenuList(_prodId);
             }
             for(String tenant : TENANT_LIST) {
                 for(String langCd : langList) {
-                    if(prodType.equals("app")) {
+                    if(prodType == App) {
                         this.cacheEvictManager.evictAppMeta(new AppMetaParam(_prodId, langCd, tenant));
 
                         if(supportDeviceList != null) {
@@ -65,22 +70,22 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
                             }
                         }
                     }
-                    else if(prodType.equals("music")) {
+                    else if(prodType == Music) {
                         this.cacheEvictManager.evictMusicMeta(new MusicMetaParam(_prodId, langCd, tenant));
                     }
-                    else if(prodType.equals("shopping")) {
+                    else if(prodType == Shopping) {
                         this.cacheEvictManager.evictShoppingMeta(new ShoppingMetaParam(_prodId, langCd, tenant));
                     }
-                    else if(prodType.equals("freepass")) {
+                    else if(prodType == Freepass) {
                         this.cacheEvictManager.evictFreepassMeta(new FreepassMetaParam(_prodId, langCd, tenant));
                     }
-                    else if(prodType.equals("vod")) {
+                    else if(prodType == Vod) {
                         this.cacheEvictManager.evictVodMeta(new VodMetaParam(_prodId, langCd, tenant));
                     }
-                    else if(prodType.equals("ebookcomic")) {
+                    else if(prodType == EbookComic) {
                         this.cacheEvictManager.evictEbookComicMeta(new EbookComicMetaParam(_prodId, langCd, tenant));
                     }
-                    else if(prodType.equals("webtoon")) {
+                    else if(prodType == Webtoon) {
                         this.cacheEvictManager.evictWebtoonMeta(new WebtoonMetaParam(_prodId, langCd, tenant));
                     }
                 }
@@ -89,43 +94,36 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
     }
 
     @Override
-    public void evictProductMeta(String prodType, String prodId) {
+    public void evictProductMeta(ProductType prodType, String prodId) {
         this.evictProductMeta(prodType, Arrays.asList(prodId));
     }
 
     @Override
-    public void evictProductMetaAll(String prodType) {
+    public void evictProductMetaAll(ProductType prodType) {
 
-        if(prodType.equals("app")) {
+        if(prodType == null)
+            throw new IllegalStateException("prodType cannot be null.");
+
+        if(prodType == App) {
             cacheEvictManager.evictAllAppMeta();
         }
-        else if(prodType.equals("music")) {
+        else if(prodType == Music) {
             cacheEvictManager.evictAllMusicMeta();
         }
-        else if(prodType.equals("shopping")) {
+        else if(prodType == Shopping) {
             cacheEvictManager.evictAllShoppingMeta();
         }
-        else if(prodType.equals("freepass")) {
+        else if(prodType == Freepass) {
             cacheEvictManager.evictAllFreepassMeta();
         }
-        else if(prodType.equals("vod")) {
+        else if(prodType == Vod) {
             cacheEvictManager.evictAllVodMeta();
         }
-        else if(prodType.equals("ebookcomic")) {
+        else if(prodType == EbookComic) {
             cacheEvictManager.evictAllEbookComicMeta();
         }
-        else if(prodType.equals("webtoon")) {
+        else if(prodType == Webtoon) {
             cacheEvictManager.evictAllWebtoonMeta();
         }
-        else if(prodType.equals("all")) {
-            cacheEvictManager.evictAllAppMeta();
-            cacheEvictManager.evictAllMusicMeta();
-            cacheEvictManager.evictAllShoppingMeta();
-            cacheEvictManager.evictAllFreepassMeta();
-            cacheEvictManager.evictAllVodMeta();
-            cacheEvictManager.evictAllEbookComicMeta();
-            cacheEvictManager.evictAllWebtoonMeta();
-        }
-
     }
 }

@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.display.common.ContentType;
 
 /**
  * <p>

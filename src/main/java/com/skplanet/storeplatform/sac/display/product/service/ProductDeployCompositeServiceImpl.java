@@ -2,8 +2,8 @@ package com.skplanet.storeplatform.sac.display.product.service;
 
 import com.skplanet.icms.refactoring.deploy.*;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
+import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
+import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import com.skplanet.storeplatform.sac.display.product.vo.CmsVo;
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
@@ -46,10 +45,7 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 	private AmqpTemplate cmsAmqpTemplate;
 
     @Autowired
-    private CacheEvictManager cacheEvictManager;
-
-    @Value("#{propertiesForSac['skp.common.service.language']}")
-    private String SERVICE_LANG;
+    private CacheEvictHelperComponent cacheEvictHelperComponent;
 
 	@Override
 	public void executeProcess(NotificationRefactoringSac message){
@@ -107,11 +103,7 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 
                     // Evict Cache
                     for(DPTenantProductVO tenProd : message.getDpProductTotal().getDpTenantProduct()) {
-                        if(StringUtils.isNotEmpty(this.SERVICE_LANG)) {
-                            for(String langCd : this.SERVICE_LANG.split(",")) {
-                                this.cacheEvictManager.evictAppMeta(new AppMetaParam(tenProd.getProdId(), langCd, tenProd.getTenantId()));
-                            }
-                        }
+                        this.cacheEvictHelperComponent.evictProductMeta(ProductType.App, tenProd.getProdId());
                     }
 
                 } catch (StorePlatformException ie) {
