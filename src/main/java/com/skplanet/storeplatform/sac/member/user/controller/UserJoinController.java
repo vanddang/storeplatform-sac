@@ -18,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -31,7 +30,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateSaveAndSyncRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
 
@@ -225,37 +223,6 @@ public class UserJoinController {
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
-
-	}
-
-	/**
-	 * TODO 테스트후 삭제 해야함...
-	 * 
-	 * TODO 테스트후 삭제 해야함...
-	 * 
-	 * TODO 테스트후 삭제 해야함...
-	 */
-	@Autowired
-	private MemberCommonRepository memberCommonRepository;
-	@RequestMapping(value = "/member/user/testClause", method = RequestMethod.GET)
-	@ResponseBody
-	public Object testClause(@RequestParam("type") String type) {
-
-		LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Request : {}", type);
-		LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Request : {}", type);
-		LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Request : {}", type);
-		LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Request : {}", type);
-		LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Request : {}", type);
-
-		if (type.equals("1")) {
-			return this.memberCommonRepository.testClause(type);
-		} else if (type.equals("2")) {
-			return this.memberCommonRepository.testClause(type);
-		} else if (type.equals("3")) {
-			return this.memberCommonRepository.testClause(type);
-		} else {
-			return null;
-		}
 
 	}
 

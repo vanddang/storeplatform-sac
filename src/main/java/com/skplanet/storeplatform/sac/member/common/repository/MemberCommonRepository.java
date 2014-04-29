@@ -88,5 +88,4 @@ public interface MemberCommonRepository {
 	 */
 	public Clause getClauseItemInfo(String tenantId, String clauseId);
 
-	public Object testClause(String type);
 }

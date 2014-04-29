@@ -71,19 +71,4 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 		return (Clause) this.commonDAO.queryForObject("MemberCommon.getClauseItemInfo", dto);
 	}
 
-	@Override
-	public Object testClause(String type) {
-
-		if (type.equals("1")) {
-			return this.commonDAO.queryForObject("MemberCommon.test1", "");
-		} else if (type.equals("2")) {
-			return this.commonDAO.queryForObject("MemberCommon.test2", "");
-		} else if (type.equals("3")) {
-			return this.commonDAO.queryForList("MemberCommon.test3", "");
-		} else {
-			return null;
-		}
-
-	}
-
 }
