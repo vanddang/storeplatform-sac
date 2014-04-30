@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo;
  * </p>
  * Updated on : 2014. 02. 17 Updated by : 정희원, SK 플래닛.
  */
-public interface ProductStatusService {
+public interface OtherParentStatusService {
 
     public ParentAppInfo selectParentInfo(String tenantId, String langCd, String partProdId);
 }

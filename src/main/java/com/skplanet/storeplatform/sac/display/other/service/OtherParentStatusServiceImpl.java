@@ -25,7 +25,7 @@ import java.util.Map;
  * Updated on : 2014. 02. 17 Updated by : 정희원, SK 플래닛.
  */
 @Service
-public class ProductStatusServiceImpl implements ProductStatusService {
+public class OtherParentStatusServiceImpl implements OtherParentStatusService {
 
     @Autowired
     @Qualifier("sac")

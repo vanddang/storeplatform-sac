@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.other;
 
-import com.skplanet.storeplatform.sac.display.other.service.ProductStatusService;
+import com.skplanet.storeplatform.sac.display.other.service.OtherParentStatusService;
 import com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class ProductStatusServiceTest {
+public class OtherParentStatusServiceTest {
 
     @Autowired
     private WebApplicationContext wac;
@@ -53,12 +53,12 @@ public class ProductStatusServiceTest {
     }
 
     @Autowired
-    private ProductStatusService productStatusService;
+    private OtherParentStatusService otherParentStatusService;
 
     @Test
     public void selectParentProductStatusTest() {
 
-        ParentAppInfo parentAppInfo = productStatusService.selectParentInfo("S01", "ko", "0900121441");
+        ParentAppInfo parentAppInfo = otherParentStatusService.selectParentInfo("S01", "ko", "0900121441");
         assert parentAppInfo.getParentChannelId() != null;
 
     }
@@ -66,7 +66,7 @@ public class ProductStatusServiceTest {
     @Test
     public void selectParentProductStatusTestWithNoData() {
 
-        ParentAppInfo parentAppInfo = productStatusService.selectParentInfo("S01", "ko", "");
+        ParentAppInfo parentAppInfo = otherParentStatusService.selectParentInfo("S01", "ko", "");
         assert parentAppInfo == null;
 
     }

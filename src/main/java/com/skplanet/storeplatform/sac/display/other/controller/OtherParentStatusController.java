@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.display.other.controller;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.other.ParentStatusRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.other.service.ProductStatusService;
+import com.skplanet.storeplatform.sac.display.other.service.OtherParentStatusService;
 import com.skplanet.storeplatform.sac.display.other.vo.ParentAppInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,15 +26,15 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @RequestMapping("/display")
-public class ProductStatusController {
+public class OtherParentStatusController {
 
     @Autowired
-    private ProductStatusService productStatusService;
+    private OtherParentStatusService otherParentStatusService;
 
     @RequestMapping(value = "/other/parentStatus/get/v1", method = RequestMethod.GET)
     @ResponseBody
     public ParentStatusRes parentStatus(@RequestParam String partChannelId, SacRequestHeader header) {
-        ParentAppInfo parentAppInfo = productStatusService.selectParentInfo(header.getTenantHeader().getTenantId(),
+        ParentAppInfo parentAppInfo = otherParentStatusService.selectParentInfo(header.getTenantHeader().getTenantId(),
                 header.getTenantHeader().getLangCd(), partChannelId);
 
         if(parentAppInfo == null)
