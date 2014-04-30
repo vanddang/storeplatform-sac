@@ -17,7 +17,7 @@ public class SellerMbrSac extends CommonInfo {
 
 	/** 판매자 key . */
 	private String sellerKey;
-	/** 판매자 key . */
+	/** 판매자 ID . */
 	private String sellerId;
 	/** 판매자 이름 . */
 	private String sellerName;
