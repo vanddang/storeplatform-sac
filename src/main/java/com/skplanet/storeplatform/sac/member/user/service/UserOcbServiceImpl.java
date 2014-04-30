@@ -101,6 +101,8 @@ public class UserOcbServiceImpl implements UserOcbService {
 	@Override
 	public RemoveOcbInformationRes removeOcbInformation(SacRequestHeader sacHeader, RemoveOcbInformationReq req) {
 
+		String ocbCardNumber = req.getCardNumber().replaceAll("-", "");
+
 		/**
 		 * OCB 조회 요청.
 		 */
@@ -120,9 +122,9 @@ public class UserOcbServiceImpl implements UserOcbService {
 		 */
 		for (MemberPoint dbOcbInfo : searchMemberPointResponse.getMemberPointList()) {
 			LOGGER.debug("### >> 비교 DB  cardNumber : {}", dbOcbInfo.getCardNumber());
-			LOGGER.debug("### >> 비교 REQ cardNumber : {}", req.getCardNumber());
-			if (!StringUtils.equals(dbOcbInfo.getCardNumber(), req.getCardNumber())) {
-				throw new StorePlatformException("SAC_MEM_1700", req.getCardNumber());
+			LOGGER.debug("### >> 비교 REQ cardNumber : {}", ocbCardNumber);
+			if (!StringUtils.equals(dbOcbInfo.getCardNumber(), ocbCardNumber)) {
+				throw new StorePlatformException("SAC_MEM_1700", ocbCardNumber);
 			}
 		}
 
@@ -132,7 +134,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 		List<MemberPoint> memberPointList = new ArrayList<MemberPoint>();
 		MemberPoint memberPoint = new MemberPoint();
 		memberPoint.setUserKey(req.getUserKey()); // 사용자 Key
-		memberPoint.setCardNumber(req.getCardNumber()); // 카드번호
+		memberPoint.setCardNumber(ocbCardNumber); // 카드번호
 
 		memberPointList.add(memberPoint);
 		removeMemberPointRequest.setMemberPointList(memberPointList);
