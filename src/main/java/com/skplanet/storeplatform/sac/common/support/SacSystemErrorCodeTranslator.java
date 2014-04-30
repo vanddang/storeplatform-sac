@@ -28,15 +28,14 @@ public class SacSystemErrorCodeTranslator implements SystemErrorCodeTranslator {
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.api", "SAC_DSP");
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.common", "SAC_CMN");
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.display", "SAC_DSP");
-		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.example", "SAC_EXP");
+		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.example", "SAC_CMN");
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.member", "SAC_MEM");
-		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.other", "SAC_OTH");
-		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.product", "SAC_PRD");
+		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.other", "SAC_CMN");
+		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.product", "SAC_CMN");
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.purchase", "SAC_PUR");
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.runtime", "SAC_CMN");
 
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sc", "SC");
-		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sc.bibi", "SC_BIBI");
 
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.member", "SC_MEM");
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.purchase", "SC_PUR");
