@@ -224,7 +224,7 @@ public class IdpServiceImpl implements IdpService {
 
 		if ("null".equals(oldId) || "".equals(oldId)) { // 신규가입경우 기존 Tstore에 없던 회원가입요청시 전환가입 대상자중 Tstore 미가입자로 Tstore에
 														// 가입이 안되어있는경우는 신규가입으로 판단
-			LOGGER.debug("JOIN NEW DATA INSERT START");
+			LOGGER.info("[신규가입] userId : {}, oldId : {}", userId, oldId);
 			CreateUserRequest createUserRequest = new CreateUserRequest();
 			CreateUserResponse create = null;
 			// 공통으로 사용되는 요청정보
@@ -363,7 +363,7 @@ public class IdpServiceImpl implements IdpService {
 			map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
 
 			if (userId.equals(oldId)) { // 전환가입 userId - oldId 비교시 같은경우
-				LOGGER.debug("전환가입 정보 입력 시작");
+				LOGGER.info("[전환가입] userId : {}, oldId : {}", userId, oldId);
 				SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 				KeySearch keySearch = new KeySearch();
@@ -412,7 +412,7 @@ public class IdpServiceImpl implements IdpService {
 				}
 
 			} else if (!userId.equals(oldId)) { // 변경가입, 변경전환
-				LOGGER.debug("변경가입,변경전환 정보 입력 시작");
+				LOGGER.info("[변경가입, 변경전환] userId : {}, oldId : {}", userId, oldId);
 				SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 				KeySearch keySearch = new KeySearch();
@@ -2528,6 +2528,7 @@ public class IdpServiceImpl implements IdpService {
 				if ("null".equals(oldId) || "".equals(oldId)) {
 					// 20140221 방어로직 추가 기존에 타사이트에서 ONEID가입시 TSTORE미동의 회원으로 가입을 했으나
 					// TSOTE에 아이디가 생긴경우가 발생 이경우 통합서비스번호로 조회하여 TSTORE정보가 존재시 수정함.
+					LOGGER.info("[신규가입] userId : {}, oldId : {}", userId, oldId);
 					SearchUserRequest searchUserRequest = new SearchUserRequest();
 					searchUserRequest.setCommonRequest(commonRequest);
 
@@ -2731,6 +2732,7 @@ public class IdpServiceImpl implements IdpService {
 
 					// MDN합치기 기능추가 20140410 START
 					if (!mdnJsonStringInfo.equals("")) { // MDN 정보가 있는경우 MDN합치기 수행
+						LOGGER.info("MDN 합치기 mdnJsonStringInfo : {}", mdnJsonStringInfo);
 						try {
 							jsonParsingMap = mapper.readValue(mdnJsonStringInfo,
 									new TypeReference<HashMap<String, String>>() {
@@ -2867,7 +2869,7 @@ public class IdpServiceImpl implements IdpService {
 					map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
 					SearchUserResponse searchUserResponse = null;
 					if (userId.equals(oldId)) { // 전환가입 userId - oldId 비교시 같은경우
-						LOGGER.debug("전환가입 정보 입력 시작");
+						LOGGER.info("[전환가입] userId : {}, oldId : {}", userId, oldId);
 						SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 						KeySearch keySearch = new KeySearch();
@@ -2915,7 +2917,7 @@ public class IdpServiceImpl implements IdpService {
 						}
 
 					} else if (!userId.equals(oldId)) { // 변경가입, 변경전환
-						LOGGER.debug("변경가입,변경전환 정보 입력 시작");
+						LOGGER.info("[변경가입, 변경전환] userId : {}, oldId : {}", userId, oldId);
 						SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 						KeySearch keySearch = new KeySearch();
