@@ -31,7 +31,6 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.HidingSacService;
 
 /**
@@ -47,9 +46,9 @@ public class HidingController {
 
 	@Autowired
 	private HidingSacService hidingSacService;
-	@Autowired
-	private PurchaseCommonUtils purchaseCommonUtils;
 
+	// @Autowired
+	// private PurchaseCommonUtils purchaseCommonUtils;
 	/**
 	 * 구매내역 숨김처리 SAC.
 	 * 
@@ -99,7 +98,7 @@ public class HidingController {
 			hidingListSc.setPrchsId(hidingListSac.getPrchsId());
 			hidingListSc.setPrchsDtlId(hidingListSac.getPrchsDtlId());
 			hidingListSc.setHidingYn(hidingListSac.getHidingYn());
-
+			// hidingListSc.setDeviceYn("ID");
 			list.add(hidingListSc);
 		}
 		req.setHidingList(list);
