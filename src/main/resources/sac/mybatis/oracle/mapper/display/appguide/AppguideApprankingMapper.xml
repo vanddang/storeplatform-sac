@@ -48,6 +48,7 @@
                                 AND LP.LIST_ID = #{listId}       
                                 AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                 AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                                AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
 		                       <if test="menuId != null and menuId != ''">
 		                        AND LP.MENU_ID = #{menuId}
 		                       </if>
@@ -114,7 +115,7 @@
                                 AND LP.LIST_ID = #{listId}       
                                 AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                 AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
-                                --AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
+                                AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                 AND LP.TENANT_ID = LT.TENANT_ID
                                 AND LP.LIST_ID = LT.LIST_ID
                                 AND LT.EXPO_YN = 'Y'
