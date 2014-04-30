@@ -106,9 +106,7 @@
 		         AND SYSDATE BETWEEN F.APPLY_START_DT AND F.APPLY_END_DT              
                  AND B.PROD_RSHP_CD =#{prodRshpCd}
                  AND A.PROD_ID =#{prodId}
-                 <if test="cmpxProdClsfCd == 'OR004303' or cmpxProdClsfCd == 'OR004304'">
-                 AND C.CMPX_PROD_CLSF_CD = #{cmpxProdClsfCd}
-                 </if>
+
              )PM             
         WHERE PD.PROD_ID = PM.PART_PROD_ID
         AND PD.PROD_ID = DC.PROD_ID
@@ -117,6 +115,12 @@
         AND DC.LANG_CD = #{langCd} 
         AND TP.TENANT_ID = #{tenantId}
         AND TP.TENANT_ID = PR.TENANT_ID
+        <if test="cmpxProdClsfCd == 'OR004303' ">
+        AND PD.USE_PERIOD_UNIT_CD = 'PD00310'
+        </if>
+        <if test="cmpxProdClsfCd == 'OR004304'">
+        AND PD.USE_PERIOD_UNIT_CD = 'PD00312'
+        </if>                        
         AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
     ) IV 
     </select>    
