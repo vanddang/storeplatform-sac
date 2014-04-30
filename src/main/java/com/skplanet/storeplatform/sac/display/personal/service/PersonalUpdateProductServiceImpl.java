@@ -4,7 +4,6 @@
 package com.skplanet.storeplatform.sac.display.personal.service;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +49,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
@@ -140,7 +140,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 			updateTargetMap.put("subContentsId", updateTargetMap.get("SUB_CONTENTS_ID"));
 			updateTargetMap.put("contentsTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 			updateTargetMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
-
+			updateTargetMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 			Map<String, Object> appInfoMap = this.commonDAO.queryForObject("PersonalUpdateProduct.getAppInfo",
 					updateTargetMap, Map.class);
 			if (appInfoMap != null) {
@@ -260,8 +260,9 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					try {
 						this.log.debug("##### Purchase check start!!!!!!!!!");
 						List<ProductListSacIn> productListSacInList = new ArrayList<ProductListSacIn>();
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-						String endDate = sdf.format(new java.util.Date());
+						MetaInfo downloadSystemDate = this.commonDAO.queryForObject(
+								"Download.selectDownloadSystemDate", "", MetaInfo.class);
+						String endDate = downloadSystemDate.getSysDate();
 
 						this.log.debug("##### endDate :: {}", endDate);
 						for (String prodId : listPid) {
@@ -299,6 +300,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							this.log.debug("##### No purchase result!!");
 						}
 					} catch (Exception e) {
+						e.printStackTrace();
 						// Exception 무시
 						this.log.error("Exception has occured using search purchase history!!!!!!!!!!!", e);
 					}
@@ -453,8 +455,12 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							(String) updateTargetApp.get("TOP_MENU_ID"), (String) updateTargetApp.get("TOP_MENU_NM"),
 							(String) updateTargetApp.get("MENU_ID"), (String) updateTargetApp.get("MENU_NM"));
 					product.setMenuList(menuList);
-					List<Identifier> identifierList = this.appGenerator.generateIdentifierList(
-							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, (String) updateTargetApp.get("PROD_ID"));
+
+					List<Identifier> identifierList = new ArrayList<Identifier>();
+					identifierList.add(this.commonGenerator.generateIdentifier(
+							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, (String) updateTargetApp.get("PART_PROD_ID")));
+					identifierList.add(this.commonGenerator.generateIdentifier(
+							DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, (String) updateTargetApp.get("PROD_ID")));
 					product.setIdentifierList(identifierList);
 
 					Title title = new Title();

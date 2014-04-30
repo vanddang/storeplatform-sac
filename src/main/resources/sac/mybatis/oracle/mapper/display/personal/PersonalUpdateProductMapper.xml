@@ -47,7 +47,7 @@
              LA.*
             ,( SELECT COUNT(PROD_ID)
                             FROM TB_CM_AUTO_UPGRD_ALTR_PROD AUAP
-                           WHERE AUAP.PROD_ID = LA.PROD_ID
+                           WHERE AUAP.PROD_ID = LA.PART_PROD_ID
              ) AS FAKE_CNT
          FROM (
             SELECT
@@ -59,7 +59,8 @@
 				 ,MC.MENU_ID
 				 ,MCD.MENU_NM
 				 ,MCD.MENU_DESC
-                 ,P.PROD_ID
+                 ,P.PROD_ID AS PART_PROD_ID
+                 ,RSHP.PROD_ID AS PROD_ID
                  ,P.UPD_DT
                  ,P.PROD_GRD_CD
                  ,PD.PROD_NM
@@ -82,6 +83,7 @@
                     ,TB_DP_MENU_CATEGORY_DESC      MCD
                     ,TB_DP_PROD_IMG                PI
                     ,TB_CM_DEVICE                  DEVICE
+                    ,TB_DP_PROD_RSHP               RSHP
              WHERE   MC.MENU_ID = MCPM.MENU_ID
                AND   MC.MENU_ID = MCD.MENU_ID
                AND   MCPM.PROD_ID = P.PROD_ID   
@@ -89,6 +91,7 @@
                AND   P.PROD_ID = SD.PROD_ID
                AND   P.PROD_ID = PI.PROD_ID
                AND   P.PROD_ID = PD.PROD_ID
+               AND   P.PROD_ID = RSHP.PART_PROD_ID
                AND   SD.DEVICE_MODEL_CD = #{deviceHeader.model}
                AND   SD.PROD_ID = SC.PROD_ID
                AND   SD.SUB_CONTENTS_ID = SC.SUB_CONTENTS_ID
@@ -111,6 +114,7 @@
                AND   PI.EXPO_ORD = 1                  /* 노출순서 */
                AND   PI.LANG_CD = #{tenantHeader.langCd}                /* ko : 한국어 */
                AND   PD.LANG_CD = #{tenantHeader.langCd}                /* ko : 한국어 */
+               AND   RSHP.PROD_RSHP_CD = #{rshpCd} 
                AND   SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
         ) LA
     )LB

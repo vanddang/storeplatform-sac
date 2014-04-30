@@ -150,7 +150,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 			updateTargetMap.put("subContentsId", updateTargetMap.get("SUB_CONTENTS_ID"));
 			updateTargetMap.put("contentsTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 			updateTargetMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
-
+			updateTargetMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 			Map<String, Object> appInfoMap = this.commonDAO.queryForObject("PersonalUpdateProduct.getAppInfo",
 					updateTargetMap, Map.class);
 			if (appInfoMap != null) {
@@ -315,9 +315,14 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 					History history = new History();
 					String prchId = (String) updateTargetApp.get("PRCHS_ID");
 					List<Update> updateList = new ArrayList<Update>();
-					List<Identifier> identifierList = this.appGenerator.generateIdentifierList(
-							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, (String) updateTargetApp.get("PROD_ID"));
+					List<Identifier> identifierList = new ArrayList<Identifier>();
+					identifierList.add(this.commonGenerator.generateIdentifier(
+							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, (String) updateTargetApp.get("PART_PROD_ID")));
+					identifierList.add(this.commonGenerator.generateIdentifier(
+							DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, (String) updateTargetApp.get("PROD_ID")));
 					product.setIdentifierList(identifierList);
+					// List<Identifier> identifierList = this.appGenerator.generateIdentifierList(
+					// DisplayConstants.DP_EPISODE_IDENTIFIER_CD, (String) updateTargetApp.get("PART_PROD_ID"));
 
 					List<Menu> menuList = this.appGenerator.generateMenuList(
 							(String) updateTargetApp.get("TOP_MENU_ID"), (String) updateTargetApp.get("TOP_MENU_NM"),
