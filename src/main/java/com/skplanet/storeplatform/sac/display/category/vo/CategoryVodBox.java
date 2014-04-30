@@ -23,7 +23,8 @@ public class CategoryVodBox {
 	private String metaClsfCd;
 	private String cid;
 	private String chnlProdId;
-	private String prodId;
+	private String storeProdId;
+	private String playProdId;
 	private String nmSubContentsId;
 	private String sdSubContentsId;
 	private String hdSubContentsId;
@@ -45,9 +46,12 @@ public class CategoryVodBox {
 	private String sdDpPgRatioNm;
 	private String hdDpPgRatioCd;
 	private String hdDpPgRatioNm;
-	private Integer prodAmt;
-	private Integer prodNetAmt;
-	private String drmYn;
+	private Integer storeProdAmt;
+	private Integer storeProdNetAmt;
+	private Integer playProdAmt;
+	private Integer playProdNetAmt;
+	private String storeDrmYn;
+	private String playDrmYn;
 	private String prodStatusCd;
 	private String prodNm;
 	private Integer chapter;
@@ -271,26 +275,51 @@ public class CategoryVodBox {
 	/**
 	 * 
 	 * <pre>
-	 * 상품_ID.
+	 * 소장 상품 ID.
 	 * </pre>
 	 * 
 	 * @return String
 	 */
-	public String getProdId() {
-		return this.prodId;
+	public String getStoreProdId() {
+		return this.storeProdId;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * 상품_ID.
+	 * 소장 상품 ID.
 	 * </pre>
 	 * 
-	 * @param prodId
+	 * @param storeProdId
 	 *            String
 	 */
-	public void setProdId(String prodId) {
-		this.prodId = prodId;
+	public void setStoreProdId(String storeProdId) {
+		this.storeProdId = storeProdId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 대여 상품 ID.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getPlayProdId() {
+		return this.playProdId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 대여 상품 ID.
+	 * </pre>
+	 * 
+	 * @param playProdId
+	 *            String
+	 */
+	public void setPlayProdId(String playProdId) {
+		this.playProdId = playProdId;
 	}
 
 	/**
@@ -826,8 +855,8 @@ public class CategoryVodBox {
 	 * 
 	 * @return Integer
 	 */
-	public Integer getProdAmt() {
-		return this.prodAmt;
+	public Integer getStoreProdAmt() {
+		return this.storeProdAmt;
 	}
 
 	/**
@@ -836,11 +865,11 @@ public class CategoryVodBox {
 	 * 상품_금액.
 	 * </pre>
 	 * 
-	 * @param prodAmt
+	 * @param storeProdAmt
 	 *            Integer
 	 */
-	public void setProdAmt(Integer prodAmt) {
-		this.prodAmt = prodAmt;
+	public void setStoreProdAmt(Integer storeProdAmt) {
+		this.storeProdAmt = storeProdAmt;
 	}
 
 	/**
@@ -851,8 +880,8 @@ public class CategoryVodBox {
 	 * 
 	 * @return Integer
 	 */
-	public Integer getProdNetAmt() {
-		return this.prodNetAmt;
+	public Integer getStoreProdNetAmt() {
+		return this.storeProdNetAmt;
 	}
 
 	/**
@@ -861,11 +890,61 @@ public class CategoryVodBox {
 	 * 상품_정찰_금액.
 	 * </pre>
 	 * 
-	 * @param prodNetAmt
+	 * @param storeProdNetAmt
 	 *            Integer
 	 */
-	public void setProdNetAmt(Integer prodNetAmt) {
-		this.prodNetAmt = prodNetAmt;
+	public void setStoreProdNetAmt(Integer storeProdNetAmt) {
+		this.storeProdNetAmt = storeProdNetAmt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품_금액.
+	 * </pre>
+	 * 
+	 * @return Integer
+	 */
+	public Integer getPlayProdAmt() {
+		return this.playProdAmt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품_금액.
+	 * </pre>
+	 * 
+	 * @param playProdAmt
+	 *            Integer
+	 */
+	public void setPlayProdAmt(Integer playProdAmt) {
+		this.playProdAmt = playProdAmt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품_정찰_금액.
+	 * </pre>
+	 * 
+	 * @return Integer
+	 */
+	public Integer getPlayProdNetAmt() {
+		return this.playProdNetAmt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품_정찰_금액.
+	 * </pre>
+	 * 
+	 * @param playProdNetAmt
+	 *            Integer
+	 */
+	public void setPlayProdNetAmt(Integer playProdNetAmt) {
+		this.playProdNetAmt = playProdNetAmt;
 	}
 
 	/**
@@ -876,8 +955,8 @@ public class CategoryVodBox {
 	 * 
 	 * @return String
 	 */
-	public String getDrmYn() {
-		return this.drmYn;
+	public String getStoreDrmYn() {
+		return this.storeDrmYn;
 	}
 
 	/**
@@ -886,11 +965,36 @@ public class CategoryVodBox {
 	 * DRM_여부.
 	 * </pre>
 	 * 
-	 * @param drmYn
+	 * @param storeDrmYn
 	 *            String
 	 */
-	public void setDrmYn(String drmYn) {
-		this.drmYn = drmYn;
+	public void setStoreDrmYn(String storeDrmYn) {
+		this.storeDrmYn = storeDrmYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * DRM_여부.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getPlayDrmYn() {
+		return this.playDrmYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * DRM_여부.
+	 * </pre>
+	 * 
+	 * @param playDrmYn
+	 *            String
+	 */
+	public void setPlayDrmYn(String playDrmYn) {
+		this.playDrmYn = playDrmYn;
 	}
 
 	/**

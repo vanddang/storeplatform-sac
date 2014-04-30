@@ -204,19 +204,19 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 				preview.setSourceList(sourceList);
 				rights.setPreview(preview);
 
-				if (!categoryVodBox.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) { // 바로보기
+				if (StringUtils.isNotEmpty(categoryVodBox.getPlayProdId())) { // 바로보기
 					play = new Play();
 					supportList = new ArrayList<Support>();
 					supportList.add(this.commonMetaInfo.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
-							categoryVodBox.getDrmYn()));
+							categoryVodBox.getPlayDrmYn()));
 					play.setSupportList(supportList);
 					play.setDate(this.commonMetaInfo.generateDateString(DisplayConstants.DP_DATE_USAGE_PERIOD,
 							categoryVodBox.getUsePeriod() + categoryVodBox.getUsePeriodUnitNm()));
-					play.setPrice(this.commonMetaInfo.generatePrice(categoryVodBox.getProdAmt(),
-							categoryVodBox.getProdNetAmt()));
+					play.setPrice(this.commonMetaInfo.generatePrice(categoryVodBox.getPlayProdAmt(),
+							categoryVodBox.getPlayProdNetAmt()));
 					identifierList = new ArrayList<Identifier>();
 					identifierList.add(this.commonMetaInfo.generateIdentifier(
-							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, categoryVodBox.getProdId()));
+							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, categoryVodBox.getPlayProdId()));
 					play.setIdentifierList(identifierList);
 					play.setSalesStatus(categoryVodBox.getProdStatusCd());
 					// play.setPlayProductStatusCode("restrict"); // "사용중" 상태가 아닐경우에 "restrict" 노출(항상 사용중)
@@ -224,17 +224,18 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					sourceList.add(this.commonMetaInfo.generateSource(categoryVodBox.getFilePath()));
 					play.setSourceList(sourceList);
 					rights.setPlay(play);
-				} else if (categoryVodBox.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) { // 다운로드
+				}
+				if (StringUtils.isNotEmpty(categoryVodBox.getStoreProdId())) { // 다운로드
 					store = new Store();
 					supportList = new ArrayList<Support>();
 					supportList.add(this.commonMetaInfo.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
-							categoryVodBox.getDrmYn()));
+							categoryVodBox.getStoreDrmYn()));
 					store.setSupportList(supportList);
-					store.setPrice(this.commonMetaInfo.generatePrice(categoryVodBox.getProdAmt(),
-							categoryVodBox.getProdNetAmt()));
+					store.setPrice(this.commonMetaInfo.generatePrice(categoryVodBox.getStoreProdAmt(),
+							categoryVodBox.getStoreProdNetAmt()));
 					identifierList = new ArrayList<Identifier>();
 					identifierList.add(this.commonMetaInfo.generateIdentifier(
-							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, categoryVodBox.getProdId()));
+							DisplayConstants.DP_EPISODE_IDENTIFIER_CD, categoryVodBox.getStoreProdId()));
 					store.setIdentifierList(identifierList);
 					store.setSalesStatus(categoryVodBox.getProdStatusCd());
 					// store.setStoreProductStatusCode("restrict"); // "사용중" 상태가 아닐경우에 "restrict" 노출(항상 사용중)
