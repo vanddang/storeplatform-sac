@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Arrays;
 
@@ -33,7 +34,8 @@ public class DisplayCacheController {
     private CacheEvictHelperComponent cacheEvictHelperComponent;
 
     @RequestMapping(value = "/evictProductMeta", method = RequestMethod.GET)
-    public void evictAppMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
+    @ResponseBody
+    public String evictAppMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
         if(prodId.equals("all")) {
             this.cacheEvictHelperComponent.evictProductMetaAll(ProductType.forName(prodType));
         }
@@ -49,5 +51,6 @@ public class DisplayCacheController {
                 //throw new StorePlatformException("");
             }
         }
+        return "";
     }
 }
