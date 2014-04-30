@@ -323,25 +323,38 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private String userPurStatus;
 
-	/**
-	 * 상품 유형 (부분 유료화 상품의 속성 표기)
-	 */
-	private String partProductType;
+    /**
+     * 부분유료화 상품 유형
+     */
+    private String prodCase;
+
+    /**
+     * 부분유료화 상품 종류
+     */
+    private String prodKind;
 
 	/**
 	 * 할인율 정보 (tmembership)
 	 */
 	private List<Point> pointList;
 
-	public String getPartProductType() {
-		return this.partProductType;
-	}
+    public String getProdCase() {
+        return prodCase;
+    }
 
-	public void setPartProductType(String partProductType) {
-		this.partProductType = partProductType;
-	}
+    public void setProdCase(String prodCase) {
+        this.prodCase = prodCase;
+    }
 
-	public String getUserPurStatus() {
+    public String getProdKind() {
+        return prodKind;
+    }
+
+    public void setProdKind(String prodKind) {
+        this.prodKind = prodKind;
+    }
+
+    public String getUserPurStatus() {
 		return this.userPurStatus;
 	}
 
