@@ -21,9 +21,9 @@
                           ,TB_DP_PROD C
                     WHERE A.PART_PROD_ID = B.PROD_ID
                       AND B.PART_PROD_ID = C.PROD_ID
-                      AND B.PROD_RSHP_CD ='DP010802'
-                      AND B.PART_PROD_ID=PM.PART_PROD_ID
-                      AND A.PROD_ID =PD.PROD_ID                  
+                      AND B.PROD_RSHP_CD = 'DP010802'
+                      AND B.PART_PROD_ID = PM.PART_PROD_ID
+                      AND A.PROD_ID = PD.PROD_ID                  
                    )
                 ELSE
                   PD.DRM_YN
@@ -39,8 +39,9 @@
             , TB_DP_PROD_DESC DC
             , TB_DP_TENANT_PROD TP
             , TB_DP_TENANT_PROD_PRICE PR
-            ,(SELECT A.PROD_ID , B.PART_PROD_ID
-                FROM TB_DP_FIXRATE_PROD_MAPG A
+            ,(SELECT  A.PROD_ID 
+                     ,B.PART_PROD_ID
+                FROM  TB_DP_FIXRATE_PROD_MAPG A
                      ,TB_DP_PROD_RSHP B
                WHERE A.PART_PROD_ID = B.PROD_ID
                  AND B.PROD_RSHP_CD ='DP010802'
