@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.system.monitor.controller;
+package com.skplanet.storeplatform.sac.system.monitoring.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by : 서대영, SK 플래닛.
  */
 @Controller
-@RequestMapping(value = "/system/monitor")
+@RequestMapping(value = "/system/monitoring")
 public class MonitorController {
 
 	@RequestMapping(value = "/request", method = RequestMethod.GET)
