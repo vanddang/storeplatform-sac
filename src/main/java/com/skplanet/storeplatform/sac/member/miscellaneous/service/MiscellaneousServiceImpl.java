@@ -535,25 +535,20 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		joinSupServiceEcReq.setUserMdn(request.getMsisdn());
 		joinSupServiceEcReq.setUserSvcMngNum(request.getSvcMngNum());
 
-		final String deviceId = joinSupServiceEcReq.getUserMdn();
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL_SAC_MEM_0003").device_id(deviceId);
-			}
-		});
-
-		JoinSupServiceRequestEcRes joinSupServiceEcRes = this.idpSCI.joinSupServiceRequest(joinSupServiceEcReq);
-
-		final String serviceCode = joinSupServiceEcRes.getSvcCode();
 		/* FDS LOG START */
+		final String deviceId = joinSupServiceEcReq.getUserMdn();
+		final String serviceCode = joinSupServiceEcReq.getSvcCode();
+
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.service_code(serviceCode);
+				shuttle.log_id("TL_SAC_MEM_0003").device_id(deviceId).service_code(serviceCode);
+				;
 			}
 		});
 		/* FDS LOG END */
+
+		JoinSupServiceRequestEcRes joinSupServiceEcRes = this.idpSCI.joinSupServiceRequest(joinSupServiceEcReq);
 
 		response.setSvcCode(serviceCode); // 부가서비스 코드
 		response.setMsisdn(joinSupServiceEcRes.getUserMdn()); // 사용자 휴대폰번호
