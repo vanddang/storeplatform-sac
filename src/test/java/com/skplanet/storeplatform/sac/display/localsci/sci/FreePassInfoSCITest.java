@@ -85,6 +85,7 @@ public class FreePassInfoSCITest {
 			req.setTenantId("S01");
 			req.setLangCd("ko");
 			req.setDeviceModelCd("SHW-M100S");
+			req.setCmpxProdClsfCd("OR004303");
 
 			EpisodeInfoSacRes res = this.freePassInfoSCI.searchEpisodeList(req);
 			List<EpisodeInfoRes> freePassInfoResList = res.getFreePassInfoRes();
