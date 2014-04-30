@@ -9,7 +9,25 @@
         SELECT  
               PD.PROD_ID
             , PM.PART_PROD_ID AS episodeProdId
-            , PD.DRM_YN
+            ,(CASE WHEN CM.CMPX_PROD_CLSF_CD NOT IN ('OR004305') THEN 
+                   (
+                    SELECT 
+                          NVL(
+                               (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_YN
+                                     WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_YN
+                                END),'N') AS DRM_YN
+                     FROM  TB_DP_FIXRATE_PROD_MAPG A
+                          ,TB_DP_PROD_RSHP B
+                          ,TB_DP_PROD C
+                    WHERE A.PART_PROD_ID = B.PROD_ID
+                      AND B.PART_PROD_ID = C.PROD_ID
+                      AND B.PROD_RSHP_CD ='DP010802'
+                      AND B.PART_PROD_ID=PM.PART_PROD_ID
+                      AND A.PROD_ID =PD.PROD_ID                  
+                   )
+                ELSE
+                  PD.DRM_YN
+              END)  AS DRM_YN            
             , PD.USE_PERIOD_UNIT_CD
             , PD.USE_PERIOD            
             , CM.CMPX_PROD_CLSF_CD
@@ -119,7 +137,7 @@
         AND PD.USE_PERIOD_UNIT_CD = 'PD00310'
         </if>
         <if test="cmpxProdClsfCd == 'OR004304'">
-        AND PD.USE_PERIOD_UNIT_CD = 'PD00312'
+        AND PD.USE_PERIOD_UNIT_CD != 'PD00310'
         </if>                        
         AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
     ) IV 
