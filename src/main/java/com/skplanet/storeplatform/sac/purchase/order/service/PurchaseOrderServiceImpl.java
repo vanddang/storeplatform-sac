@@ -1444,19 +1444,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		autoPrchs.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 		autoPrchs.setPaymentStartDt(prchsDtlMore.getPrchsDt());
 		autoPrchs.setPaymentEndDt("99991231235959");
-		if (StringUtils.equals(prchsDtlMore.getUseExprDt(), "99991231235959")) {
-			autoPrchs.setAfterPaymentDt(prchsDtlMore.getUseExprDt().substring(0, 8) + "000000"); // TAKTODO
-		} else {
-
-			try {
-				autoPrchs.setAfterPaymentDt(DateFormatUtils.format(
-						DateUtils.addDays(DateUtils.parseDate(prchsDtlMore.getUseExprDt(), "yyyyMMddHHmmss"), 1),
-						"yyyyMMddHHmmss").substring(0, 8)
-						+ "000000");
-			} catch (ParseException e) {
-				throw new StorePlatformException("SAC_PUR_7216", prchsDtlMore.getUseExprDt());
-			}
-		}
+		autoPrchs.setAfterPaymentDt(prchsDtlMore.getUseExprDt().substring(0, 8) + "000000"); // TAKTODO
 		autoPrchs.setReqPathCd(prchsDtlMore.getPrchsReqPathCd());
 		autoPrchs.setClientIp(prchsDtlMore.getClientIp());
 		autoPrchs.setPrchsTme(0);
@@ -1464,11 +1452,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		autoPrchs.setLastPrchsDtlId(1);
 		autoPrchs.setRegId(prchsDtlMore.getSystemId());
 		autoPrchs.setUpdId(prchsDtlMore.getSystemId());
-		autoPrchs.setResvCol01(prchsDtlMore.getResvCol01());
-		autoPrchs.setResvCol02(prchsDtlMore.getResvCol02());
-		autoPrchs.setResvCol03(prchsDtlMore.getResvCol03());
-		autoPrchs.setResvCol04(prchsDtlMore.getResvCol04());
-		autoPrchs.setResvCol05(prchsDtlMore.getResvCol05());
 		autoPrchs.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_STATUS_AUTO);
 		autoPrchsList.add(autoPrchs);
 
@@ -1519,11 +1502,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			prchsDtlMore.setProdId(episode.getProdId());
 			prchsDtlMore.setProdAmt(episode.getProdAmt());
 			prchsDtlMore.setProdQty(1);
-			prchsDtlMore.setResvCol01(ebookflatInfo.getResvCol01());
-			prchsDtlMore.setResvCol02(ebookflatInfo.getResvCol02());
-			prchsDtlMore.setResvCol03(ebookflatInfo.getResvCol03());
-			prchsDtlMore.setResvCol04(ebookflatInfo.getResvCol04());
-			prchsDtlMore.setResvCol05(ebookflatInfo.getResvCol05());
 			prchsDtlMore.setUseStartDt(ebookflatInfo.getUseStartDt());
 			prchsDtlMore.setUseExprDt(ebookflatInfo.getUseExprDt());
 			prchsDtlMore.setDwldStartDt(ebookflatInfo.getDwldStartDt());
