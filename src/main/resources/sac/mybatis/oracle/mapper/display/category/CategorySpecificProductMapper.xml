@@ -367,7 +367,12 @@
                            , I.PART_PROD_ID
                            , C.MENU_NM
                            , C.MENU_DESC
-                           , D.PROD_GRD_CD
+                         <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
+                           , D.PROD_GRD_CD   -- 채널 상품 ID 조회       
+                         </if>
+                         <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                           , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
+                         </if>            
                            , J.USE_PERIOD_UNIT_CD
                            , D.META_CLSF_CD
                            , D.CONTENTS_TYPE_CD
@@ -496,7 +501,12 @@
             , PD.ARTIST2_NM
             , PD.ARTIST3_NM
             , TPP.PROD_AMT
-            , P.PROD_GRD_CD
+          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
+            , P2.PROD_GRD_CD   -- 채널 상품 ID 조회       
+          </if>
+          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+            , P.PROD_GRD_CD   -- 에피소드 상품 ID 조회
+          </if>    
             , P.META_CLSF_CD
             , PD.ARTIST1_NM
             , PD.ARTIST2_NM
@@ -703,7 +713,12 @@
                       , I.PART_PROD_ID                                     
                       , C.MENU_NM
                       , C.MENU_DESC
-                      , D.PROD_GRD_CD
+                    <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
+                      , D.PROD_GRD_CD   -- 채널 상품 ID 조회       
+                    </if>
+                    <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                      , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
+                    </if>    
                       , J.USE_PERIOD_UNIT_CD
                       , D.META_CLSF_CD
                       , D.CONTENTS_TYPE_CD
@@ -882,7 +897,12 @@
                       , I.PART_PROD_ID                                     
                       , C.MENU_NM
                       , C.MENU_DESC
-                      , D.PROD_GRD_CD
+                    <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
+                      , D.PROD_GRD_CD   -- 채널 상품 ID 조회       
+                    </if>
+                    <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                      , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
+                    </if>    
                       , D.USE_PERIOD_UNIT_CD
                       , D.META_CLSF_CD
                       , D.CONTENTS_TYPE_CD
