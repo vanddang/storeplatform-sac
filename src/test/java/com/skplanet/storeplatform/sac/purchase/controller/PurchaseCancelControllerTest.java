@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacReq;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
 
@@ -41,6 +42,12 @@ public class PurchaseCancelControllerTest {
 
 	@Test
 	public void testPurchaseCancel() throws Exception {
+
+		String resvCol03 = "CASH=;POINT=1234";
+		String TCashCash = StringUtils.substringBetween(resvCol03, "CASH=", ";");
+		String TCashPoint = StringUtils.substringBetween(resvCol03, "POINT=", ";");
+
+		System.out.println(TCashCash);
 
 		List<PrchsDtlSacParam> list = null;
 		for (PrchsDtlSacParam prchsDtlSacParam : list) {

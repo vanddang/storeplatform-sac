@@ -55,6 +55,16 @@ public class PrchsDtlSacParam extends CommonInfo {
 	private String appId;
 	private String specialSaleCouponId;
 
+	private String resvCol03;
+
+	public String getResvCol03() {
+		return this.resvCol03;
+	}
+
+	public void setResvCol03(String resvCol03) {
+		this.resvCol03 = resvCol03;
+	}
+
 	/**
 	 * @return the prchsReqPathCd
 	 */

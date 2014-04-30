@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
@@ -219,16 +221,58 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		/** 구매 상품 별 체크. */
 		boolean shoppingYn = false; // 쇼핑상품 구분.
 		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
+
 			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
 					PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 				// 쇼핑상품이면 true 셋팅.
 				shoppingYn = true;
 			}
 
+			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+				// 게임캐쉬 정액제 처리. - 게임캐쉬 충전 취소 처리.
+				String resvCol03 = prchsDtlSacParam.getResvCol03();
+				String tCashCash = StringUtils.substringBetween(resvCol03, "CASH=", ";");
+				String tCashPoint = StringUtils.substringBetween(resvCol03, "POINT=", ";");
+
+				if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_REFUND,
+						purchaseCancelSacParam.getCancelReqPathCd())) {
+					// 환불
+				} else {
+					// 취소
+				}
+
+				// 환불, 취소 구분 없이 무조껀 충전취소 처리 - 2014.04.30 최상훈c.
+				TStoreCashChargeCancelEcReq tStoreCashChargeCancelEcReq = new TStoreCashChargeCancelEcReq();
+				List<TStoreCashChargeCancelDetailEcReq> cashList = new ArrayList<TStoreCashChargeCancelDetailEcReq>();
+				if (StringUtils.isNotBlank(tCashCash)) {
+					TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
+					tStoreCashChargeCancelDetailEcReq.setIdentifier(tCashCash);
+					tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
+					tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsDtlSacParam.getPrchsId());
+					tStoreCashChargeCancelDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_APP);
+					cashList.add(tStoreCashChargeCancelDetailEcReq);
+				}
+				if (StringUtils.isNotBlank(tCashPoint)) {
+					TStoreCashChargeCancelDetailEcReq tStoreCashChargeCancelDetailEcReq = new TStoreCashChargeCancelDetailEcReq();
+					tStoreCashChargeCancelDetailEcReq.setIdentifier(tCashPoint);
+					tStoreCashChargeCancelDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_POINT);
+					tStoreCashChargeCancelDetailEcReq.setOrderNo(prchsDtlSacParam.getPrchsId());
+					tStoreCashChargeCancelDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_APP);
+					cashList.add(tStoreCashChargeCancelDetailEcReq);
+				}
+
+				tStoreCashChargeCancelEcReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+				tStoreCashChargeCancelEcReq.setCashList(cashList);
+				this.purchaseCancelRepository.cancelTCashCharge(tStoreCashChargeCancelEcReq);
+
+			}
+
 			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())) {
 				// 정액권 상품 처리.
 				this.updateProdTypeFix(purchaseCancelSacParam, prchsDtlSacParam);
 			}
+
 		}
 
 		/** 쇼핑 상품 처리. */

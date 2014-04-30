@@ -13,6 +13,10 @@ import java.util.List;
 
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.PayCancelResult;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 
@@ -53,13 +57,14 @@ public interface PurchaseCancelRepository {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * PayPlanet으로 결제 취소를 요청한다.
 	 * </pre>
 	 * 
 	 * @param purchaseCancelSacParam
 	 *            purchaseCancelSacParam
 	 * @param purchaseCancelDetailSacParam
-	 *            purchaseCancelDetailSacParam
+	 *            purchaseCancelSacParam
+	 * @return CancelEcRes
 	 */
 	CancelEcRes cancelPaymentToPayPlanet(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
@@ -67,13 +72,14 @@ public interface PurchaseCancelRepository {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * T Store로 결제 취소를 요청한다.
 	 * </pre>
 	 * 
 	 * @param purchaseCancelSacParam
 	 *            purchaseCancelSacParam
 	 * @param purchaseCancelDetailSacParam
 	 *            purchaseCancelDetailSacParam
+	 * @return List<PayCancelResult>
 	 */
 	List<PayCancelResult> cancelPaymentToTStore(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
@@ -145,5 +151,29 @@ public interface PurchaseCancelRepository {
 	 */
 	void cancelTCash(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
+
+	/**
+	 * 
+	 * <pre>
+	 * T Cash 충전 취소를 호출한다.
+	 * </pre>
+	 * 
+	 * @param tStoreCashChargeCancelEcReq
+	 *            tStoreCashChargeCancelEcReq
+	 * @return TStoreCashChargeCancelEcRes
+	 */
+	TStoreCashChargeCancelEcRes cancelTCashCharge(TStoreCashChargeCancelEcReq tStoreCashChargeCancelEcReq);
+
+	/**
+	 * 
+	 * <pre>
+	 * T Cash 환불을 호출한다.
+	 * </pre>
+	 * 
+	 * @param tStoreCashRefundEcReq
+	 *            tStoreCashRefundEcReq
+	 * @return TStoreCashRefundEcRes
+	 */
+	TStoreCashRefundEcRes refundTCash(TStoreCashRefundEcReq tStoreCashRefundEcReq);
 
 }

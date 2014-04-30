@@ -34,6 +34,9 @@ import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelResult;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
@@ -554,6 +557,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		prchsDtlSacParam.setUseFixrateProdId(prchsDtl.getUseFixrateProdId());
 		prchsDtlSacParam.setPrchsResvDesc(prchsDtl.getPrchsResvDesc());
 		prchsDtlSacParam.setPrchsReqPathCd(prchsDtl.getPrchsReqPathCd());
+		prchsDtlSacParam.setResvCol03(prchsDtl.getResvCol03());
 
 		return prchsDtlSacParam;
 
@@ -625,6 +629,16 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		this.tStoreCashSCI.cancelCharge(tStoreCashChargeCancelEcReq);
 
+	}
+
+	@Override
+	public TStoreCashChargeCancelEcRes cancelTCashCharge(TStoreCashChargeCancelEcReq tStoreCashChargeCancelEcReq) {
+		return this.tStoreCashSCI.cancelCharge(tStoreCashChargeCancelEcReq);
+	}
+
+	@Override
+	public TStoreCashRefundEcRes refundTCash(TStoreCashRefundEcReq tStoreCashRefundEcReq) {
+		return this.tStoreCashSCI.refund(tStoreCashRefundEcReq);
 	}
 
 }
