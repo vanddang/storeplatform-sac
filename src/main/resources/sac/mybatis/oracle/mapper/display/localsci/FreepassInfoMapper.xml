@@ -106,7 +106,7 @@
 		         AND SYSDATE BETWEEN F.APPLY_START_DT AND F.APPLY_END_DT              
                  AND B.PROD_RSHP_CD =#{prodRshpCd}
                  AND A.PROD_ID =#{prodId}
-
+                 AND C.CMPX_PROD_CLSF_CD =#{cmpxProdClsfCd}
              )PM             
         WHERE PD.PROD_ID = PM.PART_PROD_ID
         AND PD.PROD_ID = DC.PROD_ID
