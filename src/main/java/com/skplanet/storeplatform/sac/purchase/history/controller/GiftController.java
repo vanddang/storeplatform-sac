@@ -59,7 +59,7 @@ public class GiftController {
 	 */
 	@RequestMapping(value = "/history/gift/update/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GiftConfirmSacRes modifyGiftConfirm(@RequestBody @Validated GiftConfirmSacReq giftConfirmSacReq,
+	public GiftConfirmSacRes modifyGiftConfirm(@RequestBody @Validated final GiftConfirmSacReq giftConfirmSacReq,
 			SacRequestHeader requestHeader) {
 
 		// 헤더 정보
@@ -72,7 +72,9 @@ public class GiftController {
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL_SAC_PUR_0004").system_id(systemId).usermbr_no(userKey);
+				shuttle.log_id("TL_SAC_PUR_0004").system_id(systemId).usermbr_no(userKey)
+						.insd_device_id(giftConfirmSacReq.getDeviceKey())
+						.insd_usermbr_no(giftConfirmSacReq.getUserKey());
 			}
 		});
 

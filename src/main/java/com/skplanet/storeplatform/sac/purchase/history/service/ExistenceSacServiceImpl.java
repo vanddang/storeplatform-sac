@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
@@ -53,56 +55,86 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	 */
 	@Override
 	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceScReq) {
-
-		// 기구매내역 조회함
-		final List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceScReq);
+		ErrorInfo errorInfo = null;
 		// 구매상태가 구매완료건만을 넣기 위한 리스트
 		List<ExistenceScRes> existenceListScRes = new ArrayList<ExistenceScRes>();
-		// 내부구매처리시 기구매 체크는 inputValue = true
+		try {
+			// 기구매내역 조회함
+			final List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceScReq);
+			// 내부구매처리시 기구매 체크는 inputValue = true
 
-		// TenantProdGrpCd(Device기반 모든정책 조회 )
-		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
-				.searchPurchaseTenantPolicyList(existenceScReq.getTenantId(), "",
-						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
+			// TenantProdGrpCd(Device기반 모든정책 조회 )
+			List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
+					.searchPurchaseTenantPolicyList(existenceScReq.getTenantId(), "",
+							PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
 
-		for (final ExistenceScRes existenceScRes : resultList) {
-			String flag = "";
-			this.logger.debug("existenceScRes.getStatusCd() : {}", existenceScRes.getStatusCd());
+			for (final ExistenceScRes existenceScRes : resultList) {
+				String flag = "";
+				this.logger.debug("existenceScRes.getStatusCd() : {}", existenceScRes.getStatusCd());
 
-			if (existenceScRes.getStatusCd() != null
-					&& existenceScRes.getStatusCd().equals(PurchaseConstants.PRCHS_STATUS_COMPT)) {
+				if (existenceScRes.getStatusCd() != null
+						&& existenceScRes.getStatusCd().equals(PurchaseConstants.PRCHS_STATUS_COMPT)) {
 
-				// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
-				if (existenceScRes.getTenantProdGrpCd() != null) {
-					flag = this.checkMdn(existenceScReq, existenceScRes, purchaseTenantPolicyList, flag);
-					this.logger.debug("리턴 FLAG : {}", flag);
-					// flag가 ID 이거나 MDN일 경우에만 기구매셋팅
-					if (flag.equals("ID") || flag.equals("MDN")) {
+					// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
+					if (existenceScRes.getTenantProdGrpCd() != null) {
+						flag = this.checkMdn(existenceScReq, existenceScRes, purchaseTenantPolicyList, flag);
+						this.logger.debug("리턴 FLAG : {}", flag);
+						// flag가 ID 이거나 MDN일 경우에만 기구매셋팅
+						if (flag.equals("ID") || flag.equals("MDN")) {
+							existenceListScRes.add(existenceScRes);
+						}
+					} else {
+						// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
 						existenceListScRes.add(existenceScRes);
 					}
-				} else {
-					// TenantProdGrpCd가 null일때는 ID기반으로 체크한다.
-					existenceListScRes.add(existenceScRes);
 				}
+
+				// TLog
+				final List<String> prodIdList = new ArrayList<String>();
+				final List<Long> prodAmtList = new ArrayList<Long>();
+				prodIdList.add(existenceScRes.getProdId());
+				prodAmtList.add((long) existenceScRes.getProdAmt());
+
+				new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
+
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.purchase_channel(existenceScRes.getPrchsReqPathCd())
+								.purchase_inflow_channel(existenceScRes.getPrchsCaseCd()).product_id(prodIdList)
+								.product_price(prodAmtList);
+					}
+				});
 			}
+		} catch (StorePlatformException e) {
 
+			errorInfo = e.getErrorInfo();
+
+			throw e;
+		} finally {
 			// TLog
-			final List<String> prodIdList = new ArrayList<String>();
-			final List<Long> prodAmtList = new ArrayList<Long>();
-			prodIdList.add(existenceScRes.getProdId());
-			prodAmtList.add((long) existenceScRes.getProdAmt());
+			if (errorInfo == null) {
+				new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
 
-			new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.result_code("SUCC");
+					}
+				});
+			} else {
 
-				@Override
-				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.purchase_channel(existenceScRes.getPrchsReqPathCd())
-							.purchase_inflow_channel(existenceScRes.getPrchsCaseCd()).product_id(prodIdList)
-							.product_price(prodAmtList);
-				}
-			});
+				final String resultCode = errorInfo.getCode();
+				final String resultMessage = errorInfo.getMessage();
+				// final String exceptionLog = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
+
+				new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
+
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.result_code(resultCode).result_message(resultMessage);
+					}
+				});
+			}
 		}
-
 		return existenceListScRes;
 	}
 

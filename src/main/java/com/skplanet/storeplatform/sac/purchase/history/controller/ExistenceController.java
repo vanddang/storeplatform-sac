@@ -65,7 +65,7 @@ public class ExistenceController {
 	 */
 	@RequestMapping(value = "/history/existence/search/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ExistenceListSacRes searchExistenceList(@RequestBody @Validated ExistenceSacReq existenceSacReq,
+	public ExistenceListSacRes searchExistenceList(@RequestBody @Validated final ExistenceSacReq existenceSacReq,
 			SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
@@ -74,7 +74,8 @@ public class ExistenceController {
 		new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL_SAC_PUR_0002").system_id(systemId); // T Log 보장을 위해 log_id 선 세팅
+				shuttle.log_id("TL_SAC_PUR_0002").system_id(systemId).insd_device_id(existenceSacReq.getDeviceKey())
+						.insd_usermbr_no(existenceSacReq.getUserKey()); // T Log 보장을 위해 log_id 선 세팅
 			}
 		});
 
