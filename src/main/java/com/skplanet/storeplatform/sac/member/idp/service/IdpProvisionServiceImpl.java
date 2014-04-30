@@ -1535,7 +1535,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				NonMbrSegment nonMbrSegment = new NonMbrSegment();
 				nonMbrSegment.setDeviceID(mdn);
 				nonMbrSegment.setSvcMangNum(svcMngNum);
-				nonMbrSegment.setProcessDate(DateUtil.getToday("yyyyMMddHHmmss"));
 				req.setNonMbrSegment(nonMbrSegment);
 				this.userSCI.updateNonMbrSegment(req);
 
