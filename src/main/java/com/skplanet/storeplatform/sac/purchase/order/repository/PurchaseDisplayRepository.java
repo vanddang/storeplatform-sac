@@ -108,8 +108,10 @@ public interface PurchaseDisplayRepository {
 	 *            디바이스 모델 코드
 	 * @param prodId
 	 *            이북/코믹 전권 소장/대여 상품ID
+	 * @param cmpxProdClsfCd
+	 *            복합 상품 구분 코드
 	 * @return 에피소드 상품 목록
 	 */
 	public List<EpisodeInfoRes> searchEbookComicEpisodeList(String tenantId, String langCd, String deviceModelCd,
-			String prodId);
+			String prodId, String cmpxProdClsfCd);
 }

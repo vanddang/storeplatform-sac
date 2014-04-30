@@ -537,7 +537,12 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
 
 		// (정책 적용조건) 과금조건 조회
-		if (StringUtils.isNotBlank(policy.getCondPeriodUnitCd())) {
+		// 쇼핑상품 구매건수 조회용도 이며, 전월 단위의 건수 조회인 경우만 처리
+		if (StringUtils.isNotBlank(policy.getCondPeriodUnitCd())
+				&& StringUtils.equals(policy.getCondPeriodUnitCd(),
+						PurchaseConstants.POLICY_PRECONDITION_PERIOD_UNIT_CD_PREMONTH)
+				&& StringUtils.equals(policy.getCondClsfUnitCd(),
+						PurchaseConstants.POLICY_PRECONDITION_CLSF_UNIT_CD_COUNT)) {
 			sciRes = this.purchaseOrderSearchSCI.searchSktLimitCondDetail(sciReq);
 			checkVal = (Double) sciRes.getVal();
 

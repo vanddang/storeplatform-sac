@@ -296,7 +296,7 @@ public class PurchaseOrderController {
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL_SAC_PUR_0005").purchase_id(prchsId);
+				shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_RESULT).purchase_id(prchsId);
 			}
 		});
 
@@ -339,7 +339,7 @@ public class PurchaseOrderController {
 		purchaseOrderInfo.setDeviceKey(createPurchaseSacReq.getDeviceKey()); // 구매(선물발신) 내부 디바이스 ID
 		purchaseOrderInfo.setPrchsReqPathCd(createPurchaseSacReq.getPrchsReqPathCd()); // 구매 요청 경로 코드
 		purchaseOrderInfo.setCurrencyCd(createPurchaseSacReq.getCurrencyCd()); // 통화 코드
-		purchaseOrderInfo.setIgnoreReqAmtYn(createPurchaseSacReq.getIgnoreReqAmtYn()); // 요청 금액 무시 여부
+		purchaseOrderInfo.setSaleAmtProcType(createPurchaseSacReq.getSaleAmtProcType()); // 판매금액 처리 타입
 		purchaseOrderInfo.setClientIp(createPurchaseSacReq.getClientIp()); // 클라이언트 IP
 		purchaseOrderInfo.setNetworkTypeCd(createPurchaseSacReq.getNetworkTypeCd()); // 네트워크 타입 코드
 		purchaseOrderInfo.setPrchsCaseCd(createPurchaseSacReq.getPrchsCaseCd()); // 구매 유형 코드
@@ -447,7 +447,7 @@ public class PurchaseOrderController {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL_SAC_PUR_0003").result_code("SUCC");
+						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_PRECHECK).result_code("SUCC");
 					}
 				});
 			} else {
@@ -459,8 +459,8 @@ public class PurchaseOrderController {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL_SAC_PUR_0003").result_code(resultCode).result_message(resultMessage)
-								.exception_log(exceptionLog);
+						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_PRECHECK).result_code(resultCode)
+								.result_message(resultMessage).exception_log(exceptionLog);
 					}
 				});
 			}
@@ -493,9 +493,9 @@ public class PurchaseOrderController {
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL_SAC_PUR_0001").system_id(systemId).purchase_channel(prchsReqPathCd)
-						.purchase_inflow_channel(fdsPrchsCaseCd).device_ip(clientIp).network_type(networkTypeCd)
-						.product_id(prodIdList).product_price(prodPriceList);
+				shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_REQUEST).system_id(systemId)
+						.purchase_channel(prchsReqPathCd).purchase_inflow_channel(fdsPrchsCaseCd).device_ip(clientIp)
+						.network_type(networkTypeCd).product_id(prodIdList).product_price(prodPriceList);
 			}
 		});
 	}

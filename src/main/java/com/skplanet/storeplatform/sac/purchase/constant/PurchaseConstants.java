@@ -12,6 +12,11 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String ENV_SERVER_LEVEL_DEV = "dev"; // System 설정 서버 단계 property: 개발기
 	public static final String ENV_SERVER_LEVEL_LOCAL = "local"; // System 설정 서버 단계 property: 로컬
 
+	/** TLOG ID */
+	public static final String TLOG_ID_PURCHASE_ORDER_REQUEST = "TL_SAC_PUR_0001"; // 구매인입
+	public static final String TLOG_ID_PURCHASE_ORDER_PRECHECK = "TL_SAC_PUR_0003"; // 구매 선결조건 체크
+	public static final String TLOG_ID_PURCHASE_ORDER_RESULT = "TL_SAC_PUR_0005"; // 구매 결과
+
 	/** 비회원 처리용 UserKey */
 	public static final String NONMEMBER_COMMON_USERKEY = "NONMEMBER";
 
@@ -36,6 +41,11 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String SKT_ADJUST_REASON_SHOPPING_RECV_LIMIT = "L07"; // SKT후불 쇼핑상품 선물수신 한도금액
 	public static final String SKT_ADJUST_REASON_LIMIT = "L08"; // SKT후불 한도금액
 	public static final String SKT_ADJUST_REASON_RECV_LIMIT = "L09"; // SKT후불 선물수신 한도금액
+
+	/** 쇼핑 상품 판매자 디폴트 정보 */
+	public static final String SHOPPING_SELLER_DEFAULT_NAME = "Tstore"; // 판매자명
+	public static final String SHOPPING_SELLER_DEFAULT_EMAIL = "cscenter@tstore.co.kr"; // 이메일주소
+	public static final String SHOPPING_SELLER_DEFAULT_TEL = "1600-6573"; // 전화번호
 
 	/** 구매 이력 생성 타입 */
 	public static final int CREATE_PURCHASE_TYPE_COMPLETED = 1;

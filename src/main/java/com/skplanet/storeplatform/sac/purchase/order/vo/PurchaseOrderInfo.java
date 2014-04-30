@@ -35,7 +35,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String deviceKey; // 내부 디바이스 ID
 	private String prchsReqPathCd; // 구매 요청 경로 코드
 	private String currencyCd; // 통화 코드
-	private String ignoreReqAmtYn; // Y : 요청한 금액을 무시하고 서버 상품 금액 기준으로 구매 처리
+	private String saleAmtProcType; // 판매금액 처리 타입: OR020501-일반처리, OR020502-서버기준처리, OR020503-요청기준처리
 	private double totAmt; // 총 결제 금액
 	private String clientIp; // 클라이언트 IP
 	private String networkTypeCd; // 네트워크 타입 코드
@@ -246,18 +246,18 @@ public class PurchaseOrderInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the ignoreReqAmtYn
+	 * @return the saleAmtProcType
 	 */
-	public String getIgnoreReqAmtYn() {
-		return this.ignoreReqAmtYn;
+	public String getSaleAmtProcType() {
+		return this.saleAmtProcType;
 	}
 
 	/**
-	 * @param ignoreReqAmtYn
-	 *            the ignoreReqAmtYn to set
+	 * @param saleAmtProcType
+	 *            the saleAmtProcType to set
 	 */
-	public void setIgnoreReqAmtYn(String ignoreReqAmtYn) {
-		this.ignoreReqAmtYn = ignoreReqAmtYn;
+	public void setSaleAmtProcType(String saleAmtProcType) {
+		this.saleAmtProcType = saleAmtProcType;
 	}
 
 	/**

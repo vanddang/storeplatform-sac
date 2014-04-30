@@ -321,17 +321,19 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// }
 			// }
 
-			// 링&벨은 상품 가격을 요청한 가격으로 세팅
-			if (purchaseOrderInfo.isRingbell()) {
+			// 요청한 가격으로 세팅
+			if (StringUtils
+					.equals(purchaseOrderInfo.getSaleAmtProcType(), PurchaseConstants.SALE_AMT_PROC_TYPE_REQUEST)
+					|| purchaseOrderInfo.isRingbell()) {
 				purchaseProduct.setProdAmt(reqProduct.getProdAmt());
 			}
 
-			// 상품 가격 체크
+			// 상품 가격 체크: 요청 금액 무시(서버 금액 사용) 경우는 제외
 			nowPurchaseProdAmt = StringUtils.isBlank(purchaseProduct.getSpecialSaleCouponId()) ? purchaseProduct
 					.getProdAmt() : purchaseProduct.getSpecialSaleAmt();
-
-			if (StringUtils.equals(purchaseOrderInfo.getIgnoreReqAmtYn(), PurchaseConstants.USE_Y) == false
-					&& reqProduct.getProdAmt() != nowPurchaseProdAmt) {
+			if (reqProduct.getProdAmt() != nowPurchaseProdAmt
+					&& StringUtils.equals(purchaseOrderInfo.getSaleAmtProcType(),
+							PurchaseConstants.SALE_AMT_PROC_TYPE_SERVER) == false) {
 				throw new StorePlatformException("SAC_PUR_5105");
 			}
 
@@ -422,8 +424,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 결제 총 금액 & 상품 가격 총합 체크 : // 비과금 요청 경우, 결제금액 체크 생략
 		if (purchaseOrderInfo.isFreeChargeReq()) {
 			purchaseOrderInfo.setRealTotAmt(0.0);
+
 		} else {
-			if (StringUtils.equals(purchaseOrderInfo.getIgnoreReqAmtYn(), PurchaseConstants.USE_Y) == false
+			if (StringUtils.equals(purchaseOrderInfo.getSaleAmtProcType(), PurchaseConstants.SALE_AMT_PROC_TYPE_SERVER) == false
 					&& totAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
 				throw new StorePlatformException("SAC_PUR_5106");
 			}
