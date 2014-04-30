@@ -118,7 +118,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * ROOTING 여부 체크, IMEI 비교
 		 */
-		this.checkDeviceInfo(req);
+		// this.checkDeviceInfo(req);
 
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
