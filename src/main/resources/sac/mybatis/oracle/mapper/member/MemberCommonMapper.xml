@@ -33,10 +33,8 @@
             TO_CHAR(upd_dt, 'YYYYMMDDHH24MISS') AS updDt 
          FROM TB_CM_CLAUSE 
         WHERE dp_yn='Y'
-        
         AND clause_id = #{clauseId}
-                        
-        ORDER BY clause_id ASC
+        ORDER BY clause_item_cd DESC
     </select>
     
     <!-- 약관 목록 조회 -->
