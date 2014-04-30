@@ -65,8 +65,8 @@ public class OtherPartProductController {
             ppro.setIdentifierList(Arrays.asList(new Identifier("channel", pp.getProdId()), new Identifier("parentChannel", pp.getParentProdId())));
             ppro.setTitle(new Title(pp.getProdNm()));
             ppro.setPrice(new Price(pp.getProdAmt()));
-            // 부분유료화 상품 유형 표시: prodCase/prodKind
-            ppro.setPartProductType(pp.getProdCase() + (StringUtils.isNotEmpty(pp.getProdKind()) ? "/"+pp.getProdKind() : ""));
+            ppro.setProdKind(pp.getProdKind());
+            ppro.setProdCase(pp.getProdCase());
             ppRes.getProductList().add(ppro);
         }
 

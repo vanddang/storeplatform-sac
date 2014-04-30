@@ -54,7 +54,7 @@ public class PartProductControllerTest {
     @Test
     public void test01() throws Exception {
 
-        MvcTestBuilder.build2(mvc, false, null, "/display/other/partProduct/list/v1?aid=OA00653797", null, true);
+        MvcTestBuilder.build2(mvc, false, null, "/display/other/partProduct/list/v1?aid=OA00653837", null, true);
     }
 
 }
