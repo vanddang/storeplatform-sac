@@ -10,8 +10,10 @@
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -120,6 +122,17 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// }
 		// }
 		// }
+
+		// 상품ID 중복 체크
+		if (CollectionUtils.isNotEmpty(req.getProductList())) {
+			Set<String> prodIdSet = new HashSet<String>();
+			for (CreatePurchaseSacReqProduct product : req.getProductList()) {
+				if (prodIdSet.add(product.getProdId()) == false) {
+					throw new StorePlatformException("SAC_PUR_5100");
+				}
+			}
+		}
+
 	}
 
 	/**
