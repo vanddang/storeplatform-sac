@@ -432,7 +432,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			/************************************************************************************************
 			 * Seed App 정보
 			 ************************************************************************************************/
-			component = new Component();
 
 			component.setIdentifierList(this.appInfoGenerator.generateComponentIdentifierList(metaInfo));
 			component.setGameCenterVerCd(StringUtils.isNotEmpty(metaInfo.getGameCentrVerCd()) ? metaInfo

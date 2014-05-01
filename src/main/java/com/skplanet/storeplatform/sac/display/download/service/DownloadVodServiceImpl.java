@@ -113,7 +113,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		List<Support> supportList = null;
 
 		List<Identifier> identifierList = null;
-		Product product = new Product();
 
 		// ID유형 유효값 체크
 		if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)
@@ -132,7 +131,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq,
 				MetaInfo.class);
 
-		product = new Product();
+		Product product = new Product();
 
 		if (metaInfo != null) {
 			if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)) {
