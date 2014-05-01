@@ -87,7 +87,7 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 				 ******************************/
 				final String purchase_id = obj.getPrchsId();
 				final String use_start_time = obj.getAvail_startdate() + "000";
-				final String use_end_time = obj.getAvail_enddate() + "999";
+				final String use_end_time = obj.getAvail_enddate() + "000";
 				final String coupon_publish_code = objItem.getPublishCode();
 				final String coupon_code = request.getCouponCode();
 				final String coupon_item_code = objItem.getItemCode();
