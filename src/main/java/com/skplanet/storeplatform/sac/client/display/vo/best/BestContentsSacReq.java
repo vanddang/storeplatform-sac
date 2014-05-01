@@ -47,6 +47,14 @@ public class BestContentsSacReq extends CommonInfo {
 	private String dummy;
 	private String imgCd;
 
+	private String ebookSprtYn; // eBook 상품 지원여부
+
+	private String comicSprtYn; // Comic 상품 지원여부
+
+	private String videoDrmSprtYn; // VOD 상품 DRM 지원 여부
+
+	private String sdVideoSprtYn; // VOD 상품 SD 지원 여부
+
 	/**
 	 * 
 	 * <pre>
@@ -435,6 +443,66 @@ public class BestContentsSacReq extends CommonInfo {
 	 */
 	public void setImgCd(String imgCd) {
 		this.imgCd = imgCd;
+	}
+
+	/**
+	 * @return the ebookSprtYn
+	 */
+	public String getEbookSprtYn() {
+		return this.ebookSprtYn;
+	}
+
+	/**
+	 * @param ebookSprtYn
+	 *            the ebookSprtYn to set
+	 */
+	public void setEbookSprtYn(String ebookSprtYn) {
+		this.ebookSprtYn = ebookSprtYn;
+	}
+
+	/**
+	 * @return the comicSprtYn
+	 */
+	public String getComicSprtYn() {
+		return this.comicSprtYn;
+	}
+
+	/**
+	 * @param comicSprtYn
+	 *            the comicSprtYn to set
+	 */
+	public void setComicSprtYn(String comicSprtYn) {
+		this.comicSprtYn = comicSprtYn;
+	}
+
+	/**
+	 * @return the videoDrmSprtYn
+	 */
+	public String getVideoDrmSprtYn() {
+		return this.videoDrmSprtYn;
+	}
+
+	/**
+	 * @param videoDrmSprtYn
+	 *            the videoDrmSprtYn to set
+	 */
+	public void setVideoDrmSprtYn(String videoDrmSprtYn) {
+		this.videoDrmSprtYn = videoDrmSprtYn;
+	}
+
+	/**
+	 * @return the sdVideoSprtYn
+	 */
+	public String getSdVideoSprtYn() {
+		return this.sdVideoSprtYn;
+	}
+
+	/**
+	 * @param sdVideoSprtYn
+	 *            the sdVideoSprtYn to set
+	 */
+	public void setSdVideoSprtYn(String sdVideoSprtYn) {
+		this.sdVideoSprtYn = sdVideoSprtYn;
 	}
 
 }
