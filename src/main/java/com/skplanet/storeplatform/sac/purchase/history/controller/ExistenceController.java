@@ -71,11 +71,12 @@ public class ExistenceController {
 		TenantHeader header = requestHeader.getTenantHeader();
 		final String systemId = header.getSystemId();
 
-		new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
+		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
 				shuttle.log_id("TL_SAC_PUR_0002").system_id(systemId).insd_device_id(existenceSacReq.getDeviceKey())
-						.insd_usermbr_no(existenceSacReq.getUserKey()); // T Log 보장을 위해 log_id 선 세팅
+						.insd_usermbr_no(existenceSacReq.getUserKey());
+				;
 			}
 		});
 
