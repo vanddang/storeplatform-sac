@@ -1491,7 +1491,7 @@
                              AND ROWNUM = 1
                          ) AS TOP_MENU_NM 
                         ,F.MENU_DESC                                   
-                        ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY L.PROD_AMT ASC) as NO
+                        ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY L.PROD_AMT ASC , ROUND(DBMS_RANDOM.VALUE(1, 100), 0)) as NO
                         ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT 
                         ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
                                WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
