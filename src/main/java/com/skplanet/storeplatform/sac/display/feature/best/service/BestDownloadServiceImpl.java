@@ -134,8 +134,20 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 		count = offset + count - 1;
 		bestDownloadReq.setCount(count); // set count
 
-		String stdDt = this.commonService.getBatchStandardDateString(bestDownloadReq.getTenantId(),
-				bestDownloadReq.getListId());
+		// STD_DT 설정
+		String stdDt = bestDownloadReq.getStdDt();
+		if (StringUtils.isNotEmpty(stdDt)) { // 집계 일자가 존재할 시 - 통계 이력 데이터 조회
+			if (stdDt.length() != 8) { // 날짜 형식 틀림
+				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+			}
+			stdDt += "000000"; // 시,분,초 추가
+			bestDownloadReq.setSearchHisYn("Y"); // TB_DP_LIST_PROD_HIS : 리스트 이력 테이블 조회
+
+		} else { // 최근 집계 일자 조회
+			stdDt = this.commonService.getBatchStandardDateString(bestDownloadReq.getTenantId(),
+					bestDownloadReq.getListId());
+			bestDownloadReq.setSearchHisYn("N"); // TB_DP_LIST_PROD : 리스트 테이블 조회
+		}
 		bestDownloadReq.setStdDt(stdDt);
 
 		// 유/무료 리스트 선택
@@ -365,4 +377,5 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 
 		return response;
 	}
+
 }
