@@ -215,7 +215,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 				this.log.info("---------------------------------------------------------------------");
 				this.log.info("[DownloadVodServiceImpl] purchaseFlag :{}", purchaseFlag);
-				this.log.info("[DownloadVodServiceImpl] historyRes :{}", historyRes.toString());
+				this.log.info("[DownloadVodServiceImpl] historyRes :{}", historyRes);
 				this.log.info("[DownloadVodServiceImpl] historyRes totalCnt :{}", historyRes.getTotalCnt());
 				this.log.info("---------------------------------------------------------------------");
 
@@ -337,7 +337,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 								this.log.info("----------------------------------------------------------------");
 								this.log.info("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
-								this.log.info("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes.toString());
+								this.log.info("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
 								this.log.info("----------------------------------------------------------------");
 
 								if (memberFlag && deviceRes != null) {

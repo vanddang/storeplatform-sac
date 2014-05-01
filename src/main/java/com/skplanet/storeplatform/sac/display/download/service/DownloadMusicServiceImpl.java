@@ -186,7 +186,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 				this.log.info("---------------------------------------------------------------------");
 				this.log.info("[DownloadMusicServiceImpl] purchaseFlag :{}", purchaseFlag);
-				this.log.info("[DownloadMusicServiceImpl] historyRes :{}", historyRes.toString());
+				this.log.info("[DownloadMusicServiceImpl] historyRes :{}", historyRes);
 				this.log.info("[DownloadMusicServiceImpl] historyRes totalCnt :{}", historyRes.getTotalCnt());
 				this.log.info("---------------------------------------------------------------------");
 				if (purchaseFlag && historyRes != null) {
@@ -295,7 +295,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 								this.log.info("----------------------------------------------------------------");
 								this.log.info("[DownloadMusicServiceImpl] memberFlag	:	{}", memberFlag);
-								this.log.info("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes.toString());
+								this.log.info("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
 								this.log.info("----------------------------------------------------------------");
 								if (memberFlag && deviceRes != null) {
 									deviceId = deviceRes.getDeviceId();

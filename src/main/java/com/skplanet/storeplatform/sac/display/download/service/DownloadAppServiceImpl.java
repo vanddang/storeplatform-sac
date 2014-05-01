@@ -222,7 +222,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 				this.log.info("---------------------------------------------------------------------");
 				this.log.info("[DownloadAppServiceImpl] purchaseFlag :{}", purchaseFlag);
-				this.log.info("[DownloadAppServiceImpl] historyRes :{}", historyRes.toString());
+				this.log.info("[DownloadAppServiceImpl] historyRes :{}", historyRes);
 				this.log.info("[DownloadAppServiceImpl] historyRes totalCnt :{}", historyRes.getTotalCnt());
 				this.log.info("---------------------------------------------------------------------");
 				if (purchaseFlag && historyRes != null) {
@@ -335,7 +335,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 								this.log.info("----------------------------------------------------------------");
 								this.log.info("[DownloadAppServiceImpl] memberFlag	:	{}", memberFlag);
-								this.log.info("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes.toString());
+								this.log.info("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
 								this.log.info("----------------------------------------------------------------");
 
 								if (memberFlag && deviceRes != null) {
