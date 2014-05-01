@@ -52,6 +52,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateNonMbrSegmentRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyKeyResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyValueRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePolicyValueResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserMbrSegmentRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
@@ -333,8 +335,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				updPolicyKeyReq.setNewLimitPolicyKey(mdn);
 				UpdatePolicyKeyResponse updPolicyKeyRes = this.userSCI.updatePolicyKey(updPolicyKeyReq);
 
-				LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 : {}", updPolicyKeyRes.getUpdateCount());
+				UpdatePolicyValueRequest updPolicyValueReq = new UpdatePolicyValueRequest();
+				updPolicyValueReq.setCommonRequest(commonRequest);
+				updPolicyValueReq.setOldApplyValue(beMdn);
+				updPolicyValueReq.setNewApplyValue(mdn);
+				UpdatePolicyValueResponse updPolicyValueRes = this.userSCI.updatePolicyValue(updPolicyValueReq);
 
+				LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 policyKey : {},  policyValue : {}", updPolicyKeyRes.getUpdateCount(),
+						updPolicyValueRes.getUpdateCount());
 			}
 
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
