@@ -9,12 +9,31 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.best.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -28,15 +47,6 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaFetchParam;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -61,8 +71,8 @@ public class BestAppServiceImpl implements BestAppService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-    @Autowired
-    private ProductInfoManager productInfoManager;
+	@Autowired
+	private ProductInfoManager productInfoManager;
 
 	/**
 	 * 
@@ -158,22 +168,22 @@ public class BestAppServiceImpl implements BestAppService {
 			}
 
 			if (!appList.isEmpty()) {
-                MetaFetchParam param = new MetaFetchParam();
-                param.setTenantId(tenantHeader.getTenantId());
-                param.setLangCd(tenantHeader.getLangCd());
-                param.setDeviceModelCd(deviceHeader.getModel());
+				MetaFetchParam param = new MetaFetchParam();
+				param.setTenantId(tenantHeader.getTenantId());
+				param.setLangCd(tenantHeader.getLangCd());
+				param.setDeviceModelCd(deviceHeader.getModel());
 
-                ///// [임시로직] 캐쉬를 타지 않도록 요청한 경우 prodId목록으로 일괄조회.
-                productList = MetaResultGenerator.fetch(ProductType.App, param, appList, new MetaMapper() {
-                    @Override
-                    public Product processRow(MetaInfo meta) {
-                        return responseInfoGenerateFacade.generateAppProduct(meta);
-                    }
-                });
+				// /// [임시로직] 캐쉬를 타지 않도록 요청한 경우 prodId목록으로 일괄조회.
+				productList = MetaResultGenerator.fetch(ProductType.App, param, appList, new MetaMapper() {
+					@Override
+					public Product processRow(MetaInfo meta) {
+						return BestAppServiceImpl.this.responseInfoGenerateFacade.generateAppProduct(meta);
+					}
+				});
 
-                commonResponse.setTotalCount(appList.get(0).getTotalCount());
-                response.setProductList(productList);
-                response.setCommonResponse(commonResponse);
+				commonResponse.setTotalCount(appList.get(0).getTotalCount());
+				response.setProductList(productList);
+				response.setCommonResponse(commonResponse);
 
 			} else {
 				// 조회 결과 없음
@@ -200,7 +210,6 @@ public class BestAppServiceImpl implements BestAppService {
 			sourceList = new ArrayList<Source>();
 
 			product = new Product();
-			identifier = new Identifier();
 			app = new App();
 			accrual = new Accrual();
 			rights = new Rights();
