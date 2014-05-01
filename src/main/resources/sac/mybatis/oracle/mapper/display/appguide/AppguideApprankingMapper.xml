@@ -41,20 +41,53 @@
                           , A.EXPO_ORD
                           , A.EXPO_ORD_SUB
                           , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY E.REG_DT DESC) AS RN
-                       FROM (SELECT LP.*
-                               FROM TB_DP_LIST_PROD LP  /* 채널 */
-                                  , TB_DP_LIST LT
-                              WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
-                                AND LT.TENANT_ID = #{tenantId}   /* 테넌트ID */
-                                AND LP.LIST_ID = #{listId}       
-                                AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
-                                AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
-                                AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
-		                       <if test="menuId != null and menuId != ''">
-		                        AND LP.MENU_ID LIKE #{menuId}||'%'		                        
-		                       </if>
-                                AND LP.LIST_ID = LT.LIST_ID
-                                AND LT.EXPO_YN = 'Y'
+                       FROM (
+                             SELECT 
+                                   AA.TENANT_ID
+                                 , AA.LIST_ID
+                                 , AA.MENU_ID
+                                 , AA.PROD_ID
+                                 , AA.STD_DT
+                                 , AA.EXPO_ORD_ALWAYS_YN
+                                 , AA.EXPO_ORD
+                                 , AA.EXPO_ORD_SUB
+                                 , AA.EXPO_YN
+                                 , AA.EXPO_START_DT
+                                 , AA.EXPO_END_DT
+                              FROM
+                                  (
+                                      SELECT 
+                                          LP.TENANT_ID
+                                        , LP.LIST_ID
+                                        , LP.MENU_ID
+                                        , LP.PROD_ID
+                                        , LP.STD_DT
+                                        , LP.EXPO_ORD_ALWAYS_YN
+                                        , LP.EXPO_ORD
+                                        , LP.EXPO_ORD_SUB
+                                        , LP.EXPO_YN
+                                        , LP.EXPO_START_DT
+                                        , LP.EXPO_END_DT
+							           ,ROW_NUMBER() OVER (
+						                ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC
+						                    ,LP.EXPO_ORD
+						                    ,LP.EXPO_ORD_SUB
+						                ) AS LP_RNUM
+	                               FROM TB_DP_LIST_PROD LP  /* 채널 */
+	                                  , TB_DP_LIST LT
+	                              WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
+	                                AND LT.TENANT_ID = #{tenantId}   /* 테넌트ID */
+	                                AND LP.LIST_ID = #{listId}       
+	                                AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+	                                AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+	                                AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+			                       <if test="menuId != null and menuId != ''">
+			                        AND LP.MENU_ID LIKE #{menuId}||'%'		                        
+			                       </if>
+	                                AND LP.LIST_ID = LT.LIST_ID
+	                                AND LT.EXPO_YN = 'Y'
+	                            ) AA
+                                WHERE AA.LP_RNUM <![CDATA[ <= ]]> 500
                             ) A
                           , TB_DP_PROD_RSHP B
                           , TB_DP_MENU_CATEGORY_PROD_MAPG C
@@ -108,18 +141,54 @@
                              , A.EXPO_ORD
                              , A.EXPO_ORD_SUB
                              , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS RN
-                          FROM  (SELECT LP.*
-                               FROM TB_DP_LIST_PROD LP  /* 채널 */
-                                  , TB_DP_LIST LT
-                              WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
-                                AND LT.TENANT_ID = #{tenantId}   /* 테넌트ID */
-                                AND LP.LIST_ID = #{listId}       
-                                AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
-                                AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
-                                AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
-                                AND LP.LIST_ID = LT.LIST_ID
-                                AND LT.EXPO_YN = 'Y'
-                            ) A
+                          FROM  (
+                             SELECT 
+                                   AA.TENANT_ID
+                                 , AA.LIST_ID
+                                 , AA.MENU_ID
+                                 , AA.PROD_ID
+                                 , AA.STD_DT
+                                 , AA.EXPO_ORD_ALWAYS_YN
+                                 , AA.EXPO_ORD
+                                 , AA.EXPO_ORD_SUB
+                                 , AA.EXPO_YN
+                                 , AA.EXPO_START_DT
+                                 , AA.EXPO_END_DT
+                              FROM
+                                  (
+                                      SELECT 
+                                          LP.TENANT_ID
+                                        , LP.LIST_ID
+                                        , LP.MENU_ID
+                                        , LP.PROD_ID
+                                        , LP.STD_DT
+                                        , LP.EXPO_ORD_ALWAYS_YN
+                                        , LP.EXPO_ORD
+                                        , LP.EXPO_ORD_SUB
+                                        , LP.EXPO_YN
+                                        , LP.EXPO_START_DT
+                                        , LP.EXPO_END_DT
+                                        , ROW_NUMBER() OVER (
+                                        ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC
+                                            ,LP.EXPO_ORD
+                                            ,LP.EXPO_ORD_SUB
+                                        ) AS LP_RNUM
+                                   FROM TB_DP_LIST_PROD LP  /* 채널 */
+                                      , TB_DP_LIST LT
+                                  WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
+                                    AND LT.TENANT_ID = #{tenantId}   /* 테넌트ID */
+                                    AND LP.LIST_ID = #{listId}       
+                                    AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+                                    AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                                    AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+                                   <if test="menuId != null and menuId != ''">
+                                    AND LP.MENU_ID LIKE #{menuId}||'%'                              
+                                   </if>
+                                    AND LP.LIST_ID = LT.LIST_ID
+                                    AND LT.EXPO_YN = 'Y'
+                                ) AA
+                                WHERE AA.LP_RNUM <![CDATA[ <= ]]> 500
+                             ) A
                              , TB_DP_PROD_RSHP C
                              , TB_DP_SHPG_CATALOG      D /* 쇼핑 카탈로그 */
                              , TB_DP_PROD_CATALOG_MAPG E /* 카탈로그-상품 매핑 */
