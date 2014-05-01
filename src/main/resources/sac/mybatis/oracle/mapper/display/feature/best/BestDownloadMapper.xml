@@ -32,7 +32,12 @@
                                                ,EXPO_ORD_ALWAYS_YN
                                                ,EXPO_ORD
                                                ,EXPO_ORD_SUB
+                                         <if test='searchHisYn == "N"'>
                                            FROM TB_DP_LIST_PROD
+                                         </if>
+                                         <if test='searchHisYn == "Y"'>
+                                           FROM TB_DP_LIST_PROD_HIS
+                                         </if>
                                           WHERE TENANT_ID = #{tenantId} /* header param : tenantId */ 
                                             AND LIST_ID = #{listId} /* param : listId */
                                             AND EXPO_YN = 'Y' /* 전시여부 */ 
@@ -117,7 +122,12 @@
                                                   ,EXPO_ORD_ALWAYS_YN
                                                   ,EXPO_ORD
                                                   ,EXPO_ORD_SUB
+                                            <if test='searchHisYn == "N"'>
                                               FROM TB_DP_LIST_PROD
+                                            </if>
+                                            <if test='searchHisYn == "Y"'>
+                                              FROM TB_DP_LIST_PROD_HIS
+                                            </if>
                                              WHERE TENANT_ID = #{tenantId} /* header param : tenantId */
                                                AND LIST_ID = #{listId}     /* param : listId */
                                                AND EXPO_YN = 'Y'           /* 전시여부 */  
