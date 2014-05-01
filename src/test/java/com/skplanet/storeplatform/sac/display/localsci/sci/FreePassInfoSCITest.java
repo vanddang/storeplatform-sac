@@ -44,7 +44,7 @@ public class FreePassInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	// @Test
+	@Test
 	public void searchFreePassDrmInfo() {
 		try {
 			FreePassInfoSacReq req = new FreePassInfoSacReq();
