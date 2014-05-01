@@ -9,13 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
-import java.io.Serializable;
-import java.util.List;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import java.util.List;
 
 /**
  * Interface Message App Value Object.
@@ -23,8 +21,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class App extends CommonInfo implements Serializable {
+public class App extends CommonInfo {
 	private static final long serialVersionUID = 1L;
+
 	private String aid; // Applicaton ID
 	private String supportedOs; // 지원 OS
 	private String packageName; // 패키지명
@@ -38,8 +37,17 @@ public class App extends CommonInfo implements Serializable {
 	private String scid; // sub contents Id
 	private List<Device> supportDeviceList;
 	private String isDeviceSupported; // 현재 단말기 지원 여부
+    private String descriptionVideoUrl;    // 설명 Video URL
 
-	public String getIsDeviceSupported() {
+    public String getDescriptionVideoUrl() {
+        return descriptionVideoUrl;
+    }
+
+    public void setDescriptionVideoUrl(String descriptionVideoUrl) {
+        this.descriptionVideoUrl = descriptionVideoUrl;
+    }
+
+    public String getIsDeviceSupported() {
 		return this.isDeviceSupported;
 	}
 
