@@ -641,11 +641,7 @@
              , TB.VOD_TITL_NM
              , TB.PROD_NM
              , TB.CHAPTER
-             , CASE WHEN TB.BOOK_CLSF_CD = 'DP004301' THEN '권'
-                    WHEN TB.BOOK_CLSF_CD = 'DP004302' THEN '회'
-                    WHEN TB.BOOK_CLSF_CD = 'DP004303' THEN '호'
-                    ELSE ''
-               END AS BOOK_CLSF_CD
+             , TB.BOOK_CLSF_CD
              , CASE WHEN TB.TOP_MENU_ID = 'DP13' -- 이북은 상품기본설명 컬럼 위치가 다름
                     THEN TB.PROD_DTL_DESC
                     ELSE TB.PROD_BASE_DESC

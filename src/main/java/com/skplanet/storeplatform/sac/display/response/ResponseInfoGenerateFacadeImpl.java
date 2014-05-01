@@ -924,7 +924,10 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(this.ebookComicGenerator.generateEbookContributor(metaInfo));
 		product.setProductExplain(productExplain);
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
-		product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
+		// BOOK 설정
+		Book book = this.ebookComicGenerator.generateBook(metaInfo);
+		book.setBookClsfCd(metaInfo.getBookClsfCd());
+		product.setBook(book);
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 
@@ -953,7 +956,11 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(this.ebookComicGenerator.generateComicContributor(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
-		product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
+		// product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
+		// BOOK 설정
+		Book book = this.ebookComicGenerator.generateBook(metaInfo);
+		book.setBookClsfCd(metaInfo.getBookClsfCd());
+		product.setBook(book);
 		product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo));
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
