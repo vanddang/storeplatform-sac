@@ -240,7 +240,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 				this.logger.info("----------------------------------------------------------------");
 				this.logger.info("[DownloadEbookLog] purchasePassFlag : {}", purchasePassFlag);
-				this.logger.info("[DownloadEbookLog] historyRes : {}", historyRes.toString());
+				this.logger.info("[DownloadEbookLog] historyRes : {}", historyRes);
 				this.logger.info("----------------------------------------------------------------");
 
 				if (purchasePassFlag && historyRes != null) {
@@ -352,7 +352,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 								this.logger.info("----------------------------------------------------------------");
 								this.logger.info("[DownloadEbookLog] memberPassFlag : {}", memberPassFlag);
-								this.logger.info("[DownloadEbookLog] deviceRes : {}", deviceRes.toString());
+								this.logger.info("[DownloadEbookLog] deviceRes : {}", deviceRes);
 								this.logger.info("----------------------------------------------------------------");
 
 								if (memberPassFlag && deviceRes != null) {

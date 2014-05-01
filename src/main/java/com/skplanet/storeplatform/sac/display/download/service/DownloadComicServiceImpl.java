@@ -225,7 +225,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 				this.logger.info("----------------------------------------------------------------");
 				this.logger.info("[DownloadComicLog] purchasePassFlag : {}", purchasePassFlag);
-				this.logger.info("[DownloadComicLog] historyRes : {}", historyRes.toString());
+				this.logger.info("[DownloadComicLog] historyRes : {}", historyRes);
 				this.logger.info("----------------------------------------------------------------");
 
 				if (purchasePassFlag && historyRes != null) {
@@ -336,7 +336,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 								this.logger.info("----------------------------------------------------------------");
 								this.logger.info("[DownloadComicLog] memberPassFlag : {}", memberPassFlag);
-								this.logger.info("[DownloadComicLog] deviceRes : {}", deviceRes.toString());
+								this.logger.info("[DownloadComicLog] deviceRes : {}", deviceRes);
 								this.logger.info("----------------------------------------------------------------");
 
 								if (memberPassFlag && deviceRes != null) {
