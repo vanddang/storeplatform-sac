@@ -86,21 +86,23 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 				 * TLOG Setting Start
 				 ******************************/
 				final String purchase_id = obj.getPrchsId();
-				final String use_start_time = obj.getAvail_startdate();
-				final String use_end_time = obj.getAvail_enddate();
+				final String use_start_time = obj.getAvail_startdate() + "000";
+				final String use_end_time = obj.getAvail_enddate() + "999";
 				final String coupon_publish_code = objItem.getPublishCode();
 				final String coupon_code = request.getCouponCode();
 				final String coupon_item_code = objItem.getItemCode();
 
-				new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
+				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
 						shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006).purchase_id(purchase_id)
 								.use_start_time(use_start_time).use_end_time(use_end_time)
 								.download_expired_time(use_end_time).coupon_publish_code(coupon_publish_code)
-								.coupon_code(coupon_code).coupon_item_code(coupon_item_code);
+								.coupon_code(coupon_code).coupon_item_code(coupon_item_code).result_code("SUCC")
+								.result_message("");
 					}
 				});
+
 				/******************************
 				 * TLOG Setting End
 				 ******************************/
