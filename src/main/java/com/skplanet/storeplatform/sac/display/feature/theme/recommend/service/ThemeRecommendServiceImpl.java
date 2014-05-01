@@ -104,53 +104,55 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 			// ISF 연동
 			response = this.invoker.invoke(this.makeRequest(requestVO));
 		} catch (StorePlatformException e) {
-			throw e;
-		}
-
-		try {
-			JAXBContext jc = JAXBContext.newInstance(ISFRes.class);
-			Marshaller m1 = jc.createMarshaller();
-			m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			m1.marshal(response, System.out);
-		} catch (Exception e) {
-
-		}
-
-		List<Map<String, Object>> listProd = new ArrayList<Map<String, Object>>();
-		int multiCount = response.getProps().getMultiValues().getCount();
-		this.log.debug("multiCount {}", multiCount);
-		if (multiCount > 0) {
-			Map<String, Object> mapIsf = null;
-
-			MultiValuesType multis = response.getProps().getMultiValues();
-			for (MultiValueType multi : multis.getMultiValue()) {
-				mapIsf = new HashMap<String, Object>();
-
-				this.log.debug("id:{}", multi.getId());
-				this.log.debug("order:{}", multi.getOrder());
-
-				mapIsf.put("id", multi.getId());
-				mapIsf.put("order", multi.getOrder() == null ? 0 : multi.getOrder());
-
-				listProd.add(mapIsf);
-			}
-			mapReq.put("multiValueId", listProd);
+			// throw e;
 		}
 
 		// 추천 사유
 		String reason = "";
-		int singleCount = response.getProps().getSingleValues().getCount();
-		if (singleCount > 0) {
-			for (SingleValueType single : response.getProps().getSingleValues().getSingleValue()) {
-				this.log.debug("name:{}", single.getName());
-				this.log.debug("value:{}", single.getValue());
-				if ("reason".equals(single.getName())) {
-					reason = single.getValue();
-					break;
+		if (null != response && null != response.getProps()) {
+			try {
+				JAXBContext jc = JAXBContext.newInstance(ISFRes.class);
+				Marshaller m1 = jc.createMarshaller();
+				m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+				m1.marshal(response, System.out);
+			} catch (Exception e) {
+
+			}
+
+			List<Map<String, Object>> listProd = new ArrayList<Map<String, Object>>();
+			int multiCount = response.getProps().getMultiValues().getCount();
+			this.log.debug("multiCount {}", multiCount);
+			if (multiCount > 0) {
+				Map<String, Object> mapIsf = null;
+
+				MultiValuesType multis = response.getProps().getMultiValues();
+				for (MultiValueType multi : multis.getMultiValue()) {
+					mapIsf = new HashMap<String, Object>();
+
+					this.log.debug("id:{}", multi.getId());
+					this.log.debug("order:{}", multi.getOrder());
+
+					mapIsf.put("id", multi.getId());
+					mapIsf.put("order", multi.getOrder() == null ? 0 : multi.getOrder());
+
+					listProd.add(mapIsf);
+				}
+				mapReq.put("multiValueId", listProd);
+			}
+
+			int singleCount = response.getProps().getSingleValues().getCount();
+			if (singleCount > 0) {
+				for (SingleValueType single : response.getProps().getSingleValues().getSingleValue()) {
+					this.log.debug("name:{}", single.getName());
+					this.log.debug("value:{}", single.getValue());
+					if ("reason".equals(single.getName())) {
+						reason = single.getValue();
+						break;
+					}
 				}
 			}
+			this.log.debug("reason:{}", reason);
 		}
-		this.log.debug("reason:{}", reason);
 
 		List<ThemeRecommend> listThemeRecommend = new ArrayList<ThemeRecommend>();
 		if (StringUtils.equalsIgnoreCase(requestVO.getFilteredBy(), "short")) {
