@@ -784,59 +784,60 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 
 		List<Product> productList = new ArrayList<Product>();
+		if (resultList != null) {
+			if (resultList.size() > 0) {
+				// DB 조회 파라미터 생성
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("req", req);
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("lang", tenantHeader.getLangCd());
 
-		if (resultList.size() > 0) {
-			// DB 조회 파라미터 생성
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("req", req);
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("lang", tenantHeader.getLangCd());
+				reqMap.put("imageCd", req.getImageCd());
+				reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
+				reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+				reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 
-			reqMap.put("imageCd", req.getImageCd());
-			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
-			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-			reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-
-			if (!this.commonSupportDeviceShopping(header)) {
-				// 조회 결과 없음
-				commonResponse.setTotalCount(0);
-				res.setProductList(productList);
-				res.setCommonResponse(commonResponse);
-				return res;
-			}
-			// ID list 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"Shopping.getSpecialSalesProductList", reqMap, ProductBasicInfo.class);
-			if (productBasicInfoList != null) {
-				if (productBasicInfoList.size() > 0) {
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						// 쇼핑 Meta 정보 조회
-						MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
-						if (retMetaInfo != null) {
-							// 쇼핑 Response Generate
-							Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
-							productList.add(product);
-						}
-					}
-					commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				} else {
+				if (!this.commonSupportDeviceShopping(header)) {
 					// 조회 결과 없음
 					commonResponse.setTotalCount(0);
 					res.setProductList(productList);
 					res.setCommonResponse(commonResponse);
+					return res;
 				}
+				// ID list 조회
+				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+						"Shopping.getSpecialSalesProductList", reqMap, ProductBasicInfo.class);
+				if (productBasicInfoList != null) {
+					if (productBasicInfoList.size() > 0) {
+						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+							reqMap.put("productBasicInfo", productBasicInfo);
+							// 쇼핑 Meta 정보 조회
+							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+							if (retMetaInfo != null) {
+								// 쇼핑 Response Generate
+								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+								productList.add(product);
+							}
+						}
+						commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+						res.setProductList(productList);
+						res.setCommonResponse(commonResponse);
+					} else {
+						// 조회 결과 없음
+						commonResponse.setTotalCount(0);
+						res.setProductList(productList);
+						res.setCommonResponse(commonResponse);
+					}
+				}
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
 			}
-		} else {
-			// 조회 결과 없음
-			commonResponse.setTotalCount(0);
-			res.setProductList(productList);
-			res.setCommonResponse(commonResponse);
 		}
 		return res;
 	}
@@ -1078,58 +1079,60 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 
 		List<Product> productList = new ArrayList<Product>();
-		if (resultList.size() > 0) {
-			// DB 조회 파라미터 생성
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("req", req);
-			reqMap.put("stdDt", stdDt);
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("lang", tenantHeader.getLangCd());
+		if (resultList != null) {
+			if (resultList.size() > 0) {
+				// DB 조회 파라미터 생성
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("req", req);
+				reqMap.put("stdDt", stdDt);
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("lang", tenantHeader.getLangCd());
 
-			reqMap.put("imageCd", req.getImageCd());
-			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
-			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-			reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+				reqMap.put("imageCd", req.getImageCd());
+				reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
+				reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+				reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 
-			if (!this.commonSupportDeviceShopping(header)) {
-				// 조회 결과 없음
-				commonResponse.setTotalCount(0);
-				res.setProductList(productList);
-				res.setCommonResponse(commonResponse);
-				return res;
-			}
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"Shopping.getBrandshopProductList", reqMap, ProductBasicInfo.class);
-			if (productBasicInfoList != null) {
-				if (productBasicInfoList.size() > 0) {
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						// 쇼핑 Meta 정보 조회
-						MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
-						if (retMetaInfo != null) {
-							// 쇼핑 Response Generate
-							Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
-							productList.add(product);
-						}
-					}
-					commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				} else {
+				if (!this.commonSupportDeviceShopping(header)) {
 					// 조회 결과 없음
 					commonResponse.setTotalCount(0);
 					res.setProductList(productList);
 					res.setCommonResponse(commonResponse);
+					return res;
 				}
+				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+						"Shopping.getBrandshopProductList", reqMap, ProductBasicInfo.class);
+				if (productBasicInfoList != null) {
+					if (productBasicInfoList.size() > 0) {
+						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+							reqMap.put("productBasicInfo", productBasicInfo);
+							// 쇼핑 Meta 정보 조회
+							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+							if (retMetaInfo != null) {
+								// 쇼핑 Response Generate
+								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+								productList.add(product);
+							}
+						}
+						commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+						res.setProductList(productList);
+						res.setCommonResponse(commonResponse);
+					} else {
+						// 조회 결과 없음
+						commonResponse.setTotalCount(0);
+						res.setProductList(productList);
+						res.setCommonResponse(commonResponse);
+					}
+				}
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
 			}
-		} else {
-			// 조회 결과 없음
-			commonResponse.setTotalCount(0);
-			res.setProductList(productList);
-			res.setCommonResponse(commonResponse);
 		}
 		return res;
 	}
@@ -1313,59 +1316,60 @@ public class ShoppingServiceImpl implements ShoppingService {
 			res.setLayOut(layOut);
 		}
 		List<Product> productList = new ArrayList<Product>();
+		if (resultList != null) {
+			if (resultList.size() > 0) {
+				// DB 조회 파라미터 생성
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("req", req);
+				reqMap.put("stdDt", stdDt);
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("lang", tenantHeader.getLangCd());
 
-		if (resultList.size() > 0) {
-			// DB 조회 파라미터 생성
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("req", req);
-			reqMap.put("stdDt", stdDt);
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("lang", tenantHeader.getLangCd());
+				reqMap.put("imageCd", req.getImageCd());
+				reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
+				reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+				reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 
-			reqMap.put("imageCd", req.getImageCd());
-			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
-			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-			reqMap.put("channelContentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-
-			if (!this.commonSupportDeviceShopping(header)) {
-				// 조회 결과 없음
-				commonResponse.setTotalCount(0);
-				res.setProductList(productList);
-				res.setCommonResponse(commonResponse);
-				return res;
-			}
-
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getThemeProductList",
-					reqMap, ProductBasicInfo.class);
-			if (productBasicInfoList != null) {
-				if (productBasicInfoList.size() > 0) {
-					for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-						reqMap.put("productBasicInfo", productBasicInfo);
-						// 쇼핑 Meta 정보 조회
-						MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
-						if (retMetaInfo != null) {
-							// 쇼핑 Response Generate
-							Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
-							productList.add(product);
-						}
-					}
-					commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-					res.setProductList(productList);
-					res.setCommonResponse(commonResponse);
-				} else {
+				if (!this.commonSupportDeviceShopping(header)) {
 					// 조회 결과 없음
 					commonResponse.setTotalCount(0);
 					res.setProductList(productList);
 					res.setCommonResponse(commonResponse);
+					return res;
 				}
+
+				List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+						"Shopping.getThemeProductList", reqMap, ProductBasicInfo.class);
+				if (productBasicInfoList != null) {
+					if (productBasicInfoList.size() > 0) {
+						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+							reqMap.put("productBasicInfo", productBasicInfo);
+							// 쇼핑 Meta 정보 조회
+							MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+							if (retMetaInfo != null) {
+								// 쇼핑 Response Generate
+								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+								productList.add(product);
+							}
+						}
+						commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+						res.setProductList(productList);
+						res.setCommonResponse(commonResponse);
+					} else {
+						// 조회 결과 없음
+						commonResponse.setTotalCount(0);
+						res.setProductList(productList);
+						res.setCommonResponse(commonResponse);
+					}
+				}
+			} else {
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
 			}
-		} else {
-			commonResponse.setTotalCount(0);
-			res.setProductList(productList);
-			res.setCommonResponse(commonResponse);
 		}
 		return res;
 	}
