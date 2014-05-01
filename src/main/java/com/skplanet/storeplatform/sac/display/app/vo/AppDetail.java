@@ -38,6 +38,15 @@ public class AppDetail extends CommonInfo {
     private Date saleStrtDt;
     private String svcGrpCd;
     private String drmYn;
+    private String descVideoUrl;
+
+    public String getDescVideoUrl() {
+        return descVideoUrl;
+    }
+
+    public void setDescVideoUrl(String descVideoUrl) {
+        this.descVideoUrl = descVideoUrl;
+    }
 
     public String getDrmYn() {
         return drmYn;
