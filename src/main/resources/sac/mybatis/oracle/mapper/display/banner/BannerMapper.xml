@@ -123,6 +123,9 @@
                         <when test='bnrMenuId == "DP010912"'><!-- 앱가이드 배너 -->
                            AND  A.BNR_MENU_ID IN ('DP010912', 'DP010910')<!-- 앱가이드, BEST 앱 -->
                         </when>
+                        <when test='bnrMenuId == "DP010998"'><!-- 이북보관함 메인 배너 -->
+                           AND  A.BNR_MENU_ID IN ('DP010920', 'DP010921')<!-- 이북, 코믹 -->
+                        </when>
                         <otherwise>
                            AND  A.BNR_MENU_ID = #{bnrMenuId}
                         </otherwise>
