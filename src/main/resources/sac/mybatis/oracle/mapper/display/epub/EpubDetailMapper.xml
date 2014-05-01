@@ -104,10 +104,19 @@
 	                    , ( CASE WHEN BOOK_CLSF_CD = 'DP004302' THEN FREE_CNT ELSE 0 END ) AS SERIAL_FREE_CNT
 	                    , ( CASE WHEN BOOK_CLSF_CD = 'DP004303' THEN FREE_CNT ELSE 0 END ) AS MAGAZINE_FREE_CNT
 	              FROM (
+	              
+	              
+	              SELECT TENANT_ID, LANG_CD
+					      , CHNL_PROD_ID
+					      , MENU_ID, MENU_NM
+					      , BOOK_CLSF_CD
+					      , COUNT(SALE_CNT) AS SALE_CNT, SUM(FREE_CNT) AS FREE_CNT  
+					FROM (
 	                  SELECT G.TENANT_ID, C.LANG_CD
 	                      , D.PROD_ID AS CHNL_PROD_ID
 	                      , A.MENU_ID, C.MENU_NM
 	                      , E.BOOK_CLSF_CD
+	                      , EP.CHAPTER
 	                      , SUM( CASE WHEN ( CTP.PROD_STATUS_CD = 'PD000403' AND CPD.USE_PERIOD_UNIT_CD = 'PD00310' ) THEN 1 ELSE 0 END ) AS SALE_CNT
 	                      , SUM( CASE WHEN ( CTP.PROD_STATUS_CD = 'PD000403' AND CPD.USE_PERIOD_UNIT_CD = 'PD00310' AND CTPR.PROD_AMT = 0 ) THEN 1 ELSE 0 END ) AS FREE_CNT
 	                  FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
@@ -121,6 +130,7 @@
 	                      , TB_CM_DEVICE CD
 						  , TB_DP_PROD_RSHP RSHP
                           , TB_DP_PROD CPD
+                          , TB_DP_EBOOK_PROD EP
                           , TB_DP_TENANT_PROD CTP
                           , TB_DP_TENANT_PROD_PRICE CTPR
 	                  WHERE A.BASE_YN = 'Y' AND A.BASE_YN = 'Y'
@@ -143,7 +153,9 @@
                       	AND CPD.SVC_GRP_CD = 'DP000203' AND CPD.CONTENTS_TYPE_CD = 'PD002502' AND CPD.SVC_TYPE_CD = 'DP001116'
                       	AND CPD.PROD_ID = CTP.PROD_ID AND CTP.TENANT_ID = G.TENANT_ID AND CTP.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') AND CTP.EXPO_YN = 'Y'
                       	AND CPD.PROD_ID = CTPR.PROD_ID AND CTPR.TENANT_ID = CTP.TENANT_ID AND SYSDATE BETWEEN CTPR.APPLY_START_DT AND CTPR.APPLY_END_DT
-	                    GROUP BY G.TENANT_ID, C.LANG_CD, D.PROD_ID, A.MENU_ID, C.MENU_NM, E.BOOK_CLSF_CD
+                      	AND CPD.PROD_ID = EP.PROD_ID
+	                    GROUP BY G.TENANT_ID, C.LANG_CD, D.PROD_ID, A.MENU_ID, C.MENU_NM, E.BOOK_CLSF_CD, EP.CHAPTER
+	                ) GROUP BY TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM, BOOK_CLSF_CD
 				)
 			) P
 			, TB_DP_PROD P2 
