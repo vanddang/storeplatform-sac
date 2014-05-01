@@ -402,8 +402,8 @@ public class SellerServiceImpl implements SellerService {
 					}
 
 					if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)
-							& StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL,
-									logInSellerResponse.getSellerMainStatus())) {
+							&& StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL,
+									logInSellerResponse.getSellerMainStatus())) { // TODO & -> && 로 수정 2014-05-01
 						/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
 						UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
 
