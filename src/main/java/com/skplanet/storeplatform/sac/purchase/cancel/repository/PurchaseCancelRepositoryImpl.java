@@ -108,9 +108,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 
 		PurchaseScRes purchaseScRes = this.purchaseCancelSCI.getPurchase(purchaseScReq);
-		if (purchaseScRes == null || purchaseScRes.getPrchs() == null
-				|| StringUtils.isBlank(purchaseScRes.getPrchs().getPrchsId())) {
+		if (purchaseScRes == null) {
 			// 구매 상세가 기준이기 때문에 구매 테이블은 체크하지 말아라. 2014-04-25 최상훈c.
+			throw new StorePlatformException("SAC_PUR_8100");
 		}
 
 		// 구매 정보 가져와서 셋팅.
