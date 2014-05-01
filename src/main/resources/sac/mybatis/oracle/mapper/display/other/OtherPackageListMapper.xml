@@ -84,7 +84,7 @@
         AND CP.MENU_ID = DMCD.MENU_ID
         AND P.PROD_ID = DTP.PROD_ID
         AND C.PROD_RSHP_CD = #{rshpCd}
-        AND PA.TENANT_ID = #{tenantId}
+        AND PA.TENANT_ID(+) = #{tenantId}
         AND DTP.TENANT_ID = #{tenantId}
         AND PA.PROD_ID(+) = P.PROD_ID
         AND SH.PROD_ID(+) = P.PROD_ID        
