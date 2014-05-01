@@ -50,9 +50,6 @@ public class PossLendProductInfoServiceImpl implements PossLendProductInfoServic
 		String tenantId = req.getTenantId();
 		String langCd = req.getLangCd();
 
-		this.log.debug("##### prodIdList size : {}", prodIdList.size());
-		this.log.debug("##### possLendClsfCdList size : {}", possLendClsfCdList.size());
-
 		// 파라미터 존재 여부 체크
 		if (prodIdList == null || prodIdList.size() == 0) {
 			throw new StorePlatformException("SAC_DSP_0002", "prodIdList",
