@@ -592,7 +592,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					specialReq.setSpecialCouponAmt(product.getProdAmt() - product.getSpecialSaleAmt());
 
 					SearchShoppingSpecialCountScRes specialRes = this.purchaseOrderSearchSCI
-							.SearchShoppingSpecialCount(specialReq);
+							.searchShoppingSpecialCount(specialReq);
 					if (specialRes.getDayCount() + product.getProdQty() > product.getSpecialSaleDayLimit()) {
 						throw new StorePlatformException("SAC_PUR_6104");
 					}
