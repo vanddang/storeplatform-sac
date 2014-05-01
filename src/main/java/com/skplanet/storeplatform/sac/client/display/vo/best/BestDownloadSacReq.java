@@ -27,8 +27,10 @@ public class BestDownloadSacReq extends CommonInfo {
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
+	@Pattern(regexp = "|[0-9]*")
 	private String stdDt; // 배치완료 기준일시
 	@NotBlank
+	@Pattern(regexp = "RNK000000006|RNK000000008|RNK000000007|RNK000000003|RNK000000005|RNK000000004")
 	private String listId; // 리스트 Id
 	private String topMenuId; // Top 메뉴 Id
 	private String[] arrayTopMenuId; // Top 메뉴 Id Array
@@ -48,6 +50,16 @@ public class BestDownloadSacReq extends CommonInfo {
 	@Valid
 	private Integer count; // 페이지당 노출 ROW 수
 	private String dummy;
+
+	private String ebookSprtYn; // eBook 상품 지원여부
+
+	private String comicSprtYn; // Comic 상품 지원여부
+
+	private String videoDrmSprtYn; // VOD 상품 DRM 지원 여부
+
+	private String sdVideoSprtYn; // VOD 상품 SD 지원 여부
+
+	private String searchHisYn; // 이력 테이블 조회 여부
 
 	/**
 	 * 
@@ -547,6 +559,81 @@ public class BestDownloadSacReq extends CommonInfo {
 	 */
 	public void setStdDt(String stdDt) {
 		this.stdDt = stdDt;
+	}
+
+	/**
+	 * @return the ebookSprtYn
+	 */
+	public String getEbookSprtYn() {
+		return this.ebookSprtYn;
+	}
+
+	/**
+	 * @param ebookSprtYn
+	 *            the ebookSprtYn to set
+	 */
+	public void setEbookSprtYn(String ebookSprtYn) {
+		this.ebookSprtYn = ebookSprtYn;
+	}
+
+	/**
+	 * @return the comicSprtYn
+	 */
+	public String getComicSprtYn() {
+		return this.comicSprtYn;
+	}
+
+	/**
+	 * @param comicSprtYn
+	 *            the comicSprtYn to set
+	 */
+	public void setComicSprtYn(String comicSprtYn) {
+		this.comicSprtYn = comicSprtYn;
+	}
+
+	/**
+	 * @return the videoDrmSprtYn
+	 */
+	public String getVideoDrmSprtYn() {
+		return this.videoDrmSprtYn;
+	}
+
+	/**
+	 * @param videoDrmSprtYn
+	 *            the videoDrmSprtYn to set
+	 */
+	public void setVideoDrmSprtYn(String videoDrmSprtYn) {
+		this.videoDrmSprtYn = videoDrmSprtYn;
+	}
+
+	/**
+	 * @return the sdVideoSprtYn
+	 */
+	public String getSdVideoSprtYn() {
+		return this.sdVideoSprtYn;
+	}
+
+	/**
+	 * @param sdVideoSprtYn
+	 *            the sdVideoSprtYn to set
+	 */
+	public void setSdVideoSprtYn(String sdVideoSprtYn) {
+		this.sdVideoSprtYn = sdVideoSprtYn;
+	}
+
+	/**
+	 * @return the searchHisYn
+	 */
+	public String getSearchHisYn() {
+		return this.searchHisYn;
+	}
+
+	/**
+	 * @param searchHisYn
+	 *            the searchHisYn to set
+	 */
+	public void setSearchHisYn(String searchHisYn) {
+		this.searchHisYn = searchHisYn;
 	}
 
 }
