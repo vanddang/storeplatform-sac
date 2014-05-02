@@ -48,7 +48,7 @@ public class DownloadAES128Helper {
 
 		try {
 			Random random = new Random();
-			int randomNumber = random.nextInt(20);
+			int randomNumber = random.nextInt(this.sacKey.size());
 			this.setSacRandomNo(randomNumber);
 
 			row = this.convertBytes(this.sacKey.get(randomNumber));
