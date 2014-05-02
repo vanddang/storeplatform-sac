@@ -530,7 +530,6 @@
                              </if>                             
                              AND B1.EXPO_YN ='Y'
                              AND B1.CPN_ID IS NOT NULL
-                             AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                           )N                         
                          ,TB_DP_PROD_IMG PI
                          ,TB_DP_PROD_OPT OPT
@@ -565,7 +564,6 @@
                 AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                 AND I.PROD_ID = #{productBasicInfo.partProdId}        /* 상품ID */
            ) KK
     </select>
@@ -646,7 +644,6 @@
 		        AND DC.LANG_CD = #{lang}
 		        AND TP.TENANT_ID = #{tenantId}
 		        AND TP.TENANT_ID = PR.TENANT_ID
-		        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 		    ) IV  LEFT OUTER JOIN TB_DP_PROD_IMG TIG
                ON TIG.LANG_CD = IV.LANG_CD 
                AND IV.PROD_ID = TIG.PROD_ID 
