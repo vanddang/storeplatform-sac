@@ -103,7 +103,7 @@ public class PurchaseOrderServiceImplTest {
 			product.setProdSprtYn("Y");
 			product.setDrmYn("N");
 			product.setUsePeriodUnitCd("PD00310");
-			product.setUsePeriod(0);
+			product.setUsePeriod("0");
 			product.setAid("OA00024129");
 			product.setSellerMbrNo("IF102158942020090723111912");
 			product.setSellerNm("Seed");

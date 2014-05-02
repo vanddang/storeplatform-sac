@@ -111,7 +111,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			if (displayInfo.getUsePeriodUnitCd() != null) {
 				purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
 				purchaseProduct
-						.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(), "PD00310") ? 0 : displayInfo
+						.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(), "PD00310") ? "0" : displayInfo
 								.getUsePeriod());
 			}
 			purchaseProduct.setAid(displayInfo.getAid());
@@ -145,8 +145,8 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setCmpxProdClsfCd(displayInfo.getCmpxProdClsfCd());
 			// 게임캐쉬
 			purchaseProduct.setBnsCashAmt(displayInfo.getBnsCashAmt());
-			purchaseProduct.setBnsUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
-			purchaseProduct.setBnsUsePeriod(displayInfo.getUsePeriod());
+			purchaseProduct.setBnsUsePeriodUnitCd(displayInfo.getBnsUsePeriodUnitCd());
+			purchaseProduct.setBnsUsePeriod(displayInfo.getBnsUsePeriod());
 
 			purchaseProductMap.put(displayInfo.getProdId(), purchaseProduct);
 		}
@@ -255,6 +255,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	 *            복합 상품 구분 코드
 	 * @return 에피소드 상품 목록
 	 */
+	@Override
 	public List<EpisodeInfoRes> searchEbookComicEpisodeList(String tenantId, String langCd, String deviceModelCd,
 			String prodId, String cmpxProdClsfCd) {
 		EpisodeInfoReq episodeInfoReq = new EpisodeInfoReq();

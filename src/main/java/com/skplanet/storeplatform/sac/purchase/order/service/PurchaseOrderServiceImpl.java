@@ -74,6 +74,7 @@ import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.PurchaseUserInfo;
 import com.skplanet.storeplatform.purchase.client.order.vo.ReservePurchaseScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.ReservePurchaseScRes;
+import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseSequenceAndDateRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseListScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseListScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
@@ -157,12 +158,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -----------------------------------------------------------------------------
 		// 구매ID, 구매일시 세팅
 
+		SearchPurchaseSequenceAndDateRes searchPurchaseSequenceAndDateRes = this.purchaseOrderSearchSCI
+				.searchPurchaseSequenceAndDate();
+
 		if (StringUtils.isBlank(purchaseOrderInfo.getPrchsId())) {
-			purchaseOrderInfo.setPrchsId(this.makePrchsId());
+			purchaseOrderInfo.setPrchsId(this.makePrchsId(searchPurchaseSequenceAndDateRes.getNextSequence(),
+					searchPurchaseSequenceAndDateRes.getNowDate()));
 		}
 
-		purchaseOrderInfo
-				.setPrchsDt(DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyyyMMddHHmmss"));
+		purchaseOrderInfo.setPrchsDt(searchPurchaseSequenceAndDateRes.getNowDate());
 
 		// -----------------------------------------------------------------------------
 		// 무료구매 완료 요청 데이터 생성
@@ -330,15 +334,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -----------------------------------------------------------------------------
 		// 구매ID 생성
 
+		SearchPurchaseSequenceAndDateRes searchPurchaseSequenceAndDateRes = this.purchaseOrderSearchSCI
+				.searchPurchaseSequenceAndDate();
+
 		if (StringUtils.isBlank(purchaseOrderInfo.getPrchsId())) {
-			purchaseOrderInfo.setPrchsId(this.makePrchsId());
+			purchaseOrderInfo.setPrchsId(this.makePrchsId(searchPurchaseSequenceAndDateRes.getNextSequence(),
+					searchPurchaseSequenceAndDateRes.getNowDate()));
 		}
 
 		// -----------------------------------------------------------------------------
 		// 구매시간 세팅
 
-		purchaseOrderInfo
-				.setPrchsDt(DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyyyMMddHHmmss"));
+		purchaseOrderInfo.setPrchsDt(searchPurchaseSequenceAndDateRes.getNowDate());
 
 		// -----------------------------------------------------------------------------
 		// 구매생성 요청 데이터 생성
@@ -511,7 +518,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
 			String afterAutoPayDt = this.calculateUseDate(prchsDtlMore.getUseStartDt(),
 					reservedDataMap.get("autoPrchsPeriodUnitCd"),
-					Integer.parseInt(StringUtils.defaultString(reservedDataMap.get("autoPrchsPeriodValue"), "0")));
+					StringUtils.defaultString(reservedDataMap.get("autoPrchsPeriodValue"), "0"));
 			res.setAfterAutoPayDt(afterAutoPayDt.substring(0, 8) + "000000"); // 다음 자동 결제일
 			res.setBonusCashPoint(reservedDataMap.get("bonusPoint")); // 보너스 캐쉬 지급 Point
 			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
@@ -639,8 +646,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				throw new StorePlatformException("SAC_PUR_7101");
 			}
 			prchsDtlMore.setUsePeriodUnitCd(reservedDataMap.get("usePeriodUnitCd"));
-			prchsDtlMore
-					.setUsePeriod(Integer.parseInt(StringUtils.defaultString(reservedDataMap.get("usePeriod"), "0")));
+			prchsDtlMore.setUsePeriod(StringUtils.defaultString(reservedDataMap.get("usePeriod"), "0"));
 			prchsDtlMore.setProdId(notifyPaymentReq.getProdId());
 			prchsDtlMore.setProdAmt(notifyPaymentReq.getTotAmt());
 			prchsDtlMore.setTotAmt(notifyPaymentReq.getTotAmt());
@@ -715,8 +721,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			if (Integer.parseInt(reservedDataMap.get("bonusPoint")) > 0) { // 보너스 Point
 				bonusPointAmt = Double.parseDouble(reservedDataMap.get("bonusPoint"));
 				bonusPointUseExprDt = this.calculateUseDate(prchsDtlMore.getUseStartDt(),
-						reservedDataMap.get("bonusPointUsePeriodUnitCd"),
-						Integer.parseInt(reservedDataMap.get("bonusPointUsePeriod")));
+						reservedDataMap.get("bonusPointUsePeriodUnitCd"), reservedDataMap.get("bonusPointUsePeriod"));
 			}
 
 			// 충전 예약
@@ -1065,13 +1070,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @return 새로 생성된 구매ID
 	 */
-	private String makePrchsId() {
+	private String makePrchsId(String sequence, String date) {
 		// TAKTODO:: 서버ID(2), 인스턴스ID(2) 적용 방안 확인
-		String prchsIdSeq = this.purchaseOrderSearchSCI.searchNextPurchaseIdSequence();
 		StringBuffer sbPrchsId = new StringBuffer(20);
-		sbPrchsId.append("01").append("01")
-				.append(DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyMMddHHmmss"))
-				.append(prchsIdSeq);
+		sbPrchsId.append("01").append("01").append(date.substring(2)).append(StringUtils.leftPad(sequence, 4, "0"));
 		return sbPrchsId.toString();
 	}
 
@@ -1186,7 +1188,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				prchsDtlMore.setResvCol04(product.getResvCol04());
 				prchsDtlMore.setResvCol05(product.getResvCol05());
 				prchsDtlMore.setUsePeriodUnitCd(product.getUsePeriodUnitCd());
-				prchsDtlMore.setUsePeriod(product.getUsePeriod() == null ? 0 : product.getUsePeriod());
+				prchsDtlMore.setUsePeriod(product.getUsePeriod() == null ? "0" : product.getUsePeriod());
 				// 비과금 구매요청 시, 이용종료일시 세팅
 				if (purchaseOrderInfo.isFreeChargeReq() && StringUtils.isNotBlank(product.getUseExprDt())) {
 					prchsDtlMore.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
@@ -2053,10 +2055,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @return 계산된 이용 일자
 	 */
-	private String calculateUseDate(String startDt, String periodUnitCd, int periodVal) {
+	private String calculateUseDate(String startDt, String periodUnitCd, String periodVal) {
 
 		if (StringUtils.equals(periodUnitCd, "PD00310")) { // 무제한
 			return "99991231235959";
+		} else if (StringUtils.equals(periodUnitCd, "PD00319")) { // 기간선택
+			return periodVal;
 		} else if (StringUtils.equals(periodUnitCd, "PD00315")) { // 당일
 			return startDt.substring(0, 8) + "235959";
 		} else if (StringUtils.equals(periodUnitCd, "PD00317")) { // 당년
@@ -2070,13 +2074,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 
 			if (StringUtils.equals(periodUnitCd, "PD00312")) { // 일
-				checkDate = DateUtils.addDays(checkDate, periodVal);
+				checkDate = DateUtils.addDays(checkDate, Integer.parseInt(periodVal));
 			} else if (StringUtils.equals(periodUnitCd, "PD00311")) { // 시간
-				checkDate = DateUtils.addHours(checkDate, periodVal);
+				checkDate = DateUtils.addHours(checkDate, Integer.parseInt(periodVal));
 			} else if (StringUtils.equals(periodUnitCd, "PD00313")) { // 월
-				checkDate = DateUtils.addMonths(checkDate, periodVal);
+				checkDate = DateUtils.addMonths(checkDate, Integer.parseInt(periodVal));
 			} else if (StringUtils.equals(periodUnitCd, "PD00314")) { // 년
-				checkDate = DateUtils.addYears(checkDate, periodVal);
+				checkDate = DateUtils.addYears(checkDate, Integer.parseInt(periodVal));
 			} else if (StringUtils.equals(periodUnitCd, "PD00316")) { // 당월
 				checkDate = DateUtils.addSeconds(DateUtils.ceiling(checkDate, Calendar.MONTH), -1);
 			} else {
