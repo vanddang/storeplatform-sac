@@ -56,7 +56,7 @@ public class ProductInfoSCITestTest_Shopping {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
 
-		list.add("H090131839");
+		list.add("FR00000103");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
 		req.setTenantId("S01");
@@ -81,7 +81,7 @@ public class ProductInfoSCITestTest_Shopping {
 	 * @throws JsonMappingException
 	 * @throws JsonGenerationException
 	 */
-	@Test
+	// @Test
 	public void testSearchShoppingProductList() throws JsonGenerationException, JsonMappingException, IOException {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();

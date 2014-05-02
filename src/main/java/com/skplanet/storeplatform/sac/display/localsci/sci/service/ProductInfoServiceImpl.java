@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.MapgProdMeta;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
@@ -165,9 +166,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					this.log.debug("##### Search for freePass  product");
 					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getFreePassMetaInfo", paramMap,
 							ProductInfo.class);
-					List<String> mapgProdIdList = null;
-					mapgProdIdList = (List<String>) this.commonDAO.queryForList("ProductInfo.getMapgProdIdList",
-							paramMap);
+
+					List<MapgProdMeta> mapgProdIdList = this.commonDAO.queryForList("ProductInfo.getMapgProdIdList",
+							paramMap, MapgProdMeta.class);
 					product.setMapgProdIdList(mapgProdIdList);
 					if (product != null) {
 						productList.add(product);
