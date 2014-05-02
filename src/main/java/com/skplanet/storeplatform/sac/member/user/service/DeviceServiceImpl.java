@@ -454,7 +454,7 @@ public class DeviceServiceImpl implements DeviceService {
 					updRealNameReq.setIsRealName("N");
 					updRealNameReq.setUserKey(userKey);
 					this.userSCI.updateRealName(updRealNameReq);
-					LOGGER.debug("realName init : {}", deviceInfo.getDeviceId());
+					LOGGER.debug("기등록된 모바일 회원 실명인증 정보 초기화 deviceId : {}", deviceInfo.getDeviceId());
 				}
 
 			}
