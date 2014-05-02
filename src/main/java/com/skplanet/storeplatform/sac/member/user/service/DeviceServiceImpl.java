@@ -1265,7 +1265,7 @@ public class DeviceServiceImpl implements DeviceService {
 				mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
 				mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
 
-				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+				this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
 			} catch (AmqpException ex) {
 				LOGGER.info("MQ process fail {}", mqInfo);
 
