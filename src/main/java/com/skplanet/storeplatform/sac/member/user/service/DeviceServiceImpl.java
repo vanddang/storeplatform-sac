@@ -429,10 +429,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (StringUtil.isNotBlank(previousUserKey) && StringUtil.isNotBlank(previousDeviceKey)) {
 
-			LOGGER.debug("[PreviousDeviceKey] {}", previousDeviceKey);
-			LOGGER.debug("[nowDeviceKey] {}", deviceKey);
-			LOGGER.debug("[PreviousUserKey] {}", previousUserKey);
-			LOGGER.debug("[NowUserKey] {}", userKey);
+			LOGGER.info("기등록된 모바일 회원 이관처리 deviceId : {}, PreviousDeviceKey : {}, nowDeviceKey : {}, PreviousUserKey : {}, NowUserKey : {}",
+					deviceInfo.getDeviceId(), previousDeviceKey, deviceKey, previousUserKey, userKey);
 
 			/* 3. 전시/기타, 구매 파트 키 변경 */
 			this.commService.excuteInternalMethod(true, systemId, tenantId, userKey, previousUserKey, deviceKey, previousDeviceKey);
