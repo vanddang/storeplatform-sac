@@ -421,7 +421,7 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 등록에 실패하였습니다.
 		}
 
-		/* 2. 기등록된 회원이 존재하는지 확인(모바일 회원에 대해서만 pre* 값들이 리턴됨) */
+		/* 2. 기등록된 회원이 존재하는지 확인(모바일 회원에 대해서만 previous* 값들이 리턴됨) */
 		String previousUserKey = createDeviceRes.getPreviousUserKey();
 		String previousDeviceKey = createDeviceRes.getPreviousDeviceKey();
 		String previousMbrNo = createDeviceRes.getPreMbrNo();
