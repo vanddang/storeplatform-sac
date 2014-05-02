@@ -6,6 +6,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 
 /**
  * 전시 공통 서비스
@@ -96,13 +97,6 @@ public interface DisplayCommonService {
 
 	/**
 	 * 메뉴에 해당하는 T멤버십 할인율 조회한다.
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * @param tenantId
 	 * @param topMenuId
 	 * @return
@@ -139,6 +133,22 @@ public interface DisplayCommonService {
 	 * 			chapterUnit
 	 */	
 	public String getVodChapterUnit();
+
+    /**
+     * 업데이트 히스토리 갯수 조회
+     * @param channelId
+     * @param offset
+     * @param count
+     * @return
+     */
+    public List<UpdateHistory> getUpdateList(String channelId, Integer offset, Integer count);
+
+    /**
+     * 업데이트 히스토리의 전체 갯수 조회
+     * @param channelId
+     * @return
+     */
+    public int getUpdateCount(String channelId);
 	
 	
 }

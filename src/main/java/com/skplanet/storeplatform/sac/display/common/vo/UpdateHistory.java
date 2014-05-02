@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.display.app.vo;
+package com.skplanet.storeplatform.sac.display.common.vo;
 
 import java.util.Date;
 

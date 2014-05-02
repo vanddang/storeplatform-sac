@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.display.app.vo.AppDetail;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.display.app.vo.ImageSource;
 import com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq;
-import com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory;
+import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -222,7 +222,7 @@ public class AppServiceImpl implements AppService {
 
 		// Update History
 		History history = new History();
-		List<UpdateHistory> updateHistoryList = this.getUpdateList(request.getChannelId(), 1, 5);
+		List<UpdateHistory> updateHistoryList = this.commonService.getUpdateList(request.getChannelId(), 1, 5);
 		List<Update> updateList = new ArrayList<Update>();
 		for (UpdateHistory uh : updateHistoryList) {
 			Update update = new Update();
@@ -247,19 +247,4 @@ public class AppServiceImpl implements AppService {
 		return res;
 	}
 
-    @Override
-    public List<UpdateHistory> getUpdateList(String channelId, Integer offset, Integer count) {
-        Map<String, Object> req = new HashMap<String, Object>();
-        req.put("channelId", channelId);
-        if(offset != null && count != null) {
-            req.put("rowStart", offset);
-            req.put("rowEnd", offset + count - 1);
-        }
-        return this.commonDAO.queryForList("AppDetail.getUpdateList", req, UpdateHistory.class);
-    }
-
-    @Override
-    public int getUpdateCount(String channelId) {
-        return this.commonDAO.queryForObject("AppDetail.getUpdateCount", channelId, Integer.class);
-    }
 }

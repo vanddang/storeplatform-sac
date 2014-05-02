@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.common.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +22,6 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest;
-import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
-import com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq;
-import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
-import com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy;
-import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 
 /**
  * 전시 공통 서비스
@@ -227,4 +222,20 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	public String getVodChapterUnit() {
 		return this.messageSourceAccessor.getMessage("display.chapter.unit.vod");
 	}
+
+    @Override
+    public List<UpdateHistory> getUpdateList(String channelId, Integer offset, Integer count) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("channelId", channelId);
+        if(offset != null && count != null) {
+            req.put("rowStart", offset);
+            req.put("rowEnd", offset + count - 1);
+        }
+        return this.commonDAO.queryForList("DisplayCommon.getUpdateList", req, UpdateHistory.class);
+    }
+
+    @Override
+    public int getUpdateCount(String channelId) {
+        return this.commonDAO.queryForObject("DisplayCommon.getUpdateCount", channelId, Integer.class);
+    }
 }

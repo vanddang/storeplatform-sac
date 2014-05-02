@@ -5,7 +5,7 @@
     <!--배치 완료 일시 조회-->
     <select id="getBatchStandardDate" parameterType="com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest" resultType="String">
         SELECT
-          /* CommonMapper.xml, getBatchStandardDate, SAC : 정희원 , 2014-01-07 */
+          /* DisplayCommonMapper.xml, getBatchStandardDate, SAC : 정희원 , 2014-01-07 */
           to_char(STD_DT, 'yyyyMMddHH24miss')
         FROM TB_DP_BATCH_COMPT
         WHERE TENANT_ID=#{tenantId}
@@ -15,7 +15,7 @@
     <!-- 메뉴 목록 조회 -->
     <select id="getMenuItemList" parameterType="com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq" resultType="com.skplanet.storeplatform.sac.display.common.vo.MenuItem">
         select
-            /* CommonMapper.xml, getMenuItemList, SAC : 정희원 , 2014-01-24 */
+            /* DisplayCommonMapper.xml, getMenuItemList, SAC : 정희원 , 2014-01-24 */
             MC.MENU_ID,
             MC.MENU_DEPTH,
             decode(MC.INFR_MENU_YN, 'Y', 1, 0) as IS_INFR_MENU,
@@ -41,7 +41,7 @@
 
     <!-- 해상도 코드 조회 -->
     <select id="getTmembershipDcRateForMenu" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy">
-        SELECT /* CommonMapper.xml, getTmembershipDcRateForMenu, SAC : 정희원 , 2014-01-24 */
+        SELECT /* DisplayCommonMapper.xml, getTmembershipDcRateForMenu, SAC : 정희원 , 2014-01-24 */
             NVL(SUBSTR(TENANT_PROD_GRP_CD,13,8),'OR006311') PROD_TP,
             DECODE(NVL(SUBSTR(TENANT_PROD_GRP_CD,13,8),'OR006311')
             , 'OR006311', 'normal'                    -- 일반상품 normal
@@ -69,5 +69,28 @@
 		  FROM  TB_CM_DEVICE
 		 WHERE  DEVICE_MODEL_CD = #{deviceModelCd}
 		   AND  USE_YN = 'Y'
+    </select>
+
+    <select id="getUpdateList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory">
+        SELECT /* DisplayCommonMapper.xml, getUpdateList, SAC : 정희원 , 2014-01-24 */
+        *
+        FROM (
+        SELECT
+        PROD_UPD_DT,
+        UPDT_TEXT
+        FROM TB_DP_PROD_UPDT_HIS
+        WHERE PROD_ID = #{channelId}
+        ORDER BY UPDT_SEQ DESC
+        )
+        <if test="rowStart != null and rowEnd != null">
+            WHERE ROWNUM BETWEEN #{rowStart} AND #{rowEnd}
+        </if>
+    </select>
+
+    <select id="getUpdateCount" parameterType="String" resultType="Integer">
+        SELECT /* DisplayCommonMapper.xml, getUpdateCount, SAC : 정희원 , 2014-05-01 */
+        COUNT(*) AS HIST_CNT
+        FROM TB_DP_PROD_UPDT_HIS
+        WHERE PROD_ID = #{channelId}
     </select>
 </mapper>

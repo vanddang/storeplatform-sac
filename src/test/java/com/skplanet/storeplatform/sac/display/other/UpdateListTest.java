@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.display.app;
+package com.skplanet.storeplatform.sac.display.other;
 
 import com.skplanet.storeplatform.sac.common.MvcTestBuilder;
 import org.junit.Before;
@@ -33,7 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class UpdateListTest {
-    private static final String URL = "/display/app/update/list/v1";
+    private static final String URL = "/other/update/list/v1";
 
     @Autowired
     private WebApplicationContext wac;
