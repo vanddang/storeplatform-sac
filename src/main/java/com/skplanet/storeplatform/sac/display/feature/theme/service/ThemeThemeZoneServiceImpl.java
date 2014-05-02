@@ -173,7 +173,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 			if (!themeThemeZoneInfoMeta.isEmpty()) {
 
 				Menu menu = null;
-				// List<Menu> menuList = null;
+				List<Menu> menuList = new ArrayList<Menu>();
 				Title title = null;
 				themeThemeZoneInfo = themeThemeZoneInfoMeta.get(0);
 				layout = new Layout();
@@ -186,7 +186,8 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				menu = new Menu(); // 메뉴
 				menu.setId(themeThemeZoneInfo.getBnrMenuId());
 				menu.setName(themeThemeZoneInfo.getBnrMenuNm());
-				layout.setMenu(menu);
+				menuList.add(menu);
+				layout.setMenuList(menuList);
 
 			}
 			// 단말 지원정보 조회
