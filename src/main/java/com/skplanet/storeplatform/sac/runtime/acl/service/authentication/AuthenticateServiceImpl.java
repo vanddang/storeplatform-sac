@@ -150,7 +150,7 @@ public class AuthenticateServiceImpl implements AuthenticateService {
 
 		/* 나중에 적용 예정
 		if (StringUtils.isBlank(tenantId))
-			throw new StorePlatformException("SAC_CMN_0001", CommonConstants.HEADER_TENANT_ID);
+			throw new StorePlatformException("SAC_CMN_0001", SacRestClientConstants.HEADER_TENANT_ID);
 		*/
 
     	// 헤더가 테넌트아이디가 없으면 인증키로 DB 조회 (임시 로직)
@@ -231,11 +231,11 @@ public class AuthenticateServiceImpl implements AuthenticateService {
         String nonce = headers.getNonce();
         String signature = headers.getSignature();
         try {
-            logger.debug("timestamp={}, nonce={}", timestamp, nonce);
+        	logger.debug("timestamp={}, nonce={}", timestamp, nonce);
             String data = SacAuthUtil.getMessageForAuth(requestUri, authKey, timestamp, nonce);
             String newSignature = HmacSha1Util.getSignature(data, authKeyInfo.getSecret());
             if(!newSignature.equals(signature)) {
-                logger.error("signature={}, newSignature={}", signature, newSignature);
+                logger.error("requestUri={}, authKey={}, timestamp={}, nonce={}, signature={}, newSignature={}", requestUri, authKey, timestamp, nonce, signature, newSignature);
                 // 메시지 인증 코드가 유효하지 않습니다.
                 throw new StorePlatformException("SAC_CMN_0038");
             }
