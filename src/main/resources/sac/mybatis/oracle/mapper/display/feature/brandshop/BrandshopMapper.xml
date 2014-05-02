@@ -59,8 +59,8 @@
 	            AND BS.DEL_YN = 'N'  
 	            AND BSS.MBR_NO = D.SELLER_MBR_NO
 	            AND A.PART_PROD_ID = D.PROD_ID	       
-                <if test="topMenuId != null and topMenuId != ''">
-                AND #{topMenuId} = ( select ADD_FIELD_01 FROM TB_CM_CD where cd_id = BS.CATEGORY_NO )        
+                <if test="topMenuId != null and topMenuId != ''">  
+                AND BS.CATEGORY_NO =  #{topMenuId}  
                 </if>
 	            AND A.PROD_RSHP_CD = 'DP010802'
 	            AND A.PROD_ID = B.PROD_ID
