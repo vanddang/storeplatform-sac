@@ -310,7 +310,7 @@
 							  AND MP.BOOK_CLSF_CD = #{bookTypeCd}
 		                      </if>
 		                      <if test="baseChapter != null">
-		                      AND NVL(MP.CHAPTER, 1) > #{baseChapter}
+		                      AND NVL(MP.CHAPTER, 999) > #{baseChapter}
 		                      </if>
 			              ) T1
 			              WHERE RN = 1

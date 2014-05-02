@@ -353,7 +353,7 @@
 		                    AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
 		                    AND PD.SVC_GRP_CD = 'DP000203' AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD IN ('DP001112', 'DP001115')
 		                    <if test="baseChapter != null">
-		                      AND NVL(MP.CHAPTER, 1) > #{baseChapter}
+		                      AND NVL(MP.CHAPTER, 999) > #{baseChapter}
 		                      </if>
 		                ) T1
 		                GROUP BY T1.CHAPTER
