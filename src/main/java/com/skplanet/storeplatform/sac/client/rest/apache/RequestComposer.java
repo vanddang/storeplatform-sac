@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.client.rest.apache;
 
 import java.security.SignatureException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -10,6 +11,8 @@ import org.apache.http.entity.StringEntity;
 
 import com.skplanet.storeplatform.framework.core.idgen.GuidGenerator;
 import com.skplanet.storeplatform.framework.core.idgen.GuidGeneratorFactory;
+import com.skplanet.storeplatform.sac.client.rest.constant.SacRestClientConstants;
+import com.skplanet.storeplatform.sac.client.rest.error.SacRestClientException;
 import com.skplanet.storeplatform.sac.client.rest.util.SacRestConvertingUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.util.HmacSha1Util;
 import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
@@ -38,32 +41,41 @@ public class RequestComposer {
 		return request;
 	}
 
-	public static void injectHeaders(HttpUriRequest request, String authKey, String tenantId, String systemId, String interfaceId) {
+	public static void injectHeaders(HttpUriRequest request, String authKey, String secret, String tenantId, String systemId, String interfaceId) {
 		request.addHeader("Content-Type", "application/json;charset=UTF-8");
 		request.addHeader("Accept", "application/json;charset=UTF-8");
 
+		request.addHeader(SacRestClientConstants.HEADER_AUTH_KEY, authKey);
+		request.addHeader(SacRestClientConstants.HEADER_TENANT_ID, tenantId);
+		request.addHeader(SacRestClientConstants.HEADER_SYSTEM_ID, systemId);
+		request.addHeader(SacRestClientConstants.HEADER_INTERFACE_ID, interfaceId);
+
 		String guid = guidGenerator.getId();
+		request.addHeader(SacRestClientConstants.HEADER_GUID, guid);
+
 		String timestamp = SacAuthUtil.getTimestamp();
-		// String nonce = SacAuthUtil.getNonce();
-		// String signature = this.getSignature(baseUrl, authKey, timestamp, nonce, secret);
+		request.addHeader(SacRestClientConstants.HEADER_AUTH_TIMESTAMP, timestamp);
 
-		request.addHeader("x-sac-guid", guid);
-		request.addHeader("x-sac-auth-timestamp", timestamp);
-		// request.addHeader("x-sac-auth-nonce", nonce);
-		// request.addHeader("x-sac-auth-signature", signature);
+		String nonce = SacAuthUtil.getNonce();
+		request.addHeader(SacRestClientConstants.HEADER_AUTH_NONCE, nonce);
 
-		request.addHeader("x-sac-auth-key", authKey);
-		request.addHeader("x-sac-tenant-id", tenantId);
-		request.addHeader("x-sac-system-id", systemId);
-		request.addHeader("x-sac-interface-id", interfaceId);
-		// TODO: request.addHeader("x-sac-guid", guid);
+		if (StringUtils.isNotBlank(secret)) {
+			String baseUrl = request.getURI().toString();
+			String signature = getSignature(baseUrl, authKey, secret, timestamp, nonce);
+			request.addHeader(SacRestClientConstants.HEADER_AUTH_SIGNATURE, signature);
+		}
 	}
 
-	private String getSignature(String baseUrl, String authKey, String timestamp, String nonce, String secret) throws SignatureException {
-		//인증을 위한 URL (BaseUrl + authKey + timestamp + nonce)
+	private static String getSignature(String baseUrl, String authKey, String secret, String timestamp, String nonce) {
+		// 인증을 위한 URL (BaseUrl + authKey + timestamp + nonce)
 		String urlForAuth = SacAuthUtil.getMessageForAuth(baseUrl, authKey, timestamp, nonce);
 		// Signature 생성
-		String signature = HmacSha1Util.getSignature(urlForAuth, secret);
+		String signature;
+		try {
+			signature = HmacSha1Util.getSignature(urlForAuth, secret);
+		} catch (SignatureException e) {
+			throw new SacRestClientException("Failed to generate the signature for " + urlForAuth + ".");
+		}
 		return signature;
 	}
 

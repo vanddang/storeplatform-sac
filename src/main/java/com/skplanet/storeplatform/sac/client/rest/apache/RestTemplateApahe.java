@@ -41,7 +41,7 @@ public class RestTemplateApahe {
 		HttpUriRequest request = RequestComposer.prepareRequest(method, body, url);
 
 		// 3) Set request headers.
-		RequestComposer.injectHeaders(request, this.authKey, this.tenantId, this.systemId, interfaceId);
+		RequestComposer.injectHeaders(request, this.authKey, this.secret, this.tenantId, this.systemId, interfaceId);
 
 		// 4) Call the SAC API.
 		HttpResponse response = RestInvoker.invoke(request);
