@@ -33,7 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class UpdateListTest {
-    private static final String URL = "/other/update/list/v1";
+    private static final String URL = "/display/other/update/list/v1";
 
     @Autowired
     private WebApplicationContext wac;

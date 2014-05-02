@@ -39,7 +39,7 @@ public class OtherUpdateListController {
     @Autowired
     private DisplayCommonService displayCommonService;
 
-    @RequestMapping(value = "/other/update/list/v1", method = RequestMethod.GET)
+    @RequestMapping(value = "/display/other/update/list/v1", method = RequestMethod.GET)
     @ResponseBody
     public UpdateListRes getUpdateList(@Validated UpdateListReq req) {
         UpdateListRes res = new UpdateListRes();
