@@ -658,4 +658,13 @@
                
               
     </select>
+    <!--브랜드, 카탈로그 카테고리 조회-->
+    <select id="getMapgProdIdList" parameterType="Map" resultType="String">
+       /* ProductInfoMapper.xml, getMapgProdIdList ,정액권 채널 ID 조회 , 김형식/SK플래닛, 2014-01-07 */
+		SELECT PART_PROD_ID 
+		  FROM TB_DP_FIXRATE_PROD_MAPG
+		 WHERE PROD_ID =#{productBasicInfo.partProdId}
+		 ORDER BY EXPO_ORD
+    </select>    
+    
 </mapper>

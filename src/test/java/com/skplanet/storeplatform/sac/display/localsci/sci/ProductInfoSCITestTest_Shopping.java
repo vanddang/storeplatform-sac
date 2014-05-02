@@ -56,7 +56,7 @@ public class ProductInfoSCITestTest_Shopping {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
 
-		list.add("F901000639");
+		list.add("H090131839");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
 		req.setTenantId("S01");
