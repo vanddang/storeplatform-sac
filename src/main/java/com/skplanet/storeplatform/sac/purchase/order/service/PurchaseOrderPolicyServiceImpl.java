@@ -544,7 +544,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				&& StringUtils.equals(policy.getCondClsfUnitCd(),
 						PurchaseConstants.POLICY_PRECONDITION_CLSF_UNIT_CD_COUNT)) {
 			sciRes = this.purchaseOrderSearchSCI.searchSktLimitCondDetail(sciReq);
-			checkVal = (sciRes == null ? 0 : (Double) sciRes.getVal());
+			checkVal = (sciRes.getVal() == null ? 0 : (Double) sciRes.getVal());
 
 			if (Double.parseDouble(policy.getCondClsfValue()) == 0) {
 				if (checkVal != 0) {
