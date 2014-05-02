@@ -1043,9 +1043,9 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
 
 		/* 닉네임 미입력시에만 디폴트로 기기명 저장 */
-		// if (deviceInfo.getDeviceNickName() == null) {
-		// deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
-		// }
+		if (deviceInfo.getDeviceNickName() == null) {
+			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+		}
 
 		deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum());
 
