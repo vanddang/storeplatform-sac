@@ -325,13 +325,13 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 				}
 				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-				res.setLayOut(layout);
+				res.setLayout(layout);
 				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			} else {
 				// 조회 결과 없음
 				commonResponse.setTotalCount(0);
-				res.setLayOut(layout);
+				res.setLayout(layout);
 				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			}
@@ -475,7 +475,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		Date date = null;
 
 		Product product = null;
-		Layout layOut = null;
+		Layout layout = null;
 
 		List<Menu> menuList = null;
 		List<Source> sourceList = null;
@@ -495,7 +495,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		contributor = new Contributor();
 		date = new Date();
 
-		layOut = new Layout();
+		layout = new Layout();
 		title = new Title();
 		// title 설정
 		title.setText("브랜드샵 이름");
@@ -510,9 +510,9 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		menu.setId("dummyMenuId0");
 		menu.setName("game/simulation");
 		menuList.add(menu);
-		layOut.setTitle(title);
-		layOut.setSource(source);
-		layOut.setMenu(menu);
+		layout.setTitle(title);
+		layout.setSource(source);
+		layout.setMenu(menu);
 
 		// Identifier 설정
 		identifierList = new ArrayList<Identifier>();
@@ -561,7 +561,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 		commonResponse.setTotalCount(productList.size());
 		res.setCommonResponse(commonResponse);
-		res.setLayOut(layOut);
+		res.setLayout(layout);
 		res.setProductList(productList);
 
 		return res;

@@ -395,13 +395,13 @@ public class BrandshopServiceImpl implements BrandshopService {
 					}
 				}
 				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-				res.setLayOut(layout);
+				res.setLayout(layout);
 				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			} else {
 				// 조회 결과 없음
 				commonResponse.setTotalCount(0);
-				res.setLayOut(layout);
+				res.setLayout(layout);
 				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			}
