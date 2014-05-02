@@ -31,7 +31,7 @@ public class BrandshopListSacRes extends CommonInfo {
 
 	private List<Product> productList;
 
-	private Layout layOut;
+	private Layout layout;
 
 	/**
 	 * 
@@ -88,18 +88,12 @@ public class BrandshopListSacRes extends CommonInfo {
 		return ReflectionToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 
-	/**
-	 * @return the layOut
-	 */
-	public Layout getLayOut() {
-		return this.layOut;
+	public Layout getLayout() {
+		return this.layout;
 	}
 
-	/**
-	 * @param layOut
-	 *            the layOut to set
-	 */
-	public void setLayOut(Layout layOut) {
-		this.layOut = layOut;
+	public void setLayout(Layout layout) {
+		this.layout = layout;
 	}
+
 }

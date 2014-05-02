@@ -27,14 +27,14 @@ public class ThemeThemeZoneListSacRes extends CommonInfo {
 
 	private CommonResponse commonResponse;
 	private List<Product> productList;
-	private Layout layOut;
+	private Layout layout;
 
-	public Layout getLayOut() {
-		return this.layOut;
+	public Layout getLayout() {
+		return this.layout;
 	}
 
-	public void setLayOut(Layout layOut) {
-		this.layOut = layOut;
+	public void setLayout(Layout layout) {
+		this.layout = layout;
 	}
 
 	public CommonResponse getCommonResponse() {
