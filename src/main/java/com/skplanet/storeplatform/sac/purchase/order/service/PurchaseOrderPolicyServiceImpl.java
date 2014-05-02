@@ -543,7 +543,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 						PurchaseConstants.POLICY_PRECONDITION_PERIOD_UNIT_CD_PREMONTH)
 				&& StringUtils.equals(policy.getCondClsfUnitCd(),
 						PurchaseConstants.POLICY_PRECONDITION_CLSF_UNIT_CD_COUNT)) {
-			sciRes = this.purchaseOrderSearchSCI.searchSktLimitCondDetail(sciReq);
+			sciRes = this.purchaseOrderSearchSCI.searchSktLimitCondDetail(sciReq); // null 또는 1
 			checkVal = (sciRes.getVal() == null ? 0 : (Double) sciRes.getVal());
 
 			if (Double.parseDouble(policy.getCondClsfValue()) == 0) {
