@@ -9,11 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.app.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -226,8 +222,7 @@ public class AppServiceImpl implements AppService {
 
 		// Update History
 		History history = new History();
-		List<UpdateHistory> updateHistoryList = this.commonDAO.queryForList("AppDetail.getUpdateHistoryList", request,
-				UpdateHistory.class);
+		List<UpdateHistory> updateHistoryList = this.getUpdateList(request.getChannelId(), 1, 5);
 		List<Update> updateList = new ArrayList<Update>();
 		for (UpdateHistory uh : updateHistoryList) {
 			Update update = new Update();
@@ -252,4 +247,19 @@ public class AppServiceImpl implements AppService {
 		return res;
 	}
 
+    @Override
+    public List<UpdateHistory> getUpdateList(String channelId, Integer offset, Integer count) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("channelId", channelId);
+        if(offset != null && count != null) {
+            req.put("rowStart", offset);
+            req.put("rowEnd", offset + count - 1);
+        }
+        return this.commonDAO.queryForList("AppDetail.getUpdateList", req, UpdateHistory.class);
+    }
+
+    @Override
+    public int getUpdateCount(String channelId) {
+        return this.commonDAO.queryForObject("AppDetail.getUpdateCount", channelId, Integer.class);
+    }
 }

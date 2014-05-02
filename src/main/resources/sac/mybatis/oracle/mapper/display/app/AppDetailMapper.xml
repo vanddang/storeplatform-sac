@@ -74,13 +74,27 @@
         AND LANG_CD = #{langCd}
     </select>
 
-    <select id="getUpdateHistoryList" parameterType="com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam" resultType="com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory">
-        SELECT /* AppDetailMapper.xml, getUpdateHistoryList, SAC : 정희원 , 2014-01-24 */
-            PROD_UPD_DT,
-            UPDT_TEXT
+    <select id="getUpdateList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory">
+        SELECT /* AppDetailMapper.xml, getUpdateList, SAC : 정희원 , 2014-01-24 */
+            *
+        FROM (
+            SELECT
+                PROD_UPD_DT,
+                UPDT_TEXT
+            FROM TB_DP_PROD_UPDT_HIS
+            WHERE PROD_ID = #{channelId}
+            ORDER BY UPDT_SEQ DESC
+         )
+         <if test="rowStart != null and rowEnd != null">
+         WHERE ROWNUM BETWEEN #{rowStart} AND #{rowEnd}
+         </if>
+    </select>
+
+    <select id="getUpdateCount" parameterType="String" resultType="Integer">
+        SELECT /* AppDetailMapper.xml, getUpdateCount, SAC : 정희원 , 2014-05-01 */
+            COUNT(*) AS HIST_CNT
         FROM TB_DP_PROD_UPDT_HIS
         WHERE PROD_ID = #{channelId}
-        ORDER BY UPDT_SEQ DESC
     </select>
 
 </mapper>

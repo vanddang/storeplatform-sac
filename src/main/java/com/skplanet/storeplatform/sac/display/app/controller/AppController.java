@@ -12,19 +12,25 @@ package com.skplanet.storeplatform.sac.display.app.controller;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.app.UpdateListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.app.UpdateListRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.app.service.AppService;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
+import com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AppController
@@ -63,5 +69,28 @@ public class AppController {
         }
 
         return appDetail;
+    }
+
+    @RequestMapping(value = "/app/update/list/v1", method = RequestMethod.GET)
+    @ResponseBody
+    public UpdateListRes getUpdateList(@Validated UpdateListReq req) {
+        UpdateListRes res = new UpdateListRes();
+        res.setUpdateList(new ArrayList<Update>());
+        res.setCommonResponse(new CommonResponse());
+
+        // 히스토리
+        List<UpdateHistory> updateList = this.appService.getUpdateList(req.getChannelId(), req.getOffset(), req.getCount());
+        for (UpdateHistory hist : updateList) {
+            Update update = new Update();
+            update.setDate(new Date(DisplayConstants.DP_DATE_REG, hist.getProdUpdDt()));
+            update.setUpdateExplain(hist.getUpdtText());
+            res.getUpdateList().add(update);
+        }
+
+        // 히스토리 갯수
+        int count = this.appService.getUpdateCount(req.getChannelId());
+        res.getCommonResponse().setTotalCount(count);
+
+        return res;
     }
 }
