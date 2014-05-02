@@ -164,7 +164,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		CancelEcReq cancelEcReq = new CancelEcReq();
 		cancelEcReq.setToken(PayPlanetUtils.makeToken(paymentSacParam.getAuthKey(), paymentSacParam.getPrchsId(),
 				String.valueOf(paymentSacParam.getTotAmt().intValue()), paymentSacParam.getMid()));
-		cancelEcReq.setTid(paymentSacParam.getTid());
+		cancelEcReq.setTid(StringUtils.substringBefore(paymentSacParam.getTid(), ":"));
 		cancelEcReq.setCdCancelReason(PurchaseConstants.PAYPLANET_PAYMENT_CANCEL_REASON_VOC);
 
 		return this.cancelSCI.cancelPayment(cancelEcReq);
