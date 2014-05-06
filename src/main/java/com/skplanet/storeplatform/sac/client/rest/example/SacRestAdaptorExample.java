@@ -25,7 +25,7 @@ public class SacRestAdaptorExample {
 
 	public SacRestAdaptorExample() {
 		// 호스트 (프로토콜, 포트 제거할 것!)
-		String host = "localhost:8010";
+		String host = "dev-store.sungsu.skplanet.com";
 		// 인증키 (SAC에 발급 신청, 유효 기간 확인)
 		String authKey = "S018aff2d1ada07fbc284cd3e0b243af437";
 		// 비밀키 (SAC에 발급 신청, 유효 기간 확인)
