@@ -385,8 +385,8 @@
 	             , E.COMPT_YN
 	             , E.STRM_EPSD_CNT
 	             , E.ISSUE_DAY
-	             , E.CHNL_COMP_NM as PUBLISHER
-	             , E.EPSD_CNT
+	             ,(SELECT CHNL_COMP_NM FROM TB_DP_EBOOK_PROD WHERE PROD_ID = I.PROD_ID) as PUBLISHER
+                 , E.EPSD_CNT
 	             , E.CHAPTER
 	             , E.BOOK_PAGE_CNT
 	             , E.BOOK_CLSF_CD
