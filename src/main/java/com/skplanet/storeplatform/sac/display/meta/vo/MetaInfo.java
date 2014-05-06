@@ -243,6 +243,7 @@ public class MetaInfo extends CommonInfo {
 	private String couponCode; // 쿠폰코드
 	private String itemCode; // 아이템코드
 	private String specialCouponId; // 특가 쿠폰 ID
+	private String productDetailExplain;
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
 	private String tagNm;
@@ -4115,6 +4116,21 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setChnlClsfCd(String chnlClsfCd) {
 		this.chnlClsfCd = chnlClsfCd;
+	}
+
+	/**
+	 * @return the productDetailExplain
+	 */
+	public String getProductDetailExplain() {
+		return this.productDetailExplain;
+	}
+
+	/**
+	 * @param productDetailExplain
+	 *            the productDetailExplain to set
+	 */
+	public void setProductDetailExplain(String productDetailExplain) {
+		this.productDetailExplain = productDetailExplain;
 	}
 
 }
