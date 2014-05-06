@@ -1757,7 +1757,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				Rights episodeRights = null;
 				Distributor distributor = null;
-				List<Date> episodeDateList = null;
 				SalesOption episodeSaleOption = null;
 
 				// / 옵션용
