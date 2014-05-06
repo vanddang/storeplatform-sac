@@ -153,15 +153,15 @@
         AND PD.PROD_ID = PR.PROD_ID
         AND DC.LANG_CD = #{langCd} 
         AND TP.TENANT_ID = #{tenantId}
-        AND TP.TENANT_ID = PR.TENANT_ID
+        AND TP.TENANT_ID = PR.TENANT_ID 
         <if test="cmpxProdClsfCd == 'OR004303' ">
-        AND PD.USE_PERIOD_UNIT_CD = 'PD00310'
+        AND PD.USE_PERIOD_UNIT_CD = 'PD00310'     /*전권 소장일 때는 무제한 */
         </if>
         <if test="cmpxProdClsfCd == 'OR004304'">
-        AND PD.USE_PERIOD_UNIT_CD != 'PD00310'
+        AND PD.USE_PERIOD_UNIT_CD != 'PD00310'    /*전권 대여일 때는 무제한뺀 모두 */ 
         </if>     
         <if test="cmpxProdClsfCd == 'OR004303' or  cmpxProdClsfCd == 'OR004304'">
-        AND 'DP004301' = (SELECT BOOK_CLSF_CD  FROM TB_DP_EBOOK_PROD WHERE PROD_ID =PD.PROD_ID AND ROWNUM=1)
+        AND 'DP004301' = (SELECT BOOK_CLSF_CD  FROM TB_DP_EBOOK_PROD WHERE PROD_ID =PD.PROD_ID AND ROWNUM=1) /* 전권 일때는 단행만 */
         </if>                   
         AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
     ) IV 
