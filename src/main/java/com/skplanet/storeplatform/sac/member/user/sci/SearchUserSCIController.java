@@ -296,7 +296,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
 		searchUserDeviceSacRes.setUserDeviceInfo(resMap);
 
-		LOGGER.info("Response: {}", ConvertMapperUtils.convertObjectToJson(searchUserDeviceSacRes));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(searchUserDeviceSacRes));
 
 		return searchUserDeviceSacRes;
 	}
