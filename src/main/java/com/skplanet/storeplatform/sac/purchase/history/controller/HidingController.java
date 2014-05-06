@@ -98,7 +98,6 @@ public class HidingController {
 			hidingListSc.setPrchsId(hidingListSac.getPrchsId());
 			hidingListSc.setPrchsDtlId(hidingListSac.getPrchsDtlId());
 			hidingListSc.setHidingYn(hidingListSac.getHidingYn());
-			// hidingListSc.setDeviceYn("ID");
 			list.add(hidingListSc);
 		}
 		req.setHidingList(list);
