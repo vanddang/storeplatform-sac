@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.other.feedback.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -90,6 +92,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Autowired
 	private FeedbackRepository feedbackRepository;
+
+	@Value("#{propertiesForSac['other.ogg.method.iscall']}")
+	public boolean isCall;
 
 	@Override
 	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackSacReq, SacRequestHeader sacRequestHeader) {
@@ -227,6 +232,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			tenantProdStats.setUpdId(removeFeedbackSacReq.getUserId());
 			// 상품 통계가 존재하면.
 			TenantProdStats getTenantProdStats = this.feedbackRepository.getTenantProdStats(tenantProdStats);
+			HashMap<String, String> param = new HashMap<String, String>();
 			if (getTenantProdStats != null) {
 				// 참여수가 1일경우 삭제.(모두 0으로 업데이트).
 				if (NumberUtils.toInt(getTenantProdStats.getPaticpersCnt(), 0) == 1) {
@@ -241,7 +247,19 @@ public class FeedbackServiceImpl implements FeedbackService {
 					updateTenantProdStats.setPreAvgScore(getRegMbrAvg.getAvgScore());
 					updateTenantProdStats.setUpdId(removeFeedbackSacReq.getUserId());
 					updateTenantProdStats.setAction("remove");
-					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
+
+					if (this.isCall) { // OGG연동을 위한 프로시저 호출시 사용 properties값을 이용하여 재빌드 없이 수행함
+						param.put("prodId", updateTenantProdStats.getProdId());
+						param.put("tenantId", updateTenantProdStats.getTenantId());
+						param.put("updId", updateTenantProdStats.getUpdId());
+						param.put("action", updateTenantProdStats.getAction());
+						param.put("avgEvluScore", updateTenantProdStats.getAvgEvluScore());
+						param.put("preAvgScore", updateTenantProdStats.getPreAvgScore());
+						param.put("rsltCd", "");
+						this.feedbackRepository.updateTenantProdStatsProc(param);
+					} else {
+						this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
+					}
 				}
 				// 웹툰일경우 채널ID에 에피소드들의 상품통계 평점을 계산한다.
 				this.setWebtoonChannelMbrAvgTenantStats(removeFeedbackSacReq.getProdId(), sacRequestHeader
@@ -313,7 +331,17 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 사용후기 추천 업데이트.
 		prodNotiGood.setAction("create");
-		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
+
+		HashMap<String, String> param = new HashMap<String, String>();
+		if (this.isCall) { // OGG연동을 위한 프로시저 호출시 사용 properties값을 이용하여 재빌드 없이 수행함
+			param.put("seq", prodNotiGood.getNotiSeq());
+			param.put("tenantId", prodNotiGood.getTenantId());
+			param.put("action", prodNotiGood.getAction());
+			param.put("rsltCd", "");
+			this.feedbackRepository.updateProdNotiGoodProc(param);
+		} else {
+			affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
+		}
 
 		if (affectedRow <= 0) {
 			throw new StorePlatformException("SAC_OTH_9202");
@@ -408,7 +436,18 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 사용후기 추천 업데이트.
 		prodNotiGood.setAction("remove");
-		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
+
+		HashMap<String, String> param = new HashMap<String, String>();
+
+		if (this.isCall) { // OGG연동을 위한 프로시저 호출시 사용 properties값을 이용하여 재빌드 없이 수행함
+			param.put("seq", prodNotiGood.getNotiSeq());
+			param.put("tenantId", prodNotiGood.getTenantId());
+			param.put("action", prodNotiGood.getAction());
+			param.put("rsltCd", "");
+			this.feedbackRepository.updateProdNotiGoodProc(param);
+		} else {
+			affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
+		}
 
 		if (affectedRow <= 0) {
 			throw new StorePlatformException("SAC_OTH_9204");
@@ -855,14 +894,40 @@ public class FeedbackServiceImpl implements FeedbackService {
 			updateTenantProdStats.setProdId(prodId);
 			updateTenantProdStats.setRegId(userId);
 			updateTenantProdStats.setUpdId(userId);
+			HashMap<String, String> param = new HashMap<String, String>();
 			if (getRegMbrAvg != null) {
 				updateTenantProdStats.setAvgEvluScore(avgScore);
 				updateTenantProdStats.setPreAvgScore(getRegMbrAvg.getAvgScore());
 				updateTenantProdStats.setAction("create");
-				this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
+
+				if (this.isCall) { // OGG연동을 위한 프로시저 호출시 사용 properties값을 이용하여 재빌드 없이 수행함
+					param.put("prodId", updateTenantProdStats.getProdId());
+					param.put("tenantId", updateTenantProdStats.getTenantId());
+					param.put("updId", updateTenantProdStats.getUpdId());
+					param.put("action", updateTenantProdStats.getAction());
+					param.put("avgEvluScore", updateTenantProdStats.getAvgEvluScore());
+					param.put("preAvgScore", updateTenantProdStats.getPreAvgScore());
+					param.put("rsltCd", "");
+					this.feedbackRepository.updateTenantProdStatsProc(param);
+				} else {
+					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
+				}
+
 			} else {
 				updateTenantProdStats.setAvgEvluScore(avgScore);
-				this.feedbackRepository.mergeTenantProdStats(updateTenantProdStats);
+
+				if (this.isCall) {
+					param.put("prodId", updateTenantProdStats.getProdId());
+					param.put("tenantId", updateTenantProdStats.getTenantId());
+					param.put("regId", updateTenantProdStats.getRegId());
+					param.put("updId", updateTenantProdStats.getUpdId());
+					param.put("action", updateTenantProdStats.getAction());
+					param.put("avgEvluScore", updateTenantProdStats.getAvgEvluScore());
+					param.put("rsltCd", "");
+					this.feedbackRepository.mergeTenantProdStatsProc(param);
+				} else {
+					this.feedbackRepository.mergeTenantProdStats(updateTenantProdStats);
+				}
 			}
 			// 웹툰일경우 채널ID에 에피소드들의 상품통계 평점을 계산한다.
 			this.setWebtoonChannelMbrAvgTenantStats(prodId, sacRequestHeader.getTenantHeader().getTenantId(), userId);

@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.other.feedback.repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -177,6 +178,18 @@ public interface FeedbackRepository {
 	/**
 	 * 
 	 * <pre>
+	 * 테넌트 상품통계 수정 / 등록 (OGG연동시에만 사용되는 프로시저용).
+	 * </pre>
+	 * 
+	 * @param tenantProdStats
+	 *            tenantProdStats
+	 * @return Object
+	 */
+	public Object mergeTenantProdStatsProc(HashMap<String, String> param);
+
+	/**
+	 * 
+	 * <pre>
 	 * 테넌트 상품통계 기등록 수정.
 	 * </pre>
 	 * 
@@ -185,6 +198,18 @@ public interface FeedbackRepository {
 	 * @return Object
 	 */
 	public Object updateTenantProdStats(TenantProdStats tenantProdStats);
+
+	/**
+	 * 테넌트 상품통계 기등록 수정 (OGG연동시에만 사용되는 프로시저용).
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param param
+	 * @return
+	 */
+	public Object updateTenantProdStatsProc(HashMap<String, String> param);
 
 	/**
 	 * 
@@ -233,6 +258,18 @@ public interface FeedbackRepository {
 	 * @return Object
 	 */
 	public Object updateProdNotiGood(ProdNotiGood prodNotiGood);
+
+	/**
+	 * 일반 회원 후기 추천 수 증감처리 (OGG연동시에만 사용되는 프로시저용).
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param param
+	 * @return
+	 */
+	public Object updateProdNotiGoodProc(HashMap<String, String> param);
 
 	/**
 	 * 

@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.other.feedback.repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -120,8 +121,18 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	}
 
 	@Override
+	public Object mergeTenantProdStatsProc(HashMap<String, String> param) {
+		return this.commonDAO.insert("Feedback.mergeTenantProdStatsProc", param);
+	}
+
+	@Override
 	public Object updateTenantProdStats(TenantProdStats tenantProdStats) {
 		return this.commonDAO.update("Feedback.updateTenantProdStats", tenantProdStats);
+	}
+
+	@Override
+	public Object updateTenantProdStatsProc(HashMap<String, String> param) {
+		return this.commonDAO.update("Feedback.updateTenantProdStatsProc", param);
 	}
 
 	@Override
@@ -142,6 +153,11 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	@Override
 	public Object updateProdNotiGood(ProdNotiGood prodNotiGood) {
 		return this.commonDAO.update("Feedback.updateProdNotiGood", prodNotiGood);
+	}
+
+	@Override
+	public Object updateProdNotiGoodProc(HashMap<String, String> param) {
+		return this.commonDAO.update("Feedback.updateProdNotiGoodProc", param);
 	}
 
 	@Override
