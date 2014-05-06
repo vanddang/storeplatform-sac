@@ -287,7 +287,7 @@
             , PD.ARTIST1_NM  AS  ARTIST_NM
             , PD.ARTIST2_NM
             , PD.ARTIST3_NM   AS ALBUM                     
-            , MP.CHNL_COMP_NM AS PUBLISHER
+            ,(SELECT CHNL_COMP_NM FROM TB_DP_MUSIC_PROD WHERE PROD_ID = CP.PROD_ID) as PUBLISHER
             , MP.AGENCY_NM    AS AGENCY
             , MP.ISSUE_DAY
             , 'Y' AS MP3_SPRT_YN
