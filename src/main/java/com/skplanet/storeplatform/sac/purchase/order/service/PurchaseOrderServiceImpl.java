@@ -444,6 +444,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					sktPaymethodInfo = "11:0:0";
 				}
 			}
+
+			// SKT 후불 SYSTEM_DIVISION
+			if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
+					|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+							PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
+				res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_VOD_FIXRATE_APPROVAL);
+				res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_VOD_FIXRATE_CANCEL);
+			} else {
+				res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_NORMAL_APPROVAL);
+				res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_NORMAL_CANCEL);
+			}
 		}
 
 		// 법인 및 일반 시험폰 처리 타입 (T01, T02, T03)
@@ -1336,7 +1348,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			payment.setBillKey(paymentInfo.getBillKey());
 			payment.setCpnId(paymentInfo.getCpnId());
 			payment.setCpnMakeHost(paymentInfo.getCpnMakeHost());
-			payment.setCpnType(paymentInfo.getCpnType());
+			if (StringUtils.equals(payment.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_COUPON)) {
+				payment.setCpnType(paymentInfo.getCpnType());
+			} else if (StringUtils.equals(payment.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_OCB)) {
+				payment.setCpnType(paymentInfo.getOcbType());
+			}
 			payment.setMoid(paymentInfo.getMoid());
 
 			payment.setPaymentMtdCd(PaymethodUtil.convert2StoreCode(paymentInfo.getPaymentMtdCd()));

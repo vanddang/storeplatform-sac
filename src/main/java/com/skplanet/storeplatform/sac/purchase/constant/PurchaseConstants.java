@@ -30,6 +30,12 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String DANAL_CONTENT_TYPE_DIGITAL = "0"; // 디지털 상품
 	public static final String DANAL_CONTENT_TYPE_REAL = "1"; // 실물 상품
 
+	/** SKT후불 SYSTEM_DIVISION */
+	public static final String SKT_SYSTEM_DIVISION_NORMAL_APPROVAL = "033A"; // Default 승인용
+	public static final String SKT_SYSTEM_DIVISION_NORMAL_CANCEL = "033B"; // Default 취소용
+	public static final String SKT_SYSTEM_DIVISION_VOD_FIXRATE_APPROVAL = "033C"; // VOD정액상품 승인용
+	public static final String SKT_SYSTEM_DIVISION_VOD_FIXRATE_CANCEL = "033D"; // VOD정액상품 취소용
+
 	/** SKT후불 결제수단 재정의 원인 타입 */
 	public static final String SKT_ADJUST_REASON_NO_LIMIT = "L00"; // 제한없음 / 타통신사
 	public static final String SKT_ADJUST_REASON_MVNO = "L01"; // MVNO
