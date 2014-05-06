@@ -28,7 +28,7 @@
                 ELSE
                   PD.DRM_YN
               END)  AS DRM_YN            
-            , 'PD00310' AS USE_PERIOD_UNIT_CD
+            , PM.DRM_USE_PERIOD_UNIT_CD AS USE_PERIOD_UNIT_CD
             , PM.DRM_USE_PERIOD AS USE_PERIOD            
             , CM.CMPX_PROD_CLSF_CD
             , PD.TOP_MENU_ID      
@@ -42,6 +42,7 @@
             ,(SELECT  A.PROD_ID 
                      ,B.PART_PROD_ID
                      ,A.DRM_USE_PERIOD
+                     ,A.DRM_USE_PERIOD_UNIT_CD
                 FROM  TB_DP_FIXRATE_PROD_MAPG A
                      ,TB_DP_PROD_RSHP B
                WHERE A.PART_PROD_ID = B.PROD_ID
