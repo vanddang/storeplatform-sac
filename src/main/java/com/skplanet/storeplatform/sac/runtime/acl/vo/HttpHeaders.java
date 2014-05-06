@@ -26,6 +26,7 @@ public class HttpHeaders extends CommonInfo {
 	private String acceptLanguage;
 	private String requestUrl;
 	private String servletPath;
+	private String queryString;
 
 	private String authKey;
 	private String signature;
@@ -69,6 +70,14 @@ public class HttpHeaders extends CommonInfo {
 		this.servletPath = servletPath;
 	}
 
+	public String getQueryString() {
+		return this.queryString;
+	}
+
+	public void setQueryString(String queryString) {
+		this.queryString = queryString;
+	}
+
 	public void setRequestUrl(String requestUrl) {
 		this.requestUrl = requestUrl;
 	}
@@ -106,7 +115,7 @@ public class HttpHeaders extends CommonInfo {
 	}
 
 	public String getTenantId() {
-		return tenantId;
+		return this.tenantId;
 	}
 
 	public void setTenantId(String tenantId) {

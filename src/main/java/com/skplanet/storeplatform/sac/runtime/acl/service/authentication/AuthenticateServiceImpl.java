@@ -225,17 +225,17 @@ public class AuthenticateServiceImpl implements AuthenticateService {
     @Override
     public void authMac(HttpHeaders headers, AuthKey authKeyInfo) throws StorePlatformException {
         // MAC 인증 (default)
-        String requestUri = headers.getRequestUrl();
+        String baseUrl = this.getBaseUrl(headers);
         String authKey = headers.getAuthKey();
         String timestamp = headers.getTimestamp();
         String nonce = headers.getNonce();
         String signature = headers.getSignature();
         try {
         	logger.debug("timestamp={}, nonce={}", timestamp, nonce);
-            String data = SacAuthUtil.getMessageForAuth(requestUri, authKey, timestamp, nonce);
+            String data = SacAuthUtil.getMessageForAuth(baseUrl, authKey, timestamp, nonce);
             String newSignature = HmacSha1Util.getSignature(data, authKeyInfo.getSecret());
             if(!newSignature.equals(signature)) {
-                logger.error("requestUri={}, authKey={}, timestamp={}, nonce={}, signature={}, newSignature={}", requestUri, authKey, timestamp, nonce, signature, newSignature);
+                logger.error("requestUri={}, authKey={}, timestamp={}, nonce={}, signature={}, newSignature={}", baseUrl, authKey, timestamp, nonce, signature, newSignature);
                 // 메시지 인증 코드가 유효하지 않습니다.
                 throw new StorePlatformException("SAC_CMN_0038");
             }
@@ -245,6 +245,15 @@ public class AuthenticateServiceImpl implements AuthenticateService {
             logger.error(e.getMessage());
             throw new StorePlatformException("SAC_CMN_0038");
         }
+    }
+
+    private String getBaseUrl(HttpHeaders headers) {
+    	String requestUrl = headers.getRequestUrl();
+    	String queryString = headers.getQueryString();
+    	if (StringUtils.isNotBlank(queryString)) {
+    		requestUrl += "?" + queryString;
+    	}
+    	return requestUrl;
     }
 
     /**

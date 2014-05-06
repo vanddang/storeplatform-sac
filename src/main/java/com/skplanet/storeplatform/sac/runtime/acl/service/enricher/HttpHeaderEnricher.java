@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 public class HttpHeaderEnricher implements HttpHeaderEnrichIF {
 
+	@Override
 	public HttpHeaders enrichHeader(@Headers Map<String, Object> headers) {
 		String accept = ((MediaType) headers.get(CommonConstants.HEADER_ACCEPT)).toString();
 		String acceptLanguage = (String) headers.get(CommonConstants.HEADER_ACCEPT_LANGUAGE);
@@ -48,6 +49,7 @@ public class HttpHeaderEnricher implements HttpHeaderEnrichIF {
 		String rempteHost = this.getRemoteHost();
 		String remotePort = (String) headers.get(CommonConstants.HEADER_REMOTE_PORT);
 		String servletPath = this.getServletPath();
+		String queryString = this.getQueryString();
 
 		HttpHeaders httpHeader = new HttpHeaders();
 
@@ -65,26 +67,30 @@ public class HttpHeaderEnricher implements HttpHeaderEnrichIF {
 		httpHeader.setRemoteHost(rempteHost);
 		httpHeader.setRemotePort(remotePort);
 		httpHeader.setServletPath(servletPath);
+		httpHeader.setQueryString(queryString);
 
 		return httpHeader;
 	}
 
+
 	private String getRequestUrl() {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-		String requestUrl = request.getRequestURL().toString();
-		return requestUrl;
+		return request.getRequestURL().toString();
 	}
 
 	private String getServletPath() {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-		String servletPath = request.getServletPath();
-		return servletPath;
+		return request.getServletPath();
+	}
+
+	private String getQueryString() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		return request.getQueryString();
 	}
 
 	private String getRemoteHost() {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-		String remoteAddr = request.getRemoteAddr();
-		return remoteAddr;
+		return request.getRemoteAddr();
 	}
 
 }
