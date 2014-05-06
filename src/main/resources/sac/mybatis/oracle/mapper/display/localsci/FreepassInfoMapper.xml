@@ -159,7 +159,10 @@
         </if>
         <if test="cmpxProdClsfCd == 'OR004304'">
         AND PD.USE_PERIOD_UNIT_CD != 'PD00310'
-        </if>                        
+        </if>     
+        <if test="cmpxProdClsfCd == 'OR004303' or  cmpxProdClsfCd == 'OR004304'">
+        AND 'DP004301' = (SELECT BOOK_CLSF_CD  FROM TB_DP_EBOOK_PROD WHERE PROD_ID =PD.PROD_ID AND ROWNUM=1)
+        </if>                   
         AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
     ) IV 
     </select>    
