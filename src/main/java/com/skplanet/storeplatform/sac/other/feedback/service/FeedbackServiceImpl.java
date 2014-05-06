@@ -257,6 +257,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 						param.put("preAvgScore", updateTenantProdStats.getPreAvgScore());
 						param.put("rsltCd", "");
 						this.feedbackRepository.updateTenantProdStatsProc(param);
+
+						String result = param.get("rsltCd");
+						LOGGER.debug("#### OTHER_PART remove START####");
+						LOGGER.debug("## 사용후기삭제 프로시저 리턴값 : {}", result);
+						LOGGER.debug("#### OTHER_PART remove END####");
+
 					} else {
 						this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
 					}
@@ -339,6 +345,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 			param.put("action", prodNotiGood.getAction());
 			param.put("rsltCd", "");
 			this.feedbackRepository.updateProdNotiGoodProc(param);
+
+			String result = param.get("rsltCd");
+			LOGGER.debug("#### OTHER_PART createRecommend START####");
+			LOGGER.debug("## 사용후기추천 프로시저 리턴값 : {}", result);
+			LOGGER.debug("#### OTHER_PART createRecommend END####");
+
 		} else {
 			affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
 		}
@@ -445,6 +457,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 			param.put("action", prodNotiGood.getAction());
 			param.put("rsltCd", "");
 			this.feedbackRepository.updateProdNotiGoodProc(param);
+
+			String result = param.get("rsltCd");
+			LOGGER.debug("#### OTHER_PART removeRecommend START####");
+			LOGGER.debug("## 사용후기추천삭제 프로시저 리턴값 : {}", result);
+			LOGGER.debug("#### OTHER_PART removeRecommend END####");
+
 		} else {
 			affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
 		}
@@ -909,6 +927,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 					param.put("preAvgScore", updateTenantProdStats.getPreAvgScore());
 					param.put("rsltCd", "");
 					this.feedbackRepository.updateTenantProdStatsProc(param);
+
+					String result = param.get("rsltCd");
+					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_updateTenantProdStatsProc START####");
+					LOGGER.debug("## 평점등록 프로시저 리턴값 : {}", result);
+					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_updateTenantProdStatsProc END####");
+
 				} else {
 					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
 				}
@@ -925,6 +949,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 					param.put("avgEvluScore", updateTenantProdStats.getAvgEvluScore());
 					param.put("rsltCd", "");
 					this.feedbackRepository.mergeTenantProdStatsProc(param);
+
+					String result = param.get("rsltCd");
+					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_mergeTenantProdStatsProc START####");
+					LOGGER.debug("## 평점등록 프로시저 리턴값 : {}", result);
+					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_mergeTenantProdStatsProc END####");
+
 				} else {
 					this.feedbackRepository.mergeTenantProdStats(updateTenantProdStats);
 				}
