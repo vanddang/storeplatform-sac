@@ -101,9 +101,9 @@
                   WHERE  MENU_ID = CATEGORY_NO 
                     AND  LANG_CD = 'ko'
                     AND  ROWNUM = 1) AS MENU_NM    
-              , CONCAT( BNR_IMG_PATH, BNR_IMG_NM ) AS LOG_IMG_POS
-              , BNR_IMG_NM
-              , BNR_IMG_SIZE
+              , CONCAT( LOGO_IMG_PATH, LOGO_IMG_NM ) AS LOG_IMG_POS
+              , LOGO_IMG_NM AS BNR_IMG_NM
+              , LOGO_IMG_SIZE AS BNR_IMG_SIZE
               , EXPO_ORD
           FROM  TB_DP_BRAND_SHOP
          WHERE  BRAND_SHOP_NO = #{brandshopId}
