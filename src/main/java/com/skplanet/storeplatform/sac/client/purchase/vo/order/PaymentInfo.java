@@ -36,6 +36,7 @@ public class PaymentInfo extends CommonInfo {
 	private String cpnId; // 이용한 쿠폰 ID
 	private String cpnType; // 이용한 쿠폰 타입
 	private String cpnMakeHost; // 이용한 쿠폰 생성주체
+	private String ocbType; // 신OCB 처리타입 : ID-ONE ID, CARD-OCB 카드번호
 	private String moid; // 테넌트 결제수단 관리 정보
 	private String sktTestDeviceYn; // SKT 시험폰 결제 여부
 
@@ -172,6 +173,21 @@ public class PaymentInfo extends CommonInfo {
 	 */
 	public void setCpnMakeHost(String cpnMakeHost) {
 		this.cpnMakeHost = cpnMakeHost;
+	}
+
+	/**
+	 * @return the ocbType
+	 */
+	public String getOcbType() {
+		return this.ocbType;
+	}
+
+	/**
+	 * @param ocbType
+	 *            the ocbType to set
+	 */
+	public void setOcbType(String ocbType) {
+		this.ocbType = ocbType;
 	}
 
 	/**
