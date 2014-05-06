@@ -21,11 +21,14 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private static final long serialVersionUID = 201420261L;
 
 	private String mdn; // 결제 단말 번호
+	private String oneId; // ONE ID 회원 ID
 	private String flgMbrStatus; // 회원상태: 0-비정상, 1-정상
 	private String flgProductStatus; // 상품상태: 0-구매불가상품, 1-구매가능상품
 	private String flgTeleBillingAgree; // 통신과금 동의여부: Y/N
 	private String flgOcbUseAgree; // OCB 이용약관 동의여부: Y/N
 	private String typeDanalContent; // (다날) 컨텐츠 타입: 0-디지털, 1-실물
+	private String approvalSd; // SKT후불 승인용 SYSTEM_DIVISION
+	private String cancelSd; // SKT후불 취소용 SYSTEM_DIVISION
 	private String typeSktLimit; // SKT후불 결제수단 재정의 원인: L00~L09
 	private String cdMaxAmtRate; // 결제수단 별 가능 거래금액/비율 조정 정보
 	private String cdPriority; // 결제수단 정렬 재조정
@@ -66,6 +69,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setMdn(String mdn) {
 		this.mdn = mdn;
+	}
+
+	/**
+	 * @return the oneId
+	 */
+	public String getOneId() {
+		return this.oneId;
+	}
+
+	/**
+	 * @param oneId
+	 *            the oneId to set
+	 */
+	public void setOneId(String oneId) {
+		this.oneId = oneId;
 	}
 
 	/**
@@ -141,6 +159,36 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setTypeDanalContent(String typeDanalContent) {
 		this.typeDanalContent = typeDanalContent;
+	}
+
+	/**
+	 * @return the approvalSd
+	 */
+	public String getApprovalSd() {
+		return this.approvalSd;
+	}
+
+	/**
+	 * @param approvalSd
+	 *            the approvalSd to set
+	 */
+	public void setApprovalSd(String approvalSd) {
+		this.approvalSd = approvalSd;
+	}
+
+	/**
+	 * @return the cancelSd
+	 */
+	public String getCancelSd() {
+		return this.cancelSd;
+	}
+
+	/**
+	 * @param cancelSd
+	 *            the cancelSd to set
+	 */
+	public void setCancelSd(String cancelSd) {
+		this.cancelSd = cancelSd;
 	}
 
 	/**
