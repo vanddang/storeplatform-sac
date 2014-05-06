@@ -216,7 +216,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			bizCouponPublishEcReq.setCouponCode(purchaseOrderInfo.getPurchaseProductList().get(0).getCouponCode());
 			bizCouponPublishEcReq.setBizCouponPublishDetailList(bizCouponPublishDetailEcList);
 
-			this.logger.debug("PRCHS,ORDER,SAC,CREATEBIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
 
 			try {
 				this.shoppingSCI.createBizCouponPublish(bizCouponPublishEcReq);
@@ -406,9 +406,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7208", e);
 		}
-		res.setFlgTeleBillingAgree(userPayRes.getSkpAgreementYn()); // 통신과금 동의여부
-		res.setFlgOcbUseAgree(userPayRes.getOcbAgreementYn()); // OCB 이용약관 동의여부
-		res.setNoOcbCard(userPayRes.getOcbCardNumber()); // OCB 카드번호
+		// 통신과금 동의여부
+		res.setFlgTeleBillingAgree(StringUtils.equals(userPayRes.getSkpAgreementYn(), PurchaseConstants.USE_Y) ? "1" : "0");
+		// OCB 이용약관 동의여부
+		res.setFlgOcbUseAgree(StringUtils.equals(userPayRes.getOcbAgreementYn(), PurchaseConstants.USE_Y) ? "1" : "0");
+		// OCB 카드번호
+		res.setNoOcbCard(userPayRes.getOcbCardNumber());
 
 		// ------------------------------------------------------------------------------------------------
 		// SKT 후불 관련 정책 체크: SKT시험폰, MVNO, 법인폰, 한도금액 조회
@@ -583,7 +586,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public List<PrchsDtlMore> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId) {
-		this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,START");
+		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,START");
 
 		// ------------------------------------------------------------------------------
 		// 구매 예약 건 조회
@@ -671,9 +674,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		for (PaymentInfo paymentInfo : notifyPaymentReq.getPaymentInfoList()) {
 			checkAmt += paymentInfo.getPaymentAmt();
 		}
-		if (checkAmt != prchsDtlMore.getTotAmt().doubleValue()
-				|| prchsDtlMore.getTotAmt().doubleValue() != notifyPaymentReq.getTotAmt()) {
-			throw new StorePlatformException("SAC_PUR_5106");
+		if (checkAmt != prchsDtlMore.getTotAmt().doubleValue()) {
+			throw new StorePlatformException("SAC_PUR_5106", checkAmt, prchsDtlMore.getTotAmt().doubleValue());
+		} else if (prchsDtlMore.getTotAmt().doubleValue() != notifyPaymentReq.getTotAmt()) {
+			throw new StorePlatformException("SAC_PUR_5106", notifyPaymentReq.getTotAmt(), prchsDtlMore.getTotAmt()
+					.doubleValue());
 		}
 
 		// -------------------------------------------------------------------------------------------
@@ -692,7 +697,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			couponPublishEcReq.setItemCode(reservedDataMap.get("itemCode"));
 			couponPublishEcReq.setItemCount(prchsDtlMore.getProdQty());
 			CouponPublishEcRes couponPublishEcRes = this.shoppingSCI.createCouponPublish(couponPublishEcReq);
-			this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,SHOPPING,{}", couponPublishEcRes);
+			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,SHOPPING,{}", couponPublishEcRes);
 
 			if (StringUtils
 					.equals(couponPublishEcRes.getPublishType(), PurchaseConstants.SHOPPING_COUPON_PUBLISH_ASYNC) == false
@@ -773,7 +778,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				PurchaseConstants.PRCHS_STATUS_COMPT);
 
 		// 자동구매 생성 요청 데이터
-		this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,CHECKAUTO,{},{}", prchsDtlMore.getPrchsProdType(),
+		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,CHECKAUTO,{},{}", prchsDtlMore.getPrchsProdType(),
 				reservedDataMap.get("autoPrchsYn"));
 		List<AutoPrchs> autoPrchsList = null;
 		if (StringUtils.equals(reservedDataMap.get("autoPrchsYn"), PurchaseConstants.USE_Y)) {
@@ -822,7 +827,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		try {
 
 			ConfirmPurchaseScRes confirmPurchaseScRes = this.purchaseOrderSCI.confirmPurchase(confirmPurchaseScReq);
-			this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,CNT,{}", confirmPurchaseScRes.getCount());
+			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,CNT,{}", confirmPurchaseScRes.getCount());
 
 		} catch (StorePlatformException e) {
 			// 쇼핑쿠폰발급 취소, 게임캐쉬 충전 취소 등
@@ -861,7 +866,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			});
 		}
 
-		this.logger.debug("PRCHS,ORDER,SAC,CONFIRM,END");
+		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,END");
 		return prchsDtlMoreList;
 	}
 
@@ -873,7 +878,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList) {
-		this.logger.debug("PRCHS,ORDER,SAC,POST,START,{}", prchsDtlMoreList.get(0).getPrchsId());
+		this.logger.info("PRCHS,ORDER,SAC,POST,START,{}", prchsDtlMoreList.get(0).getPrchsId());
 
 		// ------------------------------------------------------------------------------------
 		// 인터파크 / 씨네21
@@ -909,7 +914,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			this.interworkingSacService.createInterworking(interworkingSacReq);
 		} catch (Exception e) {
 			// 예외 throw 차단
-			this.logger.debug("PRCHS,ORDER,SAC,POST,INTER,ERROR,{},{}", prchsDtlMoreList.get(0).getPrchsId(),
+			this.logger.info("PRCHS,ORDER,SAC,POST,INTER,ERROR,{},{}", prchsDtlMoreList.get(0).getPrchsId(),
 					e.getMessage());
 		}
 
@@ -933,16 +938,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			try {
 				TStoreNotiEcRes tStoreNotiEcRes = this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
-				this.logger.debug("PRCHS,ORDER,SAC,POST,TSTORENOTI,{},{},{}", prchsDtlMoreList.get(0).getPrchsId(),
+				this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,{},{},{}", prchsDtlMoreList.get(0).getPrchsId(),
 						tStoreNotiEcRes.getCode(), tStoreNotiEcRes.getMessage());
 			} catch (Exception e) {
 				// 예외 throw 차단
-				this.logger.debug("PRCHS,ORDER,SAC,POST,TSTORENOTI,ERROR,{},{}", prchsDtlMoreList.get(0).getPrchsId(),
+				this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,ERROR,{},{}", prchsDtlMoreList.get(0).getPrchsId(),
 						e.getMessage());
 			}
 		}
 
-		this.logger.debug("PRCHS,ORDER,SAC,POST,END,{}", prchsDtlMoreList.get(0).getPrchsId());
+		this.logger.info("PRCHS,ORDER,SAC,POST,END,{}", prchsDtlMoreList.get(0).getPrchsId());
 	}
 
 	/**
@@ -956,7 +961,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void setPaymentPageInfo(PurchaseOrderInfo purchaseOrderInfo) {
-		this.logger.debug("PRCHS,ORDER,SAC,PAYPAGE,START,{}", purchaseOrderInfo.getPrchsId());
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,START,{}", purchaseOrderInfo.getPrchsId());
 
 		// eData(암호화 데이터)
 		PurchaseProduct product = purchaseOrderInfo.getPurchaseProductList().get(0);
@@ -1006,23 +1011,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 암호화
 		String eData = paymentPageParam.makeEncDataFormat();
-		this.logger.debug("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", eData);
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", eData);
 		try {
 			paymentPageParam.setEData(PayPlanetUtils.encrypt(eData, purchaseOrderInfo.getEncKey()));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7201", e);
 		}
-		this.logger.debug("PRCHS,ORDER,SAC,PAYPAGE,EDATA,ENC,{}", paymentPageParam.getEData());
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,ENC,{}", paymentPageParam.getEData());
 
 		// Token
 		String token = paymentPageParam.makeTokenFormat();
-		this.logger.debug("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,SRC,{}", token);
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,SRC,{}", token);
 		try {
 			paymentPageParam.setToken(MD5Utils.digestInHexFormat(token));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7201", e);
 		}
-		this.logger.debug("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,ENC,{}", paymentPageParam.getToken());
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,ENC,{}", paymentPageParam.getToken());
 
 		// 버전
 		paymentPageParam.setVersion("1.0");
@@ -1032,7 +1037,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		purchaseOrderInfo.setPaymentPageParam(paymentPageParam);
 
-		this.logger.debug("PRCHS,ORDER,SAC,PAYPAGE,END,{}", purchaseOrderInfo.getPrchsId());
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,END,{}", purchaseOrderInfo.getPrchsId());
 	}
 
 	/*

@@ -185,12 +185,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		PurchaseUserDevice purchaseUserDevice = this.purchaseMemberRepository.searchUserDeviceByKey(
 				purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getUserKey(), purchaseOrderInfo.getDeviceKey());
 		if (purchaseUserDevice == null) {
-			throw new StorePlatformException("SAC_PUR_4101");
+			throw new StorePlatformException("SAC_PUR_4101", purchaseOrderInfo.getUserKey(),
+					purchaseOrderInfo.getDeviceKey());
 		}
 
 		// 회원상태 체크
 		if (StringUtils.equals(purchaseUserDevice.getUserMainStatus(), PurchaseConstants.USER_STATUS_NORMAL) == false) {
-			throw new StorePlatformException("SAC_PUR_4102");
+			throw new StorePlatformException("SAC_PUR_4102", purchaseUserDevice.getUserMainStatus());
 		}
 
 		// 디바이스 모델 코드, 통신사 코드 : 요청 값이 있는 경우에는 요청 값으로 사용
@@ -228,12 +229,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						purchaseOrderInfo.getRecvTenantId(), purchaseOrderInfo.getRecvUserKey(),
 						purchaseOrderInfo.getRecvDeviceKey());
 				if (receiveUserDevice == null) {
-					throw new StorePlatformException("SAC_PUR_4103");
+					throw new StorePlatformException("SAC_PUR_4103", purchaseOrderInfo.getRecvUserKey(),
+							purchaseOrderInfo.getRecvDeviceKey());
 				}
 
 				// 회원상태 체크
 				if (StringUtils.equals(receiveUserDevice.getUserMainStatus(), PurchaseConstants.USER_STATUS_NORMAL) == false) {
-					throw new StorePlatformException("SAC_PUR_4104");
+					throw new StorePlatformException("SAC_PUR_4104", receiveUserDevice.getUserMainStatus());
 				}
 			}
 
@@ -301,14 +303,14 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			// 상품정보 조회 실패
 			if (purchaseProduct == null) {
-				throw new StorePlatformException("SAC_PUR_5101");
+				throw new StorePlatformException("SAC_PUR_5101", reqProduct.getProdId());
 			}
 
 			// 상품 판매상태 체크
 			if (StringUtils.equals(purchaseProduct.getProdStatusCd(), PurchaseConstants.PRODUCT_STATUS_SALE) == false
 					&& StringUtils.equals(purchaseProduct.getProdStatusCd(),
 							PurchaseConstants.PRODUCT_STATUS_FIXRATE_SALE) == false) {
-				throw new StorePlatformException("SAC_PUR_5102");
+				throw new StorePlatformException("SAC_PUR_5102", purchaseProduct.getProdStatusCd());
 			}
 
 			// Biz 쿠폰 경우 이하 상품 체크 Skip
@@ -328,9 +330,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// TAKTEST:: 테스트 위해 주석
 			// if (StringUtils.equals(purchaseProduct.getProdSprtYn(), PurchaseConstants.USE_Y) == false) {
 			// if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			// throw new StorePlatformException("SAC_PUR_5104");
+			// throw new StorePlatformException("SAC_PUR_5104", reqProduct.getProdId(), useDeviceModelCd);
 			// } else {
-			// throw new StorePlatformException("SAC_PUR_5103");
+			// throw new StorePlatformException("SAC_PUR_5103", reqProduct.getProdId(), useDeviceModelCd);
 			// }
 			// }
 
@@ -342,12 +344,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// 상품 가격 체크: 요청 금액 무시(서버 금액 사용) 경우는 제외
+			// nowPurchaseProdAmt = StringUtils.isBlank(purchaseProduct.getSpecialSaleCouponId()) ? purchaseProduct
+			// .getProdAmt() : purchaseProduct.getSpecialSaleAmt();
 			nowPurchaseProdAmt = StringUtils.isBlank(purchaseProduct.getSpecialSaleCouponId()) ? purchaseProduct
-					.getProdAmt() : purchaseProduct.getSpecialSaleAmt();
+					.getProdAmt() : purchaseProduct.getProdAmt();
 			if (reqProduct.getProdAmt() != nowPurchaseProdAmt
 					&& StringUtils.equals(purchaseOrderInfo.getSaleAmtProcType(),
 							PurchaseConstants.SALE_AMT_PROC_TYPE_SERVER) == false) {
-				throw new StorePlatformException("SAC_PUR_5105");
+				throw new StorePlatformException("SAC_PUR_5105", reqProduct.getProdId(), reqProduct.getProdAmt(),
+						nowPurchaseProdAmt);
 			}
 
 			purchaseProduct.setProdQty(reqProduct.getProdQty());
@@ -371,7 +376,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				// IAP상품 정보 조회
 				IapProductInfoRes iapInfo = this.purchaseDisplayRepository.searchIapProductInfo(reqProduct.getProdId());
 				if (iapInfo == null) {
-					throw new StorePlatformException("SAC_PUR_5101");
+					throw new StorePlatformException("SAC_PUR_5101", reqProduct.getProdId());
 				}
 				purchaseProduct.setParentProdId(iapInfo.getParentProdId()); // 부모 상품ID
 				purchaseProduct.setContentsType(iapInfo.getProdKind()); // 상품 유형 (컨텐츠_타입)
@@ -391,7 +396,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					Map<String, PurchaseProduct> fullProductMap = this.purchaseDisplayRepository
 							.searchPurchaseProductList(tenantId, langCd, useDeviceModelCd, fullProdIdList);
 					if (fullProductMap == null || fullProductMap.size() < 1) {
-						throw new StorePlatformException("SAC_PUR_5101");
+						throw new StorePlatformException("SAC_PUR_5101", iapInfo.getFullAid());
 					}
 
 					purchaseProduct.setFullIapProductInfo(fullProductMap.get(iapInfo.getFullAid()));
@@ -441,7 +446,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		} else {
 			if (StringUtils.equals(purchaseOrderInfo.getSaleAmtProcType(), PurchaseConstants.SALE_AMT_PROC_TYPE_SERVER) == false
 					&& totAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
-				throw new StorePlatformException("SAC_PUR_5106");
+				throw new StorePlatformException("SAC_PUR_5106", purchaseOrderInfo.getCreatePurchaseReq().getTotAmt(),
+						totAmt);
 			}
 			purchaseOrderInfo.setRealTotAmt(totAmt);
 		}
@@ -717,8 +723,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			throw new StorePlatformException("SAC_PUR_7205");
 		}
 
-		this.logger
-				.debug("PRCHS,SAC,ORDER,VALID,SHOPPING,{},{}", shoppingRes.getStatusCd(), shoppingRes.getStatusMsg());
+		this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,{},{}", shoppingRes.getStatusCd(), shoppingRes.getStatusMsg());
 
 		switch (Integer.parseInt(availCd)) {
 		case 0: // 정상
