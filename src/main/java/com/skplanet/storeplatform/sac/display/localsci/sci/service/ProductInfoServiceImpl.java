@@ -166,10 +166,16 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					this.log.debug("##### Search for freePass  product");
 					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getFreePassMetaInfo", paramMap,
 							ProductInfo.class);
+					List<MapgProdMeta> mapgProdIdList = null;
+					mapgProdIdList = this.commonDAO.queryForList("ProductInfo.getMapgProdIdList", paramMap,
+							MapgProdMeta.class);
 
-					List<MapgProdMeta> mapgProdIdList = this.commonDAO.queryForList("ProductInfo.getMapgProdIdList",
-							paramMap, MapgProdMeta.class);
-					product.setMapgProdIdList(mapgProdIdList);
+					if (mapgProdIdList.size() > 0) {
+						product.setMapgProdIdList(mapgProdIdList);
+					} else {
+						product.setMapgProdIdList(null);
+					}
+
 					if (product != null) {
 						productList.add(product);
 					}
