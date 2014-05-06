@@ -2,13 +2,13 @@ package com.skplanet.storeplatform.sac.display.product.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.icms.refactoring.deploy.DPProductCatMapVO;
 import com.skplanet.icms.refactoring.deploy.DPProductTotalVO;
 import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSac;
+import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 
 /**
  * 
@@ -61,6 +61,9 @@ public class SACDisplayProductInitializer implements DisplayProductInitializer {
 	@Autowired
 	private DPSeedMappService dpSeedMappService;
 
+	@Autowired
+	private DPAppDeltaDeployFileService dPAppDeltaDeployFileService;
+	
 	/*
 	 * (non-Javadoc)
 	 * @see com.skplanet.icms.deploy.job.initializer.DisplayProductInitializer#clear(java.lang.String)
@@ -125,7 +128,7 @@ public class SACDisplayProductInitializer implements DisplayProductInitializer {
 		/*
 		 * 전시상품 SeedMapp정보
 		 */
-		dpSeedMappService.deleteDPSeedMapp(pid, null);
+		dPAppDeltaDeployFileService.deleteDPAppDeltaDeployFile(pid);
 		
 
 		/*

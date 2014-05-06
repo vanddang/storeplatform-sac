@@ -59,6 +59,9 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 	
 	@Autowired
 	private DPProductSubContsService dpProductSubContsService;
+	
+	@Autowired
+	private DPAppDeltaDeployFileService dPAppDeltaDeployFileService;
 
 	@Autowired
 	private DPTagInfoService dpTagInfoService;
@@ -394,7 +397,22 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 		}
 		
 		
-		
+		/*
+		 * 델타 File 정보
+		 */
+		List<DPAppDeltaDeployFileVO> dPAppDeltaDeployFileList = notification.getDpAppDeltaDeployFileList();
+		if(dPAppDeltaDeployFileList != null){
+			log.info("CMS dPAppDeltaDeployFileList Size = " + dPAppDeltaDeployFileList.size());
+			if(dPAppDeltaDeployFileList.size() >0){
+				
+				for (DPAppDeltaDeployFileVO vo : dPAppDeltaDeployFileList) {
+
+					// 델타 File 정보
+					log.info("CMS DpAppDeltaDeployFileList Info");
+					dPAppDeltaDeployFileService.insertDPAppDeltaDeployFile(vo);
+				}
+			}
+		}
 		
 		if (null != tenantInfo) {
 			log.info("CMS tenantInfo Size = " + tenantInfo.size());
