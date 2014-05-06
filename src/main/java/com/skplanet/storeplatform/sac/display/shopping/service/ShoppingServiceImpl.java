@@ -2058,8 +2058,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 					}
 					// 데이터 매핑
 					// 채널 상품 판매 상태 코드
-					product.setProductExplain(shopping.getProdDtlDesc());
-					product.setProductDetailExplain(shopping.getProductDetailExplain());
+					product.setProductExplain(shopping.getProdBaseDesc());
+					product.setProductDetailExplain(shopping.getProdDtlDesc());
 					product.setMenuList(menuList);
 					product.setPointList(pointList);
 					product.setTitle(title);
