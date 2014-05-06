@@ -57,6 +57,8 @@ public class ProductInfoSCITestTest_Shopping {
 		List<String> list = new ArrayList<String>();
 
 		list.add("FR00000103");
+		list.add("H090234048");
+		list.add("H090234052");
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");
 		req.setTenantId("S01");

@@ -1478,7 +1478,7 @@
                         </if>
                         ,H.PROD_ID 
                         ,H.PART_PROD_ID                          
-                        ,C.CATALOG_DESC
+                        ,C.CATALOG_DESC as PROD_DTL_DESC
                         ,A.BRAND_ID  
                         ,A.BRAND_NM  
                         ,D.MENU_ID   
@@ -1504,7 +1504,7 @@
                            WHERE prod_id=H.PROD_ID 
                          ) AS SRC_CONTENT_ID
                         ,K.PROD_STATUS_CD
-                        ,C.CATALOG_DTL_DESC AS PROD_DTL_DESC
+                        ,C.CATALOG_DTL_DESC AS productDetailExplain
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
