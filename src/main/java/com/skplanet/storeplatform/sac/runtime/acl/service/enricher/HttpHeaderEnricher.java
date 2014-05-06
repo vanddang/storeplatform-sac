@@ -25,16 +25,17 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 *
 * HTTP 헤더 객체 구성 서비스 구현체
 *
-* Updated on : 2014. 2. 10.
-* Updated by : 서대영, SK 플래닛
+* Created on 2014. 2. 10. by 서대영, SK 플래닛
+* Updated on 2014. 5. 6. by 서대영, SK 플래닛 : requestUrl을 가져오는 출처 변경 (Spring Integration -> ServletRequest)
 */
 
-public class HttpHeaderEnricher {
+public class HttpHeaderEnricher implements HttpHeaderEnrichIF {
 
 	public HttpHeaders enrichHeader(@Headers Map<String, Object> headers) {
 		String accept = ((MediaType) headers.get(CommonConstants.HEADER_ACCEPT)).toString();
 		String acceptLanguage = (String) headers.get(CommonConstants.HEADER_ACCEPT_LANGUAGE);
-		String requestUrl = (String) headers.get(CommonConstants.HEADER_HTTP_REQUEST_URL);
+		// String requestUrl = (String) headers.get(CommonConstants.HEADER_HTTP_REQUEST_URL);
+		String requestUrl = this.getRequestUrl();
 		String authKey = (String) headers.get(CommonConstants.HEADER_AUTH_KEY);
 		String signature = (String) headers.get(CommonConstants.HEADER_AUTH_SIGNATURE);
 		String timestamp = (String) headers.get(CommonConstants.HEADER_AUTH_TIMESTAMP);
@@ -44,7 +45,9 @@ public class HttpHeaderEnricher {
 		String interfaceId = (String) headers.get(CommonConstants.HEADER_INTERFACE_ID);
 		String guid = (String) headers.get(CommonConstants.HEADER_GUID);
 		// String remoteHost = (String) headers.get(CommonConstants.HEADER_REMOTE_HOST);
+		String rempteHost = this.getRemoteHost();
 		String remotePort = (String) headers.get(CommonConstants.HEADER_REMOTE_PORT);
+		String servletPath = this.getServletPath();
 
 		HttpHeaders httpHeader = new HttpHeaders();
 
@@ -59,11 +62,17 @@ public class HttpHeaderEnricher {
 		httpHeader.setSystemId(systemId);
 		httpHeader.setInterfaceId(interfaceId);
 		httpHeader.setGuid(guid);
-		httpHeader.setRemoteHost(this.getRemoteHost());
+		httpHeader.setRemoteHost(rempteHost);
 		httpHeader.setRemotePort(remotePort);
-		httpHeader.setServletPath(this.getServletPath());
+		httpHeader.setServletPath(servletPath);
 
 		return httpHeader;
+	}
+
+	private String getRequestUrl() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		String requestUrl = request.getRequestURL().toString();
+		return requestUrl;
 	}
 
 	private String getServletPath() {
