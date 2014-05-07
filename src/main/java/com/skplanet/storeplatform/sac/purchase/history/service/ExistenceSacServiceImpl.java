@@ -54,21 +54,21 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	 * @return List<ExistenceScRes>
 	 */
 	@Override
-	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceScReq) {
+	public List<ExistenceScRes> searchExistenceList(final ExistenceScReq existenceScReq) {
 		ErrorInfo errorInfo = null;
 		// 구매상태가 구매완료건만을 넣기 위한 리스트
 		List<ExistenceScRes> existenceListScRes = new ArrayList<ExistenceScRes>();
-		try {
-			// 기구매내역 조회함
-			final List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceScReq);
-			// 내부구매처리시 기구매 체크는 inputValue = true
+		// 기구매내역 조회함
+		final List<ExistenceScRes> resultList = this.existenceSCI.searchExistenceList(existenceScReq);
+		// 내부구매처리시 기구매 체크는 inputValue = true
 
-			// TenantProdGrpCd(Device기반 모든정책 조회 )
-			List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
-					.searchPurchaseTenantPolicyList(existenceScReq.getTenantId(), "",
-							PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
+		// TenantProdGrpCd(Device기반 모든정책 조회 )
+		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
+				.searchPurchaseTenantPolicyList(existenceScReq.getTenantId(), "",
+						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
 
-			for (final ExistenceScRes existenceScRes : resultList) {
+		for (final ExistenceScRes existenceScRes : resultList) {
+			try {
 				String flag = "";
 				this.logger.debug("existenceScRes.getStatusCd() : {}", existenceScRes.getStatusCd());
 
@@ -99,29 +99,22 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.purchase_channel(existenceScRes.getPrchsReqPathCd())
+						shuttle.log_id("TL_SAC_PUR_0002").system_id(existenceScReq.getSystemId())
+								.insd_device_id(existenceScReq.getDeviceKey())
+								.insd_usermbr_no(existenceScReq.getUserKey())
+								.purchase_channel(existenceScRes.getPrchsReqPathCd())
 								.purchase_inflow_channel(existenceScRes.getPrchsCaseCd()).product_id(prodIdList)
-								.product_price(prodAmtList);
+								.product_price(prodAmtList).result_code("SUCC");
 					}
 				});
-			}
-		} catch (StorePlatformException e) {
+			} catch (StorePlatformException e) {
 
-			errorInfo = e.getErrorInfo();
+				final List<String> prodIdList = new ArrayList<String>();
+				final List<Long> prodAmtList = new ArrayList<Long>();
+				prodIdList.add(existenceScRes.getProdId());
+				prodAmtList.add((long) existenceScRes.getProdAmt());
 
-			throw e;
-		} finally {
-			// TLog
-			if (errorInfo == null) {
-				new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
-
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.result_code("SUCC");
-					}
-				});
-			} else {
-
+				errorInfo = e.getErrorInfo();
 				final String resultCode = errorInfo.getCode();
 				final String resultMessage = errorInfo.getMessage();
 				// final String exceptionLog = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
@@ -130,9 +123,16 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.result_code(resultCode).result_message(resultMessage);
+						shuttle.log_id("TL_SAC_PUR_0002").system_id(existenceScReq.getSystemId())
+								.insd_device_id(existenceScReq.getDeviceKey())
+								.insd_usermbr_no(existenceScReq.getUserKey())
+								.purchase_channel(existenceScRes.getPrchsReqPathCd())
+								.purchase_inflow_channel(existenceScRes.getPrchsCaseCd()).product_id(prodIdList)
+								.product_price(prodAmtList).result_code(resultCode).result_message(resultMessage);
 					}
 				});
+
+				throw e;
 			}
 		}
 		return existenceListScRes;

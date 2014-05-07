@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
@@ -65,20 +62,20 @@ public class ExistenceController {
 	 */
 	@RequestMapping(value = "/history/existence/search/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ExistenceListSacRes searchExistenceList(@RequestBody @Validated final ExistenceSacReq existenceSacReq,
+	public ExistenceListSacRes searchExistenceList(@RequestBody @Validated ExistenceSacReq existenceSacReq,
 			SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
-		final String systemId = header.getSystemId();
+		// final String systemId = header.getSystemId();
 
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL_SAC_PUR_0002").system_id(systemId).insd_device_id(existenceSacReq.getDeviceKey())
-						.insd_usermbr_no(existenceSacReq.getUserKey());
-				;
-			}
-		});
+		// new TLogUtil().set(new ShuttleSetter() {
+		// @Override
+		// public void customize(TLogSentinelShuttle shuttle) {
+		// shuttle.log_id("TL_SAC_PUR_0002").system_id(systemId).insd_device_id(existenceSacReq.getDeviceKey())
+		// .insd_usermbr_no(existenceSacReq.getUserKey());
+		// ;
+		// }
+		// });
 
 		this.logger.debug("PRCHS,ExistenceController,SAC,REQ,{},{}", existenceSacReq, requestHeader);
 
@@ -86,6 +83,7 @@ public class ExistenceController {
 
 		existenceListSacRes.setExistenceList(this.resConvert(this.existenceSacService.searchExistenceList(this
 				.reqConvert(existenceSacReq, header))));
+
 		return existenceListSacRes;
 	}
 
