@@ -215,10 +215,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				this.log.info("---------------------------------------------------------------------");
 				this.log.info("[DownloadVodServiceImpl] purchaseFlag :{}", purchaseFlag);
 				this.log.info("[DownloadVodServiceImpl] historyRes :{}", historyRes);
-				this.log.info("[DownloadVodServiceImpl] historyRes totalCnt :{}", historyRes.getTotalCnt());
-				this.log.info("---------------------------------------------------------------------");
 
 				if (purchaseFlag && historyRes != null) {
+					this.log.info("[DownloadVodServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
+					this.log.info("---------------------------------------------------------------------");
 
 					String prchsId = null; // 구매ID
 					String prchsDt = null; // 구매일시

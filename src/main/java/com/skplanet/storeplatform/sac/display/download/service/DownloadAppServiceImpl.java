@@ -223,9 +223,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				this.log.info("---------------------------------------------------------------------");
 				this.log.info("[DownloadAppServiceImpl] purchaseFlag :{}", purchaseFlag);
 				this.log.info("[DownloadAppServiceImpl] historyRes :{}", historyRes);
-				this.log.info("[DownloadAppServiceImpl] historyRes totalCnt :{}", historyRes.getTotalCnt());
-				this.log.info("---------------------------------------------------------------------");
 				if (purchaseFlag && historyRes != null) {
+					this.log.info("[DownloadAppServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
+					this.log.info("---------------------------------------------------------------------");
 
 					String prchsId = null; // 구매ID
 					String prchsDt = null; // 구매일시

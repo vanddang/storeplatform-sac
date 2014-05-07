@@ -187,9 +187,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				this.log.info("---------------------------------------------------------------------");
 				this.log.info("[DownloadMusicServiceImpl] purchaseFlag :{}", purchaseFlag);
 				this.log.info("[DownloadMusicServiceImpl] historyRes :{}", historyRes);
-				this.log.info("[DownloadMusicServiceImpl] historyRes totalCnt :{}", historyRes.getTotalCnt());
-				this.log.info("---------------------------------------------------------------------");
 				if (purchaseFlag && historyRes != null) {
+
+					this.log.info("[DownloadMusicServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
+					this.log.info("---------------------------------------------------------------------");
 
 					String prchsId = null; // 구매ID
 					String prchsDt = null; // 구매일시
