@@ -170,8 +170,12 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					mapgProdIdList = this.commonDAO.queryForList("ProductInfo.getMapgProdIdList", paramMap,
 							MapgProdMeta.class);
 
-					if (mapgProdIdList.size() > 0) {
-						product.setMapgProdIdList(mapgProdIdList);
+					if (mapgProdIdList != null) {
+						if (mapgProdIdList.size() > 0) {
+							product.setMapgProdIdList(mapgProdIdList);
+						} else {
+							product.setMapgProdIdList(null);
+						}
 					} else {
 						product.setMapgProdIdList(null);
 					}
