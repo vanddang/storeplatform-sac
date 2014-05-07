@@ -1457,7 +1457,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 					resMap.put(deviceMbrStatus.getDeviceKey(), userDeviceInfoSac);
 				}
 			}
-			LOGGER.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserDeviceInfo Response : {}", resMap);
 
 		}
 
