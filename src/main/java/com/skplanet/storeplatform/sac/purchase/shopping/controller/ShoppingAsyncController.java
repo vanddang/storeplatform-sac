@@ -19,13 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.shopping.service.ShoppingAsyncService;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
 //import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponRes;
@@ -61,12 +57,12 @@ public class ShoppingAsyncController {
 	@ResponseBody
 	public int getShoppingAsync(@RequestBody @Validated BizCouponReq request, SacRequestHeader sacRequestHeader) {
 
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006); // T Log 보장을 위해 log_id 선 세팅
-			}
-		});
+		// new TLogUtil().set(new ShuttleSetter() {
+		// @Override
+		// public void customize(TLogSentinelShuttle shuttle) {
+		// shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006); // T Log 보장을 위해 log_id 선 세팅
+		// }
+		// });
 
 		return this.shoppongAsyncService.getShoppingAsync(request);
 	}
