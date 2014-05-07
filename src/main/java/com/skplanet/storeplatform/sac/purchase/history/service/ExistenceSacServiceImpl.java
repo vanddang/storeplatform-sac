@@ -117,7 +117,6 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 				errorInfo = e.getErrorInfo();
 				final String resultCode = errorInfo.getCode();
 				final String resultMessage = errorInfo.getMessage();
-				// final String exceptionLog = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
 
 				new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
 
