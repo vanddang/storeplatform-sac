@@ -253,8 +253,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
 		searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
-		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader,
-				searchUserDeviceReq);
+		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader, searchUserDeviceReq);
 
 		Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
 		UserDeviceInfoSac userDeviceInfoSac;
@@ -268,6 +267,8 @@ public class SearchUserSCIController implements SearchUserSCI {
 				userDeviceInfoSac.setIsRealName(userInfoMap.get(deviceKeyList.get(i)).getIsRealName());
 				userDeviceInfoSac.setUserMainStatus(userInfoMap.get(deviceKeyList.get(i)).getUserMainStatus());
 				userDeviceInfoSac.setUserSubStatus(userInfoMap.get(deviceKeyList.get(i)).getUserSubStatus());
+				userDeviceInfoSac.setUserId(userInfoMap.get(deviceKeyList.get(i)).getUserId());
+				userDeviceInfoSac.setUserType(userInfoMap.get(deviceKeyList.get(i)).getUserType());
 
 				if (userInfoMap.get(deviceKeyList.get(i)).getIsRealName().equals("Y")) {
 					String birthday = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthBirthday(), "");
