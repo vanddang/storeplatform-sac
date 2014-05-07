@@ -146,7 +146,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String reqMenuId = req.getTenantProdGrpCd().substring(8, 12);
 		String reqSuffix = req.getTenantProdGrpCd().substring(12);
 
-		if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) { // App
+		if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) {
+			// 어플리케이션 : 게임, FUN, 생활/위치, 어학/교육, Android
 			if (StringUtils.equals(reqMenuId, "DP01") == false && StringUtils.equals(reqMenuId, "DP03") == false
 					&& StringUtils.equals(reqMenuId, "DP04") == false && StringUtils.equals(reqMenuId, "DP08") == false
 					&& StringUtils.equals(reqMenuId, "DP12") == false) {
@@ -154,17 +155,20 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 		} else if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)) {
+			// VOD : 영화, TV방송, 방송/영화, 동영상
 			if (StringUtils.equals(reqMenuId, "DP17") == false && StringUtils.equals(reqMenuId, "DP18") == false
 					&& StringUtils.equals(reqMenuId, "DP07") == false && StringUtils.equals(reqMenuId, "DP09") == false) {
 				throw new StorePlatformException("SAC_PUR_5100");
 			}
 
 		} else if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
+			// 뮤직(MP3) : 통합뮤직, 뮤직
 			if (StringUtils.equals(reqMenuId, "DP16") == false && StringUtils.equals(reqMenuId, "DP05") == false) {
 				throw new StorePlatformException("SAC_PUR_5100");
 			}
 
 		} else if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
+			// 이북/코믹 : eBook, Comic, 웹툰, 연재소설, 만화
 			if (StringUtils.equals(reqMenuId, "DP13") == false && StringUtils.equals(reqMenuId, "DP14") == false
 					&& StringUtils.equals(reqMenuId, "DP26") == false && StringUtils.equals(reqMenuId, "DP29") == false
 					&& StringUtils.equals(reqMenuId, "DP06") == false) {
@@ -172,11 +176,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 		} else if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) { // 쇼핑
+			// 쇼핑 : 쇼핑
 			if (StringUtils.equals(reqMenuId, "DP28") == false
 					|| StringUtils.equals(reqSuffix, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT) == false) {
 				throw new StorePlatformException("SAC_PUR_5100");
 			}
 		} else if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
+			// 벨소리/컬러링 : 폰꾸미기
 			if (StringUtils.equals(reqMenuId, "DP02") == false) {
 				throw new StorePlatformException("SAC_PUR_5100");
 			}
