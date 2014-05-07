@@ -114,6 +114,14 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 		}
 
+		// 정액상품 경우, 한 건만 구매 가능
+		if (req.getProductList().size() > 1
+				&& (StringUtils.endsWith(req.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) || StringUtils.endsWith(
+						req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE))) {
+			throw new StorePlatformException("SAC_PUR_5100");
+		}
+
 		// TAKTODO:: 링&벨
 		// if( StringUtils.startsWith(req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
 		// for(CreatePurchaseSacReqProduct product : req.getProductList()) {
@@ -298,6 +306,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		// 상품 체크
 
+		String reqMenuId = purchaseOrderInfo.getTenantProdGrpCd().substring(8, 12);
+
 		List<PurchaseProduct> purchaseProductList = purchaseOrderInfo.getPurchaseProductList();
 		double totAmt = 0.0, nowPurchaseProdAmt = 0.0;
 		PurchaseProduct purchaseProduct = null;
@@ -314,6 +324,12 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					&& StringUtils.equals(purchaseProduct.getProdStatusCd(),
 							PurchaseConstants.PRODUCT_STATUS_FIXRATE_SALE) == false) {
 				throw new StorePlatformException("SAC_PUR_5102", purchaseProduct.getProdStatusCd());
+			}
+
+			// 메뉴ID 체크
+			if (StringUtils.equals(reqMenuId, purchaseProduct.getTopMenuId()) == false
+					&& purchaseOrderInfo.isIap() == false) {
+				throw new StorePlatformException("SAC_PUR_5113", reqMenuId, purchaseProduct.getTopMenuId());
 			}
 
 			// Biz 쿠폰 경우 이하 상품 체크 Skip
