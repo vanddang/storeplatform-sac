@@ -141,6 +141,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 		}
 
+		// 테넌트 상품 분류 코드 체크
+
 	}
 
 	/**
@@ -329,7 +331,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// 메뉴ID 체크
 			if (StringUtils.equals(reqMenuId, purchaseProduct.getTopMenuId()) == false
 					&& purchaseOrderInfo.isIap() == false) {
-				throw new StorePlatformException("SAC_PUR_5113", reqMenuId, purchaseProduct.getTopMenuId());
+				throw new StorePlatformException("SAC_PUR_5113", reqProduct.getProdId(), reqMenuId,
+						purchaseProduct.getTopMenuId());
 			}
 
 			// Biz 쿠폰 경우 이하 상품 체크 Skip
