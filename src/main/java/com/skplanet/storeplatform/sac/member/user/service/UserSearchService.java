@@ -12,8 +12,10 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -33,9 +35,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -252,9 +252,8 @@ public interface UserSearchService {
 	 * </pre>
 	 * 
 	 * @param request
-	 *            SearchUserDeviceReq
-	 * @return
+	 *            SearchUserDeviceSacReq
+	 * @return Map<String, UserDeviceInfoSac>
 	 */
-	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader,
-			SearchUserDeviceReq request);
+	public Map<String, UserDeviceInfoSac> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request);
 }

@@ -71,8 +71,11 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
@@ -104,10 +107,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDevice;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -1395,33 +1395,22 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * .sac.client.member.vo.user.SearchUserDeviceReq)
 	 */
 	@Override
-	public Map<String, UserInfoByDeviceKey> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceReq request) {
+	public Map<String, UserDeviceInfoSac> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request) {
 
-		// 공통파라미터 셋팅
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-
-		// deviceKey List 추출
-		List<String> deviceKeyList = new ArrayList<String>();
 		// Request 를 보내기 위한 세팅
 		List<UserDeviceKey> userDeviceKeyList = new ArrayList<UserDeviceKey>();
 
-		for (SearchUserDevice schUserDevice : request.getSearchUserDeviceReqList()) {
-			String deviceKey = schUserDevice.getDeviceKey();
-
+		for (SearchUserDeviceSac schUserDevice : request.getSearchUserDeviceReqList()) {
 			UserDeviceKey userDeviceKey = new UserDeviceKey();
 			userDeviceKey.setDeviceKey(schUserDevice.getDeviceKey());
 			userDeviceKey.setUserKey(schUserDevice.getUserKey());
-
 			userDeviceKeyList.add(userDeviceKey);
-			deviceKeyList.add(deviceKey);
 		}
 
 		SearchMbrDeviceRequest searchMbrDeviceRequest = new SearchMbrDeviceRequest();
 
 		searchMbrDeviceRequest.setDeviceKeyList(userDeviceKeyList);
-		searchMbrDeviceRequest.setCommonRequest(commonRequest);
+		searchMbrDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 		LOGGER.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC UserSCI.searchMbrDevice() 호출.");
 
@@ -1431,27 +1420,41 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		Map<String, DeviceMbrStatus> userDeviceInfoMap = searchMbrDeviceResponse.getDeviceMbrStatusMap();
 
-		Map<String, UserInfoByDeviceKey> resMap = new HashMap<String, UserInfoByDeviceKey>();
-		UserInfoByDeviceKey userInfoByDeviceKey;
+		Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
 
 		if (userDeviceInfoMap != null) {
-			for (int i = 0; i < deviceKeyList.size(); i++) {
-				if (userDeviceInfoMap.get(deviceKeyList.get(i)) != null) {
-					userInfoByDeviceKey = new UserInfoByDeviceKey();
-					userInfoByDeviceKey.setDeviceId(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceID());
-					userInfoByDeviceKey.setDeviceModelNo(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
-					userInfoByDeviceKey.setDeviceTelecom(userDeviceInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
-					userInfoByDeviceKey.setUserBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthBirthDay()));
-					userInfoByDeviceKey.setUserName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthName()));
-					userInfoByDeviceKey.setIsRealName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getIsRealName()));
-					userInfoByDeviceKey.setUserMainStatus(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getUserMainStatus()));
-					userInfoByDeviceKey.setUserSubStatus(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getUserSubStatus()));
-					userInfoByDeviceKey.setAuthBirthday(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthBirthDay()));
-					userInfoByDeviceKey.setAuthName(StringUtil.setTrim(userDeviceInfoMap.get(deviceKeyList.get(i)).getAuthName()));
-					userInfoByDeviceKey.setUserId(userDeviceInfoMap.get(deviceKeyList.get(i)).getUserID());
-					userInfoByDeviceKey.setUserType(userDeviceInfoMap.get(deviceKeyList.get(i)).getUserType());
+			UserDeviceInfoSac userDeviceInfoSac = null;
+			for (int i = 0; i < userDeviceKeyList.size(); i++) {
 
-					resMap.put(deviceKeyList.get(i), userInfoByDeviceKey);
+				DeviceMbrStatus deviceMbrStatus = userDeviceInfoMap.get(userDeviceKeyList.get(i).getDeviceKey());
+
+				if (deviceMbrStatus != null) {
+					userDeviceInfoSac = new UserDeviceInfoSac();
+					userDeviceInfoSac.setDeviceId(deviceMbrStatus.getDeviceID());
+					userDeviceInfoSac.setDeviceModelNo(deviceMbrStatus.getDeviceModelNo());
+					userDeviceInfoSac.setDeviceTelecom(deviceMbrStatus.getDeviceTelecom());
+					userDeviceInfoSac.setUserMainStatus(deviceMbrStatus.getUserMainStatus());
+					userDeviceInfoSac.setUserSubStatus(deviceMbrStatus.getUserSubStatus());
+					userDeviceInfoSac.setIsRealName(deviceMbrStatus.getIsRealName());
+					userDeviceInfoSac.setUserId(deviceMbrStatus.getUserID());
+					userDeviceInfoSac.setUserType(deviceMbrStatus.getUserType());
+
+					if (StringUtil.equals(deviceMbrStatus.getIsRealName(), "Y")) {
+
+						userDeviceInfoSac.setUserBirthday(StringUtil.isNotBlank(deviceMbrStatus.getAuthBirthDay()) ? deviceMbrStatus
+								.getAuthBirthDay() : deviceMbrStatus.getUserBirthDay());
+
+						userDeviceInfoSac.setUserName(StringUtil.isNotBlank(deviceMbrStatus.getAuthName()) ? deviceMbrStatus.getAuthName()
+								: deviceMbrStatus.getUserName());
+
+					} else {
+
+						userDeviceInfoSac.setUserBirthday(deviceMbrStatus.getUserBirthDay());
+						userDeviceInfoSac.setUserName(deviceMbrStatus.getUserName());
+
+					}
+
+					resMap.put(deviceMbrStatus.getDeviceKey(), userDeviceInfoSac);
 				}
 			}
 			LOGGER.info("[UserSearchServiceImpl.searchUserByUserKey] SAC UserDeviceInfo Response : {}", resMap);
@@ -1460,5 +1463,4 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		return resMap;
 	}
-
 }

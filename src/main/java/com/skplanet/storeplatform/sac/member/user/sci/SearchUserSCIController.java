@@ -3,9 +3,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -21,7 +18,6 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
@@ -38,9 +34,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDevice;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchUserDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.UserInfoByDeviceKey;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -234,68 +227,67 @@ public class SearchUserSCIController implements SearchUserSCI {
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		// Respone 를 가지고 오기 위한 devceKeyList Setting
-		List<String> deviceKeyList = new ArrayList<String>();
+		//		// Respone 를 가지고 오기 위한 devceKeyList Setting
+		//		List<String> deviceKeyList = new ArrayList<String>();
+		//
+		//		// Request 를 보내기 위한 세팅
+		//		List<SearchUserDevice> schUserDeviceList = new ArrayList<SearchUserDevice>();
+		//
+		//		for (SearchUserDeviceSac schUserDevice : request.getSearchUserDeviceReqList()) {
+		//			String deviceKey = schUserDevice.getDeviceKey();
+		//			SearchUserDevice schUser = new SearchUserDevice();
+		//			schUser.setDeviceKey(schUserDevice.getDeviceKey());
+		//			schUser.setUserKey(schUserDevice.getUserKey());
+		//
+		//			schUserDeviceList.add(schUser);
+		//			deviceKeyList.add(deviceKey);
+		//		}
+		//
+		//		SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
+		//		searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
-		// Request 를 보내기 위한 세팅
-		List<SearchUserDevice> schUserDeviceList = new ArrayList<SearchUserDevice>();
+		Map<String, UserDeviceInfoSac> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader, request);
 
-		for (SearchUserDeviceSac schUserDevice : request.getSearchUserDeviceReqList()) {
-			String deviceKey = schUserDevice.getDeviceKey();
-			SearchUserDevice schUser = new SearchUserDevice();
-			schUser.setDeviceKey(schUserDevice.getDeviceKey());
-			schUser.setUserKey(schUserDevice.getUserKey());
-
-			schUserDeviceList.add(schUser);
-			deviceKeyList.add(deviceKey);
-		}
-
-		SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
-		searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
-
-		Map<String, UserInfoByDeviceKey> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader, searchUserDeviceReq);
-
-		Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
-		UserDeviceInfoSac userDeviceInfoSac;
-
-		for (int i = 0; i < deviceKeyList.size(); i++) {
-			if (userInfoMap.get(deviceKeyList.get(i)) != null) {
-				userDeviceInfoSac = new UserDeviceInfoSac();
-				userDeviceInfoSac.setDeviceId(userInfoMap.get(deviceKeyList.get(i)).getDeviceId());
-				userDeviceInfoSac.setDeviceModelNo(userInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
-				userDeviceInfoSac.setDeviceTelecom(userInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
-				userDeviceInfoSac.setIsRealName(userInfoMap.get(deviceKeyList.get(i)).getIsRealName());
-				userDeviceInfoSac.setUserMainStatus(userInfoMap.get(deviceKeyList.get(i)).getUserMainStatus());
-				userDeviceInfoSac.setUserSubStatus(userInfoMap.get(deviceKeyList.get(i)).getUserSubStatus());
-				userDeviceInfoSac.setUserId(userInfoMap.get(deviceKeyList.get(i)).getUserId());
-				userDeviceInfoSac.setUserType(userInfoMap.get(deviceKeyList.get(i)).getUserType());
-
-				if (userInfoMap.get(deviceKeyList.get(i)).getIsRealName().equals("Y")) {
-					String birthday = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthBirthday(), "");
-					String name = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthName(), "");
-
-					if (birthday.equals("")) {
-						userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
-					} else {
-						userDeviceInfoSac.setUserBirthday(birthday);
-					}
-
-					if (name.equals("")) {
-						userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
-					} else {
-						userDeviceInfoSac.setUserName(name);
-					}
-				} else {
-					userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
-					userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
-				}
-
-				resMap.put(deviceKeyList.get(i), userDeviceInfoSac);
-			}
-		}
+		//		Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
+		//		UserDeviceInfoSac userDeviceInfoSac;
+		//
+		//		for (int i = 0; i < deviceKeyList.size(); i++) {
+		//			if (userInfoMap.get(deviceKeyList.get(i)) != null) {
+		//				userDeviceInfoSac = new UserDeviceInfoSac();
+		//				userDeviceInfoSac.setDeviceId(userInfoMap.get(deviceKeyList.get(i)).getDeviceId());
+		//				userDeviceInfoSac.setDeviceModelNo(userInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
+		//				userDeviceInfoSac.setDeviceTelecom(userInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
+		//				userDeviceInfoSac.setIsRealName(userInfoMap.get(deviceKeyList.get(i)).getIsRealName());
+		//				userDeviceInfoSac.setUserMainStatus(userInfoMap.get(deviceKeyList.get(i)).getUserMainStatus());
+		//				userDeviceInfoSac.setUserSubStatus(userInfoMap.get(deviceKeyList.get(i)).getUserSubStatus());
+		//
+		//				if (userInfoMap.get(deviceKeyList.get(i)).getIsRealName().equals("Y")) {
+		//					String birthday = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthBirthday(), "");
+		//					String name = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthName(), "");
+		//
+		//					if (birthday.equals("")) {
+		//						userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
+		//					} else {
+		//						userDeviceInfoSac.setUserBirthday(birthday);
+		//					}
+		//
+		//					if (name.equals("")) {
+		//						userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
+		//					} else {
+		//						userDeviceInfoSac.setUserName(name);
+		//					}
+		//				} else {
+		//					userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
+		//					userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
+		//				}
+		//
+		//				resMap.put(deviceKeyList.get(i), userDeviceInfoSac);
+		//			}
+		//		}
 
 		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
-		searchUserDeviceSacRes.setUserDeviceInfo(resMap);
+		//searchUserDeviceSacRes.setUserDeviceInfo(resMap);
+		searchUserDeviceSacRes.setUserDeviceInfo(userInfoMap);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(searchUserDeviceSacRes));
 
