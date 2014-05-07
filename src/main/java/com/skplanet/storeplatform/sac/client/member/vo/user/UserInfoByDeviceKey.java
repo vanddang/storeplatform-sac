@@ -34,6 +34,10 @@ public class UserInfoByDeviceKey extends CommonInfo {
 
 	private String userSubStatus;
 
+	private String userId;
+
+	private String userType;
+
 	public String getAuthName() {
 		return this.authName;
 	}
@@ -116,6 +120,22 @@ public class UserInfoByDeviceKey extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getUserType() {
+		return this.userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 }
