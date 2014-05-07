@@ -10,7 +10,9 @@
 package com.skplanet.storeplatform.sac.purchase.shopping.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +93,10 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 				final String coupon_publish_code = objItem.getPublishCode();
 				final String coupon_code = request.getCouponCode();
 				final String coupon_item_code = objItem.getItemCode();
+				final Map<String, String> link_system_result_code = new HashMap<String, String>();
+				link_system_result_code.put("SCPCMS", request.getPublishStatus());
+				final Map<String, String> link_system_result_message = new HashMap<String, String>();
+				link_system_result_message.put("SCPCMS", request.getPublishStatus() == "1" ? "publish" : "fail");
 
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
@@ -99,7 +105,8 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 								.use_start_time(use_start_time).use_end_time(use_end_time)
 								.download_expired_time(use_end_time).coupon_publish_code(coupon_publish_code)
 								.coupon_code(coupon_code).coupon_item_code(coupon_item_code).result_code("SUCC")
-								.result_message("");
+								.result_message("").link_system_result_code(link_system_result_code)
+								.link_system_result_message(link_system_result_message);
 					}
 				});
 
