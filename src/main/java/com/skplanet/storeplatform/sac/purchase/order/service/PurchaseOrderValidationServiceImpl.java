@@ -189,8 +189,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					purchaseOrderInfo.getDeviceKey());
 		}
 
-		// 회원상태 체크
-		if (StringUtils.equals(purchaseUserDevice.getUserMainStatus(), PurchaseConstants.USER_STATUS_NORMAL) == false) {
+		// 회원상태 체크 : 정상 상태 또는 모바일회원이 가가입 상태 (Save&Sync)
+		if ((StringUtils.equals(purchaseUserDevice.getUserMainStatus(), PurchaseConstants.USER_STATUS_NORMAL) == false)
+				&& ((StringUtils
+						.equals(purchaseUserDevice.getUserMainStatus(), PurchaseConstants.USER_STATUS_TEMP_JOIN) && StringUtils
+						.equals(purchaseUserDevice.getUserType(), PurchaseConstants.USER_TYPE_MOBILE)) == false)) {
 			throw new StorePlatformException("SAC_PUR_4102", purchaseUserDevice.getUserMainStatus());
 		}
 

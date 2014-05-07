@@ -239,8 +239,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			makeFreePurchaseScRes = this.purchaseOrderSCI.makeFreePurchase(makeFreePurchaseScReq);
 
 		} catch (StorePlatformException e) {
-			// 중복된 구매요청 체크
-			throw (this.isDuplicateKeyException(e) ? new StorePlatformException("SAC_PUR_6110") : e);
+			throw (this.isDuplicateKeyException(e) ? new StorePlatformException("SAC_PUR_6110") : e); // 중복된 구매요청 체크
+
+		} catch (DuplicateKeyException e) {
+			throw new StorePlatformException("SAC_PUR_6110");
+
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7217", e);
 		}
 
 		int count = makeFreePurchaseScRes.getCount();
@@ -525,6 +530,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 기타 응답 값
 
 		res.setMdn(reservedDataMap.get("deviceId")); // 결제 MDN
+		res.setOneId(reservedDataMap.get("oneId")); // ONE ID
 		res.setFlgMbrStatus(PurchaseConstants.VERIFYORDER_USER_STATUS_NORMAL); // [fix] 회원상태: 1-정상
 		res.setFlgProductStatus(PurchaseConstants.VERIFYORDER_PRODUCT_STATUS_NORMAL); // [fix] 상품상태: 1-정상
 		res.setTopMenuId(prchsDtlMore.getTenantProdGrpCd().substring(8, 12)); // 상품 TOP 메뉴 ID
@@ -824,17 +830,29 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -------------------------------------------------------------------------------------------
 		// 구매확정 요청
 
+		Exception checkException = null;
 		try {
 
 			ConfirmPurchaseScRes confirmPurchaseScRes = this.purchaseOrderSCI.confirmPurchase(confirmPurchaseScReq);
 			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,CNT,{}", confirmPurchaseScRes.getCount());
 
 		} catch (StorePlatformException e) {
-			// 쇼핑쿠폰발급 취소, 게임캐쉬 충전 취소 등
-			this.revertToPreConfirm(prchsDtlMoreList, cashReserveResList);
+			checkException = e;
+			throw (this.isDuplicateKeyException(e) ? new StorePlatformException("SAC_PUR_6110") : e); // 중복된 구매요청 체크
 
-			// 중복된 구매요청 체크
-			throw (this.isDuplicateKeyException(e) ? new StorePlatformException("SAC_PUR_6110") : e);
+		} catch (DuplicateKeyException e) {
+			checkException = e;
+			throw new StorePlatformException("SAC_PUR_6110");
+
+		} catch (Exception e) {
+			checkException = e;
+			throw new StorePlatformException("SAC_PUR_7202", e);
+
+		} finally {
+			// 쇼핑쿠폰발급 취소, 게임캐쉬 충전 취소 등
+			if (checkException != null) {
+				this.revertToPreConfirm(prchsDtlMoreList, cashReserveResList);
+			}
 		}
 
 		// -------------------------------------------------------------------------------------------
@@ -1104,7 +1122,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private List<PrchsDtlMore> makePrchsDtlMoreList(PurchaseOrderInfo purchaseOrderInfo) {
 		// 구매예약 시 저장할 데이터 (공통)
 		// tenantId, systemId, networkTypeCd, currencyCd
-		// 결제자: userKey, deviceKey, deviceId, telecom, imei
+		// 결제자: userKey, deviceKey, deviceId, telecom, imei, oneId
 		// 보유자: useUserKey, useDeviceKey, useDeviceId, useDeviceModelCd
 		PurchaseUserDevice useUser = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getReceiveUser() : purchaseOrderInfo
 				.getPurchaseUser();
@@ -1113,15 +1131,28 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		StringBuffer sbReserveData = new StringBuffer(1024);
 		if (bCharge) {
-			sbReserveData.append("tenantId=").append(useUser.getTenantId()).append("&systemId=")
-					.append(purchaseOrderInfo.getSystemId()).append("&userKey=").append(purchaseOrderInfo.getUserKey())
-					.append("&deviceKey=").append(purchaseOrderInfo.getDeviceKey()).append("&deviceId=")
-					.append(purchaseOrderInfo.getPurchaseUser().getDeviceId()).append("&telecom=")
-					.append(purchaseOrderInfo.getPurchaseUser().getTelecom()).append("&imei=")
-					.append(purchaseOrderInfo.getImei()).append("&useUserKey=").append(useUser.getUserKey())
-					.append("&useDeviceKey=").append(useUser.getDeviceKey()).append("&useDeviceId=")
-					.append(useUser.getDeviceId()).append("&useDeviceModelCd=").append(useUser.getDeviceModelCd())
-					.append("&networkTypeCd=").append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
+			sbReserveData
+					.append("tenantId=")
+					.append(useUser.getTenantId())
+					.append("&systemId=")
+					.append(purchaseOrderInfo.getSystemId())
+					.append("&userKey=")
+					.append(purchaseOrderInfo.getUserKey())
+					.append("&deviceKey=")
+					.append(purchaseOrderInfo.getDeviceKey())
+					.append("&deviceId=")
+					.append(purchaseOrderInfo.getPurchaseUser().getDeviceId())
+					.append("&telecom=")
+					.append(purchaseOrderInfo.getPurchaseUser().getTelecom())
+					.append("&imei=")
+					.append(purchaseOrderInfo.getImei())
+					.append("&oneId=")
+					.append(StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getUserType(),
+							PurchaseConstants.USER_TYPE_ONEID) ? purchaseOrderInfo.getPurchaseUser().getUserId() : "")
+					.append("&useUserKey=").append(useUser.getUserKey()).append("&useDeviceKey=")
+					.append(useUser.getDeviceKey()).append("&useDeviceId=").append(useUser.getDeviceId())
+					.append("&useDeviceModelCd=").append(useUser.getDeviceModelCd()).append("&networkTypeCd=")
+					.append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
 					.append(purchaseOrderInfo.getCurrencyCd());
 			if (purchaseOrderInfo.isGift()) {
 				sbReserveData.append("&receiveNames=").append(StringUtils.defaultString(useUser.getUserName()))
@@ -1571,11 +1602,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * <pre> DB PK 오류 여부 체크. </pre>
 	 * 
-	 * @param e 발생한 StorePlatformException 개체
+	 * @param e 발생한 Exception 개체
 	 * 
 	 * @return DB PK 오류 여부
 	 */
-	private boolean isDuplicateKeyException(StorePlatformException e) {
+	private boolean isDuplicateKeyException(Exception e) {
 		Throwable exception = e;
 		while (exception != null) {
 			if (exception instanceof DuplicateKeyException) {
