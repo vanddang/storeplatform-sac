@@ -940,30 +940,30 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// Tstore 측으로 알림: 이메일 발송, SMS / MMS 등등 처리
 
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL) == false) {
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL) == false) {
 
-			prchsDtlMore = prchsDtlMoreList.get(0);
-			reservedDataMap = this.parseReservedData(prchsDtlMore.getPrchsResvDesc());
-			String tstoreNotiPublishType = reservedDataMap.get("tstoreNotiPublishType");
+		prchsDtlMore = prchsDtlMoreList.get(0);
+		reservedDataMap = this.parseReservedData(prchsDtlMore.getPrchsResvDesc());
+		String tstoreNotiPublishType = reservedDataMap.get("tstoreNotiPublishType");
 
-			TStoreNotiEcReq tStoreNotiEcReq = new TStoreNotiEcReq();
-			tStoreNotiEcReq.setPrchsId(prchsDtlMore.getPrchsId());
-			tStoreNotiEcReq.setPrchsDt(prchsDtlMore.getPrchsDt());
-			tStoreNotiEcReq.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
-			tStoreNotiEcReq.setDeviceKey(prchsDtlMore.getUseInsdDeviceId());
-			tStoreNotiEcReq.setPublishType(tstoreNotiPublishType);
-			tStoreNotiEcReq.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
+		TStoreNotiEcReq tStoreNotiEcReq = new TStoreNotiEcReq();
+		tStoreNotiEcReq.setPrchsId(prchsDtlMore.getPrchsId());
+		tStoreNotiEcReq.setPrchsDt(prchsDtlMore.getPrchsDt());
+		tStoreNotiEcReq.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
+		tStoreNotiEcReq.setDeviceKey(prchsDtlMore.getUseInsdDeviceId());
+		tStoreNotiEcReq.setPublishType(tstoreNotiPublishType);
+		tStoreNotiEcReq.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
 
-			try {
-				TStoreNotiEcRes tStoreNotiEcRes = this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
-				this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,{},{},{}", prchsDtlMoreList.get(0).getPrchsId(),
-						tStoreNotiEcRes.getCode(), tStoreNotiEcRes.getMessage());
-			} catch (Exception e) {
-				// 예외 throw 차단
-				this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,ERROR,{},{}", prchsDtlMoreList.get(0).getPrchsId(),
-						e.getMessage());
-			}
+		try {
+			TStoreNotiEcRes tStoreNotiEcRes = this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,{},{},{}", prchsDtlMoreList.get(0).getPrchsId(),
+					tStoreNotiEcRes.getCode(), tStoreNotiEcRes.getMessage());
+		} catch (Exception e) {
+			// 예외 throw 차단
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,ERROR,{},{}", prchsDtlMoreList.get(0).getPrchsId(),
+					e.getMessage());
 		}
+		// }
 
 		this.logger.info("PRCHS,ORDER,SAC,POST,END,{}", prchsDtlMoreList.get(0).getPrchsId());
 	}
@@ -1469,10 +1469,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		// TAKTEST:: 로컬 테스트, 상용 성능테스트
-		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL)
-				|| StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
-			return null;
-		}
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL)
+		// || StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// return null;
+		// }
 
 		return prchsProdCntList;
 	}
@@ -1660,9 +1660,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	private String searchTstoreCouponList(String userKey, String deviceId, List<String> prodIdList) {
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
-			return "NULL";
-		}
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// return "NULL";
+		// }
 
 		List<ProdId> prodIdObjList = new ArrayList<ProdId>();
 		ProdId prodIdObj = null;
@@ -1719,9 +1719,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	private double searchTstoreCashAmt(String userKey) {
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
-			return 0.0;
-		}
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// return 0.0;
+		// }
 
 		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
 		tStoreCashEcReq.setUserKey(userKey);
@@ -1758,9 +1758,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	private double searchGameCashAmt(String userKey) {
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
-		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
-			return 0.0;
-		}
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// return 0.0;
+		// }
 
 		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
 		tStoreCashEcReq.setUserKey(userKey);

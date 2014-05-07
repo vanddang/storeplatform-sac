@@ -731,27 +731,27 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		// 기구매 체크
 		// TAKTEST:: 로컬 테스트, 상용 성능테스트
-		if ((StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL) == false)
-				&& (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL) == false)) {
-			if (existenceProdIdList.size() > 0) {
+		// if ((StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL) == false)
+		// && (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL) == false)) {
+		if (existenceProdIdList.size() > 0) {
 
-				List<ExistenceScRes> checkPurchaseResultList = this.searchExistence(existTenantId, existUserKey,
-						existDeviceKey, existenceProdIdList);
+			List<ExistenceScRes> checkPurchaseResultList = this.searchExistence(existTenantId, existUserKey,
+					existDeviceKey, existenceProdIdList);
 
-				for (ExistenceScRes checkRes : checkPurchaseResultList) {
-					if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
-						if (StringUtils.equals(checkRes.getProdId(), removeWhenExistPossLendProdId)) {
-							bRemovePossLend = true;
-							continue;
-						}
-
-						throw new StorePlatformException("SAC_PUR_6101");
+			for (ExistenceScRes checkRes : checkPurchaseResultList) {
+				if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
+					if (StringUtils.equals(checkRes.getProdId(), removeWhenExistPossLendProdId)) {
+						bRemovePossLend = true;
+						continue;
 					}
 
-					// TAKTODO:: 예약 상태 경우 해당 구매ID 사용... 복수 구매 시 일부 예약상태일 때 처리 방안?
+					throw new StorePlatformException("SAC_PUR_6101");
 				}
+
+				// TAKTODO:: 예약 상태 경우 해당 구매ID 사용... 복수 구매 시 일부 예약상태일 때 처리 방안?
 			}
 		}
+		// }
 
 		if (bRemovePossLend) {
 			purchaseOrderInfo.getPurchaseProductList().get(0).setPossLendProductInfo(null);
