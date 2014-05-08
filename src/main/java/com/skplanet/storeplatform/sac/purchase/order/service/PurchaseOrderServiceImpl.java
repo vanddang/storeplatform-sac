@@ -174,9 +174,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		this.hostNum = StringUtils.leftPad(this.hostNum, 2, "0");
 
 		this.instanceNum = "";
-		matcher = pattern.matcher(this.instanceName);
-		while (matcher.find()) {
-			this.instanceNum += matcher.group(0);
+		if (StringUtils.isNotBlank(this.instanceName)) {
+			matcher = pattern.matcher(this.instanceName);
+			while (matcher.find()) {
+				this.instanceNum += matcher.group(0);
+			}
 		}
 		if (StringUtils.isBlank(this.instanceNum)) {
 			this.instanceNum = "01";
