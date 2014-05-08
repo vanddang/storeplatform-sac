@@ -307,11 +307,11 @@ public class BannerServceImpl implements BannerService {
 					prodId = bannerDefault.getBnrInfo();
 					topMenuId = bannerDefault.getTopMenuId();
 
-					// 앱가이드
-					if ("DP010912".equals(bnrMenuId)) {
+					// 앱가이드 또는 모바일웹 직사각형 배너
+					if ("DP010912".equals(bnrMenuId) || "DP010926".equals(bnrMenuId)) {
 						bannerReq.setProdId(prodId);
 
-						// 상품 리스트 조회 (앱가이드의 경우 배너정보에 채널 상품ID가 입력)
+						// 상품 리스트 조회 (앱가이드 및 모바일웹 직사각형 배너의 경우 배너정보에 채널 상품ID가 입력)
 						prodList = this.commonDAO.queryForList("Banner.searchAppGuideProdList", bannerReq,
 								BannerDefault.class);
 
