@@ -151,9 +151,11 @@
                             , Z1.SVC_GRP_CD
 			                , Z1.CONTENTS_TYPE_CD
 			                , Z1.PROD_NM
+                            , IB.PRCHS_CNT
 			            FROM
 			             (
 			            SELECT DISTINCT  D.PROD_ID AS PROD_ID
+			                 , BS.TENANT_ID
 			                 , C.TOP_MENU_ID
 			                 , C.MENU_ID
 			                 , A.PART_PROD_ID                                     
@@ -211,7 +213,10 @@
 		                                      ELSE CASE WHEN #{sdVideoSprtYn} = 'Y' THEN 1 ELSE 0 END END
 		                            ELSE 1 END) = 1
 			            ) Z1
-			        WHERE Z1.RN = 1
+                          , TB_DP_TENANT_PROD_STATS IB
+			        WHERE  Z1.RN = 1
+                      AND  Z1.TENANT_ID = IB.TENANT_ID(+)
+                      AND  Z1.PROD_ID = IB.PROD_ID(+)
 			        ) Z2
         <!-- 최신순 -->
         <if test='orderedBy == "DP000701"'>
