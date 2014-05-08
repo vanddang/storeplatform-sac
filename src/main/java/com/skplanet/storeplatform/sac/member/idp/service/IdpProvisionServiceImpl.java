@@ -747,7 +747,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			/* MQ 연동 */
 			ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
 			try {
-
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 				mqInfo.setUserKey(userKey);
 				//mqInfo.setOldUserKey(userKey);
 				mqInfo.setDeviceKey(deviceKey);
