@@ -617,8 +617,13 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			/* 이전 단말의 DCD 지원여부 조회 */
 			Device beforeDevice = this.mcc.getPhoneInfo(schDeviceRes.getUserMbrDevice().getDeviceModelNo());
-			beforeV4SprtYn = beforeDevice.getItoppV4SprtYn() == null ? "N" : beforeDevice.getItoppV4SprtYn();
-			preData = beforeDevice.getDeviceModelCd();
+			if (beforeDevice == null) {
+				beforeV4SprtYn = "N";
+				preData = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+			} else {
+				beforeV4SprtYn = beforeDevice.getItoppV4SprtYn() == null ? "N" : beforeDevice.getItoppV4SprtYn();
+				preData = beforeDevice.getDeviceModelCd();
+			}
 
 			/* 변경될 단말의 정보 조회 */
 			Device device = this.mcc.getPhoneInfoByUacd(uacd);
