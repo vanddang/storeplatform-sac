@@ -686,24 +686,6 @@ public class DeviceServiceImpl implements DeviceService {
 			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 			this.insertGameCenterIF(gameCenterSacReq);
-
-			/* MQ 연동 */
-			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-			try {
-				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-				mqInfo.setUserKey(createDeviceRes.getUserKey());
-				mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
-				mqInfo.setDeviceId(deviceInfo.getDeviceId());
-				if (StringUtil.isBlank(deviceTelecom)) { // MQ연동시 deviceTelecom은 필수이므로 파라메터에 없으면 DB 정보를 넣어준다.
-					mqInfo.setMnoCd(userMbrDevice.getDeviceTelecom());
-				} else {
-					mqInfo.setMnoCd(deviceTelecom);
-				}
-
-				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
-			} catch (AmqpException ex) {
-				LOGGER.info("MQ process fail {}", mqInfo);
-			}
 		}
 
 		LOGGER.info("{} updateDeviceInfo field : {}", deviceInfo.getDeviceId(), deviceInfoChangeLog.toString());
@@ -936,19 +918,6 @@ public class DeviceServiceImpl implements DeviceService {
 			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
 			this.insertGameCenterIF(gameCenterSacReq);
-
-			/* MQ 연동 */
-			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-			try {
-				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-				mqInfo.setUserKey(createDeviceRes.getUserKey());
-				mqInfo.setDeviceKey(createDeviceRes.getDeviceKey());
-				mqInfo.setDeviceId(deviceInfo.getDeviceId());
-				mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
-			} catch (AmqpException ex) {
-				LOGGER.info("MQ process fail {}", mqInfo);
-			}
 		}
 
 		LOGGER.info("{} updateDeviceInfoForLogin field : {}", deviceInfo.getDeviceId(), deviceInfoChangeLog.toString());
