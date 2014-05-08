@@ -293,7 +293,7 @@
                          AND  TDL.TENANT_ID = #{tenantId}
                          AND  TDL.EXPO_YN = 'Y'
                          AND  EXISTS (
-                              SELECT  1
+                              SELECT  /*+ use_nl(G) use_nl(D) */ 1
                                 FROM  TB_DP_LIST_PROD TDLP
                                     , TB_DP_PROD_RSHP A
                                     , TB_DP_SHPG_CATALOG      B /* 쇼핑 카탈로그 */

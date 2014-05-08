@@ -25,7 +25,7 @@
             , A.PROD_ID AS PART_PROD_ID
             , A.CONTENTS_TYPE_CD
         FROM (
-            SELECT /*+ USE_HASH(B,C,D) */
+            SELECT /*+ index_ss(d IDX_DP_PROD_DESC_01) */
                 COUNT(A.PROD_ID) OVER() TOTAL_COUNT
                 <if test="orderedBy == 'issueDate'">
                 , ROW_NUMBER() OVER(ORDER BY I.ISSUE_DAY DESC, D.PROD_NM) RNK

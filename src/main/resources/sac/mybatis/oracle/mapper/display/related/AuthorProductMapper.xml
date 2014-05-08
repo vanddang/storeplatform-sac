@@ -37,7 +37,7 @@
                 , A.UPD_DT
                 , A.CONTENTS_TYPE_CD
             FROM (
-                SELECT /*+ ORDERED */ 
+                SELECT
                     ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY E.ROWID) RNUM
                     , D.TOP_MENU_ID
                     , D.MENU_ID
