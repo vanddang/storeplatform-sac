@@ -143,7 +143,7 @@
         <level value="OFF" /> 
     </logger> 
     <logger name="jdbc.sqltiming" additivity="false">
-        <level value="OFF" /> 
+        <level value="DEBUG" /> 
         <appender-ref ref="SQL_ERROR_LOGGING_ROLLINGFILE_ASYNC" />
         <appender-ref ref="SQL_LOGGING_ROLLINGFILE_ASYNC" />
     </logger>
