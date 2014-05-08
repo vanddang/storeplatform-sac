@@ -106,9 +106,16 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
                         this.cacheEvictHelperComponent.evictProductMeta(ProductType.App, tenProd.getProdId());
                     }
 
-                } catch (StorePlatformException ie) {
+                }
+                catch (StorePlatformException ie) {
+                    log.error("CMS MQ App 수행중 오류: {}", ie.getMessage(), ie);
                     cv.setResultCd(ie.getErrorInfo().getCode()); // Result Code
                     cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + ie.getErrorInfo().getCode()));
+                }
+                catch (RuntimeException re) {
+                    log.error("CMS MQ App 수행중 오류: {}", re.getMessage(), re);
+                    cv.setResultCd(IFConstants.CMS_RST_CODE_UNKNOWN_ERROR);
+                    cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
                 }
 
                 this.log.info("CMS Result Code = " + cv.getResultCd());

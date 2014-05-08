@@ -103,7 +103,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPTenantProductVO vo : tenantInfo) {
 					
 					// 테넌트 정보 등록
-					log.info("CMS Tenant Info");
+					log.info("Insert CMS Tenant Info");
 					dpTenantProductService.insertDPTenant(vo);
 				}
 			}
@@ -122,7 +122,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPTenantProductPriceVO vo : tenantPriceInfo) {
 					
 					// 테넌트 상품 가격 등록
-					log.info("CMS TenantPrice Info");
+					log.info("Insert CMS TenantPrice Info");
 					dpTenantProductPriceService.insertDPTenantPrice(vo);
 				}
 			}
@@ -140,7 +140,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPProductDescVO vo : dpProdDesc) {
 					
 					// 전시상품 상품상세 등록
-					log.info("CMS DpProdDesc Info");
+					log.info("Insert CMS DpProdDesc Info");
 					dpProductDescService.insertDPProductDesc(vo);
 				}
 			}
@@ -153,7 +153,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 		DPAppProductVO dpProdAppInfo = notification.getDpProductTotal().getDpAppProduct(); 
 		if (null != dpProdAppInfo.getProdId()) {
 			// 전시상품 APP 상품 등록
-			log.info("CMS DpProdApp Info");
+			log.info("Insert CMS DpProdApp Info");
 			dpAppProductService.insertDPAppProduct(notification.getDpProductTotal().getDpAppProduct());
 
 		}
@@ -174,7 +174,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				if (null != inAppDpProdInfo.getProdId()) {
 					
 					// IN-APP 전시상품 정보 등록
-					log.info("CMS InAppDpProdInfo Info");
+					log.info("Insert CMS InAppDpProdInfo Info");
 					dpProductService.insertDPProduct(inAppProduct.getDpProduct());
 				}			
 				
@@ -185,7 +185,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				if (null != inAppDpProdRshpInfo.getProdId()) {
 					
 					// IN-APP 상품정보 매핑 등록
-					log.info("CMS InAppDpProdRshp Info");
+					log.info("Insert CMS InAppDpProdRshp Info");
 					dpProductRshpService.insertDPProductRshp(inAppProduct.getDpProductRshp());
 				}					
 				
@@ -201,7 +201,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 						for (DPTenantProductVO vo : inAppTenantInfo) {
 							
 							// IN-APP 테넌트 정보 등록
-							log.info("CMS InAppTenant Info");
+							log.info("Insert CMS InAppTenant Info");
 							dpTenantProductService.insertDPTenant(vo);
 						}
 					}
@@ -220,7 +220,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 						for (DPTenantProductPriceVO vo : inAppTenantPriceInfo) {
 							
 							// IN-APP 테넌트 상품 가격 등록
-							log.info("CMS InAppTenantPrice Info");
+							log.info("Insert CMS InAppTenantPrice Info");
 							dpTenantProductPriceService.insertDPTenantPrice(vo);
 						}
 					}
@@ -238,7 +238,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 						for (DPProductDescVO vo : inAppDpProdDesc) {
 							
 							// IN-APP 전시상품 상품상세 등록
-							log.info("CMS InAppDpProdDesc Info");
+							log.info("Insert CMS InAppDpProdDesc Info");
 							dpProductDescService.insertDPProductDesc(vo);
 						}
 					}
@@ -252,10 +252,9 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				if (null != inAppDpProdAppInfo.getProdId()) {
 					
 					// IN-APP 전시상품 APP 상품 등록
-					log.info("CMS inAppDpProdApp Info");
+					log.info("Insert CMS inAppDpProdApp Info #{}", inAppDpProdInfo.getProdId());
 					dpAppProductService.insertDPAppProduct(inAppProduct.getDpAppProduct());
-
-				}				
+				}
 
 			}
 		}
@@ -272,7 +271,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPProductCatMapVO vo : displayCategoryList) {
 
 					// 전시상품/부분유료화상품 카테고리정보  등록
-					log.info("CMS DisplayCategoryList Info");
+					log.info("Insert CMS DisplayCategory Info");
 					dpProductCatMapService.insertDPProductCat(vo);
 				}
 			}
@@ -290,7 +289,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPProductImgVO vo : displayProductImageList) {
 
 					// 전시상품 이미지 등록
-					log.info("CMS DisplayProductImageList Info");
+					log.info("Insert CMS DisplayProductImage Info");
 					dpProductImgService.insertDPProductImg(vo);
 				}
 			}
@@ -307,7 +306,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPProductUpdVO vo : displayProductUpdateList) {
 
 					// 전시상품 업데이트이력 등록
-					log.info("CMS DisplayProductUpdateList Info");
+					log.info("Insert CMS DisplayProductUpdate Info");
 					dpProductUpdService.insertDPProductUpd(vo);
 				}
 			}
@@ -323,7 +322,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 
                 for (DPSprtDeviceVO vo : displaySupportPhoneList) {
                     // 전시상품 단말 등록
-                    log.info("CMS DisplaySupportPhoneList Info");
+                    log.info("Insert CMS DisplaySupportPhone Info - DeviceModelCd#{}", vo.getDeviceModelCd());
                     dpSprtDeviceService.insertDPSprtDevice(vo);
                 }
 
@@ -356,7 +355,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPProductSubContsVO vo : displaySubContentList) {
 
 					// 전시상품 배포파일정보 등록
-					log.info("CMS DisplaySubContentList Info");
+					log.info("Insert CMS DisplaySubContent Info - SubContentsId#{}", vo.getSubContentsId());
 					dpProductSubContsService.insertDPProductSubconts(vo);
 				}
 			}
@@ -373,7 +372,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPTagInfoVO vo : displayTabInfoList) {
 
 					// 전시상품 Tag정보 등록
-					log.info("CMS DisplayTabInfoList Info");
+					log.info("Insert CMS DisplayTabInfo Info");
 					dpTagInfoService.insertDPTagInfo(vo);
 				}
 			}
@@ -390,7 +389,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPSeedMappVO vo : displaySeedMappList) {
 
 					// 전시상품 SeedMapp정보
-					log.info("CMS DisplaySeedMappList Info");
+					log.info("Insert CMS DisplaySeedMapp Info");
 					dpSeedMappService.insertDPSeedMapp(vo);
 				}
 			}
@@ -408,7 +407,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPAppDeltaDeployFileVO vo : dPAppDeltaDeployFileList) {
 
 					// 델타 File 정보
-					log.info("CMS DpAppDeltaDeployFileList Info");
+					log.info("Insert CMS DpAppDeltaDeployFile Info");
 					dPAppDeltaDeployFileService.insertDPAppDeltaDeployFile(vo);
 				}
 			}
@@ -476,10 +475,6 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 			// 바이너리 수정이 있을 경우 화이트 리스트 배포
 			log.info("CMS White List Regist");
 			this.prodService.insertWhiteList(prodId);
-			
-			//TODO 정산율 배포 : 정산율 프로시져 만들어 지고 나서 확인 후 작업 
-//			String result = this.prodService.registProdSettl(pv);
-//			log.info("CMS 정산율 = " + result);
 
 		}		
 	}
