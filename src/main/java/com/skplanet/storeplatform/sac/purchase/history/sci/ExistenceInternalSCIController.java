@@ -12,15 +12,13 @@ package com.skplanet.storeplatform.sac.purchase.history.sci;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
@@ -56,17 +54,18 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 	public ExistenceListRes searchExistenceList(ExistenceReq existenceReq) {
 		this.logger.debug("PRCHS,ExistenceInternalSCIController,SAC,REQ,{}", existenceReq);
 
-		new TLogUtil().logger(LoggerFactory.getLogger("TLOG_SAC_LOGGER")).log(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL_SAC_PUR_0002"); // T Log 보장을 위해 log_id 선 세팅
-			}
-		});
 		// 필수값 체크
 		if (existenceReq.getTenantId() == null || existenceReq.getTenantId().equals("")) {
 			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
 		}
 
+		if (StringUtils.isBlank(existenceReq.getUserKey())) {
+			throw new StorePlatformException("SAC_PUR_0001", "UserKey");
+		}
+
+		if (StringUtils.isBlank(existenceReq.getDeviceKey())) {
+			throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
+		}
 		ExistenceScReq req = this.reqConvert(existenceReq);
 		List<ExistenceRes> res = this.resConvert(this.existenceSacService.searchExistenceList(req));
 
@@ -95,12 +94,16 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		req.setUserKey(existenceReq.getUserKey());
 		req.setDeviceKey(existenceReq.getDeviceKey());
 		req.setPrchsId(existenceReq.getPrchsId());
+
 		req.setCheckValue(false);
 		// 상품리스트가 없을시 제외
 		if (existenceReq.getExistenceItem() != null) {
 			int size = existenceReq.getExistenceItem().size();
 			for (int i = 0; i < size; i++) {
 				ExistenceItemSc existenceItemSc = new ExistenceItemSc();
+				if (StringUtils.isBlank(existenceReq.getExistenceItem().get(i).getProdId())) {
+					throw new StorePlatformException("SAC_PUR_0001", "ProdId");
+				}
 				existenceItemSc.setProdId(existenceReq.getExistenceItem().get(i).getProdId());
 				existenceItemSc.setTenantProdGrpCd(existenceReq.getExistenceItem().get(i).getTenantProdGrpCd());
 				existenceItemListSc.add(existenceItemSc);
