@@ -243,7 +243,7 @@
                             )                        
                    ) 
                  WHERE NO =1
-                 ORDER BY REG_DT DESC, CATALOG_NM ASC
+                 ORDER BY DBMS_RANDOM.VALUE
                ) 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>        
