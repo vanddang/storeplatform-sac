@@ -8,6 +8,7 @@
  */
 package com.skplanet.storeplatform.sac.display.product.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class DPTagInfoServiceImpl implements DPTagInfoService {
 	 * @param dpTagInfo
 	 */
 	public void insertDPTagInfo(DPTagInfoVO dpTagInfo) {
+        dpTagInfo.setUpdId(StringUtils.defaultString(dpTagInfo.getUpdId()));
 		this.commonDAO.insert(NAMESPACE + ".insertDPTagInfo", dpTagInfo);
 	}
 
