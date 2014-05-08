@@ -15,7 +15,12 @@
 
     <select id="getBasicThemeRecommendProductList" parameterType="java.util.Map" resultType="ProductBasicInfo">
 		SELECT  /* AppguideThemeMapper.xml, getBasicThemeRecommendProductList, 앱가이드 테마 추천별 상품 리스트, 윤주영/SK플래닛, 2014-03-06 */
+		      S.*
+		 FROM
+          (
+          SELECT
                 A.TOTAL_COUNT
+              , ROWNUM AS RNN
               , A.PROD_ID
               , A.SVC_GRP_CD
               , A.SVC_TYPE_CD
@@ -27,7 +32,6 @@
               , A.RN
            FROM (
                    SELECT COUNT(*) OVER() AS TOTAL_COUNT
-                        , ROWNUM AS RNN
 						, P2.PROD_ID
 						, P2.SVC_GRP_CD
 						, P2.SVC_TYPE_CD
@@ -106,7 +110,8 @@
                           , AP.EXPO_ORD, AP.EXPO_ORD_SUB, P2.REG_DT DESC
               ) A
           WHERE RN = 1
-            AND RNN BETWEEN #{START_ROW} AND #{END_ROW}
+          ) S
+      WHERE RNN BETWEEN #{START_ROW} AND #{END_ROW}
     </select>
 
     <select id="getThemeRecommendList" parameterType="java.util.Map" resultType="Appguide">
