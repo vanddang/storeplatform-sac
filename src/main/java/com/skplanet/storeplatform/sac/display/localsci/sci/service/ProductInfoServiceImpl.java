@@ -96,29 +96,25 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					}
 				} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
 					// 영화/방송 상품의 경우
-					paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 					if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 							|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 						this.log.debug("##### Search for Vod specific product");
 						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getVODMetaInfo", paramMap,
 								ProductInfo.class);
 						if (product != null) {
+							product.setChapterUnit(this.displayCommonService.getVodChapterUnit());
 							productList.add(product);
 						}
 					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
-						paramMap.put("chnlImageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 						paramMap.put("imageCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD);
 						this.log.debug("##### Search for EbookComic specific product");
 						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getEbookComicMetaInfo",
 								paramMap, ProductInfo.class);
 						String chapterUnit = null;
 						if (product != null) {
-							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-								chapterUnit = this.displayCommonService.getEpubChapterUnit(product.getBookClsfCd());
-							} else {
-								chapterUnit = this.displayCommonService.getVodChapterUnit();
-							}
+							chapterUnit = this.displayCommonService.getEpubChapterUnit(product.getBookClsfCd());
 							product.setChapterUnit(chapterUnit);
 							productList.add(product);
 						}
