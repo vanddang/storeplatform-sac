@@ -236,7 +236,7 @@ public class BrandshopServiceImpl implements BrandshopService {
 			count = offset + count - 1;
 			req.setCount(count);
 
-			if (req.getOrderedBy() != null || StringUtils.isEmpty(req.getOrderedBy())) {
+			if (req.getOrderedBy() == null || StringUtils.isEmpty(req.getOrderedBy())) {
 				req.setOrderedBy("DP000701");
 			}
 
