@@ -258,7 +258,7 @@ public class BannerServceImpl implements BannerService {
 						if (passCnt == this.EDU_BANNER_COUNT) {
 							passCnt = 0;
 							eduBannerFullFlag = true;
-							continue;
+							break;
 						}
 					}
 				}
@@ -284,7 +284,7 @@ public class BannerServceImpl implements BannerService {
 						if (passCnt == this.BESTAPP_BANNER_COUNT) {
 							passCnt = 0;
 							bestAppBannerFlag = true;
-							continue;
+							break;
 						}
 					}
 				}
@@ -310,7 +310,7 @@ public class BannerServceImpl implements BannerService {
 						if (passCnt == this.COMIC_STORE_BANNER_COUNT) {
 							passCnt = 0;
 							comicStoreBannerFlag = true;
-							continue;
+							break;
 						}
 					}
 				}
