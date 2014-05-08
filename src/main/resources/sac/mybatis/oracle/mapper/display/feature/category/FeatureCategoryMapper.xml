@@ -119,10 +119,10 @@
                      , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 최신순 */
                      </if>
                      <if test='orderedBy == "download"'>
-                     , ROW_NUMBER() OVER(ORDER BY A.PRCHS_CNT, A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 다운로드순 */
+                     , ROW_NUMBER() OVER(ORDER BY NVL(A.PRCHS_CNT, 0) DESC, A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 다운로드순 */
                      </if>
                      <if test='orderedBy == "popular"'>
-                     , ROW_NUMBER() OVER(ORDER BY A.AVG_EVLU_SCORE, A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 평점순 */
+                     , ROW_NUMBER() OVER(ORDER BY NVL(A.AVG_EVLU_SCORE, 0) DESC, A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 평점순 */
                      </if>
                      <if test='orderedBy != "recent" and orderedBy != "download" and orderedBy != "popular"'>
                      , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 최신순 */
