@@ -209,6 +209,10 @@ public class BannerServceImpl implements BannerService {
 							continue;
 						}
 					} else if ("DP010916".equals(bnrMenuId)) { // 게임 2개
+						if (passCnt > 0 && !homeBannerFullFlag) {
+							passCnt = 0;
+							homeBannerFullFlag = true;
+						}
 						if (gameBannerFullFlag) {
 							continue;
 						}
@@ -218,6 +222,10 @@ public class BannerServceImpl implements BannerService {
 							continue;
 						}
 					} else if ("DP010917".equals(bnrMenuId)) { // Fun 2개
+						if (passCnt > 0 && !gameBannerFullFlag) {
+							passCnt = 0;
+							gameBannerFullFlag = true;
+						}
 						if (funBannerFullFlag) {
 							continue;
 						}
@@ -227,6 +235,10 @@ public class BannerServceImpl implements BannerService {
 							continue;
 						}
 					} else if ("DP010918".equals(bnrMenuId)) { // 생활/위치 2개
+						if (passCnt > 0 && !funBannerFullFlag) {
+							passCnt = 0;
+							funBannerFullFlag = true;
+						}
 						if (lifeBannerFullFlag) {
 							continue;
 						}
@@ -236,6 +248,10 @@ public class BannerServceImpl implements BannerService {
 							continue;
 						}
 					} else if ("DP010919".equals(bnrMenuId)) { // 어학/교육 2개
+						if (passCnt > 0 && !lifeBannerFullFlag) {
+							passCnt = 0;
+							lifeBannerFullFlag = true;
+						}
 						if (eduBannerFullFlag) {
 							continue;
 						}
@@ -258,6 +274,10 @@ public class BannerServceImpl implements BannerService {
 							continue;
 						}
 					} else if ("DP010910".equals(bnrMenuId)) { // BEST 앱 4개
+						if (passCnt > 0 && !appGuideBannerFlag) {
+							passCnt = 0;
+							appGuideBannerFlag = true;
+						}
 						if (bestAppBannerFlag) {
 							continue;
 						}
@@ -280,6 +300,10 @@ public class BannerServceImpl implements BannerService {
 							continue;
 						}
 					} else if ("DP010921".equals(bnrMenuId)) { // comic 배너 n개
+						if (passCnt > 0 && !ebookStoreBannerFlag) {
+							passCnt = 0;
+							ebookStoreBannerFlag = true;
+						}
 						if (comicStoreBannerFlag) {
 							continue;
 						}
@@ -311,7 +335,7 @@ public class BannerServceImpl implements BannerService {
 					if ("DP010912".equals(bnrMenuId) || "DP010926".equals(bnrMenuId)) {
 						bannerReq.setProdId(prodId);
 
-						// 상품 리스트 조회 (앱가이드 및 모바일웹 직사각형 배너의 경우 배너정보에 채널 상품ID가 입력)
+						// 상품 리스트 조회 (앱가이드 및 모바일웹 직사각형너너너의 경우 배너정보에 채널 상품ID가 입력)
 						prodList = this.commonDAO.queryForList("Banner.searchAppGuideProdList", bannerReq,
 								BannerDefault.class);
 
