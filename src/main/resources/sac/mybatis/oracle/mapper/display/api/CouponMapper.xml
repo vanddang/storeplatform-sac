@@ -504,6 +504,7 @@
         UPDATE 
             TB_DP_TENANT_PROD
         SET PROD_STATUS_CD = #{dpStatusCode}
+           ,UPD_DT         = sysdate  
         WHERE 1=1
           AND TENANT_ID =#{tenentId}
         <if test='upType == "0"'>
