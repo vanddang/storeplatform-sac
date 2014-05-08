@@ -2,6 +2,8 @@ package com.skplanet.storeplatform.sac.display.product.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,7 @@ import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 
 /**
  * 
- * SACDisplayProductInitializer 
+ * SACDisplayProductInitializer
  * 
  * CMS 전시 배포 기존 정보 초기화 서비스 구현체.
  * 
@@ -22,12 +24,14 @@ import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 @Service
 public class SACDisplayProductInitializer implements DisplayProductInitializer {
 
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private DPProductService dpProductService;
-	
+
 	@Autowired
 	private DPProductCatMapService dpProductCatMapService;
-	
+
 	@Autowired
 	private DPProductRshpService dpProductRshpService;
 
@@ -36,22 +40,22 @@ public class SACDisplayProductInitializer implements DisplayProductInitializer {
 
 	@Autowired
 	private DPAppProductService dpAppProductService;
-	
+
 	@Autowired
 	private DPTenantProductPriceService dpTenantProductPriceService;
-	
+
 	@Autowired
 	private DPTenantProductService dpTenantProductService;
-	
+
 	@Autowired
 	private DPProductImgService dpProductImgService;
-	
+
 	@Autowired
 	private DPProductUpdService dpProductUpdService;
 
 	@Autowired
 	private DPSprtDeviceService dpSprtDeviceService;
-	
+
 	@Autowired
 	private DPProductSubContsService dpProductSubContsService;
 
@@ -63,91 +67,99 @@ public class SACDisplayProductInitializer implements DisplayProductInitializer {
 
 	@Autowired
 	private DPAppDeltaDeployFileService dPAppDeltaDeployFileService;
-	
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.skplanet.icms.deploy.job.initializer.DisplayProductInitializer#clear(java.lang.String)
 	 */
+	@Override
 	public void deleteProdInfo(NotificationRefactoringSac notification) {
-		
-		String pid= notification.getDpProductTotal().getDpProduct().getProdId();
-		List<DPProductTotalVO> inAppList =notification.getDpProductTotalList();
-		List<DPProductCatMapVO> inAppCatList =notification.getDpProductCatMap();
-		
+		this.log.info("CMS executeProcess 3");
+		String pid = notification.getDpProductTotal().getDpProduct().getProdId();
+		List<DPProductTotalVO> inAppList = notification.getDpProductTotalList();
+		List<DPProductCatMapVO> inAppCatList = notification.getDpProductCatMap();
+
 		/*
 		 * 전시상품 상품상세
 		 */
-		dpProductDescService.deleteDPProductDesc(pid);
-		
+		this.dpProductDescService.deleteDPProductDesc(pid);
+		this.log.info("CMS executeProcess 4");
 		/*
 		 * 전시상품 APP 상품
 		 */
-		dpAppProductService.deleteDPAppProduct(pid);
+		this.dpAppProductService.deleteDPAppProduct(pid);
+		this.log.info("CMS executeProcess 5");
 		/*
 		 * 전시상품 배포파일정보
 		 */
-		dpProductSubContsService.deleteDPProductSubconts(null, pid);
-		
+		this.dpProductSubContsService.deleteDPProductSubconts(null, pid);
+		this.log.info("CMS executeProcess 6");
 		/*
 		 * 전시상품 이미지
 		 */
-		dpProductImgService.deleteDPProductImg(pid, null, null);
-		
+		this.dpProductImgService.deleteDPProductImg(pid, null, null);
+		this.log.info("CMS executeProcess 7");
 		/*
 		 * 전시상품 단말
 		 */
-		dpSprtDeviceService.deleteDPSprtDevice(pid, null);
-
+		this.dpSprtDeviceService.deleteDPSprtDevice(pid, null);
+		this.log.info("CMS executeProcess 8");
 		/*
 		 * 전시상품 업데이트이력
 		 */
-		dpProductUpdService.deleteDPProductUpd(null, pid);
+		this.dpProductUpdService.deleteDPProductUpd(null, pid);
+		this.log.info("CMS executeProcess 9");
 
-		
 		/*
 		 * 상품정보 매핑
 		 */
-		dpProductRshpService.deleteDPProductRshp(pid);
-		
+		this.dpProductRshpService.deleteDPProductRshp(pid);
+		this.log.info("CMS executeProcess 10");
 		/*
 		 * 테넌트 상품 가격
 		 */
-		dpTenantProductPriceService.deleteDPTenantPrice(pid);
-		
+		this.dpTenantProductPriceService.deleteDPTenantPrice(pid);
+		this.log.info("CMS executeProcess 11");
 		/*
 		 * 테넌트 정보
 		 */
-		dpTenantProductService.deleteDPTenant(pid);
-		
-		
+		this.dpTenantProductService.deleteDPTenant(pid);
+		this.log.info("CMS executeProcess 12");
+
 		/*
 		 * 전시상품 Tag정보
 		 */
-		dpTagInfoService.deleteDPTagInfo(pid, null);
-		
+		this.dpTagInfoService.deleteDPTagInfo(pid, null);
+		this.log.info("CMS executeProcess 13");
 		/*
 		 * 전시상품 SeedMapp정보
 		 */
-		dPAppDeltaDeployFileService.deleteDPAppDeltaDeployFile(pid);
-		
+		this.dPAppDeltaDeployFileService.deleteDPAppDeltaDeployFile(pid);
+		this.log.info("CMS executeProcess 14");
 
 		/*
-		 * 전시상품 카테고리정보 :: pid(모상품pid)  epsdProdId(모상품pid/부분유료화상품pid)
+		 * 전시상품 카테고리정보 :: pid(모상품pid) epsdProdId(모상품pid/부분유료화상품pid)
 		 */
-		List<DPProductCatMapVO> displayProductCategoryList = dpProductCatMapService.getDPProductCatList(pid, null, IFConstants.USE_Y, null);
+		List<DPProductCatMapVO> displayProductCategoryList = this.dpProductCatMapService.getDPProductCatList(pid, null,
+				IFConstants.USE_Y, null);
+		this.log.info("CMS executeProcess 15");
 		for (DPProductCatMapVO productCategory : displayProductCategoryList) {
-			dpProductCatMapService.deleteDPProductCat(productCategory.getProdId(), productCategory.getCategoryNo());
+			this.dpProductCatMapService
+					.deleteDPProductCat(productCategory.getProdId(), productCategory.getCategoryNo());
 		}
-		
-		if(null != inAppList){
-			
+		this.log.info("CMS executeProcess 16");
+
+		if (null != inAppList) {
+
 			/*
-			 * 부분유료화상품 카테고리정보 :: pid(모상품pid)  epsdProdId(모상품pid/부분유료화상품pid)
+			 * 부분유료화상품 카테고리정보 :: pid(모상품pid) epsdProdId(모상품pid/부분유료화상품pid)
 			 */
+			this.log.info("CMS executeProcess 17");
 			for (DPProductCatMapVO inAppCat : inAppCatList) {
-				dpProductCatMapService.deleteDPProductCat(inAppCat.getProdId(), inAppCat.getCategoryNo());
+				this.dpProductCatMapService.deleteDPProductCat(inAppCat.getProdId(), inAppCat.getCategoryNo());
 			}
-			
+			this.log.info("CMS executeProcess 18");
 			/*
 			 * 부분유료화상품
 			 */
@@ -155,41 +167,38 @@ public class SACDisplayProductInitializer implements DisplayProductInitializer {
 				/*
 				 * 전시상품 상품상세
 				 */
-				dpProductDescService.deleteDPProductDesc(inApp.getDpProduct().getProdId());
-				
+				this.dpProductDescService.deleteDPProductDesc(inApp.getDpProduct().getProdId());
 				/*
 				 * 전시상품 APP 상품
 				 */
-				dpAppProductService.deleteDPAppProduct(inApp.getDpProduct().getProdId());
-				
+				this.dpAppProductService.deleteDPAppProduct(inApp.getDpProduct().getProdId());
 				/*
 				 * 상품정보 매핑
 				 */
-				dpProductRshpService.deleteDPProductRshp(inApp.getDpProduct().getProdId());
-				
+				this.dpProductRshpService.deleteDPProductRshp(inApp.getDpProduct().getProdId());
 				/*
 				 * 테넌트 상품 가격
 				 */
-				dpTenantProductPriceService.deleteDPTenantPrice(inApp.getDpProduct().getProdId());
-				
+				this.dpTenantProductPriceService.deleteDPTenantPrice(inApp.getDpProduct().getProdId());
 				/*
 				 * 테넌트 정보
 				 */
-				dpTenantProductService.deleteDPTenant(inApp.getDpProduct().getProdId());
+				this.dpTenantProductService.deleteDPTenant(inApp.getDpProduct().getProdId());
 				/*
 				 * 전시상품 정보
 				 */
-				dpProductService.deleteDPPartProduct(inApp.getDpProduct().getProdId());
-				
+				this.dpProductService.deleteDPPartProduct(inApp.getDpProduct().getProdId());
 			}
-			
+
 		}
-		
+		this.log.info("CMS executeProcess 19");
+
 		/*
 		 * 전시상품 정보
 		 */
-		dpProductService.deleteDPProduct(pid);
-		
+		this.dpProductService.deleteDPProduct(pid);
+		this.log.info("CMS executeProcess 20");
+
 	}
 
 }

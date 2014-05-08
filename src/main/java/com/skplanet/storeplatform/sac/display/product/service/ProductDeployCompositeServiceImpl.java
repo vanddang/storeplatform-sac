@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * ProductDeployCompositeServiceImpl CMS 전시 배포 서비스 구현체. Updated on : 2014. 2. 13. Updated by : 차명호, ANB
  */
@@ -45,70 +46,73 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 	@Resource
 	private AmqpTemplate cmsAmqpTemplate;
 
-    @Autowired
-    private CacheEvictHelperComponent cacheEvictHelperComponent;
+	@Autowired
+	private CacheEvictHelperComponent cacheEvictHelperComponent;
 
 	@Override
-	public void executeProcess(NotificationRefactoringSac message){
+	public void executeProcess(NotificationRefactoringSac message) {
 
-        this.log.info("CMS MQ APP Process Start");
+		this.log.info("CMS MQ APP Process Start");
 
-        CmsVo cv = new CmsVo();
-        int transactionKey = message.getTransactionKey();
-        this.log.info("CMS TransactionKey = " + transactionKey);
-        cv.setTransactionKey(String.valueOf(transactionKey));
-        cv.setResultCd(IFConstants.CMS_RST_CODE_UNKNOWN_ERROR);
-        cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
+		CmsVo cv = new CmsVo();
+		int transactionKey = message.getTransactionKey();
+		this.log.info("CMS TransactionKey = " + transactionKey);
+		cv.setTransactionKey(String.valueOf(transactionKey));
+		cv.setResultCd(IFConstants.CMS_RST_CODE_UNKNOWN_ERROR);
+		cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
 
-        // Deploy
-        DPProductVO dpProd = message.getDpProductTotal().getDpProduct();
-        if (null != dpProd) {
-            String prodId = StringUtils.defaultString(dpProd.getProdId());
-            String mbrNo = StringUtils.defaultString(dpProd.getSellerMbrNo());
-            this.log.info("CMS Prod Info = " + prodId + " / " + mbrNo);
-            cv.setProdId(prodId);
-            cv.setMbrNo(mbrNo);
-            List<Map<String, Object>> tempList = new ArrayList<Map<String, Object>>();
+		// Deploy
+		DPProductVO dpProd = message.getDpProductTotal().getDpProduct();
+		if (null != dpProd) {
+			String prodId = StringUtils.defaultString(dpProd.getProdId());
+			String mbrNo = StringUtils.defaultString(dpProd.getSellerMbrNo());
+			this.log.info("CMS Prod Info = " + prodId + " / " + mbrNo);
+			cv.setProdId(prodId);
+			cv.setMbrNo(mbrNo);
+			List<Map<String, Object>> tempList = new ArrayList<Map<String, Object>>();
+			if (!"".equals(prodId) && !"".equals(mbrNo)) {
 
-            if (!"".equals(prodId) && !"".equals(mbrNo)) {
+				try {
 
-                try {
+					List<DPTenantProductVO> tenantInfo = message.getDpProductTotal().getDpTenantProduct();
+					// 기 등록된 상품의 상태를 얻어온다.
+					if (null != tenantInfo) {
+						if (0 < tenantInfo.size()) {
+							this.log.info("CMS executeProcess 1");
+							for (DPTenantProductVO vo : tenantInfo) {
+								Map<String, Object> oldProd = this.prodService.selectDpProd(vo);
 
-                    List<DPTenantProductVO> tenantInfo = message.getDpProductTotal().getDpTenantProduct();
-                    // 기 등록된 상품의 상태를 얻어온다.
-                    if (null != tenantInfo) {
-                        if (0 < tenantInfo.size()) {
-                            for (DPTenantProductVO vo : tenantInfo) {
-                                Map<String, Object> oldProd = this.prodService.selectDpProd(vo);
+								if (null != oldProd) {
+									tempList.add(oldProd);
+								}
+							}
+							this.log.info("CMS executeProcess 2");
+						}
+					}
 
-                                if (null != oldProd) {
-                                    tempList.add(oldProd);
-                                }
-                            }
-                        }
-                    }
+					/*
+					 * 이전에 배포된 전시 상품 데이터 삭제
+					 */
+					this.initializer.deleteProdInfo(message); // FIXME
+					this.log.info("CMS executeProcess 21");
+					/*
+					 * 데이터 재구성
+					 */
+					this.builder.insertProdInfo(message, tempList); // FIXME
+					this.log.info("CMS executeProcess 22");
+					// 결과 설정
+					cv.setResultCd(IFConstants.CMS_RST_CODE_SUCCESS);
+					cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
 
-                    /*
-                     * 이전에 배포된 전시 상품 데이터 삭제
-                     */
-                    this.initializer.deleteProdInfo(message);       // FIXME
+					this.log.info("CMS executeProcess 23");
+					// Evict Cache
+					for (DPTenantProductVO tenProd : message.getDpProductTotal().getDpTenantProduct()) {
+						this.cacheEvictHelperComponent.evictProductMeta(ProductType.App, tenProd.getProdId());
+					}
+					this.log.info("CMS executeProcess 24");
 
-                    /*
-                     * 데이터 재구성
-                     */
-                    this.builder.insertProdInfo(message, tempList); // FIXME
-
-                    // 결과 설정
-                    cv.setResultCd(IFConstants.CMS_RST_CODE_SUCCESS);
-                    cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
-
-                    // Evict Cache
-                    for(DPTenantProductVO tenProd : message.getDpProductTotal().getDpTenantProduct()) {
-                        this.cacheEvictHelperComponent.evictProductMeta(ProductType.App, tenProd.getProdId());
-                    }
-
-                }
-                catch (StorePlatformException ie) {
+				 }
+				catch (StorePlatformException ie) {
                     log.error("CMS MQ App 수행중 오류: {}", ie.getMessage(), ie);
                     cv.setResultCd(ie.getErrorInfo().getCode()); // Result Code
                     cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + ie.getErrorInfo().getCode()));
@@ -118,29 +122,28 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
                     cv.setResultCd(IFConstants.CMS_RST_CODE_UNKNOWN_ERROR);
                     cv.setResultMsg(re.getMessage());
                 }
+				this.log.info("CMS Result Code = " + cv.getResultCd());
+				this.log.info("CMS Result Message = " + cv.getResultMsg());
+			} else {
+				cv.setResultCd(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR);
+				cv.setResultMsg("DPProductVO 정보의 PROD_ID 또는 MBR_NO 는 Null 또는 공백이 올 수 없습니다.");
+			}
+               
+		} else {
+			cv.setResultCd(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR);
+			cv.setResultMsg("DPProductVO 정보는 Null 이 올 수 없습니다.");
+		}
+		this.log.info("CMS executeProcess 25");
+		// 결과 전송
+		NotificationRefactoringSacResult ntr = new NotificationRefactoringSacResult();
+		ntr.setTransactionKey(transactionKey);
+		ntr.setDeployResultCd(cv.getResultCd());
+		ntr.setDeployResultDtlMsg(cv.getResultMsg());
+		this.log.info("CMS Transaction Key = " + ntr.getTransactionKey());
+		this.log.info("CMS Return Code = " + ntr.getDeployResultCd());
+		this.log.info("CMS Return Message = " + ntr.getDeployResultDtlMsg());
 
-                this.log.info("CMS Result Code = " + cv.getResultCd());
-                this.log.info("CMS Result Message = " + cv.getResultMsg());
-            } else {
-                cv.setResultCd(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR);
-                cv.setResultMsg("DPProductVO 정보의 PROD_ID 또는 MBR_NO 는 Null 또는 공백이 올 수 없습니다.");
-            }
-
-        } else {
-            cv.setResultCd(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR);
-            cv.setResultMsg("DPProductVO 정보는 Null 이 올 수 없습니다.");
-        }
-
-        // 결과 전송
-        NotificationRefactoringSacResult ntr = new NotificationRefactoringSacResult();
-        ntr.setTransactionKey(transactionKey);
-        ntr.setDeployResultCd(cv.getResultCd());
-        ntr.setDeployResultDtlMsg(cv.getResultMsg());
-        this.log.info("CMS Transaction Key = " + ntr.getTransactionKey());
-        this.log.info("CMS Return Code = " + ntr.getDeployResultCd());
-        this.log.info("CMS Return Message = " + ntr.getDeployResultDtlMsg());
-
-        this.cmsAmqpTemplate.convertAndSend(ntr);
+		this.cmsAmqpTemplate.convertAndSend(ntr);
 
 	}
 
