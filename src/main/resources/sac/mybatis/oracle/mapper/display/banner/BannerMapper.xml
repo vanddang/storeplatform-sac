@@ -135,7 +135,14 @@
                     </if>
                            AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, NVL(B.EXPO_END_DT, SYSDATE))
 		               ) IA
+          <choose>
+              <when test='bnrMenuId == "DP010912"'><!-- 앱가이드 배너 -->
 		        ORDER BY IA.BNR_MENU_ID DESC, IA.EXPO_ORD, IA.EXPO_ORD_SUB, IA.EXPO_STATUS_CD
+              </when>
+              <otherwise>
+		        ORDER BY IA.BNR_MENU_ID, IA.EXPO_ORD, IA.EXPO_ORD_SUB, IA.EXPO_STATUS_CD
+              </otherwise>
+          </choose>
 		       ) JA
     </select>
     
