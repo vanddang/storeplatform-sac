@@ -393,15 +393,14 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				throw new StorePlatformException("SAC_PUR_5111");
 			}
 
-			// 상품 지원 여부 체크
-			// TAKTEST:: 테스트 위해 주석
-			// if (StringUtils.equals(purchaseProduct.getProdSprtYn(), PurchaseConstants.USE_Y) == false) {
-			// if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			// throw new StorePlatformException("SAC_PUR_5104", reqProduct.getProdId(), useDeviceModelCd);
-			// } else {
-			// throw new StorePlatformException("SAC_PUR_5103", reqProduct.getProdId(), useDeviceModelCd);
-			// }
-			// }
+			// 상품 지원 여부 체크 : 쇼핑은 프로비저닝 pass
+			if (StringUtils.equals(purchaseProduct.getProdSprtYn(), PurchaseConstants.USE_Y) == false) {
+				if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+					throw new StorePlatformException("SAC_PUR_5104", reqProduct.getProdId(), useDeviceModelCd);
+				} else {
+					throw new StorePlatformException("SAC_PUR_5103", reqProduct.getProdId(), useDeviceModelCd);
+				}
+			}
 
 			// 요청한 가격으로 세팅
 			if (StringUtils
@@ -625,22 +624,29 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					if (useExistenceScRes == null) {
 						useExistenceScRes = checkRes;
 
-						// TAKTODO:: 구매일시 비교로 변경
-					} else if (checkRes.getPrchsId().compareTo(useExistenceScRes.getPrchsId()) > 0) {
+					} else if (checkRes.getPrchsDt().compareTo(useExistenceScRes.getPrchsDt()) > 0) {
 						useExistenceScRes = checkRes;
 					}
 				}
 
 				if (useExistenceScRes != null) {
 
-					// 정액권 DRM 정보 조회 및 반영
+					// 정액권으로 이용할 에피소드 상품에 적용할 DRM 정보 조회 및 반영
 					FreePassInfo freepassInfo = this.purchaseDisplayRepository.searchFreePassDrmInfo(
 							useUser.getTenantId(), purchaseOrderInfo.getLangCd(), useExistenceScRes.getProdId(),
 							product.getProdId());
 					if (freepassInfo != null) {
-						product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
-						product.setUsePeriod(freepassInfo.getUsePeriod());
+						// product.setDrmYn(StringUtils.defaultString(freepassInfo.getDrmYn(),
+						// PurchaseConstants.USE_N));
 						product.setDrmYn(freepassInfo.getDrmYn());
+						if (freepassInfo.getUsePeriodUnitCd() != null) {
+							product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
+							product.setUsePeriod(freepassInfo.getUsePeriod());
+						} else if (StringUtils.equals(product.getDrmYn(), PurchaseConstants.USE_N)) {
+							// 이용기간 단위 정보가 없는 경우, DRM이 N 이면 무제한 처리
+							product.setUsePeriodUnitCd("PD00310");
+							product.setUsePeriod("0");
+						}
 						product.setUseFixrateProdId(useExistenceScRes.getProdId()); // 사용할 정액권ID 세팅
 
 						// 무료구매 처리 데이터 세팅

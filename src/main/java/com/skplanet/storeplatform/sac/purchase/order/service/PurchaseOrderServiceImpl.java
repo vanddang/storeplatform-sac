@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +18,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -117,6 +123,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	@Value("#{systemProperties['spring.profiles.active']}")
 	private String envServerLevel;
+	@Value("#{systemProperties['env.servername']}")
+	private String instanceName;
+	private String hostNum;
+	private String instanceNum;
 
 	@Autowired
 	private PurchaseOrderSCI purchaseOrderSCI;
@@ -142,6 +152,37 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private PurchaseMemberRepository purchaseMemberRepository;
 	@Autowired
 	private PurchaseDisplayRepository purchaseDisplayRepository;
+
+	@PostConstruct
+	public void initHostInstanceNum() {
+		String hostName = null;
+		try {
+			hostName = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			hostName = "01";
+		}
+		Pattern pattern = Pattern.compile("\\d");
+
+		this.hostNum = "";
+		Matcher matcher = pattern.matcher(hostName);
+		while (matcher.find()) {
+			this.hostNum += matcher.group(0);
+		}
+		if (StringUtils.isBlank(this.hostNum)) {
+			this.hostNum = "01";
+		}
+		this.hostNum = StringUtils.leftPad(this.hostNum, 2, "0");
+
+		this.instanceNum = "";
+		matcher = pattern.matcher(this.instanceName);
+		while (matcher.find()) {
+			this.instanceNum += matcher.group(0);
+		}
+		if (StringUtils.isBlank(this.instanceNum)) {
+			this.instanceNum = "01";
+		}
+		this.instanceNum = StringUtils.leftPad(this.instanceNum, 2, "0");
+	}
 
 	/**
 	 * 
@@ -245,7 +286,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			throw new StorePlatformException("SAC_PUR_6110");
 
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7217", e);
+			throw new StorePlatformException("SAC_PUR_7218", e);
 		}
 
 		int count = makeFreePurchaseScRes.getCount();
@@ -1027,6 +1068,59 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		paymentPageParam.setNoSim(purchaseOrderInfo.getSimNo());
 		paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
 
+		// pDescription
+		String pDescription = null;
+		PurchaseProduct purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
+		String tenantProdGrpCd = purchaseOrderInfo.getTenantProdGrpCd();
+		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			pDescription = "쿠폰 상품";
+
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
+			pDescription = "MP3/고음질";
+
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
+			if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_HIGH)) {
+				pDescription = "벨/고음질";
+			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_BASIC)) {
+				pDescription = "벨/일반";
+			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_LONG)) {
+				pDescription = "컬러링/롱";
+			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_BASIC)) {
+				pDescription = "컬러링/일반";
+			}
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+			pDescription = "자동결제";
+
+		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
+			if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+				pDescription = "전회차 구매";
+
+			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
+				if (StringUtils.equals(purchaseProduct.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
+					pDescription = "자동결제";
+				} else {
+					if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(), "PD00312")) {
+						pDescription = purchaseProduct.getUsePeriod() + "일 이용권";
+
+					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(), "PD00311")) {
+						pDescription = purchaseProduct.getUsePeriod() + "시간 이용권";
+
+					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(), "PD00313")) {
+						pDescription = purchaseProduct.getUsePeriod() + "개월 이용권";
+					}
+				}
+			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
+				pDescription = "전권 소장";
+			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
+				pDescription = "전권 대여";
+			}
+		}
+		paymentPageParam.setpDescription(pDescription);
+
 		// 암호화
 		String eData = paymentPageParam.makeEncDataFormat();
 		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", eData);
@@ -1106,9 +1200,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 새로 생성된 구매ID
 	 */
 	private String makePrchsId(String sequence, String date) {
-		// TAKTODO:: 서버ID(2), 인스턴스ID(2) 적용 방안 확인
+		// 서버ID(2) + 인스턴스ID(2) + yyMMddhhmmss(12) + 구매시퀀스(4)
 		StringBuffer sbPrchsId = new StringBuffer(20);
-		sbPrchsId.append("01").append("01").append(date.substring(2)).append(StringUtils.leftPad(sequence, 4, "0"));
+		sbPrchsId.append(this.hostNum).append(this.instanceNum).append(date.substring(2))
+				.append(StringUtils.leftPad(sequence, 4, "0"));
 		return sbPrchsId.toString();
 	}
 
@@ -1498,7 +1593,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		autoPrchs.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 		autoPrchs.setPaymentStartDt(prchsDtlMore.getPrchsDt());
 		autoPrchs.setPaymentEndDt("99991231235959");
-		autoPrchs.setAfterPaymentDt(prchsDtlMore.getUseExprDt().substring(0, 8) + "000000"); // TAKTODO
+		try {
+			autoPrchs.setAfterPaymentDt(DateFormatUtils.format(DateUtils.truncate(
+					DateUtils.addDays(DateUtils.parseDate(prchsDtlMore.getUseExprDt(), "yyyyMMddHHmmss"), 1),
+					Calendar.DATE), "yyyyMMddHHmmss"));
+		} catch (ParseException e) {
+			throw new StorePlatformException("SAC_PUR_7217", prchsDtlMore.getUseExprDt());
+		}
 		autoPrchs.setReqPathCd(prchsDtlMore.getPrchsReqPathCd());
 		autoPrchs.setClientIp(prchsDtlMore.getClientIp());
 		autoPrchs.setPrchsTme(0);
