@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.brandshop;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -34,6 +36,7 @@ public class BrandshopListSacReq extends CommonInfo {
 
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String brandshopId; // 브랜드샵 메뉴 아이디
+	@Pattern(regexp = "|DP000701|DP000709")
 	private String orderedBy; // orderedBy
 
 	private String anyDeviceModelCd; // 가상단말명
