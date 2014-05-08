@@ -157,30 +157,32 @@ public class CategoryServiceImpl implements CategoryService {
 		// this.log.debug("코믹 카테고리 조회");
 		// resultList = this.commonDAO.queryForList("MenuCategory.selectMultiSubCategoryList", requestVO, Menu.class);
 		// }
-		if (requestVO.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) { // 이북, 코믹 카테고리 조회
-			this.log.debug("코믹 카테고리 조회");
-			resultList = this.commonDAO.queryForList("MenuCategory.selectMultiSubCategoryList", requestVO, Menu.class);
-		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) { // 이북 카테고리 조회 임시 쿼리
-			this.log.debug("이북 카테고리 조회");
-			resultList = this.commonDAO.queryForList("MenuCategory.selectEbookSubCategoryList", requestVO, Menu.class);
-		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)
-				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) { // 영화, 방송 카테고리 조회
-			this.log.debug("영화, 방송 카테고리 조회");
-			requestVO.setListId(DisplayConstants.DP_NEW_VOD_TRIGGER);
-			requestVO.setStdDt(this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(),
-					DisplayConstants.DP_NEW_VOD_TRIGGER));
-			resultList = this.commonDAO.queryForList("MenuCategory.selectVodSubCategoryList", requestVO, Menu.class);
-		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) { // 뮤직 카테고리 조회
-			this.log.debug("뮤직 카테고리 조회");
-			resultList = this.commonDAO.queryForList("MenuCategory.selectMusicSubCategoryList", requestVO, Menu.class);
-		} else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_SHOPPING_TOP_MENU_ID)) { // 쇼핑 카테고리 조회
-			this.log.debug("쇼핑 카테고리 조회");
-			resultList = this.commonDAO.queryForList("MenuCategory.selectShoppingSubCategoryList", requestVO,
-					Menu.class);
-		} else { // 앱 카테고리 조회
-			this.log.debug("앱 카테고리 조회");
-			resultList = this.commonDAO.queryForList("MenuCategory.selectAppSubCategoryList", requestVO, Menu.class);
-		}
+		resultList = this.commonDAO.queryForList("MenuCategory.selectEbookSubCategoryList", requestVO, Menu.class); // 임시
+																													// 쿼리
+		// if (requestVO.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) { // 이북, 코믹 카테고리 조회
+		// this.log.debug("코믹 카테고리 조회");
+		// resultList = this.commonDAO.queryForList("MenuCategory.selectMultiSubCategoryList", requestVO, Menu.class);
+		// } else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) { // 이북 카테고리 조회 임시 쿼리
+		// this.log.debug("이북 카테고리 조회");
+		// resultList = this.commonDAO.queryForList("MenuCategory.selectEbookSubCategoryList", requestVO, Menu.class);
+		// } else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)
+		// || requestVO.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)) { // 영화, 방송 카테고리 조회
+		// this.log.debug("영화, 방송 카테고리 조회");
+		// requestVO.setListId(DisplayConstants.DP_NEW_VOD_TRIGGER);
+		// requestVO.setStdDt(this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(),
+		// DisplayConstants.DP_NEW_VOD_TRIGGER));
+		// resultList = this.commonDAO.queryForList("MenuCategory.selectVodSubCategoryList", requestVO, Menu.class);
+		// } else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) { // 뮤직 카테고리 조회
+		// this.log.debug("뮤직 카테고리 조회");
+		// resultList = this.commonDAO.queryForList("MenuCategory.selectMusicSubCategoryList", requestVO, Menu.class);
+		// } else if (requestVO.getTopMenuId().equals(DisplayConstants.DP_SHOPPING_TOP_MENU_ID)) { // 쇼핑 카테고리 조회
+		// this.log.debug("쇼핑 카테고리 조회");
+		// resultList = this.commonDAO.queryForList("MenuCategory.selectShoppingSubCategoryList", requestVO,
+		// Menu.class);
+		// } else { // 앱 카테고리 조회
+		// this.log.debug("앱 카테고리 조회");
+		// resultList = this.commonDAO.queryForList("MenuCategory.selectAppSubCategoryList", requestVO, Menu.class);
+		// }
 
 		if (!resultList.isEmpty()) {
 
