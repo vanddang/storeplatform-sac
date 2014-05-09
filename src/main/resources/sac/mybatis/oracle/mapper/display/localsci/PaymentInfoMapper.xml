@@ -47,6 +47,12 @@
 		                  END) = 1 -- 단말 지원정보
 		                 AND (SELECT COUNT(*) FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = A.PROD_ID AND (DEVICE_MODEL_CD = #{deviceModelCd} OR DEVICE_MODEL_CD = #{dpAnyPhone4mm}) ) > 0
 		            THEN 'Y'
+		            WHEN E.PART_PARENT_CLSF_CD = 'PD012302' /* In-App 자식상품일 경우 부모상품의 지원 여부 조회 */
+		                 AND (SELECT COUNT(*)
+		                      FROM   TB_DP_SPRT_DEVICE
+		                      WHERE  PROD_ID = (SELECT PROD_ID FROM TB_DP_PROD_RSHP WHERE PART_PROD_ID = A.PROD_ID AND PROD_RSHP_CD = 'DP010801')
+		                      AND    DEVICE_MODEL_CD = #{deviceModelCd} ) > 0 
+		            THEN 'Y'
 		            ELSE 'N'
 		       END AS PROD_SPRT_YN
 		      ,A.DRM_YN
