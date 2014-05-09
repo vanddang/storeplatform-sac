@@ -199,6 +199,35 @@ public class BannerServceImpl implements BannerService {
 
 				// 모바일웹 정사각형 배너
 				if ("DP010999".equals(reqBnrMenuId)) {
+					boolean dupFlag = false; // 중복된 항목을 체크하기 위한 변수
+
+					// 중복 URL 및 상품 제거를 위한 비교
+					if (resultList.size() >= this.HOME_BANNER_COUNT) {
+						String bnrInfo1 = null; // 결과리스트에 담긴 배너정보
+						String bnrInfo2 = bannerDefault.getBnrInfo(); // 비교할 배너 정보
+
+						for (int z = 0; z < resultList.size(); z++) {
+							bnrInfo1 = resultList.get(z).getBnrInfo();
+
+							if (StringUtils.isNotEmpty(bnrInfo1) && StringUtils.isNotEmpty(bnrInfo2)) {
+								if (bnrInfo1.equals(bnrInfo2)) {
+									this.logger.info("-------------------------------------------------------------");
+									this.logger.info("[searchBannerLog] bnrInfo1 : {}", bnrInfo1);
+									this.logger.info("[searchBannerLog] bnrInfo2 : {}", bnrInfo2);
+									this.logger.info("-------------------------------------------------------------");
+									dupFlag = true;
+									break;
+								}
+							}
+						}
+					}
+
+					// 중복된 항목이 있을 경우 continue
+					if (dupFlag) {
+						dupFlag = false;
+						continue;
+					}
+
 					if ("DP010915".equals(bnrMenuId)) { // Home 12개
 						if (homeBannerFullFlag) {
 							continue;
