@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.icms.Message;
@@ -107,6 +108,10 @@ import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 public class SellerServiceImpl implements SellerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerServiceImpl.class);
+
+	/** Default Session Key. */
+	@Value("#{propertiesForSac['member.seller.default.session.key']}")
+	private String defaultSessionKey;
 
 	/**
 	 * SC-SellerSCI.
@@ -682,8 +687,11 @@ public class SellerServiceImpl implements SellerService {
 		// SC 공통 헤더 생성
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 
-		// SessionKey 유효성 체크
-		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+		// default session key (준회원 이메일 변경을 위한)
+		if (!StringUtils.equals(this.defaultSessionKey, req.getSessionKey())) {
+			// SessionKey 유효성 체크
+			this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+		}
 
 		/** 1. Email 중복체크 [REQUEST] 생성 및 주입 */
 		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
