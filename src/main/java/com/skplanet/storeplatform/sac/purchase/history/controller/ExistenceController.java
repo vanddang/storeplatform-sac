@@ -66,16 +66,6 @@ public class ExistenceController {
 			SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
-		// final String systemId = header.getSystemId();
-
-		// new TLogUtil().set(new ShuttleSetter() {
-		// @Override
-		// public void customize(TLogSentinelShuttle shuttle) {
-		// shuttle.log_id("TL_SAC_PUR_0002").system_id(systemId).insd_device_id(existenceSacReq.getDeviceKey())
-		// .insd_usermbr_no(existenceSacReq.getUserKey());
-		// ;
-		// }
-		// });
 
 		this.logger.debug("PRCHS,ExistenceController,SAC,REQ,{},{}", existenceSacReq, requestHeader);
 
@@ -104,11 +94,11 @@ public class ExistenceController {
 		ExistenceScReq req = new ExistenceScReq();
 		List<ExistenceItemSc> productList = new ArrayList<ExistenceItemSc>();
 
-		if (StringUtils.isEmpty(existenceSacReq.getPrchsId())) {
-			if (StringUtils.isEmpty(existenceSacReq.getUserKey())) {
+		if (StringUtils.isBlank(existenceSacReq.getPrchsId())) {
+			if (StringUtils.isBlank(existenceSacReq.getUserKey())) {
 				throw new StorePlatformException("SAC_PUR_0001", "UserKey");
 			}
-			if (StringUtils.isEmpty(existenceSacReq.getDeviceKey())) {
+			if (StringUtils.isBlank(existenceSacReq.getDeviceKey())) {
 				throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
 			}
 		}
@@ -122,7 +112,7 @@ public class ExistenceController {
 		// 상품리스트가 없을시 제외
 		if (existenceSacReq.getProductList() != null) {
 			for (ExistenceItemSac existenceItemSac : existenceSacReq.getProductList()) {
-				if (StringUtils.isEmpty(existenceItemSac.getProdId())) {
+				if (StringUtils.isBlank(existenceItemSac.getProdId())) {
 					throw new StorePlatformException("SAC_PUR_0001", "ProdId");
 				}
 				ExistenceItemSc existenceItemSc = new ExistenceItemSc();

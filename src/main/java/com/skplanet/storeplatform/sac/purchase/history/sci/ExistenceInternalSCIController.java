@@ -55,16 +55,17 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 		this.logger.debug("PRCHS,ExistenceInternalSCIController,SAC,REQ,{}", existenceReq);
 
 		// 필수값 체크
-		if (existenceReq.getTenantId() == null || existenceReq.getTenantId().equals("")) {
+		if (StringUtils.isBlank(existenceReq.getTenantId())) {
 			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
 		}
 
-		if (StringUtils.isBlank(existenceReq.getUserKey())) {
-			throw new StorePlatformException("SAC_PUR_0001", "UserKey");
-		}
-
-		if (StringUtils.isBlank(existenceReq.getDeviceKey())) {
-			throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
+		if (StringUtils.isBlank(existenceReq.getPrchsId())) {
+			if (StringUtils.isBlank(existenceReq.getUserKey())) {
+				throw new StorePlatformException("SAC_PUR_0001", "UserKey");
+			}
+			if (StringUtils.isBlank(existenceReq.getDeviceKey())) {
+				throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
+			}
 		}
 		ExistenceScReq req = this.reqConvert(existenceReq);
 		List<ExistenceRes> res = this.resConvert(this.existenceSacService.searchExistenceList(req));
