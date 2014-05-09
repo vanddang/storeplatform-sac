@@ -15,6 +15,8 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +122,7 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
                 catch (RuntimeException re) {
                     log.error("CMS MQ App 수행중 오류: {}", re.getMessage(), re);
                     cv.setResultCd(IFConstants.CMS_RST_CODE_UNKNOWN_ERROR);
-                    cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
+                    cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()) + " @" + getMachineId());
                 }
 				this.log.info("CMS Result Code = " + cv.getResultCd());
 				this.log.info("CMS Result Message = " + cv.getResultMsg());
@@ -146,5 +148,15 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 		this.cmsAmqpTemplate.convertAndSend(ntr);
 
 	}
+
+    private String getMachineId() {
+        String hostName = "UnknownHost";
+        try {
+            hostName = InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException e) {}
+
+        return hostName + "/" +System.getProperty("env.servername", "UnknownServer");
+    }
 
 }

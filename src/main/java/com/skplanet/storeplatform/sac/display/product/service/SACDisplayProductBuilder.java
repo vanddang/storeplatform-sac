@@ -390,7 +390,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				for (DPSeedMappVO vo : displaySeedMappList) {
 
 					// 전시상품 SeedMapp정보
-					log.info("Insert CMS DisplaySeedMapp Info");
+					log.info("Insert CMS DisplaySeedMapp Info - {}/{}", vo.getProdId(), vo.getCaseRefCd());
 					dpSeedMappService.insertDPSeedMapp(vo);
 				}
 			}
