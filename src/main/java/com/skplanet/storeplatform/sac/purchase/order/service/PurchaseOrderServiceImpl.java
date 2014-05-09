@@ -475,15 +475,20 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// SKT후불 결제정보 재정의 원인
 			res.setTypeSktLimit(policyResult.getSktLimitType());
 
+			// SKT 결제 가능 금액
+			double sktAvailableAmt = policyResult.getSktRestAmt();
+
 			// SKT 결제 처리 타입
 			if (policyResult.isSktTestMdn()) {
-				testMdnType = policyResult.isSktTestMdnWhiteList() ? PurchaseConstants.SKT_PAYMENT_TYPE_TESTDEVICE : PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE;
+				if (policyResult.isSktTestMdnWhiteList()) {
+					testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_TESTDEVICE;
+					sktAvailableAmt = prchsDtlMore.getTotAmt().doubleValue();
+				} else {
+					testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE;
+				}
 			} else if (policyResult.isCorporation() || policyResult.isMvno()) {
 				testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE;
 			}
-
-			// SKT 결제 가능 금액
-			double sktAvailableAmt = policyResult.getSktRestAmt();
 
 			// SKT 후불 재조정
 			if (StringUtils.equals(testMdnType, PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE)) {
