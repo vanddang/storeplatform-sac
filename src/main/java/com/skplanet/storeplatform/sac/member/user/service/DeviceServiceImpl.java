@@ -93,7 +93,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
@@ -661,7 +660,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		deviceInfoChangeLog.append("[deviceExtraInfo]").append(ConvertMapperUtils.convertObjectToJson(deviceInfo.getDeviceExtraInfoList()));
+		deviceInfoChangeLog.append("[deviceExtraInfo]").append(deviceInfo.getDeviceExtraInfoList());
 
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
@@ -893,7 +892,7 @@ public class DeviceServiceImpl implements DeviceService {
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
 
-		deviceInfoChangeLog.append("[deviceExtraInfo]").append(ConvertMapperUtils.convertObjectToJson(deviceInfo.getDeviceExtraInfoList()));
+		deviceInfoChangeLog.append("[deviceExtraInfo]").append(deviceInfo.getDeviceExtraInfoList());
 
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
