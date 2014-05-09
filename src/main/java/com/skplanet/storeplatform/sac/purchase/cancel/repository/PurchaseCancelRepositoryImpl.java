@@ -164,7 +164,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		CancelEcReq cancelEcReq = new CancelEcReq();
 		cancelEcReq.setToken(PayPlanetUtils.makeToken(paymentSacParam.getAuthKey(), paymentSacParam.getPrchsId(),
 				String.valueOf(paymentSacParam.getTotAmt().intValue()), paymentSacParam.getMid()));
-		cancelEcReq.setTid(StringUtils.substringBefore(paymentSacParam.getTid(), ":"));
+		cancelEcReq.setTid(paymentSacParam.getTid()); // StringUtils.substringBefore(paymentSacParam.getTid(), ":")
 		cancelEcReq.setCdCancelReason(PurchaseConstants.PAYPLANET_PAYMENT_CANCEL_REASON_VOC);
 
 		return this.cancelSCI.cancelPayment(cancelEcReq);
@@ -588,7 +588,8 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		paymentSacParam.setPaymentDt(payment.getPaymentDt());
 		paymentSacParam.setPaymentAmt(payment.getPaymentAmt());
 		paymentSacParam.setPaymentCancelDt(payment.getPaymentCancelDt());
-		paymentSacParam.setTid(payment.getTid());
+		// TID의 경우 OGG동기화 이슈로 인해 붙인 :SYS_GUID를 잘라서 사용한다.
+		paymentSacParam.setTid(StringUtils.substringBefore(payment.getTid(), ":"));
 		paymentSacParam.setResvCol01(payment.getResvCol01());
 		paymentSacParam.setResvCol02(payment.getResvCol02());
 		paymentSacParam.setResvCol03(payment.getResvCol03());
