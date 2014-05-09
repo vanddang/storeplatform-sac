@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -35,7 +37,7 @@ public class DisplayCacheController {
 
     @RequestMapping(value = "/evictProductMeta", method = RequestMethod.GET)
     @ResponseBody
-    public String evictAppMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
+    public Map<String, String> evictAppMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
         if(prodId.equals("all")) {
             this.cacheEvictHelperComponent.evictProductMetaAll(ProductType.forName(prodType));
         }
@@ -51,6 +53,10 @@ public class DisplayCacheController {
                 //throw new StorePlatformException("");
             }
         }
-        return "";
+
+        Map<String, String> res = new HashMap<String, String>();
+        res.put("prodType", prodType);
+        res.put("prodId", prodId);
+        return res;
     }
 }
