@@ -63,6 +63,9 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 			if (StringUtils.isBlank(existenceReq.getUserKey())) {
 				throw new StorePlatformException("SAC_PUR_0001", "UserKey");
 			}
+			if (StringUtils.isBlank(existenceReq.getDeviceKey())) {
+				throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
+			}
 		}
 		ExistenceScReq req = this.reqConvert(existenceReq);
 		List<ExistenceRes> res = this.resConvert(this.existenceSacService.searchExistenceList(req));
