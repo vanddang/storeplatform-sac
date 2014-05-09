@@ -115,12 +115,12 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 
 				 }
 				catch (StorePlatformException ie) {
-                    log.error("CMS MQ App 수행중 오류: {}", ie.getMessage(), ie);
+                    log.error("CMS MQ App 수행중 오류: {}", ie.getMessage());
                     cv.setResultCd(ie.getErrorInfo().getCode()); // Result Code
                     cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + ie.getErrorInfo().getCode()));
                 }
                 catch (RuntimeException re) {
-                    log.error("CMS MQ App 수행중 오류: {}", re.getMessage(), re);
+                    log.error("CMS MQ App 수행중 오류: {}", re.getMessage());
                     cv.setResultCd(IFConstants.CMS_RST_CODE_UNKNOWN_ERROR);
                     cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()) + " @" + getMachineId());
                 }
