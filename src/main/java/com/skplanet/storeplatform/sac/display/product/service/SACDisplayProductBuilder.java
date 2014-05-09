@@ -327,7 +327,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
                     dpSprtDeviceService.insertDPSprtDevice(vo);
                 }
 
-                // 앱 기본 단말 추가
+                // 앱 기본 단말(ANY-PHONE-4APP) 추가
                 String anySubContentsId = null;
                 if(displaySupportPhoneList.size() > 0) {
                     anySubContentsId = displaySupportPhoneList.get(0).getSubContentsId();
@@ -335,13 +335,17 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
                 else {
                     log.warn("ProdId#{}에 대해 anySubContentsId을 지정할 수 없습니다.", prodId);
                 }
-                DPSprtDeviceVO anyPhone = new DPSprtDeviceVO();
-                anyPhone.setDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4APP);
-                anyPhone.setSubContentsId(anySubContentsId);
-                anyPhone.setRegId("admin");
-                anyPhone.setUpdId("admin");
-                anyPhone.setProdId(prodId);
-                dpSprtDeviceService.insertDPSprtDevice(anyPhone);
+
+                if(anySubContentsId != null) {
+                    log.info("Insert CMS DisplaySupportPhone Info - DeviceModelCd#{}", DisplayConstants.DP_ANY_PHONE_4APP);
+                    DPSprtDeviceVO anyPhone = new DPSprtDeviceVO();
+                    anyPhone.setDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4APP);
+                    anyPhone.setSubContentsId(anySubContentsId);
+                    anyPhone.setRegId("admin");
+                    anyPhone.setUpdId("admin");
+                    anyPhone.setProdId(prodId);
+                    dpSprtDeviceService.insertDPSprtDevice(anyPhone);
+                }
             }
         }
 		
