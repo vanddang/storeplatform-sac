@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.history.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,12 +171,16 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 					String tenantProdGrpCd = existenceScRes.getTenantProdGrpCd();
 					// 조회한 tenantProdGrpCd의 시작 코드와 정책코드가 같다면 MDN기반
 					if (tenantProdGrpCd.startsWith(purchaseTenantPolicy.getTenantProdGrpCd())) {
-						// 정책이 같을 경우에는 조회한 DeviceKey와 입력받은 DeviceKey를 비교하여 flag 셋팅
-						if (existenceScRes.getUseInsdDeviceId().equals(existenceScReq.getDeviceKey())) {
-							// MDN기반이면 리턴을 한다.
-							return flag = "MDN";
+						if (StringUtils.isNotBlank(existenceScReq.getDeviceKey())) {
+							// 정책이 같을 경우에는 조회한 DeviceKey와 입력받은 DeviceKey를 비교하여 flag 셋팅
+							if (existenceScRes.getUseInsdDeviceId().equals(existenceScReq.getDeviceKey())) {
+								// MDN기반이면 리턴을 한다.
+								return flag = "MDN";
+							} else {
+								flag = "NOT_MDN";
+							}
 						} else {
-							flag = "NOT_MDN";
+							throw new StorePlatformException("SAC_PUR_0002", "DeviceKey");
 						}
 					} else {
 						// 조회한 tenantProdGrpCd의 시작 코드와 정책코드가 다르면 ID기반
