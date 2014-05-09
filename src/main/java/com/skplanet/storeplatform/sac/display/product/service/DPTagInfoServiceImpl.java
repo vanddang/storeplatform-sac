@@ -38,7 +38,6 @@ public class DPTagInfoServiceImpl implements DPTagInfoService {
 	 * @param dpTagInfo
 	 */
 	public void insertDPTagInfo(DPTagInfoVO dpTagInfo) {
-        dpTagInfo.setUpdId(StringUtils.defaultString(dpTagInfo.getUpdId()));
 		this.commonDAO.insert(NAMESPACE + ".insertDPTagInfo", dpTagInfo);
 	}
 

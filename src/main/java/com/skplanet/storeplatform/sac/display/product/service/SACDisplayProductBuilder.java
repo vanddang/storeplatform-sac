@@ -6,6 +6,7 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -371,6 +372,9 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				
 				for (DPTagInfoVO vo : displayTabInfoList) {
 
+                    // 140509 간혹 UPD_ID가 null인 건들이 존재해 의미 없는 값인 "_"을 지정함.
+                    vo.setUpdId(StringUtils.defaultString(vo.getUpdId(), "_"));
+
 					// 전시상품 Tag정보 등록
 					log.info("Insert CMS DisplayTabInfo Info");
 					dpTagInfoService.insertDPTagInfo(vo);
@@ -425,7 +429,8 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 					ProductVo pv = new ProductVo();
 					pv.setMbrNo(mbrNo);
 					pv = this.prodService.selectMemberInfo(pv);
-					if (null == pv) throw new StorePlatformException(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR, "MBR_NO [ " + mbrNo + " ] 로 등록되어진 회원 정보가 없습니다.");
+					if (null == pv)
+                        throw new StorePlatformException(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR, "MBR_NO [ " + mbrNo + " ] 로 등록되어진 회원 정보가 없습니다.");
 					
 					//ProductVo 값 설정
 					pv.setProdId(prodId);
@@ -442,33 +447,27 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 					
 					String stdDt = displayCommonService.getBatchStandardDateString(pv.getTenantId(), DisplayConstants.DP_LIST_NEWFREE);
 					this.prodService.insertNewFreeData(pv, stdDt);
-					
-					if (null != tempList) {
-						if(tempList.size() > 0){
 
-							for(int count = 0; count < tempList.size() ; count ++){
-								
-								Map<String, Object> oldProd = tempList.get(count);
+                    if(tempList != null) {
+                        for(Map<String, Object> oldProd : tempList) {
+                            if(null != oldProd.get("TENANTID")){
+                                if(oldProd.get("TENANTID").equals(vo.getTenantId())){
+                                    oldProdStatCd = (String)oldProd.get("PRODSTATUSCD");
+                                    oldTopMenuId     = (String)oldProd.get("TOPMENUID");
 
-								if(null != oldProd.get("TENANTID")){
-									if(oldProd.get("TENANTID").equals(vo.getTenantId())){
-										oldProdStatCd = (String)oldProd.get("PRODSTATUSCD");
-										oldTopMenuId     = (String)oldProd.get("TOPMENUID");
-										
-										// 판매중인 상품의 카테고리 대분류가 변경될시 운영자추천상품 - SUB 상품 삭제
-										log.info("CMS 운영자 추천 상품 삭제 여부 Check | " + oldProdStatCd);
-										if (IFConstants.CONTENT_SALE_STAT_ING.equals(oldProdStatCd)) {
-											String topCatCd = dpProd.getTopMenuId();
-											log.info(oldTopMenuId + " == " + topCatCd);
-											if (!oldTopMenuId.equals(topCatCd)) {
-												this.prodService.removeAdminRecommand(pv);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
+                                    // 판매중인 상품의 카테고리 대분류가 변경될시 운영자추천상품 - SUB 상품 삭제
+                                    log.info("CMS 운영자 추천 상품 삭제 여부 Check | " + oldProdStatCd);
+                                    if (IFConstants.CONTENT_SALE_STAT_ING.equals(oldProdStatCd)) {
+                                        String topCatCd = dpProd.getTopMenuId();
+                                        log.info(oldTopMenuId + " == " + topCatCd);
+                                        if (!oldTopMenuId.equals(topCatCd)) {
+                                            this.prodService.removeAdminRecommand(pv);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 				}
 			}
 			

@@ -120,7 +120,7 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
                 catch (RuntimeException re) {
                     log.error("CMS MQ App 수행중 오류: {}", re.getMessage(), re);
                     cv.setResultCd(IFConstants.CMS_RST_CODE_UNKNOWN_ERROR);
-                    cv.setResultMsg(re.getMessage());
+                    cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
                 }
 				this.log.info("CMS Result Code = " + cv.getResultCd());
 				this.log.info("CMS Result Message = " + cv.getResultMsg());
