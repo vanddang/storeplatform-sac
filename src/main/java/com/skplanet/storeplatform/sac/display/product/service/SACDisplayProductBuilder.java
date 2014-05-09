@@ -372,9 +372,6 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				
 				for (DPTagInfoVO vo : displayTabInfoList) {
 
-                    // 140509 간혹 UPD_ID가 null인 건들이 존재해 의미 없는 값인 "_"을 지정함.
-                    vo.setUpdId(StringUtils.defaultString(vo.getUpdId(), "_"));
-
 					// 전시상품 Tag정보 등록
 					log.info("Insert CMS DisplayTabInfo Info");
 					dpTagInfoService.insertDPTagInfo(vo);
