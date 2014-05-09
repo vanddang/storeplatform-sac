@@ -120,10 +120,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 
 			// TB_DP_PROD 값 셋팅
-			// log.info("■■■■■ setTbDpProdInfoValue 시작 ■■■■■");
+			this.log.info("■■■■■ setTbDpProdInfoValue start ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 			if (!this.setTbDpProdInfoValue(couponInfo, itemInfoList, tblDpProdList, couponReq.getCudType())) {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
+			this.log.info("■■■■■ setTbDpProdInfoValue End ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 
 			// TB_DP_SHPG_PROD 값 셋팅
 			// log.info("■■■■■ setTbDpShpgProdInfoValue 시작 ■■■■■");
@@ -181,11 +182,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
 			// SP_SETT_REG_PROD 프로시저 호출
-			this.log.info("■■■■■ setCallSpSettRegProd 시작 ■■■■■");
+			this.log.info("■■■■■ setCallSpSettRegProd 시작 ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 			if (!this.setCallSpSettRegProd(couponInfo, itemInfoList, spRegistProdList, couponReq.getCudType())) {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
-			this.log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■");
+			this.log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 
 			this.log.info("■■■■■ cacheEvictShoppingMeta 시작 ■■■■■");
 			this.cacheEvictShoppingMeta(couponInfo, couponReq);
