@@ -176,8 +176,6 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 						} else {
 							product.setMapgProdIdList(null);
 						}
-					} else {
-						product.setMapgProdIdList(null);
 					}
 
 					if (product != null) {
