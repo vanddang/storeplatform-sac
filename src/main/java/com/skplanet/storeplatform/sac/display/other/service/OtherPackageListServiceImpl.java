@@ -74,6 +74,7 @@ public class OtherPackageListServiceImpl implements OtherPackageListService {
 		paramMap.put("tenantHeader", tenantHeader);
 		paramMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		paramMap.put("partParentClsfCd", DisplayConstants.DP_PART_CHILD_CLSF_CD);
 
 		List<MetaInfo> appList = this.commonDAO.queryForList("OtherPackageList.searchProdListByPackageNm", paramMap,
 				MetaInfo.class);
