@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 import com.skplanet.storeplatform.sac.display.common.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -17,10 +21,8 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
@@ -37,8 +39,11 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	@Autowired
-	private ExistenceSCI existenceSCI;
+//	@Autowired
+//	private ExistenceSCI existenceSCI;
+
+    @Autowired
+    private ExistenceInternalSacSCI existenceInternalSacSCI;
 
 	@Value("#{propertiesForSac['display.previewUrlPrefix']}")
 	private String previewPrefix;
@@ -101,29 +106,30 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 	@Override
 	public boolean checkPurchase(String tenantId, String userKey, String deviceKey, String episodeId) {
-		ExistenceScReq existenceScReq = new ExistenceScReq();
-		existenceScReq.setTenantId(tenantId);
-		existenceScReq.setUserKey(userKey);
-		existenceScReq.setDeviceKey(deviceKey);
-		ExistenceItemSc itemSc = new ExistenceItemSc();
-		itemSc.setProdId(episodeId);
-		List<ExistenceItemSc> itemScList = new ArrayList<ExistenceItemSc>();
-		itemScList.add(itemSc);
-		existenceScReq.setProductList(itemScList);
 
-		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
+        ExistenceReq existenceReq = new ExistenceReq();
+        existenceReq.setTenantId(tenantId);
+        existenceReq.setUserKey(userKey);
+        existenceReq.setDeviceKey(deviceKey);
+        existenceReq.setExistenceItem(new ArrayList<ExistenceItem>());
+
+        ExistenceItem existenceItem = new ExistenceItem();
+        existenceItem.setProdId(episodeId);
+        existenceReq.getExistenceItem().add(existenceItem);
+
+        this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
 		long start = System.currentTimeMillis();
-		List<ExistenceScRes> resList = this.existenceSCI.searchExistenceList(existenceScReq);
+        ExistenceListRes res = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
 		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : existenceSCI.searchExistenceList");
 		long end = System.currentTimeMillis();
 		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase existenceSCI.searchExistenceList takes {} ms",
 				(end - start));
-		return resList != null && resList.size() > 0;
+        return res.getExistenceListRes() != null && res.getExistenceListRes().size() > 0;
 	}
 
 	@Override
-	public List<ExistenceScRes> checkPurchaseList(String tenantId, String userKey, String deviceKey,
-			List<String> episodeIdList) {
+	public ExistenceListRes checkPurchaseList(String tenantId, String userKey, String deviceKey,
+                                              List<String> episodeIdList) {
 		ExistenceScReq existenceScReq = new ExistenceScReq();
 		existenceScReq.setTenantId(tenantId);
 		existenceScReq.setUserKey(userKey);
@@ -137,15 +143,27 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		}
 		existenceScReq.setProductList(itemScList);
 
+        ExistenceReq existenceReq = new ExistenceReq();
+        existenceReq.setTenantId(tenantId);
+        existenceReq.setUserKey(userKey);
+        existenceReq.setDeviceKey(deviceKey);
+        existenceReq.setExistenceItem(new ArrayList<ExistenceItem>());
+
+        for (String episodeId : episodeIdList) {
+            ExistenceItem existenceItem = new ExistenceItem();
+            existenceItem.setProdId(episodeId);
+            existenceReq.getExistenceItem().add(existenceItem);
+        }
+
 		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : existenceSCI.searchExistenceList");
 		long start = System.currentTimeMillis();
-		List<ExistenceScRes> existenceListRes = this.existenceSCI.searchExistenceList(existenceScReq);
+		ExistenceListRes res = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
 		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : existenceSCI.searchExistenceList");
 		long end = System.currentTimeMillis();
 		this.log.info("##### [SAC DSP LocalSCI] SAC Purchase existenceSCI.searchExistenceList takes {} ms",
 				(end - start));
 
-		return existenceListRes;
+		return res;
 	}
 
 	@Override

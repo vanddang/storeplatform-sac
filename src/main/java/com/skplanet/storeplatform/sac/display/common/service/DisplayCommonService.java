@@ -83,8 +83,8 @@ public interface DisplayCommonService {
 	 *            에피소드ID List
 	 * @return 구매 내역 List
 	 */
-	public List<ExistenceScRes> checkPurchaseList(String tenantId, String userKey, String deviceKey,
-			List<String> episodeIdList);
+	public com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes checkPurchaseList(String tenantId, String userKey, String deviceKey,
+                                                                                                         List<String> episodeIdList);
 
 	/**
 	 * 미리보기 URL을 작성한다.

@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,8 +130,8 @@ public class EpubServiceImpl implements EpubService {
                 
 				List<EpubDetail> subProductList = getEpubSeries(param);
 
-                List<ExistenceScRes> existenceScResList = getExistenceScReses(req.getTenantId(), userKey, deviceKey, subProductList);
-				this.mapSubProductList(param, product, subProductList, existenceScResList);
+                ExistenceListRes existenceListRes = getExistenceScReses(req.getTenantId(), userKey, deviceKey, subProductList);
+				this.mapSubProductList(param, product, subProductList, existenceListRes);
 			}
             res.setProduct(product);
         } else {
@@ -182,21 +184,19 @@ public class EpubServiceImpl implements EpubService {
             
             //코믹의 경우 ScreenShot 제공
             List<ProductImage> screenshotList = null;
-            if(epubDetail != null) {
-            	screenshotList = getScreenshotList(epubDetail.getTopMenuId(), req.getChannelId(), req.getLangCd());
-            }
-            
+            screenshotList = getScreenshotList(epubDetail.getTopMenuId(), req.getChannelId(), req.getLangCd());
+
             this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
 
             //orderedBy=noPayment 기구매 체크.
-            List<ExistenceScRes> existenceScResList = null;
+            ExistenceListRes existenceListRes = null;
 			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
 				List<String> episodeIdList = getEpisodeIdList(param);
-				existenceScResList = commonService.checkPurchaseList(req.getTenantId(), userKey, deviceKey, episodeIdList);
+				existenceListRes = commonService.checkPurchaseList(req.getTenantId(), userKey, deviceKey, episodeIdList);
 				
 				List<String> paymentProdIdList = new ArrayList<String>();
-				for(ExistenceScRes existenceScRes : existenceScResList) {
-					paymentProdIdList.add(existenceScRes.getProdId());
+				for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
+					paymentProdIdList.add(existenceRes.getProdId());
 				}
 				param.put("paymentProdIdList", paymentProdIdList);
 			}
@@ -207,9 +207,9 @@ public class EpubServiceImpl implements EpubService {
             List<EpubDetail> subProductList = getEpubSeries(param);
             if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
             	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
-            	existenceScResList = getExistenceScReses(req.getTenantId(), userKey, deviceKey, subProductList);
+            	existenceListRes = getExistenceScReses(req.getTenantId(), userKey, deviceKey, subProductList);
             }
-            this.mapSubProductList(param, product, subProductList, existenceScResList);
+            this.mapSubProductList(param, product, subProductList, existenceListRes);
             
             res.setProduct(product);
         } else {
@@ -222,7 +222,9 @@ public class EpubServiceImpl implements EpubService {
 
 	/**
 	 * Mapping Screenshot
-	 * @param param
+	 * @param topMenuId
+     * @param channelId
+     * @param langCd
 	 * @return
 	 */
 	private List<ProductImage> getScreenshotList(String topMenuId, String channelId, String langCd) {
@@ -287,13 +289,15 @@ public class EpubServiceImpl implements EpubService {
      * @param subProductList
      * @return
      */
-    private List<ExistenceScRes> getExistenceScReses(String tenantId, String userKey, String deviceKey, List<EpubDetail> subProductList) {
+    private ExistenceListRes getExistenceScReses(String tenantId, String userKey, String deviceKey, List<EpubDetail> subProductList) {
     	
     	if(StringUtils.isNotEmpty(userKey) || StringUtils.isNotEmpty(deviceKey)) {
-    		return new ArrayList<ExistenceScRes>();
+            ExistenceListRes res = new ExistenceListRes();
+            res.setExistenceListRes(new ArrayList<ExistenceRes>());
+    		return res;
     	}
-    	
-        List<ExistenceScRes> existenceScResList = null;
+
+        ExistenceListRes res = null;
         if(subProductList != null && subProductList.size() > 0) {
             //기구매 체크
             List<String> episodeIdList = new ArrayList<String>();
@@ -305,13 +309,14 @@ public class EpubServiceImpl implements EpubService {
                 }
             }
             try {
-        		existenceScResList = commonService.checkPurchaseList(tenantId, userKey, deviceKey, episodeIdList);
+                res = commonService.checkPurchaseList(tenantId, userKey, deviceKey, episodeIdList);
             } catch (StorePlatformException e) {
                 //ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로 처리한다.
-                existenceScResList = new ArrayList<ExistenceScRes>();
+                res = new ExistenceListRes();
+                res.setExistenceListRes(new ArrayList<ExistenceRes>());
             }
         }
-        return existenceScResList;
+        return res;
     }
 
     /**
@@ -585,7 +590,7 @@ public class EpubServiceImpl implements EpubService {
      * @param existenceMap
      * @return
 	 */
-	private Rights mapRights(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceScRes> existenceMap) {
+	private Rights mapRights(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceRes> existenceMap) {
 		Rights rights = new Rights();
 		//rights.setAllow(mapperVO.getDwldAreaLimtYn());
 		
@@ -651,7 +656,7 @@ public class EpubServiceImpl implements EpubService {
      * @param existenceMap
      * @return
 	 */
-	private Play mapPlay(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceScRes> existenceMap) {
+	private Play mapPlay(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceRes> existenceMap) {
 		Play play = new Play();
 
 		List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -693,7 +698,7 @@ public class EpubServiceImpl implements EpubService {
      * @param existenceMap
      * @return
 	 */
-	private Store mapStore(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceScRes> existenceMap) {
+	private Store mapStore(EpubDetail mapperVO, Map<String, Object> param, Map<String, ExistenceRes> existenceMap) {
 		Store store = new Store();
 
 		List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -729,7 +734,8 @@ public class EpubServiceImpl implements EpubService {
 
 	/**
 	 * Mapping Price
-	 * @param mapperVO
+	 * @param prodAmt
+     * @param prodNetAmt
 	 * @return
 	 */
 	private Price mapPrice(Integer prodAmt, Integer prodNetAmt) {
@@ -749,9 +755,9 @@ public class EpubServiceImpl implements EpubService {
      * @param param
      * @param product
      * @param epubSeriesList
-     * @param existenceScResList
+     * @param existenceListRes
      */
-	private void mapSubProductList(Map<String, Object> param, Product product, List<EpubDetail> epubSeriesList, List<ExistenceScRes> existenceScResList) {
+	private void mapSubProductList(Map<String, Object> param, Product product, List<EpubDetail> epubSeriesList, ExistenceListRes existenceListRes) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
         List<Product> subProjectList = new ArrayList<Product>();
 
@@ -760,10 +766,10 @@ public class EpubServiceImpl implements EpubService {
             product.setSubProductTotalCount(temp.getTotalCount());
 
             //기구매 체크
-            Map<String, ExistenceScRes> existenceMap = new HashMap<String, ExistenceScRes>();
-            if(existenceScResList != null) {
-	            for(ExistenceScRes existenceScRes : existenceScResList) {
-	                existenceMap.put(existenceScRes.getProdId(), existenceScRes);
+            Map<String, ExistenceRes> existenceMap = new HashMap<String, ExistenceRes>();
+            if(existenceListRes != null) {
+	            for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
+	                existenceMap.put(existenceRes.getProdId(), existenceRes);
 	            }
             }
 

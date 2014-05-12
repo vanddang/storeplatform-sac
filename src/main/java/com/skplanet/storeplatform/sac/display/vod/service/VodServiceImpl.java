@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,18 +113,18 @@ public class VodServiceImpl implements VodService {
 			List<ProductImage> screenshotList = getScreenshotList(req.getChannelId(), req.getLangCd());
 			this.mapProduct(req, product, vodDetail, screenshotList);
 
-			List<ExistenceScRes> existenceScResList = null;
+            ExistenceListRes existenceListRes = null;
 			//orderedBy='nonPayment'
 			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
 				List<String> episodeIdList = getEpisodeIdList(param);
-				existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
-				if(existenceScResList == null) {
-					existenceScResList = new ArrayList<ExistenceScRes>(); 
+				existenceListRes = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
+				if(existenceListRes == null) {
+					existenceListRes = new ExistenceListRes();
 				}
 				
 				List<String> paymentProdIdList = new ArrayList<String>();
-					for(ExistenceScRes existenceScRes : existenceScResList) {
-						paymentProdIdList.add(existenceScRes.getProdId());
+					for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
+						paymentProdIdList.add(existenceRes.getProdId());
 					}
 				param.put("paymentProdIdList", paymentProdIdList);
 			}
@@ -134,9 +136,9 @@ public class VodServiceImpl implements VodService {
             
             if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
             	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
-            	existenceScResList = getExistenceScReses(req, subProductList);
+            	existenceListRes = getExistenceScReses(req, subProductList);
             }
-            this.mapSubProductList(req, product, subProductList, existenceScResList);
+            this.mapSubProductList(req, product, subProductList, existenceListRes);
 
 			res.setProduct(product);
 		} else {
@@ -177,7 +179,8 @@ public class VodServiceImpl implements VodService {
 
 	/**
 	 * Mapping Screenshot
-	 * @param param
+	 * @param channelId
+     * @param langCd
 	 * @return
 	 */
 	private List<ProductImage> getScreenshotList(String channelId, String langCd) {
@@ -194,12 +197,14 @@ public class VodServiceImpl implements VodService {
      * @param subProductList
      * @return
      */
-    private List<ExistenceScRes> getExistenceScReses(VodDetailReq req, List<VodDetail> subProductList) {
+    private ExistenceListRes getExistenceScReses(VodDetailReq req, List<VodDetail> subProductList) {
     	if(StringUtils.isNotEmpty(req.getUserKey()) || StringUtils.isNotEmpty(req.getDeviceKey())) {
-    		return new ArrayList<ExistenceScRes>();
+            ExistenceListRes res = new ExistenceListRes();
+            res.setExistenceListRes(new ArrayList<ExistenceRes>());
+            return res;
     	}
     	
-        List<ExistenceScRes> existenceScResList = null;
+        ExistenceListRes existenceListRes = null;
         if(subProductList != null && subProductList.size() > 0 && StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
             //기구매 체크
             List<String> episodeIdList = new ArrayList<String>();
@@ -211,13 +216,14 @@ public class VodServiceImpl implements VodService {
                 }
             }
             try {
-        		existenceScResList = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
+        		existenceListRes = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
             } catch (StorePlatformException e) {
                 //ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로 처리한다.
-            	existenceScResList = new ArrayList<ExistenceScRes>();
+            	existenceListRes = new ExistenceListRes();
+                existenceListRes.setExistenceListRes(new ArrayList<ExistenceRes>());
             }
         }
-        return existenceScResList;
+        return existenceListRes;
     }
 
 
@@ -344,7 +350,7 @@ public class VodServiceImpl implements VodService {
      * @param existenceMap
      * @return
      */
-	private Rights mapRights(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
+	private Rights mapRights(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
 		Rights rights = new Rights();
 		rights.setGrade(mapperVO.getProdGrdCd());
 		
@@ -391,7 +397,7 @@ public class VodServiceImpl implements VodService {
 	 * @param existenceMap
 	 * @return
 	 */
-	private Store mapStore(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
+	private Store mapStore(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
 		Store store = null;
 		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
 			store = new Store();
@@ -441,7 +447,7 @@ public class VodServiceImpl implements VodService {
 	 * @param existenceMap
 	 * @return
 	 */
-	private Play mapPlay(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceScRes> existenceMap) {
+	private Play mapPlay(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
 		Play play = null;
 		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
 			play = new Play();
@@ -486,7 +492,8 @@ public class VodServiceImpl implements VodService {
 	
 	/**
 	 * Mapping Price
-	 * @param mapperVO
+	 * @param prodAmt
+     * @param prodNetAmt
 	 * @return
 	 */
 	private Price mapPrice(Integer prodAmt, Integer prodNetAmt) {
@@ -719,9 +726,9 @@ public class VodServiceImpl implements VodService {
      * @param req  요청 정보
      * @param product   Channel 정보
      * @param vodDetailList VOD Episode List
-     * @param existenceScResList 기구매 체크 결과
+     * @param existenceListRes 기구매 체크 결과
      */
-	private void mapSubProductList(VodDetailReq req, Product product, List<VodDetail> vodDetailList, List<ExistenceScRes> existenceScResList) {
+	private void mapSubProductList(VodDetailReq req, Product product, List<VodDetail> vodDetailList, ExistenceListRes existenceListRes) {
 
 		List<Product> subProjectList = new ArrayList<Product>();
 
@@ -734,10 +741,10 @@ public class VodServiceImpl implements VodService {
 			product.setSubProductTotalCount(temp.getTotalCount());
 
             //기구매 체크
-            Map<String, ExistenceScRes> existenceMap = new HashMap<String, ExistenceScRes>();
-            if(existenceScResList != null) {
-	            for(ExistenceScRes existenceScRes : existenceScResList) {
-	                existenceMap.put(existenceScRes.getProdId(), existenceScRes);
+            Map<String, ExistenceRes> existenceMap = new HashMap<String, ExistenceRes>();
+            if(existenceListRes != null) {
+	            for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
+	                existenceMap.put(existenceRes.getProdId(), existenceRes);
 	            }
             }
             
