@@ -43,7 +43,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 
 /**
  * 회원탈퇴 관련 인터페이스 구현체
@@ -123,8 +122,12 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		/* Return Value */
 		WithdrawRes withdrawRes = new WithdrawRes();
 
+		if (!deviceId.equals("")) {
+			logger.info("{} userType : {}", req.getDeviceId(), schUserRes.getUserMbr().getUserType());
+		} else {
+			logger.info("{} userType : {}", req.getUserId(), schUserRes.getUserMbr().getUserType());
+		}
 		/* 통합회원 연동 */
-		logger.info("userType : {}", ConvertMapperUtils.convertObjectToJson(schUserRes.getUserMbr().getUserType()));
 
 		if (schUserRes.getUserMbr().getImSvcNo() != null) {
 

@@ -71,7 +71,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
@@ -263,7 +262,7 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.info("회원기본정보조회 Request : {}", ConvertMapperUtils.convertObjectToJson(keyValue));
+		LOGGER.info("회원기본정보조회 Request : {}", keyValue);
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
 		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -298,7 +297,7 @@ public class MemberCommonComponent {
 		// 사용자 정보 세팅
 		UserInfo userInfo = this.userInfo(schUserRes);
 
-		LOGGER.info("회원기본정보조회 Response : {}", ConvertMapperUtils.convertObjectToJson(userInfo.getUserKey()));
+		LOGGER.info("회원기본정보조회 Response : {}", userInfo.getUserKey());
 
 		return userInfo;
 	}
@@ -317,7 +316,7 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public DetailRes getUserDetailInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.info("회원상세정보조회 Request : {}", ConvertMapperUtils.convertObjectToJson(keyValue));
+		LOGGER.info("회원상세정보조회 Request : {}", keyValue);
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
 		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -385,7 +384,7 @@ public class MemberCommonComponent {
 		/* 징계정보 세팅 */
 		detailRes.setUserMbrPnsh(mbrPnsh);
 
-		LOGGER.info("회원상세정보조회 Response : {}", ConvertMapperUtils.convertObjectToJson(detailRes.getUserKey()));
+		LOGGER.info("회원상세정보조회 Response : {}", detailRes.getUserKey());
 
 		return detailRes;
 	}
@@ -592,7 +591,7 @@ public class MemberCommonComponent {
 	 */
 	public UserExtraInfoRes getUserExtraInfo(String userKey, SacRequestHeader sacHeader) {
 
-		LOGGER.info("회원부가정보조회 Request : {}", ConvertMapperUtils.convertObjectToJson(userKey));
+		LOGGER.info("회원부가정보조회 Request : {}", userKey);
 
 		DetailReq req = new DetailReq();
 		req.setUserKey(userKey);
@@ -632,7 +631,7 @@ public class MemberCommonComponent {
 
 		UserExtraInfoRes res = extraRes;
 
-		LOGGER.info("회원부가정보조회 Response : {}", ConvertMapperUtils.convertObjectToJson(res.getUserKey()));
+		LOGGER.info("회원부가정보조회 Response : {}", res.getUserKey());
 
 		return res;
 	}
@@ -768,7 +767,8 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
+			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -1011,8 +1011,8 @@ public class MemberCommonComponent {
 	 * @param previousDeviceKey
 	 *            이전 휴대기기 Key
 	 */
-	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey,
-			String previousUserKey, String deviceKey, String previousDeviceKey) {
+	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey, String previousUserKey, String deviceKey,
+			String previousDeviceKey) {
 
 		if (isCall) {
 

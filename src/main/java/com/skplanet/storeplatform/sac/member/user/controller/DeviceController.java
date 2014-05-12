@@ -204,7 +204,7 @@ public class DeviceController {
 
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDeviceKey()));
+		LOGGER.info("Response : {}", res.getDeviceKey());
 
 		return res;
 	}
@@ -230,7 +230,7 @@ public class DeviceController {
 
 		DetailRepresentationDeviceRes res = this.deviceService.detailRepresentationDeviceRes(requestHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDeviceInfo().getDeviceKey()));
+		LOGGER.info("Response : {}", res.getDeviceInfo().getDeviceKey());
 
 		return res;
 	}
@@ -274,7 +274,7 @@ public class DeviceController {
 		/* IDP 회원정보 수정 */
 		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getDeviceKeyList().get(0).getDeviceKey()));
+		LOGGER.info("Response : {}", res.getDeviceKeyList().get(0).getDeviceKey());
 
 		return res;
 	}
@@ -302,7 +302,7 @@ public class DeviceController {
 		}
 		SupportAomRes res = this.deviceService.getSupportAom(requestHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res.getIsAomSupport()));
+		LOGGER.info("Response : {}, {}", req.getDeviceId(), res.getIsAomSupport());
 
 		return res;
 	}

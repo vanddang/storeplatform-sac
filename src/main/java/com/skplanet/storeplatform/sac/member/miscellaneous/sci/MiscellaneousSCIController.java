@@ -91,7 +91,7 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 		}
 		sacRes.setPolicyList(infoSacList);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(sacRes.getPolicyList().get(0).getKey()));
+		LOGGER.info("Response : {}", sacRes.getPolicyList().get(0).getKey());
 
 		return sacRes;
 
