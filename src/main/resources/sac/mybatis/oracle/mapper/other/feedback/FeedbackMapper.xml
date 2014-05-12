@@ -804,7 +804,7 @@
     <select id="getProdEvalInfo" parameterType="TenantProdStats" resultType="TenantProdStats">
       SELECT  /* FeedbackMapper.xml, getProdEvalInfo, SAC 기타, 2014-02-13 */
              (
-              SELECT LISTAGG (avg_score_pct, ',') WITHIN GROUP (ORDER BY avg_score DESC)
+              SELECT LISTAGG (RTRIM (TO_CHAR (avg_score_pct, 'FM990D9'), '.'), ',') WITHIN GROUP (ORDER BY avg_score DESC)
                 FROM ( 
                       SELECT  avg_score  /* 평균 점수 */  
                             , NVL (avg_count, 0) AS paticpers_cnt  /* 참여자 수 */
