@@ -30,7 +30,8 @@ public interface ShoppingAsyncService {
 	 * @param couponUseStatusSacParam
 	 *            couponUseStatusSacParam
 	 * @return CouponUseStatusSacResult
+	 * @throws Exception
 	 */
-	public int getShoppingAsync(BizCouponReq request);
+	public int getShoppingAsync(BizCouponReq request, String systemId, String tenantId) throws Exception;
 
 }

@@ -51,11 +51,13 @@ public class ShoppingAsyncController {
 	 * @param requestHeader
 	 *            공통헤더정보
 	 * @return BizCouponRes
+	 * @throws Exception
 	 */
 
 	@RequestMapping(value = "/couponAsync/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public int getShoppingAsync(@RequestBody @Validated BizCouponReq request, SacRequestHeader sacRequestHeader) {
+	public int getShoppingAsync(@RequestBody @Validated BizCouponReq request, SacRequestHeader sacRequestHeader)
+			throws Exception {
 
 		// new TLogUtil().set(new ShuttleSetter() {
 		// @Override
@@ -64,7 +66,9 @@ public class ShoppingAsyncController {
 		// }
 		// });
 
-		return this.shoppongAsyncService.getShoppingAsync(request);
-	}
+		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
+		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 
+		return this.shoppongAsyncService.getShoppingAsync(request, systemId, tenantId);
+	}
 }

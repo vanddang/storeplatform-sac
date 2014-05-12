@@ -9,9 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -27,14 +25,7 @@ import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.shopping.sci.ShoppingAsyncSCI;
 import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncItemSc;
-import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncListSc;
-import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncReq;
-import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingAsyncRes;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-//import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponItem;
-//import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublish;
-//import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
-//import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponRes;
+import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 
 /**
  * 쇼핑쿠폰 Service Implements.
@@ -50,83 +41,214 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 	private ShoppingAsyncSCI shoppingAsyncSCI;
 
 	@Override
-	public int getShoppingAsync(BizCouponReq request) {
-
-		ShoppingAsyncReq reqSc = new ShoppingAsyncReq();
-		// ShoppingAsyncRes resSc = new ShoppingAsyncRes();
-
-		ShoppingAsyncListSc listSc = null;
-		List<ShoppingAsyncListSc> prchsList = new ArrayList<ShoppingAsyncListSc>();
+	public int getShoppingAsync(BizCouponReq request, String systemId, String tenantId) throws Exception {
 
 		ShoppingAsyncItemSc item = null;
-		List<ShoppingAsyncItemSc> itemList = null;
 
-		for (BizCouponPublish obj : request.getXmlData().getPublish()) {
-			listSc = new ShoppingAsyncListSc();
-			itemList = new ArrayList<ShoppingAsyncItemSc>();
+		int prchsDtlId = 0;
+		int updateCnt = 0;
 
-			listSc.setPrchsId(obj.getPrchsId());
+		// 1:발급 0:취소
+		if ("1".equals(request.getPublishStatus())) {
 
-			logger.info("### Biz coupon :: PrchsId : " + obj.getPrchsId());
+			for (BizCouponPublish obj : request.getXmlData().getPublish()) {
 
-			listSc.setAvail_startdate(obj.getAvail_startdate());
-			listSc.setAvail_enddate(obj.getAvail_enddate());
-			listSc.setMdn(obj.getMdn());
-			listSc.setMdn2(obj.getMdn2());
+				logger.info("### Biz coupon :: PrchsId : " + obj.getPrchsId());
 
-			for (BizCouponItem objItem : obj.getItems()) {
-				item = new ShoppingAsyncItemSc();
+				for (BizCouponItem objItem : obj.getItems()) {
 
-				item.setItemCode(objItem.getItemCode());
-				item.setPublishCode(objItem.getPublishCode());
-				item.setShippingUrl(objItem.getShippingUrl());
-				item.setExtraData(objItem.getExtraData());
+					try {
+						prchsDtlId++;
 
-				itemList.add(item);
+						item = new ShoppingAsyncItemSc();
 
-				/******************************
-				 * TLOG Setting Start
-				 ******************************/
-				final String purchase_id = obj.getPrchsId();
-				final String use_start_time = obj.getAvail_startdate() + "000";
-				final String use_end_time = obj.getAvail_enddate() + "000";
-				final String coupon_publish_code = objItem.getPublishCode();
-				final String coupon_code = request.getCouponCode();
-				final String coupon_item_code = objItem.getItemCode();
-				final Map<String, String> link_system_result_code = new HashMap<String, String>();
-				link_system_result_code.put("SCPCMS", request.getPublishStatus());
-				final Map<String, String> link_system_result_message = new HashMap<String, String>();
-				link_system_result_message.put("SCPCMS", request.getPublishStatus() == "1" ? "publish" : "fail");
+						item.setPrchsId(obj.getPrchsId());
+						item.setPrchsDtlId(prchsDtlId);
+						item.setAvailStartdate(obj.getAvail_startdate());
+						item.setAvailEnddate(obj.getAvail_enddate());
+						item.setMdn(obj.getMdn());
+						item.setMdn2(obj.getMdn2());
 
-				new TLogUtil().log(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006).purchase_id(purchase_id)
-								.use_start_time(use_start_time).use_end_time(use_end_time)
-								.download_expired_time(use_end_time).coupon_publish_code(coupon_publish_code)
-								.coupon_code(coupon_code).coupon_item_code(coupon_item_code).result_code("SUCC")
-								.result_message("").link_system_result_code(link_system_result_code)
-								.link_system_result_message(link_system_result_message);
+						item.setItemCode(objItem.getItemCode());
+						item.setPublishCode(objItem.getPublishCode());
+						item.setShippingUrl(objItem.getShippingUrl());
+						item.setExtraData(objItem.getExtraData());
+
+						item.setSystemId(systemId);
+
+						// 쿠폰정보 업데이트 및 구매상태 구매완료처리
+						updateCnt += this.shoppingAsyncSCI.updateShoppingAsyncItem(item);
+
+						/******************************
+						 * TLOG Setting Start
+						 ******************************/
+						final String purchase_id = obj.getPrchsId();
+						final String use_start_time = obj.getAvail_startdate() + "000";
+						final String use_end_time = obj.getAvail_enddate() + "000";
+						final String coupon_publish_code = objItem.getPublishCode();
+						final String coupon_code = request.getCouponCode();
+						final String coupon_item_code = objItem.getItemCode();
+						final Map<String, String> link_system_result_code = new HashMap<String, String>();
+						link_system_result_code.put("SCPCMS", request.getPublishStatus());
+						final Map<String, String> link_system_result_message = new HashMap<String, String>();
+						link_system_result_message
+								.put("SCPCMS", request.getPublishStatus() == "1" ? "publish" : "fail");
+
+						new TLogUtil().log(new ShuttleSetter() {
+							@Override
+							public void customize(TLogSentinelShuttle shuttle) {
+								shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006).purchase_id(purchase_id)
+										.use_start_time(use_start_time).use_end_time(use_end_time)
+										.download_expired_time(use_end_time).coupon_publish_code(coupon_publish_code)
+										.coupon_code(coupon_code).coupon_item_code(coupon_item_code)
+										.result_code("SUCC").result_message("")
+										.link_system_result_code(link_system_result_code)
+										.link_system_result_message(link_system_result_message);
+							}
+						});
+						/******************************
+						 * TLOG Setting End
+						 ******************************/
+
+					} catch (Exception e) {
+
+						/******************************
+						 * TLOG Setting Start
+						 ******************************/
+						final String purchase_id = obj.getPrchsId();
+						final String use_start_time = obj.getAvail_startdate() + "000";
+						final String use_end_time = obj.getAvail_enddate() + "000";
+						final String coupon_publish_code = objItem.getPublishCode();
+						final String coupon_code = request.getCouponCode();
+						final String coupon_item_code = objItem.getItemCode();
+						final Map<String, String> link_system_result_code = new HashMap<String, String>();
+						link_system_result_code.put("SCPCMS", request.getPublishStatus());
+						final Map<String, String> link_system_result_message = new HashMap<String, String>();
+						link_system_result_message
+								.put("SCPCMS", request.getPublishStatus() == "1" ? "publish" : "fail");
+						final String result_message = e.getMessage();
+
+						new TLogUtil().log(new ShuttleSetter() {
+							@Override
+							public void customize(TLogSentinelShuttle shuttle) {
+								shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006).purchase_id(purchase_id)
+										.use_start_time(use_start_time).use_end_time(use_end_time)
+										.download_expired_time(use_end_time).coupon_publish_code(coupon_publish_code)
+										.coupon_code(coupon_code).coupon_item_code(coupon_item_code)
+										.result_code("FAIL").result_message(result_message)
+										.link_system_result_code(link_system_result_code)
+										.link_system_result_message(link_system_result_message);
+							}
+						});
+						/******************************
+						 * TLOG Setting End
+						 ******************************/
+
+						throw e;
 					}
-				});
-
-				/******************************
-				 * TLOG Setting End
-				 ******************************/
-
+				}
+				prchsDtlId = 0;
 			}
-			listSc.setItems(itemList);
+		} else {
 
-			prchsList.add(listSc);
+			if (request.getXmlData().getPublish() != null) {
+				String prchsId = request.getXmlData().getPublish().get(0).getPrchsId();
+				ShoppingAsyncItemSc shoppingAsyncItemSc = new ShoppingAsyncItemSc();
+				shoppingAsyncItemSc.setTenantId(tenantId);
+				shoppingAsyncItemSc.setSystemId(systemId);
+				shoppingAsyncItemSc.setPrchsId(prchsId);
+				shoppingAsyncItemSc.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+				shoppingAsyncItemSc.setCancelReqPathCd(PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON);
 
+				logger.debug("##### tenantId : " + tenantId);
+				logger.debug("##### systemId : " + systemId);
+				logger.debug("##### prchsId : " + prchsId);
+
+				this.shoppingAsyncSCI.updatePrchsStatus(shoppingAsyncItemSc);
+			}
 		}
 
-		reqSc.setPublish(prchsList);
-
-		ShoppingAsyncRes res = this.shoppingAsyncSCI.updateShoppingAsync(reqSc);
-
-		return res.getCount();
+		return updateCnt;
 
 	}
+	// @Override
+	// public int getShoppingAsync(BizCouponReq request) {
+	//
+	// ShoppingAsyncReq reqSc = new ShoppingAsyncReq();
+	// // ShoppingAsyncRes resSc = new ShoppingAsyncRes();
+	//
+	// ShoppingAsyncListSc listSc = null;
+	// List<ShoppingAsyncListSc> prchsList = new ArrayList<ShoppingAsyncListSc>();
+	//
+	// ShoppingAsyncItemSc item = null;
+	// List<ShoppingAsyncItemSc> itemList = null;
+	//
+	// for (BizCouponPublish obj : request.getXmlData().getPublish()) {
+	// listSc = new ShoppingAsyncListSc();
+	// itemList = new ArrayList<ShoppingAsyncItemSc>();
+	//
+	// listSc.setPrchsId(obj.getPrchsId());
+	//
+	// logger.info("### Biz coupon :: PrchsId : " + obj.getPrchsId());
+	//
+	// listSc.setAvail_startdate(obj.getAvail_startdate());
+	// listSc.setAvail_enddate(obj.getAvail_enddate());
+	// listSc.setMdn(obj.getMdn());
+	// listSc.setMdn2(obj.getMdn2());
+	//
+	// for (BizCouponItem objItem : obj.getItems()) {
+	// item = new ShoppingAsyncItemSc();
+	//
+	// item.setItemCode(objItem.getItemCode());
+	// item.setPublishCode(objItem.getPublishCode());
+	// item.setShippingUrl(objItem.getShippingUrl());
+	// item.setExtraData(objItem.getExtraData());
+	//
+	// itemList.add(item);
+	//
+	// /******************************
+	// * TLOG Setting Start
+	// ******************************/
+	// final String purchase_id = obj.getPrchsId();
+	// final String use_start_time = obj.getAvail_startdate() + "000";
+	// final String use_end_time = obj.getAvail_enddate() + "000";
+	// final String coupon_publish_code = objItem.getPublishCode();
+	// final String coupon_code = request.getCouponCode();
+	// final String coupon_item_code = objItem.getItemCode();
+	// final Map<String, String> link_system_result_code = new HashMap<String, String>();
+	// link_system_result_code.put("SCPCMS", request.getPublishStatus());
+	// final Map<String, String> link_system_result_message = new HashMap<String, String>();
+	// link_system_result_message.put("SCPCMS", request.getPublishStatus() == "1" ? "publish" : "fail");
+	//
+	// new TLogUtil().log(new ShuttleSetter() {
+	// @Override
+	// public void customize(TLogSentinelShuttle shuttle) {
+	// shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006).purchase_id(purchase_id)
+	// .use_start_time(use_start_time).use_end_time(use_end_time)
+	// .download_expired_time(use_end_time).coupon_publish_code(coupon_publish_code)
+	// .coupon_code(coupon_code).coupon_item_code(coupon_item_code).result_code("SUCC")
+	// .result_message("").link_system_result_code(link_system_result_code)
+	// .link_system_result_message(link_system_result_message);
+	// }
+	// });
+	//
+	// /******************************
+	// * TLOG Setting End
+	// ******************************/
+	//
+	// }
+	// listSc.setItems(itemList);
+	//
+	// prchsList.add(listSc);
+	//
+	// }
+	//
+	// reqSc.setPublish(prchsList);
+	//
+	// ShoppingAsyncRes res = this.shoppingAsyncSCI.updateShoppingAsync(reqSc);
+	//
+	// return res.getCount();
+	//
+	// }
 
 }
