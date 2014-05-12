@@ -260,7 +260,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 						String result = param.get("rsltCd");
 						LOGGER.debug("#### OTHER_PART remove START####");
-						LOGGER.debug("## 사용후기삭제 프로시저 리턴값 : {}", result);
+						LOGGER.debug("#### OTHER_PART PROCEDURE RETURN VALUE : {}", result);
 						LOGGER.debug("#### OTHER_PART remove END####");
 
 					} else {
@@ -348,7 +348,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 			String result = param.get("rsltCd");
 			LOGGER.debug("#### OTHER_PART createRecommend START####");
-			LOGGER.debug("## 사용후기추천 프로시저 리턴값 : {}", result);
+			LOGGER.debug("#### OTHER_PART PROCEDURE RETURN VALUE : {}", result);
 			LOGGER.debug("#### OTHER_PART createRecommend END####");
 
 		} else {
@@ -460,7 +460,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 			String result = param.get("rsltCd");
 			LOGGER.debug("#### OTHER_PART removeRecommend START####");
-			LOGGER.debug("## 사용후기추천삭제 프로시저 리턴값 : {}", result);
+			LOGGER.debug("#### OTHER_PART PROCEDURE RETURN VALUE : {}", result);
 			LOGGER.debug("#### OTHER_PART removeRecommend END####");
 
 		} else {
@@ -929,8 +929,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 					this.feedbackRepository.updateTenantProdStatsProc(param);
 
 					String result = param.get("rsltCd");
-					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_updateTenantProdStatsProc START####");
-					LOGGER.debug("## 평점등록 프로시저 리턴값 : {}", result);
+					LOGGER.debug("#### OTHER_PART PROCEDURE RETURN VALUE : {}", result);
 					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_updateTenantProdStatsProc END####");
 
 				} else {
@@ -952,7 +951,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 					String result = param.get("rsltCd");
 					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_mergeTenantProdStatsProc START####");
-					LOGGER.debug("## 평점등록 프로시저 리턴값 : {}", result);
+					LOGGER.debug("#### OTHER_PART PROCEDURE RETURN VALUE : {}", result);
 					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_mergeTenantProdStatsProc END####");
 
 				} else {
@@ -1128,6 +1127,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	private void setWebtoonChannelMbrAvgTenantStats(String partProdId, String tenantId, String userId) {
 		// 상품ID에 대해서 해당 상품에 채널/에피소드 관계이면서 웹툰일경우에만
 		// 채널ID에 해당되는 상품통계에 대해서 전체 통계를 진행하는 로직.(모바일POC 요청)
+		LOGGER.info("setWebtoonChannelMbrAvgTenantStats partProdId : {}, userId : {}", partProdId, userId);
 		Map<String, String> chnlEpisodeMap = this.feedbackRepository.getChannelEpisodeRelation(partProdId);
 		if (!CollectionUtils.isEmpty(chnlEpisodeMap)) {
 			String channelId = chnlEpisodeMap.get("PROD_ID");
@@ -1140,6 +1140,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 				tenantProdStats.setProdId(channelId);
 				tenantProdStats.setRegId(userId);
 				tenantProdStats.setUpdId(userId);
+				LOGGER.info("setWebtoonChannelMbrAvgTenantStats channelId : {} , count : {}", channelId, count);
 				if (count > 0) {
 					// 조회결과 있을 경우 전체 에피소드 통계 Update 처리
 					this.feedbackRepository.updateChannelTenantProdStats(tenantProdStats);
