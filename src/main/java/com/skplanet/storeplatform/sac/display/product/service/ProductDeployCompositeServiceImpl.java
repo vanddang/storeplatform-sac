@@ -2,6 +2,8 @@ package com.skplanet.storeplatform.sac.display.product.service;
 
 import com.skplanet.icms.refactoring.deploy.*;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.integration.bean.RuntimeContextCreator;
+import com.skplanet.storeplatform.framework.integration.bean.RuntimeContextHolder;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
@@ -117,12 +119,12 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 				catch (StorePlatformException ie) {
                     log.error("CMS MQ App 수행중 오류: {}", ie.getMessage());
                     cv.setResultCd(ie.getErrorInfo().getCode()); // Result Code
-                    cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + ie.getErrorInfo().getCode()));
+                    cv.setResultMsg("[" + getMachineId() + "/" + RuntimeContextHolder.getRuntimeContext().getGuid() + "]" + ie.getMessage());
                 }
                 catch (RuntimeException re) {
                     log.error("CMS MQ App 수행중 오류: {}", re.getMessage());
                     cv.setResultCd(IFConstants.CMS_RST_CODE_UNKNOWN_ERROR);
-                    cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()) + " @" + getMachineId());
+                    cv.setResultMsg("[" + getMachineId() + "/" + RuntimeContextHolder.getRuntimeContext().getGuid() + "]" + re.getMessage());
                 }
 				this.log.info("CMS Result Code = " + cv.getResultCd());
 				this.log.info("CMS Result Message = " + cv.getResultMsg());
