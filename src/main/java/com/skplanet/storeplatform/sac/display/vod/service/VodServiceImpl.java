@@ -115,7 +115,7 @@ public class VodServiceImpl implements VodService {
 
             ExistenceListRes existenceListRes = null;
 			//orderedBy='nonPayment'
-			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
+			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
 				List<String> episodeIdList = getEpisodeIdList(param);
 				existenceListRes = commonService.checkPurchaseList(req.getTenantId(), req.getUserKey(), req.getDeviceKey(), episodeIdList);
 				if(existenceListRes == null) {
@@ -134,7 +134,7 @@ public class VodServiceImpl implements VodService {
             List<VodDetail> subProductList = getSubProjectList(param);
 
             
-            if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
+            if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
             	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
             	existenceListRes = getExistenceScReses(req, subProductList);
             }
@@ -198,14 +198,14 @@ public class VodServiceImpl implements VodService {
      * @return
      */
     private ExistenceListRes getExistenceScReses(VodDetailReq req, List<VodDetail> subProductList) {
-    	if(StringUtils.isNotEmpty(req.getUserKey()) || StringUtils.isNotEmpty(req.getDeviceKey())) {
+    	if(StringUtils.isNotBlank(req.getUserKey()) || StringUtils.isNotBlank(req.getDeviceKey())) {
             ExistenceListRes res = new ExistenceListRes();
             res.setExistenceListRes(new ArrayList<ExistenceRes>());
             return res;
     	}
     	
         ExistenceListRes existenceListRes = null;
-        if(subProductList != null && subProductList.size() > 0 && StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
+        if(subProductList != null && subProductList.size() > 0 && StringUtils.isNotBlank(req.getUserKey()) && StringUtils.isNotBlank(req.getDeviceKey())) {
             //기구매 체크
             List<String> episodeIdList = new ArrayList<String>();
             for(VodDetail subProduct : subProductList) {
@@ -429,7 +429,7 @@ public class VodServiceImpl implements VodService {
 			store.setSalesStatus(mapperVO.getStoreProdStatusCd());
 			
 			// 사용자 구매 가능 상태
-            if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
+            if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && StringUtils.isNotBlank(req.getUserKey()) && StringUtils.isNotBlank(req.getDeviceKey())) {
                 String userPurStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
                 if(userPurStatus != null)  store.setUserPurStatus(userPurStatus);
             }
@@ -481,7 +481,7 @@ public class VodServiceImpl implements VodService {
 			play.setSalesStatus(mapperVO.getPlayProdStatusCd());
 			
 			// 사용자 구매 가능 상태
-			if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId()) && StringUtils.isNotEmpty(req.getUserKey()) && StringUtils.isNotEmpty(req.getDeviceKey())) {
+			if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId()) && StringUtils.isNotBlank(req.getUserKey()) && StringUtils.isNotBlank(req.getDeviceKey())) {
 				String userPurStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
 				if(userPurStatus != null)  play.setUserPurStatus(userPurStatus);
 			}
@@ -882,7 +882,7 @@ public class VodServiceImpl implements VodService {
             if (DisplayConstants.DP_SALE_STAT_PAUSED.equals(mapperVO.getProdStatusCd()) ||
                     DisplayConstants.DP_SALE_STAT_RESTRIC_DN.equals(mapperVO.getProdStatusCd()) ||
                     DisplayConstants.DP_SALE_STAT_DROP_REQ_DN.equals(mapperVO.getProdStatusCd())) {
-                if (StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
+                if (StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
                 }
                 else
                     salesStatus = "restricted";

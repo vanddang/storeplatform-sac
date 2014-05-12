@@ -190,7 +190,7 @@ public class EpubServiceImpl implements EpubService {
 
             //orderedBy=noPayment 기구매 체크.
             ExistenceListRes existenceListRes = null;
-			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
+			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
 				List<String> episodeIdList = getEpisodeIdList(param);
 				existenceListRes = commonService.checkPurchaseList(req.getTenantId(), userKey, deviceKey, episodeIdList);
 				
@@ -205,7 +205,7 @@ public class EpubServiceImpl implements EpubService {
             if(StringUtils.equals(DisplayConstants.DP_COMIC_TOP_MENU_ID, epubDetail.getTopMenuId()))
             	param.put("representImgCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD); //코믹 에피소드 대표이미지
             List<EpubDetail> subProductList = getEpubSeries(param);
-            if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotEmpty(userKey) && StringUtils.isNotEmpty(deviceKey)) {
+            if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
             	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
             	existenceListRes = getExistenceScReses(req.getTenantId(), userKey, deviceKey, subProductList);
             }
@@ -291,7 +291,7 @@ public class EpubServiceImpl implements EpubService {
      */
     private ExistenceListRes getExistenceScReses(String tenantId, String userKey, String deviceKey, List<EpubDetail> subProductList) {
     	
-    	if(StringUtils.isNotEmpty(userKey) || StringUtils.isNotEmpty(deviceKey)) {
+    	if(StringUtils.isNotBlank(userKey) || StringUtils.isNotBlank(deviceKey)) {
             ExistenceListRes res = new ExistenceListRes();
             res.setExistenceListRes(new ArrayList<ExistenceRes>());
     		return res;
