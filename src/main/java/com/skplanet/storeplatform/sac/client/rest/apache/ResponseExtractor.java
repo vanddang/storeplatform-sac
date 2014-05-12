@@ -28,15 +28,11 @@ public class ResponseExtractor {
 	private static boolean hasError(HttpResponse response) {
 		try {
 			int statusCode = response.getStatusLine().getStatusCode();
-			System.out.println(statusCode);
-
 			if (statusCode >= 300) {
 				return true;
 			}
 
 			Header resultHeader = response.getHeaders("x-sac-result-code")[0];
-			System.out.println(resultHeader.getValue());
-
 			if (!StringUtils.equalsIgnoreCase(resultHeader.getValue(), "SUCC")) {
 				return true;
 			}
