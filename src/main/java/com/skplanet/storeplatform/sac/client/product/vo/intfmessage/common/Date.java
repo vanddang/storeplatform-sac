@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -79,7 +78,7 @@ public class Date extends CommonInfo implements Serializable {
 	public Date(String type, java.util.Date date) {
 		super();
 		this.type = type;
-		this.setText(date);
+		this.setTextFromDate(date);
 	}
 
 	/**
@@ -134,7 +133,7 @@ public class Date extends CommonInfo implements Serializable {
 	 * @param dt
 	 *            일시
 	 */
-	public void setText(java.util.Date dt) {
+	public void setTextFromDate(java.util.Date dt) {
 		if (dt != null) {
 			this.text = DATE_FORMAT_ISO8601BASIC.format(dt);
 		} else {
