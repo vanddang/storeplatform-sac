@@ -687,8 +687,11 @@ public class SellerServiceImpl implements SellerService {
 		// SC 공통 헤더 생성
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 
+		// Default sessionKey 여부
+		boolean isDefaultSessionKey = StringUtils.equals(this.defaultSessionKey, req.getSessionKey());
+
 		// default session key (준회원 이메일 변경을 위한)
-		if (!StringUtils.equals(this.defaultSessionKey, req.getSessionKey())) {
+		if (!isDefaultSessionKey) {
 			// SessionKey 유효성 체크
 			this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
 		}
@@ -717,10 +720,16 @@ public class SellerServiceImpl implements SellerService {
 		SellerMbr sellerMbr = new SellerMbr();
 		sellerMbr.setSellerKey(req.getSellerKey());
 		sellerMbr.setSellerEmail(req.getNewEmailAddress());
+		// 준회원 요청시 담당자 이메일 변경
+		if (isDefaultSessionKey) {
+			sellerMbr.setCustomerEmail(req.getNewEmailAddress());
+		}
 		updateSellerRequest.setSellerMbr(sellerMbr);
 		updateSellerRequest.setCommonRequest(commonRequest);
+
 		/** 2-5. SC회원 - 기본정보변경 Call. */
 		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
+
 		ModifyEmailSacRes res = new ModifyEmailSacRes();
 		res.setSellerKey(updateSellerResponse.getSellerKey());
 		return res;
