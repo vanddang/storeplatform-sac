@@ -33,6 +33,8 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEc
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoSearchServerEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoSearchServerEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -344,20 +346,33 @@ public class UserSearchServiceImpl implements UserSearchService {
 			throw new StorePlatformException("SAC_MEM_1302", req.getUserKey());
 		}
 
-		/* OneId 정보조회 */
-		SearchAgreeSiteRequest scReq = new SearchAgreeSiteRequest();
-		scReq.setCommonRequest(commonRequest);
-		scReq.setImSvcNo(info.getImSvcNo());
-		SearchAgreeSiteResponse scRes = this.userSCI.searchAgreeSite(scReq);
+		String isCi = null; // CI 존재유무
+		String isRealName = null; // 실명인증 유무
+		String isMemberPoint = null; // OCB 가입여부
 
-		/* OneId 데이터 세팅 */
+		if (StringUtil.equals(req.getSearchType(), "1")) { // IDP 통합서버 조회
+			UserInfoSearchServerEcReq idpReq = new UserInfoSearchServerEcReq();
+			idpReq.setKey(info.getImSvcNo());
+			UserInfoSearchServerEcRes res = this.imIdpSCI.userInfoSearchServer(idpReq);
+
+			isCi = StringUtil.isNotBlank(res.getUserCi()) ? "Y" : "N";
+			isRealName = res.getIsRnameAuth(); // default : N
+			isMemberPoint = res.getJoinSstList().indexOf(MemberConstants.SSO_SST_CD_OCB_WEB) != -1 ? "Y" : "N";
+		} else { // SC DB 조회
+			SearchAgreeSiteRequest scReq = new SearchAgreeSiteRequest();
+			scReq.setCommonRequest(commonRequest);
+			scReq.setImSvcNo(info.getImSvcNo());
+			SearchAgreeSiteResponse scRes = this.userSCI.searchAgreeSite(scReq);
+
+			isCi = StringUtil.isNotBlank(scRes.getMbrOneID().getIsCi()) ? scRes.getMbrOneID().getIsCi() : "N";
+			isRealName = StringUtil.isNotBlank(scRes.getMbrOneID().getIsRealName()) ? scRes.getMbrOneID().getIsRealName() : "N";
+			isMemberPoint = StringUtil.isNotBlank(scRes.getMbrOneID().getIsMemberPoint()) ? scRes.getMbrOneID().getIsMemberPoint() : "N";
+		}
+
 		MbrOneidSacRes res = new MbrOneidSacRes();
-		res.setIsCi(StringUtil.setTrimYn(scRes.getMbrOneID().getIsCi()));
-		res.setIsRealName(StringUtil.setTrimYn(scRes.getMbrOneID().getIsRealName()));
-		res.setIsMemberPoint(StringUtil.setTrimYn(scRes.getMbrOneID().getIsMemberPoint()));
-
-		LOGGER.debug("MbrOneidSacRes : ", res.toString());
-
+		res.setIsCi(isCi);
+		res.setIsRealName(isRealName);
+		res.setIsMemberPoint(isMemberPoint);
 		return res;
 	}
 
