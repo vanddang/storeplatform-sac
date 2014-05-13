@@ -267,7 +267,7 @@ public class MiscellaneousController {
 	@RequestMapping(value = "/createAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request) {
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.defaultConvertObjectToJson(request));
 
 		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
 			throw new StorePlatformException("SAC_MEM_3004");
@@ -290,7 +290,7 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetAdditionalServiceRes getAdditionalService(@Validated @RequestBody GetAdditionalServiceReq request) {
 
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		LOGGER.info("Request : {}", ConvertMapperUtils.defaultConvertObjectToJson(request));
 
 		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
 			throw new StorePlatformException("SAC_MEM_3004");
