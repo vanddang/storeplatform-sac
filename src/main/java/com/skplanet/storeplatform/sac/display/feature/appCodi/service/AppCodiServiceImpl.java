@@ -781,7 +781,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 					contributor.setArtist(mapper.getVodArtistNm()); // 출연자
 					contributor.setCompany(mapper.getVodChnlCompNm());
 					Date date = new Date();
-					date.setText(DateUtils.parseDate(mapper.getVodSaleDt()));
+					date.setTextFromDate(DateUtils.parseDate(mapper.getVodSaleDt()));
 					contributor.setDate(date);
 					product.setContributor(contributor);
 
@@ -792,7 +792,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 					contributor.setPainter(mapper.getBookArtistNm2()); //
 					contributor.setPublisher(mapper.getBookChnlCompNm()); // 출판사
 					Date date = new Date();
-					date.setText(DateUtils.parseDate(mapper.getBookSaleDt())); // 출판년도
+					date.setTextFromDate(DateUtils.parseDate(mapper.getBookSaleDt())); // 출판년도
 					contributor.setDate(date);
 					product.setContributor(contributor);
 

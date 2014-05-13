@@ -565,7 +565,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	public Date generateDate(String type, String text) {
 		Date date = new Date();
 		date.setType(type);
-		date.setText(DateUtils.parseDate(text));
+		date.setTextFromDate(DateUtils.parseDate(text));
 		return date;
 	}
 

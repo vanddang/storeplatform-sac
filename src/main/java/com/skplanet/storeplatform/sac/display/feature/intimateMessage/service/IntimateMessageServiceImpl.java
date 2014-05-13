@@ -203,7 +203,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 					date = new Date();
 
 					date.setType(DisplayConstants.DP_DATE_REG);
-					date.setText(DateUtils.parseDate(messageDefault.getRegDt()));
+					date.setTextFromDate(DateUtils.parseDate(messageDefault.getRegDt()));
 					url.setDate(date);
 					url.setText(messageDefault.getOfrDesc());
 					intimateMessage.setUrl(url);

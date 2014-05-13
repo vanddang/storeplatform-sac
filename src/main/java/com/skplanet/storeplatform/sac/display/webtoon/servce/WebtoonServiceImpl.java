@@ -192,7 +192,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 				// 업데이트 일자
 				date = new Date();
 				date.setType("updDt");
-				date.setText(DateUtils.parseDate(webtoonDetail.getUpdDt()));
+				date.setTextFromDate(DateUtils.parseDate(webtoonDetail.getUpdDt()));
 				product.setDate(date);
 
 				// 평점, 참여자수

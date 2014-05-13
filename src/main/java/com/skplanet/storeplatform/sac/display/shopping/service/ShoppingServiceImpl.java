@@ -646,7 +646,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				promotion.setSourceList(sourceList);
 
 				Date date1 = new Date();
-				date1.setText(DateUtils.parseDate(shopping.getPrzwnerAnnoDt()));
+				date1.setTextFromDate(DateUtils.parseDate(shopping.getPrzwnerAnnoDt()));
 				promotion.setReleaseDate(date1.getText());
 				promotion.setGiveaway(shopping.getPlanGiftNm());
 				promotionList.add(i, promotion);
@@ -775,7 +775,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				promotion.setUsagePeriod(date.getText());
 				promotion.setSourceList(sourceList);
 				Date date1 = new Date();
-				date1.setText(DateUtils.parseDate(shopping.getPrzwnerAnnoDt()));
+				date1.setTextFromDate(DateUtils.parseDate(shopping.getPrzwnerAnnoDt()));
 				promotion.setReleaseDate(date1.getText());
 				promotion.setGiveaway(shopping.getPlanGiftNm());
 				promotionList.add(i, promotion);
