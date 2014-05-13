@@ -63,6 +63,13 @@ public class DisplayCommonUtil {
 		return osVersion;
 	}
 
+    /**
+     * Date타입에 날짜 기간 데이터를 정의해준다.
+     * @param tp
+     * @param period
+     * @param unit
+     * @return
+     */
     public static Date makeDateUsagePeriod(String tp, Integer period, String unit) {
         if(tp == null || tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) {
             return null;
@@ -96,6 +103,9 @@ public class DisplayCommonUtil {
         }
         else if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) {
             unitName = "calendar";
+        }
+        else if(tp.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) {
+            return new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, "unlimit");
         }
         else
             return null;
