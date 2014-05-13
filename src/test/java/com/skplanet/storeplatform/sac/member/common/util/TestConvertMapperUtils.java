@@ -1,6 +1,8 @@
 package com.skplanet.storeplatform.sac.member.common.util;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 
@@ -10,6 +12,8 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */
 public class TestConvertMapperUtils {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestConvertMapperUtils.class);
 
 	/**
 	 * <pre>
@@ -26,7 +30,7 @@ public class TestConvertMapperUtils {
 			ObjectMapper mapper = new ObjectMapper();
 			if (obj != null) {
 				returnStr = mapper.writeValueAsString(obj);
-				System.out.println(returnStr);
+				LOGGER.debug(returnStr);
 			}
 		} catch (Exception e) {
 			throw new StorePlatformException("", e);
