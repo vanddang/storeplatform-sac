@@ -134,7 +134,6 @@ public class Date extends CommonInfo implements Serializable {
 	 * @param dt
 	 *            일시
 	 */
-    @JsonIgnore
 	public void setText(java.util.Date dt) {
 		if (dt != null) {
 			this.text = DATE_FORMAT_ISO8601BASIC.format(dt);
