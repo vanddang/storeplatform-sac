@@ -46,6 +46,7 @@
 					AND DC.LANG_CD = #{langCd}
 					AND TP.TENANT_ID = #{tenantId}
 					AND TP.TENANT_ID = PR.TENANT_ID
+					AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
 					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
 			    	AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
 			    		AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
@@ -314,6 +315,7 @@
                     AND TP.TENANT_ID = #{tenantId}
                     AND TP.TENANT_ID = PR.TENANT_ID
                     AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+                    AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
                     AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
                         AND ( SP.DEVICE_MODEL_CD = #{virtualDeviceModelNo} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
                     AND EXISTS (
@@ -405,6 +407,7 @@
 					AND LP.TENANT_ID = #{tenantId}
     		    	AND LP.LIST_ID in ('TGR000000001','TGR000000002')
     		    	AND PD.PROD_ID = LP.PROD_ID
+    		    	AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
 			    	AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
 			    		AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
 			    	AND EXISTS (
