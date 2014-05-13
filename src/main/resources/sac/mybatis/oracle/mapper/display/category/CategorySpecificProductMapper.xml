@@ -441,9 +441,6 @@
                          AND B.PROD_ID = H.PROD_ID
                          AND B.PROD_ID = I.PROD_ID
 			             AND B.PROD_ID = M.PROD_ID
-			             <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-			             AND I.PART_PROD_ID = M1.PROD_ID(+)
-			             </if>
                          AND G.TENANT_ID = H.TENANT_ID                      
                          AND G.TENANT_ID = N.TENANT_ID(+)
                          AND G.TENANT_ID = O.TENANT_ID           
