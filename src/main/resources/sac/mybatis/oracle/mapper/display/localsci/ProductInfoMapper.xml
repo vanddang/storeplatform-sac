@@ -342,13 +342,21 @@
     </select>
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="ProductInfo">
         SELECT TA.*
-      , (SELECT CONCAT (FILE_PATH, FILE_NM)
+      , ( NVL(
+              (SELECT CONCAT (FILE_PATH, FILE_NM)
                               FROM TB_DP_PROD_IMG IMG
                              WHERE     IMG.PROD_ID =  TA.PART_PROD_ID
                                    AND IMG.EXPO_ORD = 1
                                    AND IMG.LANG_CD = #{lang}
-                                   AND IMG.IMG_CD = #{imageCd}
-        ) AS FILE_PATH
+                                   AND IMG.IMG_CD = #{imageCd}),
+              (SELECT CONCAT (FILE_PATH, FILE_NM)
+                              FROM TB_DP_PROD_IMG IMG
+                             WHERE     IMG.PROD_ID =  TA.PROD_ID
+                                   AND IMG.EXPO_ORD = 1
+                                   AND IMG.LANG_CD = #{lang}
+                                   AND IMG.IMG_CD = #{imageCd})
+                )
+         ) AS FILE_PATH                            
         FROM(
 	        SELECT /* ProductInfoMapper.getEbookComicMetaInfo, ebook/Comic 상품메타 조회, 오승민/인크로스, 2014-03-10 */
 	               A.UP_MENU_ID
