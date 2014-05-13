@@ -107,6 +107,16 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 		if (req.getDummy() == null) {
 
+			// 테마존 ID 에외처리 AR로 시작되면 TAR0로 replace처리함
+			// periodStart = periodStart.replace("T", "");
+			String themeZoneId = req.getThemeZoneId();
+			String themeZoneIdFirst = themeZoneId.substring(0, 2);
+
+			if (themeZoneIdFirst.equals("AR")) {
+				themeZoneId = themeZoneId.replace("AR", "TAR0");
+				req.setThemeZoneId(themeZoneId);
+			}
+
 			int offset = 1; // default
 			int count = 20; // default
 
