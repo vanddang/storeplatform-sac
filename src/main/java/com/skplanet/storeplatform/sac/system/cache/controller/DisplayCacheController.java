@@ -9,9 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.system.cache.controller;
 
+import com.skplanet.storeplatform.framework.core.cache.process.GlobalCacheProcessor;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,6 +37,9 @@ public class DisplayCacheController {
     @Autowired
     private CacheEvictHelperComponent cacheEvictHelperComponent;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     @RequestMapping(value = "/evictProductMeta", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, String> evictAppMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
@@ -57,6 +62,18 @@ public class DisplayCacheController {
         Map<String, String> res = new HashMap<String, String>();
         res.put("prodType", prodType);
         res.put("prodId", prodId);
+        return res;
+    }
+
+    @RequestMapping(value = "/enableCache", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, String> enableCache() {
+        GlobalCacheProcessor globalCacheProcessor = (GlobalCacheProcessor) applicationContext.getBean("globalCacheProcessor");
+        globalCacheProcessor.setUseCache(true);
+
+        Map<String, String> res = new HashMap<String, String>();
+        res.put("message", "Global cache enabled.");
+
         return res;
     }
 }
