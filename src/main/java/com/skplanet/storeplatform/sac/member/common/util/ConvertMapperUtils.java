@@ -59,6 +59,26 @@ public class ConvertMapperUtils {
 
 	/**
 	 * <pre>
+	 * Default Convert Object To Json.
+	 * </pre>
+	 * 
+	 * @param obj
+	 *            Object
+	 * @return String
+	 */
+	public static String defaultConvertObjectToJson(Object obj) {
+		String returnStr = "";
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			returnStr = mapper.writeValueAsString(obj);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_MEM_0099", e);
+		}
+		return returnStr;
+	}
+
+	/**
+	 * <pre>
 	 * Object To JSON.
 	 * MASKING_PARAMS : 마스킹이 필요한 필드에 MASKING_VALUE 로 치환
 	 * </pre>
@@ -135,4 +155,5 @@ public class ConvertMapperUtils {
 		}
 		return returnStr;
 	}
+
 }
