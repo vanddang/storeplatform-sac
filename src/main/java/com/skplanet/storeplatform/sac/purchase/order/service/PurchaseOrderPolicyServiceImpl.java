@@ -301,29 +301,30 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		if (this.isSktTestMdn(userEcRes, policyCheckParam.getDeviceId())) {
 			policyResult.setSktTestMdn(true);
 
+			boolean bWhite = false;
+
 			// CM011604: 서비스 허용 SKT 시험폰
 			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE)) {
 				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
 
-				boolean bWhite = false;
 				for (PurchaseTenantPolicy policy : policyList) {
 					if (this.isSktTestMdnWhiteList(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
 						bWhite = true;
 						break;
 					}
 				}
-
-				if (bWhite) {
-					policyResult.setSktTestMdnWhiteList(true);
-					policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW);
-
-				} else {
-					policyResult.setSktTestMdnWhiteList(false);
-					policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_NOT_ALLOW);
-				}
-
-				return policyResult;
 			}
+
+			if (bWhite) {
+				policyResult.setSktTestMdnWhiteList(true);
+				policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW);
+
+			} else {
+				policyResult.setSktTestMdnWhiteList(false);
+				policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_NOT_ALLOW);
+			}
+
+			return policyResult;
 		}
 
 		// --------------------------------------------------------------------------------------------------
