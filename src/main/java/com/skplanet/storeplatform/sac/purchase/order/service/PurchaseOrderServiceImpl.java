@@ -1575,6 +1575,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// || StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
 		// return null;
 		// }
+		// TAKTEST:: QA 테스트
+		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_QA)) {
+			return null;
+		}
 
 		return prchsProdCntList;
 	}
