@@ -125,7 +125,6 @@ public class CreateBySimpleMultiTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							CreateByAgreementRes res = (CreateByAgreementRes) result;
-							System.out.println(res.getUserKey() + ":" + reqJson.getUserId() + ":" + reqJson.getDeviceId());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

@@ -84,7 +84,6 @@ public class CreateBySimpleTest {
 	@Test
 	public void TEST_A_IDP간편가입_단말정보있음() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-sac-device-info", "model=\"SHW-M110S\",dpi=\"320\",resolution=\"480*720\",os=\"Android/4.0.4\",pkg=\"com.skt.skaf.A000Z00040/37\",svc=\"SHOPCLIENT/4.3\"")
@@ -139,7 +138,6 @@ public class CreateBySimpleTest {
 	@Test
 	public void TEST_B_IDP간편가입_단말정보없음() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -174,7 +172,6 @@ public class CreateBySimpleTest {
 	 */
 	public void IDP간편가입회원탈퇴(final String userId) {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/withdraw/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -190,7 +187,6 @@ public class CreateBySimpleTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						WithdrawRes res = (WithdrawRes) result;
-						System.out.println("## IDP간편가입 탈퇴회원 UserKey : " + res.getUserKey());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

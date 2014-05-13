@@ -97,26 +97,20 @@ public class HTTPClientTest {
 		reqJson.setDeviceExtraInfoList(deviceExtraList);
 
 		String reqTxt = this.mapper.writeValueAsString(reqJson);
-		System.out.println(reqTxt);
 
 		request.setEntity(new StringEntity(reqTxt));
 
 		HttpResponse response = this.client.execute(request);
 
 		if (this.hasError(response)) {
-			System.out.println("has Error");
 			InputStream in = response.getEntity().getContent();
 
 			ErrorInfo resObj = this.mapper.readValue(in, ErrorInfo.class);
-			System.out.println(resObj);
 		} else {
-			System.out.println("no Error");
 			InputStream in = response.getEntity().getContent();
 			// String resTxt = IOUtils.toString(in);
-			// System.out.println(resTxt);
 
 			CreateBySimpleRes resObj = this.mapper.readValue(in, CreateBySimpleRes.class);
-			System.out.println(resObj);
 		}
 
 		request.releaseConnection();
@@ -126,14 +120,12 @@ public class HTTPClientTest {
 	private boolean hasError(HttpResponse response) {
 		try {
 			int statusCode = response.getStatusLine().getStatusCode();
-			System.out.println(statusCode);
 
 			if (statusCode >= 300) {
 				return true;
 			}
 
 			Header resultHeader = response.getHeaders("x-sac-result-code")[0];
-			System.out.println(resultHeader.getValue());
 
 			if (!StringUtils.equalsIgnoreCase(resultHeader.getValue(), "SUCC")) {
 				return true;

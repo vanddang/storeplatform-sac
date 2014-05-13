@@ -73,7 +73,6 @@ public class ModifyPasswordTest {
 	@Test
 	public void TEST_A_기존IDP회원비밀번호수정() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modifyPassword/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -112,7 +111,6 @@ public class ModifyPasswordTest {
 	@Test(expected = StorePlatformException.class)
 	public void TEST_B_기존IDP회원비밀번호일치하지않음() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modifyPassword/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -150,7 +148,6 @@ public class ModifyPasswordTest {
 	@Test
 	public void TEST_C_통합IDP회원비밀번호수정() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modifyPassword/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -189,7 +186,6 @@ public class ModifyPasswordTest {
 	@Test(expected = StorePlatformException.class)
 	public void TEST_D_통합IDP회원비밀번호일치하지않음() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/modifyPassword/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {

@@ -78,7 +78,6 @@ public class LockAccountTest {
 	@Test(expected = StorePlatformException.class)
 	public void TEST_A_OneID미동의회원계정잠금() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/lockAccount/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -113,7 +112,6 @@ public class LockAccountTest {
 	@Test
 	public void TEST_B_기존IDP회원계정잠금() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/lockAccount/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -148,7 +146,6 @@ public class LockAccountTest {
 	@Test
 	public void TEST_C_기존IDP회원계정잠금해제및로그인() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/authorizeById/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -182,7 +179,6 @@ public class LockAccountTest {
 	@Test
 	public void TEST_D_통합회원계정잠금() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/lockAccount/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -217,7 +213,6 @@ public class LockAccountTest {
 	@Test
 	public void TEST_E_통합회원계정잠금해제및로그인() {
 
-		System.out.println("## >> " + new Exception().getStackTrace()[0].getMethodName());
 		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/authorizeById/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {

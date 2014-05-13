@@ -66,14 +66,10 @@ public class AllJunitTest_Simdaejin {
 	@BeforeClass
 	public static void 전체Junit테스트START() {
 
-		System.out.println(">> START");
-
 	}
 
 	@AfterClass
 	public static void 전체Junit테스트END() {
-
-		System.out.println(">> END");
 
 	}
 

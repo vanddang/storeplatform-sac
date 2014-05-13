@@ -110,7 +110,6 @@ public class IdpServiceImpl implements IdpService {
 	 */
 	@Override
 	public ImResult executeRXCreateUserIDP(HashMap<String, String> map) {
-		// System.out.println("rXCreateUserIDP ------- ");
 		/*
 		 * map 정보중 리턴값중 이용동의 사이트정보의 old_id 값 null을 판단 신규가입 , 전환가입/변경가입/변경전환 분기처리 RX에 실명 인증 정보가 존재 하면 -> TB_US_MBR_AUTH
 		 * 테이블에 데이터 Insert -> TB_US_USERMBR_ONEID 테이블에 실명인증 여부, CI 존재 여부 "Y"로 업데이트 -> TB_US_USERMBR 테이블의 실명인증 여부는 절대

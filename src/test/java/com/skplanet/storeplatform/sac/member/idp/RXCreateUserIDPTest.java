@@ -15,8 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -35,7 +33,6 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 
 @ActiveProfiles(value = "local")
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -71,19 +68,12 @@ public class RXCreateUserIDPTest {
 	public void after() {
 
 		// 14세미만 가입삭제
-		System.out.println("test after");
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType("MBR_ID");
 
 		// this.userSCI.searchUser(searchUserRequest);
 
 	}
-
-	/*
-	 * @Test public void rxTest() { System.out.println("test1"); }
-	 * 
-	 * @Test public void rxTest1() { System.out.println("test2"); }
-	 */
 
 	/**
 	 * <pre>
