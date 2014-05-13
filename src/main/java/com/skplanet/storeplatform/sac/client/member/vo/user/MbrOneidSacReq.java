@@ -15,6 +15,8 @@ public class MbrOneidSacReq extends CommonInfo implements Serializable {
 
 	private String userKey;
 
+	private String searchType;
+
 	public String getUserKey() {
 		return this.userKey;
 	}
@@ -25,6 +27,14 @@ public class MbrOneidSacReq extends CommonInfo implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getSearchType() {
+		return this.searchType;
+	}
+
+	public void setSearchType(String searchType) {
+		this.searchType = searchType;
 	}
 
 }
