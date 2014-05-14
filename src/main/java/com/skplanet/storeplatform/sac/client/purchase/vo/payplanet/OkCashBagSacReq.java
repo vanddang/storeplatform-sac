@@ -37,6 +37,9 @@ public class OkCashBagSacReq extends CommonInfo {
 	private String valueOcbAuth;
 	@NotNull
 	@NotEmpty
+	private String authType;
+	@NotNull
+	@NotEmpty
 	private String ocbPwd;
 
 	/**
@@ -97,6 +100,21 @@ public class OkCashBagSacReq extends CommonInfo {
 	 */
 	public void setValueOcbAuth(String valueOcbAuth) {
 		this.valueOcbAuth = valueOcbAuth;
+	}
+
+	/**
+	 * @return the authType
+	 */
+	public String getAuthType() {
+		return this.authType;
+	}
+
+	/**
+	 * @param authType
+	 *            the authType to set
+	 */
+	public void setAuthType(String authType) {
+		this.authType = authType;
 	}
 
 	/**
