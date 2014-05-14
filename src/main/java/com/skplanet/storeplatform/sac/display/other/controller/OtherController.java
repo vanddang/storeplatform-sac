@@ -189,7 +189,6 @@ public class OtherController {
 	@RequestMapping(value = "/aid/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public OtherAIDListRes searchProductListByAID(@Validated OtherAIDListReq req, SacRequestHeader header) {
-		System.out.println("###########sfdsdfsfdsdfds");
 		List<String> aIdList = Arrays.asList(StringUtils.split(req.getAidList(), "+"));
 		if (aIdList.size() > DisplayConstants.DP_UPDATE_PARAM_LIMIT) {
 			throw new StorePlatformException("SAC_DSP_0004", "list", DisplayConstants.DP_UPDATE_PARAM_LIMIT);
