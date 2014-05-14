@@ -558,6 +558,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		prchsDtlSacParam.setPrchsResvDesc(prchsDtl.getPrchsResvDesc());
 		prchsDtlSacParam.setPrchsReqPathCd(prchsDtl.getPrchsReqPathCd());
 		prchsDtlSacParam.setResvCol03(prchsDtl.getResvCol03());
+		prchsDtlSacParam.setCouponCmsPrchsId(prchsDtl.getCouponCmsPrchsId());
 
 		return prchsDtlSacParam;
 

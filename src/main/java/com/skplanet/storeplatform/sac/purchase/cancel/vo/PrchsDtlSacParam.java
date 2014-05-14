@@ -57,6 +57,23 @@ public class PrchsDtlSacParam extends CommonInfo {
 
 	private String resvCol03;
 
+	private String couponCmsPrchsId;
+
+	/**
+	 * @return the couponCmsPrchsId
+	 */
+	public String getCouponCmsPrchsId() {
+		return this.couponCmsPrchsId;
+	}
+
+	/**
+	 * @param couponCmsPrchsId
+	 *            the couponCmsPrchsId to set
+	 */
+	public void setCouponCmsPrchsId(String couponCmsPrchsId) {
+		this.couponCmsPrchsId = couponCmsPrchsId;
+	}
+
 	public String getResvCol03() {
 		return this.resvCol03;
 	}

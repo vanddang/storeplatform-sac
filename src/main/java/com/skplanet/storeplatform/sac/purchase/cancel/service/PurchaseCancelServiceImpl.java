@@ -550,6 +550,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			}
 		}
 
+		// AS-IS 선물의 경우 선물구매 ID를 넣어준다.
+		String couponPrchsId = purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0).getCouponCmsPrchsId();
+
 		/** 강제 취소가 아닐 경우 쿠폰 사용 유무를 조회해온다. */
 		if (!StringUtils.equals("Y", purchaseCancelSacParam.getShoppingForceCancelYn())) {
 
@@ -561,8 +564,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			couponUseStatusSacInReq.setDeviceKey(purchaseCancelSacParam.getDeviceKey());
 
 			// prchsId 단위로 처리.
-			couponUseStatusSacInReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-
+			couponUseStatusSacInReq.setPrchsId(couponPrchsId);
 			CouponUseStatusSacInRes couponUseStatusSacInRes = this.shoppingInternalSCI
 					.getCouponUseStatus(couponUseStatusSacInReq);
 			for (CouponUseStatusDetailSacInRes couponUseStatusDetailSacInRes : couponUseStatusSacInRes
@@ -575,7 +577,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 쇼핑 쿠폰 취소 처리 */
 		CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
-		couponPublishCancelEcReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+		couponPublishCancelEcReq.setPrchsId(couponPrchsId);
 		couponPublishCancelEcReq.setForceFlag(purchaseCancelSacParam.getShoppingForceCancelYn());
 		try {
 			this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);

@@ -21,6 +21,9 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishAvail
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusDetailEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusEcRes;
+import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScReq;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusDetailSacResult;
@@ -34,6 +37,9 @@ import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacRes
  */
 @Component
 public class ShoppingRepositoryImpl implements ShoppingRepository {
+
+	@Autowired
+	private PurchaseCancelSCI purchaseCancelSCI;
 
 	@Autowired
 	private ShoppingSCI shoppingSCI;
@@ -79,6 +85,20 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 
 		couponUseStatusEcReq.setPrchsId(couponUseStatusSacParam.getPrchsId());
 		couponUseStatusEcReq.setCouponPublishCode(couponUseStatusSacParam.getCpnPublishCd());
+
+		// AS-IS 쇼핑쿠폰 선물일 경우 구매 ID를 선물구매ID로 변경한다.
+		PurchaseScReq purchaseScReq = new PurchaseScReq();
+		purchaseScReq.setTenantId(couponUseStatusSacParam.getTenantId());
+		purchaseScReq.setSystemId(couponUseStatusSacParam.getSystemId());
+		purchaseScReq.setUserKey(couponUseStatusSacParam.getUserKey());
+		purchaseScReq.setDeviceKey(couponUseStatusSacParam.getDeviceKey());
+		purchaseScReq.setPrchsId(couponUseStatusSacParam.getPrchsId());
+		PurchaseScRes purchaseScRes = this.purchaseCancelSCI.getPurchase(purchaseScReq);
+
+		if (purchaseScRes != null && purchaseScRes.getPrchsDtlList() != null
+				&& purchaseScRes.getPrchsDtlList().size() > 0) {
+			couponUseStatusEcReq.setPrchsId(purchaseScRes.getPrchsDtlList().get(0).getCouponCmsPrchsId());
+		}
 
 		return couponUseStatusEcReq;
 
