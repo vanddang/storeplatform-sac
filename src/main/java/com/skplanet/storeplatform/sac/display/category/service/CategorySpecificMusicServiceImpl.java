@@ -128,6 +128,7 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 							product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
 							if (metaInfo.getOutsdContentsId() != null) {
 								paramMap.put("outsdContentsId", metaInfo.getOutsdContentsId());
+								paramMap.put("prodId", metaInfo.getProdId());
 								Music music = new Music();
 								product.setMusic(this.musicGenerator.generateMusic(metaInfo));
 								List<CategorySpecificProduct> metaList = this.commonDAO.queryForList(
