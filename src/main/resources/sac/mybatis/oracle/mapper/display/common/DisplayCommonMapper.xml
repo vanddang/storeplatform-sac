@@ -73,14 +73,14 @@
 
     <select id="getUpdateList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory">
         SELECT /* DisplayCommonMapper.xml, getUpdateList, SAC : 정희원 , 2014-01-24 */
-        *
+          *
         FROM (
-        SELECT
-        PROD_UPD_DT,
-        UPDT_TEXT
-        FROM TB_DP_PROD_UPDT_HIS
-        WHERE PROD_ID = #{channelId}
-        ORDER BY UPDT_SEQ DESC
+            SELECT
+            PROD_UPD_DT,
+            UPDT_TEXT
+            FROM TB_DP_PROD_UPDT_HIS
+            WHERE PROD_ID = #{channelId}
+            ORDER BY PROD_UPD_DT DESC
         )
         <if test="rowStart != null and rowEnd != null">
             WHERE ROWNUM BETWEEN #{rowStart} AND #{rowEnd}
