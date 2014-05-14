@@ -45,7 +45,6 @@ public class CreateReq extends CommonInfo {
 	private String isRecvSms;
 	/** 판매자 이메일. */
 	@NotBlank
-	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String sellerEmail;
 	/** 이메일수신 여부. */
 	private String isRecvEmail;
