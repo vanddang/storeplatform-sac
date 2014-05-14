@@ -420,7 +420,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			purchaseProduct.setProdQty(reqProduct.getProdQty());
-			totAmt += (nowPurchaseProdAmt * reqProduct.getProdQty());
+			// totAmt += (nowPurchaseProdAmt * reqProduct.getProdQty());
+			totAmt += (purchaseProduct.getProdAmt() * reqProduct.getProdQty());
 
 			purchaseProduct.setResvCol01(reqProduct.getResvCol01());
 			purchaseProduct.setResvCol02(reqProduct.getResvCol02());
