@@ -337,6 +337,14 @@
 		                    , TB_CM_DEVICE DV
 		                  WHERE PR.PROD_ID = #{channelId}
 		                    AND PR.PART_PROD_ID = PD.PROD_ID
+	                    	<if test="orderedBy == 'nonPayment'">
+						   	<if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
+						   	AND PR.PART_PROD_ID NOT IN  
+							  <foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
+							  #{item}
+							  </foreach>
+						   	</if>
+						   	</if>
 		                    AND TP.PROD_ID = PD.PROD_ID
 		                    AND PRC.PROD_ID  = PD.PROD_ID AND PRC.TENANT_ID = TP.TENANT_ID
 		                    AND MP.PROD_ID = PD.PROD_ID
@@ -365,18 +373,6 @@
 					  	</if>
 		            ) T2
 		            WHERE 1=1    
-				   	<if test="orderedBy == 'nonPayment'">
-				   	<if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
-				   	AND T2.PLAY_PROD_ID NOT IN  
-					  <foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
-					  #{item}
-					  </foreach>
-				   	AND T2.STORE_PROD_ID NOT IN  
-					  <foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
-					  #{item}
-					  </foreach>
-				   	</if>
-				   	</if>
 		        ) T3
 		        WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 		    ) T4
