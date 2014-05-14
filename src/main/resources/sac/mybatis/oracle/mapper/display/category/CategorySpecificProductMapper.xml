@@ -610,13 +610,13 @@
     </select>
     <select id="selectMusicMetaList" parameterType="Map" resultType="CategorySpecificProduct">
        SELECT /* CategorySpecificProductMapper.xml, selectMusicMetaList, SAC 전시, 2014-03-03*/
-            A.PART_PROD_ID
+            A.PART_PROD_ID AS PROD_ID
             , B.META_CLSF_CD
         FROM TB_DP_PROD_RSHP A
             , TB_DP_PROD B
             , TB_DP_TENANT_PROD C
         WHERE 1=1
-        AND A.PROD_ID = #{productBasicInfo.prodId}
+        AND A.PROD_ID = #{prodId}
         AND A.PART_PROD_ID = B.PROD_ID
         AND A.PART_PROD_ID = C.PROD_ID
         AND C.TENANT_ID = #{tenantHeader.tenantId}
