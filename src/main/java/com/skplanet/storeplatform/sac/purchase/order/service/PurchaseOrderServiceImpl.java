@@ -1660,6 +1660,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			if ((bOwn && (StringUtils.equals(episode.getUsePeriodUnitCd(), "PD00310") == false))
 					|| ((bOwn == false) && StringUtils.equals(episode.getUsePeriodUnitCd(), "PD00310"))) {
 				prchsDtlMore.setTemporary(true); // 임시 정보 여부 세팅
+				prchsDtlMoreList.add(prchsDtlMore);
 				continue;
 			}
 

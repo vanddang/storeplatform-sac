@@ -107,8 +107,8 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setProdStatusCd(displayInfo.getProdStatusCd());
 			purchaseProduct.setProdGrdCd(displayInfo.getProdGrdCd());
 			purchaseProduct.setProdSprtYn(displayInfo.getProdSprtYn());
-			// purchaseProduct.setDrmYn(StringUtils.defaultString(displayInfo.getDrmYn(), PurchaseConstants.USE_N));
-			purchaseProduct.setDrmYn(displayInfo.getDrmYn());
+			purchaseProduct.setDrmYn(StringUtils.defaultString(displayInfo.getDrmYn(), PurchaseConstants.USE_N));
+			// purchaseProduct.setDrmYn(displayInfo.getDrmYn());
 			if (displayInfo.getUsePeriodUnitCd() != null) {
 				purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
 				purchaseProduct

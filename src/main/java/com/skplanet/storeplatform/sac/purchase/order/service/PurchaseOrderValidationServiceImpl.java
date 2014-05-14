@@ -636,9 +636,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 							useUser.getTenantId(), purchaseOrderInfo.getLangCd(), useExistenceScRes.getProdId(),
 							product.getProdId());
 					if (freepassInfo != null) {
-						// product.setDrmYn(StringUtils.defaultString(freepassInfo.getDrmYn(),
-						// PurchaseConstants.USE_N));
-						product.setDrmYn(freepassInfo.getDrmYn());
+						product.setDrmYn(StringUtils.defaultString(freepassInfo.getDrmYn(), PurchaseConstants.USE_N));
+						// product.setDrmYn(freepassInfo.getDrmYn());
 						if (freepassInfo.getUsePeriodUnitCd() != null) {
 							product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
 							product.setUsePeriod(freepassInfo.getUsePeriod());
