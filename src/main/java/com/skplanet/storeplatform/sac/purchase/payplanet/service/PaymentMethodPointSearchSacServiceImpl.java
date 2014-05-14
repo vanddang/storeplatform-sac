@@ -95,6 +95,7 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		req.setTimeReq(request.getTimeReq());
 		req.setMid(request.getMid());
 		req.setValueOcbAuth(request.getValueOcbAuth());
+		req.setAuthType(request.getAuthType());
 		req.setOcbPwd(request.getOcbPwd());
 
 		OkCashBagEcRes okCashBagEcRes = this.paymentMethodPointSearchSCI.postOkCashBag(req);
