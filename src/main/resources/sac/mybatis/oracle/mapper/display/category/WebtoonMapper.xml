@@ -234,6 +234,7 @@
                         AND  H.SVC_GRP_CD = 'DP000203'
                         AND  G.PART_PROD_ID = I.PROD_ID
                         AND  I.TENANT_ID = #{tenantId}
+                        AND  I.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                         AND  I.EXPO_YN = 'Y'
                         AND  G.PART_PROD_ID = J.PROD_ID
                    ) AA
@@ -287,6 +288,7 @@
 	                AND C.PART_PROD_ID = F.PROD_ID
 	                AND D.CONTENTS_TYPE_CD = 'PD002502'
                     AND E.TENANT_ID = #{tenantId}
+                    AND E.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
 	                AND D.SVC_GRP_CD = 'DP000203'
 	                AND C.PART_PROD_ID = E.PROD_ID
 	                AND E.EXPO_YN = 'Y'
@@ -482,7 +484,7 @@
                       , N.AVG_EVLU_SCORE              
                       , O.PROD_AMT
                       , O.PROD_NET_AMT 
-                      , G.PROD_STATUS_CD
+                      , G1.PROD_STATUS_CD
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
