@@ -410,10 +410,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// 상품 가격 체크: 요청 금액 무시(서버 금액 사용) 경우는 제외
-			// nowPurchaseProdAmt = StringUtils.isBlank(purchaseProduct.getSpecialSaleCouponId()) ? purchaseProduct
-			// .getProdAmt() : purchaseProduct.getSpecialSaleAmt();
 			nowPurchaseProdAmt = StringUtils.isBlank(purchaseProduct.getSpecialSaleCouponId()) ? purchaseProduct
-					.getProdAmt() : purchaseProduct.getProdAmt();
+					.getProdAmt() : purchaseProduct.getSpecialSaleAmt();
 			if (reqProduct.getProdAmt() != nowPurchaseProdAmt
 					&& StringUtils.equals(purchaseOrderInfo.getSaleAmtProcType(),
 							PurchaseConstants.SALE_AMT_PROC_TYPE_SERVER) == false) {
