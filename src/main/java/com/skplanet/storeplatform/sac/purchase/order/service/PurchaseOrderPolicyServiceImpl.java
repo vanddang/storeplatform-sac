@@ -315,14 +315,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				}
 			}
 
-			if (bWhite) {
-				policyResult.setSktTestMdnWhiteList(true);
-				policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW);
-
-			} else {
-				policyResult.setSktTestMdnWhiteList(false);
-				policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_NOT_ALLOW);
-			}
+			policyResult.setSktTestMdnWhiteList(bWhite);
+			policyResult
+					.setSktLimitType(bWhite ? PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW : PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_NOT_ALLOW);
 
 			return policyResult;
 		}

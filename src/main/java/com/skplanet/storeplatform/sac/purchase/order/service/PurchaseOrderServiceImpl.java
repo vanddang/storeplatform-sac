@@ -842,7 +842,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터
 		List<PrchsDtlMore> ebookComicEpisodeList = null;
 		if (CollectionUtils.isNotEmpty(episodeList)) {
-			ebookComicEpisodeList = this.makeEbookComicEpisodeList(prchsDtlMore, episodeList);
+			ebookComicEpisodeList = this.makeEbookComicEpisodeList(prchsDtlMore, episodeList,
+					reservedDataMap.get("cmpxProdClsfCd"));
 		}
 
 		// 구매확정 데이터
@@ -1207,9 +1208,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 새로 생성된 구매ID
 	 */
 	private String makePrchsId(String sequence, String date) {
-		// 서버ID(2) + 인스턴스ID(2) + yyMMddhhmmss(12) + 구매시퀀스(4)
+		// yyMMddhhmmss(12) + 서버ID(2) + 인스턴스ID(2) + 구매시퀀스(4)
 		StringBuffer sbPrchsId = new StringBuffer(20);
-		sbPrchsId.append(this.hostNum).append(this.instanceNum).append(date.substring(2))
+		sbPrchsId.append(date.substring(2)).append(this.hostNum).append(this.instanceNum)
 				.append(StringUtils.leftPad(sequence, 4, "0"));
 		return sbPrchsId.toString();
 	}
@@ -1631,26 +1632,42 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param episodeList 이북/코믹 전권 소장/대여 에피소드 상품 정보 VO
 	 * 
+	 * @param cmpxProdClsfCd 정액권 타입 : 전권소장 / 전권대여
+	 * 
 	 * @return 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록
 	 */
-	private List<PrchsDtlMore> makeEbookComicEpisodeList(PrchsDtlMore ebookflatInfo, List<EpisodeInfoRes> episodeList) {
+	private List<PrchsDtlMore> makeEbookComicEpisodeList(PrchsDtlMore ebookflatInfo, List<EpisodeInfoRes> episodeList,
+			String cmpxProdClsfCd) {
 
 		// 구매생성 요청 데이터 세팅
 		List<PrchsDtlMore> prchsDtlMoreList = new ArrayList<PrchsDtlMore>();
 		PrchsDtlMore prchsDtlMore = null;
 
-		int prchsDtlCnt = 2;
+		// true-전권 소장, false-전권 대여
+		boolean bOwn = StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN);
+
+		int prchsDtlCnt = 2; // 전권 소장/대여 상품 자체가 1, 에피소드는 2부터
 		for (EpisodeInfoRes episode : episodeList) {
 			prchsDtlMore = new PrchsDtlMore();
+
+			prchsDtlMore.setSystemId(ebookflatInfo.getSystemId());
+			prchsDtlMore.setUseTenantId(ebookflatInfo.getUseTenantId());
+			prchsDtlMore.setUseInsdUsermbrNo(ebookflatInfo.getUseInsdUsermbrNo());
+			prchsDtlMore.setProdId(episode.getProdId());
+
+			// 임시 정보 경우 (전권 소장 상품 구매 시 에피소드 대여 상품, 전권 대여 상품 구매 시 에피소드 소장 상품)
+			// 에피소드 기구매 건 기간만료 처리를 위한 정보만 세팅
+			if ((bOwn && (StringUtils.equals(episode.getUsePeriodUnitCd(), "PD00310") == false))
+					|| ((bOwn == false) && StringUtils.equals(episode.getUsePeriodUnitCd(), "PD00310"))) {
+				prchsDtlMore.setTemporary(true); // 임시 정보 여부 세팅
+				continue;
+			}
 
 			prchsDtlMore.setPrchsDtlId(prchsDtlCnt++);
 
 			prchsDtlMore.setTenantId(ebookflatInfo.getTenantId());
-			prchsDtlMore.setSystemId(ebookflatInfo.getSystemId());
 			prchsDtlMore.setPrchsId(ebookflatInfo.getPrchsId());
 			prchsDtlMore.setPrchsDt(ebookflatInfo.getPrchsDt());
-			prchsDtlMore.setUseTenantId(ebookflatInfo.getUseTenantId());
-			prchsDtlMore.setUseInsdUsermbrNo(ebookflatInfo.getUseInsdUsermbrNo());
 			prchsDtlMore.setUseInsdDeviceId(ebookflatInfo.getUseInsdDeviceId());
 			prchsDtlMore.setSendInsdUsermbrNo(ebookflatInfo.getSendInsdUsermbrNo());
 			prchsDtlMore.setSendInsdDeviceId(ebookflatInfo.getSendInsdDeviceId());
@@ -1665,7 +1682,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			prchsDtlMore.setCurrencyCd(ebookflatInfo.getCurrencyCd());
 			prchsDtlMore.setNetworkTypeCd(ebookflatInfo.getNetworkTypeCd());
 			prchsDtlMore.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_UNIT); // 단위 상품
-			prchsDtlMore.setProdId(episode.getProdId());
 			prchsDtlMore.setProdAmt(episode.getProdAmt());
 			prchsDtlMore.setProdQty(1);
 			prchsDtlMore.setUseStartDt(ebookflatInfo.getUseStartDt());
