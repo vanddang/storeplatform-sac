@@ -486,10 +486,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// 쇼핑특가 쿠폰 정보 저장
 			if (StringUtils.isNotBlank(purchaseProduct.getSpecialSaleCouponId())) {
 				purchaseOrderInfo.setSpecialCouponId(purchaseProduct.getSpecialSaleCouponId());
-				purchaseOrderInfo.setSpecialCouponAmt(purchaseProduct.getProdAmt()
-						- purchaseProduct.getSpecialSaleAmt());
+				purchaseOrderInfo.setSpecialCouponAmt((purchaseProduct.getProdAmt() - purchaseProduct
+						.getSpecialSaleAmt()) * purchaseProduct.getProdQty());
 
-				purchaseProduct.setSpecialCouponAmt(purchaseOrderInfo.getSpecialCouponAmt());
+				purchaseProduct.setSpecialCouponAmt(purchaseProduct.getProdAmt() - purchaseProduct.getSpecialSaleAmt());
 			}
 
 			purchaseProductList.add(purchaseProduct);
@@ -573,7 +573,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String removeWhenExistPossLendProdId = null; // 소장/대여 상품 정보 중 구매요청 상품 외 상품은 기구매 시 제외하고 구매 진행
 
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
-			// 연령체크 안함: 생년월일도 * 문자 포함으로 확인불가
+			// 연령체크 안함: 모바일 회원은 생년월일 저장X, 생년월일도 * 문자 포함으로 확인불가
 			// 연령 체크
 			// if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19) && useUser.getAge() <
 			// 20) {
@@ -674,7 +674,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			// 쇼핑 상품 추가 체크
 			if (purchaseOrderInfo.isShopping()) {
-				if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) { // TAKTODO:: 특가상품 구매 건수 체크
+				// 특가상품 구매가능 건수 체크
+				if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
 					SearchShoppingSpecialCountScReq specialReq = new SearchShoppingSpecialCountScReq();
 					specialReq.setTenantId(purchaseOrderInfo.getTenantId());
 					specialReq.setUserKey(purchaseOrderInfo.getPurchaseUser().getUserKey());
@@ -697,10 +698,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 							.getSpecialSaleMonthLimitPerson()) {
 						throw new StorePlatformException("SAC_PUR_6107");
 					}
-
-					purchaseOrderInfo.setSpecialCouponId(product.getSpecialSaleCouponId());
-					purchaseOrderInfo.setSpecialCouponAmt((product.getProdAmt() - product.getSpecialSaleAmt())
-							* product.getProdQty());
 				}
 
 				// 발급 가능 여부 확인: 결제자 MDN 기준
