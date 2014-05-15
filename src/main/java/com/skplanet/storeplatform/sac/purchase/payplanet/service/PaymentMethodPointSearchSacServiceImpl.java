@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.payplanet.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,15 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		req.setTimeReq(request.getTimeReq());
 		req.setMid(request.getMid());
 		req.setValueOcbAuth(request.getValueOcbAuth());
-		req.setAuthType(request.getAuthType());
+		// authType이 없이 들어올경우 디폴트로 oneId로 조회 한다.
+		// 1 : ocb카드번호로 조회
+		// 2 : oneId로 조회
+		if (StringUtils.isBlank(request.getAuthType())) {
+			req.setAuthType("2");
+		} else {
+			req.setAuthType(request.getAuthType());
+
+		}
 		req.setOcbPwd(request.getOcbPwd());
 
 		OkCashBagEcRes okCashBagEcRes = this.paymentMethodPointSearchSCI.postOkCashBag(req);
