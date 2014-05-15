@@ -548,8 +548,8 @@ public class EpubServiceImpl implements EpubService {
         	book.setSerialFreeCount(mapperVO.getSerialFreeCnt());
         	book.setType(DisplayConstants.DP_BOOK_TYPE_SERIAL);
         } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_MAGAZINE)) {
-        	book.setSerialCount(mapperVO.getSerialCnt());
-        	book.setSerialFreeCount(mapperVO.getSerialFreeCnt());
+        	book.setSerialCount(mapperVO.getMagazineCnt());
+        	book.setSerialFreeCount(mapperVO.getMagazineFreeCnt());
         }
         
 		book.setSupportList(this.mapSupportList(mapperVO));
