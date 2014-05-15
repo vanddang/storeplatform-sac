@@ -570,6 +570,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			for (CouponUseStatusDetailSacInRes couponUseStatusDetailSacInRes : couponUseStatusSacInRes
 					.getCpnUseStatusList()) {
 				if (!StringUtils.equals("0", couponUseStatusDetailSacInRes.getCpnUseStatusCd())) {
+					this.logger.info("SAC_PUR_8121 couponUseStatusDetailSacInRes data : {}",
+							couponUseStatusDetailSacInRes);
 					throw new StorePlatformException("SAC_PUR_8121");
 				}
 			}
