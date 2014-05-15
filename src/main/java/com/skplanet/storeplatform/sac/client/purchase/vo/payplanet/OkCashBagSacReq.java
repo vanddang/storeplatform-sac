@@ -35,8 +35,7 @@ public class OkCashBagSacReq extends CommonInfo {
 	@NotNull
 	@NotEmpty
 	private String valueOcbAuth;
-	@NotNull
-	@NotEmpty
+
 	private String authType;
 	@NotNull
 	@NotEmpty
