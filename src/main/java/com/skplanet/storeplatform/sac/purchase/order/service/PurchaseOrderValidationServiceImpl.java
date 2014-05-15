@@ -356,7 +356,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String reqMenuId = purchaseOrderInfo.getTenantProdGrpCd().substring(8, 12);
 
 		List<PurchaseProduct> purchaseProductList = purchaseOrderInfo.getPurchaseProductList();
-		double totAmt = 0.0, nowPurchaseProdAmt = 0.0;
+		double checkTotAmt = 0.0, realTotAmt = 0.0, nowPurchaseProdAmt = 0.0;
 		PurchaseProduct purchaseProduct = null;
 		for (CreatePurchaseSacReqProduct reqProduct : reqProdList) {
 			purchaseProduct = purchaseProductMap.get(reqProduct.getProdId());
@@ -420,8 +420,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			purchaseProduct.setProdQty(reqProduct.getProdQty());
-			// totAmt += (nowPurchaseProdAmt * reqProduct.getProdQty());
-			totAmt += (purchaseProduct.getProdAmt() * reqProduct.getProdQty());
+			checkTotAmt += (nowPurchaseProdAmt * reqProduct.getProdQty());
+			realTotAmt += (purchaseProduct.getProdAmt() * reqProduct.getProdQty());
 
 			purchaseProduct.setResvCol01(reqProduct.getResvCol01());
 			purchaseProduct.setResvCol02(reqProduct.getResvCol02());
@@ -510,11 +510,12 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		} else {
 			if (StringUtils.equals(purchaseOrderInfo.getSaleAmtProcType(), PurchaseConstants.SALE_AMT_PROC_TYPE_SERVER) == false
-					&& totAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
+					&& checkTotAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
 				throw new StorePlatformException("SAC_PUR_5106", purchaseOrderInfo.getCreatePurchaseReq().getTotAmt(),
-						totAmt);
+						checkTotAmt);
 			}
-			purchaseOrderInfo.setRealTotAmt(totAmt);
+
+			purchaseOrderInfo.setRealTotAmt(realTotAmt);
 		}
 
 		// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
