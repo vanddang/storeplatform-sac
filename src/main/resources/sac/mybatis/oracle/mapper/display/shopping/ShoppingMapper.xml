@@ -604,7 +604,7 @@
                       ,LINK_URL
                       ,TO_CHAR(PLAN_START_DT,'YYYYMMDDHH24MISS') AS PLAN_START_DT
                       ,TO_CHAR(PLAN_END_DT,'YYYYMMDDHH24MISS') AS PLAN_END_DT
-                      ,PRZWNER_ANNO_DT
+                      ,TO_CHAR(PRZWNER_ANNO_DT, 'YYYYMMDDHH24MISS') AS PRZWNER_ANNO_DT
                       ,PLAN_GIFT_NM
 					  ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
 						 WHERE PROD_ID = PLAN_ID AND IMG_CD =#{bannerImgCd}
