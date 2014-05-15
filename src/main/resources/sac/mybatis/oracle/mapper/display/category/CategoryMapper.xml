@@ -128,6 +128,9 @@
                                            AND M.USE_YN = 'Y'                        /* Y : 노출 (노출여부) */
                                            AND A.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
                                            AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
+                                         <if test='prodCharge != null and prodCharge != ""'>
+                                           AND D.PROD_CHRG_YN = #{prodCharge}        /* 상품유료여부 */
+                                         </if>
                                          <if test="arrayProdGradeCd != null">
                                            AND D.PROD_GRD_CD IN
                                            <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
