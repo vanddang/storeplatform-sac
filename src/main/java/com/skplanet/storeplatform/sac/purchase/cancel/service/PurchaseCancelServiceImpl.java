@@ -481,23 +481,27 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			throw new StorePlatformException("SAC_PUR_8111");
 		}
 
-		// 정액권 자동구매 해지예약 호출.
-		AutoPaymentCancelScReq autoPaymentCancelScReq = new AutoPaymentCancelScReq();
-		autoPaymentCancelScReq.setTenantId(prchsDtlSacParam.getUseTenantId());
-		autoPaymentCancelScReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
-		autoPaymentCancelScReq.setDeviceKey(prchsDtlSacParam.getUseInsdDeviceId());
-		autoPaymentCancelScReq.setPrchsId(prchsDtlSacParam.getPrchsId());
-		autoPaymentCancelScReq.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_STATUS_CLOSE_RESERVATION);
-		autoPaymentCancelScReq.setClosedReasonCd(PurchaseConstants.AUTO_PRCHS_CLOSE_PATH_PURCHASE_CANCEL);
-		autoPaymentCancelScReq.setClosedReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
+		// 정액권 자동구매 확인.
+		String autoPrchsStatusCd = this.purchaseCancelRepository.getAutoPrchsStatus(purchaseCancelSacParam,
+				prchsDtlSacParam);
+		if (StringUtils.equals(PurchaseConstants.AUTO_PRCHS_STATUS_AUTO, autoPrchsStatusCd)) {
+			// 자동결제 중일 경우 정액권 자동구매 해지예약 호출.
+			AutoPaymentCancelScReq autoPaymentCancelScReq = new AutoPaymentCancelScReq();
+			autoPaymentCancelScReq.setTenantId(prchsDtlSacParam.getUseTenantId());
+			autoPaymentCancelScReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+			autoPaymentCancelScReq.setDeviceKey(prchsDtlSacParam.getUseInsdDeviceId());
+			autoPaymentCancelScReq.setPrchsId(prchsDtlSacParam.getPrchsId());
+			autoPaymentCancelScReq.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_STATUS_CLOSE_RESERVATION);
+			autoPaymentCancelScReq.setClosedReasonCd(PurchaseConstants.AUTO_PRCHS_CLOSE_PATH_PURCHASE_CANCEL);
+			autoPaymentCancelScReq.setClosedReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
 
-		AutoPaymentCancelScRes autoPaymentCancelScRes = this.autoPaymentCancelSacService
-				.updateReservation(autoPaymentCancelScReq);
+			AutoPaymentCancelScRes autoPaymentCancelScRes = this.autoPaymentCancelSacService
+					.updateReservation(autoPaymentCancelScReq);
 
-		if (!StringUtils.equals("Y", autoPaymentCancelScRes.getResultYn())) {
-			throw new StorePlatformException("SAC_PUR_8112");
+			if (!StringUtils.equals("Y", autoPaymentCancelScRes.getResultYn())) {
+				throw new StorePlatformException("SAC_PUR_8112");
+			}
 		}
-
 	}
 
 	/**

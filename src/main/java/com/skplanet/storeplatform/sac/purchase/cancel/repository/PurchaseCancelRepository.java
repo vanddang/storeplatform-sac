@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCanc
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 
@@ -175,5 +176,19 @@ public interface PurchaseCancelRepository {
 	 * @return TStoreCashRefundEcRes
 	 */
 	TStoreCashRefundEcRes refundTCash(TStoreCashRefundEcReq tStoreCashRefundEcReq);
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelSacParam
+	 *            purchaseCancelSacParam
+	 * @param prchsDtlSacParam
+	 *            prchsDtlSacParam
+	 * @return String
+	 */
+	String getAutoPrchsStatus(PurchaseCancelSacParam purchaseCancelSacParam, PrchsDtlSacParam prchsDtlSacParam);
 
 }

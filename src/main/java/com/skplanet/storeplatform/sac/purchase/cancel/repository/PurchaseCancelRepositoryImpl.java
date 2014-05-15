@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.purchase.cancel.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +42,8 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRe
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.AutoPaymentScReq;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.AutoPaymentScRes;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelPaymentDetailScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScRes;
@@ -69,6 +73,8 @@ import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
  */
 @Component
 public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private PurchaseCancelSCI purchaseCancelSCI;
@@ -296,6 +302,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			}
 		}
 		if (!rstFlag) {
+			this.logger.info("SAC_PUR_8131 data : {}", paymentCancelResult);
 			throw new StorePlatformException("SAC_PUR_8131");
 		}
 
@@ -641,6 +648,23 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	@Override
 	public TStoreCashRefundEcRes refundTCash(TStoreCashRefundEcReq tStoreCashRefundEcReq) {
 		return this.tStoreCashSCI.refund(tStoreCashRefundEcReq);
+	}
+
+	@Override
+	public String getAutoPrchsStatus(PurchaseCancelSacParam purchaseCancelSacParam, PrchsDtlSacParam prchsDtlSacParam) {
+
+		AutoPaymentScReq autoPaymentScReq = new AutoPaymentScReq();
+		autoPaymentScReq.setTenantId(prchsDtlSacParam.getUseTenantId());
+		autoPaymentScReq.setSystemId(purchaseCancelSacParam.getSystemId());
+		autoPaymentScReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+		autoPaymentScReq.setPrchsId(prchsDtlSacParam.getPrchsId());
+		autoPaymentScReq.setPrchsDtlId(prchsDtlSacParam.getPrchsDtlId());
+
+		AutoPaymentScRes autoPaymentScRes = this.purchaseCancelSCI.getAutoPaymentInfo(autoPaymentScReq);
+		if (autoPaymentScRes == null || autoPaymentScRes.getAutoPrchs() == null) {
+			return "";
+		}
+		return autoPaymentScRes.getAutoPrchs().getAutoPaymentStatusCd();
 	}
 
 }
