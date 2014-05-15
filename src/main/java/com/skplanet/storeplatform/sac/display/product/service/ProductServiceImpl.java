@@ -1,24 +1,23 @@
 package com.skplanet.storeplatform.sac.display.product.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.icms.deploy.DPProductVO;
 import com.skplanet.icms.refactoring.deploy.DPTenantProductVO;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 	
-	private static Log log = LogFactory.getLog(ProductServiceImpl.class);
+	private final static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
 	@Autowired
 	@Qualifier("cmsApp")
@@ -26,22 +25,21 @@ public class ProductServiceImpl implements ProductService {
 	
 	
 	@Override
-	public DPProductVO selectDpProd(DPProductVO vo) throws StorePlatformException {
+	public DPProductVO selectDpProd(DPProductVO vo) {
 		return (DPProductVO) commonDAO.queryForObject("Display_Product.selectDpProd", vo);
 	}
 	
-	
 	@Override
-	public long selectNewFreeDataCnt(ProductVo vo) throws StorePlatformException {
-		return (Long) this.commonDAO.queryForLong("Display_Product.selectNewFreeDataCnt", vo);
-	};
+	public long selectNewFreeDataCnt(ProductVo vo) {
+		return this.commonDAO.queryForLong("Display_Product.selectNewFreeDataCnt", vo);
+	}
 
 	@Override
-	public void insertNewFreeData(ProductVo vo, String stdDt) throws StorePlatformException {
+	public void insertNewFreeData(ProductVo vo, String stdDt) {
 		long newFreeCnt = selectNewFreeDataCnt(vo);
-		log.info("newFreeCnt = " + newFreeCnt);
+		logger.info("newFreeCnt = " + newFreeCnt);
 		if (0 == newFreeCnt) {
-			log.info("newFree Insert = " + vo.getProdId());
+			logger.info("newFree Insert = " + vo.getProdId());
 
             Map<String, String> req = new HashMap<String, String>();
             req.put("tenantId", vo.getTenantId());
@@ -53,24 +51,24 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public long registSaleStatHis(ProductVo vo) throws StorePlatformException {
+	public long registSaleStatHis(ProductVo vo) {
 		this.commonDAO.insert("Display_Product.insertSaleStatHis", vo);
 		return 0;
 	}
 
 	@Override
-	public ProductVo selectMemberInfo(ProductVo vo) throws StorePlatformException {
+	public ProductVo selectMemberInfo(ProductVo vo) {
 		return (ProductVo) this.commonDAO.queryForObject("Display_Product.selectMemberInfo", vo);
-	};
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> selectDpProd(DPTenantProductVO vo) throws StorePlatformException {
+	public Map<String, Object> selectDpProd(DPTenantProductVO vo) {
 		return (Map<String, Object>) this.commonDAO.queryForObject("Display_Product.selectDpProd", vo);
-	};
+	}
 
 	@Override
-	public String registProdSettl(ProductVo vo) throws StorePlatformException {
+	public String registProdSettl(ProductVo vo) {
     	HashMap<String, String> map = new HashMap<String, String>();
     	map.put("p_prod_id", vo.getProdId());
     	map.put("p_settl_rt", null);

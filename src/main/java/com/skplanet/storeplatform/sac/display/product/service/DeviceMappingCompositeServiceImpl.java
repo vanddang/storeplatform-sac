@@ -83,7 +83,12 @@ public class DeviceMappingCompositeServiceImpl implements DeviceMappingComposite
         cv.setResultCd(IFConstants.CMS_RST_CODE_UNKNOWN_ERROR); // Result Code
         cv.setResultMsg(this.messageSourceAccessor.getMessage("if.cms.msg.code." + cv.getResultCd()));
 
-        String[] deviceModelCds = new String[]{message.getModule()};
+        String[] deviceModelCds;
+        if(message.getPhoneModelCdList() != null && message.getPhoneModelCdList().size() > 0)
+            deviceModelCds = message.getPhoneModelCdList().toArray(new String[message.getPhoneModelCdList().size()]);
+        else
+            deviceModelCds = new String[]{message.getModule()};
+
         for(String deviceModelCd : deviceModelCds) {
             this.log.info("Remapping Info = " + txId + " / " + type + " / " + deviceModelCd + " / " + contentList.size());
 
