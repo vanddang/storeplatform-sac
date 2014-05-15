@@ -24,6 +24,9 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CategoryEbookComicSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	@Pattern(regexp = "|Y|N")
+	private String prodCharge;
+
 	private String prodGradeCd; // 상품등급코드
 
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
@@ -58,6 +61,21 @@ public class CategoryEbookComicSacReq extends CommonInfo {
 	private String ebookSprtYn; // eBook 상품 지원여부
 
 	private String comicSprtYn; // Comic 상품 지원여부
+
+	/**
+	 * @return the prodCharge
+	 */
+	public String getProdCharge() {
+		return this.prodCharge;
+	}
+
+	/**
+	 * @param prodCharge
+	 *            the prodCharge to set
+	 */
+	public void setProdCharge(String prodCharge) {
+		this.prodCharge = prodCharge;
+	}
 
 	/**
 	 * @return the prodGradeCd
