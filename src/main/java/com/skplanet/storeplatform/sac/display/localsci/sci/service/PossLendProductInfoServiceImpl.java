@@ -72,9 +72,9 @@ public class PossLendProductInfoServiceImpl implements PossLendProductInfoServic
 		}
 
 		// 파라미터 유효 값 체크
-		if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
+		if (prodIdList.size() > DisplayConstants.DP_PAYMENT_INFO_PARAMETER_LIMIT) {
 			throw new StorePlatformException("SAC_DSP_0004", "prodIdList",
-					DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
+					DisplayConstants.DP_PAYMENT_INFO_PARAMETER_LIMIT);
 		}
 
 		// 상품 군 조회

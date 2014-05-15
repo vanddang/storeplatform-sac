@@ -541,6 +541,11 @@ public class DisplayConstants {
 	public static final Integer DP_PRODUCT_INFO_PARAMETER_LIMIT = Integer.valueOf(100);
 
 	/**
+	 * 결제 시 필요한 상품 메타 정보 조회 API 파라미터 제한 개수.
+	 */
+	public static final Integer DP_PAYMENT_INFO_PARAMETER_LIMIT = Integer.valueOf(100);
+
+	/**
 	 * 특정 상품 조회 API 파라미터 제한 개수.
 	 */
 	public static final Integer DP_UPDATE_PARAM_LIMIT = Integer.valueOf(1000);
