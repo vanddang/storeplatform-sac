@@ -131,19 +131,20 @@ public class ConvertMapperUtils {
 									for (int k = 0; k < value.length(); k++) {
 										rv.append(MASKING_VALUE);
 									}
+									// MASKING_VALUE => invoke
+									obj.getClass().getMethod(methodString, String.class)
+											.invoke(returnObj, rv.toString());
+									break;
+								} else {
+									methods[j].invoke(returnObj, fields[i].get(obj));
+									break;
 								}
-								// MASKING_VALUE => invoke
-								obj.getClass().getMethod(methodString, String.class).invoke(returnObj, rv.toString());
-								break;
 							} else {
 								methods[j].invoke(returnObj, fields[i].get(obj));
 							}
-
 						}// ReflectionFields [for - End]
 					}
-
 				}// Methods [for - End]
-
 			}// Fields [for - End]
 
 			ObjectMapper mapper = new ObjectMapper();
