@@ -47,7 +47,7 @@ public class PurchaseCancelControllerTest {
 		String TCashCash = StringUtils.substringBetween(resvCol03, "CASH=", ";");
 		String TCashPoint = StringUtils.substringBetween(resvCol03, "POINT=", ";");
 
-		System.out.println(TCashCash);
+		// System.out.println(TCashCash);
 
 		List<PrchsDtlSacParam> list = null;
 		for (PrchsDtlSacParam prchsDtlSacParam : list) {
