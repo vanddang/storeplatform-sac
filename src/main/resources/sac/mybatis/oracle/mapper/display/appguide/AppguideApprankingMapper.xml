@@ -96,7 +96,7 @@
                           , TB_DP_TENANT_PROD F 
                           , TB_DP_SPRT_DEVICE G
                           , TB_DP_PROD_DESC H  /* 채널 */
-                      WHERE A.PROD_ID = B.PROD_ID
+                      WHERE A.PROD_ID = B.PART_PROD_ID
                         AND B.PROD_RSHP_CD = 'DP010802'
                        <if test='prodCharge != "A"'>
                          AND  E.PROD_CHRG_YN = #{prodCharge}       /* 상품유료여부 */
