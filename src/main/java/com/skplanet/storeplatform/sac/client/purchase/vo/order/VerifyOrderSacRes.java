@@ -33,6 +33,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String cdMaxAmtRate; // 결제수단 별 가능 거래금액/비율 조정 정보
 	private String cdPriority; // 결제수단 정렬 재조정
 	private String cdOcbSaveInfo; // OCB 적립코드
+	private String ocbAuthMtdCd; // OCB 인증수단 코드
 	private String noOcbCard; // OCB 카드번호
 	private String noCouponList; // 쿠폰 List
 	private Double tstoreCashAmt; // T store Cash 잔액
@@ -249,6 +250,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setCdOcbSaveInfo(String cdOcbSaveInfo) {
 		this.cdOcbSaveInfo = cdOcbSaveInfo;
+	}
+
+	/**
+	 * @return the ocbAuthMtdCd
+	 */
+	public String getOcbAuthMtdCd() {
+		return this.ocbAuthMtdCd;
+	}
+
+	/**
+	 * @param ocbAuthMtdCd
+	 *            the ocbAuthMtdCd to set
+	 */
+	public void setOcbAuthMtdCd(String ocbAuthMtdCd) {
+		this.ocbAuthMtdCd = ocbAuthMtdCd;
 	}
 
 	/**
