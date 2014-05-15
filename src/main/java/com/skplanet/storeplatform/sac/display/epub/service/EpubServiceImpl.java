@@ -532,6 +532,11 @@ public class EpubServiceImpl implements EpubService {
         book.setStatus(mapperVO.getBookStatus());
         
         
+        // 만화 > 잡지 (CT22) : 업데이트 주기 정보를 TB_DP_PROD_DESC.PROD_INTR_DSCR 값에서 내려줌 (product.book.updateCycle)
+        if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_MAGAZINE_COMIC_META_CLASS_CD)) {
+        	book.setUpdateCycle(mapperVO.getProdIntrDscr());
+        }
+        
         // 채널 정보에서만 리턴
         // freeItem 정보를 위한 건수 조회
         if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_BOOK)) {
