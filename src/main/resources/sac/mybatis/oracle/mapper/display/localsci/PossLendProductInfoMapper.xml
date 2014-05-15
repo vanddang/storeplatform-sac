@@ -3,7 +3,7 @@
 <mapper namespace="PossLendProductInfo">
     <!-- 소장/대여 상품 조회 -->
     <select id="searchPossLendProductInfo" parameterType="PossLendProductInfoSacReq" resultType="PossLendProductInfo">
-		SELECT /* PossLendProductInfo.xml, searchPossLendProductInfo, SAC 전시, 2014-04-16 */
+		SELECT /* PossLendProductInfo.xml, searchPossLendProductInfo, SAC 전시, 2014-05-14 */
 		       A.PROD_ID              AS POSS_PROD_ID
 		      ,B.POSS_LEND_CLSF_CD
 		      ,C.PROD_NM              AS POSS_PROD_NM 
@@ -17,12 +17,22 @@
 		      ,F.USE_PERIOD_UNIT_CD   AS DOWN_POSSIBLE_PERIOD_UNIT_CD
 		      ,F.USE_PERIOD           AS DOWN_POSSIBLE_PERIOD
 		FROM   TB_DP_PROD              A /* 소장 상품 */
-		      ,UV_TB_DP_MULTIMDA_PROD  B /* 소장 상품 */
+		    <if test='topMenuId == "DP13" or topMenuId == "DP14"'>
+		      ,TB_DP_EBOOK_PROD        B /* 소장 상품 (이북코믹) */
+		    </if>
+		    <if test='topMenuId != "DP13" and topMenuId != "DP14"'>
+		      ,TB_DP_VOD_PROD          B /* 소장 상품 (VOD) */
+		    </if>
 		      ,TB_DP_PROD_DESC         C /* 소장 상품 설명 */
 		      ,TB_DP_TENANT_PROD       D /* 소장 상품 */
 		      ,TB_DP_TENANT_PROD_PRICE E /* 소장 상품 가격 */
 		      ,TB_DP_PROD              F /* 대여 상품 */
-		      ,UV_TB_DP_MULTIMDA_PROD  G /* 대여 상품 */
+		    <if test='topMenuId == "DP13" or topMenuId == "DP14"'>
+		      ,TB_DP_EBOOK_PROD        G /* 대여 상품 (이북코믹) */
+		    </if>
+		    <if test='topMenuId != "DP13" and topMenuId != "DP14"'>
+		      ,TB_DP_VOD_PROD          G /* 대여 상품 (VOD) */
+		    </if>
 		      ,TB_DP_PROD_DESC         H /* 대여 상품 설명 */
 		      ,TB_DP_TENANT_PROD       I /* 대여 상품 */
 		      ,TB_DP_TENANT_PROD_PRICE J /* 대여 상품 가격 */
@@ -32,16 +42,16 @@
 		AND    A.PROD_ID = D.PROD_ID
 		AND    D.TENANT_ID = #{tenantId}
 		AND    A.PROD_ID = E.PROD_ID
-		AND    E.TENANT_ID = D.TENANT_ID
+		AND    E.TENANT_ID = #{tenantId}
 		AND    SYSDATE BETWEEN E.APPLY_START_DT AND E.APPLY_END_DT
 		AND    A.CID = F.CID
 		AND    F.PROD_ID = G.PROD_ID
 		AND    F.PROD_ID = H.PROD_ID
-		AND    H.LANG_CD = C.LANG_CD
+		AND    H.LANG_CD = #{langCd}
 		AND    F.PROD_ID = I.PROD_ID
-		AND    I.TENANT_ID = D.TENANT_ID
+		AND    I.TENANT_ID = #{tenantId}
 		AND    F.PROD_ID = J.PROD_ID
-		AND    J.TENANT_ID = D.TENANT_ID
+		AND    J.TENANT_ID = #{tenantId}
 		AND    SYSDATE BETWEEN J.APPLY_START_DT AND J.APPLY_END_DT
 		-----------------------------------------------------------------
 		-- INPUT PARAMETER

@@ -48,13 +48,21 @@ public class PossLendProductInfoSCITest {
 		try {
 			PossLendProductInfoSacReq req = new PossLendProductInfoSacReq();
 			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("H001568883"); // 소장
-			prodIdList.add("H001573660"); // 대여
+			// prodIdList.add("H000043789"); // 영화
+			// prodIdList.add("H000000471"); // topMenuId is null
+			// prodIdList.add("H900062527"); // 코믹
+			// prodIdList.add("H001568883"); // 이북
+			// prodIdList.add("H001573660"); //
+			// prodIdList.add("9999999999"); // 비정상적인 상품ID
 			req.setProdIdList(prodIdList);
 
 			List<String> possLendClsfCdList = new ArrayList<String>();
 			possLendClsfCdList.add("DP010601"); // 소장
+			// possLendClsfCdList.add("DP010601"); // 소장
+			// possLendClsfCdList.add("DP010601"); // 소장
 			possLendClsfCdList.add("DP010602"); // 대여
+			// possLendClsfCdList.add("DP010602"); // 대여
+			// possLendClsfCdList.add("9999999999"); // 비정상적인 값
 			req.setPossLendClsfCdList(possLendClsfCdList);
 
 			req.setTenantId("S01");

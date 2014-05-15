@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfoSacRes;
@@ -76,17 +77,29 @@ public class PossLendProductInfoServiceImpl implements PossLendProductInfoServic
 					DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
 		}
 
-		for (int i = 0; i < prodIdList.size(); i++) {
-			req.setProdId(prodIdList.get(i)); // prodIdList 에 있는 상품ID 1개씩 setting
-			req.setPossLendClsfCd(possLendClsfCdList.get(i)); // possLendClsfCdList 에 있는 소장/대여 구분 1개씩 setting
-			PossLendProductInfo possLendProductInfo = this.commonDAO.queryForObject(
-					"PossLendProductInfo.searchPossLendProductInfo", req, PossLendProductInfo.class);
+		// 상품 군 조회
+		PaymentInfo paymentProdType = this.commonDAO.queryForObject("PaymentInfo.searchProdType", prodIdList.get(0),
+				PaymentInfo.class);
 
-			if (possLendProductInfo == null) {
-				possLendProductInfoList.add(new PossLendProductInfo()); // 소장/대여 상품이 없을 경우 빈 객체로 전송
-				this.log.debug("possLendProductInfo is null [{}]", prodIdList.get(i));
-			} else {
-				possLendProductInfoList.add(possLendProductInfo);
+		if (paymentProdType == null) {
+			throw new StorePlatformException("SAC_DSP_0005", "[상품 군 조회]" + prodIdList.get(0));
+		} else {
+			this.log.debug("##### searchProdType result : {}, {}, {}", paymentProdType.getTopMenuId(),
+					paymentProdType.getSvcGrpCd(), paymentProdType.getInAppYn());
+
+			for (int i = 0; i < prodIdList.size(); i++) {
+				req.setTopMenuId(paymentProdType.getTopMenuId()); // 상품군 Setting
+				req.setProdId(prodIdList.get(i)); // prodIdList 에 있는 상품ID 1개씩 setting
+				req.setPossLendClsfCd(possLendClsfCdList.get(i)); // possLendClsfCdList 에 있는 소장/대여 구분 1개씩 setting
+				PossLendProductInfo possLendProductInfo = this.commonDAO.queryForObject(
+						"PossLendProductInfo.searchPossLendProductInfo", req, PossLendProductInfo.class);
+
+				if (possLendProductInfo == null) {
+					possLendProductInfoList.add(new PossLendProductInfo()); // 소장/대여 상품이 없을 경우 빈 객체로 전송
+					this.log.debug("possLendProductInfo is null [{}]", prodIdList.get(i));
+				} else {
+					possLendProductInfoList.add(possLendProductInfo);
+				}
 			}
 		}
 
