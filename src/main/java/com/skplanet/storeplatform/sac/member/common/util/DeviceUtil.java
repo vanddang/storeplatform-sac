@@ -12,7 +12,8 @@ package com.skplanet.storeplatform.sac.member.common.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
+
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
@@ -41,7 +42,7 @@ public class DeviceUtil {
 		if (deviceExtraInfoList != null) {
 			for (DeviceExtraInfo info : deviceExtraInfoList) {
 
-				if (StringUtil.equals(info.getExtraProfile(), extraProfile)) {
+				if (StringUtils.equals(info.getExtraProfile(), extraProfile)) {
 					extraProfileValue = info.getExtraProfileValue();
 					break;
 				}
@@ -67,7 +68,7 @@ public class DeviceUtil {
 		if (userMbrDeviceDetailList != null) {
 			for (UserMbrDeviceDetail info : userMbrDeviceDetailList) {
 
-				if (StringUtil.equals(info.getExtraProfile(), extraProfile)) {
+				if (StringUtils.equals(info.getExtraProfile(), extraProfile)) {
 					extraProfileValue = info.getExtraProfileValue();
 					break;
 				}
@@ -126,27 +127,25 @@ public class DeviceUtil {
 	public static DeviceInfo getConverterDeviceInfo(UserMbrDevice userMbrDevice) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setUserKey(StringUtil.nvl(userMbrDevice.getUserKey(), ""));
-		deviceInfo.setDeviceKey(StringUtil.nvl(userMbrDevice.getDeviceKey(), ""));
-		deviceInfo.setDeviceId(StringUtil.nvl(userMbrDevice.getDeviceID(), ""));
-		deviceInfo.setTenantId(StringUtil.nvl(userMbrDevice.getTenantID(), ""));
-		deviceInfo.setDeviceModelNo(StringUtil.nvl(userMbrDevice.getDeviceModelNo(), ""));
-		deviceInfo.setDeviceTelecom(StringUtil.nvl(userMbrDevice.getDeviceTelecom(), ""));
-		deviceInfo.setDeviceNickName(StringUtil.nvl(userMbrDevice.getDeviceNickName(), ""));
-		deviceInfo.setIsPrimary(StringUtil.nvl(userMbrDevice.getIsPrimary(), ""));
-		deviceInfo.setIsRecvSms(StringUtil.nvl(userMbrDevice.getIsRecvSMS(), ""));
-		deviceInfo.setNativeId(StringUtil.nvl(userMbrDevice.getNativeID(), ""));
-		deviceInfo.setDeviceAccount(StringUtil.nvl(userMbrDevice.getDeviceAccount(), ""));
-		deviceInfo.setJoinId(StringUtil.nvl(userMbrDevice.getJoinId(), ""));
-		deviceInfo.setDeviceNickName(StringUtil.nvl(userMbrDevice.getDeviceNickName(), ""));
-		deviceInfo.setDeviceAccount(StringUtil.nvl(userMbrDevice.getDeviceAccount(), ""));
-		deviceInfo.setSvcMangNum(StringUtil.nvl(userMbrDevice.getSvcMangNum(), ""));
-		deviceInfo.setAuthenticationDate(StringUtil.nvl(userMbrDevice.getAuthenticationDate(), ""));
+		deviceInfo.setUserKey(userMbrDevice.getUserKey());
+		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
+		deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
+		deviceInfo.setTenantId(userMbrDevice.getTenantID());
+		deviceInfo.setDeviceModelNo(userMbrDevice.getDeviceModelNo());
+		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
+		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
+		deviceInfo.setIsPrimary(userMbrDevice.getIsPrimary());
+		deviceInfo.setIsRecvSms(userMbrDevice.getIsRecvSMS());
+		deviceInfo.setNativeId(userMbrDevice.getNativeID());
+		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
+		deviceInfo.setJoinId(userMbrDevice.getJoinId());
+		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
+		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
+		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
+		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
 		//deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
 		deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
-		if (userMbrDevice.getUserMbrDeviceDetail() != null) {
-			deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
-		}
+		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 
 		return deviceInfo;
 	}
@@ -161,13 +160,13 @@ public class DeviceUtil {
 	 */
 	public static List<DeviceExtraInfo> getConverterDeviceInfoDetailList(List<UserMbrDeviceDetail> list) {
 
-		List<DeviceExtraInfo> deviceExtraInfoList = null;
+		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 		DeviceExtraInfo deviceExtraInfo = null;
 
 		if (list != null && list.size() > 0) {
-			deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 			for (UserMbrDeviceDetail userMbrDeviceDetail : list) {
-				if (StringUtil.isNotBlank(userMbrDeviceDetail.getExtraProfile()) && StringUtil.isNotBlank(userMbrDeviceDetail.getExtraProfileValue())) {
+				if (StringUtils.isNotBlank(userMbrDeviceDetail.getExtraProfile())
+						&& StringUtils.isNotBlank(userMbrDeviceDetail.getExtraProfileValue())) {
 					deviceExtraInfo = new DeviceExtraInfo();
 					deviceExtraInfo.setExtraProfile(userMbrDeviceDetail.getExtraProfile());
 					deviceExtraInfo.setExtraProfileValue(userMbrDeviceDetail.getExtraProfileValue());
@@ -229,7 +228,7 @@ public class DeviceUtil {
 		if (deviceInfo.getDeviceExtraInfoList() != null && deviceInfo.getDeviceExtraInfoList().size() > 0) {
 			userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 			for (DeviceExtraInfo deviceExtraInfo : deviceInfo.getDeviceExtraInfoList()) {
-				if (StringUtil.isNotBlank(deviceExtraInfo.getExtraProfile()) && StringUtil.isNotBlank(deviceExtraInfo.getExtraProfileValue())) {
+				if (StringUtils.isNotBlank(deviceExtraInfo.getExtraProfile()) && StringUtils.isNotBlank(deviceExtraInfo.getExtraProfileValue())) {
 					userMbrDeviceDetail = new UserMbrDeviceDetail();
 					userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
 					userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
