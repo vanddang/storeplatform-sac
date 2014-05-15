@@ -5,6 +5,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
+import com.skplanet.storeplatform.sac.display.product.exception.IcmsProcessException;
 import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -431,7 +432,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 					pv.setMbrNo(mbrNo);
 					pv = this.prodService.selectMemberInfo(pv);
 					if (null == pv)
-                        throw new StorePlatformException(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR, "MBR_NO [ " + mbrNo + " ] 로 등록되어진 회원 정보가 없습니다.");
+                        throw new IcmsProcessException(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR, "MBR_NO [ " + mbrNo + " ] 로 등록되어진 회원 정보가 없습니다.");
 					
 					//ProductVo 값 설정
 					pv.setProdId(prodId);

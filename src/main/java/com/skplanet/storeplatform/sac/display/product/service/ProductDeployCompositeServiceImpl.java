@@ -1,12 +1,14 @@
 package com.skplanet.storeplatform.sac.display.product.service;
 
-import com.skplanet.icms.refactoring.deploy.*;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.integration.bean.RuntimeContextCreator;
+import com.skplanet.icms.refactoring.deploy.DPProductVO;
+import com.skplanet.icms.refactoring.deploy.DPTenantProductVO;
+import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSac;
+import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSacResult;
 import com.skplanet.storeplatform.framework.integration.bean.RuntimeContextHolder;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
+import com.skplanet.storeplatform.sac.display.product.exception.IcmsProcessException;
 import com.skplanet.storeplatform.sac.display.product.vo.CmsVo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -19,7 +21,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -116,13 +117,13 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 					this.log.info("CMS executeProcess 24");
 
 				 }
-				catch (StorePlatformException ie) {
-                    log.error("CMS MQ App 수행중 오류: {}", ie.getMessage());
-                    cv.setResultCd(ie.getErrorInfo().getCode()); // Result Code
+				catch (IcmsProcessException ie) {
+                    log.error("CMS MQ App 수행중 오류: {}", ie.getMessage(), ie);
+                    cv.setResultCd(ie.getCode()); // Result Code
                     cv.setResultMsg("[" + getMachineId() + "/" + RuntimeContextHolder.getRuntimeContext().getGuid() + "]" + ie.getMessage());
                 }
                 catch (RuntimeException re) {
-                    log.error("CMS MQ App 수행중 오류: {}", re.getMessage());
+                    log.error("CMS MQ App 수행중 오류: {}", re.getMessage(), re);
                     cv.setResultCd(IFConstants.CMS_RST_CODE_UNKNOWN_ERROR);
                     cv.setResultMsg("[" + getMachineId() + "/" + RuntimeContextHolder.getRuntimeContext().getGuid() + "]" + re.getMessage());
                 }
