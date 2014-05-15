@@ -147,7 +147,7 @@ public class BestDownloadAppServiceImpl implements BestDownloadAppService {
 						DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
 				identifierList.add(chnlIdentifier);
 				Identifier epsdIdentifier = this.commonGenerator.generateIdentifier(
-						DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
+						DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId());
 				identifierList.add(epsdIdentifier);
 				product.setIdentifierList(identifierList); // 상품 ID
 				product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
