@@ -67,15 +67,27 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
 		// 파라미터 존재 여부 체크
 		if (prodIdList.size() == 0) {
+			this.log.info(
+					"searchPaymentInfo[prodIdList is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
+					prodIdList, tenantId, langCd, deviceModelCd);
 			throw new StorePlatformException("SAC_DSP_0002", "prodIdList", prodIdList.toString());
 		}
 		if (StringUtils.isEmpty(tenantId)) {
+			this.log.info(
+					"searchPaymentInfo[tenantId is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
+					prodIdList, tenantId, langCd, deviceModelCd);
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", tenantId);
 		}
 		if (StringUtils.isEmpty(langCd)) {
+			this.log.info(
+					"searchPaymentInfo[langCd is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
+					prodIdList, tenantId, langCd, deviceModelCd);
 			throw new StorePlatformException("SAC_DSP_0002", "langCd", langCd);
 		}
 		if (StringUtils.isEmpty(deviceModelCd)) {
+			this.log.info(
+					"searchPaymentInfo[deviceModelCd is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
+					prodIdList, tenantId, langCd, deviceModelCd);
 			req.setDeviceModelCd("NULL");
 		}
 
@@ -107,6 +119,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 				PaymentInfo.class);
 
 		if (paymentProdType == null) {
+			this.log.info(
+					"searchPaymentInfo[paymentProdType is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}, prodId : {}",
+					prodIdList, tenantId, langCd, deviceModelCd, prodIdList.get(0));
 			throw new StorePlatformException("SAC_DSP_0005", "[상품 군 조회]" + prodIdList.get(0));
 		} else {
 			this.log.debug("##### searchProdType result : {}, {}, {}", paymentProdType.getTopMenuId(),
@@ -123,6 +138,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 							PaymentInfo.class);
 
 					if (paymentInfo == null) {
+						this.log.info(
+								"searchPaymentInfo[paymentInfo is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}, prodId : {}",
+								prodIdList, tenantId, langCd, deviceModelCd, prodIdList.get(i));
 						throw new StorePlatformException("SAC_DSP_0005", "[일반상품 조회]" + prodIdList.get(i));
 					} else {
 						paymentInfo.setTopMenuId(paymentProdType.getTopMenuId());
