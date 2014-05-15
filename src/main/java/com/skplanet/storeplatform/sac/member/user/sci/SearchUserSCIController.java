@@ -187,15 +187,18 @@ public class SearchUserSCIController implements SearchUserSCI {
 		ocbReq.setUserKey(request.getUserKey());
 
 		String ocbCardNumber = "";
+		String ocbAuthMethodCode = "";
 		try {
 			GetOcbInformationRes ocbRes = this.userOcbService.getOcbInformation(requestHeader, ocbReq);
 			for (OcbInfo ocb : ocbRes.getOcbInfoList()) {
 				ocbCardNumber = ocb.getCardNumber();
+				ocbAuthMethodCode = ocb.getAuthMethodCode();
 			}
 
 		} catch (StorePlatformException ex) {
 			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				ocbCardNumber = "";
+				ocbAuthMethodCode = "";
 			}
 		}
 
@@ -203,6 +206,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		payplanetSacRes.setSkpAgreementYn(skpAgreementYn);
 		payplanetSacRes.setOcbCardNumber(StringUtil.setTrim(ocbCardNumber));
 		payplanetSacRes.setOcbAgreementYn(ocbAgreementYn);
+		payplanetSacRes.setOcbAuthMethodCode(ocbAuthMethodCode);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(payplanetSacRes));
 
@@ -227,66 +231,66 @@ public class SearchUserSCIController implements SearchUserSCI {
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		//		// Respone 를 가지고 오기 위한 devceKeyList Setting
-		//		List<String> deviceKeyList = new ArrayList<String>();
+		// // Respone 를 가지고 오기 위한 devceKeyList Setting
+		// List<String> deviceKeyList = new ArrayList<String>();
 		//
-		//		// Request 를 보내기 위한 세팅
-		//		List<SearchUserDevice> schUserDeviceList = new ArrayList<SearchUserDevice>();
+		// // Request 를 보내기 위한 세팅
+		// List<SearchUserDevice> schUserDeviceList = new ArrayList<SearchUserDevice>();
 		//
-		//		for (SearchUserDeviceSac schUserDevice : request.getSearchUserDeviceReqList()) {
-		//			String deviceKey = schUserDevice.getDeviceKey();
-		//			SearchUserDevice schUser = new SearchUserDevice();
-		//			schUser.setDeviceKey(schUserDevice.getDeviceKey());
-		//			schUser.setUserKey(schUserDevice.getUserKey());
+		// for (SearchUserDeviceSac schUserDevice : request.getSearchUserDeviceReqList()) {
+		// String deviceKey = schUserDevice.getDeviceKey();
+		// SearchUserDevice schUser = new SearchUserDevice();
+		// schUser.setDeviceKey(schUserDevice.getDeviceKey());
+		// schUser.setUserKey(schUserDevice.getUserKey());
 		//
-		//			schUserDeviceList.add(schUser);
-		//			deviceKeyList.add(deviceKey);
-		//		}
+		// schUserDeviceList.add(schUser);
+		// deviceKeyList.add(deviceKey);
+		// }
 		//
-		//		SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
-		//		searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
+		// SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
+		// searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
 		Map<String, UserDeviceInfoSac> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader, request);
 
-		//		Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
-		//		UserDeviceInfoSac userDeviceInfoSac;
+		// Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
+		// UserDeviceInfoSac userDeviceInfoSac;
 		//
-		//		for (int i = 0; i < deviceKeyList.size(); i++) {
-		//			if (userInfoMap.get(deviceKeyList.get(i)) != null) {
-		//				userDeviceInfoSac = new UserDeviceInfoSac();
-		//				userDeviceInfoSac.setDeviceId(userInfoMap.get(deviceKeyList.get(i)).getDeviceId());
-		//				userDeviceInfoSac.setDeviceModelNo(userInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
-		//				userDeviceInfoSac.setDeviceTelecom(userInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
-		//				userDeviceInfoSac.setIsRealName(userInfoMap.get(deviceKeyList.get(i)).getIsRealName());
-		//				userDeviceInfoSac.setUserMainStatus(userInfoMap.get(deviceKeyList.get(i)).getUserMainStatus());
-		//				userDeviceInfoSac.setUserSubStatus(userInfoMap.get(deviceKeyList.get(i)).getUserSubStatus());
+		// for (int i = 0; i < deviceKeyList.size(); i++) {
+		// if (userInfoMap.get(deviceKeyList.get(i)) != null) {
+		// userDeviceInfoSac = new UserDeviceInfoSac();
+		// userDeviceInfoSac.setDeviceId(userInfoMap.get(deviceKeyList.get(i)).getDeviceId());
+		// userDeviceInfoSac.setDeviceModelNo(userInfoMap.get(deviceKeyList.get(i)).getDeviceModelNo());
+		// userDeviceInfoSac.setDeviceTelecom(userInfoMap.get(deviceKeyList.get(i)).getDeviceTelecom());
+		// userDeviceInfoSac.setIsRealName(userInfoMap.get(deviceKeyList.get(i)).getIsRealName());
+		// userDeviceInfoSac.setUserMainStatus(userInfoMap.get(deviceKeyList.get(i)).getUserMainStatus());
+		// userDeviceInfoSac.setUserSubStatus(userInfoMap.get(deviceKeyList.get(i)).getUserSubStatus());
 		//
-		//				if (userInfoMap.get(deviceKeyList.get(i)).getIsRealName().equals("Y")) {
-		//					String birthday = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthBirthday(), "");
-		//					String name = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthName(), "");
+		// if (userInfoMap.get(deviceKeyList.get(i)).getIsRealName().equals("Y")) {
+		// String birthday = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthBirthday(), "");
+		// String name = StringUtil.nvl(userInfoMap.get(deviceKeyList.get(i)).getAuthName(), "");
 		//
-		//					if (birthday.equals("")) {
-		//						userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
-		//					} else {
-		//						userDeviceInfoSac.setUserBirthday(birthday);
-		//					}
+		// if (birthday.equals("")) {
+		// userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
+		// } else {
+		// userDeviceInfoSac.setUserBirthday(birthday);
+		// }
 		//
-		//					if (name.equals("")) {
-		//						userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
-		//					} else {
-		//						userDeviceInfoSac.setUserName(name);
-		//					}
-		//				} else {
-		//					userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
-		//					userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
-		//				}
+		// if (name.equals("")) {
+		// userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
+		// } else {
+		// userDeviceInfoSac.setUserName(name);
+		// }
+		// } else {
+		// userDeviceInfoSac.setUserBirthday(userInfoMap.get(deviceKeyList.get(i)).getUserBirthday());
+		// userDeviceInfoSac.setUserName(userInfoMap.get(deviceKeyList.get(i)).getUserName());
+		// }
 		//
-		//				resMap.put(deviceKeyList.get(i), userDeviceInfoSac);
-		//			}
-		//		}
+		// resMap.put(deviceKeyList.get(i), userDeviceInfoSac);
+		// }
+		// }
 
 		SearchUserDeviceSacRes searchUserDeviceSacRes = new SearchUserDeviceSacRes();
-		//searchUserDeviceSacRes.setUserDeviceInfo(resMap);
+		// searchUserDeviceSacRes.setUserDeviceInfo(resMap);
 		searchUserDeviceSacRes.setUserDeviceInfo(userInfoMap);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(searchUserDeviceSacRes));
