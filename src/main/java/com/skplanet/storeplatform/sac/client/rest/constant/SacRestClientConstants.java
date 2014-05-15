@@ -55,9 +55,14 @@ public class SacRestClientConstants {
 	public static final String HEADER_INTERFACE_ID = "x-sac-interface-id";
 
 	/**
-	 * 요청 커스텀 헤더 상수 - 범용 고유 식별자
+	 * 요청/응답 커스텀 헤더 상수 - 범용 고유 식별자
 	 */
 	public static final String HEADER_GUID = "x-sac-guid";
+
+	/**
+	 * 응답 커스텀 헤더 상수 - 결과 코드
+	 */
+	public static final String HEADER_RESULT_CODE = "x-sac-result-code";
 
     /**
      * 요청 커스텀 헤더 상수 - 단말기 정보
