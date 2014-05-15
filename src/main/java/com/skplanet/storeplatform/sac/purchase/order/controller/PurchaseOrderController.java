@@ -281,15 +281,17 @@ public class PurchaseOrderController {
 			return new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq.getPaymentInfoList().size());
 		}
 
-		String tenantId = null;
-		if (StringUtils.isNotBlank(notifyPaymentReq.getMctSpareParam())) { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
-			tenantId = notifyPaymentReq.getMctSpareParam();
-		} else {
-			TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
-			if (tenantHeader != null) {
-				tenantId = tenantHeader.getTenantId();
-			}
-		}
+		// String tenantId = null;
+		// if (StringUtils.isNotBlank(notifyPaymentReq.getMctSpareParam())) { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
+		// tenantId = notifyPaymentReq.getMctSpareParam();
+		// } else {
+		// TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
+		// if (tenantHeader != null) {
+		// tenantId = tenantHeader.getTenantId();
+		// }
+		// }
+
+		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 
 		// 구매완료 TLog 로그ID 초기세팅
 		final String prchsId = notifyPaymentReq.getPrchsId();

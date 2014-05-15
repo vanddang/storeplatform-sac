@@ -1053,7 +1053,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		paymentPageParam.setAid(product.getAid());
 		paymentPageParam.setReturnFormat(PaymentPageParam.PP_RETURN_FORMAT_JSON);
 		paymentPageParam.setFlgMchtAuth(PurchaseConstants.USE_Y);
-		paymentPageParam.setMctSpareParam(purchaseOrderInfo.getTenantId());
+		paymentPageParam.setMctSpareParam("");
 		paymentPageParam.setMdn(purchaseOrderInfo.getPurchaseUser().getDeviceId());
 		paymentPageParam.setNmDevice(purchaseOrderInfo.getPurchaseUser().getDeviceModelCd());
 		paymentPageParam.setImei(purchaseOrderInfo.getImei());
