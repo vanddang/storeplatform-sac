@@ -460,6 +460,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setFlgOcbUseAgree(StringUtils.equals(userPayRes.getOcbAgreementYn(), PurchaseConstants.USE_Y) ? "1" : "0");
 		// OCB 카드번호
 		res.setNoOcbCard(userPayRes.getOcbCardNumber());
+		// OCB 인증수단 코드
+		res.setOcbAuthMtdCd(userPayRes.getOcbAuthMethodCode());
 
 		// ------------------------------------------------------------------------------------------------
 		// SKT 후불 관련 정책 체크: SKT시험폰, MVNO, 법인폰, 한도금액 조회
