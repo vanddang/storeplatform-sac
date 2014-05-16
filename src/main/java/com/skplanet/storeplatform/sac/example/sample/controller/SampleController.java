@@ -31,7 +31,7 @@ public class SampleController {
 
 	@RequestMapping(value = "/detail", method = RequestMethod.GET)
 	@ResponseBody
-	public SampleRes detail(@RequestParam("no") Integer no) {
+	public SampleRes detail(@RequestParam(value = "no", defaultValue = "1") Integer no) {
 		SampleRes res = new SampleRes();
 		res.setNo(no);
 		res.setId("#" + no);
