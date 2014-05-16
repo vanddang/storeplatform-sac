@@ -1013,6 +1013,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 							}
 						}
 					}
+					// 기존 입력된 데이터중 모바일회원으로 등록해서 사용후기를 작성후 oneID로 전환한 데이터인경우엔(MDN합치기)
+					// 기존 모바일회원의 상태가 탈퇴상태로 바뀌고 ONEID회원으로 USER_TYPE_ONEID으로 바뀌어서 회원테이블의 ID를 보여줘야함.
+					// 회원테이블을 조회하여 mbr_id정보를 마스킹해서 regId에 셋팅함. 20140515 추가 로직
+					if (regId.equals("")) {
+						regId = this.getMaskRegId(userInfoSac.getUserId());
+					}
 				}
 			}
 		}
