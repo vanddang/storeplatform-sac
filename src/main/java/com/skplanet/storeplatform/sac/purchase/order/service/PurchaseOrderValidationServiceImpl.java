@@ -631,6 +631,12 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 				if (useExistenceScRes != null) {
 
+					// 이북/코믹 경우, 이용 가능한 정액권이 나오면 구매 불가 처리 (구매가 가능한 상황이 나오지 못함: 2014.05. 현재)
+					if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+							PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
+						throw new StorePlatformException("SAC_PUR_6111");
+					}
+
 					// 정액권으로 이용할 에피소드 상품에 적용할 DRM 정보 조회 및 반영
 					FreePassInfo freepassInfo = this.purchaseDisplayRepository.searchFreePassDrmInfo(
 							useUser.getTenantId(), purchaseOrderInfo.getLangCd(), useExistenceScRes.getProdId(),
