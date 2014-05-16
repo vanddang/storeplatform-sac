@@ -1941,9 +1941,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeRights = new Rights();
 
 							// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
-							if (purchseCount > 0) {
-								episodeRights.setAllow(episodeShopping.getAllow());
+							// 구매 여부 조회
+							if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
+								boolean purchaseYn = this.displayCommonService.checkPurchase(
+										tenantHeader.getTenantId(), req.getUserKey(), req.getDeviceKey(),
+										episodeShopping.getPartProdId());
+
+								if (purchaseYn) {
+									episodeRights.setAllow(episodeShopping.getAllow());
+								}
 							}
+							// // 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
+							// if (purchseCount > 0) {
+							// episodeRights.setAllow(episodeShopping.getAllow());
+							// }
 
 							episodeRights.setGrade(episodeShopping.getProdGrdCd());
 							episodeRights.setDateList(this.shoppingGenerator.generateDateList(episodeShopping));
