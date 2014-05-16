@@ -162,6 +162,7 @@ public class AppServiceImpl implements AppService {
 
         product.setSupportList(new ArrayList<Support>());
         product.getSupportList().add(new Support("drm", appDetail.getDrmYn()));
+        product.getSupportList().add(new Support("iap", appDetail.getPartParentClsfCd() != null ? "Y" : "N"));
 
         // Source
         List<ImageSource> imageSourceList = commonDAO.queryForList("AppDetail.getSourceList", new ImageSourceReq(request.getChannelId(), SOURCE_REQUEST, request.getLangCd()), ImageSource.class);

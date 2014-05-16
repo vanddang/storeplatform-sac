@@ -39,6 +39,15 @@ public class AppDetail extends CommonInfo {
     private String svcGrpCd;
     private String drmYn;
     private String descVideoUrl;
+    private String partParentClsfCd;
+
+    public String getPartParentClsfCd() {
+        return partParentClsfCd;
+    }
+
+    public void setPartParentClsfCd(String partParentClsfCd) {
+        this.partParentClsfCd = partParentClsfCd;
+    }
 
     public String getDescVideoUrl() {
         return descVideoUrl;

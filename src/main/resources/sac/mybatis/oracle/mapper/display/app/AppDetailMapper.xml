@@ -38,7 +38,8 @@
             APP.SALE_STRT_DT,
             PD.SVC_GRP_CD,
             PD.DRM_YN,
-            APP.DESC_VIDEO_URL
+            APP.DESC_VIDEO_URL,
+            APP.PART_PARENT_CLSF_CD
         FROM
             TB_DP_PROD PD
             INNER JOIN TB_DP_APP_PROD APP
