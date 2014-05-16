@@ -1445,7 +1445,9 @@ public class LoginServiceImpl implements LoginService {
 
 				sbUserPhone.append(deviceInfo.getDeviceId());
 				sbUserPhone.append(",");
-				sbUserPhone.append(imMngNum == null ? "" : imMngNum);
+				if (StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+					sbUserPhone.append(imMngNum == null ? "" : imMngNum);					
+				}
 				sbUserPhone.append(",");
 				sbUserPhone.append(uacd == null ? "" : uacd);
 				sbUserPhone.append(",");

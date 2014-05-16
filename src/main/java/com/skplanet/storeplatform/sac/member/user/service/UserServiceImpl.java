@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,9 @@ public class UserServiceImpl implements UserService {
 
 					sbUserPhone.append(deviceInfo.getDeviceId());
 					sbUserPhone.append(",");
-					sbUserPhone.append(imMngNum == null ? "" : imMngNum);
+					if (StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+						sbUserPhone.append(imMngNum == null ? "" : imMngNum);
+					}
 					sbUserPhone.append(",");
 					sbUserPhone.append(uacd == null ? "" : uacd);
 					sbUserPhone.append(",");
