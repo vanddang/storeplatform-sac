@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.external.client.example.sample.vo.Sample;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.example.sample.vo.SampleRes;
 import com.skplanet.storeplatform.sac.example.sample.service.SampleService;
 
@@ -31,7 +32,11 @@ public class SampleController {
 
 	@RequestMapping(value = "/detail", method = RequestMethod.GET)
 	@ResponseBody
-	public SampleRes detail(@RequestParam(value = "no", defaultValue = "1") Integer no) {
+	public SampleRes detail(@RequestParam(value = "no", defaultValue = "0") Integer no) {
+		if (no == 0) {
+			throw new StorePlatformException("SAC_CMN_9999");
+		}
+
 		SampleRes res = new SampleRes();
 		res.setNo(no);
 		res.setId("#" + no);
