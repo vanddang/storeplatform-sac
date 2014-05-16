@@ -556,10 +556,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// OCB 적립율
 
 		// 시험폰, SKP법인폰 여부
-		boolean testOrCorp = (policyResult != null ? (policyResult.isSktTestMdn() || policyResult.isSkpCorporation()) : false);
+		boolean sktTestOrSkpCorp = (policyResult != null ? (policyResult.isSktTestMdn() || policyResult
+				.isSkpCorporation()) : false);
 
 		res.setCdOcbSaveInfo(this.adjustOcbSaveInfo(reservedDataMap.get("telecom"), prchsDtlMore.getTenantProdGrpCd(),
-				testOrCorp));
+				sktTestOrSkpCorp));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제Page 템플릿
@@ -1656,6 +1657,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			prchsDtlMore.setUseTenantId(ebookflatInfo.getUseTenantId());
 			prchsDtlMore.setUseInsdUsermbrNo(ebookflatInfo.getUseInsdUsermbrNo());
 			prchsDtlMore.setProdId(episode.getProdId());
+			prchsDtlMore.setCid(episode.getCid());
 
 			// 임시 정보 경우 (전권 소장 상품 구매 시 에피소드 대여 상품, 전권 대여 상품 구매 시 에피소드 소장 상품)
 			// 에피소드 기구매 건 기간만료 처리를 위한 정보만 세팅
@@ -1926,11 +1928,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
 	 * 
-	 * @param testOrCorp 시험폰 또는 SKP법인폰 여부
+	 * @param sktTestOrSkpCorp 시험폰 또는 SKP법인폰 여부
 	 * 
 	 * @return 결제수단 별 OCB 적립율
 	 */
-	private String adjustOcbSaveInfo(String telecom, String tenantProdGrpCd, boolean testOrCorp) {
+	private String adjustOcbSaveInfo(String telecom, String tenantProdGrpCd, boolean sktTestOrSkpCorp) {
 
 		// 쇼핑상품, VOD정액제 상품, 게임캐쉬 정액 상품 제외
 		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
@@ -1943,7 +1945,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			StringBuffer sbOcbAccum = new StringBuffer(64);
 
 			if (StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT)) {
-				sbOcbAccum.append(testOrCorp ? "11:0.0;" : "11:4.0;"); // 시험폰, SKP법인폰 결제 제외
+				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:4.0;"); // 시험폰, SKP법인폰 결제 제외
 			} else {
 				sbOcbAccum.append("12:4.0;"); // 다날
 			}

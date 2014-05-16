@@ -278,15 +278,22 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// --------------------------------------------------------------------------------------------------
 		// 법인폰 체크
 
+		// OCB 적립 제한을 위한 SKP법인폰 기본 조회
+
+		if (this.isCorporationMdn(PurchaseConstants.SKP_CORPORATION_NO, policyCheckParam.getDeviceId())) {
+			policyResult.setSkpCorporation(true);
+		}
+
+		// 법인폰 제한 정책 체크
+
 		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_CORP_DEVICE)) {
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_CORP_DEVICE);
 
 			for (PurchaseTenantPolicy policy : policyList) {
-				if (this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
+				if ((policyResult.isSkpCorporation() && StringUtils.equals(policy.getApplyValue(),
+						PurchaseConstants.SKP_CORPORATION_NO))
+						|| this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
 					policyResult.setCorporation(true);
-					policyResult.setSkpCorporation(StringUtils.equals(policy.getApplyValue(),
-							PurchaseConstants.SKP_CORPORATION_NO));
-
 					policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_CORP);
 					return policyResult;
 				}
