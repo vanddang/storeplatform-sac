@@ -108,7 +108,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 부분유료화 정보
 		if (StringUtils.startsWith(req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
 			for (CreatePurchaseSacReqProduct product : req.getProductList()) {
-				if (StringUtils.isBlank(product.getTid()) || StringUtils.isBlank(product.getPartChrgVer())) {
+				if (StringUtils.isBlank(product.getTxId()) || StringUtils.isBlank(product.getPartChrgVer())) {
 					throw new StorePlatformException("SAC_PUR_5100");
 				}
 			}
