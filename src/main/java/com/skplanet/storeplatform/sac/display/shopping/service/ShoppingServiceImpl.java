@@ -1932,7 +1932,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 									episodeShopping.setPurchaseDt(prchsDt);
 									episodeShopping.setPurchaseState(prchsState);
 									// 구매 정보
-									product.setPurchase(this.commonGenerator.generatePurchase(episodeShopping));
+									episodeProduct.setPurchase(this.commonGenerator.generatePurchase(episodeShopping));
 								}
 							}
 
