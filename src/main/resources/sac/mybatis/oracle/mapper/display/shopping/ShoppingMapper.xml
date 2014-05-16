@@ -547,7 +547,7 @@
                         AND K.TENANT_ID = L.TENANT_ID 
                         AND N.EXPO_YN ='Y'
                         AND N.CPN_ID IS NOT NULL
-                      
+                        AND PI.IMG_CD(+) = #{imageCd}
                         AND B.CATALOG_ID = PI.PROD_ID       
                         AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/
                         AND NVL(B.CHNL_CNT, 0) > 0          
