@@ -108,16 +108,15 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setProdGrdCd(displayInfo.getProdGrdCd());
 			purchaseProduct.setProdSprtYn(displayInfo.getProdSprtYn());
 			purchaseProduct.setDrmYn(StringUtils.defaultString(displayInfo.getDrmYn(), PurchaseConstants.USE_N));
-			// purchaseProduct.setDrmYn(displayInfo.getDrmYn());
-			if (displayInfo.getUsePeriodUnitCd() != null) {
+			if (StringUtils.equals(purchaseProduct.getDrmYn(), PurchaseConstants.USE_N)) {
+				// 이용기간 단위 정보가 없는 경우, DRM이 N 이면 무제한 처리
+				purchaseProduct.setUsePeriodUnitCd("PD00310");
+				purchaseProduct.setUsePeriod("0");
+			} else {
 				purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
 				purchaseProduct
 						.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(), "PD00310") ? "0" : displayInfo
 								.getUsePeriod());
-			} else if (StringUtils.equals(purchaseProduct.getDrmYn(), PurchaseConstants.USE_N)) {
-				// 이용기간 단위 정보가 없는 경우, DRM이 N 이면 무제한 처리
-				purchaseProduct.setUsePeriodUnitCd("PD00310");
-				purchaseProduct.setUsePeriod("0");
 			}
 			purchaseProduct.setAid(displayInfo.getAid());
 			purchaseProduct.setTenantProdGrpCd(displayInfo.getTenantProdGrpCd());

@@ -637,14 +637,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 							product.getProdId());
 					if (freepassInfo != null) {
 						product.setDrmYn(StringUtils.defaultString(freepassInfo.getDrmYn(), PurchaseConstants.USE_N));
-						// product.setDrmYn(freepassInfo.getDrmYn());
-						if (freepassInfo.getUsePeriodUnitCd() != null) {
-							product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
-							product.setUsePeriod(freepassInfo.getUsePeriod());
-						} else if (StringUtils.equals(product.getDrmYn(), PurchaseConstants.USE_N)) {
-							// 이용기간 단위 정보가 없는 경우, DRM이 N 이면 무제한 처리
+						if (StringUtils.equals(product.getDrmYn(), PurchaseConstants.USE_N)) {
+							// DRM이 N 이면 무제한 처리
 							product.setUsePeriodUnitCd("PD00310");
 							product.setUsePeriod("0");
+						} else {
+							product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
+							product.setUsePeriod(freepassInfo.getUsePeriod());
 						}
 						product.setUseFixrateProdId(useExistenceScRes.getProdId()); // 사용할 정액권ID 세팅
 
