@@ -1446,7 +1446,7 @@ public class LoginServiceImpl implements LoginService {
 				sbUserPhone.append(deviceInfo.getDeviceId());
 				sbUserPhone.append(",");
 				if (StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-					sbUserPhone.append(imMngNum == null ? "" : imMngNum);					
+					sbUserPhone.append(imMngNum == null ? "" : imMngNum);
 				}
 				sbUserPhone.append(",");
 				sbUserPhone.append(uacd == null ? "" : uacd);
@@ -1462,6 +1462,7 @@ public class LoginServiceImpl implements LoginService {
 		req.setExecuteMode("A");
 		req.setKey(imSvcNo);
 		req.setUserMdn(userPhoneStr);
+		LOGGER.info("{} updateAdditionalInfo userMdn : {}", userKey, userPhoneStr);
 		UpdateAdditionalInfoEcRes updAddInfoRes = this.imIdpSCI.updateAdditionalInfo(req);
 
 		return updAddInfoRes;
