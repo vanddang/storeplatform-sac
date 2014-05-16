@@ -539,17 +539,54 @@ public class EpubServiceImpl implements EpubService {
         
         // 채널 정보에서만 리턴
         // freeItem 정보를 위한 건수 조회
+        
+        
+        /*
+        //ASIS 로직
+	     , ( CASE WHEN ( ( P.BOOK_CNT > 0 AND P.SERIAL_CNT = 0 ) AND P.BOOK_FREE_CNT > 0 ) THEN
+	           '전체 '||P.BOOK_CNT||'권 중 무료 '||P.BOOK_FREE_CNT||'권'
+	      WHEN ( ( P.SERIAL_CNT > 0 AND P.BOOK_CNT = 0 ) AND P.SERIAL_FREE_CNT > 0 ) THEN
+	           '전체 '||P.SERIAL_CNT||'회 중 무료 '||P.SERIAL_FREE_CNT||'회'
+	      WHEN ( P.SERIAL_CNT > 0 AND BOOK_CNT > 0 ) THEN
+	           ( CASE WHEN P.SERIAL_FREE_CNT > 0 OR P.BOOK_FREE_CNT > 0 THEN
+	                  ( CASE WHEN P.SERIAL_FREE_CNT > 0 THEN '연재물 '|| P.SERIAL_FREE_CNT || '회' END )||
+	                  ( CASE WHEN P.BOOK_FREE_CNT > 0 THEN
+	                              CONCAT( ( CASE WHEN P.SERIAL_FREE_CNT > 0 THEN ', ' END )
+	                                    , '단행본 '|| P.BOOK_FREE_CNT || '권' )
+	                    END ) || ' 무료'
+	              END )
+	  	  END )  AS FREE_ITEM
+         */
+        Integer bookCnt = mapperVO.getBookCnt() == null ? 0 : mapperVO.getBookCnt();
+        Integer bookFreeCnt = mapperVO.getBookFreeCnt() == null ? 0 : mapperVO.getBookFreeCnt();
+        Integer serialCnt = mapperVO.getSerialCnt() == null ? 0 : mapperVO.getSerialCnt();
+        Integer serialFreeCnt = mapperVO.getSerialFreeCnt() == null ? 0 : mapperVO.getSerialFreeCnt();
+        Integer magazineCnt = mapperVO.getMagazineCnt() == null ? 0 : mapperVO.getMagazineCnt();
+        Integer magazineFreeCnt = mapperVO.getMagazineFreeCnt() == null ? 0 : mapperVO.getMagazineFreeCnt();
+        
+        //ASIS FreeItem 로직 구현
+        //단행본만 있는 경우 : 전체 x 권 중 무료 x 권
+        //연재물만 있는 경우 : 전체 x 회 중 무료 x 회
+        //연재/단행 있는 경우 : 연재물 x 회, 단행본 x권
+        book.setBookCount(bookCnt);
+        book.setSerialCount(serialCnt);
+        book.setMagazineCount(magazineCnt);
+        
+        if((bookCnt > 0 && serialCnt == 0) && bookFreeCnt > 0) {
+        	book.setBookFreeCount(bookFreeCnt);
+        } else if ((serialCnt > 0 && bookCnt == 0) && serialFreeCnt > 0) {
+        	book.setSerialFreeCount(serialFreeCnt);
+        } else if (serialCnt > 0 && bookCnt > 0) {
+        	book.setBookFreeCount(bookFreeCnt);
+        	book.setSerialFreeCount(serialFreeCnt);
+        }
+        
         if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_BOOK)) {
-        	book.setBookCount(mapperVO.getBookCnt());
-        	book.setBookFreeCount(mapperVO.getBookFreeCnt());
         	book.setType(DisplayConstants.DP_BOOK_TYPE_BOOK);
         } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_SERIAL)) {
-        	book.setSerialCount(mapperVO.getSerialCnt());
-        	book.setSerialFreeCount(mapperVO.getSerialFreeCnt());
         	book.setType(DisplayConstants.DP_BOOK_TYPE_SERIAL);
         } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_MAGAZINE)) {
-        	book.setSerialCount(mapperVO.getMagazineCnt());
-        	book.setSerialFreeCount(mapperVO.getMagazineFreeCnt());
+        	book.setMagazineFreeCount(magazineFreeCnt);
         }
         
 		book.setSupportList(this.mapSupportList(mapperVO));
