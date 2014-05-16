@@ -119,7 +119,8 @@
                   PD.DRM_YN
               END)  AS DRM_YN               
             , PD.USE_PERIOD_UNIT_CD
-            , PD.USE_PERIOD            
+            , PD.USE_PERIOD    
+            , PD.CID        
         FROM 
               TB_DP_PROD PD
             , TB_DP_PROD_DESC DC
