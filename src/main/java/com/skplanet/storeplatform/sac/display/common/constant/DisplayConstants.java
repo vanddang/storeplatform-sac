@@ -699,6 +699,8 @@ public class DisplayConstants {
 
 	public static final String DP_LIST_SHOPPING_POPULAR = "RNK000000006";
 
+	public static final String DP_LIST_CATEGORY_SHOPPING_POPULAR = "RNK000000101";
+
 	/** 할인율 product.point */
 	public static final String DC_RATE_TMEMBERSHIP = "tmembership";
 	/** 할인율 유형 - 일반 상품 */
