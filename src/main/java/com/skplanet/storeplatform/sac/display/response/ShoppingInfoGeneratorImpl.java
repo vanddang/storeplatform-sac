@@ -197,8 +197,14 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 					.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
 
 			if (usePeriodUnitNm != "") {
-				date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, usePeriodUnitNm + "/"
-						+ metaInfo.getUsePeriod());
+				if (!usePeriodUnitNm.equals("calendar")) {
+					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, usePeriodUnitNm + "/"
+							+ metaInfo.getUsePeriod());
+				} else {
+					Date date1 = new Date();
+					date1.setTextFromDate(DateUtils.parseDate(metaInfo.getUsePeriod()));
+					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, usePeriodUnitNm + "/" + date1.getText());
+				}
 				dateList.add(date);
 			}
 		}
