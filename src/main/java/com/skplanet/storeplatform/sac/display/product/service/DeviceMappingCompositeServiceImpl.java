@@ -217,7 +217,7 @@ public class DeviceMappingCompositeServiceImpl implements DeviceMappingComposite
         DeviceMappingResultVO dmr = new DeviceMappingResultVO();
         dmr.setTxId(txId);
         dmr.setResult(cv.getResultCd()); // Result Code
-        dmr.setMsg(cv.getResultMsg()); // Result Message
+        dmr.setMsg("[SAC]"+cv.getResultMsg()+" (Success:"+countSuccess+", Fail:"+countFail+")"); // Result Message
         dmr.setContentList(resultFailList);
 
         this.deviceMappingRabbitTemplate.convertAndSend(dmr);
