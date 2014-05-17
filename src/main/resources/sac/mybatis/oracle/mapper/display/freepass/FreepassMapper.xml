@@ -191,8 +191,7 @@
 				ROWNUM AS RNUM
 				, IV.*
 			FROM (
-				SELECT  
-					COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
+				SELECT /*+ FULL(LP) */ COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT ,  -- 2014/05/16 수정
 					, FM.PROD_ID
     		        , FM.PART_PROD_ID
     		        , FM.CONTENTS_CLSF_CD
@@ -222,7 +221,7 @@
     		    AND LP.LIST_ID in ('TGR000000001','TGR000000002')
     		    AND PD.PROD_ID = LP.PROD_ID
     		    AND EXISTS ( 
-    		    	SELECT RS.PROD_ID 
+    		    	SELECT 'X' --RS.PROD_ID 
     		    	FROM TB_DP_PROD_RSHP RS, TB_DP_PROD EP, TB_DP_SUB_CONTENTS SC, TB_DP_TENANT_PROD ET
     		        WHERE RS.PROD_ID=PD.PROD_ID 
     		        AND EXISTS (
