@@ -36,37 +36,59 @@
     </select>     
 
     <update id="Display_Product.insertNewFreeData" parameterType="map">
-		INSERT INTO TB_DP_LIST_PROD (
-			SELECT 
-				TP.TENANT_ID
-				, 'ADM000000001' AS LIST_ID
-				, MCP.MENU_ID
-				, P.PROD_ID
-				, TO_DATE( #{stdDt}, 'YYYYMMDDHH24MISS') AS STD_DT
+        INSERT INTO TB_DP_LIST_PROD
+        (
+            tenant_id,
+            list_id,
+            menu_id,
+            prod_id,
+            std_dt,
+            expo_ord_always_yn,
+            expo_ord,
+            expo_ord_sub,
+            expo_yn,
+            etc_clsf_cd,
+            etc_cd,
+            prchs_qty,
+            prchs_amt,
+            dwld_qty,
+            expo_start_dt,
+            expo_end_dt,
+            img_path,
+            reg_id,
+            reg_dt,
+            upd_id,
+            upd_dt
+        )
+            SELECT
+                TP.TENANT_ID
+                , 'ADM000000001' AS LIST_ID
+                , MCP.MENU_ID
+                , P.PROD_ID
+                , TO_DATE( #{stdDt}, 'YYYYMMDDHH24MISS') AS STD_DT
                 , 'N' AS EXPO_ORD_ALWAYS_YN
-				, (SELECT MIN(EXPO_ORD)-1 FROM TB_DP_LIST_PROD WHERE LIST_ID = 'ADM000000001')AS EXPO_ORD
+                , (SELECT MIN(EXPO_ORD)-1 FROM TB_DP_LIST_PROD WHERE LIST_ID = 'ADM000000001')AS EXPO_ORD
                 , 0 AS EXPO_ORD_SUB
-				, 'Y' AS EXPO_YN
-				, NULL AS ETC_CLSF_CD
-				, NULL AS ETC_CD
-				, NULL AS PRCHS_QTY
-				, NULL AS PRCHS_AMT
-				, NULL AS DWLD_QTY
-				, TO_DATE( TO_CHAR(P.REG_DT,'YYYYMMDD'),'YYYYMMDD') AS EXPO_START_DT
-				, TO_DATE( '99991231','YYYYMMDD') AS EXPO_END_DT
+                , 'Y' AS EXPO_YN
+                , NULL AS ETC_CLSF_CD
+                , NULL AS ETC_CD
+                , NULL AS PRCHS_QTY
+                , NULL AS PRCHS_AMT
+                , NULL AS DWLD_QTY
+                , TO_DATE( TO_CHAR(P.REG_DT,'YYYYMMDD'),'YYYYMMDD') AS EXPO_START_DT
+                , TO_DATE( '99991231','YYYYMMDD') AS EXPO_END_DT
                 , NULL AS IMG_PATH
-				, P.REG_ID
-				, TO_DATE( TO_CHAR(P.REG_DT,'YYYYMMDD'),'YYYYMMDD') AS REG_DT
-				, P.UPD_ID
-				, TO_DATE( TO_CHAR(P.UPD_DT,'YYYYMMDDHH24MISS'),'YYYYMMDDHH24MISS') AS UPD_DT
-			FROM
-				TB_DP_PROD P, TB_DP_TENANT_PROD TP, TB_DP_MENU_CATEGORY_PROD_MAPG MCP
-			WHERE MCP.USE_YN = 'Y' 
-				AND P.PROD_ID = TP.PROD_ID
-			    AND P.PROD_ID = MCP.PROD_ID
-				AND P.PROD_ID = #{prodId}
-				AND TP.TENANT_ID = #{tenantId}
-		)
+                , P.REG_ID
+                , TO_DATE( TO_CHAR(P.REG_DT,'YYYYMMDD'),'YYYYMMDD') AS REG_DT
+                , P.UPD_ID
+                , TO_DATE( TO_CHAR(P.UPD_DT,'YYYYMMDDHH24MISS'),'YYYYMMDDHH24MISS') AS UPD_DT
+            FROM
+                TB_DP_PROD P, TB_DP_TENANT_PROD TP, TB_DP_MENU_CATEGORY_PROD_MAPG MCP
+            WHERE MCP.USE_YN = 'Y'
+                  AND P.PROD_ID = TP.PROD_ID
+                  AND P.PROD_ID = MCP.PROD_ID
+                  AND P.PROD_ID = #{prodId}
+                  AND TP.TENANT_ID = #{tenantId}
     </update> 
     
     <!-- 판매상태 변경 이력 등록 -->
