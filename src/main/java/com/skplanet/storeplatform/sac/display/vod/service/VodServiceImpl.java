@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -564,9 +563,13 @@ public class VodServiceImpl implements VodService {
     private Distributor mapDistributor(VodDetail mapperVO) {
 		Distributor distributor = new Distributor();
         distributor.setSellerKey(mapperVO.getSellerMbrNo());
+        // (2014-05-17) 이슈 : 멀티미디어 상품은 판매자 정보를 회원API를 통해 받아야 한다.
+        // 전시 API 에서는 sellerKey만 내려주도록 한다.
+        /*
         distributor.setName(mapperVO.getExpoSellerNm());
         distributor.setTel(mapperVO.getExpoSellerTelno());
         distributor.setEmail(mapperVO.getExpoSellerEmail());
+        */
 		return distributor;
 	}
 

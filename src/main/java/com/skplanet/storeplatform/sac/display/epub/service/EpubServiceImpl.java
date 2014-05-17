@@ -493,9 +493,13 @@ public class EpubServiceImpl implements EpubService {
     private Distributor mapDistributor(EpubDetail mapperVO) {
         Distributor distributor = new Distributor();
         distributor.setSellerKey(mapperVO.getSellerMbrNo());
+        // (2014-05-17) 이슈 : 멀티미디어 상품은 판매자 정보를 회원API를 통해 받아야 한다.
+        // 전시 API 에서는 sellerKey만 내려주도록 한다.
+        /*
         distributor.setName(mapperVO.getExpoSellerNm());
         distributor.setTel(mapperVO.getExpoSellerTelno());
         distributor.setEmail(mapperVO.getExpoSellerEmail());
+        */
         return distributor;
     }
 
