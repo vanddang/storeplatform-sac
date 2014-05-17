@@ -407,7 +407,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		String stdDt = "";
 		if (req.getOrderedBy().equals(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION)) {
 			// 필수 파라미터 체크
-			req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR);
+			//req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR); 20140517 수정
+			req.setListId(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR);
 
 			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 					req.getListId());
@@ -1001,7 +1002,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		String stdDt = "";
 		if (req.getOrderedBy().equals(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION)) {
 
-			req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR);
+			//req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR); 20140517 수정
+			req.setListId(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR);
 
 			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 					req.getListId());
@@ -1452,7 +1454,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		String stdDt = "";
 		if (req.getOrderedBy().equals(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION)) {
 			// 필수 파라미터 체크
-			req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR);
+			//req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR);20140517 수정
+			req.setListId(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR);
 
 			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 					req.getListId());
@@ -1602,7 +1605,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		String stdDt = "";
 		if (req.getOrderedBy().equals(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION)) {
 			// 필수 파라미터 체크
-			req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR);
+			//req.setListId(DisplayConstants.DP_LIST_SHOPPING_POPULAR); 20140517 수정
+			req.setListId(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR);
 
 			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 					req.getListId());
