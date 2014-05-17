@@ -225,10 +225,9 @@
 		        FROM (
 		            SELECT T2.*, COUNT(*) OVER () AS TOTAL_COUNT, ROWNUM AS RNUM
 		            FROM (
-		                SELECT T1.CHAPTER
+		                SELECT T1.CID, T1.CHAPTER
 		                  , MAX( T1.TENANT_ID ) AS TENANT_ID
 		                  , MAX( T1.LANG_CD ) AS LANG_CD
-		                  , MAX( T1.CID ) AS CID
 		                  , MAX( T1.MENU_ID ) AS MENU_ID
 		                  , MAX( T1.TOP_MENU_ID ) AS TOP_MENU_ID
 		                  , MAX( T1.META_CLSF_CD ) AS META_CLSF_CD
@@ -364,7 +363,7 @@
 		                      AND NVL(MP.CHAPTER, 999) > #{baseChapter}
 		                      </if>
 		                ) T1
-		                GROUP BY T1.CHAPTER
+		                GROUP BY T1.CID, T1.CHAPTER
 						<if test="orderedBy == 'recent'">
 					    ORDER BY T1.CHAPTER DESC, UPD_DT DESC
 					  	</if>
