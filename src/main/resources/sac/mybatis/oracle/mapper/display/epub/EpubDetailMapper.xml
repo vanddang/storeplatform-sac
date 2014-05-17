@@ -223,9 +223,8 @@
 			      SELECT T3.*, COUNT(*) OVER () TOTAL_COUNT, ROWNUM AS RNUM
 			      FROM (
 			            SELECT 
-			            	  T2.CHAPTER
+			            	  T2.CID, T2.CHAPTER
 			                , MAX( T2.PROD_ID ) AS PROD_ID
-			                , MAX( T2.CID ) AS CID
 			                , MAX( T2.TENANT_ID ) AS TENANT_ID
 			                , MAX( T2.CHNL_PROD_ID ) AS CHNL_PROD_ID
 			                , MAX( T2.META_CLSF_CD ) AS META_CLSF_CD
@@ -323,7 +322,7 @@
 			              ) T1
 			              WHERE RN = 1
 			          ) T2
-					  GROUP BY T2.CHAPTER
+					  GROUP BY T2.CID, T2.CHAPTER
 					  <if test="orderedBy == 'recent'">
 					  ORDER BY T2.CHAPTER DESC
 	                  </if>
