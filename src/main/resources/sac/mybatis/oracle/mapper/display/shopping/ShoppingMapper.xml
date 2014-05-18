@@ -325,7 +325,7 @@
                                        AND  TDLP.TENANT_ID = TDL.TENANT_ID
                                        AND  TDLP.LIST_ID   = TDL.LIST_ID
                                        AND  TDLP.TENANT_ID = #{tenantHeader.tenantId}   /* 테넌트ID */
-                                       AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000006 쇼핑 인기 */
+                                       AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000101 쇼핑 카탈로그 인기 */
                                        AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
@@ -360,8 +360,7 @@
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID 
                         <if test='req.orderedBy == "popular"'>
-                        AND K.TENANT_ID = M.TENANT_ID 
-                        AND B.CATALOG_ID = M.PROD_ID                             
+                        AND B.CATALOG_ID = M.PROD_ID(+)                             
                         </if>                   
                         AND I.PROD_ID = N.PROD_ID(+)       
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/   
@@ -916,7 +915,7 @@
                                        AND  TDLP.TENANT_ID = TDL.TENANT_ID
                                        AND  TDLP.LIST_ID   = TDL.LIST_ID
                                        AND  TDLP.TENANT_ID = #{tenantHeader.tenantId}   /* 테넌트ID */
-                                       AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000006 쇼핑 인기 */
+                                       AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000101 쇼핑 카탈로그 인기 */
                                        AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
@@ -950,8 +949,7 @@
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID 
                         <if test='req.orderedBy == "popular"'>
-                        AND K.TENANT_ID = M.TENANT_ID 
-                        AND B.CATALOG_ID = M.PROD_ID                             
+                        AND B.CATALOG_ID = M.PROD_ID(+)                             
                         </if>                        
                         AND I.PROD_ID = N.PROD_ID(+)  
                         AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
@@ -1247,7 +1245,7 @@
                                        AND  TDLP.TENANT_ID = TDL.TENANT_ID
                                        AND  TDLP.LIST_ID   = TDL.LIST_ID
                                        AND  TDLP.TENANT_ID = #{tenantHeader.tenantId}   /* 테넌트ID */
-                                       AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000006 쇼핑 인기 */
+                                       AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000101 쇼핑 카탈로그 인기 */
                                        AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
@@ -1283,8 +1281,7 @@
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID
                         <if test='req.orderedBy == "popular"'>
-                        AND K.TENANT_ID = M.TENANT_ID 
-                        AND B.CATALOG_ID = M.PROD_ID                             
+                        AND B.CATALOG_ID = M.PROD_ID(+)                             
                         </if>                   
                         AND I.PROD_ID = N.PROD_ID(+)       
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/   
@@ -1413,7 +1410,7 @@
                                        AND  TDLP.TENANT_ID = TDL.TENANT_ID
                                        AND  TDLP.LIST_ID   = TDL.LIST_ID
                                        AND  TDLP.TENANT_ID = #{tenantHeader.tenantId}   /* 테넌트ID */
-                                       AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000006 쇼핑 인기 */
+                                       AND  TDLP.LIST_ID   = #{req.listId}     /* RNK000000101 쇼핑 카탈로그 인기 */
                                        AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
@@ -1451,8 +1448,7 @@
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID
                         <if test='req.orderedBy == "popular"'>
-                        AND K.TENANT_ID = M.TENANT_ID 
-                        AND B.CATALOG_ID = M.PROD_ID                             
+                        AND B.CATALOG_ID = M.PROD_ID(+)                             
                         </if>                   
                         AND I.PROD_ID = N.PROD_ID(+)       
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/   
