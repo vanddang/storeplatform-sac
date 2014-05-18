@@ -290,7 +290,7 @@
 				               ,'1' EXPO_ORD
 				               </if>
 				               <if test='req.orderedBy == "popular"'>                 
-                               ,M.EXPO_ORD_ALWAYS_YN
+                               ,NVL(M.EXPO_ORD_ALWAYS_YN,'A') AS EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB   
 				               </if>                                                                                                                                                   
@@ -880,7 +880,7 @@
                                ,'1' EXPO_ORD
                                </if>
                                <if test='req.orderedBy == "popular"'>                 
-                               ,M.EXPO_ORD_ALWAYS_YN
+                               ,NVL(M.EXPO_ORD_ALWAYS_YN,'A') AS EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB   
                                </if>                                    
@@ -1210,7 +1210,7 @@
                                ,'1' EXPO_ORD
                                </if>
                                <if test='req.orderedBy == "popular"'>                 
-                               ,M.EXPO_ORD_ALWAYS_YN
+                               ,NVL(M.EXPO_ORD_ALWAYS_YN,'A') AS EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB    
                                </if>                                                                                                                                                   
@@ -1374,7 +1374,7 @@
                                ,'1' EXPO_ORD
                                </if>
                                <if test='req.orderedBy == "popular"'>                 
-                               ,M.EXPO_ORD_ALWAYS_YN
+                               ,NVL(M.EXPO_ORD_ALWAYS_YN,'A') AS EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB     
                                </if>                                                                                                                                                   
