@@ -536,6 +536,11 @@ public class DisplayConstants {
 	public static final Integer DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT = Integer.valueOf(50);
 
 	/**
+	 * 특정 상품 MUSIC 조회 API 파라미터 100개로 제한 .
+	 */
+	public static final Integer DP_CATEGORY_SPECIFIC_PRODUCT_MUSIIC_PARAMETER_LIMIT = Integer.valueOf(100);
+
+	/**
 	 * 구매 내역 조회 시 필요한 상품 메타 정보 조회 API 파라미터 제한 개수.
 	 */
 	public static final Integer DP_PRODUCT_INFO_PARAMETER_LIMIT = Integer.valueOf(100);
