@@ -315,7 +315,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			// 개인
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
 					.getSellerMbr().getSellerClass())) {
-				nameTop = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getCharger(), "");
+
+				// first:sellerNickName, second:charger, default:""
+				nameTop = StringUtils
+						.defaultString(
+								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerNickName()) ? searchSellerResponse
+										.getSellerMbr().getSellerNickName() : searchSellerResponse.getSellerMbr()
+										.getCharger(), "");
+
 				// first:sellerName, second:charger, default:""
 				nameLower = StringUtils
 						.defaultString(
@@ -328,9 +335,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 					.getSellerMbr().getSellerClass())
 					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS,
 							searchSellerResponse.getSellerMbr().getSellerClass())) {
-				nameTop = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerCompany(), "");
 
-				compNmLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerCompany(), "");
+				// first:sellerNickName, second:sellerCompany, default:""
+				nameTop = compNmLower = StringUtils
+						.defaultString(
+								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerNickName()) ? searchSellerResponse
+										.getSellerMbr().getSellerNickName() : searchSellerResponse.getSellerMbr()
+										.getSellerCompany(), "");
+
 				nameLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getCeoName(), "");
 				bizNoLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getBizRegNumber(), "");
 				// first:repPhone, second:cordedTelephone, default:""
@@ -346,7 +358,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			}
 
 		} else { // 외국인
-			nameTop = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerCompany(), "");
+			// first:sellerNickName, second:sellerCompany, default:""
+			nameTop = StringUtils
+					.defaultString(
+							StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerNickName()) ? searchSellerResponse
+									.getSellerMbr().getSellerNickName() : searchSellerResponse.getSellerMbr()
+									.getSellerCompany(), "");
 
 			// 개인 ( 판매자명, 이메일 )
 			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
@@ -363,8 +380,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 					.getSellerMbr().getSellerClass())
 					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS,
 							searchSellerResponse.getSellerMbr().getSellerClass())) {
-				// first:sellerCompany, second:sellerName, default:""
-				compNmLower = StringUtils
+
+				// first:sellerNickName, second:sellerCompany, third:sellerName, default:""
+				compNmLower = StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerNickName()) ? searchSellerResponse
+						.getSellerMbr().getSellerNickName() : StringUtils
 						.defaultString(
 								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerCompany()) ? searchSellerResponse
 										.getSellerMbr().getSellerCompany() : searchSellerResponse.getSellerMbr()
