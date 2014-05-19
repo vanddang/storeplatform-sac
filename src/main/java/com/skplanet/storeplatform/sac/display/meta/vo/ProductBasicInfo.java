@@ -30,6 +30,9 @@ public class ProductBasicInfo extends CommonInfo {
 	// 웹툰 관련
 	private String seriallyWkdy;
 
+	// eBook
+	private String etcCd;
+
 	/**
 	 * @return the totalCount
 	 */
@@ -239,6 +242,21 @@ public class ProductBasicInfo extends CommonInfo {
 	 */
 	public void setSeriallyWkdy(String seriallyWkdy) {
 		this.seriallyWkdy = seriallyWkdy;
+	}
+
+	/**
+	 * @return the etcCd
+	 */
+	public String getEtcCd() {
+		return this.etcCd;
+	}
+
+	/**
+	 * @param etcCd
+	 *            the etcCd to set
+	 */
+	public void setEtcCd(String etcCd) {
+		this.etcCd = etcCd;
 	}
 
 }

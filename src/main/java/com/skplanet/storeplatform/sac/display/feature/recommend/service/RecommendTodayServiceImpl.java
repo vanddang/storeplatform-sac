@@ -144,10 +144,14 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 						if ("DP13".equals(requestVO.getTopMenuId())) {
 							// Response Generate
 							Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+							// 스티커
+							product.setSticker(productBasicInfo.getEtcCd());
 							productList.add(product);
 						} else {
 							// Response Generate
 							Product product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+							// 스티커
+							product.setSticker(productBasicInfo.getEtcCd());
 							productList.add(product);
 						}
 					}
