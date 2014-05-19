@@ -346,7 +346,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		}
 
 		Map<String, PurchaseProduct> purchaseProductMap = this.purchaseDisplayRepository.searchPurchaseProductList(
-				tenantId, langCd, useDeviceModelCd, prodIdList);
+				tenantId, langCd, useDeviceModelCd, prodIdList, purchaseOrderInfo.isFlat());
 		if (purchaseProductMap == null || purchaseProductMap.size() < 1) {
 			throw new StorePlatformException("SAC_PUR_5101");
 		}
@@ -459,7 +459,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					List<String> fullProdIdList = new ArrayList<String>();
 					fullProdIdList.add(iapInfo.getFullAid());
 					Map<String, PurchaseProduct> fullProductMap = this.purchaseDisplayRepository
-							.searchPurchaseProductList(tenantId, langCd, useDeviceModelCd, fullProdIdList);
+							.searchPurchaseProductList(tenantId, langCd, useDeviceModelCd, fullProdIdList, false);
 					if (fullProductMap == null || fullProductMap.size() < 1) {
 						throw new StorePlatformException("SAC_PUR_5101", iapInfo.getFullAid());
 					}
@@ -645,7 +645,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						product.setDrmYn(StringUtils.defaultString(freepassInfo.getDrmYn(), PurchaseConstants.USE_N));
 						if (StringUtils.equals(product.getDrmYn(), PurchaseConstants.USE_N)) {
 							// DRM이 N 이면 무제한 처리
-							product.setUsePeriodUnitCd("PD00310");
+							product.setUsePeriodUnitCd(PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED);
 							product.setUsePeriod("0");
 						} else {
 							product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());

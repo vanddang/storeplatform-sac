@@ -40,10 +40,12 @@ public interface PurchaseDisplayRepository {
 	 *            단말모델코드
 	 * @param prodIdList
 	 *            조회할 상품ID 목록
+	 * @param bFlat
+	 *            정액상품 여부
 	 * @return 상품ID에 매핑되는 상품정보를 담은 Map
 	 */
 	public Map<String, PurchaseProduct> searchPurchaseProductList(String tenantId, String langCd, String deviceModelCd,
-			List<String> prodIdList);
+			List<String> prodIdList, boolean bFlat);
 
 	/**
 	 * 

@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.IapProductInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
@@ -70,11 +71,13 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	 *            단말모델코드
 	 * @param prodIdList
 	 *            조회할 상품ID 목록
+	 * @param bFlat
+	 *            정액상품 여부
 	 * @return 상품ID에 매핑되는 상품정보를 담은 Map
 	 */
 	@Override
 	public Map<String, PurchaseProduct> searchPurchaseProductList(String tenantId, String langCd, String deviceModelCd,
-			List<String> prodIdList) {
+			List<String> prodIdList, boolean bFlat) {
 		PaymentInfoSacReq req = new PaymentInfoSacReq();
 		req.setTenantId(tenantId);
 		req.setLangCd(langCd);
@@ -108,15 +111,25 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setProdGrdCd(displayInfo.getProdGrdCd());
 			purchaseProduct.setProdSprtYn(displayInfo.getProdSprtYn());
 			purchaseProduct.setDrmYn(StringUtils.defaultString(displayInfo.getDrmYn(), PurchaseConstants.USE_N));
-			if (StringUtils.equals(purchaseProduct.getDrmYn(), PurchaseConstants.USE_N)) {
+			if (StringUtils.equals(displayInfo.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
+				if (StringUtils.isBlank(displayInfo.getUsePeriodUnitCd())
+						|| StringUtils.isBlank(displayInfo.getUsePeriod())) {
+					throw new StorePlatformException("SAC_PUR_5114", displayInfo.getUsePeriodUnitCd(),
+							displayInfo.getUsePeriod());
+				}
+			}
+			if (bFlat) {
+				// 정액상품 경우, DRM 여부와 상관없이 이용기간 그대로 세팅
+				purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
+				purchaseProduct.setUsePeriod(displayInfo.getUsePeriod());
+			} else if (StringUtils.equals(purchaseProduct.getDrmYn(), PurchaseConstants.USE_N)) {
 				// 이용기간 단위 정보가 없는 경우, DRM이 N 이면 무제한 처리
-				purchaseProduct.setUsePeriodUnitCd("PD00310");
+				purchaseProduct.setUsePeriodUnitCd(PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED);
 				purchaseProduct.setUsePeriod("0");
 			} else {
 				purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
-				purchaseProduct
-						.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(), "PD00310") ? "0" : displayInfo
-								.getUsePeriod());
+				purchaseProduct.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(),
+						PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) ? "0" : displayInfo.getUsePeriod());
 			}
 			purchaseProduct.setAid(displayInfo.getAid());
 			purchaseProduct.setTenantProdGrpCd(displayInfo.getTenantProdGrpCd());

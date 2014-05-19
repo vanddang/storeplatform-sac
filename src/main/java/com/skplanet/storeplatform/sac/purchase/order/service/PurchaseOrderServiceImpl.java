@@ -1112,13 +1112,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				if (StringUtils.equals(purchaseProduct.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
 					pDescription = "자동결제";
 				} else {
-					if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(), "PD00312")) {
+					if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
+							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE)) {
 						pDescription = purchaseProduct.getUsePeriod() + "일 이용권";
 
-					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(), "PD00311")) {
+					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
+							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_HOUR)) {
 						pDescription = purchaseProduct.getUsePeriod() + "시간 이용권";
 
-					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(), "PD00313")) {
+					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
+							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH)) {
 						pDescription = purchaseProduct.getUsePeriod() + "개월 이용권";
 					}
 				}
@@ -1580,7 +1583,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// return null;
 		// }
 		// TAKTEST:: QA 테스트
-		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_QA)) {
+		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_QA)
+				|| StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_LOCAL)) {
 			return null;
 		}
 
@@ -1661,8 +1665,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			// 임시 정보 경우 (전권 소장 상품 구매 시 에피소드 대여 상품, 전권 대여 상품 구매 시 에피소드 소장 상품)
 			// 에피소드 기구매 건 기간만료 처리를 위한 정보만 세팅
-			if ((bOwn && (StringUtils.equals(episode.getUsePeriodUnitCd(), "PD00310") == false))
-					|| ((bOwn == false) && StringUtils.equals(episode.getUsePeriodUnitCd(), "PD00310"))) {
+			if ((bOwn && (StringUtils.equals(episode.getUsePeriodUnitCd(),
+					PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) == false))
+					|| ((bOwn == false) && StringUtils.equals(episode.getUsePeriodUnitCd(),
+							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED))) {
 				prchsDtlMore.setTemporary(true); // 임시 정보 여부 세팅
 				prchsDtlMoreList.add(prchsDtlMore);
 				continue;
@@ -2242,13 +2248,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	private String calculateUseDate(String startDt, String periodUnitCd, String periodVal) {
 
-		if (StringUtils.equals(periodUnitCd, "PD00310")) { // 무제한
+		if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) { // 무제한
 			return "99991231235959";
-		} else if (StringUtils.equals(periodUnitCd, "PD00319")) { // 기간선택
+		} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_SELECT)) { // 기간선택
 			return periodVal;
-		} else if (StringUtils.equals(periodUnitCd, "PD00315")) { // 당일
+		} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_DATE)) { // 당일
 			return startDt.substring(0, 8) + "235959";
-		} else if (StringUtils.equals(periodUnitCd, "PD00317")) { // 당년
+		} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_YEAR)) { // 당년
 			return startDt.substring(0, 4) + "1231235959";
 		} else {
 			Date checkDate = null;
@@ -2258,15 +2264,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				throw new StorePlatformException("SAC_PUR_7216", startDt);
 			}
 
-			if (StringUtils.equals(periodUnitCd, "PD00312")) { // 일
+			if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE)) { // 일
 				checkDate = DateUtils.addDays(checkDate, Integer.parseInt(periodVal));
-			} else if (StringUtils.equals(periodUnitCd, "PD00311")) { // 시간
+			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_HOUR)) { // 시간
 				checkDate = DateUtils.addHours(checkDate, Integer.parseInt(periodVal));
-			} else if (StringUtils.equals(periodUnitCd, "PD00313")) { // 월
+			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH)) { // 월
 				checkDate = DateUtils.addMonths(checkDate, Integer.parseInt(periodVal));
-			} else if (StringUtils.equals(periodUnitCd, "PD00314")) { // 년
+			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR)) { // 년
 				checkDate = DateUtils.addYears(checkDate, Integer.parseInt(periodVal));
-			} else if (StringUtils.equals(periodUnitCd, "PD00316")) { // 당월
+			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_MONTH)) { // 당월
 				checkDate = DateUtils.addSeconds(DateUtils.ceiling(checkDate, Calendar.MONTH), -1);
 			} else {
 				throw new StorePlatformException("SAC_PUR_7215", periodUnitCd);
