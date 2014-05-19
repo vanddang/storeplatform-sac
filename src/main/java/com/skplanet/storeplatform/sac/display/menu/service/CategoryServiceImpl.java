@@ -145,6 +145,16 @@ public class CategoryServiceImpl implements CategoryService {
 		requestVO.setFeaturedExposureYn(!StringUtils.isEmpty(requestVO.getFeaturedExposureYn()) ? requestVO
 				.getFeaturedExposureYn() : "N");
 
+		// 멀티미디어 단말 설정
+		if (requestVO.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)
+				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)
+				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)
+				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID)
+				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID)
+				|| requestVO.getTopMenuId().equals(DisplayConstants.DP_SHOPPING_TOP_MENU_ID)) {
+			requestVO.setDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		}
+
 		MenuListSacRes menuListSacRes = new MenuListSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<MenuDetail> menuDetail2DepthList = new ArrayList<MenuDetail>();
@@ -157,8 +167,8 @@ public class CategoryServiceImpl implements CategoryService {
 		// this.log.debug("코믹 카테고리 조회");
 		// resultList = this.commonDAO.queryForList("MenuCategory.selectMultiSubCategoryList", requestVO, Menu.class);
 		// }
-		resultList = this.commonDAO.queryForList("MenuCategory.selectEbookSubCategoryList", requestVO, Menu.class); // 임시
-																													// 쿼리
+		resultList = this.commonDAO.queryForList("MenuCategory.selectSubCategoryList", requestVO, Menu.class); // 임시
+																											   // 쿼리
 		// if (requestVO.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) { // 이북, 코믹 카테고리 조회
 		// this.log.debug("코믹 카테고리 조회");
 		// resultList = this.commonDAO.queryForList("MenuCategory.selectMultiSubCategoryList", requestVO, Menu.class);
