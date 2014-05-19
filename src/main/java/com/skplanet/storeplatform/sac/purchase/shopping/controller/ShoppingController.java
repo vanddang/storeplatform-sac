@@ -14,8 +14,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponPublishAvailableSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponPublishAvailableSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponUseStatusDetailSacRes;
@@ -96,25 +93,7 @@ public class ShoppingController {
 	@RequestMapping(value = "/getCouponPublishAvailable/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CouponPublishAvailableSacRes getCouponPublishAvailable(SacRequestHeader sacRequestHeader,
-			@RequestBody @Validated CouponPublishAvailableSacReq couponPublishAvailableSacReq,
-			BindingResult bindingResult) {
-
-		// Request Parameter Validation.
-		if (bindingResult.hasErrors()) {
-			if (bindingResult.hasFieldErrors()) {
-				FieldError fieldError = bindingResult.getFieldError();
-				if (StringUtils.equals("NotNull", fieldError.getCode())) {
-					throw new StorePlatformException("SAC_PUR_2000", bindingResult.getFieldError().getField());
-				}
-				if (StringUtils.equals("NotBlank", fieldError.getCode())) {
-					throw new StorePlatformException("SAC_PUR_2000", bindingResult.getFieldError().getField());
-				}
-				if (StringUtils.equals("Min", fieldError.getCode())) {
-					throw new StorePlatformException("SAC_PUR_2000", bindingResult.getFieldError().getField());
-				}
-			}
-			throw new StorePlatformException("SAC_PUR_9999");
-		}
+			@RequestBody @Validated CouponPublishAvailableSacReq couponPublishAvailableSacReq) {
 
 		CouponPublishAvailableSacParam couponPublishAvailableSacParam = this.convertReqForGetCouponPublishAvailable(
 				sacRequestHeader, couponPublishAvailableSacReq);
