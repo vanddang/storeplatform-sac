@@ -323,38 +323,43 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private String userPurStatus;
 
-    /**
-     * 부분유료화 상품 유형
-     */
-    private String prodCase;
+	/**
+	 * 부분유료화 상품 유형
+	 */
+	private String prodCase;
 
-    /**
-     * 부분유료화 상품 종류
-     */
-    private String prodKind;
+	/**
+	 * 부분유료화 상품 종류
+	 */
+	private String prodKind;
 
 	/**
 	 * 할인율 정보 (tmembership)
 	 */
 	private List<Point> pointList;
 
-    public String getProdCase() {
-        return prodCase;
-    }
+	/**
+	 * 이북/코믹 스티커
+	 */
+	private String sticker;
 
-    public void setProdCase(String prodCase) {
-        this.prodCase = prodCase;
-    }
+	public String getProdCase() {
+		return this.prodCase;
+	}
 
-    public String getProdKind() {
-        return prodKind;
-    }
+	public void setProdCase(String prodCase) {
+		this.prodCase = prodCase;
+	}
 
-    public void setProdKind(String prodKind) {
-        this.prodKind = prodKind;
-    }
+	public String getProdKind() {
+		return this.prodKind;
+	}
 
-    public String getUserPurStatus() {
+	public void setProdKind(String prodKind) {
+		this.prodKind = prodKind;
+	}
+
+	public String getUserPurStatus() {
 		return this.userPurStatus;
 	}
 
@@ -1305,4 +1310,18 @@ public class Product extends CommonInfo implements Serializable {
 		this.pointList = pointList;
 	}
 
+	/**
+	 * @return the sticker
+	 */
+	public String getSticker() {
+		return this.sticker;
+	}
+
+	/**
+	 * @param sticker
+	 *            the sticker to set
+	 */
+	public void setSticker(String sticker) {
+		this.sticker = sticker;
+	}
 }
