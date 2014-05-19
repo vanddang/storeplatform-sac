@@ -124,6 +124,9 @@ public class AuthorProductServiceImpl implements AuthorProductService {
 						if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) {
 							product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
 							productList.add(product);
+							String tempProductExplain = product.getProductExplain();
+							product.setProductExplain(product.getProductDetailExplain());
+							product.setProductDetailExplain(tempProductExplain);
 						} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) {
 							product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
 							productList.add(product);
