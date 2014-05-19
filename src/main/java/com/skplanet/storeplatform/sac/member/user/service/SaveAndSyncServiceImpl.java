@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
@@ -63,6 +64,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 	@Autowired
 	private DeviceService deviceService;
+
+	@Autowired
+	private MemberCommonInternalComponent mcic;
 
 	@Override
 	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId) {
@@ -275,7 +279,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
 		 */
-		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), newMbrNo,
+		this.mcic.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), newMbrNo,
 				userKey, deviceKey, deviceKey);
 
 		return newMbrNo;
@@ -329,7 +333,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
 		 */
-		this.mcc.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), mbrNo,
+		this.mcic.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), mbrNo,
 				userKey, deviceKey, deviceKey);
 
 	}

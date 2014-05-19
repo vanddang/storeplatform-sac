@@ -79,6 +79,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -112,6 +113,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private IdpSCI idpSCI;
+
+	@Autowired
+	private MemberCommonInternalComponent mcic;
 
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	private String tempUserAuthKey;
@@ -999,8 +1003,8 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 전시/기타, 구매 파트 키 변경 */
 			if (StringUtils.equals(isPurchaseChange, "Y")) {
-				this.commService.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader()
-						.getTenantId(), newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
+				this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(),
+						newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
 			}
 
 			res.setDeviceKey(newDeviceKey);
@@ -1082,8 +1086,8 @@ public class LoginServiceImpl implements LoginService {
 
 			/* usermbr_no가 변경된경우 OGG 연동을 위해 전시/기타, 구매 파트 키 변경 */
 			if (this.isCallChangeKey) {
-				this.commService.excuteInternalMethod(this.isCallChangeKey, requestHeader.getTenantHeader().getSystemId(), requestHeader
-						.getTenantHeader().getTenantId(), joinForWapEcRes.getUserKey(), oldUserKey, oldDeviceKey, oldDeviceKey);
+				this.mcic.excuteInternalMethod(this.isCallChangeKey, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader()
+						.getTenantId(), joinForWapEcRes.getUserKey(), oldUserKey, oldDeviceKey, oldDeviceKey);
 
 				/* 게임센터 연동 */
 				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();

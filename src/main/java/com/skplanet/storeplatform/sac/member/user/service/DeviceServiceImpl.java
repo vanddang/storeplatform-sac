@@ -91,6 +91,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
@@ -128,6 +129,9 @@ public class DeviceServiceImpl implements DeviceService {
 	@Autowired
 	@Resource(name = "memberDelDeviceAmqpTemplate")
 	private AmqpTemplate memberDelDeviceAmqpTemplate;
+
+	@Autowired
+	private MemberCommonInternalComponent mcic;
 
 	/*
 	 * (non-Javadoc)
@@ -432,7 +436,7 @@ public class DeviceServiceImpl implements DeviceService {
 					deviceInfo.getDeviceId(), previousDeviceKey, deviceKey, previousUserKey, userKey);
 
 			/* 3. 전시/기타, 구매 파트 키 변경 */
-			this.commService.excuteInternalMethod(true, systemId, tenantId, userKey, previousUserKey, deviceKey, previousDeviceKey);
+			this.mcic.excuteInternalMethod(true, systemId, tenantId, userKey, previousUserKey, deviceKey, previousDeviceKey);
 
 			/* 4. 실명인증 비교 후 초기화 */
 			SearchRealNameRequest schRealNameReq = new SearchRealNameRequest();

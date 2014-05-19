@@ -52,10 +52,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
@@ -98,12 +94,6 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private SellerSCI sellerSCI;
-
-	@Autowired
-	private ChangeDisplayUserSCI changeDisplayUserSCI;
-
-	@Autowired
-	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
 
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	public String fixedMobileUserAuthKey;
@@ -987,54 +977,6 @@ public class MemberCommonComponent {
 			return false;
 		} else {
 			return true;
-		}
-
-	}
-
-	/**
-	 * <pre>
-	 * 회원 OGG 관련 구매/기타 내부메서드 호출.
-	 * </pre>
-	 * 
-	 * @param isCall
-	 *            내부메서드 연동여부
-	 * @param systemId
-	 *            Sysetm ID
-	 * @param tenantId
-	 *            Tenant ID
-	 * @param userKey
-	 *            사용자 Key
-	 * @param previousUserKey
-	 *            이전 사용자 Key
-	 * @param deviceKey
-	 *            휴대기기 Key
-	 * @param previousDeviceKey
-	 *            이전 휴대기기 Key
-	 */
-	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey, String previousUserKey, String deviceKey,
-			String previousDeviceKey) {
-
-		if (isCall) {
-
-			/* 1. 기타/전시 파트 userKey 변경 */
-			ChangeDisplayUserSacReq changeDisplayUserSacReq = new ChangeDisplayUserSacReq();
-			changeDisplayUserSacReq.setNewUseKey(userKey);
-			changeDisplayUserSacReq.setOldUserKey(previousUserKey);
-			changeDisplayUserSacReq.setTenantId(tenantId);
-			LOGGER.info("changeDisplayUserSCI.changeUserKey request : {}", changeDisplayUserSacReq);
-			this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
-
-			/* 2. 구매 파트 userKey, deviceKey 변경 */
-			UserInfoSacInReq userInfoSacInReq = new UserInfoSacInReq();
-			userInfoSacInReq.setSystemId(systemId);
-			userInfoSacInReq.setTenantId(tenantId);
-			userInfoSacInReq.setNewDeviceKey(deviceKey);
-			userInfoSacInReq.setDeviceKey(previousDeviceKey);
-			userInfoSacInReq.setUserKey(previousUserKey);
-			userInfoSacInReq.setNewUserKey(userKey);
-			LOGGER.info("purchaseUserInfoInternalSCI.updateUserDevice request : {}", userInfoSacInReq);
-			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
-
 		}
 
 	}
