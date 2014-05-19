@@ -52,6 +52,8 @@
         </layout>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level> 
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>            
         </filter>        
     </appender> 
      <!-- SQL LOG APPENDER -->
@@ -126,7 +128,7 @@
     <logger name="jdbc.sqltiming" additivity="false">
         <level value="ERROR" /> 
         <appender-ref ref="SQL_ERROR_LOGGING_ROLLINGFILE_ASYNC" />
-        <appender-ref ref="SQL_LOGGING_ROLLINGFILE_ASYNC" />
+        <!-- appender-ref ref="SQL_LOGGING_ROLLINGFILE" / -->
     </logger>
     
     <!-- MQ BLOCKINGQUEU LOGGER -->
