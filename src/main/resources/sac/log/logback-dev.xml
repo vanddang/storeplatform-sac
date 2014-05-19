@@ -105,6 +105,9 @@
         <level value="debug" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
+    <logger name="com.skplanet.plandasj.PlandasjPingPong" additivity="false">
+        <level value="OFF" />
+    </logger>
     <logger name="com.skplanet.spring" additivity="false">
         <level value="debug" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />

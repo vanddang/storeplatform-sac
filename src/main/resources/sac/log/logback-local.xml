@@ -113,6 +113,9 @@
         <level value="INFO" />
         <appender-ref ref="CONSOLE" />
     </logger>
+    <logger name="com.skplanet.plandasj.PlandasjPingPong" additivity="false">
+        <level value="OFF" />
+    </logger>
     <logger name="com.skplanet.spring" additivity="false">
         <level value="INFO" />
         <appender-ref ref="CONSOLE" />
