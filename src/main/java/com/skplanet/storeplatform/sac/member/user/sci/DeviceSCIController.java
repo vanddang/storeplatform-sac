@@ -22,7 +22,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
+import com.skplanet.storeplatform.sac.member.user.sci.service.DeviceSCIService;
 
 /**
  * 단말 정보 조회 내부메소드 호출 Controller.
@@ -35,7 +35,7 @@ public class DeviceSCIController implements DeviceSCI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceSCIController.class);
 
 	@Autowired
-	private DeviceService deviceService; // 휴대기기 관련 SAC 내부 인터페이스.
+	private DeviceSCIService deviceService; // 휴대기기 관련 SAC 내부 인터페이스.
 
 	/**
 	 * <pre>

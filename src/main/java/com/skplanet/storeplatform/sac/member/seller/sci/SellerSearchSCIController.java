@@ -3,22 +3,19 @@ package com.skplanet.storeplatform.sac.member.seller.sci;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
-import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
+import com.skplanet.storeplatform.sac.member.seller.sci.service.SellerSearchSCIService;
 
 /**
  * 판매자 회원 조회 관련 기능
@@ -32,14 +29,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerSearchSCIController.class);
 
 	@Autowired
-	private SellerSearchService sellerSearchService;
-
-	@Autowired
-	@Qualifier("sac")
-	private CommonDAO commonDAO;
-
-	@Autowired
-	private MemberCommonComponent commonComponent;
+	private SellerSearchSCIService sellerSearchService;
 
 	/**
 	 * <pre>
