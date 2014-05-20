@@ -1946,8 +1946,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 								boolean purchaseYn = this.displayCommonService.checkPurchase(
 										tenantHeader.getTenantId(), req.getUserKey(), req.getDeviceKey(),
 										episodeShopping.getPartProdId());
-
-								if (purchaseYn) {
+								this.log.info("구매 여부::{}", purchaseYn);
+								if (!purchaseYn) {
 									episodeRights.setAllow(episodeShopping.getAllow());
 								}
 							}
