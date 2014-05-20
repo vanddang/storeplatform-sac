@@ -1401,6 +1401,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
 		}
+		if (StringUtils.isEmpty(req.getExceptId())) {
+			req.setExceptId(null);
+		}
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
