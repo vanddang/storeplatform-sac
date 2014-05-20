@@ -4,12 +4,13 @@
 
     <!-- Music Main -->
     <select id="getMusicDetail" parameterType="com.skplanet.storeplatform.sac.display.music.vo.MusicDetailParam" resultType="com.skplanet.storeplatform.sac.display.music.vo.MusicDetail">
-        SELECT /* MusicDetailMapper.xml, getMusicDetail, SAC : 정희원 , 2014-01-24 */
+        SELECT <![CDATA[/* MusicDetailMapper.xml, getMusicDetail, SAC : 정희원 , 2014-01-24 */
             CPD.PROD_ID AS CHNL_ID,
             EPD.PROD_ID AS EPSD_ID,
             TPRC.PROD_AMT,
             PDESC.PROD_NM,
-            NVL(TS.AVG_EVLU_SCORE, 0.0) AS AVG_EVLU_SCORE,
+            NVL(CASE WHEN TS.AVG_EVLU_SCORE > 0 AND TS.AVG_EVLU_SCORE < 1 THEN 1 WHEN TS.AVG_EVLU_SCORE > 5 THEN 5
+            ELSE ROUND(TS.AVG_EVLU_SCORE, 1) END, 0) as AVG_EVLU_SCORE,
             NVL(TS.PRCHS_CNT, 0) AS DWLD_CNT,
             NVL(TS.PATICPERS_CNT, 0) AS PATICPERS_CNT,
             PDESC.ARTIST1_ID,
@@ -32,7 +33,7 @@
             MM.ALBUM_TYPE_NM,
             SD.DEVICE_MODEL_CD,
             CPD.SVC_GRP_CD,
-            NVL((SELECT MUSIC_SPRT_YN FROM TB_CM_DEVICE CM2 WHERE CM2.DEVICE_MODEL_CD = #{deviceModelCd}), 'N') AS MUSIC_SPRT_YN
+            NVL((SELECT MUSIC_SPRT_YN FROM TB_CM_DEVICE CM2 WHERE CM2.DEVICE_MODEL_CD = #{deviceModelCd}), 'N') AS MUSIC_SPRT_YN]]>
         FROM TB_DP_PROD CPD
             INNER JOIN TB_DP_PROD_RSHP RS
                 ON RS.PROD_ID = CPD.PROD_ID

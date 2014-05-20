@@ -3,14 +3,15 @@
 <mapper namespace="AppDetail">
     
     <select id="getAppDetail" parameterType="com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam" resultType="com.skplanet.storeplatform.sac.display.app.vo.AppDetail">
-        SELECT
+        SELECT<![CDATA[
             /* AppDetailMapper.xml, getAppDetail, SAC : 정희원 , 2014-01-24 */
             PD.PROD_ID,
             SC.SUB_CONTENTS_ID,
             PDESC.PROD_NM,
             NVL(TPRC.PROD_NET_AMT, 0) AS FIXED_AMT,
             NVL(TPRC.PROD_AMT, 0) AS PROD_AMT,
-            nvl(TS.AVG_EVLU_SCORE, 0.0) as AVG_EVLU_SCORE,
+            NVL(CASE WHEN TS.AVG_EVLU_SCORE > 0 AND TS.AVG_EVLU_SCORE < 1 THEN 1 WHEN TS.AVG_EVLU_SCORE > 5 THEN 5
+            ELSE ROUND(TS.AVG_EVLU_SCORE, 1) END, 0) as AVG_EVLU_SCORE,
             nvl(TS.PRCHS_CNT, 0) as DWLD_CNT,
             nvl(TS.PATICPERS_CNT, 0) as PATICPERS_CNT,
             APP.AID,
@@ -39,7 +40,7 @@
             PD.SVC_GRP_CD,
             PD.DRM_YN,
             APP.DESC_VIDEO_URL,
-            APP.PART_PARENT_CLSF_CD
+            APP.PART_PARENT_CLSF_CD]]>
         FROM
             TB_DP_PROD PD
             INNER JOIN TB_DP_APP_PROD APP
