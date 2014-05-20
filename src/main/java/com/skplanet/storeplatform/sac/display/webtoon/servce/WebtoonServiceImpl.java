@@ -205,6 +205,9 @@ public class WebtoonServiceImpl implements WebtoonService {
 				product.setProductExplain(webtoonDetail.getProdBaseDesc());
 				product.setProductDetailExplain(webtoonDetail.getProdDtlDesc());
 
+				// 상품 판매상태
+				product.setSalesStatus(webtoonDetail.getProdStatusCd());
+
 				listVO.add(product);
 
 			}
