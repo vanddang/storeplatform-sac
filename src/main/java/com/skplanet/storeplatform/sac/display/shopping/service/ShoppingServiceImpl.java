@@ -1950,7 +1950,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 										tenantHeader.getTenantId(), req.getUserKey(), req.getDeviceKey(),
 										episodeShopping.getPartProdId());
 								this.log.info("구매 여부::{}", purchaseYn);
-								if (!purchaseYn) {
+								if (purchaseYn) {
 									episodeRights.setAllow(episodeShopping.getAllow());
 								}
 							}
