@@ -15,10 +15,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.Header;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.ErrorMessageBuilder;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo;
@@ -28,12 +25,11 @@ import com.skplanet.storeplatform.sac.runtime.flow.exception.code.AclErrorCode;
 import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderInfo;
 
 /**
- * 
+ *
  * Calss 설명
- * 
+ *
  * Updated on : 2013. 11. 26. Updated by : 김현일, 인크로스.
  */
-@Service
 public class AuthServiceImpl implements AuthService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -41,12 +37,11 @@ public class AuthServiceImpl implements AuthService {
 	@Autowired
 	private AclDbService aclService;
 
-	@Value("#{propertiesForSac['skp.common.service.acl']}")
 	private boolean aclYn;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.runtime.flow.service.AuthService#authentication(com.skplanet.storeplatform.sac
 	 * .runtime.flow.vo.HeaderInfo)
@@ -71,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.runtime.flow.service.AuthService#authorization(com.skplanet.storeplatform.sac.
 	 * runtime.flow.vo.HeaderInfo)

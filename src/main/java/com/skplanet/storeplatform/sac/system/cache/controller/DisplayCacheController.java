@@ -9,9 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.system.cache.controller;
 
-import com.skplanet.storeplatform.framework.core.cache.process.GlobalCacheProcessor;
-import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
-import com.skplanet.storeplatform.sac.display.common.ProductType;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -20,15 +21,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import com.skplanet.storeplatform.framework.core.cache.process.GlobalCacheProcessor;
+import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
+import com.skplanet.storeplatform.sac.display.common.ProductType;
 
 /**
  * <p>
  * DisplayCacheController
  * </p>
- * Updated on : 2014. 04. 03 Updated by : 정희원, SK 플래닛.
+ * Created on 2014. 04. 03 by 정희원, SK 플래닛.
+ * Updated on 2014. 05. 20 by 서대영, SK 플래닛. : Method 추가 (disableCache(), isUseCache())
  */
 @Controller
 @RequestMapping(value = "/system/cache")
@@ -68,7 +70,7 @@ public class DisplayCacheController {
     @RequestMapping(value = "/enableCache", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, String> enableCache() {
-        GlobalCacheProcessor globalCacheProcessor = (GlobalCacheProcessor) applicationContext.getBean("globalCacheProcessor");
+        GlobalCacheProcessor globalCacheProcessor = (GlobalCacheProcessor) this.applicationContext.getBean("globalCacheProcessor");
         globalCacheProcessor.setUseCache(true);
 
         Map<String, String> res = new HashMap<String, String>();
@@ -76,4 +78,25 @@ public class DisplayCacheController {
 
         return res;
     }
+
+    @RequestMapping(value = "/disableCache", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, String> disableCache() {
+        GlobalCacheProcessor globalCacheProcessor = (GlobalCacheProcessor) this.applicationContext.getBean("globalCacheProcessor");
+        globalCacheProcessor.setUseCache(false);
+
+        Map<String, String> res = new HashMap<String, String>();
+        res.put("message", "Global cache disabled.");
+
+        return res;
+    }
+
+    @RequestMapping(value = "/isUseCache", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean isUseCache() {
+        GlobalCacheProcessor globalCacheProcessor = (GlobalCacheProcessor) this.applicationContext.getBean("globalCacheProcessor");
+        return globalCacheProcessor.isUseCache();
+    }
+
+
 }

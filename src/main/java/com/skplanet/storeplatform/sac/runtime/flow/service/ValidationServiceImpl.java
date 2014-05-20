@@ -17,9 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.Headers;
-import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skplanet.storeplatform.framework.core.exception.ErrorMessageBuilder;
@@ -29,12 +27,11 @@ import com.skplanet.storeplatform.sac.runtime.flow.exception.code.ValidErrorCode
 import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderInfo;
 
 /**
- * 
+ *
  * Calss 설명
- * 
+ *
  * Updated on : 2013. 11. 26. Updated by : 김현일, 인크로스.
  */
-@Service
 public class ValidationServiceImpl implements ValidationService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -42,12 +39,11 @@ public class ValidationServiceImpl implements ValidationService {
 	@Autowired
 	private AclDbService aclService;
 
-	@Value("#{propertiesForSac['skp.common.service.acl']}")
 	private boolean aclYn;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.integration.v2.flow.service.ValidationService#checkHeader(java.util.Map)
 	 */
 	@Override
@@ -86,11 +82,11 @@ public class ValidationServiceImpl implements ValidationService {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * method 설명.
 	 * </pre>
-	 * 
+	 *
 	 * @param source
 	 *            source
 	 * @return Map<String, String>
