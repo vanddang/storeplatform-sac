@@ -62,10 +62,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrSegment;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchDcdSupportProductSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.DcdSupportProductRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
-import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
@@ -75,6 +73,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceAmqpSacR
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.idp.constant.IdpConstants;
@@ -100,13 +99,16 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	private MemberCommonComponent mcc;
 
 	@Autowired
+	private MemberCommonInternalComponent mcic;
+
+	@Autowired
 	private DeviceService deviceService;
 
-	@Autowired
-	private SearchDcdSupportProductSCI searchDcdSupportProductSCI;
-
-	@Autowired
-	private ExistenceInternalSacSCI existenceInternalSacSCI;
+	//	@Autowired
+	//	private SearchDcdSupportProductSCI searchDcdSupportProductSCI;
+	//
+	//	@Autowired
+	//	private ExistenceInternalSacSCI existenceInternalSacSCI;
 
 	@Autowired
 	@Resource(name = "memberModDeviceAmqpTemplate")
@@ -507,7 +509,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE) || StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_JOIN)) { // DCD 등록 및 해지
 
 			/* DCD 상품 조회 */
-			DcdSupportProductRes dcdSupportProductRes = this.searchDcdSupportProductSCI.searchDcdSupportProduct();
+			DcdSupportProductRes dcdSupportProductRes = this.mcic.searchDcdSupportProduct();
 
 			List<ExistenceItem> existenceItemList = new ArrayList<ExistenceItem>();
 			ExistenceItem existenceItem = null;
@@ -525,7 +527,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				existenceReq.setUserKey(userKey);
 				existenceReq.setDeviceKey(deviceKey);
 				existenceReq.setExistenceItem(existenceItemList);
-				ExistenceListRes existenceListRes = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
+				ExistenceListRes existenceListRes = this.mcic.searchExistenceList(existenceReq);
 
 				/* 기존번호 상품별로 DCD 단말 등록 및 해지 처리 */
 				if (existenceListRes.getExistenceListRes() != null) {

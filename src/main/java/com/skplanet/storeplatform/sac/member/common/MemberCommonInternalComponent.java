@@ -15,9 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchDcdSupportProductSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.DcdSupportProductRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 
 /**
  * 내부 메서드 호출 기능을 공통 정의해서 사용한다.
@@ -34,6 +39,12 @@ public class MemberCommonInternalComponent {
 
 	@Autowired
 	private PurchaseUserInfoInternalSCI purchaseUserInfoInternalSCI;
+
+	@Autowired
+	private SearchDcdSupportProductSCI searchDcdSupportProductSCI;
+
+	@Autowired
+	private ExistenceInternalSacSCI existenceInternalSacSCI;
 
 	/**
 	 * <pre>
@@ -95,4 +106,27 @@ public class MemberCommonInternalComponent {
 		this.changeDisplayUserSCI.changeUserId(req);
 	}
 
+	/**
+	 * <pre>
+	 * 기타/전시 파트 Dcd 상품 조회.
+	 * </pre>
+	 * 
+	 * @return ExistenceListRes
+	 */
+	public DcdSupportProductRes searchDcdSupportProduct() {
+		return this.searchDcdSupportProductSCI.searchDcdSupportProduct();
+	}
+
+	/**
+	 * <pre>
+	 * 기타/전시 파트 기구매내역 체크.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            ExistenceReq
+	 * @return ExistenceListRes
+	 */
+	public ExistenceListRes searchExistenceList(ExistenceReq req) {
+		return this.existenceInternalSacSCI.searchExistenceList(req);
+	}
 }
