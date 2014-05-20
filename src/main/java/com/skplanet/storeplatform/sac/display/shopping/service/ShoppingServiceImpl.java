@@ -1888,6 +1888,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 								historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
 								historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
 								historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+								historyListSacReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
 								historyListSacReq.setEndDt(episodeShopping.getSysDate());
 								historyListSacReq.setOffset(1);
 								historyListSacReq.setCount(1);
