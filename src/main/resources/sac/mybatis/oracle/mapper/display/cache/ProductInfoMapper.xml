@@ -821,6 +821,7 @@
                   AND EPROD.SVC_GRP_CD = #{svcGrpCd}
                   AND RSHP.PROD_RSHP_CD = 'DP010802'
                   AND TPROD.TENANT_ID = #{tenantId}
+                  AND TPROD.PROD_STATUS_CD = 'PD000403'
                   AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
                   AND NVL(SPROD.B2B_PROD_YN, 'N') != 'Y'
                   AND NVL(SC.CHNL_CNT, 0) > 0
