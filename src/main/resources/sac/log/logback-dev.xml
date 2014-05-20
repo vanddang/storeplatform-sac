@@ -102,19 +102,19 @@
     
     <!-- PLANDAS LOGGER -->
     <logger name="com.skplanet.plandasj" additivity="false">
-        <level value="debug" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
     </logger>
     <logger name="com.skplanet.plandasj.PlandasjPingPong" additivity="false">
         <level value="OFF" />
     </logger>
     <logger name="com.skplanet.spring" additivity="false">
-        <level value="debug" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
     </logger>
     <logger name="org.apache.zookeeper" additivity="false">
-        <level value="debug" />
-        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
+        <level value="ERROR" />
+        <appender-ref ref="CONSOLE" />
     </logger>
     
     <!-- JDBC LOGGER --> 
