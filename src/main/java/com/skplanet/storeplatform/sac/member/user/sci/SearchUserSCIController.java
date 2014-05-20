@@ -38,8 +38,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.user.service.UserOcbService;
-import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
+import com.skplanet.storeplatform.sac.member.user.sci.service.SearchUserSCIService;
 
 /**
  * 회원정보 조회 내부메소드 호출 Controller.
@@ -52,10 +51,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchUserSCIController.class);
 
 	@Autowired
-	private UserSearchService userSearchService;
-
-	@Autowired
-	private UserOcbService userOcbService;
+	private SearchUserSCIService searchUserSCIService;
 
 	/**
 	 * <pre>
@@ -75,7 +71,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		SearchUserSacRes searchUserSacRes = this.userSearchService.searchUserByUserKey(requestHeader, request);
+		SearchUserSacRes searchUserSacRes = this.searchUserSCIService.searchUserByUserKey(requestHeader, request);
 		LOGGER.info("Response : user count : {}", searchUserSacRes.getUserInfo().size());
 		return searchUserSacRes;
 	}
@@ -105,7 +101,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		detailReq.setSearchExtent(searchExtentReq);
 
 		// 사용자 회원 기본정보 조회 SAC 내부 메서드 호출
-		DetailRes detailRes = this.userSearchService.detail(requestHeader, detailReq);
+		DetailRes detailRes = this.searchUserSCIService.detail(requestHeader, detailReq);
 
 		UserInfoSacRes response = new UserInfoSacRes();
 		response.setUserKey(detailRes.getUserKey());
@@ -147,7 +143,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		} else if (!deviceKey.equals("")) {
 			detailReq.setDeviceKey(request.getDeviceKey());
 		}
-		DetailRes detailRes = this.userSearchService.searchUser(detailReq, requestHeader);
+		DetailRes detailRes = this.searchUserSCIService.searchUser(detailReq, requestHeader);
 
 		request.setUserKey(detailRes.getUserKey());
 
@@ -189,7 +185,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		String ocbCardNumber = "";
 		String ocbAuthMethodCode = "";
 		try {
-			GetOcbInformationRes ocbRes = this.userOcbService.getOcbInformation(requestHeader, ocbReq);
+			GetOcbInformationRes ocbRes = this.searchUserSCIService.getOcbInformation(requestHeader, ocbReq);
 			for (OcbInfo ocb : ocbRes.getOcbInfoList()) {
 				ocbCardNumber = ocb.getCardNumber();
 				ocbAuthMethodCode = ocb.getAuthMethodCode();
@@ -250,7 +246,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		// SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
 		// searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
-		Map<String, UserDeviceInfoSac> userInfoMap = this.userSearchService.searchUserByDeviceKey(requestHeader, request);
+		Map<String, UserDeviceInfoSac> userInfoMap = this.searchUserSCIService.searchUserByDeviceKey(requestHeader, request);
 
 		// Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
 		// UserDeviceInfoSac userDeviceInfoSac;
