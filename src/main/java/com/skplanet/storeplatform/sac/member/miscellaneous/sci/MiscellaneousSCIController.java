@@ -28,7 +28,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualP
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
+import com.skplanet.storeplatform.sac.member.miscellaneous.sci.service.MiscellaneousSCIService;
 
 /**
  * 기타 기능 내부메소드 호출 Controller.
@@ -41,7 +41,7 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MiscellaneousSCIController.class);
 
 	@Autowired
-	private MiscellaneousService miscellaneousService;
+	private MiscellaneousSCIService miscellaneousSCIService;
 
 	/*
 	 * (non-Javadoc)
@@ -72,7 +72,7 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 		getIndividualPolicyReq.setKey(req.getKey());
 		getIndividualPolicyReq.setPolicyCodeList(codeList);
 
-		GetIndividualPolicyRes getIndividualPolicyRes = this.miscellaneousService.getIndividualPolicy(requestHeader, getIndividualPolicyReq);
+		GetIndividualPolicyRes getIndividualPolicyRes = this.miscellaneousSCIService.getIndividualPolicy(requestHeader, getIndividualPolicyReq);
 
 		GetIndividualPolicySacRes sacRes = new GetIndividualPolicySacRes();
 		List<IndividualPolicyInfoSac> infoSacList = new ArrayList<IndividualPolicyInfoSac>();
