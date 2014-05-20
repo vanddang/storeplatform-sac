@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserD
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * 구매내역 회원정보 변경.
@@ -35,8 +36,6 @@ public class PurchaseUserInfoSacServiceImpl implements PurchaseUserInfoSacServic
 	@Autowired
 	private PurchaseUserInfoSCI purchaseUserInfoSCI;
 
-	// @Autowired
-	// private PurchaseMemberRepository purchaseMemberRepository;
 	@Autowired
 	private SearchUserSCI searchUserSCI;
 
@@ -77,7 +76,11 @@ public class PurchaseUserInfoSacServiceImpl implements PurchaseUserInfoSacServic
 				throw new StorePlatformException("SAC_PUR_4106", newUserKey, newDeviceKey);
 			}
 		} catch (StorePlatformException e) {
-			throw new StorePlatformException("SAC_PUR_4106", newUserKey, newDeviceKey);
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
+				throw new StorePlatformException("SAC_PUR_4106", newUserKey, newDeviceKey);
+			} else {
+				throw e;
+			}
 		}
 
 		return this.purchaseUserInfoSCI.updateUserDevice(userInfoScReq);
