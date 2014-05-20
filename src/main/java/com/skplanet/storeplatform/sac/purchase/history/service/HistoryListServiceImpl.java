@@ -91,6 +91,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 		HistorySac historySac = null;
 
 		List<String> prodIdList = new ArrayList<String>();
+		List<String> fixProdIdList = new ArrayList<String>();
+
 		List<SearchUserDeviceSac> deviceList = new ArrayList<SearchUserDeviceSac>();
 		SearchUserDeviceSac deviceInfo;
 		List<SearchUserDeviceSac> sendDeviceList = new ArrayList<SearchUserDeviceSac>();
@@ -238,8 +240,12 @@ public class HistoryListServiceImpl implements HistoryListService {
 			sacHistoryList.add(historySac);
 
 			// 상품정보 조회를 위한 상품ID 셋팅
-			if (!StringUtils.isEmpty(historySac.getProdId())) {
+			if (!StringUtils.isBlank(historySac.getProdId())) {
 				prodIdList.add(historySac.getProdId());
+			}
+
+			if (!StringUtils.isBlank(historySac.getUseFixrateProdId())) {
+				fixProdIdList.add(historySac.getUseFixrateProdId());
 			}
 
 			// DEVICE INFO 조회를 위한 deviceKey 셋팅
@@ -271,10 +277,14 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 **************************************************/
 		this.logger.debug("##### HistoryList ProductInfo Start");
 		if (!PurchaseConstants.USE_Y.equals(request.getInternalYn())) {
-			if (prodIdList.size() > 0) {
 
-				ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
-				ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
+			ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
+			ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
+
+			ProductInfoSacReq fixProductInfoSacReq = new ProductInfoSacReq();
+			ProductInfoSacRes fixProductInfoSacRes = new ProductInfoSacRes();
+
+			if (prodIdList.size() > 0) {
 
 				productInfoSacReq.setTenantId(request.getTenantId());
 				productInfoSacReq.setDeviceModelNo(request.getModel());
@@ -284,22 +294,46 @@ public class HistoryListServiceImpl implements HistoryListService {
 				this.logger.debug("### productInfoSacReq  : {}" + productInfoSacReq.toString());
 
 				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
+			}
 
-				if (productInfoSacRes != null) {
-					HashMap<String, Object> prodMap = new HashMap<String, Object>();
-					for (HistorySac obj : sacHistoryList) {
-						for (ProductInfo info : productInfoSacRes.getProductList()) {
-							if (obj.getProdId().equals(info.getPartProdId())) {
-								prodMap = new HashMap<String, Object>();
-								prodMap.put("productMap", info);
-								obj.setProductInfo(prodMap);
-								break;
+			if (fixProdIdList.size() > 0) {
+
+				fixProductInfoSacReq.setTenantId(request.getTenantId());
+				fixProductInfoSacReq.setDeviceModelNo(request.getModel());
+				fixProductInfoSacReq.setLang(request.getLangCd());
+				fixProductInfoSacReq.setList(fixProdIdList);
+
+				fixProductInfoSacRes = this.productInfoSCI.getProductList(fixProductInfoSacReq);
+			}
+
+			if (productInfoSacRes != null) {
+				HashMap<String, Object> prodMap = new HashMap<String, Object>();
+				for (HistorySac obj : sacHistoryList) {
+					for (ProductInfo info : productInfoSacRes.getProductList()) {
+
+						if (obj.getProdId().equals(info.getPartProdId())) {
+							prodMap = new HashMap<String, Object>();
+							prodMap.put("productMap", info);
+
+							// 구매한 정액권 ID 상품 정보조회
+							if (!StringUtils.isBlank(obj.getUseFixrateProdId())) {
+								for (ProductInfo fixInfo : fixProductInfoSacRes.getProductList()) {
+									if (obj.getUseFixrateProdId().equals(fixInfo.getPartProdId())) {
+										prodMap.put("fixProductMap", fixInfo);
+										break;
+									}
+								}
+							} else {
+								prodMap.put("fixProductMap", null);
 							}
+
+							obj.setProductInfo(prodMap);
+							break;
 						}
 					}
 				}
-
 			}
+
 		}
 		this.logger.debug("##### HistoryList ProductInfo End");
 		/*************************************************
