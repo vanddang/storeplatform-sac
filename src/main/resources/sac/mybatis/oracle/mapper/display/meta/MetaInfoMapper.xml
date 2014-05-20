@@ -862,7 +862,8 @@
                       <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                         AND H.PART_PROD_ID = #{productBasicInfo.partProdId}
                       </if>
-                        
+                      
+                        AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                         AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/
                         AND NVL(B.CHNL_CNT, 0) > 0  
                         AND PI.LANG_CD = #{tenantHeader.langCd}         /* ko : 한국어 */         
