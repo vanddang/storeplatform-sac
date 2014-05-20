@@ -106,6 +106,11 @@ public class DisplayConstants {
 	 */
 	public static final String DP_GAME_TOP_MENU_ID = "DP01";
 	/**
+	 * 폰꾸미기.
+	 */
+	public static final String DP_DISPLAY_PHONE_TOP_MENU_ID = "DP02";
+
+	/**
 	 * FUN.
 	 */
 	public static final String DP_FUN_TOP_MENU_ID = "DP03";

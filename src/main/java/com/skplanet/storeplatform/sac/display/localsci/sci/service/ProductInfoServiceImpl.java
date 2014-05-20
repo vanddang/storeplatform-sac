@@ -94,7 +94,8 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 					if (product != null) {
 						productList.add(product);
 					}
-				} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
+				} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)
+						|| DisplayConstants.DP_PHONE_DECO_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 or 폰 꾸미기 타입일 경우
 					// 영화/방송 상품의 경우
 					if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 							|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
@@ -122,32 +123,24 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 							product.setChapterUnit(chapterUnit);
 							productList.add(product);
 						}
-					} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
+					} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)
+							|| DisplayConstants.DP_DISPLAY_PHONE_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 						// productBasicInfo.setMenuId("DP004901");
 						String metaClsfCd = productBasicInfo.getMetaClsfCd();
 						paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 						this.log.debug("##### Search for Music specific product");
 						this.log.debug("##### Meta Class Cd : {} " + metaClsfCd);
-						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getMusicMetaInfo", paramMap,
-								ProductInfo.class);
+						ProductInfo product = null;
+						if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
+							product = this.commonDAO.queryForObject("ProductInfo.getMusicMetaInfo", paramMap,
+									ProductInfo.class);
+						} else {
+							// RING OR BELL일 경우에는 채널 기준으로 조회한다.
+							product = this.commonDAO.queryForObject("ProductInfo.getRingBellMetaInfo", paramMap,
+									ProductInfo.class);
+						}
+
 						if (product != null) {
-							if (DisplayConstants.DP_MUSIC_NORMAL_COLORRING_META_CLASS_CD.equals(metaClsfCd)) {
-								// 일반 컬러링인 경우
-								product.setRingType(DisplayConstants.DP_MUSIC_COLORING_TYPE);
-								product.setQuality(DisplayConstants.DP_MUSIC_NORMAL_QUALITY);
-							} else if (DisplayConstants.DP_MUSIC_LONG_COLORRING_META_CLASS_CD.equals(metaClsfCd)) {
-								// 롱 컬러링인 경우
-								product.setRingType(DisplayConstants.DP_MUSIC_COLORING_TYPE);
-								product.setQuality(DisplayConstants.DP_MUSIC_HIGH_QUALITY);
-							} else if (DisplayConstants.DP_MUSIC_NORMAL_BELL_META_CLASS_CD.equals(metaClsfCd)) {
-								// 일반 라이브벨인 경우
-								product.setRingType(DisplayConstants.DP_MUSIC_BELL_TYPE);
-								product.setQuality(DisplayConstants.DP_MUSIC_NORMAL_QUALITY);
-							} else if (DisplayConstants.DP_MUSIC_HIGH_QUALITY_BELL_META_CLASS_CD.equals(metaClsfCd)) {
-								// 고음질 라이브벨인 경우
-								product.setRingType(DisplayConstants.DP_MUSIC_BELL_TYPE);
-								product.setQuality(DisplayConstants.DP_MUSIC_HIGH_QUALITY);
-							}
 							productList.add(product);
 						}
 					}
