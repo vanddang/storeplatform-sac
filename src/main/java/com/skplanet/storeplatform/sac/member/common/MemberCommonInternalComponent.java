@@ -84,9 +84,12 @@ public class MemberCommonInternalComponent {
 	}
 
 	/**
-	 * 기타/전시 파트 아이디 변경 요청 method 설명. </pre>
+	 * <pre>
+	 * 기타/전시 파트 아이디 변경 요청.
+	 * </pre>
 	 * 
 	 * @param req
+	 *            ChangeDisplayUserSacReq
 	 */
 	public void changeUserId(ChangeDisplayUserSacReq req) {
 		this.changeDisplayUserSCI.changeUserId(req);
