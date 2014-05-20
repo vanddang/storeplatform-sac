@@ -63,4 +63,16 @@ public class CommonServiceTest {
         assert tmembershipDcRateForMenu.getFreepassDcRate() == 50;
     }
 
+    @Test
+    public void checkPurchaseTest() {
+
+        // 구매된 것
+        boolean v1 = commonService.checkPurchase("S01", "IM142100005724280201303121051", "01046353524", "S930000381");
+//        assert v1;
+
+        // 구매 취소된 것
+        boolean v2 = commonService.checkPurchase("S01", "IM142100005724280201303121051", "01046353524", "S930000383");
+//        assert !v2;
+    }
+
 }
