@@ -123,7 +123,7 @@
                                       </foreach>                        
                         </if>   
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT /*+ NL_SJ */ 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -158,8 +158,8 @@
              FROM (
                   SELECT  * 
                    FROM (
-                          SELECT 
-                                 B.CATALOG_ID 
+                          SELECT /*+ full(I) */
+                                B.CATALOG_ID 
                                ,C.CATALOG_NM 
                                ,A.BRAND_ID  
                                ,D.MENU_ID  
@@ -236,10 +236,14 @@
                         </if>      
                         AND  EXISTS (
                             SELECT 1 
-                            FROM  TB_DP_SPRT_DEVICE DV  
-                            WHERE 1=1
-                              AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
-                              AND PROD_ID = I.PROD_ID
+                              FROM  TB_DP_SPRT_DEVICE DV  
+                             WHERE PROD_ID = I.PROD_ID
+                               AND DV.DEVICE_MODEL_CD  = #{deviceHeader.model}  
+                             UNION ALL
+                            SELECT 1 
+                              FROM  TB_DP_SPRT_DEVICE DV  
+                             WHERE PROD_ID = I.PROD_ID                             
+                               AND DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo} 
                             )                        
                    ) 
                  WHERE NO =1
