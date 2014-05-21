@@ -3,7 +3,7 @@
 <mapper namespace="Category">
     <!-- 일반 카테고리 앱 상품 조회 -->
     <select id="selectCategoryAppList" parameterType="CategoryAppSacReq" resultType="ProductBasicInfo">
-		SELECT  /* CategoryMapper.XML, selectCategoryAppList, SAC 전시, 2014-01-14 */
+		SELECT  /* CategoryMapper.xml, selectCategoryAppList, SAC 전시, 2014-05-19 */
                 KA.TOTAL_COUNT
               , KA.RNUM
               , KA.TOP_MENU_ID
@@ -15,7 +15,7 @@
                              , IB.PRCHS_CNT
                              , IB.AVG_EVLU_SCORE
                              , IB.PATICPERS_CNT
-                          FROM (SELECT  COUNT(B.PROD_ID) OVER() AS TOTAL_COUNT
+                          FROM (SELECT  /*+ leading(K A B) */ COUNT(B.PROD_ID) OVER() AS TOTAL_COUNT
                                       , A.MENU_ID
                                       , A.TOP_MENU_ID
                                       , B.PROD_ID
@@ -65,7 +65,7 @@
     
     <!-- 일반 카테고리 이북/코믹 상품 조회 -->
     <select id="selectCategoryEbookComicList" parameterType="CategoryEbookComicSacReq" resultType="ProductBasicInfo">
-        SELECT  /* CategoryMapper.xml, selectCategoryEbookComicList, SAC 전시, 2014-03-25 */
+        SELECT  /* CategoryMapper.xml, selectCategoryEbookComicList, SAC 전시, 2014-05-19 */
                 LA.TOTAL_COUNT
               , LA.RNUM
               , LA.TOP_MENU_ID
@@ -98,8 +98,9 @@
                                              , TB_DP_MENU_CATEGORY_PROD_MAPG B
                                              , TB_DP_PROD               D /* 채널 상품 */
                                              , TB_DP_EBOOK_PROD         E /* 채널 상품 */
-                                             , TB_DP_PROD_DESC          F
-                                             , TB_DP_TENANT_PROD        G
+                                             , TB_DP_PROD_DESC          F /* 채널 상품 */
+                                             , TB_DP_TENANT_PROD        G /* 채널 상품 */
+                                             , TB_DP_TENANT_PROD_PRICE  H /* 채널 상품 */
                                              , TB_DP_PROD_RSHP          I
                                              , TB_DP_PROD               J /* 에피소드 상품 */
                                              , TB_DP_EBOOK_PROD         K /* 에피소드 상품 */
@@ -107,10 +108,14 @@
                                              , TB_CM_DEVICE             M
                                          WHERE B.MENU_ID = A.MENU_ID 
                                            AND D.PROD_ID = B.PROD_ID 
+                                           AND E.PROD_ID = B.PROD_ID 
                                            AND E.PROD_ID = D.PROD_ID 
                                            AND F.PROD_ID = D.PROD_ID 
                                            AND G.PROD_ID = D.PROD_ID 
                                            AND G.TENANT_ID = #{tenantId}             /* header param : tenantId */
+                                           AND H.PROD_ID = D.PROD_ID
+                                           AND H.TENANT_ID = #{tenantId}             /* header param : tenantId */
+                                           AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                                            AND I.PROD_ID = D.PROD_ID 
                                            AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                                            AND J.PROD_ID = I.PART_PROD_ID 
@@ -128,9 +133,7 @@
                                            AND M.USE_YN = 'Y'                        /* Y : 노출 (노출여부) */
                                            AND A.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
                                            AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
-                                         <if test='prodCharge != null and prodCharge != ""'>
-                                           AND D.PROD_CHRG_YN = #{prodCharge}        /* 상품유료여부 */
-                                         </if>
+                                           AND B.MENU_ID = #{menuId}                 /* 메뉴ID */
                                          <if test="arrayProdGradeCd != null">
                                            AND D.PROD_GRD_CD IN
                                            <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
@@ -140,10 +143,15 @@
                                          <if test='filteredBy == "recent+complete"'>
                                            AND E.COMPT_YN = 'Y'
                                          </if>
-                                           AND B.MENU_ID = #{menuId}                 /* 메뉴ID */
-                                           AND E.PROD_ID = B.PROD_ID 
+                                         <if test='prodCharge == "Y"'>
+                                           AND (NVL(H.CHNL_UNLMT_AMT, -1) > 0 OR NVL(H.CHNL_PERIOD_AMT, -1) > 0)    /* 유료 상품 */
+                                         </if>
+                                         <if test='prodCharge == "N"'>
+                                           <![CDATA[
+                                           AND (NVL(H.CHNL_UNLMT_AMT, -1) <= 0 AND NVL(H.CHNL_PERIOD_AMT, -1) <= 0) /* 무료 상품 */
+                                           ]]>
+                                         </if>
                                            AND (M.DEVICE_MODEL_CD = #{deviceModelCd} OR M.DEVICE_MODEL_CD = 'ANY-PHONE-4MM') /* header param : 단말모델코드 */
-                                         ORDER BY D.SELLER_MBR_NO
                                        ) IA
                                  WHERE IA.RN = 1
                                ) JA
