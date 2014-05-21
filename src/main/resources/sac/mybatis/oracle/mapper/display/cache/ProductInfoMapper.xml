@@ -810,7 +810,7 @@
                     ON PI.PROD_ID = SC.CATALOG_ID AND PI.IMG_CD = 'DP0001A3' AND PI.EXPO_ORD = 1 AND
                        PI.LANG_CD = #{langCd}
                 LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TSTAT
-                    ON TSTAT.PROD_ID = EPROD.PROD_ID AND TSTAT.TENANT_ID = TPROD.TENANT_ID
+                    ON TSTAT.PROD_ID = SC.CATALOG_ID AND TSTAT.TENANT_ID = TPROD.TENANT_ID
                 LEFT OUTER JOIN TB_DP_SPRC_PROD SPP
                     ON SPP.PROD_ID = EPROD.PROD_ID
                        AND SPP.EXPO_YN = 'Y'
