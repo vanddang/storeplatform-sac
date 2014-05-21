@@ -131,6 +131,7 @@
             , title = #{title}                    /* 제목 */
             </if>
             , upd_dt = SYSDATE                    /* 수정 일시 */
+            , reg_dt = SYSDATE                    /* 등록 일시 */
             , noti_score = 0                      /* 후기 점수 */
             , seller_resp_opin = NULL             /* 판매자 응답 의견 */
             , seller_resp_reg_dt = NULL           /* 판매자 응답 등록 일시 */           
