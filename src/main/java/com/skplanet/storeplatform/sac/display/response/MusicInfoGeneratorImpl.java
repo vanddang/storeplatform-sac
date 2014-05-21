@@ -46,8 +46,15 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
 		Accrual accrual = new Accrual();
-		accrual.setChangeRank(metaInfo.getRankChgCnt());
-		accrual.setChangeCd(metaInfo.getRankChgClsfCd());
+		if (StringUtils.isNotEmpty(metaInfo.getRankChgClsfCd())) {
+			if (metaInfo.getRankChgClsfCd().equals("DP005303")) {
+				accrual.setChangeRank("-" + metaInfo.getRankChgCnt());
+			} else {
+				accrual.setChangeRank(metaInfo.getRankChgCnt());
+			}
+		} else {
+			accrual.setChangeRank(metaInfo.getRankChgCnt());
+		}
 		accrual.setScore(metaInfo.getAvgEvluScore());
 		return accrual;
 	}
