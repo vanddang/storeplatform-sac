@@ -192,7 +192,7 @@ public class MetaInfo extends CommonInfo {
 	private String debutDay;
 	private String debutMusicNm;
 	private String country;
-	private String rankChgClsfCd;
+	private String rankChgClsfCd; // 순위변동코드
 
 	// ////////////////////////// 쇼핑 상품 변수 ////////////////////////////
 	private Double dcRate;
@@ -4118,10 +4118,17 @@ public class MetaInfo extends CommonInfo {
 		this.chnlClsfCd = chnlClsfCd;
 	}
 
+	/**
+	 * @return the rankChgClsfCd
+	 */
 	public String getRankChgClsfCd() {
 		return this.rankChgClsfCd;
 	}
 
+	/**
+	 * @param rankChgClsfCd
+	 *            the rankChgClsfCd to set
+	 */
 	public void setRankChgClsfCd(String rankChgClsfCd) {
 		this.rankChgClsfCd = rankChgClsfCd;
 	}
