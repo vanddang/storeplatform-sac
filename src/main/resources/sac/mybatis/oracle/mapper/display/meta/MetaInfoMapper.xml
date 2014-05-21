@@ -854,7 +854,7 @@
                         AND C.CATALOG_ID = PI.PROD_ID(+)
                         AND PI.IMG_CD(+) = #{imageCd}
                         AND PI.EXPO_ORD ='1'
-                        AND I.PROD_ID = M.PROD_ID(+)                           
+                        AND C.CATALOG_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)
                       <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
                         AND B.CATALOG_ID = #{productBasicInfo.catalogId}          
