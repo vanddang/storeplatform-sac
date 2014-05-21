@@ -458,7 +458,8 @@
    	               ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
 		                             ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY ) ) THEN 'Y' ELSE 'N'
 		               END ) AS soldOut     
-		           ,CONTENTS_TYPE_CD              
+		           ,CONTENTS_TYPE_CD  
+		           ,EXPO_ORD            
              FROM (
                   SELECT  * 
                    FROM (
@@ -587,8 +588,8 @@
                             )                        
                    ) 
                  WHERE NO =1
-                 ORDER BY EXPO_ORD , PROD_NM 
                )
+                ORDER BY EXPO_ORD , PROD_NM 
         ) WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>            
     
