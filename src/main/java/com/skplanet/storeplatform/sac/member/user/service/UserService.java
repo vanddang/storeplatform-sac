@@ -28,4 +28,19 @@ public interface UserService {
 	 *            사용자 IDP 인증키
 	 */
 	public void updateProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey);
+
+	/**
+	 * <pre>
+	 * userAuthKey가 없는경우 통합아이디에 붙은 MDN 휴대기기 정보 수정.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userKey
+	 *            String
+	 * @param imSvcNo
+	 *            String
+	 * @return UpdateAdditionalInfoEcRes
+	 */
+	public void updateAdditionalInfoForNonLogin(SacRequestHeader requestHeader, String userKey, String imSvcNo);
 }

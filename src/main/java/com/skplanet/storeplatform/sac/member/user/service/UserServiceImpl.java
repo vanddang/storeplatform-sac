@@ -130,4 +130,54 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserService#
+	 * updateAdditionalInfoForNonLogin
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void updateAdditionalInfoForNonLogin(SacRequestHeader requestHeader, String userKey, String imSvcNo) {
+
+		/* 휴대기기 목록 조회 */
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setIsMainDevice("N");
+		listDeviceReq.setUserKey(userKey);
+
+		String userPhoneStr = "";
+
+		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
+		if (listDeviceRes.getDeviceInfoList() != null) {
+			StringBuffer sbUserPhone = new StringBuffer();
+			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
+
+				String imMngNum = deviceInfo.getSvcMangNum();
+				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
+
+				sbUserPhone.append(deviceInfo.getDeviceId());
+				sbUserPhone.append(",");
+				if (StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+					sbUserPhone.append(imMngNum == null ? "" : imMngNum);
+				}
+				sbUserPhone.append(",");
+				sbUserPhone.append(uacd == null ? "" : uacd);
+				sbUserPhone.append(",");
+				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
+				sbUserPhone.append("|");
+			}
+			userPhoneStr = sbUserPhone.toString();
+			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+		}
+
+		UpdateAdditionalInfoEcReq req = new UpdateAdditionalInfoEcReq();
+		req.setExecuteMode("A");
+		req.setKey(imSvcNo);
+		req.setUserMdn(userPhoneStr);
+		LOGGER.info("{} updateAdditionalInfo userMdn : {}", userKey, userPhoneStr);
+		this.imIdpSCI.updateAdditionalInfo(req);
+
+	}
+
 }

@@ -35,8 +35,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -106,6 +104,9 @@ public class LoginServiceImpl implements LoginService {
 	private DeviceService deviceService;
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private SaveAndSyncService saveAndSyncService;
 
 	@Autowired
@@ -167,7 +168,8 @@ public class LoginServiceImpl implements LoginService {
 
 				/* 통신사가 변경되었을 때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
 				if (!StringUtils.equals(req.getDeviceTelecom(), dbDeviceInfo.getDeviceTelecom())) {
-					this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr().getImSvcNo());
+					this.userService.updateAdditionalInfoForNonLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr()
+							.getImSvcNo());
 				}
 
 			} else { /* 기존IDP회원 / 모바일회원인 경우 */
@@ -305,7 +307,8 @@ public class LoginServiceImpl implements LoginService {
 
 				/* 통신사가 변경되었을 때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
 				if (!StringUtils.equals(req.getDeviceTelecom(), dbDeviceInfo.getDeviceTelecom())) {
-					this.updateAdditionalInfoForMdnLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr().getImSvcNo());
+					this.userService.updateAdditionalInfoForNonLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr()
+							.getImSvcNo());
 				}
 
 			} else { /* 기존IDP회원 / 모바일회원인 경우 */
@@ -1416,60 +1419,6 @@ public class LoginServiceImpl implements LoginService {
 
 		return isAgreeYn;
 
-	}
-
-	/**
-	 * <pre>
-	 * 통합아이디에 붙은 MDN 휴대기기 정보 수정.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param userKey
-	 *            String
-	 * @param imSvcNo
-	 *            String
-	 * @return UpdateAdditionalInfoEcRes
-	 */
-	private UpdateAdditionalInfoEcRes updateAdditionalInfoForMdnLogin(SacRequestHeader requestHeader, String userKey, String imSvcNo) {
-		/* 휴대기기 목록 조회 */
-		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setIsMainDevice("N");
-		listDeviceReq.setUserKey(userKey);
-
-		String userPhoneStr = "";
-
-		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
-		if (listDeviceRes.getDeviceInfoList() != null) {
-			StringBuffer sbUserPhone = new StringBuffer();
-			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
-
-				String imMngNum = deviceInfo.getSvcMangNum();
-				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
-
-				sbUserPhone.append(deviceInfo.getDeviceId());
-				sbUserPhone.append(",");
-				if (StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-					sbUserPhone.append(imMngNum == null ? "" : imMngNum);
-				}
-				sbUserPhone.append(",");
-				sbUserPhone.append(uacd == null ? "" : uacd);
-				sbUserPhone.append(",");
-				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
-				sbUserPhone.append("|");
-			}
-			userPhoneStr = sbUserPhone.toString();
-			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
-		}
-
-		UpdateAdditionalInfoEcReq req = new UpdateAdditionalInfoEcReq();
-		req.setExecuteMode("A");
-		req.setKey(imSvcNo);
-		req.setUserMdn(userPhoneStr);
-		LOGGER.info("{} updateAdditionalInfo userMdn : {}", userKey, userPhoneStr);
-		UpdateAdditionalInfoEcRes updAddInfoRes = this.imIdpSCI.updateAdditionalInfo(req);
-
-		return updAddInfoRes;
 	}
 
 	/**
