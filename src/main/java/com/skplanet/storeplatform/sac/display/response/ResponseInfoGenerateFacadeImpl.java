@@ -443,7 +443,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
-		Price price = this.commonGenerator.generatePrice(metaInfo);
+		Price price = this.commonGenerator.generateEpubPrice(metaInfo);
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
@@ -528,7 +528,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
-		Price price = this.commonGenerator.generatePrice(metaInfo);
+		Price price = this.commonGenerator.generateEpubPrice(metaInfo);
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성

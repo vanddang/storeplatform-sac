@@ -232,6 +232,17 @@ public interface CommonMetaInfoGenerator {
 	 * 공통 Price 객체 생성.
 	 * </pre>
 	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Price
+	 */
+	public Price generateEpubPrice(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 공통 Price 객체 생성.
+	 * </pre>
+	 * 
 	 * @param text
 	 *            text
 	 * @param fixedPrice

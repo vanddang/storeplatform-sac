@@ -445,6 +445,16 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	}
 
 	@Override
+	public Price generateEpubPrice(MetaInfo metaInfo) {
+		Price price = new Price();
+		price.setText(metaInfo.getProdAmt());
+		price.setFixedPrice(metaInfo.getProdNetAmt());
+		price.setUnlmtAmt(metaInfo.getUnlmtAmt());
+		price.setPeriodAmt(metaInfo.getPeriodAmt());
+		return price;
+	}
+
+	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
 		Accrual accrual = new Accrual();
 		accrual.setVoterCount(metaInfo.getPaticpersCnt());

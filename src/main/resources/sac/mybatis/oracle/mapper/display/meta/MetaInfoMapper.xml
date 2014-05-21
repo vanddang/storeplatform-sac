@@ -472,10 +472,48 @@
            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
              , CASE WHEN (TB.CHNL_UNLMT_AMT >= 0  AND TB.EPSD_CNT > 0) THEN CHNL_UNLMT_AMT
                     ELSE NVL(TB.CHNL_PERIOD_AMT, 0) END AS PROD_AMT /* 채널 대표 가격 - 소장 있으면 소장 가격, 소장 없으면 대여 가격 */
+             , CASE WHEN TB.CHNL_UNLMT_AMT >= 0 THEN TB.CHNL_UNLMT_AMT END AS UNLMT_AMT  /* 채널 소장 가격 */
+             , CASE WHEN TB.CHNL_PERIOD_AMT >= 0 THEN TB.CHNL_PERIOD_AMT END AS PERIOD_AMT  /* 채널 대여 가격 */
            </if>
            <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-             , NVL(TB.PROD_AMT, 0) AS PROD_AMT -- 에피소드 가격
-           </if>       
+             , NVL(TB.PROD_AMT, 0) AS PROD_AMT  /* 에피소드 가격 */
+             , (SELECT MAX(SC.PROD_AMT)
+                  FROM TB_DP_PROD_RSHP SA
+                     , TB_DP_PROD SB
+                     , TB_DP_TENANT_PROD_PRICE SC
+                     , TB_DP_TENANT_PROD SD
+                 WHERE SA.PROD_ID = TB.PROD_ID
+                   AND SA.PROD_RSHP_CD = 'DP010802'
+                   AND SA.PART_PROD_ID = SB.PROD_ID
+                   AND SB.CID = TB.CID
+                   AND SB.PROD_ID = SC.PROD_ID
+                   AND SB.CONTENTS_TYPE_CD = 'PD002502'
+                   AND SC.TENANT_ID = #{tenantHeader.tenantId}
+                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
+                   AND SC.PROD_ID = SD.PROD_ID
+                   AND SD.TENANT_ID = #{tenantHeader.tenantId}
+                   AND SD.PROD_STATUS_CD = 'PD000403'
+                   AND SB.USE_PERIOD_UNIT_CD = 'PD00310'
+               ) AS UNLMT_AMT  /* 에피소드 동일 CID 소장 가격 */
+             , (SELECT MAX(SC.PROD_AMT)
+                  FROM TB_DP_PROD_RSHP SA
+                     , TB_DP_PROD SB
+                     , TB_DP_TENANT_PROD_PRICE SC
+                     , TB_DP_TENANT_PROD SD
+                 WHERE SA.PROD_ID = TB.PROD_ID
+                   AND SA.PROD_RSHP_CD = 'DP010802'
+                   AND SA.PART_PROD_ID = SB.PROD_ID
+                   AND SB.CID = TB.CID
+                   AND SB.PROD_ID = SC.PROD_ID
+                   AND SB.CONTENTS_TYPE_CD = 'PD002502'
+                   AND SC.TENANT_ID = #{tenantHeader.tenantId}
+                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
+                   AND SC.PROD_ID = SD.PROD_ID
+                   AND SD.TENANT_ID = #{tenantHeader.tenantId}
+                   AND SD.PROD_STATUS_CD = 'PD000403'
+                   AND SB.USE_PERIOD_UNIT_CD != 'PD00310'
+               ) AS PERIOD_AMT  /* 에피소드 동일 CID 대여 가격 */
+           </if>
              , NVL(TB.PROD_NET_AMT, 0) AS PROD_NET_AMT
              , NVL(TB.PATICPERS_CNT, 0) AS PATICPERS_CNT
              , NVL(TB.PRCHS_CNT, 0) AS DWLD_CNT
@@ -536,6 +574,7 @@
                       , O.PROD_NET_AMT 
                       </if>
                       , G.PROD_STATUS_CD
+                      , J.CID
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C

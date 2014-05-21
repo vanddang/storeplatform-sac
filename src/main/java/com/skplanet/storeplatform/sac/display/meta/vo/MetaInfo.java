@@ -174,6 +174,8 @@ public class MetaInfo extends CommonInfo {
 	private String mallCd;
 	private String brdcCompNm;
 	private String chnlClsfCd;
+	private Integer unlmtAmt;
+	private Integer periodAmt;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -4133,4 +4135,33 @@ public class MetaInfo extends CommonInfo {
 		this.rankChgClsfCd = rankChgClsfCd;
 	}
 
+	/**
+	 * @return the unlmtAmt
+	 */
+	public Integer getUnlmtAmt() {
+		return this.unlmtAmt;
+	}
+
+	/**
+	 * @param unlmtAmt
+	 *            the unlmtAmt to set
+	 */
+	public void setUnlmtAmt(Integer unlmtAmt) {
+		this.unlmtAmt = unlmtAmt;
+	}
+
+	/**
+	 * @return the periodAmt
+	 */
+	public Integer getPeriodAmt() {
+		return this.periodAmt;
+	}
+
+	/**
+	 * @param periodAmt
+	 *            the periodAmt to set
+	 */
+	public void setPeriodAmt(Integer periodAmt) {
+		this.periodAmt = periodAmt;
+	}
 }
