@@ -84,15 +84,15 @@ public class DeviceSCIControllerTest {
 		try {
 			new TestCaseTemplate(this.mvc)
 
-			.url("/member/user/sci/DeviceSCIController/searchDeviceId").httpMethod(HttpMethod.POST)
+					.url("/member/user/sci/searchDeviceId").httpMethod(HttpMethod.POST)
 					.requestBody(new RequestBodySetter() {
 						@Override
 						public Object requestBody() {
 							SearchDeviceIdSacReq searchDeviceIdSacReq = new SearchDeviceIdSacReq();
 							// searchDeviceIdSacReq.setUserKey("US201402110557052730002230");
 							// searchDeviceIdSacReq.setDeviceKey("DE201402120409541480001552");
-							searchDeviceIdSacReq.setUserKey("US201402281808328020000001");
-							searchDeviceIdSacReq.setDeviceKey("DE201402281808329680000001");
+							searchDeviceIdSacReq.setUserKey("IF1527585620140521131025");
+							searchDeviceIdSacReq.setDeviceKey("DE201405211313021180004529");
 							LOGGER.debug("[DeviceSCI-REQUEST] : \n{}",
 									TestConvertMapperUtils.convertObjectToJson(searchDeviceIdSacReq));
 							return searchDeviceIdSacReq;
