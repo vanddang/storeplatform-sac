@@ -410,8 +410,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// 상품 가격 체크: 요청 금액 무시(서버 금액 사용) 경우는 제외
+			// nowPurchaseProdAmt = StringUtils.isBlank(purchaseProduct.getSpecialSaleCouponId()) ? purchaseProduct
+			// .getProdAmt() : purchaseProduct.getSpecialSaleAmt(); // 특가상품 처리
 			nowPurchaseProdAmt = StringUtils.isBlank(purchaseProduct.getSpecialSaleCouponId()) ? purchaseProduct
-					.getProdAmt() : purchaseProduct.getSpecialSaleAmt();
+					.getProdAmt() : purchaseProduct.getProdAmt();
 			if (reqProduct.getProdAmt() != nowPurchaseProdAmt
 					&& StringUtils.equals(purchaseOrderInfo.getSaleAmtProcType(),
 							PurchaseConstants.SALE_AMT_PROC_TYPE_SERVER) == false) {
@@ -421,7 +423,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			purchaseProduct.setProdQty(reqProduct.getProdQty());
 			checkTotAmt += (nowPurchaseProdAmt * reqProduct.getProdQty());
-			realTotAmt += (purchaseProduct.getProdAmt() * reqProduct.getProdQty());
+			realTotAmt += (purchaseProduct.getProdAmt() * reqProduct.getProdQty()); // 특가상품의 원금액 처리용.
 
 			purchaseProduct.setResvCol01(reqProduct.getResvCol01());
 			purchaseProduct.setResvCol02(reqProduct.getResvCol02());
@@ -545,9 +547,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	@Override
 	public void validatePurchase(PurchaseOrderInfo purchaseOrderInfo) {
 		// 구매차단 체크
-		if (purchaseOrderInfo.isBlockPayment()) {
-			throw new StorePlatformException("SAC_PUR_6103");
-		}
+		// if (purchaseOrderInfo.isBlockPayment()) {
+		// throw new StorePlatformException("SAC_PUR_6103");
+		// }
 
 		// Biz 쿠폰 경우 이하 체크 Skip
 		if (purchaseOrderInfo.isBizShopping()) {

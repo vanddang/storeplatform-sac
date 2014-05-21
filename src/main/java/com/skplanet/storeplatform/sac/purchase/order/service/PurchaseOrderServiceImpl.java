@@ -464,6 +464,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setOcbAuthMtdCd(userPayRes.getOcbAuthMethodCode());
 
 		// ------------------------------------------------------------------------------------------------
+		// 구매(결제) 차단 체크
+
+		res.setFlgBlockPayment(this.purchaseOrderPolicyService.isBlockPayment(prchsDtlMore.getTenantId(),
+				reservedDataMap.get("deviceId"), prchsDtlMore.getTenantProdGrpCd()) ? PurchaseConstants.VERIFYORDER_BLOCK_PAYMENT : PurchaseConstants.VERIFYORDER_ALLOW_PAYMENT);
+
+		// ------------------------------------------------------------------------------------------------
 		// SKT 후불 관련 정책 체크: SKT시험폰, MVNO, 법인폰, 한도금액 조회
 
 		SktPaymentPolicyCheckResult policyResult = this.checkSktPaymentPolicy(prchsDtlMore,

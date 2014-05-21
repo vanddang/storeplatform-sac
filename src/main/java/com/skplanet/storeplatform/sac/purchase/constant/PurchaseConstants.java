@@ -77,6 +77,10 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String VERIFYORDER_PRODUCT_STATUS_ABNORMAL = "0"; // 비정상
 	public static final String VERIFYORDER_PRODUCT_STATUS_NORMAL = "1"; // 정상
 
+	/** 구매인증용 결제차단 여부 */
+	public static final String VERIFYORDER_BLOCK_PAYMENT = "0"; // 결제차단
+	public static final String VERIFYORDER_ALLOW_PAYMENT = "1"; // 결제가능
+
 	/** SKT 결제 타입 */
 	public static final String SKT_PAYMENT_TYPE_TESTDEVICE = "T01"; // 시험폰용: 시험폰NUD
 	public static final String SKT_PAYMENT_TYPE_ETCSERVICE = "T02"; // 서비스검증용: SKT 불가

@@ -83,6 +83,127 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	/**
 	 * 
 	 * <pre>
+	 * 구매(결제)차단 여부 체크.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param deviceId
+	 *            MDN
+	 * @param tenantProdGrpCd
+	 *            테넌트상품분류코드
+	 * @return 구매(결제) 차단 여부: true-차단됨, false-차단아님
+	 */
+	@Override
+	public boolean isBlockPayment(String tenantId, String deviceId, String tenantProdGrpCd) {
+
+		// 테넌트 구매차단 정책 조회
+		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
+				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_USER_BLOCK_CD, false);
+
+		if (CollectionUtils.isEmpty(policyList)) {
+			return false;
+		}
+
+		List<String> policyCodeList = new ArrayList<String>();
+		for (PurchaseTenantPolicy policy : policyList) {
+			policyCodeList.add(policy.getApplyValue());
+		}
+
+		// 회원Part 사용자 정책 조회
+		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
+				deviceId, policyCodeList);
+
+		if (policyResMap == null) {
+			return false;
+		}
+
+		// 정책 체크
+		IndividualPolicyInfoSac individualPolicyInfoSac = null;
+
+		for (String key : policyResMap.keySet()) {
+			if (policyCodeList.contains(key) == false) {
+				continue;
+			}
+
+			individualPolicyInfoSac = policyResMap.get(key);
+
+			if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+				this.logger.info("PRCHS,ORDER,SAC,POLICY,BLOCK,{}", deviceId);
+				return true;
+			}
+
+			policyResMap.remove(key);
+		}
+
+		return false;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * TEST MDN 여부 체크.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param deviceId
+	 *            MDN
+	 * @param tenantProdGrpCd
+	 *            테넌트상품분류코드
+	 * @return TEST MDN 여부: true-TEST MDN, false-TEST MDN 아님
+	 */
+	@Override
+	public boolean isTestMdn(String tenantId, String deviceId, String tenantProdGrpCd) {
+
+		// 테넌트 구매차단 정책 조회
+		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
+				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_STORE_TEST_DEVICE_CD, false);
+
+		if (CollectionUtils.isEmpty(policyList)) {
+			return false;
+		}
+
+		List<String> policyCodeList = new ArrayList<String>();
+		for (PurchaseTenantPolicy policy : policyList) {
+			policyCodeList.add(policy.getApplyValue());
+		}
+
+		// 회원Part 사용자 정책 조회
+		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
+				deviceId, policyCodeList);
+
+		if (policyResMap == null) {
+			return false;
+		}
+
+		// 정책 체크
+		IndividualPolicyInfoSac individualPolicyInfoSac = null;
+
+		// 비과금결제 우선 체크
+		for (String key : policyResMap.keySet()) {
+			if (policyCodeList.contains(key) == false) {
+				continue;
+			}
+
+			individualPolicyInfoSac = policyResMap.get(key);
+
+			if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)
+					&& StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)) {
+				// 테스트폰 결제
+				this.logger.info("PRCHS,ORDER,SAC,POLICY,TESTMDN,{}", deviceId);
+				return true;
+			}
+
+			policyResMap.remove(key);
+		}
+
+		return false;
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 회원 정책 체크: TestMDN / 구매차단.
 	 * </pre>
 	 * 
@@ -97,104 +218,19 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			return;
 		}
 
-		List<String> policyCodeList = new ArrayList<String>();
-		List<String> testMdnPolicyCodeList = null;
-		List<String> blockPolicyCodeList = null;
-
-		// ----------------------------------------------------------------
-		// 비과금결제 / 구매차단 정책 조회 : 회원Part 정책 코드 조회
-
-		List<PurchaseTenantPolicy> policyList = null;
-
-		policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(purchaseOrderInfo.getTenantId(),
-				purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.POLICY_PATTERN_STORE_TEST_DEVICE_CD, false);
-		if (CollectionUtils.isNotEmpty(policyList)) {
-			testMdnPolicyCodeList = new ArrayList<String>();
-			for (PurchaseTenantPolicy policy : policyList) {
-				policyCodeList.add(policy.getApplyValue());
-				testMdnPolicyCodeList.add(policy.getApplyValue());
-			}
-		}
-		policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(purchaseOrderInfo.getTenantId(),
-				purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.POLICY_PATTERN_USER_BLOCK_CD, false);
-		if (CollectionUtils.isNotEmpty(policyList)) {
-			blockPolicyCodeList = new ArrayList<String>();
-			;
-			for (PurchaseTenantPolicy policy : policyList) {
-				policyCodeList.add(policy.getApplyValue());
-				blockPolicyCodeList.add(policy.getApplyValue());
-			}
+		// 비과금 (TEST MDN) 결제 여부
+		if (this.isTestMdn(purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getPurchaseUser().getDeviceId(),
+				purchaseOrderInfo.getTenantProdGrpCd())) {
+			purchaseOrderInfo.setTestMdn(true);
+			purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_STORE_TEST_DEVICE);
+			purchaseOrderInfo.setRealTotAmt(0.0);
 		}
 
-		if (policyCodeList.size() < 1) {
-			return;
-		}
-
-		// ----------------------------------------------------------------
-		// 회원Part 사용자 정책 조회
-
-		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-				purchaseOrderInfo.getPurchaseUser().getDeviceId(), policyCodeList);
-
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,CHECK,{},{}", policyCodeList, policyResMap);
-
-		if (policyResMap == null) {
-			return;
-		}
-
-		// ----------------------------------------------------------------
-		// 정책 체크
-
-		IndividualPolicyInfoSac individualPolicyInfoSac = null;
-
-		// 비과금결제 우선 체크
-		if (testMdnPolicyCodeList != null) {
-			for (String key : policyResMap.keySet()) {
-				if (testMdnPolicyCodeList.contains(key) == false) {
-					continue;
-				}
-
-				individualPolicyInfoSac = policyResMap.get(key);
-
-				if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)
-						&& StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)) {
-					// 테스트폰 결제
-					purchaseOrderInfo.setTestMdn(true);
-					purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_STORE_TEST_DEVICE);
-					purchaseOrderInfo.setRealTotAmt(0.0);
-
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,TESTMDN,{}", purchaseOrderInfo.getPurchaseUser()
-							.getDeviceId());
-					return;
-				}
-
-				policyResMap.remove(key);
-			}
-		}
-
-		// 구매차단 체크
-		if (blockPolicyCodeList != null) {
-			for (String key : policyResMap.keySet()) {
-				if (blockPolicyCodeList.contains(key) == false) {
-					continue;
-				}
-
-				individualPolicyInfoSac = policyResMap.get(key);
-
-				// if (StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)
-				// && StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
-				if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
-					// 구매차단
-					purchaseOrderInfo.setBlockPayment(true);
-
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,BLOCK,{}", purchaseOrderInfo.getPurchaseUser()
-							.getDeviceId());
-					return;
-				}
-
-				policyResMap.remove(key);
-			}
-		}
+		// 구매차단 여부
+		// if( isBlockPayment(purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getPurchaseUser().getDeviceId(),
+		// purchaseOrderInfo.getTenantProdGrpCd())) {
+		// purchaseOrderInfo.setBlockPayment(true);
+		// }
 	}
 
 	/**
