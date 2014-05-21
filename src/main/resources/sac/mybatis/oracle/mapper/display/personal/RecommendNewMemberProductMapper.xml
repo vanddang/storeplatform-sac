@@ -100,6 +100,7 @@
 		                                       , TB_DP_SHPG_PROD I
 		                                       , TB_DP_PROD J
 		                                       , TB_DP_TENANT_PROD K
+                                               , TB_DP_TENANT_PROD K1		                                       
 		                                       , TB_DP_TENANT_PROD_PRICE L
 		                                       , (
 		                                           SELECT  TDLP.TENANT_ID
@@ -144,6 +145,8 @@
 		                                  AND I.PROD_ID = K.PROD_ID
 		                                  AND I.PROD_ID = L.PROD_ID
 		                                  AND K.TENANT_ID = #{tenantId}
+                                          AND G.PROD_ID = K1.PROD_ID
+                                          AND K1.TENANT_ID = L.TENANT_ID		                                  
 		                                  AND K.TENANT_ID = M.TENANT_ID 
 		                                  AND K.TENANT_ID = L.TENANT_ID 
 		                                  AND B.CATALOG_ID = M.PROD_ID   
@@ -160,6 +163,8 @@
 		                                  AND NVL(I.B2B_PROD_YN, 'N')  != 'Y'
 		                                  AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
 		                                  AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+					                      AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+					                      AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */		                                  
 		                                  AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
 		                                  AND EXISTS (
 		                                              SELECT 1 
