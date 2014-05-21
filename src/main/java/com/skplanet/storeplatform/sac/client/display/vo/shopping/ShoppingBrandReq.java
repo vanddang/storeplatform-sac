@@ -29,6 +29,8 @@ public class ShoppingBrandReq extends CommonInfo {
 	@NotNull
 	@NotBlank
 	private String brandId; // 브랜드아이디
+	private String tenantId; // 테넌트ID
+	private String deviceModelCd; // 디바이스 모델 코드
 	private String imageCd; // 이미지코드
 	private String listId; // 리스트아이디
 	private String menuId; // 메뉴아이디
@@ -57,6 +59,36 @@ public class ShoppingBrandReq extends CommonInfo {
 	 */
 	public void setBrandId(String brandId) {
 		this.brandId = brandId;
+	}
+
+	/**
+	 * @return the tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the deviceModelCd
+	 */
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	/**
+	 * @param deviceModelCd
+	 *            the deviceModelCd to set
+	 */
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
 	}
 
 	/**
