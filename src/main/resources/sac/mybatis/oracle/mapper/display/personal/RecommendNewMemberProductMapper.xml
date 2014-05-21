@@ -163,8 +163,8 @@
 		                                  AND NVL(I.B2B_PROD_YN, 'N')  != 'Y'
 		                                  AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
 		                                  AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-					                      AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
-					                      AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */		                                  
+					                      AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+					                      AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */		                                  
 		                                  AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
 		                                  AND EXISTS (
 		                                              SELECT 1 
