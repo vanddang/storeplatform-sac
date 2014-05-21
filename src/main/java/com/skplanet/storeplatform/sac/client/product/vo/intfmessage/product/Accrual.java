@@ -30,6 +30,7 @@ public class Accrual extends CommonInfo implements Serializable {
 	private Integer feedbackTotal; // 사용 후기 전체 개수
 	private String changeRank; // 변동 순위, 하락은 음수로 표현한다.
 	private String explain; // 평점상세정보 "너무 좋아요", "만족해요", "좋아요", "그저 그래요", "별로에요" 순서로 정의
+	private String changeCd;
 
 	/**
 	 * 
@@ -205,4 +206,30 @@ public class Accrual extends CommonInfo implements Serializable {
 	public void setExplain(String explain) {
 		this.explain = explain;
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 음악 챠트 순위 변동 코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getChangeCd() {
+		return this.changeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 음악 챠트 순위 변동 코드.
+	 * </pre>
+	 * 
+	 * @param explain
+	 *            explain
+	 */
+	public void setChangeCd(String changeCd) {
+		this.changeCd = changeCd;
+	}
+
 }
