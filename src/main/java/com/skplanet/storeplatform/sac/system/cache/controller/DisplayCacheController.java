@@ -93,18 +93,14 @@ public class DisplayCacheController {
 
     @RequestMapping(value = "/isUseCache", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, Boolean> isUseCache() {
-    	Map<String, Boolean> res = new HashMap<String, Boolean>();
+    public String isUseCache() {
     	GlobalCacheProcessor globalCacheProcessor = (GlobalCacheProcessor) this.applicationContext.getBean("globalCacheProcessor");
 
         if (globalCacheProcessor.isUseCache()) {
-        	res.put("isUseCache", true);
+        	return "true";
         } else {
-        	res.put("isUseCache", false);
+        	return "false";
         }
-
-        return res;
     }
-
 
 }
