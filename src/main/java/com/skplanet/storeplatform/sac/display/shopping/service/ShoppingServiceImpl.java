@@ -982,8 +982,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
 		req.setLangCd(tenantHeader.getLangCd());
-		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD);
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		if (StringUtils.isEmpty(req.getBrandId())) {
