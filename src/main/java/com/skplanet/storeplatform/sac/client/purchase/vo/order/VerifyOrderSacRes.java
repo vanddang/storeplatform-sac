@@ -24,6 +24,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String oneId; // ONE ID 회원 ID
 	private String flgMbrStatus; // 회원상태: 0-비정상, 1-정상
 	private String flgProductStatus; // 상품상태: 0-구매불가상품, 1-구매가능상품
+	private String flgBlockPayment; // 결제차단여부: 0-결제차단, 1-결제가능
 	private String flgTeleBillingAgree; // 통신과금 동의여부: Y/N
 	private String flgOcbUseAgree; // OCB 이용약관 동의여부: Y/N
 	private String typeDanalContent; // (다날) 컨텐츠 타입: 0-디지털, 1-실물
@@ -115,6 +116,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setFlgProductStatus(String flgProductStatus) {
 		this.flgProductStatus = flgProductStatus;
+	}
+
+	/**
+	 * @return the flgBlockPayment
+	 */
+	public String getFlgBlockPayment() {
+		return this.flgBlockPayment;
+	}
+
+	/**
+	 * @param flgBlockPayment
+	 *            the flgBlockPayment to set
+	 */
+	public void setFlgBlockPayment(String flgBlockPayment) {
+		this.flgBlockPayment = flgBlockPayment;
 	}
 
 	/**
