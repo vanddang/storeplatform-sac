@@ -33,6 +33,8 @@ public class Price extends CommonInfo implements Serializable {
 	private Double discountRate;// 할인률 (%생략)
 	private Integer discountPrice;// 할인가
 	private Integer text;// 가격
+	private Integer unlmtAmt;// 소장가격
+	private Integer periodAmt;// 대여가격
 
 	public Price() {
 	}
@@ -89,4 +91,21 @@ public class Price extends CommonInfo implements Serializable {
 	public void setText(Integer text) {
 		this.text = text;
 	}
+
+	public Integer getUnlmtAmt() {
+		return this.unlmtAmt;
+	}
+
+	public void setUnlmtAmt(Integer unlmtAmt) {
+		this.unlmtAmt = unlmtAmt;
+	}
+
+	public Integer getPeriodAmt() {
+		return this.periodAmt;
+	}
+
+	public void setPeriodAmt(Integer periodAmt) {
+		this.periodAmt = periodAmt;
+	}
+
 }
