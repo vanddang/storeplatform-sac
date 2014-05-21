@@ -3,9 +3,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
@@ -72,28 +68,23 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
-		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-		searchDeviceRequest.setCommonRequest(commonRequest);
+		SearchAllDeviceRequest searchAllDeviceRequest = new SearchAllDeviceRequest();
+		searchAllDeviceRequest.setCommonRequest(commonRequest);
 
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(keyType);
-		key.setKeyString(keyString);
-		keySearchList.add(key);
-
-		searchDeviceRequest.setUserKey(userKey);
-		searchDeviceRequest.setKeySearchList(keySearchList);
+		searchAllDeviceRequest.setUserKey(userKey);
+		searchAllDeviceRequest.setDeviceKey(keyString); // deviceKey
 
 		DeviceInfo deviceInfo = null;
 
 		try {
 
-			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+			SearchAllDeviceResponse schAllDeviceRes = this.deviceSCI.searchAllDevice(searchAllDeviceRequest);
 
 			deviceInfo = new DeviceInfo();
-			deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
-			deviceInfo.setUserId(schDeviceRes.getUserID());
-			deviceInfo.setUserKey(schDeviceRes.getUserKey());
+			deviceInfo = DeviceUtil.getConverterDeviceInfo(schAllDeviceRes.getUserMbrDevice());
+			deviceInfo.setUserId(schAllDeviceRes.getUserID());
+			deviceInfo.setUserKey(schAllDeviceRes.getUserKey());
+			deviceInfo.setIsAuthenticated(schAllDeviceRes.getUserMbrDevice().getIsUsed());
 
 			/* 폰정보 DB 조회하여 추가 정보 반영 */
 			Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
