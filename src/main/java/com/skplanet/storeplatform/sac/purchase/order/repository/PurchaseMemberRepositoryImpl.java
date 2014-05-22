@@ -29,7 +29,6 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
-import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
@@ -52,8 +51,6 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	private SearchUserSCI searchUserSCI;
 	@Autowired
 	private SellerSearchSCI sellerSearchSCI;
-	@Autowired
-	private DeviceSCI deviceSCI;
 	@Autowired
 	private MiscellaneousSCI miscellaneousSCI;
 
