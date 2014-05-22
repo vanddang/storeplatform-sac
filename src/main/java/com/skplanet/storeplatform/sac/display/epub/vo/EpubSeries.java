@@ -142,8 +142,6 @@ public class EpubSeries extends CommonInfo {
 	/** 평균 평가 점수 */
 	private Double avgEvluScore;
 
-	/** 서비스시작 일시 */
-	private Date svcStartDt;
 	/** 채널 회사명 */
 	private String chnlCompNm;
 
@@ -481,14 +479,6 @@ public class EpubSeries extends CommonInfo {
 	 */
 	public void setProdIntrDscr(String prodIntrDscr) {
 		this.prodIntrDscr = prodIntrDscr;
-	}
-
-	public Date getSvcStartDt() {
-		return this.svcStartDt;
-	}
-
-	public void setSvcStartDt(Date svcStartDt) {
-		this.svcStartDt = svcStartDt;
 	}
 
 	public String getGenreCd() {
