@@ -28,7 +28,6 @@
 		<result property="contentsTypeCd"   column="CONTENTS_TYPE_CD"    />   
 		<result property="metaClsfCd"       column="META_CLSF_CD"        />   
 		<result property="topMenuId"        column="TOP_MENU_ID"         />  
-		<result property="lastDeployDt"     column="LAST_DEPLOY_DT"      />     
 	</resultMap>
 
   	<select id="selectDPProduct" parameterType="dpProductVO" resultMap="dpProductMap">
@@ -92,7 +91,6 @@
 			,CONTENTS_TYPE_CD
 			,META_CLSF_CD
 			,TOP_MENU_ID
-			,LAST_DEPLOY_DT		
 		)
 		VALUES(
 			#{prodId}
@@ -120,7 +118,6 @@
 			,'PD002502'
 			,#{metaClsfCd, jdbcType=VARCHAR}
 			,#{topMenuId, jdbcType=VARCHAR}
-			,TO_DATE(#{lastDeployDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')     
 		 )
 	</insert>
     	
