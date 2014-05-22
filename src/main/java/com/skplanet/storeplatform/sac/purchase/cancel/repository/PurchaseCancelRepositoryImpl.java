@@ -248,7 +248,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER,
 					paymentSacParam.getPaymentMtdCd())) {
 				// SKT 후불결제이면
-				// SKT 후불결제 일 때 주던 상품타입을 위에서 처리. pay.setApplyNum(prchsProdType);
+				// 상위 레벨로 이동. //SKT 후불결제 일 때 주던 상품타입을 위에서 처리. pay.setApplyNum(prchsProdType);
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_TSTORE_CASH,
 					paymentSacParam.getPaymentMtdCd())
 					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_TSTORE_POINT,
