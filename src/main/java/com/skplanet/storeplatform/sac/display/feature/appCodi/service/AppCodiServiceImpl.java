@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +68,7 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
 
 /**
  * App Codi Service 인터페이스(CoreStoreBusiness) 구현체
- * 
+ *
  * Updated on : 2014. 01. 28. Updated by : 윤주영, SK 플래닛.
  */
 @Service
@@ -95,7 +96,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuReq
 	 * requestVO)
 	 */
@@ -388,7 +389,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 							reasonMessage = StringUtils.replace(reasonMessage, "$4", top_cat_nm_pid);
 
 							// 연관상품 정보가 있을 경우에 치환처리함
-							if (!listRelProd.isEmpty()) {
+							if (CollectionUtils.isNotEmpty(listRelProd)) {
 								for (Map<String, Object> mapRelProdTemp : listRelProd) {
 									if (StringUtil.isNotEmpty(sRelId)
 											&& sRelId.equals(ObjectUtils.toString(mapRelProdTemp.get("PROD_ID")))) {
@@ -503,19 +504,19 @@ public class AppCodiServiceImpl implements AppCodiService {
 			 * StorePlatformException(error);
 			 *//*
 			    * this.totalCount = 0;
-			    * 
+			    *
 			    * this.log.info("ISF 연동 실패나 Data 가 없는 경우 - 운영자 추천으로 대체");
-			    * 
+			    *
 			    * mapReq = new HashMap<String, Object>(); if (!"long".equalsIgnoreCase(requestVO.getFilteredBy())) {
 			    * mapReq.put("START_ROW", "1"); mapReq.put("END_ROW", "4"); } else { mapReq.put("START_ROW",
 			    * requestVO.getOffset()); mapReq.put("END_ROW", (requestVO.getOffset() + requestVO.getCount() - 1)); }
-			    * 
+			    *
 			    * mapReq.put("tenantHeader", requestHeader.getTenantHeader()); mapReq.put("deviceHeader",
 			    * requestHeader.getDeviceHeader()); mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
-			    * 
+			    *
 			    * mapReq.put("listId", IsfConstants.recommandListId); // 운영자 추천
-			    * 
-			    * 
+			    *
+			    *
 			    * List<String> imageCodeList = new ArrayList<String>();
 			    * imageCodeList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 			    * imageCodeList.add(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
@@ -523,36 +524,36 @@ public class AppCodiServiceImpl implements AppCodiService {
 			    * imageCodeList.add(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 			    * imageCodeList.add(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD); mapReq.put("imageCdList",
 			    * imageCodeList);
-			    * 
+			    *
 			    * if (this.log.isDebugEnabled()) { this.mapPrint(mapReq); }
-			    * 
+			    *
 			    * // 통쿼리 사용제한
-			    * 
+			    *
 			    * List<AppCodiRes> appCodiResultList =
 			    * this.commonDAO.queryForList("Isf.AppCodi.getAdminRecommandProdList", mapReq, AppCodiRes.class);
 			    * productList = this.makeResultList(appCodiResultList);
-			    * 
+			    *
 			    * // 상품 기본 정보 List 조회 - 운영자 추천 List<ProductBasicInfo> productBasicInfoList =
 			    * this.commonDAO.queryForList( "Isf.AppCodi.getBasicAdminRecommandProdList", mapReq,
 			    * ProductBasicInfo.class);
-			    * 
+			    *
 			    * if (this.log.isDebugEnabled()) { this.log.debug("##### parameter cnt : {}", listProdParam.size());
 			    * this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size()); } if
 			    * (!productBasicInfoList.isEmpty()) {
-			    * 
+			    *
 			    * Product product = null; MetaInfo metaInfo = null;
-			    * 
+			    *
 			    * Map<String, Object> paramMap = new HashMap<String, Object>(); paramMap.put("tenantHeader",
 			    * tenantHeader); paramMap.put("deviceHeader", deviceHeader); paramMap.put("prodStatusCd",
 			    * DisplayConstants.DP_SALE_STAT_ING); // 판매중
-			    * 
+			    *
 			    * // Meta 정보 조회 for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-			    * 
+			    *
 			    * this.totalCount = productBasicInfo.getTotalCount();
-			    * 
+			    *
 			    * String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴 String svcGrpCd =
 			    * productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드 paramMap.put("productBasicInfo", productBasicInfo);
-			    * 
+			    *
 			    * if (this.log.isDebugEnabled()) { this.log.debug("##### Top Menu Id : {}", topMenuId);
 			    * this.log.debug("##### Service Group Cd : {}", svcGrpCd); } // 상품 SVC_GRP_CD 조회 // DP000203 : 멀티미디어 //
 			    * DP000206 : Tstore 쇼핑 // DP000205 : 소셜쇼핑 // DP000204 : 폰꾸미기 // DP000201 : 애플리캐이션 // APP 상품의 경우 if
@@ -561,7 +562,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			    * this.log.debug("##### Search for app  meta info product"); } metaInfo =
 			    * this.metaInfoService.getAppMetaInfo(paramMap); if (metaInfo != null) { product =
 			    * this.responseInfoGenerateFacade.generateAppProduct(metaInfo); productList.add(product); }
-			    * 
+			    *
 			    * } else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우 // 영화/방송
 			    * 상품의 경우 paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD); if
 			    * (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId) ||
@@ -573,34 +574,34 @@ public class AppCodiServiceImpl implements AppCodiService {
 			    * this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo); } productList.add(product); } }
 			    * else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId) ||
 			    * DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 // 경우
-			    * 
+			    *
 			    * paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-			    * 
+			    *
 			    * if (this.log.isDebugEnabled()) { this.log.debug("##### Search for EbookComic specific product"); }
 			    * metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap); if (metaInfo != null) { if
 			    * (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) { product =
 			    * this.responseInfoGenerateFacade.generateEbookProduct(metaInfo); } else { product =
 			    * this.responseInfoGenerateFacade.generateComicProduct(metaInfo); } productList.add(product); }
-			    * 
+			    *
 			    * } else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-			    * 
+			    *
 			    * paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD); paramMap.put("contentTypeCd",
 			    * DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-			    * 
+			    *
 			    * if (this.log.isDebugEnabled()) { this.log.debug("##### Search for music meta info product"); }
 			    * metaInfo = this.metaInfoService.getMusicMetaInfo(paramMap); if (metaInfo != null) { product =
 			    * this.responseInfoGenerateFacade.generateMusicProduct(metaInfo); productList.add(product); } } } else
 			    * if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
 			    * paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 			    * paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			    * 
+			    *
 			    * if (this.log.isDebugEnabled()) { this.log.debug("##### Search for Shopping  meta info product"); }
 			    * metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap); if (metaInfo != null) { product =
 			    * this.responseInfoGenerateFacade.generateShoppingProduct(metaInfo); productList.add(product); } } } }
-			    * 
+			    *
 			    * if (this.log.isDebugEnabled()) { this.log.debug("product count : {}", productList.size());
 			    * this.log.debug("total count : {}", this.totalCount); }
-			    * 
+			    *
 			    * commonResponse.setTotalCount(this.totalCount); responseVO.setCommonRes(commonResponse);
 			    * responseVO.setProductList(productList);
 			    */
