@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+import java.util.Date;
+
 /**
  * <p>
  * WebtoonMeta
@@ -46,7 +48,7 @@ public class WebtoonMeta extends CommonInfo {
     private Double avgEvluScore;
     private String filePath;
     private String iconYn;
-    private String updDt;
+    private Date updDt;
     private String prodStatusCd;
 
     public String getUpMenuId() {
@@ -265,11 +267,11 @@ public class WebtoonMeta extends CommonInfo {
         this.iconYn = iconYn;
     }
 
-    public String getUpdDt() {
+    public Date getUpdDt() {
         return updDt;
     }
 
-    public void setUpdDt(String updDt) {
+    public void setUpdDt(Date updDt) {
         this.updDt = updDt;
     }
 
