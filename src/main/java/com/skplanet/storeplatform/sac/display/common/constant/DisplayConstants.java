@@ -329,7 +329,7 @@ public class DisplayConstants {
 	// //////////////////////////////////// 이미지 코드 //////////////////////////////////////////
 	public static final String DP_APP_REPRESENT_IMAGE_CD = "DP000101";
 
-	public static final String DP_VOD_REPRESENT_IMAGE_CD = "DP000101";
+	public static final String DP_VOD_REPRESENT_IMAGE_CD = "DP000127";
 
 	public static final String DP_EBOOK_COMIC_REPRESENT_IMAGE_CD = "DP006207"; /* 이북(채널,시리즈에피소드) + 코믹(채널) 이미지 코드 */
 	public static final String DP_COMIC_EPISODE_REPRESENT_IMAGE_CD = "DP000194"; /* 코믹 에피소드 이미지 코드 */
