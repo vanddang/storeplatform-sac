@@ -11,8 +11,9 @@
              <result column="SCL_SHPG_SPRT_YN" property="shoppingStore" />
              <result column="MAGAZINE_SPRT_YN" property="magazine" />
              <result column="MUSIC_SPRT_YN" property="music" />
-             <result column="AOM_SPRT_YN" property="aom" />
-             <result column="SKT_DRM_SPRT_YN" property="drm" />
+             <result column="AOM_SPRT_YN" property="aom" />    
+             <result column="VIDEO_DRM_SPRT_YN" property="drmVideo" />         
+             <result column="SKT_DRM_SPRT_YN" property="drm" />             
              <result column="STRM_SPRT_YN" property="view" />
              <result column="WEBTOON_SPRT_YN" property="webtoon" />
              <result column="VOD_FIXISTT_SPRT_YN" property="freepassVod" />
@@ -44,6 +45,7 @@
 		      ,NVL(MUSIC_SPRT_YN,'N')    AS MUSIC_SPRT_YN                                      /*뮤직_지원_여부 */
 		      ,NVL(AOM_SPRT_YN,'N')  AS AOM_SPRT_YN                                            /*AOM_지원_여부 */
 		      ,NVL(SKT_DRM_SPRT_YN,'N') AS SKT_DRM_SPRT_YN                                     /*SKT_DRM_지원_여부 */
+		      ,NVL(VIDEO_DRM_SPRT_YN,'N') AS VIDEO_DRM_SPRT_YN                                 /*VIDEO_DRM_지원_여부 */
 		      ,NVL(STRM_SPRT_YN,'N') AS STRM_SPRT_YN                                           /*바로보기_지원_여부 */
 		      ,NVL(WEBTOON_SPRT_YN,'N') AS WEBTOON_SPRT_YN                                     /*웹툰 지원_여부 */
 		      ,NVL(HDCP_SPRT_YN,'N') AS HDCP_SPRT_YN                                           /*HDCP_지원_여부 */
