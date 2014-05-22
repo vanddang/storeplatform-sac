@@ -701,7 +701,7 @@
              , A.PROD_ID
              , A.PART_PROD_ID
              , A.TOP_MENU_ID
-             , A.CONTENTS_TYPE_CD
+             , 'PD002501' AS CONTENTS_TYPE_CD
              , A.TOTAL_COUNT
           FROM (SELECT A.TENANT_ID
                      , D.MENU_ID
