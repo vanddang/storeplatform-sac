@@ -299,48 +299,58 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 								this.log.info("[DownloadMusicServiceImpl] deviceRes	:	{}", deviceRes);
 								this.log.info("----------------------------------------------------------------");
 								if (memberFlag && deviceRes != null) {
-									deviceId = deviceRes.getDeviceId();
-									deviceIdType = this.commonService.getDeviceIdType(deviceId);
+									// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+									if ("Y".equals(deviceRes.getAuthYn())) {
+										deviceId = deviceRes.getDeviceId();
+										deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
-									metaInfo.setExpiredDate(reqExpireDate);
-									metaInfo.setUseExprDt(useExprDt);
-									metaInfo.setUserKey(userKey);
-									metaInfo.setDeviceKey(deviceKey);
-									metaInfo.setDeviceType(deviceIdType);
-									metaInfo.setDeviceSubKey(deviceId);
+										metaInfo.setExpiredDate(reqExpireDate);
+										metaInfo.setUseExprDt(useExprDt);
+										metaInfo.setUserKey(userKey);
+										metaInfo.setDeviceKey(deviceKey);
+										metaInfo.setDeviceType(deviceIdType);
+										metaInfo.setDeviceSubKey(deviceId);
 
-									// 암호화 정보 (JSON)
-									EncryptionContents contents = this.encryptionGenerator
-											.generateEncryptionContents(metaInfo);
+										// 암호화 정보 (JSON)
+										EncryptionContents contents = this.encryptionGenerator
+												.generateEncryptionContents(metaInfo);
 
-									// JSON 파싱
-									MarshallingHelper marshaller = new JacksonMarshallingHelper();
-									byte[] jsonData = marshaller.marshal(contents);
+										// JSON 파싱
+										MarshallingHelper marshaller = new JacksonMarshallingHelper();
+										byte[] jsonData = marshaller.marshal(contents);
 
-									// JSON 암호화
-									byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-									String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+										// JSON 암호화
+										byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+										String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
 
-									// 암호화 정보 (AES-128)
-									Encryption encryption = new Encryption();
-									encryption.setProductId(prchsProdId);
-									encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-									encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
-									encryption.setToken(encryptString);
-									encryptionList.add(encryption);
+										// 암호화 정보 (AES-128)
+										Encryption encryption = new Encryption();
+										encryption.setProductId(prchsProdId);
+										encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
+										encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper
+												.getSacRandomNo()));
+										encryption.setToken(encryptString);
+										encryptionList.add(encryption);
 
-									// JSON 복호화
-									// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-									// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-									//
-									// try {
-									// String decData = new String(decrypt, "UTF-8");
-									// this.log.info("----------------------------------------------------------------");
-									// this.log.info("[DownloadMusicServiceImpl] decData : {}", decData);
-									// this.log.info("----------------------------------------------------------------");
-									// } catch (UnsupportedEncodingException e) {
-									// e.printStackTrace();
-									// }
+										// JSON 복호화
+										// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+										// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+										//
+										// try {
+										// String decData = new String(decrypt, "UTF-8");
+										// this.log.info("----------------------------------------------------------------");
+										// this.log.info("[DownloadMusicServiceImpl] decData : {}", decData);
+										// this.log.info("----------------------------------------------------------------");
+										// } catch (UnsupportedEncodingException e) {
+										// e.printStackTrace();
+										// }
+									} else {
+										this.log.info("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
+										this.log.info("##### [SAC DSP LocalSCI] deviceKey : {}",
+												deviceReq.getDeviceKey());
+										this.log.info("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
+												+ deviceRes.getDeviceId());
+									}
 								}
 							}
 						}

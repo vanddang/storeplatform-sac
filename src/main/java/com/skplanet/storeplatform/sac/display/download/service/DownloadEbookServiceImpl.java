@@ -356,56 +356,67 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 								this.logger.info("----------------------------------------------------------------");
 
 								if (memberPassFlag && deviceRes != null) {
-									deviceId = deviceRes.getDeviceId();
-									deviceIdType = this.commonService.getDeviceIdType(deviceId);
+									// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+									if ("Y".equals(deviceRes.getAuthYn())) {
+										deviceId = deviceRes.getDeviceId();
+										deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
-									metaInfo.setExpiredDate(reqExpireDate);
-									metaInfo.setUseExprDt(useExprDt);
-									metaInfo.setUserKey(userKey);
-									metaInfo.setDeviceKey(deviceKey);
-									metaInfo.setDeviceType(deviceIdType);
-									metaInfo.setDeviceSubKey(deviceId);
+										metaInfo.setExpiredDate(reqExpireDate);
+										metaInfo.setUseExprDt(useExprDt);
+										metaInfo.setUserKey(userKey);
+										metaInfo.setDeviceKey(deviceKey);
+										metaInfo.setDeviceType(deviceIdType);
+										metaInfo.setDeviceSubKey(deviceId);
 
-									// 구매시점 DRM 여부값으로 세팅
-									if (StringUtils.isNotEmpty(drmYn)) {
-										metaInfo.setStoreDrmYn(drmYn);
-										metaInfo.setPlayDrmYn(drmYn);
-									}
+										// 구매시점 DRM 여부값으로 세팅
+										if (StringUtils.isNotEmpty(drmYn)) {
+											metaInfo.setStoreDrmYn(drmYn);
+											metaInfo.setPlayDrmYn(drmYn);
+										}
 
-									// 소장, 대여 구분(Store : 소장, Play : 대여)
-									if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-										metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-										metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+										// 소장, 대여 구분(Store : 소장, Play : 대여)
+										if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+											metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+											metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+										} else {
+											metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+											metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+										}
+
+										// 암호화 정보 (JSON)
+										EncryptionContents contents = this.encryptionGenerator
+												.generateEncryptionContents(metaInfo);
+
+										// JSON 파싱
+										MarshallingHelper marshaller = new JacksonMarshallingHelper();
+										byte[] jsonData = marshaller.marshal(contents);
+
+										// JSON 암호화
+										byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+										String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+										// 암호화 정보 (AES-128)
+										Encryption encryption = new Encryption();
+										encryption.setProductId(prchsProdId);
+										byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
+										encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
+										encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper
+												.getSacRandomNo()));
+										encryption.setToken(encryptString);
+										encryptionList.add(encryption);
+
+										this.logger.info("-----------------------------------------------------------");
+										this.logger.info("[DownloadEbookLog] token : {}", encryption.getToken());
+										this.logger.info("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
+										this.logger.info("-----------------------------------------------------------");
 									} else {
-										metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-										metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+										this.logger.info("##### [SAC DSP LocalSCI] userKey : {}",
+												deviceReq.getUserKey());
+										this.logger.info("##### [SAC DSP LocalSCI] deviceKey : {}",
+												deviceReq.getDeviceKey());
+										this.logger.info("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
+												+ deviceRes.getDeviceId());
 									}
-
-									// 암호화 정보 (JSON)
-									EncryptionContents contents = this.encryptionGenerator
-											.generateEncryptionContents(metaInfo);
-
-									// JSON 파싱
-									MarshallingHelper marshaller = new JacksonMarshallingHelper();
-									byte[] jsonData = marshaller.marshal(contents);
-
-									// JSON 암호화
-									byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-									String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
-
-									// 암호화 정보 (AES-128)
-									Encryption encryption = new Encryption();
-									encryption.setProductId(prchsProdId);
-									byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
-									encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
-									encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
-									encryption.setToken(encryptString);
-									encryptionList.add(encryption);
-
-									this.logger.info("-------------------------------------------------------------");
-									this.logger.info("[DownloadEbookLog] token : {}", encryption.getToken());
-									this.logger.info("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
-									this.logger.info("-------------------------------------------------------------");
 								}
 							}
 						}

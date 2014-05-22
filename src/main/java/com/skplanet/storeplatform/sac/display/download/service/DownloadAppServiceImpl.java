@@ -339,82 +339,94 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								this.log.info("----------------------------------------------------------------");
 
 								if (memberFlag && deviceRes != null) {
-									deviceId = deviceRes.getDeviceId();
-									deviceTelecom = deviceRes.getDeviceTelecom();
-									deviceIdType = this.commonService.getDeviceIdType(deviceId);
+									// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+									if ("Y".equals(deviceRes.getAuthYn())) {
+										deviceId = deviceRes.getDeviceId();
+										deviceTelecom = deviceRes.getDeviceTelecom();
+										deviceIdType = this.commonService.getDeviceIdType(deviceId);
 
-									metaInfo.setExpiredDate(reqExpireDate);
-									metaInfo.setUseExprDt(useExprDt);
-									metaInfo.setUserKey(userKey);
-									metaInfo.setDeviceKey(deviceKey);
-									metaInfo.setDeviceType(deviceIdType);
-									metaInfo.setDeviceSubKey(deviceId);
+										metaInfo.setExpiredDate(reqExpireDate);
+										metaInfo.setUseExprDt(useExprDt);
+										metaInfo.setUserKey(userKey);
+										metaInfo.setDeviceKey(deviceKey);
+										metaInfo.setDeviceType(deviceIdType);
+										metaInfo.setDeviceSubKey(deviceId);
 
-									// 단말의 통신사가 SKT 일때만 적용
-									if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
-										// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
-										if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
-												&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
+										// 단말의 통신사가 SKT 일때만 적용
+										if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
+											// Top Menu 가 DP08(어학/교육) 이고, deviceId 유형이 mdn일때 PacketFee 는 halfPaid
+											if (DisplayConstants.DP_LANG_EDU_TOP_MENU_ID
+													.equals(metaInfo.getTopMenuId())
+													&& deviceIdType.equals(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN)) {
 
-											try {
-												UapsEcReq uapsEcReq = new UapsEcReq();
-												uapsEcReq.setDeviceId(deviceId);
-												uapsEcReq.setType("mdn");
-												this.log.info("----------------------------------------------------------------");
-												this.log.info("********************UAPS 정보 조회************************");
-												this.log.info("[DownloadAppServiceImpl] DeviceId : {}",
-														uapsEcReq.getDeviceId());
-												this.log.info("[DownloadAppServiceImpl] Type : {}", uapsEcReq.getType());
-												this.log.info("----------------------------------------------------------------");
-												this.log.info("##### [SAC DSP LocalSCI] SAC EC Start : uapsSCI.getMappingInfo");
-												long start = System.currentTimeMillis();
-												UserEcRes uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
-												this.log.info("##### [SAC DSP LocalSCI] SAC EC End : uapsSCI.getMappingInfo");
-												long end = System.currentTimeMillis();
-												this.log.info(
-														"##### [SAC DSP LocalSCI] SAC Member uapsSCI.getMappingInfo takes {} ms",
-														(end - start));
-												this.log.info("-------------------------------------------------------------");
-												for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-													this.log.info("[DownloadAppServiceImpl] serviceCd	:{}",
-															uapsEcRes.getServiceCD()[k]);
-													if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING.equals(uapsEcRes
-															.getServiceCD()[k])) {
-														metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
+												try {
+													UapsEcReq uapsEcReq = new UapsEcReq();
+													uapsEcReq.setDeviceId(deviceId);
+													uapsEcReq.setType("mdn");
+													this.log.info("----------------------------------------------------------------");
+													this.log.info("********************UAPS 정보 조회************************");
+													this.log.info("[DownloadAppServiceImpl] DeviceId : {}",
+															uapsEcReq.getDeviceId());
+													this.log.info("[DownloadAppServiceImpl] Type : {}",
+															uapsEcReq.getType());
+													this.log.info("----------------------------------------------------------------");
+													this.log.info("##### [SAC DSP LocalSCI] SAC EC Start : uapsSCI.getMappingInfo");
+													long start = System.currentTimeMillis();
+													UserEcRes uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
+													this.log.info("##### [SAC DSP LocalSCI] SAC EC End : uapsSCI.getMappingInfo");
+													long end = System.currentTimeMillis();
+													this.log.info(
+															"##### [SAC DSP LocalSCI] SAC Member uapsSCI.getMappingInfo takes {} ms",
+															(end - start));
+													this.log.info("-------------------------------------------------------------");
+													for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
+														this.log.info("[DownloadAppServiceImpl] serviceCd	:{}",
+																uapsEcRes.getServiceCD()[k]);
+														if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING
+																.equals(uapsEcRes.getServiceCD()[k])) {
+															metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
+														}
 													}
+													this.log.info("-------------------------------------------------------------");
+												} catch (Exception e) {
+													this.log.info("[DownloadAppServiceImpl] :	PacketFee Is Not Half");
 												}
-												this.log.info("-------------------------------------------------------------");
-											} catch (Exception e) {
-												this.log.info("[DownloadAppServiceImpl] :	PacketFee Is Not Half");
 											}
 										}
+
+										// 암호화 정보 (JSON)
+										EncryptionContents contents = this.encryptionGenerator
+												.generateEncryptionContents(metaInfo);
+
+										// JSON 파싱
+										MarshallingHelper marshaller = new JacksonMarshallingHelper();
+										byte[] jsonData = marshaller.marshal(contents);
+
+										// JSON 암호화
+										byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+										String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+										// 암호화 정보 (AES-128)
+										Encryption encryption = new Encryption();
+										encryption.setProductId(prchsProdId);
+										byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
+										encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
+										encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper
+												.getSacRandomNo()));
+										encryption.setToken(encryptString);
+										encryptionList.add(encryption);
+
+										this.log.info("-------------------------------------------------------------");
+										this.log.info("[DownloadAppServiceImpl] token : {}", encryption.getToken());
+										this.log.info("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+										this.log.info("-------------------------------------------------------------");
+									} else {
+										this.log.info("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
+										this.log.info("##### [SAC DSP LocalSCI] deviceKey : {}",
+												deviceReq.getDeviceKey());
+										this.log.info("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
+												+ deviceRes.getDeviceId());
 									}
-
-									// 암호화 정보 (JSON)
-									EncryptionContents contents = this.encryptionGenerator
-											.generateEncryptionContents(metaInfo);
-
-									// JSON 파싱
-									MarshallingHelper marshaller = new JacksonMarshallingHelper();
-									byte[] jsonData = marshaller.marshal(contents);
-
-									// JSON 암호화
-									byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-									String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
-
-									// 암호화 정보 (AES-128)
-									Encryption encryption = new Encryption();
-									encryption.setProductId(prchsProdId);
-									byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
-									encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
-									encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
-									encryption.setToken(encryptString);
-									encryptionList.add(encryption);
-
-									this.log.info("-------------------------------------------------------------");
-									this.log.info("[DownloadAppServiceImpl] token : {}", encryption.getToken());
-									this.log.info("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-									this.log.info("-------------------------------------------------------------");
 								}
 							}
 						}

@@ -340,67 +340,77 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								this.log.info("----------------------------------------------------------------");
 
 								if (memberFlag && deviceRes != null) {
-									this.log.info("----------------------------------------------------------------");
-									this.log.info("[DownloadVodServiceImpl] Start Encription");
+									// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
+									if ("Y".equals(deviceRes.getAuthYn())) {
+										this.log.info("----------------------------------------------------------------");
+										this.log.info("[DownloadVodServiceImpl] Start Encription");
 
-									deviceId = deviceRes.getDeviceId();
-									this.log.info("[DownloadVodServiceImpl] deviceId	: {}", deviceId);
-									deviceIdType = this.commonService.getDeviceIdType(deviceId);
-									this.log.info("[DownloadVodServiceImpl] deviceIdType	:	{}", deviceIdType);
-									this.log.info("[DownloadVodServiceImpl] reqExpireDate	:	{}", reqExpireDate);
-									this.log.info("[DownloadVodServiceImpl] useExprDt	:	{}", useExprDt);
-									this.log.info("[DownloadVodServiceImpl] userKey	:	{}", userKey);
-									this.log.info("[DownloadVodServiceImpl] deviceKey	:	{}", deviceKey);
+										deviceId = deviceRes.getDeviceId();
+										this.log.info("[DownloadVodServiceImpl] deviceId	: {}", deviceId);
+										deviceIdType = this.commonService.getDeviceIdType(deviceId);
+										this.log.info("[DownloadVodServiceImpl] deviceIdType	:	{}", deviceIdType);
+										this.log.info("[DownloadVodServiceImpl] reqExpireDate	:	{}", reqExpireDate);
+										this.log.info("[DownloadVodServiceImpl] useExprDt	:	{}", useExprDt);
+										this.log.info("[DownloadVodServiceImpl] userKey	:	{}", userKey);
+										this.log.info("[DownloadVodServiceImpl] deviceKey	:	{}", deviceKey);
 
-									metaInfo.setExpiredDate(reqExpireDate);
-									metaInfo.setUseExprDt(useExprDt);
-									metaInfo.setUserKey(userKey);
-									metaInfo.setDeviceKey(deviceKey);
-									metaInfo.setDeviceType(deviceIdType);
-									metaInfo.setDeviceSubKey(deviceId);
+										metaInfo.setExpiredDate(reqExpireDate);
+										metaInfo.setUseExprDt(useExprDt);
+										metaInfo.setUserKey(userKey);
+										metaInfo.setDeviceKey(deviceKey);
+										metaInfo.setDeviceType(deviceIdType);
+										metaInfo.setDeviceSubKey(deviceId);
 
-									// drmYn 구매내역에서 조회한 DrmYn
-									if (StringUtils.isNotEmpty(drmYn)) {
-										metaInfo.setStoreDrmYn(drmYn);
-										metaInfo.setPlayDrmYn(drmYn);
-									}
+										// drmYn 구매내역에서 조회한 DrmYn
+										if (StringUtils.isNotEmpty(drmYn)) {
+											metaInfo.setStoreDrmYn(drmYn);
+											metaInfo.setPlayDrmYn(drmYn);
+										}
 
-									// 소장, 대여 구분(Store : 소장, Play : 대여)
-									if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-										metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-										metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+										// 소장, 대여 구분(Store : 소장, Play : 대여)
+										if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+											metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+											metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+										} else {
+											metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+											metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+										}
+
+										// 암호화 정보 (JSON)
+										EncryptionContents contents = this.encryptionGenerator
+												.generateEncryptionContents(metaInfo);
+
+										this.log.info("[DownloadVodServiceImpl] contents	:	{}", contents);
+
+										// JSON 파싱
+										MarshallingHelper marshaller = new JacksonMarshallingHelper();
+										byte[] jsonData = marshaller.marshal(contents);
+
+										// JSON 암호화
+										byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+										String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
+
+										// 암호화 정보 (AES-128)
+										Encryption encryption = new Encryption();
+										encryption.setProductId(prchsProdId);
+										byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
+										encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
+										encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper
+												.getSacRandomNo()));
+										encryption.setToken(encryptString);
+										encryptionList.add(encryption);
+
+										this.log.info("-------------------------------------------------------------");
+										this.log.info("[DownloadVodServiceImpl] token : {}", encryption.getToken());
+										this.log.info("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+										this.log.info("--------------------------------------------------------------");
 									} else {
-										metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-										metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+										this.log.info("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
+										this.log.info("##### [SAC DSP LocalSCI] deviceKey : {}",
+												deviceReq.getDeviceKey());
+										this.log.info("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
+												+ deviceRes.getDeviceId());
 									}
-
-									// 암호화 정보 (JSON)
-									EncryptionContents contents = this.encryptionGenerator
-											.generateEncryptionContents(metaInfo);
-
-									this.log.info("[DownloadVodServiceImpl] contents	:	{}", contents);
-
-									// JSON 파싱
-									MarshallingHelper marshaller = new JacksonMarshallingHelper();
-									byte[] jsonData = marshaller.marshal(contents);
-
-									// JSON 암호화
-									byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-									String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
-
-									// 암호화 정보 (AES-128)
-									Encryption encryption = new Encryption();
-									encryption.setProductId(prchsProdId);
-									byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
-									encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
-									encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper.getSacRandomNo()));
-									encryption.setToken(encryptString);
-									encryptionList.add(encryption);
-
-									this.log.info("-------------------------------------------------------------");
-									this.log.info("[DownloadVodServiceImpl] token : {}", encryption.getToken());
-									this.log.info("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-									this.log.info("--------------------------------------------------------------");
 								}
 								this.log.info("----------------------------  end set Purchase Info  ------------------------------------");
 							}
