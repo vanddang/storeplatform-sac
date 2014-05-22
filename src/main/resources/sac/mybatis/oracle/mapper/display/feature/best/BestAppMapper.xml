@@ -94,7 +94,8 @@
                                         ,IA.*
                                     FROM 
                                          (  
-                                           SELECT B.SELLER_MBR_NO
+                                           SELECT /*+ LEADING(K A E F H I) */ 
+                                                  B.SELLER_MBR_NO
                                                  ,B.UPD_DT
                                                  ,A.EXPO_ORD_ALWAYS_YN
                                                  ,A.EXPO_ORD
@@ -105,7 +106,8 @@
                                                  ,F.TOP_MENU_ID
                                                  ,H.SUB_CONTENTS_ID
                                             FROM (
-                                                   SELECT TENANT_ID
+                                                   SELECT /*+ NO_MERGE */
+                                                          TENANT_ID
                                                          ,PROD_ID
                                                          ,MENU_ID
                                                          ,EXPO_ORD_ALWAYS_YN

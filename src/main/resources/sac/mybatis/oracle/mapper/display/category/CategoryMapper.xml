@@ -65,7 +65,7 @@
     
     <!-- 일반 카테고리 이북/코믹 상품 조회 -->
     <select id="selectCategoryEbookComicList" parameterType="CategoryEbookComicSacReq" resultType="ProductBasicInfo">
-        SELECT  /* CategoryMapper.xml, selectCategoryEbookComicList, SAC 전시, 2014-05-19 */
+        SELECT  /* CategoryMapper.xml, selectCategoryEbookComicList, SAC 전시, 2014-05-22 */
                 LA.TOTAL_COUNT
               , LA.RNUM
               , LA.TOP_MENU_ID
@@ -81,7 +81,8 @@
                           FROM (
                                 SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
                                   FROM (
-                                        SELECT ROW_NUMBER( ) OVER ( PARTITION BY D.PROD_ID
+                                        SELECT /*+ LEADING(A B E D G F H) INDEX(D IDX_DP_PROD_03) INDEX_SS(B IDX_DP_MENU_CAT_PROD_MAPG_02) */
+                                               ROW_NUMBER( ) OVER ( PARTITION BY D.PROD_ID
                                                                         ORDER BY  DECODE( K.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
                                                                                 , K.CHAPTER DESC
                                                                                 , NVL( J.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
@@ -132,6 +133,7 @@
                                            AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */
                                            AND M.USE_YN = 'Y'                        /* Y : 노출 (노출여부) */
                                            AND A.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
+                                           AND D.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
                                            AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
                                            AND B.MENU_ID = #{menuId}                 /* 메뉴ID */
                                          <if test="arrayProdGradeCd != null">
