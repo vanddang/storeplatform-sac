@@ -61,7 +61,7 @@
 				 ,MCD.MENU_DESC
                  ,P.PROD_ID AS PART_PROD_ID
                  ,RSHP.PROD_ID AS PROD_ID
-                 ,P.UPD_DT
+                 ,TO_CHAR(P.UPD_DT, 'YYYYMMDDHH24MISS') AS UPD_DT
                  ,P.PROD_GRD_CD
                  ,PD.PROD_NM
                  ,SC.APK_PKG_NM
