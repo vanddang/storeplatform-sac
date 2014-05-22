@@ -532,7 +532,7 @@
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
                                                         , L.CHAPTER DESC
                                                         , NVL( J.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
-                                                        , J.LAST_DEPLOY_DT DESC ) AS RN
+                                                        , J.UPD_DT DESC ) AS RN
                       , A.UP_MENU_ID
                       , A.TOP_MENU_ID                                                             
                       , A.MENU_ID
@@ -686,11 +686,11 @@
                          ELSE ROUND(TB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
              ]]>
              , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
-             , CASE WHEN (SYSDATE - TB.LAST_DEPLOY_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS ICON_YN     /* 아이콘 */
-             , TB.LAST_DEPLOY_DT AS UPD_DT
+             , CASE WHEN (SYSDATE - TB.UPD_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS ICON_YN     /* 아이콘 */
+             , TB.UPD_DT
              , TB.PROD_STATUS_CD
           FROM (
-                 SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID ORDER BY J.LAST_DEPLOY_DT DESC ) AS RN
+                 SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID ORDER BY J.UPD_DT DESC ) AS RN
                       , A.UP_MENU_ID
                       , A.TOP_MENU_ID                                                             
                       , A.MENU_ID
@@ -716,7 +716,7 @@
                       , H.CHNL_PERIOD_AMT
                       , H.CHNL_UNLMT_AMT
                       , J.DRM_YN
-                      , J.LAST_DEPLOY_DT
+                      , J.UPD_DT
                       , L.CHAPTER                      
                       , L.BOOK_CLSF_CD
                       , M.FILE_PATH

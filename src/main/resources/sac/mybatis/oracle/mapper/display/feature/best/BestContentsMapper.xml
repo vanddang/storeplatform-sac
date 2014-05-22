@@ -23,7 +23,7 @@
                                 SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
                                   FROM 
                                        (
-                                        SELECT ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY D.LAST_DEPLOY_DT DESC) AS RN
+                                        SELECT ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY D.UPD_DT DESC) AS RN
                                              , B.TOP_MENU_ID
                                              , A.MENU_ID
                                              , A.PROD_ID
@@ -123,7 +123,7 @@
                                                                         ORDER BY  DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
                                                                                 , L.CHAPTER DESC
                                                                                 , NVL( J.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
-                                                                                , J.LAST_DEPLOY_DT DESC ) AS RN
+                                                                                , J.UPD_DT DESC ) AS RN         
                                              , B.TOP_MENU_ID
                                              , A.MENU_ID
                                              , A.PROD_ID

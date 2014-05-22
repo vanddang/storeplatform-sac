@@ -6,7 +6,7 @@
 		       KA.*
           FROM (SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD) AS RNUM
                   FROM (SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-                     FROM ( SELECT ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY D.LAST_DEPLOY_DT DESC) AS RN
+                     FROM ( SELECT ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY D.UPD_DT DESC) AS RN
                        , A.TENANT_ID
                        , A.MENU_ID
                        , A.PROD_ID
