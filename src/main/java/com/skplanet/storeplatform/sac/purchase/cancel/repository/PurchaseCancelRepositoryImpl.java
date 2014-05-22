@@ -244,7 +244,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_OCB, paymentSacParam.getPaymentMtdCd())) {
 				// OCB 결제이면
-				pay.setPaymentTypeCd(paymentSacParam.getResvCol02());
+				pay.setPaymentTypeCd(paymentSacParam.getCpnType());
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER,
 					paymentSacParam.getPaymentMtdCd())) {
 				// SKT 후불결제이면
