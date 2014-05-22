@@ -1315,7 +1315,7 @@
 		                                , CH_E.PROD_GRD_CD
 		                                , CH_E.META_CLSF_CD
 		                                , CH_E.CONTENTS_TYPE_CD
-		                                , CH_E.UPD_DT
+		                                , CH_E.LAST_DEPLOY_DT
 		                                , CH_F.CHAPTER
 		                                , MP_G.PART_PROD_ID		                                
 							            <if test='topMenuId == "DP13" and listId == "TGR000000001"'>
@@ -1438,7 +1438,7 @@
 		      , CONCAT(KC.FILE_PATH, KC.FILE_NM) AS IMAGE_PATH
 		  FROM  (SELECT JA.*
 		           FROM (SELECT  COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-		                       , ROW_NUMBER() OVER(ORDER BY IA.EXPO_ORD_ALWAYS_YN DESC, IA.EXPO_ORD, IA.EXPO_ORD_SUB, IA.UPD_DT DESC, IA.PROD_NM) AS R_NUM
+		                       , ROW_NUMBER() OVER(ORDER BY IA.EXPO_ORD_ALWAYS_YN DESC, IA.EXPO_ORD, IA.EXPO_ORD_SUB, IA.LAST_DEPLOY_DT DESC, IA.PROD_NM) AS R_NUM
 		                       , IA.*
 		                   FROM  (SELECT  ROW_NUMBER() OVER(PARTITION BY CH_A.PROD_ID ORDER BY EP_J.REG_DT DESC) AS RNUM
 		                                , CH_A.TENANT_ID
@@ -1455,7 +1455,7 @@
 		                                , CH_F.PROD_GRD_CD
 		                                , CH_F.META_CLSF_CD
 		                                , CH_F.CONTENTS_TYPE_CD
-		                                , CH_F.UPD_DT
+		                                , CH_F.LAST_DEPLOY_DT
 		                                , CH_G.CHAPTER
 		                                , MP_H.PART_PROD_ID
 		                            FROM  (SELECT  B.*
@@ -2036,7 +2036,7 @@
                          , TDP.PROD_ID
                          , TDPD.PROD_NM
                          , TDP.REG_DT
-                         , TDP.UPD_DT
+                         , TDP.LAST_DEPLOY_DT
                       FROM TB_DP_PROD TDP
                          , TB_DP_APP_PROD TDAP
                          , TB_DP_PROD_DESC TDPD
@@ -2063,7 +2063,7 @@
                        AND TP.TENANT_ID = #{tenantId}
                        AND TDPD.LANG_CD = #{langCd}
                        AND TSC.APK_PKG_NM = #{packageName}
-                     ORDER BY NVL(TDP.UPD_DT, TDP.REG_DT) DESC
+                     ORDER BY NVL(TDP.LAST_DEPLOY_DT, TDP.REG_DT) DESC
                ) T1
            WHERE ROWNUM = 1             
     </select>

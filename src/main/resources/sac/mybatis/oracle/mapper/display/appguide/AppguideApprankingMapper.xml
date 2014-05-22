@@ -140,9 +140,9 @@
                              , A.EXPO_ORD_ALWAYS_YN
                              , A.EXPO_ORD
                              , A.EXPO_ORD_SUB
-                             , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS RN
+                             , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.LAST_DEPLOY_DT DESC) AS RN
                           FROM  (
-                             SELECT 
+                             SELECT
                                    AA.TENANT_ID
                                  , AA.LIST_ID
                                  , AA.MENU_ID

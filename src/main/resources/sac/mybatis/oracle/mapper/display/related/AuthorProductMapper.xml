@@ -28,13 +28,13 @@
         FROM (
             SELECT 
                 COUNT(A.PROD_ID) OVER() TOTAL_COUNT
-                , ROW_NUMBER() OVER(ORDER BY A.UPD_DT DESC, A.PROD_NM) RNK
+                , ROW_NUMBER() OVER(ORDER BY A.LAST_DEPLOY_DT DESC, A.PROD_NM) RNK
                 , A.RNUM
                 , A.TOP_MENU_ID
                 , A.MENU_ID
                 , A.PROD_ID
                 , A.PROD_NM
-                , A.UPD_DT
+                , A.LAST_DEPLOY_DT
                 , A.CONTENTS_TYPE_CD
             FROM (
                 SELECT 
@@ -48,7 +48,7 @@
                     , D.MENU_ID
                     , A.PROD_ID
                     , A.PROD_NM
-                    , I.UPD_DT
+                    , I.LAST_DEPLOY_DT
                     , I.CONTENTS_TYPE_CD
                 FROM
                     TB_DP_PROD_DESC A

@@ -90,13 +90,13 @@
                                 ,JA.*
                             FROM
                                 (
-                                  SELECT ROW_NUMBER() OVER ( PARTITION BY IA.SELLER_MBR_NO ORDER BY IA.UPD_DT DESC ) AS RN 
+                                  SELECT ROW_NUMBER() OVER ( PARTITION BY IA.SELLER_MBR_NO ORDER BY IA.LAST_DEPLOY_DT DESC ) AS RN
                                         ,IA.*
                                     FROM 
                                          (  
                                            SELECT /*+ LEADING(K A E F H I) */ 
                                                   B.SELLER_MBR_NO
-                                                 ,B.UPD_DT
+                                                 ,B.LAST_DEPLOY_DT
                                                  ,A.EXPO_ORD_ALWAYS_YN
                                                  ,A.EXPO_ORD
                                                  ,A.EXPO_ORD_SUB

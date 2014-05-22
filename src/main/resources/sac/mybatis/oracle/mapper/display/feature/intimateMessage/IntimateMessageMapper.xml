@@ -138,7 +138,7 @@
 		       JA.*
 		  FROM (SELECT  IA.*
 		              , COUNT(1) OVER() AS TOTAL_COUNT
-		              , ROW_NUMBER() OVER(ORDER BY IA.RANK, IA.UPD_DT DESC) AS ROW_NUM
+		              , ROW_NUMBER() OVER(ORDER BY IA.RANK, IA.LAST_DEPLOY_DT DESC) AS ROW_NUM
 		          FROM  (SELECT  ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY D.REG_DT DESC) AS RNUM
 		                       , A.RANK
 		                       , B.TOP_MENU_ID
@@ -146,7 +146,7 @@
 		                       , C.PROD_ID
 		                       , C.PART_PROD_ID
 		                       , D.REG_DT
-		                       , D.UPD_DT
+		                       , D.LAST_DEPLOY_DT
 		                   FROM  TB_DP_MSG_PROD    A
 		                       , TB_DP_PROD        B
 		                       , TB_DP_PROD_RSHP   C

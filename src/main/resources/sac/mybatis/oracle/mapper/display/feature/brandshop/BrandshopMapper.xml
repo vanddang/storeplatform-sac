@@ -159,7 +159,7 @@
 			                 , C.TOP_MENU_ID
 			                 , C.MENU_ID
 			                 , A.PART_PROD_ID                                     
-			                 , D.UPD_DT                                
+			                 , D.LAST_DEPLOY_DT AS UPD_DT
 	                         , D.REG_DT
 			                 , D.META_CLSF_CD
                              , D.SVC_GRP_CD

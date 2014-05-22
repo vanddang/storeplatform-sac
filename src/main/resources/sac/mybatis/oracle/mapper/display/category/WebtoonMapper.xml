@@ -16,13 +16,13 @@
                 SELECT KA.*
                   FROM 
                        (
-                        SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.UPD_DT DESC, JA.PROD_NM) AS RNUM
+                        SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.LAST_DEPLOY_DT DESC, JA.PROD_NM) AS RNUM
                           FROM 
                                (
                                 SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
                                   FROM 
                                        (
-                                        SELECT ROW_NUMBER( ) OVER ( PARTITION BY D.PROD_ID ORDER BY J.UPD_DT DESC ) AS RN         
+                                        SELECT ROW_NUMBER( ) OVER ( PARTITION BY D.PROD_ID ORDER BY J.LAST_DEPLOY_DT DESC ) AS RN
                                              , A.TOP_MENU_ID
                                              , A.MENU_ID
                                              , D.PROD_ID
@@ -30,7 +30,7 @@
                                              , D.META_CLSF_CD
                                              , D.CONTENTS_TYPE_CD
                                              , F.PROD_NM
-                                             , J.UPD_DT
+                                             , J.LAST_DEPLOY_DT
                                              , K.SERIALLY_WKDY
                                           FROM TB_DP_MENU_CATEGORY      A
                                              , TB_DP_MENU_CATEGORY_PROD_MAPG B
@@ -108,7 +108,7 @@
                              , A.EXPO_ORD
                              , A.EXPO_ORD_SUB
                              , F.CONTENTS_TYPE_CD
-                             , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.UPD_DT DESC) AS NO
+                             , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.LAST_DEPLOY_DT DESC) AS NO
                           FROM (SELECT LP.TENANT_ID
                                      , LP.PROD_ID
                                      , LP.EXPO_ORD_ALWAYS_YN
@@ -191,7 +191,7 @@
                    ,  AA.TOP_MENU_ID
                    ,  AA.CONTENTS_TYPE_CD
                    ,  AA.MENU_ID
-                   ,  AA.UPD_DT
+                   ,  AA.LAST_DEPLOY_DT
                    ,  AA.CHAPTER
                    ,  AA.FIRST_PROD_ID
                    ,  ( SELECT CD_ID FROM TB_CM_CD L WHERE L.CD_NM = AA.SERIALLY_WKDY AND L.GRP_CD_ID = 'DP0101') AS SERIALLY_WKDY
@@ -202,12 +202,12 @@
                              D.TOP_MENU_ID
                           ,  D.CONTENTS_TYPE_CD
                           ,  A.MENU_ID
-                          ,  D.UPD_DT
+                          ,  D.LAST_DEPLOY_DT
                           ,  J.CHAPTER
                           ,  D.PROD_ID
                           ,  G.PART_PROD_ID AS FIRST_PROD_ID
                           ,  SUBSTR(J.SERIALLY_WKDY,1,3) AS SERIALLY_WKDY
-                          ,  H.UPD_DT AS EPSD_UPD_DT
+                          ,  H.LAST_DEPLOY_DT AS EPSD_UPD_DT
                        FROM  TB_DP_MENU_CATEGORY A
                           ,  TB_DP_MENU_CATEGORY_PROD_MAPG B
                           ,  TB_DP_PROD D /* 채널 */
@@ -259,7 +259,7 @@
                 , AA.TOP_MENU_ID
                 , AA.CONTENTS_TYPE_CD
                 , AA.MENU_ID
-                , AA.UPD_DT
+                , AA.LAST_DEPLOY_DT
                 , AA.CHAPTER
 	            , COUNT(AA.PROD_ID) OVER () AS TOTAL_COUNT
 	            , ROWNUM AS RNUM
@@ -271,7 +271,7 @@
 	                     , D.TOP_MENU_ID
 	                     , D.CONTENTS_TYPE_CD
 	                     , A.MENU_ID
-	                     , D.UPD_DT
+	                     , D.LAST_DEPLOY_DT
 	                     , F.CHAPTER
 	                FROM TB_DP_MENU_CATEGORY      A
 	                    , TB_DP_MENU_CATEGORY_PROD_MAPG B
@@ -312,7 +312,7 @@
              , K.ARTIST1_NM
              , B.PROD_BASE_DESC
              , B.PROD_DTL_DESC
-             , TO_CHAR(A.UPD_DT, 'YYYYMMDDHH24MISS') AS UPD_DT
+             , TO_CHAR(A.LAST_DEPLOY_DT, 'YYYYMMDDHH24MISS') AS UPD_DT
              , C.MENU_ID
              , E.MENU_NM
              , D.TOP_MENU_ID
@@ -447,11 +447,11 @@
                          ELSE ROUND(TB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
              ]]>
              , TB.FILE_PATH
-             , CASE WHEN (SYSDATE - TB.UPD_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS ICON_YN     /* 아이콘 */
-             , TB.UPD_DT
+             , CASE WHEN (SYSDATE - TB.LAST_DEPLOY_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS ICON_YN     /* 아이콘 */
+             , TB.LAST_DEPLOY_DT AS UPD_DT
              , TB.PROD_STATUS_CD
           FROM (
-                 SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID ORDER BY J.UPD_DT DESC ) AS RN
+                 SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID ORDER BY J.LAST_DEPLOY_DT DESC ) AS RN
                       , A.UP_MENU_ID
                       , A.TOP_MENU_ID                                                             
                       , A.MENU_ID
@@ -479,7 +479,7 @@
                       , H.CHNL_PERIOD_AMT
                       , H.CHNL_UNLMT_AMT
                       , J.DRM_YN
-                      , J.UPD_DT
+                      , J.LAST_DEPLOY_DT
                       , L.CHAPTER                      
                       , L.BOOK_CLSF_CD
                       , CONCAT ( M.FILE_PATH, M.FILE_NM) AS FILE_PATH

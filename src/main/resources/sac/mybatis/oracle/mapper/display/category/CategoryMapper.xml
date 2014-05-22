@@ -77,7 +77,7 @@
           FROM (
                 SELECT KA.*
                   FROM (
-                        SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.UPD_DT DESC, JA.PROD_NM) AS RNUM
+                        SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.LAST_DEPLOY_DT DESC, JA.PROD_NM) AS RNUM
                           FROM (
                                 SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
                                   FROM (
@@ -86,12 +86,12 @@
                                                                         ORDER BY  DECODE( K.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
                                                                                 , K.CHAPTER DESC
                                                                                 , NVL( J.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
-                                                                                , J.UPD_DT DESC ) AS RN         
+                                                                                , J.LAST_DEPLOY_DT DESC ) AS RN
                                              , A.TOP_MENU_ID
                                              , A.MENU_ID
                                              , D.PROD_ID
                                              , I.PART_PROD_ID                                     
-                                             , D.UPD_DT
+                                             , D.LAST_DEPLOY_DT
                                              , D.META_CLSF_CD
                                              , D.CONTENTS_TYPE_CD
                                              , F.PROD_NM

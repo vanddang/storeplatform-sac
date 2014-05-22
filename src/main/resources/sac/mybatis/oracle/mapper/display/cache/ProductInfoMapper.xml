@@ -601,7 +601,7 @@
             ORDER BY
                 EEBOOK.CHAPTER DESC
                 , NVL(EPROD.USE_PERIOD_UNIT_CD, 'PD00310') DESC
-                , EPROD.UPD_DT DESC
+                , EPROD.LAST_DEPLOY_DT DESC
         ) TB
         WHERE ROWNUM = 1
     </select>
@@ -641,8 +641,8 @@
             WHEN TB.AVG_EVLU_SCORE > 5 THEN 5
             ELSE ROUND(TB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
             , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
-            , CASE WHEN (SYSDATE - TB.UPD_DT) <= 3 THEN 'Y' ELSE 'N' END AS ICON_YN
-            , TB.UPD_DT
+            , CASE WHEN (SYSDATE - TB.LAST_DEPLOY_DT) <= 3 THEN 'Y' ELSE 'N' END AS ICON_YN
+            , TB.LAST_DEPLOY_DT AS UPD_DT
             , TB.PROD_STATUS_CD ]]>
         FROM (
             SELECT
@@ -671,7 +671,7 @@
                 CTPRC.CHNL_PERIOD_AMT,
                 CTPRC.CHNL_UNLMT_AMT,
                 EPROD.DRM_YN,
-                EPROD.UPD_DT,
+                EPROD.LAST_DEPLOY_DT,
                 EEBOOK.CHAPTER,
                 EEBOOK.BOOK_CLSF_CD,
                 CPI.FILE_PATH,
@@ -731,7 +731,7 @@
                 AND CMCM.BASE_YN = 'Y'
                 AND CMCM.USE_YN = 'Y'
                 AND CMC.USE_YN = 'Y'
-            ORDER BY EPROD.UPD_DT DESC
+            ORDER BY EPROD.LAST_DEPLOY_DT DESC
         ) TB
         WHERE ROWNUM = 1
     </select>
