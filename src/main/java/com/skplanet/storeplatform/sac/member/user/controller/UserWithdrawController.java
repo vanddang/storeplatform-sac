@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -46,6 +48,20 @@ public class UserWithdrawController {
 	public WithdrawRes withdraw(@RequestBody WithdrawReq req, SacRequestHeader sacHeader) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		/**
+		 * 파라미터 체크 (userId, deviceId 둘다 미존재)
+		 */
+		if (StringUtils.isBlank(req.getUserId()) && StringUtils.isBlank(req.getDeviceId())) {
+			throw new StorePlatformException("SAC_MEM_0002", "userId or deviceId");
+		}
+
+		/**
+		 * 파라미터 체크 (userId 존재, userAuthKey 미존재)
+		 */
+		if (StringUtils.isNotBlank(req.getUserId()) && StringUtils.isBlank(req.getUserAuthKey())) {
+			throw new StorePlatformException("SAC_MEM_0002", "userAuthKey");
+		}
 
 		WithdrawRes res = this.svc.executeWithdraw(sacHeader, req);
 

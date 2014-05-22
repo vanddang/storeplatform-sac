@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
@@ -26,16 +27,13 @@ import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeUserEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcReq;
-import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
@@ -52,13 +50,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 @Service
 public class UserWithdrawServiceImpl implements UserWithdrawService {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserWithdrawServiceImpl.class);
-
-	private static CommonRequest commonRequest;
-
-	static {
-		commonRequest = new CommonRequest();
-	}
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserWithdrawServiceImpl.class);
 
 	@Autowired
 	private UserSCI userSCI; // 회원 콤포넌트 사용자 기능 인터페이스
@@ -68,9 +60,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 	@Autowired
 	private DeviceService deviceService;
-
-	@Autowired
-	private UapsSCI uapsSCI;
 
 	@Autowired
 	private MemberCommonComponent mcc;
@@ -85,83 +74,112 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Resource(name = "memberRetireAmqpTemplate")
 	private AmqpTemplate memberRetireAmqpTemplate;
 
-	/**
-	 * 
-	 * 회원탈퇴
-	 * 
-	 * @param
-	 * @return
-	 */
+	@Autowired
+	private UserService userService;
+
 	@Override
 	public WithdrawRes executeWithdraw(SacRequestHeader requestHeader, WithdrawReq req) {
 
-		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
-		String userId = StringUtil.nvl(req.getUserId(), "");
-		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-
-		req.setUserId(userId);
-		req.setUserAuthKey(userAuthKey);
-		req.setDeviceId(deviceId);
+		/**
+		 * 회원 정보 조회 Value Object.
+		 */
+		UserInfo userInfo = null;
 
 		/**
-		 * 모번호 조회 (989 일 경우만)
+		 * 요청 파라미터에 따라서 분기 처리한다.
+		 * 
+		 * 1. userId, userAuthKey 둘다 존재 or 모두 존재 Case.
+		 * 
+		 * 2. deviceId만 존재하는 Case.
 		 */
-		if (!deviceId.equals("")) {
-			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
-			req.setDeviceId(opmdMdn);
-			logger.debug("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
-		}
+		if (StringUtils.isNotBlank(req.getUserId()) && StringUtils.isNotBlank(req.getUserAuthKey())) {
 
-		/* SC 회원 존재 여부 */
-		SearchUserResponse schUserRes = this.searchUser(requestHeader, req);
+			LOGGER.debug("########################################");
+			LOGGER.info("userId, userAuthKey 둘다 존재 or 모두 존재 Case.");
+			LOGGER.debug("########################################");
 
-		/* Return Value */
-		WithdrawRes withdrawRes = new WithdrawRes();
+			/**
+			 * userId로 회원 정보 조회.
+			 */
+			userInfo = this.mcc.getUserBaseInfo("userId", req.getUserId(), requestHeader);
+			if (StringUtils.isNotBlank(userInfo.getImSvcNo())) {
 
-		if (!deviceId.equals("")) {
-			logger.info("{} userType : {}", req.getDeviceId(), schUserRes.getUserMbr().getUserType());
-		} else {
-			logger.info("{} userType : {}", req.getUserId(), schUserRes.getUserMbr().getUserType());
-		}
-		/* 통합회원 연동 */
+				/**********************************************
+				 * OneId ID 회원 Case.
+				 **********************************************/
+				LOGGER.info("[OneId ID 회원 Case] id:{}, type:{}", userInfo.getUserId(), userInfo.getUserType());
+				this.discardUser(userInfo.getImSvcNo(), req.getUserAuthKey());
+				this.remove(requestHeader, userInfo.getUserKey());
 
-		if (schUserRes.getUserMbr().getImSvcNo() != null) {
+			} else {
 
-			this.oneIdUser(requestHeader, schUserRes, req);
+				/**********************************************
+				 * IDP ID 회원 Case.
+				 **********************************************/
+				LOGGER.info("[IDP ID 회원 Case] id:{}, type:{}", userInfo.getUserId(), userInfo.getUserType());
+				this.secedeUser(req.getUserId(), req.getUserAuthKey());
+				this.remove(requestHeader, userInfo.getUserKey());
 
-			withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
-		} else {
-			if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
-
-				this.idpMobileUser(requestHeader, schUserRes, req);
-
-				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 			}
-			/* IDP 아이디 회원 */
-			else if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
 
-				this.idpIdUser(requestHeader, schUserRes, req);
+		} else {
 
-				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
-			}
-		}
+			LOGGER.debug("########################################");
+			LOGGER.info("deviceId 존재 Case.");
+			LOGGER.debug("########################################");
 
-		/* SC Remove */
-		RemoveUserRequest scReq = new RemoveUserRequest();
-		scReq.setCommonRequest(commonRequest);
-		scReq.setUserKey(schUserRes.getUserKey());
-		scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
-		scReq.setSecedeReasonMessage("");
-		this.userSCI.remove(scReq);
+			/**
+			 * 모번호 조회 (989 일 경우만)
+			 */
+			req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
-		/* 게임센터 연동 */
+			/**
+			 * deviceId로 회원 정보 조회.
+			 */
+			userInfo = this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), requestHeader);
+			if (StringUtils.isNotBlank(userInfo.getImSvcNo())) { // 통합회원, IDP 회원 구분
+
+				/**********************************************
+				 * OneId ID 회원 Case.
+				 **********************************************/
+				LOGGER.info("[OneId ID 회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
+				this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId());
+				this.userService.updateAdditionalInfoForNonLogin(requestHeader, userInfo.getUserKey(), userInfo.getImSvcNo());
+
+			} else {
+
+				if (StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+
+					/**********************************************
+					 * 무선 회원 Case.
+					 **********************************************/
+					LOGGER.info("[무선회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
+					this.secedeForWap(req.getDeviceId());
+					this.remove(requestHeader, userInfo.getUserKey());
+
+				} else if (StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_IDPID)) {
+
+					/**********************************************
+					 * IDP ID 회원 Case.
+					 **********************************************/
+					LOGGER.info("[IDP ID 회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
+					this.secedeForWap(req.getDeviceId());
+					this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId());
+
+				} // 모바일회원, IDP ID회원 분기 END
+
+			} // 통합회원, IDP 회원 구분 END
+
+		} // 요청 파라미터에 따른 분기 END
+
+		LOGGER.info("IDP 탈퇴처리, DB 탈퇴처리 모두 완료.");
+
+		/**
+		 * 게임센터 연동.
+		 */
 		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-		gameCenterSacReq.setUserKey(schUserRes.getUserKey());
-		if (!deviceId.equals("")) {
+		gameCenterSacReq.setUserKey(userInfo.getUserKey());
+		if (StringUtils.isNotBlank(req.getDeviceId())) {
 			gameCenterSacReq.setDeviceId(req.getDeviceId());
 		}
 		gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
@@ -169,95 +187,141 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
 		this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
-		/* MQ 연동 */
+		/**
+		 * MQ 연동.
+		 */
 		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
 
 		try {
-			mqInfo.setUserId(schUserRes.getUserMbr().getUserID());
-			mqInfo.setUserKey(schUserRes.getUserKey());
+
+			mqInfo.setUserId(userInfo.getUserId());
+			mqInfo.setUserKey(userInfo.getUserKey());
 			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-
 			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+
 		} catch (AmqpException ex) {
-			logger.info("MQ process fail {}", mqInfo);
+			LOGGER.error("MQ process fail {}", mqInfo);
 		}
 
-		return withdrawRes;
+		/**
+		 * 결과 세팅
+		 */
+		WithdrawRes response = new WithdrawRes();
+		response.setUserKey(userInfo.getUserKey());
+		return response;
 
 	}
 
 	/**
-	 * 입력된 Parameter로 회원존재여부 체크 한다. deviceId or userId && userKey
+	 * <pre>
+	 * 통합회원 해지 연동.
+	 * </pre>
+	 * 
+	 * @param imSvcNo
+	 *            통합회원 관리번호
+	 * @param userAuthKey
+	 *            IDP 인증 Key
 	 */
-	@Override
-	public SearchUserResponse searchUser(SacRequestHeader requestHeader, WithdrawReq req) {
+	public void discardUser(String imSvcNo, String userAuthKey) {
 
-		String userId = StringUtil.nvl(req.getUserId(), "");
-		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
-		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-
-		SearchUserRequest schUserReq = new SearchUserRequest();
-		schUserReq.setCommonRequest(commonRequest);
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-
-		/* userId & userAuthKey || userId 로 회원정보 조회 */
-		if (!userId.equals("") && !userAuthKey.equals("")) {
-			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
-			key.setKeyString(userId);
-			keySearchList.add(key);
-			schUserReq.setKeySearchList(keySearchList);
-
-		} else if (!deviceId.equals("")) {
-			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			key.setKeyString(deviceId);
-			keySearchList.add(key);
-			schUserReq.setKeySearchList(keySearchList);
-		}
-
-		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
-
-		return schUserRes;
-
-	}
-
-	/**
-	 * IMIDP 연동(통합회원)
-	 */
-	@Override
-	public void oneIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
 		DiscardUserEcReq ecReq = new DiscardUserEcReq();
-		ecReq.setKey(schUserRes.getUserMbr().getImSvcNo());
+		ecReq.setKey(imSvcNo);
 		ecReq.setKeyType("1");
-		ecReq.setUserAuthKey(req.getUserAuthKey());
-
+		ecReq.setUserAuthKey(userAuthKey);
 		this.imIdpSCI.discardUser(ecReq);
 
 	}
 
 	/**
-	 * IDP 모바일 회원(무선)
+	 * <pre>
+	 * 모바일 전용회원 탈퇴 연동.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 *            기기 ID (mdn, uuid)
 	 */
-	@Override
-	public void idpMobileUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
-		SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
-		ecReq.setUserMdn(req.getDeviceId());
+	public void secedeForWap(String deviceId) {
 
+		SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
+		ecReq.setUserMdn(deviceId);
 		this.idpSCI.secedeForWap(ecReq);
 
 	}
 
 	/**
-	 * IDP 아이디 회원
+	 * <pre>
+	 * IDP 회원 해지 연동.
+	 * </pre>
+	 * 
+	 * @param userId
+	 *            사용자 아이디
+	 * @param userAuthKey
+	 *            IDP 인증 Key
 	 */
-	@Override
-	public void idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
-		SecedeUserEcReq ecReq = new SecedeUserEcReq();
-		ecReq.setKey(schUserRes.getUserMbr().getUserID());
-		ecReq.setUserAuthKey(req.getUserAuthKey());
-		ecReq.setKeyType("1");
+	public void secedeUser(String userId, String userAuthKey) {
 
+		SecedeUserEcReq ecReq = new SecedeUserEcReq();
+		ecReq.setKey(userId);
+		ecReq.setUserAuthKey(userAuthKey);
+		ecReq.setKeyType("1");
 		this.idpSCI.secedeUser(ecReq);
+
+	}
+
+	/**
+	 * <pre>
+	 * SC 회원 탈퇴 요청.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SAC 공통 헤더
+	 * @param userKey
+	 *            사용자 Key
+	 */
+	public void remove(SacRequestHeader requestHeader, String userKey) {
+
+		LOGGER.info("SC 탈퇴 요청 userKey:{}", userKey);
+		RemoveUserRequest scReq = new RemoveUserRequest();
+		scReq.setCommonRequest(this.mcc.getSCCommonRequest(requestHeader));
+		scReq.setUserKey(userKey);
+		scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+		scReq.setSecedeReasonMessage("");
+		this.userSCI.remove(scReq);
+
+	}
+
+	/**
+	 * <pre>
+	 * SC DeviceId Invalid 처리 요청.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SAC 공통 헤더
+	 * @param userKey
+	 *            사용자 Key
+	 * @param deviceId
+	 *            기기 ID
+	 */
+	public void deviceIdInvalid(SacRequestHeader requestHeader, String userKey, String deviceId) {
+
+		/**
+		 * SC 휴대기기 단건 조회.
+		 */
+		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, userKey);
+
+		/**
+		 * SC 휴대기기 삭제요청.
+		 */
+		LOGGER.info("SC DeviceId Invalid 처리 요청 userKey:{}, deviceKey:{}", userKey, deviceInfo.getDeviceKey());
+		List<String> removeKeyList = new ArrayList<String>();
+		removeKeyList.add(deviceInfo.getDeviceKey());
+
+		RemoveDeviceRequest removeDeviceRequest = new RemoveDeviceRequest();
+		removeDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(requestHeader));
+		removeDeviceRequest.setUserKey(userKey);
+		removeDeviceRequest.setDeviceKey(removeKeyList);
+
+		this.deviceSCI.removeDevice(removeDeviceRequest);
 
 	}
 
