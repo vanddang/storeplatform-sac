@@ -32,7 +32,9 @@
         <property name="validator">
             <bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>  
         </property>
+        <property name="systemErrorCodeTranslator">
+            <bean class="com.skplanet.storeplatform.sac.common.support.SacSystemErrorCodeTranslator" /> 
+        </property>
         <property name="order" value="10"/>
-    </bean>
-
+    </bean> 
 </beans>
