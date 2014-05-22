@@ -65,7 +65,7 @@
 		FROM (
 		    SELECT 
 			    COUNT(A.CID) OVER () AS TOTAL_COUNT
-			    , ROW_NUMBER() OVER(ORDER BY A.CHNL_REG_DT, A.CHAPTER ASC, A.UPD_DT DESC) RNK
+			    , ROW_NUMBER() OVER(ORDER BY A.CHNL_REG_DT, A.CHAPTER ASC, A.LAST_DEPLOY_DT DESC) RNK
 	            , A.RNUM
 	            , A.CHNL_PROD_ID
 	            , A.TOP_MENU_ID
@@ -79,7 +79,7 @@
 	            , A.SC_SAMPL_URL
 	            , A.SAMPL_URL
 	            , A.REG_DT
-	            , A.UPD_DT
+	            , A.LAST_DEPLOY_DT
 	            , A.TENANT_ID
 	            , A.SUB_CONTENTS_ID
 	            , A.FILE_SIZE
@@ -140,7 +140,7 @@
                 , A.SC_SAMPL_URL
                 , A.SAMPL_URL
                 , A.REG_DT
-                , A.UPD_DT
+                , A.LAST_DEPLOY_DT
                 , A.TENANT_ID
                 , A.SUB_CONTENTS_ID
                 , A.FILE_SIZE
@@ -198,7 +198,7 @@
 			        , G.SC_SAMPL_URL
 			        , G.SAMPL_URL
 			        , A.REG_DT
-			        , A.UPD_DT
+			        , A.LAST_DEPLOY_DT
 			        , B.TENANT_ID
 			        , F.SUB_CONTENTS_ID
 			        , F.FILE_SIZE

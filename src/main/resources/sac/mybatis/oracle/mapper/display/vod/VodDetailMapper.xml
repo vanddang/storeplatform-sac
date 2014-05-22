@@ -234,7 +234,7 @@
 		                  , MAX( T1.CHNL_PROD_ID ) AS CHNL_PROD_ID
 		                  , MAX( T1.PROD_ID ) AS PROD_ID
 		                  , MAX( T1.REG_DT ) AS REG_DT
-		                  , MAX( T1.UPD_DT ) AS UPD_DT
+		                  , MAX( T1.LAST_DEPLOY_DT ) AS UPD_DT
 		                  , MAX( T1.VOD_TITL_NM ) AS VOD_TITL_NM
 		                  , MAX( T1.PROD_NM ) AS PROD_NM
 		                  , MAX( T1.PROD_BASE_DESC ) AS PROD_BASE_DESC
@@ -294,7 +294,7 @@
 		                        , PD.CID , PD.PROD_ID, PR.PROD_ID AS CHNL_PROD_ID
 		                        , PD.META_CLSF_CD
 		                        , MP.CHAPTER
-		                        , PD.REG_DT, PD.UPD_DT, PD.USE_PERIOD, PD.USE_PERIOD_UNIT_CD
+		                        , PD.REG_DT, PD.LAST_DEPLOY_DT, PD.USE_PERIOD, PD.USE_PERIOD_UNIT_CD
 		                        , DSC.PROD_NM, DSC.PROD_BASE_DESC, DSC.PROD_DTL_DESC, DSC.PROD_INTR_DSCR, DSC.ARTIST1_NM, DSC.ARTIST2_NM, DSC.ARTIST3_NM, MP.VOD_TITL_NM
 		                        , MP.GENRE_CD, MP.ISSUE_DAY, MP.BRDC_COMP_CD, MP.SVC_START_DT, MP.CHNL_COMP_NM
 		                        , MP.HDCP_YN, MP.HDV_YN, MP.DOLBY_SPRT_YN, DV.DOLBY_SPRT_YN AS DOLBY_YN
@@ -365,10 +365,10 @@
 		                ) T1
 		                GROUP BY T1.CID, T1.CHAPTER
 						<if test="orderedBy == 'recent'">
-					    ORDER BY T1.CHAPTER DESC, UPD_DT DESC
+					    ORDER BY T1.CHAPTER DESC, LAST_DEPLOY_DT DESC
 					  	</if>
 					  	<if test="orderedBy == 'regDate'">
-					    ORDER BY T1.CHAPTER ASC, UPD_DT DESC
+					    ORDER BY T1.CHAPTER ASC, LAST_DEPLOY_DT DESC
 					  	</if>
 		            ) T2
 		            WHERE 1=1    
