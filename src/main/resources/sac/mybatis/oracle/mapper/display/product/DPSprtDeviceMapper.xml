@@ -47,8 +47,7 @@
         <if test="regDt != null">,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')</if>
         <if test="regDt == null">,sysdate</if>
 			,#{updId, jdbcType=VARCHAR}
-        <if test="updDt != null">,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')</if>
-        <if test="updDt == null">,sysdate</if>
+        	,SYSDATE
 		 )
 	</insert>
   

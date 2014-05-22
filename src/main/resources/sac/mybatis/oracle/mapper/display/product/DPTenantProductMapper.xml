@@ -53,7 +53,7 @@
 			,#{regId, jdbcType=VARCHAR}
 			,TO_DATE(#{regDt}, 'yyyyMMddHH24MISS')
 			,#{updId, jdbcType=VARCHAR}
-			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')     
+			,SYSDATE
 		 )
 	</insert>
 

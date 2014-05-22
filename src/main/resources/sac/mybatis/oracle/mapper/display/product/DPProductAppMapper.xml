@@ -163,7 +163,7 @@
 			,#{regId, jdbcType=VARCHAR}
 			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
 			,#{updId, jdbcType=VARCHAR}
-			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,SYSDATE
 			,#{devCmpyNm, jdbcType=VARCHAR}
 			,#{prodSpec, jdbcType=VARCHAR}
 			,#{prodClsfCd, jdbcType=VARCHAR}

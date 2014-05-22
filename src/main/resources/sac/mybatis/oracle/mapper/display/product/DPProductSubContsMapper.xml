@@ -161,7 +161,7 @@
 			,#{regId, jdbcType=VARCHAR}
 			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
 			,#{updId, jdbcType=VARCHAR}
-			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')     
+			,SYSDATE
 		 )
 	</insert>
 	

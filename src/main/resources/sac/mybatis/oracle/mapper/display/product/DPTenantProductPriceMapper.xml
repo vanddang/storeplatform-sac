@@ -56,6 +56,8 @@
 			,DC_AMT
 			,REG_ID
 			,REG_DT
+			,UPD_ID
+			,UPD_DT
 			,TAX_CLSF
 		)
 		VALUES(
@@ -72,6 +74,8 @@
 			,#{dcAmt, jdbcType=INTEGER}
 			,#{regId, jdbcType=VARCHAR}
 			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{updId, jdbcType=VARCHAR}
+			,SYSDATE
 			,#{taxClsf, jdbcType=VARCHAR}       
 		 )
 	</insert>

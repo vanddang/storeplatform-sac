@@ -81,7 +81,7 @@
                 , P.REG_ID
                 , TO_DATE( TO_CHAR(P.REG_DT,'YYYYMMDD'),'YYYYMMDD') AS REG_DT
                 , P.UPD_ID
-                , TO_DATE( TO_CHAR(P.UPD_DT,'YYYYMMDDHH24MISS'),'YYYYMMDDHH24MISS') AS UPD_DT
+                , SYSDATE AS UPD_DT
             FROM
                 TB_DP_PROD P, TB_DP_TENANT_PROD TP, TB_DP_MENU_CATEGORY_PROD_MAPG MCP
             WHERE MCP.USE_YN = 'Y'

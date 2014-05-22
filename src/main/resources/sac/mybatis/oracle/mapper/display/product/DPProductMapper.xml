@@ -107,7 +107,7 @@
 			,#{regId}
 			,TO_DATE(#{regDt}, 'yyyyMMddHH24MISS')
 			,#{updId, jdbcType=VARCHAR}
-			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,SYSDATE
 			,#{prodGrdCd, jdbcType=VARCHAR}
 			,#{cid, jdbcType=VARCHAR}
 			,#{svcGrpCd, jdbcType=VARCHAR}

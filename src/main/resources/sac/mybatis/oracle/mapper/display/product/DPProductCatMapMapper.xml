@@ -60,7 +60,7 @@
 	 		,#{regId, jdbcType=VARCHAR}
 			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
 		 	,'SYSTEM'
-			,TO_DATE(#{updDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,SYSDATE
 			,#{useYn, jdbcType=VARCHAR}
 		)
 	</insert>
@@ -70,8 +70,5 @@
 		DELETE /* DP_PRODUCT_CAT-deleteDPProductCat : mhcha123 (2014-01-03) */
 		  FROM TB_DP_MENU_CATEGORY_PROD_MAPG
       	  WHERE PROD_ID = #{prodId}
-			<if test="@org.springframework.util.StringUtils@hasText(categoryNo)">
-				AND MENU_ID = #{categoryNo}
-			</if>			
 	</delete>    
 </mapper>
