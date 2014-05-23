@@ -525,6 +525,7 @@
                 FROM   TB_DP_SHPG_PROD A 
                       ,TB_DP_PROD_RSHP B
                 WHERE A.PROD_ID = B.PROD_ID
+                  AND B.PROD_RSHP_CD ='DP010802'                  
                   AND A.PROD_ID = #{prodId}     
           )
         </if>
