@@ -62,10 +62,6 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 @Service
 public class CouponProcessServiceImpl implements CouponProcessService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	private String errorCode = "";
-	private String message = "";
-	private String mbrNo = "";
-	private String compNm = "";
 	@Autowired
 	private CouponItemService couponItemService;
 
@@ -110,81 +106,81 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// COUPON 기본정보 등록상태확인
 			this.log.info("■■■■■ validateContentInfo 시작 ■■■■■");
 			if (!this.validateCouponInfo(couponInfo)) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 			this.log.info("■■■■■ validateContentInfo 패스 ■■■■■");
 
 			// 쿠폰 , 아이템 유효성 검증
 			if (!this.validateCouponItemCount(couponInfo, itemInfoList, couponReq.getCudType())) { // 쿠폰 , 아이템 유효성 확인 해야
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 
 			// TB_DP_PROD 값 셋팅
 			this.log.info("■■■■■ setTbDpProdInfoValue start ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 			if (!this.setTbDpProdInfoValue(couponInfo, itemInfoList, tblDpProdList, couponReq.getCudType())) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 			this.log.info("■■■■■ setTbDpProdInfoValue End ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 
 			// TB_DP_SHPG_PROD 값 셋팅
 			// log.info("■■■■■ setTbDpShpgProdInfoValue 시작 ■■■■■");
 			if (!this.setTbDpShpgProdListValue(couponInfo, itemInfoList, tbDpShpgProdList, couponReq.getCudType())) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 
 			// TB_DP_PROD_DESC 값 셋팅
 			// log.info("■■■■■ setTbDpProdDescInfoValue 시작 ■■■■■");
 			if (!this.setTbDpProdDescListValue(couponInfo, itemInfoList, tbDpProdDescList, couponReq.getCudType())) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 
 			// TB_DP_PROD_RSHP 값 셋팅
 			// log.info("■■■■■ setTbDpProdRshpValue 시작 ■■■■■");
 			if (!this.setTbDpProdRshpValue(couponInfo, itemInfoList, tbDpProdRshpList, couponReq.getCudType())) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 
 			// TB_DP_TENANT_PROD 값 셋팅
 			// log.info("■■■■■ setTbDpTenantProdListValue 시작 ■■■■■");
 			if (!this.setTbDpTenantProdListValue(couponInfo, itemInfoList, tbDpTenantProdList, couponReq.getCudType())) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 
 			// TB_DP_TENANT_PROD_PRICE 값 셋팅
 			// log.info("■■■■■ setTbDpTenantProdPriceListValue 시작 ■■■■■");
 			if (!this.setTbDpTenantProdPriceListValue(couponInfo, itemInfoList, tbDpTenantProdPriceList,
 					couponReq.getCudType())) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 
 			// TB_DP_PROD_OPT 값 셋팅
 			// log.info("■■■■■ setTbDpProdRshpValue 시작 ■■■■■");
 			if (!this.setTbDpProdOptValue(couponInfo, itemInfoList, tbDpProdOptList, couponReq.getCudType())) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 
 			// TB_DP_PROD_CATALOG_MAPG 값 셋팅
 			// log.info("■■■■■ setTbDpProdCatalogMapgInfoValue 시작 ■■■■■");
 			if (!this.setTbDpProdCatalogMapgInfoValue(couponInfo, itemInfoList, tbDpProdCatalogMapgList,
 					couponReq.getCudType())) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 
 			// TB_DP_PROD_TAG 값 셋팅
 			// log.info("■■■■■ setTbDpTenantProdPriceListValue 시작 ■■■■■");
 			if (!this.setTbDpProdTagListValue(couponInfo, tbDpProdTagList)) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 
 			// TB_DP_SPRT_DEVICE 값 셋팅
 			// log.info("■■■■■ setTbDpTenantProdPriceListValue 시작 ■■■■■");
 			if (!this.setTbDpSprtDeviceListValue(couponInfo, itemInfoList, tbDpSprtDeviceList, couponReq.getCudType())) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 			// SP_SETT_REG_PROD 프로시저 호출
 			this.log.info("■■■■■ setCallSpSettRegProd 시작 ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 			if (!this.setCallSpSettRegProd(couponInfo, itemInfoList, spRegistProdList, couponReq.getCudType())) {
-				throw new CouponException(this.errorCode, this.message, null);
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 			this.log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 
@@ -213,21 +209,21 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		if (StringUtils.equalsIgnoreCase(couponInfo.getStoreb2bFlag(), "Y")) {
 			if (StringUtils.equalsIgnoreCase(couponInfo.getStoreSaleType(),
 					CouponConstants.COUPON_SALE_TYPE_SHIPPING_PROD)) {
-				this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
-				this.message = "B2B상품은 배송상품 유형일 수 없습니다.";
+				couponInfo.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
+				couponInfo.setMessage("B2B상품은 배송상품 유형일 수 없습니다.");
 				return false;
 			}
 		}
 
 		// 업체 유효성 검증
 		if (!this.validateBusinessPartner(couponInfo)) {
-			this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_NOT_BPID;
+			couponInfo.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_NOT_BPID);
 			return false;
 		}
 
 		// 카탈로그 유효성 검증
 		if (!this.validateCatalog(couponInfo)) { // CatalogCode 확인 해야 함
-			this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATALOGID;
+			couponInfo.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATALOGID);
 			return false;
 		}
 
@@ -257,7 +253,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// ////////////////// Coupon 정보 S////////////////////////////
 			dp.setProdId(couponInfo.getProdId());
 			dp.setProdChrgYn("N");
-			dp.setSellerMbrNo(this.mbrNo);
+			dp.setSellerMbrNo(couponInfo.getMbrNo());
 			dp.setSvcGrpCd(CouponConstants.CUPON_SVC_GRP_CD); // "DP000206"; // MALL 구분 코드(쇼핑쿠폰)
 			dp.setSvcTypeCd(CouponConstants.CHNL_TP_CD_CUPON); // "DP001117"; // 채널 타입 코드(쇼핑쿠폰)
 			dp.setProdGrdCd(CouponConstants.AGE_RESTRICTIONS_DEFAULT_COMMON_CODE); // PD004401 전체 이용가
@@ -292,7 +288,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				} else { // 유료
 					dp.setProdChrgYn("Y");
 				}
-				dp.setSellerMbrNo(this.mbrNo);
+				dp.setSellerMbrNo(couponInfo.getMbrNo());
 				dp.setSvcGrpCd(CouponConstants.CUPON_SVC_GRP_CD); // "DP000206"; // MALL 구분 코드(쇼핑쿠폰)
 				dp.setSvcTypeCd(CouponConstants.CHNL_TP_CD_CUPON); // "DP001117"; // 채널 타입 코드(쇼핑쿠폰)
 				dp.setProdGrdCd(CouponConstants.AGE_RESTRICTIONS_DEFAULT_COMMON_CODE); // PD004401 전체 이용가
@@ -368,7 +364,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dsp.setProdId(couponInfo.getProdId());
 
 			dsp.setEpsdCnt(itemCnt); //
-			dsp.setChnlCompNm(this.compNm);
+			dsp.setChnlCompNm(couponInfo.getCompNm());
 			if (couponInfo.getCoupnStatus().equals("3")) { // 2:판매대기 3:판매중 4:판매중지 5:판매금지
 				dsp.setSaleYn("Y");
 			} else {
@@ -421,7 +417,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 					itemOptionCnt++;
 				}
 				dsp.setEpsdCnt(itemOptionCnt); // 아이템에 대한 판매중인 옵션 수만 count
-				dsp.setChnlCompNm(this.compNm);
+				dsp.setChnlCompNm(couponInfo.getCompNm());
 				if (itemInfo.getItemStatus().equals("3")) { // 2:판매대기 3:판매중 4:판매중지 5:판매금지
 					dsp.setSaleYn("Y");
 				} else {
@@ -963,7 +959,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// ////////////////// Coupon 정보 S////////////////////////////
 			spRegistProd.setProdId(couponInfo.getProdId());
 			spRegistProd.setSettlRt(Integer.parseInt(couponInfo.getAccountingRate()));
-			spRegistProd.setSaleMbrNo(this.mbrNo);
+			spRegistProd.setSaleMbrNo(couponInfo.getMbrNo());
 			spRegistProd.setSaleStdDt(couponInfo.getIssueSDate());
 			spRegistProd.setSaleEndDt(couponInfo.getIssueEDate());
 			spRegistProd.setRegId(couponInfo.getBpId());
@@ -977,7 +973,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				spRegistProd = new SpRegistProd();
 				spRegistProd.setProdId(itemInfo.getProdId());
 				spRegistProd.setSettlRt(Integer.parseInt(couponInfo.getAccountingRate()));
-				spRegistProd.setSaleMbrNo(this.mbrNo);
+				spRegistProd.setSaleMbrNo(couponInfo.getMbrNo());
 				spRegistProd.setSaleStdDt(couponInfo.getIssueSDate());
 				spRegistProd.setSaleEndDt(couponInfo.getIssueEDate());
 				spRegistProd.setRegId(couponInfo.getBpId());
@@ -1031,8 +1027,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
 								couponInfo.getBpId());
 					}
-					this.compNm = sellerMbrs.get(0).getSellerCompany();
-					this.mbrNo = sellerMbrs.get(0).getSellerKey();
+					couponInfo.setCompNm(sellerMbrs.get(0).getSellerCompany());
+					couponInfo.setMbrNo(sellerMbrs.get(0).getSellerKey());
 
 				} else {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
