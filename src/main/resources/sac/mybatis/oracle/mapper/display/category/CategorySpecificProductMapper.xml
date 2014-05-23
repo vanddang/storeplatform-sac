@@ -568,7 +568,6 @@
           AND CD2.MENU_ID = C.TOP_MENU_ID
           AND CD2.LANG_CD = CD.LANG_CD
           AND P2.PROD_ID = CP.PROD_ID -- CHANNEL PROD ID
-          --AND P2.META_CLSF_CD = P.META_CLSF_CD
           AND TP2.PROD_ID = P2.PROD_ID
           AND TP2.TENANT_ID = TP.TENANT_ID
           AND MP2.PROD_ID = P2.PROD_ID
@@ -596,7 +595,7 @@
           <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
             AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
           </if>
-          AND P.TOP_MENU_ID = #{productBasicInfo.topMenuId}
+          AND P2.TOP_MENU_ID = #{productBasicInfo.topMenuId}
           AND PI.IMG_CD = #{imageCd}
           AND PI.EXPO_ORD = 1                        /* 노출순서 */
           AND PI.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */  

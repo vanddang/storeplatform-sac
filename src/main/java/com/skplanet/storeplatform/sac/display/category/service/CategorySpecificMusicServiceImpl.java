@@ -115,7 +115,11 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 					// DP000201 : 애플리캐이션
 
 					// 음원 상품의 경우
-					if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
+					if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)
+							|| DisplayConstants.DP_DISPLAY_PHONE_TOP_MENU_ID.equals(topMenuId)) {
+
+						// topMenuId 뮤직으로 설정
+						productBasicInfo.setTopMenuId(DisplayConstants.DP_MUSIC_TOP_MENU_ID);
 						// 배치완료 기준일시 조회
 						productBasicInfo.setMenuId("DP004901");
 						paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
