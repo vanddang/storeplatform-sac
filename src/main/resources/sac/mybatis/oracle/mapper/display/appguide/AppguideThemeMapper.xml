@@ -127,16 +127,35 @@
                    FROM (
                        SELECT A.LIST_ID THEME_ID
 							, A.LIST_NM THEME_NM
-							, DECODE(A.IMG_PATH,NULL,2,1) THEME_TYPE
+							, A.THEME_TYPE
 							, A.IMG_PATH
-							, ROW_NUMBER() OVER( PARTITION BY A.LIST_ID
-							                        ORDER BY AP.EXPO_ORD_ALWAYS_YN, AP.EXPO_ORD, AP.EXPO_ORD_SUB, AP.REG_DT DESC ) AS RN
-							, AP.EXPO_ORD
-							, AP.EXPO_ORD_SUB
-							, AP.EXPO_ORD_ALWAYS_YN
+							, A.RN
+							, A.EXPO_ORD
+							, A.EXPO_ORD_SUB
+							, A.EXPO_ORD_ALWAYS_YN
 							, P2.REG_DT
-                        FROM TB_DP_LIST A
-							, TB_DP_LIST_PROD AP
+                        FROM  (
+		                        SELECT A.LIST_ID
+		                             , A.LIST_NM
+		                             , DECODE(A.IMG_PATH, NULL, 2, 1) THEME_TYPE
+		                             , A.IMG_PATH
+		                             , ROW_NUMBER() OVER( PARTITION BY A.LIST_ID
+		                               ORDER BY AP.EXPO_ORD_ALWAYS_YN, AP.EXPO_ORD, AP.EXPO_ORD_SUB, AP.REG_DT DESC ) AS RN
+		                             , AP.EXPO_ORD
+		                             , AP.EXPO_ORD_SUB
+		                             , AP.EXPO_ORD_ALWAYS_YN
+		                             , AP.REG_DT
+		                             , AP.PROD_ID
+		                          FROM TB_DP_LIST A
+		                             , TB_DP_LIST_PROD AP
+		                         WHERE SYSDATE BETWEEN NVL( AP.EXPO_START_DT, SYSDATE ) AND NVL( AP.EXPO_END_DT, SYSDATE )
+		                           AND A.TENANT_ID = AP.TENANT_ID
+		                           AND A.LIST_ID = AP.LIST_ID
+		                           AND A.TENANT_ID = #{tenantHeader.tenantId}
+		                           AND A.LIST_GRP_CD = #{listGrpCd}
+		                           AND A.EXPO_YN = 'Y'
+		                           AND AP.EXPO_YN = 'Y'
+		                      ) A
 							, TB_DP_PROD_RSHP PR
 							, TB_DP_MENU_CATEGORY_PROD_MAPG CP
 							, TB_DP_MENU_CATEGORY C
@@ -144,23 +163,16 @@
 							, TB_DP_TENANT_PROD TP
 							, TB_DP_PROD P2          /* CHNL */
 							, TB_DP_TENANT_PROD TP2
-						WHERE SYSDATE BETWEEN NVL( AP.EXPO_START_DT, SYSDATE ) AND    NVL( AP.EXPO_END_DT, SYSDATE )
-						  AND A.TENANT_ID = AP.TENANT_ID
-						  AND A.LIST_ID = AP.LIST_ID
-						  AND PR.PROD_ID = AP.PROD_ID  /* CHNL */
-						  AND CP.PROD_ID = AP.PROD_ID
+						WHERE PR.PROD_ID = A.PROD_ID  /* CHNL */
+						  AND CP.PROD_ID = A.PROD_ID
 						  AND P2.PROD_ID = PR.PROD_ID  /* CHNL */
-						  AND TP2.TENANT_ID = A.TENANT_ID
+						  AND TP2.TENANT_ID = #{tenantHeader.tenantId}
 						  AND TP2.PROD_ID = P2.PROD_ID
 						  AND P.PROD_ID = PR.PART_PROD_ID  /* EPSD */
-						  AND TP.TENANT_ID = A.TENANT_ID
+						  AND TP.TENANT_ID = #{tenantHeader.tenantId}
 						  AND TP.PROD_ID = P.PROD_ID
 						  AND C.MENU_ID = CP.MENU_ID
-						  AND A.LIST_GRP_CD = #{listGrpCd}
 						  AND PR.PROD_RSHP_CD = 'DP010802' /* 채널-에피소드 상품 관계 */
-						  AND A.EXPO_YN = 'Y'
-						  AND AP.EXPO_YN = 'Y'
-						  AND A.TENANT_ID = #{tenantHeader.tenantId}
 						  AND CP.BASE_YN = 'Y'
 						  AND CP.USE_YN = 'Y'
 						  AND C.USE_YN = 'Y'
@@ -209,6 +221,138 @@
                ) AA
          WHERE RNUM BETWEEN #{START_ROW} AND #{END_ROW}
     </select>
+    
+    <select id="getBasicThemeRecommendMainProductList" parameterType="java.util.Map" resultType="AppguideMain">
+        SELECT  /* AppguideThemeMapper.xml, getBasicThemeRecommendMainProductList, 앱가이드 테마추천 메인 상품 리스트, 윤주영/SK플래닛 , 2014-03-03 */
+                C.*
+          FROM  (
+                SELECT COUNT(*) OVER() AS TOTAL_COUNT ,
+                       A.THEME_ID ,
+                       A.THEME_NM ,
+                       A.THEME_TYPE ,
+                       A.IMG_PATH AS THEME_IMG ,
+                       A.PROD_ID ,
+                       A.EXPO_ORD ,
+                       A.TOP_MENU_ID ,
+                       A.MENU_ID ,
+                       A.META_CLSF_CD ,
+                       A.SVC_GRP_CD ,
+                       A.CONTENTS_TYPE_CD ,
+                       A.PART_PROD_ID ,
+                       ROW_NUMBER( ) OVER( PARTITION BY A.THEME_ID
+                                               ORDER BY A.EXPO_ORD_ALWAYS_YN, A.EXPO_ORD, A.EXPO_ORD_SUB, A.REG_DT DESC ) AS RNUM
+                FROM   (
+                        SELECT AP.LIST_ID THEME_ID ,
+                               AP.LIST_NM THEME_NM ,
+                               DECODE(AP.IMG_PATH, NULL, 2, 1) THEME_TYPE ,
+                               AP.IMG_PATH ,
+                               AP.PROD_ID ,
+                               AP.EXPO_ORD_ALWAYS_YN ,
+                               AP.EXPO_ORD ,
+                               AP.EXPO_ORD_SUB ,
+                               AP.REG_DT ,
+                               PD2.PROD_NM ,
+                               P2.TOP_MENU_ID ,
+                               C.MENU_ID ,
+                               P2.META_CLSF_CD ,
+                               P2.PROD_GRD_CD ,
+                               P2.SVC_GRP_CD ,
+                               P2.CONTENTS_TYPE_CD ,
+                               PR.PART_PROD_ID ,
+                               ROW_NUMBER( ) OVER( PARTITION BY AP.LIST_ID, AP.PROD_ID
+                                                       ORDER BY P.REG_DT DESC, PD.PROD_NM DESC ) AS RN
+                        FROM   (
+                                SELECT A.LIST_ID ,
+                                       A.LIST_NM ,
+                                       DECODE(A.IMG_PATH, NULL, 2, 1) THEME_TYPE ,
+                                       A.IMG_PATH ,
+                                       ROW_NUMBER() OVER( PARTITION BY A.LIST_ID
+                                                              ORDER BY AP.EXPO_ORD_ALWAYS_YN, AP.EXPO_ORD, AP.EXPO_ORD_SUB, AP.REG_DT DESC ) AS RN ,
+                                       AP.EXPO_ORD ,
+                                       AP.EXPO_ORD_SUB ,
+                                       AP.EXPO_ORD_ALWAYS_YN ,
+                                       AP.REG_DT ,
+                                       AP.PROD_ID
+                                FROM   TB_DP_LIST A ,
+                                       TB_DP_LIST_PROD AP
+                                WHERE  SYSDATE BETWEEN NVL( AP.EXPO_START_DT, SYSDATE ) AND NVL( AP.EXPO_END_DT, SYSDATE )
+                                  AND  A.TENANT_ID = AP.TENANT_ID
+                                  AND  A.LIST_ID = AP.LIST_ID
+                                  AND  A.TENANT_ID = #{tenantHeader.tenantId}
+                                  AND  A.LIST_GRP_CD = #{listGrpCd}
+                                  AND  A.EXPO_YN = 'Y'
+                                  AND  AP.EXPO_YN = 'Y'
+                               ) AP ,
+                               TB_DP_PROD_RSHP PR ,
+                               TB_DP_MENU_CATEGORY_PROD_MAPG CP ,
+                               TB_DP_MENU_CATEGORY C ,
+                               TB_DP_PROD P /* EPSD */,
+                               TB_DP_TENANT_PROD TP ,
+                               TB_DP_PROD_DESC PD ,
+                               TB_DP_PROD P2 /* CHNL */,
+                               TB_DP_TENANT_PROD TP2 ,
+                               TB_DP_PROD_DESC PD2
+                        WHERE  PR.PROD_ID = AP.PROD_ID
+                        AND    P2.PROD_ID = PR.PROD_ID /* 테마는 채널 단위임 */
+                        AND    PD2.PROD_ID = P2.PROD_ID
+                        AND    PD2.LANG_CD = #{tenantHeader.langCd}
+                        AND    TP.TENANT_ID = #{tenantHeader.tenantId}
+                        AND    TP.PROD_ID = P2.PROD_ID
+                        AND    P.PROD_ID = PR.PART_PROD_ID
+                        AND    PD.PROD_ID = P.PROD_ID
+                        AND    PD.LANG_CD = #{tenantHeader.langCd}
+                        AND    TP2.TENANT_ID = #{tenantHeader.tenantId}
+                        AND    TP2.PROD_ID = P.PROD_ID
+                        AND    CP.PROD_ID = AP.PROD_ID
+                        AND    C.MENU_ID = CP.MENU_ID
+                        AND    PR.PROD_RSHP_CD = 'DP010802' /* 채널-에피소드 상품 관계 */
+                        AND    CP.BASE_YN = 'Y'
+                        AND    CP.USE_YN = 'Y'
+                        AND    C.USE_YN = 'Y'
+                        AND    TP.PROD_STATUS_CD = 'PD000403'
+                        AND    TP2.PROD_STATUS_CD = 'PD000403'
+                        AND    P2.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
+                        AND    P.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
+                        AND    EXISTS (
+                                    SELECT 'X' 
+                                      FROM TB_DP_SPRT_DEVICE SH 
+                                     WHERE SH.PROD_ID = P.PROD_ID
+                                       AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
+                               )
+                        AND    (CASE  WHEN P2.TOP_MENU_ID = 'DP13' THEN
+	                                       CASE WHEN #{ebookSprtYn} = 'Y' THEN 1
+	                                            ELSE 0
+	                                       END
+	                                  WHEN P2.TOP_MENU_ID = 'DP14' THEN
+	                                       CASE WHEN #{comicSprtYn} = 'Y' THEN 1
+	                                            ELSE 0
+	                                       END
+	                                  WHEN P2.TOP_MENU_ID = 'DP15' THEN
+	                                       CASE WHEN #{sclShpgSprtYn} = 'Y' THEN 1 
+	                                            ELSE 0 
+	                                       END
+	                                  WHEN P2.TOP_MENU_ID = 'DP16' THEN
+	                                       CASE WHEN P.META_CLSF_CD = 'CT25' THEN 
+	                                            CASE WHEN #{musicSprtYn} = 'Y' THEN 1 
+	                                                 ELSE 0
+	                                            END
+	                                            ELSE 1
+	                                       END
+	                                  WHEN P2.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+	                                       CASE WHEN #{videoDrmSprtYn} = 'N' THEN
+	                                                 CASE WHEN P.DRM_YN ='N' THEN 1
+	                                                      ELSE 0
+	                                                 END
+	                                            ELSE 1
+	                                       END
+                                      ELSE 1
+                                END) = 1
+                        ORDER BY AP.LIST_ID ASC, 
+                                 AP.EXPO_ORD_ALWAYS_YN, AP.EXPO_ORD, AP.EXPO_ORD_SUB, P2.REG_DT DESC        
+                       ) A
+                WHERE  RN = 1 ) C
+         WHERE  RNUM <![CDATA[<=]]> DECODE(THEME_TYPE, '1', 5, 4)
+    </select>         
 
     <!-- 미사용 쿼리 -->
     <select id="getThemeRecommendProductList" parameterType="java.util.Map" resultType="Appguide">
