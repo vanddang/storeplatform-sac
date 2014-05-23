@@ -266,8 +266,6 @@
                                        A.LIST_NM ,
                                        DECODE(A.IMG_PATH, NULL, 2, 1) THEME_TYPE ,
                                        A.IMG_PATH ,
-                                       ROW_NUMBER() OVER( PARTITION BY A.LIST_ID
-                                                              ORDER BY AP.EXPO_ORD_ALWAYS_YN, AP.EXPO_ORD, AP.EXPO_ORD_SUB, AP.REG_DT DESC ) AS RN ,
                                        AP.EXPO_ORD ,
                                        AP.EXPO_ORD_SUB ,
                                        AP.EXPO_ORD_ALWAYS_YN ,
