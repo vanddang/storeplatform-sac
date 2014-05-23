@@ -134,6 +134,7 @@
 
         <!--  appguide 상품 조회 -->
         <typeAlias alias="Appguide"  type="com.skplanet.storeplatform.sac.display.appguide.vo.Appguide" />
+        <typeAlias alias="AppguideMain"  type="com.skplanet.storeplatform.sac.display.appguide.vo.AppguideMain" />
         
         <!--  앱랭킹 상품 조회 -->
         <typeAlias alias="AppguideApprankingSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideApprankingSacReq" />
