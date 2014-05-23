@@ -183,6 +183,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setProdId(obj.getProdId());
 			historySac.setProdAmt(obj.getProdAmt());
 			historySac.setProdQty(obj.getProdQty());
+			historySac.setSpcCpnAmt(obj.getSpcCpnAmt());
 			historySac.setStatusCd(obj.getStatusCd());
 			historySac.setUseStartDt(obj.getUseStartDt());
 			historySac.setUseExprDt(obj.getUseExprDt());
