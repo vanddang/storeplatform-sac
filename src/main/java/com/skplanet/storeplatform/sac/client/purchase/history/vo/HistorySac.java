@@ -33,6 +33,7 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String prodId;
 	private String prodAmt;
 	private String prodQty;
+	private String spcCpnAmt;
 	private String statusCd;
 	private String useStartDt;
 	private String useExprDt;
@@ -1103,6 +1104,21 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setProductInfo(HashMap<String, Object> productInfo) {
 		this.productInfo = productInfo;
+	}
+
+	/**
+	 * @return the spcCpnAmt
+	 */
+	public String getSpcCpnAmt() {
+		return this.spcCpnAmt;
+	}
+
+	/**
+	 * @param spcCpnAmt
+	 *            the spcCpnAmt to set
+	 */
+	public void setSpcCpnAmt(String spcCpnAmt) {
+		this.spcCpnAmt = spcCpnAmt;
 	}
 
 }
