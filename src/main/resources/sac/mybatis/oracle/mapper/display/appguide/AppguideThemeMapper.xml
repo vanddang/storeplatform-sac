@@ -222,6 +222,19 @@
          WHERE RNUM BETWEEN #{START_ROW} AND #{END_ROW}
     </select>
     
+    <select id="getThemeRecommendMainList" parameterType="java.util.Map" resultType="java.lang.String">
+         SELECT DISTINCT A.LIST_ID
+         FROM   TB_DP_LIST A ,
+                TB_DP_LIST_PROD AP
+         WHERE  SYSDATE BETWEEN NVL( AP.EXPO_START_DT, SYSDATE ) AND NVL( AP.EXPO_END_DT, SYSDATE )
+           AND  A.TENANT_ID = AP.TENANT_ID
+           AND  A.LIST_ID = AP.LIST_ID
+           AND  A.TENANT_ID = #{tenantHeader.tenantId}
+           AND  A.LIST_GRP_CD = #{listGrpCd}
+           AND  A.EXPO_YN = 'Y'
+           AND  AP.EXPO_YN = 'Y'
+    </select>
+    
     <select id="getBasicThemeRecommendMainProductList" parameterType="java.util.Map" resultType="AppguideMain">
         SELECT  /* AppguideThemeMapper.xml, getBasicThemeRecommendMainProductList, 앱가이드 테마추천 메인 상품 리스트, 윤주영/SK플래닛 , 2014-03-03 */
                 C.*
@@ -240,7 +253,10 @@
                        A.CONTENTS_TYPE_CD ,
                        A.PART_PROD_ID ,
                        ROW_NUMBER( ) OVER( PARTITION BY A.THEME_ID
-                                               ORDER BY A.EXPO_ORD_ALWAYS_YN, A.EXPO_ORD, A.EXPO_ORD_SUB, A.REG_DT DESC ) AS RNUM
+                                               ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, 
+                                                        A.EXPO_ORD, 
+                                                        A.EXPO_ORD_SUB, 
+                                                        A.REG_DT DESC ) AS RNUM
                 FROM   (
                         SELECT AP.LIST_ID THEME_ID ,
                                AP.LIST_NM THEME_NM ,
@@ -260,7 +276,8 @@
                                P2.CONTENTS_TYPE_CD ,
                                PR.PART_PROD_ID ,
                                ROW_NUMBER( ) OVER( PARTITION BY AP.LIST_ID, AP.PROD_ID
-                                                       ORDER BY P.REG_DT DESC, PD.PROD_NM DESC ) AS RN
+                                                       ORDER BY P.REG_DT DESC, 
+                                                                PD.PROD_NM DESC ) AS RN
                         FROM   (
                                 SELECT A.LIST_ID ,
                                        A.LIST_NM ,
@@ -277,6 +294,11 @@
                                   AND  A.TENANT_ID = AP.TENANT_ID
                                   AND  A.LIST_ID = AP.LIST_ID
                                   AND  A.TENANT_ID = #{tenantHeader.tenantId}
+                                    <if test="listId  != null">
+                                  AND  A.LIST_ID IN (
+                                        <foreach collection="listId" item="listId" separator=",">#{listId}</foreach>
+                                    )
+                                    </if>
                                   AND  A.LIST_GRP_CD = #{listGrpCd}
                                   AND  A.EXPO_YN = 'Y'
                                   AND  AP.EXPO_YN = 'Y'
@@ -346,7 +368,10 @@
                                       ELSE 1
                                 END) = 1
                         ORDER BY AP.LIST_ID ASC, 
-                                 AP.EXPO_ORD_ALWAYS_YN, AP.EXPO_ORD, AP.EXPO_ORD_SUB, P2.REG_DT DESC        
+                                 AP.EXPO_ORD_ALWAYS_YN DESC, 
+                                 AP.EXPO_ORD, 
+                                 AP.EXPO_ORD_SUB, 
+                                 P2.REG_DT DESC        
                        ) A
                 WHERE  RN = 1 ) C
          WHERE  RNUM <![CDATA[<=]]> DECODE(THEME_TYPE, '1', 5, 4)
