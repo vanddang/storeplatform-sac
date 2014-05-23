@@ -12,7 +12,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * 전시 공통 모듈 테스트
@@ -22,8 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath*:/spring-test/context-test.xml"})
-@TransactionConfiguration
-@Transactional
+@WebAppConfiguration
+//@TransactionConfiguration
+//@Transactional
 public class CommonServiceTest {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());

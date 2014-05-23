@@ -57,4 +57,6 @@ public interface CacheEvictManager {
     void evictAllShoppingMeta();
 
     void evictAllFreepassMeta();
+
+    void evictAllTmembershipDcRate();
 }

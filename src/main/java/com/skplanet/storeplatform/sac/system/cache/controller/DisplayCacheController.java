@@ -13,13 +13,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.skplanet.storeplatform.framework.core.cache.process.GlobalCacheProcessor;
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictHelperComponent;
@@ -40,11 +38,14 @@ public class DisplayCacheController {
     private CacheEvictHelperComponent cacheEvictHelperComponent;
 
     @Autowired
+    private CacheEvictManager cacheEvictManager;
+
+    @Autowired
     private ApplicationContext applicationContext;
 
     @RequestMapping(value = "/evictProductMeta", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, String> evictAppMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
+    public Map<String, String> evictProductMeta(@RequestParam(required = true) String prodType, @RequestParam(required = true) String prodId) {
         if(prodId.equals("all")) {
             this.cacheEvictHelperComponent.evictProductMetaAll(ProductType.forName(prodType));
         }
@@ -64,6 +65,21 @@ public class DisplayCacheController {
         Map<String, String> res = new HashMap<String, String>();
         res.put("prodType", prodType);
         res.put("prodId", prodId);
+        return res;
+    }
+
+    @RequestMapping(value = "/evict/{type}", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> evictOthers(@PathVariable String type) {
+        boolean success = false;
+        if(type.equalsIgnoreCase("tmembershipdcrate")) {
+            cacheEvictManager.evictAllTmembershipDcRate();
+            success = true;
+        }
+
+        Map<String, Object> res = new HashMap<String, Object>();
+        res.put("type", type);
+        res.put("success", success);
         return res;
     }
 
