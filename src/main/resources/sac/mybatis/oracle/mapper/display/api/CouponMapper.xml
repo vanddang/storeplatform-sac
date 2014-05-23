@@ -672,4 +672,36 @@
           AND EXPO_YN = 'Y' 
     </select>           
     
+    <!-- tb_dp_prod 최초 판매시간 -->
+    <update id="updateTbDpProdLastDeployDt" parameterType="HashMap">
+        /* CouponMapper.xml, updateTbDpProdLastDeployDt, tb_dp_prod 최초 판매시간, 김형식/SK플래닛  , 2013-05-22 */
+        UPDATE 
+            TB_DP_PROD
+        SET LAST_DEPLOY_DT = sysdate  
+        WHERE 1=1
+        <if test='upType == "0"'>
+         AND PROD_ID =#{prodId}
+        </if>
+        <if test='upType == "1"'>
+          AND PROD_ID =#{itemCode}
+        </if>
+        <if test='upType == "2"'>        
+          AND PROD_ID IN (
+               SELECT 
+                      PROD_ID 
+                 FROM TB_DP_SHPG_PROD
+                WHERE  PROD_ID = #{prodId}
+            UNION ALL 
+               SELECT 
+                       B.PART_PROD_ID
+                FROM   TB_DP_SHPG_PROD A 
+                      ,TB_DP_PROD_RSHP B
+                WHERE A.PROD_ID = B.PROD_ID
+                  AND A.PROD_ID = #{prodId}     
+          ) 
+          </if>                 
+          AND LAST_DEPLOY_DT IS NULL
+    </update>
+        
+    
 </mapper>

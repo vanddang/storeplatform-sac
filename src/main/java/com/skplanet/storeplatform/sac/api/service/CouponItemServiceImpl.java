@@ -269,6 +269,13 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 				if ("C".equalsIgnoreCase(vo.getCudType())) {
 					this.commonDAO.insert("Coupon.createTbDpTenantProdInfo", vo);
+					// tb_dp_prod 최초 판매시간 2014.05.22 일 수정
+					if (CouponConstants.DP_STATUS_IN_SERVICE.equals(vo.getProdStatusCd())) {
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("prodId", vo.getProdId());
+						map.put("upType", "0");
+						this.commonDAO.update("Coupon.updateTbDpProdLastDeployDt", map);
+					}
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpTenantProdInfo", vo);
 				}
@@ -509,6 +516,12 @@ public class CouponItemServiceImpl implements CouponItemService {
 			if (!StringUtils.equalsIgnoreCase(upType, "0")) {
 				this.commonDAO.update("Coupon.updateDPYNStatus", map);
 			}
+
+			// tb_dp_prod 최초 판매시간 2014.05.22 일 수정
+			if (CouponConstants.DP_STATUS_IN_SERVICE.equals(dpStatusCode)) {
+				this.commonDAO.update("Coupon.updateTbDpProdLastDeployDt", map);
+			}
+
 		} catch (CouponException e) {
 			throw e;
 		} catch (Exception e) {
