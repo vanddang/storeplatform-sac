@@ -223,7 +223,7 @@
     </select>
     
     <select id="getThemeRecommendMainList" parameterType="java.util.Map" resultType="java.lang.String">
-         SELECT /* AppguideThemeMapper.xml, getBasicThemeRecommendMainProductList, 앱가이드 테마추천 메인 테마 추천 아이디 리스트, 윤주영/SK플래닛 , 2014-05-23 */
+         SELECT /* AppguideThemeMapper.xml, getThemeRecommendMainList, 앱가이드 테마추천 메인 테마 추천 아이디 리스트, 윤주영/SK플래닛 , 2014-05-23 */
                 DISTINCT A.LIST_ID
          FROM   TB_DP_LIST A ,
                 TB_DP_LIST_PROD AP
