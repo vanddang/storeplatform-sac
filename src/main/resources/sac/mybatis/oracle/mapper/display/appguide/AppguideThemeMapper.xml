@@ -223,7 +223,8 @@
     </select>
     
     <select id="getThemeRecommendMainList" parameterType="java.util.Map" resultType="java.lang.String">
-         SELECT DISTINCT A.LIST_ID
+         SELECT /* AppguideThemeMapper.xml, getBasicThemeRecommendMainProductList, 앱가이드 테마추천 메인 테마 추천 아이디 리스트, 윤주영/SK플래닛 , 2014-05-23 */
+                DISTINCT A.LIST_ID
          FROM   TB_DP_LIST A ,
                 TB_DP_LIST_PROD AP
          WHERE  SYSDATE BETWEEN NVL( AP.EXPO_START_DT, SYSDATE ) AND NVL( AP.EXPO_END_DT, SYSDATE )
@@ -236,7 +237,7 @@
     </select>
     
     <select id="getBasicThemeRecommendMainProductList" parameterType="java.util.Map" resultType="AppguideMain">
-        SELECT  /* AppguideThemeMapper.xml, getBasicThemeRecommendMainProductList, 앱가이드 테마추천 메인 상품 리스트, 윤주영/SK플래닛 , 2014-03-03 */
+        SELECT  /* AppguideThemeMapper.xml, getBasicThemeRecommendMainProductList, 앱가이드 테마추천 메인 상품 리스트, 윤주영/SK플래닛 , 2014-05-23 */
                 C.*
           FROM  (
                 SELECT COUNT(*) OVER() AS TOTAL_COUNT ,
