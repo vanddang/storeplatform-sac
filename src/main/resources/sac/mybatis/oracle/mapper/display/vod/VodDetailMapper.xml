@@ -365,10 +365,10 @@
 		                ) T1
 		                GROUP BY T1.CID, T1.CHAPTER
 						<if test="orderedBy == 'recent'">
-					    ORDER BY T1.CHAPTER DESC, LAST_DEPLOY_DT DESC
+					    ORDER BY T1.CHAPTER DESC, UPD_DT DESC
 					  	</if>
 					  	<if test="orderedBy == 'regDate'">
-					    ORDER BY T1.CHAPTER ASC, LAST_DEPLOY_DT DESC
+					    ORDER BY T1.CHAPTER ASC, UPD_DT DESC
 					  	</if>
 		            ) T2
 		            WHERE 1=1    
