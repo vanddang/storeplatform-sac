@@ -128,6 +128,7 @@ public class HistoryInternalSCIController implements HistoryInternalSCI {
 			historySacIn.setProdId(obj.getProdId());
 			historySacIn.setProdAmt(obj.getProdAmt());
 			historySacIn.setProdQty(obj.getProdQty());
+			historySacIn.setSpcCpnAmt(obj.getSpcCpnAmt());
 			historySacIn.setTenantProdGrpCd(obj.getTenantProdGrpCd());
 			historySacIn.setStatusCd(obj.getStatusCd());
 			historySacIn.setUseStartDt(obj.getUseStartDt());
