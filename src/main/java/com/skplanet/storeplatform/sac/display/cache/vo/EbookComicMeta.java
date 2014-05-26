@@ -57,6 +57,42 @@ public class EbookComicMeta extends CommonInfo {
     private String prodChrg;
     private String filePath;
     private String prodStatusCd;
+    private Integer epsdUnlmtAmt;
+    private Integer epsdPeriodAmt;
+    private Integer chnlUnlmtAmt;
+    private Integer chnlPeriodAmt;
+
+    public Integer getChnlUnlmtAmt() {
+        return chnlUnlmtAmt;
+    }
+
+    public void setChnlUnlmtAmt(Integer chnlUnlmtAmt) {
+        this.chnlUnlmtAmt = chnlUnlmtAmt;
+    }
+
+    public Integer getChnlPeriodAmt() {
+        return chnlPeriodAmt;
+    }
+
+    public void setChnlPeriodAmt(Integer chnlPeriodAmt) {
+        this.chnlPeriodAmt = chnlPeriodAmt;
+    }
+
+    public Integer getEpsdUnlmtAmt() {
+        return epsdUnlmtAmt;
+    }
+
+    public void setEpsdUnlmtAmt(Integer epsdUnlmtAmt) {
+        this.epsdUnlmtAmt = epsdUnlmtAmt;
+    }
+
+    public Integer getEpsdPeriodAmt() {
+        return epsdPeriodAmt;
+    }
+
+    public void setEpsdPeriodAmt(Integer epsdPeriodAmt) {
+        this.epsdPeriodAmt = epsdPeriodAmt;
+    }
 
     public String getUpMenuId() {
         return upMenuId;

@@ -409,7 +409,7 @@
           INNER JOIN TB_DP_PROD_DESC CPDESC
             ON CPDESC.PROD_ID = CTPROD.PROD_ID
           LEFT OUTER JOIN TB_DP_PROD_IMG CPI
-            ON CPI.PROD_ID = CTPROD.PROD_ID AND CPI.IMG_CD = #{representImgCd} AND CPI.LANG_CD = #{langCd}
+            ON CPI.PROD_ID = CTPROD.PROD_ID AND CPI.IMG_CD = #{imageCd} AND CPI.LANG_CD = #{langCd}
           LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS CTSTAT
             ON CTSTAT.PROD_ID = CTPROD.PROD_ID AND CTSTAT.TENANT_ID = CTPROD.TENANT_ID
           INNER JOIN TB_DP_TENANT_PROD_PRICE CTPRC
@@ -498,7 +498,9 @@
             , TB.COMPT_YN
             , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
             , CASE WHEN (TB.CHNL_UNLMT_AMT >= 0  AND TB.EPSD_CNT > 0) THEN CHNL_UNLMT_AMT
-            ELSE NVL(TB.CHNL_PERIOD_AMT, 0) END AS CHNL_PROD_AMT
+               ELSE NVL(TB.CHNL_PERIOD_AMT, 0) END AS CHNL_PROD_AMT
+            , CASE WHEN TB.CHNL_UNLMT_AMT >= 0 THEN TB.CHNL_UNLMT_AMT END AS CHNL_UNLMT_AMT  /* 채널 소장 가격 */
+            , CASE WHEN TB.CHNL_PERIOD_AMT >= 0 THEN TB.CHNL_PERIOD_AMT END AS CHNL_PERIOD_AMT  /* 채널 대여 가격 */
             , NVL(TB.PROD_AMT, 0) AS EPSD_PROD_AMT
             , NVL(TB.CHNL_PROD_NET_AMT, 0) AS CHNL_PROD_NET_AMT
             , NVL(TB.EPSD_PROD_NET_AMT, 0) AS EPSD_PROD_NET_AMT
@@ -510,7 +512,44 @@
             ELSE ROUND(TB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
             , TB.PROD_CHRG_YN AS PROD_CHRG
             , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
-            , TB.PROD_STATUS_CD ]]>
+            , TB.PROD_STATUS_CD
+            , (SELECT MAX(SC.PROD_AMT)
+             FROM TB_DP_PROD_RSHP SA
+               , TB_DP_PROD SB
+               , TB_DP_TENANT_PROD_PRICE SC
+               , TB_DP_TENANT_PROD SD
+             WHERE SA.PROD_ID = TB.PROD_ID
+                   AND SA.PROD_RSHP_CD = 'DP010802'
+                   AND SA.PART_PROD_ID = SB.PROD_ID
+                   AND SB.CID = TB.CID
+                   AND SB.PROD_ID = SC.PROD_ID
+                   AND SB.CONTENTS_TYPE_CD = 'PD002502'
+                   AND SC.TENANT_ID = 'S01'
+                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
+                   AND SC.PROD_ID = SD.PROD_ID
+                   AND SD.TENANT_ID = 'S01'
+                   AND SD.PROD_STATUS_CD = 'PD000403'
+                   AND SB.USE_PERIOD_UNIT_CD = 'PD00310'
+            ) AS EPSD_UNLMT_AMT  /* 에피소드 동일 CID 소장 가격 */
+          , (SELECT MAX(SC.PROD_AMT)
+             FROM TB_DP_PROD_RSHP SA
+               , TB_DP_PROD SB
+               , TB_DP_TENANT_PROD_PRICE SC
+               , TB_DP_TENANT_PROD SD
+             WHERE SA.PROD_ID = TB.PROD_ID
+                   AND SA.PROD_RSHP_CD = 'DP010802'
+                   AND SA.PART_PROD_ID = SB.PROD_ID
+                   AND SB.CID = TB.CID
+                   AND SB.PROD_ID = SC.PROD_ID
+                   AND SB.CONTENTS_TYPE_CD = 'PD002502'
+                   AND SC.TENANT_ID = 'S01'
+                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
+                   AND SC.PROD_ID = SD.PROD_ID
+                   AND SD.TENANT_ID = 'S01'
+                   AND SD.PROD_STATUS_CD = 'PD000403'
+                   AND SB.USE_PERIOD_UNIT_CD != 'PD00310'
+            ) AS EPSD_PERIOD_AMT  /* 에피소드 동일 CID 대여 가격 */
+            ]]>
         FROM (
             SELECT
                 CMC.UP_MENU_ID,
@@ -550,7 +589,8 @@
                 CTPRC.PROD_NET_AMT AS CHNL_PROD_NET_AMT,
                 ETPRC.PROD_NET_AMT AS EPSD_PROD_NET_AMT,
                 CTPROD.PROD_STATUS_CD,
-                CPDESC.LANG_CD
+                CPDESC.LANG_CD,
+                EPROD.CID
             FROM TB_DP_PROD_RSHP RSHP
                 INNER JOIN TB_DP_TENANT_PROD CTPROD
                 ON CTPROD.PROD_ID = RSHP.PROD_ID
@@ -563,7 +603,7 @@
                 INNER JOIN TB_DP_EBOOK_PROD CEBOOK
                 ON CEBOOK.PROD_ID = RSHP.PROD_ID
                 LEFT OUTER JOIN TB_DP_PROD_IMG CPI
-                ON CPI.PROD_ID = CEBOOK.PROD_ID AND CPI.IMG_CD = 'DP006207' AND CPI.LANG_CD = #{langCd} AND CPI.EXPO_ORD = 1
+                ON CPI.PROD_ID = CEBOOK.PROD_ID AND CPI.IMG_CD = #{imageCd} AND CPI.LANG_CD = #{langCd} AND CPI.EXPO_ORD = 1
                 INNER JOIN TB_DP_TENANT_PROD ETPROD
                 ON ETPROD.PROD_ID = RSHP.PART_PROD_ID AND ETPROD.TENANT_ID = CTPROD.TENANT_ID
                 INNER JOIN TB_DP_TENANT_PROD_PRICE ETPRC
@@ -695,7 +735,7 @@
                 INNER JOIN TB_DP_EBOOK_PROD CEBOOK
                   ON CEBOOK.PROD_ID = RSHP.PROD_ID
                 LEFT OUTER JOIN TB_DP_PROD_IMG CPI
-                  ON CPI.PROD_ID = CEBOOK.PROD_ID AND CPI.IMG_CD = 'DP000196' AND CPI.LANG_CD = #{langCd} AND CPI.EXPO_ORD = 1
+                  ON CPI.PROD_ID = CEBOOK.PROD_ID AND CPI.IMG_CD = #{imageCd} AND CPI.LANG_CD = #{langCd} AND CPI.EXPO_ORD = 1
                 INNER JOIN TB_DP_TENANT_PROD ETPROD
                   ON ETPROD.PROD_ID = RSHP.PART_PROD_ID AND ETPROD.TENANT_ID = CTPROD.TENANT_ID
                 INNER JOIN TB_DP_TENANT_PROD_PRICE ETPRC
@@ -807,7 +847,7 @@
                 INNER JOIN TB_DP_MENU_CATEGORY_DESC MCD
                     ON MCD.MENU_ID = MSM.MENU_ID AND MCD.LANG_CD = SCD.LANG_CD
                 LEFT OUTER JOIN TB_DP_PROD_IMG PI
-                    ON PI.PROD_ID = SC.CATALOG_ID AND PI.IMG_CD = 'DP0001A3' AND PI.EXPO_ORD = 1 AND
+                    ON PI.PROD_ID = SC.CATALOG_ID AND PI.IMG_CD = #{imageCd} AND PI.EXPO_ORD = 1 AND
                        PI.LANG_CD = #{langCd}
                 LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TSTAT
                     ON TSTAT.PROD_ID = SC.CATALOG_ID AND TSTAT.TENANT_ID = TPROD.TENANT_ID
@@ -899,12 +939,12 @@
             INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
                 ON TPRC.PROD_ID = CPROD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
             LEFT OUTER JOIN TB_DP_PROD_IMG BIMG
-                ON BIMG.PROD_ID = CPROD.PROD_ID AND BIMG.LANG_CD = CPDESC.LANG_CD AND BIMG.IMG_CD = 'DP000197' -- Banner
+                ON BIMG.PROD_ID = CPROD.PROD_ID AND BIMG.LANG_CD = CPDESC.LANG_CD AND BIMG.IMG_CD = #{bannImageCd} -- Banner
             LEFT OUTER JOIN TB_DP_PROD_IMG TIMG
                 ON TIMG.PROD_ID = CPROD.PROD_ID AND TIMG.LANG_CD = CPDESC.LANG_CD
                    AND TIMG.IMG_CD = (
-                               CASE WHEN CXPROD.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN 'DP000199' -- thumbnail
-                               WHEN CXPROD.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN 'DP000153' -- ebook thumbnail
+                               CASE WHEN CXPROD.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN #{thmbImageCd} -- thumbnail
+                               WHEN CXPROD.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN #{ebookImageCd} -- ebook thumbnail
                                END
                        )
         WHERE 1=1

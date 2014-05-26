@@ -10,11 +10,8 @@
 package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * <p>

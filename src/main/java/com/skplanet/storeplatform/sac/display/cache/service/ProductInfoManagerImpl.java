@@ -106,7 +106,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         reqMap.put("prodIdList", prodIdList);
         reqMap.put("langCd", langCd);
         reqMap.put("tenantId", tenantId);
-        reqMap.put("imageCd", MUSIC_IMG_CD);
+        reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
         reqMap.put("svcGrpCd", MUSIC_SVC_GRP_CD);
         reqMap.put("svcTypeCd", MUSIC_SVC_TP_CD);
 
@@ -128,7 +128,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         reqMap.put("prodId", param.getProdId());
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("tenantId", param.getTenantId());
-        reqMap.put("representImgCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+        reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
         if(param.getContentType() == ContentType.Channel)
             reqMap.put("prodIdType", "CHANNEL");
         else if(param.getContentType() == ContentType.Episode)
@@ -146,6 +146,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         reqMap.put("prodId", param.getProdId());
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("tenantId", param.getTenantId());
+        reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
         if(param.getContentType() == ContentType.Channel)
             reqMap.put("prodIdType", "CHANNEL");
         else if(param.getContentType() == ContentType.Episode)
@@ -164,6 +165,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         reqMap.put("prodId", param.getProdId());
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("tenantId", param.getTenantId());
+        reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
         if(param.getContentType() == ContentType.Channel)
             reqMap.put("prodIdType", "CHANNEL");
         else if(param.getContentType() == ContentType.Episode)
@@ -182,6 +184,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("tenantId", param.getTenantId());
         reqMap.put("svcGrpCd", SHOPPING_SVC_GRP_CD);
+        reqMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
         return commonDAO.queryForObject("ProductInfo.getShoppingMeta", reqMap, ShoppingMeta.class);
     }
@@ -194,6 +197,9 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("tenantId", param.getTenantId());
         reqMap.put("svcGrpCd", FREEPASS_SVC_GRP_CD);
+        reqMap.put("thmbImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+        reqMap.put("bannImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+        reqMap.put("ebookImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 
         return commonDAO.queryForObject("ProductInfo.getFreepassMeta", reqMap, FreepassMeta.class);
     }

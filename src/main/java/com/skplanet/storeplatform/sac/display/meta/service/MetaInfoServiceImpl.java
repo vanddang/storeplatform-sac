@@ -242,9 +242,13 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             if (param.getContentType() == ContentType.Channel) {
                 me.setProdAmt(meta.getChnlProdAmt());
                 me.setProdNetAmt(meta.getChnlProdNetAmt());
+                me.setUnlmtAmt(meta.getChnlUnlmtAmt());
+                me.setPeriodAmt(meta.getChnlPeriodAmt());
             } else if (param.getContentType() == ContentType.Episode) {
                 me.setProdAmt(meta.getEpsdProdAmt());
                 me.setProdNetAmt(meta.getEpsdProdNetAmt());
+                me.setUnlmtAmt(meta.getEpsdUnlmtAmt());
+                me.setPeriodAmt(meta.getEpsdPeriodAmt());
             }
 
             return me;

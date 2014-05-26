@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.cache.vo.ShoppingMetaParam;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -363,8 +364,13 @@ public class MetaServiceTest {
         MetaInfo meta1 = metaInfoService.getShoppingMetaInfo(reqMap);
         logger.info("Meta1={}", meta1);
 
-        RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         cacheEvictManager.evictAllShoppingMeta();
+//        ShoppingMetaParam param = new ShoppingMetaParam();
+//        param.setTenantId(tenantHeader.getTenantId());
+//        param.setLangCd(tenantHeader.getLangCd());
+//        param.setCatalogId(productBasicInfo.getCatalogId());
+//        cacheEvictManager.evictShoppingMeta(param);
+        RequestContextHolder.currentRequestAttributes().setAttribute("useCache", true, RequestAttributes.SCOPE_REQUEST);
         MetaInfo meta2 = metaInfoService.getShoppingMetaInfo(reqMap);
         logger.info("Meta2={}", meta2);
 
