@@ -139,9 +139,9 @@ public class EpubDetail extends CommonInfo {
 
 	// Accrual
 	/** 참여자수 */
-	private Double paticpersCnt;
+	private Integer paticpersCnt;
 	/** 구매수 */
-	private Double prchsCnt;
+	private Integer prchsCnt;
 	/** 평균 평가 점수 */
 	private Double avgEvluScore;
 
@@ -342,7 +342,7 @@ public class EpubDetail extends CommonInfo {
 	 *
 	 * @return 참여자수
 	 */
-	public Double getPaticpersCnt() {
+	public Integer getPaticpersCnt() {
 		return this.paticpersCnt;
 	}
 
@@ -352,7 +352,7 @@ public class EpubDetail extends CommonInfo {
 	 * @param paticpersCnt
 	 *            참여자수
 	 */
-	public void setPaticpersCnt(Double paticpersCnt) {
+	public void setPaticpersCnt(Integer paticpersCnt) {
 		this.paticpersCnt = paticpersCnt;
 	}
 
@@ -361,7 +361,7 @@ public class EpubDetail extends CommonInfo {
 	 *
 	 * @return 구매수
 	 */
-	public Double getPrchsCnt() {
+	public Integer getPrchsCnt() {
 		return this.prchsCnt;
 	}
 
@@ -371,7 +371,7 @@ public class EpubDetail extends CommonInfo {
 	 * @param prchsCnt
 	 *            구매수
 	 */
-	public void setPrchsCnt(Double prchsCnt) {
+	public void setPrchsCnt(Integer prchsCnt) {
 		this.prchsCnt = prchsCnt;
 	}
 
