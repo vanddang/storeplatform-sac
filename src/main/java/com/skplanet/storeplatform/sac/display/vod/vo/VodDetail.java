@@ -460,7 +460,7 @@ public class VodDetail extends CommonInfo {
 	 *
 	 * @return 참여자수
 	 */
-	public Integer getPaticpersCnt() {
+	public Double getPaticpersCnt() {
 		return this.paticpersCnt;
 	}
 
@@ -470,7 +470,7 @@ public class VodDetail extends CommonInfo {
 	 * @param paticpersCnt
 	 *            참여자수
 	 */
-	public void setPaticpersCnt(Integer paticpersCnt) {
+	public void setPaticpersCnt(Double paticpersCnt) {
 		this.paticpersCnt = paticpersCnt;
 	}
 

@@ -342,7 +342,7 @@ public class EpubDetail extends CommonInfo {
 	 *
 	 * @return 참여자수
 	 */
-	public Integer getPaticpersCnt() {
+	public Double getPaticpersCnt() {
 		return this.paticpersCnt;
 	}
 
@@ -352,7 +352,7 @@ public class EpubDetail extends CommonInfo {
 	 * @param paticpersCnt
 	 *            참여자수
 	 */
-	public void setPaticpersCnt(Integer paticpersCnt) {
+	public void setPaticpersCnt(Double paticpersCnt) {
 		this.paticpersCnt = paticpersCnt;
 	}
 
@@ -361,7 +361,7 @@ public class EpubDetail extends CommonInfo {
 	 *
 	 * @return 구매수
 	 */
-	public Integer getPrchsCnt() {
+	public Double getPrchsCnt() {
 		return this.prchsCnt;
 	}
 
@@ -371,7 +371,7 @@ public class EpubDetail extends CommonInfo {
 	 * @param prchsCnt
 	 *            구매수
 	 */
-	public void setPrchsCnt(Integer prchsCnt) {
+	public void setPrchsCnt(Double prchsCnt) {
 		this.prchsCnt = prchsCnt;
 	}
 
