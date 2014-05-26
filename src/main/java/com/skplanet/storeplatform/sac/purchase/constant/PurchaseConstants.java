@@ -94,6 +94,22 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYMENT_PAGE_TEMPLATE_SHOPPING = "TC05"; // 쇼핑
 	public static final String PAYMENT_PAGE_TEMPLATE_GIFT = "TC06"; // 선물
 
+	/** 결제Page 상품설명 */
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_DELIVERY = "배송 상품";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_COUPON = "쿠폰 상품";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH = "MP3/고음질";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_BELL_HIGH = "벨/고음질";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_BELL_BASIC = "벨/일반";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_HIGH = "컬러링/60초";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC = "컬러링/40초";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_AUTO = "자동결제";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_SERIES = "전회차 구매";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_OWN = "전권 소장";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_LOAN = "전권 대여";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_DATE_SUFFIX = "일 이용권";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_HOUR_SUFFIX = "시간 이용권";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_MONTH_SUFFIX = "개월 이용권";
+
 	/** T Store Cash */
 	/* 서비스 타입 */
 	public static final String TSTORE_CASH_CLASS_POINT = "01";

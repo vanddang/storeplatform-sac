@@ -1093,56 +1093,59 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		String tenantProdGrpCd = purchaseOrderInfo.getTenantProdGrpCd();
 		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			if (StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_DELIVERY)) {
-				pDescription = "배송 상품";
+				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_DELIVERY;
 			} else {
-				pDescription = "쿠폰 상품";
+				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_COUPON;
 			}
 
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
-			pDescription = "MP3/고음질";
+			pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH;
 
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
 			if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_HIGH)) {
-				pDescription = "벨/고음질";
+				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_BELL_HIGH;
 			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_BASIC)) {
-				pDescription = "벨/일반";
+				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_BELL_BASIC;
 			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_LONG)) {
-				pDescription = "컬러링/60초";
+				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_HIGH;
 			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_BASIC)) {
-				pDescription = "컬러링/40초";
+				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC;
 			}
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-			pDescription = "자동결제";
+			pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_AUTO;
 
 		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
 			if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
-				pDescription = "전회차 구매";
+				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_SERIES;
 
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
 				if (StringUtils.equals(purchaseProduct.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
-					pDescription = "자동결제";
+					pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_AUTO;
 				} else {
 					if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
 							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE)) {
-						pDescription = purchaseProduct.getUsePeriod() + "일 이용권";
+						pDescription = purchaseProduct.getUsePeriod()
+								+ PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_DATE_SUFFIX;
 
 					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
 							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_HOUR)) {
-						pDescription = purchaseProduct.getUsePeriod() + "시간 이용권";
+						pDescription = purchaseProduct.getUsePeriod()
+								+ PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_HOUR_SUFFIX;
 
 					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
 							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH)) {
-						pDescription = purchaseProduct.getUsePeriod() + "개월 이용권";
+						pDescription = purchaseProduct.getUsePeriod()
+								+ PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MONTH_SUFFIX;
 					}
 				}
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
-				pDescription = "전권 소장";
+				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN;
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
-				pDescription = "전권 대여";
+				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_LOAN;
 			}
 		}
 		paymentPageParam.setpDescription(pDescription);
