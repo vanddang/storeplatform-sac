@@ -1092,7 +1092,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		PurchaseProduct purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
 		String tenantProdGrpCd = purchaseOrderInfo.getTenantProdGrpCd();
 		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-			pDescription = "쿠폰 상품";
+			if (StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_DELIVERY)) {
+				pDescription = "배송 상품";
+			} else {
+				pDescription = "쿠폰 상품";
+			}
 
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
 			pDescription = "MP3/고음질";
@@ -1103,9 +1107,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_BASIC)) {
 				pDescription = "벨/일반";
 			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_LONG)) {
-				pDescription = "컬러링/롱";
+				pDescription = "컬러링/60초";
 			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_BASIC)) {
-				pDescription = "컬러링/일반";
+				pDescription = "컬러링/40초";
 			}
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
 			pDescription = "자동결제";

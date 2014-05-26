@@ -141,6 +141,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setSellerTelno(displayInfo.getSellerTelno());
 			purchaseProduct.setPossLendClsfCd(displayInfo.getPossLendClsfCd());
 			// ////////////////////////// 쇼핑 상품 변수 ////////////////////////////
+			purchaseProduct.setProdCaseCd(displayInfo.getProdCaseCd()); // DP006301-상품권, DP006302-교환권, DP006303-배송상품
 			purchaseProduct.setCouponCode(displayInfo.getCouponCode());
 			purchaseProduct.setItemCode(displayInfo.getItemCode());
 			purchaseProduct.setSpecialSaleAmt(displayInfo.getSpecialSaleAmt());
