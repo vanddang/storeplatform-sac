@@ -231,7 +231,7 @@ public class VodDetail extends CommonInfo {
 	/** 일반화질 상품버전. */
 	private String nmProdVer;
 	/** 일반화질 파일용량.  */
-	private Integer nmFileSize;
+	private Double nmFileSize;
 	/** 일반화질 해상도. */
 	private String nmDpPixel;
 	/** 일반화질 화면비율. */
@@ -242,7 +242,7 @@ public class VodDetail extends CommonInfo {
 	/** SD화질 상품버전. */
 	private String sdProdVer;
 	/** SD화질 파일용량.  */
-	private Integer sdFileSize;
+	private Double sdFileSize;
 	/** SD화질 해상도. */
 	private String sdDpPixel;
 	/** SD화질 화면비율. */
@@ -253,7 +253,7 @@ public class VodDetail extends CommonInfo {
 	/** HD화질 상품버전. */
 	private String hdProdVer;
 	/** HD화질 파일용량.  */
-	private Integer hdFileSize;
+	private Double hdFileSize;
 	/** HD화질 해상도. */
 	private String hdDpPixel;
 	/** HD화질 화면비율. */
@@ -1001,7 +1001,7 @@ public class VodDetail extends CommonInfo {
 	 * @return
 	 * 		일반화질 파일용량.
 	 */
-	public Integer getNmFileSize() {
+	public Double getNmFileSize() {
 		return this.nmFileSize;
 	}
 
@@ -1010,7 +1010,7 @@ public class VodDetail extends CommonInfo {
 	 * @param nmFileSize
 	 * 			일반화질 파일용량.
 	 */
-	public void setNmFileSize(Integer nmFileSize) {
+	public void setNmFileSize(Double nmFileSize) {
 		this.nmFileSize = nmFileSize;
 	}
 
@@ -1090,7 +1090,7 @@ public class VodDetail extends CommonInfo {
 	 * @return
 	 * 		SD화질 파일용량.
 	 */
-	public Integer getSdFileSize() {
+	public Double getSdFileSize() {
 		return this.sdFileSize;
 	}
 
@@ -1099,7 +1099,7 @@ public class VodDetail extends CommonInfo {
 	 * @param sdFileSize
 	 * 			SD화질 파일용량.
 	 */
-	public void setSdFileSize(Integer sdFileSize) {
+	public void setSdFileSize(Double sdFileSize) {
 		this.sdFileSize = sdFileSize;
 	}
 
@@ -1180,7 +1180,7 @@ public class VodDetail extends CommonInfo {
 	 * @return
 	 * 		HD화질 파일용량.
 	 */
-	public Integer getHdFileSize() {
+	public Double getHdFileSize() {
 		return this.hdFileSize;
 	}
 
@@ -1189,7 +1189,7 @@ public class VodDetail extends CommonInfo {
 	 * @param hdFileSize
 	 * 		HD화질 파일용량.
 	 */
-	public void setHdFileSize(Integer hdFileSize) {
+	public void setHdFileSize(Double hdFileSize) {
 		this.hdFileSize = hdFileSize;
 	}
 
