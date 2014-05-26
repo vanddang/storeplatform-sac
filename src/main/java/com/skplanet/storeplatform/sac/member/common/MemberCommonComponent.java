@@ -1072,7 +1072,7 @@ public class MemberCommonComponent {
 
 		if (Integer.parseInt(parentBirth) > Integer.parseInt(year_20)) {
 			/**
-			 * TODO 샵클에서 준비가 되지 않아 준비될때까지 스킵하기로함. (2014.05.22 - 임재화 과장)
+			 * TODO 샵클에서 준비가 되지 않아 준비될때까지 스킵하기로함. (2014.05.22 - 임재호 과장)
 			 */
 			// throw new StorePlatformException("SAC_MEM_0005", ownBirth, parentBirth);
 		}
