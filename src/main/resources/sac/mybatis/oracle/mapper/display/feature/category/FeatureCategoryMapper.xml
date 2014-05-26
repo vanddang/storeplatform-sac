@@ -279,32 +279,32 @@
                                   AND LT1.EXPO_YN = 'Y'
                                   AND LP1.PROD_ID NOT IN (SELECT PROD_ID
                                                             FROM (SELECT LP.PROD_ID
-																	    , ROW_NUMBER() OVER(PARTITION BY LP.LIST_ID ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC, LP.EXPO_ORD, LP.EXPO_ORD_SUB, PD.PROD_NM) AS NO
-																	 FROM TB_DP_LIST_PROD LP
-																	    , (SELECT TENANT_ID, BATCH_ID, STD_DT
-																	         FROM TB_DP_BATCH_COMPT
-																	        WHERE BATCH_ID IN ('ADM000000033', 'ADM000000034', 'ADM000000035', 'ADM000000036', 'ADM000000041', 'ADM000000042')
-																	          AND TENANT_ID = #{tenantId}
-																	      ) BC
-																	    , TB_DP_LIST LT
-																	    , TB_DP_TENANT_PROD TP
-																	    , TB_DP_PROD_DESC PD
-																	WHERE LP.LIST_ID IN ('ADM000000033', 'ADM000000034', 'ADM000000035', 'ADM000000036', 'ADM000000041', 'ADM000000042')
-																	  AND LP.EXPO_YN = 'Y'
-																	  AND LP.TENANT_ID = #{tenantId}
-																	  AND LP.LIST_ID = BC.BATCH_ID
-																	  AND LP.TENANT_ID = BC.TENANT_ID
-																	  AND LP.STD_DT = BC.STD_DT
-																	  AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
-																	  AND LP.TENANT_ID = LT.TENANT_ID
-																	  AND LP.LIST_ID = LT.LIST_ID
-																	  AND LT.EXPO_YN = 'Y'
-																	  AND LP.PROD_ID = TP.PROD_ID
-																	  AND LP.TENANT_ID = TP.TENANT_ID
-																	  AND TP.PROD_STATUS_CD = 'PD000403'
-																	  AND TP.EXPO_YN = 'Y'
-																	  AND LP.PROD_ID = PD.PROD_ID
-																	  AND PD.LANG_CD = #{langCd}
+                                                                        , ROW_NUMBER() OVER(PARTITION BY LP.LIST_ID ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC, LP.EXPO_ORD, LP.EXPO_ORD_SUB, PD.PROD_NM) AS NO
+                                                                     FROM TB_DP_LIST_PROD LP
+                                                                        , (SELECT TENANT_ID, BATCH_ID, STD_DT
+                                                                             FROM TB_DP_BATCH_COMPT
+                                                                            WHERE BATCH_ID IN ('ADM000000033', 'ADM000000034', 'ADM000000035', 'ADM000000036', 'ADM000000041', 'ADM000000042')
+                                                                              AND TENANT_ID = #{tenantId}
+                                                                          ) BC
+                                                                        , TB_DP_LIST LT
+                                                                        , TB_DP_TENANT_PROD TP
+                                                                        , TB_DP_PROD_DESC PD
+                                                                    WHERE LP.LIST_ID IN ('ADM000000033', 'ADM000000034', 'ADM000000035', 'ADM000000036', 'ADM000000041', 'ADM000000042')
+                                                                      AND LP.EXPO_YN = 'Y'
+                                                                      AND LP.TENANT_ID = #{tenantId}
+                                                                      AND LP.LIST_ID = BC.BATCH_ID
+                                                                      AND LP.TENANT_ID = BC.TENANT_ID
+                                                                      AND LP.STD_DT = BC.STD_DT
+                                                                      AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+                                                                      AND LP.TENANT_ID = LT.TENANT_ID
+                                                                      AND LP.LIST_ID = LT.LIST_ID
+                                                                      AND LT.EXPO_YN = 'Y'
+                                                                      AND LP.PROD_ID = TP.PROD_ID
+                                                                      AND LP.TENANT_ID = TP.TENANT_ID
+                                                                      AND TP.PROD_STATUS_CD = 'PD000403'
+                                                                      AND TP.EXPO_YN = 'Y'
+                                                                      AND LP.PROD_ID = PD.PROD_ID
+                                                                      AND PD.LANG_CD = #{langCd}
                                                                  )
                                                            WHERE NO <![CDATA[<=]]> 4
                                                          )  /* 방송 카테고리별 추천 제외 */
@@ -601,7 +601,8 @@
                      , A.META_CLSF_CD
                      , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
-                  FROM (SELECT A.TENANT_ID
+                  FROM (SELECT <if test='listId == "TGR000000001"'> /*+ LEADING(A F C G) CARDINALITY(H 1000000) */ </if>
+                               A.TENANT_ID
                              , E.MENU_ID
                              , C.PROD_ID
                              , E.TOP_MENU_ID
@@ -611,7 +612,19 @@
                              , B.EXPO_ORD_SUB
                              , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.LAST_DEPLOY_DT DESC) AS RN
                           FROM TB_DP_LIST A
-                             , TB_DP_LIST_PROD B
+                             ,(SELECT <if test='listId == "TGR000000001"'> /*+ NO_MERGE USE_NL(T S) */ </if>
+                                      LIST_ID, TENANT_ID, PROD_ID, EXPO_ORD_ALWAYS_YN, EXPO_ORD, EXPO_ORD_SUB
+                                 FROM SPSAC.TB_DP_LIST_PROD T
+                                    , (SELECT ROWID AS RID
+                                         FROM SPSAC.TB_DP_LIST_PROD 
+                                        WHERE TENANT_ID = #{tenantId}
+                                          AND LIST_ID = #{listId}
+                                          AND STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                                        ORDER BY ROWID) S
+                                 WHERE T.ROWID = S.RID
+                                   AND EXPO_YN = 'Y'
+                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
+                               ) B
                              , TB_DP_PROD_RSHP C
                              , TB_DP_MENU_CATEGORY_PROD_MAPG D
                              , TB_DP_MENU_CATEGORY E
@@ -621,11 +634,8 @@
                          WHERE A.LIST_ID = B.LIST_ID
                            AND A.TENANT_ID = B.TENANT_ID
                            AND A.EXPO_YN = 'Y'
-                           AND B.EXPO_YN = 'Y'
                            AND A.TENANT_ID = #{tenantId}
                            AND A.LIST_ID = #{listId}
-                           AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
-                           AND B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
                            AND B.PROD_ID = C.PROD_ID  /* 채널 */
                            AND C.PROD_RSHP_CD = 'DP010802'
                            AND B.PROD_ID = D.PROD_ID
@@ -633,6 +643,7 @@
                            AND D.MENU_ID = E.MENU_ID
                            AND E.USE_YN = 'Y'
                            AND E.TOP_MENU_ID = #{topMenuId}
+                           AND F.TOP_MENU_ID = #{topMenuId}
                            AND C.PART_PROD_ID = F.PROD_ID
                            AND F.CONTENTS_TYPE_CD = 'PD002502'
                            <if test='prodCharge == "Y"'>
@@ -676,14 +687,16 @@
                            AND (CASE WHEN (SELECT EBOOK_SPRT_YN 
                                              FROM TB_CM_DEVICE CD 
                                             WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
-                                              AND CD.USE_YN = 'Y') = 'Y'  
+                                              AND CD.USE_YN = 'Y'
+                                              AND ROWNUM <![CDATA[<=]]> 1) = 'Y'  
                                      THEN 1 ELSE 0 END) = 1
                            </if>
                            <if test='topMenuId == "DP14"'>
                            AND (CASE WHEN (SELECT COMIC_SPRT_YN 
                                              FROM TB_CM_DEVICE CD 
                                             WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
-                                              AND CD.USE_YN = 'Y') = 'Y'  
+                                              AND CD.USE_YN = 'Y'
+                                              AND ROWNUM <![CDATA[<=]]> 1) = 'Y'  
                                      THEN 1 ELSE 0 END) = 1
                            </if>
                       ) A
