@@ -139,9 +139,9 @@ public class EpubDetail extends CommonInfo {
 
 	// Accrual
 	/** 참여자수 */
-	private Integer paticpersCnt;
+	private Double paticpersCnt;
 	/** 구매수 */
-	private Integer prchsCnt;
+	private Double prchsCnt;
 	/** 평균 평가 점수 */
 	private Double avgEvluScore;
 

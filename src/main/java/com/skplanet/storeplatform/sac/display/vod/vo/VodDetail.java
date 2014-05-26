@@ -146,9 +146,9 @@ public class VodDetail extends CommonInfo {
 	// Accrual
 	// ---------------------------------------------------
 	/** 참여자수 */
-	private Integer paticpersCnt;
+	private Double paticpersCnt;
 	/** 구매수 */
-	private Integer prchsCnt;
+	private Double prchsCnt;
 	/** 평균 평가 점수 */
 	private Double avgEvluScore;
 
@@ -479,7 +479,7 @@ public class VodDetail extends CommonInfo {
 	 *
 	 * @return 구매수
 	 */
-	public Integer getPrchsCnt() {
+	public Double getPrchsCnt() {
 		return this.prchsCnt;
 	}
 
@@ -489,7 +489,7 @@ public class VodDetail extends CommonInfo {
 	 * @param prchsCnt
 	 *            구매수
 	 */
-	public void setPrchsCnt(Integer prchsCnt) {
+	public void setPrchsCnt(Double prchsCnt) {
 		this.prchsCnt = prchsCnt;
 	}
 
