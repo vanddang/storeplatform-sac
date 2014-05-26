@@ -120,6 +120,7 @@
                            WHERE prod_id=H.PROD_ID 
                          ) AS COUPON_CODE                        
                         ,I.SRC_CONTENT_ID AS ITEM_CODE 
+                        ,I.PROD_CASE_CD
                         ,NVL(N.SPRC_PRICE,0) specialSaleAmt
                         ,TO_CHAR(N.SPRC_APPLY_START_DT,'YYYYMMDDHH24MISS') AS specialSaleStartDt
                         ,TO_CHAR(N.SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS')  AS specialSaleEndDt
