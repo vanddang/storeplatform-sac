@@ -42,6 +42,8 @@ public class BannerServceImpl implements BannerService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final int BANNER_MAX_COUNT = 100; // 요청 가능한 배너 최대 개수
+
+	private final int SQUARE_BANNER_MAX_COUNT = 20; // 모바일웹 정사각형 배너 최대 요청 개수
 	private final int HOME_BANNER_COUNT = 12; // Home 배너 12개 (모바일웹 정사각형 배너)
 	private final int GAME_BANNER_COUNT = 2; // 게임 배너 2개 (모바일웹 정사각형 배너)
 	private final int FUN_BANNER_COUNT = 2; // Fun 배너 2개 (모바일웹 정사각형 배너)
@@ -577,6 +579,19 @@ public class BannerServceImpl implements BannerService {
 					++passCnt;
 					resultList.add(bannerDefault);
 				}
+
+			}
+
+			// 모바일웹 정사각형 배너 (최대 요청 개수를 못채웠을 경우)
+			if ("DP010999".equals(reqBnrMenuId) && resultList.size() < this.SQUARE_BANNER_MAX_COUNT) {
+				// 모바일웹 정사각형 배너리스트를 임시 리스트에 담는다.
+				this.tempList = new ArrayList<BannerDefault>();
+				this.tempList.addAll(resultList);
+
+				// 모바일웹 직사각형 배너 재귀호출
+				bannerReq.setBnrMenuId(this.REC_BANNER_MENU_ID);
+				bannerReq.setImgSizeCd(this.REC_BANNER_IMG_SIZE);
+				return this.searchBannerList(header, bannerReq);
 			}
 		}
 
