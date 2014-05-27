@@ -296,10 +296,10 @@
 		                      AND MP.PROD_ID = PD.PROD_ID
 		                      AND TP.TENANT_ID = #{tenantId} 
 		                      AND TP.EXPO_YN = 'Y'
-			                  <choose>
-			                  <when test="includeProdStopStatus == 'Y'">
+		                   	  <choose>
+			                  <when test="includeProdStopStatus.equals('Y')">
 			                  AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-			                  </when>		                        
+			                  </when>
 			                  <otherwise>
 			                  AND TP.PROD_STATUS_CD = 'PD000403'
 			                  </otherwise>
