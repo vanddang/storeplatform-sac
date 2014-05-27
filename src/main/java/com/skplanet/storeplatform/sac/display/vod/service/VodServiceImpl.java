@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,6 +75,10 @@ public class VodServiceImpl implements VodService {
     @Autowired
     private DisplayCommonService commonService;
 
+    //[2.x fadeout] 상품 상세 요청 시 예외 처리
+	@Value("#{propertiesForSac['sc2x.fadeout.dummy.product.vod.channel']}")
+	private String sc2xFadeOutDummyProductChannel;
+    
 	/*
 	 * (non-Javadoc)
 	 * @see com.skplanet.storeplatform.sac.display.vod.service.VodService#searchVod(com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq)
@@ -82,26 +87,34 @@ public class VodServiceImpl implements VodService {
 	public VodDetailRes searchVod(VodDetailReq req) {
 		logger.debug("req={}", req);
 
-		// Dummy
 		VodDetailRes res = new VodDetailRes();
 		Product product = new Product();
-
-		//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
-
+		
+		final String channelId = req.getChannelId();
+		
 		String userKey = StringUtils.defaultString(req.getUserKey());
 		String deviceKey = StringUtils.defaultString(req.getDeviceKey());
 		
 		// 1. Channel 정보 조회
 		final String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
+		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
+
+		//[2.x fadeout] 상품 상세 요청 시 예외 처리
+		//요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
+		String temp = StringUtils.defaultString(sc2xFadeOutDummyProductChannel);
+		includeProdStopStatus = temp.contains(channelId) ? "Y" : "N";
+		
+		
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("representImgCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
         param.put("deviceModel", req.getDeviceModel());
-        param.put("channelId", req.getChannelId());
+        param.put("channelId", channelId);
         param.put("langCd", req.getLangCd());
         param.put("tenantId", req.getTenantId());
         param.put("baseChapter", req.getBaseChapter());
         param.put("orderedBy", orderedBy);
+        param.put("includeProdStopStatus", includeProdStopStatus);
         param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
         param.put("count", req.getCount() == null ? 20 : req.getCount());
 
@@ -713,8 +726,7 @@ public class VodServiceImpl implements VodService {
 		support.setText(mapperVO.getDolbySprtYn());
 		supportList.add(support);
 		
-		
-		//FIXME : BTV Support (임시값)
+		//BTV Support (기존 서비스 유지를 위해 하드코딩)
 		support = new Support();
 		support.setType(DisplayConstants.DP_VOD_BTV_SUPPORT_NM);
 		support.setText("Y");

@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -71,6 +72,10 @@ public class EpubServiceImpl implements EpubService {
 
     @Autowired
     private DisplayCommonService commonService;
+    
+    //[2.x fadeout] 상품 상세 요청 시 예외 처리
+	@Value("#{propertiesForSac['sc2x.fadeout.dummy.product.ebook.channel']}")
+	private String sc2xFadeOutDummyProductChannel;
     
     /*
      * (non-Javadoc)
@@ -152,15 +157,24 @@ public class EpubServiceImpl implements EpubService {
         EpubSeriesRes res = new EpubSeriesRes();
 
 		Product product = new Product();
+		
+		String channelId = req.getChannelId();
+		
 		// 1. Channel 정보 조회
-		String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
+		final String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
+		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
+		
 		String userKey = StringUtils.defaultString(req.getUserKey());
 		String deviceKey = StringUtils.defaultString(req.getDeviceKey());
 		
+		//[2.x fadeout] 상품 상세 요청 시 예외 처리
+		//요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
+		String temp = StringUtils.defaultString(sc2xFadeOutDummyProductChannel);
+		includeProdStopStatus = temp.contains(channelId) ? "Y" : "N";
 		
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("tenantId", req.getTenantId());
-        param.put("channelId", req.getChannelId());
+        param.put("channelId", channelId);
         param.put("langCd", req.getLangCd());
         param.put("deviceModel", StringUtils.defaultString(req.getDeviceModel()));
         param.put("bookTypeCd", StringUtils.defaultString(req.getBookTypeCd()));
@@ -170,6 +184,7 @@ public class EpubServiceImpl implements EpubService {
         param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
         param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
         param.put("count", req.getCount() == null ? 20 : req.getCount());
+        param.put("includeProdStopStatus", includeProdStopStatus);
         final EpubDetail epubDetail = getEpubChannel(param);
 
         if(epubDetail != null) {
