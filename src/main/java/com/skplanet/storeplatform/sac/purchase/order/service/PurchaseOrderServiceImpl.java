@@ -749,15 +749,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------
 		// 오퍼링 ID 체크
 
+		String offeringId = null;
+
 		if (StringUtils.isNotBlank(prchsDtlMore.getResvCol01())) { // 오퍼링 제공으로 예약된 경우
-			if (notifyPaymentReq.getOfferingId() != null
-					&& (StringUtils.equals(notifyPaymentReq.getOfferingId(), prchsDtlMore.getResvCol01()) == false)) {
-				throw new StorePlatformException("SAC_PUR_5115", notifyPaymentReq.getOfferingId(),
-						prchsDtlMore.getResvCol01());
-			}
-		} else {
-			if (StringUtils.isNotBlank(notifyPaymentReq.getOfferingId())) {
-				throw new StorePlatformException("SAC_PUR_5116", notifyPaymentReq.getOfferingId());
+			if (StringUtils.equals(notifyPaymentReq.getOfferingYn(), PurchaseConstants.USE_N) == false) {
+				offeringId = prchsDtlMore.getResvCol01();
 			}
 		}
 
@@ -879,7 +875,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		confirmPurchaseScReq.setUseUserKey(prchsDtlMore.getUseInsdUsermbrNo());
 		confirmPurchaseScReq.setPrchsId(prchsDtlMore.getPrchsId());
 		confirmPurchaseScReq.setNetworkTypeCd(prchsDtlMore.getNetworkTypeCd());
-		confirmPurchaseScReq.setOfferingId(notifyPaymentReq.getOfferingId());
+		confirmPurchaseScReq.setOfferingId(offeringId);
 		if (CollectionUtils.isNotEmpty(cashReserveResList)) {
 			for (TStoreCashChargeReserveDetailEcRes chargeInfo : cashReserveResList) {
 				if (StringUtils.equals(chargeInfo.getCashCls(), "02")) { // T store Cash 충전형 - 01 : Point, 02 : Cash
