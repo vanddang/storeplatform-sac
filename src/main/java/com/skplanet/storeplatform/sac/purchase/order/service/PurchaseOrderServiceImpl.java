@@ -746,6 +746,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					.doubleValue());
 		}
 
+		// ------------------------------------------------------------------------------
+		// 오퍼링 ID 체크
+
+		if (StringUtils.isNotBlank(prchsDtlMore.getResvCol01())) { // 오퍼링 제공으로 예약된 경우
+			if (notifyPaymentReq.getOfferingId() != null
+					&& (StringUtils.equals(notifyPaymentReq.getOfferingId(), prchsDtlMore.getResvCol01()) == false)) {
+				throw new StorePlatformException("SAC_PUR_5115", notifyPaymentReq.getOfferingId(),
+						prchsDtlMore.getResvCol01());
+			}
+		}
+
 		// -------------------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
 
@@ -864,6 +875,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		confirmPurchaseScReq.setUseUserKey(prchsDtlMore.getUseInsdUsermbrNo());
 		confirmPurchaseScReq.setPrchsId(prchsDtlMore.getPrchsId());
 		confirmPurchaseScReq.setNetworkTypeCd(prchsDtlMore.getNetworkTypeCd());
+		confirmPurchaseScReq.setOfferingId(notifyPaymentReq.getOfferingId());
 		if (CollectionUtils.isNotEmpty(cashReserveResList)) {
 			for (TStoreCashChargeReserveDetailEcRes chargeInfo : cashReserveResList) {
 				if (StringUtils.equals(chargeInfo.getCashCls(), "02")) { // T store Cash 충전형 - 01 : Point, 02 : Cash
