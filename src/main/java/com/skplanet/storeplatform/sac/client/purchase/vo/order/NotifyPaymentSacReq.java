@@ -36,7 +36,7 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	@NotNull
 	private double totAmt; // 결제 총 금액
 	private String mctSpareParam; // 가맹점 파라미터
-	private String offeringId; // 오퍼링ID
+	private String offeringYn; // 오퍼링 적용 여부
 
 	@Valid
 	private List<PaymentInfo> paymentInfoList; // 결제수단정보 리스트
@@ -117,18 +117,18 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the offeringId
+	 * @return the offeringYn
 	 */
-	public String getOfferingId() {
-		return this.offeringId;
+	public String getOfferingYn() {
+		return this.offeringYn;
 	}
 
 	/**
-	 * @param offeringId
-	 *            the offeringId to set
+	 * @param offeringYn
+	 *            the offeringYn to set
 	 */
-	public void setOfferingId(String offeringId) {
-		this.offeringId = offeringId;
+	public void setOfferingYn(String offeringYn) {
+		this.offeringYn = offeringYn;
 	}
 
 	/**
