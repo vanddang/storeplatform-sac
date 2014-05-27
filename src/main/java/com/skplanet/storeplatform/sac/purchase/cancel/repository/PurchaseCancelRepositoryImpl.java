@@ -391,7 +391,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			prchsProdCnt.setRegId(purchaseCancelSacParam.getSystemId());
 			prchsProdCnt.setUpdId(purchaseCancelSacParam.getSystemId());
 
-			prchsProdCnt.setUseFixrateProdId(prchsDtlSacParam.getUseFixrateProdId());
+			// prchsProdCnt.setUseFixrateProdId(prchsDtlSacParam.getUseFixrateProdId());
 
 			prchsProdCntList.add(prchsProdCnt);
 		}
