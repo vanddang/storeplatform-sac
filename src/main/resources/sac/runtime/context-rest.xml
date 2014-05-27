@@ -59,7 +59,9 @@
         </mvc:interceptor>   
         <mvc:interceptor>
             <mvc:mapping path="/**" />
-            <bean class="com.skplanet.storeplatform.sac.runtime.interceptor.InternalControllerCallCheckingInterceptor"/>
+            <bean class="com.skplanet.storeplatform.sac.runtime.interceptor.InternalControllerCallCheckingInterceptor">
+                <property name="acceptRemoteAddr" value="#{propertiesForSac['internal.call.accept.remoteaddr']}"/>
+            </bean>
         </mvc:interceptor> 
          <!-- set "SacRequestHeader" of response header   -->
         <mvc:interceptor>
