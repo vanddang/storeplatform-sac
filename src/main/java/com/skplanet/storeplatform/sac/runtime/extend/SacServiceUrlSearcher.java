@@ -9,9 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.runtime.extend;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
-import java.net.URLDecoder;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -31,7 +29,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearcher;
 
@@ -99,24 +96,18 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		// Bypass 이면.
 		if (StringUtils.isNotEmpty(bypassPath)) {
 			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
+
 		} else {
 			// 그외는 내부 서블릿 URL 호출.
 			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).port(this.innerServletPort)
 					.path(requestContextPath).path(this.innerServletPath).path(innerRequestURI);
 		}
-		if (requestMethod.equals("GET")) {
-			// 쿼리 Decoding 후 Controller로 전달.
-			if (StringUtils.isNotBlank(request.getQueryString())) {
-				try {
-					String queryString = URLDecoder.decode(request.getQueryString(), "UTF-8");
-					to.query(queryString);
-				} catch (UnsupportedEncodingException e) {
-					throw new StorePlatformException("GET URL Decode시 오류가 발생하였습니다.", e);
-				}
-			}
+
+		if (StringUtils.isNotBlank(request.getQueryString())) {
+			to.query(request.getQueryString());
 		}
 
-		String serviceUrl = to.build().toUriString();
+		String serviceUrl = to.build(false).toUriString();
 
 		LOGGER.warn("####SAC-PORT-TEST#### 서비스URL : " + serviceUrl);
 
