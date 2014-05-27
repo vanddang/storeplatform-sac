@@ -376,10 +376,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 					PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
 					|| StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
 							PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				prchsProdCnt.setProdGrpCd(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 12)
-						+ prchsDtlSacParam.getPrchsId());
+				prchsProdCnt.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd() + prchsDtlSacParam.getPrchsId());
 			} else {
-				prchsProdCnt.setProdGrpCd(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 12));
+				prchsProdCnt.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd());
 			}
 
 			prchsProdCnt.setProdId(prchsDtlSacParam.getProdId());
@@ -391,6 +390,8 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 			prchsProdCnt.setRegId(purchaseCancelSacParam.getSystemId());
 			prchsProdCnt.setUpdId(purchaseCancelSacParam.getSystemId());
+
+			prchsProdCnt.setUseFixrateProdId(prchsDtlSacParam.getUseFixrateProdId());
 
 			prchsProdCntList.add(prchsProdCnt);
 		}
