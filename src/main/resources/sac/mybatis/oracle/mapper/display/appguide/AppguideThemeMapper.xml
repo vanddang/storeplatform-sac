@@ -125,7 +125,8 @@
                       , A.THEME_TYPE
                       , A.IMG_PATH AS THEME_IMG
                    FROM (
-                       SELECT A.LIST_ID THEME_ID
+                       SELECT DISTINCT 
+                              A.LIST_ID THEME_ID
 							, A.LIST_NM THEME_NM
 							, A.THEME_TYPE
 							, A.IMG_PATH
@@ -152,6 +153,11 @@
 		                           AND A.TENANT_ID = AP.TENANT_ID
 		                           AND A.LIST_ID = AP.LIST_ID
 		                           AND A.TENANT_ID = #{tenantHeader.tenantId}
+                                    <if test="listId  != null">
+                                  AND  A.LIST_ID IN (
+                                        <foreach collection="listId" item="listId" separator=",">#{listId}</foreach>
+                                    )
+                                    </if>
 		                           AND A.LIST_GRP_CD = #{listGrpCd}
 		                           AND A.EXPO_YN = 'Y'
 		                           AND AP.EXPO_YN = 'Y'

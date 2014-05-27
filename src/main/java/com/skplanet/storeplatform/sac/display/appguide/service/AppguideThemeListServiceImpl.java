@@ -113,6 +113,11 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 			mapReq.put("sdVideoSprtYn", supportDevice.getSdVideoSprtYn());
 			mapReq.put("sclShpgSprtYn", supportDevice.getSclShpgSprtYn());
 
+			List<String> listIdList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendMainList", mapReq,
+					String.class);
+
+			mapReq.put("listId", listIdList);
+
 			List<Appguide> themeList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
 					Appguide.class);
 			if (themeList == null) {
