@@ -202,12 +202,12 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				this.log.debug("##### deviceId :: {} " + deviceId);
 				UserInfoSacReq userInfoSacReq = new UserInfoSacReq();
 				userInfoSacReq.setDeviceId(deviceId);
-				this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
+				this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserBydeviceId");
 				long start = System.currentTimeMillis();
 				UserInfoSacRes userInfoSacRes = this.searchUserSCI.searchUserBydeviceId(userInfoSacReq);
-				this.log.info("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserByUserKey");
+				this.log.info("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserBydeviceId");
 				long end = System.currentTimeMillis();
-				this.log.info("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserByUserKey takes {} ms",
+				this.log.info("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserBydeviceId takes {} ms",
 						(end - start));
 
 				String userMainStatus = userInfoSacRes.getUserMainStatus();
