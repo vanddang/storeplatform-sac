@@ -1034,7 +1034,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setSelfRecomYn(prodNoti.getNotiYn());
 		feedback.setAvgScore(prodNoti.getAvgScore());
 		// 판매자 정보
-		String nickNm = "";
+		String nickNm = null;
 		String compNm = "";
 		String sellerNickName = "";
 		String sellerCompany = "";
@@ -1067,8 +1067,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// , N.EXPOSURE_DEV_NM
 		// , DECODE( M.DEV_TP_CD, 'US000401', M.OP_NM, 'US000404', M.FR_COMPANY, M.COMP_NM ) )
 		// , NULL) AS NICK_NAME
-		// 사용후기 내용이 있으면
-		if (StringUtils.isNotBlank(prodNoti.getNotiDscr())) {
+		// 사용후기 내용이 있고, 판매자 댓글이 존재하면 nkchNm 세팅
+		if (StringUtils.isNotBlank(prodNoti.getNotiDscr()) && StringUtils.isNotBlank(prodNoti.getSellerRespTitle())
+				&& StringUtils.isNotBlank(prodNoti.getSellerRespOpin())) {
 			// 상품테이블 판매자명이 있으면
 			if (StringUtils.isNotBlank(prodNoti.getExpoSellerNm())) {
 				nickNm = prodNoti.getExpoSellerNm();
