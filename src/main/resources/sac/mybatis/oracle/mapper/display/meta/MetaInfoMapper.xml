@@ -472,8 +472,8 @@
            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
              , CASE WHEN (TB.CHNL_UNLMT_AMT >= 0  AND TB.EPSD_CNT > 0) THEN CHNL_UNLMT_AMT
                     ELSE NVL(TB.CHNL_PERIOD_AMT, 0) END AS PROD_AMT /* 채널 대표 가격 - 소장 있으면 소장 가격, 소장 없으면 대여 가격 */
-             , CASE WHEN (TB.CHNL_UNLMT_AMT >= 0  AND TB.EPSD_CNT > 0) THEN TB.CHNL_UNLMT_AMT END AS UNLMT_AMT  /* 채널 소장 가격 */
-             , CASE WHEN (TB.CHNL_PERIOD_AMT >= 0 AND TB.STRM_EPSD_CNT > 0) THEN TB.CHNL_PERIOD_AMT END AS PERIOD_AMT  /* 채널 대여 가격 */
+             , CASE WHEN TB.EPSD_CNT > 0 THEN TB.CHNL_UNLMT_AMT END AS UNLMT_AMT  /* 채널 소장 가격 */
+             , CASE WHEN TB.STRM_EPSD_CNT > 0 THEN TB.CHNL_PERIOD_AMT END AS PERIOD_AMT  /* 채널 대여 가격 */
            </if>
            <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
              , NVL(TB.PROD_AMT, 0) AS PROD_AMT  /* 에피소드 가격 */
