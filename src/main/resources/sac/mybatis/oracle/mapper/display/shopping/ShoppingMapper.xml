@@ -819,9 +819,9 @@
                           </if>
                           AND MCD.LANG_CD =#{langCd}
                           AND EXISTS (
-                                  SELECT
+                               SELECT
                                         'X'
-                                  FROM 
+                                 FROM 
                                           TB_DP_SHPG_BRAND A
                                          ,TB_DP_SHPG_CATALOG B
                                          ,TB_DP_SHPG_CATALOG_DESC C
