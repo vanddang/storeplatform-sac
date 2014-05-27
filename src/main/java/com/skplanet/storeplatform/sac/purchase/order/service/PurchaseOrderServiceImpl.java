@@ -755,6 +755,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				throw new StorePlatformException("SAC_PUR_5115", notifyPaymentReq.getOfferingId(),
 						prchsDtlMore.getResvCol01());
 			}
+		} else {
+			if (StringUtils.isNotBlank(notifyPaymentReq.getOfferingId())) {
+				throw new StorePlatformException("SAC_PUR_5116", notifyPaymentReq.getOfferingId());
+			}
 		}
 
 		// -------------------------------------------------------------------------------------------
