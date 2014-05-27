@@ -48,11 +48,17 @@ public class BannerServceImpl implements BannerService {
 	private final int LIFE_BANNER_COUNT = 2; // 생활/위치 배너 2개 (모바일웹 정사각형 배너)
 	private final int EDU_BANNER_COUNT = 2; // 어학/교육 배너 2개 (모바일웹 정사각형 배너)
 
+	private final String REC_BANNER_MENU_ID = "DP010926"; // 모바일웹 직사각형 배너 메뉴ID
+	private final String REC_BANNER_IMG_SIZE = "DP011002/5"; // 모바일웹 직사각형 배너 이미지 요청 코드
+	private final String SQUARE_BANNER_IMG_SIZE = "DP011020/20"; // 모바일웹 정사각형 배너 이미지 요청 코드
+
 	private final int APPGUIDE_BANNER_COUNT = 2; // 앱가이드 배너 2개 (앱가이드 배너)
 	private final int BESTAPP_BANNER_COUNT = 4; // BEST 앱 배너 4개 (앱가이드 배너)
 
 	private int EBOOK_STORE_BANNER_COUNT = 0; // eBook 배너 건수 (이북보관함 메인 배너)
 	private int COMIC_STORE_BANNER_COUNT = 0; // comic 배너 건수 (이북보관함 메인 배너)
+
+	private List<BannerDefault> tempList = null; // 모바일웹 정사각형 배너가 담길 임시 리스트
 
 	@Autowired
 	@Qualifier("sac")
@@ -77,16 +83,27 @@ public class BannerServceImpl implements BannerService {
 	@Override
 	public BannerSacRes searchBannerList(SacRequestHeader header, BannerSacReq bannerReq) {
 		String reqBnrMenuId = bannerReq.getBnrMenuId();
-		String reqMobileWebExpoYn = bannerReq.getMobileWebExpoYn();
 		String reqBnrExpoMenuId = bannerReq.getBnrExpoMenuId();
 		String reqImgSizeCd = bannerReq.getImgSizeCd();
 
 		this.logger.info("----------------------------------------------------------------");
 		this.logger.info("[searchBannerLog] reqBnrMenuId : {}", reqBnrMenuId);
-		this.logger.info("[searchBannerLog] reqMobileWebExpoYn : {}", reqMobileWebExpoYn);
 		this.logger.info("[searchBannerLog] reqBnrExpoMenuId : {}", reqBnrExpoMenuId);
 		this.logger.info("[searchBannerLog] reqImgSizeCd : {}", reqImgSizeCd);
 		this.logger.info("----------------------------------------------------------------");
+
+		// ※모바일웹 직사각형, 모바일웹 상/하단, T플레이, 유료앱이무료 배너는 프로비저닝을 제외한다.
+		// ※모바일웹 정사각형 배너는 Home 12개, 게임 2개, Fun 2개, 생활/위치 2개, 어학/교육 2개 총 20를 요청한다.
+		// ※앱가이드 배너는 앱가이드 배너2개, 베스트앱 4개 총 6개를 요청한다.
+		// ※앱가이드 배너는 배너유형이 상품모바일 배너일 경우 상품ID가 채널단위로 들어간다.
+		// ※이북보관함 메인 배너는 샵클 eBook 배너와 comic 배너를 조합하여 내려준다.
+		// ※모바일웹 정사각형 배너와 직사각형 배너 API가 하나로 통합 (2014.05.26 양해엽M 요청)
+		// ※모바일웹 정사각형 배너 요청 시, 직사각형 배너도 같이 내려줌 (중복제거)
+
+		// 모바일웹 정사각형
+		if ("DP010999".equals(reqBnrMenuId)) {
+			reqImgSizeCd = this.SQUARE_BANNER_IMG_SIZE;
+		}
 
 		int imgCount = 0;
 		String imgSizeList[] = null;
@@ -114,12 +131,6 @@ public class BannerServceImpl implements BannerService {
 		bannerReq.setDeviceModelCd(header.getDeviceHeader().getModel());
 		bannerReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
-		// ※모바일웹 직사각형, 모바일웹 상/하단, T플레이, 유료앱이무료 배너는 프로비저닝을 제외한다.
-		// ※모바일웹 정사각형 배너는 Home 12개, 게임 2개, Fun 2개, 생활/위치 2개, 어학/교육 2개 총 20를 요청한다.
-		// ※앱가이드 배너는 앱가이드 배너2개, 베스트앱 4개 총 6개를 요청한다.
-		// ※앱가이드 배너는 배너유형이 상품모바일 배너일 경우 상품ID가 채널단위로 들어간다.
-		// ※이북보관함 메인 배너는 샵클 eBook 배너와 comic 배너를 조합하여 내려준다.
-
 		String reqImgCd = null; // 요청 이미지
 		Integer reqImgCnt = null; // 요청 이미지 개수
 
@@ -139,7 +150,6 @@ public class BannerServceImpl implements BannerService {
 		boolean gameBannerFullFlag = false; // 모바일웹 게임 배너 최대 개수 여부
 		boolean funBannerFullFlag = false; // 모바일웹 Fun 배너 최대 개수 여부
 		boolean lifeBannerFullFlag = false; // 모바일웹 생활/위치 배너 최대 개수 여부
-		boolean eduBannerFullFlag = false; // 모바일웹 어학/교육 배너 최대 개수 여부
 
 		boolean appGuideBannerFlag = false; // 앱가이드 배너 최대 개수 여부
 		boolean bestAppBannerFlag = false; // BEST 앱 배너 최대 개수 여부
@@ -197,11 +207,15 @@ public class BannerServceImpl implements BannerService {
 				this.logger.info("[searchBannerLog] bnrType : {}", bnrType);
 				this.logger.info("----------------------------------------------------------------");
 
-				// 모바일웹 정사각형 배너
-				if ("DP010999".equals(reqBnrMenuId)) {
+				// 모바일웹 정사각형 배너 및 모바일웹 직사각형 배너
+				if ("DP010999".equals(reqBnrMenuId) || this.REC_BANNER_MENU_ID.equals(reqBnrMenuId)) {
+					if (this.tempList != null) {
+						resultList.addAll(this.tempList);
+						this.tempList = null;
+					}
+
 					boolean dupFlag = false; // 중복된 항목을 체크하기 위한 변수
 
-					// 중복 URL 및 상품 제거를 위한 비교
 					if (resultList.size() >= this.HOME_BANNER_COUNT) {
 						String bnrInfo1 = null; // 결과리스트에 담긴 배너정보
 						String bnrInfo2 = bannerDefault.getBnrInfo(); // 비교할 배너 정보
@@ -209,6 +223,7 @@ public class BannerServceImpl implements BannerService {
 						for (int z = 0; z < resultList.size(); z++) {
 							bnrInfo1 = resultList.get(z).getBnrInfo();
 
+							// 중복 URL 및 상품 제거를 위한 비교
 							if (StringUtils.isNotEmpty(bnrInfo1) && StringUtils.isNotEmpty(bnrInfo2)) {
 								if (bnrInfo1.equals(bnrInfo2)) {
 									this.logger.info("-------------------------------------------------------------");
@@ -222,71 +237,81 @@ public class BannerServceImpl implements BannerService {
 						}
 					}
 
-					// 중복된 항목이 있을 경우 continue
+					// 중복된 항목이 있을 경우 Pass
 					if (dupFlag) {
 						dupFlag = false;
 						continue;
 					}
 
-					if ("DP010915".equals(bnrMenuId)) { // Home 12개
-						if (homeBannerFullFlag) {
-							continue;
+					// 모바일웹 정사각형 배너
+					if ("DP010999".equals(reqBnrMenuId)) {
+						if ("DP010915".equals(bnrMenuId)) { // Home 12개
+							if (homeBannerFullFlag) {
+								continue;
+							}
+							if (passCnt == this.HOME_BANNER_COUNT) {
+								passCnt = 0;
+								homeBannerFullFlag = true;
+								continue;
+							}
+						} else if ("DP010916".equals(bnrMenuId)) { // 게임 2개
+							if (passCnt > 0 && !homeBannerFullFlag) {
+								passCnt = 0;
+								homeBannerFullFlag = true;
+							}
+							if (gameBannerFullFlag) {
+								continue;
+							}
+							if (passCnt == this.GAME_BANNER_COUNT) {
+								passCnt = 0;
+								gameBannerFullFlag = true;
+								continue;
+							}
+						} else if ("DP010917".equals(bnrMenuId)) { // Fun 2개
+							if (passCnt > 0 && !gameBannerFullFlag) {
+								passCnt = 0;
+								gameBannerFullFlag = true;
+							}
+							if (funBannerFullFlag) {
+								continue;
+							}
+							if (passCnt == this.FUN_BANNER_COUNT) {
+								passCnt = 0;
+								funBannerFullFlag = true;
+								continue;
+							}
+						} else if ("DP010918".equals(bnrMenuId)) { // 생활/위치 2개
+							if (passCnt > 0 && !funBannerFullFlag) {
+								passCnt = 0;
+								funBannerFullFlag = true;
+							}
+							if (lifeBannerFullFlag) {
+								continue;
+							}
+							if (passCnt == this.LIFE_BANNER_COUNT) {
+								passCnt = 0;
+								lifeBannerFullFlag = true;
+								continue;
+							}
+						} else if ("DP010919".equals(bnrMenuId)) { // 어학/교육 2개
+							if (passCnt > 0 && !lifeBannerFullFlag) {
+								passCnt = 0;
+								lifeBannerFullFlag = true;
+							}
+							if (passCnt == this.EDU_BANNER_COUNT) {
+								// 모바일웹 정사각형 배너리스트를 임시 리스트에 담는다.
+								this.tempList = new ArrayList<BannerDefault>();
+								this.tempList.addAll(resultList);
+
+								// 모바일웹 직사각형 배너 재귀호출
+								bannerReq.setBnrMenuId(this.REC_BANNER_MENU_ID);
+								bannerReq.setImgSizeCd(this.REC_BANNER_IMG_SIZE);
+								return this.searchBannerList(header, bannerReq);
+							}
 						}
-						if (passCnt == this.HOME_BANNER_COUNT) {
-							passCnt = 0;
-							homeBannerFullFlag = true;
-							continue;
-						}
-					} else if ("DP010916".equals(bnrMenuId)) { // 게임 2개
-						if (passCnt > 0 && !homeBannerFullFlag) {
-							passCnt = 0;
-							homeBannerFullFlag = true;
-						}
-						if (gameBannerFullFlag) {
-							continue;
-						}
-						if (passCnt == this.GAME_BANNER_COUNT) {
-							passCnt = 0;
-							gameBannerFullFlag = true;
-							continue;
-						}
-					} else if ("DP010917".equals(bnrMenuId)) { // Fun 2개
-						if (passCnt > 0 && !gameBannerFullFlag) {
-							passCnt = 0;
-							gameBannerFullFlag = true;
-						}
-						if (funBannerFullFlag) {
-							continue;
-						}
-						if (passCnt == this.FUN_BANNER_COUNT) {
-							passCnt = 0;
-							funBannerFullFlag = true;
-							continue;
-						}
-					} else if ("DP010918".equals(bnrMenuId)) { // 생활/위치 2개
-						if (passCnt > 0 && !funBannerFullFlag) {
-							passCnt = 0;
-							funBannerFullFlag = true;
-						}
-						if (lifeBannerFullFlag) {
-							continue;
-						}
-						if (passCnt == this.LIFE_BANNER_COUNT) {
-							passCnt = 0;
-							lifeBannerFullFlag = true;
-							continue;
-						}
-					} else if ("DP010919".equals(bnrMenuId)) { // 어학/교육 2개
-						if (passCnt > 0 && !lifeBannerFullFlag) {
-							passCnt = 0;
-							lifeBannerFullFlag = true;
-						}
-						if (eduBannerFullFlag) {
-							continue;
-						}
-						if (passCnt == this.EDU_BANNER_COUNT) {
-							passCnt = 0;
-							eduBannerFullFlag = true;
+					} else {
+						// 모바일웹 직사각형 배너 요청건수 확인
+						if (reqImgCnt == passCnt) {
 							break;
 						}
 					}
@@ -642,7 +667,7 @@ public class BannerServceImpl implements BannerService {
 	 *            list
 	 * @return BannerSacResㄴ
 	 */
-	private BannerSacRes generateResponse(List<BannerDefault> list) {
+	private BannerSacRes generateResponse(List<BannerDefault> resultList) {
 		String bnrType = null;
 		String bnrInfo = null;
 		String topMenuId = null;
@@ -662,9 +687,9 @@ public class BannerServceImpl implements BannerService {
 		BannerSacRes bannerRes = new BannerSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		if (list != null && !list.isEmpty()) {
-			for (int i = 0; i < list.size(); i++) {
-				bannerDf = list.get(i);
+		if (resultList != null && !resultList.isEmpty()) {
+			for (int i = 0; i < resultList.size(); i++) {
+				bannerDf = resultList.get(i);
 				bnrType = bannerDf.getBnrInfoTypeCd();
 				bnrInfo = bannerDf.getBnrInfo();
 				topMenuId = bannerDf.getTopMenuId();
@@ -825,7 +850,7 @@ public class BannerServceImpl implements BannerService {
 				banner.setIdentifierList(identifierList);
 				bannerList.add(banner);
 			}
-			commonResponse.setTotalCount(list.size());
+			commonResponse.setTotalCount(resultList.size());
 		}
 
 		bannerRes.setBannerList(bannerList);
