@@ -601,7 +601,8 @@
                      , A.META_CLSF_CD
                      , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
-                  FROM (SELECT A.TENANT_ID
+                  FROM (SELECT <if test='listId == "TGR000000001"'> /*+ LEADING(A F C G B D E) FULL(B) */ </if>
+                               A.TENANT_ID
                              , E.MENU_ID
                              , C.PROD_ID
                              , E.TOP_MENU_ID
@@ -633,6 +634,7 @@
                            AND D.MENU_ID = E.MENU_ID
                            AND E.USE_YN = 'Y'
                            AND E.TOP_MENU_ID = #{topMenuId}
+                           AND F.TOP_MENU_ID = #{topMenuId}
                            AND C.PART_PROD_ID = F.PROD_ID
                            AND F.CONTENTS_TYPE_CD = 'PD002502'
                            <if test='prodCharge == "Y"'>
@@ -676,14 +678,16 @@
                            AND (CASE WHEN (SELECT EBOOK_SPRT_YN 
                                              FROM TB_CM_DEVICE CD 
                                             WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
-                                              AND CD.USE_YN = 'Y') = 'Y'  
+                                              AND CD.USE_YN = 'Y'
+                                              AND ROWNUM <![CDATA[<=]]> 1) = 'Y'  
                                      THEN 1 ELSE 0 END) = 1
                            </if>
                            <if test='topMenuId == "DP14"'>
                            AND (CASE WHEN (SELECT COMIC_SPRT_YN 
                                              FROM TB_CM_DEVICE CD 
                                             WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
-                                              AND CD.USE_YN = 'Y') = 'Y'  
+                                              AND CD.USE_YN = 'Y'
+                                              AND ROWNUM <![CDATA[<=]]> 1) = 'Y'  
                                      THEN 1 ELSE 0 END) = 1
                            </if>
                       ) A
