@@ -63,6 +63,24 @@ public class VodDetailReq extends CommonInfo {
 
     private String userKey;
     private String deviceKey;
+    
+    /**
+     * 판매 중지(다운로드 허용) 상품 포함 여부
+     * <ul>
+     * <li>- 기구매 체크 로직에서 판매 중지, 판매불가-다운로드 허용 상태의 상품도 조회 가능해야함</li>
+     * <li>- 서비스에 영향이 없도록 기구매 체크 하는 부분에서만 파라미터를 추가하여 사용</li>
+     * <ul>
+     * <br/>
+     * 
+     * Parameter
+     * <ul>
+     * <li>N (Default) : 판매 상태</li>
+     * <li>Y :(판매중지, 판매불가-다운허용)</li>
+     * </ul>
+     * 
+     */
+    private String includeProdStopStatus;
+    
 	/**
 	 * @return the channelId
 	 */
@@ -182,6 +200,18 @@ public class VodDetailReq extends CommonInfo {
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+	/**
+	 * @return the includeProdStopStatus
+	 */
+	public String getIncludeProdStopStatus() {
+		return includeProdStopStatus;
+	}
+	/**
+	 * @param includeProdStopStatus the includeProdStopStatus to set
+	 */
+	public void setIncludeProdStopStatus(String includeProdStopStatus) {
+		this.includeProdStopStatus = includeProdStopStatus;
 	}
 
 }
