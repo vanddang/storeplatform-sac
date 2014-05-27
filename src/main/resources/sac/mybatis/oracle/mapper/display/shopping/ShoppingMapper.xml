@@ -181,7 +181,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 ,(SELECT /*+ ORDERED */
+                                 ,(SELECT /*+ NO_MERGE LEADING(B1) */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
@@ -798,9 +798,29 @@
                               <if test='menuId == null and brandId == null' > 
                              ,PM.DP_ORD
                              </if>                             
-                             ,(
+                        FROM  TB_DP_SHPG_BRAND SB
+                             ,TB_DP_MENU_CATEGORY MC
+                             ,TB_DP_MENU_CATEGORY_DESC MCD
+                              <if test='menuId == null and brandId == null' > 
+                             ,TB_DP_RECOM_PROD_MANG PM
+                             </if>
+                        WHERE SB.MENU_ID = MC.MENU_ID
+                          AND SB.MENU_ID = MCD.MENU_ID
+     
+                          <if test="brandId != null">
+                          AND SB.BRAND_ID = #{brandId}
+                          </if>       
+                          <if test='menuId == null and brandId == null'> 
+                          AND SB.BRAND_ID = PM.BRAND_ID
+                          </if>
+                          AND MC.USE_YN ='Y'
+                           <if test='menuId != null'> 
+                          AND MC.MENU_ID = #{menuId} 
+                          </if>
+                          AND MCD.LANG_CD =#{langCd}
+                          AND EXISTS (
                                   SELECT
-                                        COUNT(1) 
+                                        'X'
                                   FROM 
                                           TB_DP_SHPG_BRAND A
                                          ,TB_DP_SHPG_CATALOG B
@@ -859,30 +879,9 @@
                                       FROM  TB_DP_SPRT_DEVICE DV  
                                      WHERE PROD_ID = I.PROD_ID                             
                                        AND DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo} 
-                                )                        
-                                       
-                              ) AS CNT
-                        FROM  TB_DP_SHPG_BRAND SB
-                             ,TB_DP_MENU_CATEGORY MC
-                             ,TB_DP_MENU_CATEGORY_DESC MCD
-                              <if test='menuId == null and brandId == null' > 
-                             ,TB_DP_RECOM_PROD_MANG PM
-                             </if>
-                        WHERE SB.MENU_ID = MC.MENU_ID
-                          AND SB.MENU_ID = MCD.MENU_ID
-     
-                          <if test="brandId != null">
-                          AND SB.BRAND_ID = #{brandId}
-                          </if>       
-                          <if test='menuId == null and brandId == null'> 
-                          AND SB.BRAND_ID = PM.BRAND_ID
-                          </if>
-                          AND MC.USE_YN ='Y'
-                           <if test='menuId != null'> 
-                          AND MC.MENU_ID = #{menuId} 
-                          </if>
-                          AND MCD.LANG_CD =#{langCd}
-                   )WHERE CNT>0
+                                )
+                          )
+                     )
                     ORDER BY
                           <if test='menuId == null and brandId == null' > 
                            DP_ORD ,
