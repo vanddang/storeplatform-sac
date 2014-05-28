@@ -92,7 +92,7 @@ public class GiftSacServiceImpl implements GiftSacService {
 			}
 		});
 
-		if (StringUtils.isEmpty(giftConfirmScRes.getRecvDt())) {
+		if (!StringUtils.isEmpty(giftConfirmScRes.getRecvDt())) {
 			// 이미 수신처리가 되었을 경우 에러처리? 아니면 실패로 리턴?
 			throw new StorePlatformException("SAC_PUR_7104");
 		}
