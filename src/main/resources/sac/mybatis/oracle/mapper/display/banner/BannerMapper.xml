@@ -116,7 +116,7 @@
 		                   AND  B.EXPO_STATUS_CD IN ('DP010201', 'DP010202')
 		                   AND  C.IMG_SIZE_CD = #{imgSizeCd}
                     <choose>
-                        <when test='bnrMenuId == "DP010999"'><!-- 모바일웹 정사각형-->
+                        <when test='bnrMenuId == "DP999999"'><!-- 모바일웹 정사각형-->
                            AND  C.MOBILE_WEB_EXPO_YN = 'Y'
                            AND  A.BNR_MENU_ID IN ('DP010915', 'DP010916', 'DP010917', 'DP010918', 'DP010919')<!-- HOME, 게임, Fun, 생활/위치, 어학/교육 -->
                         </when>
