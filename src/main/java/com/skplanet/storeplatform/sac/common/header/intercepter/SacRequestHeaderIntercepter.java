@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.common.header.intercepter;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,14 +77,26 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 	 */
 	private DeviceHeader extractDevice(NativeWebRequest webRequest) {
         DeviceHeader device = new DeviceHeader();
-        device.setDpi("320");
-        device.setModel("SHW-M110S");
-        device.setResolution("480*720");
-        device.setOs("Android/4.0.4");
-        device.setPkg("store.skplanet.com/0.1");
-        device.setSvc("SAC_Client/4.3");
+//        device.setDpi("320");
+//        device.setModel("SHW-M110S");
+//        device.setResolution("480*720");
+//        device.setOs("Android/4.0.4");
+//        device.setPkg("store.skplanet.com/0.1");
+//        device.setSvc("SAC_Client/4.3");
 
-        this.assignValues(webRequest.getHeader(CommonConstants.HEADER_DEVICE), device);
+        String headerStr = webRequest.getHeader(CommonConstants.HEADER_DEVICE);
+        if(StringUtils.isNotEmpty(headerStr)) {
+            this.assignValues(headerStr, device);
+            if(device.getDpi() == null ||
+                    device.getModel() == null ||
+                    device.getResolution() == null ||
+                    device.getOs() == null ||
+                    device.getPkg() == null ||
+                    device.getSvc() == null)
+                throw new StorePlatformException("SAC_CMN_0004", "x-sac-device-info");
+        }
+        else
+            throw new StorePlatformException("SAC_CMN_0001", "x-sac-device-info");
 
 		return device;
 	}
@@ -98,11 +111,19 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 	 */
 	private NetworkHeader extractNetwork(NativeWebRequest webRequest) {
 		NetworkHeader network = new NetworkHeader();
-		network.setOperator("unknown/unknown");
-		network.setSimOperator("450/05");
-		network.setType("wifi");
+//		network.setOperator("unknown/unknown");
+//		network.setSimOperator("450/05");
+//		network.setType("wifi");
 
-        this.assignValues(webRequest.getHeader(CommonConstants.HEADER_NETWORK), network);
+        String headerStr = webRequest.getHeader(CommonConstants.HEADER_NETWORK);
+        if(StringUtils.isNotEmpty(headerStr)) {
+            this.assignValues(headerStr, network);
+            if(network.getOperator() == null || network.getSimOperator() == null || network.getType() == null)
+                throw new StorePlatformException("SAC_CMN_0004", "x-sac-network-info");
+        }
+        else {
+            throw new StorePlatformException("SAC_CMN_0001", "x-sac-network-info");
+        }
 
 		return network;
 	}
