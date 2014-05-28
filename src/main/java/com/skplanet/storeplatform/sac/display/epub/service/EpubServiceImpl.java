@@ -170,9 +170,10 @@ public class EpubServiceImpl implements EpubService {
 		//[2.x fadeout] 상품 상세 요청 시 예외 처리
 		//요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
 		String temp = StringUtils.defaultString(sc2xFadeOutDummyProductChannel);
-		includeProdStopStatus = temp.contains(channelId) ? "Y" : "N";
+		includeProdStopStatus = temp.contains(channelId) ? "Y" : includeProdStopStatus;
 		
         Map<String, Object> param = new HashMap<String, Object>();
+        param.put("includeProdStopStatus", includeProdStopStatus);
         param.put("tenantId", req.getTenantId());
         param.put("channelId", channelId);
         param.put("langCd", req.getLangCd());
@@ -184,7 +185,6 @@ public class EpubServiceImpl implements EpubService {
         param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
         param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
         param.put("count", req.getCount() == null ? 20 : req.getCount());
-        param.put("includeProdStopStatus", includeProdStopStatus);
         final EpubDetail epubDetail = getEpubChannel(param);
 
         if(epubDetail != null) {
@@ -290,7 +290,6 @@ public class EpubServiceImpl implements EpubService {
      * @return
      */
     public List<EpubDetail> getEpubSeries(Map<String, Object> param) {
-    	logger.debug("param={}", param);
         return this.commonDAO.queryForList("EpubDetail.selectEpubSeries", param, EpubDetail.class);
     }
 
