@@ -201,6 +201,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					String prchsState = null; // 구매상태
 					String prchsProdId = null; // 구매 상품ID
 					String puchsPrice = null; // 구매 상품금액
+					String permitDeviceYn = null; // 단말 지원여부
 
 					if (historyRes.getTotalCnt() > 0) {
 						List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -215,6 +216,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							prchsCaseCd = historyRes.getHistoryList().get(i).getPrchsCaseCd();
 							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
 							puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
+							permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
 
 							// 구매상태 확인
 							downloadMusicSacReq.setPrchsDt(prchsDt);
@@ -261,7 +263,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							 * 구매 정보에 따른 암호화 시작
 							 ************************************************************************************************/
 							// 구매상태 만료 여부 확인
-							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
+									&& permitDeviceYn.equals("Y")) {
 								String deviceId = null; // Device Id
 								String deviceIdType = null; // Device Id 유형
 								SearchDeviceIdSacReq deviceReq = null;
@@ -352,15 +355,16 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 												+ deviceRes.getDeviceId());
 									}
 								}
+								// 구매 정보
+								product.setPurchaseList(purchaseList);
+								// 암호화 정보
+								// if (!encryptionList.isEmpty()) {
+								// product.setDl(encryptionList);
+								// }
+								break;
 							}
 						}
-						// 구매 정보
-						product.setPurchaseList(purchaseList);
 					}
-					// 암호화 정보
-					// if (!encryptionList.isEmpty()) {
-					// product.setDl(encryptionList);
-					// }
 				}
 			}
 

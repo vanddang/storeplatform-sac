@@ -230,6 +230,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					String prchsProdId = null; // 구매 상품ID
 					String puchsPrice = null; // 구매 상품금액
 					String drmYn = null; // 구매상품 Drm여부
+					String permitDeviceYn = null; // 단말 지원여부
 
 					if (historyRes.getTotalCnt() > 0) {
 						List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -245,6 +246,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
 							puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 							drmYn = historyRes.getHistoryList().get(i).getDrmYn();
+							permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
+							this.log.info("###########################################");
+							this.log.info("permitDeviceYn	:	" + permitDeviceYn);
+							this.log.info("###########################################");
 
 							// 구매상태 확인
 							downloadVodSacReq.setPrchsDt(prchsDt);
@@ -296,7 +301,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							this.log.info("----------------------------------------------------------------");
 
 							// 구매상태 만료 여부 확인
-							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
+									&& permitDeviceYn.equals("Y")) {
 								this.log.info("----------------------------  start set Purchase Info  ------------------------------------");
 								String deviceId = null; // Device Id
 								String deviceIdType = null; // Device Id 유형
@@ -404,6 +410,19 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										this.log.info("[DownloadVodServiceImpl] token : {}", encryption.getToken());
 										this.log.info("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
 										this.log.info("--------------------------------------------------------------");
+										// JSON 복호화
+										// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
+										// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
+										//
+										// try {
+										// String decData = new String(decrypt, "UTF-8");
+										// this.log.debug("----------------------------------------------------------------");
+										// this.log.debug("[DownloadVodServiceImpl] decData : {}", decData);
+										// System.out.println("decData	:	" + decData);
+										// this.log.debug("----------------------------------------------------------------");
+										// } catch (UnsupportedEncodingException e) {
+										// e.printStackTrace();
+										// }
 									} else {
 										this.log.info("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
 										this.log.info("##### [SAC DSP LocalSCI] deviceKey : {}",
@@ -412,18 +431,21 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 												+ deviceRes.getDeviceId());
 									}
 								}
+								// 구매 정보
+								product.setPurchaseList(purchaseList);
+								this.log.info("----------------------------------------------------------------");
+								// 암호화 정보
+								if (!encryptionList.isEmpty()) {
+									this.log.info("[DownloadVodServiceImpl]	setDl : {}");
+									product.setDl(encryptionList);
+								}
+
+								this.log.debug("[DownloadVodServiceImpl] End Encription");
+								this.log.info("----------------------------------------------------------------");
 								this.log.info("----------------------------  end set Purchase Info  ------------------------------------");
+								break;
 							}
 						}
-						// 구매 정보
-						product.setPurchaseList(purchaseList);
-						this.log.info("----------------------------------------------------------------");
-						// 암호화 정보
-						if (!encryptionList.isEmpty()) {
-							this.log.info("[DownloadVodServiceImpl]	setDl : {}");
-							product.setDl(encryptionList);
-						}
-						this.log.info("----------------------------------------------------------------");
 					}
 				}
 			}
