@@ -24,12 +24,12 @@
 	   <param-value>/WEB-INF/classes/sac/properties</param-value>
 	</context-param>
 	<listener>
-	   <listener-class>com.skplanet.storeplatform.framework.core.context.ContextFinalizer</listener-class>
-	</listener>
-    <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener
         </listener-class>
     </listener>
+	<listener>
+	   <listener-class>com.skplanet.storeplatform.framework.core.context.ContextFinalizer</listener-class>
+	</listener>    
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener
         </listener-class>
