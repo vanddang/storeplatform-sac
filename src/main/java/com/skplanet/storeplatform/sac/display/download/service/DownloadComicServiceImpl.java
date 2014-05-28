@@ -243,6 +243,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					String prchsProdId = null; // 구매 상품ID
 					String prchsPrice = null; // 구매금액
 					String drmYn = null; // DRM 지원여부
+					String permitDeviceYn = null; // 단말지원여부
 
 					if (historyRes.getTotalCnt() > 0) {
 						List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -258,6 +259,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
 							prchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 							drmYn = historyRes.getHistoryList().get(i).getDrmYn();
+							permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
 
 							// 구매상태 확인
 							comicReq.setDwldStartDt(dwldStartDt);
@@ -285,6 +287,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 							this.logger.info("[DownloadComicLog] prchsState : {}", prchsState);
 							this.logger.info("[DownloadComicLog] prchsProdId : {}", prchsProdId);
 							this.logger.info("[DownloadComicLog] prchsPrice : {}", prchsPrice);
+							this.logger.info("[DownloadComicLog] drmYn : {}", drmYn);
+							this.logger.info("[DownloadComicLog] permitDeviceYn : {}", permitDeviceYn);
 							this.logger.info("----------------------------------------------------------------");
 
 							metaInfo.setPurchaseId(prchsId);
@@ -297,8 +301,9 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 							// 구매 정보
 							purchaseList.add(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
 
-							// 구매상태 만료 여부 확인
-							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)) {
+							// 구매상태 만료여부 및 단말 지원여부 확인
+							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
+									&& "Y".equals(permitDeviceYn)) {
 								String deviceId = null; // Device Id
 								String deviceIdType = null; // Device Id 유형
 								SearchDeviceIdSacReq deviceReq = null;
@@ -392,14 +397,16 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 												+ deviceRes.getDeviceId());
 									}
 								}
-							}
-						}
-						// 구매 정보
-						product.setPurchaseList(purchaseList);
+								// 구매 정보
+								product.setPurchaseList(purchaseList);
 
-						// 암호화 정보
-						if (!encryptionList.isEmpty()) {
-							product.setDl(encryptionList);
+								// 암호화 정보
+								if (!encryptionList.isEmpty()) {
+									product.setDl(encryptionList);
+								}
+
+								break;
+							}
 						}
 					}
 				}
