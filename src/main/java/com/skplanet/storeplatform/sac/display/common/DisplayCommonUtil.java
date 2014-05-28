@@ -52,13 +52,17 @@ public class DisplayCommonUtil {
 	 * @return String
 	 */
 	public static String getOsVer(String osVer) {
+		if(StringUtils.isEmpty(osVer)) return osVer;
+		
+		String osVersion = osVer;
 		String[] temp = osVer.trim().split("/");
-
-		String osVersion = temp[1];
-		String osVersionOrginal = osVersion;
-		String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
-		if (osVersionTemp.length == 3) {
-			osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
+		if(temp.length >= 2) {
+			osVersion = temp[1];
+			String osVersionOrginal = osVersion;
+			String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
+			if (osVersionTemp.length == 3) {
+				osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
+			}
 		}
 		return osVersion;
 	}
