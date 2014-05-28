@@ -45,7 +45,7 @@ public class EpubControllerTest {
 	@Test
 	public void searchEpubChannel_시리즈_CT20_1() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("channelId", "H001553068"); //태양의 전설 바람의 노래
+		param.put("channelId", "H000400481"); //태양의 전설 바람의 노래
 		param.put("deviceKey", "DE201402201711283140002222");
 		param.put("userKey", "US201402201711282940003170");
 		String json = this.convertMapToJson(param);

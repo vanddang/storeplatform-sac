@@ -102,7 +102,7 @@ public class VodServiceImpl implements VodService {
 		//[2.x fadeout] 상품 상세 요청 시 예외 처리
 		//요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
 		String temp = StringUtils.defaultString(sc2xFadeOutDummyProductChannel);
-		includeProdStopStatus = temp.contains(channelId) ? "Y" : includeProdStopStatus;
+		if(temp.contains(channelId)) includeProdStopStatus = "Y";
 		
 		
         Map<String, Object> param = new HashMap<String, Object>();

@@ -136,7 +136,15 @@
 	                    AND D.PROD_ID = #{channelId}
 	                    AND C.LANG_CD = #{langCd}
 	                    AND D.SVC_GRP_CD = 'DP000203' AND D.CONTENTS_TYPE_CD = 'PD002501' AND D.SVC_TYPE_CD = 'DP001116'
-	                    AND G.PROD_STATUS_CD = 'PD000403' AND G.EXPO_YN = 'Y'
+						<choose>
+		                <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
+		                AND G.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
+		                </when>
+		                <otherwise>
+		                AND G.PROD_STATUS_CD = 'PD000403'
+		                </otherwise>
+		                </choose>
+	                    AND G.EXPO_YN = 'Y'
 	                    AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
 						AND RSHP.PROD_ID = D.PROD_ID
                       	AND RSHP.PART_PROD_ID = CPD.PROD_ID
@@ -297,7 +305,7 @@
 		                      AND TP.TENANT_ID = #{tenantId} 
 		                      AND TP.EXPO_YN = 'Y'
 		                   	  <choose>
-			                  <when test="includeProdStopStatus != null and includeProdStopStatus.equals('Y')">
+			                  <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
 			                  AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
 			                  </when>
 			                  <otherwise>
