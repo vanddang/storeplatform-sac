@@ -319,41 +319,55 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		// 결제 취소 정보를 넣어준다.
 		// 구매 상품 건수 업데이트 시 특가상품 여부 확인.
 		boolean specialSaleYn = false;
+		boolean isSktTestMdn = false;
 		List<PurchaseCancelPaymentDetailScReq> purchaseCancelPaymentDetailScReqList = new ArrayList<PurchaseCancelPaymentDetailScReq>();
 
 		if (purchaseCancelDetailSacParam.getPaymentSacParamList() != null
-				&& purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0
-				&& !purchaseCancelSacParam.getIgnorePayment()) {
-			for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
-				PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
-				purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
-				purchaseCancelPaymentDetailScReq.setSystemId(purchaseCancelSacParam.getSystemId());
-				purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-				purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
-				purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
-				if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
-						&& purchaseCancelDetailSacParam.gettStorePayCancelResultList().size() > 0) {
-					for (PayCancelResult payCancelResult : purchaseCancelDetailSacParam.gettStorePayCancelResultList()) {
-						if (StringUtils.equals(payCancelResult.getPayCls(), paymentSacParam.getPaymentMtdCd())) {
-							if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
-									payCancelResult.getPayCancelResultCd())) {
-								// T Store 결제 취소 실패이면
-								purchaseCancelPaymentDetailScReq
-										.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
-							}
-							purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(payCancelResult
-									.getPayCancelResultCd());
-						}
-					}
-				}
+				&& purchaseCancelDetailSacParam.getPaymentSacParamList().size() > 0) {
 
-				purchaseCancelPaymentDetailScReqList.add(purchaseCancelPaymentDetailScReq);
+			for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
+
+				// SKT 시험폰 여부
+				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_TEST_DEVICE,
+						paymentSacParam.getPaymentMtdCd())) {
+					isSktTestMdn = true;
+				}
 
 				// 구매 상품 건수 업데이트 시 특가상품 여부 확인.
 				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_COUPON, paymentSacParam.getPaymentMtdCd())
 						&& StringUtils.equals(PurchaseConstants.COUPON_TYPE_SPECIAL_PRICE_PRODUCT,
 								paymentSacParam.getCpnType())) {
 					specialSaleYn = true;
+				}
+
+				// 결제 취소 무시가 아니면 DB업데이트 진행.
+				if (!purchaseCancelSacParam.getIgnorePayment()) {
+
+					PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
+					purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
+					purchaseCancelPaymentDetailScReq.setSystemId(purchaseCancelSacParam.getSystemId());
+					purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+					purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
+					purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+					if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
+							&& purchaseCancelDetailSacParam.gettStorePayCancelResultList().size() > 0) {
+						for (PayCancelResult payCancelResult : purchaseCancelDetailSacParam
+								.gettStorePayCancelResultList()) {
+							if (StringUtils.equals(payCancelResult.getPayCls(), paymentSacParam.getPaymentMtdCd())) {
+								if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
+										payCancelResult.getPayCancelResultCd())) {
+									// T Store 결제 취소 실패이면
+									purchaseCancelPaymentDetailScReq
+											.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
+								}
+								purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(payCancelResult
+										.getPayCancelResultCd());
+							}
+						}
+					}
+
+					purchaseCancelPaymentDetailScReqList.add(purchaseCancelPaymentDetailScReq);
+
 				}
 
 			}
@@ -363,6 +377,11 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		InsertPurchaseProductCountScReq insertPurchaseProductCountScReq = new InsertPurchaseProductCountScReq();
 		List<PrchsProdCnt> prchsProdCntList = new ArrayList<PrchsProdCnt>();
 		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
+			// 시험폰일 경우 상품 구매수 업데이트 제외.
+			if (isSktTestMdn) {
+				break;
+			}
+
 			PrchsProdCnt prchsProdCnt = new PrchsProdCnt();
 			prchsProdCnt.setTenantId(prchsDtlSacParam.getTenantId());
 			prchsProdCnt.setUseUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
