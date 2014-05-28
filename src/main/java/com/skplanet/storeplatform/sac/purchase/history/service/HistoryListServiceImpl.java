@@ -480,6 +480,26 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setHidingYn(request.getHidingYn());
 		scRequest.setGiftRecvConfYn(request.getGiftRecvConfYn());
 
+		/**
+		 * 구매정책을 조회하여 list에 셋팅
+		 */
+		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
+				.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
+						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
+
+		// Device를 조회 조건으로 넣을지 여부
+		String selectDeviceYn = "N";
+
+		for (PurchaseTenantPolicy obj : purchaseTenantPolicyList) {
+
+			if (!StringUtils.isBlank(request.getTenantProdGrpCd())
+					&& obj.getTenantProdGrpCd().equals(request.getTenantProdGrpCd())) {
+				selectDeviceYn = "Y"; // 디바이스정책 카테고리 조회일 경우 조회 조건으로 DeviceKey를 넣는다.
+			}
+		}
+		this.logger.info("### Device Policy Category ### selectDeviceYn = " + selectDeviceYn);
+		scRequest.setSelectDeviceYn(selectDeviceYn);
+
 		/*************************************************
 		 * SC Request Setting End
 		 *************************************************/
