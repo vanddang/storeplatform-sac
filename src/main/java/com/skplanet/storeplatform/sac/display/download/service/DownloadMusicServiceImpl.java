@@ -148,6 +148,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					historyReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
 					historyReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
 					historyReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+					historyReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
 					historyReq.setEndDt(sysDate);
 					historyReq.setOffset(1);
 					historyReq.setCount(1000);
