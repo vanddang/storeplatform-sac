@@ -139,9 +139,11 @@
 						<choose>
 		                <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
 		                AND G.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
+		                AND CTP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
 		                </when>
 		                <otherwise>
 		                AND G.PROD_STATUS_CD = 'PD000403'
+		                AND CTP.PROD_STATUS_CD = 'PD000403'
 		                </otherwise>
 		                </choose>
 	                    AND G.EXPO_YN = 'Y'
@@ -151,7 +153,7 @@
 						AND CPD.PROD_ID = K.PROD_ID AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 						AND CD.DEVICE_MODEL_CD = #{deviceModel} AND CD.USE_YN = 'Y'
                       	AND CPD.SVC_GRP_CD = 'DP000203' AND CPD.CONTENTS_TYPE_CD = 'PD002502' AND CPD.SVC_TYPE_CD = 'DP001116'
-                      	AND CPD.PROD_ID = CTP.PROD_ID AND CTP.TENANT_ID = G.TENANT_ID AND CTP.PROD_STATUS_CD = 'PD000403' AND CTP.EXPO_YN = 'Y'
+                      	AND CPD.PROD_ID = CTP.PROD_ID AND CTP.TENANT_ID = G.TENANT_ID AND CTP.EXPO_YN = 'Y'
                       	AND CPD.PROD_ID = CTPR.PROD_ID AND CTPR.TENANT_ID = CTP.TENANT_ID AND SYSDATE BETWEEN CTPR.APPLY_START_DT AND CTPR.APPLY_END_DT
                       	AND CPD.PROD_ID = EP.PROD_ID
 	                    GROUP BY G.TENANT_ID, C.LANG_CD, D.PROD_ID, A.MENU_ID, C.MENU_NM, EP.BOOK_CLSF_CD, EP.CHAPTER, CPD.CID
