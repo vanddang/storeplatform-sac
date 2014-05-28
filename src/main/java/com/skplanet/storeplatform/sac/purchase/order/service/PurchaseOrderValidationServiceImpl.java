@@ -148,9 +148,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) {
 			// 어플리케이션 : 게임, FUN, 생활/위치, 어학/교육, Android
-			if (StringUtils.equals(reqMenuId, "DP00") == false && StringUtils.equals(reqMenuId, "DP01") == false
-					&& StringUtils.equals(reqMenuId, "DP03") == false && StringUtils.equals(reqMenuId, "DP04") == false
-					&& StringUtils.equals(reqMenuId, "DP08") == false && StringUtils.equals(reqMenuId, "DP12") == false) {
+			if (StringUtils.equals(reqMenuId, "DP01") == false && StringUtils.equals(reqMenuId, "DP03") == false
+					&& StringUtils.equals(reqMenuId, "DP04") == false && StringUtils.equals(reqMenuId, "DP08") == false
+					&& StringUtils.equals(reqMenuId, "DP12") == false) {
 				throw new StorePlatformException("SAC_PUR_5100");
 			}
 
