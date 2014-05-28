@@ -213,6 +213,7 @@
               AND TP.TENANT_ID = #{tenantId}
               AND PDESC.LANG_CD = MD.LANG_CD
               AND CPD.PROD_ID = #{channelId}
+              AND ROWNUM = 1
     </select>
 
     <select id="getMusicMetaList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.MusicMeta">
