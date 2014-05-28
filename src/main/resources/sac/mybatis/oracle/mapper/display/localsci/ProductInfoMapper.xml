@@ -507,7 +507,9 @@
 	                      ) = 1
 	                ) AS PHONE_SPRT_YN
 	             , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId} AND TENANT1.EXPO_YN ='Y') as chnlProdStatusCd
-	             , TENANT.PROD_STATUS_CD 
+	             , TENANT.PROD_STATUS_CD
+	             , SUBCONTENTS.PROD_VER AS BOOK_VERSION
+	             , SUBCONTENTS.SUB_CONTENTS_ID AS SCID
 	         FROM  TB_DP_MENU_CATEGORY           A
 	             , TB_DP_MENU_CATEGORY_PROD_MAPG B
 	             , TB_DP_MENU_CATEGORY_DESC      C
@@ -516,12 +518,14 @@
 	             , TB_DP_PROD_DESC               F
 	             , TB_DP_PROD_RSHP               I
 	             , TB_DP_TENANT_PROD             TENANT
+	             , TB_DP_SUB_CONTENTS            SUBCONTENTS 
 	        WHERE A.MENU_ID = B.MENU_ID
 	          AND A.MENU_ID = C.MENU_ID
 	          AND B.PROD_ID = D.PROD_ID
 	          AND B.PROD_ID = E.PROD_ID
 	          AND B.PROD_ID = F.PROD_ID
 	          AND B.PROD_ID = TENANT.PROD_ID
+	          AND B.PROD_ID = SUBCONTENTS.PROD_ID
 	          AND TENANT.TENANT_ID = #{tenantId}
 	          AND B.PROD_ID = I.PART_PROD_ID
 	          AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
