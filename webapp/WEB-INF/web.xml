@@ -19,13 +19,13 @@
             classpath*:sac/spring/context-*.xml 
         </param-value>
     </context-param>
-    <!-- context-param>
+    <context-param>
 	   <param-name>propertiesPath</param-name>
 	   <param-value>/WEB-INF/classes/sac/properties</param-value>
 	</context-param>
 	<listener>
 	   <listener-class>com.skplanet.storeplatform.framework.core.context.ContextFinalizer</listener-class>
-	</listener> -->
+	</listener>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener
         </listener-class>
