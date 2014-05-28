@@ -141,19 +141,19 @@ public class MetaInfo extends CommonInfo {
 	private String nmDpPicRatio;
 	private String nmDpPixel;
 	private String nmSubContsId;
-	private Integer nmFileSize;
+	private String nmFileSize;
 	private String nmProdVer;
 	private String sdBtvCid;
 	private String sdDpPicRatio;
 	private String sdDpPixel;
 	private String sdSubContsId;
-	private Integer sdFileSize;
+	private String sdFileSize;
 	private String sdProdVer;
 	private String hdBtvCid;
 	private String hdDpPicRatio;
 	private String hdDpPixel;
 	private String hdSubContsId;
-	private Integer hdFileSize;
+	private String hdFileSize;
 	private String hdProdVer;
 	private String dwldAreaLimtYn;
 	private String strmNetworkCd;
@@ -2113,7 +2113,7 @@ public class MetaInfo extends CommonInfo {
 	/**
 	 * @return the nmFileSize
 	 */
-	public Integer getNmFileSize() {
+	public String getNmFileSize() {
 		return this.nmFileSize;
 	}
 
@@ -2121,7 +2121,7 @@ public class MetaInfo extends CommonInfo {
 	 * @param nmFileSize
 	 *            the nmFileSize to set
 	 */
-	public void setNmFileSize(Integer nmFileSize) {
+	public void setNmFileSize(String nmFileSize) {
 		this.nmFileSize = nmFileSize;
 	}
 
@@ -2203,7 +2203,7 @@ public class MetaInfo extends CommonInfo {
 	/**
 	 * @return the sdFileSize
 	 */
-	public Integer getSdFileSize() {
+	public String getSdFileSize() {
 		return this.sdFileSize;
 	}
 
@@ -2211,7 +2211,7 @@ public class MetaInfo extends CommonInfo {
 	 * @param sdFileSize
 	 *            the sdFileSize to set
 	 */
-	public void setSdFileSize(Integer sdFileSize) {
+	public void setSdFileSize(String sdFileSize) {
 		this.sdFileSize = sdFileSize;
 	}
 
@@ -2293,7 +2293,7 @@ public class MetaInfo extends CommonInfo {
 	/**
 	 * @return the hdFileSize
 	 */
-	public Integer getHdFileSize() {
+	public String getHdFileSize() {
 		return this.hdFileSize;
 	}
 
@@ -2301,7 +2301,7 @@ public class MetaInfo extends CommonInfo {
 	 * @param hdFileSize
 	 *            the hdFileSize to set
 	 */
-	public void setHdFileSize(Integer hdFileSize) {
+	public void setHdFileSize(String hdFileSize) {
 		this.hdFileSize = hdFileSize;
 	}
 
