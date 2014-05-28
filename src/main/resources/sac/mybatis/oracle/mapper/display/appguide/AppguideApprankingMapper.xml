@@ -140,7 +140,9 @@
                              , A.EXPO_ORD_ALWAYS_YN
                              , A.EXPO_ORD
                              , A.EXPO_ORD_SUB
-                             , ROW_NUMBER() OVER(PARTITION BY C.PROD_ID ORDER BY F.LAST_DEPLOY_DT DESC) AS RN
+                             , ROW_NUMBER() OVER (
+                                 PARTITION BY D.CATALOG_ID ORDER BY J.PROD_AMT ASC
+                                ) AS RN
                           FROM  (
                              SELECT
                                    AA.TENANT_ID
@@ -195,13 +197,25 @@
                              , TB_DP_MENU_SHPG_MAPG ESM
                              , TB_DP_PROD F  
                              , TB_DP_TENANT_PROD G
+                             , TB_DP_SHPG_PROD H
+                             , TB_DP_MENU_CATEGORY I
+                             , TB_DP_TENANT_PROD_PRICE J
                        WHERE 1=1
                        AND A.PROD_ID = D.CATALOG_ID  
                        AND G.TENANT_ID = #{tenantId}
+                       AND J.TENANT_ID = #{tenantId}
                        AND C.PROD_RSHP_CD = 'DP010802'
                        AND D.CATALOG_ID = E.CATALOG_ID
                        AND C.PROD_ID = E.PROD_ID
+                       AND C.PROD_ID  <![CDATA[ <> ]]> C.PART_PROD_ID
+                       AND C.PART_PROD_ID = H.PROD_ID
                        AND D.CATALOG_ID = ESM.CATALOG_ID   
+                       AND ESM.MENU_ID = I.MENU_ID
+                       AND E.BASE_YN = 'Y'
+                       AND E.USE_YN = 'Y'
+                       AND I.USE_YN = 'Y'
+                       AND ESM.BASE_YN = 'Y'
+                       AND ESM.USE_YN = 'Y'
                        <if test="menuId != null and menuId != ''">
                         AND ESM.MENU_ID LIKE #{menuId}||'%' 
                        </if>
@@ -210,9 +224,15 @@
                        </if>
                        AND E.BASE_YN = 'Y'
                        AND E.USE_YN = 'Y'
+                       AND I.USE_YN = 'Y'
+                       AND ESM.BASE_YN = 'Y'
+                       AND ESM.USE_YN = 'Y'
                        AND C.PROD_ID = F.PROD_ID
                        AND F.PROD_ID = G.PROD_ID   
+                       AND H.PROD_ID = J.PROD_ID
                        AND G.EXPO_YN = 'Y'
+                       AND G.PROD_STATUS_CD = 'PD000403'
+                       AND NVL(D.CHNL_CNT, 0) > 0 
                        AND EXISTS (
                               SELECT 1 
                               FROM  TB_DP_SPRT_DEVICE DV  
@@ -223,17 +243,9 @@
                                 AND (DV.DEVICE_MODEL_CD = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = #{anyDeviceModelCd})
                                 AND DV.PROD_ID = F.PROD_ID
                               ) 
-                      AND ( CASE WHEN F.TOP_MENU_ID IN ( 'DP28' )
-                            THEN ( SELECT 1
-                                     FROM TB_DP_SHPG_PROD SP
-                                    WHERE SP.PROD_ID = F.PROD_ID
-                                      AND SP.SALE_YN = 'Y'
-                                      <if test='b2bProd != "A"'>
-                                      AND SP.B2B_PROD_YN = #{b2bProd}
-                                      </if>
-                                      AND ROWNUM <![CDATA[ <= ]]> 1  )
-                            ELSE 1
-                        END ) = 1
+                        <if test='b2bProd != "A"'>
+                        AND H.B2B_PROD_YN = #{b2bProd}
+                        </if>
                     ) Z1
               WHERE Z1.RN = 1
             ) Z2
