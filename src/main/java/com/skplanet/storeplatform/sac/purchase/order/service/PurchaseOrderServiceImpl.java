@@ -1593,13 +1593,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			tenantProdGrpCd = prchsDtlMore.getTenantProdGrpCd();
 			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
 					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd().substring(0, 12)
-						+ prchsDtlMore.getPrchsId());
+				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd() + prchsDtlMore.getPrchsId());
 			} else {
-				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd().substring(0, 12));
+				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd());
 			}
 
 			prchsProdCnt.setCntProcStatus(PurchaseConstants.USE_N);
+
+			prchsProdCnt.setUseFixrateProdId(prchsDtlMore.getUseFixrateProdId());
 
 			prchsProdCntList.add(prchsProdCnt);
 		}
