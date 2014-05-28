@@ -217,9 +217,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 구매생성 요청 데이터
 		List<PrchsDtlMore> prchsDtlMoreList = this.makePrchsDtlMoreList(purchaseOrderInfo);
 
-		// 구매집계 요청 데이터: Biz 쿠폰 발급 요청 경우는 제외
+		// 구매집계 요청 데이터: 테스트폰 / Biz 쿠폰 발급 요청 경우는 제외
 		List<PrchsProdCnt> prchsProdCntList = null;
-		if (purchaseOrderInfo.isBizShopping() == false) {
+		if ((purchaseOrderInfo.isTestMdn() == false) && (purchaseOrderInfo.isBizShopping() == false)) {
 			prchsProdCntList = this.makePrchsProdCntList(prchsDtlMoreList, PurchaseConstants.PRCHS_STATUS_COMPT);
 		}
 
@@ -845,13 +845,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -------------------------------------------------------------------------------------------
 		// 구매확정 요청 데이터 생성
 
-		// 구매집계 요청 데이터
-		List<PrchsProdCnt> prchsProdCntList = this.makePrchsProdCntList(prchsDtlMoreList,
-				PurchaseConstants.PRCHS_STATUS_COMPT);
-
 		// 결제생성 요청 데이터
 		List<Payment> paymentList = this.makePaymentList(prchsDtlMore, notifyPaymentReq.getPaymentInfoList(),
 				PurchaseConstants.PRCHS_STATUS_COMPT);
+
+		boolean bSktTest = false;
+		for (Payment payment : paymentList) {
+			if (StringUtils.equals(payment.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_SKT_TEST_DEVICE)) {
+				bSktTest = true;
+				break;
+			}
+		}
+
+		// 구매집계 요청 데이터 : 시험폰 결제 경우 제외
+		List<PrchsProdCnt> prchsProdCntList = null;
+		if (bSktTest == false) {
+			this.makePrchsProdCntList(prchsDtlMoreList, PurchaseConstants.PRCHS_STATUS_COMPT);
+		}
 
 		// 자동구매 생성 요청 데이터
 		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,CHECKAUTO,{},{}", prchsDtlMore.getPrchsProdType(),
@@ -1588,6 +1598,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			prchsProdCnt.setProdQty(prchsDtlMore.getProdQty());
 			prchsProdCnt
 					.setSprcProdYn(StringUtils.defaultString(prchsDtlMore.getSprcProdYn(), PurchaseConstants.USE_N));
+			prchsProdCnt.setUseFixrateProdId(prchsDtlMore.getUseFixrateProdId());
 
 			// 중복 구매 가능한 쇼핑상품 / 부분유료화 상품 처리
 			tenantProdGrpCd = prchsDtlMore.getTenantProdGrpCd();
@@ -1599,8 +1610,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 
 			prchsProdCnt.setCntProcStatus(PurchaseConstants.USE_N);
-
-			prchsProdCnt.setUseFixrateProdId(prchsDtlMore.getUseFixrateProdId());
 
 			prchsProdCntList.add(prchsProdCnt);
 		}
