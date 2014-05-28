@@ -34,7 +34,7 @@
          FROM TB_CM_CLAUSE 
         WHERE dp_yn='Y'
         AND clause_id = #{clauseId}
-        ORDER BY clause_item_cd DESC
+        ORDER BY start_day DESC
     </select>
     
     <!-- 약관 목록 조회 -->
