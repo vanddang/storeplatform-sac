@@ -202,7 +202,8 @@ public class AppServiceImpl implements AppService {
 		App app = new App();
 		product.setApp(app);
 		app.setAid(appDetail.getAid());
-		app.setSupportedOs("Android " + appDetail.getVmVer());
+        if(appDetail.getVmVer() != null)
+		    app.setSupportedOs("Android " + appDetail.getVmVer());
 		app.setPackageName(appDetail.getApkPkgNm());
 		app.setVersionCode(appDetail.getApkVer());
 		app.setVersion(appDetail.getApkVerNm());
