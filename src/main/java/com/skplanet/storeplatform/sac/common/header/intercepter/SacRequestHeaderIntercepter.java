@@ -77,12 +77,12 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 	 */
 	private DeviceHeader extractDevice(NativeWebRequest webRequest) {
         DeviceHeader device = new DeviceHeader();
-        device.setDpi("");
-        device.setModel("");
-        device.setResolution("");
-        device.setOs("");
-        device.setPkg("");
-        device.setSvc("");
+        device.setDpi("320");
+        device.setModel("SHW-M110S");
+        device.setResolution("480*720");
+        device.setOs("Android/4.0.4");
+        device.setPkg("store.skplanet.com/0.1");
+        device.setSvc("SAC_Client/4.3");
 
         String headerStr = webRequest.getHeader(CommonConstants.HEADER_DEVICE);
         if(StringUtils.isNotEmpty(headerStr)) {
@@ -102,9 +102,9 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 	 */
 	private NetworkHeader extractNetwork(NativeWebRequest webRequest) {
 		NetworkHeader network = new NetworkHeader();
-		network.setOperator("");
-		network.setSimOperator("");
-		network.setType("");
+		network.setOperator("unknown/unknown");
+		network.setSimOperator("450/05");
+		network.setType("wifi");
 
         String headerStr = webRequest.getHeader(CommonConstants.HEADER_NETWORK);
         if(StringUtils.isNotEmpty(headerStr)) {
