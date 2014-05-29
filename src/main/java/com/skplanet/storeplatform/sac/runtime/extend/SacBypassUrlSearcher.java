@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,10 +22,11 @@ import com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo;
 
 /**
  * 바이패스 URL를 조회하는 구현클래스
- * 
+ *
  * Updated on : 2013-09-01 Updated by : 최현식, 에이엔비.
+ * Updated on : 2014-05-29 Updated by : 서대영, SK 플래닛. (미 사용 클래스이므로 @Component 어노테이션 제거)
  */
-@Component
+// @Component
 public class SacBypassUrlSearcher implements BypassUrlSearcher {
 
 	@Autowired
@@ -34,7 +34,7 @@ public class SacBypassUrlSearcher implements BypassUrlSearcher {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.framework.integration.serviceactivator.BypassUrlSearcher#search(java.lang.String)
 	 */
 	@Override
