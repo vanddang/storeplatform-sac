@@ -41,7 +41,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
  *
  * <pre>
  * Created on 2014. 1. 16. by 김현일, 인크로스.
- * Updated on 2014. 05. 29. by 서대영, SK 플래닛 : bypass 여부 획득 방법 변경 (Properties -> DB)
+ * Updated on 2014. 05. 29. by 서대영, SK 플래닛 : bypass 여부 획득 방법 변경 (Properties File -> DB Cache)
  * </pre>
  */
 @Component
