@@ -3,7 +3,8 @@
 <mapper namespace="Download">
     <!-- OS 지원여부 조회 -->
     <select id="selectSupportOsVersion" parameterType="DownloadAppSacReq" resultType="HashMap">
-	SELECT IA.PROD_ID
+	SELECT /* DownloadMapper.selectSupportOsVersion, 지원 OS VERSION 조회, 이석희/아이에스플러스, 2014-05-29 */
+	       IA.PROD_ID
 	     , NVL(IB.VM_VER, 'N') AS VM_VER
 	  FROM 
 	       (
