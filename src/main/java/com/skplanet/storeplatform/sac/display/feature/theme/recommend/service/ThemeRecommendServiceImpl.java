@@ -61,8 +61,6 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private int totalCount = 0;
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -249,9 +247,9 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 			response.setLayout(layout);
 		}
 
-		for (ThemeRecommend mapper : resultList) {
+		commonResponse.setTotalCount(resultList.get(0).getTotalCount());
 
-			this.totalCount = mapper.getTotalCount();
+		for (ThemeRecommend mapper : resultList) {
 
 			Product packageProduct;
 			Product subProduct;
@@ -403,7 +401,6 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 
 		} // end of while
 
-		commonResponse.setTotalCount(this.totalCount);
 		response.setCommonRes(commonResponse);
 		response.setProductList(productList);
 

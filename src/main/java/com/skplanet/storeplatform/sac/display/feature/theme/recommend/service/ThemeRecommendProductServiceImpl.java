@@ -66,8 +66,6 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private int totalCount = 0;
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -87,6 +85,8 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 
 		// TODO Auto-generated method stub
 		Map<String, Object> mapReq = new HashMap<String, Object>();
+
+		CommonResponse commonResponse = new CommonResponse();
 
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
 		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
@@ -150,6 +150,7 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
 			}
 			if (!productBasicInfoList.isEmpty()) {
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
 
 				Map<String, Object> paramMap = new HashMap<String, Object>();
 				paramMap.put("tenantHeader", tenantHeader);
@@ -158,8 +159,6 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 
 				// Meta 정보 조회
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-
-					this.totalCount = productBasicInfo.getTotalCount();
 
 					String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
 					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
@@ -251,11 +250,11 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 					}
 				}
 			}
-		}
+		} else
+			commonResponse.setTotalCount(0);
 
 		if (this.log.isDebugEnabled()) {
 			this.log.debug("product count : {}", productList.size());
-			this.log.debug("total count : {}", this.totalCount);
 		}
 
 		// data 무존재시 운영자 추천으로 대체
@@ -284,8 +283,6 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 
 		ThemeRecommendSacRes responseVO = new ThemeRecommendSacRes();
 
-		CommonResponse commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(this.totalCount);
 		responseVO.setCommonRes(commonResponse);
 
 		responseVO.setLayout(layout);
@@ -327,8 +324,6 @@ public class ThemeRecommendProductServiceImpl implements ThemeRecommendProductSe
 		while (iterator.hasNext()) {
 
 			ThemeRecommend mapper = iterator.next();
-
-			this.totalCount = mapper.getTotalCount();
 
 			Product product;
 			Identifier identifier;
