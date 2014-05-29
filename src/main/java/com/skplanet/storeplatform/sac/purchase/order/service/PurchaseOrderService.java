@@ -76,14 +76,6 @@ public interface PurchaseOrderService {
 	/**
 	 * 
 	 * <pre>
-	 * 구매 후처리( 인터파크/씨네21, 구매건수 증가).
-	 * </pre>
-	 */
-	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList);
-
-	/**
-	 * 
-	 * <pre>
 	 * 유료구매 - 결제Page 준비작업.
 	 * </pre>
 	 * 

@@ -9,7 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcReq;
+import java.util.List;
+
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
 /**
  * 
@@ -22,13 +25,54 @@ public interface PurchaseShoppingOrderRepository {
 	/**
 	 * 
 	 * <pre>
+	 * 쿠폰 발급 요청.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 *            구매 ID
+	 * @param useDeviceId
+	 *            이용자 MDN
+	 * @param buyDeviceId
+	 *            구매자 MDN
+	 * @param couponCode
+	 *            CMS 쿠폰코드
+	 * @param itemCode
+	 *            CMS 단품코드
+	 * @param qty
+	 *            수량
+	 * @return 발급 요청 결과 개체
+	 */
+	public CouponPublishEcRes createCouponPublish(String prchsId, String useDeviceId, String buyDeviceId,
+			String couponCode, String itemCode, int qty);
+
+	/**
+	 * 
+	 * <pre>
+	 * 쿠폰 발급 취소 요청.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 *            취소할 구매ID
+	 */
+	public void cancelCouponPublish(String prchsId);
+
+	/**
+	 * 
+	 * <pre>
 	 * Biz쿠폰 발급 요청.
 	 * </pre>
 	 * 
-	 * @param request
-	 *            쿠폰발급요청
-	 * @return void
+	 * @param prchsId
+	 *            구매ID
+	 * @param adminId
+	 *            회원(어드민) ID
+	 * @param deviceId
+	 *            MDN
+	 * @param couponCode
+	 *            CMS 쿠폰코드
+	 * @param receiverList
+	 *            수신자목록
 	 */
-	public void createBizCouponPublish(BizCouponPublishEcReq request);
-
+	public void createBizCouponPublish(String prchsId, String adminId, String deviceId, String couponCode,
+			List<PurchaseUserDevice> receiverList);
 }

@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPoli
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
-import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRespository;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckResult;
@@ -58,7 +58,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	private PurchaseMemberRepository purchaseMemberRepository;
 
 	@Autowired
-	private PurchaseUapsRespository uapsRespository;
+	private PurchaseUapsRepository uapsRespository;
 
 	/**
 	 * 

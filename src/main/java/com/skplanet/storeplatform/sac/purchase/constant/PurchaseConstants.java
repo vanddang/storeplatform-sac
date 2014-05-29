@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.constant;
 
 /**
@@ -52,6 +61,10 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String SHOPPING_SELLER_DEFAULT_NAME = "Tstore"; // 판매자명
 	public static final String SHOPPING_SELLER_DEFAULT_EMAIL = "cscenter@tstore.co.kr"; // 이메일주소
 	public static final String SHOPPING_SELLER_DEFAULT_TEL = "1600-6573"; // 전화번호
+
+	/** 구매 요청 이후 진행 알림 */
+	public static final String CREATE_PURCHASE_RESULT_FREE = "free"; // 무료구매완료
+	public static final String CREATE_PURCHASE_RESULT_PAYMENT = "payment"; // 결제Page요청
 
 	/** 구매 이력 생성 타입 */
 	public static final int CREATE_PURCHASE_TYPE_COMPLETED = 1;

@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
  * 
  * Updated on : 2014. 2. 13. Updated by : 이승택, nTels.
  */
-public interface PurchaseUapsRespository {
+public interface PurchaseUapsRepository {
 
 	/**
 	 * 

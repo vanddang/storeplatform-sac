@@ -23,7 +23,7 @@ import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
  * Updated on : 2014. 2. 13. Updated by : 이승택, nTels.
  */
 @Component
-public class PurchaseUapsRespositoryImpl implements PurchaseUapsRespository {
+public class PurchaseUapsRepositoryImpl implements PurchaseUapsRepository {
 
 	@Autowired
 	private UapsSCI uapsSCI;

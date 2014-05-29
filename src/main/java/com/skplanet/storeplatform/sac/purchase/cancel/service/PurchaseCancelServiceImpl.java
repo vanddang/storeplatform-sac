@@ -51,7 +51,7 @@ import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopServi
 import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
-import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRespository;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
 
 /**
  * 구매 취소 Service Implements.
@@ -85,7 +85,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	private PaymentInfoSCI paymentInfoSCI;
 
 	@Autowired
-	private PurchaseUapsRespository purchaseUapsRespository;
+	private PurchaseUapsRepository purchaseUapsRespository;
 
 	@Autowired
 	private PayPlanetShopService payPlanetShopService;

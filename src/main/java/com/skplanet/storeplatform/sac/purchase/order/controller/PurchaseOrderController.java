@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +47,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPostService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderValidationService;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
@@ -66,9 +68,14 @@ public class PurchaseOrderController {
 	@Autowired
 	private PurchaseOrderService orderService;
 	@Autowired
+	private PurchaseOrderPostService orderPostService;
+	@Autowired
 	private PurchaseOrderValidationService validationService;
 	@Autowired
 	private PurchaseOrderPolicyService policyService;
+
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor;
 
 	/**
 	 * 
@@ -87,7 +94,7 @@ public class PurchaseOrderController {
 			SacRequestHeader sacRequestHeader) {
 		this.logger.info("PRCHS,ORDER,SAC,CREATE,REQ,{},{}", sacRequestHeader, req);
 
-		// T Log
+		// T Log SET
 		this.loggingPurchaseReq(req, sacRequestHeader);
 
 		// 요청 값 검증
@@ -101,19 +108,13 @@ public class PurchaseOrderController {
 
 		// 진행 처리: 무료구매완료 처리 || 결제Page 요청 준비작업
 		if (purchaseOrderInfo.getRealTotAmt() > 0) {
-			// 구매예약
-			this.orderService.createReservedPurchase(purchaseOrderInfo);
-
-			// 결제Page 정보 세팅
-			this.orderService.setPaymentPageInfo(purchaseOrderInfo);
-
-			purchaseOrderInfo.setResultType("payment");
+			this.orderService.createReservedPurchase(purchaseOrderInfo); // 구매예약
+			this.orderService.setPaymentPageInfo(purchaseOrderInfo); // 결제Page 정보 세팅
+			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_PAYMENT);
 
 		} else {
-			// 구매생성 (무료)
-			this.orderService.createFreePurchase(purchaseOrderInfo);
-
-			purchaseOrderInfo.setResultType("free");
+			this.orderService.createFreePurchase(purchaseOrderInfo); // 구매생성 (무료)
+			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_FREE);
 		}
 
 		// 응답 세팅
@@ -121,15 +122,8 @@ public class PurchaseOrderController {
 		res.setResultType(purchaseOrderInfo.getResultType());
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
 
-		if (StringUtils.equals(purchaseOrderInfo.getResultType(), "payment")) {
-			PaymentPageParam paymentPageParam = purchaseOrderInfo.getPaymentPageParam();
-
-			StringBuffer sbParam = new StringBuffer(paymentPageParam.getEData().length()
-					+ paymentPageParam.getToken().length() + 25);
-			sbParam.append("version=").append(paymentPageParam.getVersion()).append("&token=")
-					.append(paymentPageParam.getToken()).append("&EData=").append(paymentPageParam.getEData());
-
-			res.setPaymentPageParam(sbParam.toString());
+		if (StringUtils.equals(purchaseOrderInfo.getResultType(), PurchaseConstants.CREATE_PURCHASE_RESULT_PAYMENT)) {
+			res.setPaymentPageParam(this.makePaymentPageParam(purchaseOrderInfo.getPaymentPageParam()));
 			res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
 		}
 
@@ -154,7 +148,7 @@ public class PurchaseOrderController {
 			SacRequestHeader sacRequestHeader) {
 		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,REQ,{},{}", sacRequestHeader, req);
 
-		// T Log
+		// T Log SET
 		this.loggingPurchaseReq(req, sacRequestHeader);
 
 		// 비과금 구매요청 권한 체크
@@ -171,11 +165,9 @@ public class PurchaseOrderController {
 		// 비과금 구매완료 처리
 		this.orderService.createFreePurchase(purchaseOrderInfo);
 
-		purchaseOrderInfo.setResultType("free");
-
 		// 응답 세팅
 		CreateFreePurchaseSacRes res = new CreateFreePurchaseSacRes();
-		res.setResultType(purchaseOrderInfo.getResultType());
+		res.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_FREE);
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
 
 		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,RES,{}", res);
@@ -311,7 +303,7 @@ public class PurchaseOrderController {
 		// ------------------------------------------------------------------------------
 		// 구매 후 처리 - 씨네21/인터파크, 구매건수 증가 등등
 
-		this.orderService.postPurchase(prchsDtlMoreList);
+		this.orderPostService.postPurchase(prchsDtlMoreList);
 
 		// ------------------------------------------------------------------------------
 		// 응답
@@ -416,6 +408,24 @@ public class PurchaseOrderController {
 	}
 
 	/*
+	 * 
+	 * <pre> 결제Page URL 파라미터 생성. </pre>
+	 * 
+	 * @param paymentPageParam 결제Page 파라미터 값 정보
+	 * 
+	 * @return 결제Page URL 파라미터
+	 */
+	private String makePaymentPageParam(PaymentPageParam paymentPageParam) {
+		StringBuffer sbParam = new StringBuffer(paymentPageParam.getEData().length()
+				+ paymentPageParam.getToken().length() + 25);
+
+		sbParam.append("version=").append(paymentPageParam.getVersion()).append("&token=")
+				.append(paymentPageParam.getToken()).append("&EData=").append(paymentPageParam.getEData());
+
+		return sbParam.toString();
+	}
+
+	/*
 	 * <pre> 구매 전처리 - 구매 정합성 체크. </pre>
 	 * 
 	 * @param purchaseOrderInfo 구매진행 정보
@@ -445,6 +455,19 @@ public class PurchaseOrderController {
 
 		} finally {
 
+			// T Log SET
+			if (purchaseOrderInfo.getPurchaseUser() != null) {
+				final String mbrId = purchaseOrderInfo.getPurchaseUser().getUserId();
+				final String deviceId = purchaseOrderInfo.getPurchaseUser().getDeviceId();
+				new TLogUtil().set(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.mbr_id(mbrId).device_id(deviceId);
+					}
+				});
+			}
+
+			// 구매 선결조건 체크 결과 LOGGING
 			if (errorInfo == null) {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
@@ -455,7 +478,7 @@ public class PurchaseOrderController {
 			} else {
 
 				final String resultCode = errorInfo.getCode();
-				final String resultMessage = errorInfo.getMessage();
+				final String resultMessage = this.messageSourceAccessor.getMessage(resultCode);
 				final String exceptionLog = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
 
 				new TLogUtil().log(new ShuttleSetter() {
@@ -479,6 +502,8 @@ public class PurchaseOrderController {
 	 * @param sacRequestHeader 요청 헤더
 	 */
 	private void loggingPurchaseReq(CreatePurchaseSacReq req, SacRequestHeader sacRequestHeader) {
+		final String insdUsermbrNo = req.getUserKey();
+		final String insdDeviceId = req.getDeviceKey();
 		final String systemId = sacRequestHeader.getTenantHeader().getSystemId();
 		final String clientIp = req.getClientIp();
 		final String prchsReqPathCd = req.getPrchsReqPathCd();
@@ -495,9 +520,10 @@ public class PurchaseOrderController {
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_REQUEST).system_id(systemId)
-						.purchase_channel(prchsReqPathCd).purchase_inflow_channel(fdsPrchsCaseCd).device_ip(clientIp)
-						.network_type(networkTypeCd).product_id(prodIdList).product_price(prodPriceList);
+				shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_REQUEST).insd_usermbr_no(insdUsermbrNo)
+						.insd_device_id(insdDeviceId).system_id(systemId).purchase_channel(prchsReqPathCd)
+						.purchase_inflow_channel(fdsPrchsCaseCd).device_ip(clientIp).network_type(networkTypeCd)
+						.product_id(prodIdList).product_price(prodPriceList);
 			}
 		});
 	}

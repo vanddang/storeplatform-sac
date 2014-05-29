@@ -9,11 +9,21 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
+import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishDetailEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
 /**
  * 
@@ -23,6 +33,7 @@ import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEc
  */
 @Component
 public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrderRepository {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private ShoppingSCI shoppingSCI;
@@ -30,15 +41,93 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 	/**
 	 * 
 	 * <pre>
+	 * 쿠폰 발급 요청.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 *            구매 ID
+	 * @param useDeviceId
+	 *            이용자 MDN
+	 * @param buyDeviceId
+	 *            구매자 MDN
+	 * @param couponCode
+	 *            CMS 쿠폰코드
+	 * @param itemCode
+	 *            CMS 단품코드
+	 * @param qty
+	 *            수량
+	 * @return 발급 요청 결과 개체
+	 */
+	@Override
+	public CouponPublishEcRes createCouponPublish(String prchsId, String useDeviceId, String buyDeviceId,
+			String couponCode, String itemCode, int qty) {
+		CouponPublishEcReq couponPublishEcReq = new CouponPublishEcReq();
+		couponPublishEcReq.setPrchsId(prchsId);
+		couponPublishEcReq.setUseMdn(useDeviceId);
+		couponPublishEcReq.setBuyMdn(buyDeviceId);
+		couponPublishEcReq.setCouponCode(couponCode);
+		couponPublishEcReq.setItemCode(itemCode);
+		couponPublishEcReq.setItemCount(qty);
+		CouponPublishEcRes couponPublishEcRes = this.shoppingSCI.createCouponPublish(couponPublishEcReq);
+
+		return couponPublishEcRes;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 쿠폰 발급 취소 요청.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 *            취소할 구매ID
+	 */
+	@Override
+	public void cancelCouponPublish(String prchsId) {
+		CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
+		couponPublishCancelEcReq.setPrchsId(prchsId);
+
+		this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * Biz쿠폰 발급 요청.
 	 * </pre>
 	 * 
-	 * @param request
-	 *            쿠폰발급요청
-	 * @return void
+	 * @param prchsId
+	 *            구매ID
+	 * @param adminId
+	 *            회원(어드민) ID
+	 * @param deviceId
+	 *            MDN
+	 * @param couponCode
+	 *            CMS 쿠폰코드
+	 * @param receiverList
+	 *            수신자목록
 	 */
 	@Override
-	public void createBizCouponPublish(BizCouponPublishEcReq request) {
-		this.shoppingSCI.createBizCouponPublish(request);
+	public void createBizCouponPublish(String prchsId, String adminId, String deviceId, String couponCode,
+			List<PurchaseUserDevice> receiverList) {
+		List<BizCouponPublishDetailEcReq> bizCouponPublishDetailEcList = new ArrayList<BizCouponPublishDetailEcReq>();
+
+		BizCouponPublishDetailEcReq bizCouponPublishDetailEcReq = null;
+		for (PurchaseUserDevice receiver : receiverList) {
+			bizCouponPublishDetailEcReq = new BizCouponPublishDetailEcReq();
+			bizCouponPublishDetailEcReq.setPrchsId(prchsId);
+			bizCouponPublishDetailEcReq.setMdn(receiver.getDeviceId());
+			bizCouponPublishDetailEcList.add(bizCouponPublishDetailEcReq);
+		}
+
+		BizCouponPublishEcReq bizCouponPublishEcReq = new BizCouponPublishEcReq();
+		bizCouponPublishEcReq.setAdminId(adminId);
+		bizCouponPublishEcReq.setMdn(deviceId);
+		bizCouponPublishEcReq.setCouponCode(couponCode);
+		bizCouponPublishEcReq.setBizCouponPublishDetailList(bizCouponPublishDetailEcList);
+
+		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
+
+		this.shoppingSCI.createBizCouponPublish(bizCouponPublishEcReq);
 	}
 }
