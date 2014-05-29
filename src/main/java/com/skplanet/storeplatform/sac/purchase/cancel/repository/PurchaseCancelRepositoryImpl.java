@@ -224,6 +224,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		List<Pay> payList = new ArrayList<Pay>();
 		for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
+			// 참고 : TStore에서 정의되지 않은 결제일 경우 무조껀 성공값을 받는다. 단, 메시지에 정의되지 않은 결제라고 옴.
 			Pay pay = new Pay();
 			pay.setPayCls(paymentSacParam.getPaymentMtdCd());
 			pay.setTradeId(paymentSacParam.getTid());
