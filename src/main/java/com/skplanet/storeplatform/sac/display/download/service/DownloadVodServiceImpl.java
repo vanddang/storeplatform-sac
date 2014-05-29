@@ -248,9 +248,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 							drmYn = historyRes.getHistoryList().get(i).getDrmYn();
 							permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
-							this.log.info("###########################################");
-							this.log.info("permitDeviceYn	:	" + permitDeviceYn);
-							this.log.info("###########################################");
 
 							// 구매상태 확인
 							downloadVodSacReq.setPrchsDt(prchsDt);

@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.download.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +97,24 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 	public DownloadAppSacRes searchDownloadApp(SacRequestHeader requestheader, DownloadAppSacReq downloadAppSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+		String osVersion = DisplayCommonUtil.getOsVer(deviceHeader.getOs());
+		downloadAppSacReq.setTenantId(tanantHeader.getTenantId());
+		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
+		downloadAppSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		downloadAppSacReq.setLangCd(tanantHeader.getLangCd());
+		downloadAppSacReq.setOsVersion(osVersion); // OS Version
+		downloadAppSacReq.setLcdSize(deviceHeader.getResolution()); // LCD SIZE
+		downloadAppSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+		Map chkSupportOs = (Map) this.commonDAO.queryForObject("Download.selectSupportOsVersion", downloadAppSacReq);
+
+		if (chkSupportOs != null) {
+			if ("N".equals(chkSupportOs.get("VM_VER"))) {
+				throw new StorePlatformException("SAC_DSP_0023");
+			}
+		} else {
+			this.log.info("About Check OS Provisioning Not Found Product Info");
+			throw new StorePlatformException("SAC_DSP_0009");
+		}
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
@@ -112,15 +131,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		// if (osVersionTemp.length == 3) {
 		// osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
 		// }
-		String osVersion = DisplayCommonUtil.getOsVer(deviceHeader.getOs());
-
-		downloadAppSacReq.setTenantId(tanantHeader.getTenantId());
-		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
-		downloadAppSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-		downloadAppSacReq.setLangCd(tanantHeader.getLangCd());
-		downloadAppSacReq.setOsVersion(osVersion); // OS Version
-		downloadAppSacReq.setLcdSize(deviceHeader.getResolution()); // LCD SIZE
-		downloadAppSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 
 		DownloadAppSacRes response = new DownloadAppSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -301,9 +311,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							 * 구매 정보에 따른 암호화 시작
 							 ************************************************************************************************/
 							// 구매상태 만료 여부 확인
-							this.log.info("###########################################");
-							this.log.info("permitDeviceYn	:	" + permitDeviceYn);
-							this.log.info("###########################################");
 							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
 									&& permitDeviceYn.equals("Y")) {
 								String deviceId = null; // Device Id

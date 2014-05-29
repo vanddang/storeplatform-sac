@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Download">
-<!-- 패키지명으로 상품 ID 조회 -->
+    <!-- OS 지원여부 조회 -->
+    <select id="selectSupportOsVersion" parameterType="DownloadAppSacReq" resultType="HashMap">
+	SELECT IA.PROD_ID
+	     , NVL(IB.VM_VER, 'N') AS VM_VER
+	  FROM 
+	       (
+	       SELECT A.PROD_ID AS PROD_ID
+	            , B.SUB_CONTENTS_ID
+	         FROM TB_DP_APP_PROD     A  
+	            , TB_DP_SPRT_DEVICE  B
+	         WHERE 1=1
+	           AND A.PROD_ID = B.PROD_ID
+	           AND A.PROD_ID = #{productId} 
+	           AND B.DEVICE_MODEL_CD = #{deviceModelCd}
+	       ) IA ,
+	       TB_DP_SUB_CONTENTS IB
+	  WHERE IA.PROD_ID = IB.PROD_ID(+)
+	    AND IA.SUB_CONTENTS_ID = IB.SUB_CONTENTS_ID(+)
+	    AND IB.VM_VER(+) LIKE '%'||#{osVersion}||'%'
+    </select>
+
+    <!-- 패키지명으로 상품 ID 조회 -->
     <select id="getProductIdForPackageName" resultType="String">
     SELECT /* DownloadMapper.getProductIdForPackageName, 패키지명으로 상품 ID 조회, 이석희/아이에스플러스, 2014-01-23 */
            PROD_ID
