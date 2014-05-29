@@ -55,6 +55,12 @@ public class PurchaseUserInfoSacServiceImpl implements PurchaseUserInfoSacServic
 
 		if (StringUtils.isBlank(userInfoScReq.getDeviceKey())) {
 			newDeviceKey = this.purchaseUserInfoSCI.searchDeviceKey(userInfoScReq);
+
+			if (StringUtils.isBlank(newDeviceKey)) {
+				UserInfoScRes userInfoScRes = new UserInfoScRes();
+				userInfoScRes.setCount(0);
+				return userInfoScRes;
+			}
 		} else {
 			newDeviceKey = userInfoScReq.getNewDeviceKey();
 		}
