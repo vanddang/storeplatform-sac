@@ -584,7 +584,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUserKey(userMbrDevice.getUserKey());
 
 		/* device header 값 셋팅 */
-		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+		//deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 		/* 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
