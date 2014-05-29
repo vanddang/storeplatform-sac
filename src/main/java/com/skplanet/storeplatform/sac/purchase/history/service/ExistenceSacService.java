@@ -30,6 +30,6 @@ public interface ExistenceSacService {
 	 *            내외부 사용구분 내부 true 요청정보
 	 * @return List<ExistenceScRes>
 	 */
-	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceScReq);
+	public List<ExistenceScRes> searchExistenceList(ExistenceScReq existenceScReq, String networkType);
 
 }

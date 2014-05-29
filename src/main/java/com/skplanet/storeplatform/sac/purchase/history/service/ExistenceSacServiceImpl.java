@@ -54,7 +54,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	 * @return List<ExistenceScRes>
 	 */
 	@Override
-	public List<ExistenceScRes> searchExistenceList(final ExistenceScReq existenceScReq) {
+	public List<ExistenceScRes> searchExistenceList(final ExistenceScReq existenceScReq, final String networkType) {
 		ErrorInfo errorInfo = null;
 		// 구매상태가 구매완료건만을 넣기 위한 리스트
 		List<ExistenceScRes> existenceListScRes = new ArrayList<ExistenceScRes>();
@@ -103,8 +103,8 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 								.insd_device_id(existenceScReq.getDeviceKey())
 								.insd_usermbr_no(existenceScReq.getUserKey())
 								.purchase_channel(existenceScRes.getPrchsReqPathCd())
-								.purchase_inflow_channel(existenceScRes.getPrchsCaseCd()).product_id(prodIdList)
-								.product_price(prodAmtList).result_code("SUCC");
+								.purchase_inflow_channel(existenceScRes.getPrchsCaseCd()).network_type(networkType)
+								.product_id(prodIdList).product_price(prodAmtList).result_code("SUCC");
 					}
 				});
 			} catch (StorePlatformException e) {

@@ -68,7 +68,9 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 			}
 		}
 		ExistenceScReq req = this.reqConvert(existenceReq);
-		List<ExistenceRes> res = this.resConvert(this.existenceSacService.searchExistenceList(req));
+		// 로컬SCI는 빈값셋팅
+		String networkType = "";
+		List<ExistenceRes> res = this.resConvert(this.existenceSacService.searchExistenceList(req, networkType));
 
 		ExistenceListRes existenceListRes = new ExistenceListRes();
 		existenceListRes.setExistenceListRes(res);

@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,8 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmSacR
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacRes;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.NetworkHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.history.service.GiftSacService;
@@ -64,17 +69,28 @@ public class GiftController {
 
 		// 헤더 정보
 		TenantHeader header = requestHeader.getTenantHeader();
+		final NetworkHeader networkHeader = requestHeader.getNetworkHeader();
+		final DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
+
 		// 시스템아이디
 		final String systemId = header.getSystemId();
 		// usembr_no
 		final String userKey = giftConfirmSacReq.getUserKey();
+		// TLog
+		// 상품아이디
+		final List<String> prodIdList = new ArrayList<String>();
+		// tlog 상품아이디 셋팅
+		prodIdList.add(giftConfirmSacReq.getProdId());
 
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
 				shuttle.log_id("TL_SAC_PUR_0004").system_id(systemId).usermbr_no(userKey)
+						.phone_model(deviceHeader.getModel()).os_version(deviceHeader.getOs())
 						.insd_device_id(giftConfirmSacReq.getDeviceKey())
-						.insd_usermbr_no(giftConfirmSacReq.getUserKey());
+						.insd_usermbr_no(giftConfirmSacReq.getUserKey()).network_type(networkHeader.getType())
+						.purchase_id(giftConfirmSacReq.getPrchsId()).product_id(prodIdList)
+						.recv_confirm_class(giftConfirmSacReq.getRecvConfPathCd());
 			}
 		});
 

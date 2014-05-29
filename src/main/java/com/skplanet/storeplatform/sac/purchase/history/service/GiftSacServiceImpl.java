@@ -65,12 +65,8 @@ public class GiftSacServiceImpl implements GiftSacService {
 
 		final GiftConfirmScRes giftConfirmScRes = this.giftSCI.updateGiftConfirm(giftConfirmScReq);
 		// TLog
-		// 상품아이디
-		final List<String> prodIdList = new ArrayList<String>();
 		// 상품금액
 		final List<Long> prodAmtList = new ArrayList<Long>();
-		// tlog 상품아이디 셋팅
-		prodIdList.add(giftConfirmScReq.getProdId());
 		// tlog 상품금액 셋팅
 		prodAmtList.add((long) giftConfirmScRes.getProdAmt());
 
@@ -78,8 +74,7 @@ public class GiftSacServiceImpl implements GiftSacService {
 			@Override
 			public void customize(TLogSentinelShuttle shuttle) {
 				shuttle.purchase_channel(giftConfirmScRes.getPrchsReqPathCd())
-						.purchase_inflow_channel(giftConfirmScRes.getPrchsCaseCd()).product_id(prodIdList)
-						.product_price(prodAmtList).purchase_id(giftConfirmScRes.getPrchsId())
+						.purchase_inflow_channel(giftConfirmScRes.getPrchsCaseCd()).product_price(prodAmtList)
 						.purchase_prod_num(String.valueOf(giftConfirmScRes.getPrchsDtlId()))
 						.purchase_id_send(giftConfirmScRes.getPrchsId())
 						.purchase_prod_num_send(String.valueOf(giftConfirmScRes.getPrchsDtlId()))
@@ -87,11 +82,10 @@ public class GiftSacServiceImpl implements GiftSacService {
 						.download_expired_time(giftConfirmScRes.getDwldExprDt())
 						.product_qty((long) giftConfirmScRes.getProdQty())
 						.coupon_publish_code(giftConfirmScRes.getCpnPublishCd())
-						.recv_confirm_class(giftConfirmScRes.getRecvConfPathCd())
 						.insd_usermbr_no(giftConfirmScRes.getSendInsdUsermbrNo());
 			}
 		});
-
+		// 이미선물처리가 되었을 경우 Exception 처리
 		if (!StringUtils.isEmpty(giftConfirmScRes.getRecvDt())) {
 			// 이미 수신처리가 되었을 경우 에러처리? 아니면 실패로 리턴?
 			throw new StorePlatformException("SAC_PUR_7104");

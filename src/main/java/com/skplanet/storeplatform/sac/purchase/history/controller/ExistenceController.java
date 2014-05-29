@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceItemSa
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacRes;
+import com.skplanet.storeplatform.sac.common.header.vo.NetworkHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
@@ -65,14 +66,14 @@ public class ExistenceController {
 	public ExistenceListSacRes searchExistenceList(@RequestBody @Validated ExistenceSacReq existenceSacReq,
 			SacRequestHeader requestHeader) {
 
-		TenantHeader header = requestHeader.getTenantHeader();
-
+		TenantHeader tenantHeader = requestHeader.getTenantHeader();
+		NetworkHeader networkHeader = requestHeader.getNetworkHeader();
 		this.logger.debug("PRCHS,ExistenceController,SAC,REQ,{},{}", existenceSacReq, requestHeader);
 
 		ExistenceListSacRes existenceListSacRes = new ExistenceListSacRes();
 
-		existenceListSacRes.setExistenceList(this.resConvert(this.existenceSacService.searchExistenceList(this
-				.reqConvert(existenceSacReq, header))));
+		existenceListSacRes.setExistenceList(this.resConvert(this.existenceSacService.searchExistenceList(
+				this.reqConvert(existenceSacReq, tenantHeader), networkHeader.getType())));
 
 		return existenceListSacRes;
 	}
