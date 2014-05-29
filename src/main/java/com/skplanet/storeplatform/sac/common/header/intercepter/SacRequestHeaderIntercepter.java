@@ -89,9 +89,7 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
         device.setSvc("SAC_Client/4.3");
 
         String headerStr = webRequest.getHeader(CommonConstants.HEADER_DEVICE);
-        if(StringUtils.isNotEmpty(headerStr)) {
-            this.assignValues(headerStr, device);
-        }
+        this.assignValues(headerStr, device);
 
         logger.info("DeviceInfo: mdl={}, res={}, dpi={}, os={}, pkg={}, svc={} << {}",
                 device.getModel(), device.getResolution(), device.getDpi(), device.getOs(), device.getPkg(), device.getSvc(), headerStr);
@@ -114,9 +112,7 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 		network.setType("wifi");
 
         String headerStr = webRequest.getHeader(CommonConstants.HEADER_NETWORK);
-        if(StringUtils.isNotEmpty(headerStr)) {
-            this.assignValues(headerStr, network);
-        }
+        this.assignValues(headerStr, network);
 
         logger.info("NetworkInfo: oper={}, soper={}, type={} << {}",
                 network.getOperator(), network.getSimOperator(), network.getType(), headerStr);
