@@ -43,8 +43,6 @@ public class AppguideVersionServiceImpl implements AppguideVersionService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private int totalCount = 0;
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -97,9 +95,7 @@ public class AppguideVersionServiceImpl implements AppguideVersionService {
 		product.setApp(app);
 		productList.add(product);
 
-		this.totalCount = 1;
-
-		commonResponse.setTotalCount(this.totalCount);
+		commonResponse.setTotalCount(1);
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(productList);
 		return responseVO;

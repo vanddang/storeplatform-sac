@@ -53,8 +53,6 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private int totalCount = 0;
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -118,6 +116,8 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 				throw new StorePlatformException("SAC_DSP_0009");
 			}
 
+			commonResponse.setTotalCount(themeMainList.get(0).getTotalCount());
+
 			// 테마 정보
 			int count = 0;
 			int total = themeMainList.size();
@@ -128,8 +128,6 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 			for (AppguideMain main : themeMainList) {
 
 				count++;
-
-				this.totalCount = main.getTotalCount();
 
 				Product currTheme = new Product();
 				Identifier themeId = new Identifier();
@@ -302,9 +300,10 @@ public class AppguideThemeMainServiceImpl implements AppguideThemeMainService {
 					throw new StorePlatformException("SAC_DSP_9999");
 				}
 			} // end of for loop
-		} // device info
+		} else {
+			commonResponse.setTotalCount(0);
+		}
 
-		commonResponse.setTotalCount(this.totalCount);
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(themeList);
 		return responseVO;

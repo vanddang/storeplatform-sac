@@ -48,8 +48,6 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private int totalCount = 0;
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -120,16 +118,19 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 
 			List<Appguide> themeList = this.commonDAO.queryForList("Appguide.Theme.getThemeRecommendList", mapReq,
 					Appguide.class);
-			if (themeList == null) {
-				commonResponse.setTotalCount(this.totalCount);
+			if (themeList == null || themeList.isEmpty()) {
+				commonResponse.setTotalCount(0);
 				responseVO.setCommonResponse(commonResponse);
 
 				return responseVO;
+			} else {
+				commonResponse.setTotalCount(themeList.get(0).getTotalCount());
+				productList = this.makeProductList(themeList);
 			}
-			productList = this.makeProductList(themeList);
+		} else {
+			commonResponse.setTotalCount(0);
 		}
 
-		commonResponse.setTotalCount(this.totalCount);
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(productList);
 
@@ -159,8 +160,6 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 				themeUrlList.add(themeUrl);
 				theme.setSourceList(themeUrlList);
 			}
-
-			this.totalCount = main.getTotalCount();
 
 			mainListVO.add(theme);
 		} // end of for

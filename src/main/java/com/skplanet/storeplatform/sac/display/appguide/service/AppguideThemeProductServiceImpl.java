@@ -52,8 +52,6 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private int totalCount = 0;
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -148,6 +146,7 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 				this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
 			}
 			if (!productBasicInfoList.isEmpty()) {
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
 
 				Product product = null;
 				MetaInfo metaInfo = null;
@@ -159,8 +158,6 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 
 				// Meta 정보 조회
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-
-					this.totalCount = productBasicInfo.getTotalCount();
 
 					String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
 					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
@@ -250,17 +247,17 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 						}
 					}
 				}
-			}
-		}
+			} else
+				commonResponse.setTotalCount(0);
+		} else
+			commonResponse.setTotalCount(0);
 
 		if (this.log.isDebugEnabled()) {
 			this.log.debug("product count : {}", productList.size());
-			this.log.debug("total count : {}", this.totalCount);
 		}
 
 		themeProduct.setSubProductList(productList);
 
-		commonResponse.setTotalCount(this.totalCount);
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProduct(themeProduct);
 

@@ -75,8 +75,6 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private int totalCount = 0;
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -213,6 +211,7 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 						// productBasicInfoList.clear();
 					}
 					if (!productBasicInfoList.isEmpty()) {
+						commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
 
 						Map<String, Object> paramMap = new HashMap<String, Object>();
 						paramMap.put("tenantHeader", tenantHeader);
@@ -221,8 +220,6 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 
 						// Meta 정보 조회
 						for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-
-							this.totalCount = productBasicInfo.getTotalCount();
 
 							String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
 							String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
@@ -320,13 +317,15 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 								}
 							}
 						}
+					} else {
+						commonResponse.setTotalCount(0);
 					}
+				} else {
+					commonResponse.setTotalCount(0);
 				}
 
 				if (this.log.isDebugEnabled()) {
 					this.log.debug("product count : {}", productList.size());
-					this.log.debug("total count : {}", this.totalCount);
-					// productList.clear();
 				}
 
 				if (productList.isEmpty()) {
@@ -472,7 +471,6 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 						listRes.addAll(listAppCodiReason);
 					}
 
-					commonResponse.setTotalCount(this.totalCount);
 					responseVO.setCommonResponse(commonResponse);
 					responseVO.setProductList(listRes);
 				}
@@ -497,7 +495,6 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 
 		// ISF 연동 실패나 Data 가 없는 경우( 운영자 추천으로 대체 )
 		if (!isExists) {
-			commonResponse.setTotalCount(this.totalCount);
 			responseVO.setCommonResponse(commonResponse);
 			responseVO.setProductList(productList);
 			/*
@@ -631,8 +628,6 @@ public class AppguideIsfServiceImpl implements AppguideIsfService {
 		List<Product> listVO = new ArrayList<Product>();
 
 		for (Appguide mapper : resultList) {
-
-			this.totalCount = mapper.getTotalCount();
 
 			Product product;
 			Identifier identifier;
