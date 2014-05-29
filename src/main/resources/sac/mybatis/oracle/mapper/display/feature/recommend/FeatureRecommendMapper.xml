@@ -269,10 +269,10 @@
                      </if>
                      <if test='searchType != "A"'>
                          <if test="periodStart != null">
-                         AND  a.expo_dt <![CDATA[ >= ]]> #{periodStart}
+                         AND  a.expo_end_dt <![CDATA[ >= ]]> TO_DATE(#{periodStart}, 'YYYYMMDDHH24MISS')
                          </if>
                          <if test="periodEnd != null">
-                         AND a.expo_dt <![CDATA[ <= ]]> #{periodEnd}
+                         AND a.expo_start_dt <![CDATA[ <= ]]> TO_DATE(#{periodEnd}, 'YYYYMMDDHH24MISS')
                          </if>
                      </if>
                  </if>

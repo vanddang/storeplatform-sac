@@ -108,13 +108,13 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 					if (findStirng == 0) {
 						periodEnd = periodList.get(0);
 						periodEnd = periodEnd.replace("T", "");
-						periodEnd = periodEnd.substring(0, 8);
+						periodEnd = periodEnd.substring(0, 14);
 						requestVO.setPeriodEnd(periodEnd);
 
 					} else {
 						periodStart = periodList.get(0);
 						periodStart = periodStart.replace("T", "");
-						periodStart = periodStart.substring(0, 8);
+						periodStart = periodStart.substring(0, 14);
 						requestVO.setPeriodStart(periodStart);
 
 					}
@@ -123,11 +123,11 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 					periodEnd = periodList.get(1);
 
 					periodStart = periodStart.replace("T", "");
-					periodStart = periodStart.substring(0, 8);
+					periodStart = periodStart.substring(0, 14);
 					requestVO.setPeriodStart(periodStart);
 
 					periodEnd = periodEnd.replace("T", "");
-					periodEnd = periodEnd.substring(0, 8);
+					periodEnd = periodEnd.substring(0, 14);
 					requestVO.setPeriodEnd(periodEnd);
 
 				}
