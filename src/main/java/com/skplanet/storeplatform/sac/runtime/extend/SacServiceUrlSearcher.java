@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -31,17 +32,25 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearcher;
+import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
+import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 
 /**
- * 
  * ServiceUrlSearcher 구현체
- * 
- * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
+ *
+ * <pre>
+ * Created on 2014. 1. 16. by 김현일, 인크로스.
+ * Updated on 2014. 05. 29. by 서대영, SK 플래닛 : bypass 여부 획득 방법 변경 (Properties -> DB)
+ * </pre>
  */
 @Component
 public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SacServiceUrlSearcher.class);
+
+	@Autowired
+	private AclDataAccessService aclDataService;
 
 	/**
 	 * 내부 요청 서블릿 Host.
@@ -64,11 +73,26 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
 	private Integer innerServletPort;
 
+	public void setInnerServletHost(String innerServletHost) {
+		this.innerServletHost = innerServletHost;
+	}
+
+	public void setInnerServletPath(String innerServletPath) {
+		this.innerServletPath = innerServletPath;
+	}
+
+	public void setExternalBaseUrl(String externalBaseUrl) {
+		this.externalBaseUrl = externalBaseUrl;
+	}
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
+
 	@Override
 	public String search(Map<String, Object> headerMap) {
 		// 요청 객체 획득
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-				.getRequest();
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
 		// 요청 서블릿 컨텍스트 Path
 		String requestContextPath = request.getContextPath();
@@ -76,29 +100,18 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		String requestURI = request.getRequestURI();
 		// 내부 요청 URI
 		String innerRequestURI = StringUtils.removeStart(requestURI, requestContextPath);
-		// 요청 Method
-		String requestMethod = request.getMethod();
-		//
-		int localPort = request.getLocalPort();
-
-		LOGGER.info("localPort : {} " + request.getLocalPort());
-		LOGGER.info("serverPort : {} " + request.getServerPort());
-		LOGGER.info("remotePort : {}" + request.getRemotePort());
 
 		// External Component는 SAC에서 Bypass 대상이나 우선 프로퍼티로 해당 기능이 가능하게 구현.
 		// 1. 해당 인터페이스의 bypass유무가 'Y' 인 대상.
 		// 2. 인터페이스 Route에 등록된 Bypass 정보를 기준으로
 		// 3. 컴포넌트 정보와, Bypass의 URL 정보를 조합하여 return URL을 생성.
-		String bypassPath = this.properties.getProperty(innerRequestURI, "");
-
 		UriComponentsBuilder to;
 
-		// Bypass 이면.
-		if (StringUtils.isNotEmpty(bypassPath)) {
+		// Bypass 이면 EC URL을 Properties에서 가져오고 그외에는 내부 서블릿 URL 호출
+		if (this.isBypass(headerMap)) {
+			String bypassPath = this.properties.getProperty(innerRequestURI, "");
 			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
-
 		} else {
-			// 그외는 내부 서블릿 URL 호출.
 			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).port(this.innerServletPort)
 					.path(requestContextPath).path(this.innerServletPath).path(innerRequestURI);
 		}
@@ -112,6 +125,19 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		LOGGER.warn("####SAC-PORT-TEST#### 서비스URL : " + serviceUrl);
 
 		return serviceUrl;
+	}
+
+	/**
+	 * Bypass 여부 조회
+	 */
+	private boolean isBypass(Map<String, Object> headers) {
+		String interfaceId = (String) headers.get(CommonConstants.HEADER_INTERFACE_ID);
+		Interface intf = this.aclDataService.selectInterfaceById(interfaceId);
+		if (intf != null) {
+			return intf.isBypass();
+		} else {
+			return false;
+		}
 	}
 
 	@PostConstruct

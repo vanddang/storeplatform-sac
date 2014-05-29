@@ -25,6 +25,7 @@ public class Interface extends CommonInfo {
 	private String interfaceId;
 	private String url;
 	private InterfaceStatus status;
+	private String bypassYn;
 
 	public Interface() {
 	}
@@ -50,6 +51,18 @@ public class Interface extends CommonInfo {
 	}
 	public void setStatus(InterfaceStatus status) {
 		this.status = status;
+	}
+
+	public boolean isBypass() {
+		return "Y".equals(this.bypassYn) ? true : false;
+	}
+
+	public String getBypassYn() {
+		return this.bypassYn;
+	}
+
+	public void setBypassYn(String bypassYn) {
+		this.bypassYn = bypassYn;
 	}
 
 }

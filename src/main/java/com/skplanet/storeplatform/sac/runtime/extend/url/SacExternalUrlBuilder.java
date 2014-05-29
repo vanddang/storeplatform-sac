@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
+package com.skplanet.storeplatform.sac.runtime.extend.url;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.util.UriComponentsBuilder;
+
+/**
+ * SAC 내부 외부 호출용 URL 생성기 (EC 호출)
+ *
+ * Created on 2014. 05. 29. by 서대영, SK 플래닛.
+ */
+public class SacExternalUrlBuilder {
+
+	/**
+	 * 임시 external URL -> 추후 Component 테이블의 URL 조합이 됨.
+	 */
+	@Value("#{propertiesForSac['component.external.baseUrl']}")
+	private String externalBaseUrl;
+
+	public UriComponentsBuilder buildUrl(UriComponentsBuilder builder, String bypassPath) {
+		return UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
+	}
+
+}
