@@ -97,6 +97,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 	public DownloadAppSacRes searchDownloadApp(SacRequestHeader requestheader, DownloadAppSacReq downloadAppSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+
 		String osVersion = DisplayCommonUtil.getOsVer(deviceHeader.getOs());
 		downloadAppSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
@@ -105,6 +106,25 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		downloadAppSacReq.setOsVersion(osVersion); // OS Version
 		downloadAppSacReq.setLcdSize(deviceHeader.getResolution()); // LCD SIZE
 		downloadAppSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+
+		String filteredBy = downloadAppSacReq.getFilteredBy();
+		String productId = downloadAppSacReq.getProductId();
+		String deviceKey = downloadAppSacReq.getDeviceKey();
+		String userKey = downloadAppSacReq.getUserKey();
+		String packageName = downloadAppSacReq.getPackageName();
+		List<Identifier> identifierList = null;
+
+		// 파라미터 체크
+		if ("package".equals(filteredBy)) {
+			productId = (String) this.commonDAO
+					.queryForObject("Download.getProductIdForPackageName", downloadAppSacReq);
+			downloadAppSacReq.setProductId(productId);
+
+			if (StringUtils.isEmpty(productId)) {
+				throw new StorePlatformException("SAC_DSP_0005", packageName);
+			}
+		}
+
 		Map chkSupportOs = (Map) this.commonDAO.queryForObject("Download.selectSupportOsVersion", downloadAppSacReq);
 
 		if (chkSupportOs != null) {
@@ -134,28 +154,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		DownloadAppSacRes response = new DownloadAppSacRes();
 		CommonResponse commonResponse = new CommonResponse();
-		String filteredBy = downloadAppSacReq.getFilteredBy();
-		String productId = downloadAppSacReq.getProductId();
-		String deviceKey = downloadAppSacReq.getDeviceKey();
-		String userKey = downloadAppSacReq.getUserKey();
-		String packageName = downloadAppSacReq.getPackageName();
-
-		List<Identifier> identifierList = null;
-
 		Product product = new Product();
 		Component component = new Component();
-
-		// 파라미터 체크
-		if ("package".equals(filteredBy)) {
-
-			productId = (String) this.commonDAO
-					.queryForObject("Download.getProductIdForPackageName", downloadAppSacReq);
-			downloadAppSacReq.setProductId(productId);
-
-			if (StringUtils.isEmpty(productId)) {
-				throw new StorePlatformException("SAC_DSP_0005", packageName);
-			}
-		}
 		this.log.info("----------------------------------------------------------------");
 		this.log.info("[DownloadAppServiceImpl] productId : {}", productId);
 		this.log.info("[DownloadAppServiceImpl] deviceKey : {}", deviceKey);
