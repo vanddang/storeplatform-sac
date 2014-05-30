@@ -654,6 +654,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 							product.setUsePeriod(freepassInfo.getUsePeriod());
 						}
 						product.setUseFixrateProdId(useExistenceScRes.getProdId()); // 사용할 정액권ID 세팅
+						product.setUseFixrateProdClsfCd(freepassInfo.getCmpxProdClsfCd()); // 사용할 정액권 타입
 
 						// 무료구매 처리 데이터 세팅
 						purchaseOrderInfo.setRealTotAmt(0.0);

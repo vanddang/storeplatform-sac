@@ -144,6 +144,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					prchsDtlMore.setDwldExprDt(prchsDtlMore.getUseExprDt());
 				}
 				prchsDtlMore.setUseFixrateProdId(product.getUseFixrateProdId());
+				prchsDtlMore.setUseFixrateProdClsfCd(product.getUseFixrateProdClsfCd());
 				prchsDtlMore.setDrmYn(product.getDrmYn());
 				prchsDtlMore.setAlarmYn(PurchaseConstants.USE_Y);
 				/* IAP */

@@ -37,6 +37,7 @@ public class PurchaseProduct extends PaymentInfo {
 	private String resvCol05;
 	private String useExprDt; // [비과금 구매요청 시 사용]
 	private String useFixrateProdId; // 이용한 정액제 상품ID
+	private String useFixrateProdClsfCd; // 이용한 정액제 상품 타입
 	/* IAP */
 	private String tid; // 부분유료화 개발사 구매Key
 	private String txId; // 부분유료화 전자영수증 번호
@@ -248,6 +249,21 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setUseFixrateProdId(String useFixrateProdId) {
 		this.useFixrateProdId = useFixrateProdId;
+	}
+
+	/**
+	 * @return the useFixrateProdClsfCd
+	 */
+	public String getUseFixrateProdClsfCd() {
+		return this.useFixrateProdClsfCd;
+	}
+
+	/**
+	 * @param useFixrateProdClsfCd
+	 *            the useFixrateProdClsfCd to set
+	 */
+	public void setUseFixrateProdClsfCd(String useFixrateProdClsfCd) {
+		this.useFixrateProdClsfCd = useFixrateProdClsfCd;
 	}
 
 	/**
