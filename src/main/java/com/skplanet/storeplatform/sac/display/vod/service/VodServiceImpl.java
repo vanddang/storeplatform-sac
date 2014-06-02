@@ -85,7 +85,8 @@ public class VodServiceImpl implements VodService {
 	 */
 	@Override
 	public VodDetailRes searchVod(VodDetailReq req) {
-		logger.debug("req={}", req);
+		//VOC 응대를 위한 로깅
+		logger.info("channelId={},userKey={},deviceKey={},deviceModel={}", req.getChannelId(), req.getUserKey(), req.getDeviceKey(), req.getDeviceModel());
 
 		VodDetailRes res = new VodDetailRes();
 		Product product = new Product();

@@ -86,6 +86,10 @@ public class EpubServiceImpl implements EpubService {
      */
 	@Override
 	public EpubChannelRes searchEpubChannel(EpubChannelReq req) {
+		
+		//VOC 응대를 위한 로깅
+		logger.info("channelId={},userKey={},deviceKey={},deviceModel={}", req.getChannelId(), req.getUserKey(), req.getDeviceKey(), req.getDeviceModel());
+		
 		EpubChannelRes res = new EpubChannelRes();
 		Product product = new Product();
 
@@ -164,6 +168,9 @@ public class EpubServiceImpl implements EpubService {
      */
 	@Override
 	public EpubSeriesRes searchEpubSeries(EpubSeriesReq req) {
+		//VOC 응대를 위한 로깅
+		logger.info("channelId={},userKey={},deviceKey={},deviceModel={}", req.getChannelId(), req.getUserKey(), req.getDeviceKey(), req.getDeviceModel());
+		
         EpubSeriesRes res = new EpubSeriesRes();
 
 		Product product = new Product();
