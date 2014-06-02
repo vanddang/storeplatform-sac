@@ -72,6 +72,8 @@ public class AppServiceImpl implements AppService {
 
 	@Override
 	public AppDetailRes getAppDetail(AppDetailParam request) {
+        logger.info("channelId={},userKey={},deviceKey={},deviceModel={}",
+                request.getChannelId(), request.getUserKey(), request.getDeviceKey(), request.getDeviceModelCd());
 
 		AppDetail appDetail = this.commonDAO.queryForObject("AppDetail.getAppDetail", request, AppDetail.class);
 		if (appDetail == null)

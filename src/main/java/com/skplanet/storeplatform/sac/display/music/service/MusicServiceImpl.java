@@ -54,6 +54,9 @@ public class MusicServiceImpl implements MusicService {
 
 	@Override
 	public MusicDetailComposite getMusicDetail(MusicDetailParam param) {
+        logger.info("channelId={},userKey={},deviceKey={},deviceModel={}",
+                param.getChannelId(), param.getUserKey(), param.getDeviceKey(), param.getDeviceModelCd());
+
 		MusicDetailComposite detailComposite = new MusicDetailComposite();
 
         // 음악 메타데이터 조회
