@@ -2837,7 +2837,7 @@ public class IdpServiceImpl implements IdpService {
 										}
 									}
 
-									this.deviceService.updateDeviceInfo(requestHeader, getDeviceInfo);
+									this.deviceService.updateDeviceInfo(requestHeader, getDeviceInfo, false);
 
 								}
 							}

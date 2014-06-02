@@ -105,9 +105,12 @@ public interface DeviceService {
 	 *            SacRequestHeader
 	 * @param req
 	 *            DeviceInfo
+	 * @param isDeviceIdChange
+	 *            request와 DB deviceId가 다를때(true : deviceId 업데이트, false :
+	 *            deviceId 업데이트 하지 않음)
 	 * @return deviceKey String
 	 */
-	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
+	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req, boolean isDeviceIdChange);
 
 	/**
 	 * 로그인한 기기정보 update.

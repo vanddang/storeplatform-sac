@@ -231,7 +231,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUserKey(req.getUserKey());
 
 		/* 휴대기기 정보 수정 */
-		String deviceKey = this.updateDeviceInfo(requestHeader, deviceInfo);
+		String deviceKey = this.updateDeviceInfo(requestHeader, deviceInfo, false);
 
 		ModifyDeviceRes res = new ModifyDeviceRes();
 		res.setDeviceKey(deviceKey);
@@ -537,7 +537,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
+	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo, boolean isDeviceIdChange) {
 
 		String gameCenterYn = null;
 
@@ -596,7 +596,9 @@ public class DeviceServiceImpl implements DeviceService {
 		String joinId = deviceInfo.getJoinId(); // 가입채널코드
 
 		StringBuffer deviceInfoChangeLog = new StringBuffer();
-		if (StringUtils.isNotBlank(deviceInfo.getDeviceId()) && !StringUtils.equals(dbUserMbrDevice.getDeviceID(), deviceInfo.getDeviceId())) {
+
+		if (StringUtils.isNotBlank(deviceInfo.getDeviceId()) && !StringUtils.equals(dbUserMbrDevice.getDeviceID(), deviceInfo.getDeviceId())
+				&& isDeviceIdChange) {
 
 			deviceInfoChangeLog.append("[deviceId]").append(dbUserMbrDevice.getDeviceID()).append("->").append(deviceInfo.getDeviceId());
 			userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
@@ -688,7 +690,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (StringUtils.equals(gameCenterYn, "Y")) {
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 			gameCenterSacReq.setUserKey(dbUserMbrDevice.getUserKey());
-			gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
+			gameCenterSacReq.setDeviceId(dbUserMbrDevice.getDeviceID());
 			gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
 			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);

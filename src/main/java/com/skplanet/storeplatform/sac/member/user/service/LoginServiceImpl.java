@@ -453,7 +453,7 @@ public class LoginServiceImpl implements LoginService {
 			if (StringUtils.isNotBlank(req.getDeviceAccount())) {
 				paramDeviceInfo.setDeviceAccount(req.getDeviceAccount());
 			}
-			String deviceKey = this.deviceService.updateDeviceInfo(requestHeader, paramDeviceInfo);
+			String deviceKey = this.deviceService.updateDeviceInfo(requestHeader, paramDeviceInfo, false);
 
 			res.setDeviceKey(deviceKey);
 			res.setUserKey(userKey);
@@ -1002,7 +1002,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
 					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
 
-			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
+			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo, false);
 
 			/* 전시/기타, 구매 파트 키 변경 */
 			if (StringUtils.equals(isPurchaseChange, "Y")) {
@@ -1075,7 +1075,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
 					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
 
-			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
+			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo, true);
 
 			/* mbrNo 변경 */
 			LOGGER.info("{} 신규가입한 IDP userKey로 업데이트 newMbrNo={}", req.getDeviceId(), joinForWapEcRes.getUserKey());
