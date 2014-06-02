@@ -462,7 +462,7 @@ public class DeviceServiceImpl implements DeviceService {
 					mbrAuth.setCi(" ");
 					mbrAuth.setIsRealName("N");
 					updRealNameReq.setUserMbrAuth(mbrAuth);
-					LOGGER.info("기등록된 모바일 회원 실명인증 정보 초기화 deviceId : {}", deviceInfo.getDeviceId());
+					LOGGER.info("기등록된 모바일 회원 실명인증 정보 초기화 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
 					this.userSCI.updateRealName(updRealNameReq);
 				}
 
