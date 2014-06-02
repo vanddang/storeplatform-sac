@@ -9,14 +9,20 @@
  */
 package com.skplanet.storeplatform.sac.runtime.extend.url;
 
+import java.util.Properties;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * SAC 내부 외부 호출용 URL 생성기 (EC 호출)
+ * SAC 외부 호출용 URL 생성기 (EC 호출)
  *
  * Created on 2014. 05. 29. by 서대영, SK 플래닛.
  */
+@Component
 public class SacExternalUrlBuilder {
 
 	/**
@@ -25,7 +31,19 @@ public class SacExternalUrlBuilder {
 	@Value("#{propertiesForSac['component.external.baseUrl']}")
 	private String externalBaseUrl;
 
-	public UriComponentsBuilder buildUrl(UriComponentsBuilder builder, String bypassPath) {
+	@Resource(name = "propertiesForSac")
+	private Properties properties;
+
+	public void setExternalBaseUrl(String externalBaseUrl) {
+		this.externalBaseUrl = externalBaseUrl;
+	}
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
+
+	public UriComponentsBuilder buildUrl(String innerRequestURI) {
+		String bypassPath = this.properties.getProperty(innerRequestURI, "");
 		return UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
 	}
 

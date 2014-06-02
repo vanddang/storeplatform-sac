@@ -9,22 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.runtime.extend;
 
-import java.lang.management.ManagementFactory;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.management.MBeanServer;
-import javax.management.ObjectInstance;
-import javax.management.ObjectName;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -35,6 +26,8 @@ import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearc
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
+import com.skplanet.storeplatform.sac.runtime.extend.url.SacExternalUrlBuilder;
+import com.skplanet.storeplatform.sac.runtime.extend.url.SacInternalUrlBuilder;
 
 /**
  * ServiceUrlSearcher 구현체
@@ -52,42 +45,11 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 	@Autowired
 	private AclDataAccessService aclDataService;
 
-	/**
-	 * 내부 요청 서블릿 Host.
-	 */
-	@Value("#{propertiesForSac['skp.common.inner.servlet.host']}")
-	private String innerServletHost;
-	/**
-	 * 내부 요청 서블릿 Path.
-	 */
-	@Value("#{propertiesForSac['skp.common.inner.servlet.path']}")
-	private String innerServletPath;
-	/**
-	 * 임시 external URL -> 추후 Component 테이블의 URL 조합이 됨.
-	 */
-	@Value("#{propertiesForSac['component.external.baseUrl']}")
-	private String externalBaseUrl;
+	@Autowired
+	private SacInternalUrlBuilder intUrlBuilder;
 
-	@Resource(name = "propertiesForSac")
-	private Properties properties;
-
-	private Integer innerServletPort;
-
-	public void setInnerServletHost(String innerServletHost) {
-		this.innerServletHost = innerServletHost;
-	}
-
-	public void setInnerServletPath(String innerServletPath) {
-		this.innerServletPath = innerServletPath;
-	}
-
-	public void setExternalBaseUrl(String externalBaseUrl) {
-		this.externalBaseUrl = externalBaseUrl;
-	}
-
-	public void setProperties(Properties properties) {
-		this.properties = properties;
-	}
+	@Autowired
+	private SacExternalUrlBuilder extUrlBuilder;
 
 	@Override
 	public String search(Map<String, Object> headerMap) {
@@ -109,20 +71,22 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
 		// Bypass 이면 EC URL을 Properties에서 가져오고 그외에는 내부 서블릿 URL 호출
 		if (this.isBypass(headerMap)) {
-			String bypassPath = this.properties.getProperty(innerRequestURI, "");
-			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
+			to = this.extUrlBuilder.buildUrl(innerRequestURI);
 		} else {
-			to = UriComponentsBuilder.fromHttpUrl(this.innerServletHost).port(this.innerServletPort)
-					.path(requestContextPath).path(this.innerServletPath).path(innerRequestURI);
+			to = this.intUrlBuilder.buildUrl(innerRequestURI, requestContextPath);
 		}
 
 		if (StringUtils.isNotBlank(request.getQueryString())) {
 			to.query(request.getQueryString());
 		}
 
+		String requestUrl = this.getRequestURL(request);
 		String serviceUrl = to.build(false).toUriString();
 
-		LOGGER.warn("####SAC-PORT-TEST#### 서비스URL : " + serviceUrl);
+		LOGGER.warn("#######################################################################################################");
+		LOGGER.warn("Request URL : " + requestUrl);
+		LOGGER.warn("Service URL : " + serviceUrl);
+		LOGGER.warn("#######################################################################################################");
 
 		return serviceUrl;
 	}
@@ -140,52 +104,16 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		}
 	}
 
-	@PostConstruct
-	public void init() {
-		this.innerServletPort = this.getHttpConnectorPort();
+	private String getRequestURL(HttpServletRequest request) {
+	    StringBuffer requestURL = request.getRequestURL();
+	    String queryString = request.getQueryString();
 
+	    if (queryString == null) {
+	        return requestURL.toString();
+	    } else {
+	        return requestURL.append('?').append(queryString).toString();
+	    }
 	}
 
-	private Integer getHttpConnectorPort() {
-		Integer port = null;
-
-		Exception ex = null;
-
-		try {
-			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-
-			Set<ObjectInstance> connectors = mBeanServer.queryMBeans(new ObjectName("Catalina:type=Connector,port=*"),
-					null);
-
-			for (ObjectInstance objectInstance : connectors) {
-				if (StringUtils.equals("HTTP/1.1",
-						(String) mBeanServer.getAttribute(objectInstance.getObjectName(), "protocol"))) {
-					port = (Integer) mBeanServer.getAttribute(objectInstance.getObjectName(), "port");
-				}
-			}
-
-		} catch (Exception e) {
-			ex = e;
-		}
-
-		if (ex != null) {
-			LOGGER.warn("####SAC-PORT-TEST#### 비정상 > 예외발생 : " + ex.getMessage());
-			return 8010;
-		}
-
-		if (port == null) {
-			LOGGER.warn("####SAC-PORT-TEST#### 비정상 > PORT가 존재하지 않음");
-			return 8010;
-		}
-
-		if (port == 8010 || port == 8020) {
-			LOGGER.warn("####SAC-PORT-TEST#### 정상 > 포트 : " + port);
-			return port;
-		} else {
-			LOGGER.warn("####SAC-PORT-TEST#### 비정상 > 포트 : " + port + " 예상포트(8010, 8020)가 아님");
-			return 8010;
-		}
-
-	}
 
 }
