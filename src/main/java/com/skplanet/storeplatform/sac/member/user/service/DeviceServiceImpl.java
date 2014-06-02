@@ -577,7 +577,7 @@ public class DeviceServiceImpl implements DeviceService {
 		UserMbrDevice userMbrDevice = new UserMbrDevice();
 		userMbrDevice.setUserKey(dbUserMbrDevice.getUserKey());
 		userMbrDevice.setDeviceKey(dbUserMbrDevice.getDeviceKey());
-		userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
+		userMbrDevice.setDeviceID(dbUserMbrDevice.getDeviceID());
 
 		/* 부가정보 등록시 셋팅할 값들 */
 		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
