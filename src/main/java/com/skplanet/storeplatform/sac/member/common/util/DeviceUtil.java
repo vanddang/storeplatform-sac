@@ -197,7 +197,8 @@ public class DeviceUtil {
 		userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
 		userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
 		userMbrDevice.setTenantID(deviceInfo.getTenantId());
-		userMbrDevice.setDeviceModelNo(deviceInfo.getDeviceModelNo());
+		if (StringUtils.isNotBlank(deviceInfo.getDeviceModelNo()))
+			userMbrDevice.setDeviceModelNo(deviceInfo.getDeviceModelNo());
 		userMbrDevice.setDeviceTelecom(deviceInfo.getDeviceTelecom());
 		userMbrDevice.setDeviceNickName(deviceInfo.getDeviceNickName());
 		userMbrDevice.setIsPrimary(deviceInfo.getIsPrimary());
