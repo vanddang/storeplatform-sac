@@ -530,7 +530,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		List<PaymentSacParam> paymentSacParamList = purchaseCancelDetailSacParam.getPaymentSacParamList();
 		for (PaymentSacParam paymentSacParam : paymentSacParamList) {
 			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_DANAL, paymentSacParam.getPaymentMtdCd())
-					&& !StringUtils.equals(DateUtil.getToday("yyyyMM"), paymentSacParam.getPaymentDt().substring(0, 6))) {
+					&& !StringUtils.isEmpty(paymentSacParam.getPaymentDt())
+					&& !StringUtils.equals(DateUtil.getToday("yyyyMM"),
+							StringUtils.substring(paymentSacParam.getPaymentDt(), 0, 6))) {
 				// 다날 결제이면서 결제월과 취소월이 다른 경우 취소 불가.
 				throw new StorePlatformException("SAC_PUR_8401");
 			}
