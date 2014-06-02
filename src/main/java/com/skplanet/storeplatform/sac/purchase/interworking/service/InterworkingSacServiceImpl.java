@@ -89,7 +89,6 @@ public class InterworkingSacServiceImpl implements InterworkingSacService {
 					req.setTransClasValue(interworkingSac.getSellermbrNo());
 					// 전송테이블에 저장
 					updateCount += this.interworkingSCI.createInterworking(req);
-					updateCount += this.interworkingSCI.createInterworking(req);
 				}
 			}
 		}
