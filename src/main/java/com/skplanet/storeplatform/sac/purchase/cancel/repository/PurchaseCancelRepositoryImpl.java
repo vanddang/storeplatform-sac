@@ -421,6 +421,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelScReq.setTenantId(purchaseCancelSacParam.getTenantId());
 		purchaseCancelScReq.setSystemId(purchaseCancelSacParam.getSystemId());
 		// 구매 취소 정보를 넣어준다.
+		purchaseCancelScReq
+				.setReqUserId(StringUtils.isEmpty(purchaseCancelSacParam.getReqUserId()) ? purchaseCancelSacParam
+						.getSystemId() : purchaseCancelSacParam.getReqUserId());
 		purchaseCancelScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelScReq.setCancelReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
 		purchaseCancelScReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);

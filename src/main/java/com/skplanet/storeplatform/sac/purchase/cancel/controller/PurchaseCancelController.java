@@ -183,6 +183,7 @@ public class PurchaseCancelController {
 			throw new StorePlatformException("SAC_PUR_9901");
 		}
 
+		purchaseCancelSacParam.setReqUserId(purchaseCancelByUserSacReq.getReqUserId());
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByUserSacReq.getCancelReqPathCd());
 		purchaseCancelSacParam.setShoppingForceCancelYn("N");
 		purchaseCancelSacParam.setSktLimitUserCancelYn("N");
@@ -279,6 +280,7 @@ public class PurchaseCancelController {
 			throw new StorePlatformException("SAC_PUR_9901");
 		}
 
+		purchaseCancelSacParam.setReqUserId(purchaseCancelByAdminSacReq.getReqUserId());
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByAdminSacReq.getCancelReqPathCd());
 		purchaseCancelSacParam.setShoppingForceCancelYn(purchaseCancelByAdminSacReq.getShoppingForceCancelYn());
 		purchaseCancelSacParam.setSktLimitUserCancelYn(purchaseCancelByAdminSacReq.getSktLimitUserCancelYn());
@@ -366,6 +368,7 @@ public class PurchaseCancelController {
 			throw new StorePlatformException("SAC_PUR_9901");
 		}
 
+		purchaseCancelSacParam.setReqUserId(purchaseCancelForPaymentErrorSacReq.getReqUserId());
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelForPaymentErrorSacReq.getCancelReqPathCd());
 		purchaseCancelSacParam.setShoppingForceCancelYn("N");
 		purchaseCancelSacParam.setSktLimitUserCancelYn("N");
@@ -432,6 +435,7 @@ public class PurchaseCancelController {
 			throw new StorePlatformException("SAC_PUR_9901");
 		}
 
+		purchaseCancelSacParam.setReqUserId(purchaseCancelForTCashSacReq.getReqUserId());
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelForTCashSacReq.getCancelReqPathCd());
 		purchaseCancelSacParam.setShoppingForceCancelYn("N");
 		purchaseCancelSacParam.setSktLimitUserCancelYn("N");

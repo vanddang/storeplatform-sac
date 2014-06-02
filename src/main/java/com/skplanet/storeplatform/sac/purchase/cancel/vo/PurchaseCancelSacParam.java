@@ -22,6 +22,8 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 
 	private static final long serialVersionUID = 1L;
 
+	private String reqUserId;
+
 	private Integer prchsCancelByType; // 구매 취소 요청자 구분(사용자 / 운영자).
 	private Integer prchsCancelServiceType = 0; // 기본 : 0, TCASH : 1
 	private String cancelReqPathCd;
@@ -31,6 +33,21 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 	private Boolean ignorePayment = false;
 
 	private List<PurchaseCancelDetailSacParam> prchsCancelList;
+
+	/**
+	 * @return the reqUserId
+	 */
+	public String getReqUserId() {
+		return this.reqUserId;
+	}
+
+	/**
+	 * @param reqUserId
+	 *            the reqUserId to set
+	 */
+	public void setReqUserId(String reqUserId) {
+		this.reqUserId = reqUserId;
+	}
 
 	public Boolean getIgnorePayment() {
 		return this.ignorePayment;
