@@ -64,12 +64,14 @@ public class PaymentListController {
 	@ResponseBody
 	public Map<String, List<PaymentListSacRes>> searchPaymentList(@RequestBody @Validated PaymentSacReq paymentSacReq,
 			SacRequestHeader requestHeader) {
-		this.logger.debug("PRCHS,PaymentListController,SAC,REQ,{},{}", paymentSacReq, requestHeader);
+		this.logger.debug("PRCHS,PaymentListController,SAC,PaymentSacReq,{}", paymentSacReq);
 		TenantHeader header = requestHeader.getTenantHeader();
 
 		Map<String, List<PaymentListSacRes>> res = new HashMap<String, List<PaymentListSacRes>>();
 		res.put("paymentList",
 				this.resConvert(this.paymentSearchSacService.searchPaymentList(this.reqConvert(paymentSacReq, header))));
+
+		this.logger.debug("PRCHS,PaymentListController,SAC,PaymentListSacRes,{}", res);
 		return res;
 	}
 

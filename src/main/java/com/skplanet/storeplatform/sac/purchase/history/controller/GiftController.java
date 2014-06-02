@@ -94,7 +94,7 @@ public class GiftController {
 			}
 		});
 
-		this.logger.debug("PRCHS,GiftController,SAC,REQ,{},{}", giftConfirmSacReq, requestHeader);
+		this.logger.info("PRCHS,GiftController,SAC,giftConfirmSacReq,{}", giftConfirmSacReq);
 
 		// reqConvert처리 -> SC선물수신처리 -> resConvert 처리후 리턴
 		return this.resConfirmConvert(this.giftService.updateGiftConfirm(this.reqConfirmConvert(giftConfirmSacReq,
@@ -137,7 +137,7 @@ public class GiftController {
 		res.setPrchsId(giftComfirmScRes.getPrchsId());
 		res.setProdId(giftComfirmScRes.getProdId());
 		res.setResultYn(giftComfirmScRes.getResultYn());
-		this.logger.debug("PRCHS,GiftController,SAC,RES,{}", res);
+		this.logger.info("PRCHS,GiftController,SAC,GiftConfirmSacRes,{}", res);
 		return res;
 	}
 

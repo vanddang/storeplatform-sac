@@ -68,13 +68,13 @@ public class ExistenceController {
 
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
 		NetworkHeader networkHeader = requestHeader.getNetworkHeader();
-		this.logger.debug("PRCHS,ExistenceController,SAC,REQ,{},{}", existenceSacReq, requestHeader);
+		this.logger.info("PRCHS,ExistenceController,SAC,REQ,{},{}", existenceSacReq, requestHeader);
 
 		ExistenceListSacRes existenceListSacRes = new ExistenceListSacRes();
 
 		existenceListSacRes.setExistenceList(this.resConvert(this.existenceSacService.searchExistenceList(
 				this.reqConvert(existenceSacReq, tenantHeader), networkHeader.getType())));
-
+		this.logger.info("PRCHS,ExistenceController,SAC,existenceListSacRes,{}", existenceListSacRes);
 		return existenceListSacRes;
 	}
 
@@ -148,7 +148,7 @@ public class ExistenceController {
 
 			res.add(existenceSacRes);
 		}
-		// this.logger.debug("PRCHS,ExistenceController,SAC,RES,{}", res);
+		// this.logger.info("PRCHS,ExistenceController,SAC,RES,{}", res);
 		return res;
 	}
 

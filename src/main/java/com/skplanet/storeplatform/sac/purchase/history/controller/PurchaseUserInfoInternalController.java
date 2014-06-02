@@ -80,7 +80,7 @@ public class PurchaseUserInfoInternalController {
 		this.logger.debug("@@@@@@ UserInfoSacRes resConvert @@@@@@@");
 		PurchaseUserInfoSacRes res = new PurchaseUserInfoSacRes();
 		res.setCount(userInfoScRes.getCount());
-		this.logger.debug("PRCHS,PurchaseUserInfoInternalSCIController,SAC,RES,{}", res);
+		this.logger.info("PRCHS,PurchaseUserInfoInternalSCIController,SAC,RES,{}", res);
 		return res;
 	}
 }

@@ -62,12 +62,13 @@ public class HidingController {
 	@ResponseBody
 	public HidingListSacRes updateHiding(@RequestBody @Validated HidingSacReq hidingSacReq,
 			SacRequestHeader requestHeader) {
-		this.logger.debug("PRCHS,HidingController,SAC,REQ,{},{}", hidingSacReq, requestHeader);
+		this.logger.info("PRCHS,HidingController,SAC,HidingSacReq,{}", hidingSacReq);
 		TenantHeader header = requestHeader.getTenantHeader();
 
 		HidingListSacRes response = new HidingListSacRes();
 		response.setResponseList(this.resConvert(this.hidingSacService.updateHiding(this.reqConvert(hidingSacReq,
 				header))));
+		this.logger.debug("PRCHS,HidingController,SAC,HidingListSacRes,{}", response);
 		return response;
 	}
 
@@ -123,7 +124,7 @@ public class HidingController {
 			hidingRes.setResultYn(hidingScRes.getResultYn());
 			res.add(hidingRes);
 		}
-		this.logger.debug("PRCHS,HidingController,SAC,RES,{}", res);
+		// this.logger.debug("PRCHS,HidingController,SAC,RES,{}", res);
 		return res;
 	}
 }
