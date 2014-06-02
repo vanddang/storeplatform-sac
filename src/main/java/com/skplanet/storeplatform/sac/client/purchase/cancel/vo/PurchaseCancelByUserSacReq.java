@@ -27,6 +27,8 @@ public class PurchaseCancelByUserSacReq extends PurchaseCommonSacReq {
 
 	private static final long serialVersionUID = 1L;
 
+	private String reqUserId;
+
 	@NotBlank
 	private String userKey;
 	@NotBlank
@@ -38,6 +40,21 @@ public class PurchaseCancelByUserSacReq extends PurchaseCommonSacReq {
 	@NotEmpty
 	@Valid
 	private List<PurchaseCancelDetailSacReq> prchsCancelList;
+
+	/**
+	 * @return the reqUserId
+	 */
+	public String getReqUserId() {
+		return this.reqUserId;
+	}
+
+	/**
+	 * @param reqUserId
+	 *            the reqUserId to set
+	 */
+	public void setReqUserId(String reqUserId) {
+		this.reqUserId = reqUserId;
+	}
 
 	/**
 	 * @return the userKey

@@ -22,11 +22,28 @@ public class PurchaseCancelForPaymentErrorSacReq extends PurchaseCommonSacReq {
 
 	private static final long serialVersionUID = 1L;
 
+	private String reqUserId;
+
 	@NotBlank
 	private String cancelReqPathCd;
 
 	@NotBlank
 	private String prchsId;
+
+	/**
+	 * @return the reqUserId
+	 */
+	public String getReqUserId() {
+		return this.reqUserId;
+	}
+
+	/**
+	 * @param reqUserId
+	 *            the reqUserId to set
+	 */
+	public void setReqUserId(String reqUserId) {
+		this.reqUserId = reqUserId;
+	}
 
 	public String getCancelReqPathCd() {
 		return this.cancelReqPathCd;
