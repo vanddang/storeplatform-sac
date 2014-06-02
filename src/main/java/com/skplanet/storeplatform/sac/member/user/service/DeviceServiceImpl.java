@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
@@ -55,6 +56,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRespons
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateGameCenterRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
@@ -183,7 +185,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
-		/* device header 값 셋팅 */
+		/* device header 값 셋팅(단말모델코드, OS버젼, SC버젼) */
 		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 		/* 휴대기기 주요정보 확인 */
@@ -455,8 +457,13 @@ public class DeviceServiceImpl implements DeviceService {
 					updRealNameReq.setCommonRequest(commonRequest);
 					updRealNameReq.setIsRealName("N");
 					updRealNameReq.setUserKey(userKey);
+					updRealNameReq.setIsOwn(MemberConstants.AUTH_TYPE_OWN);
+					MbrAuth mbrAuth = new MbrAuth();
+					mbrAuth.setCi(" ");
+					mbrAuth.setIsRealName("N");
+					updRealNameReq.setUserMbrAuth(mbrAuth);
+					LOGGER.info("기등록된 모바일 회원 실명인증 정보 초기화 deviceId : {}", deviceInfo.getDeviceId());
 					this.userSCI.updateRealName(updRealNameReq);
-					LOGGER.debug("기등록된 모바일 회원 실명인증 정보 초기화 deviceId : {}", deviceInfo.getDeviceId());
 				}
 
 			}
@@ -532,12 +539,6 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) {
 
-		/* 헤더 정보 셋팅 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
-		String userKey = deviceInfo.getUserKey();
 		String gameCenterYn = null;
 
 		/* 기기정보 조회 */
@@ -554,7 +555,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		keySearchList.add(key);
-		schDeviceReq.setCommonRequest(commonRequest);
+		schDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 		schDeviceReq.setUserKey(deviceInfo.getUserKey());
 		schDeviceReq.setKeySearchList(keySearchList);
 
@@ -571,22 +572,19 @@ public class DeviceServiceImpl implements DeviceService {
 				throw ex;
 			}
 		}
+		UserMbrDevice dbUserMbrDevice = schDeviceRes.getUserMbrDevice();
 
-		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
-		/* deviceKey로 휴대기기 정보 업데이트시 로깅을 위해 조회한 deviceId를 셋팅 */
-		if (StringUtils.isBlank(deviceInfo.getDeviceId())) {
-			deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
-		}
+		UserMbrDevice userMbrDevice = new UserMbrDevice();
+		userMbrDevice.setUserKey(dbUserMbrDevice.getUserKey());
+		userMbrDevice.setDeviceKey(dbUserMbrDevice.getDeviceKey());
+		userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
 
-		// 부가정보 등록시 셋팅할 값들
+		/* 부가정보 등록시 셋팅할 값들 */
 		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
-		deviceInfo.setUserKey(userMbrDevice.getUserKey());
+		deviceInfo.setUserKey(dbUserMbrDevice.getUserKey());
+		deviceInfo.setDeviceKey(dbUserMbrDevice.getDeviceKey());
 
-		/* device header 값 셋팅 */
-		//deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
-
-		/* 기기정보 필드 */
+		/* 수정 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
 		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
 		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
@@ -595,18 +593,19 @@ public class DeviceServiceImpl implements DeviceService {
 		String isPrimary = deviceInfo.getIsPrimary(); // 대표폰 여부
 		String isRecvSms = deviceInfo.getIsRecvSms(); // sms 수신여부
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
+		String joinId = deviceInfo.getJoinId(); // 가입채널코드
 
 		StringBuffer deviceInfoChangeLog = new StringBuffer();
-		if (StringUtils.isNotBlank(deviceInfo.getDeviceId()) && !StringUtils.equals(deviceInfo.getDeviceId(), userMbrDevice.getDeviceID())) {
+		if (StringUtils.isNotBlank(deviceInfo.getDeviceId()) && !StringUtils.equals(dbUserMbrDevice.getDeviceID(), deviceInfo.getDeviceId())) {
 
-			deviceInfoChangeLog.append("[deviceId]").append(userMbrDevice.getDeviceID()).append("->").append(deviceInfo.getDeviceId());
+			deviceInfoChangeLog.append("[deviceId]").append(dbUserMbrDevice.getDeviceID()).append("->").append(deviceInfo.getDeviceId());
 			userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
 
 		}
 
-		if (StringUtils.isNotBlank(deviceModelNo)) {
+		if (StringUtils.isNotBlank(deviceModelNo) && !StringUtils.equals(dbUserMbrDevice.getDeviceModelNo(), deviceInfo.getDeviceModelNo())) {
 
-			deviceInfoChangeLog.append("[deviceModelNo]").append(userMbrDevice.getDeviceModelNo()).append("->").append(deviceModelNo);
+			deviceInfoChangeLog.append("[deviceModelNo]").append(dbUserMbrDevice.getDeviceModelNo()).append("->").append(deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
 
 			/* 단말모델이 변경된 경우 게임센터 연동 */
@@ -616,65 +615,71 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (StringUtils.isNotBlank(nativeId)) {
 
-			deviceInfoChangeLog.append("[nativeId]").append(userMbrDevice.getNativeID()).append("->").append(nativeId);
+			deviceInfoChangeLog.append("[nativeId]").append(dbUserMbrDevice.getNativeID()).append("->").append(nativeId);
 			userMbrDevice.setNativeID(nativeId);
 
 		}
 
 		if (StringUtils.isNotBlank(deviceAccount)) {
 
-			deviceInfoChangeLog.append("[deviceAccount]").append(userMbrDevice.getDeviceAccount()).append("->").append(deviceAccount);
+			deviceInfoChangeLog.append("[deviceAccount]").append(dbUserMbrDevice.getDeviceAccount()).append("->").append(deviceAccount);
 			userMbrDevice.setDeviceAccount(deviceAccount);
 
 		}
 
 		if (StringUtils.isNotBlank(deviceTelecom)) {
 
-			deviceInfoChangeLog.append("[deviceTelecom]").append(userMbrDevice.getDeviceTelecom()).append("->").append(deviceTelecom);
+			deviceInfoChangeLog.append("[deviceTelecom]").append(dbUserMbrDevice.getDeviceTelecom()).append("->").append(deviceTelecom);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 
 		}
 
 		if (StringUtils.isNotBlank(deviceNickName)) {
 
-			deviceInfoChangeLog.append("[deviceNickName]").append(userMbrDevice.getDeviceNickName()).append("->").append(deviceNickName);
+			deviceInfoChangeLog.append("[deviceNickName]").append(dbUserMbrDevice.getDeviceNickName()).append("->").append(deviceNickName);
 			userMbrDevice.setDeviceNickName(deviceNickName);
 
 		}
 
 		if (StringUtils.isNotBlank(isPrimary)) {
 
-			deviceInfoChangeLog.append("[isPrimary]").append(userMbrDevice.getIsPrimary()).append("->").append(isPrimary);
+			deviceInfoChangeLog.append("[isPrimary]").append(dbUserMbrDevice.getIsPrimary()).append("->").append(isPrimary);
 			userMbrDevice.setIsPrimary(isPrimary);
 
 		}
 
 		if (StringUtils.isNotBlank(isRecvSms)) {
 
-			deviceInfoChangeLog.append("[isRecvSms]").append(userMbrDevice.getIsRecvSMS()).append("->").append(isRecvSms);
+			deviceInfoChangeLog.append("[isRecvSms]").append(dbUserMbrDevice.getIsRecvSMS()).append("->").append(isRecvSms);
 			userMbrDevice.setIsRecvSMS(isRecvSms);
 
 		}
 
 		if (StringUtils.isNotBlank(svcMangNum)) {
 
-			deviceInfoChangeLog.append("[svcMangNum]").append(userMbrDevice.getSvcMangNum()).append("->").append(svcMangNum);
+			deviceInfoChangeLog.append("[svcMangNum]").append(dbUserMbrDevice.getSvcMangNum()).append("->").append(svcMangNum);
 			userMbrDevice.setSvcMangNum(svcMangNum);
 
 		}
 
-		deviceInfoChangeLog.append("[deviceExtraInfo]").append(deviceInfo.getDeviceExtraInfoList());
+		if (StringUtils.isNotBlank(joinId)) {
+
+			deviceInfoChangeLog.append("[joinId]").append(dbUserMbrDevice.getJoinId()).append("->").append(joinId);
+			userMbrDevice.setJoinId(joinId);
+
+		}
 
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
+		deviceInfoChangeLog.append("[deviceExtraInfo]").append(deviceInfo.getDeviceExtraInfoList());
 
 		/* 휴대기기 변경 이력 코드 */
 		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
 
 		/* 기기정보 업데이트 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
-		createDeviceReq.setCommonRequest(commonRequest);
-		createDeviceReq.setUserKey(userKey);
+		createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		createDeviceReq.setUserKey(dbUserMbrDevice.getUserKey());
 		createDeviceReq.setIsNew("N");
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
@@ -682,7 +687,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 게임센터 연동 */
 		if (StringUtils.equals(gameCenterYn, "Y")) {
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(userKey);
+			gameCenterSacReq.setUserKey(dbUserMbrDevice.getUserKey());
 			gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
 			gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
 			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
@@ -690,7 +695,7 @@ public class DeviceServiceImpl implements DeviceService {
 			this.insertGameCenterIF(gameCenterSacReq);
 		}
 
-		LOGGER.info("{} updateDeviceInfo field : {}", deviceInfo.getDeviceId(), deviceInfoChangeLog.toString());
+		LOGGER.info("{} update device field : {}", dbUserMbrDevice.getDeviceID(), deviceInfoChangeLog.toString());
 
 		return createDeviceRes.getDeviceKey();
 
@@ -721,20 +726,31 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUserKey(dbDeviceInfo.getUserKey());
 		deviceInfo.setDeviceKey(dbDeviceInfo.getDeviceKey());
 
-		/* device header 값 셋팅 */
-		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
+		/* device header로 넘어온 정보 셋팅 */
+		String deviceModelNo = requestHeader.getDeviceHeader().getModel(); // 모델코드
+		String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
+		String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
+		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+				osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo)); // osVersion 휴대기기 부가속성에 셋팅
+		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
+				svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo)); // svcVersion 휴대기기 부가속성에 셋팅
 
-		/* 휴대기기 주요정보 확인 */
-		deviceInfo = this.getDeviceMajorInfo(deviceInfo);
+		/* 주요정보(SKT 서비스관리번호, UACD, OMDUACD) 조회 후 셋팅 */
+		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceModelNo, deviceInfo.getDeviceTelecom(), deviceInfo.getDeviceId(),
+				deviceInfo.getDeviceIdType());
+		deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 서비스관리번호
+		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd() == null ? ""
+				: majorDeviceInfo.getUacd(), deviceInfo)); // UACD
+		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
+				majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo)); // OMDUACD
 
 		/* 기기정보 필드 */
-		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
 		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
 		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getDeviceExtraInfoList()); // rooting 여부
-		String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
+		String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList()); // UACD
 
 		StringBuffer deviceInfoChangeLog = new StringBuffer();
 		if (StringUtils.isNotBlank(deviceModelNo) && !StringUtils.equals(deviceModelNo, dbDeviceInfo.getDeviceModelNo())) {
@@ -895,36 +911,77 @@ public class DeviceServiceImpl implements DeviceService {
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
 
-		deviceInfoChangeLog.append("[deviceExtraInfo]").append(deviceInfo.getDeviceExtraInfoList());
+		/* 휴대기기 부가정보 세팅 */
+		if (deviceInfo.getDeviceExtraInfoList() != null && deviceInfo.getDeviceExtraInfoList().size() > 0) {
 
-		/* 휴대기기 부가정보 */
-		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
-
-		/* 휴대기기 변경 이력 코드 */
-		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
-
-		/* 기기정보 업데이트 */
-		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
-		createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-		createDeviceReq.setUserKey(dbDeviceInfo.getUserKey());
-		createDeviceReq.setIsNew("N");
-		createDeviceReq.setUserMbrDevice(userMbrDevice);
-		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
-
-		/* 게임센터 연동 */
-		if (StringUtils.equals(gameCenterYn, "Y")) {
-			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(dbDeviceInfo.getUserKey());
-			gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
-			gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-			this.insertGameCenterIF(gameCenterSacReq);
+			List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+			for (DeviceExtraInfo deviceExtraInfo : deviceInfo.getDeviceExtraInfoList()) {
+				if (StringUtils.isNotBlank(deviceExtraInfo.getExtraProfile()) && StringUtils.isNotBlank(deviceExtraInfo.getExtraProfileValue())) {
+					boolean isExsitExtra = false; // 휴대기기 부가속성 DB존재여부
+					for (DeviceExtraInfo dbDeviceExtraInfo : dbDeviceInfo.getDeviceExtraInfoList()) {
+						if (StringUtils.equals(deviceExtraInfo.getExtraProfile(), dbDeviceExtraInfo.getExtraProfile())) {
+							isExsitExtra = true;
+							if (!StringUtils.equals(deviceExtraInfo.getExtraProfileValue(), dbDeviceExtraInfo.getExtraProfileValue())) { // request 와 DB값이 다른경우만 셋팅
+								UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+								userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
+								userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
+								userMbrDeviceDetail.setDeviceKey(deviceInfo.getDeviceKey());
+								userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
+								userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+								userMbrDeviceDetailList.add(userMbrDeviceDetail);
+								deviceInfoChangeLog.append("[").append(deviceExtraInfo.getExtraProfile()).append("]")
+										.append(dbDeviceExtraInfo.getExtraProfileValue()).append("->").append(deviceExtraInfo.getExtraProfileValue());
+							}
+							break;
+						}
+					}
+					if (!isExsitExtra) { // DB에 존재하지 않은 휴대기기부가속성은 신규로 삽입
+						UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+						userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
+						userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
+						userMbrDeviceDetail.setDeviceKey(deviceInfo.getDeviceKey());
+						userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
+						userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+						userMbrDeviceDetailList.add(userMbrDeviceDetail);
+						deviceInfoChangeLog.append("[").append(deviceExtraInfo.getExtraProfile()).append("]").append("null").append("->")
+								.append(deviceExtraInfo.getExtraProfileValue());
+					}
+				}
+			}
+			userMbrDevice.setUserMbrDeviceDetail(userMbrDeviceDetailList);
 		}
 
-		LOGGER.info("{} updateDeviceInfoForLogin field : {}", deviceInfo.getDeviceId(), deviceInfoChangeLog.toString());
+		if (StringUtils.isNotBlank(deviceInfoChangeLog.toString())) { // 변경내역이 있는경우만 휴대기기 수정 API 호출
 
-		return createDeviceRes.getDeviceKey();
+			/* 휴대기기 변경 이력 코드 */
+			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
+
+			/* 기기정보 업데이트 */
+			CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+			createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+			createDeviceReq.setUserKey(dbDeviceInfo.getUserKey());
+			createDeviceReq.setIsNew("N");
+			createDeviceReq.setUserMbrDevice(userMbrDevice);
+			CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
+
+			/* 게임센터 연동 */
+			if (StringUtils.equals(gameCenterYn, "Y")) {
+				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+				gameCenterSacReq.setUserKey(dbDeviceInfo.getUserKey());
+				gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
+				gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+				gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+				this.insertGameCenterIF(gameCenterSacReq);
+			}
+
+			LOGGER.info("{} Login update device field : {}", deviceInfo.getDeviceId(), deviceInfoChangeLog.toString());
+			return createDeviceRes.getDeviceKey();
+
+		} else {
+			LOGGER.info("{} No Login update device field", deviceInfo.getDeviceId());
+			return dbDeviceInfo.getDeviceKey();
+		}
 
 	}
 
