@@ -22,8 +22,6 @@ public class HttpHeaders extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String accept;
-	private String acceptLanguage;
 	private String requestUrl;
 	private String servletPath;
 	private String queryString;
@@ -41,22 +39,6 @@ public class HttpHeaders extends CommonInfo {
 
 	private String remoteHost;
 	private String remotePort;
-
-	public String getAccept() {
-		return this.accept;
-	}
-
-	public void setAccept(String accept) {
-		this.accept = accept;
-	}
-
-	public String getAcceptLanguage() {
-		return this.acceptLanguage;
-	}
-
-	public void setAcceptLanguage(String acceptLanguage) {
-		this.acceptLanguage = acceptLanguage;
-	}
 
 	public String getRequestUrl() {
 		return this.requestUrl;

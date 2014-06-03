@@ -13,7 +13,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.http.MediaType;
 import org.springframework.integration.annotation.Headers;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -33,8 +32,15 @@ public class HttpHeaderEnricher implements HttpHeaderEnrichIF {
 
 	@Override
 	public HttpHeaders enrichHeader(@Headers Map<String, Object> headers) {
-		String accept = ((MediaType) headers.get(CommonConstants.HEADER_ACCEPT)).toString();
-		String acceptLanguage = (String) headers.get(CommonConstants.HEADER_ACCEPT_LANGUAGE);
+		HttpHeaders httpHeaders = new HttpHeaders();
+
+		// Spring Integration에서 headers를 null로 보내는 것에 대한 방어 로직
+		if (headers == null) {
+			return httpHeaders;
+		}
+
+		// String accept = ((MediaType) headers.get(CommonConstants.HEADER_ACCEPT)).toString();
+		// String acceptLanguage = (String) headers.get(CommonConstants.HEADER_ACCEPT_LANGUAGE);
 		// String requestUrl = (String) headers.get(CommonConstants.HEADER_HTTP_REQUEST_URL);
 		String requestUrl = this.getRequestUrl();
 		String authKey = (String) headers.get(CommonConstants.HEADER_AUTH_KEY);
@@ -51,25 +57,23 @@ public class HttpHeaderEnricher implements HttpHeaderEnrichIF {
 		String servletPath = this.getServletPath();
 		String queryString = this.getQueryString();
 
-		HttpHeaders httpHeader = new HttpHeaders();
+		// httpHeader.setAccept(accept);
+		// httpHeader.setAcceptLanguage(acceptLanguage);
+		httpHeaders.setRequestUrl(requestUrl);
+		httpHeaders.setAuthKey(authKey);
+		httpHeaders.setSignature(signature);
+		httpHeaders.setTimestamp(timestamp);
+		httpHeaders.setNonce(nonce);
+		httpHeaders.setTenantId(tenantId);
+		httpHeaders.setSystemId(systemId);
+		httpHeaders.setInterfaceId(interfaceId);
+		httpHeaders.setGuid(guid);
+		httpHeaders.setRemoteHost(rempteHost);
+		httpHeaders.setRemotePort(remotePort);
+		httpHeaders.setServletPath(servletPath);
+		httpHeaders.setQueryString(queryString);
 
-		httpHeader.setAccept(accept);
-		httpHeader.setAcceptLanguage(acceptLanguage);
-		httpHeader.setRequestUrl(requestUrl);
-		httpHeader.setAuthKey(authKey);
-		httpHeader.setSignature(signature);
-		httpHeader.setTimestamp(timestamp);
-		httpHeader.setNonce(nonce);
-		httpHeader.setTenantId(tenantId);
-		httpHeader.setSystemId(systemId);
-		httpHeader.setInterfaceId(interfaceId);
-		httpHeader.setGuid(guid);
-		httpHeader.setRemoteHost(rempteHost);
-		httpHeader.setRemotePort(remotePort);
-		httpHeader.setServletPath(servletPath);
-		httpHeader.setQueryString(queryString);
-
-		return httpHeader;
+		return httpHeaders;
 	}
 
 
