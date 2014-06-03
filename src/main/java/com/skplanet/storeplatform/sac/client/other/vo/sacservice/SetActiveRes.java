@@ -1,12 +1,12 @@
 package com.skplanet.storeplatform.sac.client.other.vo.sacservice;
 
-public class GetServiceActiveRes {
+public class SetActiveRes {
 
 	private String serviceCd;
 
 	private String operator;
 
-	private boolean isActive;
+	private boolean isApplied;
 
 	public String getServiceCd() {
 		return this.serviceCd;
@@ -24,12 +24,12 @@ public class GetServiceActiveRes {
 		this.operator = operator;
 	}
 
-	public boolean isActive() {
-		return isActive;
+	public boolean isApplied() {
+		return isApplied;
 	}
 
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
+	public void setApplied(boolean isApplied) {
+		this.isApplied = isApplied;
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.client.other.vo.sacservice;
 
-public class SetServiceActiveReq {
+public class GetActiveRes {
 
 	private String serviceCd;
 
@@ -25,7 +25,7 @@ public class SetServiceActiveReq {
 	}
 
 	public boolean isActive() {
-		return this.isActive;
+		return isActive;
 	}
 
 	public void setActive(boolean isActive) {
