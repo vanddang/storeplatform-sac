@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.vo;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -20,9 +18,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 1. 24. Updated by : 이승택, nTels.
  */
 public class PaymentPageParam extends CommonInfo {
-	public static final String PP_RETURN_FORMAT_JSON = "1";
-
-	private static final long serialVersionUID = 201401241L;
+	private static final long serialVersionUID = 1L;
 
 	private String version;
 	private String token; // MD5( AuthKey+OrderID+AmtPurchase+MID )
@@ -52,82 +48,6 @@ public class PaymentPageParam extends CommonInfo {
 	private String carrier; // 통신사 (1: SKT , 2: LGU, 3: KT)
 	private String noSim; // SIM Serial Number
 	private String flgSim; // SIM 조회가능여부
-
-	// ==========================================================================================
-
-	/**
-	 * 
-	 * <pre>
-	 * Token 데이터 구성: AuthKey+OrderID+AmtPurchase+MID.
-	 * </pre>
-	 * 
-	 * @return Token 데이터
-	 */
-	public String makeTokenFormat() {
-		StringBuffer sb = new StringBuffer(128);
-
-		sb.append(this.authKey).append(this.orderId).append(this.amtPurchase).append(this.mid);
-
-		return sb.toString();
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 암호화 할 데이터 구성.
-	 * </pre>
-	 * 
-	 * @return 암호화 할 데이터 문자열
-	 */
-	public String makeEncDataFormat() {
-		StringBuffer sb = new StringBuffer(1024);
-
-		// sb.append("mid=").append(this.mid).append(";orderId=").append(this.orderId).append(";mctTrDate=")
-		// .append(this.mctTrDate).append(";amtPurchase=").append(this.amtPurchase).append(";pid=")
-		// .append(this.pid).append(";pName=").append(this.pName).append(";pDescription=")
-		// .append(this.pDescription).append(";pType=").append(this.pType).append(";aid=").append(this.aid)
-		// .append(";returnFormat=").append(this.returnFormat).append(";flgMchtAuth=").append(this.flgMchtAuth)
-		// .append(";returnPath=").append(this.returnPath).append(";resultPath=").append(this.resultPath)
-		// .append(";mctSpareParam=").append(this.mctSpareParam).append(";mdn=").append(this.mdn)
-		// .append(";nmDevice=").append(this.nmDevice).append(";imei=").append(this.imei).append(";uacd=")
-		// .append(this.uacd).append(";typeNetwork=").append(this.typeNetwork).append(";carrier=")
-		// .append(this.carrier).append(";noSim=").append(this.noSim).append(";flgSim=").append(this.flgSim);
-
-		// sb.append("mid=").append(this.mid).append("&orderId=").append(this.orderId).append("&mctTrDate=")
-		// .append(this.mctTrDate).append("&amtPurchase=").append(this.amtPurchase).append("&pid=")
-		// .append(this.pid).append("&pName=").append(this.pName).append("&aid=")
-		// .append(StringUtils.defaultString(this.aid)).append("&returnFormat=").append(this.returnFormat)
-		// .append("&flgMchtAuth=").append(this.flgMchtAuth).append("&mctSpareParam=").append(this.mctSpareParam)
-		// .append("&mdn=").append(this.mdn).append("&nmDevice=").append(StringUtils.defaultString(this.nmDevice))
-		// .append("&imei=").append(StringUtils.defaultString(this.imei)).append("&uacd=")
-		// .append(StringUtils.defaultString(this.uacd)).append("&typeNetwork=").append(this.typeNetwork)
-		// .append("&carrier=").append(this.carrier).append("&noSim=")
-		// .append(StringUtils.defaultString(this.noSim)).append("&flgSim=")
-		// .append(StringUtils.defaultString(this.flgSim));
-
-		// sb.append("mid=").append(this.mid).append("&orderId=").append(this.orderId).append("&mctTrDate=")
-		// .append(this.mctTrDate).append("&amtPurchase=").append(this.amtPurchase).append("&pid=")
-		// .append(this.pid).append("&pName=").append(this.pName).append("&aid=")
-		// .append(StringUtils.defaultString(this.aid)).append("&returnFormat=").append(this.returnFormat)
-		// .append("&flgMchtAuth=").append(this.flgMchtAuth).append("&mctSpareParam=").append(this.mctSpareParam)
-		// .append("&mdn=").append(this.mdn).append("&nmDevice=").append(StringUtils.defaultString(this.nmDevice))
-		// .append("&imei=").append(StringUtils.defaultString(this.imei)).append("&typeNetwork=")
-		// .append(this.typeNetwork).append("&carrier=").append(this.carrier).append("&noSim=")
-		// .append(StringUtils.defaultString(this.noSim));
-
-		sb.append("mid=").append(this.mid).append("&orderId=").append(this.orderId).append("&mctTrDate=")
-				.append(this.mctTrDate).append("&amtPurchase=").append(this.amtPurchase).append("&pid=")
-				.append(this.pid).append("&pName=").append(this.pName).append("&pDescription=")
-				.append(this.pDescription).append("&aid=").append(StringUtils.defaultString(this.aid))
-				.append("&returnFormat=").append(this.returnFormat).append("&flgMchtAuth=").append(this.flgMchtAuth)
-				.append("&mctSpareParam=").append(this.mctSpareParam).append("&mdn=").append(this.mdn)
-				.append("&nmDevice=").append(StringUtils.defaultString(this.nmDevice)).append("&imei=")
-				.append(StringUtils.defaultString(this.imei)).append("&typeNetwork=").append(this.typeNetwork)
-				.append("&carrier=").append(this.carrier).append("&noSim=")
-				.append(StringUtils.defaultString(this.noSim));
-
-		return sb.toString();
-	}
 
 	// ==========================================================================================
 

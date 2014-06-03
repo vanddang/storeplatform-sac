@@ -64,14 +64,11 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
-import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
-import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShoppingOrderRepository;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
@@ -161,6 +158,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public int createFreePurchase(PurchaseOrderInfo purchaseOrderInfo) {
+		// CLINK 예외 처리
+		boolean bAtLeastOne = false;
+		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
+			if (StringUtils.isBlank(product.getResultCd())) {
+				bAtLeastOne = true;
+				break;
+			}
+		}
+
+		if (bAtLeastOne == false) {
+			return 0;
+		}
+
 		// -----------------------------------------------------------------------------
 		// 구매ID, 구매일시 세팅
 
@@ -179,7 +189,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 구매생성 요청 데이터
 		List<PrchsDtlMore> prchsDtlMoreList = this.purchaseOrderMakeDataService.makePrchsDtlMoreList(purchaseOrderInfo);
-		this.purchaseOrderMakeDataService.buildReservedData(purchaseOrderInfo, prchsDtlMoreList); // 예약 정보 세팅
 
 		// 구매집계 요청 데이터: 테스트폰 / Biz 쿠폰 발급 요청 경우는 제외
 		List<PrchsProdCnt> prchsProdCntList = null;
@@ -930,159 +939,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		return prchsDtlMoreList;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 유료구매 - 결제Page 준비작업.
-	 * </pre>
-	 * 
-	 * @param purchaseOrderInfo
-	 *            구매요청 정보
-	 */
-	@Override
-	public void setPaymentPageInfo(PurchaseOrderInfo purchaseOrderInfo) {
-		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,START,{}", purchaseOrderInfo.getPrchsId());
-
-		// eData(암호화 데이터)
-		PurchaseProduct product = purchaseOrderInfo.getPurchaseProductList().get(0);
-
-		PaymentPageParam paymentPageParam = new PaymentPageParam();
-		paymentPageParam.setMid(purchaseOrderInfo.getMid());
-		paymentPageParam.setAuthKey(purchaseOrderInfo.getAuthKey());
-		paymentPageParam.setOrderId(purchaseOrderInfo.getPrchsId());
-		paymentPageParam.setMctTrDate(purchaseOrderInfo.getPrchsDt());
-		paymentPageParam.setAmtPurchase(String.valueOf(purchaseOrderInfo.getRealTotAmt()));
-		paymentPageParam.setPid(product.getProdId());
-		if (purchaseOrderInfo.getPurchaseProductList().size() > 1) {
-			paymentPageParam.setpName(product.getProdNm() + " 외 "
-					+ (purchaseOrderInfo.getPurchaseProductList().size() - 1) + "개");
-		} else {
-			paymentPageParam.setpName(product.getProdNm());
-		}
-		// paymentPageParam.setpDescription("remove");
-		// paymentPageParam.setpType("remove");
-		paymentPageParam.setAid(product.getAid());
-		paymentPageParam.setReturnFormat(PaymentPageParam.PP_RETURN_FORMAT_JSON);
-		paymentPageParam.setFlgMchtAuth(PurchaseConstants.USE_Y);
-		paymentPageParam.setMctSpareParam("");
-		paymentPageParam.setMdn(purchaseOrderInfo.getPurchaseUser().getDeviceId());
-		paymentPageParam.setNmDevice(purchaseOrderInfo.getPurchaseUser().getDeviceModelCd());
-		paymentPageParam.setImei(purchaseOrderInfo.getImei());
-		paymentPageParam.setUacd(purchaseOrderInfo.getUacd());
-		if (StringUtils.equals(purchaseOrderInfo.getNetworkTypeCd(), PurchaseConstants.NETWORK_TYPE_3G)) {
-			paymentPageParam.setTypeNetwork(PurchaseConstants.PAYPLANET_NETWORK_TYPE_3GLTE); // 3G, LTE
-		} else if (StringUtils.equals(purchaseOrderInfo.getNetworkTypeCd(), PurchaseConstants.NETWORK_TYPE_WIFI)) {
-			paymentPageParam.setTypeNetwork(PurchaseConstants.PAYPLANET_NETWORK_TYPE_WIFI); // WIFI
-		} else {
-			paymentPageParam.setTypeNetwork(PurchaseConstants.PAYPLANET_NETWORK_TYPE_UNKNOWN);
-		}
-		if (StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_SKT)) {
-			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_SKT); // SKT
-		} else if (StringUtils
-				.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_UPLUS)) {
-			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_LGT); // LGT
-		} else if (StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_KT)) {
-			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_KT); // KT
-		} else {
-			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_UNKNOWN); // UKNOWN
-		}
-		paymentPageParam.setNoSim(purchaseOrderInfo.getSimNo());
-		paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
-
-		// pDescription
-		String pDescription = null;
-		PurchaseProduct purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
-		String tenantProdGrpCd = purchaseOrderInfo.getTenantProdGrpCd();
-		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-			if (StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_DELIVERY)) {
-				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_DELIVERY;
-			} else {
-				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_COUPON;
-			}
-
-		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
-			pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH;
-
-		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
-			if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_HIGH)) {
-				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_BELL_HIGH;
-			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_BASIC)) {
-				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_BELL_BASIC;
-			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_LONG)) {
-				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_HIGH;
-			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_BASIC)) {
-				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC;
-			}
-		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-			pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_AUTO;
-
-		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
-			if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
-				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_SERIES;
-
-			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
-				if (StringUtils.equals(purchaseProduct.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
-					pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_AUTO;
-				} else {
-					if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
-							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE)) {
-						pDescription = purchaseProduct.getUsePeriod()
-								+ PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_DATE_SUFFIX;
-
-					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
-							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_HOUR)) {
-						pDescription = purchaseProduct.getUsePeriod()
-								+ PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_HOUR_SUFFIX;
-
-					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
-							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH)) {
-						pDescription = purchaseProduct.getUsePeriod()
-								+ PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MONTH_SUFFIX;
-					}
-				}
-			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
-				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN;
-			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
-				pDescription = PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_LOAN;
-			}
-		}
-		paymentPageParam.setpDescription(pDescription);
-
-		// 암호화
-		String eData = paymentPageParam.makeEncDataFormat();
-		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", eData);
-		try {
-			paymentPageParam.setEData(PayPlanetUtils.encrypt(eData, purchaseOrderInfo.getEncKey()));
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7201", e);
-		}
-		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,ENC,{}", paymentPageParam.getEData());
-
-		// Token
-		String token = paymentPageParam.makeTokenFormat();
-		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,SRC,{}", token);
-		try {
-			paymentPageParam.setToken(MD5Utils.digestInHexFormat(token));
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7201", e);
-		}
-		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,ENC,{}", paymentPageParam.getToken());
-
-		// 버전
-		paymentPageParam.setVersion("1.0");
-
-		// 결제Page 요청 URL
-		purchaseOrderInfo.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
-
-		purchaseOrderInfo.setPaymentPageParam(paymentPageParam);
-
-		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,END,{}", purchaseOrderInfo.getPrchsId());
-	}
-
 	/*
 	 * 
 	 * <pre> 구매 확정 취소 작업. </pre>
@@ -1376,13 +1232,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 
 			if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE)) { // 일
-				checkDate = DateUtils.addDays(checkDate, Integer.parseInt(periodVal));
+				checkDate = DateUtils.addSeconds(DateUtils.addDays(checkDate, Integer.parseInt(periodVal)), -1);
 			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_HOUR)) { // 시간
-				checkDate = DateUtils.addHours(checkDate, Integer.parseInt(periodVal));
+				checkDate = DateUtils.addSeconds(DateUtils.addHours(checkDate, Integer.parseInt(periodVal)), -1);
 			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH)) { // 월
-				checkDate = DateUtils.addMonths(checkDate, Integer.parseInt(periodVal));
+				checkDate = DateUtils.addSeconds(DateUtils.addMonths(checkDate, Integer.parseInt(periodVal)), -1);
 			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR)) { // 년
-				checkDate = DateUtils.addYears(checkDate, Integer.parseInt(periodVal));
+				checkDate = DateUtils.addSeconds(DateUtils.addYears(checkDate, Integer.parseInt(periodVal)), -1);
 			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_MONTH)) { // 당월
 				checkDate = DateUtils.addSeconds(DateUtils.ceiling(checkDate, Calendar.MONTH), -1);
 			} else {

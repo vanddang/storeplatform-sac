@@ -73,15 +73,4 @@ public interface PurchaseOrderService {
 	 */
 	public List<PrchsDtlMore> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId);
 
-	/**
-	 * 
-	 * <pre>
-	 * 유료구매 - 결제Page 준비작업.
-	 * </pre>
-	 * 
-	 * @param purchaseOrderInfo
-	 *            구매요청 정보
-	 */
-	public void setPaymentPageInfo(PurchaseOrderInfo purchaseOrderInfo);
-
 }

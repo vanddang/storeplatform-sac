@@ -81,7 +81,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String authKey; // 가맹점 인증키
 	private String encKey; // Pay Planet 암호화
 	private String paymentPageUrl; // 결제Page_URL
-	private PaymentPageParam paymentPageParam; // 결제Page_요청_파라미터
+	private String paymentPageUrlParam; // 결제Page_요청_파라미터
 
 	// ------------------------------------------------------------------------
 	// 상품 속성
@@ -97,6 +97,10 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private boolean flat; // 정액 상품 여부
 	private boolean vodFlat; // VOD정액 상품 여부
 	private boolean ebookcomicFlat; // 이북/코믹 전권 소장/대여 상품 여부
+
+	// ------------------------------------------------------------------------
+	// CLINK 예외 처리용
+	private boolean clink; // CLINK 여부
 
 	// ================================================================================================
 
@@ -561,18 +565,18 @@ public class PurchaseOrderInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the paymentPageParam
+	 * @return the paymentPageUrlParam
 	 */
-	public PaymentPageParam getPaymentPageParam() {
-		return this.paymentPageParam;
+	public String getPaymentPageUrlParam() {
+		return this.paymentPageUrlParam;
 	}
 
 	/**
-	 * @param paymentPageParam
-	 *            the paymentPageParam to set
+	 * @param paymentPageUrlParam
+	 *            the paymentPageUrlParam to set
 	 */
-	public void setPaymentPageParam(PaymentPageParam paymentPageParam) {
-		this.paymentPageParam = paymentPageParam;
+	public void setPaymentPageUrlParam(String paymentPageUrlParam) {
+		this.paymentPageUrlParam = paymentPageUrlParam;
 	}
 
 	/**
@@ -925,6 +929,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setEbookcomicFlat(boolean ebookcomicFlat) {
 		this.ebookcomicFlat = ebookcomicFlat;
+	}
+
+	/**
+	 * @return the clink
+	 */
+	public boolean isClink() {
+		return this.clink;
+	}
+
+	/**
+	 * @param clink
+	 *            the clink to set
+	 */
+	public void setClink(boolean clink) {
+		this.clink = clink;
 	}
 
 }

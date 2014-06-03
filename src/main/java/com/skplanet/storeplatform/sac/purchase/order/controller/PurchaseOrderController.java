@@ -46,12 +46,13 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPaymentPageService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPostService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderValidationService;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
 
@@ -67,6 +68,8 @@ public class PurchaseOrderController {
 
 	@Autowired
 	private PurchaseOrderService orderService;
+	@Autowired
+	private PurchaseOrderPaymentPageService orderPaymentPageService;
 	@Autowired
 	private PurchaseOrderPostService orderPostService;
 	@Autowired
@@ -109,7 +112,7 @@ public class PurchaseOrderController {
 		// 진행 처리: 무료구매완료 처리 || 결제Page 요청 준비작업
 		if (purchaseOrderInfo.getRealTotAmt() > 0) {
 			this.orderService.createReservedPurchase(purchaseOrderInfo); // 구매예약
-			this.orderService.setPaymentPageInfo(purchaseOrderInfo); // 결제Page 정보 세팅
+			this.orderPaymentPageService.buildPaymentPageUrlParam(purchaseOrderInfo); // 결제Page 정보 세팅
 			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_PAYMENT);
 
 		} else {
@@ -123,8 +126,11 @@ public class PurchaseOrderController {
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
 
 		if (StringUtils.equals(purchaseOrderInfo.getResultType(), PurchaseConstants.CREATE_PURCHASE_RESULT_PAYMENT)) {
-			res.setPaymentPageParam(this.makePaymentPageParam(purchaseOrderInfo.getPaymentPageParam()));
 			res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
+			res.setPaymentPageParam(purchaseOrderInfo.getPaymentPageUrlParam());
+
+		} else if (purchaseOrderInfo.isClink()) { // CLINK 예외 처리용
+			res.setPaymentPageParam(this.makeClinkResProductResult(purchaseOrderInfo.getPurchaseProductList()));
 		}
 
 		this.logger.info("PRCHS,ORDER,SAC,CREATE,RES,{}", res);
@@ -404,25 +410,12 @@ public class PurchaseOrderController {
 			purchaseOrderInfo.setGamecash(true); // 게임캐쉬 상품 여부
 		}
 
+		// CLINK 예외 처리용
+		if (StringUtils.equals(createPurchaseSacReq.getPrchsCaseCd(), PurchaseConstants.PRCHS_REQ_PATH_CLINK)) {
+			purchaseOrderInfo.setClink(true);
+		}
+
 		return purchaseOrderInfo;
-	}
-
-	/*
-	 * 
-	 * <pre> 결제Page URL 파라미터 생성. </pre>
-	 * 
-	 * @param paymentPageParam 결제Page 파라미터 값 정보
-	 * 
-	 * @return 결제Page URL 파라미터
-	 */
-	private String makePaymentPageParam(PaymentPageParam paymentPageParam) {
-		StringBuffer sbParam = new StringBuffer(paymentPageParam.getEData().length()
-				+ paymentPageParam.getToken().length() + 25);
-
-		sbParam.append("version=").append(paymentPageParam.getVersion()).append("&token=")
-				.append(paymentPageParam.getToken()).append("&EData=").append(paymentPageParam.getEData());
-
-		return sbParam.toString();
 	}
 
 	/*
@@ -528,4 +521,28 @@ public class PurchaseOrderController {
 		});
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * CLINK 상품 별 구매 결과 응답 값 생성.
+	 * </pre>
+	 * 
+	 * @param productList
+	 *            구매요청 상품 목록
+	 * @return 상품 별 구매 결과
+	 */
+	private String makeClinkResProductResult(List<PurchaseProduct> productList) {
+		StringBuffer sb = new StringBuffer();
+
+		for (PurchaseProduct product : productList) {
+			sb.append(product.getProdId()).append(":")
+					.append(StringUtils.defaultIfBlank(product.getResultCd(), "0000")).append(",");
+		}
+
+		if (sb.length() > 0) {
+			sb.setLength(sb.length() - 1);
+		}
+
+		return sb.toString();
+	}
 }

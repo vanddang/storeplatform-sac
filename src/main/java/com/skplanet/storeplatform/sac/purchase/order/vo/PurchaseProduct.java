@@ -56,6 +56,9 @@ public class PurchaseProduct extends PaymentInfo {
 	private String menuId; // 메뉴_ID
 	private String genreClsfCd; // 장르_구분_코드
 
+	// CLINK 처리용
+	private String resultCd; // 구매처리 결과코드
+
 	/**
 	 * @return the possLendProductInfo
 	 */
@@ -489,6 +492,21 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setGenreClsfCd(String genreClsfCd) {
 		this.genreClsfCd = genreClsfCd;
+	}
+
+	/**
+	 * @return the resultCd
+	 */
+	public String getResultCd() {
+		return this.resultCd;
+	}
+
+	/**
+	 * @param resultCd
+	 *            the resultCd to set
+	 */
+	public void setResultCd(String resultCd) {
+		this.resultCd = resultCd;
 	}
 
 }

@@ -1,0 +1,283 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
+package com.skplanet.storeplatform.sac.purchase.order.service;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
+import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
+
+/**
+ * 
+ * 결제Page 서비스
+ * 
+ * Updated on : 2014. 6. 2. Updated by : 이승택, nTels.
+ */
+@Service
+public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPaymentPageService {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	public static final String PAYMENT_PAGE_PARAM_VER = "1.0";
+	public static final String PP_RETURN_FORMAT_JSON = "1";
+
+	/**
+	 * 
+	 * <pre>
+	 * 유료구매 - 결제Page 파라미터 세팅.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매요청 정보
+	 */
+	@Override
+	public void buildPaymentPageUrlParam(PurchaseOrderInfo purchaseOrderInfo) {
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,START,{}", purchaseOrderInfo.getPrchsId());
+
+		// eData(암호화 데이터)
+		PurchaseProduct product = purchaseOrderInfo.getPurchaseProductList().get(0);
+
+		PaymentPageParam paymentPageParam = new PaymentPageParam();
+		paymentPageParam.setMid(purchaseOrderInfo.getMid());
+		paymentPageParam.setAuthKey(purchaseOrderInfo.getAuthKey());
+		paymentPageParam.setOrderId(purchaseOrderInfo.getPrchsId());
+		paymentPageParam.setMctTrDate(purchaseOrderInfo.getPrchsDt());
+		paymentPageParam.setAmtPurchase(String.valueOf(purchaseOrderInfo.getRealTotAmt()));
+		paymentPageParam.setPid(product.getProdId());
+		if (purchaseOrderInfo.getPurchaseProductList().size() > 1) {
+			paymentPageParam.setpName(product.getProdNm() + " 외 "
+					+ (purchaseOrderInfo.getPurchaseProductList().size() - 1) + "개");
+		} else {
+			paymentPageParam.setpName(product.getProdNm());
+		}
+		paymentPageParam.setAid(product.getAid());
+		paymentPageParam.setReturnFormat(PP_RETURN_FORMAT_JSON);
+		paymentPageParam.setFlgMchtAuth(PurchaseConstants.USE_Y);
+		paymentPageParam.setMctSpareParam(this.getMctSpareParam(purchaseOrderInfo));
+		paymentPageParam.setMdn(purchaseOrderInfo.getPurchaseUser().getDeviceId());
+		paymentPageParam.setNmDevice(purchaseOrderInfo.getPurchaseUser().getDeviceModelCd());
+		paymentPageParam.setImei(purchaseOrderInfo.getImei());
+		paymentPageParam.setUacd(purchaseOrderInfo.getUacd());
+		if (StringUtils.equals(purchaseOrderInfo.getNetworkTypeCd(), PurchaseConstants.NETWORK_TYPE_3G)) {
+			paymentPageParam.setTypeNetwork(PurchaseConstants.PAYPLANET_NETWORK_TYPE_3GLTE); // 3G, LTE
+		} else if (StringUtils.equals(purchaseOrderInfo.getNetworkTypeCd(), PurchaseConstants.NETWORK_TYPE_WIFI)) {
+			paymentPageParam.setTypeNetwork(PurchaseConstants.PAYPLANET_NETWORK_TYPE_WIFI); // WIFI
+		} else {
+			paymentPageParam.setTypeNetwork(PurchaseConstants.PAYPLANET_NETWORK_TYPE_UNKNOWN);
+		}
+		if (StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_SKT)) {
+			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_SKT); // SKT
+		} else if (StringUtils
+				.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_UPLUS)) {
+			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_LGT); // LGT
+		} else if (StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getTelecom(), PurchaseConstants.TELECOM_KT)) {
+			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_KT); // KT
+		} else {
+			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_UNKNOWN); // UKNOWN
+		}
+		paymentPageParam.setNoSim(purchaseOrderInfo.getSimNo());
+		paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
+
+		// pDescription
+		paymentPageParam.setpDescription(this.getProductDescription(purchaseOrderInfo.getTenantProdGrpCd(),
+				purchaseOrderInfo.getPurchaseProductList().get(0)));
+
+		// 암호화
+		paymentPageParam.setEData(this.encryptPaymentData(paymentPageParam, purchaseOrderInfo.getEncKey()));
+
+		// Token
+		paymentPageParam.setToken(this.makeToken(paymentPageParam));
+
+		// 버전
+		paymentPageParam.setVersion(PAYMENT_PAGE_PARAM_VER);
+
+		// 결제Page 요청 URL
+		purchaseOrderInfo.setPaymentPageUrlParam(this.makePaymentPageUrlParam(paymentPageParam));
+
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,END,{}", purchaseOrderInfo.getPrchsId());
+	}
+
+	/*
+	 * 
+	 * <pre> 가맹점 파라미터 구성. </pre>
+	 * 
+	 * @param purchaseOrderInfo 구매요청 정보
+	 * 
+	 * @return 구성된 가맹점 파라미터
+	 */
+	private String getMctSpareParam(PurchaseOrderInfo purchaseOrderInfo) {
+		return "";
+	}
+
+	/*
+	 * 
+	 * <pre> 구매 상품설명 생성. </pre>
+	 * 
+	 * @param tenantProdGrpCd 테넌트 상품 분류 코드
+	 * 
+	 * @param purchaseProduct 구매 기본상품 정보
+	 * 
+	 * @return 구매 상품설명
+	 */
+	private String getProductDescription(String tenantProdGrpCd, PurchaseProduct purchaseProduct) {
+
+		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			if (StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_DELIVERY)) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_DELIVERY;
+			} else {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_COUPON;
+			}
+
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
+			return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH;
+
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
+			if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_HIGH)) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_BELL_HIGH;
+			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_BASIC)) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_BELL_BASIC;
+			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_LONG)) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_HIGH;
+			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_BASIC)) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC;
+			}
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+			return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_AUTO;
+
+		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
+			if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_SERIES;
+
+			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {
+				if (StringUtils.equals(purchaseProduct.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_AUTO;
+				} else {
+					if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
+							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE)) {
+						return purchaseProduct.getUsePeriod() + PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_DATE_SUFFIX;
+
+					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
+							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_HOUR)) {
+						return purchaseProduct.getUsePeriod() + PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_HOUR_SUFFIX;
+
+					} else if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
+							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH)) {
+						return purchaseProduct.getUsePeriod()
+								+ PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MONTH_SUFFIX;
+					}
+				}
+			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN;
+			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_LOAN;
+			}
+		}
+
+		return "";
+	}
+
+	/*
+	 * 
+	 * <pre> 결제Page 데이터 암호화. </pre>
+	 * 
+	 * @param paymentPageParam 결제Page 데이터
+	 * 
+	 * @param encKey 암호화 키
+	 * 
+	 * @return 암호화된 데이터
+	 */
+	private String encryptPaymentData(PaymentPageParam paymentPageParam, String encKey) {
+		// 암호화 데이터 구성
+		StringBuffer sb = new StringBuffer(1024);
+		sb.append("mid=").append(paymentPageParam.getMid()).append("&orderId=").append(paymentPageParam.getOrderId())
+				.append("&mctTrDate=").append(paymentPageParam.getMctTrDate()).append("&amtPurchase=")
+				.append(paymentPageParam.getAmtPurchase()).append("&pid=").append(paymentPageParam.getPid())
+				.append("&pName=").append(paymentPageParam.getpName()).append("&pDescription=")
+				.append(paymentPageParam.getpDescription()).append("&aid=")
+				.append(StringUtils.defaultString(paymentPageParam.getAid())).append("&returnFormat=")
+				.append(paymentPageParam.getReturnFormat()).append("&flgMchtAuth=")
+				.append(paymentPageParam.getFlgMchtAuth()).append("&mctSpareParam=")
+				.append(paymentPageParam.getMctSpareParam()).append("&mdn=").append(paymentPageParam.getMdn())
+				.append("&nmDevice=").append(StringUtils.defaultString(paymentPageParam.getNmDevice()))
+				.append("&imei=").append(StringUtils.defaultString(paymentPageParam.getImei())).append("&typeNetwork=")
+				.append(paymentPageParam.getTypeNetwork()).append("&carrier=").append(paymentPageParam.getCarrier())
+				.append("&noSim=").append(StringUtils.defaultString(paymentPageParam.getNoSim()));
+
+		String plainData = sb.toString();
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", plainData);
+
+		// 암호화
+		String encData = null;
+		try {
+			encData = PayPlanetUtils.encrypt(plainData, encKey);
+			this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,ENC,{}", encData);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7201", e);
+		}
+		return encData;
+	}
+
+	/*
+	 * 
+	 * <pre> 결제Page 토큰 생성. </pre>
+	 * 
+	 * @param paymentPageParam 결제Page 데이터
+	 * 
+	 * @return 생성된 토큰값
+	 */
+	private String makeToken(PaymentPageParam paymentPageParam) {
+		// 토큰 구성 : AuthKey+OrderID+AmtPurchase+MID
+		StringBuffer sb = new StringBuffer(128);
+		sb.append(paymentPageParam.getAuthKey()).append(paymentPageParam.getOrderId())
+				.append(paymentPageParam.getAmtPurchase()).append(paymentPageParam.getMid());
+
+		String plainToken = sb.toString();
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,SRC,{}", plainToken);
+
+		// Digest MD5
+		String md5Token = null;
+		try {
+			md5Token = MD5Utils.digestInHexFormat(plainToken);
+			this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,ENC,{}", paymentPageParam.getToken());
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7201", e);
+		}
+		return md5Token;
+	}
+
+	/*
+	 * 
+	 * <pre> 결제Page URL 파라미터 생성. </pre>
+	 * 
+	 * @param paymentPageParam 결제Page 파라미터 값 정보
+	 * 
+	 * @return 결제Page URL 파라미터
+	 */
+	private String makePaymentPageUrlParam(PaymentPageParam paymentPageParam) {
+		StringBuffer sbParam = new StringBuffer(paymentPageParam.getEData().length()
+				+ paymentPageParam.getToken().length() + 25);
+
+		sbParam.append("version=").append(paymentPageParam.getVersion()).append("&token=")
+				.append(paymentPageParam.getToken()).append("&EData=").append(paymentPageParam.getEData());
+
+		return sbParam.toString();
+	}
+}

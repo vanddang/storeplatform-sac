@@ -77,6 +77,11 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 		int prchsDtlCnt = 1, i = 0;
 		for (PurchaseProduct product : workProductList) {
+
+			if (StringUtils.isNotBlank(product.getResultCd())) { // CLINK 예외 처리용
+				continue;
+			}
+
 			for (i = 0; i < product.getProdQty(); i++) {
 				prchsDtlMore = new PrchsDtlMore();
 
