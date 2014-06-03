@@ -32,7 +32,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetail;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.display.app.vo.ImageSource;
-import com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq;
 import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -50,17 +49,25 @@ public class AppServiceImpl implements AppService {
 
 	private static final Logger logger = LoggerFactory.getLogger(AppServiceImpl.class);
 
-	private static final Set<String> SOURCE_LIST_SCREENSHOT_ORIGINAL;
-	private static final String[] SOURCE_REQUEST;
+	private static final Set<String> IMG_CODE_PREVIEW;
+	private static final Map<String, String> IMG_CODE_LANDSCAPE_REFERENCE;
+	private static final List<String> IMG_CODE_REQUEST;
     private static final Pattern PATTERN_OSVER = Pattern.compile("Android/(\\d+\\.\\d+)(?:\\.\\d+)?");
 
 	static {
-		SOURCE_LIST_SCREENSHOT_ORIGINAL = new HashSet<String>(Arrays.asList("DP000103", "DP000104", "DP000105",
-				"DP000106", "DP0001C1", "DP0001C2", "DP0001C3", "DP0001C4"));
+		IMG_CODE_PREVIEW = new LinkedHashSet<String>(Arrays.asList("DP000103,DP000104,DP000105,DP000106,DP0001C1,DP0001C2,DP0001C3,DP0001C4".split(",")));
+        IMG_CODE_LANDSCAPE_REFERENCE = new HashMap<String, String>();
+        String[] landscapeRef = "DP0001D7,DP0001D8,DP0001D9,DP0001E0,DP0001E1,DP0001E2,DP0001E3,DP0001E4".split(",");
+        int i = 0;
+        for (String imgCd : IMG_CODE_PREVIEW) {
+            IMG_CODE_LANDSCAPE_REFERENCE.put(landscapeRef[i++], imgCd);
+        }
+
 		List<String> reqList = new ArrayList<String>();
 		reqList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD); // for Thumbnail original
-		reqList.addAll(SOURCE_LIST_SCREENSHOT_ORIGINAL);
-		SOURCE_REQUEST = reqList.toArray(new String[reqList.size()]);
+		reqList.addAll(IMG_CODE_PREVIEW);
+		reqList.addAll(IMG_CODE_LANDSCAPE_REFERENCE.keySet());
+		IMG_CODE_REQUEST = reqList;
 	}
 
 	@Autowired
@@ -167,27 +174,7 @@ public class AppServiceImpl implements AppService {
         product.getSupportList().add(new Support("iab", appDetail.getPartParentClsfCd() != null ? "Y" : "N"));
 
         // Source
-        List<ImageSource> imageSourceList = commonDAO.queryForList("AppDetail.getSourceList", new ImageSourceReq(request.getChannelId(), SOURCE_REQUEST, request.getLangCd()), ImageSource.class);
-        List<Source> sourceList = new ArrayList<Source>();
-        for (ImageSource imgSrc : imageSourceList) {
-            Source source = new Source();
-            source.setMediaType(DisplayCommonUtil.getMimeType(imgSrc.getFileNm()));
-            source.setUrl(imgSrc.getFilePath());
-            if(imgSrc.getWidth() != null && imgSrc.getHeight() != null) {
-                source.setHeight(imgSrc.getHeight());
-                source.setWidth(imgSrc.getWidth());
-                source.setOrientation(imgSrc.getWidth() < imgSrc.getHeight() ? "portrait" : "landscape");
-            } else {
-                source.setOrientation("portrait");
-            }
-
-			if (SOURCE_LIST_SCREENSHOT_ORIGINAL.contains(imgSrc.getImgCd()))
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
-			else
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-
-			sourceList.add(source);
-		}
+        List<Source> sourceList = getImageList(request.getChannelId(), request.getLangCd());
 		product.setSourceList(sourceList);
 
 		Accrual accrual = new Accrual();
@@ -250,5 +237,60 @@ public class AppServiceImpl implements AppService {
 		res.setProduct(product);
 		return res;
 	}
+
+    private List<Source> getImageList(String channelId, String langCd) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("channelId", channelId);
+        req.put("langCd", langCd);
+        req.put("imgCds", IMG_CODE_REQUEST);
+
+        List<ImageSource> imageSourceList = commonDAO.queryForList("AppDetail.getSourceList", req, ImageSource.class);
+
+        // 가로 크기 이미지 판단
+        Set<String> landscapeImgSet = new HashSet<String>();
+        for (ImageSource imgSrc : imageSourceList) {
+            String orgImgCd = IMG_CODE_LANDSCAPE_REFERENCE.get(imgSrc.getImgCd());
+            if(orgImgCd != null)
+                landscapeImgSet.add(orgImgCd);
+        }
+
+        List<Source> sourceList = new ArrayList<Source>();
+        for (ImageSource imgSrc : imageSourceList) {
+
+            Source source = new Source();
+            source.setMediaType(DisplayCommonUtil.getMimeType(imgSrc.getFileNm()));
+            source.setUrl(imgSrc.getFilePath());
+
+            if (IMG_CODE_PREVIEW.contains(imgSrc.getImgCd())) {
+                source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
+            }
+            else if(imgSrc.getImgCd().equals(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD)) {
+                source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+            }
+            else
+                continue;
+
+            if(landscapeImgSet.contains(imgSrc.getImgCd())) {
+                source.setOrientation("landscape");
+            }
+            else {
+                if(imgSrc.getWidth() != null && imgSrc.getHeight() != null) {
+                    source.setHeight(imgSrc.getHeight());
+                    source.setWidth(imgSrc.getWidth());
+
+                    if(imgSrc.getWidth().equals(imgSrc.getHeight()))
+                        source.setOrientation("square");
+                    else
+                        source.setOrientation(imgSrc.getWidth() < imgSrc.getHeight() ? "portrait" : "landscape");
+                } else {
+                    source.setOrientation("portrait");
+                }
+            }
+
+            sourceList.add(source);
+        }
+
+        return sourceList;
+    }
 
 }

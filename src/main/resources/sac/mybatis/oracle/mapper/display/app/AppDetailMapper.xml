@@ -66,7 +66,7 @@
               AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
     </select>
 
-    <select id="getSourceList" parameterType="com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.ImageSource">
+    <select id="getSourceList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.app.vo.ImageSource">
         SELECT /* AppDetailMapper.xml, getSourceList, SAC : 정희원 , 2014-01-24 */
           FILE_PATH, FILE_NM, IMG_CD, WIDTH, HEIGHT
         FROM TB_DP_PROD_IMG
