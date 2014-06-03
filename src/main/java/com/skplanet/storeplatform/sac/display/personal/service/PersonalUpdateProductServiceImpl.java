@@ -89,6 +89,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 	@Override
 	public PersonalUpdateProductRes searchUpdateProductList(PersonalUpdateProductReq req, SacRequestHeader header,
 			List<String> packageInfoList) {
+		this.log.info("##### searchUpdateProductList start!!!!!!!!!!");
 		PersonalUpdateProductRes res = new PersonalUpdateProductRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
@@ -279,6 +280,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 						historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
 						historyListSacReq.setEndDt(endDate);
 						historyListSacReq.setOffset(1);
+						historyListSacReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
 						historyListSacReq.setCount(1000);
 						historyListSacReq.setProductList(productListSacInList);
 
@@ -511,7 +513,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 				throw new StorePlatformException("SAC_DSP_0006");
 			}
 		}
-
+		this.log.info("##### searchUpdateProductList end!!!!!!!!!!");
 		return res;
 	}
 }

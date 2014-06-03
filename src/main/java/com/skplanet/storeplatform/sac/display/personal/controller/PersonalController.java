@@ -93,6 +93,10 @@ public class PersonalController {
 			throw new StorePlatformException("SAC_DSP_0004", "packageInfo",
 					DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT);
 		}
+		this.log.info("----------------------------------------------------------------");
+		this.log.info("[searchUpdateProductList] SacRequestHeader\n{}", header.toString());
+		this.log.info("[searchUpdateProductList] PersonalUpdateProductReq\n{}", personalUpdateProductReq.toString());
+		this.log.info("----------------------------------------------------------------");
 		return this.personalUpdateProductService.searchUpdateProductList(personalUpdateProductReq, header,
 				packageInfoList);
 	}
@@ -117,6 +121,10 @@ public class PersonalController {
 			throw new StorePlatformException("SAC_DSP_0004", "packageInfo",
 					DisplayConstants.DP_PERSONAL_UPDATE_PARAM_LIMIT);
 		}
+		this.log.info("----------------------------------------------------------------");
+		this.log.info("[updateAutoUpdateList] SacRequestHeader\n{}", header.toString());
+		this.log.info("[updateAutoUpdateList] PersonalAutoUpdateReq\n{}", req.toString());
+		this.log.info("----------------------------------------------------------------");
 		return this.personalAutoUpdateService.updateAutoUpdateList(req, header, packageInfoList);
 	}
 

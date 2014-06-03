@@ -86,6 +86,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 	@Override
 	public PersonalAutoUpdateRes updateAutoUpdateList(PersonalAutoUpdateReq req, SacRequestHeader header,
 			List<String> packageInfoList) {
+		this.log.info("##### updateAutoUpdateList start!!!!!!!!!!");
 		final String deviceId = req.getDeviceId();
 		new TLogUtil().set(new ShuttleSetter() {
 			@Override
@@ -364,6 +365,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				throw new StorePlatformException("SAC_DSP_0006");
 			}
 		}
+		this.log.info("##### updateAutoUpdateList start!!!!!!!!!!");
 		return res;
 	}
 }
