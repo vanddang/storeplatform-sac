@@ -618,7 +618,6 @@
                              , TB_DP_MENU_CATEGORY E
                              , TB_DP_PROD F  /* 에피소드 */
                              , TB_DP_TENANT_PROD G
-                             , TB_DP_SPRT_DEVICE H
                          WHERE A.LIST_ID = B.LIST_ID
                            AND A.TENANT_ID = B.TENANT_ID
                            AND A.EXPO_YN = 'Y'
@@ -672,24 +671,21 @@
                            AND B.TENANT_ID = G.TENANT_ID
                            AND G.EXPO_YN = 'Y'
                            AND G.PROD_STATUS_CD = 'PD000403'
-                           AND C.PART_PROD_ID = H.PROD_ID
-                           AND (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = #{anyDeviceModelCd})
-                           <if test='topMenuId == "DP13"'>
-                           AND (CASE WHEN (SELECT EBOOK_SPRT_YN 
-                                             FROM TB_CM_DEVICE CD 
-                                            WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
-                                              AND CD.USE_YN = 'Y'
-                                              AND ROWNUM <![CDATA[<=]]> 1) = 'Y'  
-                                     THEN 1 ELSE 0 END) = 1
-                           </if>
-                           <if test='topMenuId == "DP14"'>
-                           AND (CASE WHEN (SELECT COMIC_SPRT_YN 
-                                             FROM TB_CM_DEVICE CD 
-                                            WHERE CD.DEVICE_MODEL_CD = #{deviceModelCd}
-                                              AND CD.USE_YN = 'Y'
-                                              AND ROWNUM <![CDATA[<=]]> 1) = 'Y'  
-                                     THEN 1 ELSE 0 END) = 1
-                           </if>
+                           AND EXISTS
+                              (SELECT 1
+                                 FROM TB_DP_SPRT_DEVICE T1
+                                    , TB_CM_DEVICE T2
+                                WHERE (T1.DEVICE_MODEL_CD = #{deviceModelCd}
+                                      OR T1.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                                  AND T1.DEVICE_MODEL_CD = T2.DEVICE_MODEL_CD
+                                  AND T2.USE_YN = 'Y'
+                                  <if test='topMenuId == "DP13"'>
+                                  AND T2.EBOOK_SPRT_YN = 'Y'
+                                  </if>
+                                  <if test='topMenuId == "DP14"'>
+                                  AND T2.COMIC_SPRT_YN = 'Y'
+                                  </if>
+                              )
                       ) A
                  WHERE RN = 1
               ) B
