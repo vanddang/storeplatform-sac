@@ -411,7 +411,7 @@ public class PurchaseOrderController {
 		}
 
 		// CLINK 예외 처리용
-		if (StringUtils.equals(createPurchaseSacReq.getPrchsCaseCd(), PurchaseConstants.PRCHS_REQ_PATH_CLINK)) {
+		if (StringUtils.equals(createPurchaseSacReq.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_CLINK)) {
 			purchaseOrderInfo.setClink(true);
 		}
 
