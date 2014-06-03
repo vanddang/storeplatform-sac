@@ -34,7 +34,7 @@ public class HttpHeaderEnricher implements HttpHeaderEnrichIF {
 	public HttpHeaders enrichHeader(@Headers Map<String, Object> headers) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 
-		// Spring Integration에서 headers를 null로 보내는 것에 대한 방어 로직
+		// Spring Integration에서 headers 객체를 null로 보내는 것에 대한 방어 로직
 		if (headers == null) {
 			return httpHeaders;
 		}
