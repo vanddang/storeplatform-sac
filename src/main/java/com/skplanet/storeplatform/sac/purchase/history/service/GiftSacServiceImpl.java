@@ -82,7 +82,9 @@ public class GiftSacServiceImpl implements GiftSacService {
 						.download_expired_time(giftConfirmScRes.getDwldExprDt())
 						.product_qty((long) giftConfirmScRes.getProdQty())
 						.coupon_publish_code(giftConfirmScRes.getCpnPublishCd())
-						.insd_usermbr_no(giftConfirmScRes.getSendInsdUsermbrNo());
+						.insd_usermbr_no_send(giftConfirmScRes.getSendInsdUsermbrNo())
+						.device_id_send(giftConfirmScRes.getSendInsdDeviceId());
+
 			}
 		});
 		// 이미선물처리가 되었을 경우 Exception 처리
