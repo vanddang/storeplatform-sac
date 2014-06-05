@@ -78,6 +78,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 */
 	@Override
 	public HistoryListSacRes searchHistoryList(HistoryListSacReq request) {
+		this.logger.info("##### [SAC History CallTime] HistoryListServiceImpl.searchHistoryList START");
 		long start = System.currentTimeMillis();
 		this.logger.debug("HistoryListSacRes : {}", request);
 		this.logger.info("HistoryListSac Request Param : {}", request);
@@ -140,9 +141,14 @@ public class HistoryListServiceImpl implements HistoryListService {
 		/**
 		 * 구매정책을 조회하여 list에 셋팅
 		 */
+		long polscStTime = System.currentTimeMillis();
+
 		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
 				.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
 						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
+		this.logger
+				.info("##### [SAC History CallTime] HistorySC purchaseTenantPolicyService.searchPurchaseTenantPolicyList END takes {} ms",
+						(System.currentTimeMillis() - polscStTime));
 
 		// Device를 조회 조건으로 넣을지 여부
 		String selectDeviceYn = "N";
@@ -166,7 +172,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 * Purchase SC Call
 		 */
 		this.logger.debug("##### HistoryList SC Call Start");
+		long scStTime = System.currentTimeMillis();
 		scResponse = this.historySci.searchHistoryList(scRequest);
+		this.logger.info("##### [SAC History CallTime] HistorySC historySci.searchHistoryList END takes {} ms",
+				(System.currentTimeMillis() - scStTime));
 		this.logger.debug("##### HistoryList SC Call End");
 
 		/*************************************************
@@ -280,6 +289,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			}
 
 		}
+		this.logger.info("##### [SAC History CallTime] HistoryListServiceImpl.searchHistoryList SC Result Setting");
 		/*************************************************
 		 * SC -> SAC Response Setting Start
 		 *************************************************/
@@ -305,7 +315,11 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 				this.logger.debug("### productInfoSacReq  : {}" + productInfoSacReq.toString());
 
+				long prodTime = System.currentTimeMillis();
 				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
+				this.logger.info(
+						"##### [SAC History CallTime] LOCAL SCI prod productInfoSCI.getProductList END takes {} ms",
+						(System.currentTimeMillis() - prodTime));
 			}
 
 			if (fixProdIdList.size() > 0) {
@@ -315,7 +329,12 @@ public class HistoryListServiceImpl implements HistoryListService {
 				fixProductInfoSacReq.setLang(request.getLangCd());
 				fixProductInfoSacReq.setList(fixProdIdList);
 
+				long fixprodTime = System.currentTimeMillis();
 				fixProductInfoSacRes = this.productInfoSCI.getProductList(fixProductInfoSacReq);
+				this.logger.info(
+						"##### [SAC History CallTime] LOCAL SCI fix productInfoSCI.getProductList END takes {} ms",
+						(System.currentTimeMillis() - fixprodTime));
+
 			}
 
 			if (productInfoSacRes != null) {
@@ -345,6 +364,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 					}
 				}
 			}
+			this.logger
+					.info("##### [SAC History CallTime] HistoryListServiceImpl.searchHistoryList Product Result Setting");
 
 		}
 		this.logger.debug("##### HistoryList ProductInfo End");
@@ -373,7 +394,12 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 			try {
 				// member InternalSCI Call
+				long uDevicdTime = System.currentTimeMillis();
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+				this.logger.info(
+						"##### [SAC History CallTime] LOCAL SCI searchUserSCI.searchUserByDeviceKey END takes {} ms",
+						(System.currentTimeMillis() - uDevicdTime));
+
 				useDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
 			} catch (Exception e) {
 				useInfo = false;
@@ -390,8 +416,13 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 			try {
 				// member InternalSCI Call
+				long sDevicdTime = System.currentTimeMillis();
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
+				this.logger.info(
+						"##### [SAC History CallTime] LOCAL SCI searchUserSCI.searchUserByDeviceKey END takes {} ms",
+						(sDevicdTime - System.currentTimeMillis()));
 				sendDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
+
 			} catch (Exception e) {
 				sendInfo = false;
 				this.logger.info("---------------------------------------------------");
@@ -431,7 +462,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		response.setTotalCnt(scResponse.getTotalCnt());
 
 		long end = System.currentTimeMillis();
-		this.logger.info("##### [SAC History List CallTime] HistoryListServiceImpl.searchHistoryList takes {} ms",
+		this.logger.info("##### [SAC History CallTime] HistoryListServiceImpl.searchHistoryList END takes {} ms",
 				(end - start));
 
 		return response;
@@ -489,9 +520,13 @@ public class HistoryListServiceImpl implements HistoryListService {
 		/**
 		 * 구매정책을 조회하여 list에 셋팅
 		 */
+		long polTime = System.currentTimeMillis();
 		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
 				.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
 						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
+		this.logger.info(
+				"##### [SAC History Count CallTime] HistoryListServiceImpl.searchHistoryCount Policy Call takes {} ms",
+				(System.currentTimeMillis() - polTime));
 
 		// Device를 조회 조건으로 넣을지 여부
 		String selectDeviceYn = "N";
@@ -511,7 +546,11 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 *************************************************/
 
 		// SC Call
+		long scTime = System.currentTimeMillis();
 		scResponse = this.historySci.searchHistoryCount(scRequest);
+		this.logger.info(
+				"##### [SAC History Count CallTime] HistoryListServiceImpl.searchHistoryCount SC Call takes {} ms",
+				(System.currentTimeMillis() - scTime));
 
 		if (scResponse.getCntList() != null && scResponse.getCntList().size() > 0) {
 			for (ProductCountSc obj : scResponse.getCntList()) {
@@ -527,7 +566,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 		response.setCntList(sacProdList);
 
 		long end = System.currentTimeMillis();
-		this.logger.info("##### [SAC History Count CallTime] HistoryListServiceImpl.searchHistoryCount takes {} ms",
+		this.logger.info(
+				"##### [SAC History Count CallTime] HistoryListServiceImpl.searchHistoryCount End takes {} ms",
 				(end - start));
 
 		// logger.debug("list : {}", historyListRes);
