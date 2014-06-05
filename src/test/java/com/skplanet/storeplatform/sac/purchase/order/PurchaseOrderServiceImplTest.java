@@ -173,7 +173,7 @@ public class PurchaseOrderServiceImplTest {
 	 */
 	@Test
 	public void freePurchaseInsert() throws Exception {
-		this.purchaseOrderService.createFreePurchase(this.purchaseInfo);
+		this.purchaseOrderService.freePurchase(this.purchaseInfo);
 	}
 
 	/**
@@ -187,6 +187,6 @@ public class PurchaseOrderServiceImplTest {
 	 */
 	@Test
 	public void reservePurchase() throws Exception {
-		this.purchaseOrderService.createReservedPurchase(this.purchaseInfo);
+		this.purchaseOrderService.reservePurchase(this.purchaseInfo);
 	}
 }

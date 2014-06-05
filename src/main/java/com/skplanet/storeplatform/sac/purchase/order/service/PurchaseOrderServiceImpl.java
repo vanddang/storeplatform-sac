@@ -157,7 +157,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 생성된 구매이력 건수
 	 */
 	@Override
-	public int createFreePurchase(PurchaseOrderInfo purchaseOrderInfo) {
+	public int freePurchase(PurchaseOrderInfo purchaseOrderInfo) {
 		// CLINK 예외 처리
 		boolean bAtLeastOne = false;
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
@@ -329,7 +329,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 *            구매요청 정보
 	 */
 	@Override
-	public void createReservedPurchase(PurchaseOrderInfo purchaseOrderInfo) {
+	public void reservePurchase(PurchaseOrderInfo purchaseOrderInfo) {
 		// -----------------------------------------------------------------------------
 		// PayPlanet 가맹점 정보 조회
 
@@ -612,7 +612,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 *            결제결과 정보
 	 */
 	@Override
-	public List<PrchsDtlMore> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId) {
+	public List<PrchsDtlMore> confirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId) {
 		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,START");
 
 		// ------------------------------------------------------------------------------
@@ -828,7 +828,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 구매집계 요청 데이터 : 시험폰 결제 경우 제외
 		List<PrchsProdCnt> prchsProdCntList = null;
 		if (bSktTest == false) {
-			this.purchaseOrderMakeDataService.makePrchsProdCntList(prchsDtlMoreList,
+			prchsProdCntList = this.purchaseOrderMakeDataService.makePrchsProdCntList(prchsDtlMoreList,
 					PurchaseConstants.PRCHS_STATUS_COMPT);
 		}
 
@@ -1045,12 +1045,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			StringBuffer sbOcbAccum = new StringBuffer(64);
 
 			if (StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT)) {
-				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:4.0;"); // 시험폰, SKP법인폰 결제 제외
+				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:1.0;"); // 시험폰, SKP법인폰 결제 제외
 			} else {
-				sbOcbAccum.append("12:4.0;"); // 다날
+				sbOcbAccum.append("12:1.0;"); // 다날
 			}
 
-			sbOcbAccum.append("13:4.0;14:4.0;25:4.0"); // 신용카드, PayPin, T store Cash
+			sbOcbAccum.append("13:1.0;14:1.0;25:1.0"); // 신용카드, PayPin, T store Cash
 
 			return sbOcbAccum.toString();
 		}

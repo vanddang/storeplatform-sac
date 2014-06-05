@@ -111,12 +111,12 @@ public class PurchaseOrderController {
 
 		// 진행 처리: 무료구매완료 처리 || 결제Page 요청 준비작업
 		if (purchaseOrderInfo.getRealTotAmt() > 0) {
-			this.orderService.createReservedPurchase(purchaseOrderInfo); // 구매예약
+			this.orderService.reservePurchase(purchaseOrderInfo); // 구매예약
 			this.orderPaymentPageService.buildPaymentPageUrlParam(purchaseOrderInfo); // 결제Page 정보 세팅
 			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_PAYMENT);
 
 		} else {
-			this.orderService.createFreePurchase(purchaseOrderInfo); // 구매생성 (무료)
+			this.orderService.freePurchase(purchaseOrderInfo); // 구매생성 (무료)
 			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_FREE);
 		}
 
@@ -169,7 +169,7 @@ public class PurchaseOrderController {
 		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
 
 		// 비과금 구매완료 처리
-		this.orderService.createFreePurchase(purchaseOrderInfo);
+		this.orderService.freePurchase(purchaseOrderInfo);
 
 		// 응답 세팅
 		CreateFreePurchaseSacRes res = new CreateFreePurchaseSacRes();
@@ -212,7 +212,7 @@ public class PurchaseOrderController {
 		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
 
 		// 비과금 구매완료 처리
-		int count = this.orderService.createFreePurchase(purchaseOrderInfo);
+		int count = this.orderService.freePurchase(purchaseOrderInfo);
 
 		// 응답 세팅
 		CreateBizPurchaseSacRes res = new CreateBizPurchaseSacRes();
@@ -304,7 +304,7 @@ public class PurchaseOrderController {
 		// 쇼핑상품 쿠폰 발급요청
 		// 구매 확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장
 
-		List<PrchsDtlMore> prchsDtlMoreList = this.orderService.executeConfirmPurchase(notifyPaymentReq, tenantId);
+		List<PrchsDtlMore> prchsDtlMoreList = this.orderService.confirmPurchase(notifyPaymentReq, tenantId);
 
 		// ------------------------------------------------------------------------------
 		// 구매 후 처리 - 씨네21/인터파크, 구매건수 증가 등등

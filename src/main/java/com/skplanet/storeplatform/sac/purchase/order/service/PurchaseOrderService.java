@@ -35,7 +35,7 @@ public interface PurchaseOrderService {
 	 *            구매요청 정보
 	 * @return 생성된 구매이력 건수
 	 */
-	public int createFreePurchase(PurchaseOrderInfo purchaseOrderInfo);
+	public int freePurchase(PurchaseOrderInfo purchaseOrderInfo);
 
 	/**
 	 * 
@@ -46,7 +46,7 @@ public interface PurchaseOrderService {
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 */
-	public void createReservedPurchase(PurchaseOrderInfo purchaseOrderInfo);
+	public void reservePurchase(PurchaseOrderInfo purchaseOrderInfo);
 
 	/**
 	 * 
@@ -71,6 +71,6 @@ public interface PurchaseOrderService {
 	 *            테넌트 ID
 	 * @return 구매예약했던 구매이력 목록
 	 */
-	public List<PrchsDtlMore> executeConfirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId);
+	public List<PrchsDtlMore> confirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId);
 
 }
