@@ -78,6 +78,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 */
 	@Override
 	public HistoryListSacRes searchHistoryList(HistoryListSacReq request) {
+		long start = System.currentTimeMillis();
 		this.logger.debug("HistoryListSacRes : {}", request);
 		this.logger.info("HistoryListSac Request Param : {}", request);
 
@@ -429,6 +430,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 		response.setHistoryList(sacHistoryList);
 		response.setTotalCnt(scResponse.getTotalCnt());
 
+		long end = System.currentTimeMillis();
+		this.logger.info("##### [SAC History List CallTime] HistoryListServiceImpl.searchHistoryList takes {} ms",
+				(end - start));
+
 		return response;
 	}
 
@@ -441,6 +446,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 */
 	@Override
 	public HistoryCountSacRes searchHistoryCount(HistoryCountSacReq request) {
+		long start = System.currentTimeMillis();
 		// logger.debug("list : {}", historyListReq);
 
 		// SC request/response VO
@@ -519,6 +525,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		response.setTotalCnt(scResponse.getTotalCnt());
 		response.setCntList(sacProdList);
+
+		long end = System.currentTimeMillis();
+		this.logger.info("##### [SAC History Count CallTime] HistoryListServiceImpl.searchHistoryCount takes {} ms",
+				(end - start));
 
 		// logger.debug("list : {}", historyListRes);
 		return response;
