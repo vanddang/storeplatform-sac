@@ -137,7 +137,8 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         // Date
         product.setDateList(new ArrayList<Date>());
         if(StringUtils.isNotEmpty(musicDetail.getIssueDay())) {
-            product.getDateList().add(new Date("date/issue", DateUtils.parseDate(musicDetail.getIssueDay())));
+            product.getDateList().add(new Date("date/issue",
+                    DateUtils.parseDate(StringUtils.rightPad(musicDetail.getIssueDay(), 14, "0"))));
         }
         
         // tmembership 할인율
