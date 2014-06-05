@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashBalanceEcRes;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacReq;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
@@ -42,6 +43,15 @@ public class PurchaseCancelControllerTest {
 
 	@Test
 	public void testPurchaseCancel() throws Exception {
+
+		String temp = "20140602";
+		temp = StringUtils.substring(temp, 0, 6);
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		String testJson = "{\"cashList\" : [], \"id\" : \"testId\"}";
+
+		TStoreCashBalanceEcRes tStoreCashBalanceEcRes = mapper.readValue(testJson, TStoreCashBalanceEcRes.class);
 
 		String resvCol03 = "CASH=;POINT=1234";
 		String TCashCash = StringUtils.substringBetween(resvCol03, "CASH=", ";");
@@ -66,7 +76,6 @@ public class PurchaseCancelControllerTest {
 
 		// purchaseCancelReq.setPrchsList(list);
 
-		ObjectMapper mapper = new ObjectMapper();
 		String json = mapper.writeValueAsString(purchaseCancelByUserSacReq);
 
 		this.mvc.perform(

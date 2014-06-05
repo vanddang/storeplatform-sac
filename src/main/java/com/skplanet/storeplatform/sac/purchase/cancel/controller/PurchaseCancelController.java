@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.purchase.cancel.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByAdminSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByAdminSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacReq;
@@ -283,6 +283,11 @@ public class PurchaseCancelController {
 		purchaseCancelSacParam.setReqUserId(purchaseCancelByAdminSacReq.getReqUserId());
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByAdminSacReq.getCancelReqPathCd());
 		purchaseCancelSacParam.setShoppingForceCancelYn(purchaseCancelByAdminSacReq.getShoppingForceCancelYn());
+		// 쇼핑쿠폰 cms 취소 결과값 무시 여부.
+		if (StringUtils.equals("F", purchaseCancelByAdminSacReq.getShoppingForceCancelYn())) {
+			purchaseCancelSacParam.setIgnoreCouponCms(true);
+			purchaseCancelSacParam.setShoppingForceCancelYn("Y");
+		}
 		purchaseCancelSacParam.setSktLimitUserCancelYn(purchaseCancelByAdminSacReq.getSktLimitUserCancelYn());
 		if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_ADMIN_REFUND,
 				purchaseCancelSacParam.getCancelReqPathCd())

@@ -31,8 +31,24 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 	private String sktLimitUserCancelYn;
 
 	private Boolean ignorePayment = false;
+	private Boolean ignoreCouponCms = false;
 
 	private List<PurchaseCancelDetailSacParam> prchsCancelList;
+
+	/**
+	 * @return the ignoreCouponCms
+	 */
+	public Boolean getIgnoreCouponCms() {
+		return this.ignoreCouponCms;
+	}
+
+	/**
+	 * @param ignoreCouponCms
+	 *            the ignoreCouponCms to set
+	 */
+	public void setIgnoreCouponCms(Boolean ignoreCouponCms) {
+		this.ignoreCouponCms = ignoreCouponCms;
+	}
 
 	/**
 	 * @return the reqUserId

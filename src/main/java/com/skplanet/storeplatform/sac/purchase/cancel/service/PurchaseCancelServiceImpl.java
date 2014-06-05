@@ -591,7 +591,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);
 		} catch (Exception e) {
 			this.logger.info("SAC_PUR_8122 Exception : {}", e.getMessage());
-			throw new StorePlatformException("SAC_PUR_8122", e);
+			if (!purchaseCancelSacParam.getIgnoreCouponCms()) {
+				throw new StorePlatformException("SAC_PUR_8122", e);
+			}
 		}
 
 	}
