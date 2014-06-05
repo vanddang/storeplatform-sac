@@ -34,7 +34,7 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	private String cancelReqPathCd;
 
 	@NotBlank
-	@Pattern(regexp = "^Y|^N")
+	@Pattern(regexp = "^Y|^N|^F")
 	private String shoppingForceCancelYn;
 
 	@NotBlank
