@@ -162,8 +162,8 @@
     ) IV 
     </select>    
     
-  <select id="searchFreepassBasicList" parameterType="Map" resultType="FreePassBasicInfo">
-  /* FreePassInfoMapper.xml, searchFreepassBasicList,정액권 기본 정보 조회 , 김형식/SK플래닛, 2014-06-09 */
+    <select id="searchFreepassBasicList" parameterType="Map" resultType="FreePassBasicInfo">
+      /* FreePassInfoMapper.xml, searchFreepassBasicList,정액권 기본 정보 조회 , 김형식/SK플래닛, 2014-06-09 */
          SELECT  
 	             PD.PROD_ID
 	           , DC.PROD_NM
