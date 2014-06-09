@@ -1,7 +1,14 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,6 +23,9 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreeP
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
 
@@ -44,13 +54,13 @@ public class FreePassInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	// @Test
 	public void searchFreePassDrmInfo() {
 		try {
 			FreePassInfoSacReq req = new FreePassInfoSacReq();
 
-			req.setProdId("FR00000103");
-			req.setEpisodeProdId("H000043061");
+			req.setProdId("F901001220");
+			req.setEpisodeProdId("H001605887");
 			req.setTenantId("S01");
 			req.setLangCd("ko");
 
@@ -75,13 +85,13 @@ public class FreePassInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	// @Test
 	public void getFreepassList() {
 		try {
 			EpisodeInfoReq req = new EpisodeInfoReq();
 			// Q/A 값은 H001610176
 			// 개발은 FR00000103
-			req.setProdId("FR00000103");
+			req.setProdId("H002621847");
 			req.setTenantId("S01");
 			req.setLangCd("ko");
 			req.setDeviceModelCd("SHW-M100S");
@@ -102,5 +112,40 @@ public class FreePassInfoSCITest {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * <pre>
+	 * 정액권 기본 정보 조회.
+	 * </pre>
+	 * 
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonGenerationException
+	 * 
+	 */
+	@Test
+	public void searchFreepassBasicList() throws JsonGenerationException, JsonMappingException, IOException {
+		FreePassBasicInfoSacReq req = new FreePassBasicInfoSacReq();
+		List<String> list = new ArrayList<String>();
+
+		list.add("FR00000103");
+		list.add("H090234048");
+		list.add("H090234052");
+		list.add("H900068064");
+		req.setList(list);
+		req.setTenantId("S01");
+
+		FreePassBasicInfoSacRes res = this.freePassInfoSCI.searchFreepassBasicList(req);
+		List<FreePassBasicInfo> freePassBasicInfoList = new ArrayList<FreePassBasicInfo>();
+		freePassBasicInfoList = res.getFreePassBasicInfo();
+		this.log.debug("##### productInfo cnt : ", freePassBasicInfoList.size());
+		for (FreePassBasicInfo freePassBasicInfo : freePassBasicInfoList) {
+			this.log.debug("##### FreePass productInfo VO : {}",
+					ReflectionToStringBuilder.toString(freePassBasicInfo, ToStringStyle.MULTI_LINE_STYLE));
+		}
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(freePassBasicInfoList);
+		this.log.info("##### FreePass productInfo  JSON : {}", json);
 	}
 }
