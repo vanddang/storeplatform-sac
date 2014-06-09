@@ -165,9 +165,9 @@
   <select id="searchFreepassBasicList" parameterType="Map" resultType="FreePassBasicInfo">
   /* FreePassInfoMapper.xml, searchFreepassBasicList,정액권 기본 정보 조회 , 김형식/SK플래닛, 2014-06-09 */
          SELECT  
-             PD.PROD_ID
-           , DC.PROD_NM
-           , CM.CMPX_PROD_CLSF_CD AS PLAN_TYPE     
+	             PD.PROD_ID
+	           , DC.PROD_NM
+	           , CM.CMPX_PROD_CLSF_CD AS PLAN_TYPE     
            FROM 
                  TB_DP_PROD PD
                , TB_DP_CMPX_PROD CM
