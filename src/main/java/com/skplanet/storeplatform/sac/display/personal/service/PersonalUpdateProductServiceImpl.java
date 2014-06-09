@@ -104,7 +104,13 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		 **************************************************************/
 		List<String> listPkgNm = new ArrayList<String>();
 		for (String s : packageInfoList) {
-			listPkgNm.add(StringUtils.split(s, "/")[0]);
+			String[] arrInfo = StringUtils.split(s, "/");
+			if (arrInfo.length >= 2) {
+				String pkgNm = arrInfo[0];
+				// parameter가 적어도 packageName/version정보로 와야지만 update 리스트에 추가한다.
+				this.log.debug("##### update package name : {}", pkgNm);
+				listPkgNm.add(pkgNm);
+			}
 		}
 
 		// Oracle SQL 리터럴 수행 방지를 위한 예외처리
@@ -181,41 +187,44 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 				for (String s : packageInfoList) {
 					sArrPkgInfo = StringUtils.split(s, "/");
-					if (sPkgNm.equals(sArrPkgInfo[0])) {
-						iReqPkgVerCd = NumberUtils.toInt(sArrPkgInfo[1]);
+					if (sArrPkgInfo.length >= 2) {
+						this.log.debug("##### sArrPkgInfo's length is over 2!!!!");
+						if (sPkgNm.equals(sArrPkgInfo[0])) {
+							iReqPkgVerCd = NumberUtils.toInt(sArrPkgInfo[1]);
 
-						// 단말에서 올라온 VERSION_CODE, installer 셋팅
-						mapPkg.put("REQ_APK_VER_CD", sArrPkgInfo[1]);
-						mapPkg.put("REQ_INSTALLER", ((sArrPkgInfo.length > 2) ? sArrPkgInfo[2] : ""));
-						this.log.debug("###########################################");
-						this.log.debug("##### {}'s server version is {} !!!!!!!!!!", sPkgNm, iPkgVerCd);
-						this.log.debug("##### {}'s user   version is {} !!!!!!!!!!", sPkgNm, iReqPkgVerCd);
-						this.log.debug("##### Is fake update?????????? : {} ", sFakeYn);
-						if (sFakeYn.equals("Y")) {
-							// Fake Update 대상일 경우( 단말 Version <= 서버 Version )
-							if (iPkgVerCd >= iReqPkgVerCd) {
-								this.log.debug("##### package nm: {}", sPkgNm);
-								// Version 이 동일할 경우 +1
-								if (iPkgVerCd == iReqPkgVerCd) {
-									this.log.debug("##### fake update target & same version !!!!!!!!!");
-									mapPkg.put("APK_VER_CD", Integer.toString((iPkgVerCd + 1)));
-									this.log.debug("##### fake update target version up from {} to {}", iPkgVerCd,
-											iPkgVerCd + 1);
+							// 단말에서 올라온 VERSION_CODE, installer 셋팅
+							mapPkg.put("REQ_APK_VER_CD", sArrPkgInfo[1]);
+							mapPkg.put("REQ_INSTALLER", ((sArrPkgInfo.length > 2) ? sArrPkgInfo[2] : ""));
+							this.log.debug("###########################################");
+							this.log.debug("##### {}'s server version is {} !!!!!!!!!!", sPkgNm, iPkgVerCd);
+							this.log.debug("##### {}'s user   version is {} !!!!!!!!!!", sPkgNm, iReqPkgVerCd);
+							this.log.debug("##### Is fake update?????????? : {} ", sFakeYn);
+							if (sFakeYn.equals("Y")) {
+								// Fake Update 대상일 경우( 단말 Version <= 서버 Version )
+								if (iPkgVerCd >= iReqPkgVerCd) {
+									this.log.debug("##### package nm: {}", sPkgNm);
+									// Version 이 동일할 경우 +1
+									if (iPkgVerCd == iReqPkgVerCd) {
+										this.log.debug("##### fake update target & same version !!!!!!!!!");
+										mapPkg.put("APK_VER_CD", Integer.toString((iPkgVerCd + 1)));
+										this.log.debug("##### fake update target version up from {} to {}", iPkgVerCd,
+												iPkgVerCd + 1);
+									}
+									listProd.add(mapPkg);
+									listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
 								}
-								listProd.add(mapPkg);
-								listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
-							}
-						} else {
-							// 일반 업데이트 대상 ( 단말 Version < 서버 Version )
-							if (iPkgVerCd > iReqPkgVerCd) {
-								this.log.debug("##### is fake update target? : {}", sPkgNm);
-								listProd.add(mapPkg);
-								listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
 							} else {
-								this.log.debug("##### {} is not update target ", sPkgNm);
+								// 일반 업데이트 대상 ( 단말 Version < 서버 Version )
+								if (iPkgVerCd > iReqPkgVerCd) {
+									this.log.debug("##### is fake update target? : {}", sPkgNm);
+									listProd.add(mapPkg);
+									listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
+								} else {
+									this.log.debug("##### {} is not update target ", sPkgNm);
+								}
 							}
+							break;
 						}
-						break;
 					}
 				}
 			}

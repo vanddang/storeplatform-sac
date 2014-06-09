@@ -111,7 +111,13 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 		 **************************************************************/
 		List<String> listPkgNm = new ArrayList<String>();
 		for (String s : packageInfoList) {
-			listPkgNm.add(StringUtils.split(s, "/")[0]);
+			String[] arrInfo = StringUtils.split(s, "/");
+			if (arrInfo.length >= 2) {
+				String pkgNm = arrInfo[0];
+				// parameter가 적어도 packageName/version정보로 와야지만 update 리스트에 추가한다.
+				this.log.debug("##### update package name : {}", pkgNm);
+				listPkgNm.add(pkgNm);
+			}
 		}
 
 		// Oracle SQL 리터럴 수행 방지를 위한 예외처리
@@ -180,17 +186,20 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 				String sArrPkgInfo[] = null;
 				for (String s : packageInfoList) {
 					sArrPkgInfo = StringUtils.split(s, "/");
-					this.log.debug("###########################################");
-					this.log.debug("##### {}'s server version is {} !!!!!!!!!!", sPkgNm, iPkgVerCd);
-					this.log.debug("##### {}'s user   version is {} !!!!!!!!!!", sPkgNm, sArrPkgInfo[1]);
-					// 단말보다 Version Code 가 높은경우
-					if (sPkgNm.equals(sArrPkgInfo[0])) {
-						if (iPkgVerCd > NumberUtils.toInt(sArrPkgInfo[1])) {
-							this.log.debug("##### Add to update target!!!!!!!!!");
-							listProd.add(mapPkg);
-							listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
+					if (sArrPkgInfo.length >= 2) {
+						this.log.debug("###########################################");
+						this.log.debug("##### sArrPkgInfo's length is over 2!!!!");
+						this.log.debug("##### {}'s server version is {} !!!!!!!!!!", sPkgNm, iPkgVerCd);
+						this.log.debug("##### {}'s user   version is {} !!!!!!!!!!", sPkgNm, sArrPkgInfo[1]);
+						// 단말보다 Version Code 가 높은경우
+						if (sPkgNm.equals(sArrPkgInfo[0])) {
+							if (iPkgVerCd > NumberUtils.toInt(sArrPkgInfo[1])) {
+								this.log.debug("##### Add to update target!!!!!!!!!");
+								listProd.add(mapPkg);
+								listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
+							}
+							break;
 						}
-						break;
 					}
 				}
 			}
