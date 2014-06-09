@@ -51,5 +51,17 @@
         <property name="defaultEncoding" value="utf-8" />
         <property name="cacheSeconds" value="60"/>
     </bean> 
-     
+    <bean id="accessLoggingFitler" class="com.skplanet.storeplatform.framework.core.log.access.AccessLoggingFitler" >
+        <property name="accessLoggingManager" >
+		   <bean class="com.skplanet.storeplatform.framework.core.log.access.AccessLoggingManagerFactoryBean">
+		        <constructor-arg>
+		            <bean class="com.skplanet.storeplatform.framework.core.log.access.XmlAccessLoggingManagerConfigurer">
+		                <constructor-arg>
+		                    <value>access-logging-configuration.xml</value>
+		                </constructor-arg>
+		            </bean>
+		        </constructor-arg>
+		    </bean>  
+        </property>
+    </bean>      
 </beans>

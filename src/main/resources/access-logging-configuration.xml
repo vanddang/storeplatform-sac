@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<accessLoggingConfiguration>
+    <activation>true</activation> 
+    <loggerName>test</loggerName>
+    <loggingLevel>INFO</loggingLevel>
+    <requestBodyLength>200</requestBodyLength>
+    <responseBodyLength>200</responseBodyLength>
+    <requestLoggingActivation>true</requestLoggingActivation> 
+    <responseLoggingActivation>true</responseLoggingActivation>
+    <requestHeaderList>
+        <requestHeader>*</requestHeader>
+    </requestHeaderList>
+    <responseHeaderList>
+        <responseHeader>*</responseHeader>  
+    </responseHeaderList> 
+    <loggingTiming>true</loggingTiming>
+</accessLoggingConfiguration>
