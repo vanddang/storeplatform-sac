@@ -78,9 +78,7 @@
              , B.PART_PROD_ID
              , B.TOP_MENU_ID
              , B.META_CLSF_CD
-             , (CASE WHEN B.TOP_MENU_ID = 'DP16' THEN B.CONTENTS_TYPE_CD
-                     ELSE 'PD002501'
-                 END) AS CONTENTS_TYPE_CD
+             , B.CONTENTS_TYPE_CD
              , (CASE WHEN B.ETC_CD = 'DP007101' THEN 'today/recommend'
                      WHEN B.ETC_CD = 'DP007102' THEN 'today/book'
                      WHEN B.ETC_CD = 'DP007103' THEN 'today/book'
