@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <accessLoggingConfiguration>
     <activation>true</activation> 
-    <loggerName>test</loggerName>
+    <loggerName>com.skplanet.storeplatform.sac</loggerName>
     <loggingLevel>INFO</loggingLevel>
     <requestBodyLength>200</requestBodyLength>
     <responseBodyLength>200</responseBodyLength>
