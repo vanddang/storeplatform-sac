@@ -323,6 +323,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 				this.logger.debug("### productInfoSacReq  : {}" + productInfoSacReq.toString());
 
 				long prodTime = System.currentTimeMillis();
+				this.logger.error(
+						"##### [SAC History CallTime]  : LOCAL SCI prod productInfoSCI.getProductList param {}",
+						productInfoSacReq);
 				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
 				this.logger.error(
 						"##### [SAC History CallTime] LOCAL SCI prod productInfoSCI.getProductList END takes {} ms",
@@ -336,6 +339,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 				fixProductInfoSacReq.setList(fixProdIdList);
 
 				long fixprodTime = System.currentTimeMillis();
+				this.logger.error(
+						"##### [SAC History CallTime]  : LOCAL SCI fix productInfoSCI.getProductList param {}",
+						fixProductInfoSacReq);
 				fixProductInfoSacRes = this.freePassInfoSCI.searchFreepassBasicList(fixProductInfoSacReq);
 				this.logger.error(
 						"##### [SAC History CallTime] LOCAL SCI fix productInfoSCI.getProductList END takes {} ms",
@@ -400,6 +406,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 			try {
 				// member InternalSCI Call
 				long uDevicdTime = System.currentTimeMillis();
+				this.logger.error(
+						"##### [SAC History CallTime]  : LOCAL SCI use searchUserSCI.searchUserByDeviceKey param {}",
+						searchUserDeviceSacReq);
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
 				this.logger
 						.error("##### [SAC History CallTime] LOCAL SCI use searchUserSCI.searchUserByDeviceKey END takes {} ms",
@@ -422,6 +431,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 			try {
 				// member InternalSCI Call
 				long sDevicdTime = System.currentTimeMillis();
+				this.logger.error(
+						"##### [SAC History CallTime]  : LOCAL SCI send searchUserSCI.searchUserByDeviceKey param {}",
+						searchUserDeviceSacReq);
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
 				this.logger
 						.error("##### [SAC History CallTime] LOCAL SCI send searchUserSCI.searchUserByDeviceKey END takes {} ms",
