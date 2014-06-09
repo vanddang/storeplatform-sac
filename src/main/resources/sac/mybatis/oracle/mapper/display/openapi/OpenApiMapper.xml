@@ -36,7 +36,7 @@
 		                                  FROM TB_DP_LIST_PROD 
 		                                 WHERE LIST_ID = #{listId}
 		                                   AND TENANT_ID =#{tenantId}
-		                                   AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
+		                                   AND STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
 		                                   AND EXPO_YN ='Y'
 		                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
 		                               )                          A
@@ -563,6 +563,9 @@
                         SELECT  COUNT(*) OVER() AS TOTAL_CNT       
                               , ROWNUM AS RNUM
                               , JA.*
+							  , (SELECT MAX(AID) FROM SPSAC.TB_DP_APP_PROD WHERE PROD_ID = JA.EPSD_PROD_ID) AS AID                                                                        
+							  , (SELECT PROD_NM FROM SPSAC.TB_DP_PROD_DESC WHERE PROD_ID = JA.PROD_ID  AND LANG_CD = #{langCd}) AS PROD_NM
+							  , (SELECT PROD_BASE_DESC FROM SPSAC.TB_DP_PROD_DESC WHERE PROD_ID = JA.PROD_ID AND LANG_CD = #{langCd}) AS PROD_BASE_DESC                                                
                           FROM
                                (
                                 SELECT B.PROD_ID
@@ -571,9 +574,6 @@
                                      , B.PROD_GRD_CD
                                      , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
                                      , C.PART_PROD_ID AS EPSD_PROD_ID
-                                     , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = B.PROD_ID) AS AID
-                                     , D.PROD_NM
-                                     , D.PROD_BASE_DESC
                                      , F.MENU_ID
                                      , I.CHNL_UNLMT_AMT
                                      , I.CHNL_PERIOD_AMT
@@ -596,13 +596,12 @@
                                          WHERE 1=1
                                            AND TENANT_ID = #{tenantId}
                                            AND LIST_ID = #{listId}
-                                           AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                           AND STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
                                            AND EXPO_YN ='Y'
                                            AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                        )                              A           
                                       , TB_DP_PROD                    B
                                       , TB_DP_PROD_RSHP               C
-                                      , TB_DP_PROD_DESC               D
                                       , TB_DP_MENU_CATEGORY_PROD_MAPG F
                                       , TB_DP_MENU_CATEGORY           G
                                       , TB_DP_TENANT_PROD             H
@@ -613,7 +612,6 @@
                                  WHERE 1=1
                                    AND A.PROD_ID = B.PROD_ID
                                    AND B.PROD_ID = C.PART_PROD_ID
-                                   AND B.PROD_ID = D.PROD_ID 
                                    AND B.PROD_ID = F.PROD_ID
                                    AND B.PROD_ID = H.PROD_ID   
                                    AND B.PROD_ID = I.PROD_ID   
@@ -634,15 +632,15 @@
                                    AND B.SVC_GRP_CD       = 'DP000201'    /* 앱 상품 조회 */
                                    </otherwise>
                                    </choose>
-                                   AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
+                                     AND G.TOP_MENU_ID IN ('DP01', 'DP03', 'DP04', 'DP08')
                                    </if>
                                    <if test ="topMenuId != 'DPAPP'">
-                                     AND B.TOP_MENU_ID  = #{topMenuId}
+                                         AND B.TOP_MENU_ID  = #{topMenuId}
+                                         AND G.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
-                                   AND D.LANG_CD  = #{langCd}
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
@@ -658,7 +656,7 @@
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB
                                         , B.REG_DT
-                                        , D.PROD_NM
+                                        --, D.PROD_NM
                                ) JA
                        ) 
                  WHERE ROWNUM BETWEEN #{offset} AND #{count}  
@@ -708,6 +706,9 @@
                         SELECT  COUNT(*) OVER() AS TOTAL_CNT       
                               , ROWNUM AS RNUM
                               , JA.*
+                              , (SELECT MAX(AID) FROM SPSAC.TB_DP_APP_PROD WHERE PROD_ID = JA.EPSD_PROD_ID) AS AID                                                                        
+                              , (SELECT PROD_NM FROM SPSAC.TB_DP_PROD_DESC WHERE PROD_ID = JA.PROD_ID  AND LANG_CD = #{langCd}) AS PROD_NM
+                              , (SELECT PROD_BASE_DESC FROM SPSAC.TB_DP_PROD_DESC WHERE PROD_ID = JA.PROD_ID AND LANG_CD = #{langCd}) AS PROD_BASE_DESC                              
                           FROM
                                (
                                 SELECT B.PROD_ID
@@ -716,9 +717,6 @@
                                      , B.PROD_GRD_CD
                                      , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
                                      , C.PART_PROD_ID AS EPSD_PROD_ID
-                                     , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = B.PROD_ID) AS AID
-                                     , D.PROD_NM
-                                     , D.PROD_BASE_DESC
                                      , F.MENU_ID
                                      , I.CHNL_UNLMT_AMT
                                      , I.CHNL_PERIOD_AMT
@@ -741,13 +739,12 @@
                                          WHERE 1=1
                                            AND TENANT_ID = #{tenantId}
                                            AND LIST_ID = #{listId}
-                                           AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                           AND STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
                                            AND EXPO_YN ='Y'
                                            AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                        )                              A           
                                       , TB_DP_PROD                    B
                                       , TB_DP_PROD_RSHP               C
-                                      , TB_DP_PROD_DESC               D
                                       , TB_DP_MENU_CATEGORY_PROD_MAPG F
                                       , TB_DP_MENU_CATEGORY           G
                                       , TB_DP_TENANT_PROD             H
@@ -757,8 +754,7 @@
                                       , TB_DP_TENANT_PROD_STATS       L
                                  WHERE 1=1
                                    AND A.PROD_ID = B.PROD_ID
-                                   AND B.PROD_ID = C.PART_PROD_ID
-                                   AND B.PROD_ID = D.PROD_ID 
+                                   AND B.PROD_ID = C.PART_PROD_ID 
                                    AND B.PROD_ID = F.PROD_ID
                                    AND B.PROD_ID = H.PROD_ID   
                                    AND B.PROD_ID = I.PROD_ID   
@@ -779,15 +775,15 @@
                                    AND B.SVC_GRP_CD       = 'DP000201'    /* 앱 상품 조회 */
                                    </otherwise>
                                    </choose>
-                                   AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
+                                     AND G.TOP_MENU_ID IN ('DP01', 'DP03', 'DP04', 'DP08')
                                    </if>
                                    <if test ="topMenuId != 'DPAPP'">
                                          AND B.TOP_MENU_ID  = #{topMenuId}
+                                         AND G.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
-                                   AND D.LANG_CD  = #{langCd}
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
@@ -803,7 +799,6 @@
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB
                                         , B.REG_DT
-                                        , D.PROD_NM
                                ) JA
                        ) 
                  WHERE ROWNUM BETWEEN #{offset} AND #{count}  
@@ -853,6 +848,9 @@
                         SELECT  COUNT(*) OVER() AS TOTAL_CNT       
                               , ROWNUM AS RNUM
                               , JA.*
+                              , (SELECT MAX(AID) FROM SPSAC.TB_DP_APP_PROD WHERE PROD_ID = JA.EPSD_PROD_ID) AS AID                                                                        
+                              , (SELECT PROD_NM FROM SPSAC.TB_DP_PROD_DESC WHERE PROD_ID = JA.PROD_ID  AND LANG_CD = #{langCd}) AS PROD_NM
+                              , (SELECT PROD_BASE_DESC FROM SPSAC.TB_DP_PROD_DESC WHERE PROD_ID = JA.PROD_ID AND LANG_CD = #{langCd}) AS PROD_BASE_DESC                              
                           FROM
                                (
                                 SELECT B.PROD_ID
@@ -861,9 +859,6 @@
                                      , B.PROD_GRD_CD
                                      , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
                                      , C.PART_PROD_ID AS EPSD_PROD_ID
-                                     , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = B.PROD_ID) AS AID
-                                     , D.PROD_NM
-                                     , D.PROD_BASE_DESC
                                      , F.MENU_ID
                                      , I.CHNL_UNLMT_AMT
                                      , I.CHNL_PERIOD_AMT
@@ -885,13 +880,12 @@
                                          WHERE 1=1
                                            AND TENANT_ID = #{tenantId}
                                            AND LIST_ID = #{listId}
-                                           AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                           AND STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')                                           
                                            AND EXPO_YN ='Y'
                                            AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                        )                              A           
                                       , TB_DP_PROD                    B
                                       , TB_DP_PROD_RSHP               C
-                                      , TB_DP_PROD_DESC               D
                                       , TB_DP_MENU_CATEGORY_PROD_MAPG F
                                       , TB_DP_MENU_CATEGORY           G
                                       , TB_DP_TENANT_PROD             H
@@ -901,8 +895,7 @@
                                       , TB_DP_TENANT_PROD_STATS       L
                                  WHERE 1=1
                                    AND A.PROD_ID = B.PROD_ID
-                                   AND B.PROD_ID = C.PART_PROD_ID
-                                   AND B.PROD_ID = D.PROD_ID 
+                                   AND B.PROD_ID = C.PART_PROD_ID 
                                    AND B.PROD_ID = F.PROD_ID
                                    AND B.PROD_ID = H.PROD_ID   
                                    AND B.PROD_ID = I.PROD_ID   
@@ -922,15 +915,15 @@
                                    AND B.SVC_GRP_CD       = 'DP000201'    /* 앱 상품 조회 */
                                    </otherwise>
                                    </choose>
-                                   AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
+                                     AND G.TOP_MENU_ID IN ('DP01', 'DP03', 'DP04', 'DP08')
                                    </if>
                                    <if test ="topMenuId != 'DPAPP'">
                                          AND B.TOP_MENU_ID  = #{topMenuId}
+                                         AND G.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
-                                   AND D.LANG_CD  = #{langCd}
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
@@ -946,7 +939,6 @@
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB
                                         , B.REG_DT
-                                        , D.PROD_NM
                                ) JA
                        ) 
                  WHERE ROWNUM BETWEEN #{offset} AND #{count}  
@@ -996,6 +988,9 @@
                         SELECT  COUNT(*) OVER() AS TOTAL_CNT       
                               , ROWNUM AS RNUM
                               , JA.*
+                              , (SELECT MAX(AID) FROM SPSAC.TB_DP_APP_PROD WHERE PROD_ID = JA.EPSD_PROD_ID) AS AID                                                                        
+                              , (SELECT PROD_NM FROM SPSAC.TB_DP_PROD_DESC WHERE PROD_ID = JA.PROD_ID  AND LANG_CD = #{langCd}) AS PROD_NM
+                              , (SELECT PROD_BASE_DESC FROM SPSAC.TB_DP_PROD_DESC WHERE PROD_ID = JA.PROD_ID AND LANG_CD = #{langCd}) AS PROD_BASE_DESC                              
                           FROM
                                (
                                 SELECT B.PROD_ID
@@ -1004,9 +999,6 @@
                                      , B.PROD_GRD_CD
                                      , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
                                      , C.PART_PROD_ID AS EPSD_PROD_ID
-                                     , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = B.PROD_ID) AS AID
-                                     , D.PROD_NM
-                                     , D.PROD_BASE_DESC
                                      , F.MENU_ID
                                      , I.CHNL_UNLMT_AMT
                                      , I.CHNL_PERIOD_AMT
@@ -1029,13 +1021,12 @@
                                          WHERE 1=1
                                            AND TENANT_ID = #{tenantId}
                                            AND LIST_ID = #{listId}
-                                           AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                           AND STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
                                            AND EXPO_YN ='Y'
                                            AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                        )                              A           
                                       , TB_DP_PROD                    B
                                       , TB_DP_PROD_RSHP               C
-                                      , TB_DP_PROD_DESC               D
                                       , TB_DP_MENU_CATEGORY_PROD_MAPG F
                                       , TB_DP_MENU_CATEGORY           G
                                       , TB_DP_TENANT_PROD             H
@@ -1045,8 +1036,7 @@
                                       , TB_DP_TENANT_PROD_STATS       L
                                  WHERE 1=1
                                    AND A.PROD_ID = B.PROD_ID
-                                   AND B.PROD_ID = C.PART_PROD_ID
-                                   AND B.PROD_ID = D.PROD_ID 
+                                   AND B.PROD_ID = C.PART_PROD_ID 
                                    AND B.PROD_ID = F.PROD_ID
                                    AND B.PROD_ID = H.PROD_ID   
                                    AND B.PROD_ID = I.PROD_ID   
@@ -1066,15 +1056,15 @@
                                    AND B.SVC_GRP_CD       = 'DP000201'    /* 앱 상품 조회 */
                                    </otherwise>
                                    </choose>
-                                   AND B.TOP_MENU_ID     != 'DP02'
                                    <if test ="topMenuId == 'DPAPP'">
                                      AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
+                                     AND G.TOP_MENU_ID IN ('DP01', 'DP03', 'DP04', 'DP08')
                                    </if>
                                    <if test ="topMenuId != 'DPAPP'">
                                          AND B.TOP_MENU_ID  = #{topMenuId}
+                                         AND G.TOP_MENU_ID  = #{topMenuId}
                                    </if>
                                    AND C.PROD_RSHP_CD     = 'DP010802'
-                                   AND D.LANG_CD  = #{langCd}
                                    AND F.USE_YN = 'Y'
                                    AND G.USE_YN = 'Y'
                                    AND H.PROD_STATUS_CD   = 'PD000403'
@@ -1090,7 +1080,6 @@
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB 
                                         , B.REG_DT
-                                        , D.PROD_NM
                                ) JA
                        ) 
                  WHERE ROWNUM BETWEEN #{offset} AND #{count}  
@@ -1173,7 +1162,7 @@
 		                                         WHERE  1=1
 		                                           AND  TENANT_ID = #{tenantId}
 		                                           AND  LIST_ID = #{listId}
-		                                           AND  TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+		                                           AND STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
 		                                           AND  EXPO_YN ='Y'
 		                                           AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
 		                                      )                                A
