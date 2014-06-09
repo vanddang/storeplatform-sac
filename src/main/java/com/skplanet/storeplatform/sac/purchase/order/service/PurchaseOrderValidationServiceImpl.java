@@ -686,6 +686,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				}
 
 				if (useExistenceScRes != null) {
+					// 선물 수신자가 정액권 소유했을 경우 기구매 처리
+					if (purchaseOrderInfo.isGift()) {
+						throw new StorePlatformException("SAC_PUR_6112");
+					}
 
 					// 이북/코믹 경우, 이용 가능한 정액권이 나오면 구매 불가 처리 (구매가 가능한 상황이 나오지 못함: 2014.05. 현재)
 					if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
