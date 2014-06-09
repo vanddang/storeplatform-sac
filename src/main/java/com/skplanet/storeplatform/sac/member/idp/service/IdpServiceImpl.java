@@ -2070,6 +2070,7 @@ public class IdpServiceImpl implements IdpService {
 			MbrPwd mbrPwd = new MbrPwd();
 			mbrPwd.setPwRegDate(req_date + req_time);
 			mbrPwd.setMemberID(searchUserRespnse.getUserMbr().getUserID());
+			mbrPwd.setMemberPW("-"); // SC에서 필수로 체크하고 있어서 의미없는 값을 넣기로함.
 
 			updatePasswordUserRequest.setMbrPwd(mbrPwd);
 
