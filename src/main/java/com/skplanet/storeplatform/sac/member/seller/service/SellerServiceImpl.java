@@ -860,17 +860,35 @@ public class SellerServiceImpl implements SellerService {
 		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
 				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
 
-		// 요청 가능 상태 => [메인 : 정상], [서브 : 정상, 승인거절, 전환거절]
-		if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
-				.getSellerMainStatus())
-				|| !(StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
-						.getSellerSubStatus())
-						|| StringUtils.equals(MemberConstants.SUB_STATUS_ACCT_JOIN_REJECT, searchSellerResponse
-								.getSellerMbr().getSellerSubStatus()) || StringUtils.equals(
-						MemberConstants.SUB_STATUS_TURN_REJECT, searchSellerResponse.getSellerMbr()
-								.getSellerSubStatus()))) {
-			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
-					searchSellerResponse.getSellerMbr().getSellerSubStatus());
+		if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY, searchSellerResponse.getSellerMbr()
+				.getSellerCategory())) {
+			// 무료 요청 가능 상태 => [메인 : 정상] , [서브 : 정상, 정산정보승인 거절, 개발자유형전환 거절, 정산정보승인 대기]
+			if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+					.getSellerMainStatus())
+					|| !(StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+							.getSellerSubStatus())
+							|| StringUtils.equals(MemberConstants.SUB_STATUS_ACCT_JOIN_REJECT, searchSellerResponse
+									.getSellerMbr().getSellerSubStatus())
+							|| StringUtils.equals(MemberConstants.SUB_STATUS_TURN_REJECT, searchSellerResponse
+									.getSellerMbr().getSellerSubStatus()) || StringUtils.equals(
+							MemberConstants.SUB_STATUS_ACCT_APPLY_WATING, searchSellerResponse.getSellerMbr()
+									.getSellerSubStatus()))) {
+				throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr()
+						.getSellerMainStatus(), searchSellerResponse.getSellerMbr().getSellerSubStatus());
+			}
+		} else {
+			// 유료 요청 가능 상태 => [메인 : 정상], [서브 : 정상, 정산정보승인 거절, 개발자유형전환 거절]
+			if (!StringUtils.equals(MemberConstants.MAIN_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+					.getSellerMainStatus())
+					|| !(StringUtils.equals(MemberConstants.SUB_STATUS_NORMAL, searchSellerResponse.getSellerMbr()
+							.getSellerSubStatus())
+							|| StringUtils.equals(MemberConstants.SUB_STATUS_ACCT_JOIN_REJECT, searchSellerResponse
+									.getSellerMbr().getSellerSubStatus()) || StringUtils.equals(
+							MemberConstants.SUB_STATUS_TURN_REJECT, searchSellerResponse.getSellerMbr()
+									.getSellerSubStatus()))) {
+				throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr()
+						.getSellerMainStatus(), searchSellerResponse.getSellerMbr().getSellerSubStatus());
+			}
 		}
 
 		UpgradeSellerRequest upgradeSellerRequest = new UpgradeSellerRequest();
