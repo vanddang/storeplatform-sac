@@ -243,10 +243,9 @@ public final class MemberConstants {
 	/*
 	 * MDN이 소속된 통신사 정보 0: SKT, 1: non-SKT, 2: KTF, 3: LGT
 	 */
-	public static final String MDN_CARRIER_DEVICE_TELECOM_SKT = "0"; // SKT
-	public static final String MDN_CARRIER_DEVICE_TELECOM_NON_SKT = "1"; // NON-SKT
-	public static final String MDN_CARRIER_DEVICE_TELECOM_KTF = "2"; // KTF
-	public static final String MDN_CARRIER_DEVICE_TELECOM_LGT = "3"; // LGT
+	public static final String MDN_CARRIER_DEVICE_TELECOM_SKT = "SKT"; // SKT
+	public static final String MDN_CARRIER_DEVICE_TELECOM_KTF = "KTF"; // KTF
+	public static final String MDN_CARRIER_DEVICE_TELECOM_LGT = "LGT"; // LGT
 
 	/**
 	 * 판매자 회원 상수들.
