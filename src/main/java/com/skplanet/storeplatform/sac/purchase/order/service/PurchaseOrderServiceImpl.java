@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemDetailEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.DateUtils;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
@@ -91,6 +93,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private String instanceName;
 	private String hostNum;
 	private String instanceNum;
+
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor;
 
 	@Autowired
 	private PurchaseOrderSCI purchaseOrderSCI;
@@ -649,43 +654,44 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
 		// 구매완료 TLog 중간 세팅
-		final String insdUsermbrNo = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-				PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? prchsDtlMore.getUseInsdUsermbrNo() : prchsDtlMore
-				.getSendInsdUsermbrNo();
-		final String insdDeviceId = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-				PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? prchsDtlMore.getUseInsdDeviceId() : prchsDtlMore
-				.getSendInsdDeviceId();
-		final String mbrId = reservedDataMap.get("userId");
-		final String deviceId = reservedDataMap.get("deviceId");
-		final String imei = reservedDataMap.get("imei");
-		final String mno_type = StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) ? "SKT" : (StringUtils
-				.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_KT) ? "KT" : (StringUtils.equals(
-				reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_UPLUS) ? "U+" : "")); // SKT, KT, U+
-		final String usermbr_no = reservedDataMap.get("userKey");
-		final String system_id = prchsDtlMore.getSystemId();
-		final String purchase_channel = prchsDtlMore.getPrchsReqPathCd();
-		final String purchase_inflow_channel = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-				PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
-		final String purchase_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-				PurchaseConstants.PRCHS_CASE_GIFT_CD) ? prchsDtlMore.getPrchsId() : "";
-		final String coupon_code = reservedDataMap.get("couponCode");
-		final String coupon_item_code = reservedDataMap.get("itemCode");
-		final String auto_payment_yn = StringUtils.defaultIfBlank(reservedDataMap.get("autoPrchsYn"), "N");
-		final List<String> prodIdTempList = new ArrayList<String>();
-		for (PrchsDtlMore tempPrchsDtlMore : prchsDtlMoreList) {
-			prodIdTempList.add(tempPrchsDtlMore.getProdId());
-		}
-
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.insd_usermbr_no(insdUsermbrNo).insd_device_id(insdDeviceId).mbr_id(mbrId).device_id(deviceId)
-						.product_id(prodIdTempList).imei(imei).mno_type(mno_type).usermbr_no(usermbr_no)
-						.system_id(system_id).purchase_channel(purchase_channel)
-						.purchase_inflow_channel(purchase_inflow_channel).purchase_id_recv(purchase_id_recv)
-						.coupon_code(coupon_code).coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
-			}
-		});
+		// final String insdUsermbrNo = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+		// PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? prchsDtlMore.getUseInsdUsermbrNo() : prchsDtlMore
+		// .getSendInsdUsermbrNo();
+		// final String insdDeviceId = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+		// PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? prchsDtlMore.getUseInsdDeviceId() : prchsDtlMore
+		// .getSendInsdDeviceId();
+		// final String mbrId = reservedDataMap.get("userId");
+		// final String deviceId = reservedDataMap.get("deviceId");
+		// final String imei = reservedDataMap.get("imei");
+		// final String mno_type = StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) ?
+		// "SKT" : (StringUtils
+		// .equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_KT) ? "KT" : (StringUtils.equals(
+		// reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_UPLUS) ? "U+" : "")); // SKT, KT, U+
+		// final String usermbr_no = reservedDataMap.get("userKey");
+		// final String system_id = prchsDtlMore.getSystemId();
+		// final String purchase_channel = prchsDtlMore.getPrchsReqPathCd();
+		// final String purchase_inflow_channel = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+		// PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+		// final String purchase_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+		// PurchaseConstants.PRCHS_CASE_GIFT_CD) ? prchsDtlMore.getPrchsId() : "";
+		// final String coupon_code = reservedDataMap.get("couponCode");
+		// final String coupon_item_code = reservedDataMap.get("itemCode");
+		// final String auto_payment_yn = StringUtils.defaultIfBlank(reservedDataMap.get("autoPrchsYn"), "N");
+		// final List<String> prodIdTempList = new ArrayList<String>();
+		// for (PrchsDtlMore tempPrchsDtlMore : prchsDtlMoreList) {
+		// prodIdTempList.add(tempPrchsDtlMore.getProdId());
+		// }
+		//
+		// new TLogUtil().set(new ShuttleSetter() {
+		// @Override
+		// public void customize(TLogSentinelShuttle shuttle) {
+		// shuttle.insd_usermbr_no(insdUsermbrNo).insd_device_id(insdDeviceId).mbr_id(mbrId).device_id(deviceId)
+		// .product_id(prodIdTempList).imei(imei).mno_type(mno_type).usermbr_no(usermbr_no)
+		// .system_id(system_id).purchase_channel(purchase_channel)
+		// .purchase_inflow_channel(purchase_inflow_channel).purchase_id_recv(purchase_id_recv)
+		// .coupon_code(coupon_code).coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
+		// }
+		// });
 
 		// 소장/대여 TAB으로 구매요청이 아닌 상품 구매 시
 		if (StringUtils.isNotBlank(notifyPaymentReq.getProdId())
@@ -881,58 +887,97 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -------------------------------------------------------------------------------------------
 		// 구매확정 요청
 
-		Exception checkException = null;
+		StorePlatformException checkException = null;
 		try {
 
 			ConfirmPurchaseScRes confirmPurchaseScRes = this.purchaseOrderSCI.confirmPurchase(confirmPurchaseScReq);
 			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,CNT,{}", confirmPurchaseScRes.getCount());
 
 		} catch (StorePlatformException e) {
-			checkException = e;
-			throw (this.isDuplicateKeyException(e) ? new StorePlatformException("SAC_PUR_6110") : e); // 중복된 구매요청 체크
+			// 중복된 구매요청 체크
+			checkException = (this.isDuplicateKeyException(e) ? new StorePlatformException("SAC_PUR_6110") : e);
+			throw checkException;
 
 		} catch (DuplicateKeyException e) {
-			checkException = e;
-			throw new StorePlatformException("SAC_PUR_6110");
+			checkException = new StorePlatformException("SAC_PUR_6110");
+			throw checkException;
 
 		} catch (Exception e) {
-			checkException = e;
-			throw new StorePlatformException("SAC_PUR_7202", e);
+			checkException = new StorePlatformException("SAC_PUR_7202", e);
+			throw checkException;
 
 		} finally {
 			// 쇼핑쿠폰발급 취소, 게임캐쉬 충전 취소 등
 			if (checkException != null) {
 				this.revertToPreConfirm(prchsDtlMoreList, cashReserveResList);
 			}
-		}
 
-		// -------------------------------------------------------------------------------------------
-		// 구매완료 TLog 상품 별 로깅
+			// 구매완료 TLog 상품 별 로깅
+			ErrorInfo errorInfo = (checkException != null ? checkException.getErrorInfo() : null);
 
-		for (PrchsDtlMore prchsInfo : prchsDtlMoreList) {
-			final List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add(prchsInfo.getProdId());
-			final String purchase_prod_num = String.valueOf(prchsInfo.getPrchsDtlId());
-			final String purchase_prod_num_recv = StringUtils.equals(prchsInfo.getPrchsCaseCd(),
-					PurchaseConstants.PRCHS_CASE_GIFT_CD) ? String.valueOf(prchsInfo.getPrchsDtlId()) : "";
-			final String tid = prchsInfo.getTid();
-			final String tx_id = prchsInfo.getTxId();
-			final String use_start_time = prchsInfo.getUseStartDt();
-			final String use_end_time = prchsInfo.getUseExprDt();
-			final String download_expired_time = prchsInfo.getDwldExprDt();
-			final Long product_qty = (long) prchsInfo.getProdQty();
-			final String coupon_publish_code = prchsInfo.getCpnPublishCd();
+			final String result_code = (errorInfo != null ? errorInfo.getCode() : "SUCC");
+			final String result_message = (errorInfo != null ? this.messageSourceAccessor.getMessage(result_code) : "");
+			final String exception_log = (errorInfo != null ? (errorInfo.getCause() == null ? "" : errorInfo.getCause()
+					.toString()) : "");
 
-			new TLogUtil().log(new ShuttleSetter() {
-				@Override
-				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.product_id(prodIdList).purchase_prod_num(purchase_prod_num)
-							.purchase_prod_num_recv(purchase_prod_num_recv).tid(tid).tx_id(tx_id)
-							.use_start_time(use_start_time).use_end_time(use_end_time)
-							.download_expired_time(download_expired_time).product_qty(product_qty)
-							.coupon_publish_code(coupon_publish_code).result_code("SUCC");
-				}
-			});
+			final String purchase_id = prchsDtlMore.getPrchsId();
+			final String insd_usermbr_no = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? prchsDtlMore.getUseInsdUsermbrNo() : prchsDtlMore
+					.getSendInsdUsermbrNo();
+			final String insd_device_id = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? prchsDtlMore.getUseInsdDeviceId() : prchsDtlMore
+					.getSendInsdDeviceId();
+			final String mbr_id = reservedDataMap.get("userId");
+			final String device_id = reservedDataMap.get("deviceId");
+			final String imei = reservedDataMap.get("imei");
+			final String mno_type = StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) ? "SKT" : (StringUtils
+					.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_KT) ? "KT" : (StringUtils.equals(
+					reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_UPLUS) ? "U+" : "")); // SKT, KT, U+
+			final String usermbr_no = reservedDataMap.get("userKey");
+			final String system_id = prchsDtlMore.getSystemId();
+			final String purchase_channel = prchsDtlMore.getPrchsReqPathCd();
+			final String purchase_inflow_channel = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+			final String purchase_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+					PurchaseConstants.PRCHS_CASE_GIFT_CD) ? prchsDtlMore.getPrchsId() : "";
+			final String coupon_code = reservedDataMap.get("couponCode");
+			final String coupon_item_code = reservedDataMap.get("itemCode");
+			final String auto_payment_yn = StringUtils.defaultIfBlank(reservedDataMap.get("autoPrchsYn"), "N");
+
+			for (PrchsDtlMore prchsInfo : prchsDtlMoreList) {
+				final List<String> prodIdList = new ArrayList<String>();
+				prodIdList.add(prchsInfo.getProdId());
+				final String purchase_prod_num = String.valueOf(prchsInfo.getPrchsDtlId());
+				final String purchase_prod_num_recv = StringUtils.equals(prchsInfo.getPrchsCaseCd(),
+						PurchaseConstants.PRCHS_CASE_GIFT_CD) ? String.valueOf(prchsInfo.getPrchsDtlId()) : "";
+				final String tid = prchsInfo.getTid();
+				final String tx_id = prchsInfo.getTxId();
+				final String use_start_time = prchsInfo.getUseStartDt();
+				final String use_end_time = prchsInfo.getUseExprDt();
+				final String download_expired_time = prchsInfo.getDwldExprDt();
+				final Long product_qty = (long) prchsInfo.getProdQty();
+				final String coupon_publish_code = prchsInfo.getCpnPublishCd();
+
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_RESULT).purchase_id(purchase_id)
+								.insd_usermbr_no(insd_usermbr_no).insd_device_id(insd_device_id).mbr_id(mbr_id)
+								.device_id(device_id).imei(imei).mno_type(mno_type).usermbr_no(usermbr_no)
+								.system_id(system_id).purchase_channel(purchase_channel)
+								.purchase_inflow_channel(purchase_inflow_channel).purchase_id_recv(purchase_id_recv)
+								.coupon_code(coupon_code).coupon_item_code(coupon_item_code)
+								.auto_payment_yn(auto_payment_yn).product_id(prodIdList)
+								.purchase_prod_num(purchase_prod_num).purchase_prod_num_recv(purchase_prod_num_recv)
+								.tid(tid).tx_id(tx_id).use_start_time(use_start_time).use_end_time(use_end_time)
+								.download_expired_time(download_expired_time).product_qty(product_qty)
+								.coupon_publish_code(coupon_publish_code).result_code(result_code);
+						if (StringUtils.equals(result_code, "SUCC") == false) {
+							shuttle.result_message(result_message).exception_log(exception_log);
+						}
+					}
+				});
+			}
 		}
 
 		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,END");

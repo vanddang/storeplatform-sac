@@ -292,13 +292,13 @@ public class PurchaseOrderController {
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 
 		// 구매완료 TLog 로그ID 초기세팅
-		final String prchsId = notifyPaymentReq.getPrchsId();
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_RESULT).purchase_id(prchsId);
-			}
-		});
+		// final String prchsId = notifyPaymentReq.getPrchsId();
+		// new TLogUtil().set(new ShuttleSetter() {
+		// @Override
+		// public void customize(TLogSentinelShuttle shuttle) {
+		// shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_RESULT).purchase_id(prchsId);
+		// }
+		// });
 
 		// ------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
@@ -470,15 +470,15 @@ public class PurchaseOrderController {
 				});
 			} else {
 
-				final String resultCode = errorInfo.getCode();
-				final String resultMessage = this.messageSourceAccessor.getMessage(resultCode);
-				final String exceptionLog = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
+				final String result_code = errorInfo.getCode();
+				final String result_message = this.messageSourceAccessor.getMessage(result_code);
+				final String exception_log = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
 
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_PRECHECK).result_code(resultCode)
-								.result_message(resultMessage).exception_log(exceptionLog);
+						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_PRECHECK).result_code(result_code)
+								.result_message(result_message).exception_log(exception_log);
 					}
 				});
 			}
