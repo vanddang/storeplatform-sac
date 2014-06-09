@@ -1597,7 +1597,7 @@ public class IdpServiceImpl implements IdpService {
 			gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
 			gameCenterSacReq.setSystemId(map.get("systemID").toString());
 			gameCenterSacReq.setTenantId(map.get("tenantID").toString());
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE); // 회원 탈퇴
 			this.deviceService.insertGameCenterIF(gameCenterSacReq);
 
 			// 회원 탈퇴 정보를 전달 하는 mq 호출.
@@ -1958,7 +1958,7 @@ public class IdpServiceImpl implements IdpService {
 						gameCenterSacReq.setPreMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
 						gameCenterSacReq.setSystemId(systemId);
 						gameCenterSacReq.setTenantId(tenantId);
-						gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE);
+						gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
 						this.deviceService.insertGameCenterIF(gameCenterSacReq);
 					}
 
