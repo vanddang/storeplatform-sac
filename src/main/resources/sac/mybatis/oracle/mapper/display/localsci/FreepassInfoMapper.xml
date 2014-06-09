@@ -161,4 +161,23 @@
         AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
     ) IV 
     </select>    
+    
+  <select id="searchFreepassBasicList" parameterType="Map" resultType="FreePassBasicInfo">
+  /* FreePassInfoMapper.xml, searchFreepassBasicList,정액권 기본 정보 조회 , 김형식/SK플래닛, 2014-06-09 */
+         SELECT  
+             PD.PROD_ID
+           , DC.PROD_NM
+           , CM.CMPX_PROD_CLSF_CD AS PLAN_TYPE     
+           FROM 
+                 TB_DP_PROD PD
+               , TB_DP_CMPX_PROD CM
+               , TB_DP_PROD_DESC DC
+               , TB_DP_TENANT_PROD TP
+           WHERE PD.PROD_ID = #{prodId}
+           AND PD.PROD_ID = CM.PROD_ID
+           AND PD.PROD_ID = DC.PROD_ID
+           AND PD.PROD_ID = TP.PROD_ID
+           AND DC.LANG_CD = #{lang}
+           AND TP.TENANT_ID = #{tenantId}
+    </select>     
 </mapper>

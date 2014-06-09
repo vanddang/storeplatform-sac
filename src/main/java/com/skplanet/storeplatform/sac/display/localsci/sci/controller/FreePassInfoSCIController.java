@@ -3,12 +3,16 @@ package com.skplanet.storeplatform.sac.display.localsci.sci.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.localsci.sci.service.FreePassInfoService;
 
 /**
@@ -50,6 +54,23 @@ public class FreePassInfoSCIController implements FreePassInfoSCI {
 	@Override
 	public EpisodeInfoSacRes searchEpisodeList(@Validated EpisodeInfoReq req) {
 		return this.freePassInfoService.searchEpisodeList(req);
+	}
+
+	/**
+	 * <pre>
+	 * 정액권 기본 정보 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            파라미터
+	 * @return FreePassBasicInfoSacRes 상품 메타 정보 리스트
+	 */
+	@Override
+	public FreePassBasicInfoSacRes searchFreepassBasicList(@Validated FreePassBasicInfoSacReq req) {
+		if (req.getList().size() > DisplayConstants.DP_PRODUCT_INFO_PARAMETER_LIMIT) {
+			throw new StorePlatformException("SAC_DSP_0004", "list", DisplayConstants.DP_PRODUCT_INFO_PARAMETER_LIMIT);
+		}
+		return this.freePassInfoService.searchFreepassBasicList(req);
 	}
 
 }

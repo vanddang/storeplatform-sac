@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +12,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -84,6 +89,43 @@ public class FreePassInfoServiceImpl implements FreePassInfoService {
 		freePassInfoResList = this.commonDAO.queryForList("FreePassInfo.searchEpisodeList", paramMap,
 				EpisodeInfoRes.class);
 		res.setFreePassInfoRes(freePassInfoResList);
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 정액권 기본 정보 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            파라미터
+	 * @return FreePassBasicInfoSacRes 상품 메타 정보 리스트
+	 */
+	@Override
+	public FreePassBasicInfoSacRes searchFreepassBasicList(FreePassBasicInfoSacReq req) {
+		this.log.info("################ [SAC DP LocalSCI] SAC FreePass Stat : searchFreepassBasicList :{} ",
+				DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
+		FreePassBasicInfoSacRes res = new FreePassBasicInfoSacRes();
+		List<FreePassBasicInfo> freePassBasicInfoList = new ArrayList<FreePassBasicInfo>();
+		List<String> prodIdList = req.getList();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("lang", req.getLang());
+		paramMap.put("tenantId", req.getTenantId());
+
+		for (String prodId : prodIdList) {
+			paramMap.put("prodId", prodId);
+			FreePassBasicInfo freePassBasicInfo = this.commonDAO.queryForObject("FreePassInfo.searchFreepassBasicList",
+					paramMap, FreePassBasicInfo.class);
+
+			if (freePassBasicInfo != null) {
+				freePassBasicInfoList.add(freePassBasicInfo);
+			}
+
+			res.setFreePassBasicInfo(freePassBasicInfoList);
+		}
+		this.log.info("################ [SAC DP LocalSCI] SAC FreePass End : searchFreepassBasicList :{} ",
+				DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
+
 		return res;
 	}
 }
