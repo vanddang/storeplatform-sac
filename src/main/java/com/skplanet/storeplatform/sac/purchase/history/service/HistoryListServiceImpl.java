@@ -27,7 +27,11 @@ import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScRes;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistorySc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ProductCountSc;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ProductInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
@@ -65,6 +69,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 	@Autowired
 	private ProductInfoSCI productInfoSCI;
+
+	@Autowired
+	private FreePassInfoSCI freePassInfoSCI;
 
 	@Autowired
 	private SearchUserSCI searchUserSCI;
@@ -303,8 +310,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 			ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
 			ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
 
-			ProductInfoSacReq fixProductInfoSacReq = new ProductInfoSacReq();
-			ProductInfoSacRes fixProductInfoSacRes = new ProductInfoSacRes();
+			FreePassBasicInfoSacReq fixProductInfoSacReq = new FreePassBasicInfoSacReq();
+			FreePassBasicInfoSacRes fixProductInfoSacRes = new FreePassBasicInfoSacRes();
 
 			if (prodIdList.size() > 0) {
 
@@ -317,7 +324,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 				long prodTime = System.currentTimeMillis();
 				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
-				this.logger.info(
+				this.logger.error(
 						"##### [SAC History CallTime] LOCAL SCI prod productInfoSCI.getProductList END takes {} ms",
 						(System.currentTimeMillis() - prodTime));
 			}
@@ -325,13 +332,12 @@ public class HistoryListServiceImpl implements HistoryListService {
 			if (fixProdIdList.size() > 0) {
 
 				fixProductInfoSacReq.setTenantId(request.getTenantId());
-				fixProductInfoSacReq.setDeviceModelNo(request.getModel());
 				fixProductInfoSacReq.setLang(request.getLangCd());
 				fixProductInfoSacReq.setList(fixProdIdList);
 
 				long fixprodTime = System.currentTimeMillis();
-				fixProductInfoSacRes = this.productInfoSCI.getProductList(fixProductInfoSacReq);
-				this.logger.info(
+				fixProductInfoSacRes = this.freePassInfoSCI.searchFreepassBasicList(fixProductInfoSacReq);
+				this.logger.error(
 						"##### [SAC History CallTime] LOCAL SCI fix productInfoSCI.getProductList END takes {} ms",
 						(System.currentTimeMillis() - fixprodTime));
 
@@ -345,17 +351,16 @@ public class HistoryListServiceImpl implements HistoryListService {
 						if (obj.getProdId().equals(info.getPartProdId())) {
 							prodMap = new HashMap<String, Object>();
 							prodMap.put("productMap", info);
+							prodMap.put("fixProductMap", null);
 
 							// 구매한 정액권 ID 상품 정보조회
 							if (!StringUtils.isBlank(obj.getUseFixrateProdId())) {
-								for (ProductInfo fixInfo : fixProductInfoSacRes.getProductList()) {
-									if (obj.getUseFixrateProdId().equals(fixInfo.getPartProdId())) {
+								for (FreePassBasicInfo fixInfo : fixProductInfoSacRes.getFreePassBasicInfo()) {
+									if (obj.getUseFixrateProdId().equals(fixInfo.getProdId())) {
 										prodMap.put("fixProductMap", fixInfo);
 										break;
 									}
 								}
-							} else {
-								prodMap.put("fixProductMap", null);
 							}
 
 							obj.setProductInfo(prodMap);
@@ -396,9 +401,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 				// member InternalSCI Call
 				long uDevicdTime = System.currentTimeMillis();
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
-				this.logger.info(
-						"##### [SAC History CallTime] LOCAL SCI searchUserSCI.searchUserByDeviceKey END takes {} ms",
-						(System.currentTimeMillis() - uDevicdTime));
+				this.logger
+						.error("##### [SAC History CallTime] LOCAL SCI use searchUserSCI.searchUserByDeviceKey END takes {} ms",
+								(System.currentTimeMillis() - uDevicdTime));
 
 				useDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
 			} catch (Exception e) {
@@ -418,9 +423,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 				// member InternalSCI Call
 				long sDevicdTime = System.currentTimeMillis();
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
-				this.logger.info(
-						"##### [SAC History CallTime] LOCAL SCI searchUserSCI.searchUserByDeviceKey END takes {} ms",
-						(sDevicdTime - System.currentTimeMillis()));
+				this.logger
+						.error("##### [SAC History CallTime] LOCAL SCI send searchUserSCI.searchUserByDeviceKey END takes {} ms",
+								(sDevicdTime - System.currentTimeMillis()));
 				sendDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
 
 			} catch (Exception e) {
