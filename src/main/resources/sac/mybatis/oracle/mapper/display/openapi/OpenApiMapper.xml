@@ -1883,7 +1883,7 @@
        SELECT  /* OpenApiMapper.getAppList, APP 목록 요청, 오승민/인크로스, 2014-03-03 */
                 NVL(APPPROD.AID, '') AS AID
 		       ,PRODDESC.PROD_NM
-		       ,PROD.REG_DT
+		       ,TO_CHAR(PROD.REG_DT,'YYYYMMDDHH24MISS') REG_DT
 		       ,TENANTPROD.PROD_STATUS_CD
          FROM  TB_DP_PROD PROD 
 		      ,TB_DP_APP_PROD APPPROD
@@ -1918,7 +1918,7 @@
 		            ELSE #{appUrl} || PROD.PROD_ID
                END) AS WEB_URL
 
-		      ,PROD.REG_DT
+		      ,TO_CHAR(PROD.REG_DT,'YYYYMMDDHH24MISS') REG_DT
 		      ,APPPROD.AID
 		      ,IMG.FILE_PATH AS IMAGE_PATH
 	  FROM  TB_DP_PROD PROD 
@@ -1944,7 +1944,7 @@
        SELECT  /* OpenApiMapper.getPDAppList, 개발APP 목록 요청, 이태희/부르칸, 2014-03-03 */
                 NVL(APPPROD.AID, '') AS AID
                ,PRODDESC.PROD_NM
-               ,PROD.REG_DT
+               ,TO_CHAR(PROD.REG_DT,'YYYYMMDDHH24MISS') REG_DT
                ,TENANTPROD.PROD_STATUS_CD
          FROM  TB_DP_PROD PROD 
               ,TB_DP_APP_PROD APPPROD
