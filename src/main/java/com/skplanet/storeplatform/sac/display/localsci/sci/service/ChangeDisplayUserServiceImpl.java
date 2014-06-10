@@ -36,8 +36,6 @@ public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 		LOGGER.info("## changeDisplayUserRepository.changeBadNoti : {}", affectedRow);
 		affectedRow = (Integer) this.changeDisplayUserRepository.changeProdNotiGood(changeDisplayUser);
 		LOGGER.info("## changeDisplayUserRepository.changeProdNotiGood : {}", affectedRow);
-		affectedRow = (Integer) this.changeDisplayUserRepository.changeTenantProdStats(changeDisplayUser);
-		LOGGER.info("## changeDisplayUserRepository.changeTenantProdStats : {}", affectedRow);
 		affectedRow = (Integer) this.changeDisplayUserRepository.changeMsgMbrMapg(changeDisplayUser);
 		LOGGER.info("## changeDisplayUserRepository.changeMsgMbrMapg : {}", affectedRow);
 		LOGGER.info("## changeDisplayUserId end ##");

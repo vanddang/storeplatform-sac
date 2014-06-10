@@ -38,7 +38,7 @@ public class ChangeDisplayUserSCIController implements ChangeDisplayUserSCI {
 		ChangeDisplayUser changeDisplayUser = new ChangeDisplayUser();
 		changeDisplayUser.setTenantId(changeDisplayUserSacReq.getTenantId());
 		changeDisplayUser.setNewUserId(changeDisplayUserSacReq.getNewUserId());
-		changeDisplayUser.setOldUserId(changeDisplayUserSacReq.getOldUserId());
+		changeDisplayUser.setOldUserKey(changeDisplayUserSacReq.getOldUserKey());
 		this.changeDisplayUserService.updateDisplayUserId(changeDisplayUser);
 	}
 

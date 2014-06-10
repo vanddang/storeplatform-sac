@@ -63,18 +63,6 @@ public interface ChangeDisplayUserRepository {
 	/**
 	 * 
 	 * <pre>
-	 * 상품별 평점 테이블 변경.
-	 * </pre>
-	 * 
-	 * @param changeDisplayUser
-	 *            changeDisplayUser
-	 * @return Object
-	 */
-	public Object changeTenantProdStats(ChangeDisplayUser changeDisplayUser);
-
-	/**
-	 * 
-	 * <pre>
 	 * 메시지 회원 매핑 테이블 변경.
 	 * </pre>
 	 * 
