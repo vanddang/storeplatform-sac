@@ -103,6 +103,7 @@ public class MemberCommonInternalComponent {
 	 *            ChangeDisplayUserSacReq
 	 */
 	public void changeUserId(ChangeDisplayUserSacReq req) {
+		LOGGER.info("changeDisplayUserSCI.changeUserId request : {}", req);
 		this.changeDisplayUserSCI.changeUserId(req);
 	}
 
