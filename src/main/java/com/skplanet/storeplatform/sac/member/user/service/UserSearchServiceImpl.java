@@ -33,8 +33,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEc
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoSearchServerEcReq;
-import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoSearchServerEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -351,10 +349,17 @@ public class UserSearchServiceImpl implements UserSearchService {
 		String isMemberPoint = null; // OCB 가입여부
 
 		if (StringUtil.equals(req.getSearchType(), "1")) { // IDP 통합서버 조회
-			UserInfoSearchServerEcReq idpReq = new UserInfoSearchServerEcReq();
-			idpReq.setKey(info.getImSvcNo());
-			UserInfoSearchServerEcRes res = this.imIdpSCI.userInfoSearchServer(idpReq);
+		//			UserInfoSearchServerEcReq idpReq = new UserInfoSearchServerEcReq();
+		//			idpReq.setKey(info.getImSvcNo());
+		//			UserInfoSearchServerEcRes res = this.imIdpSCI.userInfoSearchServer(idpReq);
+		//
+		//			isCi = StringUtil.isNotBlank(res.getUserCi()) ? "Y" : "N";
+		//			isRealName = res.getIsRnameAuth(); // default : N
+		//			isMemberPoint = res.getJoinSstList().indexOf(MemberConstants.SSO_SST_CD_OCB_WEB) != -1 ? "Y" : "N";
 
+			UserInfoIdpSearchServerEcReq idpReq = new UserInfoIdpSearchServerEcReq();
+			idpReq.setKey(info.getImSvcNo()); // 통합서비스 관리번호
+			UserInfoIdpSearchServerEcRes res = this.imIdpSCI.userInfoIdpSearchServer(idpReq);
 			isCi = StringUtil.isNotBlank(res.getUserCi()) ? "Y" : "N";
 			isRealName = res.getIsRnameAuth(); // default : N
 			isMemberPoint = res.getJoinSstList().indexOf(MemberConstants.SSO_SST_CD_OCB_WEB) != -1 ? "Y" : "N";
