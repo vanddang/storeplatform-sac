@@ -126,7 +126,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 					purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage(
 							errorInfo.getCode(), errorInfo.getArgs()));
 				} else {
-					purchaseCancelDetailSacResult.setResultMsg(errorInfo.getMessage());
+					purchaseCancelDetailSacResult.setResultMsg("hostName > " + errorInfo.getHostName()
+							+ ", instanceName  > " + errorInfo.getInstanceName() + ", msg > " + errorInfo.getMessage());
 				}
 
 			} catch (Exception e) {
