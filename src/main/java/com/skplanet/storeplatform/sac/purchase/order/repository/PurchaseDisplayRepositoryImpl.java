@@ -114,23 +114,35 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			if (StringUtils.equals(displayInfo.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
 				if (StringUtils.isBlank(displayInfo.getUsePeriodUnitCd())
 						|| StringUtils.isBlank(displayInfo.getUsePeriod())) {
-					throw new StorePlatformException("SAC_PUR_5114", displayInfo.getUsePeriodUnitCd(),
-							displayInfo.getUsePeriod());
+					throw new StorePlatformException("SAC_PUR_5114", displayInfo.getProdId(),
+							displayInfo.getUsePeriodUnitCd(), displayInfo.getUsePeriod());
 				}
 			}
-			if (bFlat) {
-				// 정액상품 경우, DRM 여부와 상관없이 이용기간 그대로 세팅
-				purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
-				purchaseProduct.setUsePeriod(displayInfo.getUsePeriod());
-			} else if (StringUtils.equals(purchaseProduct.getDrmYn(), PurchaseConstants.USE_N)) {
-				// 이용기간 단위 정보가 없는 경우, DRM이 N 이면 무제한 처리
-				purchaseProduct.setUsePeriodUnitCd(PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED);
-				purchaseProduct.setUsePeriod("0");
-			} else {
-				purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
-				purchaseProduct.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(),
-						PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) ? "0" : displayInfo.getUsePeriod());
+			if (StringUtils.isBlank(displayInfo.getUsePeriodUnitCd())
+					|| ((StringUtils.equals(displayInfo.getUsePeriodUnitCd(),
+							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) == false) && StringUtils
+							.isBlank(displayInfo.getUsePeriod()))) {
+				throw new StorePlatformException("SAC_PUR_5115", displayInfo.getProdId(),
+						displayInfo.getUsePeriodUnitCd(), displayInfo.getUsePeriod());
 			}
+
+			purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
+			purchaseProduct.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(),
+					PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) ? "0" : displayInfo.getUsePeriod());
+
+			// if (bFlat) {
+			// // 정액상품 경우, DRM 여부와 상관없이 이용기간 그대로 세팅
+			// purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
+			// purchaseProduct.setUsePeriod(displayInfo.getUsePeriod());
+			// } else if (StringUtils.equals(purchaseProduct.getDrmYn(), PurchaseConstants.USE_N)) {
+			// // 이용기간 단위 정보가 없는 경우, DRM이 N 이면 무제한 처리
+			// purchaseProduct.setUsePeriodUnitCd(PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED);
+			// purchaseProduct.setUsePeriod("0");
+			// } else {
+			// purchaseProduct.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
+			// purchaseProduct.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(),
+			// PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) ? "0" : displayInfo.getUsePeriod());
+			// }
 			purchaseProduct.setAid(displayInfo.getAid());
 			purchaseProduct.setTenantProdGrpCd(displayInfo.getTenantProdGrpCd());
 			purchaseProduct.setMallCd(displayInfo.getMallCd());

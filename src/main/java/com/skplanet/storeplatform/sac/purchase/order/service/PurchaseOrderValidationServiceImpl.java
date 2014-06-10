@@ -703,14 +703,25 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 							product.getProdId());
 					if (freepassInfo != null) {
 						product.setDrmYn(StringUtils.defaultString(freepassInfo.getDrmYn(), PurchaseConstants.USE_N));
-						if (StringUtils.equals(product.getDrmYn(), PurchaseConstants.USE_N)) {
-							// DRM이 N 이면 무제한 처리
-							product.setUsePeriodUnitCd(PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED);
-							product.setUsePeriod("0");
-						} else {
-							product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
-							product.setUsePeriod(freepassInfo.getUsePeriod());
+						if (StringUtils.isBlank(freepassInfo.getUsePeriodUnitCd())
+								|| ((StringUtils.equals(freepassInfo.getUsePeriodUnitCd(),
+										PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) == false) && StringUtils
+										.isBlank(freepassInfo.getUsePeriod()))) {
+							throw new StorePlatformException("SAC_PUR_5116", useExistenceScRes.getProdId(),
+									product.getProdId(), freepassInfo.getUsePeriodUnitCd(), freepassInfo.getUsePeriod());
 						}
+						product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
+						product.setUsePeriod(StringUtils.equals(freepassInfo.getUsePeriodUnitCd(),
+								PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) ? "0" : freepassInfo
+								.getUsePeriod());
+						// if (StringUtils.equals(product.getDrmYn(), PurchaseConstants.USE_N)) {
+						// // DRM이 N 이면 무제한 처리
+						// product.setUsePeriodUnitCd(PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED);
+						// product.setUsePeriod("0");
+						// } else {
+						// product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
+						// product.setUsePeriod(freepassInfo.getUsePeriod());
+						// }
 						product.setUseFixrateProdId(useExistenceScRes.getProdId()); // 사용할 정액권ID 세팅
 						product.setUseFixrateProdClsfCd(freepassInfo.getCmpxProdClsfCd()); // 사용할 정액권 타입
 
