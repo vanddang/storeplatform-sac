@@ -9,12 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -94,7 +97,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 
 		// pDescription
 		paymentPageParam.setpDescription(this.getProductDescription(purchaseOrderInfo.getTenantProdGrpCd(),
-				purchaseOrderInfo.getPurchaseProductList().get(0)));
+				purchaseOrderInfo.getPurchaseProductList()));
 
 		// 암호화
 		paymentPageParam.setEData(this.encryptPaymentData(paymentPageParam, purchaseOrderInfo.getEncKey()));
@@ -129,13 +132,29 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	 * 
 	 * @param tenantProdGrpCd 테넌트 상품 분류 코드
 	 * 
-	 * @param purchaseProduct 구매 기본상품 정보
+	 * @param purchaseProductList 구매 기본상품 목록
 	 * 
 	 * @return 구매 상품설명
 	 */
-	private String getProductDescription(String tenantProdGrpCd, PurchaseProduct purchaseProduct) {
+	private String getProductDescription(String tenantProdGrpCd, List<PurchaseProduct> purchaseProductList) {
+		PurchaseProduct purchaseProduct = purchaseProductList.get(0);
 
-		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+		if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)
+				&& purchaseProductList.size() == 1
+				&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
+						.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))) {
+
+			PossLendProductInfo possLendProductInfo = purchaseProduct.getPossLendProductInfo();
+			if (possLendProductInfo == null) { // 소장/대여 중 하나만 존재하는 경우에만 세팅
+				if (StringUtils.equals(purchaseProduct.getPossLendClsfCd(),
+						PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)) {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN;
+				} else {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_LOAN;
+				}
+			}
+
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			if (StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_DELIVERY)) {
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_DELIVERY;
 			} else {
@@ -184,10 +203,10 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				}
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
-				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN;
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_OWN;
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
-				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_LOAN;
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_LOAN;
 			}
 		}
 
