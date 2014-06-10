@@ -18,6 +18,6 @@ public interface AppService {
      * @param request
      * @return
      */
-    public AppDetailRes getAppDetail(AppDetailParam request);
+    public AppDetailRes searchAppDetail(AppDetailParam request);
 
 }

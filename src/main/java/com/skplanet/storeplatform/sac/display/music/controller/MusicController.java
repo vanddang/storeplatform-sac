@@ -14,8 +14,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -67,7 +65,7 @@ public class MusicController {
         param.setLangCd(header.getTenantHeader().getLangCd());
         param.setDeviceModelCd(header.getDeviceHeader().getModel());
 
-        MusicDetailComposite musicDetailComp = musicService.getMusicDetail(param);
+        MusicDetailComposite musicDetailComp = musicService.searchMusicDetail(param);
         if(musicDetailComp == null)
             throw new StorePlatformException("SAC_DSP_0009");
 

@@ -13,6 +13,6 @@ import java.util.Map;
  */
 public interface MusicService {
 
-    public MusicDetailComposite getMusicDetail(MusicDetailParam param);
+    public MusicDetailComposite searchMusicDetail(MusicDetailParam param);
 
 }

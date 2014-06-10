@@ -53,7 +53,7 @@ public class MusicServiceImpl implements MusicService {
 	private DisplayCommonService commonService;
 
 	@Override
-	public MusicDetailComposite getMusicDetail(MusicDetailParam param) {
+	public MusicDetailComposite searchMusicDetail(MusicDetailParam param) {
         logger.info("channelId={},userKey={},deviceKey={},deviceModel={}",
                 param.getChannelId(), param.getUserKey(), param.getDeviceKey(), param.getDeviceModelCd());
 

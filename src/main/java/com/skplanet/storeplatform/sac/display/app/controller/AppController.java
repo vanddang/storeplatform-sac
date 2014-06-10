@@ -12,25 +12,15 @@ package com.skplanet.storeplatform.sac.display.app.controller;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
-import com.skplanet.storeplatform.sac.client.display.vo.app.UpdateListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.app.UpdateListRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.app.service.AppService;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
-import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * AppController
@@ -63,7 +53,7 @@ public class AppController {
         request.setUserKey(req.getUserKey());
         request.setDeviceKey(req.getDeviceKey());
 
-        AppDetailRes appDetail = appService.getAppDetail(request);
+        AppDetailRes appDetail = appService.searchAppDetail(request);
         if (appDetail == null) {
             throw new StorePlatformException("SAC_DSP_0009");
         }

@@ -78,7 +78,7 @@ public class AppServiceImpl implements AppService {
 	private DisplayCommonService commonService;
 
 	@Override
-	public AppDetailRes getAppDetail(AppDetailParam request) {
+	public AppDetailRes searchAppDetail(AppDetailParam request) {
         logger.info("channelId={},userKey={},deviceKey={},deviceModel={}",
                 request.getChannelId(), request.getUserKey(), request.getDeviceKey(), request.getDeviceModelCd());
 
