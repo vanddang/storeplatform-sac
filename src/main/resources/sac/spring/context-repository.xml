@@ -29,6 +29,8 @@
            <tx:method name="delete*" propagation="REQUIRED" read-only="false" /> <!-- 삭제 -->
 
            <tx:method name="execute*" propagation="REQUIRED" read-only="false" /> <!-- 생성,수정,삭제등 복합 비지니스 -->
+           
+           <tx:method name="search*" propagation="SUPPORTS" read-only="true" /> <!-- 조회 Read-only Transaction 설정 -->
         </tx:attributes>
     </tx:advice>
     
