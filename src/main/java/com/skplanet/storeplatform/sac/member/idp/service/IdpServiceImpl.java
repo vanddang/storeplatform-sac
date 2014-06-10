@@ -455,6 +455,7 @@ public class IdpServiceImpl implements IdpService {
 					changeDisplayUserSacReqByUserID.setNewUserId(userId);
 					changeDisplayUserSacReqByUserID.setOldUserId(oldId);
 					changeDisplayUserSacReqByUserID.setTenantId(tenantId);
+					changeDisplayUserSacReqByUserID.setOldUserKey(searchUserResponse.getUserKey());
 					this.mcic.changeUserId(changeDisplayUserSacReqByUserID);
 					// 공통_기타 회원ID 변경 끝
 
@@ -2326,6 +2327,7 @@ public class IdpServiceImpl implements IdpService {
 							changeDisplayUserSacReqByUserID.setNewUserId(newUserId);
 							changeDisplayUserSacReqByUserID.setOldUserId(searchUserResponse.getUserMbr().getUserID());
 							changeDisplayUserSacReqByUserID.setTenantId(tenantId);
+							changeDisplayUserSacReqByUserID.setOldUserKey(searchUserResponse.getUserKey());
 							this.mcic.changeUserId(changeDisplayUserSacReqByUserID);
 							// 공통_기타 회원ID 변경 끝
 						}
@@ -2945,6 +2947,7 @@ public class IdpServiceImpl implements IdpService {
 								changeDisplayUserSacReqByUserID.setNewUserId(userId);
 								changeDisplayUserSacReqByUserID.setOldUserId(oldId);
 								changeDisplayUserSacReqByUserID.setTenantId(tenantId);
+								changeDisplayUserSacReqByUserID.setOldUserKey(searchUserResponse.getUserKey());
 								this.mcic.changeUserId(changeDisplayUserSacReqByUserID);
 								// 공통_기타 회원ID 변경 끝
 
