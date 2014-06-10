@@ -507,7 +507,7 @@ public class PurchaseOrderController {
 		final List<Long> prodPriceList = new ArrayList<Long>();
 		for (CreatePurchaseSacReqProduct product : req.getProductList()) {
 			prodIdList.add(product.getProdId());
-			prodPriceList.add((long) product.getProdAmt().doubleValue());
+			prodPriceList.add(product.getProdAmt().longValue());
 		}
 
 		new TLogUtil().set(new ShuttleSetter() {

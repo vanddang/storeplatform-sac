@@ -369,19 +369,64 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -----------------------------------------------------------------------------
 		// 구매예약 생성 요청
 
-		ReservePurchaseScRes reservePurchaseScRes = this.purchaseOrderSCI.reservePurchase(new ReservePurchaseScReq(
-				prchsDtlMoreList));
+		StorePlatformException checkException = null;
 
-		int count = reservePurchaseScRes.getCount();
+		try {
+			ReservePurchaseScRes reservePurchaseScRes = this.purchaseOrderSCI.reservePurchase(new ReservePurchaseScReq(
+					prchsDtlMoreList));
 
-		if (CollectionUtils.isNotEmpty(purchaseOrderInfo.getReceiveUserList())) {
-			if (count != purchaseOrderInfo.getReceiveUserList().size()) {
-				throw new StorePlatformException("SAC_PUR_7201");
+			int count = reservePurchaseScRes.getCount();
+
+			if (CollectionUtils.isNotEmpty(purchaseOrderInfo.getReceiveUserList())) {
+				if (count != purchaseOrderInfo.getReceiveUserList().size()) {
+					throw new StorePlatformException("SAC_PUR_7201");
+				}
+			} else {
+				if (count != prchsDtlMoreList.size()) {
+					throw new StorePlatformException("SAC_PUR_7201");
+				}
 			}
-		} else {
-			if (count != prchsDtlMoreList.size()) {
-				throw new StorePlatformException("SAC_PUR_7201");
+
+		} catch (StorePlatformException e) {
+			checkException = e;
+			throw e;
+
+		} finally {
+			// 구매예약 TLog 로깅
+			ErrorInfo errorInfo = (checkException != null ? checkException.getErrorInfo() : null);
+
+			final String result_code = (errorInfo != null ? errorInfo.getCode() : "SUCC");
+			final String result_message = (errorInfo != null ? this.messageSourceAccessor.getMessage(result_code) : "");
+			final String exception_log = (errorInfo != null ? (errorInfo.getCause() == null ? "" : errorInfo.getCause()
+					.toString()) : "");
+
+			final String mbr_id = purchaseOrderInfo.getPurchaseUser().getUserId();
+			final String device_id = purchaseOrderInfo.getPurchaseUser().getDeviceId();
+			final String purchase_id = purchaseOrderInfo.getPrchsId();
+
+			final List<String> product_id_list = new ArrayList<String>();
+			final List<String> product_name_list = new ArrayList<String>();
+			final List<Long> product_price_list = new ArrayList<Long>();
+			final Long product_qty = (long) purchaseOrderInfo.getPurchaseProductList().size();
+
+			for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
+				product_id_list.add(product.getProdId());
+				product_name_list.add(product.getProdNm());
+				product_price_list.add(product.getProdAmt().longValue());
 			}
+
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_RESERVE).mbr_id(mbr_id)
+							.device_id(device_id).purchase_id(purchase_id).product_id(product_id_list)
+							.product_name(product_name_list).product_price(product_price_list).product_qty(product_qty)
+							.result_code(result_code);
+					if (StringUtils.equals(result_code, "SUCC") == false) {
+						shuttle.result_message(result_message).exception_log(exception_log);
+					}
+				}
+			});
 		}
 	}
 

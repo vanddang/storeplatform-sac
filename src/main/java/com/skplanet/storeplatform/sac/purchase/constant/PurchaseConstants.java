@@ -25,6 +25,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String TLOG_ID_PURCHASE_ORDER_REQUEST = "TL_SAC_PUR_0001"; // 구매인입
 	public static final String TLOG_ID_PURCHASE_ORDER_PRECHECK = "TL_SAC_PUR_0003"; // 구매 선결조건 체크
 	public static final String TLOG_ID_PURCHASE_ORDER_RESULT = "TL_SAC_PUR_0005"; // 구매 결과
+	public static final String TLOG_ID_PURCHASE_ORDER_RESERVE = "TL_SAC_PUR_0007"; // 구매 예약
 
 	/** 비회원 처리용 UserKey */
 	public static final String NONMEMBER_COMMON_USERKEY = "NONMEMBER";
