@@ -566,7 +566,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 		// PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAME)) {
-		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")) {
+		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
+				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
 			res.setGameCashAmt(this.purchaseOrderTstoreService.searchGameCashAmt(reservedDataMap.get("userKey")));
 		} else {
 			res.setGameCashAmt(0.0);
