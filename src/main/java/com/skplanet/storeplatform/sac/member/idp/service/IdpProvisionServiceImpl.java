@@ -507,9 +507,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			this.userSCI.createDCD(createDcdReq);
 
 		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE) || StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_JOIN)) { // DCD
-																																				 // 등록
-																																				 // 및
-																																				 // 해지
+																																					// 등록
+																																					// 및
+																																					// 해지
 
 			/* DCD 상품 조회 */
 			DcdSupportProductRes dcdSupportProductRes = this.mcic.searchDcdSupportProduct();
@@ -897,14 +897,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					this.deviceSCI.createDevice(createDeviceReq);
 
 					/* 휴대기기 삭제 요청 */
-					List<String> removeKeyList = new ArrayList<String>();
-					removeKeyList.add(deviceKey);
-
-					RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
-					removeDeviceReq.setCommonRequest(commonRequest);
-					removeDeviceReq.setUserKey(userKey);
-					removeDeviceReq.setDeviceKey(removeKeyList);
-					this.deviceSCI.removeDevice(removeDeviceReq);
+					//					List<String> removeKeyList = new ArrayList<String>();
+					//					removeKeyList.add(deviceKey);
+					//
+					//					RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+					//					removeDeviceReq.setCommonRequest(commonRequest);
+					//					removeDeviceReq.setUserKey(userKey);
+					//					removeDeviceReq.setDeviceKey(removeKeyList);
+					//					this.deviceSCI.removeDevice(removeDeviceReq);
 
 					/* 회원상태 업데이트 */
 					UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
