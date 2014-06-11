@@ -62,7 +62,7 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdn(requestHeader, req);
+		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -147,7 +147,7 @@ public class LoginController {
 	 *            AuthorizeSimpleByMdnReq
 	 * @return AuthorizeByIdRes
 	 */
-	//	@RequestMapping(value = "/member/user/authorizeSimpleByMdn/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/member/user/authorizeSimpleByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
 	@Deprecated
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSimpleByMdnReq req) {

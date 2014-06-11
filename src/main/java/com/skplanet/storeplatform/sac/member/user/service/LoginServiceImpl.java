@@ -131,13 +131,12 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
-	 * authorizeByMdn
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# authorizeByMdn
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq)
 	 */
 	@Override
-	public AuthorizeByMdnRes executeAuthorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
+	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
@@ -231,8 +230,7 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
-	 * executeAuthorizeByMdnV2
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# executeAuthorizeByMdnV2
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq)
 	 */
@@ -276,8 +274,7 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtils.equals(changedDeviceHistoryRes.getIsChanged(), "Y")) {
 
 			/*
-			 * 최근 1개월 이내 기기변경이력이 있고 Tcloud 약관동의 되어있지 않은 경우 "T"로 임시 업데이트하여 Tcloud
-			 * 약관동의 최초 한번만 노출되도록 처리
+			 * 최근 1개월 이내 기기변경이력이 있고 Tcloud 약관동의 되어있지 않은 경우 "T"로 임시 업데이트하여 Tcloud 약관동의 최초 한번만 노출되도록 처리
 			 */
 			String tcloudAgreeYn = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN,
 					dbDeviceInfo.getDeviceExtraInfoList()); // Tcloud 약관동의 여부
@@ -371,8 +368,7 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
-	 * executCheckVariability
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# executCheckVariability
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq)
 	 */
@@ -483,7 +479,8 @@ public class LoginServiceImpl implements LoginService {
 			/* 인증수단 조회 */
 			UserAuthMethod userAuthMethod = this.searchUserAuthMethod(requestHeader, req.getDeviceId(), userKey);
 
-			if (StringUtils.isBlank(userAuthMethod.getUserId()) && StringUtils.equals(userAuthMethod.getIsRealName(), "N")) { // 인증수단이 없는경우
+			if (StringUtils.isBlank(userAuthMethod.getUserId()) && StringUtils.equals(userAuthMethod.getIsRealName(), "N")) { // 인증수단이
+																															  // 없는경우
 
 				LOGGER.info("{} 추가인증수단 없음, 탈퇴처리", req.getDeviceId());
 
@@ -520,8 +517,7 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeById
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeById
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq)
 	 */
@@ -550,7 +546,13 @@ public class LoginServiceImpl implements LoginService {
 
 		} else if (chkDupRes.getMbrOneID() != null) {
 
-			if (chkDupRes.getUserMbr() == null || StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) { //회원 정보가 없거나 회원메인상태가 가가입이면 가가입정보를 내려줌
+			if (chkDupRes.getUserMbr() == null || StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) { // 회원
+																																						// 정보가
+																																						// 없거나
+																																						// 회원메인상태가
+																																						// 가가입이면
+																																						// 가가입정보를
+																																						// 내려줌
 
 				try {
 
@@ -565,7 +567,14 @@ public class LoginServiceImpl implements LoginService {
 						LOGGER.info("SC_INVALID_USER authorizeById userId : {}", userId);
 						throw new StorePlatformException("SAC_MEM_1200"); // 원아이디 이용동의 간편가입 대상 정보가 상이합니다.
 
-					} else if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입 상태인 경우 EC에서 성공으로 처리하여 joinSstList 받는다.
+					} else if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입
+																																			   // 상태인
+																																			   // 경우
+																																			   // EC에서
+																																			   // 성공으로
+																																			   // 처리하여
+																																			   // joinSstList
+																																			   // 받는다.
 
 						Map<String, String> mapSiteCd = new HashMap<String, String>();
 						mapSiteCd.put("10100", "네이트");
@@ -747,7 +756,9 @@ public class LoginServiceImpl implements LoginService {
 						|| StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 								+ ImIdpConstants.IDP_RES_CODE_SUSPEND_02)) { // 직권중지 상태인 경우
 
-					if (!StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) { // IDP와 직권중지상태 코드가 다를경우 직권중지상태로 업데이트
+					if (!StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) { // IDP와 직권중지상태
+																									   // 코드가 다를경우
+																									   // 직권중지상태로 업데이트
 						LOGGER.info("{} 직권중지상태코드가 상이하여 업데이트(stopStatusCode : {} -> {})", userId, stopStatusCode,
 								MemberConstants.USER_STOP_STATUS_PAUSE);
 						this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null, MemberConstants.USER_STOP_STATUS_PAUSE, null,
@@ -759,7 +770,10 @@ public class LoginServiceImpl implements LoginService {
 				} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
 						+ ImIdpConstants.IDP_RES_CODE_LOGIN_RESTRICT)) { // 로그인제한 상태인 경우
 
-					if (!StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) { // IDP와 로그인 제한상태 코드가 다를경우 로그인 제한상태로 업데이트
+					if (!StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) { // IDP와 로그인
+																										 // 제한상태 코드가
+																										 // 다를경우 로그인
+																										 // 제한상태로 업데이트
 						LOGGER.info("{} 로그인제한상태코드가 상이하여 업데이트(loginStatusCode : {} -> {})", userId, loginStatusCode,
 								MemberConstants.USER_LOGIN_STATUS_PAUSE);
 						this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_PAUSE, null,
@@ -859,10 +873,8 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
-	 * executeAuthorizeForAutoUpdate
-	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# executeAuthorizeForAutoUpdate
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, com.skplanet
 	 * .storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq)
 	 */
 	@Override
@@ -919,10 +931,8 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
-	 * executeAuthorizeSaveAndSyncByMac
-	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# executeAuthorizeSaveAndSyncByMac
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, com.skplanet
 	 * .storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq)
 	 */
 	@Override

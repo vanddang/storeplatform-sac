@@ -28,7 +28,7 @@ public interface LoginService {
 	 *            AuthorizeByMdnReq
 	 * @return AuthorizeByMdnRes
 	 */
-	public AuthorizeByMdnRes executeAuthorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
+	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
 
 	/**
 	 * 모바일 전용 회원 인증 v2 (MDN 인증, 변동성 포함).
