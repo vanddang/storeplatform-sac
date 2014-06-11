@@ -2834,14 +2834,14 @@ public class IdpServiceImpl implements IdpService {
 
 									// insertDeviceInfo 호출시 deviceKey가 새로 생성되는데 새로 생성된 값을 updateDeviceInfo
 									// api호출해서 부가속성을 모두 바꿔줘야함.
-									getDeviceInfo.setDeviceKey(afterDeviceKey);
-									if (getDeviceInfo.getDeviceExtraInfoList() != null) { // 부가속성
-										for (int i = 0; i < getDeviceInfo.getDeviceExtraInfoList().size(); i++) {
-											getDeviceInfo.getDeviceExtraInfoList().get(i).setDeviceKey(afterDeviceKey);
-										}
-									}
-
-									this.deviceService.updateDeviceInfo(requestHeader, getDeviceInfo, false);
+									//									getDeviceInfo.setDeviceKey(afterDeviceKey);
+									//									if (getDeviceInfo.getDeviceExtraInfoList() != null) { // 부가속성
+									//										for (int i = 0; i < getDeviceInfo.getDeviceExtraInfoList().size(); i++) {
+									//											getDeviceInfo.getDeviceExtraInfoList().get(i).setDeviceKey(afterDeviceKey);
+									//										}
+									//									}
+									//
+									//									this.deviceService.updateDeviceInfo(requestHeader, getDeviceInfo, false);
 
 								}
 							}
