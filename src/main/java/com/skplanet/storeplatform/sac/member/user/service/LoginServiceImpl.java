@@ -391,12 +391,19 @@ public class LoginServiceImpl implements LoginService {
 		String isSaveAndSyncTarget = "N"; // 변동성 mdn 유무
 		String userKey = null;
 
+		String telecomUpdateYn = "N";
+		String gmailupdateYn = "N";
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
 
 			/* 휴대기기 정보 조회 */
 			DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
 
 			userKey = deviceInfo.getUserKey();
+
+			if (StringUtils.isBlank(deviceInfo.getDeviceTelecom())) {
+				telecomUpdateYn = "Y";
+				LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), "null", req.getDeviceTelecom());
+			}
 
 			/* 통산사가 일치한 경우 IMEI와 GMAIL이 다르면 변동성 체크 실패 */
 			if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(), deviceInfo.getDeviceTelecom(),
@@ -412,10 +419,19 @@ public class LoginServiceImpl implements LoginService {
 
 					}
 
+				} else { // nativeID가 같은경우
+
+					if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
+						LOGGER.info("{} GMAIL 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceAccount(), req.getDeviceAccount());
+						gmailupdateYn = "Y";
+					}
+
 				}
 
 			} else { /* 통신사가 다른경우 GMAIL이 다르면 변동성 체크 실패 */
 
+				telecomUpdateYn = "Y";
+				LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceTelecom(), req.getDeviceTelecom());
 				if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(), deviceInfo.getDeviceAccount(),
 						MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
 
@@ -449,12 +465,14 @@ public class LoginServiceImpl implements LoginService {
 			DeviceInfo paramDeviceInfo = new DeviceInfo();
 			paramDeviceInfo.setUserKey(userKey);
 			paramDeviceInfo.setDeviceId(req.getDeviceId());
-			paramDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-			if (StringUtils.isNotBlank(req.getDeviceAccount())) {
+			if (StringUtils.equals(telecomUpdateYn, "Y")) {
+				paramDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+			}
+			if (StringUtils.equals(gmailupdateYn, "Y")) {
 				paramDeviceInfo.setDeviceAccount(req.getDeviceAccount());
 			}
-			String deviceKey = this.deviceService.updateDeviceInfo(requestHeader, paramDeviceInfo, false);
 
+			String deviceKey = this.deviceService.updateDeviceInfo(requestHeader, paramDeviceInfo, false);
 			res.setDeviceKey(deviceKey);
 			res.setUserKey(userKey);
 
