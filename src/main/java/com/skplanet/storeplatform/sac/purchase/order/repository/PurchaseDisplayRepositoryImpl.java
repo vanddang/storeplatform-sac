@@ -167,8 +167,10 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			// ////////////////////////// 정액제 상품 변수 ////////////////////////////
 			purchaseProduct.setAvailableFixrateProdIdList(displayInfo.getAvailableFixrateProdIdList());
 			purchaseProduct.setAutoPrchsYN(displayInfo.getAutoPrchsYN());
-			purchaseProduct.setAutoPrchsPeriodUnitCd(displayInfo.getAutoPrchsPeriodUnitCd());
-			purchaseProduct.setAutoPrchsPeriodValue(displayInfo.getAutoPrchsPeriodValue());
+			if (StringUtils.equals(displayInfo.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
+				purchaseProduct.setAutoPrchsPeriodUnitCd(displayInfo.getAutoPrchsPeriodUnitCd());
+				purchaseProduct.setAutoPrchsPeriodValue(displayInfo.getAutoPrchsPeriodValue());
+			}
 			purchaseProduct.setAutoPrchsLastDt(displayInfo.getAutoPrchsLastDt());
 			purchaseProduct.setExclusiveFixrateProdExistYn(displayInfo.getExclusiveFixrateProdExistYn());
 			purchaseProduct.setExclusiveFixrateProdIdList(displayInfo.getExclusiveFixrateProdIdList());

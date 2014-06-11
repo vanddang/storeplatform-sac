@@ -605,13 +605,27 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setFlgMbrStatus(PurchaseConstants.VERIFYORDER_USER_STATUS_NORMAL); // [fix] 회원상태: 1-정상
 		res.setFlgProductStatus(PurchaseConstants.VERIFYORDER_PRODUCT_STATUS_NORMAL); // [fix] 상품상태: 1-정상
 		res.setTopMenuId(prchsDtlMore.getTenantProdGrpCd().substring(8, 12)); // 상품 TOP 메뉴 ID
-		// 게임캐쉬
-		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+		// 자동결제 상품 - 다음 자동 결제일
+		if (StringUtils.equals(reservedDataMap.get("autoPrchsYn"), PurchaseConstants.USE_Y)) {
 			String afterAutoPayDt = this.calculateUseDate(prchsDtlMore.getUseStartDt(),
 					reservedDataMap.get("autoPrchsPeriodUnitCd"),
 					StringUtils.defaultString(reservedDataMap.get("autoPrchsPeriodValue"), "0"));
 			res.setAfterAutoPayDt(afterAutoPayDt.substring(0, 8) + "000000"); // 다음 자동 결제일
+		}
+		// VOD 정액제 이용권 (ex, 30일 이용권) - 만료예정일
+		if (StringUtils.equals(reservedDataMap.get("cmpxProdClsfCd"), PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)
+				&& (StringUtils.equals(reservedDataMap.get("autoPrchsYn"), PurchaseConstants.USE_Y) == false)) {
+			res.setUseExprDt(prchsDtlMore.getUseExprDt());
+		}
+		// 시리즈 전회차 이용권 - 이용시작일, 이용종료일
+		if (StringUtils.equals(reservedDataMap.get("cmpxProdClsfCd"),
+				PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+			res.setUseStartDt(prchsDtlMore.getUseStartDt());
+			res.setUseExprDt(prchsDtlMore.getUseExprDt());
+		}
+		// 게임캐쉬
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
 			res.setBonusCashPoint(reservedDataMap.get("bonusPoint")); // 보너스 캐쉬 지급 Point
 			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		}
