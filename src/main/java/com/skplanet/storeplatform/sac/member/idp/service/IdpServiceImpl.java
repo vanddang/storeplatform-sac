@@ -505,7 +505,7 @@ public class IdpServiceImpl implements IdpService {
 				MbrOneID mbrOneID = new MbrOneID();
 				mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
 				mbrOneID.setIntgSvcNumber(imIntSvcNo);
-				mbrOneID.setUserKey(map.get("user_key").toString()); // 내부사용자키를 셋팅
+				mbrOneID.setUserKey(userKey); // 내부사용자키를 셋팅
 				mbrOneID.setUserID(userId); // 사용자 ID 셋팅
 				mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
 				mbrOneID.setIsRealName(isRnameAuth); // 실명인증 여부
@@ -3002,7 +3002,7 @@ public class IdpServiceImpl implements IdpService {
 						MbrOneID mbrOneID = new MbrOneID();
 						mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
 						mbrOneID.setIntgSvcNumber(imIntSvcNo);
-						mbrOneID.setUserKey(map.get("user_key").toString()); // 내부사용자키를 셋팅
+						mbrOneID.setUserKey(userKey); // 내부사용자키를 셋팅
 						mbrOneID.setUserID(userId); // 사용자 ID 셋팅
 						mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
 						mbrOneID.setIsRealName(isRnameAuth); // 실명인증 여부
