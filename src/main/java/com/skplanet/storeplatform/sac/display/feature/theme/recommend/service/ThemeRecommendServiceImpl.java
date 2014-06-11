@@ -14,9 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-
 import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,14 +105,11 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		// 추천 사유
 		String reason = "";
 		if (null != response && null != response.getProps()) {
-			try {
-				JAXBContext jc = JAXBContext.newInstance(ISFRes.class);
-				Marshaller m1 = jc.createMarshaller();
-				m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-				m1.marshal(response, System.out);
-			} catch (Exception e) {
-
-			}
+			/*
+			 * try { JAXBContext jc = JAXBContext.newInstance(ISFRes.class); Marshaller m1 = jc.createMarshaller();
+			 * m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); m1.marshal(response, System.out); } catch
+			 * (Exception e) {}
+			 */
 
 			List<Map<String, Object>> listProd = new ArrayList<Map<String, Object>>();
 			int multiCount = response.getProps().getMultiValues().getCount();
