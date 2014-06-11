@@ -140,7 +140,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String svcMngNum = StringUtil.nvl(map.get("svc_mng_num"), "");
 		String tenantId = StringUtil.nvl(map.get("tenantID"), "");
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
-
+		String deviceTelecom = MemberConstants.DEVICE_TELECOM_SKT;
+		String deviceNickName = null;
 		String userKey = null;
 		String deviceKey = null;
 		String modelCd = null;
@@ -180,8 +181,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", mdn, uacd, svcMngNum);
 					uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 					modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+					deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
+					deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 				} else {
 					modelCd = device.getDeviceModelCd();
+					deviceNickName = device.getModelNm();
 				}
 
 				/* 휴대기기 정보 업데이트 */
@@ -192,7 +196,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userMbrDevice.setDeviceKey(deviceKey);
 				userMbrDevice.setDeviceModelNo(modelCd);
 				userMbrDevice.setSvcMangNum(svcMngNum);
-				userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+				userMbrDevice.setDeviceTelecom(deviceTelecom);
+				userMbrDevice.setDeviceNickName(deviceNickName);
 				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
 
 				List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
@@ -240,10 +245,12 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", mdn, uacd, svcMngNum);
 					uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 					modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
-
+					deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
+					deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 				} else {
 
 					modelCd = device.getDeviceModelCd();
+					deviceNickName = device.getModelNm();
 					if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
 
 						/* 테스트 단말여부 확인 */
@@ -268,6 +275,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 									mdn, modelCd, uacd, svcMngNum);
 							uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 							modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+							deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
+							deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 						}
 
 					}
@@ -282,7 +291,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				userMbrDevice.setDeviceKey(deviceKey);
 				userMbrDevice.setDeviceModelNo(modelCd);
 				userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_CHANGE);
-				userMbrDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+				userMbrDevice.setDeviceTelecom(deviceTelecom);
+				userMbrDevice.setDeviceNickName(deviceNickName);
 
 				List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 				UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
@@ -589,6 +599,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String svcMngNum = StringUtil.nvl(map.get("svc_mng_num"), "");
 		String tenantId = StringUtil.nvl(map.get("tenantID"), "");
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
+		String deviceTelecom = MemberConstants.DEVICE_TELECOM_SKT;
+		String deviceNickName = null;
 		String beforeV4SprtYn = null; // 이전 단말 DCD 지원여부
 		String v4SprtYn = null; // 변경될 단말 DCD 지원여부
 		String preData = null;
@@ -639,11 +651,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						mdn, null, uacd, svcMngNum);
 				uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 				modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+				deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
+				deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 				v4SprtYn = "N"; // V4 무조건 해지
 
 			} else {
 
 				modelCd = device.getDeviceModelCd();
+				deviceNickName = device.getModelNm();
 				v4SprtYn = device.getItoppV4SprtYn() == null ? "N" : device.getItoppV4SprtYn(); // DCD 연동 지원여부
 
 				if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
@@ -679,6 +694,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						// 일반 사용자인 경우 - 미지원 휴대폰으로
 						uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 						modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
+						deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
+						deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 						v4SprtYn = "N"; // V4 무조건 해지
 					}
 
@@ -693,6 +710,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			userMbrDevice.setDeviceID(mdn);
 			userMbrDevice.setDeviceKey(deviceKey);
 			userMbrDevice.setDeviceModelNo(modelCd);
+			userMbrDevice.setDeviceTelecom(deviceTelecom);
+			userMbrDevice.setDeviceNickName(deviceNickName);
 			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE); // 휴대기기 변경 유형코드 : 기기변경
 
 			List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
@@ -920,6 +939,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					resultLogStr = "변동성대상처리";
 
 				} else {
+
+					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE;
+					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
 
 					/* 회원 탈퇴 */
 					RemoveUserRequest scReq = new RemoveUserRequest();
@@ -1297,7 +1319,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 									modifyDevice.setDeviceKey(userMbrDevice.getDeviceKey());
 									modifyDevice.setDeviceID(deviceId);
 									modifyDevice.setDeviceModelNo(deviceModelNo);
-									modifyDevice.setDeviceTelecom(this.mcc.convertDeviceTelecomCode(deviceTelecom));
+									if (device == null) {
+										modifyDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH);
+										userMbrDevice.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
+									} else {
+										modifyDevice.setDeviceTelecom(this.mcc.convertDeviceTelecomCode(deviceTelecom));
+										modifyDevice.setDeviceNickName(device.getModelNm());
+									}
+
 									modifyDevice.setSvcMangNum(svcMangNum);
 
 									List<UserMbrDeviceDetail> modifyDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
@@ -1412,7 +1441,13 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 								modifyDevice.setDeviceKey(userMbrDevice.getDeviceKey());
 								modifyDevice.setDeviceID(deviceId);
 								modifyDevice.setDeviceModelNo(deviceModelNo);
-								modifyDevice.setDeviceTelecom(this.mcc.convertDeviceTelecomCode(deviceTelecom));
+								if (device == null) {
+									modifyDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH);
+									userMbrDevice.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
+								} else {
+									modifyDevice.setDeviceTelecom(this.mcc.convertDeviceTelecomCode(deviceTelecom));
+									modifyDevice.setDeviceNickName(device.getModelNm());
+								}
 								modifyDevice.setSvcMangNum(svcMangNum);
 
 								List<UserMbrDeviceDetail> modifyDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
