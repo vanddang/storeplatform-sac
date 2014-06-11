@@ -2805,6 +2805,18 @@ public class IdpServiceImpl implements IdpService {
 								// 휴대기기 등록시 MDN_JSON_DATA 정보중 MDN,CARRIER,SVC_MNG_NUM, MODEL_ID정보는 REQUEST PARAM
 								if (getDeviceInfo != null) {
 
+									/* 단말코드 조회 */
+									Device device = this.mcc.getPhoneInfoByUacd(modelIdByMdnInfo);
+									if (device == null) {
+										getDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD);
+										getDeviceInfo.setModelNm(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
+										modelIdByMdnInfo = MemberConstants.NOT_SUPPORT_HP_UACODE;
+										telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_NSH;
+									} else {
+										getDeviceInfo.setDeviceModelNo(device.getDeviceModelCd());
+										getDeviceInfo.setModelNm(device.getModelNm());
+									}
+
 									// 휴대기기등록
 									getDeviceInfo.setDeviceId(deviceId);
 									getDeviceInfo.setDeviceTelecom(telecomValueByMdnInfo);
@@ -2819,15 +2831,6 @@ public class IdpServiceImpl implements IdpService {
 												getDeviceInfo.getDeviceExtraInfoList().get(i).setExtraProfileValue(modelIdByMdnInfo);
 											}
 										}
-									}
-
-									/* 단말코드 조회 */
-									Device device = this.mcc.getPhoneInfoByUacd(modelIdByMdnInfo);
-									if (device == null) {
-										getDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD);
-										getDeviceInfo.setModelNm(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
-									} else {
-										getDeviceInfo.setDeviceModelNo(device.getDeviceModelCd());
 									}
 
 									String afterDeviceKey = this.deviceService.insertDeviceInfo(systemId, tenantId, userKey, getDeviceInfo);
