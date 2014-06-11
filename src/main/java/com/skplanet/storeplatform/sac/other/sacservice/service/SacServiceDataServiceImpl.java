@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
@@ -27,27 +28,41 @@ public class SacServiceDataServiceImpl implements SacServiceDataService {
 
 	private final Map<String, Boolean> dataSvc;
 
+	@Autowired
+	private SacServiceSimService simSvc;
+
+	public void setSimSvc(SacServiceSimService simSvc) {
+		this.simSvc = simSvc;
+	}
+
 	public SacServiceDataServiceImpl() {
 		this.dataSvc = new HashMap<String, Boolean>();
-		this.dataSvc.put("GAME_CASH_FLAT_RATE", true);
+		this.dataSvc.put("tstore.gamecash.flatrate", true);
 		this.dataSvc.put("SERVICE_SAMPLE", false);
 	}
 
 	@Override
-	public void getServiceActive(SacService service) {
-		String serviceId = service.getServiceCd();
-		if (this.dataSvc.get(serviceId) != null) {
-			boolean active = this.dataSvc.get(serviceId);
-			service.setActive(active);
+	public SacService getServiceActive(SacService service) {
+		if (this.simSvc.belongsToSkt(service.getSimOperator())) {
+			String serviceId = service.getServiceCd();
+			if (this.dataSvc.get(service.getServiceCd()) != null) {
+				boolean active = this.dataSvc.get(serviceId);
+				service.setActive(active);
+			}
+		} else {
+			// SKT가 아니면 무조건 Service Off
+			service.setActive(false);
 		}
+		return service;
 	}
 
 	@Override
-	public void setServiceActive(SacService service) {
+	public SacService setServiceActive(SacService service) {
 		String serviceId = service.getServiceCd();
 		boolean active = service.isActive();
 		this.dataSvc.put(serviceId, active);
 		service.setApplied(true);
+		return service;
 	}
 
 	@Override

@@ -15,20 +15,32 @@ public class SacServiceDataServiceImplTest {
 	@Before
 	public void setUp() {
 		this.dataSvc = new SacServiceDataServiceImpl();
+		this.dataSvc.setSimSvc(new SacServiceSimServiceImpl());
 	}
 
 	@Test
 	public void testGetServiceActiveForActive() {
 		SacService vo = new SacService();
-		vo.setServiceCd("GAME_CASH_FLAT_RATE");
+		vo.setServiceCd("tstore.gamecash.flatrate");
+		vo.setSimOperator("450/05");
 		this.dataSvc.getServiceActive(vo);
 		assertTrue(vo.isActive());
 	}
 
 	@Test
-	public void testGetServiceActiveForInactive() {
+	public void testGetServiceActiveForInactive1() {
 		SacService vo = new SacService();
-		vo.setServiceCd("GAME_CASH_FLAT_RATE2");
+		vo.setServiceCd("tstore.gamecash.flatrate");
+		vo.setSimOperator("450/08");
+		this.dataSvc.getServiceActive(vo);
+		assertFalse(vo.isActive());
+	}
+
+	@Test
+	public void testGetServiceActiveForInactive2() {
+		SacService vo = new SacService();
+		vo.setServiceCd("tstore.gamecash.flatrate.v2");
+		vo.setSimOperator("450/05");
 		this.dataSvc.getServiceActive(vo);
 		assertFalse(vo.isActive());
 	}

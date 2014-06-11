@@ -23,12 +23,12 @@ public interface SacServiceDataService {
 	/**
 	 * 한 서비스의 On/Off 값을 조회한다.
 	 */
-	void getServiceActive(SacService service);
+	SacService getServiceActive(SacService service);
 
 	/**
 	 * 한 서비스의 On/Off 값을 수정한다.
 	 */
-	void setServiceActive(SacService service);
+	SacService setServiceActive(SacService service);
 
 	/**
 	 * 어려 서비스의 On/Off 값을 조회온다.

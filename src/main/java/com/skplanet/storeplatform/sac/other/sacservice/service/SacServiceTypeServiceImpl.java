@@ -33,7 +33,8 @@ public class SacServiceTypeServiceImpl implements SacServiceTypeService {
 	public SacService fromGetReq(GetActiveReq req) {
 		SacService vo = new SacService();
 		vo.setServiceCd(req.getServiceCd());
-		vo.setOperator(req.getOperator());
+		vo.setSimOperator(req.getSimOperator());
+		vo.setModel(req.getModel());
 		return vo;
 	}
 
@@ -41,7 +42,8 @@ public class SacServiceTypeServiceImpl implements SacServiceTypeService {
 	public GetActiveRes toGetRes(SacService vo) {
 		GetActiveRes res = new GetActiveRes();
 		res.setServiceCd(vo.getServiceCd());
-		res.setOperator(vo.getOperator());
+		res.setSimOperator(vo.getSimOperator());
+		res.setModel(vo.getModel());
 		res.setActive(vo.isActive());
 		return res;
 	}
@@ -50,7 +52,8 @@ public class SacServiceTypeServiceImpl implements SacServiceTypeService {
 	public SacService fromSetReq(SetActiveReq req) {
 		SacService vo = new SacService();
 		vo.setServiceCd(req.getServiceCd());
-		vo.setOperator(req.getOperator());
+		vo.setSimOperator(req.getSimOperator());
+		vo.setModel(req.getModel());
 		vo.setActive(req.isActive());
 		return vo;
 	}
@@ -59,7 +62,8 @@ public class SacServiceTypeServiceImpl implements SacServiceTypeService {
 	public SetActiveRes toSetRes(SacService vo) {
 		SetActiveRes res = new SetActiveRes();
 		res.setServiceCd(vo.getServiceCd());
-		res.setOperator(vo.getOperator());
+		res.setSimOperator(vo.getSimOperator());
+		res.setModel(vo.getModel());
 		res.setApplied(vo.isApplied());
 		return res;
 	}

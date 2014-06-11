@@ -60,7 +60,7 @@ public class SacServiceActiveController {
 	public GetActiveRes getActive(@RequestBody @Validated GetActiveReq req, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("/getActive/v1's req : {}", req);
 		SacService vo = this.typeSvc.fromGetReq(req);
-		this.dataSvc.getServiceActive(vo);
+		vo = this.dataSvc.getServiceActive(vo);
 		GetActiveRes res = this.typeSvc.toGetRes(vo);
 		return res;
 	}
@@ -70,7 +70,7 @@ public class SacServiceActiveController {
 	public SetActiveRes setActive(@RequestBody @Validated SetActiveReq req, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("/setActive/v1's req : {}", req);
 		SacService vo = this.typeSvc.fromSetReq(req);
-		this.dataSvc.getServiceActive(vo);
+		vo = this.dataSvc.getServiceActive(vo);
 		SetActiveRes res = this.typeSvc.toSetRes(vo);
 		return res;
 	}

@@ -1,10 +1,16 @@
 package com.skplanet.storeplatform.sac.other.sacservice.vo;
 
-public class SacService {
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
+public class SacService extends CommonInfo {
+
+	private static final long serialVersionUID = 1L;
 
 	private String serviceCd;
 
-	private String operator;
+	private String simOperator;
+
+	private String model;
 
 	private boolean active;
 
@@ -18,12 +24,12 @@ public class SacService {
 		this.serviceCd = serviceCd;
 	}
 
-	public String getOperator() {
-		return this.operator;
+	public String getSimOperator() {
+		return this.simOperator;
 	}
 
-	public void setOperator(String operator) {
-		this.operator = operator;
+	public void setSimOperator(String simOperator) {
+		this.simOperator = simOperator;
 	}
 
 	public boolean isActive() {
@@ -40,6 +46,14 @@ public class SacService {
 
 	public void setApplied(boolean applied) {
 		this.applied = applied;
+	}
+
+	public String getModel() {
+		return this.model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
 	}
 
 }
