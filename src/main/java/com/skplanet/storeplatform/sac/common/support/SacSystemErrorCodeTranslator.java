@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.skplanet.storeplatform.sac.common.support;
 
@@ -14,7 +14,7 @@ import com.skplanet.storeplatform.framework.core.exception.SystemErrorCodeTransl
 
 /**
  * Calss 설명
- * 
+ *
  * Updated on : 2014. 4. 23. Updated by : 홍占썸동, SK 占시뤄옙占쏙옙.
  */
 public class SacSystemErrorCodeTranslator implements SystemErrorCodeTranslator {
@@ -30,8 +30,7 @@ public class SacSystemErrorCodeTranslator implements SystemErrorCodeTranslator {
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.display", "SAC_DSP");
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.example", "SAC_CMN");
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.member", "SAC_MEM");
-		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.other", "SAC_CMN");
-		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.product", "SAC_CMN");
+		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.other", "SAC_OTH");
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.purchase", "SAC_PUR");
 		this.systemErrorCodeMap.put("com.skplanet.storeplatform.sac.runtime", "SAC_CMN");
 
@@ -44,7 +43,7 @@ public class SacSystemErrorCodeTranslator implements SystemErrorCodeTranslator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.common.support.SystemErrorCodeTranslator#translate(java.lang.String)
 	 */
 	@Override
