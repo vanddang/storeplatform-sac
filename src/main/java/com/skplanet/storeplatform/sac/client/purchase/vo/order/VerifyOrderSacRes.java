@@ -45,6 +45,8 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String bonusCashPoint; // 보너스 캐쉬 지급 Point
 	private String bonusCashUsableDayCnt; // 보너스 캐쉬 유효기간(일)
 	private String afterAutoPayDt; // 다음 자동 결제일
+	private String useStartDt; // 이용 시작 일시
+	private String useExprDt; // 이용 종료 일시
 	private String dwldAvailableDayCnt; // 다운로드 가능기간(일)
 	private String usePeriodCnt; // 이용기간(일)
 	private String basePid; // 기본 상품 ID (대여/소장 TAB 하이라이트 처리)
@@ -431,6 +433,36 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setAfterAutoPayDt(String afterAutoPayDt) {
 		this.afterAutoPayDt = afterAutoPayDt;
+	}
+
+	/**
+	 * @return the useStartDt
+	 */
+	public String getUseStartDt() {
+		return this.useStartDt;
+	}
+
+	/**
+	 * @param useStartDt
+	 *            the useStartDt to set
+	 */
+	public void setUseStartDt(String useStartDt) {
+		this.useStartDt = useStartDt;
+	}
+
+	/**
+	 * @return the useExprDt
+	 */
+	public String getUseExprDt() {
+		return this.useExprDt;
+	}
+
+	/**
+	 * @param useExprDt
+	 *            the useExprDt to set
+	 */
+	public void setUseExprDt(String useExprDt) {
+		this.useExprDt = useExprDt;
 	}
 
 	/**
