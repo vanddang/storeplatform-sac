@@ -111,11 +111,11 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 결제Page 상품설명 */
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_DELIVERY = "배송 상품";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_COUPON = "쿠폰 상품";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH = "MP3/고음질";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_BELL_HIGH = "벨/고음질";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_BELL_BASIC = "벨/일반";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_HIGH = "컬러링/60초";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC = "컬러링/40초";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH = "MP3 : 192kbps";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_BELL_HIGH = "벨소리 : 고음질";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_BELL_BASIC = "벨소리 : 일반음질";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_HIGH = "컬러링 : 롱(60초)";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC = "컬러링 : 일반(40초)";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_AUTO = "자동결제";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_SERIES = "전회차 구매";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_OWN = "전권 소장";
