@@ -128,7 +128,7 @@
 		                              , D.AID
 		                              , D.PKG_NM AS APK_PKG_NM
 		                              , D.SALE_STRT_DT
-		                              , D.REG_DT
+		                              , TO_CHAR(A.REG_DT , 'YYYYMMDD') AS REG_DT
 		                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
 		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE   
 		                              , NVL(F.PATICPERS_CNT, 0) AS PATICPERS_CNT             
@@ -163,9 +163,9 @@
 		                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
 		                           AND I.USE_YN ='Y'
                                    AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 7,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')
-                                 ORDER BY A.REG_DT DESC
-                                        , C.PROD_NM
 		                       ) IA
+                          ORDER BY IA.REG_DT DESC
+                                 , IA.PROD_NM		                       
 		              ) JA
 		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}             
 		       )                               KA
