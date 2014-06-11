@@ -104,11 +104,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	@Autowired
 	private DeviceService deviceService;
 
-	//	@Autowired
-	//	private SearchDcdSupportProductSCI searchDcdSupportProductSCI;
+	// @Autowired
+	// private SearchDcdSupportProductSCI searchDcdSupportProductSCI;
 	//
-	//	@Autowired
-	//	private ExistenceInternalSacSCI existenceInternalSacSCI;
+	// @Autowired
+	// private ExistenceInternalSacSCI existenceInternalSacSCI;
 
 	@Autowired
 	@Resource(name = "memberModDeviceAmqpTemplate")
@@ -506,7 +506,10 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			createDcdReq.setDCDInfo(dcdInfo);
 			this.userSCI.createDCD(createDcdReq);
 
-		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE) || StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_JOIN)) { // DCD 등록 및 해지
+		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE) || StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_JOIN)) { // DCD
+																																				 // 등록
+																																				 // 및
+																																				 // 해지
 
 			/* DCD 상품 조회 */
 			DcdSupportProductRes dcdSupportProductRes = this.mcic.searchDcdSupportProduct();
@@ -751,11 +754,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			try {
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 				mqInfo.setUserKey(userKey);
-				//mqInfo.setOldUserKey(userKey);
+				// mqInfo.setOldUserKey(userKey);
 				mqInfo.setDeviceKey(deviceKey);
-				//mqInfo.setOldDeviceKey(deviceKey);
+				// mqInfo.setOldDeviceKey(deviceKey);
 				mqInfo.setDeviceId(mdn);
-				//mqInfo.setOldDeviceId(mdn);
+				// mqInfo.setOldDeviceId(mdn);
 				mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
 				mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
 				mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
@@ -865,39 +868,76 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
-			if ((StringUtil.equals(svcRsnCd, "Z222") || StringUtil.equals(svcRsnCd, "Z261"))
-					&& StringUtil.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) { //(번호이동당일해지 || 번호이동해지) && 모바일 회원
+			/********************
+			 * 무선 회원인 경우.
+			 ********************/
+			String resultLogStr = "";
+			if (StringUtil.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-				changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_MOVE;
-				gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
+				/********************************
+				 * 번호이동당일해지 || 번호이동해지
+				 ********************************/
+				if (StringUtil.equals(svcRsnCd, "Z222") || StringUtil.equals(svcRsnCd, "Z261")) {
 
-				/* 휴대기기 수정 요청 */
-				CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
-				UserMbrDevice userMbrDevice = new UserMbrDevice();
-				userMbrDevice.setUserKey(userKey);
-				userMbrDevice.setDeviceID(mdn);
-				userMbrDevice.setDeviceKey(deviceKey);
-				userMbrDevice.setChangeCaseCode(changeCaseCode); // 휴대기기 변경 유형코드 : 번호이동
+					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_MOVE;
+					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
 
-				createDeviceReq.setCommonRequest(commonRequest);
-				createDeviceReq.setUserKey(userKey);
-				createDeviceReq.setIsNew("N");
-				createDeviceReq.setUserMbrDevice(userMbrDevice);
-				this.deviceSCI.createDevice(createDeviceReq);
+					/* 휴대기기 수정 요청 */
+					CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+					UserMbrDevice userMbrDevice = new UserMbrDevice();
+					userMbrDevice.setUserKey(userKey);
+					userMbrDevice.setDeviceID(mdn);
+					userMbrDevice.setDeviceKey(deviceKey);
+					userMbrDevice.setChangeCaseCode(changeCaseCode); // 휴대기기 변경 유형코드 : 번호이동
 
-				/* 회원상태 업데이트 */
-				UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
-				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-				key.setKeyString(userKey);
-				keySearchList.add(key);
-				updStatusUserReq.setCommonRequest(commonRequest);
-				updStatusUserReq.setKeySearchList(keySearchList);
-				updStatusUserReq.setUserMainStatus(MemberConstants.MAIN_STATUS_SECEDE); // 탈퇴
-				updStatusUserReq.setUserSubStatus(MemberConstants.SUB_STATUS_CHANGE_USER); // 변동성 대상
-				this.userSCI.updateStatus(updStatusUserReq);
+					createDeviceReq.setCommonRequest(commonRequest);
+					createDeviceReq.setUserKey(userKey);
+					createDeviceReq.setIsNew("N");
+					createDeviceReq.setUserMbrDevice(userMbrDevice);
+					this.deviceSCI.createDevice(createDeviceReq);
+
+					/* 휴대기기 삭제 요청 */
+					List<String> removeKeyList = new ArrayList<String>();
+					removeKeyList.add(deviceKey);
+
+					RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+					removeDeviceReq.setCommonRequest(commonRequest);
+					removeDeviceReq.setUserKey(userKey);
+					removeDeviceReq.setDeviceKey(removeKeyList);
+					this.deviceSCI.removeDevice(removeDeviceReq);
+
+					/* 회원상태 업데이트 */
+					UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
+					key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+					key.setKeyString(userKey);
+					keySearchList.add(key);
+					updStatusUserReq.setCommonRequest(commonRequest);
+					updStatusUserReq.setKeySearchList(keySearchList);
+					updStatusUserReq.setUserMainStatus(MemberConstants.MAIN_STATUS_SECEDE); // 탈퇴
+					updStatusUserReq.setUserSubStatus(MemberConstants.SUB_STATUS_CHANGE_USER); // 변동성 대상
+					this.userSCI.updateStatus(updStatusUserReq);
+
+					resultLogStr = "변동성대상처리";
+
+				} else {
+
+					/* 회원 탈퇴 */
+					RemoveUserRequest scReq = new RemoveUserRequest();
+					scReq.setCommonRequest(commonRequest);
+					scReq.setUserKey(userKey);
+					scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+					scReq.setSecedeReasonMessage("");
+					this.userSCI.remove(scReq);
+
+					resultLogStr = "회원탈퇴";
+
+				}
 
 			} else {
 
+				/**************************
+				 * MDN이 ID에 붙은 경우
+				 *************************/
 				if (StringUtil.equals(svcRsnCd, "M1NC")) { // 명의변경
 					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NAME_CHANGE;
 					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_NAME_CHANGE;
@@ -916,7 +956,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				removeDeviceReq.setDeviceKey(removeKeyList);
 				this.deviceSCI.removeDevice(removeDeviceReq);
 
+				resultLogStr = "휴대기기삭제";
+
 			}
+
+			LOGGER.info("{},결과:{},Type:{},svcRsnCd:{}", mdn, resultLogStr, schUserRes.getUserMbr().getUserType(), svcRsnCd);
 
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
