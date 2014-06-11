@@ -234,7 +234,7 @@
 		                              , D.AID
 		                              , D.PKG_NM
 		                              , D.SALE_STRT_DT
-		                              , D.REG_DT
+		                              , TO_CHAR(A.REG_DT, 'YYYYMMDD') AS REG_DT
 		                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
 		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE              
 		                              , NVL(F.PATICPERS_CNT, 0) AS PATICPERS_CNT              
@@ -269,9 +269,9 @@
 		                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
 		                           AND I.USE_YN ='Y'
                                    AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 1,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')   
-		                         ORDER BY A.REG_DT DESC
-		                                , C.PROD_NM
 		                       ) IA
+                         ORDER BY IA.REG_DT DESC
+                                , IA.PROD_NM		                       
 		              ) JA
 		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}
 		      )                               KA
@@ -1199,7 +1199,7 @@
                                            </if>		                                   
 		                                   AND B.TOP_MENU_ID      = #{topMenuId} /* Top Menu Id*/
 		                                   <if test ="topMenuId == 'DP13'">
-		                                   --AND B.META_CLSF_CD     = 'CT19' /* 이북 조회일때 단편만 조회 */
+		                                   AND B.META_CLSF_CD     = 'CT19' /* 이북 조회일때 단편만 조회 */
 		                                   </if>
 		                                   AND B.SVC_GRP_CD       = 'DP000203'
 		                                   AND B.CONTENTS_TYPE_CD = 'PD002502' /* 에피소드 */   
@@ -1212,7 +1212,7 @@
 		                                   AND H.USE_YN = 'Y'      
 		                                   AND I.TOP_MENU_ID      = #{topMenuId}
 		                                   <if test ="topMenuId == 'DP13'">
-		                                   --AND I.META_CLSF_CD     = 'CT19' /* 이북 조회일때 단편만 조회 */
+		                                   AND I.META_CLSF_CD     = 'CT19' /* 이북 조회일때 단편만 조회 */
 		                                   </if>
 		                                   AND I.SVC_GRP_CD       = 'DP000203'
 		                                   AND I.CONTENTS_TYPE_CD = 'PD002501' /* 채널 */      
@@ -1355,14 +1355,14 @@
 		                             AND  CH_D.EXPO_YN = 'Y'
 		                             AND  CH_D.PROD_STATUS_CD = 'PD000403'
                                      <if test ="topMenuId == 'DP13'">
-                                     --AND  CH_E.META_CLSF_CD     = 'CT19' /* 이북 조회일때 단편만 조회 */
+                                     AND  CH_E.META_CLSF_CD     = 'CT19' /* 이북 조회일때 단편만 조회 */
                                      </if>		                             
 		                             AND  CH_E.SVC_GRP_CD = 'DP000203'
 		                             AND  CH_E.CONTENTS_TYPE_CD = 'PD002501'
 		                             AND  CH_E.TOP_MENU_ID = #{topMenuId}
 		                             AND  MP_G.PROD_RSHP_CD = 'DP010802'
                                      <if test ="topMenuId == 'DP13'">
-                                     --AND  EP_H.META_CLSF_CD     = 'CT19' /* 이북 조회일때 단편만 조회 */
+                                     AND  EP_H.META_CLSF_CD     = 'CT19' /* 이북 조회일때 단편만 조회 */
                                      </if>  		                             
 		                             AND  EP_H.SVC_GRP_CD = 'DP000203'
 		                             AND  EP_H.CONTENTS_TYPE_CD = 'PD002502'
