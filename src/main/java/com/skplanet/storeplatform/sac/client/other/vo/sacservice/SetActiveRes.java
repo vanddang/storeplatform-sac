@@ -1,6 +1,10 @@
 package com.skplanet.storeplatform.sac.client.other.vo.sacservice;
 
-public class SetActiveRes {
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
+public class SetActiveRes extends CommonInfo {
+
+	private static final long serialVersionUID = 1L;
 
 	private String serviceCd;
 
