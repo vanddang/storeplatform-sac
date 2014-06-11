@@ -359,8 +359,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		autoPrchs.setPaymentEndDt("99991231235959");
 		try {
 			autoPrchs.setAfterPaymentDt(DateFormatUtils.format(DateUtils.truncate(
-					DateUtils.addDays(DateUtils.parseDate(prchsDtlMore.getUseExprDt(), "yyyyMMddHHmmss"), 1),
-					Calendar.DATE), "yyyyMMddHHmmss"));
+					DateUtils.parseDate(prchsDtlMore.getUseExprDt(), "yyyyMMddHHmmss"), Calendar.DATE),
+					"yyyyMMddHHmmss"));
 		} catch (ParseException e) {
 			throw new StorePlatformException("SAC_PUR_7217", prchsDtlMore.getUseExprDt());
 		}
