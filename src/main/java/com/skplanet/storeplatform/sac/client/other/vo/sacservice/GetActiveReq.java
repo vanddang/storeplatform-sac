@@ -4,7 +4,9 @@ public class GetActiveReq {
 
 	private String serviceCd;
 
-	private String operator;
+	private String simOperator;
+
+	private String model;
 
 	public String getServiceCd() {
 		return this.serviceCd;
@@ -14,12 +16,20 @@ public class GetActiveReq {
 		this.serviceCd = serviceCd;
 	}
 
-	public String getOperator() {
-		return this.operator;
+	public String getSimOperator() {
+		return this.simOperator;
 	}
 
-	public void setOperator(String operator) {
-		this.operator = operator;
+	public void setSimOperator(String simOperator) {
+		this.simOperator = simOperator;
+	}
+
+	public String getModel() {
+		return this.model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
 	}
 
 }

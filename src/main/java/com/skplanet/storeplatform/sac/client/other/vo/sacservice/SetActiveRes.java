@@ -4,7 +4,9 @@ public class SetActiveRes {
 
 	private String serviceCd;
 
-	private String operator;
+	private String simOperator;
+
+	private String model;
 
 	private boolean isApplied;
 
@@ -16,20 +18,28 @@ public class SetActiveRes {
 		this.serviceCd = serviceCd;
 	}
 
-	public String getOperator() {
-		return this.operator;
+	public String getSimOperator() {
+		return this.simOperator;
 	}
 
-	public void setOperator(String operator) {
-		this.operator = operator;
+	public void setSimOperator(String simOperator) {
+		this.simOperator = simOperator;
 	}
 
 	public boolean isApplied() {
-		return isApplied;
+		return this.isApplied;
 	}
 
 	public void setApplied(boolean isApplied) {
 		this.isApplied = isApplied;
+	}
+
+	public String getModel() {
+		return this.model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
 	}
 
 }

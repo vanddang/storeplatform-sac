@@ -4,7 +4,9 @@ public class SetActiveReq {
 
 	private String serviceCd;
 
-	private String operator;
+	private String simOperator;
+
+	private String model;
 
 	private boolean isActive;
 
@@ -16,12 +18,12 @@ public class SetActiveReq {
 		this.serviceCd = serviceCd;
 	}
 
-	public String getOperator() {
-		return this.operator;
+	public String getSimOperator() {
+		return this.simOperator;
 	}
 
-	public void setOperator(String operator) {
-		this.operator = operator;
+	public void setSimOperator(String simOperator) {
+		this.simOperator = simOperator;
 	}
 
 	public boolean isActive() {
@@ -30,6 +32,14 @@ public class SetActiveReq {
 
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+
+	public String getModel() {
+		return this.model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
 	}
 
 }
