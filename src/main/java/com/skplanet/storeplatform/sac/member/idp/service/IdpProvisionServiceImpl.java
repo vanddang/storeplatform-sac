@@ -856,7 +856,17 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			userKey = schDeviceRes.getUserKey();
 			deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
-			if (StringUtil.equals(svcRsnCd, "Z222") || StringUtil.equals(svcRsnCd, "Z261")) { //번호이동당일해지 || 번호이동해지
+			SearchUserRequest schUserReq = new SearchUserRequest();
+			schUserReq.setCommonRequest(commonRequest);
+			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+			key.setKeyString(schDeviceRes.getUserKey());
+			keySearchList.add(key);
+			schUserReq.setKeySearchList(keySearchList);
+
+			SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
+
+			if ((StringUtil.equals(svcRsnCd, "Z222") || StringUtil.equals(svcRsnCd, "Z261"))
+					&& StringUtil.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) { //(번호이동당일해지 || 번호이동해지) && 모바일 회원
 
 				changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_MOVE;
 				gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
