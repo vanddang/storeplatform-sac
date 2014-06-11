@@ -1,12 +1,14 @@
 package com.skplanet.storeplatform.sac.other.sacservice.service;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 
 /**
  * SacServiceSimeService 클래스
  *
  * Created on 2014. 6. 11. by 서대영. SK 플래닛
  */
+@Service
 public class SacServiceSimServiceImpl implements SacServiceSimService {
 
 	/**
