@@ -240,12 +240,15 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_CREDIT_CARD, paymentSacParam.getPaymentMtdCd())) {
 				// 신용카드 결제이면
 				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
-			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_PAYPIN, paymentSacParam.getPaymentMtdCd())) {
-				// Paypin 결제이면
-				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_DANAL, paymentSacParam.getPaymentMtdCd())) {
+				// DANAL 결제이면
+
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_OCB, paymentSacParam.getPaymentMtdCd())) {
 				// OCB 결제이면
 				pay.setPaymentTypeCd(paymentSacParam.getCpnType());
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_DOTORI, paymentSacParam.getPaymentMtdCd())) {
+				// 도토리 결제이면
+
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER,
 					paymentSacParam.getPaymentMtdCd())) {
 				// SKT 후불결제이면
@@ -266,6 +269,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 				} else {
 					pay.setApplyNum("00");
 				}
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_OCB, paymentSacParam.getPaymentMtdCd())) {
+				// T GiftCard 결제이면
+
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_TMEMBERSHIP,
 					paymentSacParam.getPaymentMtdCd())) {
 				// T Membership 결제이면 하드코딩 - 최상훈 2014.03.26
@@ -276,12 +282,21 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 					// 20퍼 할인율 고정.
 					pay.setPaymentTypeCd("1001");
 				}
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_PAYPIN, paymentSacParam.getPaymentMtdCd())) {
+				// Paypin 결제이면
+				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
 			} else {
-
+				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
+				continue;
 			}
 
 			payList.add(pay);
 
+		}
+
+		if (payList.size() <= 0) {
+			this.logger.info("TStore에서 지원하는 결제수단이 없음!");
+			return null;
 		}
 
 		paymentCancel.setPayList(payList);
