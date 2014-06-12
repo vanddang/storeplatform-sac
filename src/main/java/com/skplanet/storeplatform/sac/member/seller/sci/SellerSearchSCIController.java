@@ -75,7 +75,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 
 		DetailInformationListForProductSacRes response = this.sellerSearchService.detailInformationListForProduct(
 				requestHeader, request);
-		// LOGGER.info("Response : seller count : {}", response.getSellerInfoList().size());
+		LOGGER.info("Response : keyList count : {}", response.getSellerMbrMap().size());
 		return response;
 	}
 }
