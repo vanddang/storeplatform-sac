@@ -74,7 +74,7 @@ public class UserJoinController {
 		/**
 		 * 모바일 전용회원 Biz
 		 */
-		CreateByMdnRes res = this.svc.createByMdn(sacHeader, req);
+		CreateByMdnRes res = this.svc.regByMdn(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -95,7 +95,8 @@ public class UserJoinController {
 	 */
 	@RequestMapping(value = "/member/user/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateByAgreementReq req) {
+	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader,
+			@Validated @RequestBody CreateByAgreementReq req) {
 
 		LOGGER.debug("####################################################");
 		LOGGER.debug("##### 2.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
@@ -119,14 +120,14 @@ public class UserJoinController {
 				throw new StorePlatformException("SAC_MEM_0002", "model");
 			}
 
-			res = this.svc.createByAgreementDevice(sacHeader, req);
+			res = this.svc.regByAgreementDevice(sacHeader, req);
 
 		} else {
 
 			/**
 			 * [[ 단말정보 미존재 ]] Biz
 			 */
-			res = this.svc.createByAgreementId(sacHeader, req);
+			res = this.svc.regByAgreementId(sacHeader, req);
 
 		}
 
@@ -173,14 +174,14 @@ public class UserJoinController {
 				throw new StorePlatformException("SAC_MEM_0002", "model");
 			}
 
-			res = this.svc.createBySimpleDevice(sacHeader, req);
+			res = this.svc.regBySimpleDevice(sacHeader, req);
 
 		} else {
 
 			/**
 			 * [[ 단말정보 미존재 ]] Biz
 			 */
-			res = this.svc.createBySimpleId(sacHeader, req);
+			res = this.svc.regBySimpleId(sacHeader, req);
 
 		}
 
@@ -203,7 +204,8 @@ public class UserJoinController {
 	 */
 	@RequestMapping(value = "/member/user/createSaveAndSync/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateSaveAndSyncRes createSaveAndSync(SacRequestHeader sacHeader, @Validated @RequestBody CreateSaveAndSyncReq req) {
+	public CreateSaveAndSyncRes createSaveAndSync(SacRequestHeader sacHeader,
+			@Validated @RequestBody CreateSaveAndSyncReq req) {
 
 		LOGGER.debug("#################################");
 		LOGGER.debug("##### 2.1.39. Save&Sync 가입 #####");
@@ -218,7 +220,7 @@ public class UserJoinController {
 		/**
 		 * Save&Sync 가입 Biz
 		 */
-		CreateSaveAndSyncRes res = this.svc.createSaveAndSync(sacHeader, req);
+		CreateSaveAndSyncRes res = this.svc.regSaveAndSync(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
