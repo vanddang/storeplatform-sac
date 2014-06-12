@@ -9,8 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.purchase.common.util;
 
+import java.net.UnknownHostException;
+
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelCommonSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonSacParam;
 
 /**
@@ -36,6 +41,24 @@ public class ConvertVO {
 
 		return true;
 
+	}
+
+	public static boolean convertPurchaseCancelCommonSacRes(PurchaseCancelSacResult purchaseCancelSacResult,
+			PurchaseCancelCommonSacRes purchaseCancelCommonSacRes) {
+
+		if (purchaseCancelSacResult == null || purchaseCancelCommonSacRes == null) {
+			return false;
+		}
+
+		try {
+			purchaseCancelCommonSacRes.setHostName(java.net.InetAddress.getLocalHost().getHostName());
+		} catch (UnknownHostException e) {
+			purchaseCancelCommonSacRes.setHostName("UnknownHost");
+		}
+		purchaseCancelCommonSacRes.setInstanceName(StringUtils.defaultString(
+				java.lang.System.getProperty("env.servername"), "UNDEFINED"));
+
+		return true;
 	}
 
 }

@@ -233,6 +233,11 @@ public class PurchaseCancelController {
 
 		PurchaseCancelByUserSacRes purchaseCancelByUserSacRes = new PurchaseCancelByUserSacRes();
 
+		// cancel common response setting.
+		if (!ConvertVO.convertPurchaseCancelCommonSacRes(purchaseCancelSacResult, purchaseCancelByUserSacRes)) {
+			throw new StorePlatformException("SAC_PUR_9902");
+		}
+
 		// response setting.
 		purchaseCancelByUserSacRes.setTotCnt(purchaseCancelSacResult.getTotCnt());
 		purchaseCancelByUserSacRes.setSuccessCnt(purchaseCancelSacResult.getSuccessCnt());
@@ -337,6 +342,11 @@ public class PurchaseCancelController {
 			PurchaseCancelSacResult purchaseCancelSacResult) {
 
 		PurchaseCancelByAdminSacRes purchaseCancelByAdminSacRes = new PurchaseCancelByAdminSacRes();
+
+		// cancel common response setting.
+		if (!ConvertVO.convertPurchaseCancelCommonSacRes(purchaseCancelSacResult, purchaseCancelByAdminSacRes)) {
+			throw new StorePlatformException("SAC_PUR_9902");
+		}
 
 		// response setting.
 		purchaseCancelByAdminSacRes.setTotCnt(purchaseCancelSacResult.getTotCnt());
@@ -482,6 +492,11 @@ public class PurchaseCancelController {
 			PurchaseCancelSacResult purchaseCancelSacResult) {
 
 		PurchaseCancelForTCashSacRes purchaseCancelForTCashSacRes = new PurchaseCancelForTCashSacRes();
+
+		// cancel common response setting.
+		if (!ConvertVO.convertPurchaseCancelCommonSacRes(purchaseCancelSacResult, purchaseCancelForTCashSacRes)) {
+			throw new StorePlatformException("SAC_PUR_9902");
+		}
 
 		// response setting.
 		purchaseCancelForTCashSacRes.setTotCnt(purchaseCancelSacResult.getTotCnt());
