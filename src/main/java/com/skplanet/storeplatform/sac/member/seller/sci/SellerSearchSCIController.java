@@ -50,7 +50,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 		DetailInformationSacRes response = this.sellerSearchService.detailInformationList(requestHeader, request);
-		LOGGER.info("Response : seller count : {}", response.getSellerMbrListMap().size());
+		LOGGER.info("Response : keyList count : {}", response.getSellerMbrListMap().size());
 		return response;
 
 	}
@@ -75,7 +75,7 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 
 		DetailInformationListForProductSacRes response = this.sellerSearchService.detailInformationListForProduct(
 				requestHeader, request);
-		LOGGER.info("Response : keyList count : {}", response.getSellerMbrMap().size());
+		LOGGER.info("Response : seller count : {}", response.getSellerMbrMap().size());
 		return response;
 	}
 }
