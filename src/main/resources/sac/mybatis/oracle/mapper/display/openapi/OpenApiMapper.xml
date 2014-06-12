@@ -110,64 +110,68 @@
              , PATICPERS_CNT		     
 		  FROM 
 		       (
-		        SELECT *
-		          FROM 
-		              (       
-		                SELECT COUNT(*) OVER() AS TOTAL_COUNT
-		                     , ROWNUM AS RNUM
-		                     , IA.*  
-		                  FROM
-		                       (
-		                        SELECT  A.PROD_ID
-		                              , A.EXPO_SELLER_NM
-		                              , A.SELLER_MBR_NO
-		                              , A.TOP_MENU_ID
-		                              , A.CONTENTS_TYPE_CD
-		                              , C.PROD_NM
-		                              , C.PROD_BASE_DESC
-		                              , D.AID
-		                              , D.PKG_NM AS APK_PKG_NM
-		                              , D.SALE_STRT_DT
-		                              , TO_CHAR(A.REG_DT , 'YYYYMMDD') AS REG_DT
-		                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
-		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE   
-		                              , NVL(F.PATICPERS_CNT, 0) AS PATICPERS_CNT             
-		                              , NVL(G.PROD_AMT, 0) AS PROD_AMT
-		                              , J.MENU_ID              
-		                          FROM
-		                                TB_DP_PROD                    A
-		                              , TB_DP_PROD_RSHP               B
-		                              , TB_DP_PROD_DESC               C
-		                              , TB_DP_APP_PROD                D
-		                              , TB_DP_TENANT_PROD             E
-		                              , TB_DP_TENANT_PROD_STATS       F
-		                              , TB_DP_TENANT_PROD_PRICE       G
-		                              , TB_DP_MENU_CATEGORY_PROD_MAPG I
-		                              , TB_DP_MENU_CATEGORY           J               
-		                         WHERE A.PROD_ID = B.PART_PROD_ID
-		                           AND A.PROD_ID = C.PROD_ID
-		                           AND A.PROD_ID = D.PROD_ID
-		                           AND A.PROD_ID = E.PROD_ID
-		                           AND A.PROD_ID = F.PROD_ID(+)
-		                           AND A.PROD_ID = G.PROD_ID
-		                           AND A.PROD_ID = I.PROD_ID
-		                           AND I.MENU_ID = J.MENU_ID
-		                           AND A.TOP_MENU_ID != 'DP02'
-		                           AND A.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
-		                           AND C.LANG_CD  = #{langCd}
-		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
-		                           AND E.PROD_STATUS_CD ='PD000403'
-                                   AND E.TENANT_ID = #{tenantId}
-                                   AND F.TENANT_ID(+) = #{tenantId}
-                                   AND G.TENANT_ID = #{tenantId}		                           
-		                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
-		                           AND I.USE_YN ='Y'
-                                   AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 7,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')
-		                       ) IA
-                          ORDER BY IA.REG_DT DESC
-                                 , IA.PROD_NM		                       
-		              ) JA
-		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}             
+				SELECT *
+				  FROM
+				      (
+				        SELECT ROWNUM AS RNUM
+				             , JA.*
+				          FROM 
+				              (       
+				                SELECT COUNT(*) OVER() AS TOTAL_COUNT
+				                     , IA.*  
+				                  FROM
+				                       (
+				                        SELECT  A.PROD_ID
+				                              , A.EXPO_SELLER_NM
+				                              , A.SELLER_MBR_NO
+				                              , A.TOP_MENU_ID
+				                              , A.CONTENTS_TYPE_CD
+				                              , C.PROD_NM
+				                              , C.PROD_BASE_DESC
+				                              , D.AID
+				                              , D.PKG_NM AS APK_PKG_NM
+				                              , D.SALE_STRT_DT
+				                              , TO_CHAR(A.REG_DT , 'YYYYMMDD') AS REG_DT
+				                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
+				                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE   
+				                              , NVL(F.PATICPERS_CNT, 0) AS PATICPERS_CNT             
+				                              , NVL(G.PROD_AMT, 0) AS PROD_AMT
+				                              , J.MENU_ID              
+				                          FROM
+				                                TB_DP_PROD                    A
+				                              , TB_DP_PROD_RSHP               B
+				                              , TB_DP_PROD_DESC               C
+				                              , TB_DP_APP_PROD                D
+				                              , TB_DP_TENANT_PROD             E
+				                              , TB_DP_TENANT_PROD_STATS       F
+				                              , TB_DP_TENANT_PROD_PRICE       G
+				                              , TB_DP_MENU_CATEGORY_PROD_MAPG I
+				                              , TB_DP_MENU_CATEGORY           J               
+				                         WHERE A.PROD_ID = B.PART_PROD_ID
+				                           AND A.PROD_ID = C.PROD_ID
+				                           AND A.PROD_ID = D.PROD_ID
+				                           AND A.PROD_ID = E.PROD_ID
+				                           AND A.PROD_ID = F.PROD_ID(+)
+				                           AND A.PROD_ID = G.PROD_ID
+				                           AND A.PROD_ID = I.PROD_ID
+				                           AND I.MENU_ID = J.MENU_ID
+				                           AND A.TOP_MENU_ID != 'DP02'
+				                           AND A.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
+				                           AND C.LANG_CD  = #{langCd}
+				                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
+				                           AND E.PROD_STATUS_CD ='PD000403'
+				                           AND E.TENANT_ID = #{tenantId}
+				                           AND F.TENANT_ID(+) = #{tenantId}
+				                           AND G.TENANT_ID = #{tenantId}                                   
+				                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
+				                           AND I.USE_YN ='Y'
+				                           AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 7,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')
+				                       ) IA
+				                  ORDER BY IA.REG_DT DESC
+				                         , IA.PROD_NM                              
+				              ) JA
+				      )  
+				  WHERE RNUM BETWEEN #{offset} AND #{count}               
 		       )                               KA
                 LEFT OUTER JOIN TB_DP_PROD_IMG KB
                              ON KA.PROD_ID  = KB.PROD_ID
@@ -217,63 +221,67 @@
 		  FROM 
 		      (
 		        SELECT *
-		          FROM 
-		              (
-		                SELECT COUNT(*) OVER() AS TOTAL_CNT
-		                     , ROWNUM AS RNUM
-		                     , IA.*   
-		                  FROM 
-		                       (
-		                        SELECT  A.PROD_ID
-		                              , A.SELLER_MBR_NO
-		                              , A.EXPO_SELLER_NM
-		                              , A.TOP_MENU_ID
-		                              , C.PROD_NM
-		                              , C.PROD_BASE_DESC
-		                              , C.PROD_DTL_DESC
-		                              , D.AID
-		                              , D.PKG_NM
-		                              , D.SALE_STRT_DT
-		                              , TO_CHAR(A.REG_DT, 'YYYYMMDD') AS REG_DT
-		                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
-		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE              
-		                              , NVL(F.PATICPERS_CNT, 0) AS PATICPERS_CNT              
-		                              , NVL(G.PROD_AMT, 0) AS PROD_AMT
-		                              , J.MENU_ID
-		                          FROM
-		                                TB_DP_PROD                    A
-		                              , TB_DP_PROD_RSHP               B
-		                              , TB_DP_PROD_DESC               C
-		                              , TB_DP_APP_PROD                D
-		                              , TB_DP_TENANT_PROD             E
-		                              , TB_DP_TENANT_PROD_STATS       F
-		                              , TB_DP_TENANT_PROD_PRICE       G
-		                              , TB_DP_MENU_CATEGORY_PROD_MAPG I
-		                              , TB_DP_MENU_CATEGORY           J               
-		                         WHERE A.PROD_ID = B.PART_PROD_ID
-		                           AND A.PROD_ID = C.PROD_ID
-		                           AND A.PROD_ID = D.PROD_ID
-		                           AND A.PROD_ID = E.PROD_ID
-		                           AND A.PROD_ID = F.PROD_ID(+)
-		                           AND A.PROD_ID = G.PROD_ID
-		                           AND A.PROD_ID = I.PROD_ID
-		                           AND I.MENU_ID = J.MENU_ID
-		                           AND A.TOP_MENU_ID IN ( 'DP01', 'DP03', 'DP04', 'DP08') /*일반 앱만*/
-		                           AND A.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
-		                           AND C.LANG_CD  = #{langCd}
-		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
-		                           AND E.PROD_STATUS_CD ='PD000403'
-                                   AND E.TENANT_ID = #{tenantId}
-                                   AND F.TENANT_ID(+) = #{tenantId}
-                                   AND G.TENANT_ID = #{tenantId}		                           
-		                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
-		                           AND I.USE_YN ='Y'
-                                   AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 1,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')   
-		                       ) IA
-                         ORDER BY IA.REG_DT DESC
-                                , IA.PROD_NM		                       
-		              ) JA
-		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}
+				  FROM
+				      (
+				        SELECT ROWNUM AS RNUM
+				             , JA.*
+				          FROM 
+				              (
+				                SELECT COUNT(*) OVER() AS TOTAL_CNT
+				                     , IA.*   
+				                  FROM 
+				                       (
+				                        SELECT  A.PROD_ID
+				                              , A.SELLER_MBR_NO
+				                              , A.EXPO_SELLER_NM
+				                              , A.TOP_MENU_ID
+				                              , C.PROD_NM
+				                              , C.PROD_BASE_DESC
+				                              , C.PROD_DTL_DESC
+				                              , D.AID
+				                              , D.PKG_NM
+				                              , D.SALE_STRT_DT
+				                              , TO_CHAR(A.REG_DT, 'YYYYMMDD') AS REG_DT
+				                              , NVL(F.PRCHS_CNT, 0) AS DWLD_CNT              
+				                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE              
+				                              , NVL(F.PATICPERS_CNT, 0) AS PATICPERS_CNT              
+				                              , NVL(G.PROD_AMT, 0) AS PROD_AMT
+				                              , J.MENU_ID
+				                          FROM
+				                                TB_DP_PROD                    A
+				                              , TB_DP_PROD_RSHP               B
+				                              , TB_DP_PROD_DESC               C
+				                              , TB_DP_APP_PROD                D
+				                              , TB_DP_TENANT_PROD             E
+				                              , TB_DP_TENANT_PROD_STATS       F
+				                              , TB_DP_TENANT_PROD_PRICE       G
+				                              , TB_DP_MENU_CATEGORY_PROD_MAPG I
+				                              , TB_DP_MENU_CATEGORY           J               
+				                         WHERE A.PROD_ID = B.PART_PROD_ID
+				                           AND A.PROD_ID = C.PROD_ID
+				                           AND A.PROD_ID = D.PROD_ID
+				                           AND A.PROD_ID = E.PROD_ID
+				                           AND A.PROD_ID = F.PROD_ID(+)
+				                           AND A.PROD_ID = G.PROD_ID
+				                           AND A.PROD_ID = I.PROD_ID
+				                           AND I.MENU_ID = J.MENU_ID
+				                           AND A.TOP_MENU_ID IN ( 'DP01', 'DP03', 'DP04', 'DP08') /*일반 앱만*/
+				                           AND A.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
+				                           AND C.LANG_CD  = #{langCd}
+				                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
+				                           AND E.PROD_STATUS_CD ='PD000403'
+				                           AND E.TENANT_ID = #{tenantId}
+				                           AND F.TENANT_ID(+) = #{tenantId}
+				                           AND G.TENANT_ID = #{tenantId}                                   
+				                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
+				                           AND I.USE_YN ='Y'
+				                           AND TO_CHAR(SALE_STRT_DT,'YYYYMMDD') BETWEEN TO_CHAR(SYSDATE - 1,'YYYYMMDD') AND  TO_CHAR(SYSDATE,'YYYYMMDD')   
+				                       ) IA
+				                 ORDER BY IA.REG_DT DESC
+				                        , IA.PROD_NM                               
+				              ) JA
+				      )
+				 WHERE RNUM BETWEEN #{offset} AND #{count}  
 		      )                               KA
 		       LEFT OUTER JOIN TB_DP_PROD_IMG KB
 		                    ON KA.PROD_ID  = KB.PROD_ID
