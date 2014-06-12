@@ -412,103 +412,107 @@
                                ,JA.*
                           FROM
                                (
-                                SELECT ROW_NUMBER( ) OVER( PARTITION BY C.PROD_ID ORDER BY B.REG_DT DESC ) AS RNUM
-                                     , B.PROD_ID
-                                     , B.PROD_CHRG_YN
-                                     , B.TOP_MENU_ID  
-                                     , B.PROD_GRD_CD
-                                     , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
-                                     , C.PART_PROD_ID AS EPSD_PROD_ID
-                                     , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = C.PART_PROD_ID) AS AID
-                                     , D.PROD_NM
-                                     , D.PROD_BASE_DESC
-                                     , F.MENU_ID
-                                     , I.CHNL_UNLMT_AMT
-                                     , I.CHNL_PERIOD_AMT
-                                     , I.PROD_AMT
-                                     , J.SUB_CONTENTS_ID
-                                     , L.PATICPERS_CNT AS PATICPERS_CNT
-                                     , L.PRCHS_CNT AS PRCHS_CNT
-                                     , L.AVG_EVLU_SCORE AS AVG_EVLU_SCORE
-                                  FROM  TB_DP_PROD                    B
-                                      , TB_DP_PROD_RSHP               C
-                                      , TB_DP_PROD_DESC               D
-                                      , TB_DP_MENU_CATEGORY_PROD_MAPG F
-                                      , TB_DP_MENU_CATEGORY           G
-                                      , TB_DP_TENANT_PROD             H
-                                      , TB_DP_TENANT_PROD_PRICE       I       
-                                      , TB_DP_SPRT_DEVICE             J
-                                      , TB_CM_DEVICE                  K
-                                      , TB_DP_TENANT_PROD_STATS       L
-                                 WHERE 1=1
-                                   AND B.PROD_ID = C.PROD_ID
-                                   AND B.PROD_ID = D.PROD_ID 
-                                   AND B.PROD_ID = F.PROD_ID
-                                   AND B.PROD_ID = H.PROD_ID   
-                                   AND B.PROD_ID = I.PROD_ID   
-                                   AND C.PART_PROD_ID = J.PROD_ID   
-                                   AND B.PROD_ID = L.PROD_ID(+)
-                                   AND F.MENU_ID = G.MENU_ID      
-                                   AND H.TENANT_ID = I.TENANT_ID                                   
-                                   <if test ="topMenuId == 'DPAPP'">
-                                     AND B.SVC_GRP_CD       = 'DP000201'
-                                     AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
-                                   </if>
-                                   <if test ="topMenuId == 'DP09'">
-                                     AND B.SVC_GRP_CD       = 'DP000203'
-                                     AND B.TOP_MENU_ID IN ('DP09','DP17','DP18')
-                                   </if>                                   
-                                   <if test ="topMenuId != 'DPAPP' and topMenuId != 'DP09'">
-	                                <choose>
-	                                   <when test='topMenuId == "DP01" or topMenuId == "DP03" or topMenuId == "DP04" or topMenuId == "DP08"'>
-	                                   AND B.SVC_GRP_CD       = 'DP000201'
-	                                   </when>
-	                                   <otherwise>
-	                                   AND B.SVC_GRP_CD       = 'DP000203'
-	                                   </otherwise>
-                                    </choose>
-                                       AND B.TOP_MENU_ID  = #{topMenuId}
-                                   </if>
-                                   AND C.PROD_RSHP_CD     = 'DP010802'
-                                   AND D.LANG_CD  = #{langCd}
-                                   AND F.USE_YN = 'Y'
-                                   AND G.USE_YN = 'Y'
-                                   AND H.TENANT_ID = #{tenantId}
-                                   AND H.PROD_STATUS_CD   = 'PD000403'
-                                   AND SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
-                                   AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
-                                   AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
-                                   AND K.REP_DEVICE_YN ='Y'
-                                   AND K.USE_YN ='Y'
-                                   AND L.TENANT_ID(+) = #{tenantId}
-                                   <if test="searchType != null">
-                                    <if test='searchType == "prodNm"'>
-                                      AND UPPER( D.PROD_NM ) like '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
-                                    </if>
-                                    <if test='searchType == "sellerNm"'>
-                                      AND UPPER( DECODE(B.TOP_MENU_ID ,'DP13', B.REG_ID
-                                                                      ,'DP14', B.REG_ID
-                                                                      ,'DP17', B.REG_ID
-                                                                      ,'DP18', B.REG_ID
-                                                                      ,'DP09', B.REG_ID, B.EXPO_SELLER_NM)) LIKE '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
-                                    </if>
-                                   </if>
-                                   <if test='topMenuId == "DP09" or topMenuId == "DP17" or topMenuId == "DP18"'>
-                                   AND (CASE WHEN (NVL(B.DRM_YN, 'N') = 'Y' AND NVL(K.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 
-                                        ELSE CASE WHEN K.SD_VIDEO_SPRT_YN = 'Y' THEN 1 
-                                             ELSE 0 END
-                                         END
-                                        ) = 1  
-                                   </if>
-                                   <if test='topMenuId == "DP13"'>
-                                   AND K.EBOOK_SPRT_YN ='Y' /* 이북 조회일때 */ 
-                                   </if>
-                                   <if test='topMenuId == "DP14"'> 
-                                   AND K.COMIC_SPRT_YN = 'Y'
-                                   </if>
-                                   <if test='topMenuId == "DP16"'>
-                                   AND (CASE WHEN B.META_CLSF_CD = 'CT25' THEN CASE WHEN K.MUSIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END ELSE 1 END) = 1                                                                                                                                                                                                            
-                                   </if>                                                                                                         
+                                SELECT ROW_NUMBER( ) OVER( PARTITION BY T1.PROD_ID ORDER BY T1.REG_DT DESC ) AS RNUM
+								     , T1.*
+								  FROM
+								       (
+								        SELECT B.PROD_ID
+								             , B.PROD_CHRG_YN
+								             , B.TOP_MENU_ID  
+								             , B.PROD_GRD_CD
+								             , TO_CHAR(B.REG_DT, 'YYYYMMDD') AS REG_DT
+								             , C.PART_PROD_ID AS EPSD_PROD_ID
+								             , (SELECT MAX(AID) FROM TB_DP_APP_PROD WHERE PROD_ID  = C.PART_PROD_ID) AS AID
+								             , D.PROD_NM
+								             , D.PROD_BASE_DESC
+								             , F.MENU_ID
+								             , I.CHNL_UNLMT_AMT
+								             , I.CHNL_PERIOD_AMT
+								             , I.PROD_AMT
+								             , J.SUB_CONTENTS_ID
+								             , L.PATICPERS_CNT AS PATICPERS_CNT
+								             , L.PRCHS_CNT AS PRCHS_CNT
+								             , L.AVG_EVLU_SCORE AS AVG_EVLU_SCORE
+								          FROM  TB_DP_PROD                    B
+								              , TB_DP_PROD_RSHP               C
+								              , TB_DP_PROD_DESC               D
+								              , TB_DP_MENU_CATEGORY_PROD_MAPG F
+								              , TB_DP_MENU_CATEGORY           G
+								              , TB_DP_TENANT_PROD             H
+								              , TB_DP_TENANT_PROD_PRICE       I       
+								              , TB_DP_SPRT_DEVICE             J
+								              , TB_CM_DEVICE                  K
+								              , TB_DP_TENANT_PROD_STATS       L
+								         WHERE 1=1
+								           AND B.PROD_ID = C.PROD_ID
+								           AND B.PROD_ID = D.PROD_ID 
+								           AND B.PROD_ID = F.PROD_ID
+								           AND B.PROD_ID = H.PROD_ID   
+								           AND B.PROD_ID = I.PROD_ID   
+								           AND C.PART_PROD_ID = J.PROD_ID   
+								           AND B.PROD_ID = L.PROD_ID(+)
+								           AND F.MENU_ID = G.MENU_ID      
+								           AND H.TENANT_ID = I.TENANT_ID                                   
+								           <if test ="topMenuId == 'DPAPP'">
+								             AND B.SVC_GRP_CD       = 'DP000201'
+								             AND B.TOP_MENU_ID IN ('DP01','DP03','DP04','DP08')
+								           </if>
+								           <if test ="topMenuId == 'DP09'">
+								             AND B.SVC_GRP_CD       = 'DP000203'
+								             AND B.TOP_MENU_ID IN ('DP09','DP17','DP18')
+								           </if>                                   
+								           <if test ="topMenuId != 'DPAPP' and topMenuId != 'DP09'">
+								            <choose>
+								               <when test='topMenuId == "DP01" or topMenuId == "DP03" or topMenuId == "DP04" or topMenuId == "DP08"'>
+								               AND B.SVC_GRP_CD       = 'DP000201'
+								               </when>
+								               <otherwise>
+								               AND B.SVC_GRP_CD       = 'DP000203'
+								               </otherwise>
+								            </choose>
+								               AND B.TOP_MENU_ID  = #{topMenuId}
+								           </if>
+								           AND C.PROD_RSHP_CD     = 'DP010802'
+								           AND D.LANG_CD  = #{langCd}
+								           AND F.USE_YN = 'Y'
+								           AND G.USE_YN = 'Y'
+								           AND H.TENANT_ID = #{tenantId}
+								           AND H.PROD_STATUS_CD   = 'PD000403'
+								           AND SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
+								           AND (J.DEVICE_MODEL_CD = #{deviceModelCd} OR J.DEVICE_MODEL_CD = #{anyDeviceModelCd})                                       
+								           AND K.DEVICE_MODEL_CD  = #{deviceModelCd} /* header param : 단말모델코드 */   
+								           AND K.REP_DEVICE_YN ='Y'
+								           AND K.USE_YN ='Y'
+								           AND L.TENANT_ID(+) = #{tenantId}
+								           <if test="searchType != null">
+								            <if test='searchType == "prodNm"'>
+								              AND UPPER( D.PROD_NM ) like '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
+								            </if>
+								            <if test='searchType == "sellerNm"'>
+								              AND UPPER( DECODE(B.TOP_MENU_ID ,'DP13', B.REG_ID
+								                                              ,'DP14', B.REG_ID
+								                                              ,'DP17', B.REG_ID
+								                                              ,'DP18', B.REG_ID
+								                                              ,'DP09', B.REG_ID, B.EXPO_SELLER_NM)) LIKE '%'||UPPER( RTRIM(#{searchKeyword}) )||'%'
+								            </if>
+								           </if>
+								           <if test='topMenuId == "DP09" or topMenuId == "DP17" or topMenuId == "DP18"'>
+								           AND (CASE WHEN (NVL(B.DRM_YN, 'N') = 'Y' AND NVL(K.VIDEO_DRM_SPRT_YN, 'N') = 'N') THEN 0 
+								                ELSE CASE WHEN K.SD_VIDEO_SPRT_YN = 'Y' THEN 1 
+								                     ELSE 0 END
+								                 END
+								                ) = 1  
+								           </if>
+								           <if test='topMenuId == "DP13"'>
+								           AND K.EBOOK_SPRT_YN ='Y' /* 이북 조회일때 */ 
+								           </if>
+								           <if test='topMenuId == "DP14"'> 
+								           AND K.COMIC_SPRT_YN = 'Y'
+								           </if>
+								           <if test='topMenuId == "DP16"'>
+								           AND (CASE WHEN B.META_CLSF_CD = 'CT25' THEN CASE WHEN K.MUSIC_SPRT_YN = 'Y' THEN 1 ELSE 0 END ELSE 1 END) = 1                                                                                                                                                                                                            
+								           </if>             
+								       ) T1                                                                                                        
                                ) JA
                           WHERE RNUM = 1
                        ) 
@@ -1427,7 +1431,7 @@
 		      , CONCAT(KC.FILE_PATH, KC.FILE_NM) AS IMAGE_PATH
 		  FROM  (SELECT JA.*
 		           FROM (SELECT  COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-		                       , ROW_NUMBER() OVER(ORDER BY IA.EXPO_ORD_ALWAYS_YN DESC, IA.EXPO_ORD, IA.EXPO_ORD_SUB, IA.LAST_DEPLOY_DT DESC, IA.PROD_NM) AS R_NUM
+		                       , ROW_NUMBER() OVER(ORDER BY IA.LAST_DEPLOY_DT DESC, IA.PROD_NM) AS R_NUM
 		                       , IA.*
 		                   FROM  (SELECT  ROW_NUMBER() OVER(PARTITION BY CH_A.PROD_ID ORDER BY EP_J.REG_DT DESC) AS RNUM
 		                                , CH_A.TENANT_ID
