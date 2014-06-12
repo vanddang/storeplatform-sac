@@ -30,6 +30,8 @@ public class CreateChangeSacReq extends CommonInfo {
 	/** 판매자 PW. */
 	@NotBlank
 	private String sellerPw;
+	/** 판매자회원명. */
+	private String sellerName;
 	/** 이동통신사. */
 	private String sellerTelecom;
 	/** 무선 전화번호 국가코드. */
@@ -144,6 +146,21 @@ public class CreateChangeSacReq extends CommonInfo {
 	 */
 	public void setSellerPw(String sellerPw) {
 		this.sellerPw = sellerPw;
+	}
+
+	/**
+	 * @return the sellerName
+	 */
+	public String getSellerName() {
+		return this.sellerName;
+	}
+
+	/**
+	 * @param sellerName
+	 *            the sellerName to set
+	 */
+	public void setSellerName(String sellerName) {
+		this.sellerName = sellerName;
 	}
 
 	/**
