@@ -95,21 +95,22 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 
 			// KeyList별 SC 호출해서 ScMap에 PutAll.
 			Map<String, List<SellerMbr>> sellerMbrMapSc = new HashMap<String, List<SellerMbr>>();
-			int keyCnt = 0;
+			int keyCnt = sellerKeys.size() + sellerIds.size() + sellerBizNos.size();
 			int errCnt = 0;
 			if (!sellerKeys.isEmpty()) {
-				keyCnt++;
+				// keyCnt++;
 				schReq = new SearchMbrSellerRequest();
 				schReq.setCommonRequest(commonRequest);
 				schReq.setKeySearchList(sellerKeys);
 				if (this.isException(schReq, keyCnt, errCnt) == null) {
 					errCnt++;
 				} else {
+
 					sellerMbrMapSc.putAll(this.sellerSCI.searchMbrSeller(schReq).getSellerMbrListMap());
 				}
 			}
 			if (!sellerIds.isEmpty()) {
-				keyCnt++;
+				// keyCnt++;
 				schReq = new SearchMbrSellerRequest();
 				schReq.setCommonRequest(commonRequest);
 				schReq.setKeySearchList(sellerIds);
@@ -120,7 +121,7 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 				}
 			}
 			if (!sellerBizNos.isEmpty()) {
-				keyCnt++;
+				// keyCnt++;
 				schReq = new SearchMbrSellerRequest();
 				schReq.setCommonRequest(commonRequest);
 				schReq.setKeySearchList(sellerBizNos);
@@ -130,7 +131,7 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 					sellerMbrMapSc.putAll(this.sellerSCI.searchMbrSeller(schReq).getSellerMbrListMap());
 				}
 			}
-
+			// List<SellerMbr> list = sellerMbrMapSc
 			LOGGER.info("요청한 Key값들 중 일부 또는 전체에 대한 결과 존재.");
 			// SC 호출 후 PutAll한 Map을 SacMap에 Setting.
 			Iterator<String> it = sellerMbrMapSc.keySet().iterator();
@@ -344,10 +345,10 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 			resultMap = this.sellerSCI.searchMbrSeller(schReq).getSellerMbrListMap();
 		} catch (StorePlatformException e) {
 			if (!e.getErrorInfo().getCode().equals("SC_MEM_9982")) { // 검색결과 없음이 아닌경우 Exception.
-				throw new StorePlatformException(e.getErrorInfo().getCode());
+				throw e;
 			} else {
 				if (++errCnt == keyCnt) {
-					throw new StorePlatformException(e.getErrorInfo().getCode());
+					throw e;
 				}
 			}
 		}
