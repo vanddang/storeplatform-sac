@@ -5,6 +5,8 @@ package com.skplanet.storeplatform.sac.member.seller.sci.service;
 
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -26,4 +28,18 @@ public interface SellerSearchSCIService {
 	 * @return DetailInformationSacRes
 	 */
 	public DetailInformationSacRes detailInformationList(SacRequestHeader header, DetailInformationSacReq req);
+
+	/**
+	 * <pre>
+	 * 상품상세의 판매자 정보 목록 조회 - 내부메서드.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            detailInformationListForProductSacReq
+	 * @return detailInformationListForProductSacRes
+	 */
+	public DetailInformationListForProductSacRes detailInformationListForProduct(SacRequestHeader header,
+			DetailInformationListForProductSacReq req);
 }

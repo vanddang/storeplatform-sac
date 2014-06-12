@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -51,5 +53,29 @@ public class SellerSearchSCIController implements SellerSearchSCI {
 		LOGGER.info("Response : seller count : {}", response.getSellerMbrListMap().size());
 		return response;
 
+	}
+
+	/**
+	 * <pre>
+	 * 상품상세의 판매자 정보 목록 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            detailInformationListForProductSacReq
+	 * @return detailInformationListForProductSacRes
+	 */
+	@Override
+	@ResponseBody
+	@RequestMapping(value = "/detailInformationListForProduct", method = RequestMethod.POST)
+	public DetailInformationListForProductSacRes detailInformationListForProduct(
+			@Validated DetailInformationListForProductSacReq request) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+
+		DetailInformationListForProductSacRes response = this.sellerSearchService.detailInformationListForProduct(
+				requestHeader, request);
+		// LOGGER.info("Response : seller count : {}", response.getSellerInfoList().size());
+		return response;
 	}
 }
