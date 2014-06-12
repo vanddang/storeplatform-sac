@@ -19,7 +19,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String executeChangeMobileNumber(HashMap<String, String> map);
+	public String changeMobileNumber(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -32,7 +32,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String executeChangeMobileID(HashMap<String, String> map);
+	public String changeMobileID(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -45,7 +45,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String executeSecedeMobileNumber(HashMap<String, String> map);
+	public String secedeMobileNumber(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -58,7 +58,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String executeJoinComplete(HashMap<String, String> map);
+	public String joinComplete(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -71,7 +71,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String executeAdjustWiredProfile(HashMap<String, String> map);
+	public String adjustWiredProfile(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -84,7 +84,7 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String executeEcgJoinedTStore(HashMap<String, String> map);
+	public String ecgJoinedTStore(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -97,6 +97,6 @@ public interface IdpProvisionService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String executeEcgScededTStore(HashMap<String, String> map);
+	public String ecgScededTStore(HashMap<String, String> map);
 
 }

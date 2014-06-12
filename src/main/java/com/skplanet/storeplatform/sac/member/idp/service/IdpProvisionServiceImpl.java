@@ -131,7 +131,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return IDP Provisioning 처리 결과
 	 */
 	@Override
-	public String executeChangeMobileNumber(HashMap<String, String> map) {
+	public String changeMobileNumber(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
@@ -178,7 +178,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
 				if (device == null) {
-					LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", mdn, uacd, svcMngNum);
+					LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", mdn,
+							uacd, svcMngNum);
 					uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 					modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 					deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
@@ -242,7 +243,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
 				if (device == null) {
-					LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", mdn, uacd, svcMngNum);
+					LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", mdn,
+							uacd, svcMngNum);
 					uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 					modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 					deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
@@ -319,7 +321,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				gameCenterSacReq.setSystemId(systemId);
 				gameCenterSacReq.setTenantId(tenantId);
 				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
-				this.deviceService.insertGameCenterIF(gameCenterSacReq);
+				this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 				/* MQ 연동 */
 				ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
@@ -353,8 +355,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				updPolicyValueReq.setNewApplyValue(mdn);
 				UpdatePolicyValueResponse updPolicyValueRes = this.userSCI.updatePolicyValue(updPolicyValueReq);
 
-				LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 policyKey : {},  policyValue : {}", updPolicyKeyRes.getUpdateCount(),
-						updPolicyValueRes.getUpdateCount());
+				LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 policyKey : {},  policyValue : {}",
+						updPolicyKeyRes.getUpdateCount(), updPolicyValueRes.getUpdateCount());
 			}
 
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
@@ -383,7 +385,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				changeDeviceLog.setPreData(beMdn);
 
 				/* DCD 연동정보 저장 */
-				this.insertDcdInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn, IdpConstants.DCD_ENTRY_CHANGE_NUMBER);
+				this.insertDcdInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn,
+						IdpConstants.DCD_ENTRY_CHANGE_NUMBER);
 
 			} else if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_NO_DATA)) {
 				changeDeviceLog.setPreData("FAIL");
@@ -418,9 +421,10 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL_SAC_MEM_0002").result_code("SUCC").result_message("").insd_usermbr_no(fdsLogUserKey)
-								.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
-								.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
+						shuttle.log_id("TL_SAC_MEM_0002").result_code("SUCC").result_message("")
+								.insd_usermbr_no(fdsLogUserKey).insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn)
+								.device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum)
+								.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
 								.request_system_id(fdsSystemId).exception_log("");
 					}
 				});
@@ -428,9 +432,10 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL_SAC_MEM_0002").result_code(fdsResult).result_message(fdsResultMsg).insd_usermbr_no(fdsLogUserKey)
-								.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
-								.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
+						shuttle.log_id("TL_SAC_MEM_0002").result_code(fdsResult).result_message(fdsResultMsg)
+								.insd_usermbr_no(fdsLogUserKey).insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn)
+								.device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum)
+								.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
 								.request_system_id(fdsSystemId).exception_log("");
 					}
 				});
@@ -479,8 +484,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @throws StorePlatformException
 	 *             Exception
 	 */
-	public void insertDcdInfo(CommonRequest commonRequest, String userKey, String deviceKey, String svcMngNum, String mdn, String entryClass)
-			throws StorePlatformException {
+	public void insertDcdInfo(CommonRequest commonRequest, String userKey, String deviceKey, String svcMngNum,
+			String mdn, String entryClass) throws StorePlatformException {
 
 		DCDInfo dcdInfo = new DCDInfo();
 
@@ -516,13 +521,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			createDcdReq.setDCDInfo(dcdInfo);
 			this.userSCI.createDCD(createDcdReq);
 
-		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE) || StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_JOIN)) { // DCD
-																																					// 등록
-																																					// 및
-																																					// 해지
+		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE)
+				|| StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_JOIN)) { // DCD
+																				 // 등록
+																				 // 및
+																				 // 해지
 
 			/* DCD 상품 조회 */
-			DcdSupportProductRes dcdSupportProductRes = this.mcic.searchDcdSupportProduct();
+			DcdSupportProductRes dcdSupportProductRes = this.mcic.srhDcdSupportProduct();
 
 			List<ExistenceItem> existenceItemList = new ArrayList<ExistenceItem>();
 			ExistenceItem existenceItem = null;
@@ -540,7 +546,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				existenceReq.setUserKey(userKey);
 				existenceReq.setDeviceKey(deviceKey);
 				existenceReq.setExistenceItem(existenceItemList);
-				ExistenceListRes existenceListRes = this.mcic.searchExistenceList(existenceReq);
+				ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
 
 				/* 기존번호 상품별로 DCD 단말 등록 및 해지 처리 */
 				if (existenceListRes.getExistenceListRes() != null) {
@@ -591,7 +597,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return IDP Provisioning 처리 결과
 	 */
 	@Override
-	public String executeChangeMobileID(HashMap<String, String> map) {
+	public String changeMobileID(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
@@ -685,8 +691,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					}
 
 					if (StringUtil.equals(isTestModel, "Y")) {
-						LOGGER.info("<changeMobileID> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd,
-								svcMngNum);
+						LOGGER.info(
+								"<changeMobileID> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+								mdn, modelCd, uacd, svcMngNum);
 					} else {
 						LOGGER.info(
 								"<changeMobileID> NOT SUPPORT DEVICE.(타겟단말이고 단말테스터가 아닌경우- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
@@ -738,33 +745,41 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			gameCenterSacReq.setSystemId(systemId);
 			gameCenterSacReq.setTenantId(tenantId);
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-			this.deviceService.insertGameCenterIF(gameCenterSacReq);
+			this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 			/* DCD 연동 */
 			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<changeMobileID> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
+				LOGGER.info("<changeMobileID> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, modelCd, uacd, svcMngNum);
 
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
+						IdpConstants.DCD_ENTRY_SECEDE);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<changeMobileID> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
+				LOGGER.info("<changeMobileID> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, modelCd, uacd, svcMngNum);
 
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_CHANGE_MODEL);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
+						IdpConstants.DCD_ENTRY_CHANGE_MODEL);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<changeMobileID> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
+				LOGGER.info("<changeMobileID> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, modelCd, uacd, svcMngNum);
 
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_JOIN);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
+						IdpConstants.DCD_ENTRY_JOIN);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<changeMobileID> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd,
-						uacd, svcMngNum);
+				LOGGER.info(
+						"<changeMobileID> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, modelCd, uacd, svcMngNum);
 
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
+						IdpConstants.DCD_ENTRY_SECEDE);
 
 			}
 
@@ -842,7 +857,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return IDP Provisioning 처리 결과
 	 */
 	@Override
-	public String executeSecedeMobileNumber(HashMap<String, String> map) {
+	public String secedeMobileNumber(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
@@ -916,14 +931,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					this.deviceSCI.createDevice(createDeviceReq);
 
 					/* 휴대기기 삭제 요청 */
-					//					List<String> removeKeyList = new ArrayList<String>();
-					//					removeKeyList.add(deviceKey);
+					// List<String> removeKeyList = new ArrayList<String>();
+					// removeKeyList.add(deviceKey);
 					//
-					//					RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
-					//					removeDeviceReq.setCommonRequest(commonRequest);
-					//					removeDeviceReq.setUserKey(userKey);
-					//					removeDeviceReq.setDeviceKey(removeKeyList);
-					//					this.deviceSCI.removeDevice(removeDeviceReq);
+					// RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+					// removeDeviceReq.setCommonRequest(commonRequest);
+					// removeDeviceReq.setUserKey(userKey);
+					// removeDeviceReq.setDeviceKey(removeKeyList);
+					// this.deviceSCI.removeDevice(removeDeviceReq);
 
 					/* 회원상태 업데이트 */
 					UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
@@ -982,7 +997,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			}
 
-			LOGGER.info("{},결과:{},Type:{},svcRsnCd:{}", mdn, resultLogStr, schUserRes.getUserMbr().getUserType(), svcRsnCd);
+			LOGGER.info("{},결과:{},Type:{},svcRsnCd:{}", mdn, resultLogStr, schUserRes.getUserMbr().getUserType(),
+					svcRsnCd);
 
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
@@ -991,7 +1007,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			gameCenterSacReq.setSystemId(systemId);
 			gameCenterSacReq.setTenantId(tenantId);
 			gameCenterSacReq.setWorkCd(gameCenterWorkCd);
-			this.deviceService.insertGameCenterIF(gameCenterSacReq);
+			this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 			/* MQ 연동 */
 			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
@@ -1061,7 +1077,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return HashMap
 	 */
 	@Override
-	public String executeJoinComplete(HashMap<String, String> map) {
+	public String joinComplete(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
@@ -1098,7 +1114,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			gameCenterSacReq.setSystemId(systemId);
 			gameCenterSacReq.setTenantId(tenantId);
 			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
-			this.deviceService.insertGameCenterIF(gameCenterSacReq);
+			this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 			/* 회원 탈퇴 처리 */
 			RemoveUserRequest removeUserReq = new RemoveUserRequest();
@@ -1175,7 +1191,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return HashMap
 	 */
 	@Override
-	public String executeAdjustWiredProfile(HashMap<String, String> map) {
+	public String adjustWiredProfile(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String imIntSvcNo = StringUtil.nvl(map.get("im_int_svc_no"), "");
@@ -1291,8 +1307,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							Device device = this.mcc.getPhoneInfoByUacd(uaCd);
 							String deviceModelNo = null;
 							if (device == null) {
-								LOGGER.info("<executeAdjustWiredProfile> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", deviceId, uaCd,
-										svcMangNum);
+								LOGGER.info(
+										"<executeAdjustWiredProfile> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}",
+										deviceId, uaCd, svcMangNum);
 								deviceModelNo = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 								uaCd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 							} else {
@@ -1413,8 +1430,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						Device device = this.mcc.getPhoneInfoByUacd(uaCd);
 						String deviceModelNo = null;
 						if (device == null) {
-							LOGGER.info("<executeAdjustWiredProfile> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", deviceId, uaCd,
-									svcMangNum);
+							LOGGER.info(
+									"<executeAdjustWiredProfile> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}",
+									deviceId, uaCd, svcMangNum);
 							uaCd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 							deviceModelNo = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 						} else {
@@ -1570,7 +1588,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return HashMap
 	 */
 	@Override
-	public String executeEcgJoinedTStore(HashMap<String, String> map) {
+	public String ecgJoinedTStore(HashMap<String, String> map) {
 
 		String requestUrl = StringUtil.nvl(map.get("requestUrl"), "");
 		String mdn = StringUtil.nvl(map.get("mdn"), "");
@@ -1677,7 +1695,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @return HashMap
 	 */
 	@Override
-	public String executeEcgScededTStore(HashMap<String, String> map) {
+	public String ecgScededTStore(HashMap<String, String> map) {
 		return IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 	}
 }

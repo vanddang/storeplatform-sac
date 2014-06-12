@@ -66,8 +66,8 @@ public class MemberCommonInternalComponent {
 	 * @param previousDeviceKey
 	 *            이전 휴대기기 Key
 	 */
-	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey, String previousUserKey, String deviceKey,
-			String previousDeviceKey) {
+	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey,
+			String previousUserKey, String deviceKey, String previousDeviceKey) {
 
 		if (isCall) {
 
@@ -114,7 +114,7 @@ public class MemberCommonInternalComponent {
 	 * 
 	 * @return ExistenceListRes
 	 */
-	public DcdSupportProductRes searchDcdSupportProduct() {
+	public DcdSupportProductRes srhDcdSupportProduct() {
 		return this.searchDcdSupportProductSCI.searchDcdSupportProduct();
 	}
 
@@ -127,7 +127,7 @@ public class MemberCommonInternalComponent {
 	 *            ExistenceReq
 	 * @return ExistenceListRes
 	 */
-	public ExistenceListRes searchExistenceList(ExistenceReq req) {
+	public ExistenceListRes srhExistenceList(ExistenceReq req) {
 		return this.existenceInternalSacSCI.searchExistenceList(req);
 	}
 }

@@ -21,7 +21,7 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return One ID Rx 처리 결과
 	 */
-	public ImResult executeRXCreateUserIDP(HashMap<String, String> map);
+	public ImResult rXCreateUserIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -34,7 +34,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
-	public ImResult executeRXInvalidUserTelNoIDP(HashMap map);
+	public ImResult rXInvalidUserTelNoIDP(HashMap map);
 
 	/**
 	 * 
@@ -47,7 +47,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
-	public ImResult executeRXSetLoginConditionIDP(HashMap map);
+	public ImResult rXSetLoginConditionIDP(HashMap map);
 
 	/**
 	 * 
@@ -60,7 +60,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
-	public ImResult executeRXCreateUserIdIDP(HashMap map);
+	public ImResult rXCreateUserIdIDP(HashMap map);
 
 	/**
 	 * 
@@ -74,7 +74,7 @@ public interface IdpService {
 	 * @return ImResult
 	 */
 
-	public ImResult executeRXSetSuspendUserIdIDP(HashMap map);
+	public ImResult rXSetSuspendUserIdIDP(HashMap map);
 
 	/**
 	 * 
@@ -88,7 +88,7 @@ public interface IdpService {
 	 * @return ImResult
 	 */
 
-	public ImResult executeRXUpdateUserNameIDP(HashMap map);
+	public ImResult rXUpdateUserNameIDP(HashMap map);
 
 	/**
 	 * 
@@ -102,7 +102,7 @@ public interface IdpService {
 	 * @return ImResult
 	 */
 
-	public ImResult executeRXUpdateGuardianInfoIDP(HashMap map);
+	public ImResult rXUpdateGuardianInfoIDP(HashMap map);
 
 	/**
 	 * 
@@ -114,7 +114,7 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return
 	 */
-	public ImResult executeRXActivateUserIdIDP(HashMap<String, String> map);
+	public ImResult rXActivateUserIdIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -126,7 +126,7 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return
 	 */
-	public ImResult executeRXDeleteUserIdIDP(HashMap<String, String> map);
+	public ImResult rXDeleteUserIdIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -139,7 +139,7 @@ public interface IdpService {
 	 * 
 	 * @return HashMap
 	 */
-	public ImResult executeRXPreCheckDeleteUserIDP(HashMap map);
+	public ImResult rXPreCheckDeleteUserIDP(HashMap map);
 
 	/**
 	 * 
@@ -152,7 +152,7 @@ public interface IdpService {
 	 * 
 	 * @return HashMap
 	 */
-	public ImResult executeRXPreCheckDisagreeUserIDP(HashMap map);
+	public ImResult rXPreCheckDisagreeUserIDP(HashMap map);
 
 	/**
 	 * 
@@ -166,7 +166,7 @@ public interface IdpService {
 	 * @return HashMap
 	 */
 
-	public ImResult executeRXSetOCBDisagreeIDP(HashMap map);
+	public ImResult rXSetOCBDisagreeIDP(HashMap map);
 
 	/**
 	 * 
@@ -177,7 +177,7 @@ public interface IdpService {
 	 * @param map
 	 * @return
 	 */
-	public ImResult executeRXUpdateDisagreeUserIDP(HashMap<String, String> map);
+	public ImResult rXUpdateDisagreeUserIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -190,7 +190,7 @@ public interface IdpService {
 	 * 
 	 * @return HashMap
 	 */
-	public ImResult executeRXTerminateRetryIDP(HashMap map);
+	public ImResult rXTerminateRetryIDP(HashMap map);
 
 	/**
 	 * 
@@ -203,7 +203,7 @@ public interface IdpService {
 	 * 
 	 * @return HashMap
 	 */
-	public ImResult executeRXUpdateUserPwdIDP(HashMap map);
+	public ImResult rXUpdateUserPwdIDP(HashMap map);
 
 	/**
 	 * 
@@ -216,7 +216,7 @@ public interface IdpService {
 	 * 
 	 * @return HashMap
 	 */
-	public ImResult executeRXChangePWDIDP(HashMap map);
+	public ImResult rXChangePWDIDP(HashMap map);
 
 	/**
 	 * 
@@ -228,7 +228,7 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return
 	 */
-	public ImResult executeRXUpdateUserInfoIDP(HashMap<String, String> map);
+	public ImResult rXUpdateUserInfoIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -240,7 +240,7 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return
 	 */
-	public ImResult executeRXChangeUserIdIDP(HashMap<String, String> map);
+	public ImResult rXChangeUserIdIDP(HashMap<String, String> map);
 
 	/**
 	 * 이용동의 변경사이트 목록 배포.
@@ -253,5 +253,5 @@ public interface IdpService {
 	 *            Request 받은 Parameter Map
 	 * @return
 	 */
-	public ImResult executeRXUpdateAgreeUserIDP(HashMap<String, String> map);
+	public ImResult rXUpdateAgreeUserIDP(HashMap<String, String> map);
 }
