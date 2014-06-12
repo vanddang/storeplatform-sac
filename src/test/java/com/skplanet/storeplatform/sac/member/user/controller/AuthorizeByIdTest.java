@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -51,7 +49,6 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
  * Updated on : 2014. 1. 8. Updated by : 반범진, 지티소프트
  */
 @ActiveProfiles(value = "local")
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -93,7 +90,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -141,7 +139,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -189,7 +188,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -237,7 +237,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -285,7 +286,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -333,7 +335,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -381,7 +384,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -429,7 +433,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -477,7 +482,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -526,7 +532,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -575,7 +582,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -586,7 +594,7 @@ public class AuthorizeByIdTest {
 							req.setDeviceId("01048088874");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 							req.setNativeId("012962008247725");
-							//req.setIsNativeIdAuth("Y");
+							// req.setIsNativeIdAuth("Y");
 
 							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 
@@ -676,7 +684,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -687,7 +696,7 @@ public class AuthorizeByIdTest {
 							req.setDeviceId("01048088874");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 							req.setNativeId("012962008247725");
-							//req.setIsNativeIdAuth("Y");
+							// req.setIsNativeIdAuth("Y");
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
 								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
@@ -727,7 +736,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -778,7 +788,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -789,7 +800,7 @@ public class AuthorizeByIdTest {
 							req.setDeviceId("01048088874");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 							req.setNativeId("358362045580842");
-							//req.setIsNativeIdAuth("Y");
+							// req.setIsNativeIdAuth("Y");
 							try {
 								ObjectMapper objMapper = new ObjectMapper();
 								LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
@@ -829,7 +840,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -880,7 +892,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -891,7 +904,7 @@ public class AuthorizeByIdTest {
 							req.setDeviceId("01099012852");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_KT);
 							req.setNativeId("358362045580842");
-							//req.setIsNativeIdAuth("Y");
+							// req.setIsNativeIdAuth("Y");
 							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
 							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
@@ -939,7 +952,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -987,7 +1001,8 @@ public class AuthorizeByIdTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -1031,7 +1046,7 @@ public class AuthorizeByIdTest {
 		tenantHeader.setTenantId("S01");
 
 		DeviceHeader deviceHeader = new DeviceHeader();
-		//deviceHeader.setModel("SHW-M440S");
+		// deviceHeader.setModel("SHW-M440S");
 		deviceHeader.setModel("SHW-M110S");
 		deviceHeader.setOs("1.0");
 
@@ -1057,7 +1072,7 @@ public class AuthorizeByIdTest {
 			ObjectMapper objMapper = new ObjectMapper();
 			LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 
-			AuthorizeByIdRes res = this.loginService.executeAuthorizeById(header, req);
+			AuthorizeByIdRes res = this.loginService.authorizeById(header, req);
 			LOGGER.info("res : {} " + res.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

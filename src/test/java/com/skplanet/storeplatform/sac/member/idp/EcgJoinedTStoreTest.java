@@ -19,8 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -44,7 +42,6 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
  * Updated on : 2014. 2. 14. Updated by : 반범진, 지티소프트
  */
 @ActiveProfiles(value = "local")
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -77,34 +74,35 @@ public class EcgJoinedTStoreTest {
 	@Test
 	public void ecgJoinedTStore() {
 
-		//cmd=ecgJoinedTStore&svc_mng_num=7211418980&mdn=01071117908&min=1071117908
+		// cmd=ecgJoinedTStore&svc_mng_num=7211418980&mdn=01071117908&min=1071117908
 
-		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ProvisioningReq req = new ProvisioningReq();
-				req.setCmd("ecgJoinedTStore");
-				HashMap map = new HashMap();
-				map.put("systemID", "W");
-				map.put("tenantID", "S01");
-				map.put("mdn", "01071117908");
-				map.put("min", "1071117908");
-				map.put("svc_mng_num", "7211418980");
+		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ProvisioningReq req = new ProvisioningReq();
+						req.setCmd("ecgJoinedTStore");
+						HashMap map = new HashMap();
+						map.put("systemID", "W");
+						map.put("tenantID", "S01");
+						map.put("mdn", "01071117908");
+						map.put("min", "1071117908");
+						map.put("svc_mng_num", "7211418980");
 
-				req.setReqParam(map);
+						req.setReqParam(map);
 
-				LOGGER.info("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ProvisioningRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ProvisioningRes res = (ProvisioningRes) result;
-				// res.get
-				// assertThat(res.getSellerKey(), notNullValue());
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						LOGGER.info("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ProvisioningRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ProvisioningRes res = (ProvisioningRes) result;
+						// res.get
+						// assertThat(res.getSellerKey(), notNullValue());
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
@@ -114,34 +112,35 @@ public class EcgJoinedTStoreTest {
 	@Test
 	public void ecgJoinedTStore02() {
 
-		//cmd=ecgJoinedTStore&svc_mng_num=9050006514&mdn=01071117908&min=1071117908
+		// cmd=ecgJoinedTStore&svc_mng_num=9050006514&mdn=01071117908&min=1071117908
 
-		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ProvisioningReq req = new ProvisioningReq();
-				req.setCmd("ecgJoinedTStore");
-				HashMap map = new HashMap();
-				map.put("systemID", "W");
-				map.put("tenantID", "S01");
-				map.put("mdn", "01066786220");
-				map.put("min", "1066786220");
-				map.put("svc_mng_num", "7211418980");
+		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ProvisioningReq req = new ProvisioningReq();
+						req.setCmd("ecgJoinedTStore");
+						HashMap map = new HashMap();
+						map.put("systemID", "W");
+						map.put("tenantID", "S01");
+						map.put("mdn", "01066786220");
+						map.put("min", "1066786220");
+						map.put("svc_mng_num", "7211418980");
 
-				req.setReqParam(map);
+						req.setReqParam(map);
 
-				LOGGER.info("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ProvisioningRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ProvisioningRes res = (ProvisioningRes) result;
-				// res.get
-				// assertThat(res.getSellerKey(), notNullValue());
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						LOGGER.info("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ProvisioningRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ProvisioningRes res = (ProvisioningRes) result;
+						// res.get
+						// assertThat(res.getSellerKey(), notNullValue());
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
@@ -158,7 +157,7 @@ public class EcgJoinedTStoreTest {
 			map.put("mdn", "01071117908");
 			map.put("min", "1071117908");
 			map.put("svc_mng_num", "7211418980");
-			this.idpService.executeEcgJoinedTStore(map);
+			this.idpService.ecgJoinedTStore(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();

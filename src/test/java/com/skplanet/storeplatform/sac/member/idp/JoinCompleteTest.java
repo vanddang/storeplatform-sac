@@ -19,8 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -44,7 +42,6 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
  * Updated on : 2014. 2. 7. Updated by : 반범진, 지티소프트
  */
 @ActiveProfiles(value = "local")
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -77,30 +74,31 @@ public class JoinCompleteTest {
 	@Test
 	public void joinCompleteTest01() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ProvisioningReq req = new ProvisioningReq();
-				req.setCmd("joinComplete");
-				HashMap map = new HashMap();
-				map.put("systemID", "W");
-				map.put("tenantID", "S01");
-				;
-				map.put("user_key", "IF1526967420140128135555");
-				req.setReqParam(map);
+		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ProvisioningReq req = new ProvisioningReq();
+						req.setCmd("joinComplete");
+						HashMap map = new HashMap();
+						map.put("systemID", "W");
+						map.put("tenantID", "S01");
+						;
+						map.put("user_key", "IF1526967420140128135555");
+						req.setReqParam(map);
 
-				LOGGER.info("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ProvisioningRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ProvisioningRes res = (ProvisioningRes) result;
-				// res.get
-				// assertThat(res.getSellerKey(), notNullValue());
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						LOGGER.info("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ProvisioningRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ProvisioningRes res = (ProvisioningRes) result;
+						// res.get
+						// assertThat(res.getSellerKey(), notNullValue());
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
@@ -115,7 +113,7 @@ public class JoinCompleteTest {
 			map.put("systemID", "W");
 			map.put("tenantID", "S01");
 			map.put("user_key", "IF1526967420140128135555");
-			this.idpService.executeJoinComplete(map);
+			this.idpService.joinComplete(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -22,8 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -54,7 +52,6 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
  * Updated on : 2014. 1. 8. Updated by : 반범진, 지티소프트
  */
 @ActiveProfiles(value = "local")
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -93,7 +90,8 @@ public class ModifyDeviceTest {
 				.httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
-				.addHeaders("x-planet-device-info",
+				.addHeaders(
+						"x-planet-device-info",
 						"model=\"SHW-M220L\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -102,7 +100,7 @@ public class ModifyDeviceTest {
 						req.setUserKey("US201402170712090930002827");
 
 						DeviceInfo deviceInfo = new DeviceInfo();
-						//deviceInfo.setDeviceKey("DE201402140234115260001735");
+						// deviceInfo.setDeviceKey("DE201402140234115260001735");
 						deviceInfo.setDeviceId("01099999996");
 						deviceInfo.setDeviceIdType("msisdn ");
 						deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
@@ -168,7 +166,8 @@ public class ModifyDeviceTest {
 				.httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
-				.addHeaders("x-planet-device-info",
+				.addHeaders(
+						"x-planet-device-info",
 						"model=\"SHW-M220L\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -178,7 +177,7 @@ public class ModifyDeviceTest {
 
 						DeviceInfo deviceInfo = new DeviceInfo();
 						deviceInfo.setDeviceKey("DE201402170717160220001896");
-						//deviceInfo.setDeviceId("01099999996");
+						// deviceInfo.setDeviceId("01099999996");
 						deviceInfo.setDeviceIdType("msisdn ");
 						deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
 						deviceInfo.setIsPrimary("N");
@@ -243,7 +242,8 @@ public class ModifyDeviceTest {
 				.httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
-				.addHeaders("x-planet-device-info",
+				.addHeaders(
+						"x-planet-device-info",
 						"model=\"SHW-M220L\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -316,9 +316,9 @@ public class ModifyDeviceTest {
 		tenantHeader.setTenantId("S01");
 
 		DeviceHeader deviceHeader = new DeviceHeader();
-		//deviceHeader.setModel("SHW-M440S");
-		//deviceHeader.setModel("SHW-M110S");
-		//deviceHeader.setOs("1.0");
+		// deviceHeader.setModel("SHW-M440S");
+		// deviceHeader.setModel("SHW-M110S");
+		// deviceHeader.setOs("1.0");
 
 		SacRequestHeader requestHeader = new SacRequestHeader();
 		requestHeader.setDeviceHeader(deviceHeader);
@@ -365,7 +365,7 @@ public class ModifyDeviceTest {
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
 			LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
-			this.deviceService.modifyDevice(requestHeader, req);
+			this.deviceService.modDevice(requestHeader, req);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

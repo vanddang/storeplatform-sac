@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +30,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
+import com.skplanet.storeplatform.sac.member.seller.service.SellerSubService;
 
 /**
  * 판매자 회원 서브 계정 탈퇴
@@ -57,6 +60,12 @@ public class RemoveSubsellerTest {
 	/** [RESPONSE]. */
 	public static CreateSubsellerRes createSubsellerRes;
 
+	@Autowired
+	private SellerSubService sellerSubService;
+
+	public static TenantHeader tenantHeader;
+	public static SacRequestHeader header;
+
 	/**
 	 * 
 	 * <pre>
@@ -66,57 +75,31 @@ public class RemoveSubsellerTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		tenantHeader = new TenantHeader();
+		tenantHeader.setSystemId("S00-02001");
+		tenantHeader.setTenantId("S00");
 
+		header = new SacRequestHeader();
+		header.setTenantHeader(tenantHeader);
+
+		// 판매자 서브계정 등록.
 		createSubsellerReq = new CreateSubsellerReq();
+		createSubsellerReq.setSellerKey("SE201403272110139760001941");
+		createSubsellerReq.setSubSellerId("mainPerson01_sub001");
+		createSubsellerReq.setSubSellerMemo("test2");
+		createSubsellerReq.setSubSellerEmail("omc97asefd@hanmail.net");
+		createSubsellerReq.setSubSellerPw("1234qwer");
+		createSubsellerRes = this.sellerSubService.regSubseller(header, createSubsellerReq);
+		LOGGER.debug(ConvertMapperUtils.convertObjectToJson(createSubsellerRes));
 	}
 
 	/**
 	 * <pre>
-	 * 판매자 서브계정 등록.
+	 * 판매자 서브계정 삭제.
 	 * </pre>
 	 */
 	@Test
-	public void createSubseller() {
-
-		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/createSubseller/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-
-						// 필수
-						createSubsellerReq.setSellerKey("IF1023501184720130823173955");
-						createSubsellerReq.setSubSellerId("011ZXCsssssss");
-						// createSubsellerReq.setIsNew("Y");
-
-						createSubsellerReq.setSubSellerMemo("test2");
-						createSubsellerReq.setSubSellerEmail("omsc997assefd@hanmail.net");
-
-						// 새로 추가됨
-						// createSubsellerReq.setSubSellerKey("SS201402061427346800000640");
-						createSubsellerReq.setSubSellerPw("1234567999");
-						// createSubsellerReq.setOldPW("1234567999");
-
-						LOGGER.debug("request param : {}", createSubsellerReq.toString());
-						return createSubsellerReq;
-					}
-				}).success(CreateSubsellerRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						createSubsellerRes = (CreateSubsellerRes) result;
-						// assertThat(res.getSubSellerKey(), notNullValue());
-						LOGGER.debug("response param : {}", createSubsellerRes.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 판매자 회원 서브 계정 탈퇴.
-	 * </pre>
-	 */
-	@After
-	public void after() {
+	public void removeSubseller() {
 
 		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/removeSubseller/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
@@ -124,12 +107,12 @@ public class RemoveSubsellerTest {
 					public Object requestBody() {
 						RemoveSubsellerReq req = new RemoveSubsellerReq();
 
-						req.setSellerKey("IF1023501184720130823173955");
+						req.setSellerKey(createSubsellerReq.getSellerKey());
 
 						List<String> removeKeyList;
 						removeKeyList = new ArrayList<String>();
 						removeKeyList.add(createSubsellerRes.getSubSellerKey());
-						// req.setSubSellerKey(removeKeyList);
+						req.setSubSellerKeyList(removeKeyList);
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
@@ -142,6 +125,5 @@ public class RemoveSubsellerTest {
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
 	}
 }

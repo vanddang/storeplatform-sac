@@ -19,8 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -44,7 +42,6 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
  * Updated on : 2014. 2. 19. Updated by : 반범진. 지티소프트
  */
 @ActiveProfiles(value = "local")
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -84,34 +81,35 @@ public class ChangeMobileNumberTest {
 		// http://stg.tstore.co.kr/userpoc/IF/IDPSubsProv.omp?cmd=changeMobileNumber&mdn=01071295269&model_id=SSNT&be_mdn=01071295269&svc_mng_num=7213811004]
 		// svcMngNum [ 7213811004] mdn [ 01071295269] modelId [ SSNT]
 
-		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ProvisioningReq req = new ProvisioningReq();
-				req.setCmd("changeMobileNumber");
-				HashMap map = new HashMap();
-				map.put("systemID", "W");
-				map.put("tenantID", "S01");
+		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ProvisioningReq req = new ProvisioningReq();
+						req.setCmd("changeMobileNumber");
+						HashMap map = new HashMap();
+						map.put("systemID", "W");
+						map.put("tenantID", "S01");
 
-				map.put("mdn", "01010007001");
-				map.put("svc_mng_num", "9050006514");
-				map.put("model_id", "SSNT");
-				map.put("be_mdn", "01010007002");
+						map.put("mdn", "01010007001");
+						map.put("svc_mng_num", "9050006514");
+						map.put("model_id", "SSNT");
+						map.put("be_mdn", "01010007002");
 
-				req.setReqParam(map);
+						req.setReqParam(map);
 
-				LOGGER.info("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ProvisioningRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ProvisioningRes res = (ProvisioningRes) result;
-				// res.get
-				// assertThat(res.getSellerKey(), notNullValue());
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						LOGGER.info("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ProvisioningRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ProvisioningRes res = (ProvisioningRes) result;
+						// res.get
+						// assertThat(res.getSellerKey(), notNullValue());
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
@@ -124,36 +122,37 @@ public class ChangeMobileNumberTest {
 	@Test
 	public void changeMobileNumber02() {
 
-		//cmd=changeMobileNumber&mdn=0101231234&model_id=SSND&be_mdn=01028102082&svc_mng_num=12341234
+		// cmd=changeMobileNumber&mdn=0101231234&model_id=SSND&be_mdn=01028102082&svc_mng_num=12341234
 
-		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ProvisioningReq req = new ProvisioningReq();
-				req.setCmd("changeMobileNumber");
-				HashMap map = new HashMap();
-				map.put("systemID", "W");
-				map.put("tenantID", "S01");
+		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ProvisioningReq req = new ProvisioningReq();
+						req.setCmd("changeMobileNumber");
+						HashMap map = new HashMap();
+						map.put("systemID", "W");
+						map.put("tenantID", "S01");
 
-				map.put("mdn", "0101231234");
-				map.put("svc_mng_num", "12341234");
-				map.put("model_id", "SSNT");
-				map.put("be_mdn", "01028102082");
+						map.put("mdn", "0101231234");
+						map.put("svc_mng_num", "12341234");
+						map.put("model_id", "SSNT");
+						map.put("be_mdn", "01028102082");
 
-				req.setReqParam(map);
+						req.setReqParam(map);
 
-				LOGGER.info("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ProvisioningRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ProvisioningRes res = (ProvisioningRes) result;
-				// res.get
-				// assertThat(res.getSellerKey(), notNullValue());
-				LOGGER.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						LOGGER.info("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ProvisioningRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ProvisioningRes res = (ProvisioningRes) result;
+						// res.get
+						// assertThat(res.getSellerKey(), notNullValue());
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
@@ -173,7 +172,7 @@ public class ChangeMobileNumberTest {
 			map.put("model_id", "SSNT");
 			map.put("be_mdn", "01099991007");
 
-			this.idpService.executeChangeMobileNumber(map);
+			this.idpService.changeMobileNumber(map);
 
 		} catch (Exception e) {
 			e.printStackTrace();

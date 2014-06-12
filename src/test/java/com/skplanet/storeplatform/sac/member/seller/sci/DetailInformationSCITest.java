@@ -12,8 +12,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -34,7 +32,6 @@ import com.skplanet.storeplatform.sac.common.util.MockRequestAttributeInitialize
  * Updated on : 2014. 4. 24. Updated by : Rejoice, Burkhan
  */
 @ActiveProfiles(value = "local")
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -81,13 +78,13 @@ public class DetailInformationSCITest {
 		for (int i = 0; i < 1; i++) {
 			SellerMbrSac sellerMbrSac = new SellerMbrSac();
 			if (i == 0) {
-				sellerMbrSac.setSellerKey("SE201403041615354320000032");
+				sellerMbrSac.setSellerKey("SE2014030416153543200000321111111111111");
 				sellerMbrSacs.add(sellerMbrSac);
 			} else if (i == 1) {
-				sellerMbrSac.setSellerKey("IF1023498592920130510112417");
+				sellerMbrSac.setSellerId("IF1023498592920130510112417111111111");
 				sellerMbrSacs.add(sellerMbrSac);
 			} else if (i == 2) {
-				sellerMbrSac.setSellerBizNumber("1352668460");
+				sellerMbrSac.setSellerBizNumber("135266846011111111");
 				sellerMbrSacs.add(sellerMbrSac);
 			}
 		}

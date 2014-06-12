@@ -82,9 +82,7 @@ public class DeviceSCIControllerTest {
 	@Test
 	public void testSearchDeviceId() {
 		try {
-			new TestCaseTemplate(this.mvc)
-
-					.url("/member/user/sci/searchDeviceId").httpMethod(HttpMethod.POST)
+			new TestCaseTemplate(this.mvc).url("/member/user/sci/searchDeviceId").httpMethod(HttpMethod.POST)
 					.requestBody(new RequestBodySetter() {
 						@Override
 						public Object requestBody() {
@@ -93,7 +91,7 @@ public class DeviceSCIControllerTest {
 							// searchDeviceIdSacReq.setDeviceKey("DE201402120409541480001552");
 							searchDeviceIdSacReq.setUserKey("IF1527585620140521131025");
 							searchDeviceIdSacReq.setDeviceKey("DE201405211313021180004529");
-							LOGGER.debug("[DeviceSCI-REQUEST] : \n{}",
+							LOGGER.debug("[DeviceSCI-REQUEST] : {}",
 									TestConvertMapperUtils.convertObjectToJson(searchDeviceIdSacReq));
 							return searchDeviceIdSacReq;
 						}
@@ -101,7 +99,7 @@ public class DeviceSCIControllerTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							SearchDeviceIdSacRes res = (SearchDeviceIdSacRes) result;
-							LOGGER.info("response param : {}", res.toString());
+							LOGGER.debug("[DeviceSCI-RESPONSE] : {}", TestConvertMapperUtils.convertObjectToJson(res));
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 		} catch (Exception e) {
@@ -118,24 +116,28 @@ public class DeviceSCIControllerTest {
 	 */
 	@Test
 	public void testSearchChangedDeviceHistory() throws Exception {
-		new TestCaseTemplate(this.mvc).url("/member/user/sci/DeviceSCIController/searchChangedDeviceHistory")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						ChangedDeviceHistorySacReq changedDeviceHistorySacReq = new ChangedDeviceHistorySacReq();
-						changedDeviceHistorySacReq.setUserKey("IW1023090104420100127095457");
-						changedDeviceHistorySacReq.setDeviceId("01064779017"); // deviceKey = '01064779017'
-						LOGGER.debug("[DeviceSCI-REQUEST] : \n{}",
-								TestConvertMapperUtils.convertObjectToJson(changedDeviceHistorySacReq));
-						return changedDeviceHistorySacReq;
-					}
-				}).success(ChangedDeviceHistorySacRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ChangedDeviceHistorySacRes res = (ChangedDeviceHistorySacRes) result;
-						LOGGER.info("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		try {
+			new TestCaseTemplate(this.mvc).url("/member/user/sci/DeviceSCIController/searchChangedDeviceHistory")
+					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+							ChangedDeviceHistorySacReq changedDeviceHistorySacReq = new ChangedDeviceHistorySacReq();
+							changedDeviceHistorySacReq.setUserKey("IW1314365020140612034108");
+							changedDeviceHistorySacReq.setDeviceId("01066786220");
+							LOGGER.debug("[DeviceSCI-REQUEST] : {}",
+									TestConvertMapperUtils.convertObjectToJson(changedDeviceHistorySacReq));
+							return changedDeviceHistorySacReq;
+						}
+					}).success(ChangedDeviceHistorySacRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							ChangedDeviceHistorySacRes res = (ChangedDeviceHistorySacRes) result;
+							LOGGER.debug("[DeviceSCI-RESPONSE] : {}", TestConvertMapperUtils.convertObjectToJson(res));
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		} catch (Exception e) {
+			LOGGER.info("\n>>error : {}", e.getMessage());
+		}
 
 	}
 }
