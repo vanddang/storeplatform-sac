@@ -1518,8 +1518,7 @@ public class SellerServiceImpl implements SellerService {
 		// 성별
 		mbrAuth.setSex(req.getSellerSex());
 		// 회원명
-		mbrAuth.setName(StringUtils.isBlank(searchSellerResponse.getMbrAuth().getName()) ? searchSellerResponse
-				.getSellerMbr().getSellerName() : searchSellerResponse.getMbrAuth().getName());
+		mbrAuth.setName(req.getSellerName());
 		// 실명 인증사이트
 		mbrAuth.setRealNameSite(commonRequest.getSystemID());
 		// 실명 인증 일시

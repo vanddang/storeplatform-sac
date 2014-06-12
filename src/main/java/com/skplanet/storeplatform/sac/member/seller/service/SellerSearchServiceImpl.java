@@ -32,6 +32,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequ
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchMbrSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListRequest;
@@ -270,6 +272,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 *            DetailInformationForProductReq
 	 * @return DetailInformationForProductRes
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public DetailInformationForProductRes detailInformationForProduct(SacRequestHeader header,
 			DetailInformationForProductReq req) {
@@ -277,20 +280,22 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		String sellerKey = StringUtils.isNotBlank(req.getSellerKey()) ? req.getSellerKey() : this.searchSellerKeySCI
 				.searchSellerKeyForAid(req.getAid());
 
-		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
-		// Header 셋팅
-		searchSellerRequest.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
-
 		// 검색 조회 셋팅
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyString(sellerKey);
 		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
-		searchSellerRequest.setKeySearchList(list);
 
-		// SC-회원 기본 정보 조회
-		SearchSellerResponse searchSellerResponse = this.sellerSCI.searchSeller(searchSellerRequest);
+		SearchMbrSellerRequest schReq = new SearchMbrSellerRequest();
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+
+		schReq.setKeySearchList(list);
+
+		SearchMbrSellerResponse schRes = this.sellerSCI.searchMbrSeller(schReq);
+
+		// SAC [RESPONSE] - Object
+		List<SellerMbr> sellerMbrs = (List<SellerMbr>) schRes.getSellerMbrListMap().get(sellerKey);
 
 		// 상단
 		String nameTop = null;
@@ -304,93 +309,79 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		// Top + Lower
 		// 내국인
-		if (StringUtils.equals(MemberConstants.USE_Y, searchSellerResponse.getSellerMbr().getIsDomestic())) {
+		if (StringUtils.equals(MemberConstants.USE_Y, sellerMbrs.get(0).getIsDomestic())) {
 			// 개인
-			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
-					.getSellerMbr().getSellerClass())) {
+			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, sellerMbrs.get(0)
+					.getSellerClass())) {
 
 				// first:sellerNickName, second:charger, default:""
-				nameTop = StringUtils
-						.defaultString(
-								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerNickName()) ? searchSellerResponse
-										.getSellerMbr().getSellerNickName() : searchSellerResponse.getSellerMbr()
-										.getCharger(), "");
+				nameTop = StringUtils.defaultString(
+						StringUtils.isNotBlank(sellerMbrs.get(0).getSellerNickName()) ? sellerMbrs.get(0)
+								.getSellerNickName() : sellerMbrs.get(0).getCharger(), "");
 
 				// first:sellerName, second:charger, default:""
 				nameLower = StringUtils
-						.defaultString(
-								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerName()) ? searchSellerResponse
-										.getSellerMbr().getSellerName() : searchSellerResponse.getSellerMbr()
-										.getCharger(), "");
+						.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
+								.getSellerName() : sellerMbrs.get(0).getCharger(), "");
 			}
 			// 개인 사업자, 법인 사업자
-			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, searchSellerResponse
-					.getSellerMbr().getSellerClass())
-					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS,
-							searchSellerResponse.getSellerMbr().getSellerClass())) {
+			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, sellerMbrs.get(0)
+					.getSellerClass())
+					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS, sellerMbrs.get(0)
+							.getSellerClass())) {
 
 				// first:sellerNickName, second:sellerCompany, default:""
-				nameTop = compNmLower = StringUtils
-						.defaultString(
-								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerNickName()) ? searchSellerResponse
-										.getSellerMbr().getSellerNickName() : searchSellerResponse.getSellerMbr()
-										.getSellerCompany(), "");
+				nameTop = compNmLower = StringUtils.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0)
+						.getSellerNickName()) ? sellerMbrs.get(0).getSellerNickName() : sellerMbrs.get(0)
+						.getSellerCompany(), "");
 
-				nameLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getCeoName(), "");
-				bizNoLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getBizRegNumber(), "");
+				nameLower = StringUtils.defaultString(sellerMbrs.get(0).getCeoName(), "");
+				bizNoLower = StringUtils.defaultString(sellerMbrs.get(0).getBizRegNumber(), "");
 				// first:repPhone, second:cordedTelephone, default:""
 				phoneLower = StringUtils
-						.defaultString(
-								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getRepPhone()) ? searchSellerResponse
-										.getSellerMbr().getRepPhone() : searchSellerResponse.getSellerMbr()
-										.getCordedTelephone(), "");
-				addrLower = StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerAddress()) ? searchSellerResponse
-						.getSellerMbr().getSellerAddress() : "";
-				addrLower += StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerDetailAddress()) ? " "
-						+ searchSellerResponse.getSellerMbr().getSellerDetailAddress() : "";
+						.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0).getRepPhone()) ? sellerMbrs.get(0)
+								.getRepPhone() : sellerMbrs.get(0).getCordedTelephone(), "");
+				addrLower = StringUtils.isNotBlank(sellerMbrs.get(0).getSellerAddress()) ? sellerMbrs.get(0)
+						.getSellerAddress() : "";
+				addrLower += StringUtils.isNotBlank(sellerMbrs.get(0).getSellerDetailAddress()) ? " "
+						+ sellerMbrs.get(0).getSellerDetailAddress() : "";
 			}
 
 		} else { // 외국인
 			// first:sellerNickName, second:sellerCompany, default:""
-			nameTop = StringUtils
-					.defaultString(
-							StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerNickName()) ? searchSellerResponse
-									.getSellerMbr().getSellerNickName() : searchSellerResponse.getSellerMbr()
-									.getSellerCompany(), "");
+			nameTop = StringUtils.defaultString(
+					StringUtils.isNotBlank(sellerMbrs.get(0).getSellerNickName()) ? sellerMbrs.get(0)
+							.getSellerNickName() : sellerMbrs.get(0).getSellerCompany(), "");
 
 			// 개인 ( 판매자명, 이메일 )
-			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
-					.getSellerMbr().getSellerClass())) {
+			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, sellerMbrs.get(0)
+					.getSellerClass())) {
 				// first:sellerName, second:sellerCompany, default:""
 				nameLower = StringUtils
-						.defaultString(
-								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerName()) ? searchSellerResponse
-										.getSellerMbr().getSellerName() : searchSellerResponse.getSellerMbr()
-										.getSellerCompany(), "");
+						.defaultString(StringUtils.isNotBlank(sellerMbrs.get(0).getSellerName()) ? sellerMbrs.get(0)
+								.getSellerName() : sellerMbrs.get(0).getSellerCompany(), "");
 			}
 			// 개인 사업자, 법인 사업자 ( 상호명, 이메일 )
-			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, searchSellerResponse
-					.getSellerMbr().getSellerClass())
-					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS,
-							searchSellerResponse.getSellerMbr().getSellerClass())) {
+			if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_BUSINESS, sellerMbrs.get(0)
+					.getSellerClass())
+					|| StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_LEGAL_BUSINESS, sellerMbrs.get(0)
+							.getSellerClass())) {
 
 				// first:sellerNickName, second:sellerCompany, third:sellerName, default:""
-				compNmLower = StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerNickName()) ? searchSellerResponse
-						.getSellerMbr().getSellerNickName() : StringUtils
-						.defaultString(
-								StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getSellerCompany()) ? searchSellerResponse
-										.getSellerMbr().getSellerCompany() : searchSellerResponse.getSellerMbr()
-										.getSellerName(), "");
+				compNmLower = StringUtils.isNotBlank(sellerMbrs.get(0).getSellerNickName()) ? sellerMbrs.get(0)
+						.getSellerNickName() : StringUtils.defaultString(
+						StringUtils.isNotBlank(sellerMbrs.get(0).getSellerCompany()) ? sellerMbrs.get(0)
+								.getSellerCompany() : sellerMbrs.get(0).getSellerName(), "");
 			}
 		}
 
 		// first:repEmail, second:customerEmail, third:sellerEmail, default:""
-		if (StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getRepEmail())) {
-			emailLower = searchSellerResponse.getSellerMbr().getRepEmail();
-		} else if (StringUtils.isNotBlank(searchSellerResponse.getSellerMbr().getCustomerEmail())) {
-			emailLower = searchSellerResponse.getSellerMbr().getCustomerEmail();
+		if (StringUtils.isNotBlank(sellerMbrs.get(0).getRepEmail())) {
+			emailLower = sellerMbrs.get(0).getRepEmail();
+		} else if (StringUtils.isNotBlank(sellerMbrs.get(0).getCustomerEmail())) {
+			emailLower = sellerMbrs.get(0).getCustomerEmail();
 		} else {
-			emailLower = StringUtils.defaultString(searchSellerResponse.getSellerMbr().getSellerEmail(), "");
+			emailLower = StringUtils.defaultString(sellerMbrs.get(0).getSellerEmail(), "");
 		}
 
 		SellerMbrAppSac sellerMbrSac = new SellerMbrAppSac();
@@ -414,9 +405,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		// RESPONSE
 		DetailInformationForProductRes response = new DetailInformationForProductRes();
-		response.setSellerId(searchSellerResponse.getSellerMbr().getSellerID());
-		response.setIsDomestic(searchSellerResponse.getSellerMbr().getIsDomestic());
-		response.setSellerClass(searchSellerResponse.getSellerMbr().getSellerClass());
+		response.setSellerId(sellerMbrs.get(0).getSellerID());
+		response.setIsDomestic(sellerMbrs.get(0).getIsDomestic());
+		response.setSellerClass(sellerMbrs.get(0).getSellerClass());
 		response.setSellerMbrList(resList);
 
 		return response;

@@ -39,14 +39,12 @@ public class IdpController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdpController.class);
 
 	/**
-	 * 
 	 * <pre>
-	 * IDP에서 수신된 'cmd'값을 기준으로 Service Method를 호출
+	 * IDP에서 수신된 'cmd'값을 기준으로 Service Method를 호출.
 	 * </pre>
 	 * 
-	 * @param req
-	 * @param res
-	 * @return
+	 * @param provisioningReq
+	 * @return ProvisioningRes
 	 */
 	@RequestMapping(value = "/provisioning/v1", method = RequestMethod.POST)
 	@ResponseBody
