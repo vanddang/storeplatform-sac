@@ -144,22 +144,23 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 			while (it.hasNext()) {
 				String key = it.next(); // 요청된 키값
 				sellerMbrSacs = new ArrayList<SellerMbrSac>();
-				SellerMbr sellerMbr = (SellerMbr) sellerMbrMapSc.get(key);
-				sellerMbrSac = new SellerMbrSac();
-				sellerMbrSac.setSellerKey(sellerMbr.getSellerKey());
-				sellerMbrSac.setSellerId(sellerMbr.getSellerID());
-				sellerMbrSac.setSellerClass(sellerMbr.getSellerClass());
-				sellerMbrSac.setCharger(sellerMbr.getCharger());
-				sellerMbrSac.setSellerCompany(sellerMbr.getSellerCompany());
-				sellerMbrSac.setSellerNickName(sellerMbr.getSellerNickName());
-				sellerMbrSac.setSellerBizNumber(sellerMbr.getSellerBizNumber());
-				sellerMbrSac.setSellerName(sellerMbr.getSellerName());
-				sellerMbrSac.setRepPhone(sellerMbr.getRepPhone());
-				sellerMbrSac.setSellerEmail(sellerMbr.getSellerEmail());
-				sellerMbrSac.setSellerAddress(sellerMbr.getSellerAddress());
-				sellerMbrSac.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
-				sellerMbrSac.setBizRegNumber(sellerMbr.getBizRegNumber());
-				sellerMbrSacs.add(sellerMbrSac);
+				for (SellerMbr sellerMbr : sellerMbrMapSc.get(key)) {
+					sellerMbrSac = new SellerMbrSac();
+					sellerMbrSac.setSellerKey(sellerMbr.getSellerKey());
+					sellerMbrSac.setSellerId(sellerMbr.getSellerID());
+					sellerMbrSac.setSellerClass(sellerMbr.getSellerClass());
+					sellerMbrSac.setCharger(sellerMbr.getCharger());
+					sellerMbrSac.setSellerCompany(sellerMbr.getSellerCompany());
+					sellerMbrSac.setSellerNickName(sellerMbr.getSellerNickName());
+					sellerMbrSac.setSellerBizNumber(sellerMbr.getSellerBizNumber());
+					sellerMbrSac.setSellerName(sellerMbr.getSellerName());
+					sellerMbrSac.setRepPhone(sellerMbr.getRepPhone());
+					sellerMbrSac.setSellerEmail(sellerMbr.getSellerEmail());
+					sellerMbrSac.setSellerAddress(sellerMbr.getSellerAddress());
+					sellerMbrSac.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
+					sellerMbrSac.setBizRegNumber(sellerMbr.getBizRegNumber());
+					sellerMbrSacs.add(sellerMbrSac);
+				}
 				sellerMbrSacMap.put(key, sellerMbrSacs);
 			}
 			response.setSellerMbrListMap(sellerMbrSacMap);
