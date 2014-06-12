@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,10 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.MapgPr
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
@@ -38,6 +43,9 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	SellerSearchSCI sellerSearchSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -178,6 +186,57 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 				}
 			}
 		}
+
+		// 2014.06.12 판매자 정보 목록 조회 추가 (이태희D)
+		String sellerMbrNo = null;
+		List<String> sellerKeyList = null;
+		DetailInformationListForProductSacReq sellerReq = null;
+		DetailInformationListForProductSacRes sellerRes = null;
+
+		try {
+			sellerKeyList = new ArrayList<String>();
+			sellerReq = new DetailInformationListForProductSacReq();
+
+			// 회원 판매자 정보를 위한 판매자키 파라미터 세팅
+			for (int i = 0; i < productList.size(); i++) {
+				sellerMbrNo = productList.get(i).getSellerMbrNo();
+
+				if (StringUtils.isNotEmpty(sellerMbrNo)) {
+					sellerKeyList.add(sellerMbrNo);
+				}
+			}
+
+			sellerReq.setSellerKeyList(sellerKeyList);
+
+			this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformationListForProduct");
+			long start = System.currentTimeMillis();
+
+			// 회원 판매자 정보 조회
+			sellerRes = this.sellerSearchSCI.detailInformationListForProduct(sellerReq);
+
+			this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformationListForProduct");
+			long end = System.currentTimeMillis();
+			this.log.info("##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms", (end - start));
+
+			for (int j = 0; j < productList.size(); j++) {
+				ProductInfo product = productList.get(j);
+				sellerMbrNo = productList.get(j).getSellerMbrNo();
+
+				if (StringUtils.isNotEmpty(sellerMbrNo)) {
+					SellerMbrInfoSac SellerMbrInfoSac = sellerRes.getSellerMbrMap().get(sellerMbrNo);
+
+					if (SellerMbrInfoSac != null) {
+						product.setSellerMbrInfoSac(SellerMbrInfoSac);
+
+						productList.remove(j);
+						productList.add(j, product);
+					}
+				}
+			}
+		} catch (Exception e) {
+			this.log.error("판매자 정보 목록 조회 연동 중 오류가 발생하였습니다.\n", e);
+		}
+
 		res.setProductList(productList);
 		return res;
 	}

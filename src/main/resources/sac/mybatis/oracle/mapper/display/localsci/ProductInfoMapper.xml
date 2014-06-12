@@ -84,6 +84,10 @@
               , TB.CID
               , TB.PROD_STATUS_CD
               , TB.PLAT_CLSF_CD
+              , TB.EXPO_SELLER_EMAIL
+              , TB.EXPO_SELLER_NM
+              , TB.EXPO_SELLER_TELNO
+              , TB.SELLER_MBR_NO
               , (CASE
 		           WHEN TB.PART_PARENT_CLSF_CD = 'PD012302'
 		           THEN
@@ -117,6 +121,7 @@
                       , D.EXPO_SELLER_EMAIL
                       , D.EXPO_SELLER_NM
                       , D.EXPO_SELLER_TELNO
+                      , D.SELLER_MBR_NO
                       , D.CID
                       , E.AID
                       , E.VER_MAJOR
@@ -279,6 +284,7 @@
             , P.EXPO_SELLER_EMAIL
             , P.EXPO_SELLER_NM
             , P.EXPO_SELLER_TELNO
+            , P.SELLER_MBR_NO
             , P.META_CLSF_CD
             , 'paid' as PROD_CLSF_CD
             , P.USE_PERIOD
@@ -361,6 +367,7 @@
             , P.EXPO_SELLER_EMAIL
             , P.EXPO_SELLER_NM
             , P.EXPO_SELLER_TELNO
+            , P.SELLER_MBR_NO
             , (CASE WHEN P1.META_CLSF_CD IN ('CT30','CT31') THEN 'colorRing'
                     WHEN P1.META_CLSF_CD IN ('CT32','CT33') THEN 'bell'
                     ELSE null
