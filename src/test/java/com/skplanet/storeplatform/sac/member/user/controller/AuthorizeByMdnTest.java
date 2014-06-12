@@ -92,7 +92,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -140,7 +141,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -188,7 +190,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -282,7 +285,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -330,7 +334,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -379,7 +384,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -427,7 +433,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -475,7 +482,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -523,7 +531,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -572,7 +581,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -620,7 +630,8 @@ public class AuthorizeByMdnTest {
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
-					.addHeaders("x-planet-device-info",
+					.addHeaders(
+							"x-planet-device-info",
 							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
@@ -696,7 +707,7 @@ public class AuthorizeByMdnTest {
 			ObjectMapper objMapper = new ObjectMapper();
 			LOGGER.info("Request : {}", objMapper.writeValueAsString(req));
 
-			AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdn(header, req);
+			AuthorizeByMdnRes res = this.loginService.authorizeByMdn(header, req);
 			LOGGER.info("res : {} " + res.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
