@@ -84,7 +84,7 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		AuthorizeByMdnRes res = this.loginService.executeAuthorizeByMdnV2(requestHeader, req);
+		AuthorizeByMdnRes res = this.loginService.authorizeByMdnV2(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -103,11 +103,12 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/member/user/checkVariability/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CheckVariabilityRes checkVariability(SacRequestHeader requestHeader, @Valid @RequestBody CheckVariabilityReq req) {
+	public CheckVariabilityRes checkVariability(SacRequestHeader requestHeader,
+			@Valid @RequestBody CheckVariabilityReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		CheckVariabilityRes res = this.loginService.executCheckVariability(requestHeader, req);
+		CheckVariabilityRes res = this.loginService.checkVariability(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -130,7 +131,7 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		AuthorizeByIdRes res = this.loginService.executeAuthorizeById(requestHeader, req);
+		AuthorizeByIdRes res = this.loginService.authorizeById(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -150,11 +151,12 @@ public class LoginController {
 	// @RequestMapping(value = "/member/user/authorizeSimpleByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
 	@Deprecated
-	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSimpleByMdnReq req) {
+	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeSimpleByMdnReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		AuthorizeSimpleByMdnRes res = this.loginService.executeAuthorizeSimpleByMdn(requestHeader, req);
+		AuthorizeSimpleByMdnRes res = this.loginService.authorizeSimpleByMdn(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -175,11 +177,12 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/member/user/authorizeSaveAndSyncByMac/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
+	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeSaveAndSyncByMacReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		AuthorizeSaveAndSyncByMacRes res = this.loginService.executeAuthorizeSaveAndSyncByMac(requestHeader, req);
+		AuthorizeSaveAndSyncByMacRes res = this.loginService.authorizeSaveAndSyncByMac(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 

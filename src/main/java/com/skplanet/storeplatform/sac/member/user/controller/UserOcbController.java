@@ -56,7 +56,8 @@ public class UserOcbController {
 	 */
 	@RequestMapping(value = "/member/user/createOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateOcbInformationRes createOcbInformation(SacRequestHeader sacHeader, @Validated @RequestBody CreateOcbInformationReq req) {
+	public CreateOcbInformationRes createOcbInformation(SacRequestHeader sacHeader,
+			@Validated @RequestBody CreateOcbInformationReq req) {
 
 		LOGGER.debug("########################################");
 		LOGGER.debug("##### 2.1.29 회원 OCB 정보 등록/수정 #####");
@@ -67,7 +68,7 @@ public class UserOcbController {
 		/**
 		 * 회원 OCB 정보 등록/수정 Biz
 		 */
-		CreateOcbInformationRes res = this.svc.createOcbInformation(sacHeader, req);
+		CreateOcbInformationRes res = this.svc.regOcbInformation(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -88,7 +89,8 @@ public class UserOcbController {
 	 */
 	@RequestMapping(value = "/member/user/removeOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoveOcbInformationRes removeOcbInformation(SacRequestHeader sacHeader, @Validated @RequestBody RemoveOcbInformationReq req) {
+	public RemoveOcbInformationRes removeOcbInformation(SacRequestHeader sacHeader,
+			@Validated @RequestBody RemoveOcbInformationReq req) {
 
 		LOGGER.debug("###################################");
 		LOGGER.debug("##### 2.1.29 회원 OCB 정보 삭제 #####");
@@ -99,7 +101,7 @@ public class UserOcbController {
 		/**
 		 * 회원 OCB 정보 삭제 Biz
 		 */
-		RemoveOcbInformationRes res = this.svc.removeOcbInformation(sacHeader, req);
+		RemoveOcbInformationRes res = this.svc.remOcbInformation(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -120,7 +122,8 @@ public class UserOcbController {
 	 */
 	@RequestMapping(value = "/member/user/getOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetOcbInformationRes getOcbInformation(SacRequestHeader sacHeader, @Validated @RequestBody GetOcbInformationReq req) {
+	public GetOcbInformationRes getOcbInformation(SacRequestHeader sacHeader,
+			@Validated @RequestBody GetOcbInformationReq req) {
 
 		LOGGER.debug("###################################");
 		LOGGER.debug("##### 2.1.29 회원 OCB 정보 조회 #####");

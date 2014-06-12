@@ -65,7 +65,7 @@ public class UserExtraInfoController {
 
 		}
 
-		UserExtraInfoRes res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
+		UserExtraInfoRes res = this.userExtraService.modAdditionalInformation(req, sacHeader);
 
 		LOGGER.info("Response : {}", res.getUserKey());
 
@@ -93,7 +93,7 @@ public class UserExtraInfoController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		UserExtraInfoRes res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
+		UserExtraInfoRes res = this.userExtraService.remAdditionalInformation(req, sacHeader);
 
 		LOGGER.info("Response : {}", res.getUserKey());
 

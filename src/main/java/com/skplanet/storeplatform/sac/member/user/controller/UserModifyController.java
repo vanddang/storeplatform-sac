@@ -75,7 +75,7 @@ public class UserModifyController {
 		/**
 		 * 회원 정보 수정 Biz
 		 */
-		ModifyRes res = this.svc.modify(sacHeader, req);
+		ModifyRes res = this.svc.mod(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -107,7 +107,7 @@ public class UserModifyController {
 		/**
 		 * 비밀번호 수정 Biz
 		 */
-		ModifyPasswordRes res = this.svc.modifyPassword(sacHeader, req);
+		ModifyPasswordRes res = this.svc.modPassword(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -139,7 +139,7 @@ public class UserModifyController {
 		/**
 		 * 이메일 주소 Biz
 		 */
-		ModifyEmailRes res = this.svc.modifyEmail(sacHeader, req);
+		ModifyEmailRes res = this.svc.modEmail(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -160,7 +160,8 @@ public class UserModifyController {
 	 */
 	@RequestMapping(value = "/member/user/createTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateTermsAgreementReq req) {
+	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader,
+			@Validated @RequestBody CreateTermsAgreementReq req) {
 
 		LOGGER.debug("#####################################");
 		LOGGER.debug("##### 2.1.16 Store 약관 동의 등록 #####");
@@ -171,7 +172,7 @@ public class UserModifyController {
 		/**
 		 * Store 약관 동의 등록 Biz
 		 */
-		CreateTermsAgreementRes res = this.svc.createTermsAgreement(sacHeader, req);
+		CreateTermsAgreementRes res = this.svc.regTermsAgreement(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -192,7 +193,8 @@ public class UserModifyController {
 	 */
 	@RequestMapping(value = "/member/user/modifyTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader, @Validated @RequestBody ModifyTermsAgreementReq req) {
+	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader,
+			@Validated @RequestBody ModifyTermsAgreementReq req) {
 
 		LOGGER.debug("#####################################");
 		LOGGER.debug("##### 2.1.17 Store 약관 동의 수정 #####");
@@ -203,7 +205,7 @@ public class UserModifyController {
 		/**
 		 * Store 약관 동의 수정 Biz
 		 */
-		ModifyTermsAgreementRes res = this.svc.modifyTermsAgreement(sacHeader, req);
+		ModifyTermsAgreementRes res = this.svc.modTermsAgreement(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -249,7 +251,7 @@ public class UserModifyController {
 		/**
 		 * 실명인증 등록/수정 Biz
 		 */
-		CreateRealNameRes res = this.svc.createRealName(sacHeader, req);
+		CreateRealNameRes res = this.svc.regRealName(sacHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 

@@ -29,45 +29,45 @@ import com.skplanet.storeplatform.sac.member.user.service.UserWithdrawService;
 
 /**
  * 회원 탈퇴 서비스 Controller
- *
+ * 
  * Updated on : 2014. 1. 7. Updated by : 강신완, 부르칸.
  */
 @RequestMapping(value = "/member/user")
 @Controller
 public class UserWithdrawController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserWithdrawController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserWithdrawController.class);
 
-    ObjectMapper objMapper = new ObjectMapper();
+	ObjectMapper objMapper = new ObjectMapper();
 
-    @Autowired
-    private UserWithdrawService svc;
+	@Autowired
+	private UserWithdrawService svc;
 
-    @RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
-    @ResponseBody
-    public WithdrawRes withdraw(@RequestBody WithdrawReq req, SacRequestHeader sacHeader) {
+	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public WithdrawRes withdraw(@RequestBody WithdrawReq req, SacRequestHeader sacHeader) {
 
-        LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-        /**
-         * 파라미터 체크 (userId, deviceId 둘다 미존재)
-         */
-        if (StringUtils.isBlank(req.getUserId()) && StringUtils.isBlank(req.getDeviceId())) {
-            throw new StorePlatformException("SAC_MEM_0002", "userId or deviceId");
-        }
+		/**
+		 * 파라미터 체크 (userId, deviceId 둘다 미존재)
+		 */
+		if (StringUtils.isBlank(req.getUserId()) && StringUtils.isBlank(req.getDeviceId())) {
+			throw new StorePlatformException("SAC_MEM_0002", "userId or deviceId");
+		}
 
-        /**
-         * 파라미터 체크 (userId 존재, userAuthKey 미존재)
-         */
-        if (StringUtils.isNotBlank(req.getUserId()) && StringUtils.isBlank(req.getUserAuthKey())) {
-            throw new StorePlatformException("SAC_MEM_0002", "userAuthKey");
-        }
+		/**
+		 * 파라미터 체크 (userId 존재, userAuthKey 미존재)
+		 */
+		if (StringUtils.isNotBlank(req.getUserId()) && StringUtils.isBlank(req.getUserAuthKey())) {
+			throw new StorePlatformException("SAC_MEM_0002", "userAuthKey");
+		}
 
-        WithdrawRes res = this.svc.executeWithdraw(sacHeader, req);
+		WithdrawRes res = this.svc.withdraw(sacHeader, req);
 
-        LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
-        return res;
-    }
+		return res;
+	}
 
 }

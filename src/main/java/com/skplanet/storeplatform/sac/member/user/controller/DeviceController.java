@@ -75,11 +75,13 @@ public class DeviceController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/* userKey, userId 조회 요청한 걸로 판단하여 isMainDevice 필수 파라메터 체크 */
-		if (StringUtil.isBlank(req.getDeviceId()) && StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getIsMainDevice())) {
+		if (StringUtil.isBlank(req.getDeviceId()) && StringUtil.isBlank(req.getDeviceKey())
+				&& StringUtil.isBlank(req.getIsMainDevice())) {
 			throw new StorePlatformException("SAC_MEM_0001", "isMainDevice");
 		}
 
-		ListDeviceRes res = this.deviceService.listDevice(requestHeader, (ListDeviceReq) ConvertMapperUtils.convertObject(req));
+		ListDeviceRes res = this.deviceService.listDevice(requestHeader,
+				(ListDeviceReq) ConvertMapperUtils.convertObject(req));
 
 		if (res.getDeviceInfoList() == null) {
 			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
@@ -138,10 +140,10 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "isPrimary");
 		}
 
-		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, req);
+		CreateDeviceRes res = this.deviceService.regDevice(requestHeader, req);
 
 		/* 변경된 정보 idp 연동 */
-		this.userService.updateProfileIdp(requestHeader, res.getUserKey(), req.getUserAuthKey());
+		this.userService.modProfileIdp(requestHeader, res.getUserKey(), req.getUserAuthKey());
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -168,11 +170,12 @@ public class DeviceController {
 		}
 
 		/* deviceId, deviceKey 둘중하나는 필수 */
-		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceKey()) && StringUtil.isBlank(req.getDeviceInfo().getDeviceId())) {
+		if (StringUtil.isBlank(req.getDeviceInfo().getDeviceKey())
+				&& StringUtil.isBlank(req.getDeviceInfo().getDeviceId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceKey || deviceId");
 		}
 
-		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);
+		ModifyDeviceRes res = this.deviceService.modDevice(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
@@ -202,7 +205,7 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceKey || deviceId");
 		}
 
-		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
+		SetMainDeviceRes res = this.deviceService.modRepresentationDevice(requestHeader, req);
 
 		LOGGER.info("Response : {}", res.getDeviceKey());
 
@@ -220,7 +223,8 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @RequestBody DetailRepresentationDeviceReq req) {
+	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader,
+			@RequestBody DetailRepresentationDeviceReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
@@ -269,10 +273,10 @@ public class DeviceController {
 		req.setUserAuthKey(userAuthKey);
 		req.setUserKey(userKey);
 
-		RemoveDeviceRes res = this.deviceService.removeDevice(requestHeader, req);
+		RemoveDeviceRes res = this.deviceService.remDevice(requestHeader, req);
 
 		/* IDP 회원정보 수정 */
-		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
+		this.userService.modProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
 		LOGGER.info("Response : {}", res.getDeviceKeyList().get(0).getDeviceKey());
 
