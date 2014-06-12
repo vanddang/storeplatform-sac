@@ -30,7 +30,7 @@ public class PaymethodUtil {
 		convert2StoreMap.put(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER, "OR000605"); // SKT후불
 		convert2StoreMap.put("12", "OR000602"); // 다날
 		convert2StoreMap.put("13", "OR000601"); // 신용카드
-		convert2StoreMap.put("14", "OR000605"); // PayPin
+		convert2StoreMap.put("14", "OR000622"); // PayPin
 		convert2StoreMap.put("20", "OR000603"); // OCB
 		convert2StoreMap.put("21", "OR000616"); // T membership
 		convert2StoreMap.put("22", "OR000614"); // T money
@@ -38,12 +38,13 @@ public class PaymethodUtil {
 		convert2StoreMap.put("24", "OR000610"); // 문화상품권
 		convert2StoreMap.put("25", "OR000607"); // T store Cash
 		convert2StoreMap.put("26", "OR000606"); // Coupon
+		convert2StoreMap.put("27", "OR000623"); // 게임캐쉬
 
 		convert2PayPlanetMap = new HashMap<String, String>();
 		convert2PayPlanetMap.put("OR000605", PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER); // SKT후불
 		convert2PayPlanetMap.put("OR000602", "12"); // 다날
 		convert2PayPlanetMap.put("OR000601", "13"); // 신용카드
-		convert2PayPlanetMap.put("OR000605", "14"); // PayPin
+		convert2PayPlanetMap.put("OR000622", "14"); // PayPin
 		convert2PayPlanetMap.put("OR000603", "20"); // OCB
 		convert2PayPlanetMap.put("OR000616", "21"); // T membership
 		convert2PayPlanetMap.put("OR000614", "22"); // T money
@@ -51,6 +52,7 @@ public class PaymethodUtil {
 		convert2PayPlanetMap.put("OR000610", "24"); // 문화상품권
 		convert2PayPlanetMap.put("OR000607", "25"); // T store Cash
 		convert2PayPlanetMap.put("OR000606", "26"); // Coupon
+		convert2PayPlanetMap.put("OR000623", "27"); // 게임캐쉬
 
 	}
 
