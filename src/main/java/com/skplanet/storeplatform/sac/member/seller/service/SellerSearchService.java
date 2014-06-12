@@ -105,7 +105,7 @@ public interface SellerSearchService {
 	 *            SearchIdReq
 	 * @return SearchIdRes
 	 */
-	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req);
+	public SearchIdRes srhId(SacRequestHeader header, SearchIdReq req);
 
 	/**
 	 * <pre>
@@ -157,7 +157,7 @@ public interface SellerSearchService {
 	 *            SearchPasswordReq
 	 * @return SearchPasswordRes
 	 */
-	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req);
+	public SearchPasswordRes srhPassword(SacRequestHeader header, SearchPasswordReq req);
 
 	/**
 	 * <pre>

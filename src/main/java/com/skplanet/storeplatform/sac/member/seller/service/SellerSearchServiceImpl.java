@@ -542,7 +542,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return SearchIdRes
 	 */
 	@Override
-	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) {
+	public SearchIdRes srhId(SacRequestHeader header, SearchIdReq req) {
 
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
@@ -585,7 +585,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return SearchPasswordRes
 	 */
 	@Override
-	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) {
+	public SearchPasswordRes srhPassword(SacRequestHeader header, SearchPasswordReq req) {
 
 		ResetPasswordSellerRequest schReq = new ResetPasswordSellerRequest();
 

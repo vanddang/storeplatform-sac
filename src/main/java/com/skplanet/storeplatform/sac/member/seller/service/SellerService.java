@@ -56,7 +56,7 @@ public interface SellerService {
 	 *            CreateReq
 	 * @return CreateRes
 	 */
-	public CreateRes createSeller(SacRequestHeader header, CreateReq req);
+	public CreateRes regSeller(SacRequestHeader header, CreateReq req);
 
 	/**
 	 * <pre>
@@ -95,7 +95,7 @@ public interface SellerService {
 	 *            ModifyInformationSacReq
 	 * @return ModifyInformationSacRes
 	 */
-	public ModifyInformationSacRes modifyInformation(SacRequestHeader header, ModifyInformationSacReq req);
+	public ModifyInformationSacRes modInformation(SacRequestHeader header, ModifyInformationSacReq req);
 
 	/**
 	 * <pre>
@@ -108,7 +108,7 @@ public interface SellerService {
 	 *            ModifyAccountInformationSacReq
 	 * @return ModifyAccountInformationSacRes
 	 */
-	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
+	public ModifyAccountInformationSacRes modAccountInformation(SacRequestHeader header,
 			ModifyAccountInformationSacReq req);
 
 	/**
@@ -122,7 +122,7 @@ public interface SellerService {
 	 *            ModifyEmailSacReq
 	 * @return ModifyEmailSacRes
 	 */
-	public ModifyEmailSacRes modifyEmail(SacRequestHeader header, ModifyEmailSacReq req);
+	public ModifyEmailSacRes modEmail(SacRequestHeader header, ModifyEmailSacReq req);
 
 	/**
 	 * <pre>
@@ -135,7 +135,7 @@ public interface SellerService {
 	 *            ModifyPasswordSacReq
 	 * @return ModifyPasswordSacRes
 	 */
-	public ModifyPasswordSacRes modifyPassword(SacRequestHeader header, ModifyPasswordSacReq req);
+	public ModifyPasswordSacRes modPassword(SacRequestHeader header, ModifyPasswordSacReq req);
 
 	/**
 	 * <pre>
@@ -187,7 +187,7 @@ public interface SellerService {
 	 *            ModifyRealNameSacReq
 	 * @return ModifyRealNameSacRes
 	 */
-	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, ModifyRealNameSacReq req);
+	public ModifyRealNameSacRes modRealName(SacRequestHeader header, ModifyRealNameSacReq req);
 
 	/**
 	 * <pre>
@@ -213,7 +213,7 @@ public interface SellerService {
 	 *            AbrogationAuthKeyReq
 	 * @return AbrogationAuthKeyRes
 	 */
-	public RemoveAuthorizationKeySacRes removeAuthorizationKey(SacRequestHeader header, RemoveAuthorizationKeySacReq req);
+	public RemoveAuthorizationKeySacRes remAuthorizationKey(SacRequestHeader header, RemoveAuthorizationKeySacReq req);
 
 	/**
 	 * <pre>
@@ -226,7 +226,7 @@ public interface SellerService {
 	 *            RemoveFlurrySacReq
 	 * @return RemoveFlurrySacRes
 	 */
-	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, RemoveFlurrySacReq req);
+	public RemoveFlurrySacRes remFlurry(SacRequestHeader header, RemoveFlurrySacReq req);
 
 	/**
 	 * <pre>
@@ -239,7 +239,7 @@ public interface SellerService {
 	 *            CreateFlurrySacRes
 	 * @return CreateFlurrySacRes
 	 */
-	public CreateFlurrySacRes createFlurry(SacRequestHeader header, CreateFlurrySacReq req);
+	public CreateFlurrySacRes regFlurry(SacRequestHeader header, CreateFlurrySacReq req);
 
 	/**
 	 * <pre>
@@ -252,7 +252,7 @@ public interface SellerService {
 	 *            ModifyWaitEmailSacReq
 	 * @return ModifyWaitEmailSacRes
 	 */
-	public ModifyWaitEmailSacRes modifyWaitEmail(SacRequestHeader header, ModifyWaitEmailSacReq req);
+	public ModifyWaitEmailSacRes modWaitEmail(SacRequestHeader header, ModifyWaitEmailSacReq req);
 
 	/**
 	 * <pre>
@@ -265,7 +265,7 @@ public interface SellerService {
 	 *            ModifyFlurrySacReq
 	 * @return ModifyFlurrySacRes
 	 */
-	public ModifyFlurrySacRes modifyFlurry(SacRequestHeader header, ModifyFlurrySacReq req);
+	public ModifyFlurrySacRes modFlurry(SacRequestHeader header, ModifyFlurrySacReq req);
 
 	/**
 	 * <pre>
@@ -278,5 +278,5 @@ public interface SellerService {
 	 *            CreateChangeSacReq
 	 * @return CreateChangeSacRes
 	 */
-	public CreateChangeSacRes createChange(SacRequestHeader header, CreateChangeSacReq req);
+	public CreateChangeSacRes regChange(SacRequestHeader header, CreateChangeSacReq req);
 }

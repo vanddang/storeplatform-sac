@@ -149,7 +149,7 @@ public interface MiscellaneousService {
 	 *            CreateAdditionalServiceReq
 	 * @return CreateAdditionalServiceRes
 	 */
-	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request);
+	public CreateAdditionalServiceRes regAdditionalService(CreateAdditionalServiceReq request);
 
 	/**
 	 * <pre>
@@ -208,7 +208,7 @@ public interface MiscellaneousService {
 	 *            CreateIndividualPolicyReq
 	 * @return CreateIndividualPolicyRes
 	 */
-	public CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header, CreateIndividualPolicyReq req);
+	public CreateIndividualPolicyRes regIndividualPolicy(SacRequestHeader header, CreateIndividualPolicyReq req);
 
 	/**
 	 * <pre>
@@ -221,5 +221,5 @@ public interface MiscellaneousService {
 	 *            RemoveIndividualPolicyReq
 	 * @return RemoveIndividualPolicyRes
 	 */
-	public RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header, RemoveIndividualPolicyReq req);
+	public RemoveIndividualPolicyRes remIndividualPolicy(SacRequestHeader header, RemoveIndividualPolicyReq req);
 }

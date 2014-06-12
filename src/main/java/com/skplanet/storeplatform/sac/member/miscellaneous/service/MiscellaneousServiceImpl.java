@@ -526,7 +526,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * @return CreateAdditionalServiceRes
 	 */
 	@Override
-	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) {
+	public CreateAdditionalServiceRes regAdditionalService(CreateAdditionalServiceReq request) {
 
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
 
@@ -733,7 +733,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * @return CreateIndividualPolicyRes
 	 */
 	@Override
-	public CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header, CreateIndividualPolicyReq req) {
+	public CreateIndividualPolicyRes regIndividualPolicy(SacRequestHeader header, CreateIndividualPolicyReq req) {
 
 		LOGGER.debug("###### MiscellaneousServiceImpl.createIndividualPolicy [START] ######");
 
@@ -794,7 +794,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * @return RemoveIndividualPolicyRes
 	 */
 	@Override
-	public RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header, RemoveIndividualPolicyReq req) {
+	public RemoveIndividualPolicyRes remIndividualPolicy(SacRequestHeader header, RemoveIndividualPolicyReq req) {
 
 		LOGGER.debug("###### MiscellaneousServiceImpl.removeIndividualPolicy [START] ######");
 

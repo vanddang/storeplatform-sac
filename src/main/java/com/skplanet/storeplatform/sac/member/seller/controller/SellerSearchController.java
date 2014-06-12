@@ -188,7 +188,7 @@ public class SellerSearchController {
 				&& StringUtils.isBlank(req.getSellerEmail()) && StringUtils.isBlank(req.getSellerPhone())) {
 			throw new StorePlatformException("SAC_MEM_0001", "sellerBizNumber, sellerCompany, sellerEmail, sellerPhone");
 		}
-		SearchIdRes res = this.sellerSearchService.searchId(header, req);
+		SearchIdRes res = this.sellerSearchService.srhId(header, req);
 		LOGGER.info("Response : seller count : {}", res.getSellerMbr().size());
 		return res;
 	}
@@ -208,7 +208,7 @@ public class SellerSearchController {
 	@ResponseBody
 	public SearchPasswordRes searchPassword(SacRequestHeader header, @RequestBody @Validated SearchPasswordReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		SearchPasswordRes res = this.sellerSearchService.searchPassword(header, req);
+		SearchPasswordRes res = this.sellerSearchService.srhPassword(header, req);
 		LOGGER.info("Response : SUCC");
 		return res;
 	}

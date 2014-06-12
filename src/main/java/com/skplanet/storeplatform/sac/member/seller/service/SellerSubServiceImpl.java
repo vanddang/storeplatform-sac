@@ -64,7 +64,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 	 * @return CreateSubsellerRes
 	 */
 	@Override
-	public CreateSubsellerRes createSubseller(SacRequestHeader header, CreateSubsellerReq req) {
+	public CreateSubsellerRes regSubseller(SacRequestHeader header, CreateSubsellerReq req) {
 
 		CreateSubSellerRequest schReq = new CreateSubSellerRequest();
 
@@ -106,7 +106,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 	 * @return UpdateSubsellerRes
 	 */
 	@Override
-	public UpdateSubsellerRes updateSubseller(SacRequestHeader header, UpdateSubsellerReq req) {
+	public UpdateSubsellerRes modSubseller(SacRequestHeader header, UpdateSubsellerReq req) {
 
 		CreateSubSellerRequest schReq = new CreateSubSellerRequest();
 
@@ -152,7 +152,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 	 * @return RemoveSubsellerRes
 	 */
 	@Override
-	public RemoveSubsellerRes removeSubseller(SacRequestHeader header, RemoveSubsellerReq req) {
+	public RemoveSubsellerRes remSubseller(SacRequestHeader header, RemoveSubsellerReq req) {
 
 		RemoveSubSellerRequest schReq = new RemoveSubSellerRequest();
 

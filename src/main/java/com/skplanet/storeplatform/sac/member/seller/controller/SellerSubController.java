@@ -61,7 +61,7 @@ public class SellerSubController {
 		} else if (StringUtils.isBlank(req.getSubSellerId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerId");
 		}
-		CreateSubsellerRes res = this.sellerSubService.createSubseller(header, req);
+		CreateSubsellerRes res = this.sellerSubService.regSubseller(header, req);
 		LOGGER.info("Response : {}", res.getSubSellerKey());
 		return res;
 	}
@@ -86,7 +86,7 @@ public class SellerSubController {
 			throw new StorePlatformException("SAC_MEM_0001", "subSellerKey");
 		}
 
-		UpdateSubsellerRes res = this.sellerSubService.updateSubseller(header, req);
+		UpdateSubsellerRes res = this.sellerSubService.modSubseller(header, req);
 		LOGGER.info("Response : {}", res.getSubSellerKey());
 		return res;
 	}
@@ -106,7 +106,7 @@ public class SellerSubController {
 	@ResponseBody
 	public RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		RemoveSubsellerRes res = this.sellerSubService.removeSubseller(header, req);
+		RemoveSubsellerRes res = this.sellerSubService.remSubseller(header, req);
 		LOGGER.info("Response : remove count : {}", res.getRemoveCnt());
 		return res;
 	}

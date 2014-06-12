@@ -30,7 +30,7 @@ public interface SellerSubService {
 	 *            CreateSubsellerReq
 	 * @return CreateSubsellerRes
 	 */
-	public CreateSubsellerRes createSubseller(SacRequestHeader header, CreateSubsellerReq req);
+	public CreateSubsellerRes regSubseller(SacRequestHeader header, CreateSubsellerReq req);
 
 	/**
 	 * <pre>
@@ -43,7 +43,7 @@ public interface SellerSubService {
 	 *            UpdateSubsellerReq
 	 * @return UpdateSubsellerRes
 	 */
-	public UpdateSubsellerRes updateSubseller(SacRequestHeader header, UpdateSubsellerReq req);
+	public UpdateSubsellerRes modSubseller(SacRequestHeader header, UpdateSubsellerReq req);
 
 	/**
 	 * <pre>
@@ -56,7 +56,7 @@ public interface SellerSubService {
 	 *            RemoveSubsellerReq
 	 * @return RemoveSubsellerRes
 	 */
-	public RemoveSubsellerRes removeSubseller(SacRequestHeader header, RemoveSubsellerReq req);
+	public RemoveSubsellerRes remSubseller(SacRequestHeader header, RemoveSubsellerReq req);
 
 	/**
 	 * <pre>

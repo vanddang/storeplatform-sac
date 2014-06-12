@@ -143,7 +143,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return CreateRes
 	 */
 	@Override
-	public CreateRes createSeller(SacRequestHeader header, CreateReq req) {
+	public CreateRes regSeller(SacRequestHeader header, CreateReq req) {
 
 		LOGGER.debug("############ SellerServiceImpl.createSeller() [START] ############");
 		// SC공통 헤더
@@ -474,9 +474,9 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyInformationRes
 	 */
 	@Override
-	public ModifyInformationSacRes modifyInformation(SacRequestHeader header, ModifyInformationSacReq req) {
+	public ModifyInformationSacRes modInformation(SacRequestHeader header, ModifyInformationSacReq req) {
 
-		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
+		LOGGER.debug("############ SellerServiceImpl.modInformation() [START] ############");
 		// SC공통 헤더
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 
@@ -546,7 +546,7 @@ public class SellerServiceImpl implements SellerService {
 		ModifyInformationSacRes res = new ModifyInformationSacRes();
 		res.setSellerKey(updateSellerResponse.getSellerKey());
 
-		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
+		LOGGER.debug("############ SellerServiceImpl.modInformation() [START] ############");
 		return res;
 	}
 
@@ -562,9 +562,9 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyAccountInformationRes
 	 */
 	@Override
-	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
+	public ModifyAccountInformationSacRes modAccountInformation(SacRequestHeader header,
 			ModifyAccountInformationSacReq req) {
-		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [START] ############");
+		LOGGER.debug("############ SellerServiceImpl.modAccountInformation() [START] ############");
 		// SC공통 헤더
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 		// SessionKey 유효성 체크
@@ -665,7 +665,7 @@ public class SellerServiceImpl implements SellerService {
 		/** 4. TenantRes Response 생성 및 주입 */
 		ModifyAccountInformationSacRes res = new ModifyAccountInformationSacRes();
 		res.setSellerKey(updateAccountSellerResponse.getSellerKey());
-		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [END] ############");
+		LOGGER.debug("############ SellerServiceImpl.modAccountInformation() [END] ############");
 		return res;
 	}
 
@@ -681,8 +681,8 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyEmailSacRes
 	 */
 	@Override
-	public ModifyEmailSacRes modifyEmail(SacRequestHeader header, ModifyEmailSacReq req) {
-		LOGGER.debug("############ SellerServiceImpl.modifyEmail() [START] ############");
+	public ModifyEmailSacRes modEmail(SacRequestHeader header, ModifyEmailSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.modEmail() [START] ############");
 
 		// SC 공통 헤더 생성
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
@@ -747,8 +747,8 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyPasswordSacRes
 	 */
 	@Override
-	public ModifyPasswordSacRes modifyPassword(SacRequestHeader header, ModifyPasswordSacReq req) {
-		LOGGER.debug("############ SellerServiceImpl.modifyPassword() [START] ############");
+	public ModifyPasswordSacRes modPassword(SacRequestHeader header, ModifyPasswordSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.modPassword() [START] ############");
 		// SC 공통 헤더 생성
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 		// SessionKey 유효성 체크
@@ -774,7 +774,7 @@ public class SellerServiceImpl implements SellerService {
 		ModifyPasswordSacRes res = new ModifyPasswordSacRes();
 
 		res.setSellerKey(updatePasswordSellerResponse.getSellerKey());
-		LOGGER.debug("############ SellerServiceImpl.modifyPassword() [END] ############");
+		LOGGER.debug("############ SellerServiceImpl.modPassword() [END] ############");
 		return res;
 	}
 
@@ -1053,9 +1053,9 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyRealNameSacRes
 	 */
 	@Override
-	public ModifyRealNameSacRes modifyRealName(SacRequestHeader header, ModifyRealNameSacReq req) {
+	public ModifyRealNameSacRes modRealName(SacRequestHeader header, ModifyRealNameSacReq req) {
 
-		LOGGER.debug("############ SellerServiceImpl.modifyRealName() [START] ############");
+		LOGGER.debug("############ SellerServiceImpl.modRealName() [START] ############");
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 		// SessionKey 유효성 체크
 		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
@@ -1129,7 +1129,7 @@ public class SellerServiceImpl implements SellerService {
 
 		ModifyRealNameSacRes res = new ModifyRealNameSacRes();
 		res.setSellerKey(updateRealNameSellerResponse.getSellerKey());
-		LOGGER.debug("############ SellerServiceImpl.modifyRealName() [END] ############");
+		LOGGER.debug("############ SellerServiceImpl.modRealName() [END] ############");
 		return res;
 	}
 
@@ -1189,7 +1189,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return AbrogationAuthKeyRes
 	 */
 	@Override
-	public RemoveAuthorizationKeySacRes removeAuthorizationKey(SacRequestHeader header, RemoveAuthorizationKeySacReq req) {
+	public RemoveAuthorizationKeySacRes remAuthorizationKey(SacRequestHeader header, RemoveAuthorizationKeySacReq req) {
 
 		RemoveLoginInfoRequest schReq = new RemoveLoginInfoRequest();
 
@@ -1260,10 +1260,10 @@ public class SellerServiceImpl implements SellerService {
 	 * @return RemoveFlurrySacRes
 	 */
 	@Override
-	public RemoveFlurrySacRes removeFlurry(SacRequestHeader header, RemoveFlurrySacReq req) {
+	public RemoveFlurrySacRes remFlurry(SacRequestHeader header, RemoveFlurrySacReq req) {
 
 		// 1. CommonRequest Setting
-		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
+		LOGGER.debug("############ SellerServiceImpl.modInformation() [START] ############");
 		// SC공통 헤더
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 
@@ -1308,7 +1308,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return CreateFlurrySacRes
 	 */
 	@Override
-	public CreateFlurrySacRes createFlurry(SacRequestHeader header, CreateFlurrySacReq req) {
+	public CreateFlurrySacRes regFlurry(SacRequestHeader header, CreateFlurrySacReq req) {
 		// 1. CommonRequest Setting
 		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [START] ############");
 		// SC공통 헤더
@@ -1355,8 +1355,8 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyWaitEmailSacRes
 	 */
 	@Override
-	public ModifyWaitEmailSacRes modifyWaitEmail(SacRequestHeader header, ModifyWaitEmailSacReq req) {
-		LOGGER.debug("############ SellerServiceImpl.modifyWaitEmail() [START] ############");
+	public ModifyWaitEmailSacRes modWaitEmail(SacRequestHeader header, ModifyWaitEmailSacReq req) {
+		LOGGER.debug("############ SellerServiceImpl.modWaitEmail() [START] ############");
 
 		// SC 공통 헤더 생성
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
@@ -1419,7 +1419,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyFlurrySacRes
 	 */
 	@Override
-	public ModifyFlurrySacRes modifyFlurry(SacRequestHeader header, ModifyFlurrySacReq req) {
+	public ModifyFlurrySacRes modFlurry(SacRequestHeader header, ModifyFlurrySacReq req) {
 		// 1. CommonRequest Setting
 		LOGGER.debug("############ SellerServiceImpl.createFlurrySacRes() [START] ############");
 		// SC공통 헤더
@@ -1455,7 +1455,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return CreateChangeSacRes
 	 */
 	@Override
-	public CreateChangeSacRes createChange(SacRequestHeader header, CreateChangeSacReq req) {
+	public CreateChangeSacRes regChange(SacRequestHeader header, CreateChangeSacReq req) {
 		LOGGER.debug("############ SellerServiceImpl.createChange() [START] ############");
 		// SC공통 헤더
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);

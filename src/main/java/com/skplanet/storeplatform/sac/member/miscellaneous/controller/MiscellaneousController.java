@@ -272,7 +272,7 @@ public class MiscellaneousController {
 		if (!ValidationCheckUtils.isMdn(request.getMsisdn())) {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
-		CreateAdditionalServiceRes response = this.service.createAdditionalService(request);
+		CreateAdditionalServiceRes response = this.service.regAdditionalService(request);
 		LOGGER.info("Response : msisdn : {}", response.getMsisdn());
 		return response;
 	}
@@ -385,7 +385,7 @@ public class MiscellaneousController {
 	public CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header,
 			@RequestBody @Validated CreateIndividualPolicyReq request) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
-		CreateIndividualPolicyRes response = this.service.createIndividualPolicy(header, request);
+		CreateIndividualPolicyRes response = this.service.regIndividualPolicy(header, request);
 		LOGGER.info("Response : policy key {}", response.getKey());
 		return response;
 	}
@@ -406,7 +406,7 @@ public class MiscellaneousController {
 	public RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header,
 			@RequestBody @Validated RemoveIndividualPolicyReq request) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
-		RemoveIndividualPolicyRes response = this.service.removeIndividualPolicy(header, request);
+		RemoveIndividualPolicyRes response = this.service.remIndividualPolicy(header, request);
 		LOGGER.info("Response : policy key : {}", response.getKey());
 		return response;
 	}
