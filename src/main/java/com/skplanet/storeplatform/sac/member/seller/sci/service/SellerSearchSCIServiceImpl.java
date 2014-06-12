@@ -95,40 +95,41 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 
 			// KeyList별 SC 호출해서 ScMap에 PutAll.
 			Map<String, List<SellerMbr>> sellerMbrMapSc = new HashMap<String, List<SellerMbr>>();
+			// SC Temp Map
+			Map<String, List<SellerMbr>> resultMap = null;
 			int keyCnt = sellerKeys.size() + sellerIds.size() + sellerBizNos.size();
 			int errCnt = 0;
 			if (!sellerKeys.isEmpty()) {
-				// keyCnt++;
 				schReq = new SearchMbrSellerRequest();
 				schReq.setCommonRequest(commonRequest);
 				schReq.setKeySearchList(sellerKeys);
-				if (this.isException(schReq, keyCnt, errCnt) == null) {
-					errCnt++;
+				resultMap = this.isException(schReq, keyCnt, errCnt);
+				if (resultMap != null) {
+					sellerMbrMapSc.putAll(resultMap);
 				} else {
-
-					sellerMbrMapSc.putAll(this.sellerSCI.searchMbrSeller(schReq).getSellerMbrListMap());
+					errCnt++;
 				}
 			}
 			if (!sellerIds.isEmpty()) {
-				// keyCnt++;
 				schReq = new SearchMbrSellerRequest();
 				schReq.setCommonRequest(commonRequest);
 				schReq.setKeySearchList(sellerIds);
-				if (this.isException(schReq, keyCnt, errCnt) == null) {
-					errCnt++;
+				resultMap = this.isException(schReq, keyCnt, errCnt);
+				if (resultMap != null) {
+					sellerMbrMapSc.putAll(resultMap);
 				} else {
-					sellerMbrMapSc.putAll(this.sellerSCI.searchMbrSeller(schReq).getSellerMbrListMap());
+					errCnt++;
 				}
 			}
 			if (!sellerBizNos.isEmpty()) {
-				// keyCnt++;
 				schReq = new SearchMbrSellerRequest();
 				schReq.setCommonRequest(commonRequest);
 				schReq.setKeySearchList(sellerBizNos);
-				if (this.isException(schReq, keyCnt, errCnt) == null) {
-					errCnt++;
+				resultMap = this.isException(schReq, keyCnt, errCnt);
+				if (resultMap != null) {
+					sellerMbrMapSc.putAll(resultMap);
 				} else {
-					sellerMbrMapSc.putAll(this.sellerSCI.searchMbrSeller(schReq).getSellerMbrListMap());
+					errCnt++;
 				}
 			}
 			// List<SellerMbr> list = sellerMbrMapSc
@@ -139,26 +140,26 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 			List<SellerMbrSac> sellerMbrSacs = null;
 			SellerMbrSac sellerMbrSac = null;
 			Map<String, List<SellerMbrSac>> sellerMbrSacMap = new HashMap<String, List<SellerMbrSac>>();
+
 			while (it.hasNext()) {
 				String key = it.next(); // 요청된 키값
 				sellerMbrSacs = new ArrayList<SellerMbrSac>();
-				for (SellerMbr sellerMbr : sellerMbrMapSc.get(key)) {
-					sellerMbrSac = new SellerMbrSac();
-					sellerMbrSac.setSellerKey(sellerMbr.getSellerKey());
-					sellerMbrSac.setSellerId(sellerMbr.getSellerID());
-					sellerMbrSac.setSellerClass(sellerMbr.getSellerClass());
-					sellerMbrSac.setCharger(sellerMbr.getCharger());
-					sellerMbrSac.setSellerCompany(sellerMbr.getSellerCompany());
-					sellerMbrSac.setSellerNickName(sellerMbr.getSellerNickName());
-					sellerMbrSac.setSellerBizNumber(sellerMbr.getSellerBizNumber());
-					sellerMbrSac.setSellerName(sellerMbr.getSellerName());
-					sellerMbrSac.setRepPhone(sellerMbr.getRepPhone());
-					sellerMbrSac.setSellerEmail(sellerMbr.getSellerEmail());
-					sellerMbrSac.setSellerAddress(sellerMbr.getSellerAddress());
-					sellerMbrSac.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
-					sellerMbrSac.setBizRegNumber(sellerMbr.getBizRegNumber());
-					sellerMbrSacs.add(sellerMbrSac);
-				}
+				SellerMbr sellerMbr = (SellerMbr) sellerMbrMapSc.get(key);
+				sellerMbrSac = new SellerMbrSac();
+				sellerMbrSac.setSellerKey(sellerMbr.getSellerKey());
+				sellerMbrSac.setSellerId(sellerMbr.getSellerID());
+				sellerMbrSac.setSellerClass(sellerMbr.getSellerClass());
+				sellerMbrSac.setCharger(sellerMbr.getCharger());
+				sellerMbrSac.setSellerCompany(sellerMbr.getSellerCompany());
+				sellerMbrSac.setSellerNickName(sellerMbr.getSellerNickName());
+				sellerMbrSac.setSellerBizNumber(sellerMbr.getSellerBizNumber());
+				sellerMbrSac.setSellerName(sellerMbr.getSellerName());
+				sellerMbrSac.setRepPhone(sellerMbr.getRepPhone());
+				sellerMbrSac.setSellerEmail(sellerMbr.getSellerEmail());
+				sellerMbrSac.setSellerAddress(sellerMbr.getSellerAddress());
+				sellerMbrSac.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
+				sellerMbrSac.setBizRegNumber(sellerMbr.getBizRegNumber());
+				sellerMbrSacs.add(sellerMbrSac);
 				sellerMbrSacMap.put(key, sellerMbrSacs);
 			}
 			response.setSellerMbrListMap(sellerMbrSacMap);
@@ -339,17 +340,16 @@ public class SellerSearchSCIServiceImpl implements SellerSearchSCIService {
 	 * @param schReq
 	 * @return Map<String, List<SellerMbrSac>>
 	 */
-	public Map<String, List<SellerMbrSac>> isException(SearchMbrSellerRequest schReq, int keyCnt, int errCnt) {
-		Map<String, List<SellerMbrSac>> resultMap = null;
+	public Map<String, List<SellerMbr>> isException(SearchMbrSellerRequest schReq, int keyCnt, int errCnt) {
+		Map<String, List<SellerMbr>> resultMap = null;
 		try {
 			resultMap = this.sellerSCI.searchMbrSeller(schReq).getSellerMbrListMap();
 		} catch (StorePlatformException e) {
 			if (!e.getErrorInfo().getCode().equals("SC_MEM_9982")) { // 검색결과 없음이 아닌경우 Exception.
 				throw e;
-			} else {
-				if (++errCnt == keyCnt) {
-					throw e;
-				}
+			}
+			if (++errCnt == keyCnt) {
+				throw e;
 			}
 		}
 		return resultMap;
