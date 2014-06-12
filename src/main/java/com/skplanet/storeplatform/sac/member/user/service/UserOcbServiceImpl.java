@@ -60,7 +60,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 	private OcbSCI ocbSCI;
 
 	@Override
-	public CreateOcbInformationRes createOcbInformation(SacRequestHeader sacHeader, CreateOcbInformationReq req) {
+	public CreateOcbInformationRes regOcbInformation(SacRequestHeader sacHeader, CreateOcbInformationReq req) {
 
 		/**
 		 * OCB 연동시에 대시가 없는 상태로 연동 되기 때문에 데이타를 변환함.
@@ -99,7 +99,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 	}
 
 	@Override
-	public RemoveOcbInformationRes removeOcbInformation(SacRequestHeader sacHeader, RemoveOcbInformationReq req) {
+	public RemoveOcbInformationRes remOcbInformation(SacRequestHeader sacHeader, RemoveOcbInformationReq req) {
 
 		String ocbCardNumber = req.getCardNumber().replaceAll("-", "");
 
@@ -108,7 +108,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 		 */
 		SearchMemberPointResponse searchMemberPointResponse = null;
 		try {
-			searchMemberPointResponse = this.searchMemberPointList(sacHeader, req.getUserKey());
+			searchMemberPointResponse = this.srhMemberPointList(sacHeader, req.getUserKey());
 		} catch (StorePlatformException spe) {
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 				throw new StorePlatformException("SAC_MEM_1701", spe);
@@ -159,7 +159,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 		/**
 		 * OCB 조회 요청.
 		 */
-		SearchMemberPointResponse searchMemberPointResponse = this.searchMemberPointList(sacHeader, req.getUserKey());
+		SearchMemberPointResponse searchMemberPointResponse = this.srhMemberPointList(sacHeader, req.getUserKey());
 
 		/**
 		 * 결과 setting.
@@ -194,7 +194,7 @@ public class UserOcbServiceImpl implements UserOcbService {
 	 *            사용자 Key
 	 * @return OCB 정보
 	 */
-	private SearchMemberPointResponse searchMemberPointList(SacRequestHeader sacHeader, String userKey) {
+	private SearchMemberPointResponse srhMemberPointList(SacRequestHeader sacHeader, String userKey) {
 
 		SearchMemberPointRequest searchMemberPointRequest = new SearchMemberPointRequest();
 		searchMemberPointRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
@@ -203,7 +203,8 @@ public class UserOcbServiceImpl implements UserOcbService {
 		/**
 		 * OCB 조회 요청.
 		 */
-		SearchMemberPointResponse searchMemberPointResponse = this.userSCI.searchMemberPointList(searchMemberPointRequest);
+		SearchMemberPointResponse searchMemberPointResponse = this.userSCI
+				.searchMemberPointList(searchMemberPointRequest);
 		LOGGER.debug("### searchMemberPointResponse : {}", searchMemberPointResponse.getMemberPointList());
 
 		return searchMemberPointResponse;

@@ -43,7 +43,7 @@ public interface DeviceService {
 	 *            CreateDeviceReq
 	 * @return CreateDeviceRes
 	 */
-	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req);
+	public CreateDeviceRes regDevice(SacRequestHeader requestHeader, CreateDeviceReq req);
 
 	/**
 	 * 휴대기기 수정.
@@ -54,7 +54,7 @@ public interface DeviceService {
 	 *            ModifyDeviceReq
 	 * @return ModifyDeviceRes
 	 */
-	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, ModifyDeviceReq req);
+	public ModifyDeviceRes modDevice(SacRequestHeader requestHeader, ModifyDeviceReq req);
 
 	/**
 	 * 휴대기기 목록 조회.
@@ -80,11 +80,10 @@ public interface DeviceService {
 	 *            String
 	 * @return DeviceInfo
 	 */
-	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey);
+	public DeviceInfo srhDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey);
 
 	/**
-	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인
-	 * 경우 IDP에 무선회원 해지 요청.
+	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인 경우 IDP에 무선회원 해지 요청.
 	 * 
 	 * @param systemId
 	 *            String
@@ -96,7 +95,7 @@ public interface DeviceService {
 	 *            DeviceInfo
 	 * @return deviceKey String
 	 */
-	public String insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo);
+	public String regDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo);
 
 	/**
 	 * 기기정보 update.
@@ -106,11 +105,10 @@ public interface DeviceService {
 	 * @param req
 	 *            DeviceInfo
 	 * @param isDeviceIdChange
-	 *            request와 DB deviceId가 다를때(true : deviceId 업데이트, false :
-	 *            deviceId 업데이트 하지 않음)
+	 *            request와 DB deviceId가 다를때(true : deviceId 업데이트, false : deviceId 업데이트 하지 않음)
 	 * @return deviceKey String
 	 */
-	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req, boolean isDeviceIdChange);
+	public String modDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req, boolean isDeviceIdChange);
 
 	/**
 	 * 로그인한 기기정보 update.
@@ -125,7 +123,8 @@ public interface DeviceService {
 	 *            MDN 로그인 버젼
 	 * @return deviceKey String
 	 */
-	public String updateDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, DeviceInfo dbDeviceInfo, String version);
+	public String modDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, DeviceInfo dbDeviceInfo,
+			String version);
 
 	/**
 	 * 휴대기기 대표단말 설정.
@@ -136,7 +135,7 @@ public interface DeviceService {
 	 *            SetMainDeviceReq
 	 * @return SetMainDeviceRes
 	 */
-	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req);
+	public SetMainDeviceRes modRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req);
 
 	/**
 	 * 휴대기기 삭제.
@@ -147,7 +146,7 @@ public interface DeviceService {
 	 *            RemoveDeviceReq
 	 * @return List<DeviceInfo>
 	 */
-	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req);
+	public RemoveDeviceRes remDevice(SacRequestHeader requestHeader, RemoveDeviceReq req);
 
 	/**
 	 * 대표단말 조회.
@@ -158,7 +157,8 @@ public interface DeviceService {
 	 *            DetailRepresentationDeviceReq
 	 * @return DetailRepresentationDeviceRes
 	 */
-	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader, DetailRepresentationDeviceReq req);
+	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader,
+			DetailRepresentationDeviceReq req);
 
 	/**
 	 * 단말 AOM 확인.
@@ -178,7 +178,7 @@ public interface DeviceService {
 	 *            GameCenterSac
 	 * @return GameCenterSacRes
 	 */
-	public GameCenterSacRes insertGameCenterIF(@Valid @RequestBody GameCenterSacReq gameCenterSac);
+	public GameCenterSacRes regGameCenterIF(@Valid @RequestBody GameCenterSacReq gameCenterSac);
 
 	/**
 	 * <pre>
@@ -191,7 +191,7 @@ public interface DeviceService {
 	 *            ChangedDeviceHistoryReq
 	 * @return ChangedDeviceHistoryRes
 	 */
-	public ChangedDeviceHistorySacRes searchChangedDeviceHistory(SacRequestHeader sacHeader,
+	public ChangedDeviceHistorySacRes srhChangedDeviceHistory(SacRequestHeader sacHeader,
 			@Validated @RequestBody ChangedDeviceHistorySacReq historyRequest);
 
 	/**

@@ -27,7 +27,7 @@ public interface UserService {
 	 * @param userAuthKey
 	 *            사용자 IDP 인증키
 	 */
-	public void updateProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey);
+	public void modProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey);
 
 	/**
 	 * <pre>
@@ -42,5 +42,5 @@ public interface UserService {
 	 *            String
 	 * @return UpdateAdditionalInfoEcRes
 	 */
-	public void updateAdditionalInfoForNonLogin(SacRequestHeader requestHeader, String userKey, String imSvcNo);
+	public void modAdditionalInfoForNonLogin(SacRequestHeader requestHeader, String userKey, String imSvcNo);
 }

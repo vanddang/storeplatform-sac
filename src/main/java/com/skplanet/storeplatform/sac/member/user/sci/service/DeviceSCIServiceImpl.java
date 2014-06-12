@@ -61,7 +61,7 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 	 * @return DeviceInfo
 	 */
 	@Override
-	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) {
+	public DeviceInfo srhDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) {
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -115,7 +115,7 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 	 * @return ChangedDeviceHistoryRes
 	 */
 	@Override
-	public ChangedDeviceHistorySacRes searchChangedDeviceHistory(SacRequestHeader sacHeader,
+	public ChangedDeviceHistorySacRes srhChangedDeviceHistory(SacRequestHeader sacHeader,
 			ChangedDeviceHistorySacReq request) {
 		// 공통 파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();

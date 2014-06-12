@@ -55,13 +55,11 @@ public class UserServiceImpl implements UserService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.UserService#
-	 * modifyProfileIdp
-	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserService# modifyProfileIdp
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) {
+	public void modProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) {
 
 		/* 회원정보 조회 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -92,7 +90,8 @@ public class UserServiceImpl implements UserService {
 				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
 
 					String imMngNum = deviceInfo.getSvcMangNum();
-					String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
+					String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
+							deviceInfo.getDeviceExtraInfoList());
 
 					sbUserPhone.append(deviceInfo.getDeviceId());
 					sbUserPhone.append(",");
@@ -118,7 +117,7 @@ public class UserServiceImpl implements UserService {
 				this.imIdpSCI.updateAdditionalInfo(req);
 			} else {
 				ModifyProfileEcReq req = new ModifyProfileEcReq();
-				req.setKeyType("2"); // idp키로 조회 
+				req.setKeyType("2"); // idp키로 조회
 				req.setUserAuthKey(userAuthKey);
 				req.setKey(schUserRes.getUserMbr().getImMbrNo());
 				req.setUserPhone(userPhoneStr);
@@ -133,13 +132,11 @@ public class UserServiceImpl implements UserService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.UserService#
-	 * updateAdditionalInfoForNonLogin
-	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserService# updateAdditionalInfoForNonLogin
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateAdditionalInfoForNonLogin(SacRequestHeader requestHeader, String userKey, String imSvcNo) {
+	public void modAdditionalInfoForNonLogin(SacRequestHeader requestHeader, String userKey, String imSvcNo) {
 
 		/* 휴대기기 목록 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
@@ -154,7 +151,8 @@ public class UserServiceImpl implements UserService {
 			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
 
 				String imMngNum = deviceInfo.getSvcMangNum();
-				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList());
+				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
+						deviceInfo.getDeviceExtraInfoList());
 
 				sbUserPhone.append(deviceInfo.getDeviceId());
 				sbUserPhone.append(",");

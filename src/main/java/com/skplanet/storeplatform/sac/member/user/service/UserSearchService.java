@@ -103,7 +103,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public DetailRes searchUser(DetailReq req, SacRequestHeader sacHeader);
+	public DetailRes srhUser(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -176,7 +176,7 @@ public interface UserSearchService {
 	 * @param req
 	 * @return MbrOneidSacRes
 	 */
-	public MbrOneidSacRes searchUserOneId(SacRequestHeader sacHeader, MbrOneidSacReq req);
+	public MbrOneidSacRes srhUserOneId(SacRequestHeader sacHeader, MbrOneidSacReq req);
 
 	/**
 	 * <pre>
@@ -188,7 +188,7 @@ public interface UserSearchService {
 	 * @param deviceId
 	 * @return SearchIdSacRes
 	 */
-	public SearchIdSacRes searchId(SacRequestHeader sacHeader, SearchIdSacReq req);
+	public SearchIdSacRes srhId(SacRequestHeader sacHeader, SearchIdSacReq req);
 
 	/**
 	 * <pre>
@@ -200,7 +200,7 @@ public interface UserSearchService {
 	 * @param SearchPasswordSacReq
 	 * @return SearchPasswordSacRes
 	 */
-	public SearchPasswordSacRes searchPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req);
+	public SearchPasswordSacRes srhPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req);
 
 	/**
 	 * <pre>
@@ -223,7 +223,7 @@ public interface UserSearchService {
 	 * @param SearchIdSacReq
 	 * @return SearchIdSacRes
 	 */
-	public List<SearchIdSac> searchUserEmail(SearchIdSacReq req, SacRequestHeader sacHeader);
+	public List<SearchIdSac> srhUserEmail(SearchIdSacReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * <pre>
@@ -244,7 +244,7 @@ public interface UserSearchService {
 	 *            SearchUserReq
 	 * @return
 	 */
-	public SearchUserSacRes searchUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request);
+	public SearchUserSacRes srhUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request);
 
 	/**
 	 * <pre>
@@ -255,5 +255,5 @@ public interface UserSearchService {
 	 *            SearchUserDeviceSacReq
 	 * @return Map<String, UserDeviceInfoSac>
 	 */
-	public Map<String, UserDeviceInfoSac> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request);
+	public Map<String, UserDeviceInfoSac> srhUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request);
 }

@@ -42,7 +42,7 @@ public interface SearchUserSCIService {
 	 *            SearchUserReq
 	 * @return
 	 */
-	public SearchUserSacRes searchUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request);
+	public SearchUserSacRes srhUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request);
 
 	/**
 	 * 
@@ -66,7 +66,7 @@ public interface SearchUserSCIService {
 	 * @return
 	 * @throws Exception
 	 */
-	public DetailRes searchUser(DetailReq req, SacRequestHeader sacHeader);
+	public DetailRes srhUser(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -116,7 +116,7 @@ public interface SearchUserSCIService {
 	 *            String
 	 * @return DeviceInfo
 	 */
-	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey);
+	public DeviceInfo srhDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey);
 
 	/**
 	 * <pre>
@@ -127,7 +127,7 @@ public interface SearchUserSCIService {
 	 *            SearchUserDeviceSacReq
 	 * @return Map<String, UserDeviceInfoSac>
 	 */
-	public Map<String, UserDeviceInfoSac> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request);
+	public Map<String, UserDeviceInfoSac> srhUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request);
 
 	/**
 	 * <pre>

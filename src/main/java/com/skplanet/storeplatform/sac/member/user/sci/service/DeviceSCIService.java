@@ -29,7 +29,7 @@ public interface DeviceSCIService {
 	 * 
 	 * @return DeviceInfo
 	 */
-	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey);
+	public DeviceInfo srhDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey);
 
 	/**
 	 * <pre>
@@ -42,6 +42,6 @@ public interface DeviceSCIService {
 	 *            ChangedDeviceHistoryReq
 	 * @return ChangedDeviceHistoryRes
 	 */
-	public ChangedDeviceHistorySacRes searchChangedDeviceHistory(SacRequestHeader sacHeader,
+	public ChangedDeviceHistorySacRes srhChangedDeviceHistory(SacRequestHeader sacHeader,
 			ChangedDeviceHistorySacReq request);
 }

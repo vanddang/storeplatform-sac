@@ -103,7 +103,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	 * @return SearchUserSacRes
 	 */
 	@Override
-	public SearchUserSacRes searchUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request) {
+	public SearchUserSacRes srhUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request) {
 
 		// 공통파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();
@@ -118,7 +118,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		LOGGER.debug("SAC Request {}", request);
 		SearchMbrUserResponse searchMbrUserResponse = this.userSCI.searchMbrUser(searchMbrUserRequest);
 
-		LOGGER.debug("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse.getCommonResponse().getResultCode());
+		LOGGER.debug("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse
+				.getCommonResponse().getResultCode());
 
 		Map<String, UserMbrStatus> userInfoMap = searchMbrUserResponse.getUserMbrStatusMap();
 
@@ -164,7 +165,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		}
 
 		/* 회원 기본 정보 */
-		DetailRes res = this.searchUser(req, sacHeader);
+		DetailRes res = this.srhUser(req, sacHeader);
 
 		/* 정보조회범위 */
 		if (req.getSearchExtent() != null) {
@@ -222,7 +223,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	}
 
 	@Override
-	public DetailRes searchUser(DetailReq req, SacRequestHeader sacHeader) {
+	public DetailRes srhUser(DetailReq req, SacRequestHeader sacHeader) {
 
 		String userId = StringUtil.nvl(req.getUserId(), "");
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
@@ -391,7 +392,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		}
 
 		// 회원정보 세팅
-		DetailRes detailRes = this.searchUser(detailReq, sacHeader);
+		DetailRes detailRes = this.srhUser(detailReq, sacHeader);
 
 		result.setUserKey(StringUtil.setTrim(detailRes.getUserInfo().getUserKey()));
 		result.setUserType(StringUtil.setTrim(detailRes.getUserInfo().getUserType()));
@@ -425,7 +426,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 		if (StringUtils.isNotBlank(req.getDeviceId())) {
 			/* 단건 조회 처리 */
-			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userKey);
+			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+					req.getDeviceId(), userKey);
 			if (deviceInfo != null) {
 				res.setUserId(deviceInfo.getUserId());
 				res.setUserKey(deviceInfo.getUserKey());
@@ -437,7 +439,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 			return res;
 		} else if (StringUtils.isNotBlank(req.getDeviceKey())) {
 			/* 단건 조회 처리 */
-			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, req.getDeviceKey(), userKey);
+			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
+					req.getDeviceKey(), userKey);
 			if (deviceInfo != null) {
 				res.setUserId(deviceInfo.getUserId());
 				res.setUserKey(deviceInfo.getUserKey());
@@ -493,7 +496,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	}
 
 	@Override
-	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) {
+	public DeviceInfo srhDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) {
 
 		/* 헤더 정보 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
@@ -541,7 +544,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	}
 
 	@Override
-	public Map<String, UserDeviceInfoSac> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request) {
+	public Map<String, UserDeviceInfoSac> srhUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request) {
 
 		// Request 를 보내기 위한 세팅
 		List<UserDeviceKey> userDeviceKeyList = new ArrayList<UserDeviceKey>();
@@ -562,7 +565,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 		SearchMbrDeviceResponse searchMbrDeviceResponse = this.userSCI.searchMbrDevice(searchMbrDeviceRequest);
 
-		LOGGER.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse.getCommonResponse().getResultCode());
+		LOGGER.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse
+				.getCommonResponse().getResultCode());
 
 		Map<String, DeviceMbrStatus> userDeviceInfoMap = searchMbrDeviceResponse.getDeviceMbrStatusMap();
 
@@ -587,11 +591,13 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 					if (StringUtil.equals(deviceMbrStatus.getIsRealName(), "Y")) {
 
-						userDeviceInfoSac.setUserBirthday(StringUtil.isNotBlank(deviceMbrStatus.getAuthBirthDay()) ? deviceMbrStatus
-								.getAuthBirthDay() : deviceMbrStatus.getUserBirthDay());
+						userDeviceInfoSac
+								.setUserBirthday(StringUtil.isNotBlank(deviceMbrStatus.getAuthBirthDay()) ? deviceMbrStatus
+										.getAuthBirthDay() : deviceMbrStatus.getUserBirthDay());
 
-						userDeviceInfoSac.setUserName(StringUtil.isNotBlank(deviceMbrStatus.getAuthName()) ? deviceMbrStatus.getAuthName()
-								: deviceMbrStatus.getUserName());
+						userDeviceInfoSac
+								.setUserName(StringUtil.isNotBlank(deviceMbrStatus.getAuthName()) ? deviceMbrStatus
+										.getAuthName() : deviceMbrStatus.getUserName());
 
 					} else {
 
@@ -615,7 +621,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		/**
 		 * OCB 조회 요청.
 		 */
-		SearchMemberPointResponse searchMemberPointResponse = this.searchMemberPointList(sacHeader, req.getUserKey());
+		SearchMemberPointResponse searchMemberPointResponse = this.srhMemberPointList(sacHeader, req.getUserKey());
 
 		/**
 		 * 결과 setting.
@@ -715,8 +721,10 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 			List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
 			for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-				LOGGER.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
-				LOGGER.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
+				LOGGER.debug("============================================ UserExtraInfo CODE : {}",
+						ptcr.getExtraProfile());
+				LOGGER.debug("============================================ UserExtraInfo VALUE : {}",
+						ptcr.getExtraProfileValue());
 
 				UserExtraInfo extra = new UserExtraInfo();
 				extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -845,7 +853,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	 *            사용자 Key
 	 * @return OCB 정보
 	 */
-	private SearchMemberPointResponse searchMemberPointList(SacRequestHeader sacHeader, String userKey) {
+	private SearchMemberPointResponse srhMemberPointList(SacRequestHeader sacHeader, String userKey) {
 
 		SearchMemberPointRequest searchMemberPointRequest = new SearchMemberPointRequest();
 		searchMemberPointRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
@@ -854,7 +862,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		/**
 		 * OCB 조회 요청.
 		 */
-		SearchMemberPointResponse searchMemberPointResponse = this.userSCI.searchMemberPointList(searchMemberPointRequest);
+		SearchMemberPointResponse searchMemberPointResponse = this.userSCI
+				.searchMemberPointList(searchMemberPointRequest);
 		LOGGER.debug("### searchMemberPointResponse : {}", searchMemberPointResponse.getMemberPointList());
 
 		return searchMemberPointResponse;

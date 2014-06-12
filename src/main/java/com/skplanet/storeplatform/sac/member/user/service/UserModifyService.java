@@ -41,7 +41,7 @@ public interface UserModifyService {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	public ModifyRes modify(SacRequestHeader sacHeader, ModifyReq req);
+	public ModifyRes mod(SacRequestHeader sacHeader, ModifyReq req);
 
 	/**
 	 * <pre>
@@ -54,7 +54,7 @@ public interface UserModifyService {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, ModifyPasswordReq req);
+	public ModifyPasswordRes modPassword(SacRequestHeader sacHeader, ModifyPasswordReq req);
 
 	/**
 	 * <pre>
@@ -67,7 +67,7 @@ public interface UserModifyService {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, ModifyEmailReq req);
+	public ModifyEmailRes modEmail(SacRequestHeader sacHeader, ModifyEmailReq req);
 
 	/**
 	 * <pre>
@@ -80,7 +80,7 @@ public interface UserModifyService {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req);
+	public CreateTermsAgreementRes regTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req);
 
 	/**
 	 * <pre>
@@ -93,7 +93,7 @@ public interface UserModifyService {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req);
+	public ModifyTermsAgreementRes modTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req);
 
 	/**
 	 * <pre>
@@ -106,6 +106,6 @@ public interface UserModifyService {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, CreateRealNameReq req);
+	public CreateRealNameRes regRealName(SacRequestHeader sacHeader, CreateRealNameReq req);
 
 }

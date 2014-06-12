@@ -92,7 +92,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private DeviceService deviceService;
 
 	@Override
-	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
+	public CreateByMdnRes regByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
 
 		/**
 		 * 법정대리인 나이 유효성 체크.
@@ -227,7 +227,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 휴대기기 등록.
 		 */
-		String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
+		String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
 
 		/**
 		 * 결과 세팅
@@ -240,7 +240,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	}
 
 	@Override
-	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req) {
+	public CreateByAgreementRes regByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req) {
 
 		/**
 		 * 약관 맵핑정보 세팅.
@@ -315,7 +315,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * OneID 정보 업데이트
 		 */
-		this.updateOneIdInfo(sacHeader, agreeUserEcRes, createUserResponse.getUserKey());
+		this.modOneIdInfo(sacHeader, agreeUserEcRes, createUserResponse.getUserKey());
 
 		/**
 		 * 결과 세팅
@@ -328,7 +328,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	}
 
 	@Override
-	public CreateByAgreementRes createByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req) {
+	public CreateByAgreementRes regByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req) {
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -428,12 +428,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 휴대기기 등록.
 		 */
-		String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
+		String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
 
 		/**
 		 * OneID 정보 업데이트
 		 */
-		this.updateOneIdInfo(sacHeader, agreeUserEcRes, createUserResponse.getUserKey());
+		this.modOneIdInfo(sacHeader, agreeUserEcRes, createUserResponse.getUserKey());
 
 		/**
 		 * 결과 세팅
@@ -447,7 +447,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	}
 
 	@Override
-	public CreateBySimpleRes createBySimpleId(SacRequestHeader sacHeader, CreateBySimpleReq req) {
+	public CreateBySimpleRes regBySimpleId(SacRequestHeader sacHeader, CreateBySimpleReq req) {
 
 		/**
 		 * IDP 중복 아이디 체크. (cmd = duplicateIDCheck)
@@ -508,7 +508,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	}
 
 	@Override
-	public CreateBySimpleRes createBySimpleDevice(SacRequestHeader sacHeader, CreateBySimpleReq req) {
+	public CreateBySimpleRes regBySimpleDevice(SacRequestHeader sacHeader, CreateBySimpleReq req) {
 
 		/**
 		 * IDP 중복 아이디 체크. (cmd = duplicateIDCheck)
@@ -586,7 +586,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 휴대기기 등록.
 		 */
-		String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
+		String deviceKey = this.regDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
 
 		/**
 		 * 결과 세팅
@@ -599,7 +599,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	}
 
 	@Override
-	public CreateSaveAndSyncRes createSaveAndSync(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
+	public CreateSaveAndSyncRes regSaveAndSync(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -619,7 +619,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 회원 가입 MSISDN, MAC (변동성 대상 체크 로직 포함)
 		 */
-		return this.createSaveAndSyncUserJoin(sacHeader, req);
+		return this.regSaveAndSyncUserJoin(sacHeader, req);
 
 	}
 
@@ -712,7 +712,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            단말 주요 정보
 	 * @return Device Key
 	 */
-	private String createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey,
+	private String regDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey,
 			MajorDeviceInfo majorDeviceInfo) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
@@ -813,7 +813,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 휴대기기 등록 모듈 호출.
 			 */
 			LOGGER.debug("## 휴대기기 등록 정보 : {}", deviceInfo);
-			String deviceKey = this.deviceService.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader
+			String deviceKey = this.deviceService.regDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader
 					.getTenantHeader().getTenantId(), userKey, deviceInfo);
 
 			if (deviceKey == null || StringUtils.equals(deviceKey, "")) {
@@ -983,7 +983,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	private CreateSaveAndSyncRes createSaveAndSyncUserJoin(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
+	private CreateSaveAndSyncRes regSaveAndSyncUserJoin(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
 
 		String userKey = null; // 사용자 Key
 		String deviceKey = null; // 휴대기기 Key
@@ -1007,12 +1007,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * MAC IDP 연동없이 DB 만 가입처리.
 			 */
-			userKey = this.createSaveAndSyncMacUser(sacHeader, req);
+			userKey = this.regSaveAndSyncMacUser(sacHeader, req);
 
 			/**
 			 * 휴대기기 등록.
 			 */
-			deviceKey = this.createDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
+			deviceKey = this.regDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
 
 		} else {
 
@@ -1034,12 +1034,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 				/**
 				 * MSISDN IDP와 DB 모두 가입처리.
 				 */
-				userKey = this.createSaveAndSyncMsisdnUser(sacHeader, req);
+				userKey = this.regSaveAndSyncMsisdnUser(sacHeader, req);
 
 				/**
 				 * 휴대기기 등록.
 				 */
-				deviceKey = this.createDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
+				deviceKey = this.regDeviceSubmodule(req, sacHeader, userKey, majorDeviceInfo);
 
 			}
 
@@ -1067,7 +1067,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            Request Value Object
 	 * @return 사용자 Key
 	 */
-	private String createSaveAndSyncMsisdnUser(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
+	private String regSaveAndSyncMsisdnUser(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
 
 		/**
 		 * (IDP 연동) 무선회원 가입 (cmd - joinForWap)
@@ -1123,7 +1123,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            Request Value Object
 	 * @return 사용자 Key
 	 */
-	private String createSaveAndSyncMacUser(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
+	private String regSaveAndSyncMacUser(SacRequestHeader sacHeader, CreateSaveAndSyncReq req) {
 
 		/**
 		 * SC 가입 (공통 Request, 약관동의 Request) setting.
@@ -1191,7 +1191,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 * @param userKey
 	 *            사용자 Key
 	 */
-	private void updateOneIdInfo(SacRequestHeader sacHeader, AgreeUserEcRes agreeUserEcRes, String userKey) {
+	private void modOneIdInfo(SacRequestHeader sacHeader, AgreeUserEcRes agreeUserEcRes, String userKey) {
 
 		try {
 

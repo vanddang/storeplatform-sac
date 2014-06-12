@@ -35,7 +35,7 @@ public interface UserOcbService {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	public CreateOcbInformationRes createOcbInformation(SacRequestHeader sacHeader, CreateOcbInformationReq req);
+	public CreateOcbInformationRes regOcbInformation(SacRequestHeader sacHeader, CreateOcbInformationReq req);
 
 	/**
 	 * <pre>
@@ -48,7 +48,7 @@ public interface UserOcbService {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	public RemoveOcbInformationRes removeOcbInformation(SacRequestHeader sacHeader, RemoveOcbInformationReq req);
+	public RemoveOcbInformationRes remOcbInformation(SacRequestHeader sacHeader, RemoveOcbInformationReq req);
 
 	/**
 	 * <pre>

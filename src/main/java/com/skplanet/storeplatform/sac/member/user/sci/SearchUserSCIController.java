@@ -71,7 +71,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		// 헤더 정보 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
-		SearchUserSacRes searchUserSacRes = this.searchUserSCIService.searchUserByUserKey(requestHeader, request);
+		SearchUserSacRes searchUserSacRes = this.searchUserSCIService.srhUserByUserKey(requestHeader, request);
 		LOGGER.info("Response : user count : {}", searchUserSacRes.getUserInfo().size());
 		return searchUserSacRes;
 	}
@@ -143,7 +143,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		} else if (!deviceKey.equals("")) {
 			detailReq.setDeviceKey(request.getDeviceKey());
 		}
-		DetailRes detailRes = this.searchUserSCIService.searchUser(detailReq, requestHeader);
+		DetailRes detailRes = this.searchUserSCIService.srhUser(detailReq, requestHeader);
 
 		request.setUserKey(detailRes.getUserKey());
 
@@ -246,7 +246,8 @@ public class SearchUserSCIController implements SearchUserSCI {
 		// SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
 		// searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
-		Map<String, UserDeviceInfoSac> userInfoMap = this.searchUserSCIService.searchUserByDeviceKey(requestHeader, request);
+		Map<String, UserDeviceInfoSac> userInfoMap = this.searchUserSCIService.srhUserByDeviceKey(requestHeader,
+				request);
 
 		// Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
 		// UserDeviceInfoSac userDeviceInfoSac;

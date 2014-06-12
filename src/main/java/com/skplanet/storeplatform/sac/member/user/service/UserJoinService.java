@@ -38,7 +38,7 @@ public interface UserJoinService {
 	 * @return CreateByMdnRes
 	 * 
 	 */
-	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req);
+	public CreateByMdnRes regByMdn(SacRequestHeader sacHeader, CreateByMdnReq req);
 
 	/**
 	 * <pre>
@@ -51,7 +51,7 @@ public interface UserJoinService {
 	 *            CreateByAgreementReq
 	 * @return CreateByAgreementRes
 	 */
-	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req);
+	public CreateByAgreementRes regByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req);
 
 	/**
 	 * <pre>
@@ -64,7 +64,7 @@ public interface UserJoinService {
 	 *            CreateByAgreementReq
 	 * @return CreateByAgreementRes
 	 */
-	public CreateByAgreementRes createByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req);
+	public CreateByAgreementRes regByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req);
 
 	/**
 	 * <pre>
@@ -77,7 +77,7 @@ public interface UserJoinService {
 	 *            CreateBySimpleReq
 	 * @return CreateBySimpleRes
 	 */
-	public CreateBySimpleRes createBySimpleId(SacRequestHeader sacHeader, CreateBySimpleReq req);
+	public CreateBySimpleRes regBySimpleId(SacRequestHeader sacHeader, CreateBySimpleReq req);
 
 	/**
 	 * <pre>
@@ -90,7 +90,7 @@ public interface UserJoinService {
 	 *            CreateBySimpleReq
 	 * @return CreateBySimpleRes
 	 */
-	public CreateBySimpleRes createBySimpleDevice(SacRequestHeader sacHeader, CreateBySimpleReq req);
+	public CreateBySimpleRes regBySimpleDevice(SacRequestHeader sacHeader, CreateBySimpleReq req);
 
 	/**
 	 * <pre>
@@ -104,6 +104,6 @@ public interface UserJoinService {
 	 * @return CreateSaveAndSyncRes
 	 * 
 	 */
-	public CreateSaveAndSyncRes createSaveAndSync(SacRequestHeader sacHeader, CreateSaveAndSyncReq req);
+	public CreateSaveAndSyncRes regSaveAndSync(SacRequestHeader sacHeader, CreateSaveAndSyncReq req);
 
 }

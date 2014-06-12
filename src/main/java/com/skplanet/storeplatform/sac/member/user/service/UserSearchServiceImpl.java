@@ -182,7 +182,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		// 회원정보 세팅
-		DetailRes detailRes = this.searchUser(detailReq, sacHeader);
+		DetailRes detailRes = this.srhUser(detailReq, sacHeader);
 
 		result.setUserKey(StringUtil.setTrim(detailRes.getUserInfo().getUserKey()));
 		result.setUserType(StringUtil.setTrim(detailRes.getUserInfo().getUserType()));
@@ -215,7 +215,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		/* 회원 기본 정보 */
-		DetailRes res = this.searchUser(req, sacHeader);
+		DetailRes res = this.srhUser(req, sacHeader);
 
 		/* 정보조회범위 */
 		if (req.getSearchExtent() != null) {
@@ -332,7 +332,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @return
 	 */
 	@Override
-	public MbrOneidSacRes searchUserOneId(SacRequestHeader sacHeader, MbrOneidSacReq req) {
+	public MbrOneidSacRes srhUserOneId(SacRequestHeader sacHeader, MbrOneidSacReq req) {
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
@@ -349,13 +349,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 		String isMemberPoint = null; // OCB 가입여부
 
 		if (StringUtil.equals(req.getSearchType(), "1")) { // IDP 통합서버 조회
-		//			UserInfoSearchServerEcReq idpReq = new UserInfoSearchServerEcReq();
-		//			idpReq.setKey(info.getImSvcNo());
-		//			UserInfoSearchServerEcRes res = this.imIdpSCI.userInfoSearchServer(idpReq);
-		//
-		//			isCi = StringUtil.isNotBlank(res.getUserCi()) ? "Y" : "N";
-		//			isRealName = res.getIsRnameAuth(); // default : N
-		//			isMemberPoint = res.getJoinSstList().indexOf(MemberConstants.SSO_SST_CD_OCB_WEB) != -1 ? "Y" : "N";
+			// UserInfoSearchServerEcReq idpReq = new UserInfoSearchServerEcReq();
+			// idpReq.setKey(info.getImSvcNo());
+			// UserInfoSearchServerEcRes res = this.imIdpSCI.userInfoSearchServer(idpReq);
+			//
+			// isCi = StringUtil.isNotBlank(res.getUserCi()) ? "Y" : "N";
+			// isRealName = res.getIsRnameAuth(); // default : N
+			// isMemberPoint = res.getJoinSstList().indexOf(MemberConstants.SSO_SST_CD_OCB_WEB) != -1 ? "Y" : "N";
 
 			UserInfoIdpSearchServerEcReq idpReq = new UserInfoIdpSearchServerEcReq();
 			idpReq.setKey(info.getImSvcNo()); // 통합서비스 관리번호
@@ -370,8 +370,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 			SearchAgreeSiteResponse scRes = this.userSCI.searchAgreeSite(scReq);
 
 			isCi = StringUtil.isNotBlank(scRes.getMbrOneID().getIsCi()) ? scRes.getMbrOneID().getIsCi() : "N";
-			isRealName = StringUtil.isNotBlank(scRes.getMbrOneID().getIsRealName()) ? scRes.getMbrOneID().getIsRealName() : "N";
-			isMemberPoint = StringUtil.isNotBlank(scRes.getMbrOneID().getIsMemberPoint()) ? scRes.getMbrOneID().getIsMemberPoint() : "N";
+			isRealName = StringUtil.isNotBlank(scRes.getMbrOneID().getIsRealName()) ? scRes.getMbrOneID()
+					.getIsRealName() : "N";
+			isMemberPoint = StringUtil.isNotBlank(scRes.getMbrOneID().getIsMemberPoint()) ? scRes.getMbrOneID()
+					.getIsMemberPoint() : "N";
 		}
 
 		MbrOneidSacRes res = new MbrOneidSacRes();
@@ -444,7 +446,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @return
 	 */
 	@Override
-	public SearchIdSacRes searchId(SacRequestHeader sacHeader, SearchIdSacReq req) {
+	public SearchIdSacRes srhId(SacRequestHeader sacHeader, SearchIdSacReq req) {
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
@@ -472,7 +474,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 			sacList.add(sac);
 		} else if (!req.getUserEmail().equals("")) {
-			sacList = this.searchUserEmail(req, sacHeader);
+			sacList = this.srhUserEmail(req, sacHeader);
 		}
 
 		SearchIdSacRes res = new SearchIdSacRes();
@@ -492,7 +494,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @return
 	 */
 	@Override
-	public SearchPasswordSacRes searchPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req) {
+	public SearchPasswordSacRes srhPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req) {
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
@@ -615,7 +617,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	// userEmail 기반 사용자 조회
 	@Override
-	public List<SearchIdSac> searchUserEmail(SearchIdSacReq req, SacRequestHeader sacHeader) {
+	public List<SearchIdSac> srhUserEmail(SearchIdSacReq req, SacRequestHeader sacHeader) {
 
 		SearchUserEmailRequest scReq = new SearchUserEmailRequest();
 		scReq.setCommonRequest(commonRequest);
@@ -693,7 +695,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/* SC API 회원정보 조회 */
 	@Override
-	public DetailRes searchUser(DetailReq req, SacRequestHeader sacHeader) {
+	public DetailRes srhUser(DetailReq req, SacRequestHeader sacHeader) {
 
 		String userId = StringUtil.nvl(req.getUserId(), "");
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
@@ -966,8 +968,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 			List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
 			for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-				LOGGER.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
-				LOGGER.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
+				LOGGER.debug("============================================ UserExtraInfo CODE : {}",
+						ptcr.getExtraProfile());
+				LOGGER.debug("============================================ UserExtraInfo VALUE : {}",
+						ptcr.getExtraProfileValue());
 
 				UserExtraInfo extra = new UserExtraInfo();
 				extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -1188,13 +1192,20 @@ public class UserSearchServiceImpl implements UserSearchService {
 					policyInfos = new ArrayList<IndividualPolicyInfo>();
 					for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
 						policyInfo = new IndividualPolicyInfo();
-						policyInfo.setKey(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey()));
-						policyInfo.setPolicyCode(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode()));
-						policyInfo.setValue(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue()));
-						policyInfo.setLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getLimitAmount()));
-						policyInfo.setPreLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPreLimitAmount()));
-						policyInfo.setPermissionType(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getPermissionType()));
-						policyInfo.setIsUsed(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i).getIsUsed()));
+						policyInfo.setKey(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getLimitPolicyKey()));
+						policyInfo.setPolicyCode(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getLimitPolicyCode()));
+						policyInfo.setValue(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getPolicyApplyValue()));
+						policyInfo.setLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getLimitAmount()));
+						policyInfo.setPreLimitAmount(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getPreLimitAmount()));
+						policyInfo.setPermissionType(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getPermissionType()));
+						policyInfo.setIsUsed(ObjectUtils.toString(policyResponse.getLimitTargetList().get(i)
+								.getIsUsed()));
 						policyInfos.add(policyInfo);
 					}
 				}
@@ -1240,7 +1251,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @param response
 	 * @return DetailByDeviceIdSacRes
 	 */
-	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req, DetailByDeviceIdSacRes response) {
+	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req,
+			DetailByDeviceIdSacRes response) {
 
 		/**
 		 * 검색조건 정보 setting.
@@ -1310,7 +1322,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
 		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
-		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo()).getGiftSprtYn());
+		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo())
+				.getGiftSprtYn());
 
 		return response;
 
@@ -1360,7 +1373,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @return SearchUserSacRes
 	 */
 	@Override
-	public SearchUserSacRes searchUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request) {
+	public SearchUserSacRes srhUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request) {
 
 		// 공통파라미터 셋팅
 		CommonRequest commonRequest = new CommonRequest();
@@ -1375,7 +1388,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		LOGGER.debug("SAC Request {}", request);
 		SearchMbrUserResponse searchMbrUserResponse = this.userSCI.searchMbrUser(searchMbrUserRequest);
 
-		LOGGER.debug("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse.getCommonResponse().getResultCode());
+		LOGGER.debug("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse
+				.getCommonResponse().getResultCode());
 
 		Map<String, UserMbrStatus> userInfoMap = searchMbrUserResponse.getUserMbrStatusMap();
 
@@ -1409,13 +1423,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
-	 * searchUserByDeviceKey(com.skplanet.storeplatform
-	 * .sac.client.member.vo.user.SearchUserDeviceReq)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserSearchService#
+	 * searchUserByDeviceKey(com.skplanet.storeplatform .sac.client.member.vo.user.SearchUserDeviceReq)
 	 */
 	@Override
-	public Map<String, UserDeviceInfoSac> searchUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request) {
+	public Map<String, UserDeviceInfoSac> srhUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request) {
 
 		// Request 를 보내기 위한 세팅
 		List<UserDeviceKey> userDeviceKeyList = new ArrayList<UserDeviceKey>();
@@ -1436,7 +1448,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		SearchMbrDeviceResponse searchMbrDeviceResponse = this.userSCI.searchMbrDevice(searchMbrDeviceRequest);
 
-		LOGGER.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse.getCommonResponse().getResultCode());
+		LOGGER.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse
+				.getCommonResponse().getResultCode());
 
 		Map<String, DeviceMbrStatus> userDeviceInfoMap = searchMbrDeviceResponse.getDeviceMbrStatusMap();
 
@@ -1461,11 +1474,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 					if (StringUtil.equals(deviceMbrStatus.getIsRealName(), "Y")) {
 
-						userDeviceInfoSac.setUserBirthday(StringUtil.isNotBlank(deviceMbrStatus.getAuthBirthDay()) ? deviceMbrStatus
-								.getAuthBirthDay() : deviceMbrStatus.getUserBirthDay());
+						userDeviceInfoSac
+								.setUserBirthday(StringUtil.isNotBlank(deviceMbrStatus.getAuthBirthDay()) ? deviceMbrStatus
+										.getAuthBirthDay() : deviceMbrStatus.getUserBirthDay());
 
-						userDeviceInfoSac.setUserName(StringUtil.isNotBlank(deviceMbrStatus.getAuthName()) ? deviceMbrStatus.getAuthName()
-								: deviceMbrStatus.getUserName());
+						userDeviceInfoSac
+								.setUserName(StringUtil.isNotBlank(deviceMbrStatus.getAuthName()) ? deviceMbrStatus
+										.getAuthName() : deviceMbrStatus.getUserName());
 
 					} else {
 

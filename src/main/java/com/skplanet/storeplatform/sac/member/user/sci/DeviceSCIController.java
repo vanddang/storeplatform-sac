@@ -55,7 +55,7 @@ public class DeviceSCIController implements DeviceSCI {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
 
-		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
+		DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				request.getDeviceKey(), request.getUserKey());
 
 		SearchDeviceIdSacRes response = new SearchDeviceIdSacRes();
@@ -94,7 +94,7 @@ public class DeviceSCIController implements DeviceSCI {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId 또는 deviceKey");
 		}
 
-		ChangedDeviceHistorySacRes response = this.deviceService.searchChangedDeviceHistory(requestHeader, request);
+		ChangedDeviceHistorySacRes response = this.deviceService.srhChangedDeviceHistory(requestHeader, request);
 		LOGGER.info("Response : changed Yn : {}", response.getIsChanged());
 		return response;
 

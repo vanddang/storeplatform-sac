@@ -144,7 +144,8 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
 		/* 회원정보 조회 */
-		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
+				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		/* 회원 존재유무 확인 */
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
@@ -155,11 +156,12 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 휴대기기 정보 조회 */
-		DeviceInfo dbDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), chkDupRes
-				.getUserMbr().getUserKey());
+		DeviceInfo dbDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+				req.getDeviceId(), chkDupRes.getUserMbr().getUserKey());
 
 		/* 휴대기기 정보 수정 */
-		String deviceKey = this.updateDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req, dbDeviceInfo, "v1");
+		String deviceKey = this.modDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req,
+				dbDeviceInfo, "v1");
 
 		try {
 
@@ -167,8 +169,8 @@ public class LoginServiceImpl implements LoginService {
 
 				/* 통신사가 변경되었을 때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
 				if (!StringUtils.equals(req.getDeviceTelecom(), dbDeviceInfo.getDeviceTelecom())) {
-					this.userService.updateAdditionalInfoForNonLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr()
-							.getImSvcNo());
+					this.userService.modAdditionalInfoForNonLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(),
+							chkDupRes.getUserMbr().getImSvcNo());
 				}
 
 			} else { /* 기존IDP회원 / 모바일회원인 경우 */
@@ -188,7 +190,8 @@ public class LoginServiceImpl implements LoginService {
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER))) {
 
 				/* 미가입 회원인 경우 로그 남김 */
-				LOGGER.info("NOT_EXIST_USER authorizeByMdn devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
+				LOGGER.info("NOT_EXIST_USER authorizeByMdn devicdId : {}, {}", req.getDeviceId(), chkDupRes
+						.getUserMbr().getUserType());
 				throw ex;
 
 			} else {
@@ -198,7 +201,8 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 로그인 성공이력 저장 */
-		this.insertLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), req.getIsAutoUpdate(), req.getLoginReason());
+		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(),
+				req.getIsAutoUpdate(), req.getLoginReason());
 
 		/* 일시정지 인경우 (로그인제한상태 / 직권중지상태는 MDN로그인시는 샵클 정상이용가능하게 해야하므로 체크하지 않음) */
 		if (StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_PAUSE)) {
@@ -235,7 +239,7 @@ public class LoginServiceImpl implements LoginService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq)
 	 */
 	@Override
-	public AuthorizeByMdnRes executeAuthorizeByMdnV2(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
+	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
@@ -243,7 +247,8 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
 		/* 회원정보 조회 */
-		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
+				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		/* 회원 존재유무 확인 */
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
@@ -255,21 +260,22 @@ public class LoginServiceImpl implements LoginService {
 
 		/* SKT인경우 개인정보 3자 제공 동의약관 동의여부 체크 */
 		if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
-				&& !StringUtils.equals(this.isAgreementByAgreementCode(requestHeader, chkDupRes.getUserMbr().getUserKey(),
-						MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS), "Y")) {
+				&& !StringUtils.equals(this.isAgreementByAgreementCode(requestHeader, chkDupRes.getUserMbr()
+						.getUserKey(), MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS), "Y")) {
 			throw new StorePlatformException("SAC_MEM_1506"); // 개인정보 3자 제공 동의약관 미동의 상태입니다.
 		}
 
 		/* 휴대기기 정보 조회 */
-		DeviceInfo dbDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), chkDupRes
-				.getUserMbr().getUserKey());
+		DeviceInfo dbDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+				req.getDeviceId(), chkDupRes.getUserMbr().getUserKey());
 
 		/* Tcloud 약관동의 노출 여부 체크 */
 		String tcloudAgreeViewYn = "N"; // Tcloud 이용동의 노출 여부
 		ChangedDeviceHistorySacReq changedDeviceHistoryReq = new ChangedDeviceHistorySacReq();
 		changedDeviceHistoryReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		changedDeviceHistoryReq.setDeviceId(req.getDeviceId());
-		ChangedDeviceHistorySacRes changedDeviceHistoryRes = this.deviceService.searchChangedDeviceHistory(requestHeader, changedDeviceHistoryReq);
+		ChangedDeviceHistorySacRes changedDeviceHistoryRes = this.deviceService.srhChangedDeviceHistory(requestHeader,
+				changedDeviceHistoryReq);
 
 		if (StringUtils.equals(changedDeviceHistoryRes.getIsChanged(), "Y")) {
 
@@ -296,7 +302,8 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 휴대기기 정보 수정 */
-		String deviceKey = this.updateDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req, dbDeviceInfo, "v2");
+		String deviceKey = this.modDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req,
+				dbDeviceInfo, "v2");
 
 		try {
 
@@ -304,8 +311,8 @@ public class LoginServiceImpl implements LoginService {
 
 				/* 통신사가 변경되었을 때 변경되는 정보(통신사, 서비스관리번호)가 존재하므로 변경된 정보를 올려준다. */
 				if (!StringUtils.equals(req.getDeviceTelecom(), dbDeviceInfo.getDeviceTelecom())) {
-					this.userService.updateAdditionalInfoForNonLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), chkDupRes.getUserMbr()
-							.getImSvcNo());
+					this.userService.modAdditionalInfoForNonLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(),
+							chkDupRes.getUserMbr().getImSvcNo());
 				}
 
 			} else { /* 기존IDP회원 / 모바일회원인 경우 */
@@ -325,7 +332,8 @@ public class LoginServiceImpl implements LoginService {
 							+ ImIdpConstants.IDP_RES_CODE_UNAUTHORIZED_USER))) {
 
 				/* 미가입 회원인 경우 로그 남김 */
-				LOGGER.info("NOT_EXIST_USER authorizeByMdn devicdId : {}, {}", req.getDeviceId(), chkDupRes.getUserMbr().getUserType());
+				LOGGER.info("NOT_EXIST_USER authorizeByMdn devicdId : {}, {}", req.getDeviceId(), chkDupRes
+						.getUserMbr().getUserType());
 				throw ex;
 
 			} else {
@@ -335,7 +343,8 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 로그인 성공이력 저장 */
-		this.insertLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), req.getIsAutoUpdate(), req.getLoginReason());
+		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(),
+				req.getIsAutoUpdate(), req.getLoginReason());
 
 		/* 일시정지 인경우 (로그인제한상태 / 직권중지상태는 MDN로그인시는 샵클 정상이용가능하게 해야하므로 체크하지 않음) */
 		if (StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_PAUSE)) {
@@ -373,7 +382,7 @@ public class LoginServiceImpl implements LoginService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq)
 	 */
 	@Override
-	public CheckVariabilityRes executCheckVariability(SacRequestHeader requestHeader, CheckVariabilityReq req) {
+	public CheckVariabilityRes checkVariability(SacRequestHeader requestHeader, CheckVariabilityReq req) {
 
 		CheckVariabilityRes res = new CheckVariabilityRes();
 
@@ -381,7 +390,8 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
 		/* mdn 회원유무 조회 */
-		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
+				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		String isVariability = "Y"; // 변동성 체크 성공 유무
 		String isSaveAndSyncTarget = "N"; // 변동성 mdn 유무
@@ -392,7 +402,8 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
 
 			/* 휴대기기 정보 조회 */
-			DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+			DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+					req.getDeviceId(), null);
 
 			userKey = deviceInfo.getUserKey();
 
@@ -402,14 +413,14 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			/* 통산사가 일치한 경우 IMEI와 GMAIL이 다르면 변동성 체크 실패 */
-			if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(), deviceInfo.getDeviceTelecom(),
-					MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
+			if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(),
+					deviceInfo.getDeviceTelecom(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
 
-				if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getNativeId(), deviceInfo.getNativeId(),
-						MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
+				if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getNativeId(),
+						deviceInfo.getNativeId(), MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
-					if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(), deviceInfo.getDeviceAccount(),
-							MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
+					if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(),
+							deviceInfo.getDeviceAccount(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
 
 						isVariability = "N";
 
@@ -418,7 +429,8 @@ public class LoginServiceImpl implements LoginService {
 				} else { // nativeID가 같은경우
 
 					if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
-						LOGGER.info("{} GMAIL 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceAccount(), req.getDeviceAccount());
+						LOGGER.info("{} GMAIL 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceAccount(),
+								req.getDeviceAccount());
 						gmailupdateYn = "Y";
 					}
 
@@ -427,9 +439,10 @@ public class LoginServiceImpl implements LoginService {
 			} else { /* 통신사가 다른경우 GMAIL이 다르면 변동성 체크 실패 */
 
 				telecomUpdateYn = "Y";
-				LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceTelecom(), req.getDeviceTelecom());
-				if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(), deviceInfo.getDeviceAccount(),
-						MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
+				LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceTelecom(),
+						req.getDeviceTelecom());
+				if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(),
+						deviceInfo.getDeviceAccount(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
 
 					isVariability = "N";
 
@@ -468,7 +481,7 @@ public class LoginServiceImpl implements LoginService {
 				paramDeviceInfo.setDeviceAccount(req.getDeviceAccount());
 			}
 
-			String deviceKey = this.deviceService.updateDeviceInfo(requestHeader, paramDeviceInfo, false);
+			String deviceKey = this.deviceService.modDeviceInfo(requestHeader, paramDeviceInfo, false);
 			res.setDeviceKey(deviceKey);
 			res.setUserKey(userKey);
 
@@ -477,10 +490,11 @@ public class LoginServiceImpl implements LoginService {
 			LOGGER.info("{} 변동성 체크 실패", req.getDeviceId());
 
 			/* 인증수단 조회 */
-			UserAuthMethod userAuthMethod = this.searchUserAuthMethod(requestHeader, req.getDeviceId(), userKey);
+			UserAuthMethod userAuthMethod = this.srhUserAuthMethod(requestHeader, req.getDeviceId(), userKey);
 
-			if (StringUtils.isBlank(userAuthMethod.getUserId()) && StringUtils.equals(userAuthMethod.getIsRealName(), "N")) { // 인증수단이
-																															  // 없는경우
+			if (StringUtils.isBlank(userAuthMethod.getUserId())
+					&& StringUtils.equals(userAuthMethod.getIsRealName(), "N")) { // 인증수단이
+																				  // 없는경우
 
 				LOGGER.info("{} 추가인증수단 없음, 탈퇴처리", req.getDeviceId());
 
@@ -502,7 +516,8 @@ public class LoginServiceImpl implements LoginService {
 				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
 
 			} else {
-				LOGGER.info("{} 추가인증수단 userId : {}, 실명인증여부 : {}", req.getDeviceId(), userAuthMethod.getUserId(), userAuthMethod.getIsRealName());
+				LOGGER.info("{} 추가인증수단 userId : {}, 실명인증여부 : {}", req.getDeviceId(), userAuthMethod.getUserId(),
+						userAuthMethod.getIsRealName());
 			}
 
 			res.setUserAuthMethod(userAuthMethod);
@@ -522,7 +537,7 @@ public class LoginServiceImpl implements LoginService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq)
 	 */
 	@Override
-	public AuthorizeByIdRes executeAuthorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) {
+	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) {
 
 		String userId = req.getUserId();
 		String userPw = req.getUserPw();
@@ -536,7 +551,8 @@ public class LoginServiceImpl implements LoginService {
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
 		/* 회원정보 조회 */
-		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId);
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_MBR_ID,
+				userId);
 
 		/* 원아이디 서비스 이용동의 간편 가입 대상 및 가가입 상태 체크 */
 		if (chkDupRes.getUserMbr() == null && chkDupRes.getMbrOneID() == null) {
@@ -546,13 +562,15 @@ public class LoginServiceImpl implements LoginService {
 
 		} else if (chkDupRes.getMbrOneID() != null) {
 
-			if (chkDupRes.getUserMbr() == null || StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) { // 회원
-																																						// 정보가
-																																						// 없거나
-																																						// 회원메인상태가
-																																						// 가가입이면
-																																						// 가가입정보를
-																																						// 내려줌
+			if (chkDupRes.getUserMbr() == null
+					|| StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(),
+							MemberConstants.MAIN_STATUS_WATING)) { // 회원
+																   // 정보가
+																   // 없거나
+																   // 회원메인상태가
+																   // 가가입이면
+																   // 가가입정보를
+																   // 내려줌
 
 				try {
 
@@ -567,14 +585,15 @@ public class LoginServiceImpl implements LoginService {
 						LOGGER.info("SC_INVALID_USER authorizeById userId : {}", userId);
 						throw new StorePlatformException("SAC_MEM_1200"); // 원아이디 이용동의 간편가입 대상 정보가 상이합니다.
 
-					} else if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입
-																																			   // 상태인
-																																			   // 경우
-																																			   // EC에서
-																																			   // 성공으로
-																																			   // 처리하여
-																																			   // joinSstList
-																																			   // 받는다.
+					} else if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(),
+							ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입
+																			  // 상태인
+																			  // 경우
+																			  // EC에서
+																			  // 성공으로
+																			  // 처리하여
+																			  // joinSstList
+																			  // 받는다.
 
 						Map<String, String> mapSiteCd = new HashMap<String, String>();
 						mapSiteCd.put("10100", "네이트");
@@ -677,7 +696,8 @@ public class LoginServiceImpl implements LoginService {
 			try {
 
 				/* 잠금해지 요청인 경우 처리 */
-				if (StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+				if (StringUtils.equals(req.getReleaseLock(), "Y")
+						&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 
 					/* 통합IDP 로그인 상태 정상처리 요청 */
 					SetLoginStatusEcReq setLoginStatusEcReq = new SetLoginStatusEcReq();
@@ -686,9 +706,10 @@ public class LoginServiceImpl implements LoginService {
 					this.imIdpSCI.setLoginStatus(setLoginStatusEcReq);
 
 					/* 로그인 상태코드 정상처리 */
-					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null,
-							null);
-					this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_NOMAL, null);
+					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId,
+							MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
+					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(),
+							MemberConstants.USER_LOGIN_STATUS_NOMAL, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
@@ -702,7 +723,8 @@ public class LoginServiceImpl implements LoginService {
 
 					userAuthKey = authForIdEcRes.getUserAuthKey();
 
-				} else if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
+				} else if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(),
+						ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
 
 					LOGGER.info("IDP_INVALID_USER authorizeById userId : {}, {}", userId);
 					throw new StorePlatformException("SAC_MEM_1202"); // 원아이디 회원상태정보가 상이합니다.
@@ -711,10 +733,12 @@ public class LoginServiceImpl implements LoginService {
 
 				/* IDP 로그인이 정상으로 되었으나 직원중지코드가 정상이 아닌경우 정상으로 업데이트 */
 				if (!StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_NOMAL)) {
-					LOGGER.info("{} 직권중지코드가 상이하여 업데이트(stopStatusCode : {} -> {})", userId, stopStatusCode, MemberConstants.USER_STOP_STATUS_NOMAL);
-					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null, MemberConstants.USER_STOP_STATUS_NOMAL, null,
-							null);
-					this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), null, MemberConstants.USER_STOP_STATUS_NOMAL);
+					LOGGER.info("{} 직권중지코드가 상이하여 업데이트(stopStatusCode : {} -> {})", userId, stopStatusCode,
+							MemberConstants.USER_STOP_STATUS_NOMAL);
+					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null,
+							MemberConstants.USER_STOP_STATUS_NOMAL, null, null);
+					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), null,
+							MemberConstants.USER_STOP_STATUS_NOMAL);
 					stopStatusCode = MemberConstants.USER_STOP_STATUS_NOMAL;
 				}
 
@@ -722,22 +746,24 @@ public class LoginServiceImpl implements LoginService {
 				if (!StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
 					LOGGER.info("{} 로그인제한상태코드가 상이하여 업데이트(loginStatusCode : {} -> {})", userId, loginStatusCode,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL);
-					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null,
-							null);
-					this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_NOMAL, null);
+					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId,
+							MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
+					this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(),
+							MemberConstants.USER_LOGIN_STATUS_NOMAL, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
 				/* 단말정보 update */
-				// this.updateDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
+				// this.modDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 			} catch (StorePlatformException ex) {
 
-				if (StringUtils
-						.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+						+ ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
-					LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N", null);
+					LoginUserResponse loginUserRes = this.regLoginHistory(requestHeader, userId, userPw, "N", "N",
+							req.getIpAddress(), "N", null);
 
 					/* 로그인 결과 */
 					res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
@@ -761,9 +787,10 @@ public class LoginServiceImpl implements LoginService {
 																									   // 직권중지상태로 업데이트
 						LOGGER.info("{} 직권중지상태코드가 상이하여 업데이트(stopStatusCode : {} -> {})", userId, stopStatusCode,
 								MemberConstants.USER_STOP_STATUS_PAUSE);
-						this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null, MemberConstants.USER_STOP_STATUS_PAUSE, null,
-								null);
-						this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), null, MemberConstants.USER_STOP_STATUS_PAUSE);
+						this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, null,
+								MemberConstants.USER_STOP_STATUS_PAUSE, null, null);
+						this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), null,
+								MemberConstants.USER_STOP_STATUS_PAUSE);
 						stopStatusCode = MemberConstants.USER_STOP_STATUS_PAUSE;
 					}
 
@@ -776,9 +803,10 @@ public class LoginServiceImpl implements LoginService {
 																										 // 제한상태로 업데이트
 						LOGGER.info("{} 로그인제한상태코드가 상이하여 업데이트(loginStatusCode : {} -> {})", userId, loginStatusCode,
 								MemberConstants.USER_LOGIN_STATUS_PAUSE);
-						this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_PAUSE, null,
-								null, null);
-						this.updateOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(), MemberConstants.USER_LOGIN_STATUS_PAUSE, null);
+						this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId,
+								MemberConstants.USER_LOGIN_STATUS_PAUSE, null, null, null);
+						this.modOneIdInfo(requestHeader, chkDupRes.getUserMbr().getImSvcNo(),
+								MemberConstants.USER_LOGIN_STATUS_PAUSE, null);
 						loginStatusCode = MemberConstants.USER_LOGIN_STATUS_PAUSE;
 					}
 
@@ -793,10 +821,11 @@ public class LoginServiceImpl implements LoginService {
 			try {
 
 				/* 잠금해지 요청인 경우 */
-				if (StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+				if (StringUtils.equals(req.getReleaseLock(), "Y")
+						&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 					/* 로그인 상태코드 정상처리 */
-					this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId, MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null,
-							null);
+					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId,
+							MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
@@ -804,19 +833,22 @@ public class LoginServiceImpl implements LoginService {
 				com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq authForIdEcReq = new com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq();
 				authForIdEcReq.setUserId(userId);
 				authForIdEcReq.setUserPasswd(userPw);
-				com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcRes authForIdEcRes = this.idpSCI.authForId(authForIdEcReq);
+				com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcRes authForIdEcRes = this.idpSCI
+						.authForId(authForIdEcReq);
 
 				userAuthKey = authForIdEcRes.getUserAuthKey();
 
 				/* 단말정보 update */
-				// this.updateDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
+				// this.modDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
 			} catch (StorePlatformException ex) {
 
-				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+						+ IdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
-					LoginUserResponse loginUserRes = this.insertLoginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress(), "N", null);
+					LoginUserResponse loginUserRes = this.regLoginHistory(requestHeader, userId, userPw, "N", "N",
+							req.getIpAddress(), "N", null);
 
 					/* 로그인 결과 */
 					res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
@@ -839,7 +871,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 로그인 성공이력 저장 */
-		this.insertLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null);
+		this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null);
 
 		/* 일시정지 / 로그인제한 / 직권중지 상태인 경우 */
 		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
@@ -864,7 +896,8 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserSubStatus(userSubStatus);
 		res.setLoginStatusCode(loginStatusCode);
 		res.setStopStatusCode(stopStatusCode);
-		res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey, userKey));
+		res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey,
+				userKey));
 		res.setIsLoginSuccess("Y");
 
 		return res;
@@ -878,7 +911,7 @@ public class LoginServiceImpl implements LoginService {
 	 * .storeplatform.sac.client.member.vo.user.AuthorizeForAutoUpdateReq)
 	 */
 	@Override
-	public AuthorizeSimpleByMdnRes executeAuthorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req) {
+	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req) {
 
 		String deviceId = req.getDeviceId();
 
@@ -886,7 +919,8 @@ public class LoginServiceImpl implements LoginService {
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
 
 		/* 휴대기기 정보 조회 */
-		DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, null);
+		DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+				deviceId, null);
 
 		AuthorizeSimpleByMdnRes res = new AuthorizeSimpleByMdnRes();
 
@@ -931,24 +965,27 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# executeAuthorizeSaveAndSyncByMac
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# authorizeSaveAndSyncByMac
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, com.skplanet
 	 * .storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq)
 	 */
 	@Override
-	public AuthorizeSaveAndSyncByMacRes executeAuthorizeSaveAndSyncByMac(SacRequestHeader requestHeader, AuthorizeSaveAndSyncByMacReq req) {
+	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader,
+			AuthorizeSaveAndSyncByMacReq req) {
 
 		AuthorizeSaveAndSyncByMacRes res = new AuthorizeSaveAndSyncByMacRes();
 
 		/* mac 정보 조회 */
-		DeviceInfo macDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null);
+		DeviceInfo macDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+				req.getMacAddress(), null);
 
 		if (macDeviceInfo == null) {
 			throw new StorePlatformException("SAC_MEM_0003", "macAddress", req.getMacAddress());
 		}
 
 		/* mdn 회원유무 조회 */
-		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
+		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
+				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
 		String isPurchaseChange = "N";
 		String isJoinMdn = "N";
@@ -961,7 +998,8 @@ public class LoginServiceImpl implements LoginService {
 
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) { // 회원인 경우
 
-			DeviceInfo mdnDeviceInfo = this.deviceService.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+			DeviceInfo mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+					req.getDeviceId(), null);
 
 			isPurchaseChange = "Y";
 
@@ -1022,20 +1060,20 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo = this.deviceService.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 			/* 휴대기기 주요정보 조회 */
-			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
-					req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN);
+			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(),
+					MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN);
 
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
 					majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
 					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
 
-			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo, false);
+			this.deviceService.modDeviceInfo(requestHeader, deviceInfo, false);
 
 			/* 전시/기타, 구매 파트 키 변경 */
 			if (StringUtils.equals(isPurchaseChange, "Y")) {
-				this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(),
-						newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
+				this.mcic.excuteInternalMethod(true, requestHeader.getTenantHeader().getSystemId(), requestHeader
+						.getTenantHeader().getTenantId(), newUserKey, oldUserKey, newDeviceKey, oldDeviceKey);
 			}
 
 			res.setDeviceKey(newDeviceKey);
@@ -1056,7 +1094,8 @@ public class LoginServiceImpl implements LoginService {
 
 			} catch (StorePlatformException ex) {
 
-				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
+				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+						+ IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 					/* IDP 기가입인경우 탈퇴 처리 */
 					SecedeForWapEcReq ecReq = new SecedeForWapEcReq();
@@ -1073,8 +1112,8 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 			/* 가가입 상태인 mac 회원정보를 정상상태로 */
-			this.updateStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null, null, MemberConstants.MAIN_STATUS_NORMAL,
-					MemberConstants.SUB_STATUS_NORMAL);
+			this.modStatus(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getMacAddress(), null, null,
+					MemberConstants.MAIN_STATUS_NORMAL, MemberConstants.SUB_STATUS_NORMAL);
 
 			/* mac -> mdn으로 변경 처리 및 휴대기기 정보 수정 */
 			LOGGER.info("{} -> {} deviceId 변경", req.getMacAddress(), req.getDeviceId());
@@ -1096,14 +1135,14 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo = this.deviceService.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 			/* 휴대기기 주요정보 조회 */
-			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
-					req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN);
+			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(),
+					MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN);
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
 					majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
 					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
 
-			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo, true);
+			this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
 
 			/* mbrNo 변경 */
 			LOGGER.info("{} 신규가입한 IDP userKey로 업데이트 newMbrNo={}", req.getDeviceId(), joinForWapEcRes.getUserKey());
@@ -1117,8 +1156,9 @@ public class LoginServiceImpl implements LoginService {
 
 			/* usermbr_no가 변경된경우 OGG 연동을 위해 전시/기타, 구매 파트 키 변경 */
 			if (this.isCallChangeKey) {
-				this.mcic.excuteInternalMethod(this.isCallChangeKey, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader()
-						.getTenantId(), joinForWapEcRes.getUserKey(), oldUserKey, oldDeviceKey, oldDeviceKey);
+				this.mcic.excuteInternalMethod(this.isCallChangeKey, requestHeader.getTenantHeader().getSystemId(),
+						requestHeader.getTenantHeader().getTenantId(), joinForWapEcRes.getUserKey(), oldUserKey,
+						oldDeviceKey, oldDeviceKey);
 
 				/* 게임센터 연동 */
 				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
@@ -1130,7 +1170,7 @@ public class LoginServiceImpl implements LoginService {
 				gameCenterSacReq.setPreUserKey(oldUserKey);
 				gameCenterSacReq.setPreMbrNo(oldUserKey);
 				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
-				this.deviceService.insertGameCenterIF(gameCenterSacReq);
+				this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 				/* MQ 연동 */
 				CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
@@ -1209,7 +1249,8 @@ public class LoginServiceImpl implements LoginService {
 	 * @return CheckDuplicationResponse
 	 * 
 	 */
-	private CheckDuplicationResponse checkDuplicationUser(SacRequestHeader requestHeader, String keyType, String keyString) {
+	private CheckDuplicationResponse checkDuplicationUser(SacRequestHeader requestHeader, String keyType,
+			String keyString) {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
@@ -1245,7 +1286,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return String
 	 */
-	private SearchUserResponse searchUser(SacRequestHeader requestHeader, String keyType, String keyString) {
+	private SearchUserResponse srhUser(SacRequestHeader requestHeader, String keyType, String keyString) {
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -1295,8 +1336,8 @@ public class LoginServiceImpl implements LoginService {
 	 *            로그인 사유
 	 * @return LoginUserResponse
 	 */
-	private LoginUserResponse insertLoginHistory(SacRequestHeader requestHeader, String userId, String userPw, String isSuccess, String isMobile,
-			String ipAddress, String isAutoUpdate, String loginReason) {
+	private LoginUserResponse regLoginHistory(SacRequestHeader requestHeader, String userId, String userPw,
+			String isSuccess, String isMobile, String ipAddress, String isAutoUpdate, String loginReason) {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
@@ -1343,8 +1384,8 @@ public class LoginServiceImpl implements LoginService {
 	 * @param userSubStatus
 	 *            서브메인 상태코드
 	 */
-	private void updateStatus(SacRequestHeader requestHeader, String keyType, String keyString, String loginStatusCode, String stopStatusCode,
-			String userMainStatus, String userSubStatus) {
+	private void modStatus(SacRequestHeader requestHeader, String keyType, String keyString, String loginStatusCode,
+			String stopStatusCode, String userMainStatus, String userSubStatus) {
 
 		UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
@@ -1390,7 +1431,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @param stopStatusCode
 	 *            직권중지 상태코드
 	 */
-	private void updateOneIdInfo(SacRequestHeader sacHeader, String imSvcNo, String loginStatusCode, String stopStatusCode) {
+	private void modOneIdInfo(SacRequestHeader sacHeader, String imSvcNo, String loginStatusCode, String stopStatusCode) {
 
 		UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
 		updateMbrOneIDRequest.setCommonRequest(this.commService.getSCCommonRequest(sacHeader));
@@ -1462,9 +1503,9 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return UserAuthMethod
 	 */
-	private UserAuthMethod searchUserAuthMethod(SacRequestHeader requestHeader, String deviceId, String userKey) {
+	private UserAuthMethod srhUserAuthMethod(SacRequestHeader requestHeader, String deviceId, String userKey) {
 
-		SearchUserResponse schUserRes = this.searchUser(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
+		SearchUserResponse schUserRes = this.srhUser(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
 		UserAuthMethod userAuthMethod = new UserAuthMethod();
 
@@ -1499,7 +1540,8 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return deviceKey String
 	 */
-	private String updateDeviceInfoForLogin(SacRequestHeader requestHeader, String userKey, Object obj, DeviceInfo dbDeviceInfo, String version) {
+	private String modDeviceInfoForLogin(SacRequestHeader requestHeader, String userKey, Object obj,
+			DeviceInfo dbDeviceInfo, String version) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userKey);
@@ -1536,6 +1578,6 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
-		return this.deviceService.updateDeviceInfoForLogin(requestHeader, deviceInfo, dbDeviceInfo, version);
+		return this.deviceService.modDeviceInfoForLogin(requestHeader, deviceInfo, dbDeviceInfo, version);
 	}
 }

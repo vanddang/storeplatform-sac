@@ -83,12 +83,12 @@ public class UserLockServiceImpl implements UserLockService {
 			/**
 			 * 회원 계정 잠금
 			 */
-			this.updateLoginStatus(sacHeader, req.getUserId());
+			this.modLoginStatus(sacHeader, req.getUserId());
 
 			/**
 			 * OneID 정보 업데이트
 			 */
-			this.updateOneIdInfo(sacHeader, chkDupRes.getUserMbr().getImSvcNo());
+			this.modOneIdInfo(sacHeader, chkDupRes.getUserMbr().getImSvcNo());
 
 		} else {
 
@@ -99,7 +99,7 @@ public class UserLockServiceImpl implements UserLockService {
 			/**
 			 * 회원 계정 잠금
 			 */
-			this.updateLoginStatus(sacHeader, req.getUserId());
+			this.modLoginStatus(sacHeader, req.getUserId());
 
 		}
 
@@ -177,7 +177,7 @@ public class UserLockServiceImpl implements UserLockService {
 	 * @param userId
 	 *            사용자 아이디
 	 */
-	public void updateLoginStatus(SacRequestHeader sacHeader, String userId) {
+	public void modLoginStatus(SacRequestHeader sacHeader, String userId) {
 
 		UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
 
@@ -206,7 +206,7 @@ public class UserLockServiceImpl implements UserLockService {
 	 * @param imSvcNo
 	 *            OneID 통합서비스 관리번호
 	 */
-	private void updateOneIdInfo(SacRequestHeader sacHeader, String imSvcNo) {
+	private void modOneIdInfo(SacRequestHeader sacHeader, String imSvcNo) {
 
 		try {
 

@@ -51,12 +51,12 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	 * 사용자 부가정보 등록/수정
 	 */
 	@Override
-	public UserExtraInfoRes modifyAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
+	public UserExtraInfoRes modAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
-		UserInfo searchUser = this.searchUser(req, sacHeader);
+		UserInfo searchUser = this.srhUser(req, sacHeader);
 
 		/* 입력받은 profileCode 정상인지 확인 */
 		String validProfileCode = this.validProfileCode(req);
@@ -64,7 +64,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		/* 정상회원이면 SC 회원 부가 정보 등록/수정 호출 */
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		if (searchUser != null && "Y".equals(validProfileCode)) {
-			res = this.modifyUserExtra(req, sacHeader);
+			res = this.modUserExtra(req, sacHeader);
 		}
 
 		return res;
@@ -80,7 +80,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		UserInfo searchUser = this.searchUser(req, sacHeader);
+		UserInfo searchUser = this.srhUser(req, sacHeader);
 
 		/* 정상회원이면 SC 회원 부가 정보 조회 호출 */
 		UserExtraInfoRes res = new UserExtraInfoRes();
@@ -95,13 +95,13 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	 * 사용자 부가정보 삭제
 	 */
 	@Override
-	public UserExtraInfoRes removeAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
+	public UserExtraInfoRes remAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		UserInfo searchUser = this.searchUser(req, sacHeader);
+		UserInfo searchUser = this.srhUser(req, sacHeader);
 
 		/* 입력받은 profileCode 정상인지 확인 */
 		String validProfileCode = this.validProfileCode(req);
@@ -112,7 +112,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		/* 정상회원이면 SC 회원 부가 정보 삭제 호출 */
 		if (searchUser != null && "Y".equals(validProfileCode) && "Y".equals(registerdProfileCode)) {
-			res = this.removeUserExtra(req, sacHeader);
+			res = this.remUserExtra(req, sacHeader);
 		}
 
 		return res;
@@ -120,7 +120,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 	/* SC API 회원정보 조회 */
 	@Override
-	public UserInfo searchUser(UserExtraInfoReq req, SacRequestHeader sacHeader) {
+	public UserInfo srhUser(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
 		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
@@ -137,7 +137,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 	/* SC API 회원부가정보 삭제 */
 	@Override
-	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
+	public UserExtraInfoRes remUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
 		RemoveManagementRequest removeReq = new RemoveManagementRequest();
 
@@ -167,7 +167,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 	/* SC API 회원부가정보 등록/수정 */
 	@Override
-	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
+	public UserExtraInfoRes modUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
 		UpdateManagementRequest updateReq = new UpdateManagementRequest();
 

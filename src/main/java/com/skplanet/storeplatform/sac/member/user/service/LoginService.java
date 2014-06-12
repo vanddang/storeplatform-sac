@@ -39,7 +39,7 @@ public interface LoginService {
 	 *            AuthorizeByMdnReq
 	 * @return AuthorizeByMdnRes
 	 */
-	public AuthorizeByMdnRes executeAuthorizeByMdnV2(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
+	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
 
 	/**
 	 * <pre>
@@ -52,7 +52,7 @@ public interface LoginService {
 	 *            CheckVariabilityReq
 	 * @return CheckVariabilityRes
 	 */
-	public CheckVariabilityRes executCheckVariability(SacRequestHeader requestHeader, CheckVariabilityReq req);
+	public CheckVariabilityRes checkVariability(SacRequestHeader requestHeader, CheckVariabilityReq req);
 
 	/**
 	 * ID 기반 회원 인증 (One ID, IDP 회원).
@@ -63,7 +63,7 @@ public interface LoginService {
 	 *            AuthorizeByIdReq
 	 * @return AuthorizeByIdRes
 	 */
-	public AuthorizeByIdRes executeAuthorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req);
+	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req);
 
 	/**
 	 * 심플 인증(간편인증).
@@ -75,7 +75,7 @@ public interface LoginService {
 	 * @return AuthorizeByIdRes
 	 */
 	@Deprecated
-	public AuthorizeSimpleByMdnRes executeAuthorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req);
+	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req);
 
 	/**
 	 * <pre>
@@ -88,6 +88,7 @@ public interface LoginService {
 	 *            AuthorizeSaveAndSyncByMacReq
 	 * @return AuthorizeSaveAndSyncByMacRes
 	 */
-	public AuthorizeSaveAndSyncByMacRes executeAuthorizeSaveAndSyncByMac(SacRequestHeader requestHeader, AuthorizeSaveAndSyncByMacReq req);
+	public AuthorizeSaveAndSyncByMacRes authorizeSaveAndSyncByMac(SacRequestHeader requestHeader,
+			AuthorizeSaveAndSyncByMacReq req);
 
 }

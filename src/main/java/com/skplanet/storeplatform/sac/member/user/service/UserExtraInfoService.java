@@ -20,7 +20,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes modifyAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader);
+	public UserExtraInfoRes modAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 조회
@@ -40,7 +40,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes removeAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader);
+	public UserExtraInfoRes remAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 회원조회 SC API
@@ -50,7 +50,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserInfo searchUser(UserExtraInfoReq req, SacRequestHeader sacHeader);
+	public UserInfo srhUser(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 부가정보리스트 SC API
@@ -70,7 +70,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader);
+	public UserExtraInfoRes modUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 부가정보 삭제 SC API
@@ -80,7 +80,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader);
+	public UserExtraInfoRes remUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * profileCode 정상 데이터인지 체크
