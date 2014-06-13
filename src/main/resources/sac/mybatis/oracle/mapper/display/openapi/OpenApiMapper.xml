@@ -18,6 +18,7 @@
 		                       (
 		                        SELECT  COUNT(*) OVER () AS TOTAL_COUNT
 		                              , A.PROD_ID AS PART_PROD_ID
+		                              , A.PROD_ID
 		                              , NVL(A.DWLD_QTY, 0) AS PRCHS_CNT
 		                              , B.EXPO_SELLER_NM
 		                              , B.CONTENTS_TYPE_CD
