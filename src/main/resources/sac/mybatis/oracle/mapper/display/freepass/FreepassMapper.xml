@@ -35,7 +35,7 @@
 						, PD.DRM_SET_CD
 						, PD.DRM_SET_VALUE
 						, PD.CONTENTS_TYPE_CD
-			      , TP.EXPO_ORD
+			      		, TP.EXPO_ORD
 					FROM
 						TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
 						TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
@@ -76,7 +76,7 @@
                 #{topMenuId}
                 </foreach>
             </if>
-			    ORDER BY TP.EXPO_ORD/*, PD.REG_DT DESC*/
+			    ORDER BY PD.TOP_MENU_ID DESC, TP.EXPO_ORD, TP.REG_DT /*, PD.REG_DT DESC*/
 			  ) IV
 			) OV
 			WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
