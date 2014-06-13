@@ -8,15 +8,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfoSacRes;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 
 /**
  * 
@@ -32,6 +33,9 @@ public class PossLendProductInfoServiceImpl implements PossLendProductInfoServic
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	/**
 	 * <pre>
@@ -98,6 +102,22 @@ public class PossLendProductInfoServiceImpl implements PossLendProductInfoServic
 					possLendProductInfoList.add(new PossLendProductInfo()); // 소장/대여 상품이 없을 경우 빈 객체로 전송
 					this.log.debug("possLendProductInfo is null [{}]", prodIdList.get(i));
 				} else {
+					// Chapter 셋팅
+					if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())) { // TV
+						if (StringUtils.isNotEmpty(possLendProductInfo.getChapter())) {
+							possLendProductInfo.setChapterText(possLendProductInfo.getChapter());
+							possLendProductInfo.setChapterUnit(this.displayCommonService.getVodChapterUnit());
+						}
+					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())
+							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())) { // 이북,코믹
+						if (StringUtils.isNotEmpty(possLendProductInfo.getChapter())
+								&& StringUtils.isNotEmpty(possLendProductInfo.getBookClsfCd())) {
+							possLendProductInfo.setChapterText(possLendProductInfo.getChapter());
+							possLendProductInfo.setChapterUnit(this.displayCommonService
+									.getEpubChapterUnit(possLendProductInfo.getBookClsfCd()));
+						}
+					}
+
 					possLendProductInfoList.add(possLendProductInfo);
 				}
 			}

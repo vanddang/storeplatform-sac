@@ -111,7 +111,7 @@ public class PaymentInfoSCITest {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();
 			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("H000044543");
+			prodIdList.add("H000400002");
 			req.setProdIdList(prodIdList);
 			req.setTenantId("S01");
 			req.setLangCd("ko");
@@ -136,7 +136,7 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	// @Test
 	public void searchShoppingPaymentInfo() {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();

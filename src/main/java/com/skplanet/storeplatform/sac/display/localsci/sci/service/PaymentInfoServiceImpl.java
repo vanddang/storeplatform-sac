@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
@@ -146,6 +146,22 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 						paymentInfo.setTopMenuId(paymentProdType.getTopMenuId());
 						paymentInfo.setSvcGrpCd(paymentProdType.getSvcGrpCd());
 						paymentInfo.setInAppYn(paymentProdType.getInAppYn()); // In-App 여부
+
+						// Chapter 셋팅
+						if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())) { // TV
+							if (StringUtils.isNotEmpty(paymentInfo.getChapter())) {
+								paymentInfo.setChapterText(paymentInfo.getChapter());
+								paymentInfo.setChapterUnit(this.displayCommonService.getVodChapterUnit());
+							}
+						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())) { // 이북,코믹
+							if (StringUtils.isNotEmpty(paymentInfo.getChapter())
+									&& StringUtils.isNotEmpty(paymentInfo.getBookClsfCd())) {
+								paymentInfo.setChapterText(paymentInfo.getChapter());
+								paymentInfo.setChapterUnit(this.displayCommonService.getEpubChapterUnit(paymentInfo
+										.getBookClsfCd()));
+							}
+						}
 
 						// 이용가능한 정액권목록 제공
 						paymentInfo.setAvailableFixrateProdIdList(this.freepassService

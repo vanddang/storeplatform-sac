@@ -23,7 +23,7 @@
     </select>
     
     <select id="searchPaymentInfo" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
-		SELECT /* PaymentInfoMapper.xml, searchPaymentInfo, SAC 전시, 2014-04-30 */
+		SELECT /* PaymentInfoMapper.xml, searchPaymentInfo, SAC 전시, 2014-06-12 */
 		       A.PROD_ID
 		      ,B.PROD_NM
 		      ,D.PROD_AMT
@@ -66,6 +66,8 @@
 		      ,A.EXPO_SELLER_EMAIL AS SELLER_EMAIL
 		      ,A.EXPO_SELLER_TELNO AS SELLER_TELNO
 		      ,F.POSS_LEND_CLSF_CD
+		      ,F.CHAPTER
+		      ,F.BOOK_CLSF_CD
 		FROM   TB_DP_PROD              A
 		      ,TB_DP_PROD_DESC         B
 		      ,TB_DP_TENANT_PROD       C
