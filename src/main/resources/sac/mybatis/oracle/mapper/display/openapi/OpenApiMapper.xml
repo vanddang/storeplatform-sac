@@ -291,7 +291,7 @@
 		                   AND KB.LANG_CD  = #{langCd}                  
 		       LEFT OUTER JOIN TB_DP_PROD_IMG KC
 		                    ON KA.PROD_ID  = KC.PROD_ID                   
-		                   AND KC.IMG_CD   = #{previewImagecd}
+		                   AND KC.IMG_CD   = 'DP000103'
 		                   AND KC.EXPO_ORD = '1'
 		                   AND KC.LANG_CD  = #{langCd}
     </select>
@@ -342,21 +342,21 @@
                                                -->      		                                                          
 		                               ) IA
 		                             , (
-		                                    SELECT 'DP000116' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP000103' AS IMG_CD FROM DUAL UNION ALL
 		                                    SELECT 'DP0001D7' AS IMG_CD FROM DUAL UNION ALL
-		                                    SELECT 'DP000117' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP000104' AS IMG_CD FROM DUAL UNION ALL
 		                                    SELECT 'DP0001D8' AS IMG_CD FROM DUAL UNION ALL
-		                                    SELECT 'DP000118' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP000105' AS IMG_CD FROM DUAL UNION ALL
 		                                    SELECT 'DP0001D9' AS IMG_CD FROM DUAL UNION ALL
-		                                    SELECT 'DP000119' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP000106' AS IMG_CD FROM DUAL UNION ALL
 		                                    SELECT 'DP0001E0' AS IMG_CD FROM DUAL UNION ALL
-		                                    SELECT 'DP0001C5' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001C1' AS IMG_CD FROM DUAL UNION ALL
 		                                    SELECT 'DP0001E1' AS IMG_CD FROM DUAL UNION ALL
-		                                    SELECT 'DP0001C8' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001C2' AS IMG_CD FROM DUAL UNION ALL
 		                                    SELECT 'DP0001E2' AS IMG_CD FROM DUAL UNION ALL
-		                                    SELECT 'DP0001D1' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001C3' AS IMG_CD FROM DUAL UNION ALL
 		                                    SELECT 'DP0001E3' AS IMG_CD FROM DUAL UNION ALL
-		                                    SELECT 'DP0001D4' AS IMG_CD FROM DUAL UNION ALL
+		                                    SELECT 'DP0001C4' AS IMG_CD FROM DUAL UNION ALL
 		                                    SELECT 'DP0001E4' AS IMG_CD FROM DUAL
 		                               ) IB
 		                    )                JA
