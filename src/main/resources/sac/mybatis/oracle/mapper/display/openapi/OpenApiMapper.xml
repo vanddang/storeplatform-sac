@@ -668,7 +668,7 @@
                                  ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB
-                                        , B.REG_DT
+                                        --, B.REG_DT
                                         --, D.PROD_NM
                                ) JA
                        ) 
@@ -811,7 +811,7 @@
                                  ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB
-                                        , B.REG_DT
+                                        --, B.REG_DT
                                ) JA
                        ) 
                  WHERE ROWNUM BETWEEN #{offset} AND #{count}  
@@ -951,7 +951,7 @@
                                  ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB
-                                        , B.REG_DT
+                                        --, B.REG_DT
                                ) JA
                        ) 
                  WHERE ROWNUM BETWEEN #{offset} AND #{count}  
@@ -1092,7 +1092,7 @@
                                  ORDER BY A.EXPO_ORD_ALWAYS_YN DESC
                                         , A.EXPO_ORD
                                         , A.EXPO_ORD_SUB 
-                                        , B.REG_DT
+                                        --, B.REG_DT
                                ) JA
                        ) 
                  WHERE ROWNUM BETWEEN #{offset} AND #{count}  
