@@ -175,7 +175,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:tmembershipdcrate", unless = "#result == null")
+	@Cacheable(value = "sac:display:tmembershipdcrate:v2", unless = "#result == null")
 	public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String topMenuId) {
 		Map<String, String> req = new HashMap<String, String>();
 		req.put("tenantId", tenantId);

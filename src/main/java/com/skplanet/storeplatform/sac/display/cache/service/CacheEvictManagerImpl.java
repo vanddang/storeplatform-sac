@@ -117,7 +117,7 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = "sac:display:tmembershipdcrate", allEntries = true)
+    @CacheEvict(value = {"sac:display:tmembershipdcrate", "sac:display:tmembershipdcrate:v2"}, allEntries = true)
     public void evictAllTmembershipDcRate() {
 
     }
