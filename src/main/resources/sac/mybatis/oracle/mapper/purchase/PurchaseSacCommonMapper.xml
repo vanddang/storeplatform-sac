@@ -41,6 +41,7 @@
               , cd_desc AS paymentUrl
           FROM  tb_cm_cd
          WHERE  cd_id = #{cd_id}
+           AND  lang_cd = 'ko' /* 언어에 무관 */
            AND  use_yn = 'Y'
     </select>
     
