@@ -2369,12 +2369,6 @@
               #{productId}
            </foreach>
         </if>       
-		AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> #{partParentClsfCd} OR DAP.PART_PARENT_CLSF_CD IS NULL ) /* 부분유료화 모상품만 */
-        <if test="arrayProductId != null">  
-         ORDER BY INSTR
-             <foreach collection="arrayProductId" item="productId" index="index" open="(" separator=" || " close=", PROD_ID)">              
-                 #{productId}
-             </foreach>
-        </if> 		         
+		AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> #{partParentClsfCd} OR DAP.PART_PARENT_CLSF_CD IS NULL ) /* 부분유료화 모상품만 */      
     </select>
 </mapper>
