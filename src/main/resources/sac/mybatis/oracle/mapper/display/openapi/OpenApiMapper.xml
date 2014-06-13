@@ -2093,9 +2093,9 @@
                   AND DPI.IMG_CD = DECODE(DP.TOP_MENU_ID, 'DP09', 'DP000127'
                                                           , 'DP17', 'DP000127'
                                                           , 'DP18', 'DP000127'
-                                                          , 'DP13', 'DP000147'
-                                                          , 'DP14', 'DP000147'
-                                                          , 'DP000125')
+                                                          , 'DP13', 'DP006207'
+                                                          , 'DP14', 'DP006207'
+                                                          , 'DP000101')
                   AND LANG_CD = #{langCd}                  
                   AND ROWNUM = 1
                  ) AS IMAGE_PATH
