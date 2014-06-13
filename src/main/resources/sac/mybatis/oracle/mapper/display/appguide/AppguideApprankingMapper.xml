@@ -30,7 +30,7 @@
                    , ROW_NUMBER() OVER(ORDER BY Z1.EXPO_ORD_ALWAYS_YN DESC, Z1.EXPO_ORD, Z1.EXPO_ORD_SUB) AS RNUM
                FROM (SELECT A.TENANT_ID
                           , D.MENU_ID
-                          , A.PROD_ID
+                          , B.PROD_ID
                           , B.PART_PROD_ID
                           , '' AS CATALOG_ID
                           , D.TOP_MENU_ID
