@@ -52,11 +52,12 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String SKT_ADJUST_REASON_CORP = "L02"; // 법인폰
 	public static final String SKT_ADJUST_REASON_SKTTEST_ALLOW = "L03"; // 허용 SKT시험폰
 	public static final String SKT_ADJUST_REASON_SKTTEST_NOT_ALLOW = "L04"; // 비허용 SKT시험폰
-	public static final String SKT_ADJUST_REASON_SHOPPING_USERPART_LIMIT = "L05"; // SKT후불 쇼핑상품 회원 별 강제적용 한도금액
+	public static final String SKT_ADJUST_REASON_SHOPPING_PRCHS_USERPART_LIMIT = "L05"; // SKT후불 쇼핑상품 회원 별 강제적용 한도금액
 	public static final String SKT_ADJUST_REASON_SHOPPING_LIMIT = "L06"; // SKT후불 쇼핑상품 한도금액
 	public static final String SKT_ADJUST_REASON_SHOPPING_RECV_LIMIT = "L07"; // SKT후불 쇼핑상품 선물수신 한도금액
 	public static final String SKT_ADJUST_REASON_LIMIT = "L08"; // SKT후불 한도금액
 	public static final String SKT_ADJUST_REASON_RECV_LIMIT = "L09"; // SKT후불 선물수신 한도금액
+	public static final String SKT_ADJUST_REASON_SHOPPING_RECV_USERPART_LIMIT = "L10"; // SKT후불 쇼핑상품 선물수신 회원 별 강제적용 한도금액
 
 	/** 쇼핑 상품 판매자 디폴트 정보 */
 	public static final String SHOPPING_SELLER_DEFAULT_NAME = "Tstore"; // 판매자명
