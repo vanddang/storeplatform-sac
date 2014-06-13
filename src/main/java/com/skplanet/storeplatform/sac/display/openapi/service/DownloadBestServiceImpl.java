@@ -156,9 +156,6 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 
 				product = new Product();
 
-				Identifier identifier = this.commonGenerator.generateIdentifier(
-						DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
-				identifierList.add(identifier);
 				product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo)); // 상품 ID
 
 				/*

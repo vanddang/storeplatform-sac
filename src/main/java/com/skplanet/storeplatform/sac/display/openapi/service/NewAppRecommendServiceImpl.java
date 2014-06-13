@@ -128,6 +128,9 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 				Identifier identifier = this.commonGenerator.generateIdentifier(
 						DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
 				identifierList.add(identifier);
+				identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+						metaInfo.getProdId());
+				identifierList.add(identifier);
 
 				product.setIdentifierList(identifierList); // 상품 Id
 
