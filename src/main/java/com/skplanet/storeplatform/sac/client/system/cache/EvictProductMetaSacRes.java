@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
- * DESC
+ * EvictProductMetaSacRes
  * </p>
  * Updated on : 2014. 06. 13 Updated by : 정희원, SK 플래닛.
  */
@@ -21,9 +21,9 @@ public class EvictProductMetaSacRes extends CommonInfo {
 
     private static final long serialVersionUID = 1L;
 
-    String prodType;
+    private String prodType;
 
-    String prodId;
+    private String prodId;
 
     public String getProdType() {
         return prodType;
