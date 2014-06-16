@@ -660,6 +660,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setNmSeller(sellerInfo.getSellerNickName()); // 쇼핑 노출명
 			res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
 			res.setNoTelSeller(sellerInfo.getRepPhone()); // 대표전화번호
+
+			// 쇼핑상품 종류
+			res.setProdKind(reservedDataMap.get("prodCaseCd"));
 		}
 
 		// 선물 수신자
