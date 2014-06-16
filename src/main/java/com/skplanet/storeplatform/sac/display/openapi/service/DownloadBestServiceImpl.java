@@ -104,42 +104,53 @@ public class DownloadBestServiceImpl implements DownloadBestService {
 		String inquiryType = downloadBestSacReq.getInquiryType();
 		String inquiryValue = downloadBestSacReq.getInquiryValue();
 
-		if ("2".equals(inquiryType)) {
-			// 사업자 등록번호로 Selley Key 조회
-			String[] arraySellerKey = null;
-			DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-			List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
-			SellerMbrSac sellerMbrSac = new SellerMbrSac();
-			sellerMbrSac.setSellerBizNumber(inquiryValue);
-			sellerMbrSacList.add(sellerMbrSac);
-			detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
-			this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
-			long start = System.currentTimeMillis();
-			try {
+		this.log.debug("########### inquiryType : " + inquiryType);
+		this.log.debug("########### inquiryValue : " + inquiryValue);
 
-				DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
-						.detailInformation(detailInformationSacReq);
+		// sellerKey 조회
+		String[] arraySellerKey = null;
+		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		SellerMbrSac sellerMbrSac = new SellerMbrSac();
 
-				Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
-				// sellerMbrSac = new SellerMbrSac();
-				while (it.hasNext()) {
-					String key = it.next();
-					List<SellerMbrSac> sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
-					arraySellerKey = new String[sellerMbrs.size()];
-					for (int i = 0; i < sellerMbrs.size(); i++) {
-						arraySellerKey[i] = sellerMbrs.get(i).getSellerKey();
-					}
-				}
-				// 조회된 Seller Key setting
-				downloadBestSacReq.setArraySellerKey(arraySellerKey);
-			} catch (Exception e) {
-				downloadBestSacReq.setArraySellerKey(arraySellerKey);
-			}
-			this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation");
-			long end = System.currentTimeMillis();
-			this.log.info("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformation takes {} ms",
-					(end - start));
+		// 판매자 ID로 sellerKey 조회
+		if ("1".equals(inquiryType)) {
+			sellerMbrSac.setSellerId(inquiryValue);
 		}
+
+		// 사업자 번호로 sellerKey 조회
+		if ("2".equals(inquiryType)) {
+			sellerMbrSac.setSellerBizNumber(inquiryValue);
+		}
+
+		sellerMbrSacList.add(sellerMbrSac);
+		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+		this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformation");
+		long start = System.currentTimeMillis();
+		try {
+
+			DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
+					.detailInformation(detailInformationSacReq);
+
+			Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
+			// sellerMbrSac = new SellerMbrSac();
+			while (it.hasNext()) {
+				String key = it.next();
+				List<SellerMbrSac> sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
+				arraySellerKey = new String[sellerMbrs.size()];
+				for (int i = 0; i < sellerMbrs.size(); i++) {
+					arraySellerKey[i] = sellerMbrs.get(i).getSellerKey();
+				}
+			}
+			// 조회된 Seller Key setting
+			downloadBestSacReq.setArraySellerKey(arraySellerKey);
+		} catch (Exception e) {
+			downloadBestSacReq.setArraySellerKey(arraySellerKey);
+		}
+		this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformation");
+		long end = System.currentTimeMillis();
+		this.log.info("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformation takes {} ms",
+				(end - start));
 
 		List<MetaInfo> downloadBestList = null;
 		// OpenApi 다운로드 Best 상품 조회

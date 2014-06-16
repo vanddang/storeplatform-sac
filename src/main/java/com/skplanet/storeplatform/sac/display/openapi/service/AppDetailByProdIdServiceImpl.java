@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,17 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -60,6 +66,9 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 
 	@Value("#{propertiesForSac['web.poc.apps.detail.url']}")
 	private String webPocAppsDetailUrl;
+
+	@Autowired
+	SellerSearchSCI sellerSearchSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -210,7 +219,53 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 
 				product.setProductDetailExplain(metaInfo.getProdDtlDesc()); // 상품 상세 설명
 
-				product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
+				// 2014.06.13 판매자 정보 목록 조회 추가 (백승현K)
+				String sellerMbrNo = null;
+				List<String> sellerKeyList = null;
+				DetailInformationListForProductSacReq sellerReq = null;
+				DetailInformationListForProductSacRes sellerRes = null;
+
+				String sellerId = null;
+				try {
+					sellerKeyList = new ArrayList<String>();
+					sellerReq = new DetailInformationListForProductSacReq();
+
+					// 회원 판매자 정보를 위한 판매자키 파라미터 세팅
+					sellerMbrNo = metaInfo.getSellerMbrNo();
+
+					if (StringUtils.isNotEmpty(sellerMbrNo)) {
+						sellerKeyList.add(sellerMbrNo);
+					}
+
+					sellerReq.setSellerKeyList(sellerKeyList);
+
+					this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformationListForProduct");
+					long start = System.currentTimeMillis();
+
+					// 회원 판매자 정보 조회
+					sellerRes = this.sellerSearchSCI.detailInformationListForProduct(sellerReq);
+
+					this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformationListForProduct");
+					long end = System.currentTimeMillis();
+					this.log.info("##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
+							(end - start));
+
+					if (StringUtils.isNotEmpty(sellerMbrNo)) {
+						SellerMbrInfoSac SellerMbrInfoSac = sellerRes.getSellerMbrMap().get(sellerMbrNo);
+
+						if (SellerMbrInfoSac != null) {
+							sellerId = SellerMbrInfoSac.getSellerId();
+						}
+					}
+				} catch (Exception e) {
+					this.log.error("판매자 정보 목록 조회 연동 중 오류가 발생하였습니다.\n", e);
+				}
+
+				// Distributor 상세정보(판매자 정보)
+				Distributor distributor = new Distributor();
+				distributor.setIdentifier(sellerId);
+				distributor.setName(metaInfo.getExpoSellerNm());
+				product.setDistributor(distributor);
 
 				productList.add(product);
 				commonResponse.setTotalCount(1);
