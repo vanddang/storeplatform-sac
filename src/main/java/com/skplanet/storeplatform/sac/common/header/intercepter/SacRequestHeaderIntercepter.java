@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -32,6 +33,17 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 
 	@Autowired
 	private TenantExtractor tenantExtractor;
+
+    @Value("#{config['header.device.resolution']}")
+    private String defaultDevResolution = "";
+    @Value("#{config['header.device.svc']}")
+    private String defaultDevSvc = "";
+    @Value("#{config['header.device.model']}")
+    private String defaultDevModel = "";
+    @Value("#{config['header.device.os']}")
+    private String defaultDevOs = "";
+    @Value("#{config['header.network.type']}")
+    private String defaultNetType = "";
 
     private static final Pattern PATTERN_KV = Pattern.compile("^\\s*(\\w+)\\s*=\\s*\"([\\d\\w\\-\\.\\*/_,]*)\"\\s*(,|$)");
 
@@ -81,12 +93,12 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 	 */
 	private DeviceHeader extractDevice(NativeWebRequest webRequest) {
         DeviceHeader device = new DeviceHeader();
-        device.setDpi("320");
-        device.setModel("SHW-M110S");
-        device.setResolution("480*720");
-        device.setOs("Android/4.0.4");
-        device.setPkg("store.skplanet.com/0.1");
-        device.setSvc("SAC_Client/4.3");
+        device.setDpi("");  // 참조 없음
+        device.setPkg(""); // 참조 없음
+        device.setResolution(defaultDevResolution);
+        device.setSvc(defaultDevSvc);
+        device.setModel(defaultDevModel);
+        device.setOs(defaultDevOs);
 
         String headerStr = webRequest.getHeader(CommonConstants.HEADER_DEVICE);
         this.assignValues(headerStr, device);
@@ -107,9 +119,9 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 	 */
 	private NetworkHeader extractNetwork(NativeWebRequest webRequest) {
 		NetworkHeader network = new NetworkHeader();
-		network.setOperator("unknown/unknown");
-		network.setSimOperator("450/05");
-		network.setType("wifi");
+		network.setOperator("");    // 참조 없음
+		network.setSimOperator(""); // 참조 없음
+		network.setType(defaultNetType);
 
         String headerStr = webRequest.getHeader(CommonConstants.HEADER_NETWORK);
         this.assignValues(headerStr, network);
