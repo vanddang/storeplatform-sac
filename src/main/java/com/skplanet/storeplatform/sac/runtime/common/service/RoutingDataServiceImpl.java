@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.runtime.common.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
 @Service
 public class RoutingDataServiceImpl implements RoutingDataService {
 
-	@Autowired
+	@Autowired @Qualifier("sac")
 	private CommonDAO dao;
 
 	public void setDao(CommonDAO dao) {
