@@ -96,6 +96,29 @@
 		   AND PROD_ID= #{productId}
     </update>
     
+    <!-- 회원 평점 테이블 회원별 중복 상품 조회 -->
+    <select id="getMbrAvgProdId" parameterType="ChangeDisplayUser" resultType="Map">
+        SELECT /* LocalSciMapper.xml, getMbrAvgProdId, SAC : 남궁석호, 2014-06-16 */
+               PROD_ID
+          FROM TB_DP_MBR_AVG
+         WHERE TENANT_ID = #{tenantId}
+           AND MBR_NO = #{newUserKey}
+           AND PROD_ID IN ( SELECT PROD_ID
+                              FROM TB_DP_MBR_AVG
+                             WHERE TENANT_ID = #{tenantId}
+                               AND MBR_NO = #{oldUserKey}
+                           )
+    </select>
+
+    <!-- 회원 평점 테이블 회원별 중복 상품 삭제 -->  
+    <delete id="deleteMbrAvg" parameterType="ChangeDisplayUser">
+        DELETE /* LocalSciMapper.xml, deleteMbrAvg, SAC : 남궁석호, 2014-06-16 */
+          FROM TB_DP_MBR_AVG
+         WHERE TENANT_ID = #{tenantId}
+           AND PROD_ID = #{prodId}
+           AND MBR_NO = #{newUserKey}
+    </delete>
+
     <!-- 평점 테이블 회원 ID, KEY 변경 -->
     <update id="changeMbrAvg" parameterType="ChangeDisplayUser">
 	    UPDATE /* LocalSciMapper.xml, changeMbrAvg, SAC : 김현일 , 2014-02-17 */

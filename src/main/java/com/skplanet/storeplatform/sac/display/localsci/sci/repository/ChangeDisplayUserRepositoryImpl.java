@@ -23,6 +23,16 @@ public class ChangeDisplayUserRepositoryImpl implements ChangeDisplayUserReposit
 	private CommonDAO commonDAO;
 
 	@Override
+	public Object getMbrAvgProdId(ChangeDisplayUser changeDisplayUser) {
+		return this.commonDAO.queryForList("LocalSci.getMbrAvgProdId", changeDisplayUser);
+	}
+
+	@Override
+	public Object deleteMbrAvg(ChangeDisplayUser changeDisplayUser) {
+		return this.commonDAO.delete("LocalSci.deleteMbrAvg", changeDisplayUser);
+	}
+
+	@Override
 	public Object changeMbrAvg(ChangeDisplayUser changeDisplayUser) {
 		return this.commonDAO.update("LocalSci.changeMbrAvg", changeDisplayUser);
 	}

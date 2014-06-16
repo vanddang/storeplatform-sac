@@ -38,6 +38,11 @@ public class ChangeDisplayUser extends CommonInfo {
 	private String oldUserKey;
 
 	/**
+	 * prodId.
+	 */
+	private String prodId;
+
+	/**
 	 * @return String
 	 */
 	public String getTenantId() {
@@ -112,4 +117,18 @@ public class ChangeDisplayUser extends CommonInfo {
 		this.oldUserKey = oldUserKey;
 	}
 
+	/**
+	 * @return String
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            prodId
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
+	}
 }

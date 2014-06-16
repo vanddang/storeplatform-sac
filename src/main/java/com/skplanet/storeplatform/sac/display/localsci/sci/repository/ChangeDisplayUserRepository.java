@@ -15,6 +15,30 @@ public interface ChangeDisplayUserRepository {
 	/**
 	 * 
 	 * <pre>
+	 * 회원 평점 테이블 회원별 중복 상품 조회.
+	 * </pre>
+	 * 
+	 * @param changeDisplayUser
+	 *            changeDisplayUser
+	 * @return Object
+	 */
+	public Object getMbrAvgProdId(ChangeDisplayUser changeDisplayUser);
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원 평점 테이블 회원별 중복 상품 삭제.
+	 * </pre>
+	 * 
+	 * @param changeDisplayUser
+	 *            changeDisplayUser
+	 * @return Object
+	 */
+	public Object deleteMbrAvg(ChangeDisplayUser changeDisplayUser);
+
+	/**
+	 * 
+	 * <pre>
 	 * 상품 평점 테이블 변경.
 	 * </pre>
 	 * 
