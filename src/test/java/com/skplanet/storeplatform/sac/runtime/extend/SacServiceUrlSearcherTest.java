@@ -23,8 +23,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
-import com.skplanet.storeplatform.sac.runtime.extend.url.SacExternalUrlBuilder;
-import com.skplanet.storeplatform.sac.runtime.extend.url.SacInternalUrlBuilder;
+import com.skplanet.storeplatform.sac.runtime.extend.url.SacExternalUrlService;
+import com.skplanet.storeplatform.sac.runtime.extend.url.SacInternalUrlService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SacServiceUrlSearcherTest {
@@ -36,10 +36,10 @@ public class SacServiceUrlSearcherTest {
 	private AclDataAccessService dataService;
 
 	@Mock
-	private SacExternalUrlBuilder extUrlBuilder;
+	private SacExternalUrlService extUrlBuilder;
 
 	@Mock
-	private SacInternalUrlBuilder intUrlBuilder;
+	private SacInternalUrlService intUrlBuilder;
 
 	@Before
 	public void before() {
