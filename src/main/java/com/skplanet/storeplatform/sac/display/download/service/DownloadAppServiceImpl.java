@@ -125,6 +125,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			}
 		}
 
+		if (StringUtils.isEmpty(osVersion)) {
+			throw new StorePlatformException("SAC_DSP_0024");
+		}
+
 		Map chkSupportOs = (Map) this.commonDAO.queryForObject("Download.selectSupportOsVersion", downloadAppSacReq);
 
 		if (chkSupportOs != null) {
