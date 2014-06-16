@@ -14,7 +14,6 @@ import java.util.Properties;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -22,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  *
  * Created on 2014. 05. 29. by 서대영, SK 플래닛.
  */
-@Service
+// @Service (SacExternalUrlServiceDb 적용 후 문제가 생기면 활성화 요망)
 public class SacExternalUrlServiceProp implements SacExternalUrlService {
 
 	/**

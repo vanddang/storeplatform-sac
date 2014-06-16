@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.runtime.extend.url;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -22,7 +23,7 @@ import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
  *
  * Created on 2014. 05. 29. by 서대영, SK 플래닛.
  */
-// @Service
+@Service // (SacExternalUrlServiceDb 적용 후 문제가 생기면 비활성화 요망)
 public class SacExternalUrlServiceDb implements SacExternalUrlService {
 
 	@Autowired
