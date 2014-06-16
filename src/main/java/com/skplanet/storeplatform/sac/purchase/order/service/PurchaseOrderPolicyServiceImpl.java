@@ -180,7 +180,6 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// 정책 체크
 		IndividualPolicyInfoSac individualPolicyInfoSac = null;
 
-		// 비과금결제 우선 체크
 		for (String key : policyResMap.keySet()) {
 			if (policyCodeList.contains(key) == false) {
 				continue;
@@ -188,8 +187,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 			individualPolicyInfoSac = policyResMap.get(key);
 
-			if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)
-					&& StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)) {
+			// if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)
+			// && StringUtils.equals(individualPolicyInfoSac.getValue(), PurchaseConstants.USE_Y)) {
+			if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
 				// 테스트폰 결제
 				this.logger.info("PRCHS,ORDER,SAC,POLICY,TESTMDN,{}", deviceId);
 				return true;
