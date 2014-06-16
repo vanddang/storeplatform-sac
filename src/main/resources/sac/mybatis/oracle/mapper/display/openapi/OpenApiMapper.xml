@@ -63,20 +63,17 @@
 		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
 		                           AND E.PROD_STATUS_CD ='PD000403'
 		                           AND SYSDATE BETWEEN G.APPLY_START_DT AND G.APPLY_END_DT
-		                           <if test='inquiryType == "1"'> 
-		                              AND B.REG_ID = #{inquiryValue}        /* 개발자 ID */
-		                           </if>
-                                   <if test='inquiryType == "2"'>
+
                                       <if test="arraySellerKey != null">
                                       AND B.SELLER_MBR_NO IN 
-                                     <foreach collection="arraySellerKey" item="sellerKey" separator="," open="(" close=")">
-                                       #{sellerKey}
-                                     </foreach>                           
+	                                     <foreach collection="arraySellerKey" item="sellerKey" separator="," open="(" close=")">
+	                                       #{sellerKey}
+	                                     </foreach>                           
                                      </if>
                                      <if test="arraySellerKey == null or arraySellerKey == ''">
-                                     AND B.SELLER_MBR_NO = ''
+                                        AND B.SELLER_MBR_NO = ''
                                      </if> 
-                                   </if>		                           
+	                           
 		                           AND B.PROD_CHRG_YN = #{prodCharge}    /* 유무료 구분 */       
 		                         ORDER BY A.DWLD_QTY
 		                                , C.PROD_NM
@@ -2184,6 +2181,7 @@
                     FROM TB_DP_TENANT_PROD_STATS DTPS
                    WHERE DTPS.PROD_ID = DP.PROD_ID 
                    AND TENANT_ID = #{tenantId}), 0)      AS PATICPERS_CNT    /*평점 참여자*/
+                ,DP.SELLER_MBR_NO          AS SELLER_MBR_NO                    
                 ,DP.EXPO_SELLER_NM         AS EXPO_SELLER_NM         
                 ,DP.REG_ID                 AS EXPO_SELLER_ID          
                 ,DP.TOP_MENU_ID            AS TOP_MENU_ID 
