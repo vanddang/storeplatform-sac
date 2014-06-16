@@ -26,8 +26,8 @@ import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearc
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDataAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
-import com.skplanet.storeplatform.sac.runtime.extend.url.SacExternalUrlBuilder;
-import com.skplanet.storeplatform.sac.runtime.extend.url.SacInternalUrlBuilder;
+import com.skplanet.storeplatform.sac.runtime.extend.url.SacExternalUrlService;
+import com.skplanet.storeplatform.sac.runtime.extend.url.SacInternalUrlService;
 
 /**
  * ServiceUrlSearcher 구현체
@@ -46,10 +46,10 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 	private AclDataAccessService aclDataService;
 
 	@Autowired
-	private SacInternalUrlBuilder intUrlBuilder;
+	private SacInternalUrlService intUrlBuilder;
 
 	@Autowired
-	private SacExternalUrlBuilder extUrlBuilder;
+	private SacExternalUrlService extUrlBuilder;
 
 	@Override
 	public String search(Map<String, Object> headerMap) {

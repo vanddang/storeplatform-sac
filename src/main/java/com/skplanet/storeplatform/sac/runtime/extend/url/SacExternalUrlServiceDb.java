@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.runtime.extend.url;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -23,8 +22,8 @@ import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
  *
  * Created on 2014. 05. 29. by 서대영, SK 플래닛.
  */
-@Service
-public class SacExternalUrlBuilderDb implements SacExternalUrlBuilder {
+// @Service
+public class SacExternalUrlServiceDb implements SacExternalUrlService {
 
 	@Autowired
 	private RoutingDataService dataSvc;
@@ -47,13 +46,13 @@ public class SacExternalUrlBuilderDb implements SacExternalUrlBuilder {
 		}
 
 		try {
-			SacExternalUrlBuilderUtils.buildUrl(bypass);
+			SacExternalUrlBuilder.buildUrl(bypass);
 		} catch (Exception e) {
 			// 인터페이스({0})의 바이패스 URL 생성에 문제가 발생하였습니다.
 			throw new StorePlatformException("SAC_CMN_0093", interfaceId);
 		}
 
-		return SacExternalUrlBuilderUtils.buildUrl(bypass);
+		return SacExternalUrlBuilder.buildUrl(bypass);
 	}
 
 }

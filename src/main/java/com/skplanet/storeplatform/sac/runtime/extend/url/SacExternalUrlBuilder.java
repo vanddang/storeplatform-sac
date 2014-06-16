@@ -1,23 +1,22 @@
-/*
- * Copyright (c) 2013 SK planet.
- * All right reserved.
- *
- * This software is the confidential and proprietary information of SK planet.
- * You shall not disclose such Confidential Information and
- * shall use it only in accordance with the terms of the license agreement
- * you entered into with SK planet.
- */
 package com.skplanet.storeplatform.sac.runtime.extend.url;
 
 import org.springframework.web.util.UriComponentsBuilder;
 
-/**
- * SAC 외부 호출용 URL 생성기 (EC 호출)
- *
- * Created on 2014. 05. 29. by 서대영, SK 플래닛.
- */
-public interface SacExternalUrlBuilder {
+import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
+import com.skplanet.storeplatform.sac.runtime.common.vo.Component;
 
-	UriComponentsBuilder buildUrl(String innerRequestURI, String interfaceId);
+public class SacExternalUrlBuilder {
+
+	public static UriComponentsBuilder buildUrl(Bypass bypass) {
+		Component component = bypass.getComponent();
+		String scheme = component.getProtocolNm();
+		String host = component.getDomain();
+		int port = component.getPort();
+		String path = bypass.getPath();
+
+		UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
+		builder.scheme(scheme).host(host).port(port).path(path);
+		return builder;
+	}
 
 }

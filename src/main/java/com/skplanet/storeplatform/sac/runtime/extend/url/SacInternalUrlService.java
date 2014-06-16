@@ -20,7 +20,7 @@ import javax.management.ObjectName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -31,10 +31,10 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 *
 * Created on 2014. 05. 29. by 서대영, SK 플래닛.
 */
-@Component
-public class SacInternalUrlBuilder {
+@Service
+public class SacInternalUrlService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SacInternalUrlBuilder.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SacInternalUrlService.class);
 
 	/**
 	 * 내부 호출 서블릿 Host. ("http://localhost")
