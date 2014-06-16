@@ -224,13 +224,15 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			purchaseOrderInfo.setTestMdn(true);
 			purchaseOrderInfo.setFreePaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_STORE_TEST_DEVICE);
 			purchaseOrderInfo.setRealTotAmt(0.0);
+
+			return;
 		}
 
 		// 구매차단 여부
-		// if( isBlockPayment(purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getPurchaseUser().getDeviceId(),
-		// purchaseOrderInfo.getTenantProdGrpCd())) {
-		// purchaseOrderInfo.setBlockPayment(true);
-		// }
+		if (this.isBlockPayment(purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getPurchaseUser().getDeviceId(),
+				purchaseOrderInfo.getTenantProdGrpCd())) {
+			purchaseOrderInfo.setBlockPayment(true);
+		}
 	}
 
 	/**

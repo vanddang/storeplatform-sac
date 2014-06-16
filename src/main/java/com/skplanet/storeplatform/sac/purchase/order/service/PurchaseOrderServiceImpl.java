@@ -478,8 +478,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// 구매(결제) 차단 체크
 
-		res.setFlgBlockPayment(this.purchaseOrderPolicyService.isBlockPayment(prchsDtlMore.getTenantId(),
-				reservedDataMap.get("deviceId"), prchsDtlMore.getTenantProdGrpCd()) ? PurchaseConstants.VERIFYORDER_BLOCK_PAYMENT : PurchaseConstants.VERIFYORDER_ALLOW_PAYMENT);
+		// res.setFlgBlockPayment(this.purchaseOrderPolicyService.isBlockPayment(prchsDtlMore.getTenantId(),
+		// reservedDataMap.get("deviceId"), prchsDtlMore.getTenantProdGrpCd()) ?
+		// PurchaseConstants.VERIFYORDER_BLOCK_PAYMENT : PurchaseConstants.VERIFYORDER_ALLOW_PAYMENT);
 
 		// ------------------------------------------------------------------------------------------------
 		// SKT 후불 관련 정책 체크: SKT시험폰, MVNO, 법인폰, 한도금액 조회
@@ -807,7 +808,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			CouponPublishEcRes couponPublishEcRes = this.purchaseShoppingOrderRepository.createCouponPublish(
 					prchsDtlMore.getPrchsId(), reservedDataMap.get("useDeviceId"), reservedDataMap.get("deviceId"),
 					reservedDataMap.get("couponCode"), reservedDataMap.get("itemCode"), prchsDtlMore.getProdQty());
-			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,SHOPPING,{}", couponPublishEcRes);
 
 			if (StringUtils
 					.equals(couponPublishEcRes.getPublishType(), PurchaseConstants.SHOPPING_COUPON_PUBLISH_ASYNC) == false

@@ -20,7 +20,9 @@ import org.springframework.stereotype.Component;
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishDetailEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponPublishEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
@@ -68,7 +70,10 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		couponPublishEcReq.setCouponCode(couponCode);
 		couponPublishEcReq.setItemCode(itemCode);
 		couponPublishEcReq.setItemCount(qty);
+
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,PUBLISH,REQ,{}", couponPublishEcReq);
 		CouponPublishEcRes couponPublishEcRes = this.shoppingSCI.createCouponPublish(couponPublishEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,PUBLISH,RES,{}", couponPublishEcRes);
 
 		return couponPublishEcRes;
 	}
@@ -87,7 +92,10 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
 		couponPublishCancelEcReq.setPrchsId(prchsId);
 
-		this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,CANCEL,REQ,{}", couponPublishCancelEcReq);
+		CouponPublishCancelEcRes couponPublishCancelEcRes = this.shoppingSCI
+				.cancelCouponPublish(couponPublishCancelEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,CANCEL,RES,{}", couponPublishCancelEcRes);
 	}
 
 	/**
@@ -126,8 +134,8 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		bizCouponPublishEcReq.setCouponCode(couponCode);
 		bizCouponPublishEcReq.setBizCouponPublishDetailList(bizCouponPublishDetailEcList);
 
-		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
-
-		this.shoppingSCI.createBizCouponPublish(bizCouponPublishEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,BIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
+		BizCouponPublishEcRes bizCouponPublishEcRes = this.shoppingSCI.createBizCouponPublish(bizCouponPublishEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,BIZ,PUBLISH,RES,{}", bizCouponPublishEcRes);
 	}
 }

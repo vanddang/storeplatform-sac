@@ -143,14 +143,14 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	 * 회원의 비과금단말 / 구매차단 정책 조회.
 	 * </pre>
 	 * 
-	 * @param deviceKey
-	 *            내부 디바이스 ID
+	 * @param policyKey
+	 *            정책 Key
 	 * @param policyCodeList
 	 *            정책코드 목록
 	 * @return
 	 */
 	@Override
-	public Map<String, IndividualPolicyInfoSac> getPurchaseUserPolicy(String deviceKey, List<String> policyCodeList) {
+	public Map<String, IndividualPolicyInfoSac> getPurchaseUserPolicy(String policyKey, List<String> policyCodeList) {
 		List<PolicyCode> policyCodeObjList = new ArrayList<PolicyCode>();
 		PolicyCode policyCodeObj = null;
 		for (String policyCode : policyCodeList) {
@@ -159,7 +159,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 			policyCodeObjList.add(policyCodeObj);
 		}
 		GetIndividualPolicySacReq getIndividualPolicySacReq = new GetIndividualPolicySacReq();
-		getIndividualPolicySacReq.setKey(deviceKey);
+		getIndividualPolicySacReq.setKey(policyKey);
 		getIndividualPolicySacReq.setPolicyCodeList(policyCodeObjList);
 
 		GetIndividualPolicySacRes getIndividualPolicySacRes = null;

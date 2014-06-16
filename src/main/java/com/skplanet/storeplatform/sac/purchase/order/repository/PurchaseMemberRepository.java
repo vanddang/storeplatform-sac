@@ -60,13 +60,13 @@ public interface PurchaseMemberRepository {
 	 * 회원의 비과금단말 / 구매차단 정책 조회.
 	 * </pre>
 	 * 
-	 * @param deviceKey
-	 *            내부 디바이스 ID
+	 * @param policyKey
+	 *            정책 적용 Key
 	 * @param policyCodeList
 	 *            정책코드 목록
 	 * @return
 	 */
-	public Map<String, IndividualPolicyInfoSac> getPurchaseUserPolicy(String deviceKey, List<String> policyCodeList);
+	public Map<String, IndividualPolicyInfoSac> getPurchaseUserPolicy(String policyKey, List<String> policyCodeList);
 
 	/**
 	 * 

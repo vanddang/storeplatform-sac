@@ -99,22 +99,24 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		// userCouponListEcReq.setCouponType("");
 		userCouponListEcReq.setProdIdList(prodIdObjList);
 
-		UserCouponListEcRes tstoreCouponListEcRes = null;
+		UserCouponListEcRes userCouponListEcRes = null;
 		try {
-			tstoreCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,REQ,{}", userCouponListEcReq);
+			userCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES,{}", userCouponListEcRes);
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7210", e);
 		}
 
-		if (StringUtils.equals(tstoreCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
-			throw new StorePlatformException("SAC_PUR_7206", tstoreCouponListEcRes.getResultCd(),
-					tstoreCouponListEcRes.getResultMsg());
+		if (StringUtils.equals(userCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
+			throw new StorePlatformException("SAC_PUR_7206", userCouponListEcRes.getResultCd(),
+					userCouponListEcRes.getResultMsg());
 		}
 
-		if (CollectionUtils.isNotEmpty(tstoreCouponListEcRes.getCouponList())) {
+		if (CollectionUtils.isNotEmpty(userCouponListEcRes.getCouponList())) {
 			StringBuffer sbTstoreCoupon = new StringBuffer(256);
 
-			for (Coupon coupon : tstoreCouponListEcRes.getCouponList()) {
+			for (Coupon coupon : userCouponListEcRes.getCouponList()) {
 				if (sbTstoreCoupon.length() > 0) {
 					sbTstoreCoupon.append(";");
 				}
@@ -154,7 +156,9 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 
 		TStoreCashBalanceEcRes tStoreCashEcRes = null;
 		try {
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,SEARCH,REQ,{}", tStoreCashEcReq);
 			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,SEARCH,RES,{}", tStoreCashEcRes);
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7211", e);
 		}
@@ -197,7 +201,9 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 
 		TStoreCashBalanceEcRes tStoreCashEcRes = null;
 		try {
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,SEARCH,REQ,{}", tStoreCashEcReq);
 			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,SEARCH,RES,{}", tStoreCashEcRes);
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7211", e);
 		}
@@ -266,8 +272,10 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreCashChargeReserveEcReq.setUserKey(userKey);
 		tStoreCashChargeReserveEcReq.setCashList(cashReserveList);
 
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,RESERVE,REQ,{}", tStoreCashChargeReserveEcReq);
 		TStoreCashChargeReserveEcRes tStoreCashChargeReserveEcRes = this.tStoreCashSCI
 				.reserveCharge(tStoreCashChargeReserveEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,RESERVE,RES,{}", tStoreCashChargeReserveEcRes);
 
 		if (StringUtils.equals(tStoreCashChargeReserveEcRes.getResultCd(),
 				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
@@ -310,8 +318,11 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		TStoreCashChargeConfirmEcReq tStoreCashChargeConfirmEcReq = new TStoreCashChargeConfirmEcReq();
 		tStoreCashChargeConfirmEcReq.setUserKey(userKey);
 		tStoreCashChargeConfirmEcReq.setCashList(cashConfirmList);
+
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CONFIRM,REQ,{}", tStoreCashChargeConfirmEcReq);
 		TStoreCashChargeConfirmEcRes tStoreCashChargeConfirmEcRes = this.tStoreCashSCI
 				.confirmCharge(tStoreCashChargeConfirmEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CONFIRM,RES,{}", tStoreCashChargeConfirmEcRes);
 
 		if (StringUtils.equals(tStoreCashChargeConfirmEcRes.getResultCd(),
 				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
@@ -352,9 +363,10 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreCashChargeCancelEcReq.setUserKey(userKey);
 		tStoreCashChargeCancelEcReq.setCashList(cashCancelList);
 
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CANCEL,REQ,{}", tStoreCashChargeCancelEcReq);
 		TStoreCashChargeCancelEcRes tStoreCashChargeCancelEcRes = this.tStoreCashSCI
 				.cancelCharge(tStoreCashChargeCancelEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,CANCEL_GAMECASH,RESULT,{}", tStoreCashChargeCancelEcRes.getResultCd());
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CANCEL,RES,{}", tStoreCashChargeCancelEcRes);
 
 		if (StringUtils.equals(tStoreCashChargeCancelEcRes.getResultCd(),
 				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
@@ -391,9 +403,9 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreNotiEcReq.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
 
 		try {
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,NOTI,REQ,{}", tStoreNotiEcReq);
 			TStoreNotiEcRes tStoreNotiEcRes = this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
-			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,{},{},{}", prchsId, tStoreNotiEcRes.getCode(),
-					tStoreNotiEcRes.getMessage());
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,NOTI,RES,{}", tStoreNotiEcRes);
 		} catch (Exception e) {
 			// 예외 throw 차단
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,ERROR,{},{}", prchsId, e.getMessage());
