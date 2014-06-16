@@ -5,6 +5,7 @@ package com.skplanet.storeplatform.sac.member.user.sci;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,15 +168,19 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// OCB이용약관 동의여부 searchOneId
 		String ocbAgreementYn = "N";
-		try {
-			ocbAgreementYn = StringUtil.setTrimYn(detailRes.getUserInfo().getIsMemberPoint());
-		} catch (StorePlatformException ex) {
-			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				ocbAgreementYn = "N";
-			} else if (ex.getErrorInfo().getCode().equals(MemberConstants.SAC_ERROR_NO_ONEID)) {
-				ocbAgreementYn = "N";
-			}
-			LOGGER.debug("====== OneId Response : {}", ex.getCode());
+		//		try {
+		//			ocbAgreementYn = StringUtil.setTrimYn(detailRes.getUserInfo().getIsMemberPoint());
+		//		} catch (StorePlatformException ex) {
+		//			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+		//				ocbAgreementYn = "N";
+		//			} else if (ex.getErrorInfo().getCode().equals(MemberConstants.SAC_ERROR_NO_ONEID)) {
+		//				ocbAgreementYn = "N";
+		//			}
+		//			LOGGER.debug("====== OneId Response : {}", ex.getCode());
+		//		}
+		if (StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())
+				&& this.searchUserSCIService.isOcbJoinIDP(detailRes.getUserInfo().getImSvcNo())) {
+			ocbAgreementYn = "Y";
 		}
 
 		// OCB 카드번호
@@ -246,8 +251,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 		// SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
 		// searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
-		Map<String, UserDeviceInfoSac> userInfoMap = this.searchUserSCIService.srhUserByDeviceKey(requestHeader,
-				request);
+		Map<String, UserDeviceInfoSac> userInfoMap = this.searchUserSCIService.srhUserByDeviceKey(requestHeader, request);
 
 		// Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
 		// UserDeviceInfoSac userDeviceInfoSac;

@@ -142,4 +142,26 @@ public interface SearchUserSCIService {
 	 */
 	public GetOcbInformationRes getOcbInformation(SacRequestHeader sacHeader, GetOcbInformationReq req);
 
+	/**
+	 * <pre>
+	 * OCB 가입여부 IDP 조회.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	/**
+	 * <pre>
+	 * OCB 가입여부 IDP 조회.
+	 * </pre>
+	 * 
+	 * @param imSvcNo
+	 *            String
+	 * @return OCB 가입여부
+	 */
+	public boolean isOcbJoinIDP(String imSvcNo);
+
 }
