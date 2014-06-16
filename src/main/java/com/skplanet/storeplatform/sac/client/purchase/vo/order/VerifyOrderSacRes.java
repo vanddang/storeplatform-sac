@@ -54,6 +54,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private Double loanAmt; // 대여하기 상품 금액
 	private String ownPid; // 소장하기 상품 ID
 	private Double ownAmt; // 소장하기 상품 금액
+	private String prodKind; // 쇼핑상품 종류
 	private String nmSeller; // 판매자명
 	private String emailSeller; // 판매자 이메일 주소
 	private String noTelSeller; // 판매자 전화번호
@@ -568,6 +569,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setOwnAmt(Double ownAmt) {
 		this.ownAmt = ownAmt;
+	}
+
+	/**
+	 * @return the prodKind
+	 */
+	public String getProdKind() {
+		return this.prodKind;
+	}
+
+	/**
+	 * @param prodKind
+	 *            the prodKind to set
+	 */
+	public void setProdKind(String prodKind) {
+		this.prodKind = prodKind;
 	}
 
 	/**
