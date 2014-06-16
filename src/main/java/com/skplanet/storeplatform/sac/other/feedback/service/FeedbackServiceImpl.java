@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -92,9 +91,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Autowired
 	private FeedbackRepository feedbackRepository;
-
-	@Value("#{propertiesForSac['other.ogg.method.iscall']}")
-	public boolean isCall;
 
 	@Override
 	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackSacReq, SacRequestHeader sacRequestHeader) {
@@ -248,24 +244,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 					updateTenantProdStats.setUpdId(removeFeedbackSacReq.getUserId());
 					updateTenantProdStats.setAction("remove");
 
-					if (this.isCall) { // OGG연동을 위한 프로시저 호출시 사용 properties값을 이용하여 재빌드 없이 수행함
-						param.put("prodId", updateTenantProdStats.getProdId());
-						param.put("tenantId", updateTenantProdStats.getTenantId());
-						param.put("updId", updateTenantProdStats.getUpdId());
-						param.put("action", updateTenantProdStats.getAction());
-						param.put("avgEvluScore", updateTenantProdStats.getAvgEvluScore());
-						param.put("preAvgScore", updateTenantProdStats.getPreAvgScore());
-						param.put("rsltCd", "");
-						this.feedbackRepository.updateTenantProdStatsProc(param);
-
-						String result = param.get("rsltCd");
-						LOGGER.debug("#### OTHER_PART remove START####");
-						LOGGER.debug("#### OTHER_PART PROCEDURE RETURN VALUE : {}", result);
-						LOGGER.debug("#### OTHER_PART remove END####");
-
-					} else {
-						this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
-					}
+					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
 				}
 				// 웹툰일경우 채널ID에 에피소드들의 상품통계 평점을 계산한다.
 				this.setWebtoonChannelMbrAvgTenantStats(removeFeedbackSacReq.getProdId(), sacRequestHeader
@@ -339,21 +318,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNotiGood.setAction("create");
 
 		HashMap<String, String> param = new HashMap<String, String>();
-		if (this.isCall) { // OGG연동을 위한 프로시저 호출시 사용 properties값을 이용하여 재빌드 없이 수행함
-			param.put("seq", prodNotiGood.getNotiSeq());
-			param.put("tenantId", prodNotiGood.getTenantId());
-			param.put("action", prodNotiGood.getAction());
-			param.put("rsltCd", "");
-			this.feedbackRepository.updateProdNotiGoodProc(param);
 
-			String result = param.get("rsltCd");
-			LOGGER.debug("#### OTHER_PART createRecommend START####");
-			LOGGER.debug("#### OTHER_PART PROCEDURE RETURN VALUE : {}", result);
-			LOGGER.debug("#### OTHER_PART createRecommend END####");
-
-		} else {
-			affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
-		}
+		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
 
 		if (affectedRow <= 0) {
 			throw new StorePlatformException("SAC_OTH_9202");
@@ -451,21 +417,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		HashMap<String, String> param = new HashMap<String, String>();
 
-		if (this.isCall) { // OGG연동을 위한 프로시저 호출시 사용 properties값을 이용하여 재빌드 없이 수행함
-			param.put("seq", prodNotiGood.getNotiSeq());
-			param.put("tenantId", prodNotiGood.getTenantId());
-			param.put("action", prodNotiGood.getAction());
-			param.put("rsltCd", "");
-			this.feedbackRepository.updateProdNotiGoodProc(param);
-
-			String result = param.get("rsltCd");
-			LOGGER.debug("#### OTHER_PART removeRecommend START####");
-			LOGGER.debug("#### OTHER_PART PROCEDURE RETURN VALUE : {}", result);
-			LOGGER.debug("#### OTHER_PART removeRecommend END####");
-
-		} else {
-			affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
-		}
+		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
 
 		if (affectedRow <= 0) {
 			throw new StorePlatformException("SAC_OTH_9204");
@@ -918,45 +870,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 				updateTenantProdStats.setPreAvgScore(getRegMbrAvg.getAvgScore());
 				updateTenantProdStats.setAction("create");
 
-				if (this.isCall) { // OGG연동을 위한 프로시저 호출시 사용 properties값을 이용하여 재빌드 없이 수행함
-					param.put("prodId", updateTenantProdStats.getProdId());
-					param.put("tenantId", updateTenantProdStats.getTenantId());
-					param.put("updId", updateTenantProdStats.getUpdId());
-					param.put("action", updateTenantProdStats.getAction());
-					param.put("avgEvluScore", updateTenantProdStats.getAvgEvluScore());
-					param.put("preAvgScore", updateTenantProdStats.getPreAvgScore());
-					param.put("rsltCd", "");
-					this.feedbackRepository.updateTenantProdStatsProc(param);
-
-					String result = param.get("rsltCd");
-					LOGGER.debug("#### OTHER_PART PROCEDURE RETURN VALUE : {}", result);
-					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_updateTenantProdStatsProc END####");
-
-				} else {
-					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
-				}
-
+				this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
 			} else {
 				updateTenantProdStats.setAvgEvluScore(avgScore);
 
-				if (this.isCall) {
-					param.put("prodId", updateTenantProdStats.getProdId());
-					param.put("tenantId", updateTenantProdStats.getTenantId());
-					param.put("regId", updateTenantProdStats.getRegId());
-					param.put("updId", updateTenantProdStats.getUpdId());
-					param.put("action", updateTenantProdStats.getAction());
-					param.put("avgEvluScore", updateTenantProdStats.getAvgEvluScore());
-					param.put("rsltCd", "");
-					this.feedbackRepository.mergeTenantProdStatsProc(param);
-
-					String result = param.get("rsltCd");
-					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_mergeTenantProdStatsProc START####");
-					LOGGER.debug("#### OTHER_PART PROCEDURE RETURN VALUE : {}", result);
-					LOGGER.debug("#### OTHER_PART setMbrAvgTenantProdStats_mergeTenantProdStatsProc END####");
-
-				} else {
-					this.feedbackRepository.mergeTenantProdStats(updateTenantProdStats);
-				}
+				this.feedbackRepository.mergeTenantProdStats(updateTenantProdStats);
 			}
 			// 웹툰일경우 채널ID에 에피소드들의 상품통계 평점을 계산한다.
 			this.setWebtoonChannelMbrAvgTenantStats(prodId, sacRequestHeader.getTenantHeader().getTenantId(), userId);
