@@ -38,6 +38,9 @@
         <typeAlias alias="Tenant"      			type="com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant" />
         <typeAlias alias="AuthKey"      		type="com.skplanet.storeplatform.sac.runtime.acl.vo.AuthKey" />
         <typeAlias alias="System"      			type="com.skplanet.storeplatform.sac.runtime.acl.vo.System" />
+        <typeAlias alias="Interface"               type="com.skplanet.storeplatform.sac.runtime.acl.vo.Interface" />
+        <typeAlias alias="Component"              type="com.skplanet.storeplatform.sac.runtime.common.vo.Component" />
+        <typeAlias alias="Bypass"               type="com.skplanet.storeplatform.sac.runtime.common.vo.Bypass" />
 
         <!-- ################################################# -->
         <!-- 기타                                            -->

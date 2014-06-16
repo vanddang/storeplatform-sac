@@ -25,10 +25,10 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.System;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Tenant;
 
 /**
- * ACL 관련 DB 접근 서비스
+ * ACL 관련 데이터 접근 서비스 (글로벌 캐쉬)
  *
- * Updated on : 2014. 2. 17.
- * Updated by : 서대영, SK플래닛
+ * Created on 2014. 02. 17. by 서대영, SK플래닛
+ * Updated on 2014. 06. 16. by 서대영, SK플래닛 : flush 항목 추가 (sac:runtime:selectBypassByInterface)
  */
 @Service
 public class AclDataAccessServiceBatis implements AclDataAccessService {
@@ -89,7 +89,8 @@ public class AclDataAccessServiceBatis implements AclDataAccessService {
     		"sac:runtime:selectTenant",
     		"sac:runtime:selectSystem",
     		"sac:runtime:selectSystemByIp",
-    		"sac:runtime:selectUsableInterface"},
+    		"sac:runtime:selectUsableInterface",
+    		"sac:runtime:selectBypassByInterface"},
     		allEntries = true)
     @Override
     public void flushCache() {

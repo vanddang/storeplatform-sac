@@ -63,6 +63,8 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		// 내부 요청 URI
 		String innerRequestURI = StringUtils.removeStart(requestURI, requestContextPath);
 
+		String interfaceId = (String) headerMap.get(CommonConstants.HEADER_INTERFACE_ID);
+
 		// External Component는 SAC에서 Bypass 대상이나 우선 프로퍼티로 해당 기능이 가능하게 구현.
 		// 1. 해당 인터페이스의 bypass유무가 'Y' 인 대상.
 		// 2. 인터페이스 Route에 등록된 Bypass 정보를 기준으로
@@ -70,8 +72,8 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		UriComponentsBuilder to;
 
 		// Bypass 이면 EC URL을 Properties에서 가져오고 그외에는 내부 서블릿 URL 호출
-		if (this.isBypass(headerMap)) {
-			to = this.extUrlBuilder.buildUrl(innerRequestURI);
+		if (this.isBypass(interfaceId)) {
+			to = this.extUrlBuilder.buildUrl(innerRequestURI, interfaceId);
 		} else {
 			to = this.intUrlBuilder.buildUrl(innerRequestURI, requestContextPath);
 		}
@@ -94,8 +96,7 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 	/**
 	 * Bypass 여부 조회
 	 */
-	private boolean isBypass(Map<String, Object> headers) {
-		String interfaceId = (String) headers.get(CommonConstants.HEADER_INTERFACE_ID);
+	private boolean isBypass(String interfaceId) {
 		Interface intf = this.aclDataService.selectInterfaceById(interfaceId);
 		if (intf != null) {
 			return intf.isBypass();

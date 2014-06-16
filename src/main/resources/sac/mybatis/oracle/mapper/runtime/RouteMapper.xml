@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Route">
+
+    <resultMap id="bypassResultMap" type="Bypass" autoMapping="true">
+        <association property="component" resultMap="componentResultMap"/>  
+    </resultMap>
+    
+    <resultMap id="componentResultMap" type="Component" autoMapping="true">
+    </resultMap>
+   
+    <!-- SELECT SQL -->
+    <select id="selectBypassByInterface" parameterType="Interface" resultMap="bypassResultMap" >
+        /* Route.selectBypassByInterface, 인터페이스가 라우팅할 바이패스 정보 조회, 서대영/SK플래닛, 2014-06-16 */
+        SELECT 
+            bypass_id, 
+            path, 
+            component_id, 
+            protocol_cd,
+            (SELECT cd_nm FROM tb_cm_cd WHERE cd_id = protocol_cd) as protocol_nm, 
+            domain, 
+            port
+        FROM tb_fw_route
+        JOIN tb_fw_bypass
+        USING (bypass_id)
+        JOIN tb_fw_component
+        USING (component_id)
+        WHERE interface_id = #{interfaceId}
+    </select>
+    
+</mapper>
