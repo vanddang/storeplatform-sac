@@ -86,7 +86,7 @@ public class SacServiceUrlSearcherTest {
 	    this.setRequestContextHolder(contextPath, requestURI, queryString);
 
 	    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://localhost:8210").path("/nate/search");
-	    when(this.extUrlBuilder.buildUrl(requestURI)).thenReturn(builder);
+	    when(this.extUrlBuilder.buildUrl(requestURI, interfaceId)).thenReturn(builder);
 
 		Map<String, Object> headerMap = new HashMap<String, Object>();
 		headerMap.put(CommonConstants.HEADER_INTERFACE_ID, interfaceId);
