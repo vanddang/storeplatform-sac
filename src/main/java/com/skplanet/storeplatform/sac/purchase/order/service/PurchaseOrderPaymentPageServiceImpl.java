@@ -62,8 +62,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		paymentPageParam.setAmtPurchase(String.valueOf(purchaseOrderInfo.getRealTotAmt()));
 		paymentPageParam.setPid(product.getProdId());
 		if (purchaseOrderInfo.getPurchaseProductList().size() > 1) {
-			paymentPageParam.setpName(product.getProdNm() + " 외 "
-					+ (purchaseOrderInfo.getPurchaseProductList().size() - 1) + "개");
+			paymentPageParam.setpName(product.getProdNm() + " 포함 " + purchaseOrderInfo.getPurchaseProductList().size()
+					+ "개");
 		} else {
 			paymentPageParam.setpName(product.getProdNm());
 		}
