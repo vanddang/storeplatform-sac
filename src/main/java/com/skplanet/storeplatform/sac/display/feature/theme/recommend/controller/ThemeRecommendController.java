@@ -55,10 +55,7 @@ public class ThemeRecommendController {
 
 		this.log.debug("searchThemeRecommendList start !!");
 		this.log.debug("request {}", requestVO);
-		if ("dummy".equals(requestVO.getFilteredBy()))
-			return this.themeRecommendService.searchThemeRecommendList(requestVO, header);
-		else
-			return this.themeRecommendService.searchThemeRecommendList(requestVO, header);
+		return this.themeRecommendService.searchThemeRecommendList(requestVO, header);
 	}
 
 	/**
