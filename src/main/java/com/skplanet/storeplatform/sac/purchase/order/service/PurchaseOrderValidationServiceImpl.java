@@ -642,7 +642,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				}
 			}
 
-			// (정액권) 배타 상품 체크
+			// (정액권) 베타 상품 체크
 			if (CollectionUtils.isNotEmpty(product.getExclusiveFixrateProdIdList())) {
 
 				tempExistenceProdIdList = new ArrayList<String>();

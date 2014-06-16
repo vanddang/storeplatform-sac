@@ -152,6 +152,11 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setSellerEmail(displayInfo.getSellerEmail());
 			purchaseProduct.setSellerTelno(displayInfo.getSellerTelno());
 			purchaseProduct.setPossLendClsfCd(displayInfo.getPossLendClsfCd());
+			// 회차정보
+			purchaseProduct.setBookClsfCd(displayInfo.getBookClsfCd());
+			purchaseProduct.setChapter(displayInfo.getChapter());
+			purchaseProduct.setChapterText(displayInfo.getChapterText());
+			purchaseProduct.setChapterUnit(displayInfo.getChapterUnit());
 			// ////////////////////////// 쇼핑 상품 변수 ////////////////////////////
 			purchaseProduct.setProdCaseCd(displayInfo.getProdCaseCd()); // DP006301-상품권, DP006302-교환권, DP006303-배송상품
 			purchaseProduct.setCouponCode(displayInfo.getCouponCode());

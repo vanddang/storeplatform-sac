@@ -65,12 +65,12 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			paymentPageParam.setpName(product.getProdNm() + " 포함 " + purchaseOrderInfo.getPurchaseProductList().size()
 					+ "개");
 		} else {
-			paymentPageParam.setpName(product.getProdNm());
+			paymentPageParam.setpName(this.makeProductName(product));
 		}
 		paymentPageParam.setAid(product.getAid());
 		paymentPageParam.setReturnFormat(PP_RETURN_FORMAT_JSON);
 		paymentPageParam.setFlgMchtAuth(PurchaseConstants.USE_Y);
-		paymentPageParam.setMctSpareParam(this.getMctSpareParam(purchaseOrderInfo));
+		paymentPageParam.setMctSpareParam(this.makeMctSpareParam(purchaseOrderInfo));
 		paymentPageParam.setMdn(purchaseOrderInfo.getPurchaseUser().getDeviceId());
 		paymentPageParam.setNmDevice(purchaseOrderInfo.getPurchaseUser().getDeviceModelCd());
 		paymentPageParam.setImei(purchaseOrderInfo.getImei());
@@ -96,7 +96,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
 
 		// pDescription
-		paymentPageParam.setpDescription(this.getProductDescription(purchaseOrderInfo.getTenantProdGrpCd(),
+		paymentPageParam.setpDescription(this.makeProductDescription(purchaseOrderInfo.getTenantProdGrpCd(),
 				purchaseOrderInfo.getPurchaseProductList()));
 
 		// 암호화
@@ -122,8 +122,48 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	 * 
 	 * @return 구성된 가맹점 파라미터
 	 */
-	private String getMctSpareParam(PurchaseOrderInfo purchaseOrderInfo) {
+	private String makeMctSpareParam(PurchaseOrderInfo purchaseOrderInfo) {
 		return "";
+	}
+
+	/*
+	 * 
+	 * <pre> 결제Page 노출 상품명 정보 생성. </pre>
+	 * 
+	 * @param purchaseProduct 구매할 상품 정보
+	 * 
+	 * @return 결제Page에 노출할 상품명
+	 */
+	private String makeProductName(PurchaseProduct purchaseProduct) {
+		if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(), PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+			// 시리즈 전회차
+			if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
+					PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) {
+				return "'" + purchaseProduct.getProdNm() + "' 시리즈 전회차 영구소장"; // 무제한
+			} else {
+				return "'" + purchaseProduct.getProdNm() + "' 시리즈 전회차";
+			}
+
+		} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+				PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
+			// 전권 소장
+			return "'" + purchaseProduct.getProdNm() + "' 전"
+					+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권") + " 소장";
+
+		} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+				PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
+			// 전권 대여
+			return "'" + purchaseProduct.getProdNm() + "' 전"
+					+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권") + " 대여";
+
+		} else {
+			if (StringUtils.isNotBlank(purchaseProduct.getChapterText())) {
+				return purchaseProduct.getProdNm() + " " + purchaseProduct.getChapterText()
+						+ purchaseProduct.getChapterUnit();
+			} else {
+				return purchaseProduct.getProdNm();
+			}
+		}
 	}
 
 	/*
@@ -136,7 +176,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	 * 
 	 * @return 구매 상품설명
 	 */
-	private String getProductDescription(String tenantProdGrpCd, List<PurchaseProduct> purchaseProductList) {
+	private String makeProductDescription(String tenantProdGrpCd, List<PurchaseProduct> purchaseProductList) {
 		PurchaseProduct purchaseProduct = purchaseProductList.get(0);
 
 		if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)
@@ -203,10 +243,12 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				}
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
-				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_OWN;
+				// return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_OWN;
+				return "전" + StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권") + " 소장";
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
-				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_LOAN;
+				// return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_LOAN;
+				return "전" + StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권") + " 대여";
 			}
 		}
 

@@ -343,30 +343,36 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		// 2014.06.09 상용 적용 : SKT 시험폰은 모두 허용으로.
 
+		// if (this.isSktTestMdn(userEcRes, policyCheckParam.getDeviceId())) {
+		// policyResult.setSktTestMdn(true);
+		// policyResult.setSktTestMdnWhiteList(true);
+		// policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW);
+		//
+		// return policyResult;
+		// }
+
 		if (this.isSktTestMdn(userEcRes, policyCheckParam.getDeviceId())) {
 			policyResult.setSktTestMdn(true);
-			policyResult.setSktTestMdnWhiteList(true);
-			policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW);
+			boolean bWhite = false;
+
+			// CM011604: 서비스 허용 SKT 시험폰
+			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE)) {
+				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
+
+				for (PurchaseTenantPolicy policy : policyList) {
+					if (this.isSktTestMdnWhiteList(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
+						bWhite = true;
+						break;
+					}
+				}
+			}
+
+			policyResult.setSktTestMdnWhiteList(bWhite);
+			policyResult
+					.setSktLimitType(bWhite ? PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW : PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_NOT_ALLOW);
 
 			return policyResult;
 		}
-
-		/*
-		 * if (this.isSktTestMdn(userEcRes, policyCheckParam.getDeviceId())) { policyResult.setSktTestMdn(true);
-		 * 
-		 * boolean bWhite = false;
-		 * 
-		 * // CM011604: 서비스 허용 SKT 시험폰 if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE)) {
-		 * policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
-		 * 
-		 * for (PurchaseTenantPolicy policy : policyList) { if (this.isSktTestMdnWhiteList(policy.getApplyValue(),
-		 * policyCheckParam.getDeviceId())) { bWhite = true; break; } } }
-		 * 
-		 * policyResult.setSktTestMdnWhiteList(bWhite); policyResult .setSktLimitType(bWhite ?
-		 * PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW : PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_NOT_ALLOW);
-		 * 
-		 * return policyResult; }
-		 */
 
 		// --------------------------------------------------------------------------------------------------
 		// SKT 후불 쇼핑상품 한도금액 제한
@@ -751,25 +757,27 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @return White List 등록 여부: true-White List 등록, false-White List 등록 안됨
 	 */
-	// private boolean isSktTestMdnWhiteList(String memberPolicyCd, String deviceId) {
-	// List<String> policyCodeList = new ArrayList<String>();
-	// policyCodeList.add(memberPolicyCd);
-	//
-	// Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-	// deviceId, policyCodeList);
-	//
-	// if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
-	// return false;
-	// }
-	//
-	// IndividualPolicyInfoSac individualPolicyInfoSac = policyResMap.get(memberPolicyCd);
-	//
-	// if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
-	// return true;
-	// }
-	//
-	// return false;
-	// }
+	private boolean isSktTestMdnWhiteList(String memberPolicyCd, String deviceId) {
+		return true; // 2014.06.09: SKT시험폰 항상 허용됨
+
+		// List<String> policyCodeList = new ArrayList<String>();
+		// policyCodeList.add(memberPolicyCd);
+		//
+		// Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
+		// deviceId, policyCodeList);
+		//
+		// if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
+		// return false;
+		// }
+		//
+		// IndividualPolicyInfoSac individualPolicyInfoSac = policyResMap.get(memberPolicyCd);
+		//
+		// if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+		// return true;
+		// }
+		//
+		// return false;
+	}
 
 	/*
 	 * 
