@@ -195,7 +195,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		// 법정대리인정보
 		MbrLglAgent mbrLglAgent = new MbrLglAgent();
 		if (schRes.getMbrLglAgent() != null) {
-			mbrLglAgent.setIsParent(schRes.getMbrLglAgent().getIsParent());
+			// 법정대리인 정보가 존재할 경우, 판매자정보(sellerMbr)에서 값을 가져옴.
+			mbrLglAgent.setIsParent(schRes.getSellerMbr().getIsParent());
 			mbrLglAgent.setParentBirthDay(schRes.getMbrLglAgent().getParentBirthDay());
 			mbrLglAgent.setParentCI(schRes.getMbrLglAgent().getParentCI());
 			mbrLglAgent.setParentDate(schRes.getMbrLglAgent().getParentDate());
@@ -207,6 +208,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			mbrLglAgent.setParentRealNameSite(schRes.getMbrLglAgent().getParentRealNameSite());
 			mbrLglAgent.setParentTelecom(schRes.getMbrLglAgent().getParentTelecom());
 			mbrLglAgent.setParentType(schRes.getMbrLglAgent().getParentType());
+		} else {
+			// 법정대리인 정보가 존재하지 않을 경우, "N"으로 셋팅.
+			mbrLglAgent.setIsParent(MemberConstants.USE_N);
 		}
 
 		// 판매자 탭권한
@@ -910,6 +914,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setWebsite(sellerMbr.getWebsite());
 			sellerMbrRes.setRegDate(sellerMbr.getRegDate());
 			sellerMbrRes.setUpdateDate(sellerMbr.getUpdateDate());
+
 			// 구매 요청으로 통신판매업 관련 파라미터 3개 추가. 2014.03.26
 			sellerMbrRes.setIsBizRegistered(sellerMbr.getIsBizRegistered());
 			sellerMbrRes.setBizRegNumber(sellerMbr.getBizRegNumber());
