@@ -1649,7 +1649,9 @@
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                <if test="req.saleDtUseYn == null">
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+                </if>
                 AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                 AND B.CATALOG_ID = #{req.productId}
                 <if test="req.specialProdId != null">
@@ -1812,7 +1814,9 @@
                 AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                 AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
                 AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                <if test="req.saleDtUseYn == null">
                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+                </if>
                 AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
                 AND B.CATALOG_ID = #{req.productId}
                 <if test="req.specialProdId != null">
@@ -1894,7 +1898,9 @@
                      ) 
                END
               ) = 'Y'     
+          <if test="req.saleDtUseYn == null">
           AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
+          </if>
         ORDER BY A.CHNL_PROD_ID
                 ,A.OPT1_NM
                 ,A.EXPO_ORD

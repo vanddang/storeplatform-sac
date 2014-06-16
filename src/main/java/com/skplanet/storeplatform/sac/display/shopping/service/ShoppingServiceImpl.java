@@ -1724,6 +1724,17 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getDeviceKey())) {
 			req.setDeviceKey(null);
 		}
+		if (StringUtils.isNotEmpty(req.getSaleDtUseYn())) {
+			if (!"Y".equals(req.getSaleDtUseYn()) && !"N".equals(req.getSaleDtUseYn())) {
+				throw new StorePlatformException("SAC_DSP_0003", "saleDtUseYn", req.getSaleDtUseYn());
+			}
+			if ("N".equals(req.getSaleDtUseYn())) {
+				req.setSaleDtUseYn(null);
+			}
+		}
+		if (StringUtils.isEmpty(req.getSaleDtUseYn())) {
+			req.setSaleDtUseYn(null);
+		}
 
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -1842,8 +1853,22 @@ public class ShoppingServiceImpl implements ShoppingService {
 								// 아이템코드 입력
 								episodeProduct.setItemCode(episodeShopping.getItemCode());
 							}
+
 							// 채널, 에피소드 상품 판매 상태 코드
-							episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
+							if (req.getSaleDtUseYn() != null) {
+								// 만약 판매중이면 판매중지로 바꿔야함
+								if (episodeShopping.getProdStatusCd() != null) {
+									if (episodeShopping.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
+										episodeProduct.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
+									} else {
+										episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
+									}
+								} else {
+									episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
+								}
+							} else {
+								episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
+							}
 
 							// 특가 상품일 경우
 							episodeProduct.setSpecialProdYn(episodeShopping.getSpecialSale());
@@ -1873,7 +1898,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 							String prchsId = null;
 							String prchsDt = null;
 							String prchsState = null;
-							int purchseCount = 0;
 							try {
 								this.log.info("################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : "
 										+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
@@ -1905,7 +1929,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 									this.log.debug("[getShoppingInfo] purchase count : {}",
 											historyListSacRes.getTotalCnt());
 									this.log.debug("----------------------------------------------------------------");
-									purchseCount = historyListSacRes.getTotalCnt();
 									if (historyListSacRes.getTotalCnt() > 0) {
 										prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 										prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
@@ -2015,7 +2038,23 @@ public class ShoppingServiceImpl implements ShoppingService {
 											Price option1Price = this.shoppingGenerator.generatePrice(optionShopping);
 											selectOption.setPrice(option1Price);
 											selectOption.setItemCode(optionShopping.getItemCode());
-											selectOption.setSalesStatus(optionShopping.getProdStatusCd());
+
+											if (req.getSaleDtUseYn() != null) {
+												// 만약 판매중이면 판매중지로 바꿔야함
+												if (optionShopping.getProdStatusCd() != null) {
+													if (optionShopping.getProdStatusCd().equals(
+															DisplayConstants.DP_SALE_STAT_ING)) {
+														selectOption.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
+													} else {
+														selectOption.setSalesStatus(episodeShopping.getProdStatusCd());
+													}
+												} else {
+													selectOption.setSalesStatus(optionShopping.getProdStatusCd());
+												}
+											} else {
+												selectOption.setSalesStatus(optionShopping.getProdStatusCd());
+											}
+
 											selectOption.setSubYn("N");
 										}
 										if (optionShopping.getSubYn().equals("N")) { // 옵션 2 인 경우
@@ -2031,7 +2070,25 @@ public class ShoppingServiceImpl implements ShoppingService {
 											Price option2Price = this.shoppingGenerator.generatePrice(optionShopping);
 											subSelectOption.setPrice(option2Price);
 											subSelectOption.setItemCode(optionShopping.getItemCode());
-											subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
+
+											if (req.getSaleDtUseYn() != null) {
+												// 만약 판매중이면 판매중지로 바꿔야함
+												if (optionShopping.getProdStatusCd() != null) {
+													if (optionShopping.getProdStatusCd().equals(
+															DisplayConstants.DP_SALE_STAT_ING)) {
+														subSelectOption
+																.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
+													} else {
+														subSelectOption
+																.setSalesStatus(optionShopping.getProdStatusCd());
+													}
+												} else {
+													subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
+												}
+											} else {
+												subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
+											}
+
 											subSelectOptionList.add(subSelectOption);
 										}
 										if (mm < resultOptionList.size() - 1) {
