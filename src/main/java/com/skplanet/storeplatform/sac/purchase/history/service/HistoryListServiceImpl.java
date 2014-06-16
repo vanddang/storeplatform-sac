@@ -285,6 +285,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 				deviceList.add(deviceInfo);
 			}
 
+			if (PurchaseConstants.NON_MEMBER.equals(historySac.getUseUserKey())) {
+				historySac.setUseDeviceId(historySac.getUseDeviceKey());
+			}
+
 			// DEVICE INFO 조회를 위한 deviceKey 셋팅
 			if (!StringUtils.isEmpty(historySac.getSendUserKey())
 					&& !StringUtils.isEmpty(historySac.getSendDeviceKey())
@@ -293,6 +297,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 				sendDeviceInfo.setUserKey(historySac.getSendUserKey());
 				sendDeviceInfo.setDeviceKey(historySac.getSendDeviceKey());
 				sendDeviceList.add(sendDeviceInfo);
+			}
+
+			if (PurchaseConstants.NON_MEMBER.equals(historySac.getSendUserKey())) {
+				historySac.setSendDeviceId(historySac.getSendDeviceKey());
 			}
 
 		}
