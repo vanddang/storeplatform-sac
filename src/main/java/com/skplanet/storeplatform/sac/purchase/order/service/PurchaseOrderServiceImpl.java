@@ -539,8 +539,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setTypeTestMdn(testMdnType);
 
 		// 결제수단 별 가능 거래금액/비율 조정 정보
-		res.setCdMaxAmtRate(this.adjustPaymethod(sktPaymethodInfo, prchsDtlMore.getTenantId(),
-				prchsDtlMore.getTenantProdGrpCd(), prchsDtlMore.getTotAmt().doubleValue()));
+		res.setCdMaxAmtRate(this.adjustPaymethod(sktPaymethodInfo, prchsDtlMore.getTenantId(), prchsDtlMore
+				.getTenantProdGrpCd(), reservedDataMap.get("prodCaseCd"), prchsDtlMore.getTotAmt().doubleValue()));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제수단 정렬 재조정
@@ -1273,11 +1273,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
 	 * 
+	 * @param prodCaseCd 쇼핑 상품 종류 코드
+	 * 
 	 * @param payAmt 결제할 금액
 	 * 
 	 * @return 재정의 된 결제 수단 정보
 	 */
-	private String adjustPaymethod(String sktPaymethodInfo, String tenantId, String tenantProdGrpCd, double payAmt) {
+	private String adjustPaymethod(String sktPaymethodInfo, String tenantId, String tenantProdGrpCd, String prodCaseCd,
+			double payAmt) {
 		// 결제수단 별 가능 거래금액/비율 조정 정보
 		String paymentAdjustInfo = this.purchaseOrderPolicyService.getAvailablePaymethodAdjustInfo(tenantId,
 				tenantProdGrpCd);
@@ -1288,11 +1291,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		StringBuffer sbPaymethodInfo = new StringBuffer(64);
 
 		if (StringUtils.isNotBlank(sktPaymethodInfo)) {
-			sbPaymethodInfo.append(sktPaymethodInfo).append(";12:0:0");
+			sbPaymethodInfo.append(sktPaymethodInfo).append(";12:0:0;");
 		} else {
-			sbPaymethodInfo.append("11:0:0");
+			sbPaymethodInfo.append("11:0:0;");
 		}
-		sbPaymethodInfo.append(";").append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
+
+		// 쇼핑상품권 경우, 신용카드, 페이핀 결제수단 제외
+		if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_GIFT)) {
+			sbPaymethodInfo.append("13:0:0;14:0:0;");
+		}
+
+		sbPaymethodInfo.append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
 
 		return sbPaymethodInfo.toString();
 	}
