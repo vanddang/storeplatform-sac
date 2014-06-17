@@ -907,7 +907,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				reservedDataMap.get("autoPrchsYn"));
 		List<AutoPrchs> autoPrchsList = null;
 		if (StringUtils.equals(reservedDataMap.get("autoPrchsYn"), PurchaseConstants.USE_Y)) {
-			autoPrchsList = this.purchaseOrderMakeDataService.makeAutoPrchsList(prchsDtlMore);
+			autoPrchsList = this.purchaseOrderMakeDataService.makeAutoPrchsList(prchsDtlMore,
+					reservedDataMap.get("deviceModelCd"));
 		}
 
 		// 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터

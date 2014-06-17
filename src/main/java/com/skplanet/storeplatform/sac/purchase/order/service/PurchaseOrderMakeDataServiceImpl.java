@@ -341,10 +341,13 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	 * @param prchsDtlMore
 	 *            구매생성 정보
 	 * 
+	 * @param deviceModelCd
+	 *            구매 단말 모델 코드
+	 * 
 	 * @return 자동구매 생성을 위한 목록
 	 */
 	@Override
-	public List<AutoPrchs> makeAutoPrchsList(PrchsDtlMore prchsDtlMore) {
+	public List<AutoPrchs> makeAutoPrchsList(PrchsDtlMore prchsDtlMore, String deviceModelCd) {
 		List<AutoPrchs> autoPrchsList = new ArrayList<AutoPrchs>();
 
 		AutoPrchs autoPrchs = new AutoPrchs();
@@ -372,6 +375,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		autoPrchs.setRegId(prchsDtlMore.getSystemId());
 		autoPrchs.setUpdId(prchsDtlMore.getSystemId());
 		autoPrchs.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_STATUS_AUTO);
+		autoPrchs.setResvCol01(deviceModelCd); // 구매한 단말 모델 코드
 		autoPrchsList.add(autoPrchs);
 
 		return autoPrchsList;
@@ -482,7 +486,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 		/*
 		 * 구매예약 시 저장할 데이터 (공통) - tenantId, systemId, networkTypeCd, currencyCd - 결제자: userKey, userId, deviceKey,
-		 * deviceId, telecom, imei, oneId - 보유자: useUserKey, useDeviceKey, useDeviceId, useDeviceModelCd
+		 * deviceId, deviceModelCd, telecom, imei, oneId - 보유자: useUserKey, useDeviceKey, useDeviceId, useDeviceModelCd
 		 */
 		PurchaseUserDevice useUser = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getReceiveUser() : purchaseOrderInfo
 				.getPurchaseUser();
@@ -501,6 +505,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 				.append(purchaseOrderInfo.getDeviceKey())
 				.append("&deviceId=")
 				.append(purchaseOrderInfo.getPurchaseUser().getDeviceId())
+				.append("&deviceModelCd=")
+				.append(purchaseOrderInfo.getPurchaseUser().getDeviceModelCd())
 				.append("&telecom=")
 				.append(purchaseOrderInfo.getPurchaseUser().getTelecom())
 				.append("&imei=")

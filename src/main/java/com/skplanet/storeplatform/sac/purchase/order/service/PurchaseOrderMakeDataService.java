@@ -84,9 +84,12 @@ public interface PurchaseOrderMakeDataService {
 	 * @param prchsDtlMore
 	 *            구매생성 정보
 	 * 
+	 * @param deviceModelCd
+	 *            구매 단말 모델 코드
+	 * 
 	 * @return 자동구매 생성을 위한 목록
 	 */
-	public List<AutoPrchs> makeAutoPrchsList(PrchsDtlMore prchsDtlMore);
+	public List<AutoPrchs> makeAutoPrchsList(PrchsDtlMore prchsDtlMore, String deviceModelCd);
 
 	/**
 	 * <pre>
