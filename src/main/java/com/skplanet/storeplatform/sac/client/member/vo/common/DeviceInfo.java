@@ -38,6 +38,11 @@ public class DeviceInfo extends CommonInfo {
 	private String deviceId;
 
 	/**
+	 * 자번호
+	 */
+	private String sDeviceId;
+
+	/**
 	 * 기기 ID 타입 (msisdn, uuid, macaddress).
 	 */
 	private String deviceIdType;
@@ -517,4 +522,18 @@ public class DeviceInfo extends CommonInfo {
 		this.authenticationDate = authenticationDate;
 	}
 
+	/**
+	 * @return sDeviceId
+	 */
+	public String getsDeviceId() {
+		return this.sDeviceId;
+	}
+
+	/**
+	 * @param sDeviceId
+	 *            String
+	 */
+	public void setsDeviceId(String sDeviceId) {
+		this.sDeviceId = sDeviceId;
+	}
 }

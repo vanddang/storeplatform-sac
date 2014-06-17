@@ -35,6 +35,10 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	private String deviceTelecom;
 
 	/**
+	 * mdn 로그인시 올라오는 자번호
+	 */
+	private String sDeviceId;
+	/**
 	 * 기기 고유 번호.
 	 */
 	private String nativeId;
@@ -197,6 +201,21 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	 */
 	public void setLoginReason(String loginReason) {
 		this.loginReason = loginReason;
+	}
+
+	/**
+	 * @return sDeviceId
+	 */
+	public String getsDeviceId() {
+		return this.sDeviceId;
+	}
+
+	/**
+	 * @param sDeviceId
+	 *            String
+	 */
+	public void setsDeviceId(String sDeviceId) {
+		this.sDeviceId = sDeviceId;
 	}
 
 }
