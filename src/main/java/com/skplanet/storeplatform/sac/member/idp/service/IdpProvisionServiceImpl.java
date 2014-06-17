@@ -187,10 +187,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 					} else {
 						modelCd = device.getDeviceModelCd();
-						if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-								&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) { // 기존 닉네임이 미지원표준단말, android_standard 일경우에만 기본닉네임으로 업데이트
-							deviceNickName = device.getModelNm();
-						}
+						deviceNickName = device.getModelNm();
 					}
 				}
 
@@ -259,10 +256,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					} else {
 
 						modelCd = device.getDeviceModelCd();
-						if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-								&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) { // 기존 닉네임이 미지원표준단말, android_standard 일경우에만 기본닉네임으로 업데이트
-							deviceNickName = device.getModelNm();
-						}
+						deviceNickName = device.getModelNm();
 						if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
 
 							/* 테스트 단말여부 확인 */
@@ -673,10 +667,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			} else {
 
 				modelCd = device.getDeviceModelCd();
-				if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-						&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) { // 기존 닉네임이 미지원표준단말, android_standard 일경우에만 기본닉네임으로 업데이트
-					deviceNickName = device.getModelNm();
-				}
+				deviceNickName = device.getModelNm();
 				v4SprtYn = device.getItoppV4SprtYn() == null ? "N" : device.getItoppV4SprtYn(); // DCD 연동 지원여부
 
 				if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
@@ -1342,10 +1333,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 										userMbrDevice.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
 									} else {
 										modifyDevice.setDeviceTelecom(this.mcc.convertDeviceTelecomCode(deviceTelecom));
-										if (StringUtils.equals(userMbrDevice.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-												&& StringUtils.equals(userMbrDevice.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) { // 기존 닉네임이 미지원표준단말, android_standard 일경우에만 기본닉네임으로 업데이트
-											modifyDevice.setDeviceNickName(device.getModelNm());
-										}
+										modifyDevice.setDeviceNickName(device.getModelNm());
 									}
 
 									modifyDevice.setSvcMangNum(svcMangNum);
@@ -1467,10 +1455,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 									userMbrDevice.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
 								} else {
 									modifyDevice.setDeviceTelecom(this.mcc.convertDeviceTelecomCode(deviceTelecom));
-									if (StringUtils.equals(userMbrDevice.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-											&& StringUtils.equals(userMbrDevice.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) { // 기존 닉네임이 미지원표준단말, android_standard 일경우에만 기본닉네임으로 업데이트
-										modifyDevice.setDeviceNickName(device.getModelNm());
-									}
+									modifyDevice.setDeviceNickName(device.getModelNm());
 								}
 								modifyDevice.setSvcMangNum(svcMangNum);
 
