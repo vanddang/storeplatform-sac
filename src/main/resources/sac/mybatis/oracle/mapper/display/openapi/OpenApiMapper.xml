@@ -1241,7 +1241,7 @@
 		                               ) 
 		                          WHERE RN = 1
 		                          <if test ="topMenuId == 'DP13'">
-		                          /* 이북일때 정렬 */                          
+		                          /* 이북일때 정렬 AS-IS getProductEbookList */                          
 		                          ORDER BY EXPO_ORD_ALWAYS_YN DESC
                                          , EXPO_ORD
                                          , EXPO_ORD_SUB
@@ -1250,7 +1250,7 @@
 		                                 , PROD_NM DESC           
 		                          </if>
 		                          <if test ="topMenuId == 'DP14'">              
-		                          /* 코믹일때 정렬 */                          
+		                          /* 코믹일때 정렬 AS-IS getProductCommicList*/                          
 		                          ORDER BY EXPO_ORD_ALWAYS_YN DESC
 		                                 , EXPO_ORD
 		                                 , EXPO_ORD_SUB
