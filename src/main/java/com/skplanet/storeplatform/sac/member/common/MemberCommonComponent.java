@@ -1081,4 +1081,21 @@ public class MemberCommonComponent {
 
 	}
 
+	/**
+	 * <pre>
+	 * 디바이스 헤더값이 없어 ACL에서 디폴트로 셋팅된 모델명인지 체크.
+	 * </pre>
+	 * 
+	 * @param deviceModelCd
+	 *            String
+	 * @return boolean
+	 */
+	public boolean isDefaultDeviceModel(String deviceModelCd) {
+
+		if (StringUtils.equals(deviceModelCd, MemberConstants.DP_ANY_PHONE_4APP)
+				|| StringUtils.equals(deviceModelCd, MemberConstants.DP_ANY_PHONE_4MM)) {
+			return true;
+		}
+		return false;
+	}
 }
