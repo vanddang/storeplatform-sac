@@ -145,6 +145,16 @@ public final class MemberConstants {
 	public static final String NOT_SUPPORT_HP_MODEL_CD = "android_standard";
 	public static final String NOT_SUPPORT_HP_MODEL_NM = "미지원표준단말";
 
+	/**
+	 * 가상 프로비저닝 모델명 (앱).
+	 */
+	public static final String DP_ANY_PHONE_4APP = "ANY-PHONE-4APP";
+
+	/**
+	 * 가상 프로비저닝 모델명 (멀티미디어).
+	 */
+	public static final String DP_ANY_PHONE_4MM = "ANY-PHONE-4MM";
+
 	/** DeviceIdType 정의. */
 	public static final String DEVICE_ID_TYPE_MSISDN = "msisdn";
 	public static final String DEVICE_ID_TYPE_UUID = "uuid";
