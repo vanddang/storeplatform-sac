@@ -141,9 +141,6 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
-		/* 자번호 셋팅 */
-		req.setsDeviceId(req.getDeviceId());
-
 		/* 모번호 조회 */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
@@ -243,9 +240,6 @@ public class LoginServiceImpl implements LoginService {
 	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
-
-		/* 자번호 셋팅 */
-		req.setsDeviceId(req.getDeviceId());
 
 		/* 모번호 조회 */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
@@ -1526,7 +1520,6 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
 			deviceInfo.setNativeId(req.getNativeId()); // IMEI
 			deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth()); // IMEI 비교여부
-			deviceInfo.setsDeviceId(req.getsDeviceId()); // 자번호
 			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
 
 		} else if (obj instanceof AuthorizeByIdReq) { // id인증
