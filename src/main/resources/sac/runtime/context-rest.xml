@@ -66,7 +66,13 @@
          <!-- set "SacRequestHeader" of response header   -->
         <mvc:interceptor>
             <mvc:mapping path="/**" />
-            <bean class="com.skplanet.storeplatform.sac.common.header.intercepter.SacRequestHeaderIntercepter"/>
+            <bean class="com.skplanet.storeplatform.sac.common.header.intercepter.SacRequestHeaderIntercepter">
+                <property name="defaultDevModel" value="#{propertiesForSac['header.device.model']}"/>
+                <property name="defaultDevOs" value="#{propertiesForSac['header.device.os']}"/>
+                <property name="defaultDevResolution" value="#{propertiesForSac['header.device.resolution']}"/>
+                <property name="defaultDevSvc" value="#{propertiesForSac['header.device.svc']}"/>
+                <property name="defaultNetType" value="#{propertiesForSac['header.network.type']}"/>
+            </bean>
         </mvc:interceptor> 
         <!-- defined request logging  -->
         <mvc:interceptor>

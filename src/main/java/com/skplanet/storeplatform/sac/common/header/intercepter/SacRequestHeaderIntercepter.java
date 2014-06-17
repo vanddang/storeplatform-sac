@@ -34,16 +34,31 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 	@Autowired
 	private TenantExtractor tenantExtractor;
 
-    @Value("#{config['header.device.resolution']}")
-    private String defaultDevResolution = "";
-    @Value("#{config['header.device.svc']}")
-    private String defaultDevSvc = "";
-    @Value("#{config['header.device.model']}")
-    private String defaultDevModel = "";
-    @Value("#{config['header.device.os']}")
-    private String defaultDevOs = "";
-    @Value("#{config['header.network.type']}")
-    private String defaultNetType = "";
+    private String defaultDevResolution;
+    private String defaultDevSvc;
+    private String defaultDevModel;
+    private String defaultDevOs;
+    private String defaultNetType;
+
+    public void setDefaultDevResolution(String defaultDevResolution) {
+        this.defaultDevResolution = defaultDevResolution;
+    }
+
+    public void setDefaultDevSvc(String defaultDevSvc) {
+        this.defaultDevSvc = defaultDevSvc;
+    }
+
+    public void setDefaultDevModel(String defaultDevModel) {
+        this.defaultDevModel = defaultDevModel;
+    }
+
+    public void setDefaultDevOs(String defaultDevOs) {
+        this.defaultDevOs = defaultDevOs;
+    }
+
+    public void setDefaultNetType(String defaultNetType) {
+        this.defaultNetType = defaultNetType;
+    }
 
     private static final Pattern PATTERN_KV = Pattern.compile("^\\s*(\\w+)\\s*=\\s*\"([\\d\\w\\-\\.\\*/_,]*)\"\\s*(,|$)");
 
