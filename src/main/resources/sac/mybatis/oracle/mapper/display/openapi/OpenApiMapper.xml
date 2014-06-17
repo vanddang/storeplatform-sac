@@ -1905,7 +1905,6 @@
 		 AND  PROD.PROD_ID = TENANTPROD.PROD_ID
 		 AND  TENANTPROD.TENANT_ID = #{tenantHeader.tenantId}
 		  <if test='req.admin != "Y"'>
-		 AND  PROD.REG_ID = #{req.sellerId}
 		 AND  PROD.SELLER_MBR_NO = #{req.sellerKey}
 		 </if>
 		 AND  (APPPROD.PART_PARENT_CLSF_CD = #{partClsfCd} OR APPPROD.PART_PARENT_CLSF_CD is null)
@@ -1943,7 +1942,6 @@
 	       AND IMG.LANG_CD = #{tenantHeader.langCd}
 	       AND  (APPPROD.PART_PARENT_CLSF_CD = 'PD012301' OR APPPROD.PART_PARENT_CLSF_CD is null)
 	      <if test='req.admin != "Y"'>
-           AND  PROD.REG_ID = #{req.sellerId}
            AND  PROD.SELLER_MBR_NO = #{req.sellerKey}
           </if>
           AND  APPPROD.AID = #{req.aid}
@@ -1965,7 +1963,6 @@
          AND  PRODDESC.LANG_CD = #{tenantHeader.langCd}
          AND  PROD.PROD_ID = TENANTPROD.PROD_ID
          AND  TENANTPROD.TENANT_ID = #{tenantHeader.tenantId}
-         AND  PROD.REG_ID = #{req.sellerId}
          AND  PROD.SELLER_MBR_NO = #{req.sellerKey}
          AND  (APPPROD.PART_PARENT_CLSF_CD = #{partClsfCd} OR APPPROD.PART_PARENT_CLSF_CD is null)
          <if test='req.searchType == "AID"'>
