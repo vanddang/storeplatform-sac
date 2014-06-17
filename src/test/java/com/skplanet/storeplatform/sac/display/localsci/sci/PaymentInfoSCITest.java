@@ -111,7 +111,7 @@ public class PaymentInfoSCITest {
 		try {
 			PaymentInfoSacReq req = new PaymentInfoSacReq();
 			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("H000400002");
+			prodIdList.add("H001493615"); // 이북
 			req.setProdIdList(prodIdList);
 			req.setTenantId("S01");
 			req.setLangCd("ko");

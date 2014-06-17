@@ -46,21 +46,23 @@ public class PossLendProductInfoSCITest {
 	@Test
 	public void searchInAppPossLendProductInfo() {
 		try {
+			/* VOD는 VOD끼리만, 이북/코믹은 이북/코믹끼리만 요청 옴 */
+
 			PossLendProductInfoSacReq req = new PossLendProductInfoSacReq();
 			List<String> prodIdList = new ArrayList<String>();
 			List<String> possLendClsfCdList = new ArrayList<String>();
 
-			// prodIdList.add("H001573161"); // 방송
-			// possLendClsfCdList.add("DP010601"); // 소장
-			//
-			// prodIdList.add("H000044366"); // 영화
-			// possLendClsfCdList.add("DP010601"); // 소장
-
-			prodIdList.add("H900215749"); // 만화
+			prodIdList.add("H001573161"); // 방송
 			possLendClsfCdList.add("DP010601"); // 소장
 
-			prodIdList.add("H001440306"); // 이북
-			possLendClsfCdList.add("DP010602"); // 대여
+			prodIdList.add("H000044366"); // 영화
+			possLendClsfCdList.add("DP010601"); // 소장
+
+			// prodIdList.add("H900215749"); // 만화
+			// possLendClsfCdList.add("DP010601"); // 소장
+			//
+			// prodIdList.add("H001440306"); // 이북
+			// possLendClsfCdList.add("DP010602"); // 대여
 
 			/*******************/
 			req.setProdIdList(prodIdList);
