@@ -20,6 +20,15 @@
 		              ,F.USE_PERIOD
 		              ,F.USE_PERIOD_UNIT_CD   AS DOWN_POSSIBLE_PERIOD_UNIT_CD
 		              ,F.USE_PERIOD           AS DOWN_POSSIBLE_PERIOD
+		              ,(SELECT PROD_NM
+		                FROM   TB_DP_PROD_RSHP Z1
+		                      ,TB_DP_PROD_DESC Z2
+		                WHERE  Z1.PROD_ID = Z2.PROD_ID
+		                AND    Z1.PROD_RSHP_CD = 'DP010802'  /* DP010802 : 채널-에피소드 상품 관계 */
+		                AND    Z2.LANG_CD = #{langCd}
+		                AND    Z1.PART_PROD_ID = #{prodId}
+		                AND    ROWNUM = 1
+		               ) AS CHNL_PROD_NM /* 채널상품명 */
 		        FROM   TB_DP_PROD              A /* 소장 상품 */
 		            <if test='topMenuId == "DP13" or topMenuId == "DP14"'>
 		              ,TB_DP_EBOOK_PROD        B /* 소장 상품 (이북코믹) */

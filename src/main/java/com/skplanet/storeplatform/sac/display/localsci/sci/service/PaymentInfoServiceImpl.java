@@ -114,7 +114,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 					DisplayConstants.DP_PAYMENT_INFO_PARAMETER_LIMIT);
 		}
 
-		// 상품 군 조회
+		// 상품 군 조회 (VOD는 VOD끼리만, 이북/코믹은 이북/코믹끼리만 요청이 오므로, 1번만 조회)
 		PaymentInfo paymentProdType = this.commonDAO.queryForObject("PaymentInfo.searchProdType", prodIdList.get(0),
 				PaymentInfo.class);
 
@@ -147,11 +147,12 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 						paymentInfo.setSvcGrpCd(paymentProdType.getSvcGrpCd());
 						paymentInfo.setInAppYn(paymentProdType.getInAppYn()); // In-App 여부
 
-						// Chapter 셋팅
+						// Chapter 및 채널명 셋팅
 						if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())) { // TV
 							if (StringUtils.isNotEmpty(paymentInfo.getChapter())) {
 								paymentInfo.setChapterText(paymentInfo.getChapter());
 								paymentInfo.setChapterUnit(this.displayCommonService.getVodChapterUnit());
+								paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
 							}
 						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())
 								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())) { // 이북,코믹
@@ -160,6 +161,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 								paymentInfo.setChapterText(paymentInfo.getChapter());
 								paymentInfo.setChapterUnit(this.displayCommonService.getEpubChapterUnit(paymentInfo
 										.getBookClsfCd()));
+								paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
 							}
 						}
 
