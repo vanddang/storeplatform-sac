@@ -428,17 +428,19 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				throw new StorePlatformException("SAC_PUR_5111");
 			}
 
-			// 상품 지원 여부 체크 : 쇼핑은 프로비저닝 pass
-			if (StringUtils.equals(purchaseProduct.getProdSprtYn(), PurchaseConstants.USE_Y) == false) {
-				if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-					throw new StorePlatformException("SAC_PUR_5104", reqProduct.getProdId(), useDeviceModelCd);
-				} else {
-					if (bClink) { // CLINK 예외 처리
-						purchaseProduct.setResultCd("5103");
-						purchaseProductList.add(purchaseProduct);
-						continue;
+			// 상품 지원 여부 체크 : IAP/쇼핑은 프로비저닝 pass
+			if ((purchaseOrderInfo.isShopping() == false) && (purchaseOrderInfo.isIap() == false)) {
+				if (StringUtils.equals(purchaseProduct.getProdSprtYn(), PurchaseConstants.USE_Y) == false) {
+					if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+						throw new StorePlatformException("SAC_PUR_5104", reqProduct.getProdId(), useDeviceModelCd);
 					} else {
-						throw new StorePlatformException("SAC_PUR_5103", reqProduct.getProdId(), useDeviceModelCd);
+						if (bClink) { // CLINK 예외 처리
+							purchaseProduct.setResultCd("5103");
+							purchaseProductList.add(purchaseProduct);
+							continue;
+						} else {
+							throw new StorePlatformException("SAC_PUR_5103", reqProduct.getProdId(), useDeviceModelCd);
+						}
 					}
 				}
 			}
