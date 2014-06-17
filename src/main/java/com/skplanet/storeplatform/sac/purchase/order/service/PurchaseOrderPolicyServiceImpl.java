@@ -398,9 +398,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				if (sktRestAmtObj != null) {
 					if (sktRestAmtObj.doubleValue() < policyResult.getSktRestAmt()) {
 						policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SHOPPING_PRCHS_USERPART_LIMIT);
+						policyResult.setSktRestAmt(sktRestAmtObj.doubleValue());
 					}
-
-					policyResult.setSktRestAmt(sktRestAmtObj.doubleValue());
 
 					if (sktRestAmtObj.doubleValue() <= 0.0) {
 						policyResult.setSktRestAmt(0.0);
@@ -502,9 +501,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 						if (sktRestAmtObj.doubleValue() < policyResult.getSktRestAmt()) {
 							policyResult
 									.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SHOPPING_RECV_USERPART_LIMIT);
+							policyResult.setSktRestAmt(sktRestAmtObj.doubleValue());
 						}
-
-						policyResult.setSktRestAmt(sktRestAmtObj.doubleValue());
 
 						if (sktRestAmtObj.doubleValue() <= 0.0) {
 							policyResult.setSktRestAmt(0.0);
@@ -571,9 +569,11 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		List<String> policyCodeList = new ArrayList<String>();
 		policyCodeList.add(memberPolicyCd);
 
+		boolean bCheckRecv = StringUtils.equals(policy.getPolicyId(),
+				PurchaseConstants.POLICY_ID_SKT_SHOPPING_RECV_LIMIT);
+
 		// 구매자/수신자 체크
-		String deviceId = StringUtils.equals(policy.getPolicyId(), PurchaseConstants.POLICY_ID_SKT_SHOPPING_RECV_LIMIT) ? policyCheckParam
-				.getRecvDeviceId() : policyCheckParam.getDeviceId();
+		String deviceId = bCheckRecv ? policyCheckParam.getRecvDeviceId() : policyCheckParam.getDeviceId();
 
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
 				deviceId, policyCodeList);
@@ -592,9 +592,44 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			return null;
 		}
 
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,MEMBER,{}({}),{}", policy.getPolicyId(),
+				policy.getPolicySeq(), individualPolicyInfoSac.getLimitAmount());
+
+		// ----------------------------------------------------------------
+		// 회원 구매/선물수신 금액 조회
+
+		// 당월 구매(선물수신) 금액
+		SearchSktPaymentScReq sciReq = new SearchSktPaymentScReq();
+		SearchSktPaymentScRes sciRes = null;
+
+		sciReq.setTenantProdGrpCd(policy.getTenantProdGrpCd());
+		sciReq.setApplyUnitCd("CM011301"); // 금액
+		sciReq.setCondUnitCd("CM011408"); // 당월
+		sciReq.setCondValue("1"); // 1
+
+		if (bCheckRecv) {
+			sciReq.setTenantId(policyCheckParam.getRecvTenantId());
+			sciReq.setUserKey(policyCheckParam.getRecvUserKey());
+			sciReq.setDeviceKey(policyCheckParam.getRecvDeviceKey());
+
+			sciRes = this.purchaseOrderSearchSCI.searchSktRecvAmountDetail(sciReq);
+			this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,GIFT,{}", sciRes.getVal());
+
+		} else {
+			sciReq.setTenantId(policyCheckParam.getTenantId());
+			sciReq.setUserKey(policyCheckParam.getUserKey());
+			sciReq.setDeviceKey(policyCheckParam.getDeviceKey());
+
+			sciRes = this.purchaseOrderSearchSCI.searchSktAmountDetail(sciReq);
+			this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,PRCHS,{}", sciRes.getVal());
+		}
+
+		Double restVal = Double.parseDouble(individualPolicyInfoSac.getLimitAmount())
+				- ((Double) sciRes.getVal()).doubleValue();
+
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,END,{}({}),{}", policy.getPolicyId(), policy.getPolicySeq(),
-				Double.parseDouble(individualPolicyInfoSac.getLimitAmount()) - policyCheckParam.getPaymentTotAmt());
-		return Double.parseDouble(individualPolicyInfoSac.getLimitAmount()) - policyCheckParam.getPaymentTotAmt();
+				restVal);
+		return restVal;
 	}
 
 	/*
