@@ -753,10 +753,23 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
 				majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo)); // OMDUACD
 
-		if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
-			deviceInfoChangeLog.append("[deviceNickName]").append(dbDeviceInfo.getDeviceNickName()).append("->")
-					.append(majorDeviceInfo.getDeviceNickName());
-			userMbrDevice.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+		/* 닉네임 처리 */
+		if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) { //미지원 단말인경우
+
+			if (!StringUtils.equals(dbDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
+				deviceInfoChangeLog.append("[deviceNickName]").append(dbDeviceInfo.getDeviceNickName()).append("->")
+						.append(majorDeviceInfo.getDeviceNickName());
+				userMbrDevice.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+			}
+		} else {
+
+			if (StringUtils.equals(dbDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+					&& StringUtils.equals(dbDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+				deviceInfoChangeLog.append("[deviceNickName]").append(dbDeviceInfo.getDeviceNickName()).append("->")
+						.append(majorDeviceInfo.getDeviceNickName());
+				userMbrDevice.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+			}
+
 		}
 
 		/* 기기정보 필드 */

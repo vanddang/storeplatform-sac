@@ -2819,6 +2819,10 @@ public class IdpServiceImpl implements IdpService {
 									} else {
 										getDeviceInfo.setDeviceModelNo(device.getDeviceModelCd());
 										getDeviceInfo.setModelNm(device.getModelNm());
+										if (StringUtils.equals(getDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+												&& StringUtils.equals(getDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+											getDeviceInfo.setDeviceNickName(device.getModelNm());
+										}
 									}
 
 									// 휴대기기등록
