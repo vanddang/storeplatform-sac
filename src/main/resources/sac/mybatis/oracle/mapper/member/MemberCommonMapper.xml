@@ -133,13 +133,12 @@
 		      , (SELECT cd_nm FROM TB_CM_CD WHERE cd_id = mnft_comp_cd AND lang_cd = 'ko') AS MNFT_COMP_CD
 		      , (SELECT cd_nm FROM TB_CM_CD WHERE cd_id = vm_type_cd AND lang_cd = 'ko') AS VM_TYPE_CD
 		 FROM TB_CM_DEVICE
-		WHERE use_yn = 'Y'
+		WHERE rep_device_yn = 'Y'
         <if test='deviceModelCd != null'>
           AND device_model_cd = #{deviceModelCd}
         </if>
         <if test='uaCd != null'>
           AND ua_cd = #{uaCd}
-          AND rep_device_yn = 'Y'
         </if>
         
     </select>
