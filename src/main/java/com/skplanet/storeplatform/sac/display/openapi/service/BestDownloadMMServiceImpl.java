@@ -135,15 +135,17 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 		this.log.debug("---------------------------------------------------------------------");
 
 		if (StringUtils.isEmpty(orderedBy) && StringUtils.isEmpty(channelId)) {
+			// 최신순, 평점순이 아니고, 시리즈 조회가 아닐때
 			if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)
 					|| DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 					|| DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook ,Comic, Music
-				bestDownloadMMSacReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
+				// 이북 무료는 조회 하지 않음
 				if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId) && "RNK000000003".equals(listId)) {
 					commonResponse.setTotalCount(0);
-					// throw new StorePlatformException("SAC_DSP_0016");
 				} else {
+					bestDownloadMMSacReq.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+					// 뮤직일때 List Id로 조회하는 경우 searchBestDownloadAppListByListId 쿼리 사용(뮤직은 현재 데이터 없음)
 					if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
 						this.log.debug("---------------------------------------------------------------------");
 						this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchBestDownloadAppListByListId : {}");
@@ -151,14 +153,15 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 						bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchBestDownloadAppListByListId",
 								bestDownloadMMSacReq, MetaInfo.class);
 					} else {
-						// 유/무료
+						bestDownloadMMSacReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+						// 코믹, 이북일때 유/무료
 						if ("RNK000000006".equals(listId) || "RNK000000003".equals(listId)) {
 							this.log.debug("---------------------------------------------------------------------");
 							this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchPayFreeList : {}");
 							this.log.debug("---------------------------------------------------------------------");
 							bestDownloadMMList = this.commonDAO.queryForList("OpenApi.searchPayFreeList",
 									bestDownloadMMSacReq, MetaInfo.class);
-							// 추천/신규
+							// 코믹, 이북일때 추천/신규
 						} else if ("ADM000000013".equals(listId) || "TGR000000001".equals(listId)) {
 							this.log.debug("---------------------------------------------------------------------");
 							this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchRecommendNewList : {}");
@@ -188,6 +191,7 @@ public class BestDownloadMMServiceImpl implements BestDownloadMMService {
 			}
 		} else {
 
+			// 최신순, 평점순일때 뮤직 카테고리
 			if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
 				this.log.debug("---------------------------------------------------------------------");
 				this.log.debug("[BestDownloadMMServiceImpl] call OpenApi.searchBestDownloadAppListByOrder : {}");
