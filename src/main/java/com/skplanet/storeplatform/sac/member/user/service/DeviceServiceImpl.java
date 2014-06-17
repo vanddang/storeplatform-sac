@@ -822,7 +822,7 @@ public class DeviceServiceImpl implements DeviceService {
 				if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
 					// OPMD 여부
-					boolean isOpmd = StringUtils.substring(deviceInfo.getsDeviceId(), 0, 3).equals("989");
+					boolean isOpmd = StringUtils.substring(deviceInfo.getDeviceId(), 0, 3).equals("989");
 
 					if (!StringUtils.equals(nativeId, dbDeviceInfo.getNativeId()) && !isOpmd) {
 						/* ICAS IMEI 비교 */
@@ -867,7 +867,7 @@ public class DeviceServiceImpl implements DeviceService {
 				if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
 					// OPMD 여부
-					boolean isOpmd = StringUtils.substring(deviceInfo.getsDeviceId(), 0, 3).equals("989");
+					boolean isOpmd = StringUtils.substring(deviceInfo.getDeviceId(), 0, 3).equals("989");
 
 					if (!isOpmd) {
 						/* ICAS IMEI 비교 */
