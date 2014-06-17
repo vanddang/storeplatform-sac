@@ -202,7 +202,11 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			}
 
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
-			return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH;
+			if (StringUtils.equals(purchaseProduct.getResvCol03(), "128")) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_NORMAL;
+			} else {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH;
+			}
 
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
 			if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_HIGH)) {
