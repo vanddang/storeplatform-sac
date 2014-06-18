@@ -2246,7 +2246,8 @@
 		   AND DSC.SUB_CONTENTS_ID = DSD.SUB_CONTENTS_ID
 		   AND DP.PROD_ID = DPR.PART_PROD_ID
 		   AND DPR.PROD_RSHP_CD = #{rshpCd}
-		   AND DP.PROD_ID = #{productId}        
+		   AND DP.PROD_ID = #{productId}    
+		   AND NVL(CD.VERIFY_DVC_YN, 'N') = 'N'    
     </select>   
 
     <!-- 타켓 단말 리스트 (By ProductId)-->
@@ -2257,7 +2258,8 @@
         FROM   TB_DP_SPRT_DEVICE DSD
               ,TB_CM_DEVICE CD
         WHERE  CD.DEVICE_MODEL_CD = DSD.DEVICE_MODEL_CD
-        AND    DSD.PROD_ID = #{productId} 
+        AND DSD.PROD_ID = #{productId} 
+        AND NVL(CD.VERIFY_DVC_YN, 'N') = 'N'
     </select>  
     
     <!-- 상품 ID 리스트 (BY AID)-->
