@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +97,8 @@ public class PurchaseOrderController {
 	public CreatePurchaseSacRes createPurchase(
 			@RequestBody @Validated(GroupCreatePurchase.class) CreatePurchaseSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,CREATE,REQ,{},{}", sacRequestHeader, req);
+		this.logger.info("PRCHS,ORDER,SAC,CREATE,REQ,{},{}",
+				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
 
 		// T Log SET
 		this.loggingPurchaseReq(req, sacRequestHeader);
@@ -133,7 +136,8 @@ public class PurchaseOrderController {
 			res.setPaymentPageParam(this.makeClinkResProductResult(purchaseOrderInfo.getPurchaseProductList()));
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,CREATE,RES,{}", res);
+		this.logger.info("PRCHS,ORDER,SAC,CREATE,RES,{}",
+				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		return res;
 	}
 
@@ -152,7 +156,8 @@ public class PurchaseOrderController {
 	public CreateFreePurchaseSacRes createFreeChargePurchase(
 			@RequestBody @Validated(GroupCreateFreePurchase.class) CreatePurchaseSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,REQ,{},{}", sacRequestHeader, req);
+		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,REQ,{},{}",
+				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
 
 		// T Log SET
 		this.loggingPurchaseReq(req, sacRequestHeader);
@@ -176,7 +181,8 @@ public class PurchaseOrderController {
 		res.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_FREE);
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
 
-		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,RES,{}", res);
+		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,RES,{}",
+				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		return res;
 	}
 
@@ -195,7 +201,8 @@ public class PurchaseOrderController {
 	public CreateBizPurchaseSacRes createBizPurchase(
 			@RequestBody @Validated(GroupCreateBizPurchase.class) CreatePurchaseSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}", sacRequestHeader, req);
+		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}",
+				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
 
 		// T Log
 		// this.loggingPurchaseReq(req, sacRequestHeader);
@@ -219,7 +226,8 @@ public class PurchaseOrderController {
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
 		res.setCount(count);
 
-		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,RES,{}", res);
+		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,RES,{}",
+				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		return res;
 	}
 
@@ -237,7 +245,8 @@ public class PurchaseOrderController {
 	@ResponseBody
 	public VerifyOrderSacRes verifyOrder(@RequestBody @Validated VerifyOrderSacReq req,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,VERIFY,REQ,{},{}", req, sacRequestHeader);
+		this.logger.info("PRCHS,ORDER,SAC,VERIFY,REQ,{},{}",
+				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
 
 		String tenantId = null;
 		if (StringUtils.isNotBlank(req.getMctSpareParam())) { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
@@ -254,7 +263,8 @@ public class PurchaseOrderController {
 		verifyOrderInfo.setPrchsId(req.getPrchsId());
 
 		VerifyOrderSacRes res = this.orderService.verifyPurchaseOrder(verifyOrderInfo);
-		this.logger.info("PRCHS,ORDER,SAC,VERIFY,RES,{},{}", res);
+		this.logger.info("PRCHS,ORDER,SAC,VERIFY,RES,{},{}", req.getPrchsId(),
+				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		return res;
 	}
 
@@ -272,7 +282,9 @@ public class PurchaseOrderController {
 	@ResponseBody
 	public NotifyPaymentSacRes notifyPayment(@RequestBody @Validated NotifyPaymentSacReq notifyPaymentReq,
 			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,REQ,{}", notifyPaymentReq);
+		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,REQ,{},{}",
+				ReflectionToStringBuilder.toString(notifyPaymentReq, ToStringStyle.SHORT_PREFIX_STYLE),
+				sacRequestHeader);
 
 		// TAKTODO:: 결제실패 경우 처리 - 구매실패(결제실패) 이력 관리 할건가?
 		if (Integer.parseInt(notifyPaymentReq.getResultCd()) != 0) {
@@ -316,7 +328,8 @@ public class PurchaseOrderController {
 
 		NotifyPaymentSacRes res = new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq
 				.getPaymentInfoList().size());
-		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,RES,{}", res);
+		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,RES,{}",
+				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		return res;
 	}
 
@@ -400,6 +413,7 @@ public class PurchaseOrderController {
 			}
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
 			purchaseOrderInfo.setIap(true); // IAP 상품 여부
+			purchaseOrderInfo.setPossibleDuplication(true); // 중복 구매 가능 여부 : IAP은 기구매체크 제외 2014.06.18.
 			// possibleDuplication: 중복 구매 가능 여부 - 상품 정합성 체크 (상품 조회) 시 세팅
 			// iapCommercial: IAP 정식판 전환상품 존재 여부 - 상품 정합성 체크 (상품 조회) 시 세팅
 
