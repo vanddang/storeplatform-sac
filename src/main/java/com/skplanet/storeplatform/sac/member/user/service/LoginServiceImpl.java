@@ -141,7 +141,10 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
-		/* 모번호 조회 */
+		/* 자번호 셋팅(mdn 로그인시 deviceId는 자번호로 넘어온다) */
+		String oDeviceId = req.getDeviceId();
+
+		/* 모번호 조회 및 셋팅 */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
 		/* 회원정보 조회 */
@@ -160,7 +163,7 @@ public class LoginServiceImpl implements LoginService {
 				.getUserMbr().getUserKey());
 
 		/* 휴대기기 정보 수정 */
-		String deviceKey = this.modDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req, dbDeviceInfo, "v1");
+		String deviceKey = this.modDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req, oDeviceId, dbDeviceInfo, "v1");
 
 		try {
 
@@ -241,6 +244,9 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
+		/* 자번호 셋팅(mdn 로그인시 deviceId는 자번호로 넘어온다) */
+		String oDeviceId = req.getDeviceId();
+
 		/* 모번호 조회 */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 
@@ -299,7 +305,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 휴대기기 정보 수정 */
-		String deviceKey = this.modDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req, dbDeviceInfo, "v2");
+		String deviceKey = this.modDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req, oDeviceId, dbDeviceInfo, "v2");
 
 		try {
 
@@ -1498,13 +1504,16 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @param obj
 	 *            Object
+	 * @param oDeviceId
+	 *            String
 	 * @param dbDeviceInfo
 	 *            DeviceInfo
 	 * @param version
 	 *            String
 	 * @return deviceKey String
 	 */
-	private String modDeviceInfoForLogin(SacRequestHeader requestHeader, String userKey, Object obj, DeviceInfo dbDeviceInfo, String version) {
+	private String modDeviceInfoForLogin(SacRequestHeader requestHeader, String userKey, Object obj, String oDeviceId, DeviceInfo dbDeviceInfo,
+			String version) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userKey);
@@ -1515,6 +1524,7 @@ public class LoginServiceImpl implements LoginService {
 			req = (AuthorizeByMdnReq) obj;
 
 			deviceInfo.setDeviceId(req.getDeviceId()); // MDN
+			deviceInfo.setoDeviceId(oDeviceId); // 자번호
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // MDN Type
 			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
@@ -1530,6 +1540,7 @@ public class LoginServiceImpl implements LoginService {
 			if (StringUtils.isNotBlank(req.getDeviceId())) { // deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 update 요청
 
 				deviceInfo.setDeviceId(req.getDeviceId()); // MDN
+				deviceInfo.setoDeviceId(oDeviceId); // 자번호
 				deviceInfo.setDeviceIdType(req.getDeviceIdType()); // MDN Type
 				deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
 				deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
