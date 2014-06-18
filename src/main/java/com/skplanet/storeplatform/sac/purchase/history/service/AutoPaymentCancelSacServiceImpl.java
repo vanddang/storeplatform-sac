@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.tstore.sci.TStoreNotiSCI;
 import com.skplanet.storeplatform.purchase.client.history.sci.AutoPaymentCancelSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
@@ -31,8 +30,9 @@ public class AutoPaymentCancelSacServiceImpl implements AutoPaymentCancelSacServ
 
 	@Autowired
 	private AutoPaymentCancelSCI autoPaymentCancelSCI;
-	@Autowired
-	private TStoreNotiSCI tStoreNotiSCI;
+
+	// @Autowired
+	// private TStoreNotiSCI tStoreNotiSCI;
 
 	/**
 	 * 자동결재해지예약/예약취소/해지 SAC Service.
