@@ -267,11 +267,21 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							policyRequest.setCommonRequest(commonRequest);
 							policyRequest.setLimitPolicyKey(mdn);
 							policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
-							SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
-							for (LimitTarget limitTarget : policyResponse.getLimitTargetList()) {
-								if (StringUtil.equals(limitTarget.getLimitPolicyKey(), mdn)) {
-									isTestModel = "Y";
-									break;
+
+							SearchPolicyResponse policyResponse = null;
+
+							try {
+								policyResponse = this.userSCI.searchPolicyList(policyRequest);
+							} catch (StorePlatformException e) {
+								//ignore
+							}
+
+							if (policyResponse != null) {
+								for (LimitTarget limitTarget : policyResponse.getLimitTargetList()) {
+									if (limitTarget.getLimitPolicyKey().equals(mdn)) {
+										isTestModel = "Y";
+										break;
+									}
 								}
 							}
 
@@ -684,12 +694,21 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					policyRequest.setCommonRequest(commonRequest);
 					policyRequest.setLimitPolicyKey(mdn);
 					policyRequest.setLimitPolicyCodeList(limitPolicyCodeList);
-					SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
 
-					for (LimitTarget limitTarget : policyResponse.getLimitTargetList()) {
-						if (limitTarget.getLimitPolicyKey().equals(mdn)) {
-							isTestModel = "Y";
-							break;
+					SearchPolicyResponse policyResponse = null;
+
+					try {
+						policyResponse = this.userSCI.searchPolicyList(policyRequest);
+					} catch (StorePlatformException e) {
+						//ignore
+					}
+
+					if (policyResponse != null) {
+						for (LimitTarget limitTarget : policyResponse.getLimitTargetList()) {
+							if (limitTarget.getLimitPolicyKey().equals(mdn)) {
+								isTestModel = "Y";
+								break;
+							}
 						}
 					}
 
