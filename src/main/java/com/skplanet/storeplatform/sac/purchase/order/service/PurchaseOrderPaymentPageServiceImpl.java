@@ -321,7 +321,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		String md5Token = null;
 		try {
 			md5Token = MD5Utils.digestInHexFormat(plainToken);
-			this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,ENC,{}", paymentPageParam.getToken());
+			this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,TOKEN,ENC,{}", md5Token);
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7201", e);
 		}
