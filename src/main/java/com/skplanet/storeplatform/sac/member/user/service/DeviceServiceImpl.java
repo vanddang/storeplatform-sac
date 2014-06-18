@@ -717,6 +717,8 @@ public class DeviceServiceImpl implements DeviceService {
 	public String modDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, DeviceInfo dbDeviceInfo, String version) {
 
 		String gameCenterYn = null;
+		String oDeviceId = deviceInfo.getoDeviceId(); // request 자번호(OPMD단말여부는 자번호로 한다. OPMD단말인경우 IMEI 체크는 하지 않는다.)
+		String oDeviceTelecom = deviceInfo.getDeviceTelecom(); // request 통신사 코드
 		StringBuffer deviceInfoChangeLog = new StringBuffer();
 
 		UserMbrDevice userMbrDevice = new UserMbrDevice();
@@ -734,32 +736,34 @@ public class DeviceServiceImpl implements DeviceService {
 		String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
 		String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
-				osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo)); // osVersion 휴대기기
-																										// 부가속성에 셋팅
+				osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo)); // osVersion 휴대기기 부가속성에 셋팅
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
-				svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo)); // svcVersion
-																											// 휴대기기 부가속성에
-																											// 셋팅
+				svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo)); // svcVersion 휴대기기 부가속성에 셋팅
 
-		/* 주요정보(SKT 서비스관리번호, UACD, OMDUACD) 조회 후 셋팅 */
-		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceModelNo, deviceInfo.getDeviceTelecom(), deviceInfo.getDeviceId(),
-				deviceInfo.getDeviceIdType());
+		/* 디바이스 헤더의 model 값이 있고 디폴트 모델명이 아닌경우만 주요정보조회. */
+		if (!StringUtils.isBlank(deviceModelNo) && !this.commService.isDefaultDeviceModel(deviceModelNo)) {
 
-		deviceModelNo = majorDeviceInfo.getDeviceModelNo();
-		deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 통신사
-		deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 서비스관리번호
-		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd() == null ? ""
-				: majorDeviceInfo.getUacd(), deviceInfo)); // UACD
-		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-				majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo)); // OMDUACD
-
-		if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
-			deviceInfoChangeLog.append("[deviceNickName]").append(dbDeviceInfo.getDeviceNickName()).append("->")
-					.append(majorDeviceInfo.getDeviceNickName());
-			userMbrDevice.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+			/* 주요정보(SKT 서비스관리번호, UACD, OMDUACD, 미지원단말처리) 조회 후 셋팅 */
+			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceModelNo, deviceInfo.getDeviceTelecom(),
+					deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType());
+			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말코드
+			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 통신사
+			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 서비스관리번호
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
+					majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo)); // UACD
+			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
+					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo)); // OMDUACD
+			if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
+				deviceInfoChangeLog.append("[deviceNickName]").append(dbDeviceInfo.getDeviceNickName()).append("->")
+						.append(majorDeviceInfo.getDeviceNickName());
+				userMbrDevice.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+			}
+		} else {
+			LOGGER.info("{} deviceHeader model 정보 없음 : {}", deviceInfo.getDeviceId(), deviceModelNo);
 		}
 
 		/* 기기정보 필드 */
+		deviceModelNo = deviceInfo.getDeviceModelNo(); // 모델코드
 		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
 		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
@@ -769,7 +773,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (StringUtils.isNotBlank(deviceModelNo) && !StringUtils.equals(deviceModelNo, dbDeviceInfo.getDeviceModelNo())) {
 
-			if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, oDeviceTelecom)) {
 
 				// // 폰정보 조회 (deviceModelNo)
 				// Device device = this.commService.getPhoneInfo(deviceModelNo);
@@ -819,11 +823,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 			if (StringUtils.isNotBlank(nativeId)) {
 
-				if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+				if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, oDeviceTelecom)) {
 
 					// OPMD 여부
-					boolean isOpmd = StringUtils.substring(deviceInfo.getDeviceId(), 0, 3).equals("989");
-
+					boolean isOpmd = StringUtils.substring(oDeviceId, 0, 3).equals("989");
+					if (isOpmd)
+						LOGGER.info("{} OPMD 단말로 IMEI 미체크, 자번호: {}", deviceInfo.getDeviceId(), oDeviceId);
 					if (!StringUtils.equals(nativeId, dbDeviceInfo.getNativeId()) && !isOpmd) {
 						/* ICAS IMEI 비교 */
 						if (StringUtils.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
@@ -864,11 +869,12 @@ public class DeviceServiceImpl implements DeviceService {
 			if (!this.isEqualsLoginDevice(deviceInfo.getDeviceId(), nativeId, dbDeviceInfo.getNativeId(),
 					MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
-				if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
+				if (StringUtils.equals(oDeviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
 					// OPMD 여부
-					boolean isOpmd = StringUtils.substring(deviceInfo.getDeviceId(), 0, 3).equals("989");
-
+					boolean isOpmd = StringUtils.substring(oDeviceId, 0, 3).equals("989");
+					if (isOpmd)
+						LOGGER.info("{} OPMD 단말로 IMEI 미체크, 자번호: {}", deviceInfo.getDeviceId(), oDeviceId);
 					if (!isOpmd) {
 						/* ICAS IMEI 비교 */
 						if (StringUtils.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
@@ -889,7 +895,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 				if (StringUtils.isNotBlank(nativeId)) {
 
-					if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+					if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, oDeviceTelecom)) {
 
 						String icasImei = this.getIcasImei(deviceInfo.getDeviceId());
 						deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->").append(icasImei);
