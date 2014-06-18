@@ -143,7 +143,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		// pageInfo set
 		scRequest.getPage().setNo(request.getOffset());
-		scRequest.getPage().setRows(request.getCount());
+		scRequest.getPage().setRows(request.getCount() > 100 ? 100 : request.getCount());
 
 		/**
 		 * 구매정책을 조회하여 list에 셋팅
