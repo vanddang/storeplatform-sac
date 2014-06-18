@@ -38,6 +38,11 @@ public class DeviceInfo extends CommonInfo {
 	private String deviceId;
 
 	/**
+	 * 자번호(mdn 로그인시 올려주는 자버호)
+	 */
+	private String oDeviceId;
+
+	/**
 	 * 기기 ID 타입 (msisdn, uuid, macaddress).
 	 */
 	private String deviceIdType;
@@ -515,6 +520,21 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	public void setAuthenticationDate(String authenticationDate) {
 		this.authenticationDate = authenticationDate;
+	}
+
+	/**
+	 * @return oDeviceId
+	 */
+	public String getoDeviceId() {
+		return this.oDeviceId;
+	}
+
+	/**
+	 * @param oDeviceId
+	 *            String
+	 */
+	public void setoDeviceId(String oDeviceId) {
+		this.oDeviceId = oDeviceId;
 	}
 
 }
