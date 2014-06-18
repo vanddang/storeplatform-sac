@@ -8,6 +8,7 @@
 		        ua_cd
 		  FROM  tb_cm_device
 		 WHERE  device_model_cd = #{deviceModelNo}
+		   AND use_yn = 'Y'
 	</select>
 	
 	<!-- 휴대폰 SMS 인증 정보 확인 (인증 코드,Signature,만료시간)-->
