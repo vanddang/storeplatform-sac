@@ -732,7 +732,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
+			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());// 단말 모델
 			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기 IMEI
@@ -753,7 +753,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
+			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말 모델
 			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
@@ -773,7 +773,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
+			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말 모델
 			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
@@ -793,7 +793,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setJoinId(""); // 가입 채널 코드
 			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
+			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말 모델
 			deviceInfo.setDeviceAccount(""); // 기기 계정 (Gmail)
 			deviceInfo.setNativeId(""); // 기기고유 ID (imei)
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부

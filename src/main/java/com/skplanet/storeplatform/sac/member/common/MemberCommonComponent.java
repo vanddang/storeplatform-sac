@@ -730,7 +730,7 @@ public class MemberCommonComponent {
 		 * 폰정보 조회후 단말 정보 세팅.
 		 */
 		Device deviceDTO = this.getPhoneInfo(model);
-		if (deviceDTO == null) {
+		if (deviceDTO == null || this.isDefaultDeviceModel(model)) {
 
 			/**
 			 * 미지원 단말 setting
@@ -758,8 +758,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {

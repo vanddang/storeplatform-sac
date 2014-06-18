@@ -66,10 +66,10 @@ public class UserJoinController {
 		LOGGER.debug("####################################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
-			throw new StorePlatformException("SAC_MEM_0002", "model");
-		}
+		// 미지원 단말 정보 수정으로 인한 주서처리...
+		// if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
+		// throw new StorePlatformException("SAC_MEM_0002", "model");
+		// }
 
 		/**
 		 * 모바일 전용회원 Biz
@@ -116,9 +116,11 @@ public class UserJoinController {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
 			} else if (StringUtils.equals(req.getDeviceTelecom(), "")) {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
-			} else if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
-				throw new StorePlatformException("SAC_MEM_0002", "model");
 			}
+			// 미지원 단말 정보 수정으로 인한 주서처리...
+			// else if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
+			// throw new StorePlatformException("SAC_MEM_0002", "model");
+			// }
 
 			res = this.svc.regByAgreementDevice(sacHeader, req);
 
@@ -170,9 +172,11 @@ public class UserJoinController {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
 			} else if (StringUtils.equals(req.getDeviceTelecom(), "")) {
 				throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
-			} else if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
-				throw new StorePlatformException("SAC_MEM_0002", "model");
 			}
+			// 미지원 단말 정보 수정으로 인한 주서처리...
+			// else if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
+			// throw new StorePlatformException("SAC_MEM_0002", "model");
+			// }
 
 			res = this.svc.regBySimpleDevice(sacHeader, req);
 
@@ -213,9 +217,10 @@ public class UserJoinController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
-			throw new StorePlatformException("SAC_MEM_0002", "model");
-		}
+		// 미지원 단말 정보 수정으로 인한 주서처리...
+		// if (StringUtils.isBlank(sacHeader.getDeviceHeader().getModel())) {
+		// throw new StorePlatformException("SAC_MEM_0002", "model");
+		// }
 
 		/**
 		 * Save&Sync 가입 Biz
