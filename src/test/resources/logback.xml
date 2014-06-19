@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    
-    <if condition='p("jenkins.test.logger.level").equals("OFF")'>
-        <then><!-- Jenkins 빌드 -->
-            <property name="LOG_LEVEL_DEBUG" value="OFF" />
-            <property name="LOG_LEVEL_INFO"  value="OFF" />
-            <property name="LOG_LEVEL_ERROR" value="OFF" />
-        </then><!-- Jenkins 빌드 -->
-        <else>
-            <property name="LOG_LEVEL_DEBUG" value="DEBUG" />
-            <property name="LOG_LEVEL_INFO"  value="INFO" />            
-            <property name="LOG_LEVEL_ERROR" value="ERROR" />
-        </else><!-- 로컬 개발 -->
-    </if>
       
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
