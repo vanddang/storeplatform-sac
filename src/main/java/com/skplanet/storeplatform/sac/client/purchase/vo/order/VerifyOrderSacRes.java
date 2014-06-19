@@ -28,6 +28,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String flgTeleBillingAgree; // 통신과금 동의여부: Y/N
 	private String flgOcbUseAgree; // OCB 이용약관 동의여부: Y/N
 	private String typeDanalContent; // (다날) 컨텐츠 타입: 0-디지털, 1-실물
+	private String prchsCaseCd; // 구매/선물 구분 코드
 	private String approvalSd; // SKT후불 승인용 SYSTEM_DIVISION
 	private String cancelSd; // SKT후불 취소용 SYSTEM_DIVISION
 	private String typeSktLimit; // SKT후불 결제수단 재정의 원인: L00~L09
@@ -179,6 +180,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setTypeDanalContent(String typeDanalContent) {
 		this.typeDanalContent = typeDanalContent;
+	}
+
+	/**
+	 * @return the prchsCaseCd
+	 */
+	public String getPrchsCaseCd() {
+		return this.prchsCaseCd;
+	}
+
+	/**
+	 * @param prchsCaseCd
+	 *            the prchsCaseCd to set
+	 */
+	public void setPrchsCaseCd(String prchsCaseCd) {
+		this.prchsCaseCd = prchsCaseCd;
 	}
 
 	/**
