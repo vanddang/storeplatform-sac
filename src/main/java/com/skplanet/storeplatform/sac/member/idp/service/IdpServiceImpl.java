@@ -2358,44 +2358,45 @@ public class IdpServiceImpl implements IdpService {
 						});
 						/* FDS LOG END */
 
-					} else {
-						// 회원 UserKey 정보가 불일치 할경우, OneId 테이블만 업데이트.
-						SearchAgreeSiteRequest searchAgreeSiteRequest = new SearchAgreeSiteRequest();
-						searchAgreeSiteRequest.setCommonRequest(commonRequest);
-						searchAgreeSiteRequest.setImSvcNo(imIntSvcNo);
-						this.userSCI.searchAgreeSite(searchAgreeSiteRequest);
-
-						// 미동의 회원 OneId - TB_US_USERMBR_ONEID 업데이트 추가
-						UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-						updateMbrOneIDRequest.setCommonRequest(commonRequest);
-						MbrOneID mbrOneID = new MbrOneID();
-						mbrOneID.setTenantID(tenantId);
-						mbrOneID.setIntgSvcNumber(imIntSvcNo);
-						mbrOneID.setUserID(newUserId);
-						updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-						// SC.TB_US_USERMBR_ONEID 정보 수정
-						this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-						// OneId Response Setting
-						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
-						imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
-
-						/* FDS LOG START */
-						final String fdsMbrIdPre = oldId;
-						final String fdsMbrId = newUserId;
-						final String fdsUsermbrNoPost = userKey;
-						final String fdsUserId = newUserId;
-						final String fdsSystemId = systemId;
-
-						new TLogUtil().log(new ShuttleSetter() {
-							@Override
-							public void customize(TLogSentinelShuttle shuttle) {
-								shuttle.log_id("TL_SAC_MEM_0001").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
-										.usermbr_no_post(fdsUsermbrNoPost).result_code("SUCC").mbr_id(fdsUserId)
-										.request_system_id(fdsSystemId);
-							}
-						});
 					}
+					// else {
+					// // 회원 UserKey 정보가 불일치 할경우, OneId 테이블만 업데이트.
+					// SearchAgreeSiteRequest searchAgreeSiteRequest = new SearchAgreeSiteRequest();
+					// searchAgreeSiteRequest.setCommonRequest(commonRequest);
+					// searchAgreeSiteRequest.setImSvcNo(imIntSvcNo);
+					// this.userSCI.searchAgreeSite(searchAgreeSiteRequest);
+					//
+					// // 미동의 회원 OneId - TB_US_USERMBR_ONEID 업데이트 추가
+					// UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+					// updateMbrOneIDRequest.setCommonRequest(commonRequest);
+					// MbrOneID mbrOneID = new MbrOneID();
+					// mbrOneID.setTenantID(tenantId);
+					// mbrOneID.setIntgSvcNumber(imIntSvcNo);
+					// mbrOneID.setUserID(newUserId);
+					// updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+					// // SC.TB_US_USERMBR_ONEID 정보 수정
+					// this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+					//
+					// // OneId Response Setting
+					// imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
+					// imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
+					//
+					// /* FDS LOG START */
+					// final String fdsMbrIdPre = oldId;
+					// final String fdsMbrId = newUserId;
+					// final String fdsUsermbrNoPost = userKey;
+					// final String fdsUserId = newUserId;
+					// final String fdsSystemId = systemId;
+					//
+					// new TLogUtil().log(new ShuttleSetter() {
+					// @Override
+					// public void customize(TLogSentinelShuttle shuttle) {
+					// shuttle.log_id("TL_SAC_MEM_0001").mbr_id_pre(fdsMbrIdPre).mbr_id_post(fdsMbrId)
+					// .usermbr_no_post(fdsUsermbrNoPost).result_code("SUCC").mbr_id(fdsUserId)
+					// .request_system_id(fdsSystemId);
+					// }
+					// });
+					// }
 				}
 			} catch (StorePlatformException spe) {
 				LOGGER.error(spe.getMessage(), spe);
