@@ -740,6 +740,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			userMbrDevice.setDeviceModelNo(modelCd);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 			userMbrDevice.setDeviceNickName(deviceNickName);
+			/*
+			 * 기기변경시 nativeId 가 변경되어 변동성 확인 API에서 지메일까지 불일치 하면 회원이 탈퇴처리 되므로
+			 * 기기변경프로비져닝에서 변경된 기기의 nativeId를 업데이트 한다.
+			 */
+			userMbrDevice.setNativeID(this.deviceService.getIcasImei(mdn));
 			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE); // 휴대기기 변경 유형코드 : 기기변경
 
 			List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
