@@ -8,9 +8,9 @@
             <property name="LOG_LEVEL_ERROR" value="OFF" />
         </then><!-- Jenkins 빌드 -->
         <else>
-            <property name="LOG_LEVEL_DEBUG" value="OFF" />
-            <property name="LOG_LEVEL_INFO"  value="OFF" />            
-            <property name="LOG_LEVEL_ERROR" value="OFF" />
+            <property name="LOG_LEVEL_DEBUG" value="DEBUG" />
+            <property name="LOG_LEVEL_INFO"  value="INFO" />            
+            <property name="LOG_LEVEL_ERROR" value="ERROR" />
         </else><!-- 로컬 개발 -->
     </if>
       
