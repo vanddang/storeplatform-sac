@@ -442,6 +442,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelScReq.setCancelReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
 		purchaseCancelScReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+		purchaseCancelScReq.setCurrPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 		purchaseCancelScReq.setPurchaseCancelPaymentDetailScReqList(purchaseCancelPaymentDetailScReqList);
 		purchaseCancelScReq.setInsertPurchaseProductCountScReq(insertPurchaseProductCountScReq);
 
@@ -478,6 +479,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelScReq.setCancelReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
 		purchaseCancelScReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_FAIL);
+		purchaseCancelScReq.setCurrPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_RESERVATION);
 		purchaseCancelScReq.setPurchaseCancelPaymentDetailScReqList(purchaseCancelPaymentDetailScReqList);
 		purchaseCancelScReq.setInsertPurchaseProductCountScReq(insertPurchaseProductCountScReq);
 
@@ -487,6 +489,10 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelDetailSacParam.setPrchsDtlCancelCnt(purchaseCancelScRes.getPrchsDtlCancelCnt());
 		purchaseCancelDetailSacParam.setPrchsCancelCnt(purchaseCancelScRes.getPrchsCancelCnt());
 		purchaseCancelDetailSacParam.setPrchsProdCntCnt(purchaseCancelScRes.getPrchsProdCntCnt());
+
+		if (purchaseCancelDetailSacParam.getPrchsDtlCancelCnt() < 1) {
+			throw new StorePlatformException("SAC_PUR_8103");
+		}
 
 		return purchaseCancelDetailSacParam;
 

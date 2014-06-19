@@ -421,14 +421,14 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	}
 
 	@Override
-	public PurchaseCancelDetailSacResult executePurchaseCancelForPaymentError(
-			PurchaseCancelSacParam purchaseCancelSacParam, PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
+	public PurchaseCancelDetailSacResult cancelPurchaseForPaymentError(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
 		PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 
 		/** 구매 정보 조회. */
 		this.purchaseCancelRepository.setPurchaseDetailInfo(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 		if (purchaseCancelDetailSacParam.getPrchsDtlSacParamList() == null
-				|| purchaseCancelDetailSacParam.getPrchsDtlSacParamList().size() < 1) {
+				|| purchaseCancelDetailSacParam.getPrchsDtlSacParamList().isEmpty()) {
 			// 구매 상세 정보가 없으면 구매 취소 불가.
 			throw new StorePlatformException("SAC_PUR_8100");
 		}
@@ -437,12 +437,23 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		PrchsDtlSacParam prchsDtlSacParam = purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0);
 		if (StringUtils.equals(PurchaseConstants.PRCHS_STATUS_RESERVATION, prchsDtlSacParam.getStatusCd())) {
 			// 구매 예약 상태이면 구매 실패로 업데이트.
-			this.purchaseCancelRepository.updatePurchaseCancelForPaymentError(purchaseCancelSacParam,
-					purchaseCancelDetailSacParam);
+			try {
+				this.purchaseCancelRepository.updatePurchaseCancelForPaymentError(purchaseCancelSacParam,
+						purchaseCancelDetailSacParam);
 
-			purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-			purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
-			purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_0000"));
+				purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+				purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
+				purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_0000"));
+
+			} catch (StorePlatformException e) {
+				if (StringUtils.equals("SC_PUR_7101", e.getCode()) || StringUtils.equals("SAC_PUR_8103", e.getCode())) {
+					// 예약상태인 구매가 없거나, 구매상태가 완료로 변경되었으면 구매 취소 호출.
+					purchaseCancelDetailSacResult = this.executePurchaseCancel(purchaseCancelSacParam,
+							purchaseCancelDetailSacParam);
+				} else {
+					throw e;
+				}
+			}
 
 		} else if (StringUtils.equals(PurchaseConstants.PRCHS_STATUS_COMPT, prchsDtlSacParam.getStatusCd())) {
 			// 구매 완료이면 구매 취소 호출.

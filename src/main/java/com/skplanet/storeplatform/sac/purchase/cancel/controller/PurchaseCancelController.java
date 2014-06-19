@@ -123,8 +123,8 @@ public class PurchaseCancelController {
 				sacRequestHeader, purchaseCancelForPaymentErrorSacReq);
 
 		PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = this.purchaseCancelService
-				.executePurchaseCancelForPaymentError(purchaseCancelSacParam, purchaseCancelSacParam
-						.getPrchsCancelList().get(0));
+				.cancelPurchaseForPaymentError(purchaseCancelSacParam,
+						purchaseCancelSacParam.getPrchsCancelList().get(0));
 
 		if (!StringUtils.equals("SAC_PUR_0000", purchaseCancelDetailSacResult.getResultCd())) {
 			throw new StorePlatformException("SAC_PUR_8999");

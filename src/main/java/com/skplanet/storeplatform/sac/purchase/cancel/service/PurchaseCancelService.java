@@ -74,7 +74,7 @@ public interface PurchaseCancelService {
 	 *            purchaseCancelDetailSacParam
 	 * @return PurchaseCancelDetailSacResult
 	 */
-	PurchaseCancelDetailSacResult executePurchaseCancelForPaymentError(PurchaseCancelSacParam purchaseCancelSacParam,
+	PurchaseCancelDetailSacResult cancelPurchaseForPaymentError(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
 
 }
