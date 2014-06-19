@@ -148,6 +148,12 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.getUseExprDt() + "235959");
 					prchsDtlMore.setDwldExprDt(prchsDtlMore.getUseExprDt());
 				}
+				// 정액권으로 에피소드 이용시, 다운로드 종료 일시
+				if (StringUtils.isNotBlank(product.getUseFixrateProdId())
+						&& StringUtils.isNotBlank(product.getDwldExprDt())) {
+					prchsDtlMore.setDwldExprDt(product.getDwldExprDt());
+				}
+
 				prchsDtlMore.setUseFixrateProdId(product.getUseFixrateProdId());
 				prchsDtlMore.setUseFixrateProdClsfCd(product.getUseFixrateProdClsfCd());
 				prchsDtlMore.setDrmYn(product.getDrmYn());

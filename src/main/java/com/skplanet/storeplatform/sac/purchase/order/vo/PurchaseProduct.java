@@ -59,6 +59,9 @@ public class PurchaseProduct extends PaymentInfo {
 	// CLINK 처리용
 	private String resultCd; // 구매처리 결과코드
 
+	// 정액권으로 에피소드 상품 이용할 때
+	private String dwldExprDt; // 다운로드 종료 일시
+
 	/**
 	 * @return the possLendProductInfo
 	 */
@@ -507,6 +510,21 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setResultCd(String resultCd) {
 		this.resultCd = resultCd;
+	}
+
+	/**
+	 * @return the dwldExprDt
+	 */
+	public String getDwldExprDt() {
+		return this.dwldExprDt;
+	}
+
+	/**
+	 * @param dwldExprDt
+	 *            the dwldExprDt to set
+	 */
+	public void setDwldExprDt(String dwldExprDt) {
+		this.dwldExprDt = dwldExprDt;
 	}
 
 }

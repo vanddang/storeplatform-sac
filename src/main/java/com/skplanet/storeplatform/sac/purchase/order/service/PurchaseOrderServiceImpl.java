@@ -9,26 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.PostConstruct;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -39,7 +31,6 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemD
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
-import com.skplanet.storeplatform.framework.core.util.DateUtils;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
@@ -89,18 +80,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	@Value("#{systemProperties['spring.profiles.active']}")
 	private String envServerLevel;
-	@Value("#{systemProperties['env.servername']}")
-	private String instanceName;
-	private String hostNum;
-	private String instanceNum;
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
+	@Autowired
+	@Qualifier("scPurchase")
+	private MessageSourceAccessor scMessageSourceAccessor;
 
 	@Autowired
 	private PurchaseOrderSCI purchaseOrderSCI;
 	@Autowired
 	private PurchaseOrderSearchSCI purchaseOrderSearchSCI;
+	@Autowired
+	private PurchaseOrderAssistService purchaseOrderAssistService;
 	@Autowired
 	private PurchaseOrderMakeDataService purchaseOrderMakeDataService;
 	@Autowired
@@ -117,39 +109,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private PurchaseDisplayRepository purchaseDisplayRepository;
 	@Autowired
 	private PurchaseShoppingOrderRepository purchaseShoppingOrderRepository;
-
-	@PostConstruct
-	public void initHostInstanceNum() {
-		String hostName = null;
-		try {
-			hostName = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			hostName = "01";
-		}
-		Pattern pattern = Pattern.compile("\\d");
-
-		this.hostNum = "";
-		Matcher matcher = pattern.matcher(hostName);
-		while (matcher.find()) {
-			this.hostNum += matcher.group(0);
-		}
-		if (StringUtils.isBlank(this.hostNum)) {
-			this.hostNum = "01";
-		}
-		this.hostNum = StringUtils.leftPad(this.hostNum, 2, "0");
-
-		this.instanceNum = "";
-		if (StringUtils.isNotBlank(this.instanceName)) {
-			matcher = pattern.matcher(this.instanceName);
-			while (matcher.find()) {
-				this.instanceNum += matcher.group(0);
-			}
-		}
-		if (StringUtils.isBlank(this.instanceNum)) {
-			this.instanceNum = "01";
-		}
-		this.instanceNum = StringUtils.leftPad(this.instanceNum, 2, "0");
-	}
 
 	/**
 	 * 
@@ -183,8 +142,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				.searchPurchaseSequenceAndDate();
 
 		if (StringUtils.isBlank(purchaseOrderInfo.getPrchsId())) {
-			purchaseOrderInfo.setPrchsId(this.makePrchsId(searchPurchaseSequenceAndDateRes.getNextSequence(),
-					searchPurchaseSequenceAndDateRes.getNowDate()));
+			purchaseOrderInfo.setPrchsId(this.purchaseOrderAssistService.makePrchsId(
+					searchPurchaseSequenceAndDateRes.getNextSequence(), searchPurchaseSequenceAndDateRes.getNowDate()));
 		}
 
 		purchaseOrderInfo.setPrchsDt(searchPurchaseSequenceAndDateRes.getNowDate());
@@ -245,7 +204,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			makeFreePurchaseScRes = this.purchaseOrderSCI.makeFreePurchase(makeFreePurchaseScReq);
 
 		} catch (StorePlatformException e) {
-			throw (this.isDuplicateKeyException(e) ? new StorePlatformException("SAC_PUR_6110") : e); // 중복된 구매요청 체크
+			throw (this.purchaseOrderAssistService.isDuplicateKeyException(e) ? new StorePlatformException(
+					"SAC_PUR_6110") : e); // 중복된 구매요청 체크
 
 		} catch (DuplicateKeyException e) {
 			throw new StorePlatformException("SAC_PUR_6110");
@@ -294,7 +254,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				final String tid = prchsInfo.getTid();
 				final String tx_id = prchsInfo.getTxId();
 				final String use_start_time = prchsInfo.getPrchsDt();
-				final String use_end_time = this.calculateUseDate(prchsInfo.getPrchsDt(),
+				final String use_end_time = this.purchaseOrderAssistService.calculateUseDate(prchsInfo.getPrchsDt(),
 						prchsInfo.getUsePeriodUnitCd(), prchsInfo.getUsePeriod());
 				final String download_expired_time = use_end_time;
 				final Long product_qty = (long) prchsInfo.getProdQty();
@@ -351,8 +311,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				.searchPurchaseSequenceAndDate();
 
 		if (StringUtils.isBlank(purchaseOrderInfo.getPrchsId())) {
-			purchaseOrderInfo.setPrchsId(this.makePrchsId(searchPurchaseSequenceAndDateRes.getNextSequence(),
-					searchPurchaseSequenceAndDateRes.getNowDate()));
+			purchaseOrderInfo.setPrchsId(this.purchaseOrderAssistService.makePrchsId(
+					searchPurchaseSequenceAndDateRes.getNextSequence(), searchPurchaseSequenceAndDateRes.getNowDate()));
 		}
 
 		// -----------------------------------------------------------------------------
@@ -610,7 +570,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setTopMenuId(prchsDtlMore.getTenantProdGrpCd().substring(8, 12)); // 상품 TOP 메뉴 ID
 		// 자동결제 상품 - 다음 자동 결제일
 		if (StringUtils.equals(reservedDataMap.get("autoPrchsYn"), PurchaseConstants.USE_Y)) {
-			String afterAutoPayDt = this.calculateUseDate(prchsDtlMore.getUseStartDt(),
+			String afterAutoPayDt = this.purchaseOrderAssistService.calculateUseDate(prchsDtlMore.getUseStartDt(),
 					reservedDataMap.get("autoPrchsPeriodUnitCd"),
 					StringUtils.defaultString(reservedDataMap.get("autoPrchsPeriodValue"), "0"));
 			res.setAfterAutoPayDt(afterAutoPayDt.substring(0, 8) + "000000"); // 다음 자동 결제일
@@ -850,7 +810,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			String bonusPointUseExprDt = null;
 			if (Integer.parseInt(reservedDataMap.get("bonusPoint")) > 0) { // 보너스 Point
 				bonusPointAmt = Double.parseDouble(reservedDataMap.get("bonusPoint"));
-				bonusPointUseExprDt = this.calculateUseDate(prchsDtlMore.getUseStartDt(),
+				bonusPointUseExprDt = this.purchaseOrderAssistService.calculateUseDate(prchsDtlMore.getUseStartDt(),
 						reservedDataMap.get("bonusPointUsePeriodUnitCd"), reservedDataMap.get("bonusPointUsePeriod"));
 			}
 
@@ -960,7 +920,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		} catch (StorePlatformException e) {
 			// 중복된 구매요청 체크
-			checkException = (this.isDuplicateKeyException(e) ? new StorePlatformException("SAC_PUR_6110") : e);
+			checkException = (this.purchaseOrderAssistService.isDuplicateKeyException(e) ? new StorePlatformException(
+					"SAC_PUR_6110") : e);
 			throw checkException;
 
 		} catch (DuplicateKeyException e) {
@@ -980,8 +941,21 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// 구매완료 TLog 상품 별 로깅
 			ErrorInfo errorInfo = (checkException != null ? checkException.getErrorInfo() : null);
 
+			String msg = null;
+			if (errorInfo != null) {
+				try {
+					if (StringUtils.startsWith(errorInfo.getCode(), "SC_")) {
+						msg = this.scMessageSourceAccessor.getMessage(errorInfo.getCode());
+					} else {
+						msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+					}
+				} catch (NoSuchMessageException e) {
+					msg = "";
+				}
+			}
+
 			final String result_code = (errorInfo != null ? errorInfo.getCode() : "SUCC");
-			final String result_message = (errorInfo != null ? this.messageSourceAccessor.getMessage(result_code) : "");
+			final String result_message = msg;
 			final String exception_log = (errorInfo != null ? (errorInfo.getCause() == null ? "" : errorInfo.getCause()
 					.toString()) : "");
 
@@ -1059,6 +1033,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	private void revertToPreConfirm(List<PrchsDtlMore> prchsDtlMoreList,
 			List<TStoreCashChargeReserveDetailEcRes> cashReserveResList) {
+		this.logger.info("PRCHS,ORDER,SAC,REVERT");
 
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
@@ -1087,19 +1062,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
-	}
-
-	/*
-	 * <pre> 새로운 구매ID 생성. </pre>
-	 * 
-	 * @return 새로 생성된 구매ID
-	 */
-	private String makePrchsId(String sequence, String date) {
-		// yyMMddhhmmss(12) + 서버ID(2) + 인스턴스ID(2) + 구매시퀀스(4)
-		StringBuffer sbPrchsId = new StringBuffer(20);
-		sbPrchsId.append(date.substring(2)).append(this.hostNum).append(this.instanceNum)
-				.append(StringUtils.leftPad(sequence, 4, "0"));
-		return sbPrchsId.toString();
 	}
 
 	// =========================================================================================================================================================================
@@ -1329,74 +1291,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		return sellerMbrSac;
-	}
-
-	/*
-	 * 
-	 * <pre> 기준일로부터 이용 일자 계산. </pre>
-	 * 
-	 * @param startDt 기준일(시작일)
-	 * 
-	 * @param periodUnitCd 이용기간 단위 코드
-	 * 
-	 * @param periodVal 이용기간 값
-	 * 
-	 * @return 계산된 이용 일자
-	 */
-	private String calculateUseDate(String startDt, String periodUnitCd, String periodVal) {
-
-		if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) { // 무제한
-			return "99991231235959";
-		} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_SELECT)) { // 기간선택
-			return periodVal;
-		} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_DATE)) { // 당일
-			return startDt.substring(0, 8) + "235959";
-		} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_YEAR)) { // 당년
-			return startDt.substring(0, 4) + "1231235959";
-		} else {
-			Date checkDate = null;
-			try {
-				checkDate = DateUtils.parseDate(startDt, "yyyyMMddHHmmss");
-			} catch (ParseException e) {
-				throw new StorePlatformException("SAC_PUR_7216", startDt);
-			}
-
-			if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE)) { // 일
-				checkDate = DateUtils.addSeconds(DateUtils.addDays(checkDate, Integer.parseInt(periodVal)), -1);
-			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_HOUR)) { // 시간
-				checkDate = DateUtils.addSeconds(DateUtils.addHours(checkDate, Integer.parseInt(periodVal)), -1);
-			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH)) { // 월
-				checkDate = DateUtils.addSeconds(DateUtils.addMonths(checkDate, Integer.parseInt(periodVal)), -1);
-			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR)) { // 년
-				checkDate = DateUtils.addSeconds(DateUtils.addYears(checkDate, Integer.parseInt(periodVal)), -1);
-			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_MONTH)) { // 당월
-				checkDate = DateUtils.addSeconds(DateUtils.ceiling(checkDate, Calendar.MONTH), -1);
-			} else {
-				throw new StorePlatformException("SAC_PUR_7215", periodUnitCd);
-			}
-
-			return DateFormatUtils.format(checkDate, "yyyyMMddHHmmss");
-		}
-	}
-
-	/*
-	 * 
-	 * <pre> DB PK 오류 여부 체크. </pre>
-	 * 
-	 * @param e 발생한 Exception 개체
-	 * 
-	 * @return DB PK 오류 여부
-	 */
-	private boolean isDuplicateKeyException(Exception e) {
-		Throwable exception = e;
-		while (exception != null) {
-			if (exception instanceof DuplicateKeyException) {
-				return true;
-			}
-			exception = exception.getCause();
-		}
-
-		return false;
 	}
 
 }

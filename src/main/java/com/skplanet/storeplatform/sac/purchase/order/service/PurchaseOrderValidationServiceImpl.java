@@ -9,7 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +66,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	private ExistenceSCI existenceSCI;
 	@Autowired
 	private PurchaseOrderSearchSCI purchaseOrderSearchSCI;
+	@Autowired
+	private PurchaseOrderAssistService purchaseOrderAssistService;
 	@Autowired
 	private PurchaseOrderPolicyService purchaseOrderPolicyService;
 	@Autowired
@@ -724,6 +728,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						// product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
 						// product.setUsePeriod(freepassInfo.getUsePeriod());
 						// }
+
+						// 다운로드 만료일시의 최대값은 정액권의 이용종료일시
+						String dwldExprDt = this.purchaseOrderAssistService.calculateUseDate(new SimpleDateFormat(
+								"yyyyMMddHHmmss").format(new Date()), product.getUsePeriodUnitCd(), product
+								.getUsePeriod());
+						if (dwldExprDt.compareTo(useExistenceScRes.getUseExprDt()) > 0) {
+							product.setDwldExprDt(useExistenceScRes.getUseExprDt());
+						}
+
 						product.setUseFixrateProdId(useExistenceScRes.getProdId()); // 사용할 정액권ID 세팅
 						product.setUseFixrateProdClsfCd(freepassInfo.getCmpxProdClsfCd()); // 사용할 정액권 타입
 

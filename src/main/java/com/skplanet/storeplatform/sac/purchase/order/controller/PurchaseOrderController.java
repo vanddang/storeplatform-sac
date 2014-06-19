@@ -18,6 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -484,8 +485,16 @@ public class PurchaseOrderController {
 				});
 			} else {
 
+				String msg = null;
+
+				try {
+					msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+				} catch (NoSuchMessageException e) {
+					msg = "";
+				}
+
 				final String result_code = errorInfo.getCode();
-				final String result_message = this.messageSourceAccessor.getMessage(result_code);
+				final String result_message = msg;
 				final String exception_log = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
 
 				new TLogUtil().log(new ShuttleSetter() {
