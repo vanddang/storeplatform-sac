@@ -626,6 +626,7 @@
         WHERE A.PROD_ID = B.PROD_ID
           AND B.SRC_CONTENT_ID =  #{prodId}
           AND A.EXPO_YN = 'Y' 
+          AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
     </select>
     
     <!--특가 상품 상세 조회-->
@@ -653,6 +654,7 @@
 		  AND A.PROD_ID = C.PROD_ID
 		  AND C.SRC_CONTENT_ID =  #{prodId}
 		  AND A.EXPO_YN = 'Y' 
+		  AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
 		  AND ROWNUM =1
     </select>    
         
