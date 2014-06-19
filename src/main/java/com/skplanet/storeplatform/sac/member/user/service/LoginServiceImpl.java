@@ -1124,7 +1124,7 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 디바이스 헤더에 모델정보가 있거나 디폴트 모델이 아닌경우만 단말정보 변경 */
 			if (StringUtils.isNotBlank(deviceInfo.getDeviceModelNo()) && !this.commService.isDefaultDeviceModel(deviceInfo.getDeviceModelNo())) {
-				deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+				deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
 				deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
 				deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
