@@ -729,7 +729,8 @@ public class MemberCommonComponent {
 		/**
 		 * 폰정보 조회후 단말 정보 세팅.
 		 */
-		if (StringUtils.isBlank(model) || this.isDefaultDeviceModel(model)) {
+		//if (StringUtils.isBlank(model) || this.isDefaultDeviceModel(model)) {
+		if (StringUtils.isBlank(model)) {
 
 			/**
 			 * 미지원 단말 setting
