@@ -115,6 +115,12 @@ public class PurchaseOrderController {
 
 		// 진행 처리: 무료구매완료 처리 || 결제Page 요청 준비작업
 		if (purchaseOrderInfo.getRealTotAmt() > 0) {
+			// 구매(결제)차단 여부 체크
+			if (this.policyService.isBlockPayment(purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getPurchaseUser()
+					.getDeviceId(), purchaseOrderInfo.getTenantProdGrpCd())) {
+				throw new StorePlatformException("SAC_PUR_6103");
+			}
+
 			this.orderService.reservePurchase(purchaseOrderInfo); // 구매예약
 			this.orderPaymentPageService.buildPaymentPageUrlParam(purchaseOrderInfo); // 결제Page 정보 세팅
 			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_PAYMENT);
@@ -449,7 +455,7 @@ public class PurchaseOrderController {
 			// 상품 적합성 체크
 			this.validationService.validateProduct(purchaseOrderInfo);
 
-			// 회원정책 체크 : TestMDN / 구매차단
+			// 회원정책 체크 : TestMDN
 			this.policyService.checkUserPolicy(purchaseOrderInfo);
 
 			// 구매 적합성(&가능여부) 체크

@@ -229,10 +229,10 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		// 구매차단 여부
-		if (this.isBlockPayment(purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getPurchaseUser().getDeviceId(),
-				purchaseOrderInfo.getTenantProdGrpCd())) {
-			purchaseOrderInfo.setBlockPayment(true);
-		}
+		// if (this.isBlockPayment(purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getPurchaseUser().getDeviceId(),
+		// purchaseOrderInfo.getTenantProdGrpCd())) {
+		// purchaseOrderInfo.setBlockPayment(true);
+		// }
 	}
 
 	/**

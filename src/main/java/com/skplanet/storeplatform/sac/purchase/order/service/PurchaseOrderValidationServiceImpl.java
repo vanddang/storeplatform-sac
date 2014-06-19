@@ -600,9 +600,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	@Override
 	public void validatePurchase(PurchaseOrderInfo purchaseOrderInfo) {
 		// 구매차단 체크
-		if (purchaseOrderInfo.isBlockPayment()) {
-			throw new StorePlatformException("SAC_PUR_6103");
-		}
+		// if (purchaseOrderInfo.isBlockPayment()) {
+		// throw new StorePlatformException("SAC_PUR_6103");
+		// }
 
 		// Biz 쿠폰 경우 이하 체크 Skip
 		if (purchaseOrderInfo.isBizShopping()) {
