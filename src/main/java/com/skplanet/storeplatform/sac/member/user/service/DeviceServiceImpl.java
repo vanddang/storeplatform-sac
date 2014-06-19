@@ -740,36 +740,41 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
 				svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo)); // svcVersion 휴대기기 부가속성에 셋팅
 
-		/* 디바이스 헤더의 model 값이 있고 디폴트 모델명이 아닌경우만 주요정보조회. */
-		if (!StringUtils.isBlank(deviceModelNo) && !this.commService.isDefaultDeviceModel(deviceModelNo)) {
+		/* 주요정보(SKT 서비스관리번호, UACD, OMDUACD, 미지원단말처리) 조회 */
+		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceModelNo, deviceInfo.getDeviceTelecom(), deviceInfo.getDeviceId(),
+				deviceInfo.getDeviceIdType());
 
-			/* 주요정보(SKT 서비스관리번호, UACD, OMDUACD, 미지원단말처리) 조회 후 셋팅 */
-			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceModelNo, deviceInfo.getDeviceTelecom(),
-					deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType());
-			deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 단말코드
-			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 통신사
-			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 서비스관리번호
+		/* 기기정보 필드 */
+		String deviceTelecom = null; // 통신사코드
+		String uacd = null; // UACD
+		String deviceNickName = null; // 모델닉네임
+		String svcMangNum = majorDeviceInfo.getSvcMangNum(); // SKT 서비스관리번호
+		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
+		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
+		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getDeviceExtraInfoList()); // rooting 여부
+
+		if (StringUtils.isNotBlank(deviceModelNo) && !this.commService.isDefaultDeviceModel(deviceModelNo)) {
+
+			/* 주요정보 셋팅, 모델이 존재하지 않은경우 미지원단말처리됨 */
+			deviceModelNo = majorDeviceInfo.getDeviceModelNo();
+			deviceTelecom = majorDeviceInfo.getDeviceTelecom();
+			if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
+				deviceNickName = majorDeviceInfo.getDeviceNickName();
+			}
+			uacd = majorDeviceInfo.getUacd();
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
 					majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo)); // UACD
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
 					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo)); // OMDUACD
-			if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
-				deviceInfoChangeLog.append("[deviceNickName]").append(dbDeviceInfo.getDeviceNickName()).append("->")
-						.append(majorDeviceInfo.getDeviceNickName());
-				userMbrDevice.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
-			}
-		} else {
-			LOGGER.info("{} deviceHeader model 정보 없음 : {}", deviceInfo.getDeviceId(), deviceModelNo);
-		}
 
-		/* 기기정보 필드 */
-		deviceModelNo = deviceInfo.getDeviceModelNo(); // 모델코드
-		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
-		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
-		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
-		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
-		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getDeviceExtraInfoList()); // rooting 여부
-		String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getDeviceExtraInfoList()); // UACD
+		} else {
+			LOGGER.info("{} deviceHeader model 정보 없거나 default모델 : {}", deviceInfo.getDeviceId(), deviceModelNo);
+			deviceModelNo = null; // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
+			if (!StringUtils.equals(dbDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
+					&& !StringUtils.equals(dbDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) { // DB에 저장된 단말정보가 미지원단말이 아닌경우는 request에 올라온 통신사정보를 업데이트 한다.
+				deviceTelecom = deviceInfo.getDeviceTelecom();
+			}
+		}
 
 		if (StringUtils.isNotBlank(deviceModelNo) && !StringUtils.equals(deviceModelNo, dbDeviceInfo.getDeviceModelNo())) {
 
@@ -896,10 +901,17 @@ public class DeviceServiceImpl implements DeviceService {
 				if (StringUtils.isNotBlank(nativeId)) {
 
 					if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, oDeviceTelecom)) {
-
-						String icasImei = this.getIcasImei(deviceInfo.getDeviceId());
-						deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->").append(icasImei);
-						userMbrDevice.setNativeID(icasImei);
+						// OPMD 여부
+						boolean isOpmd = StringUtils.substring(oDeviceId, 0, 3).equals("989");
+						if (!isOpmd) {
+							/* ICAS IMEI 비교 */
+							if (StringUtils.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
+								deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->").append(nativeId);
+								userMbrDevice.setNativeID(nativeId);
+							} else {
+								throw new StorePlatformException("SAC_MEM_1503");
+							}
+						}
 
 					} else {
 
@@ -930,6 +942,11 @@ public class DeviceServiceImpl implements DeviceService {
 		if (StringUtils.isNotBlank(svcMangNum) && !StringUtils.equals(svcMangNum, dbDeviceInfo.getSvcMangNum())) {
 			deviceInfoChangeLog.append("[svcMangNum]").append(dbDeviceInfo.getSvcMangNum()).append("->").append(svcMangNum);
 			userMbrDevice.setSvcMangNum(svcMangNum);
+		}
+
+		if (StringUtils.isNotBlank(deviceNickName) && !StringUtils.equals(deviceNickName, dbDeviceInfo.getDeviceNickName())) {
+			deviceInfoChangeLog.append("[deviceNickName]").append(dbDeviceInfo.getDeviceNickName()).append("->").append(deviceNickName);
+			userMbrDevice.setDeviceNickName(deviceNickName);
 		}
 
 		/* 휴대기기 부가정보 세팅 */
