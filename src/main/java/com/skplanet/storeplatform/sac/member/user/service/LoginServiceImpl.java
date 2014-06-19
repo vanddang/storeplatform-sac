@@ -970,9 +970,10 @@ public class LoginServiceImpl implements LoginService {
 		String newDeviceKey = null;
 		String newUserKey = null;
 
+		DeviceInfo mdnDeviceInfo = null;
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) { // 회원인 경우
 
-			DeviceInfo mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+			mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
 
 			isPurchaseChange = "Y";
 
@@ -991,6 +992,7 @@ public class LoginServiceImpl implements LoginService {
 				newDeviceKey = saveAndSync.getDeviceKey();
 				newUserKey = saveAndSync.getUserKey();
 
+				mdnDeviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, newDeviceKey, newUserKey);
 			} else { // 변동성 대상이 아닌 경우
 
 				isJoinMdn = "Y";
@@ -1020,7 +1022,6 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setUserKey(newUserKey);
 			deviceInfo.setDeviceKey(newDeviceKey);
 			deviceInfo.setDeviceId(req.getDeviceId());
-			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 			if (StringUtils.isNotBlank(req.getNativeId())) {
 				deviceInfo.setNativeId(req.getNativeId());
 			}
@@ -1031,16 +1032,27 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 휴대기기 헤더 정보 셋팅 */
 			deviceInfo = this.deviceService.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
-
 			/* 휴대기기 주요정보 조회 */
 			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
 					req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN);
 
-			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-					majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
-			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
-
+			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum());
+			/* 디바이스 헤더에 모델정보가 있거나 디폴트 모델이 아닌경우만 단말정보 변경 */
+			if (StringUtils.isNotBlank(deviceInfo.getDeviceModelNo()) && !this.commService.isDefaultDeviceModel(deviceInfo.getDeviceModelNo())) {
+				deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
+				deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
+				deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
+						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
+						majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
+			} else {
+				deviceInfo.setDeviceModelNo(null); // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
+				if (!StringUtils.equals(mdnDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
+						&& !StringUtils.equals(mdnDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) { // DB에 저장된 단말정보가 미지원단말이 아닌경우 통신사정보를 업데이트 한다.
+					deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+				}
+			}
 			this.deviceService.modDeviceInfo(requestHeader, deviceInfo, false);
 
 			/* 전시/기타, 구매 파트 키 변경 */
@@ -1109,10 +1121,23 @@ public class LoginServiceImpl implements LoginService {
 			/* 휴대기기 주요정보 조회 */
 			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
 					req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN);
-			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-					majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
-			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
+
+			/* 디바이스 헤더에 모델정보가 있거나 디폴트 모델이 아닌경우만 단말정보 변경 */
+			if (StringUtils.isNotBlank(deviceInfo.getDeviceModelNo()) && !this.commService.isDefaultDeviceModel(deviceInfo.getDeviceModelNo())) {
+				deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+				deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
+				deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
+						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
+				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
+						majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
+			} else {
+				deviceInfo.setDeviceModelNo(null); // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
+				if (!StringUtils.equals(macDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
+						&& !StringUtils.equals(macDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) { // MAC정보 DB에 저장된 단말정보가 미지원단말이 아닌경우 통신사정보를 업데이트 한다.
+					deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+				}
+			}
 
 			this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
 
