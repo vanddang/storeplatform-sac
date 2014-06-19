@@ -781,6 +781,14 @@ public class MemberCommonComponent {
 						LOGGER.warn("###############################################################################");
 					}
 				}
+
+				/**
+				 * OMD 단말 setting.
+				 */
+				if (this.repository.searchOmdCount(deviceDTO.getUaCd()) > 0) {
+					LOGGER.debug("## OMD 단말 setting.");
+					majorDeviceInfo.setOmdUacd(deviceDTO.getUaCd());
+				}
 			}
 
 		}
@@ -801,17 +809,6 @@ public class MemberCommonComponent {
 				majorDeviceInfo.setSvcMangNum(userRes.getSvcMngNum());
 
 			}
-
-			/**
-			 * OMD 단말 setting.
-			 */
-			if (this.repository.searchOmdCount(model) > 0) {
-
-				LOGGER.debug("## OMD 단말 setting.");
-				majorDeviceInfo.setOmdUacd(model);
-
-			}
-
 		}
 
 		LOGGER.debug("## 단말 주요정보 : {}", majorDeviceInfo);
