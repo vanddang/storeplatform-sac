@@ -192,6 +192,7 @@
 						                AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
 						                AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
 						                AND (DV.DEVICE_MODEL_CD = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                                        AND CM.DEVICE_MODEL_CD = #{deviceModelCd}
 						                AND DV.PROD_ID = F.PROD_ID
 						              ) 
 	                         <if test='b2bProd != "A"'>
