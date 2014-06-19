@@ -499,8 +499,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setTypeTestMdn(testMdnType);
 
 		// 결제수단 별 가능 거래금액/비율 조정 정보
-		res.setCdMaxAmtRate(this.adjustPaymethod(sktPaymethodInfo, prchsDtlMore.getTenantId(), prchsDtlMore
-				.getTenantProdGrpCd(), reservedDataMap.get("prodCaseCd"), prchsDtlMore.getTotAmt().doubleValue()));
+		res.setCdMaxAmtRate(this.adjustPaymethod(sktPaymethodInfo, prchsDtlMore.getTenantId(),
+				verifyOrderInfo.getSystemId(), prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("prodCaseCd"),
+				prchsDtlMore.getTotAmt().doubleValue()));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제수단 정렬 재조정
@@ -1233,6 +1234,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param tenantId 테넌트ID
 	 * 
+	 * @param systemId 시스템ID
+	 * 
 	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
 	 * 
 	 * @param prodCaseCd 쇼핑 상품 종류 코드
@@ -1241,8 +1244,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @return 재정의 된 결제 수단 정보
 	 */
-	private String adjustPaymethod(String sktPaymethodInfo, String tenantId, String tenantProdGrpCd, String prodCaseCd,
-			double payAmt) {
+	private String adjustPaymethod(String sktPaymethodInfo, String tenantId, String systemId, String tenantProdGrpCd,
+			String prodCaseCd, double payAmt) {
 		// 결제수단 별 가능 거래금액/비율 조정 정보
 		String paymentAdjustInfo = this.purchaseOrderPolicyService.getAvailablePaymethodAdjustInfo(tenantId,
 				tenantProdGrpCd);
@@ -1258,8 +1261,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			sbPaymethodInfo.append("11:0:0;");
 		}
 
-		// 쇼핑상품권 경우, 신용카드, 페이핀 결제수단 제외
-		if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_GIFT)) {
+		// PP용 : 쇼핑상품권 경우, 신용카드, 페이핀 결제수단 제외
+		if (StringUtils.startsWith(systemId, "S00")
+				&& StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_GIFT)) {
 			sbPaymethodInfo.append("13:0:0;14:0:0;");
 		}
 

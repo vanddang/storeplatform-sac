@@ -255,18 +255,25 @@ public class PurchaseOrderController {
 		this.logger.info("PRCHS,ORDER,SAC,VERIFY,REQ,{},{}",
 				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
 
+		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
 		String tenantId = null;
+		String systemId = null;
+
 		if (StringUtils.isNotBlank(req.getMctSpareParam())) { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
 			tenantId = req.getMctSpareParam();
 		} else {
-			TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
 			if (tenantHeader != null) {
 				tenantId = tenantHeader.getTenantId();
 			}
 		}
 
+		if (tenantHeader != null) {
+			systemId = tenantHeader.getSystemId();
+		}
+
 		VerifyOrderInfo verifyOrderInfo = new VerifyOrderInfo();
 		verifyOrderInfo.setTenantId(tenantId);
+		verifyOrderInfo.setSystemId(systemId);
 		verifyOrderInfo.setPrchsId(req.getPrchsId());
 
 		VerifyOrderSacRes res = this.orderService.verifyPurchaseOrder(verifyOrderInfo);

@@ -6,6 +6,7 @@ public class VerifyOrderInfo extends CommonInfo {
 	private static final long serialVersionUID = 201402261L;
 
 	private String tenantId; // 테넌트 ID
+	private String systemId; // 시스템 ID
 	private String prchsId; // 구매ID
 
 	/**
@@ -21,6 +22,21 @@ public class VerifyOrderInfo extends CommonInfo {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the systemId
+	 */
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	/**
+	 * @param systemId
+	 *            the systemId to set
+	 */
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
 	}
 
 	/**
