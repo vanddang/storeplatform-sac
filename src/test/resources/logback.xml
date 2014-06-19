@@ -26,11 +26,11 @@
         </layout>
     </appender>
     
-    <logger name="org.springframework" additivity="false" level="${LOG_LEVEL_INFO}"> 
+    <logger name="org.springframework" additivity="false" level="INFO"> 
         <appender-ref ref="CONSOLE" />
     </logger> 
     
-    <logger name="org.springframework.data.transaction.ChainedTransactionManager" additivity="false" level="${LOG_LEVEL_DEBUG}"> 
+    <logger name="org.springframework.data.transaction.ChainedTransactionManager" additivity="false" level="DEBUG"> 
         <appender-ref ref="CONSOLE" />
     </logger>  
     
@@ -41,35 +41,35 @@
     
     <!-- PLANDAS LOGGER -->
     <logger name="com.skplanet.plandasj" additivity="false">
-        <level value="${LOG_LEVEL_INFO}" />
+        <level value="INFO" />
         <appender-ref ref="CONSOLE" />
     </logger>
     <logger name="com.skplanet.plandasj.PlandasjPingPong" additivity="false">
         <level value="OFF" />
     </logger>
     <logger name="com.skplanet.spring" additivity="false">
-        <level value="${LOG_LEVEL_INFO}" />
+        <level value="INFO" />
         <appender-ref ref="CONSOLE" />
     </logger>
     <logger name="org.apache.zookeeper" additivity="false">
-        <level value="${LOG_LEVEL_ERROR}" />
+        <level value="ERROR" />
         <appender-ref ref="CONSOLE" />
     </logger>
     
     <!-- MQ BLOCKINGQUEU LOGGER -->
     <logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" additivity="false">
-        <level value="${LOG_LEVEL_INFO}" />
+        <level value="INFO" />
         <appender-ref ref="CONSOLE" />
     </logger>
     
     <!-- TLOG LOGGER -->
     <logger name="TLOG_SAC_LOGGER" additivity="false">
-        <level value="${LOG_LEVEL_INFO}" />
+        <level value="INFO" />
         <appender-ref ref="SIMPLE_CONSOLE" />
     </logger>
     
     <root>
-        <level value="${LOG_LEVEL_DEBUG}" />
+        <level value="DEBUG" />
         <appender-ref ref="CONSOLE" />
     </root>
 </configuration>
