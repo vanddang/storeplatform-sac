@@ -51,7 +51,7 @@
                           AND MUSIC_SPRT_YN = 'Y'
                           AND ROWNUM = 1
                 )
-            INNER JOIN UV_TB_DP_MULTIMDA_PROD MM
+            INNER JOIN TB_DP_MUSIC_PROD MM
                 ON EPD.PROD_ID = MM.PROD_ID
             INNER JOIN TB_DP_PROD_DESC PDESC
                 ON PDESC.PROD_ID = EPD.PROD_ID
