@@ -568,6 +568,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setOneId(reservedDataMap.get("oneId")); // ONE ID
 		res.setFlgMbrStatus(PurchaseConstants.VERIFYORDER_USER_STATUS_NORMAL); // [fix] 회원상태: 1-정상
 		res.setFlgProductStatus(PurchaseConstants.VERIFYORDER_PRODUCT_STATUS_NORMAL); // [fix] 상품상태: 1-정상
+		res.setPrchsCaseCd(prchsDtlMore.getPrchsCaseCd()); // 구매/선물 구분 코드
 		res.setTopMenuId(prchsDtlMore.getTenantProdGrpCd().substring(8, 12)); // 상품 TOP 메뉴 ID
 		// 자동결제 상품 - 다음 자동 결제일
 		if (StringUtils.equals(reservedDataMap.get("autoPrchsYn"), PurchaseConstants.USE_Y)) {
