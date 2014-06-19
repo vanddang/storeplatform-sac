@@ -145,7 +145,7 @@
                         , ISF.ISF_ORDER
                   </if>
                         , ROW_NUMBER() OVER ( PARTITION BY UPD.PKG_ID
-                                                  ORDER BY PP.PATICPERS_CNT DESC ) AS RNUM
+                                                  ORDER BY PP.PRCHS_CNT DESC ) AS RNUM
                      FROM TB_DP_RECOM_PKG UP
                         , TB_DP_RECOM_PKG_DTL UPD
                         , TB_DP_TENANT_PROD_STATS PP
