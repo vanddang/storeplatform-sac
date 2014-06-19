@@ -729,8 +729,7 @@ public class MemberCommonComponent {
 		/**
 		 * 폰정보 조회후 단말 정보 세팅.
 		 */
-		Device deviceDTO = this.getPhoneInfo(model);
-		if (deviceDTO == null || this.isDefaultDeviceModel(model)) {
+		if (StringUtils.isBlank(model) || this.isDefaultDeviceModel(model)) {
 
 			/**
 			 * 미지원 단말 setting
@@ -744,27 +743,43 @@ public class MemberCommonComponent {
 
 		} else {
 
-			majorDeviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
-			majorDeviceInfo.setDeviceModelNo(deviceDTO.getDeviceModelCd()); // 기기 모델 번호
-			majorDeviceInfo.setDeviceNickName(deviceDTO.getModelNm()); // 기기명
-
-			/**
-			 * 미지원 단말 예외처리. (UA 코드 여부에 따라 이동통신사 코드 변경)
-			 */
-			if (StringUtils.equals(deviceDTO.getUaCd(), MemberConstants.NOT_SUPPORT_HP_UACODE)) {
+			Device deviceDTO = this.getPhoneInfo(model);
+			if (deviceDTO == null) {
+				/**
+				 * 미지원 단말 setting
+				 */
+				LOGGER.debug("## 미지원 단말 세팅.");
+				LOGGER.info("<getDeviceBaseInfo> NOT SUPPORT DEVICE. mdn : {}, model : {}", deviceId, model);
+				majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
 				majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
-			} else {
-				majorDeviceInfo.setDeviceTelecom(deviceTelecom); // 이동 통신사
-			}
+				majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
+				majorDeviceInfo.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM); // 기기명
 
-			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
-			 */
-			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
-				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
-					LOGGER.warn("###############################################################################");
-					LOGGER.warn("##### UUID 일때는 무조건 이동통신사 코드를 IOS로 줘야 한다. AI-IS 로직 반영.... #####");
-					LOGGER.warn("###############################################################################");
+			} else {
+
+				majorDeviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
+				majorDeviceInfo.setDeviceModelNo(deviceDTO.getDeviceModelCd()); // 기기 모델 번호
+				majorDeviceInfo.setDeviceNickName(deviceDTO.getModelNm()); // 기기명
+
+				/**
+				 * 미지원 단말 예외처리. (UA 코드 여부에 따라 이동통신사 코드 변경)
+				 */
+				if (StringUtils.equals(deviceDTO.getUaCd(), MemberConstants.NOT_SUPPORT_HP_UACODE)) {
+					majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
+				} else {
+					majorDeviceInfo.setDeviceTelecom(deviceTelecom); // 이동 통신사
+				}
+
+				/**
+				 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS
+				 * 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+				 */
+				if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
+					if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
+						LOGGER.warn("###############################################################################");
+						LOGGER.warn("##### UUID 일때는 무조건 이동통신사 코드를 IOS로 줘야 한다. AI-IS 로직 반영.... #####");
+						LOGGER.warn("###############################################################################");
+					}
 				}
 			}
 
