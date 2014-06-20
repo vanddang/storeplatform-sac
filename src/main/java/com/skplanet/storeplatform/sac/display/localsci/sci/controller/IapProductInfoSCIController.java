@@ -21,7 +21,7 @@ import org.springframework.validation.annotation.Validated;
 
 /**
  * <p>
- * DESC
+ * IapProductInfoSCIController
  * </p>
  * Updated on : 2014. 04. 16 Updated by : 정희원, SK 플래닛.
  */
@@ -44,6 +44,7 @@ public class IapProductInfoSCIController implements IapProductInfoSCI {
             res.setMenuId(iapProductInfo.getMenuId());
             res.setProdCase(iapProductInfo.getProdCase());
             res.setProdKind(iapProductInfo.getProdKind());
+            res.setFullProdId(iapProductInfo.getFullProdId());
         }
 
         return res;

@@ -42,7 +42,7 @@ public class IapProductInfoSCITest {
 
     @Test
     public void test01_정상() {
-        IapProductInfoRes iapProductInfo = iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq("0910008892"));
+        IapProductInfoRes iapProductInfo = iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq("0900300466"));
         logger.info("{}", iapProductInfo);
         assert iapProductInfo != null;
     }

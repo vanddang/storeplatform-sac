@@ -25,6 +25,7 @@ public class IapProductInfo extends CommonInfo {
     private String partProductType;
     private String hasFullProdYn;
     private String fullAid;
+    private String fullProdId;
     private String menuId;
     private String prodCase;
     private String prodKind;
@@ -91,5 +92,13 @@ public class IapProductInfo extends CommonInfo {
 
     public void setMenuId(String menuId) {
         this.menuId = menuId;
+    }
+
+    public String getFullProdId() {
+        return fullProdId;
+    }
+
+    public void setFullProdId(String fullProdId) {
+        this.fullProdId = fullProdId;
     }
 }
