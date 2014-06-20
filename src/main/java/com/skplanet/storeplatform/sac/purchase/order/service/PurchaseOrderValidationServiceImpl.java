@@ -508,18 +508,18 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 				// 정식판 전환 상품 조회
 				if (StringUtils.equals(iapInfo.getHasFullProdYn(), PurchaseConstants.USE_Y)
-						&& StringUtils.isNotBlank(iapInfo.getFullAid())) {
+						&& StringUtils.isNotBlank(iapInfo.getFullProdId())) {
 					purchaseOrderInfo.setExistCommercialIap(true); // IAP 정식판 전환상품 존재 여부
 
 					List<String> fullProdIdList = new ArrayList<String>();
-					fullProdIdList.add(iapInfo.getFullAid());
+					fullProdIdList.add(iapInfo.getFullProdId());
 					Map<String, PurchaseProduct> fullProductMap = this.purchaseDisplayRepository
 							.searchPurchaseProductList(tenantId, langCd, useDeviceModelCd, fullProdIdList, false);
 					if (fullProductMap == null || fullProductMap.size() < 1) {
-						throw new StorePlatformException("SAC_PUR_5101", iapInfo.getFullAid());
+						throw new StorePlatformException("SAC_PUR_5101", iapInfo.getFullProdId());
 					}
 
-					PurchaseProduct fullProd = fullProductMap.get(iapInfo.getFullAid());
+					PurchaseProduct fullProd = fullProductMap.get(iapInfo.getFullProdId());
 					fullProd.setFullProd(true);
 					purchaseProduct.setFullIapProductInfo(fullProd);
 
