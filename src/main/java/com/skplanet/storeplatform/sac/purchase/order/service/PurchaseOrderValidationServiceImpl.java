@@ -519,7 +519,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						throw new StorePlatformException("SAC_PUR_5101", iapInfo.getFullAid());
 					}
 
-					purchaseProduct.setFullIapProductInfo(fullProductMap.get(iapInfo.getFullAid()));
+					PurchaseProduct fullProd = fullProductMap.get(iapInfo.getFullAid());
+					fullProd.setFullProd(true);
+					purchaseProduct.setFullIapProductInfo(fullProd);
 
 				}
 

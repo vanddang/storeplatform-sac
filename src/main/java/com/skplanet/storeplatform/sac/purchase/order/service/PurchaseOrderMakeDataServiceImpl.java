@@ -116,7 +116,9 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					prchsDtlMore.setUseInsdDeviceId(purchaseOrderInfo.getDeviceKey());
 				}
 				prchsDtlMore.setTotAmt(purchaseOrderInfo.getRealTotAmt());
-				prchsDtlMore.setPrchsReqPathCd(purchaseOrderInfo.getPrchsReqPathCd());
+				prchsDtlMore
+						.setPrchsReqPathCd(product.isFullProd() ? PurchaseConstants.PRCHS_REQ_PATH_IAP_COMMERCIAL_CONVERTED : purchaseOrderInfo
+								.getPrchsReqPathCd());
 				prchsDtlMore.setClientIp(purchaseOrderInfo.getClientIp());
 				prchsDtlMore.setUseHidingYn(PurchaseConstants.USE_N);
 				prchsDtlMore.setSendHidingYn(PurchaseConstants.USE_N);

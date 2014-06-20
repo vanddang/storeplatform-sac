@@ -44,6 +44,7 @@ public class PurchaseProduct extends PaymentInfo {
 	private String parentProdId; // 부모_상품_ID
 	private String partChrgVer; // 부분_유료_버전
 	private String partChrgProdNm; // 부분_유료_상품_명
+	private boolean fullProd; // 정식판 전환 상품 여부
 	/* Ring & Bell */
 	private String rnBillCd; // RN_과금_코드
 	private String infoUseFee; // 정보_이용_요금 (ISU_AMT_ADD)
@@ -345,6 +346,21 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setPartChrgProdNm(String partChrgProdNm) {
 		this.partChrgProdNm = partChrgProdNm;
+	}
+
+	/**
+	 * @return the fullProd
+	 */
+	public boolean isFullProd() {
+		return this.fullProd;
+	}
+
+	/**
+	 * @param fullProd
+	 *            the fullProd to set
+	 */
+	public void setFullProd(boolean fullProd) {
+		this.fullProd = fullProd;
 	}
 
 	/**
