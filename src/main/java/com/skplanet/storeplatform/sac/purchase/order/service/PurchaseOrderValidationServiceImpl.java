@@ -521,6 +521,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 					PurchaseProduct fullProd = fullProductMap.get(iapInfo.getFullProdId());
 					fullProd.setFullProd(true);
+					fullProd.setProdQty(1);
 					purchaseProduct.setFullIapProductInfo(fullProd);
 
 				}
