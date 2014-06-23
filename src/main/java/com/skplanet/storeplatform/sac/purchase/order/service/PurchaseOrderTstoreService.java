@@ -77,19 +77,22 @@ public interface PurchaseOrderTstoreService {
 	 * @param cashAmt
 	 *            충전할 Cash 금액
 	 * 
-	 * @param cashUseExprDt
-	 *            Cash 이용종료일시
+	 * @param useStartDt
+	 *            Cash 이용시작일시
 	 * 
 	 * @param bonusPointAmt
 	 *            충전할 Point 금액
 	 * 
-	 * @param bonusPointUseExprDt
-	 *            Point 이용종료일시
+	 * @param bonusPointUsePeriodUnitCd
+	 *            보너스 Point 이용기간단위
+	 * 
+	 * @param bonusPointUsePeriod
+	 *            보너스 Point 이용기간값
 	 * 
 	 * @return 충전 예약 결과 정보 목록
 	 */
 	public List<TStoreCashChargeReserveDetailEcRes> reserveGameCashCharge(String userKey, double cashAmt,
-			String cashUseExprDt, double bonusPointAmt, String bonusPointUseExprDt);
+			String useStartDt, double bonusPointAmt, String bonusPointUsePeriodUnitCd, String bonusPointUsePeriod);
 
 	/**
 	 * 

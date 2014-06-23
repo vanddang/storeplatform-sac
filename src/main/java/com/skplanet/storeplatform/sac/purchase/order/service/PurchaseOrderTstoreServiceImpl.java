@@ -55,6 +55,8 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
+	private PurchaseOrderAssistService purchaseOrderAssistService;
+	@Autowired
 	private TStoreCouponSCI tStoreCouponSCI;
 	@Autowired
 	private TStoreCashSCI tStoreCashSCI;
@@ -234,27 +236,31 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 * @param cashAmt
 	 *            충전할 Cash 금액
 	 * 
-	 * @param cashUseExprDt
-	 *            Cash 이용종료일시
+	 * @param useStartDt
+	 *            Cash 이용시작일시
 	 * 
 	 * @param bonusPointAmt
 	 *            충전할 Point 금액
 	 * 
-	 * @param bonusPointUseExprDt
-	 *            Point 이용종료일시
+	 * @param bonusPointUsePeriodUnitCd
+	 *            보너스 Point 이용기간단위
+	 * 
+	 * @param bonusPointUsePeriod
+	 *            보너스 Point 이용기간값
 	 * 
 	 * @return 충전 예약 결과 정보 목록
 	 */
 	@Override
 	public List<TStoreCashChargeReserveDetailEcRes> reserveGameCashCharge(String userKey, double cashAmt,
-			String cashUseExprDt, double bonusPointAmt, String bonusPointUseExprDt) {
+			String useStartDt, double bonusPointAmt, String bonusPointUsePeriodUnitCd, String bonusPointUsePeriod) {
 		List<TStoreCashChargeReserveDetailEcReq> cashReserveList = new ArrayList<TStoreCashChargeReserveDetailEcReq>();
 
-		// 게임 Cash
+		// 게임 Cash : Cash 유효기간은 5년
 		TStoreCashChargeReserveDetailEcReq tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
 		tStoreCashChargeReserveDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_APP);
 		tStoreCashChargeReserveDetailEcReq.setAmt(String.valueOf((int) cashAmt));
-		tStoreCashChargeReserveDetailEcReq.setDate(cashUseExprDt); // 사용 유효기간(만료일시 - yyyyMMddHHmmss)
+		tStoreCashChargeReserveDetailEcReq.setDate(this.purchaseOrderAssistService.calculateUseDate(useStartDt,
+				PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR, "5")); // 사용 유효기간(만료일시 - yyyyMMddHHmmss)
 		tStoreCashChargeReserveDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_CASH);
 		cashReserveList.add(tStoreCashChargeReserveDetailEcReq);
 
@@ -263,7 +269,8 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
 			tStoreCashChargeReserveDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_APP);
 			tStoreCashChargeReserveDetailEcReq.setAmt(String.valueOf((int) bonusPointAmt));
-			tStoreCashChargeReserveDetailEcReq.setDate(bonusPointUseExprDt);
+			tStoreCashChargeReserveDetailEcReq.setDate(this.purchaseOrderAssistService.calculateUseDate(useStartDt,
+					bonusPointUsePeriodUnitCd, bonusPointUsePeriod));
 			tStoreCashChargeReserveDetailEcReq.setCashCls(PurchaseConstants.TSTORE_CASH_CLASS_POINT);
 			cashReserveList.add(tStoreCashChargeReserveDetailEcReq);
 		}

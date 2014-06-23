@@ -807,23 +807,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-			// 보너스 Point 정보 계산
-			double bonusPointAmt = 0.0;
-			String bonusPointUseExprDt = null;
-			if (Integer.parseInt(reservedDataMap.get("bonusPoint")) > 0) { // 보너스 Point
-				bonusPointAmt = Double.parseDouble(reservedDataMap.get("bonusPoint"));
-				bonusPointUseExprDt = this.purchaseOrderAssistService.calculateUseDate(prchsDtlMore.getUseStartDt(),
-						reservedDataMap.get("bonusPointUsePeriodUnitCd"), reservedDataMap.get("bonusPointUsePeriod"));
-			}
-
-			// Cash 이용기간은 5년
-			String cashUseExprDt = this.purchaseOrderAssistService.calculateUseDate(prchsDtlMore.getUseStartDt(),
-					PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR, "5");
-
 			// 충전 예약
 			cashReserveResList = this.purchaseOrderTstoreService.reserveGameCashCharge(
-					prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getProdAmt().doubleValue(), cashUseExprDt,
-					bonusPointAmt, bonusPointUseExprDt);
+					prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getProdAmt().doubleValue(),
+					prchsDtlMore.getUseStartDt(), Double.parseDouble(reservedDataMap.get("bonusPoint")),
+					reservedDataMap.get("bonusPointUsePeriodUnitCd"), reservedDataMap.get("bonusPointUsePeriod"));
 
 			// 충전 확정
 			if (CollectionUtils.isNotEmpty(cashReserveResList)) {
