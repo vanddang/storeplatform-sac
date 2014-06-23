@@ -816,10 +816,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 						reservedDataMap.get("bonusPointUsePeriodUnitCd"), reservedDataMap.get("bonusPointUsePeriod"));
 			}
 
+			// Cash 이용기간은 5년
+			String cashUseExprDt = this.purchaseOrderAssistService.calculateUseDate(prchsDtlMore.getUseStartDt(),
+					PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR, "5");
+
 			// 충전 예약
 			cashReserveResList = this.purchaseOrderTstoreService.reserveGameCashCharge(
-					prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getProdAmt().doubleValue(),
-					prchsDtlMore.getUseExprDt(), bonusPointAmt, bonusPointUseExprDt);
+					prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getProdAmt().doubleValue(), cashUseExprDt,
+					bonusPointAmt, bonusPointUseExprDt);
 
 			// 충전 확정
 			if (CollectionUtils.isNotEmpty(cashReserveResList)) {
