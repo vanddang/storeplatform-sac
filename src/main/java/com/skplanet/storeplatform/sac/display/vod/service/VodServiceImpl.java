@@ -602,7 +602,9 @@ public class VodServiceImpl implements VodService {
 		contributor.setPublisher(mapperVO.getChnlCompNm()); //배급사
 		*/
 		if(StringUtils.equals(mapperVO.getTopMenuId(), DisplayConstants.DP_TV_TOP_MENU_ID)) { // TV 방송
-			contributor.setChannel(mapperVO.getBrdcCompCdNm()); //방송사
+			//2014.06.23 방송사 명은 TB_DP_VOD_PROD.AGENCY_NM 값을 보여줘야 한다. (CMS-MM)
+			//contributor.setChannel(mapperVO.getBrdcCompCdNm()); //방송사
+			contributor.setChannel(mapperVO.getAgencyNm()); //방송사
 		}
 		return contributor;
 	}
