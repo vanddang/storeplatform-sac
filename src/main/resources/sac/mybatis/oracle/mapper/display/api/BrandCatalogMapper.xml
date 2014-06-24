@@ -288,5 +288,16 @@
         WHERE CID = #{cid}
     </delete>   
    
+    <!--ImgId로 파일 경로 가져오기-->
+    <select id="getBrandCatalogImgPath" resultType="com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo">
+       /* BrandCatalogMapper.xml, getBrandCatalogImgPath, ImgId로 파일 경로 가져오기, 김형식/SK플래닛  , 2014-06-24 */
+			SELECT  
+			       CONCAT(FILE_PATH,REPLACE(REPLACE(REPLACE(FILE_NM,'_177x177',''),'_182x182',''),'_684x','' ))as filePos
+			FROM  TB_DP_PROD_IMG
+			WHERE PROD_ID =#{imgId}
+			  AND EXPO_ORD =1
+			  AND IMG_CD != 'DP0001B0'	
+			ORDER BY IMG_CD	
+    </select>     
     
 </mapper>

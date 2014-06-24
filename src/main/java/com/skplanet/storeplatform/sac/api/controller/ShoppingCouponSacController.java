@@ -82,7 +82,14 @@ public class ShoppingCouponSacController {
 		CouponRes couponRes = new CouponRes();
 
 		try {
-			couponRes = this.dePloy(couponReq, couponRes);
+			if (couponReq.getTxType().equals("ig")) {
+				this.log.info("----------------------이미지 재처리 Start----------------------------");
+				if (this.shoppingCouponService.couponRetryImg(couponReq)) {
+					couponRes.setFlag(true);
+				}
+			} else {
+				couponRes = this.dePloy(couponReq, couponRes);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.api.service;
 
+import java.util.ArrayList;
+
 import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
@@ -156,5 +158,17 @@ public interface BrandCatalogService {
 	 * @return int
 	 */
 	public int getBrandCatalogChangeCudType(String brandId, String catalogId);
+
+	/**
+	 * <pre>
+	 * ImgId로 파일 경로 가져오기.
+	 * </pre>
+	 * 
+	 * @param imgId
+	 *            imgId
+	 * 
+	 * @return List
+	 */
+	public ArrayList<BrandCatalogProdImgInfo> getBrandCatalogImgPath(String imgId);
 
 }

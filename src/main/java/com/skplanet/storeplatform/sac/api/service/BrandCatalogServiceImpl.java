@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.api.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -396,5 +399,19 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 			resuntCnt = this.selectCatalogCountCudType(catalogId);
 		}
 		return resuntCnt;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.api.service.BrandCatalogService#getBrandCatalogImgPath(java.lang.String)
+	 */
+	@Override
+	public ArrayList<BrandCatalogProdImgInfo> getBrandCatalogImgPath(String imgId) {
+
+		List<BrandCatalogProdImgInfo> productBasicInfoList = this.commonDAO.queryForList(
+				"BrandCatalog.getBrandCatalogImgPath", imgId, BrandCatalogProdImgInfo.class);
+
+		return (ArrayList<BrandCatalogProdImgInfo>) productBasicInfoList;
 	}
 }
