@@ -74,9 +74,18 @@ public class ImageUtil {
 			if (!isOk) {
 				return false;
 			}
+
+			File file = new File(outFile); // 파일의 이름을 설정한다
+			long L = file.length();
+			this.log.info("■■■■■이미지 파일 정보 ■■■■■ :" + file.getAbsoluteFile());
+			this.log.info(L + " bytes ■■■■■");
+			if (L == 0) {
+				return false;
+			}
 		} catch (Exception e) {
 			this.log.info(e.getMessage());
 			e.getStackTrace();
+			return false;
 		}
 
 		return true;
@@ -99,7 +108,7 @@ public class ImageUtil {
 	 *            dH
 	 * @return boolean
 	 */
-	public String cutImage2(String srcFile, String destFile, int cX, int cY, int dW, int dH) {
+	public boolean cutImage2(String srcFile, String destFile, int cX, int cY, int dW, int dH) {
 
 		ImageIcon img = new ImageIcon(srcFile);
 
@@ -115,11 +124,20 @@ public class ImageUtil {
 			ImageIO.write(bufImage2, "jpg", output);
 			fos.write(output.toByteArray());
 			fos.close();
+			long L = file.length();
+			this.log.info("■■■■■이미지 상세 파일 정보 ■■■■■ :" + file.getAbsoluteFile());
+			this.log.info(L + " bytes ■■■■■");
+			if (L == 0) {
+				return false;
+			}
+
 		} catch (Exception e) {
+			this.log.info(e.getMessage());
 			e.printStackTrace();
+			return false;
 		}
 
-		return destFile;
+		return true;
 	}
 
 	/**

@@ -22,7 +22,7 @@ public class BrandCatalogProdImgInfo extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private String prodId; // 브랜드,카탈로그id
 	private String imgCls; // 이미지구분
-	private final int fileSize = 0; // 파일size
+	private long fileSize = 0; // 파일size
 	private String insBy; // 등록자
 	private String insDts; // 등록일시
 	private String updBy; // 수정자
@@ -170,7 +170,7 @@ public class BrandCatalogProdImgInfo extends CommonInfo {
 	/**
 	 * @return the fileSize
 	 */
-	public int getFileSize() {
+	public long getFileSize() {
 		return this.fileSize;
 	}
 
@@ -187,6 +187,14 @@ public class BrandCatalogProdImgInfo extends CommonInfo {
 	 */
 	public void setSeq(int seq) {
 		this.seq = seq;
+	}
+
+	/**
+	 * @param fileSize
+	 *            the fileSize to set
+	 */
+	public void setFileSize(long fileSize) {
+		this.fileSize = fileSize;
 	}
 
 }

@@ -398,10 +398,13 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
 
+				File outputfile = new File(outFile);
+				long fileSize = outputfile.length();
 				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
 
 				this.brandCatalogProdImgInfo.setProdId(dpBrandInfo.getCreateBrandId());
 				this.brandCatalogProdImgInfo.setImgCls(imgClsCode[i]);
+				this.brandCatalogProdImgInfo.setFileSize(fileSize);
 				this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
 				this.brandCatalogProdImgInfo.setFilePos(uploadDir);
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName);
@@ -497,10 +500,14 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				if (!imgUtil.setImgScale(srcFile, outFile, width, height, uploadDir)) {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
 				}
-				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
+				this.log.info("■■■■■CatalogImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
+
+				File outputfile = new File(outFile);
+				long fileSize = outputfile.length();
 
 				this.brandCatalogProdImgInfo.setProdId(dpCatalogInfo.getCreateCatalogId());
 				this.brandCatalogProdImgInfo.setImgCls(imgClsCodeTop[i]);
+				this.brandCatalogProdImgInfo.setFileSize(fileSize);
 				this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
 				this.brandCatalogProdImgInfo.setFilePos(uploadDir);
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName);
@@ -525,13 +532,17 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				// 이미지 리사이즈
 				if (!imgUtil.setImgScale(srcFile1, cutOutFile, width, height, uploadDir)) {
-					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류!", null);
 				}
 
 				this.log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName1 + "을 생성 하였습니다.");
 
+				File outputfile = new File(cutOutFile);
+				long fileSize = outputfile.length();
+
 				this.brandCatalogProdImgInfo.setProdId(dpCatalogInfo.getCreateCatalogId());
 				this.brandCatalogProdImgInfo.setImgCls(CouponConstants.CATALOG_DTL_IMG_684_XY);
+				this.brandCatalogProdImgInfo.setFileSize(fileSize);
 				this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
 				this.brandCatalogProdImgInfo.setFilePos(uploadDir1);
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName1);
@@ -554,14 +565,20 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 						String resizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
 
-						imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
-								width, 1170);
+						if (!imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
+								width, 1170)) {
+							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ",
+									null);
+						}
 						this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
-						// log.info("■■■■■BrandImgResize■■■■■ : " + resizetargetFileName1 + "을 생성 하였습니다.");
+						this.log.info("■■■■■BrandCatalogImgResize■■■■■ : " + resizetargetFileName1 + "을 생성 하였습니다.");
 
 						cY = nHeightSize;
 						nHeightSize = nHeightSize + 1170;
+						File cutOutputfile = new File(uploadDir1 + resizetargetFileName1);
+						long cutFileSize = cutOutputfile.length();
 
+						this.brandCatalogProdImgInfo.setFileSize(cutFileSize);
 						this.brandCatalogProdImgInfo.setSeq(seq);
 						this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
 						this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
@@ -575,13 +592,17 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 							seq = seq + 1;
 
 							resizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
-							this.log.info("resizetargetFileName1" + resizetargetFileName1);
+							this.log.info("■■■■■resizetargetFileName1■■■■■ :" + resizetargetFileName1 + "을 생성 하였습니다.");
 
-							imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0, cY,
-									width, height - cY);
-							this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
-							// log.info("■■■■■BrandImgResize■■■■■ : " + resizetargetFileName1 + "을 생성 하였습니다.");
+							if (!imgUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + resizetargetFileName1, 0,
+									cY, width, height - cY)) {
+								throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR,
+										"이미지 생성 오류!!", null);
+							}
+							File lastCutOutputfile = new File(uploadDir1 + resizetargetFileName1);
+							long lastCutFileSize = lastCutOutputfile.length();
 
+							this.brandCatalogProdImgInfo.setFileSize(lastCutFileSize);
 							this.brandCatalogProdImgInfo.setSeq(seq);
 							this.brandCatalogProdImgInfo.setLangCd(CouponConstants.LANG_CD_KO);
 							this.brandCatalogProdImgInfo.setFileNm(resizetargetFileName1);
@@ -602,6 +623,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 		} catch (CouponException e) {
 			// resize 오류 Catch 및 CouponException 처리 2013.08.07 임선택
+			this.log.info("■■■■■이미지 생성 오류■■■■■ ");
 			this.log.error("<brandImgResize> brandResize : ", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "카탈로그 이미지 Resize 실패", null);
 		}
