@@ -132,7 +132,7 @@ public class ImageUtil {
 			}
 
 		} catch (Exception e) {
-			this.log.info(e.getMessage());
+			this.log.info("쇼핑 상품 Cutting 이미지 생성 실패(cutImage2) : " + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
