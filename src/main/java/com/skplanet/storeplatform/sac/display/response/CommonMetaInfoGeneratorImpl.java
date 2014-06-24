@@ -591,31 +591,26 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	public Store generateStore(MetaInfo metaInfo) {
 		Store store = new Store();
 
-		// 코미
-		if (DisplayConstants.DP_RIGHTS_STORE.equals(metaInfo.getStoreProdId())) {
-			ArrayList<Support> supportList = new ArrayList<Support>();
-			supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
-			store.setSupportList(supportList);
-		} else {
+		ArrayList<Support> supportList = new ArrayList<Support>();
+		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
+		store.setSupportList(supportList);
+
+		// 이용기간단위
+		if (StringUtils.isNotEmpty(metaInfo.getStoreUsePeriodUnitCd())) {
+			store.setUsePeriodUnitCd(metaInfo.getStoreUsePeriodUnitCd());
+		}
+		metaInfo.setProdAmt(metaInfo.getStoreProdAmt());
+		metaInfo.setProdNetAmt(metaInfo.getStoreProdNetAmt());
+		store.setPrice(this.generatePrice(metaInfo));
+		
+		// 코믹일 경우 SQL 에서 PLAY_PROD_ID="play"로 리턴한다.
+		if (!DisplayConstants.DP_RIGHTS_STORE.equals(metaInfo.getStoreProdId())) {
 			List<Identifier> identifierList = new ArrayList<Identifier>();
 			identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
 					metaInfo.getStoreProdId()));
 			store.setIdentifierList(identifierList);
-
-			ArrayList<Support> supportList = new ArrayList<Support>();
-			supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
-			store.setSupportList(supportList);
-
-			metaInfo.setProdAmt(metaInfo.getStoreProdAmt());
-			metaInfo.setProdNetAmt(metaInfo.getStoreProdNetAmt());
-			store.setPrice(this.generatePrice(metaInfo));
-
-			// 이용기간단위
-			if (StringUtils.isNotEmpty(metaInfo.getStoreUsePeriodUnitCd())) {
-				store.setUsePeriodUnitCd(metaInfo.getStoreUsePeriodUnitCd());
-			}
 		}
-
+		
 		return store;
 	}
 
@@ -623,33 +618,30 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	public Play generatePlay(MetaInfo metaInfo) {
 		Play play = new Play();
 
-		if (DisplayConstants.DP_RIGHTS_PLAY.equals(metaInfo.getPlayProdId())) {
-			ArrayList<Support> supportList = new ArrayList<Support>();
-			supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
-			play.setSupportList(supportList);
-		} else {
+		ArrayList<Support> supportList = new ArrayList<Support>();
+		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
+		play.setSupportList(supportList);
+		
+		// 이용기간단위
+		if (StringUtils.isNotEmpty(metaInfo.getPlayUsePeriodUnitCd())) {
+			play.setUsePeriodUnitCd(metaInfo.getPlayUsePeriodUnitCd());
+		}
+
+		metaInfo.setProdAmt(metaInfo.getPlayProdAmt());
+		metaInfo.setProdNetAmt(metaInfo.getPlayProdNetAmt());
+		play.setPrice(this.generatePrice(metaInfo));
+
+		Date date = new Date();
+		date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
+		date.setText(metaInfo.getUsePeriodNm());
+		play.setDate(date);
+		
+		// 코믹일 경우 SQL 에서 PLAY_PROD_ID="play"로 리턴한다.
+		if (!DisplayConstants.DP_RIGHTS_PLAY.equals(metaInfo.getPlayProdId())) {
 			List<Identifier> identifierList = new ArrayList<Identifier>();
 			identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
 					metaInfo.getPlayProdId()));
 			play.setIdentifierList(identifierList);
-
-			ArrayList<Support> supportList = new ArrayList<Support>();
-			supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
-			play.setSupportList(supportList);
-
-			metaInfo.setProdAmt(metaInfo.getPlayProdAmt());
-			metaInfo.setProdNetAmt(metaInfo.getPlayProdNetAmt());
-			play.setPrice(this.generatePrice(metaInfo));
-
-			Date date = new Date();
-			date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-			date.setText(metaInfo.getUsePeriodNm());
-			play.setDate(date);
-
-			// 이용기간단위
-			if (StringUtils.isNotEmpty(metaInfo.getPlayUsePeriodUnitCd())) {
-				play.setUsePeriodUnitCd(metaInfo.getPlayUsePeriodUnitCd());
-			}
 		}
 
 		return play;

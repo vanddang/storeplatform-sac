@@ -34,14 +34,14 @@
     <insert id="createTbShpgBrand" parameterType="com.skplanet.storeplatform.sac.api.vo.DpBrandInfo">
       /* BrandCatalogMapper.xml, createTbShpgBrand, 브랜드 테이블에 INSERT, 김형식/SK플래닛   , 2014-12-30 */
          INSERT INTO TB_DP_SHPG_BRAND(
-	         BRAND_ID
-	        ,MENU_ID
-	        ,BRAND_NM
-	        ,ORG_BRAND_ID
-	        ,REG_ID
-	        ,REG_DT
-	        ,UPD_ID
-	        ,UPD_DT         
+             BRAND_ID
+            ,MENU_ID
+            ,BRAND_NM
+            ,ORG_BRAND_ID
+            ,REG_ID
+            ,REG_DT
+            ,UPD_ID
+            ,UPD_DT         
          )VALUES(
              #{createBrandId}
             ,#{dpCatNo}
@@ -105,14 +105,14 @@
     <insert id="createTbDpShpgCatalog" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
         /* BrandCatalogMapper.xml, createTbDpShpgCatalog,카탈로그 정보 테이블에 INSERT, 김형식/SK플래닛  , 2014-12-30 */
         INSERT INTO TB_DP_SHPG_CATALOG(
-	         CATALOG_ID
-	        ,ORG_CATALOG_ID
-	        ,BRAND_ID
-	        ,CHNL_CNT
-	        ,REG_ID
-	        ,REG_DT
-	        ,UPD_ID
-	        ,UPD_DT
+             CATALOG_ID
+            ,ORG_CATALOG_ID
+            ,BRAND_ID
+            ,CHNL_CNT
+            ,REG_ID
+            ,REG_DT
+            ,UPD_ID
+            ,UPD_DT
         )
         VALUES(
              #{createCatalogId}
@@ -130,15 +130,15 @@
     <insert id="createTbDpShpgCatalogDesc" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
         /* BrandCatalogMapper.xml, createTbDpShpgCatalogDesc,카탈로그 상세 테이블에 INSERT, 김형식/SK플래닛  , 2014-12-30 */
         INSERT INTO TB_DP_SHPG_CATALOG_DESC(
-	         CATALOG_ID
-	        ,LANG_CD
-	        ,CATALOG_NM
-	        ,CATALOG_DESC
-	        ,CATALOG_DTL_DESC
-	        ,REG_ID
-	        ,REG_DT
-	        ,UPD_ID
-	        ,UPD_DT
+             CATALOG_ID
+            ,LANG_CD
+            ,CATALOG_NM
+            ,CATALOG_DESC
+            ,CATALOG_DTL_DESC
+            ,REG_ID
+            ,REG_DT
+            ,UPD_ID
+            ,UPD_DT
         )
         VALUES(
              #{createCatalogId}
@@ -157,14 +157,14 @@
     <insert id="createTbDpMenuShpgMapg" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
         /* BrandCatalogMapper.xml, createTbDpMenuShpgMapg,카탈로그_카테고리 매핑 테이블에 INSERT, 김형식/SK플래닛  , 2014-12-30 */
         INSERT INTO TB_DP_MENU_SHPG_MAPG(
-   	         MENU_ID
-	        ,CATALOG_ID
-	        ,BASE_YN
-	        ,USE_YN
-            ,REG_ID	        
-	        ,REG_DT
-	        ,UPD_ID
-	        ,UPD_DT
+             MENU_ID
+            ,CATALOG_ID
+            ,BASE_YN
+            ,USE_YN
+            ,REG_ID         
+            ,REG_DT
+            ,UPD_ID
+            ,UPD_DT
         )
         VALUES(
              #{dpCatNo}
@@ -218,17 +218,17 @@
     <insert id="createBrandCatalogTbDpProdImg" parameterType="com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo">
        /* BrandCatalogMapper.xml, createBrandCatalogTbDpProdImg,브랜드 카탈로그 이미지 테이블, 김형식/SK플래닛  , 2014-12-30 */
         INSERT INTO TB_DP_PROD_IMG(
-	         PROD_ID
-	        ,IMG_CD
-	        ,EXPO_ORD
-	        ,LANG_CD
-	        ,FILE_PATH
-	        ,FILE_NM
-	        ,FILE_SIZE
-	        ,REG_ID
-	        ,REG_DT
-	        ,UPD_ID
-	        ,UPD_DT            
+             PROD_ID
+            ,IMG_CD
+            ,EXPO_ORD
+            ,LANG_CD
+            ,FILE_PATH
+            ,FILE_NM
+            ,FILE_SIZE
+            ,REG_ID
+            ,REG_DT
+            ,UPD_ID
+            ,UPD_DT            
         )
           VALUES(
              #{prodId}
@@ -239,9 +239,9 @@
             ,#{fileNm}
             ,#{fileSize}
             ,'admin'
-	        ,SYSDATE
-	        ,'admin'
-	        ,SYSDATE 
+            ,SYSDATE
+            ,'admin'
+            ,SYSDATE 
           )
     </insert>   
    
@@ -263,21 +263,21 @@
                 ,TAG_TYPE_CD
                 ,TAG_CD
                 ,TAG_NM
-	            ,REG_ID
-	            ,REG_DT
-	            ,UPD_ID
-	            ,UPD_DT   
+                ,REG_ID
+                ,REG_DT
+                ,UPD_ID
+                ,UPD_DT   
             )
             VALUES(
-	             SQ_DP_PROD_TAG.NEXTVAL
-	            ,#{cid}
-	            ,#{tagTypeCd}         /*DP004507: 쇼핑/쿠폰 태그*/
-	            ,#{tagCd}
-	            ,#{tagNm}
-	            ,#{regId}
-	            ,sysdate
-	            ,#{updId}
-	            ,sysdate
+                 SQ_DP_PROD_TAG.NEXTVAL
+                ,#{cid}
+                ,#{tagTypeCd}         /*DP004507: 쇼핑/쿠폰 태그*/
+                ,#{tagCd}
+                ,#{tagNm}
+                ,#{regId}
+                ,sysdate
+                ,#{updId}
+                ,sysdate
             )
     </insert>      
     
@@ -298,6 +298,6 @@
 			  AND EXPO_ORD =1
 			  AND IMG_CD != 'DP0001B0'	
 			ORDER BY IMG_CD	
-    </select>     
+    </select>
     
 </mapper>
