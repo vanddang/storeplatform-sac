@@ -47,8 +47,8 @@
         			<argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
         			<systemProperties>
 	                    <property>
-	                      <name>jenkins.test.logger.level</name>
-	                      <value>OFF</value>
+	                       <name>jenkins.test.logger.level</name>
+	                       <value>OFF</value>
 		                 </property>
 	                 </systemProperties>
     			</configuration>
