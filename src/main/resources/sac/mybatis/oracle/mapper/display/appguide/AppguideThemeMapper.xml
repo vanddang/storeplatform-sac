@@ -124,6 +124,8 @@
                       , A.THEME_NM
                       , A.THEME_TYPE
                       , A.IMG_PATH AS THEME_IMG
+                      , A.EXPO_ORD
+                      , A.EXPO_ORD_SUB
                    FROM (
                        SELECT DISTINCT A.LIST_ID THEME_ID ,
 						      A.LIST_NM THEME_NM ,
@@ -215,6 +217,7 @@
                            A.EXPO_ORD, A.EXPO_ORD_SUB, A.REG_DT DESC
                ) AA
          WHERE RNUM BETWEEN #{START_ROW} AND #{END_ROW}
+         ORDER BY AA.EXPO_ORD ASC, AA.EXPO_ORD_SUB ASC, RNUM
     </select>
     
     <select id="getThemeRecommendMainList" parameterType="java.util.Map" resultType="java.lang.String">
