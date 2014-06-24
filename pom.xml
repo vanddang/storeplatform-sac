@@ -51,11 +51,6 @@
 	                      <value>OFF</value>
 		                 </property>
 	                 </systemProperties>
-	                 <excludes>
-	                    <exclude>**/ListPasswordReminderQuestionTest.java</exclude>
-	                    <exclude>**/ListWithdrawalReasonTest.java</exclude>
-	                    <exclude>**/WithdrawTest.java</exclude>
-	                  </excludes>
     			</configuration>
                 <!-- 
                 <configuration> 
