@@ -112,11 +112,11 @@ public class ImageUtil {
 
 		ImageIcon img = new ImageIcon(srcFile);
 
-		BufferedImage bufImage = this.imageToBufferedImage(img.getImage(), img.getIconWidth(), img.getIconHeight());
-
-		BufferedImage bufImage2 = bufImage.getSubimage(cX, cY, dW, dH);
-
 		try {
+			BufferedImage bufImage = this.imageToBufferedImage(img.getImage(), img.getIconWidth(), img.getIconHeight());
+
+			BufferedImage bufImage2 = bufImage.getSubimage(cX, cY, dW, dH);
+
 			File file = new File(destFile); // 파일의 이름을 설정한다
 			FileOutputStream fos = new FileOutputStream(file);
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
