@@ -58,11 +58,6 @@ public class BannerServceImpl implements BannerService {
 	private final int APPGUIDE_BANNER_COUNT = 2; // 앱가이드 배너 2개 (앱가이드 배너)
 	private final int BESTAPP_BANNER_COUNT = 4; // BEST 앱 배너 4개 (앱가이드 배너)
 
-	private int EBOOK_STORE_BANNER_COUNT = 0; // eBook 배너 건수 (이북보관함 메인 배너)
-	private int COMIC_STORE_BANNER_COUNT = 0; // comic 배너 건수 (이북보관함 메인 배너)
-
-	private List<BannerDefault> tempList = null; // 모바일웹 직사각형 배너가 담길 임시 리스트
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -84,7 +79,7 @@ public class BannerServceImpl implements BannerService {
 	 * .sac.common.header.vo.SacRequestHeader, com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq)
 	 */
 	@Override
-	public BannerSacRes searchBannerList(SacRequestHeader header, BannerSacReq bannerReq) {
+	public BannerSacRes searchBannerList(SacRequestHeader header, BannerSacReq bannerReq, List<BannerDefault> tempList) {
 		// 모바일웹 정사각형/직사각형 배너
 		if ("DP010999".equals(bannerReq.getBnrMenuId())) {
 			// 직사각형 배너로 세팅
@@ -151,6 +146,9 @@ public class BannerServceImpl implements BannerService {
 		int provCnt = 0; // 프로비저닝 건수
 		int passCnt = 0; // 결과리스트에 담긴 배너 개수
 
+		int EBOOK_STORE_BANNER_COUNT = 0; // eBook 배너 건수 (이북보관함 메인 배너)
+		int COMIC_STORE_BANNER_COUNT = 0; // comic 배너 건수 (이북보관함 메인 배너)
+
 		boolean homeBannerFullFlag = false; // 모바일웹 Home 배너 최대 개수 여부
 		boolean gameBannerFullFlag = false; // 모바일웹 게임 배너 최대 개수 여부
 		boolean funBannerFullFlag = false; // 모바일웹 Fun 배너 최대 개수 여부
@@ -185,16 +183,16 @@ public class BannerServceImpl implements BannerService {
 			if ("DP010998".equals(reqBnrMenuId)) {
 				// 요청건수 확인 (홀수로 요청 시, 이북을 한개 더 내려준다)
 				if (reqImgCnt % 2 == 0) {
-					this.EBOOK_STORE_BANNER_COUNT = reqImgCnt / 2;
-					this.COMIC_STORE_BANNER_COUNT = reqImgCnt / 2;
+					EBOOK_STORE_BANNER_COUNT = reqImgCnt / 2;
+					COMIC_STORE_BANNER_COUNT = reqImgCnt / 2;
 				} else {
-					this.EBOOK_STORE_BANNER_COUNT = (reqImgCnt / 2) + 1;
-					this.COMIC_STORE_BANNER_COUNT = reqImgCnt / 2;
+					EBOOK_STORE_BANNER_COUNT = (reqImgCnt / 2) + 1;
+					COMIC_STORE_BANNER_COUNT = reqImgCnt / 2;
 				}
 
 				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("[searchBannerLog] 이북보관함 메인 이북 배너 건수 : {}", this.EBOOK_STORE_BANNER_COUNT);
-				this.logger.debug("[searchBannerLog] 이북보관함 메인 코믹 배너 건수 : {}", this.COMIC_STORE_BANNER_COUNT);
+				this.logger.debug("[searchBannerLog] 이북보관함 메인 이북 배너 건수 : {}", EBOOK_STORE_BANNER_COUNT);
+				this.logger.debug("[searchBannerLog] 이북보관함 메인 코믹 배너 건수 : {}", COMIC_STORE_BANNER_COUNT);
 				this.logger.debug("----------------------------------------------------------------");
 			}
 
@@ -214,9 +212,9 @@ public class BannerServceImpl implements BannerService {
 
 				// 모바일웹 정사각형 배너
 				if (this.SQUARE_BANNER_MENU_ID.equals(reqBnrMenuId)) {
-					if (this.tempList != null) {
-						resultList.addAll(this.tempList);
-						this.tempList = null;
+					if (tempList != null) {
+						resultList.addAll(tempList);
+						tempList = null;
 					}
 
 					boolean dupFlag = false; // 중복된 항목을 체크하기 위한 변수
@@ -335,7 +333,7 @@ public class BannerServceImpl implements BannerService {
 						if (ebookStoreBannerFlag) {
 							continue;
 						}
-						if (passCnt == this.EBOOK_STORE_BANNER_COUNT) {
+						if (passCnt == EBOOK_STORE_BANNER_COUNT) {
 							passCnt = 0;
 							ebookStoreBannerFlag = true;
 							continue;
@@ -348,7 +346,7 @@ public class BannerServceImpl implements BannerService {
 						if (comicStoreBannerFlag) {
 							continue;
 						}
-						if (passCnt == this.COMIC_STORE_BANNER_COUNT) {
+						if (passCnt == COMIC_STORE_BANNER_COUNT) {
 							passCnt = 0;
 							comicStoreBannerFlag = true;
 							break;
@@ -361,13 +359,13 @@ public class BannerServceImpl implements BannerService {
 					if (reqImgCnt == passCnt) {
 						if (this.REC_BANNER_MENU_ID.equals(reqBnrMenuId)) {
 							// 배너리스트를 임시 리스트에 담는다.
-							this.tempList = new ArrayList<BannerDefault>();
-							this.tempList.addAll(resultList);
+							tempList = new ArrayList<BannerDefault>();
+							tempList.addAll(resultList);
 
 							// 모바일웹 정사각형 배너 재귀호출
 							bannerReq.setBnrMenuId(this.SQUARE_BANNER_MENU_ID);
 							bannerReq.setImgSizeCd(this.SQUARE_BANNER_IMG_SIZE);
-							return this.searchBannerList(header, bannerReq);
+							return this.searchBannerList(header, bannerReq, tempList);
 						} else {
 							break;
 						}
@@ -581,13 +579,13 @@ public class BannerServceImpl implements BannerService {
 			// 모바일웹 직사각형 배너 (최대 요청 개수를 못채웠을 경우)
 			if (this.REC_BANNER_MENU_ID.equals(reqBnrMenuId) && resultList.size() < this.REC_BANNER_MAX_COUNT) {
 				// 배너리스트를 임시 리스트에 담는다.
-				this.tempList = new ArrayList<BannerDefault>();
-				this.tempList.addAll(resultList);
+				tempList = new ArrayList<BannerDefault>();
+				tempList.addAll(resultList);
 
 				// 모바일웹 정사각형 배너 재귀호출
 				bannerReq.setBnrMenuId(this.SQUARE_BANNER_MENU_ID);
 				bannerReq.setImgSizeCd(this.SQUARE_BANNER_IMG_SIZE);
-				return this.searchBannerList(header, bannerReq);
+				return this.searchBannerList(header, bannerReq, tempList);
 			}
 		}
 

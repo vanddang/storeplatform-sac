@@ -46,6 +46,6 @@ public class BannerController {
 		this.logger.debug("[searchBannerList] BannerSacReq\n{}", bannerReq.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.bannerService.searchBannerList(header, bannerReq);
+		return this.bannerService.searchBannerList(header, bannerReq, null);
 	}
 }
