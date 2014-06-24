@@ -105,7 +105,7 @@
                             </foreach>
                        </if>
                        AND G.EXPO_YN = 'Y'
-                       AND (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                       AND H.DEVICE_MODEL_CD = #{anyDeviceModelCd}
                        AND C.PART_PROD_ID = H.PROD_ID
 		               AND (CASE WHEN F.TOP_MENU_ID = 'DP13' THEN
 		                                CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
@@ -146,6 +146,7 @@
 				            ,TB_DP_SHPG_PROD H
 				            ,TB_DP_MENU_CATEGORY I
 				            ,TB_DP_TENANT_PROD_PRICE J
+                            ,TB_DP_SPRT_DEVICE DV
 				        WHERE 1 = 1
 				            AND A.LIST_ID = #{themeZoneId}
 				            AND A.LIST_ID = B.LIST_ID
@@ -184,17 +185,10 @@
 		                         #{prodGradeCd}
 		                       </foreach>
 		                    </if>
-						    AND EXISTS (
-						            SELECT 1 
-						            FROM  TB_DP_SPRT_DEVICE DV  
-						                   ,TB_CM_DEVICE CM
-						            WHERE 1=1
-						                AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
-						                AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-						                AND (DV.DEVICE_MODEL_CD = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = #{anyDeviceModelCd})
-                                        AND CM.DEVICE_MODEL_CD = #{deviceModelCd}
-						                AND DV.PROD_ID = F.PROD_ID
-						              ) 
+                            AND DV.DEVICE_MODEL_CD = #{anyDeviceModelCd}
+                            AND DV.PROD_ID = C.PROD_ID
+                            AND #{shpgSprtYn} = 'Y'
+
 	                         <if test='b2bProd != "A"'>
 	                         AND H.B2B_PROD_YN = #{b2bProd}
 	                         </if>

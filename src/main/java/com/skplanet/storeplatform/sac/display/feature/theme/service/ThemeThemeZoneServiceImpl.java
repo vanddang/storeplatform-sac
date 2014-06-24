@@ -210,7 +210,17 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 				req.setMusicSprtYn(supportDevice.getMusicSprtYn());
 				req.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
 				req.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
+                req.setShpgSprtYn(supportDevice.getSclShpgSprtYn());
 			}
+            else {
+                req.setEbookSprtYn("N");
+                req.setComicSprtYn("N");
+                req.setMusicSprtYn("N");
+                req.setVideoDrmSprtYn("N");
+                req.setSdVideoSprtYn("N");
+                req.setShpgSprtYn("N");
+            }
+
 			// 테마상품 조회
 			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 					"ThemeThemeZone.selectThemeThemeZoneList", req, ProductBasicInfo.class);
