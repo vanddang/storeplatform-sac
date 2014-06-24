@@ -45,9 +45,9 @@ import com.skplanet.storeplatform.purchase.client.order.vo.MakeFreePurchaseScRes
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.ReservePurchaseScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.ReservePurchaseScRes;
+import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseListByStatusScReq;
+import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseListByStatusScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseSequenceAndDateRes;
-import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseListScReq;
-import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseListScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
@@ -1072,15 +1072,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 구매 예약 정보 목록
 	 */
 	private List<PrchsDtlMore> searchReservedPurchaseList(String tenantId, String prchsId) {
-		SearchReservedPurchaseListScReq reqSearch = new SearchReservedPurchaseListScReq();
+		SearchPurchaseListByStatusScReq reqSearch = new SearchPurchaseListByStatusScReq();
 		reqSearch.setTenantId(tenantId);
 		reqSearch.setPrchsId(prchsId);
+		reqSearch.setStatusCd(null);
 
-		SearchReservedPurchaseListScRes searchPurchaseListRes = this.purchaseOrderSearchSCI
-				.searchReservedPurchaseList(reqSearch);
+		SearchPurchaseListByStatusScRes searchPurchaseListRes = this.purchaseOrderSearchSCI
+				.searchPurchaseListByStatus(reqSearch);
 		List<PrchsDtlMore> prchsDtlMoreList = searchPurchaseListRes.getPrchsDtlMoreList();
 		if (prchsDtlMoreList.size() < 1) {
 			throw new StorePlatformException("SAC_PUR_7101");
+		} else {
+			if (StringUtils.equals(prchsDtlMoreList.get(0).getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
+				throw new StorePlatformException("SAC_PUR_7105");
+			} else if (StringUtils.equals(prchsDtlMoreList.get(0).getStatusCd(),
+					PurchaseConstants.PRCHS_STATUS_RESERVATION) == false) {
+				throw new StorePlatformException("SAC_PUR_7101");
+			}
 		}
 
 		return prchsDtlMoreList;
