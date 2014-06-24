@@ -44,8 +44,17 @@ public class ThemeThemeZoneListSacReq extends CommonInfo {
 	private String musicSprtYn; // 음악 상품 지원여부
 	private String videoDrmSprtYn; // VOD 상품 DRM 지원 여부
 	private String sdVideoSprtYn; // VOD 상품 SD 지원 여부
+	private String shpgSprtYn; // 쇼핑상품 지원여부
 
-	// TODO osm1021 dummy data가 필요없어지면 삭제할것
+    public String getShpgSprtYn() {
+        return shpgSprtYn;
+    }
+
+    public void setShpgSprtYn(String shpgSprtYn) {
+        this.shpgSprtYn = shpgSprtYn;
+    }
+
+    // TODO osm1021 dummy data가 필요없어지면 삭제할것
 	private String dummy;
 
 	public Integer getOffset() {
