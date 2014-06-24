@@ -70,7 +70,7 @@
 		           AND A.REP_DEVICE_YN = 'Y'
 		           AND B.PROD_ID = #{productId}
   	              <if test='deviceModelNm != null and deviceModelNm != ""'>
-		           AND (A.MODEL_NM LIKE '%'||#{deviceModelNm}||'%' OR A.DEVICE_MODEL_CD LIKE '%'||#{deviceModelNm}||'%')
+		           AND (UPPER(A.MODEL_NM) LIKE '%'||UPPER(#{deviceModelNm})||'%' OR UPPER(A.DEVICE_MODEL_CD) LIKE '%'||UPPER(#{deviceModelNm})||'%')
 		          </if>
 		          <if test='mnftCompCd != null and mnftCompCd != ""'>
 		           AND MNFT_COMP_CD = #{mnftCompCd}
@@ -135,7 +135,7 @@
 		           AND A.USE_YN = 'Y' 
 		           AND A.REP_DEVICE_YN = 'Y'
 		         <if test='deviceModelNm != null and deviceModelNm != ""'>
-		           AND (A.MODEL_NM LIKE '%'||#{deviceModelNm}||'%' OR A.DEVICE_MODEL_CD LIKE '%'||#{deviceModelNm}||'%')
+		           AND (UPPER(A.MODEL_NM) LIKE '%'||UPPER(#{deviceModelNm})||'%' OR UPPER(A.DEVICE_MODEL_CD) LIKE '%'||UPPER(#{deviceModelNm})||'%')
 		         </if>
 		         <if test='mnftCompCd != null and mnftCompCd != ""'>
 		           AND A.MNFT_COMP_CD = #{mnftCompCd}
@@ -211,7 +211,7 @@
 		           AND A.USE_YN = 'Y' 
 		           AND A.REP_DEVICE_YN = 'Y'
 		         <if test='deviceModelNm != null and deviceModelNm != ""'>
-		           AND (A.MODEL_NM LIKE '%'||#{deviceModelNm}||'%' OR A.DEVICE_MODEL_CD LIKE '%'||#{deviceModelNm}||'%')
+		           AND (UPPER(A.MODEL_NM) LIKE '%'||UPPER(#{deviceModelNm})||'%' OR UPPER(A.DEVICE_MODEL_CD) LIKE '%'||UPPER(#{deviceModelNm})||'%')
 		         </if>
 		         <if test='mnftCompCd != null and mnftCompCd != ""'>
 		           AND MNFT_COMP_CD = #{mnftCompCd}
