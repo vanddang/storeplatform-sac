@@ -105,7 +105,7 @@
                             </foreach>
                        </if>
                        AND G.EXPO_YN = 'Y'
-                       AND H.DEVICE_MODEL_CD = #{anyDeviceModelCd}
+                       AND (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = #{anyDeviceModelCd})
                        AND C.PART_PROD_ID = H.PROD_ID
 		               AND (CASE WHEN F.TOP_MENU_ID = 'DP13' THEN
 		                                CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
@@ -186,7 +186,7 @@
 		                       </foreach>
 		                    </if>
                             AND DV.DEVICE_MODEL_CD = #{anyDeviceModelCd}
-                            AND DV.PROD_ID = C.PROD_ID
+                            AND DV.PROD_ID = C.PART_PROD_ID
                             AND #{shpgSprtYn} = 'Y'
 
 	                         <if test='b2bProd != "A"'>
