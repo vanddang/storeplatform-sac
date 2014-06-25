@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.member.user.sci.service;
 
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
@@ -163,5 +165,19 @@ public interface SearchUserSCIService {
 	 * @return OCB 가입여부
 	 */
 	public boolean isOcbJoinIDP(String imSvcNo);
+
+	/**
+	 * <pre>
+	 * deviceId, orderDt 이용하여 최근 회원정보(탈퇴포함) 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param request
+	 *            SearchOrderUserByDeviceIdSacReq
+	 * @return SearchOrderUserByDeviceIdSacRes
+	 */
+	public SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceId(SacRequestHeader header,
+			SearchOrderUserByDeviceIdSacReq request);
 
 }

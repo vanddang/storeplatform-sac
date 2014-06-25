@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -208,4 +210,24 @@ public class SearchUserSCITest {
 	// LOGGER.info("\nerror >> ", e);
 	// }
 	// }
+
+	/**
+	 * <pre>
+	 * UserKeyList를 이용한 회원정보 조회 SCI TEST.
+	 * - 검색결과 없음.
+	 * </pre>
+	 */
+	@Test
+	public void testSearchOrderUserByDeviceId() {
+
+		SearchOrderUserByDeviceIdSacReq request = new SearchOrderUserByDeviceIdSacReq();
+
+		request.setDeviceId("01048088875");
+		request.setOrderDt("20140324160000");
+
+		LOGGER.debug("[SearchUserSCI-REQUEST] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+
+		SearchOrderUserByDeviceIdSacRes res = this.searchUserSCI.searchOrderUserByDeviceId(request);
+		LOGGER.debug("[SearchUserSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
+	}
 }

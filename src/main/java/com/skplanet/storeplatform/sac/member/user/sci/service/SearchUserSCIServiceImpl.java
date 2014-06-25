@@ -37,6 +37,8 @@ import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceMbrStatus;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceRequest;
@@ -49,6 +51,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
@@ -124,7 +128,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		LOGGER.debug("SAC Request {}", request);
 		SearchMbrUserResponse searchMbrUserResponse = this.userSCI.searchMbrUser(searchMbrUserRequest);
 
-		LOGGER.debug("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse.getCommonResponse().getResultCode());
+		LOGGER.debug("[UserSearchServiceImpl.searchUserByUserKey] SC ResultCode : {}", searchMbrUserResponse
+				.getCommonResponse().getResultCode());
 
 		Map<String, UserMbrStatus> userInfoMap = searchMbrUserResponse.getUserMbrStatusMap();
 
@@ -431,7 +436,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 		if (StringUtils.isNotBlank(req.getDeviceId())) {
 			/* 단건 조회 처리 */
-			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userKey);
+			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+					req.getDeviceId(), userKey);
 			if (deviceInfo != null) {
 				res.setUserId(deviceInfo.getUserId());
 				res.setUserKey(deviceInfo.getUserKey());
@@ -443,7 +449,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 			return res;
 		} else if (StringUtils.isNotBlank(req.getDeviceKey())) {
 			/* 단건 조회 처리 */
-			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, req.getDeviceKey(), userKey);
+			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
+					req.getDeviceKey(), userKey);
 			if (deviceInfo != null) {
 				res.setUserId(deviceInfo.getUserId());
 				res.setUserKey(deviceInfo.getUserKey());
@@ -568,7 +575,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 		SearchMbrDeviceResponse searchMbrDeviceResponse = this.userSCI.searchMbrDevice(searchMbrDeviceRequest);
 
-		LOGGER.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse.getCommonResponse().getResultCode());
+		LOGGER.info("[UserSearchServiceImpl.searchUserByDeviceKey] SC ResultCode : {}", searchMbrDeviceResponse
+				.getCommonResponse().getResultCode());
 
 		Map<String, DeviceMbrStatus> userDeviceInfoMap = searchMbrDeviceResponse.getDeviceMbrStatusMap();
 
@@ -593,11 +601,13 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 					if (StringUtil.equals(deviceMbrStatus.getIsRealName(), "Y")) {
 
-						userDeviceInfoSac.setUserBirthday(StringUtil.isNotBlank(deviceMbrStatus.getAuthBirthDay()) ? deviceMbrStatus
-								.getAuthBirthDay() : deviceMbrStatus.getUserBirthDay());
+						userDeviceInfoSac
+								.setUserBirthday(StringUtil.isNotBlank(deviceMbrStatus.getAuthBirthDay()) ? deviceMbrStatus
+										.getAuthBirthDay() : deviceMbrStatus.getUserBirthDay());
 
-						userDeviceInfoSac.setUserName(StringUtil.isNotBlank(deviceMbrStatus.getAuthName()) ? deviceMbrStatus.getAuthName()
-								: deviceMbrStatus.getUserName());
+						userDeviceInfoSac
+								.setUserName(StringUtil.isNotBlank(deviceMbrStatus.getAuthName()) ? deviceMbrStatus
+										.getAuthName() : deviceMbrStatus.getUserName());
 
 					} else {
 
@@ -721,8 +731,10 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 			List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
 			for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-				LOGGER.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
-				LOGGER.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
+				LOGGER.debug("============================================ UserExtraInfo CODE : {}",
+						ptcr.getExtraProfile());
+				LOGGER.debug("============================================ UserExtraInfo VALUE : {}",
+						ptcr.getExtraProfileValue());
 
 				UserExtraInfo extra = new UserExtraInfo();
 				extra.setExtraProfile(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -860,7 +872,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		/**
 		 * OCB 조회 요청.
 		 */
-		SearchMemberPointResponse searchMemberPointResponse = this.userSCI.searchMemberPointList(searchMemberPointRequest);
+		SearchMemberPointResponse searchMemberPointResponse = this.userSCI
+				.searchMemberPointList(searchMemberPointRequest);
 		LOGGER.debug("### searchMemberPointResponse : {}", searchMemberPointResponse.getMemberPointList());
 
 		return searchMemberPointResponse;
@@ -870,11 +883,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.sci.service.SearchUserSCIService
-	 * #
-	 * isOcbJoin(com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader
-	 * , java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.member.user.sci.service.SearchUserSCIService #
+	 * isOcbJoin(com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader , java.lang.String)
 	 */
 	@Override
 	public boolean isOcbJoinIDP(String imSvcNo) {
@@ -889,4 +899,37 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		return false;
 	}
 
+	/**
+	 * <pre>
+	 * deviceId, orderDt 이용하여 최근 회원정보(탈퇴포함) 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param request
+	 *            SearchOrderUserByDeviceIdSacReq
+	 * @return SearchOrderUserByDeviceIdSacRes
+	 */
+	@Override
+	public SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceId(SacRequestHeader header,
+			SearchOrderUserByDeviceIdSacReq request) {
+
+		SearchDeviceOwnerRequest searchDeviceOwnerRequest = new SearchDeviceOwnerRequest();
+		searchDeviceOwnerRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		searchDeviceOwnerRequest.setDeviceID(request.getDeviceId());
+		searchDeviceOwnerRequest.setRegDate(request.getOrderDt());
+
+		// SC.DeviceSCI Call
+		SearchDeviceOwnerResponse searchDeviceOwnerResponse = this.deviceSCI
+				.searchDeviceOwner(searchDeviceOwnerRequest);
+
+		SearchOrderUserByDeviceIdSacRes res = new SearchOrderUserByDeviceIdSacRes();
+		res.setUserKey(searchDeviceOwnerResponse.getUserKey());
+		res.setDeviceKey(searchDeviceOwnerResponse.getDeviceKey());
+		res.setAuthenticationDate(searchDeviceOwnerResponse.getAuthenticationDate());
+		res.setAuthYn(searchDeviceOwnerResponse.getIsUsed());
+		res.setTableName(searchDeviceOwnerResponse.getTableName());
+
+		return res;
+	}
 }

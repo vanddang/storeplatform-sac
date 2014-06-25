@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
@@ -368,6 +370,7 @@ public class SearchUserSCIControllerTest {
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
+
 	//
 	// @Test(expected = StorePlatformException.class)
 	// public void C_TEST_오류_DeviceKeyList_검색_검색결과없음() throws Exception {
@@ -394,5 +397,30 @@ public class SearchUserSCIControllerTest {
 	// }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	//
 	// }
+	/**
+	 * <pre>
+	 * deviceId, 구매일시로 최근 회원정보(탈퇴포함) 조회.
+	 * </pre>
+	 */
+	@Test
+	public void testSearchOrderUserByDeviceId() {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchOrderUserByDeviceId").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchOrderUserByDeviceIdSacReq req = new SearchOrderUserByDeviceIdSacReq();
+						req.setDeviceId("01048088874");
+						req.setOrderDt("20140324160000");
+						return req;
+					}
+				}).success(SearchOrderUserByDeviceIdSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchOrderUserByDeviceIdSacRes res = (SearchOrderUserByDeviceIdSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
 
 }

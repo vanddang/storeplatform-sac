@@ -19,6 +19,8 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
@@ -168,16 +170,16 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		// OCB이용약관 동의여부 searchOneId
 		String ocbAgreementYn = "N";
-		//		try {
-		//			ocbAgreementYn = StringUtil.setTrimYn(detailRes.getUserInfo().getIsMemberPoint());
-		//		} catch (StorePlatformException ex) {
-		//			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-		//				ocbAgreementYn = "N";
-		//			} else if (ex.getErrorInfo().getCode().equals(MemberConstants.SAC_ERROR_NO_ONEID)) {
-		//				ocbAgreementYn = "N";
-		//			}
-		//			LOGGER.debug("====== OneId Response : {}", ex.getCode());
-		//		}
+		// try {
+		// ocbAgreementYn = StringUtil.setTrimYn(detailRes.getUserInfo().getIsMemberPoint());
+		// } catch (StorePlatformException ex) {
+		// if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+		// ocbAgreementYn = "N";
+		// } else if (ex.getErrorInfo().getCode().equals(MemberConstants.SAC_ERROR_NO_ONEID)) {
+		// ocbAgreementYn = "N";
+		// }
+		// LOGGER.debug("====== OneId Response : {}", ex.getCode());
+		// }
 		if (StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())
 				&& this.searchUserSCIService.isOcbJoinIDP(detailRes.getUserInfo().getImSvcNo())) {
 			ocbAgreementYn = "Y";
@@ -251,7 +253,8 @@ public class SearchUserSCIController implements SearchUserSCI {
 		// SearchUserDeviceReq searchUserDeviceReq = new SearchUserDeviceReq();
 		// searchUserDeviceReq.setSearchUserDeviceReqList(schUserDeviceList);
 
-		Map<String, UserDeviceInfoSac> userInfoMap = this.searchUserSCIService.srhUserByDeviceKey(requestHeader, request);
+		Map<String, UserDeviceInfoSac> userInfoMap = this.searchUserSCIService.srhUserByDeviceKey(requestHeader,
+				request);
 
 		// Map<String, UserDeviceInfoSac> resMap = new HashMap<String, UserDeviceInfoSac>();
 		// UserDeviceInfoSac userDeviceInfoSac;
@@ -298,4 +301,32 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 		return searchUserDeviceSacRes;
 	}
+
+	/**
+	 * <pre>
+	 * deviceId, orderDt 이용하여 최근 회원정보(탈퇴포함) 조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            SearchOrderUserByDeviceIdSacReq
+	 * @return SearchOrderUserByDeviceIdSacRes
+	 */
+	@Override
+	@RequestMapping(value = "/searchOrderUserByDeviceId", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceId(
+			@RequestBody @Validated SearchOrderUserByDeviceIdSacReq request) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+
+		SearchOrderUserByDeviceIdSacRes response = this.searchUserSCIService.searchOrderUserByDeviceId(requestHeader,
+				request);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
+
+		return response;
+	}
+
 }
