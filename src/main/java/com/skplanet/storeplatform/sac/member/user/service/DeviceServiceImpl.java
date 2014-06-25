@@ -720,7 +720,6 @@ public class DeviceServiceImpl implements DeviceService {
 	public String modDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, DeviceInfo dbDeviceInfo, String version) {
 
 		String gameCenterYn = null;
-		String oDeviceId = deviceInfo.getoDeviceId(); // request 자번호(OPMD단말여부는 자번호로 한다. OPMD단말인경우 IMEI 체크는 하지 않는다.)
 		String oDeviceTelecom = deviceInfo.getDeviceTelecom(); // request 통신사 코드
 		StringBuffer deviceInfoChangeLog = new StringBuffer();
 
@@ -845,11 +844,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 				if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, oDeviceTelecom)) {
 
-					// OPMD 여부
-					boolean isOpmd = StringUtils.substring(oDeviceId, 0, 3).equals("989");
-					if (isOpmd)
-						LOGGER.info("{} OPMD 단말로 IMEI 미체크, 자번호: {}", deviceInfo.getDeviceId(), oDeviceId);
-					if (!StringUtils.equals(nativeId, dbDeviceInfo.getNativeId()) && !isOpmd) {
+					if (!StringUtils.equals(nativeId, dbDeviceInfo.getNativeId())) {
 						/* ICAS IMEI 비교 */
 						if (StringUtils.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
 
@@ -891,18 +886,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 				if (StringUtils.equals(oDeviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
-					// OPMD 여부
-					boolean isOpmd = StringUtils.substring(oDeviceId, 0, 3).equals("989");
-					if (isOpmd)
-						LOGGER.info("{} OPMD 단말로 IMEI 미체크, 자번호: {}", deviceInfo.getDeviceId(), oDeviceId);
-					if (!isOpmd) {
-						/* ICAS IMEI 비교 */
-						if (StringUtils.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
-							deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->").append(nativeId);
-							userMbrDevice.setNativeID(nativeId);
-						} else {
-							throw new StorePlatformException("SAC_MEM_1503");
-						}
+					/* ICAS IMEI 비교 */
+					if (StringUtils.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
+						deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->").append(nativeId);
+						userMbrDevice.setNativeID(nativeId);
+					} else {
+						throw new StorePlatformException("SAC_MEM_1503");
 					}
 
 				} else { // 타사는 IMEI가 다르면 에러
@@ -916,18 +905,13 @@ public class DeviceServiceImpl implements DeviceService {
 				if (StringUtils.isNotBlank(nativeId)) {
 
 					if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, oDeviceTelecom)) {
-						// OPMD 여부
-						boolean isOpmd = StringUtils.substring(oDeviceId, 0, 3).equals("989");
-						if (isOpmd)
-							LOGGER.info("{} OPMD 단말로 IMEI 미체크, 자번호: {}", deviceInfo.getDeviceId(), oDeviceId);
-						if (!isOpmd) {
-							/* ICAS IMEI 비교 */
-							if (StringUtils.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
-								deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->").append(nativeId);
-								userMbrDevice.setNativeID(nativeId);
-							} else {
-								throw new StorePlatformException("SAC_MEM_1503");
-							}
+
+						/* ICAS IMEI 비교 */
+						if (StringUtils.equals(nativeId, this.getIcasImei(deviceInfo.getDeviceId()))) {
+							deviceInfoChangeLog.append("[nativeId]").append(dbDeviceInfo.getNativeId()).append("->").append(nativeId);
+							userMbrDevice.setNativeID(nativeId);
+						} else {
+							throw new StorePlatformException("SAC_MEM_1503");
 						}
 
 					} else {
