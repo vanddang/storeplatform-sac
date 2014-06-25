@@ -66,6 +66,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreement
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 /**
@@ -451,7 +452,15 @@ public class UserModifyServiceImpl implements UserModifyService {
 						updateUserNameEcReq.setUserCi(req.getUserCi());
 						updateUserNameEcReq.setUserDi(req.getUserDi());
 						updateUserNameEcReq.setRnameAuthDate(req.getRealNameDate());
-						this.imIdpSCI.updateUserName(updateUserNameEcReq);
+
+						try {
+							this.imIdpSCI.updateUserName(updateUserNameEcReq);
+						} catch (StorePlatformException ex) {
+							if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+									+ ImIdpConstants.IDP_RES_CODE_PROCESS_NOT_PERMISSION)) {
+								throw ex;
+							}
+						}
 
 						/**
 						 * OneID 실명인증 정보 업데이트.
