@@ -199,7 +199,9 @@
     		        , FM.DRM_USE_PERIOD
     		        , FM.DWLD_DRM_YN
     		        , FM.EXPO_ORD
-    		        , FM.ICON_CLSF_CD
+                    ,(CASE WHEN FM.ICON_CLSF_CD='DP006701' THEN 'new' 
+                           WHEN FM.ICON_CLSF_CD='DP006702' THEN 'closing'  
+                      END) AS ICON_CLSF_CD       		        
     		        , FM.SETT_RATE
     		        , FM.STD_PRICE
     		        , FM.STRM_DRM_YN
