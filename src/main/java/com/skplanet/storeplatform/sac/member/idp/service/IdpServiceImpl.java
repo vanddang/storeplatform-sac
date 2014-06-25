@@ -1884,7 +1884,6 @@ public class IdpServiceImpl implements IdpService {
 		imResult.setResult(idpResult);
 		imResult.setResultText(idpResultText);
 		imResult.setImIntSvcNo(imIntSvcNo);
-		imResult.setImIntSvcNo(userId);
 
 		return imResult;
 	}
