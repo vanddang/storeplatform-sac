@@ -129,6 +129,19 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
+	 * OPMD단말여부 확인.
+	 * </pre>
+	 * 
+	 * @param msisdn
+	 *            String
+	 * @return boolean
+	 */
+	public boolean isOpmd(String msisdn) {
+		return StringUtils.substring(msisdn, 0, 3).equals("989") ? true : false;
+	}
+
+	/**
+	 * <pre>
 	 * SKT 이용정지회원 여부 조회.
 	 * </pre>
 	 * 
