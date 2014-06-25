@@ -238,9 +238,9 @@ public class FreepassServiceImpl implements FreepassService {
 
 			// 구매 여부 조회
 			if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
-				//공통 메서드로 변경 20140424
-				boolean purchaseYn = displayCommonService.checkPurchase(
-						req.getTenantId(), req.getUserKey(), req.getDeviceKey(), req.getProductId());
+				// 공통 메서드로 변경 20140424
+				boolean purchaseYn = this.displayCommonService.checkPurchase(req.getTenantId(), req.getUserKey(),
+						req.getDeviceKey(), req.getProductId());
 
 				// 구매가 있을 경우 : 판매중지,판매중,팬매종료는 노출함
 				if (!purchaseYn) {
@@ -309,6 +309,7 @@ public class FreepassServiceImpl implements FreepassService {
 					} else
 						product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
 				}
+				product.setStatus(prodMap.getIconClsfCd());
 				productList.add(product);
 
 			}
@@ -513,7 +514,6 @@ public class FreepassServiceImpl implements FreepassService {
 			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 			req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
-
 
 			// 시작점 ROW Default 세팅
 			if (req.getOffset() == 0) {
