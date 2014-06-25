@@ -145,7 +145,7 @@ public class LoginServiceImpl implements LoginService {
 		String oDeviceId = req.getDeviceId();
 
 		/* 모번호 조회 및 셋팅 */
-		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
+		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
 
 		/* 회원정보 조회 */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
@@ -248,7 +248,7 @@ public class LoginServiceImpl implements LoginService {
 		String oDeviceId = req.getDeviceId();
 
 		/* 모번호 조회 */
-		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
+		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
 
 		/* 회원정보 조회 */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
@@ -386,38 +386,62 @@ public class LoginServiceImpl implements LoginService {
 	public CheckVariabilityRes checkVariability(SacRequestHeader requestHeader, CheckVariabilityReq req) {
 
 		CheckVariabilityRes res = new CheckVariabilityRes();
+		String oDeviceId = req.getDeviceId(); // 자번호
+		boolean isOpmd = this.commService.isOpmd(oDeviceId);
+		String isVariability = "Y"; // 변동성 체크 성공 유무
+		String isSaveAndSyncTarget = "N"; // 변동성 mdn 유무
+		String userKey = null;
+		String deviceKey = null;
+		String telecomUpdateYn = "N";
+		String gmailupdateYn = "N";
 
-		/* 모번호 조회 */
-		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
+		/* 모번호 조회 및 셋팅 */
+		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
 
 		/* mdn 회원유무 조회 */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
-		String isVariability = "Y"; // 변동성 체크 성공 유무
-		String isSaveAndSyncTarget = "N"; // 변동성 mdn 유무
-		String userKey = null;
-
-		String telecomUpdateYn = "N";
-		String gmailupdateYn = "N";
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
 
-			/* 휴대기기 정보 조회 */
-			DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
+			if (!isOpmd) { // OPMD단말인경우 변동성 체크를 하지 않는다.
+				/* 휴대기기 정보 조회 */
+				DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), null);
 
-			userKey = deviceInfo.getUserKey();
+				userKey = deviceInfo.getUserKey();
+				deviceKey = deviceInfo.getDeviceKey();
 
-			if (StringUtils.isBlank(deviceInfo.getDeviceTelecom())) {
-				telecomUpdateYn = "Y";
-				LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), "null", req.getDeviceTelecom());
-			}
+				if (StringUtils.isBlank(deviceInfo.getDeviceTelecom())) {
+					telecomUpdateYn = "Y";
+					LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), "null", req.getDeviceTelecom());
+				}
 
-			/* 통산사가 일치한 경우 IMEI와 GMAIL이 다르면 변동성 체크 실패 */
-			if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(), deviceInfo.getDeviceTelecom(),
-					MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
+				/* 통산사가 일치한 경우 IMEI와 GMAIL이 다르면 변동성 체크 실패 */
+				if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(), deviceInfo.getDeviceTelecom(),
+						MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
 
-				if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getNativeId(), deviceInfo.getNativeId(),
-						MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
+					if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getNativeId(), deviceInfo.getNativeId(),
+							MemberConstants.LOGIN_DEVICE_EQUALS_NATIVE_ID)) {
 
+						if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(), deviceInfo.getDeviceAccount(),
+								MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
+
+							isVariability = "N";
+
+						}
+
+					} else { // nativeID가 같은경우
+
+						if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
+							LOGGER.info("{} GMAIL 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceAccount(), req.getDeviceAccount());
+							gmailupdateYn = "Y";
+						}
+
+					}
+
+				} else { /* 통신사가 다른경우 GMAIL이 다르면 변동성 체크 실패 */
+
+					telecomUpdateYn = "Y";
+					LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceTelecom(), req.getDeviceTelecom());
 					if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(), deviceInfo.getDeviceAccount(),
 							MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
 
@@ -425,28 +449,10 @@ public class LoginServiceImpl implements LoginService {
 
 					}
 
-				} else { // nativeID가 같은경우
-
-					if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
-						LOGGER.info("{} GMAIL 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceAccount(), req.getDeviceAccount());
-						gmailupdateYn = "Y";
-					}
-
 				}
-
-			} else { /* 통신사가 다른경우 GMAIL이 다르면 변동성 체크 실패 */
-
-				telecomUpdateYn = "Y";
-				LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceTelecom(), req.getDeviceTelecom());
-				if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(), deviceInfo.getDeviceAccount(),
-						MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
-
-					isVariability = "N";
-
-				}
-
+			} else {
+				LOGGER.info("{} {} OPMD 단말 변동성 성공처리", req.getDeviceId(), oDeviceId);
 			}
-
 		} else {
 
 			/* 변동성 여부 조회 */
@@ -465,21 +471,25 @@ public class LoginServiceImpl implements LoginService {
 
 		if (StringUtils.equals(isVariability, "Y")) {
 
-			LOGGER.info("{} 변동성 체크 성공", req.getDeviceId());
+			if (!isOpmd) { // OPMD 단말인경우 휴대기기 정보 업데이트를 하지 않는다.
+				LOGGER.info("{} 변동성 체크 성공", req.getDeviceId());
 
-			/* 휴대기기 정보 수정 (통신사, GMAIL) */
-			DeviceInfo paramDeviceInfo = new DeviceInfo();
-			paramDeviceInfo.setUserKey(userKey);
-			paramDeviceInfo.setDeviceId(req.getDeviceId());
-			if (StringUtils.equals(telecomUpdateYn, "Y")) {
-				paramDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-			}
-			if (StringUtils.equals(gmailupdateYn, "Y")) {
-				paramDeviceInfo.setDeviceAccount(req.getDeviceAccount());
-			}
+				/* 휴대기기 정보 수정 (통신사, GMAIL) */
+				DeviceInfo paramDeviceInfo = new DeviceInfo();
+				paramDeviceInfo.setUserKey(userKey);
+				paramDeviceInfo.setDeviceId(req.getDeviceId());
+				if (StringUtils.equals(telecomUpdateYn, "Y")) {
+					paramDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+				}
+				if (StringUtils.equals(gmailupdateYn, "Y")) {
+					paramDeviceInfo.setDeviceAccount(req.getDeviceAccount());
+				}
 
-			String deviceKey = this.deviceService.modDeviceInfo(requestHeader, paramDeviceInfo, false);
-			res.setDeviceKey(deviceKey);
+				deviceKey = this.deviceService.modDeviceInfo(requestHeader, paramDeviceInfo, false);
+				res.setDeviceKey(deviceKey);
+			} else {
+				res.setDeviceKey(deviceKey);
+			}
 			res.setUserKey(userKey);
 
 		} else {
@@ -557,13 +567,8 @@ public class LoginServiceImpl implements LoginService {
 
 		} else if (chkDupRes.getMbrOneID() != null) {
 
-			if (chkDupRes.getUserMbr() == null || StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) { // 회원
-																																						// 정보가
-																																						// 없거나
-																																						// 회원메인상태가
-																																						// 가가입이면
-																																						// 가가입정보를
-																																						// 내려줌
+			// 회원정보가 없거나 회원메인상태가 가가입이면 가가입정보를 내려줌
+			if (chkDupRes.getUserMbr() == null || StringUtils.equals(chkDupRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_WATING)) {
 
 				try {
 
@@ -578,68 +583,14 @@ public class LoginServiceImpl implements LoginService {
 						LOGGER.info("SC_INVALID_USER authorizeById userId : {}", userId);
 						throw new StorePlatformException("SAC_MEM_1200"); // 원아이디 이용동의 간편가입 대상 정보가 상이합니다.
 
-					} else if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) { // 가가입
-																																				// 상태인
-																																				// 경우
-																																				// EC에서
-																																				// 성공으로
-																																				// 처리하여
-																																				// joinSstList
-																																				// 받는다.
+					} else if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
 
-						Map<String, String> mapSiteCd = new HashMap<String, String>();
-						mapSiteCd.put("10100", "네이트");
-						mapSiteCd.put("10200", "싸이월드");
-						mapSiteCd.put("20100", "11st");
-						mapSiteCd.put("30100", "멜론");
-						mapSiteCd.put("40100", "Planet X 개발자센터");
-						mapSiteCd.put("40300", "Smart Touch Platform");
-						mapSiteCd.put("41000", "IDP");
-						mapSiteCd.put("41100", "T store");
-						mapSiteCd.put("41200", "T cloud");
-						mapSiteCd.put("41300", "T map");
-						mapSiteCd.put("41400", "SimpleSync");
-						mapSiteCd.put("41500", "T-Ad");
-						mapSiteCd.put("41600", "T-MapHot");
-						mapSiteCd.put("41700", "J-Store");
-						mapSiteCd.put("41800", "Gold-In-City");
-						mapSiteCd.put("41900", "T-MapNavi");
-						mapSiteCd.put("42100", "OK Cashbag");
-						mapSiteCd.put("42200", "기프티콘");
-						mapSiteCd.put("45000", "Landing Page");
-						mapSiteCd.put("50000", "NAP");
-						mapSiteCd.put("50100", "상생혁신센터");
-						mapSiteCd.put("80100", "BSS");
-						mapSiteCd.put("80200", "ISF");
-						mapSiteCd.put("80300", "BoSS VOC");
-						mapSiteCd.put("90000", "One ID");
-						mapSiteCd.put("90100", "Admin");
-						mapSiteCd.put("90200", "OAuth");
-						mapSiteCd.put("90300", "One ID 사이트");
-						mapSiteCd.put("90400", "mOTP");
-
-						// 가가입 상태 - 가입신청 사이트 정보
-						String joinSst = authForIdEcRes.getJoinSstList();
-						String joinSstCd = null;
-						String joinSstNm = null;
-
-						for (Entry<String, String> entry : mapSiteCd.entrySet()) {
-							if (StringUtils.contains(joinSst, entry.getKey())) {
-								joinSstCd = entry.getKey();
-								joinSstNm = entry.getValue();
-								break;
-							}
-						}
-						LOGGER.info("{} invalid user site info : {}, {}, {}", userId, joinSst, joinSstCd, joinSstNm);
-
-						if (StringUtils.isBlank(joinSstCd)) {
-							joinSstCd = "90000"; // One ID
-							joinSstNm = mapSiteCd.get(joinSstCd);
-						}
+						// 가가입상태인 경우 EC에서 성공으로 처리하여 joinSstList 받는다.
+						HashMap<String, String> invalidSiteInfo = this.getInvalidSiteInfo(userId, authForIdEcRes.getJoinSstList());
 
 						/* 로그인 결과 */
-						res.setJoinSiteCd(joinSstCd);
-						res.setJoinSiteNm(joinSstNm);
+						res.setJoinSiteCd(invalidSiteInfo.get("joinSstCd"));
+						res.setJoinSiteNm(invalidSiteInfo.get("joinSstNm"));
 						res.setIsLoginSuccess("Y");
 						return res;
 
@@ -714,8 +665,17 @@ public class LoginServiceImpl implements LoginService {
 
 				} else if (StringUtils.equals(authForIdEcRes.getCommonRes().getResult(), ImIdpConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
 
+					//throw new StorePlatformException("SAC_MEM_1202"); // 원아이디 회원상태정보가 상이합니다.
+
 					LOGGER.info("IDP_INVALID_USER authorizeById userId : {}, {}", userId);
-					throw new StorePlatformException("SAC_MEM_1202"); // 원아이디 회원상태정보가 상이합니다.
+
+					HashMap<String, String> invalidSiteInfo = this.getInvalidSiteInfo(userId, authForIdEcRes.getJoinSstList());
+
+					/* 로그인 결과 */
+					res.setJoinSiteCd(invalidSiteInfo.get("joinSstCd"));
+					res.setJoinSiteNm(invalidSiteInfo.get("joinSstNm"));
+					res.setIsLoginSuccess("Y");
+					return res;
 
 				}
 
@@ -1540,32 +1500,16 @@ public class LoginServiceImpl implements LoginService {
 	private String modDeviceInfoForLogin(SacRequestHeader requestHeader, String userKey, Object obj, String oDeviceId, DeviceInfo dbDeviceInfo,
 			String version) {
 
-		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setUserKey(userKey);
+		if (!this.commService.isOpmd(oDeviceId)) { // OPMD 단말이 아닌경우만 휴대기기정보 수정
+			DeviceInfo deviceInfo = new DeviceInfo();
+			deviceInfo.setUserKey(userKey);
 
-		if (obj instanceof AuthorizeByMdnReq) { // mdn인증
+			if (obj instanceof AuthorizeByMdnReq) { // mdn인증
 
-			AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-			req = (AuthorizeByMdnReq) obj;
-
-			deviceInfo.setDeviceId(req.getDeviceId()); // MDN
-			deviceInfo.setoDeviceId(oDeviceId); // 자번호
-			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // MDN Type
-			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
-			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
-			deviceInfo.setNativeId(req.getNativeId()); // IMEI
-			deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth()); // IMEI 비교여부
-			deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
-
-		} else if (obj instanceof AuthorizeByIdReq) { // id인증
-
-			AuthorizeByIdReq req = new AuthorizeByIdReq();
-			req = (AuthorizeByIdReq) obj;
-
-			if (StringUtils.isNotBlank(req.getDeviceId())) { // deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 update 요청
+				AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+				req = (AuthorizeByMdnReq) obj;
 
 				deviceInfo.setDeviceId(req.getDeviceId()); // MDN
-				deviceInfo.setoDeviceId(oDeviceId); // 자번호
 				deviceInfo.setDeviceIdType(req.getDeviceIdType()); // MDN Type
 				deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
 				deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
@@ -1573,10 +1517,97 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth()); // IMEI 비교여부
 				deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
 
+			} else if (obj instanceof AuthorizeByIdReq) { // id인증
+
+				AuthorizeByIdReq req = new AuthorizeByIdReq();
+				req = (AuthorizeByIdReq) obj;
+
+				if (StringUtils.isNotBlank(req.getDeviceId())) { // deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 update 요청
+
+					deviceInfo.setDeviceId(req.getDeviceId()); // MDN
+					deviceInfo.setDeviceIdType(req.getDeviceIdType()); // MDN Type
+					deviceInfo.setDeviceAccount(req.getDeviceAccount()); // GMAIL
+					deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 통신사
+					deviceInfo.setNativeId(req.getNativeId()); // IMEI
+					deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth()); // IMEI 비교여부
+					deviceInfo.setDeviceExtraInfoList(req.getDeviceExtraInfoList()); // 휴대기기 부가속성 정보
+
+				}
+
 			}
 
+			return this.deviceService.modDeviceInfoForLogin(requestHeader, deviceInfo, dbDeviceInfo, version);
+
+		} else {
+			LOGGER.info("{} {} OPMD 단말로 휴대기기 업데이트 하지 않음", dbDeviceInfo.getDeviceId(), oDeviceId);
+			return dbDeviceInfo.getDeviceKey();
 		}
 
-		return this.deviceService.modDeviceInfoForLogin(requestHeader, deviceInfo, dbDeviceInfo, version);
+	}
+
+	/**
+	 * <pre>
+	 * 가가입한 원아이디 사이트 정보 조회.
+	 * </pre>
+	 * 
+	 * @param userId
+	 *            String
+	 * @param joinSstList
+	 *            String
+	 * @return HashMap<String, String>
+	 */
+	private HashMap<String, String> getInvalidSiteInfo(String userId, String joinSstList) {
+
+		HashMap<String, String> invalidSiteInfo = new HashMap<String, String>();
+
+		Map<String, String> mapSiteCd = new HashMap<String, String>();
+		mapSiteCd.put("10100", "네이트");
+		mapSiteCd.put("10200", "싸이월드");
+		mapSiteCd.put("20100", "11st");
+		mapSiteCd.put("30100", "멜론");
+		mapSiteCd.put("40100", "Planet X 개발자센터");
+		mapSiteCd.put("40300", "Smart Touch Platform");
+		mapSiteCd.put("41000", "IDP");
+		mapSiteCd.put("41100", "T store");
+		mapSiteCd.put("41200", "T cloud");
+		mapSiteCd.put("41300", "T map");
+		mapSiteCd.put("41400", "SimpleSync");
+		mapSiteCd.put("41500", "T-Ad");
+		mapSiteCd.put("41600", "T-MapHot");
+		mapSiteCd.put("41700", "J-Store");
+		mapSiteCd.put("41800", "Gold-In-City");
+		mapSiteCd.put("41900", "T-MapNavi");
+		mapSiteCd.put("42100", "OK Cashbag");
+		mapSiteCd.put("42200", "기프티콘");
+		mapSiteCd.put("45000", "Landing Page");
+		mapSiteCd.put("50000", "NAP");
+		mapSiteCd.put("50100", "상생혁신센터");
+		mapSiteCd.put("80100", "BSS");
+		mapSiteCd.put("80200", "ISF");
+		mapSiteCd.put("80300", "BoSS VOC");
+		mapSiteCd.put("90000", "One ID");
+		mapSiteCd.put("90100", "Admin");
+		mapSiteCd.put("90200", "OAuth");
+		mapSiteCd.put("90300", "One ID 사이트");
+		mapSiteCd.put("90400", "mOTP");
+
+		// 가가입 상태 - 가입신청 사이트 정보
+		for (Entry<String, String> entry : mapSiteCd.entrySet()) {
+			if (StringUtils.contains(joinSstList, entry.getKey())) {
+				invalidSiteInfo.put("joinSstCd", entry.getKey());
+				invalidSiteInfo.put("joinSstNm", entry.getValue());
+				break;
+			}
+		}
+
+		if (StringUtils.isBlank(invalidSiteInfo.get("joinSstCd"))) {
+			invalidSiteInfo.put("joinSstCd", "90000"); // One ID
+			invalidSiteInfo.put("joinSstNm", mapSiteCd.get("90000"));
+		}
+
+		LOGGER.info("{} invalid user site info : {}, {}, {}", userId, joinSstList, invalidSiteInfo.get("joinSstCd"), invalidSiteInfo.get("joinSstNm"));
+
+		return invalidSiteInfo;
+
 	}
 }
