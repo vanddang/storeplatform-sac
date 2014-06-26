@@ -34,6 +34,8 @@ import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateBizPurchaseSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateFreePurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
@@ -234,6 +236,38 @@ public class PurchaseOrderController {
 		res.setCount(count);
 
 		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,RES,{}",
+				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
+		return res;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * IAP 구매/결제 통합 구매이력 생성 요청.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            구매/결제 통합 구매이력 생성 요청 정보
+	 * @return 구매/결제 통합 구매이력 생성 결과
+	 */
+	@RequestMapping(value = "/createComplete/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateCompletePurchaseSacRes createCompletePurchase(
+			@RequestBody @Validated CreateCompletePurchaseSacReq req, SacRequestHeader sacRequestHeader) {
+		this.logger.info("PRCHS,ORDER,SAC,CREATECOMPLETE,REQ,{},{}",
+				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
+
+		// IAP 구매/결제 통합 구매이력 생성 요청 권한 체크
+		// this.validationService.validateCompleteAuth(req.getPrchsReqPathCd());
+
+		// IAP 구매/결제 통합 구매이력 생성 처리
+		String prchsId = this.orderService.completeIapPurchase(req);
+
+		// 응답 세팅
+		CreateCompletePurchaseSacRes res = new CreateCompletePurchaseSacRes();
+		res.setPrchsId(prchsId);
+
+		this.logger.info("PRCHS,ORDER,SAC,CREATECOMPLETE,RES,{}",
 				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		return res;
 	}

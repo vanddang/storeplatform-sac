@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 import java.util.List;
 
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
@@ -73,4 +74,15 @@ public interface PurchaseOrderService {
 	 */
 	public List<PrchsDtlMore> confirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId);
 
+	/**
+	 * 
+	 * <pre>
+	 * IAP 구매/결제 통합 구매이력 생성 요청.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            구매/결제 통합 구매이력 생성 요청 VO
+	 * @return 생성된 구매ID
+	 */
+	public String completeIapPurchase(CreateCompletePurchaseSacReq req);
 }
