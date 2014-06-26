@@ -489,6 +489,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setDeviceKey(deviceKey);
 			} else {
 				res.setDeviceKey(deviceKey);
+				LOGGER.info("{} {} OPMD 단말 변동성 휴대기기 업데이트 안함", req.getDeviceId(), oDeviceId);
 			}
 			res.setUserKey(userKey);
 
