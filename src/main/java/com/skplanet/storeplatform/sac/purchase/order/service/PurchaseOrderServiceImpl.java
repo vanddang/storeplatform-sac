@@ -1106,6 +1106,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		prchsDtlMore.setRegId(purchase.getRegId());
 		prchsDtlMore.setUpdId(purchase.getUpdId());
 		prchsDtlMore.setAlarmYn(PurchaseConstants.USE_N);
+		prchsDtlMore.setContentsType(iapInfo.getProdKind());
 
 		List<PrchsDtlMore> prchsDtlMoreList = new ArrayList<PrchsDtlMore>();
 		prchsDtlMoreList.add(prchsDtlMore);
