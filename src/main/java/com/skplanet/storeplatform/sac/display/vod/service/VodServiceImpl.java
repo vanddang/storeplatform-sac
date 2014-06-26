@@ -777,7 +777,7 @@ public class VodServiceImpl implements VodService {
 
 				subProduct.setIdentifierList(identifierList);
 
-				subProduct.setTitle(new Title(mapperVO.getProdNm()));
+				subProduct.setTitle(this.mapTitle(mapperVO));
 
 				// 상품 설명
 				subProduct.setProductExplain(mapperVO.getProdBaseDesc());
