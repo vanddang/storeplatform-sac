@@ -129,9 +129,11 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 					purchaseCancelDetailSacResult.setResultMsg(errorInfo.getMessage());
 				}
 
-			} catch (Exception e) {
+				this.logger.info("SAC_PUR_XXXX code : {}", purchaseCancelDetailSacResult.getResultCd() + ", msg : "
+						+ purchaseCancelDetailSacResult.getResultMsg());
+				this.logger.info("purchaseCancelDetailSacParam data : {}", purchaseCancelDetailSacParam);
 
-				this.logger.info("SAC_PUR_8999 : {}", e);
+			} catch (Exception e) {
 
 				purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
 				purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
@@ -139,6 +141,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 				purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_8999")
 						+ "cause : " + e);
+
+				this.logger.info("SAC_PUR_8999 : code : {}", purchaseCancelDetailSacResult.getResultCd() + ", msg : "
+						+ purchaseCancelDetailSacResult.getResultMsg());
+				this.logger.info("purchaseCancelDetailSacParam data : {}", purchaseCancelDetailSacParam);
 
 			}
 
@@ -510,6 +516,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 					.updateReservation(autoPaymentCancelScReq);
 
 			if (!StringUtils.equals("Y", autoPaymentCancelScRes.getResultYn())) {
+				this.logger.info("AutoPaymentCancelScReq data : {}", autoPaymentCancelScReq);
+				this.logger.info("AutoPaymentCancelScRes data : {}", autoPaymentCancelScRes);
 				throw new StorePlatformException("SAC_PUR_8112");
 			}
 		}
