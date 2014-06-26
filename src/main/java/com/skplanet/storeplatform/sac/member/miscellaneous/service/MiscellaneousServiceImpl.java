@@ -228,71 +228,87 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(SacRequestHeader sacRequestHeader,
 			GetPhoneAuthorizationCodeReq request) {
-		// 헤더는 controller 에서 SacRequestHeader 셋팅된걸 사용한다. (tennatId, systemId 사용시에만 선언)
 
-		String authCode = "";
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
 		String messageText = "auth.message.";
 		String messageSender = "auth.message.sendNum.";
+		String authCode = "";
 
-		/* 휴대폰 인증 코드 생성 */
-		Random random = new Random();
-		authCode += random.nextInt(999999); // 0~999999 사이의 난수 발생
-		if (authCode.length() < 6) {
-			int loop = 6 - authCode.length();
-			for (int i = 0; i < loop; i++) { // 첫째자리수가 0으로 시작할 경우 "0"값을 앞에 추가.
-				authCode = "0" + authCode;
-			}
-		}
-		Object[] object = new Object[1];
-		object[0] = authCode;
-
-		if (tenantId.equals("S01")) { // 티스토어
-			messageText += "tstore";
-			messageSender += "tstore";
-		} else if (tenantId.equals("S00") && systemId.equals("S00-02001")) { // 개발자
-			messageText += "dev";
-			messageSender += "dev";
-		} else { // default
-			messageText += "default";
-			messageSender += "default";
-		}
-
-		messageText = this.messageSourceAccessor.getMessage(messageText, object, LocaleContextHolder.getLocale());
-		messageSender = this.messageSourceAccessor.getMessage(messageSender, object, LocaleContextHolder.getLocale());
-		LOGGER.debug("## [SAC] messageText : {}, messageSender : {}", messageText, messageSender);
-
-		/* 인증 Signautre 생성 - guid 형식 */
-		String authSign = UUID.randomUUID().toString().replace("-", "");
-		LOGGER.debug("## [SAC] authSign : {}", authSign);
-
-		/* DB에 저장할 파라미터 셋팅 */
-		ServiceAuth serviceAuthInfo = new ServiceAuth();
-		serviceAuthInfo.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		serviceAuthInfo.setAuthTypeCd("CM010901");
-		serviceAuthInfo.setAuthSign(authSign);
-		serviceAuthInfo.setAuthValue(authCode);
-
-		this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
-
-		/* External Comp.에 SMS 발송 요청 */
-		SmsSendEcReq smsReq = new SmsSendEcReq();
-		smsReq.setSrcId(request.getSrcId());
-		smsReq.setSendMdn(messageSender);
-		smsReq.setRecvMdn(request.getRecvMdn());
-		smsReq.setTeleSvcId(request.getTeleSvcId());
-		smsReq.setMsg(messageText);
-		// 통신사정보 Optional
-		smsReq.setCarrier(StringUtils.defaultIfBlank(request.getCarrier(), null));
-
-		LOGGER.debug("[MiscellaneousService.getPhoneAuthorizationCode] SAC->SMS 발송 Request : {}", smsReq);
-		this.messageSCI.smsSend(smsReq);
+		// 3분 이내 동일한 MDN과 SystemID로 요청 여부 확인.
+		ServiceAuth confirmSendedSmsReq = new ServiceAuth();
+		confirmSendedSmsReq.setTenantId(tenantId);
+		confirmSendedSmsReq.setSystemId(systemId);
+		confirmSendedSmsReq.setAuthMdn(request.getRecvMdn());
+		confirmSendedSmsReq.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_SMS);
+		ServiceAuth confirmSendedSmsRes = this.commonDao.queryForObject("Miscellaneous.confirmSendedSms",
+				confirmSendedSmsReq, ServiceAuth.class);
 
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
 
-		response.setPhoneSign(authSign);
+		if (confirmSendedSmsRes != null && confirmSendedSmsRes.getAuthSeq() != null) { // 3분 이내 동일한 MDN과 SystemID로 요청.
+			response.setPhoneSign(confirmSendedSmsRes.getAuthSign());
+		} else {
 
+			/* 휴대폰 인증 코드 생성 */
+			Random random = new Random();
+			authCode += random.nextInt(999999); // 0~999999 사이의 난수 발생
+			if (authCode.length() < 6) {
+				int loop = 6 - authCode.length();
+				for (int i = 0; i < loop; i++) { // 첫째자리수가 0으로 시작할 경우 "0"값을 앞에 추가.
+					authCode = "0" + authCode;
+				}
+			}
+			Object[] object = new Object[1];
+			object[0] = authCode;
+
+			if (MemberConstants.TENANT_ID_TSTORE.equals(tenantId)) {
+				messageText += "tstore";
+				messageSender += "tstore";
+			} else if (MemberConstants.TENANT_ID_NON_SPECIFIC.equals(tenantId)
+					&& MemberConstants.SYSTEM_ID_DEV_POC.equals(systemId)) {
+				messageText += "dev";
+				messageSender += "dev";
+			} else { // default
+				messageText += "default";
+				messageSender += "default";
+			}
+
+			messageText = this.messageSourceAccessor.getMessage(messageText, object, LocaleContextHolder.getLocale());
+			messageSender = this.messageSourceAccessor.getMessage(messageSender, object,
+					LocaleContextHolder.getLocale());
+			LOGGER.debug("## [SAC] messageText : {}, messageSender : {}", messageText, messageSender);
+
+			/* 인증 Signautre 생성 - guid 형식 */
+			String authSign = UUID.randomUUID().toString().replace("-", "");
+			LOGGER.debug("## [SAC] authSign : {}", authSign);
+
+			/* DB에 저장할 파라미터 셋팅 */
+			ServiceAuth serviceAuthInfo = new ServiceAuth();
+			serviceAuthInfo.setTenantId(tenantId);
+			serviceAuthInfo.setSystemId(systemId); // 6/26 TB_CM_SVC_AUTH 신규 컬럼.
+			serviceAuthInfo.setAuthMdn(request.getRecvMdn()); // 6/26 TB_CM_SVC_AUTH 신규 컬럼.
+			serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_SMS);
+			serviceAuthInfo.setAuthSign(authSign);
+			serviceAuthInfo.setAuthValue(authCode);
+
+			this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
+
+			/* External Comp.에 SMS 발송 요청 */
+			SmsSendEcReq smsReq = new SmsSendEcReq();
+			smsReq.setSrcId(request.getSrcId());
+			smsReq.setSendMdn(messageSender);
+			smsReq.setRecvMdn(request.getRecvMdn());
+			smsReq.setTeleSvcId(request.getTeleSvcId());
+			smsReq.setMsg(messageText);
+			// 통신사정보 Optional
+			smsReq.setCarrier(StringUtils.defaultIfBlank(request.getCarrier(), null));
+
+			LOGGER.debug("[MiscellaneousService.getPhoneAuthorizationCode] SAC->SMS 발송 Request : {}", smsReq);
+			this.messageSCI.smsSend(smsReq);
+
+			response.setPhoneSign(authSign);
+		}
 		LOGGER.debug("## Response : {}", response);
 		return response;
 	}
@@ -316,7 +332,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/* DB에 저장할 파라미터 셋팅 */
 		ServiceAuth serviceAuthInfo = new ServiceAuth();
-		serviceAuthInfo.setAuthTypeCd("CM010901");
+		serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_SMS);
 		serviceAuthInfo.setAuthSign(authSign);
 		serviceAuthInfo.setAuthValue(authCode);
 		serviceAuthInfo.setTimeToLive(request.getTimeToLive());
@@ -430,6 +446,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			GetEmailAuthorizationCodeReq request) {
 
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
+		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
+
 		ServiceAuth serviceAuthReq = new ServiceAuth();
 		serviceAuthReq.setAuthEmail(request.getUserEmail());
 		serviceAuthReq.setMbrNo(request.getUserKey());
@@ -449,8 +467,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		if (authYnInfo == null) {
 			serviceAuthInfo.setTenantId(tenantId);
+			serviceAuthInfo.setSystemId(systemId);
 			serviceAuthInfo.setMbrNo(request.getUserKey());
-			serviceAuthInfo.setAuthTypeCd("CM010902");
+			serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_EMAIL);
 			serviceAuthInfo.setAuthSign("EmailAuthorization"); // 의미 없음. DB에 AUTH_SIGN 이 "NOT NULL"로 정의되어있음.
 
 			this.commonDao.insert("Miscellaneous.createServiceAuthCode", serviceAuthInfo);
@@ -487,6 +506,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		ServiceAuth serviceAuthReq = new ServiceAuth();
 		serviceAuthReq.setAuthValue(authValue);
 		serviceAuthReq.setTimeToLive(timeToLive);
+		serviceAuthReq.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_EMAIL);
 		ServiceAuth serviceAuthInfo = this.commonDao.queryForObject("Miscellaneous.searchEmailAuthInfo",
 				serviceAuthReq, ServiceAuth.class);
 

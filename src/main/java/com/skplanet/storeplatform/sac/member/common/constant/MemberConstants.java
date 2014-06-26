@@ -5,6 +5,11 @@ package com.skplanet.storeplatform.sac.member.common.constant;
  * 
  * Updated on : 2014. 1. 9. Updated by : 김경복, 부르칸.
  */
+/**
+ * Calss 설명
+ * 
+ * Updated on : 2014. 6. 26. Updated by : 김다슬, 인크로스.
+ */
 public final class MemberConstants {
 
 	/** 사용 여부 Y N. **/
@@ -256,6 +261,19 @@ public final class MemberConstants {
 	public static final String MDN_CARRIER_DEVICE_TELECOM_SKT = "SKT"; // SKT
 	public static final String MDN_CARRIER_DEVICE_TELECOM_KTF = "KTF"; // KTF
 	public static final String MDN_CARRIER_DEVICE_TELECOM_LGT = "LGT"; // LGT
+
+	/** Non-specific TenantID */
+	public static final String TENANT_ID_NON_SPECIFIC = "S00";
+	/** T store TenantID */
+	public static final String TENANT_ID_TSTORE = "S01";
+
+	/** 개발자센터 SystemID */
+	public static final String SYSTEM_ID_DEV_POC = "S00-02001";
+
+	/** SMS 인증 타입 코드 */
+	public static final String AUTH_TYPE_CD_SMS = "CM010901";
+	/** EMAIL 인증 타입 코드 */
+	public static final String AUTH_TYPE_CD_EMAIL = "CM010902";
 
 	/**
 	 * 판매자 회원 상수들.

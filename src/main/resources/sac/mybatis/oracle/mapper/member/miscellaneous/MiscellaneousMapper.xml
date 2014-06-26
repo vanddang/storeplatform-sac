@@ -2,17 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Miscellaneous">
 
-	<!-- UA 코드 정보 조회 -->
-	<select id="getUaCode" parameterType="String" resultType="String">
-		SELECT  /* MiscellaneousMapper.getUaCode, UA 코드 정보 조회, 김다슬/인크로스, 2014-01-09 */
-		        ua_cd
-		  FROM  tb_cm_device
-		 WHERE  device_model_cd = #{deviceModelNo}
-		   AND use_yn = 'Y'
-	</select>
-	
-	<!-- 휴대폰 SMS 인증 정보 확인 (인증 코드,Signature,만료시간)-->
-	<select id="searchPhoneAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
+    <!-- UA 코드 정보 조회 -->
+    <select id="getUaCode" parameterType="String" resultType="String">
+        SELECT  /* MiscellaneousMapper.getUaCode, UA 코드 정보 조회, 김다슬/인크로스, 2014-01-09 */
+                ua_cd
+          FROM  tb_cm_device
+         WHERE  device_model_cd = #{deviceModelNo}
+           AND use_yn = 'Y'
+    </select>
+    
+    <!-- 휴대폰 SMS 인증 정보 확인 (인증 코드,Signature,만료시간)-->
+    <select id="searchPhoneAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
        SELECT  /* MiscellaneousMapper.searchPhoneAuthInfo, 휴대폰 SMS 인증 정보 확인 (인증 코드,Signature,만료시간), 김다슬/인크로스, 2014-01-16 */
                auth_seq
              , auth_sign
@@ -27,8 +27,8 @@
           AND  auth_sign = #{authSign}
           AND  auth_value = #{authValue}
     </select>
-	
-	<!--  휴대폰 SMS 및 이메일 인증 여부 업데이트(인증성공) -->
+    
+    <!--  휴대폰 SMS 및 이메일 인증 여부 업데이트(인증성공) -->
     <update id="updateServiceAuthYn" parameterType="String">
     UPDATE  /* MiscellaneousMapper.updateServiceAuthYn, 휴대폰 SMS 및 이메일 인증 여부 업데이트(인증성공), 김다슬/인크로스, 2014-01-16 */
             tb_cm_svc_auth
@@ -49,6 +49,12 @@
       </if>
       <if test="tenantId !=null">
     , tenant_id
+      </if>
+      <if test="systemId !=null">
+    , system_id
+      </if>
+      <if test="authMdn !=null">
+    , auth_mdn  /* SMS 인증 대상 번호 */
       </if>
     , auth_type_cd  /* 인증 타입 (CM010901:SMS, CM010902:Email) */
       <if test="authSign !=null">
@@ -74,6 +80,12 @@
        <if test="tenantId !=null">
      , #{tenantId}
        </if>
+       <if test="systemId !=null">
+     , #{systemId}
+       </if>
+       <if test="authMdn !=null">
+     , #{authMdn}
+       </if>
      , #{authTypeCd}
        <if test="authSign !=null">
      , #{authSign}
@@ -91,6 +103,20 @@
      )
     </insert>
     
+    <!-- 휴대폰 인증 SMS 기발송 확인 -->
+    <select id="confirmSendedSms" parameterType="ServiceAuth" resultType="ServiceAuth">
+    SELECT  /* MiscellaneousMapper.confirmSendedSms, 휴대폰 인증 SMS 기발송 확인, 김다슬/인크로스, 2014-06-26 */ 
+            auth_seq
+          , auth_sign
+      FROM  tb_cm_svc_auth
+     WHERE  tenant_id = #{tenantId}
+       AND  system_id = #{systemId}
+       AND  auth_mdn = #{authMdn}
+       AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */ 
+       AND  auth_compt_yn = 'N'
+       AND  (SYSDATE - auth_value_create_dt) <![CDATA[<=]]> (3/24/60) /* 3분이내 */
+    </select>
+    
     <!-- 미인증 이메일 코드 존재여부 확인 -->
     <select id="searchEmailAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
     SELECT  /* MiscellaneousMapper.searchEmailAuthYn, 미인증 이메일 코드 존재여부 확인, 김다슬/인크로스, 2014-01-23 */ 
@@ -100,6 +126,7 @@
      WHERE  mbr_no = #{mbrNo} 
        AND  auth_compt_yn = 'N'
     </select>
+    
     
     <!--  이메일 인증 코드 업데이트 -->
     <update id="updateServiceAuthCode" parameterType="ServiceAuth">
@@ -125,7 +152,7 @@
           , TO_CHAR(auth_value_create_dt, 'yyyyMMdd hh24:mi:ss') AS auth_value_create_dt
           , auth_compt_yn
       FROM  tb_cm_svc_auth
-     WHERE  auth_type_cd = 'CM010902'
+     WHERE  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */
        AND  auth_value = #{authValue}
     </select>
     

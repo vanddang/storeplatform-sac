@@ -27,6 +27,16 @@ public class ServiceAuth extends CommonInfo {
 	private String tenantId;
 
 	/**
+	 * 시스템 아이디.
+	 */
+	private String systemId;
+
+	/**
+	 * 인증 대상 MDN ( 휴대폰 인증 SMS ).
+	 */
+	private String authMdn;
+
+	/**
 	 * 인증 타입 코드 SMS(CM010901), Email(CM010902).
 	 */
 	private String authTypeCd;
@@ -87,21 +97,6 @@ public class ServiceAuth extends CommonInfo {
 	private String timeToLive;
 
 	/**
-	 * @return the timeToLive
-	 */
-	public String getTimeToLive() {
-		return this.timeToLive;
-	}
-
-	/**
-	 * @param timeToLive
-	 *            the timeToLive to set
-	 */
-	public void setTimeToLive(String timeToLive) {
-		this.timeToLive = timeToLive;
-	}
-
-	/**
 	 * @return the authSeq
 	 */
 	public String getAuthSeq() {
@@ -144,6 +139,36 @@ public class ServiceAuth extends CommonInfo {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the systemId
+	 */
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	/**
+	 * @param systemId
+	 *            the systemId to set
+	 */
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
+
+	/**
+	 * @return the authMdn
+	 */
+	public String getAuthMdn() {
+		return this.authMdn;
+	}
+
+	/**
+	 * @param authMdn
+	 *            the authMdn to set
+	 */
+	public void setAuthMdn(String authMdn) {
+		this.authMdn = authMdn;
 	}
 
 	/**
@@ -309,6 +334,21 @@ public class ServiceAuth extends CommonInfo {
 	 */
 	public void setCurrDt(String currDt) {
 		this.currDt = currDt;
+	}
+
+	/**
+	 * @return the timeToLive
+	 */
+	public String getTimeToLive() {
+		return this.timeToLive;
+	}
+
+	/**
+	 * @param timeToLive
+	 *            the timeToLive to set
+	 */
+	public void setTimeToLive(String timeToLive) {
+		this.timeToLive = timeToLive;
 	}
 
 }
