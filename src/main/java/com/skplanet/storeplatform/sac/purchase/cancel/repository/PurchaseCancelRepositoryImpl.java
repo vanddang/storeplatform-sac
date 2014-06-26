@@ -185,6 +185,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		String prodIdList = "";
 		String prchsProdType = "";
+		String tenantProdGrpCd = "";
 
 		StringBuilder sb = new StringBuilder();
 		if (purchaseCancelDetailSacParam.getPrchsDtlSacParamList() != null
@@ -202,6 +203,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 						// 그 외에(현재는 단위상품뿐이 없음.
 						prchsProdType = "01";
 					}
+
+					// tenantProdGrpCd 셋팅.
+					tenantProdGrpCd = prchsDtlSacParam.getTenantProdGrpCd();
 
 				} else {
 					sb.append(",").append(prchsDtlSacParam.getProdId());
@@ -221,6 +225,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		paymentCancel.setDeviceKey(prchsSacParam.getInsdDeviceId());
 		paymentCancel.setMdn(prchsSacParam.getDeviceId());
 		paymentCancel.setPrchsProdType(prchsProdType);
+		paymentCancel.setTenantProdGrpCd(tenantProdGrpCd);
 
 		List<Pay> payList = new ArrayList<Pay>();
 		for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
