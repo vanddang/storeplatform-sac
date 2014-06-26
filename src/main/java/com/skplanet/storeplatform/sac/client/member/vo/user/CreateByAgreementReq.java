@@ -2,7 +2,6 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import java.util.List;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -67,7 +66,6 @@ public class CreateByAgreementReq extends CommonInfo {
 	/**
 	 * 약관 동의 정보.
 	 */
-	@NotBlank
 	private List<AgreementInfo> agreementList = null;
 
 	/**

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.constraints.Pattern;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -71,7 +70,6 @@ public class CreateByMdnReq extends CommonInfo {
 	/**
 	 * 약관동의 정보.
 	 */
-	@NotBlank
 	private List<AgreementInfo> agreementList = null;
 
 	/**
