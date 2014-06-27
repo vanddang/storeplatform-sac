@@ -601,7 +601,7 @@
                      , A.META_CLSF_CD
                      , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
-                  FROM (SELECT <if test='listId == "TGR000000001"'> /*+ LEADING(A F C G B D E) FULL(B) */ </if>
+                  FROM (SELECT <if test='listId == "TGR000000001"'> /*+ LEADING(A F G C B D E) */ </if>
                                A.TENANT_ID
                              , E.MENU_ID
                              , C.PROD_ID
