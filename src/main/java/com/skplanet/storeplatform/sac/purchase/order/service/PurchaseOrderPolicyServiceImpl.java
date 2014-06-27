@@ -322,15 +322,39 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyResult.setSkpCorporation(true);
 		}
 
+		boolean bAllowDevice = false; // 시험폰(법인폰) 제한 상품에 대해 구매 허용하는 디바이스 여부
+
 		// 법인폰 제한 정책 체크
 
 		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_CORP_DEVICE)) {
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_CORP_DEVICE);
 
+			boolean bLimit = false;
 			for (PurchaseTenantPolicy policy : policyList) {
 				if ((policyResult.isSkpCorporation() && StringUtils.equals(policy.getApplyValue(),
 						PurchaseConstants.SKP_CORPORATION_NO))
 						|| this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
+					bLimit = true;
+					break;
+				}
+			}
+
+			// 제한 정책에 걸렸을 경우, 허용된 디바이스면 통과
+			if (bLimit) {
+				if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD)) {
+					policyList = policyListMap.get(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD);
+
+					for (PurchaseTenantPolicy policy : policyList) {
+						if (this.isAllowPurchaseCorpDevice(policy, policyCheckParam)) {
+							bAllowDevice = true;
+							break;
+						}
+					}
+
+					policyListMap.remove(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD);
+				}
+
+				if (bAllowDevice == false) {
 					policyResult.setCorporation(true);
 					policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_CORP);
 					return policyResult;
@@ -341,7 +365,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		// --------------------------------------------------------------------------------------------------
-		// SKT 시험폰 체크
+		// SKT 시험폰 체크 (참고, SKT시험폰이라면 100% 법인폰)
 
 		// 2014.06.09 상용 적용 : SKT 시험폰은 모두 허용으로.
 
@@ -357,14 +381,19 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyResult.setSktTestMdn(true);
 			boolean bWhite = false;
 
-			// CM011604: 서비스 허용 SKT 시험폰
-			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE)) {
-				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
+			if (bAllowDevice) {
+				bWhite = true;
 
-				for (PurchaseTenantPolicy policy : policyList) {
-					if (this.isSktTestMdnWhiteList(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
-						bWhite = true;
-						break;
+			} else {
+				// CM011604: 서비스 허용 SKT 시험폰
+				if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE)) {
+					policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
+
+					for (PurchaseTenantPolicy policy : policyList) {
+						if (this.isSktTestMdnWhiteList(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
+							bWhite = true;
+							break;
+						}
 					}
 				}
 			}
@@ -546,6 +575,46 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	}
 
 	// ========================
+
+	/*
+	 * 
+	 * <pre> 쇼핑상품 구매 허용된 시험폰(법인폰) 여부 조회. </pre>
+	 * 
+	 * @param policy 테넌트 정책 정보
+	 * 
+	 * @param policyCheckParam 정책 체크 대상 데이터
+	 * 
+	 * @return 쇼핑상품 구매 허용된 시험폰(법인폰) 여부
+	 */
+	private boolean isAllowPurchaseCorpDevice(PurchaseTenantPolicy policy, SktPaymentPolicyCheckParam policyCheckParam) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,ALLOWPURCHASE,START,{}({})", policy.getPolicyId(),
+				policy.getPolicySeq());
+
+		// ----------------------------------------------------------------
+		// 회원Part 사용자 정책 조회
+
+		String memberPolicyCd = policy.getApplyValue();
+
+		List<String> policyCodeList = new ArrayList<String>();
+		policyCodeList.add(memberPolicyCd);
+
+		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
+				policyCheckParam.getDeviceId(), policyCodeList);
+
+		if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
+			this.logger.info("PRCHS,ORDER,SAC,POLICY,ALLOWPURCHASE,END,{}({}),null", policy.getPolicyId(),
+					policy.getPolicySeq());
+			return false;
+		}
+
+		IndividualPolicyInfoSac individualPolicyInfoSac = policyResMap.get(memberPolicyCd);
+
+		this.logger
+				.info("PRCHS,ORDER,SAC,POLICY,ALLOWPURCHASE,END,{}({}),{}", policy.getPolicyId(),
+						policy.getPolicySeq(),
+						StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y));
+		return StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y);
+	}
 
 	/*
 	 * 

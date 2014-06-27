@@ -649,10 +649,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				} else {
 					// T-Freemium 19금 상품에 대한 실명(성인)인증 없이 처리 : 2014.06.25 반영
 					// T-Freemium 은 OR000420, OR000413 2개의 요청경로로 유입됨.
-					if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
-							PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false
-							&& StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
-									PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false) {
+					if ((StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
+							PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
+							&& (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
+									PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false)) {
 						throw new StorePlatformException("SAC_PUR_4105");
 					}
 					// // T-Freemium 19금 상품에 대한 실명(성인)인증 없이 처리 : 2014.06.25 반영
