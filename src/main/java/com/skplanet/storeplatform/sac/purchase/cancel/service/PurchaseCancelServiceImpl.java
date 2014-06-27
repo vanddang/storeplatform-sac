@@ -49,6 +49,7 @@ import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
@@ -120,14 +121,26 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 
 				ErrorInfo errorInfo = e.getErrorInfo();
+				String errorMsg = "";
+				String addErrorMsg = "";
 
 				purchaseCancelDetailSacResult.setResultCd(errorInfo.getCode());
 				if (StringUtils.isBlank(errorInfo.getMessage())) {
-					purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage(
-							errorInfo.getCode(), errorInfo.getArgs()));
+					errorMsg = this.multiMessageSourceAccessor.getMessage(errorInfo.getCode(), errorInfo.getArgs());
 				} else {
-					purchaseCancelDetailSacResult.setResultMsg(errorInfo.getMessage());
+					errorMsg = errorInfo.getMessage();
 				}
+
+				if (errorInfo.getArgs() != null && errorInfo.getArgs().length > 0) {
+					for (Object obj : errorInfo.getArgs()) {
+						if (obj instanceof PurchaseErrorInfo) {
+							addErrorMsg = ((PurchaseErrorInfo) obj).getErrorMsg();
+						}
+					}
+				}
+
+				purchaseCancelDetailSacResult.setResultMsg(errorMsg
+						+ (StringUtils.isBlank(addErrorMsg) ? "" : ", detailMsg : " + addErrorMsg));
 
 				this.logger.info("SAC_PUR_XXXX code : {}", purchaseCancelDetailSacResult.getResultCd() + ", msg : "
 						+ purchaseCancelDetailSacResult.getResultMsg());

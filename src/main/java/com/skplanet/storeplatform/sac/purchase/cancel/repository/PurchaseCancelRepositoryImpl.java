@@ -64,6 +64,7 @@ import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
@@ -315,16 +316,23 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		/** 결제 취소가 하나라도 성공이 있으면 구매 취소 진행한다. 없으면 에러. */
 		boolean rstFlag = false;
+		StringBuilder errorSb = new StringBuilder();
 		for (PayCancelResult payCancelResult : paymentCancelResult.getPayCancelList()) {
 			if (StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
 					payCancelResult.getPayCancelResultCd())) {
 				rstFlag = true;
 				break;
+			} else {
+				errorSb.append("결제수단 : ").append(payCancelResult.getPayCls()).append(", 결제취소결과 : ")
+						.append(payCancelResult.getPayCancelResultCd()).append(", 결제취소결과메시지 : ")
+						.append(payCancelResult.getPayCancelResultMsg());
 			}
 		}
 		if (!rstFlag) {
 			this.logger.info("SAC_PUR_8131 data : {}", paymentCancelResult);
-			throw new StorePlatformException("SAC_PUR_8131");
+			PurchaseErrorInfo purchaseErrorInfo = new PurchaseErrorInfo();
+			purchaseErrorInfo.setErrorMsg(errorSb.toString());
+			throw new StorePlatformException("SAC_PUR_8131", purchaseErrorInfo);
 		}
 
 		return paymentCancelResult.getPayCancelList();
