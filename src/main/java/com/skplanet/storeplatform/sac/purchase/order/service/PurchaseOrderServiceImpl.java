@@ -1100,7 +1100,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		prchsDtlMore.setSendHidingYn(PurchaseConstants.USE_N);
 		prchsDtlMore.setTid(purchase.getTid());
 		prchsDtlMore.setTxId(purchase.getTxId());
-		prchsDtlMore.setParentProdId(purchase.getParentProdId());
+		prchsDtlMore.setParentProdId(iapInfo.getParentProdId());
 		prchsDtlMore.setPartChrgVer(purchase.getPartChrgVer());
 		prchsDtlMore.setPartChrgProdNm(purchase.getPartChrgProdNm());
 		prchsDtlMore.setRegId(purchase.getRegId());
