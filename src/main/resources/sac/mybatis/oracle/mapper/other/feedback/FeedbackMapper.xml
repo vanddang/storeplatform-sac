@@ -223,22 +223,6 @@
          AND  mbr_no = #{mbrNo}       /* 회원 번호 */
     </delete>
     
-    <!--  프로시저 평점 참여자수 증가 Map -->
-    <parameterMap id="procAvgMap" type="hashmap">
-        <parameter property="prodId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-        <parameter property="tenantId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-        <parameter property="updId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-        <parameter property="action" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />      
-        <parameter property="avgEvluScore" mode="IN" jdbcType="INTEGER" javaType="java.lang.String" />
-        <parameter property="preAvgScore" mode="IN" jdbcType="INTEGER" javaType="java.lang.String" />        
-        <parameter property="rsltCd" mode="OUT" jdbcType="INTEGER" javaType="java.lang.String" />
-    </parameterMap>
-    
-    <!--  프로시저 평점 참여자수 증가 -->
-    <update id="updateTenantProdStatsProc" statementType="CALLABLE" parameterMap="procAvgMap">
-        {CALL SP1_UPD_SCORE_DP_PROD_AVG(?,?,?,?,?,?,?)}
-    </update>
-    
     <!-- 평점저장(기평가평점 수정) -->
     <update id="updateTenantProdStats" parameterType="TenantProdStats">
       UPDATE  /* FeedbackMapper.xml, updateTenantProdStats, SAC 기타, 2014-02-04 */
@@ -257,22 +241,6 @@
          AND  prod_id = #{prodId}      /* 상품 ID */
     </update>
     
-    <!-- 프로시저 평점저장 Map -->
-    <parameterMap id="procAvgScoreMap" type="hashmap">
-        <parameter property="prodId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-        <parameter property="tenantId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-        <parameter property="regId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-        <parameter property="updId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-        <parameter property="action" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />      
-        <parameter property="avgEvluScore" mode="IN" jdbcType="INTEGER" javaType="java.lang.String" />
-        <parameter property="rsltCd" mode="OUT" jdbcType="INTEGER" javaType="java.lang.String" />
-    </parameterMap>
-    
-    <!--  프로시저 평점저장 -->
-    <update id="mergeTenantProdStatsProc" statementType="CALLABLE" parameterMap="procAvgScoreMap">
-        {CALL SP2_MRG_SCORE_DP_PROD_AVG(?,?,?,?,?,?,?)}
-    </update>
-        
     <!-- 평점저장 -->
     <insert id="mergeTenantProdStats" parameterType="TenantProdStats" useGeneratedKeys="false">
       MERGE  /* FeedbackMapper.xml, mergeTenantProdStats, SAC 기타, 2014-02-04 */
@@ -374,19 +342,6 @@
          AND  b.tenant_id = #{tenantId}      /* 테넌트 ID */
     </select>
     
-    <!-- 프로시저 (일반회원 후기) 추천 수 증감처리 Map-->
-    <parameterMap id="procNotiMap" type="hashmap">
-        <parameter property="seq" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-        <parameter property="tenantId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-        <parameter property="action" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-        <parameter property="rsltCd" mode="OUT" jdbcType="INTEGER" javaType="java.lang.String" />                    
-    </parameterMap>
-
-    <!-- 프로시저 (일반회원 후기) 추천 수 증감처리 -->
-    <update id="updateProdNotiGoodProc" statementType="CALLABLE" parameterMap="procNotiMap">
-        {CALL SP1_UPD_SCORE_DP_PROD_NOTI(?,?,?,?)}
-    </update>
-            
     <!-- (일반회원 후기) 추천 수 증감처리 -->
     <update id="updateProdNotiGood" parameterType="ProdNotiGood">
       UPDATE  /* FeedbackMapper.xml, updateProdNotiGood, SAC 기타, 2014-02-04 */

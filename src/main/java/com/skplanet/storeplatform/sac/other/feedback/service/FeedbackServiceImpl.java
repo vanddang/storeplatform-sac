@@ -1017,9 +1017,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 			// 쇼핑 상품이면서 개인 판매자이면,
 			if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_PRIVATE_PERSON)) {
 				compNm = charger;
-				// 법인사업자이면.
-			} else if (StringUtils.equals(sellerClass, SellerConstants.SELLER_TYPE_LEGAL_BUSINESS)) {
-				compNm = sellerCompany;
 			} else {
 				// TStore 쇼핑인경우.
 				if (StringUtils.equals(prodNoti.getSvcGrpCd(), DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD)) {
