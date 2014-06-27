@@ -66,6 +66,7 @@ public class CreateByAgreementReq extends CommonInfo {
 	/**
 	 * 약관 동의 정보.
 	 */
+	@NotEmpty
 	private List<AgreementInfo> agreementList = null;
 
 	/**

@@ -45,6 +45,7 @@ public class CreateSaveAndSyncReq extends CommonInfo {
 	/**
 	 * 약관동의 정보.
 	 */
+	@NotEmpty
 	private List<AgreementInfo> agreementList = null;
 
 	/**
