@@ -505,7 +505,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 결제수단 별 가능 거래금액/비율 조정 정보
 		res.setCdMaxAmtRate(this.adjustPaymethod(sktPaymethodInfo, prchsDtlMore.getTenantId(),
 				verifyOrderInfo.getSystemId(), prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("prodCaseCd"),
-				prchsDtlMore.getTotAmt().doubleValue()));
+				reservedDataMap.get("cmpxProdClsfCd"), prchsDtlMore.getTotAmt().doubleValue()));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제수단 정렬 재조정
@@ -1379,12 +1379,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param prodCaseCd 쇼핑 상품 종류 코드
 	 * 
+	 * @param cmpxProdClsfCd 정액상품 타입 코드
+	 * 
 	 * @param payAmt 결제할 금액
 	 * 
 	 * @return 재정의 된 결제 수단 정보
 	 */
 	private String adjustPaymethod(String sktPaymethodInfo, String tenantId, String systemId, String tenantProdGrpCd,
-			String prodCaseCd, double payAmt) {
+			String prodCaseCd, String cmpxProdClsfCd, double payAmt) {
 		// 결제수단 별 가능 거래금액/비율 조정 정보
 		String paymentAdjustInfo = this.purchaseOrderPolicyService.getAvailablePaymethodAdjustInfo(tenantId,
 				tenantProdGrpCd);
@@ -1408,7 +1410,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		sbPaymethodInfo.append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
 
-		return sbPaymethodInfo.toString();
+		// 시리즈 패스
+		if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+			return sbPaymethodInfo.toString().replaceAll("14:0:0;", "");
+		} else {
+			return sbPaymethodInfo.toString();
+		}
 	}
 
 	/*
