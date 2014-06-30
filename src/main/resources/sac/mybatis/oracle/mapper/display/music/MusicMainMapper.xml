@@ -59,6 +59,9 @@
                      , TB_DP_PROD_RSHP I
                  WHERE A.CHART_CLSF_CD = #{chartClsfCd}
                    AND A.RANK_START_DAY = #{stdDt}
+                <if test='filteredBy == "genre" || filteredBy == "ring" || filteredBy == "bell"'>
+                   AND A.CHART_GENRE_CD = C.MENU_ID
+                </if>
                    AND A.PROD_ID = B.PROD_ID
                    AND B.USE_YN = 'Y'
                    AND B.MENU_ID = C.MENU_ID
