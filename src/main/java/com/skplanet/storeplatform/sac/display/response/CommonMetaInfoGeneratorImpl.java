@@ -212,7 +212,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			source.setType(type);
 		}
 
-		if (StringUtils.isNotEmpty(size.toString())) {
+		if (size != null) {
 			source.setSize(size);
 		}
 
