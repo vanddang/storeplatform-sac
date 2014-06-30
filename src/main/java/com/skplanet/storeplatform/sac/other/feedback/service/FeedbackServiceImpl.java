@@ -1020,7 +1020,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 			} else {
 				// TStore 쇼핑인경우.
 				if (StringUtils.equals(prodNoti.getSvcGrpCd(), DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD)) {
-					compNm = sellerNickName;
+					// 방어로직 쇼핑노출명이 null 일경우는 회사명으로 노출한다. (강성준 차장님 확인)
+					if (sellerNickName == null || sellerNickName.length() == 0) {
+						compNm = sellerCompany; // 회사명
+					} else {
+						compNm = sellerNickName; // 쇼핑 노출명
+					}
 				} else {
 					compNm = sellerCompany;
 				}
