@@ -464,6 +464,17 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								this.log.info("----------------------------------------------------------------");
 								this.log.info("----------------------------  end set Purchase Info  ------------------------------------");
 								break;
+							} else {
+								// 2014.07.01. kdlim. 구매 내역 drmYn 값이 정확하지 않아 상품정보 drmYn으로 변경
+								// 단, T Freemium을 통한 구매건의 경우는 무조건 DRM적용이므로 아래의 조건을 예외처리 해야함.
+								//-	"prchsReqPathCd": "OR0004xx",
+								//-	OR000413, OR000420 2개 코드가 T Freemium을 통한 구매건임.
+								if(StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM1_CD, prchsReqPathCd) 
+										|| StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM2_CD, prchsReqPathCd)) {
+									metaInfo.setDrmYn("Y");
+									metaInfo.setStoreDrmYn("Y");
+									metaInfo.setPlayDrmYn("Y");
+								}
 							}
 						}
 					}
