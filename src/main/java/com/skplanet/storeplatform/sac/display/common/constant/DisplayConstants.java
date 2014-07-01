@@ -632,6 +632,10 @@ public class DisplayConstants {
 	public static final String PRCHS_STATE_TYPE_EXPIRED = "expired"; // 구매상태(만료)
 	public static final String PRCHS_STSTUS_COMPLETE_CD = "OR000301"; // 구매상태코드 - 완료
 
+	// 구매 경로 - T freemium
+	public static final String PRCHS_REQ_PATH_TFREEMIUM1_CD = "OR000413";
+	public static final String PRCHS_REQ_PATH_TFREEMIUM2_CD = "OR000420";
+	
 	// 정액제 상품 자동결제 구분
 	public static final String DP_AUTOPAY_AUTO = "auto"; // 자동결제
 	public static final String DP_AUTOPAY_NORMAL = "normal"; // 일반결제
