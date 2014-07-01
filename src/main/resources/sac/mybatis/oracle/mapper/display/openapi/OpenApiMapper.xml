@@ -2003,7 +2003,8 @@
 		           AND  E.REP_DEVICE_YN = 'Y'
 		           AND  E.USE_YN = 'Y'
 		           AND  E.UA_CD = #{uaCode}
-		           AND  F.SALE_YN = 'Y'
+                   AND  E.DEVICE_MODEL_CD = D.DEVICE_MODEL_CD
+                   AND  F.SALE_YN = 'Y'
 		           AND  F.APK_PKG_NM = #{packName}
 		           AND  F.VM_VER LIKE '%' || #{osVersion} || '%'
 		       ) IA
