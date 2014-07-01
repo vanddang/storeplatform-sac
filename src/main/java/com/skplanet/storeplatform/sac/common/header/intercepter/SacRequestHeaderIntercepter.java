@@ -60,7 +60,7 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
         this.defaultNetType = defaultNetType;
     }
 
-    private static final Pattern PATTERN_KV = Pattern.compile("^\\s*(\\w+)\\s*=\\s*\"([\\d\\w\\-\\.\\*/_, ]*)\"\\s*(,|$)");
+    private static final Pattern PATTERN_KV = Pattern.compile("^\\s*(\\w+)\\s*=\\s*\"([\\d\\w\\-\\.\\*/_, \\(\\)]*)\"\\s*(,|$)");
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
