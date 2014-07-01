@@ -146,6 +146,7 @@
                                          , TB_CM_DEVICE             M
                                      WHERE A.MENU_ID = B.MENU_ID
                                        AND A.PROD_ID = D.PROD_ID
+                                       AND D.PROD_ID = E.PROD_ID
                                        AND A.PROD_ID = G.PROD_ID
                                        AND A.TENANT_ID = G.TENANT_ID
                                        AND A.PROD_ID = I.PART_PROD_ID
