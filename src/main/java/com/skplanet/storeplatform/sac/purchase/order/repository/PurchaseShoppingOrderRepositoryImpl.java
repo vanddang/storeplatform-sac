@@ -71,9 +71,9 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		couponPublishEcReq.setItemCode(itemCode);
 		couponPublishEcReq.setItemCount(qty);
 
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,PUBLISH,REQ,{}", couponPublishEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,PUBLISH,REQ,{}", couponPublishEcReq);
 		CouponPublishEcRes couponPublishEcRes = this.shoppingSCI.createCouponPublish(couponPublishEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,PUBLISH,RES,{}", couponPublishEcRes);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,PUBLISH,RES,{}", couponPublishEcRes);
 
 		return couponPublishEcRes;
 	}
@@ -92,10 +92,10 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
 		couponPublishCancelEcReq.setPrchsId(prchsId);
 
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,CANCEL,REQ,{}", couponPublishCancelEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CANCEL,REQ,{}", couponPublishCancelEcReq);
 		CouponPublishCancelEcRes couponPublishCancelEcRes = this.shoppingSCI
 				.cancelCouponPublish(couponPublishCancelEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,CANCEL,RES,{}", couponPublishCancelEcRes);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CANCEL,RES,{}", couponPublishCancelEcRes);
 	}
 
 	/**
@@ -134,8 +134,8 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		bizCouponPublishEcReq.setCouponCode(couponCode);
 		bizCouponPublishEcReq.setBizCouponPublishDetailList(bizCouponPublishDetailEcList);
 
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,BIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,BIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
 		BizCouponPublishEcRes bizCouponPublishEcRes = this.shoppingSCI.createBizCouponPublish(bizCouponPublishEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING_CMS,BIZ,PUBLISH,RES,{}", bizCouponPublishEcRes);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,BIZ,PUBLISH,RES,{}", bizCouponPublishEcRes);
 	}
 }
