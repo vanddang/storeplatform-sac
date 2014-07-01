@@ -138,6 +138,7 @@
                                            )                        A
                                          , TB_DP_MENU_CATEGORY      B
                                          , TB_DP_PROD               D /* 에피소드 상품 */
+                                         , UV_TB_DP_MULTIMDA_PROD	E
                                          , TB_DP_TENANT_PROD        G
                                          , TB_DP_PROD_RSHP          I
                                          , TB_DP_PROD               J /* 채널 상품 */
