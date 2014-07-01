@@ -410,12 +410,12 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreNotiEcReq.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
 
 		try {
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,NOTI,REQ,{}", tStoreNotiEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,REQ,{}", tStoreNotiEcReq);
 			TStoreNotiEcRes tStoreNotiEcRes = this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,NOTI,RES,{}", tStoreNotiEcRes);
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,RES,{}", tStoreNotiEcRes);
 		} catch (Exception e) {
 			// 예외 throw 차단
-			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORENOTI,ERROR,{},{}", prchsId, e.getMessage());
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,ERROR,{},{}", prchsId, e.getMessage());
 		}
 	}
 }
