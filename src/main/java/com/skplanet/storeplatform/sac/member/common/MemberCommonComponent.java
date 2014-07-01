@@ -1022,6 +1022,11 @@ public class MemberCommonComponent {
 
 			for (AgreementInfo info : agreementList) {
 
+				if (StringUtils.isBlank(info.getExtraAgreementId()) || StringUtils.isBlank(info.getIsExtraAgreement())) {
+					throw new StorePlatformException("SAC_MEM_0001", StringUtils.isBlank(info.getExtraAgreementId()) ? "extraAgreementId"
+							: "isExtraAgreement");
+				}
+
 				/**
 				 * 맵핑할 약관정보 조회.
 				 */
