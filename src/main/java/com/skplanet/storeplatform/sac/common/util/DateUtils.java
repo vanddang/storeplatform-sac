@@ -31,17 +31,24 @@ public class DateUtils {
      * @return the parsed date
      */
     public static Date parseDate(String str) {
+        return parseDate(str, "yyyyMMddHHmmss");
+    }
+
+    public static Date parseDate(String str, String ptn) {
         if(str == null)
             return null;
 
         SimpleDateFormat parser = new SimpleDateFormat();
-        parser.applyPattern("yyyyMMddHHmmss");
+
         try {
+            parser.applyPattern(ptn);
             return parser.parse(str);
+        }
+        catch (IllegalArgumentException ae) {
+            return null;
         }
         catch (ParseException pe) {
             return null;
         }
-
     }
 }

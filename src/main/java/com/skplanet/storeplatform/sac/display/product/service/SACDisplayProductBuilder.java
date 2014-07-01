@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.product.service;
 
 import com.skplanet.icms.refactoring.deploy.*;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -443,12 +445,18 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 					String result = this.prodService.registProdSettl(pv);
 					log.info("CMS 정산율 = " + result);
 					
-					// 신규 상품 등록
-					// 트리거 확인 후 작업
-					log.info("CMS New Free Data Insert");
-					
-					String stdDt = displayCommonService.getBatchStandardDateString(pv.getTenantId(), DisplayConstants.DP_LIST_NEWFREE);
-					this.prodService.insertNewFreeData(pv, stdDt);
+                    Date saleStrtDt = DateUtils.parseDate(StringUtils.defaultString(dpProdAppInfo.getSaleStrtDt()).substring(0, 8), "yyyyMMdd");
+                    Date lastDeployDt = DateUtils.parseDate(StringUtils.defaultString(dpProd.getLastDeployDt()).substring(0, 8), "yyyyMMdd");
+                    if(saleStrtDt != null && lastDeployDt != null) {
+                        // 최근배포일 <= 출시일+1개월
+                        Date saleStrtDtPlus1M = org.apache.commons.lang3.time.DateUtils.addMonths(saleStrtDt, 1);
+                        if(lastDeployDt.before(saleStrtDtPlus1M)) {
+                            log.info("CMS New Free Data Insert");
+                            String stdDt = displayCommonService.getBatchStandardDateString(pv.getTenantId(), DisplayConstants.DP_LIST_NEWFREE);
+                            this.prodService.insertNewFreeData(pv, stdDt);
+                        }
+                    }
+
 
                     if(tempList != null) {
                         for(Map<String, Object> oldProd : tempList) {
