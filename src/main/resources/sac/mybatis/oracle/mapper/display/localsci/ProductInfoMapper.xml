@@ -601,7 +601,8 @@
                         ,(SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE PROD_ID = H.PROD_ID AND EXPO_YN ='Y' AND TENANT_ID = #{tenantId}  AND ROWNUM =1) chnlProdStatusCd
                         ,K.PROD_STATUS_CD
                         ,OPT.OPT1_NM
-                        ,OPT.OPT2_NM                                                                                                                             
+                        ,OPT.OPT2_NM   
+                        ,I.B2B_PROD_YN                                                                                                                          
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
