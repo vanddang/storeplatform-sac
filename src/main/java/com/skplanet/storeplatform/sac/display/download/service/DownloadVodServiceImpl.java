@@ -396,7 +396,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 											metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
 										}
 										
-										log.debug("prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
+										this.log.info("DownloadVodServiceImpl prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
 
 										// 암호화 정보 (JSON)
 										EncryptionContents contents = this.encryptionGenerator
