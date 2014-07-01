@@ -378,6 +378,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 											metaInfo.setStoreDrmYn("Y");
 											metaInfo.setPlayDrmYn("Y");
 										}
+
 										
 										/*
 										if (StringUtils.isNotEmpty(drmYn)) {
@@ -394,6 +395,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 											metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
 											metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
 										}
+										
+										log.debug("prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
 
 										// 암호화 정보 (JSON)
 										EncryptionContents contents = this.encryptionGenerator
