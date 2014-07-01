@@ -375,8 +375,20 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										//-	OR000413, OR000420 2개 코드가 T Freemium을 통한 구매건임.
 										if(StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM1_CD, prchsReqPathCd) 
 												|| StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM2_CD, prchsReqPathCd)) {
+											metaInfo.setDrmYn("Y");
 											metaInfo.setStoreDrmYn("Y");
 											metaInfo.setPlayDrmYn("Y");
+										}
+										else {
+
+											// 소장, 대여 구분(Store : 소장, Play : 대여)
+											if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+												metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+												metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+											} else {
+												metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+												metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+											}
 										}
 
 										
@@ -387,14 +399,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										}
 										*/
 
-										// 소장, 대여 구분(Store : 소장, Play : 대여)
-										if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-											metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-											metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
-										} else {
-											metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-											metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
-										}
 										
 										this.log.info("DownloadVodServiceImpl prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
 
