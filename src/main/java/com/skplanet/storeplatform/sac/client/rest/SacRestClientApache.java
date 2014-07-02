@@ -2,9 +2,12 @@ package com.skplanet.storeplatform.sac.client.rest;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.skplanet.storeplatform.sac.client.rest.apache.RestMethod;
 import com.skplanet.storeplatform.sac.client.rest.apache.RestTemplateApahe;
 import com.skplanet.storeplatform.sac.client.rest.error.SacRestClientException;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestMethod;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestRequest;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestResponse;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestScheme;
 
 /**
  * <pre>
@@ -22,8 +25,6 @@ import com.skplanet.storeplatform.sac.client.rest.error.SacRestClientException;
 public class SacRestClientApache implements SacRestClient {
 
 	private final RestTemplateApahe processor;
-
-	private static final String SCHEME = "http";
 
 	/**
 	 * 생성자
@@ -71,17 +72,22 @@ public class SacRestClientApache implements SacRestClient {
 
 	@Override
 	public <T> T get(String interfaceId, String path, Class<T> responseType, Object param) throws SacRestClientException {
-		return this.processor.process(SCHEME, RestMethod.GET, interfaceId, path, responseType, param, null);
+		return this.processor.process(SacRestScheme.http, SacRestMethod.GET, interfaceId, path, responseType, param, null);
 	}
 
 	@Override
 	public <T> T post(String interfaceId, String path, Class<T> responseType, Object body) throws SacRestClientException {
-		return this.processor.process(SCHEME, RestMethod.POST, interfaceId, path, responseType, null, body);
+		return this.processor.process(SacRestScheme.http, SacRestMethod.POST, interfaceId, path, responseType, null, body);
 	}
 
 	@Override
 	public <T> T post(String interfaceId, String path, Class<T> responseType, Object param, Object body) throws SacRestClientException {
-		return this.processor.process(SCHEME, RestMethod.POST, interfaceId, path, responseType, param, body);
+		return this.processor.process(SacRestScheme.http, SacRestMethod.POST, interfaceId, path, responseType, param, body);
+	}
+
+	@Override
+	public <T> SacRestResponse<T> exchange(SacRestRequest request, Class<T> responseType) throws SacRestClientException {
+		return this.processor.process(request, responseType);
 	}
 
 }

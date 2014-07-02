@@ -9,12 +9,13 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestScheme;
 
 public class SacRestFormattingUtilsTest {
 
 	@Test
 	public void testFormatUrl() {
-		String scheme = "http";
+		SacRestScheme scheme = SacRestScheme.http;
 		String host = "devspweb1.sungsu.skplanet.com/sp_sac";
 		String path = "/other/feedback/listScorePaticpers/v1";
 		String query = "prodId=0000059641&userId=shop_7842";

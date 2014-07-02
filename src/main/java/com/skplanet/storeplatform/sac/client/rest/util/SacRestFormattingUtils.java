@@ -5,18 +5,20 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestScheme;
+
 public class SacRestFormattingUtils {
 
-	public static String formatUrl(String scheme, String host, String path, Object param) {
+	public static String formatUrl(SacRestScheme scheme, String host, String path, Object param) {
 		String query = formatQuery(param);
 		return formatUrl(scheme, host, path, query);
 	}
 
-	public static String formatUrl(String scheme, String host, String path, String query) {
+	public static String formatUrl(SacRestScheme scheme, String host, String path, String query) {
 		return scheme + "://" + host + path + "?" + query;
 	}
 
-	public static String formatUrl(String scheme, String host, String path) {
+	public static String formatUrl(SacRestScheme scheme, String host, String path) {
 		return scheme + "://" + host + path;
 	}
 

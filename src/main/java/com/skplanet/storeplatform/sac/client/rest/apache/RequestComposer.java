@@ -14,6 +14,8 @@ import com.skplanet.storeplatform.framework.core.idgen.GuidGeneratorFactory;
 import com.skplanet.storeplatform.sac.client.rest.constant.SacRestClientConstants;
 import com.skplanet.storeplatform.sac.client.rest.error.SacRestClientException;
 import com.skplanet.storeplatform.sac.client.rest.util.SacRestConvertingUtils;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestMethod;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestRequest;
 import com.skplanet.storeplatform.sac.runtime.acl.util.HmacSha1Util;
 import com.skplanet.storeplatform.sac.runtime.acl.util.SacAuthUtil;
 
@@ -27,9 +29,9 @@ public class RequestComposer {
 
 	private static GuidGenerator guidGenerator = GuidGeneratorFactory.getDefaultInstance();
 
-	public static HttpUriRequest prepareRequest(RestMethod method, Object body, String url) {
+	public static HttpUriRequest prepareRequest(SacRestMethod method, Object body, String url) {
 		HttpUriRequest request;
-		if (method == RestMethod.POST) {
+		if (method == SacRestMethod.POST) {
 			HttpPost postRequest = new HttpPost(url);
 			// In case of POST, set the request body.
 			RequestComposer.injectBody(postRequest, body);
@@ -39,6 +41,18 @@ public class RequestComposer {
 			request = getRequest;
 		}
 		return request;
+	}
+
+	public static void injectHeaders(HttpUriRequest request, SacRestRequest sacReq) {
+		injectHeaders(request, sacReq.getAuthKey(), sacReq.getSecret(), sacReq.getTenantId(), sacReq.getSystemId(), sacReq.getInterfaceId());
+
+		if (sacReq.getDevice() != null) {
+			request.addHeader(SacRestClientConstants.HEADER_DEVICE, sacReq.getDevice());
+		}
+
+		if (sacReq.getNetwork() != null) {
+			request.addHeader(SacRestClientConstants.HEADER_NETWORK, sacReq.getNetwork());
+		}
 	}
 
 	public static void injectHeaders(HttpUriRequest request, String authKey, String secret, String tenantId, String systemId, String interfaceId) {

@@ -16,6 +16,10 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSac
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.rest.error.SacRestClientError;
 import com.skplanet.storeplatform.sac.client.rest.error.SacRestClientException;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestMethod;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestRequest;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestResponse;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestScheme;
 
 public class SacRestClientApacheTest {
 
@@ -23,10 +27,55 @@ public class SacRestClientApacheTest {
 
 	@Before
 	public void setUp() {
-		String host = "dev-store.sungsu.skplanet.com";
-		String authKey = "S010c629d2e2fb303ce5664c1ab3bc40a2e"; // TestKey (2014-03-24 ~ 2014-04-23)
+		String host = "qa-store.sungsu.skplanet.com";
+		String authKey = "S01e49e2116a019ea588a698475e4780dfd"; // TestKey (2014-06-20 ~ 2014-09-19)
 		String systemId = "S01-06001";
 		this.client = new SacRestClientApache(host, authKey, systemId);
+	}
+
+	@Test
+	public void testExchangeForGet() {
+		SacRestRequest sacReq = new SacRestRequest();
+		sacReq.setScheme(SacRestScheme.http);
+		sacReq.setMethod(SacRestMethod.GET);
+		sacReq.setInterfaceId("I04000013");
+		sacReq.setPath("/other/feedback/listScorePaticpers/v1");
+
+		ListScorePaticpersSacReq param = new ListScorePaticpersSacReq();
+		param.setProdId("0000647637");
+
+		sacReq.setParam(param);
+
+		SacRestResponse<ListScorePaticpersSacRes> sacRes = this.client.exchange(sacReq, ListScorePaticpersSacRes.class);
+		System.out.println("# testExchangeForGet : \n" + sacRes);
+	}
+
+	@Test
+	public void testExchangeForPost() {
+		SacRestRequest sacReq = new SacRestRequest();
+		sacReq.setScheme(SacRestScheme.http);
+		sacReq.setMethod(SacRestMethod.POST);
+		sacReq.setInterfaceId("I04000003");
+		sacReq.setPath("/other/feedback/modify/v1");
+
+		ModifyFeedbackSacReq body = new ModifyFeedbackSacReq();
+		body.setProdId("0000059641");
+		body.setUserKey("IW1023350238820110701120455");
+		body.setUserId("shop_7842");
+		body.setAvgScore("2");
+
+		sacReq.setBody(body);
+
+		try {
+			SacRestResponse<ModifyFeedbackSacRes> sacRes = this.client.exchange(sacReq, ModifyFeedbackSacRes.class);
+			System.out.println("# testExchangeForPost() : \n" + sacRes);
+			ModifyFeedbackSacRes resObject = sacRes.getBody();
+			assertTrue(StringUtils.isNotEmpty(resObject.getProdId()));
+		} catch (SacRestClientException e) {
+			SacRestClientError error = e.getError();
+			System.out.println("# testExchangeForPost Error : \n" + error);
+			assertTrue(StringUtils.isNotEmpty(error.getCode()));
+		}
 	}
 
 	@Test

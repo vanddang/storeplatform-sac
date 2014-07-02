@@ -1,6 +1,8 @@
 package com.skplanet.storeplatform.sac.client.rest;
 
 import com.skplanet.storeplatform.sac.client.rest.error.SacRestClientException;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestRequest;
+import com.skplanet.storeplatform.sac.client.rest.vo.SacRestResponse;
 
 /**
  * SAC의 Rest API를 호출하기 위한 클라이언트 인터페이스
@@ -59,5 +61,10 @@ public interface SacRestClient {
 	 * 		응답 데이터 객체
 	 */
 	<T> T post(String interfaceId, String path, Class<T> responseType, Object param, Object body) throws SacRestClientException;
+
+	/**
+	 * SAC API를 호출한다. (Custom Header도 전송)
+	 */
+	<T> SacRestResponse<T> exchange(SacRestRequest request, Class<T> responseType) throws SacRestClientException;
 
 }
