@@ -6,7 +6,8 @@
          SELECT /*PersonalUpdateProductMapper.searchRecentFromPkgNm, searchRecentFromPkgNm, 오승민/인크로스, 2014-02-28 */
          LA.*
          FROM
-             ( SELECT SC.PROD_ID
+             ( SELECT /*+ LEADING(CMDEVICE SC) USE_NL(SC) USE_NL(APPPROD) */
+               SC.PROD_ID
              , SC.APK_PKG_NM
              , SC.APK_VER
              , SC.SUB_CONTENTS_ID

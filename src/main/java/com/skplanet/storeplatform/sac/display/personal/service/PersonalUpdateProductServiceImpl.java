@@ -12,6 +12,7 @@ import java.util.Map;
 import com.skplanet.storeplatform.sac.display.cache.service.UpdateProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
+import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -105,6 +106,8 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		List<Product> productList = new ArrayList<Product>();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
+        String tenantId = header.getTenantHeader().getTenantId();
+        String langCd = header.getTenantHeader().getLangCd();
         List<HistorySacIn> listPrchs = null;
 
 		String memberType = req.getMemberType();
@@ -112,37 +115,46 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		 * Package 명으로 상품 조회
 		 **************************************************************/
 		List<String> listPkgNm = new ArrayList<String>();
-		for (String s : packageInfoList) {
+        List<String> hashedPkgList = new ArrayList<String>(listPkgNm.size());
+        for (String s : packageInfoList) {
 			String[] arrInfo = StringUtils.split(s, "/");
 			if (arrInfo.length >= 2) {
 				String pkgNm = arrInfo[0];
 				// parameter가 적어도 packageName/version정보로 와야지만 update 리스트에 추가한다.
 				this.log.debug("##### update package name : {}", pkgNm);
 				listPkgNm.add(pkgNm);
-			}
+                hashedPkgList.add(DisplayCryptUtils.hashPkgNm(pkgNm));
+            }
 		}
 
-        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceHeader.getModel(), listPkgNm, false);
+        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceHeader.getModel(), hashedPkgList, true);
 		List<Map<String, Object>> listPkg = new ArrayList<Map<String, Object>>();
 
 		for (SubContentInfo scInfo : subContentInfos) {
-            Map<String, Object> updateTargetMap = new HashMap<String, Object>();
-            updateTargetMap.put("deviceHeader", deviceHeader);
-            updateTargetMap.put("tenantHeader", tenantHeader);
-            updateTargetMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-            updateTargetMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-            updateTargetMap.put("prodId", scInfo.getProdId());
-            updateTargetMap.put("subContentsId", scInfo.getSubContentsId());
-            updateTargetMap.put("contentsTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-            updateTargetMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
-            updateTargetMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 
-            // TODO Caching needed !!!!!
-            Map<String, Object> appInfoMap = this.commonDAO.queryForObject("PersonalUpdateProduct.getAppInfo",
-                    updateTargetMap, Map.class);
+            UpdateProduct up = updateProductInfoManager.getUpdateProductInfo(new UpdateProductParam(tenantId, langCd, scInfo.getProdId(), scInfo.getSubContentsId()));
+            if(up != null) {
+                Map<String, Object> prod = new HashMap<String, Object>();
+                prod.put("PROD_ID", up.getProdId());
+                prod.put("PART_PROD_ID", up.getPartProdId());
+                prod.put("APK_VER", up.getApkVer());
+                prod.put("APK_PKG_NM", up.getApkPkgNm());
+                prod.put("FAKE_YN", up.getFakeYn());
+                prod.put("PROD_AMT", up.getProdAmt());
+                prod.put("TOP_MENU_ID", up.getTopMenuId());
+                prod.put("TOP_MENU_NM", up.getTopMenuNm());
+                prod.put("MENU_ID", up.getMenuId());
+                prod.put("MENU_NM", up.getMenuNm());
+                prod.put("PROD_NM", up.getProdNm());
+                prod.put("IMAGE_PATH", up.getImagePath());
+                prod.put("PROD_GRD_CD", up.getProdGrdCd());
+                prod.put("AID", up.getAid());
+                prod.put("PROD_VER", up.getProdVer());
+                prod.put("FILE_SIZE", up.getFileSize());
+                prod.put("FILE_PATH", up.getFilePath());
+                prod.put("LAST_DEPLOY_DT", up.getLastDeployDt());
 
-            if (appInfoMap != null) {
-                listPkg.add(appInfoMap);
+                listPkg.add(prod);
             }
         }
 
@@ -479,7 +491,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					product.setRights(rights);
 
 					Price price = this.commonGenerator.generatePrice(
-							((BigDecimal) updateTargetApp.get("PROD_AMT")).intValue(), null);
+							((Integer)updateTargetApp.get("PROD_AMT")), null);
 					product.setPrice(price);
 					// 구매 정보는 구매 내역이 있는 App만 표시한다.
 					if (!StringUtils.isEmpty(prchId)) {
@@ -493,11 +505,11 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							(String) updateTargetApp.get("APK_PKG_NM"),
 							ObjectUtils.toString(updateTargetApp.get("APK_VER")),
 							ObjectUtils.toString(updateTargetApp.get("PROD_VER")),
-							((BigDecimal) updateTargetApp.get("FILE_SIZE")).intValue(), null, null,
+							((Integer) updateTargetApp.get("FILE_SIZE")), null, null,
 							ObjectUtils.toString(updateTargetApp.get("FILE_PATH")));
 
 					Update update = this.appGenerator.generateUpdate(
-							new Date(null, DateUtils.parseDate(ObjectUtils.toString(updateTargetApp.get("UPD_DT")))),
+							new Date(null, (java.util.Date)updateTargetApp.get("LAST_DEPLOY_DT")),
 							null);
 					updateList.add(update);
 					history.setUpdate(updateList);
