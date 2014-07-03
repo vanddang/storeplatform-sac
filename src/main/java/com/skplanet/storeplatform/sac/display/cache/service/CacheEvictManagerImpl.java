@@ -121,4 +121,10 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     public void evictAllTmembershipDcRate() {
 
     }
+
+    @Override
+    @CacheEvict(value = "sac:display:updateProductInfo", allEntries = true)
+    public void evictAllUpdateProduct() {
+
+    }
 }

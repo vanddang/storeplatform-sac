@@ -9,6 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.cache.service.UpdateProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct;
+import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
+import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -73,10 +77,16 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 	private AppInfoGenerator appGenerator;
 
 	@Autowired
-	HistoryInternalSCI historyInternalSCI;
+	private HistoryInternalSCI historyInternalSCI;
 
 	@Autowired
-	SearchUserSCI searchUserSCI;
+	private SearchUserSCI searchUserSCI;
+
+    @Autowired
+    private AppUpdateSupportService appUpdateSupportService;
+
+    @Autowired
+    private UpdateProductInfoManager updateProductInfoManager;
 
 	/*
 	 * (non-Javadoc)
@@ -93,10 +103,9 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		PersonalUpdateProductRes res = new PersonalUpdateProductRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
-		Map<String, Object> mapReq = new HashMap<String, Object>();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
-		List<HistorySacIn> listPrchs = null;
+        List<HistorySacIn> listPrchs = null;
 
 		String memberType = req.getMemberType();
 		/**************************************************************
@@ -113,47 +122,29 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 			}
 		}
 
-		// Oracle SQL 리터럴 수행 방지를 위한 예외처리
-		int iListPkgSize = listPkgNm.size();
-		int iPkgLimited = 0;
-		if (iListPkgSize < 300) {
-			iPkgLimited = 300;
-		} else if (iListPkgSize >= 300 && iListPkgSize < 500) {
-			iPkgLimited = 500;
-		} else if (iListPkgSize >= 500 && iListPkgSize < 700) {
-			iPkgLimited = 700;
-		} else if (iListPkgSize >= 700 && iListPkgSize < 1000) {
-			iPkgLimited = 1000;
-		}
-		for (int i = iListPkgSize; i < iPkgLimited; i++) {
-			listPkgNm.add("");
-		}
-		mapReq.put("PKG_LIST", listPkgNm);
-		mapReq.put("deviceHeader", deviceHeader);
-		mapReq.put("parentClsfCd", DisplayConstants.DP_PART_PARENT_CLSF_CD);
-		// List<Object> listPkg = queryForList("updateAlarm.getRecentFromPkgNm", mapReq);
-		List<Map> updateTargetList = this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", mapReq,
-				Map.class);
-		mapReq.remove("PKG_LIST");
-
+        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceHeader.getModel(), listPkgNm, false);
 		List<Map<String, Object>> listPkg = new ArrayList<Map<String, Object>>();
 
-		for (Map<String, Object> updateTargetMap : updateTargetList) {
-			updateTargetMap.put("deviceHeader", deviceHeader);
-			updateTargetMap.put("tenantHeader", tenantHeader);
-			updateTargetMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-			updateTargetMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			updateTargetMap.put("prodId", updateTargetMap.get("PROD_ID"));
-			updateTargetMap.put("subContentsId", updateTargetMap.get("SUB_CONTENTS_ID"));
-			updateTargetMap.put("contentsTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-			updateTargetMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
-			updateTargetMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-			Map<String, Object> appInfoMap = this.commonDAO.queryForObject("PersonalUpdateProduct.getAppInfo",
-					updateTargetMap, Map.class);
-			if (appInfoMap != null) {
-				listPkg.add(appInfoMap);
-			}
-		}
+		for (SubContentInfo scInfo : subContentInfos) {
+            Map<String, Object> updateTargetMap = new HashMap<String, Object>();
+            updateTargetMap.put("deviceHeader", deviceHeader);
+            updateTargetMap.put("tenantHeader", tenantHeader);
+            updateTargetMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+            updateTargetMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+            updateTargetMap.put("prodId", scInfo.getProdId());
+            updateTargetMap.put("subContentsId", scInfo.getSubContentsId());
+            updateTargetMap.put("contentsTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+            updateTargetMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
+            updateTargetMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+
+            // TODO Caching needed !!!!!
+            Map<String, Object> appInfoMap = this.commonDAO.queryForObject("PersonalUpdateProduct.getAppInfo",
+                    updateTargetMap, Map.class);
+
+            if (appInfoMap != null) {
+                listPkg.add(appInfoMap);
+            }
+        }
 
 		this.log.debug("##### update target list  : {}", listPkg);
 		this.log.debug("##### update target cnt   : {}", listPkg.size());

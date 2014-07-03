@@ -85,7 +85,7 @@
 		WHERE PROD_ID = #{prodId}
   	</select>
   		
-	<insert id="insertDPProductSubconts" parameterType="dpProductSubContsVO">
+	<insert id="insertDPProductSubconts" parameterType="map">
 		INSERT    /* DP_PRODUCT_SUBCONTS-insertDPProductSubconts : mhcha123 (2014-01-03) */
 		INTO TB_DP_SUB_CONTENTS (
 			PROD_ID
@@ -123,45 +123,47 @@
 			,REG_ID
 			,REG_DT
 			,UPD_ID
-			,UPD_DT	
+			,UPD_DT
+            ,APK_PKG_HASH
 		)
 		VALUES(
-			#{prodId, jdbcType=VARCHAR}
-			,#{subContentsId, jdbcType=VARCHAR}
-			,#{lcdSize, jdbcType=VARCHAR}
-			,#{colorDepthCd, jdbcType=VARCHAR}
-			,#{audioTypeCd, jdbcType=VARCHAR}
-			,#{touchscreenSprtYn, jdbcType=VARCHAR}
-			,#{itoppSprtYn, jdbcType=VARCHAR}
-			,#{bluetoothSprtYn, jdbcType=VARCHAR}
-			,#{gpsSprtYn, jdbcType=VARCHAR}
-			,#{epsdPlayTm, jdbcType=VARCHAR}
-			,#{saleYn, jdbcType=VARCHAR}
-			,#{vmTypeCd, jdbcType=VARCHAR}
-			,#{vmVer, jdbcType=VARCHAR}
-			,#{gigaVer, jdbcType=VARCHAR}
-			,#{sound3DSprtYn, jdbcType=VARCHAR}
-			,#{vitlKeySprtYn, jdbcType=VARCHAR}
-			,#{cpuTypeCd, jdbcType=VARCHAR}
-			,#{tPlayerSprtYn, jdbcType=VARCHAR}
-			,#{drmVerCd, jdbcType=VARCHAR}
-			,#{cfmSprtYn, jdbcType=VARCHAR}
-			,#{videoFileTypeCd, jdbcType=VARCHAR}
-			,#{rsltnCd, jdbcType=VARCHAR}
-			,#{dpPgRatioCd, jdbcType=VARCHAR}
-			,#{dpPgQultCd, jdbcType=VARCHAR}
-			,#{fileClsfCd, jdbcType=VARCHAR}
-			,#{filePath, jdbcType=VARCHAR}
-			,#{fileSize, jdbcType=INTEGER}
-			,#{apkVer, jdbcType=INTEGER}
-			,#{apkVerNm, jdbcType=VARCHAR}
-			,#{apkPkgNm, jdbcType=VARCHAR}
-			,#{apkApiLevelCd, jdbcType=VARCHAR}
-			,#{apkLabelNm, jdbcType=VARCHAR}
-			,#{regId, jdbcType=VARCHAR}
-			,TO_DATE(#{regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
-			,#{updId, jdbcType=VARCHAR}
+			#{vo.prodId, jdbcType=VARCHAR}
+			,#{vo.subContentsId, jdbcType=VARCHAR}
+			,#{vo.lcdSize, jdbcType=VARCHAR}
+			,#{vo.colorDepthCd, jdbcType=VARCHAR}
+			,#{vo.audioTypeCd, jdbcType=VARCHAR}
+			,#{vo.touchscreenSprtYn, jdbcType=VARCHAR}
+			,#{vo.itoppSprtYn, jdbcType=VARCHAR}
+			,#{vo.bluetoothSprtYn, jdbcType=VARCHAR}
+			,#{vo.gpsSprtYn, jdbcType=VARCHAR}
+			,#{vo.epsdPlayTm, jdbcType=VARCHAR}
+			,#{vo.saleYn, jdbcType=VARCHAR}
+			,#{vo.vmTypeCd, jdbcType=VARCHAR}
+			,#{vo.vmVer, jdbcType=VARCHAR}
+			,#{vo.gigaVer, jdbcType=VARCHAR}
+			,#{vo.sound3DSprtYn, jdbcType=VARCHAR}
+			,#{vo.vitlKeySprtYn, jdbcType=VARCHAR}
+			,#{vo.cpuTypeCd, jdbcType=VARCHAR}
+			,#{vo.tPlayerSprtYn, jdbcType=VARCHAR}
+			,#{vo.drmVerCd, jdbcType=VARCHAR}
+			,#{vo.cfmSprtYn, jdbcType=VARCHAR}
+			,#{vo.videoFileTypeCd, jdbcType=VARCHAR}
+			,#{vo.rsltnCd, jdbcType=VARCHAR}
+			,#{vo.dpPgRatioCd, jdbcType=VARCHAR}
+			,#{vo.dpPgQultCd, jdbcType=VARCHAR}
+			,#{vo.fileClsfCd, jdbcType=VARCHAR}
+			,#{vo.filePath, jdbcType=VARCHAR}
+			,#{vo.fileSize, jdbcType=INTEGER}
+			,#{vo.apkVer, jdbcType=INTEGER}
+			,#{vo.apkVerNm, jdbcType=VARCHAR}
+			,#{vo.apkPkgNm, jdbcType=VARCHAR}
+			,#{vo.apkApiLevelCd, jdbcType=VARCHAR}
+			,#{vo.apkLabelNm, jdbcType=VARCHAR}
+			,#{vo.regId, jdbcType=VARCHAR}
+			,TO_DATE(#{vo.regDt, jdbcType=DATE}, 'yyyyMMddHH24MISS')
+			,#{vo.updId, jdbcType=VARCHAR}
 			,SYSDATE
+            ,#{hashedPkg}
 		 )
 	</insert>
 	
@@ -169,6 +171,13 @@
 		DELETE  /* DP_PRODUCT_SUBCONTS-deleteDPProductSubconts : mhcha123 (2014-01-03) */
 		  FROM TB_DP_SUB_CONTENTS
       	  WHERE PROD_ID = #{prodId}
-	</delete>	
+	</delete>
+
+    <update id="updateDPProductSubContsHashedPkgNm" parameterType="map">
+        UPDATE /* DP_PRODUCT_SUBCONTS-updateDPProductSubContsHashedPkgNm : 정희원/SKP (2014-07-02) */
+          TB_DP_SUB_CONTENTS
+          SET APK_PKG_HASH = #{hashedPkg}
+        WHERE PROD_ID = #{prodId} AND SUB_CONTENTS_ID = #{subContentsId}
+    </update>
 	
 </mapper>

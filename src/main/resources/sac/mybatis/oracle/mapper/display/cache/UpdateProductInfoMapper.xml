@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UpdateProductInfo">
+
+    <select id="getUpdateProductInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct">
+        SELECT /* UpdateProductInfo.getUpdateProductInfo, 정희원/SKP, 2014-07-03 */
+            LB.*
+            ,( CASE WHEN ( LB.FAKE_CNT > 0 AND NVL( LB.PROD_AMT, 0 ) = 0 ) THEN 'Y' ELSE 'N' END ) AS FAKE_YN
+            ,(SELECT MENU_NM
+              FROM TB_DP_MENU_CATEGORY_DESC
+              WHERE MENU_ID = LB.TOP_MENU_ID
+                    AND LANG_CD = LB.LANG_CD
+                    AND ROWNUM = 1) AS TOP_MENU_NM
+            ,LB.VER_MAJOR || '.' || LB.VER_MINOR AS PROD_VER
+        FROM(
+                SELECT
+                    LA.*
+                    ,( SELECT COUNT(PROD_ID)
+                       FROM TB_CM_AUTO_UPGRD_ALTR_PROD AUAP
+                       WHERE AUAP.PROD_ID = LA.PART_PROD_ID
+                     ) AS FAKE_CNT
+                FROM (
+                         SELECT
+                             AP.AID
+                             ,AP.VER_MAJOR
+                             ,AP.VER_MINOR
+                             ,MC.TOP_MENU_ID
+                             ,MC.UP_MENU_ID
+                             ,MC.MENU_ID
+                             ,MCD.MENU_NM
+                             ,MCD.MENU_DESC
+                             ,P.PROD_ID AS PART_PROD_ID
+                             ,RSHP.PROD_ID AS PROD_ID
+                             ,P.LAST_DEPLOY_DT
+                             ,P.PROD_GRD_CD
+                             ,PD.PROD_NM
+                             ,SC.APK_PKG_NM
+                             ,SC.APK_VER
+                             ,SC.FILE_SIZE
+                             ,SC.FILE_PATH
+                             ,PI.FILE_PATH as IMAGE_PATH
+                             ,PI.FILE_SIZE as IMAGE_SIZE
+                             ,TPP.PROD_AMT
+                             ,PD.LANG_CD
+                         FROM   TB_DP_PROD P
+                             ,TB_DP_PROD_DESC PD
+                             ,TB_DP_APP_PROD AP
+                             ,TB_DP_SUB_CONTENTS SC
+                             ,TB_DP_TENANT_PROD TP
+                             ,TB_DP_TENANT_PROD_PRICE TPP
+                             ,TB_DP_MENU_CATEGORY           MC
+                             ,TB_DP_MENU_CATEGORY_PROD_MAPG MCPM
+                             ,TB_DP_MENU_CATEGORY_DESC      MCD
+                             ,TB_DP_PROD_IMG                PI
+                             ,TB_DP_PROD_RSHP               RSHP
+                         WHERE   MC.MENU_ID = MCPM.MENU_ID
+                                 AND   MC.MENU_ID = MCD.MENU_ID
+                                 AND   MCPM.PROD_ID = P.PROD_ID
+                                 AND   P.PROD_ID = AP.PROD_ID
+                                 AND   P.PROD_ID = PI.PROD_ID
+                                 AND   P.PROD_ID = PD.PROD_ID
+                                 AND   P.PROD_ID = RSHP.PART_PROD_ID
+                                 AND   SC.PROD_ID = #{epsdId}
+                                 AND   SC.SUB_CONTENTS_ID = #{subContentsId}
+                                 AND   P.PROD_ID = SC.PROD_ID
+                                 AND   P.SVC_GRP_CD = #{svcGrpCd}
+                                 AND   P.PROD_ID = TP.PROD_ID
+                                 AND   TP.TENANT_ID = #{tenantId}
+                                 AND   TP.PROD_ID = TPP.PROD_ID
+                                 AND   TP.TENANT_ID = TPP.TENANT_ID
+                                 AND   TP.PROD_STATUS_CD = #{prodStatusCd}   /* PD000403 : 판매중 */
+                                 AND   TP.EXPO_YN = 'Y'                 /* Y : 노출 (노출여부) */
+                                 AND   P.CONTENTS_TYPE_CD = #{contentsTypeCd}                -- 에피소드
+                                 AND   MC.USE_YN = 'Y'
+                                 AND   MCPM.USE_YN = 'Y'
+                                 AND   MCD.LANG_CD = PD.LANG_CD
+                                 AND   PI.IMG_CD = #{imageCd}           /* 이미지코드 */
+                                 AND   PI.EXPO_ORD = 1                  /* 노출순서 */
+                                 AND   PI.LANG_CD = #{langCd}
+                                 AND   PD.LANG_CD = #{langCd}
+                                 AND   RSHP.PROD_RSHP_CD = #{rshpCd}
+                                 AND   SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
+                     ) LA
+            )LB
+    </select>
+
+</mapper>

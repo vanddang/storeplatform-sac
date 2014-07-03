@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.display.product.service;
 import com.skplanet.icms.refactoring.deploy.*;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
+import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
@@ -364,7 +365,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 
 					// 전시상품 배포파일정보 등록
 					log.info("Insert CMS DisplaySubContent Info - SubContentsId#{}", vo.getSubContentsId());
-					dpProductSubContsService.insertDPProductSubconts(vo);
+					dpProductSubContsService.insertDPProductSubconts(vo, DisplayCryptUtils.hashPkgNm(vo.getApkPkgNm()));
 				}
 			}
 		}

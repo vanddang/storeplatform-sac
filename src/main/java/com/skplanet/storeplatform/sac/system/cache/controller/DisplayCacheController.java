@@ -76,6 +76,10 @@ public class DisplayCacheController {
             cacheEvictManager.evictAllTmembershipDcRate();
             success = true;
         }
+        else if(type.equalsIgnoreCase("updateproduct")) {
+            cacheEvictManager.evictAllUpdateProduct();
+            success = true;
+        }
 
         Map<String, Object> res = new HashMap<String, Object>();
         res.put("type", type);

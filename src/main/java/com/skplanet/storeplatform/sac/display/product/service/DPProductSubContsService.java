@@ -18,10 +18,11 @@ import com.skplanet.icms.refactoring.deploy.DPProductSubContsVO;
 public interface DPProductSubContsService {
 
 	/**
-	 * 
-	 * @param dpSubConts
-	 */
-	void insertDPProductSubconts(DPProductSubContsVO dpSubConts);
+	 *
+     * @param dpSubConts
+     * @param hashedPkg
+     */
+	void insertDPProductSubconts(DPProductSubContsVO dpSubConts, String hashedPkg);
 
 	/**
 	 * 

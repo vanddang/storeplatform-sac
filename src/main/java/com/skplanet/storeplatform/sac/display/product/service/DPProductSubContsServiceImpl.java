@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import com.skplanet.icms.refactoring.deploy.DPProductSubContsVO;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * <pre>
  *  전시 서브 컨텐츠 정보 관리
@@ -36,9 +39,12 @@ public class DPProductSubContsServiceImpl implements DPProductSubContsService {
 	 * (non-Javadoc)
 	 * @see com.skplanet.icms.deploy.tstore.service.DPSubContentsService#insertDPSubContents(com.skplanet.icms.deploy.DPSubContentsVO)
 	 */
-	public void insertDPProductSubconts(DPProductSubContsVO dpSubConts) {
-		commonDAO.insert(NAMESPACE + ".insertDPProductSubconts", dpSubConts);
-	}
+	public void insertDPProductSubconts(DPProductSubContsVO dpSubConts, String hashedPkg) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("vo", dpSubConts);
+        req.put("hashedPkg", hashedPkg);
+        commonDAO.insert(NAMESPACE + ".insertDPProductSubconts", req);
+    }
 
 	/*
 	 * (non-Javadoc)
