@@ -59,13 +59,6 @@ public class ShoppingAsyncController {
 	public int getShoppingAsync(@RequestBody @Validated BizCouponReq request, SacRequestHeader sacRequestHeader)
 			throws Exception {
 
-		// new TLogUtil().set(new ShuttleSetter() {
-		// @Override
-		// public void customize(TLogSentinelShuttle shuttle) {
-		// shuttle.log_id(PurchaseConstants.INTERFACE_ID_TL_SAC_PUR_0006); // T Log 보장을 위해 log_id 선 세팅
-		// }
-		// });
-
 		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 
