@@ -45,7 +45,23 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	private Integer prchsCancelCnt;
 	private Integer prchsDtlCancelCnt;
 	private Integer paymentCancelCnt;
+	private Integer autoPrchsCancelCnt;
 	private Integer prchsProdCntCnt;
+
+	/**
+	 * @return the autoPrchsCancelCnt
+	 */
+	public Integer getAutoPrchsCancelCnt() {
+		return this.autoPrchsCancelCnt;
+	}
+
+	/**
+	 * @param autoPrchsCancelCnt
+	 *            the autoPrchsCancelCnt to set
+	 */
+	public void setAutoPrchsCancelCnt(Integer autoPrchsCancelCnt) {
+		this.autoPrchsCancelCnt = autoPrchsCancelCnt;
+	}
 
 	/**
 	 * @return the prchsId

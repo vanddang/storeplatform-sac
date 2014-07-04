@@ -465,6 +465,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelDetailSacParam.setPrchsDtlCancelCnt(purchaseCancelScRes.getPrchsDtlCancelCnt());
 		purchaseCancelDetailSacParam.setPrchsCancelCnt(purchaseCancelScRes.getPrchsCancelCnt());
 		purchaseCancelDetailSacParam.setPrchsProdCntCnt(purchaseCancelScRes.getPrchsProdCntCnt());
+		purchaseCancelDetailSacParam.setAutoPrchsCancelCnt(purchaseCancelScRes.getAutoPrchsCancelCnt());
 
 		return purchaseCancelDetailSacParam;
 

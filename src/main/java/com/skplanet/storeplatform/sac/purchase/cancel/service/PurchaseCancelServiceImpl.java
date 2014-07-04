@@ -341,7 +341,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
 		purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_0000"));
 
-		this.logger.debug("구매 취소 성공!");
+		this.logger.info("### 구매 취소 성공! ###");
+		this.logger.info("purchaseCancelDetailSacParam data : {}", purchaseCancelDetailSacParam);
 
 		return purchaseCancelDetailSacResult;
 
