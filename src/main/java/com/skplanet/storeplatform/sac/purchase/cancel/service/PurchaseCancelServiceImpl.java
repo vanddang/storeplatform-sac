@@ -487,6 +487,36 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	}
 
+	@Override
+	public PurchaseCancelDetailSacResult cancelPurchaseForInApp(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
+		PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = new PurchaseCancelDetailSacResult();
+
+		/** 구매 정보 조회. */
+		this.purchaseCancelRepository.setPurchaseDetailInfo(purchaseCancelSacParam, purchaseCancelDetailSacParam);
+		if (purchaseCancelDetailSacParam.getPrchsDtlSacParamList() == null
+				|| purchaseCancelDetailSacParam.getPrchsDtlSacParamList().isEmpty()) {
+			// 구매 상세 정보가 없으면 구매 취소 불가.
+			throw new StorePlatformException("SAC_PUR_8100");
+		}
+
+		/** 구매 정보 체크. */
+		PrchsDtlSacParam prchsDtlSacParam = purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0);
+		if (!StringUtils.equals(PurchaseConstants.PRCHS_STATUS_COMPT, prchsDtlSacParam.getStatusCd())) {
+			throw new StorePlatformException("SAC_PUR_8101");
+		}
+
+		/** 구매 DB 취소 처리. */
+		this.purchaseCancelRepository.updatePurchaseCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam);
+
+		purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
+		purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_0000"));
+
+		return purchaseCancelDetailSacResult;
+
+	}
+
 	private void updateProdTypeFix(PurchaseCancelSacParam purchaseCancelSacParam, PrchsDtlSacParam prchsDtlSacParam) {
 
 		/** 정액권으로 산 상품이 존재하는지 체크. */

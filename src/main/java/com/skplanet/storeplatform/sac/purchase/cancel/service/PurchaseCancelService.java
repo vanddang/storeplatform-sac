@@ -77,4 +77,19 @@ public interface PurchaseCancelService {
 	PurchaseCancelDetailSacResult cancelPurchaseForPaymentError(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
 
+	/**
+	 * 
+	 * <pre>
+	 * (구)InApp 구매 취소 Service.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelSacParam
+	 *            purchaseCancelSacParam
+	 * @param purchaseCancelDetailSacParam
+	 *            purchaseCancelDetailSacParam
+	 * @return PurchaseCancelDetailSacResult
+	 */
+	PurchaseCancelDetailSacResult cancelPurchaseForInApp(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
+
 }

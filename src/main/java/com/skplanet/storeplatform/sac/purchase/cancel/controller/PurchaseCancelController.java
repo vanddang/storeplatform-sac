@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelBy
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelByUserSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelDetailSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelDetailSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForInAppSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForInAppSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForPaymentErrorSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForPaymentErrorSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelForTCashSacReq;
@@ -131,6 +133,38 @@ public class PurchaseCancelController {
 		}
 
 		return this.convertResForCancelPurchaseForPaymentError(purchaseCancelDetailSacResult);
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * (구)InApp에서 구매 취소 요청.
+	 * </pre>
+	 * 
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @param purchaseCancelForInAppSacReq
+	 *            purchaseCancelForInAppSacReq
+	 * @return PurchaseCancelForInAppSacRes
+	 */
+	@RequestMapping(value = "/inApp/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public PurchaseCancelForInAppSacRes cancelPurchaseForInApp(SacRequestHeader sacRequestHeader,
+			@RequestBody @Validated PurchaseCancelForInAppSacReq purchaseCancelForInAppSacReq) {
+
+		PurchaseCancelSacParam purchaseCancelSacParam = this.convertReqForCancelPurchaseForInApp(sacRequestHeader,
+				purchaseCancelForInAppSacReq);
+
+		PurchaseCancelDetailSacResult purchaseCancelDetailSacResult = this.purchaseCancelService
+				.cancelPurchaseForPaymentError(purchaseCancelSacParam,
+						purchaseCancelSacParam.getPrchsCancelList().get(0));
+
+		if (!StringUtils.equals("SAC_PUR_0000", purchaseCancelDetailSacResult.getResultCd())) {
+			throw new StorePlatformException("SAC_PUR_8999");
+		}
+
+		return this.convertResForCancelPurchaseForInApp(purchaseCancelDetailSacResult);
 
 	}
 
@@ -424,6 +458,51 @@ public class PurchaseCancelController {
 		purchaseCancelForPaymentErrorSacRes.setPrchsId(purchaseCancelDetailSacResult.getPrchsId());
 
 		return purchaseCancelForPaymentErrorSacRes;
+
+	}
+
+	private PurchaseCancelSacParam convertReqForCancelPurchaseForInApp(SacRequestHeader sacRequestHeader,
+			PurchaseCancelForInAppSacReq purchaseCancelForInAppSacReq) {
+
+		PurchaseCancelSacParam purchaseCancelSacParam = new PurchaseCancelSacParam();
+
+		// common parameter setting.
+		if (!ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelForInAppSacReq,
+				purchaseCancelSacParam)) {
+			throw new StorePlatformException("SAC_PUR_9901");
+		}
+
+		purchaseCancelSacParam.setReqUserId(purchaseCancelForInAppSacReq.getReqUserId());
+		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelForInAppSacReq.getCancelReqPathCd());
+		purchaseCancelSacParam.setShoppingForceCancelYn("N");
+		purchaseCancelSacParam.setSktLimitUserCancelYn("N");
+		purchaseCancelSacParam.setIgnorePayment(true);
+
+		// request admin type setting.
+		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_ADMIN);
+
+		// parameter setting.
+		List<PurchaseCancelDetailSacParam> prchsCancelList = new ArrayList<PurchaseCancelDetailSacParam>();
+		PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
+
+		purchaseCancelDetailSacParam.setPrchsId(purchaseCancelForInAppSacReq.getPrchsId());
+
+		prchsCancelList.add(purchaseCancelDetailSacParam);
+
+		purchaseCancelSacParam.setPrchsCancelList(prchsCancelList);
+
+		return purchaseCancelSacParam;
+
+	}
+
+	private PurchaseCancelForInAppSacRes convertResForCancelPurchaseForInApp(
+			PurchaseCancelDetailSacResult purchaseCancelDetailSacResult) {
+
+		PurchaseCancelForInAppSacRes purchaseCancelForInAppSacRes = new PurchaseCancelForInAppSacRes();
+
+		purchaseCancelForInAppSacRes.setPrchsId(purchaseCancelDetailSacResult.getPrchsId());
+
+		return purchaseCancelForInAppSacRes;
 
 	}
 
