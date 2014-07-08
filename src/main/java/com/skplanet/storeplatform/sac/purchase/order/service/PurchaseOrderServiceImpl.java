@@ -359,8 +359,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// 구매예약 TLog 로깅
 			ErrorInfo errorInfo = (checkException != null ? checkException.getErrorInfo() : null);
 
+			String msg = "";
+			if (errorInfo != null) {
+				try {
+					msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+				} catch (NoSuchMessageException e) {
+					msg = "";
+				}
+			}
+
 			final String result_code = (errorInfo != null ? errorInfo.getCode() : "SUCC");
-			final String result_message = (errorInfo != null ? this.messageSourceAccessor.getMessage(result_code) : "");
+			final String result_message = msg;
 			final String exception_log = (errorInfo != null ? (errorInfo.getCause() == null ? "" : errorInfo.getCause()
 					.toString()) : "");
 
@@ -939,7 +948,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// 구매완료 TLog 상품 별 로깅
 			ErrorInfo errorInfo = (checkException != null ? checkException.getErrorInfo() : null);
 
-			String msg = null;
+			String msg = "";
 			if (errorInfo != null) {
 				try {
 					if (StringUtils.startsWith(errorInfo.getCode(), "SC_")) {
@@ -1414,8 +1423,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
 			return sbPaymethodInfo.toString().replaceAll("14:0:0;", "");
 		} else {
-		return sbPaymethodInfo.toString();
-	}
+			return sbPaymethodInfo.toString();
+		}
 	}
 
 	/*
