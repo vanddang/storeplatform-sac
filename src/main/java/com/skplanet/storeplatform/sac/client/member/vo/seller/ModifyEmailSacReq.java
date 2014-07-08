@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
-import javax.validation.constraints.Pattern;
-
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
@@ -28,7 +26,6 @@ public class ModifyEmailSacReq extends CommonInfo {
 	private String sellerKey;
 	/** 변경할 새 이메일 주소. */
 	@NotBlank
-	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String newEmailAddress;
 
 	/**
