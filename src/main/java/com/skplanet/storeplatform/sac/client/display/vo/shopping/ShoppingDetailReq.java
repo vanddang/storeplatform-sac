@@ -39,6 +39,7 @@ public class ShoppingDetailReq extends CommonInfo {
 	private String deviceKey; // 디바이스키
 	private String userKey; // 사용자고유키
 	private String saleDtUseYn; // 판매 기간이 넘어갈 경우 조회시
+	private String specialType;
 	private String imageCd; // 이미지코드
 	private String langCd; // 언어코드
 	private String virtualDeviceModelNo; // android_standard2
@@ -134,6 +135,21 @@ public class ShoppingDetailReq extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	/**
+	 * @return the specialType
+	 */
+	public String getSpecialType() {
+		return this.specialType;
+	}
+
+	/**
+	 * @param specialType
+	 *            the specialType to set
+	 */
+	public void setSpecialType(String specialType) {
+		this.specialType = specialType;
 	}
 
 	/**
