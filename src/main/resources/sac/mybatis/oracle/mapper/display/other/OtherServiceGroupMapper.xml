@@ -71,4 +71,13 @@
             </foreach>
          </if>
     </select>
+
+    <select id="selectPartProdId" parameterType="map" resultType="String">
+        SELECT /* OtherServiceGroupMapper.XML, selectPartProdId, 정희원/SKP, 2014-07-08 */
+            RSHP.PART_PROD_ID AS EPSD_ID
+        FROM TB_DP_PROD_RSHP RSHP
+          WHERE 1=1
+            AND RSHP.PROD_ID = #{chnlId}
+            AND RSHP.PROD_RSHP_CD = #{rshpCd}
+    </select>
 </mapper>

@@ -9,10 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
+import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +49,10 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 	 * 기타 카테고리 상품서비스군 상품 조회.
 	 * </pre>
 	 * 
-	 * @param OtherServiceGroupSacReq
-	 * @return OtherServiceGroupSacRes
-	 * 
 	 * @param req
-	 *            req
 	 * @param header
 	 *            header
+	 * @return OtherServiceGroupSacRes
 	 */
 	@Override
 	public OtherServiceGroupSacRes searchServiceGroupList(OtherServiceGroupSacReq req, SacRequestHeader header) {
@@ -107,6 +103,14 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 				identifierList.add(identifier);
 				product.setIdentifierList(identifierList);
 
+                // chnlId로 요청시 epsdId목록을 응답에 추가
+                if(otherServiceGroup.getContentsTypeCd().equals(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD)) {
+                    List<String> partProdIds = selectPartProdId(otherServiceGroup.getProdId());
+                    for (String v : partProdIds) {
+                        identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, v));
+                    }
+                }
+
 				// 메뉴 정보
 				menu = new Menu(); // TOP메뉴
 				menu.setId(otherServiceGroup.getTopMenuId());
@@ -153,4 +157,11 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 
 		return appRes;
 	}
+
+    private List<String> selectPartProdId(String chnlId) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+        req.put("chnlId", chnlId);
+        return commonDAO.queryForList("OtherServiceGroup.selectPartProdId", req, String.class);
+    }
 }
