@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,9 +122,10 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		List<BizCouponPublishDetailEcReq> bizCouponPublishDetailEcList = new ArrayList<BizCouponPublishDetailEcReq>();
 
 		BizCouponPublishDetailEcReq bizCouponPublishDetailEcReq = null;
+		int dtlId = 1;
 		for (PurchaseUserDevice receiver : receiverList) {
 			bizCouponPublishDetailEcReq = new BizCouponPublishDetailEcReq();
-			bizCouponPublishDetailEcReq.setPrchsId(prchsId);
+			bizCouponPublishDetailEcReq.setPrchsId(prchsId + StringUtils.leftPad(String.valueOf(dtlId++), 4, "0"));
 			bizCouponPublishDetailEcReq.setMdn(receiver.getDeviceId());
 			bizCouponPublishDetailEcList.add(bizCouponPublishDetailEcReq);
 		}
