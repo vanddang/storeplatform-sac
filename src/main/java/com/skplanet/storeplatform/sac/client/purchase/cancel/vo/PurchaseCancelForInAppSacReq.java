@@ -20,14 +20,14 @@ import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSa
  * 
  * Updated on : 2014. 4. 24. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelForPaymentErrorSacReq extends PurchaseCommonSacReq {
+public class PurchaseCancelForInAppSacReq extends PurchaseCommonSacReq {
 
 	private static final long serialVersionUID = 1L;
 
 	private String reqUserId;
 
 	@NotBlank
-	@Pattern(regexp = "^OR000440|^OR000443")
+	@Pattern(regexp = "^OR000441")
 	private String cancelReqPathCd;
 
 	@NotBlank

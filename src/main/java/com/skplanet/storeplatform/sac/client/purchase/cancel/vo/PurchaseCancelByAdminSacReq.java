@@ -31,6 +31,7 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	private String reqUserId;
 
 	@NotBlank
+	@Pattern(regexp = "^OR000400|^OR000435|^OR000437|^OR000438|^OR000439")
 	private String cancelReqPathCd;
 
 	@NotBlank
