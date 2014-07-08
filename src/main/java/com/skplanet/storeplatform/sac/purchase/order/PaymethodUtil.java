@@ -39,6 +39,8 @@ public class PaymethodUtil {
 		convert2StoreMap.put("25", "OR000607"); // T store Cash
 		convert2StoreMap.put("26", "OR000606"); // Coupon
 		convert2StoreMap.put("27", "OR000623"); // 게임캐쉬
+		convert2StoreMap.put("28", "OR000624"); // 게임캐쉬 보너스 포인트
+		convert2StoreMap.put("29", "OR000608"); // T store Point
 
 		convert2PayPlanetMap = new HashMap<String, String>();
 		convert2PayPlanetMap.put("OR000605", PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER); // SKT후불
@@ -53,6 +55,8 @@ public class PaymethodUtil {
 		convert2PayPlanetMap.put("OR000607", "25"); // T store Cash
 		convert2PayPlanetMap.put("OR000606", "26"); // Coupon
 		convert2PayPlanetMap.put("OR000623", "27"); // 게임캐쉬
+		convert2PayPlanetMap.put("OR000624", "28"); // 게임캐쉬 보너스 포인트
+		convert2PayPlanetMap.put("OR000608", "29"); // T store Point
 
 	}
 
