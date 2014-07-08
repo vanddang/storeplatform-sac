@@ -1694,7 +1694,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		// 필수 파라미터 체크
 
-		if (!"catalog".equals(req.getType()) && !"episode".equals(req.getType())) {
+		if (!DisplayConstants.DP_CATALOG_IDENTIFIER_CD.equals(req.getType())
+				&& !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(req.getType())) {
 			throw new StorePlatformException("SAC_DSP_0003", "type", req.getType());
 		}
 
@@ -1702,12 +1703,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 			throw new StorePlatformException("SAC_DSP_0002", "productId", req.getProductId());
 		}
 		if (StringUtils.isEmpty(req.getSpecialProdId())) { // 특가 상품이 아닌경우
-			if ("episode".equals(req.getType())) {
+			if (DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(req.getType())) {
 				MetaInfo channelByEpisode = this.commonDAO.queryForObject("Shopping.getChannelByepisode", req,
 						MetaInfo.class);
 				if (channelByEpisode != null) {
 					req.setSpecialProdId(req.getProductId());
 					req.setProductId(channelByEpisode.getCatalogId());
+					req.setSpecialType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 				} else {
 					throw new StorePlatformException("SAC_DSP_0009");
 				}
@@ -1718,6 +1720,17 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getSpecialProdId())) {
 			req.setSpecialProdId(null);
 		}
+		if (StringUtils.isNotEmpty(req.getSpecialType())) {
+			if (!DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(req.getSpecialType())
+					&& !DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(req.getSpecialType())) {
+				throw new StorePlatformException("SAC_DSP_0003", "specialType", req.getSpecialType());
+			}
+		}
+		// OPTIONAL 파라미터 체크
+		if (StringUtils.isEmpty(req.getSpecialType())) {
+			req.setSpecialType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+		}
+
 		if (StringUtils.isEmpty(req.getUserKey())) {
 			req.setUserKey(null);
 		}
