@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -38,12 +37,6 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -111,68 +104,61 @@ public class FreepassServiceImpl implements FreepassService {
 		List<ProductBasicInfo> productBasicInfoList = null;
 		MetaInfo retMetaInfo = null;
 
-		if (StringUtil.nvl(req.getDummy(), "").equals("")) {
+		// 정액제 상품 목록 조회
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setDeviceModelCd(header.getDeviceHeader().getModel());
+		req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+		req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+		req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
+		req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
-			// 정액제 상품 목록 조회
-			req.setTenantId(header.getTenantHeader().getTenantId());
-			req.setLangCd(header.getTenantHeader().getLangCd());
-			req.setDeviceModelCd(header.getDeviceHeader().getModel());
-			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
-			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-
-			// 시작점 ROW Default 세팅
-			if (req.getOffset() == 0) {
-				req.setOffset(1);
-			}
-			// 페이지당 노출될 ROW 개수 Default 세팅
-			if (req.getCount() == 0) {
-				req.setCount(20);
-			}
-
-			// 페이지당 노출될 ROW 개수 Default 세팅
-			if ("All".equals(req.getKind())) {
-				req.setKind("");
-			}
-
-			// '+'로 연결 된 상품등급코드를 배열로 전달
-			if (StringUtils.isNotEmpty(req.getTopMenuId())) {
-				try {
-					// String[] arrTopMenuId = URLDecoder.decode(req.getTopMenuId(), "UTF-8").split("//+");
-					String[] arrTopMenuId = StringUtils.split(req.getTopMenuId(), "+");
-					req.setArrTopMenuId(arrTopMenuId);
-				} catch (Exception e) {
-					throw new StorePlatformException("SAC_DSP_0003", "topMenuId", req.getTopMenuId());
-				}
-			}
-
-			productBasicInfoList = this.commonDAO.queryForList("Freepass.selectFreepassList", req,
-					ProductBasicInfo.class);
-
-			if (productBasicInfoList == null)
-				throw new StorePlatformException("SAC_DSP_0009");
-
-			// 정액제 상품 메타 조회
-			if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
-				reqMap.put("tenantHeader", header.getTenantHeader());
-				reqMap.put("deviceHeader", header.getDeviceHeader());
-				reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-				reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-				reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
-					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
-					coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
-					couponList.add(coupon);
-					commonResponse.setTotalCount(productBasicInfo.getTotalCount());
-				}
-			}
-
-		} else {
-			couponList = this.getDummyCoupon();
-			commonResponse.setTotalCount(couponList.size());
+		// 시작점 ROW Default 세팅
+		if (req.getOffset() == 0) {
+			req.setOffset(1);
 		}
+		// 페이지당 노출될 ROW 개수 Default 세팅
+		if (req.getCount() == 0) {
+			req.setCount(20);
+		}
+
+		// 페이지당 노출될 ROW 개수 Default 세팅
+		if ("All".equals(req.getKind())) {
+			req.setKind("");
+		}
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getTopMenuId())) {
+			try {
+				// String[] arrTopMenuId = URLDecoder.decode(req.getTopMenuId(), "UTF-8").split("//+");
+				String[] arrTopMenuId = StringUtils.split(req.getTopMenuId(), "+");
+				req.setArrTopMenuId(arrTopMenuId);
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_DSP_0003", "topMenuId", req.getTopMenuId());
+			}
+		}
+
+		productBasicInfoList = this.commonDAO.queryForList("Freepass.selectFreepassList", req, ProductBasicInfo.class);
+
+		if (productBasicInfoList == null)
+			throw new StorePlatformException("SAC_DSP_0009");
+
+		// 정액제 상품 메타 조회
+		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+			reqMap.put("tenantHeader", header.getTenantHeader());
+			reqMap.put("deviceHeader", header.getDeviceHeader());
+			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+			reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
+			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+				reqMap.put("productBasicInfo", productBasicInfo);
+				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
+				coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
+				couponList.add(coupon);
+				commonResponse.setTotalCount(productBasicInfo.getTotalCount());
+			}
+		}
+
 		responseVO = new FreepassListRes();
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setCouponList(couponList);
@@ -203,143 +189,116 @@ public class FreepassServiceImpl implements FreepassService {
 		ProductBasicInfo productBasicInfo = new ProductBasicInfo();
 		MetaInfo retMetaInfo = null;
 
-		if (StringUtil.nvl(req.getDummy(), "").equals("")) {
-			// 정액제 상품 상세 조회
-			req.setTenantId(header.getTenantHeader().getTenantId());
-			req.setLangCd(header.getTenantHeader().getLangCd());
-			req.setDeviceModelCd(header.getDeviceHeader().getModel());
-			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			req.setEbookThumbnailImageCd(DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
-			req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
-			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		// 정액제 상품 상세 조회
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setDeviceModelCd(header.getDeviceHeader().getModel());
+		req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+		req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+		req.setEbookThumbnailImageCd(DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
+		req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
+		req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
-			// 시작점 ROW Default 세팅
-			if (req.getOffset() == 0) {
-				req.setOffset(1);
-			}
-			// 페이지당 노출될 ROW 개수 Default 세팅
-			if (req.getCount() == 0) {
-				req.setCount(20);
-			}
-
-			retMetaInfo = this.commonDAO.queryForObject("Freepass.selectFreepassDetail", req, MetaInfo.class);
-
-			if (retMetaInfo == null)
-				throw new StorePlatformException("SAC_DSP_0009", req.getProductId(), req.getProductId());
-
-			// 상품 상태 조회 - 판매중,판매중지,판매종료가 아니면 노출 안함
-			if (!DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
-					&& !DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())
-					&& !DisplayConstants.DP_PASS_SALE_STAT_ING.equals(retMetaInfo.getProdStatusCd())) {
-				throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(),
-						retMetaInfo.getProdStatusCd());
-			}
-
-			// 구매 여부 조회
-			if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
-				// 공통 메서드로 변경 20140424
-				boolean purchaseYn = this.displayCommonService.checkPurchase(req.getTenantId(), req.getUserKey(),
-						req.getDeviceKey(), req.getProductId());
-
-				// 구매가 있을 경우 : 판매중지,판매중,팬매종료는 노출함
-				if (!purchaseYn) {
-					if (DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
-							|| DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())) {
-						throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(),
-								retMetaInfo.getProdStatusCd());
-					}
-				}
-			}
-
-			coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
-
-			// 티멤버십 DC 정보
-			TmembershipDcInfo info = this.displayCommonService.getTmembershipDcRateForMenu(header.getTenantHeader()
-					.getTenantId(), retMetaInfo.getTopMenuId());
-			List<Point> pointList = this.commonGenerator.generatePoint(info);
-			coupon.setPointList(pointList);
-
-			mapList = this.commonDAO.queryForList("Freepass.selectFreepassMapProduct", req, FreepassProdMap.class);
-
-			reqMap.put("tenantHeader", header.getTenantHeader());
-			reqMap.put("deviceHeader", header.getDeviceHeader());
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			int minusCount = 0;
-
-			for (FreepassProdMap prodMap : mapList) {
-
-				productBasicInfo.setProdId(prodMap.getPartProdId());
-				productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
-				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-				reqMap.put("productBasicInfo", productBasicInfo);
-
-				commonResponse.setTotalCount(prodMap.getTotalCount());
-
-				if ("DP13".equals(prodMap.getTopMenuId())) {
-					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-					if (retMetaInfo == null) {
-						minusCount += 1;
-						continue;
-					} else
-						product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
-				} else if ("DP14".equals(prodMap.getTopMenuId())) {
-					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-					if (retMetaInfo == null) {
-						minusCount += 1;
-						continue;
-					} else
-						product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
-				} else if ("DP17".equals(prodMap.getTopMenuId())) {
-					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-					if (retMetaInfo == null) {
-						minusCount += 1;
-						continue;
-					} else
-						product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
-				} else if ("DP18".equals(prodMap.getTopMenuId())) {
-					reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-					if (retMetaInfo == null) {
-						minusCount += 1;
-						continue;
-					} else
-						product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
-				}
-				product.setStatus(prodMap.getIconClsfCd());
-				productList.add(product);
-
-			}
-			commonResponse.setTotalCount(commonResponse.getTotalCount() - minusCount);
-
-		} else {
-
-			reqMap.put("tenantHeader", header.getTenantHeader());
-			reqMap.put("deviceHeader", header.getDeviceHeader());
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-			String[] prodIdList = { "H000043398", "H000043398", "H000043398" };
-
-			for (int i = 0; i < prodIdList.length; i++) {
-				productBasicInfo.setProdId(prodIdList[i]);
-				productBasicInfo.setTenantId("S01");
-				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-				reqMap.put("productBasicInfo", productBasicInfo);
-				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-				product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
-				productList.add(product);
-			}
-
-			List<Coupon> couponList;
-			couponList = this.getDummyCoupon();
-			coupon = couponList.get(0);
-
-			commonResponse = new CommonResponse();
-			commonResponse.setTotalCount(productList.size());
+		// 시작점 ROW Default 세팅
+		if (req.getOffset() == 0) {
+			req.setOffset(1);
 		}
+		// 페이지당 노출될 ROW 개수 Default 세팅
+		if (req.getCount() == 0) {
+			req.setCount(20);
+		}
+
+		retMetaInfo = this.commonDAO.queryForObject("Freepass.selectFreepassDetail", req, MetaInfo.class);
+
+		if (retMetaInfo == null)
+			throw new StorePlatformException("SAC_DSP_0009", req.getProductId(), req.getProductId());
+
+		// 상품 상태 조회 - 판매중,판매중지,판매종료가 아니면 노출 안함
+		if (!DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
+				&& !DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())
+				&& !DisplayConstants.DP_PASS_SALE_STAT_ING.equals(retMetaInfo.getProdStatusCd())) {
+			throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(),
+					retMetaInfo.getProdStatusCd());
+		}
+
+		// 구매 여부 조회
+		if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
+			// 공통 메서드로 변경 20140424
+			boolean purchaseYn = this.displayCommonService.checkPurchase(req.getTenantId(), req.getUserKey(),
+					req.getDeviceKey(), req.getProductId());
+
+			// 구매가 있을 경우 : 판매중지,판매중,판매종료는 노출함
+			if (!purchaseYn) {
+				if (DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
+						|| DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())) {
+					throw new StorePlatformException("SAC_DSP_0011", retMetaInfo.getProdStatusCd(),
+							retMetaInfo.getProdStatusCd());
+				}
+			}
+		}
+
+		coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
+
+		// 티멤버십 DC 정보
+		TmembershipDcInfo info = this.displayCommonService.getTmembershipDcRateForMenu(header.getTenantHeader()
+				.getTenantId(), retMetaInfo.getTopMenuId());
+		List<Point> pointList = this.commonGenerator.generatePoint(info);
+		coupon.setPointList(pointList);
+
+		mapList = this.commonDAO.queryForList("Freepass.selectFreepassMapProduct", req, FreepassProdMap.class);
+
+		reqMap.put("tenantHeader", header.getTenantHeader());
+		reqMap.put("deviceHeader", header.getDeviceHeader());
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		int minusCount = 0;
+
+		for (FreepassProdMap prodMap : mapList) {
+
+			productBasicInfo.setProdId(prodMap.getPartProdId());
+			productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
+			productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+			reqMap.put("productBasicInfo", productBasicInfo);
+
+			commonResponse.setTotalCount(prodMap.getTotalCount());
+
+			if ("DP13".equals(prodMap.getTopMenuId())) {
+				reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+				retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+				if (retMetaInfo == null) {
+					minusCount += 1;
+					continue;
+				} else
+					product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+			} else if ("DP14".equals(prodMap.getTopMenuId())) {
+				reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+				retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+				if (retMetaInfo == null) {
+					minusCount += 1;
+					continue;
+				} else
+					product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+			} else if ("DP17".equals(prodMap.getTopMenuId())) {
+				reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+				if (retMetaInfo == null) {
+					minusCount += 1;
+					continue;
+				} else
+					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+			} else if ("DP18".equals(prodMap.getTopMenuId())) {
+				reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+				if (retMetaInfo == null) {
+					minusCount += 1;
+					continue;
+				} else
+					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+			}
+			product.setStatus(prodMap.getIconClsfCd());
+			productList.add(product);
+
+		}
+		commonResponse.setTotalCount(commonResponse.getTotalCount() - minusCount);
 
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setCoupon(coupon);
@@ -373,105 +332,75 @@ public class FreepassServiceImpl implements FreepassService {
 		ProductBasicInfo productBasicInfo = null;
 		MetaInfo retMetaInfo = null;
 
-		if (StringUtil.nvl(req.getDummy(), "").equals("")) {
+		// 정액제 상품 목록 조회
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setDeviceModelCd(header.getDeviceHeader().getModel());
+		req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+		req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+		req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
+		req.setChnlStatusCd(DisplayConstants.DP_SALE_STAT_ING);
+		req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		req.setKind("OR004302");
 
-			// 정액제 상품 목록 조회
-			req.setTenantId(header.getTenantHeader().getTenantId());
-			req.setLangCd(header.getTenantHeader().getLangCd());
-			req.setDeviceModelCd(header.getDeviceHeader().getModel());
-			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
-			req.setChnlStatusCd(DisplayConstants.DP_SALE_STAT_ING);
-			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-			req.setKind("OR004302");
+		// 시작점 ROW Default 세팅
+		if (req.getOffset() == 0) {
+			req.setOffset(1);
+		}
+		// 페이지당 노출될 ROW 개수 Default 세팅
+		if (req.getCount() == 0) {
+			req.setCount(20);
+		}
 
-			// 시작점 ROW Default 세팅
-			if (req.getOffset() == 0) {
-				req.setOffset(1);
-			}
-			// 페이지당 노출될 ROW 개수 Default 세팅
-			if (req.getCount() == 0) {
-				req.setCount(20);
-			}
+		couponBasicInfoList = this.commonDAO.queryForList("Freepass.selectFreepassSeries", req, ProductBasicInfo.class);
 
-			couponBasicInfoList = this.commonDAO.queryForList("Freepass.selectFreepassSeries", req,
-					ProductBasicInfo.class);
+		if (couponBasicInfoList == null)
+			commonResponse.setTotalCount(0);
 
-			if (couponBasicInfoList == null)
-				commonResponse.setTotalCount(0);
-
-			// 정액제 상품 메타 조회
-			if (couponBasicInfoList != null && couponBasicInfoList.size() > 0) {
-				reqMapC.put("tenantHeader", header.getTenantHeader());
-				reqMapC.put("deviceHeader", header.getDeviceHeader());
-				reqMapC.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-				reqMapC.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-				reqMapC.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
-				reqMapP.put("tenantHeader", header.getTenantHeader());
-				reqMapP.put("deviceHeader", header.getDeviceHeader());
-				reqMapP.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-
-				for (ProductBasicInfo couponBasicInfo : couponBasicInfoList) {
-					reqMapC.put("productBasicInfo", couponBasicInfo);
-					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMapC);
-					coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
-
-					productBasicInfo = new ProductBasicInfo();
-					productBasicInfo.setProdId(couponBasicInfo.getPartProdId());
-					productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
-					productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-					reqMapP.put("productBasicInfo", productBasicInfo);
-
-					commonResponse.setTotalCount(couponBasicInfo.getTotalCount());
-					// 상품메타 정보 조회
-					if ("DP13".equals(couponBasicInfo.getTopMenuId())) {
-						reqMapP.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMapP);
-						product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
-					} else if ("DP14".equals(couponBasicInfo.getTopMenuId())) {
-						reqMapP.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMapP);
-						product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
-					} else if ("DP17".equals(couponBasicInfo.getTopMenuId())) {
-						reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
-						product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
-					} else if ("DP18".equals(couponBasicInfo.getTopMenuId())) {
-						reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-						retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
-						product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
-					}
-					product.setCoupon(coupon);
-					productList.add(product);
-				}
-			}
-
-		} else {
-			// 더미용 데이터 제공
+		// 정액제 상품 메타 조회
+		if (couponBasicInfoList != null && couponBasicInfoList.size() > 0) {
+			reqMapC.put("tenantHeader", header.getTenantHeader());
+			reqMapC.put("deviceHeader", header.getDeviceHeader());
+			reqMapC.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+			reqMapC.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+			reqMapC.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
 			reqMapP.put("tenantHeader", header.getTenantHeader());
 			reqMapP.put("deviceHeader", header.getDeviceHeader());
 			reqMapP.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-			String[] prodIdList = { "H000043398", "H000043398", "H000043398" };
 
-			List<Coupon> couponList = this.getDummyCoupon();
-			coupon = couponList.get(0);
+			for (ProductBasicInfo couponBasicInfo : couponBasicInfoList) {
+				reqMapC.put("productBasicInfo", couponBasicInfo);
+				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMapC);
+				coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
 
-			productBasicInfo = new ProductBasicInfo();
-			for (int i = 0; i < prodIdList.length; i++) {
-				productBasicInfo.setProdId(prodIdList[i]);
-				productBasicInfo.setTenantId("S01");
+				productBasicInfo = new ProductBasicInfo();
+				productBasicInfo.setProdId(couponBasicInfo.getPartProdId());
+				productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
 				productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 				reqMapP.put("productBasicInfo", productBasicInfo);
-				retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
-				product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+
+				commonResponse.setTotalCount(couponBasicInfo.getTotalCount());
+				// 상품메타 정보 조회
+				if ("DP13".equals(couponBasicInfo.getTopMenuId())) {
+					reqMapP.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMapP);
+					product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+				} else if ("DP14".equals(couponBasicInfo.getTopMenuId())) {
+					reqMapP.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMapP);
+					product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+				} else if ("DP17".equals(couponBasicInfo.getTopMenuId())) {
+					reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
+					product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+				} else if ("DP18".equals(couponBasicInfo.getTopMenuId())) {
+					reqMapP.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+					retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMapP);
+					product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+				}
 				product.setCoupon(coupon);
 				productList.add(product);
 			}
-
-			commonResponse.setTotalCount(couponList.size());
-
 		}
 
 		responseVO.setCommonResponse(commonResponse);
@@ -502,153 +431,64 @@ public class FreepassServiceImpl implements FreepassService {
 		List<ProductBasicInfo> productBasicInfoList = null;
 		MetaInfo retMetaInfo = null;
 
-		if (StringUtil.nvl(req.getDummy(), "").equals("")) {
+		// 정액제 상품 목록 조회
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setDeviceModelCd(header.getDeviceHeader().getModel());
+		req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+		req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+		req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
+		req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 
-			// 정액제 상품 목록 조회
-			req.setTenantId(header.getTenantHeader().getTenantId());
-			req.setLangCd(header.getTenantHeader().getLangCd());
-			req.setDeviceModelCd(header.getDeviceHeader().getModel());
-			req.setBannerImageCd(DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-			req.setThumbnailImageCd(DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-			req.setProdStatusCd(DisplayConstants.DP_PASS_SALE_STAT_ING);
-			req.setStandardModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-			req.setProdRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-			req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
-
-			// 시작점 ROW Default 세팅
-			if (req.getOffset() == 0) {
-				req.setOffset(1);
-			}
-			// 페이지당 노출될 ROW 개수 Default 세팅
-			if (req.getCount() == 0) {
-				req.setCount(20);
-			}
-
-			// '+'로 연결 된 상품등급코드를 배열로 전달
-			if (StringUtils.isNotEmpty(req.getKind())) {
-				try {
-
-					// String[] arrKind = URLDecoder.decode(req.getKind(), "UTF-8").split("//+");
-					String[] arrKind = StringUtils.split(req.getKind(), "+");
-					req.setArrKind(arrKind);
-				} catch (Exception e) {
-					throw new StorePlatformException("SAC_DSP_0003", "kind", req.getKind());
-				}
-			}
-
-			if (StringUtils.equalsIgnoreCase(req.getKind(), "All")) {
-				req.setKind("");
-			}
-			productBasicInfoList = this.commonDAO.queryForList("Freepass.searchFreepassListByChannel", req,
-					ProductBasicInfo.class);
-
-			// 정액제 상품 메타 조회
-			if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
-				reqMap.put("tenantHeader", header.getTenantHeader());
-				reqMap.put("deviceHeader", header.getDeviceHeader());
-				reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
-				reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
-				reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
-					retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
-					coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
-					couponList.add(coupon);
-					commonResponse.setTotalCount(productBasicInfo.getTotalCount());
-				}
-			}
-
-		} else {
-			couponList = this.getDummyCoupon();
-			commonResponse.setTotalCount(couponList.size());
+		// 시작점 ROW Default 세팅
+		if (req.getOffset() == 0) {
+			req.setOffset(1);
 		}
+		// 페이지당 노출될 ROW 개수 Default 세팅
+		if (req.getCount() == 0) {
+			req.setCount(20);
+		}
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getKind())) {
+			try {
+
+				// String[] arrKind = URLDecoder.decode(req.getKind(), "UTF-8").split("//+");
+				String[] arrKind = StringUtils.split(req.getKind(), "+");
+				req.setArrKind(arrKind);
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_DSP_0003", "kind", req.getKind());
+			}
+		}
+
+		if (StringUtils.equalsIgnoreCase(req.getKind(), "All")) {
+			req.setKind("");
+		}
+		productBasicInfoList = this.commonDAO.queryForList("Freepass.searchFreepassListByChannel", req,
+				ProductBasicInfo.class);
+
+		// 정액제 상품 메타 조회
+		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+			reqMap.put("tenantHeader", header.getTenantHeader());
+			reqMap.put("deviceHeader", header.getDeviceHeader());
+			reqMap.put("bannerImageCd", DisplayConstants.DP_FREEPASS_BANNER_IMAGE_CD);
+			reqMap.put("thumbnailImageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
+			reqMap.put("ebookThumbnailImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
+			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+				reqMap.put("productBasicInfo", productBasicInfo);
+				retMetaInfo = this.metaInfoService.getFreepassMetaInfo(reqMap);
+				coupon = this.responseInfoGenerateFacade.generateFreepassProduct(retMetaInfo);
+				couponList.add(coupon);
+				commonResponse.setTotalCount(productBasicInfo.getTotalCount());
+			}
+		}
+
 		responseVO = new FreepassListRes();
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setCouponList(couponList);
 		return responseVO;
-	}
-
-	/**
-	 * <pre>
-	 * 임시 더미용.
-	 * </pre>
-	 * 
-	 * @return List
-	 * 
-	 */
-	public List<Coupon> getDummyCoupon() {
-		// TODO Auto-generated method stub
-		Identifier identifier;
-		Title title;
-
-		Source source;
-		Price price;
-
-		Coupon coupon;
-		AutoPay autoPay;
-		Date date;
-
-		// Response VO를 만들기위한 생성자
-		// List<Product> productList = new ArrayList<Product>();
-
-		List<Source> sourceList;
-		List<Identifier> identifierList;
-		List<Coupon> couponList = new ArrayList<Coupon>();
-
-		for (int i = 0; i < 3; i++) {
-			// 상품ID
-			identifier = new Identifier();
-			title = new Title();
-
-			source = new Source();
-			price = new Price();
-
-			coupon = new Coupon();
-			autoPay = new AutoPay();
-			date = new Date();
-
-			// Response VO를 만들기위한 생성자
-
-			sourceList = new ArrayList<Source>();
-
-			identifierList = new ArrayList<Identifier>();
-
-			identifier.setType("freepass");
-			identifier.setText("FR9010117" + i);
-			identifierList.add(identifier);
-
-			coupon.setKind("OR004301");
-			coupon.setCouponExplain("특선영화 30일 자유이용권");
-
-			price.setText(6500);
-
-			autoPay.setType("auto");
-
-			date.setType("duration/usagePeriod");
-			date.setText("2013-10-06 14:22:51/2015-02-06 14:22:51");
-
-			title.setText("특선영화 30일 자유이용권");
-			title.setAlias("특선영화 30일 자유이용권");
-
-			source.setType("banner");
-			source.setUrl("/data4/img/original/0000258524_DP000101.png");
-			sourceList.add(source);
-
-			source = new Source();
-			source.setType("thumnail");
-			source.setUrl("/data4/img/original/0000258524_DP000101.png");
-			sourceList.add(source);
-
-			coupon.setAutopay(autoPay);
-			coupon.setDate(date);
-			coupon.setPrice(price);
-			coupon.setSourceList(sourceList);
-			coupon.setTitle(title);
-			coupon.setIdentifierList(identifierList);
-
-			couponList.add(coupon);
-		}
-		return couponList;
 	}
 
 	/**
