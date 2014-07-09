@@ -125,7 +125,7 @@
                      , ROW_NUMBER() OVER(ORDER BY NVL(A.AVG_EVLU_SCORE, 0) DESC, A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 평점순 */
                      </if>
                      <if test='orderedBy != "recent" and orderedBy != "download" and orderedBy != "popular"'>
-                     , ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC, A.PROD_NM) AS RNUM  /* 최신순 */
+                     , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB, A.PROD_NM) AS RNUM
                      </if>
                  FROM (SELECT A.TENANT_ID
                             , D.MENU_ID
