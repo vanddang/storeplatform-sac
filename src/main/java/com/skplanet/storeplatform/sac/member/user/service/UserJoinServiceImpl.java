@@ -124,7 +124,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
 		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
-				req.getDeviceId(), req.getDeviceIdType());
+				req.getDeviceId(), req.getDeviceIdType(), false);
 
 		/**
 		 * 약관 맵핑정보 세팅.
@@ -142,6 +142,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 			joinForWapEcReq.setUserMdn(req.getDeviceId());
 			joinForWapEcReq.setMdnCorp(this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
 			joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
+
+			/**
+			 * skt 서비스 관리번호 idp응답값으로 셋팅
+			 */
+			majorDeviceInfo.setSvcMangNum(joinForWapEcRes.getSvcMngNum());
 
 		} catch (StorePlatformException spe) {
 
@@ -338,7 +343,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
 		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
-				req.getDeviceId(), req.getDeviceIdType());
+				req.getDeviceId(), req.getDeviceIdType(), true);
 
 		/**
 		 * 약관 맵핑정보 세팅.
@@ -525,7 +530,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
 		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
-				req.getDeviceId(), req.getDeviceIdType());
+				req.getDeviceId(), req.getDeviceIdType(), true);
 
 		/**
 		 * IDP 연동을 위한.... Phone 정보 세팅.
@@ -990,7 +995,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
 		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), deviceTelecom, req.getDeviceId(),
-				req.getDeviceIdType());
+				req.getDeviceIdType(), true);
 
 		/**
 		 * MSISDN 가입자와 MAC 가입자를 분기하여 처리한다.
