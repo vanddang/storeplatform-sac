@@ -55,9 +55,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserAuthMethod;
@@ -273,36 +270,36 @@ public class LoginServiceImpl implements LoginService {
 				.getUserMbr().getUserKey());
 
 		/* Tcloud 약관동의 노출 여부 체크 */
-		String tcloudAgreeViewYn = "N"; // Tcloud 이용동의 노출 여부
-		ChangedDeviceHistorySacReq changedDeviceHistoryReq = new ChangedDeviceHistorySacReq();
-		changedDeviceHistoryReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
-		changedDeviceHistoryReq.setDeviceId(req.getDeviceId());
-		ChangedDeviceHistorySacRes changedDeviceHistoryRes = this.deviceService.srhChangedDeviceHistory(requestHeader, changedDeviceHistoryReq);
-
-		if (StringUtils.equals(changedDeviceHistoryRes.getIsChanged(), "Y")) {
-
-			/*
-			 * 최근 1개월 이내 기기변경이력이 있고 Tcloud 약관동의 되어있지 않은 경우 "T"로 임시 업데이트하여 Tcloud
-			 * 약관동의 최초 한번만 노출되도록 처리
-			 */
-			String tcloudAgreeYn = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN,
-					dbDeviceInfo.getDeviceExtraInfoList()); // Tcloud 약관동의 여부
-
-			if (StringUtils.isBlank(tcloudAgreeYn) || StringUtils.equals(tcloudAgreeYn, "N")) {
-
-				tcloudAgreeViewYn = "Y";
-				List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-				if (req.getDeviceExtraInfoList() != null) {
-					deviceExtraInfoList = req.getDeviceExtraInfoList();
-				}
-				DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-				deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN);
-				deviceExtraInfo.setExtraProfileValue("T");
-				deviceExtraInfoList.add(deviceExtraInfo);
-				req.setDeviceExtraInfoList(deviceExtraInfoList);
-
-			}
-		}
+		//		String tcloudAgreeViewYn = "N"; // Tcloud 이용동의 노출 여부
+		//		ChangedDeviceHistorySacReq changedDeviceHistoryReq = new ChangedDeviceHistorySacReq();
+		//		changedDeviceHistoryReq.setUserKey(chkDupRes.getUserMbr().getUserKey());
+		//		changedDeviceHistoryReq.setDeviceId(req.getDeviceId());
+		//		ChangedDeviceHistorySacRes changedDeviceHistoryRes = this.deviceService.srhChangedDeviceHistory(requestHeader, changedDeviceHistoryReq);
+		//
+		//		if (StringUtils.equals(changedDeviceHistoryRes.getIsChanged(), "Y")) {
+		//
+		//			/*
+		//			 * 최근 1개월 이내 기기변경이력이 있고 Tcloud 약관동의 되어있지 않은 경우 "T"로 임시 업데이트하여 Tcloud
+		//			 * 약관동의 최초 한번만 노출되도록 처리
+		//			 */
+		//			String tcloudAgreeYn = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN,
+		//					dbDeviceInfo.getDeviceExtraInfoList()); // Tcloud 약관동의 여부
+		//
+		//			if (StringUtils.isBlank(tcloudAgreeYn) || StringUtils.equals(tcloudAgreeYn, "N")) {
+		//
+		//				tcloudAgreeViewYn = "Y";
+		//				List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		//				if (req.getDeviceExtraInfoList() != null) {
+		//					deviceExtraInfoList = req.getDeviceExtraInfoList();
+		//				}
+		//				DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		//				deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_TCLOUD_SUPPORT_YN);
+		//				deviceExtraInfo.setExtraProfileValue("T");
+		//				deviceExtraInfoList.add(deviceExtraInfo);
+		//				req.setDeviceExtraInfoList(deviceExtraInfoList);
+		//
+		//			}
+		//		}
 
 		/* 휴대기기 정보 수정 */
 		String deviceKey = this.modDeviceInfoForLogin(requestHeader, chkDupRes.getUserMbr().getUserKey(), req, oDeviceId, dbDeviceInfo, "v2");
@@ -368,9 +365,7 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserAuthKey(this.tempUserAuthKey);
 		res.setDeviceKey(deviceKey);
 		res.setIsLoginSuccess("Y");
-		if (StringUtils.equals(tcloudAgreeViewYn, "Y")) {
-			res.setTcloudAgreeViewYn(tcloudAgreeViewYn);
-		}
+
 		return res;
 	}
 
@@ -919,6 +914,9 @@ public class LoginServiceImpl implements LoginService {
 			throw new StorePlatformException("SAC_MEM_0003", "macAddress", req.getMacAddress());
 		}
 
+		/* 모번호 조회 및 셋팅 */
+		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
+
 		/* mdn 회원유무 조회 */
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
@@ -995,14 +993,23 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo = this.deviceService.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 			/* 휴대기기 주요정보 조회 */
 			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
-					req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN);
+					req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN, false);
 
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum());
 			/* 디바이스 헤더에 모델정보가 있거나 디폴트 모델이 아닌경우만 단말정보 변경 */
 			if (StringUtils.isNotBlank(deviceInfo.getDeviceModelNo()) && !this.commService.isDefaultDeviceModel(deviceInfo.getDeviceModelNo())) {
 				deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
 				deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
-				deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+				if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
+					deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+				} else {
+
+					/* 정상단말로 요청시 DB에 단말정보가 미지원단말정보이면 디폴트 모델명을 닉네임에 셋팅 */
+					if (StringUtils.equals(mdnDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+							&& StringUtils.equals(mdnDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+						deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+					}
+				}
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
 						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
@@ -1081,13 +1088,22 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 휴대기기 주요정보 조회 */
 			MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), MemberConstants.DEVICE_TELECOM_SKT,
-					req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN);
+					req.getDeviceId(), MemberConstants.DEVICE_ID_TYPE_MSISDN, false);
 
 			/* 디바이스 헤더에 모델정보가 있거나 디폴트 모델이 아닌경우만 단말정보 변경 */
 			if (StringUtils.isNotBlank(deviceInfo.getDeviceModelNo()) && !this.commService.isDefaultDeviceModel(deviceInfo.getDeviceModelNo())) {
 				deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
 				deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
-				deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+				if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
+					deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+				} else {
+
+					/* 정상단말로 요청시 DB에 단말정보가 미지원단말정보이면 디폴트 모델명을 닉네임에 셋팅 */
+					if (StringUtils.equals(mdnDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+							&& StringUtils.equals(mdnDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+						deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
+					}
+				}
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
 						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
