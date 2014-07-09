@@ -186,6 +186,8 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
         res.setProductList(productList);
 
         this.log.debug("##### updateAutoUpdateList finished !!!!!!!!!!");
+        appUpdateSupportService.logUpdateResult("Auto", deviceId, member.getUserKey(), member.getDeviceKey(), header.getNetworkHeader().getType(), forTlogAppIdList);
+
         return res;
     }
 

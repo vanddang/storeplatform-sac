@@ -109,20 +109,19 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
         String tenantId = header.getTenantHeader().getTenantId();
         String langCd = header.getTenantHeader().getLangCd();
         List<HistorySacIn> listPrchs = null;
+        List<String> updatePidList = new ArrayList<String>();
 
 		String memberType = req.getMemberType();
 		/**************************************************************
 		 * Package 명으로 상품 조회
 		 **************************************************************/
-		List<String> listPkgNm = new ArrayList<String>();
-        List<String> hashedPkgList = new ArrayList<String>(listPkgNm.size());
+        List<String> hashedPkgList = new ArrayList<String>(packageInfoList.size());
         for (String s : packageInfoList) {
 			String[] arrInfo = StringUtils.split(s, "/");
 			if (arrInfo.length >= 2) {
 				String pkgNm = arrInfo[0];
 				// parameter가 적어도 packageName/version정보로 와야지만 update 리스트에 추가한다.
 				this.log.debug("##### update package name : {}", pkgNm);
-				listPkgNm.add(pkgNm);
                 hashedPkgList.add(DisplayCryptUtils.hashPkgNm(pkgNm));
             }
 		}
@@ -459,6 +458,9 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 				// Response 정보 가공
 				for (Map<String, Object> updateTargetApp : listUpdate) {
+
+                    updatePidList.add((String) updateTargetApp.get("PROD_ID"));
+
 					Product product = new Product();
 					History history = new History();
 					List<Update> updateList = new ArrayList<Update>();
@@ -526,6 +528,9 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 			}
 		}
 		this.log.debug("##### searchUpdateProductList end!!!!!!!!!!");
+
+        appUpdateSupportService.logUpdateResult("Manual", "", req.getUserKey(), req.getDeviceKey(), header.getNetworkHeader().getType(), updatePidList);
+
 		return res;
 	}
 }

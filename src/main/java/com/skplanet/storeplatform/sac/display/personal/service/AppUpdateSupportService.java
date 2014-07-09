@@ -47,4 +47,15 @@ public interface AppUpdateSupportService {
      * @return
      */
     MemberInfo getMemberInfo(String deviceId);
+
+    /**
+     * 업데이트 결과를 로그에 남긴다.
+     * @param type
+     * @param deviceId
+     * @param userKey
+     * @param deviceKey
+     * @param network
+     * @param updateList
+     */
+    void logUpdateResult(String type, String deviceId, String userKey, String deviceKey, String network, List<String> updateList);
 }

@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.display.personal.vo.MemberInfo;
 import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,5 +161,11 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
         }
 
         return new MemberInfo(userKey, deviceKey);
+    }
+
+    @Override
+    public void logUpdateResult(String type, String deviceId, String userKey, String deviceKey, String network, List<String> updateList) {
+        String updateListStr = StringUtils.join(updateList, ",");
+        logger.info("UpdateResult: type={}, deviceId={}, userKey={}, deviceKey={}, network={}, updateList=[{}]", type, deviceId, userKey, deviceId, network, updateListStr);
     }
 }
