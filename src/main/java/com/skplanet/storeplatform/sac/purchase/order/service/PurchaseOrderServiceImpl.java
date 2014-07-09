@@ -550,6 +550,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		// ------------------------------------------------------------------------------------------------
+		// 캐쉬/포인트 잔액 통합 정보
+
+		StringBuffer sbCashPoint = new StringBuffer();
+		sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":")
+				.append(res.getTstoreCashAmt()).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH)
+				.append(":").append(res.getGameCashAmt());
+
+		res.setCashPointList(sbCashPoint.toString());
+
+		// ------------------------------------------------------------------------------------------------
 		// OCB 적립율
 
 		// 시험폰, SKP법인폰 여부
