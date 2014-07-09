@@ -56,8 +56,8 @@
 			,SYSDATE
 			,#{updId, jdbcType=VARCHAR}
 			,SYSDATE			
-            ,#{bnchProdId}
-            ,#{bnchDwldMsg}
+            ,#{bnchProdId, jdbcType=VARCHAR}
+            ,#{bnchDwldMsg, jdbcType=VARCHAR}
         ) 
   	]]>
   	</insert>
