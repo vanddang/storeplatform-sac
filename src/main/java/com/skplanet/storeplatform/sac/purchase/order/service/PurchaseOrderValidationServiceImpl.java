@@ -19,6 +19,8 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,6 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.shopping.repository.ShoppingRepository;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
 
 /**
  * 
@@ -888,8 +889,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 * @param deviceId MDN
 	 */
 	private void checkAvailableCouponPublish(String couponCode, String itemCode, int itemCount, String deviceId) {
-		CouponPublishAvailableSacResult shoppingRes = null;
-		String availCd = null;
 
 		CouponPublishAvailableSacParam shoppingReq = new CouponPublishAvailableSacParam();
 		shoppingReq.setCouponCode(couponCode);
@@ -897,33 +896,51 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		shoppingReq.setItemCount(itemCount);
 		shoppingReq.setMdn(deviceId);
 
+		this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,REQ,{},",
+				ReflectionToStringBuilder.toString(shoppingReq, ToStringStyle.SHORT_PREFIX_STYLE));
 		try {
-			shoppingRes = this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
-			availCd = shoppingRes.getStatusCd();
+			this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
+			this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,RES,true");
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7205", e);
+			if (e instanceof StorePlatformException) {
+				this.logger
+						.info("PRCHS,SAC,ORDER,VALID,SHOPPING,RES,false,{},", ((StorePlatformException) e).getCode());
+			} else {
+				this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,RES,false");
+			}
 		}
 
-		if (availCd == null) {
-			throw new StorePlatformException("SAC_PUR_7205");
-		}
-
-		this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,{},{}", shoppingRes.getStatusCd(), shoppingRes.getStatusMsg());
-
-		switch (Integer.parseInt(availCd)) {
-		case 0: // 정상
-			break;
-		case 3301:
-			throw new StorePlatformException("SAC_PUR_6104");
-		case 3302:
-			throw new StorePlatformException("SAC_PUR_6105");
-		case 3303:
-			throw new StorePlatformException("SAC_PUR_6106");
-		case 3304:
-			throw new StorePlatformException("SAC_PUR_6107");
-		default:
-			throw new StorePlatformException("SAC_PUR_7205");
-		}
+		// CouponPublishAvailableSacResult shoppingRes = null;
+		// String availCd = null;
+		//
+		// try {
+		// shoppingRes = this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
+		// availCd = shoppingRes.getStatusCd();
+		// } catch (Exception e) {
+		// throw new StorePlatformException("SAC_PUR_7205", e);
+		// }
+		//
+		// if (availCd == null) {
+		// throw new StorePlatformException("SAC_PUR_7205");
+		// }
+		//
+		// this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,{},{}", shoppingRes.getStatusCd(),
+		// shoppingRes.getStatusMsg());
+		//
+		// switch (Integer.parseInt(availCd)) {
+		// case 0: // 정상
+		// break;
+		// case 3301:
+		// throw new StorePlatformException("SAC_PUR_6104");
+		// case 3302:
+		// throw new StorePlatformException("SAC_PUR_6105");
+		// case 3303:
+		// throw new StorePlatformException("SAC_PUR_6106");
+		// case 3304:
+		// throw new StorePlatformException("SAC_PUR_6107");
+		// default:
+		// throw new StorePlatformException("SAC_PUR_7205");
+		// }
 	}
 
 	/*

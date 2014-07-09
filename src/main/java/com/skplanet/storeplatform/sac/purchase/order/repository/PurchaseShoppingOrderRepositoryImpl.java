@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,9 +74,11 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		couponPublishEcReq.setItemCode(itemCode);
 		couponPublishEcReq.setItemCount(qty);
 
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,PUBLISH,REQ,{}", couponPublishEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,PUBLISH,REQ,{}",
+				ReflectionToStringBuilder.toString(couponPublishEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 		CouponPublishEcRes couponPublishEcRes = this.shoppingSCI.createCouponPublish(couponPublishEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,PUBLISH,RES,{}", couponPublishEcRes);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,PUBLISH,RES,{}",
+				ReflectionToStringBuilder.toString(couponPublishEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		return couponPublishEcRes;
 	}
@@ -93,10 +97,12 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
 		couponPublishCancelEcReq.setPrchsId(prchsId);
 
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CANCEL,REQ,{}", couponPublishCancelEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CANCEL,REQ,{}",
+				ReflectionToStringBuilder.toString(couponPublishCancelEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 		CouponPublishCancelEcRes couponPublishCancelEcRes = this.shoppingSCI
 				.cancelCouponPublish(couponPublishCancelEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CANCEL,RES,{}", couponPublishCancelEcRes);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,CANCEL,RES,{}",
+				ReflectionToStringBuilder.toString(couponPublishCancelEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 	}
 
 	/**
@@ -136,8 +142,10 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		bizCouponPublishEcReq.setCouponCode(couponCode);
 		bizCouponPublishEcReq.setBizCouponPublishDetailList(bizCouponPublishDetailEcList);
 
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,BIZ,PUBLISH,REQ,{}", bizCouponPublishEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,BIZ,PUBLISH,REQ,{}",
+				ReflectionToStringBuilder.toString(bizCouponPublishEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 		BizCouponPublishEcRes bizCouponPublishEcRes = this.shoppingSCI.createBizCouponPublish(bizCouponPublishEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,BIZ,PUBLISH,RES,{}", bizCouponPublishEcRes);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,BIZ,PUBLISH,RES,{}",
+				ReflectionToStringBuilder.toString(bizCouponPublishEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 	}
 }

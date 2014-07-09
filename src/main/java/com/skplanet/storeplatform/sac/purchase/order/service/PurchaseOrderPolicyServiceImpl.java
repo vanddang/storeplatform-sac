@@ -15,6 +15,8 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,7 +214,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public void checkUserPolicy(PurchaseOrderInfo purchaseOrderInfo) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,START,{}", purchaseOrderInfo.getPurchaseUser());
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,USER,START,{}", ReflectionToStringBuilder.toString(
+				purchaseOrderInfo.getPurchaseUser(), ToStringStyle.SHORT_PREFIX_STYLE));
 
 		if (purchaseOrderInfo.getRealTotAmt() == 0.0) {
 			return;
@@ -276,7 +279,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		/* 정책 처리 -- 처리패턴에 의한 처리에서 특정 처리패턴의 순차 처리로 변경. */
 		/* 추후 정책 구조 변경을 보며, 처리 방법 변경 고려 */
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,START,{}", policyCheckParam);
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,START,{}",
+				ReflectionToStringBuilder.toString(policyCheckParam, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		// --------------------------------------------------------------------------------------------------
 		// UAPS Mapping정보 조회
@@ -570,7 +574,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyResult.setSktRestAmt(policyCheckParam.getPaymentTotAmt());
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,END,{},{}", policyCheckParam.getDeviceKey(), policyResult);
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,END,{},{}", policyCheckParam.getDeviceKey(),
+				ReflectionToStringBuilder.toString(policyResult, ToStringStyle.SHORT_PREFIX_STYLE));
 		return policyResult;
 	}
 

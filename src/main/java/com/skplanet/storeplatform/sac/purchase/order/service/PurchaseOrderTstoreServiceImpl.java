@@ -14,6 +14,8 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,9 +105,11 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 
 		UserCouponListEcRes userCouponListEcRes = null;
 		try {
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,REQ,{}", userCouponListEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,REQ,{}",
+					ReflectionToStringBuilder.toString(userCouponListEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 			userCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES,{}", userCouponListEcRes);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES,{}",
+					ReflectionToStringBuilder.toString(userCouponListEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7210", e);
 		}
@@ -158,9 +162,11 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 
 		TStoreCashBalanceEcRes tStoreCashEcRes = null;
 		try {
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,SEARCH,REQ,{}", tStoreCashEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,SEARCH,REQ,{}",
+					ReflectionToStringBuilder.toString(tStoreCashEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,SEARCH,RES,{}", tStoreCashEcRes);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,SEARCH,RES,{}",
+					ReflectionToStringBuilder.toString(tStoreCashEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7211", e);
 		}
@@ -203,9 +209,11 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 
 		TStoreCashBalanceEcRes tStoreCashEcRes = null;
 		try {
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,SEARCH,REQ,{}", tStoreCashEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,SEARCH,REQ,{}",
+					ReflectionToStringBuilder.toString(tStoreCashEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,SEARCH,RES,{}", tStoreCashEcRes);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,SEARCH,RES,{}",
+					ReflectionToStringBuilder.toString(tStoreCashEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7211", e);
 		}
@@ -279,10 +287,12 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreCashChargeReserveEcReq.setUserKey(userKey);
 		tStoreCashChargeReserveEcReq.setCashList(cashReserveList);
 
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,RESERVE,REQ,{}", tStoreCashChargeReserveEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,RESERVE,REQ,{}",
+				ReflectionToStringBuilder.toString(tStoreCashChargeReserveEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 		TStoreCashChargeReserveEcRes tStoreCashChargeReserveEcRes = this.tStoreCashSCI
 				.reserveCharge(tStoreCashChargeReserveEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,RESERVE,RES,{}", tStoreCashChargeReserveEcRes);
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,RESERVE,RES,{}",
+				ReflectionToStringBuilder.toString(tStoreCashChargeReserveEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		if (StringUtils.equals(tStoreCashChargeReserveEcRes.getResultCd(),
 				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
@@ -326,10 +336,12 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreCashChargeConfirmEcReq.setUserKey(userKey);
 		tStoreCashChargeConfirmEcReq.setCashList(cashConfirmList);
 
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CONFIRM,REQ,{}", tStoreCashChargeConfirmEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CONFIRM,REQ,{}",
+				ReflectionToStringBuilder.toString(tStoreCashChargeConfirmEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 		TStoreCashChargeConfirmEcRes tStoreCashChargeConfirmEcRes = this.tStoreCashSCI
 				.confirmCharge(tStoreCashChargeConfirmEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CONFIRM,RES,{}", tStoreCashChargeConfirmEcRes);
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CONFIRM,RES,{}",
+				ReflectionToStringBuilder.toString(tStoreCashChargeConfirmEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		if (StringUtils.equals(tStoreCashChargeConfirmEcRes.getResultCd(),
 				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
@@ -370,10 +382,12 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreCashChargeCancelEcReq.setUserKey(userKey);
 		tStoreCashChargeCancelEcReq.setCashList(cashCancelList);
 
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CANCEL,REQ,{}", tStoreCashChargeCancelEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CANCEL,REQ,{}",
+				ReflectionToStringBuilder.toString(tStoreCashChargeCancelEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 		TStoreCashChargeCancelEcRes tStoreCashChargeCancelEcRes = this.tStoreCashSCI
 				.cancelCharge(tStoreCashChargeCancelEcReq);
-		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CANCEL,RES,{}", tStoreCashChargeCancelEcRes);
+		this.logger.info("PRCHS,ORDER,SAC,TSTORE,GAMECASH,CANCEL,RES,{}",
+				ReflectionToStringBuilder.toString(tStoreCashChargeCancelEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		if (StringUtils.equals(tStoreCashChargeCancelEcRes.getResultCd(),
 				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
@@ -410,9 +424,11 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreNotiEcReq.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
 
 		try {
-			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,REQ,{}", tStoreNotiEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,REQ,{}",
+					ReflectionToStringBuilder.toString(tStoreNotiEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 			TStoreNotiEcRes tStoreNotiEcRes = this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
-			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,RES,{}", tStoreNotiEcRes);
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,RES,{}",
+					ReflectionToStringBuilder.toString(tStoreNotiEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
 			// 예외 throw 차단
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,ERROR,{},{}", prchsId, e.getMessage());
