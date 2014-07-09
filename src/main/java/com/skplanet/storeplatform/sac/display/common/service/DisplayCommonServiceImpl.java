@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
+import com.skplanet.storeplatform.sac.display.common.ContentType;
+import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
+import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -255,5 +260,52 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
     @Override
     public int getUpdateCount(String channelId) {
         return this.commonDAO.queryForObject("DisplayCommon.getUpdateCount", channelId, Integer.class);
+    }
+
+    @Override
+    public ProductInfo selectProductInfo(String prodId) {
+        ProductInfo info = this.commonDAO.queryForObject("DisplayCommon.selectProductInfo", prodId, ProductInfo.class);
+
+        if(info == null)
+            throw new StorePlatformException("SAC_DSP_0005", prodId);
+
+        // ContentType
+        info.setContentType(ContentType.forCode(info.getContentsTypeCd()));
+
+        // ProductType
+        String svcGrp = StringUtils.defaultString(info.getSvcGrpCd());
+        String svcTp = StringUtils.defaultString(info.getSvcTypeCd());
+        String metaClsf = StringUtils.defaultString(info.getMetaClsfCd());
+        String q = StringUtils.join(new String[]{svcGrp, svcTp, metaClsf}, ".");
+
+        if(q.startsWith("DP000201")) {
+            info.setProductType(ProductType.App);
+        }
+        else if(q.startsWith("DP000203.DP001111")) {
+            info.setProductType(ProductType.Music);
+        }
+        else if(q.startsWith("DP000203.DP001115")) {
+            info.setProductType(ProductType.Vod);
+        }
+        else if(q.matches("DP000203\\.DP001116\\.CT(19|20)")) {
+            info.setProductType(ProductType.Webtoon);
+        }
+        else if(q.matches("DP000203\\.DP001116\\.CT(21|22|24|26)")) {
+            info.setProductType(ProductType.EbookComic);
+        }
+        else if(q.startsWith("DP000204")) {
+            info.setProductType(ProductType.RingBell);
+            info.setMetaType(MetaRingBellType.forCode(info.getMetaClsfCd()));
+        }
+        else if(q.startsWith("DP000206")) {
+            info.setProductType(ProductType.Shopping);
+        }
+        else if(q.startsWith("DP000207")) {
+            info.setProductType(ProductType.Freepass);
+        }
+        else
+            throw new IllegalStateException("[" + q + "] 에 해당하는 상품을 찾을 수 없습니다.");
+
+        return info;
     }
 }

@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.common;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+
 /**
  * 상품 유형
  * User: joyspring
@@ -13,7 +15,8 @@ public enum ProductType {
     Freepass("freepass"),
     Vod("vod"),
     EbookComic("ebookcomic"),
-    Webtoon("webtoon");
+    Webtoon("webtoon"),
+    RingBell("ringbell");
 
     private String name;
     private ProductType(String name) {
@@ -24,8 +27,9 @@ public enum ProductType {
     }
     public static ProductType forName(String name) {
         ProductType v = null;
-        if(name == null)
-            throw new IllegalStateException("name cannot be null.");
+        if(StringUtils.isEmpty(name))
+            throw new IllegalArgumentException("name cannot be null.");
+
         String name2 = name.toLowerCase();
 
         for (ProductType i : values()) {
@@ -35,7 +39,9 @@ public enum ProductType {
             }
         }
 
-        return v;
+        if(v == null)
+            throw new IllegalArgumentException();
 
+        return v;
     }
 }

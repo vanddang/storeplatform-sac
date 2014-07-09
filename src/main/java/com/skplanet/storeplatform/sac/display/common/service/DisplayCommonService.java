@@ -2,11 +2,7 @@ package com.skplanet.storeplatform.sac.display.common.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
-import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
-import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
-import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
-import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
+import com.skplanet.storeplatform.sac.display.common.vo.*;
 
 /**
  * 전시 공통 서비스
@@ -149,6 +145,12 @@ public interface DisplayCommonService {
      * @return
      */
     public int getUpdateCount(String channelId);
-	
-	
+
+    /**
+     * prodId로 상품 유형을 조회한다.
+     * @param prodId
+     * @return
+     */
+    ProductInfo selectProductInfo(String prodId);
+
 }
