@@ -518,6 +518,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			throw new StorePlatformException("SAC_PUR_8101");
 		}
 
+		if (!StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_IAP, prchsDtlSacParam.getPrchsReqPathCd())) {
+			throw new StorePlatformException("SAC_PUR_8129");
+		}
+
 		/** 구매 DB 취소 처리. */
 		this.purchaseCancelRepository.updatePurchaseCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 
