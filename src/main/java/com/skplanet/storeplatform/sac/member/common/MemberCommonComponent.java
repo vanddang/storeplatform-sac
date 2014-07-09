@@ -732,10 +732,12 @@ public class MemberCommonComponent {
 	 *            (msisdn or uuid or mac value)
 	 * @param deviceIdType
 	 *            (msisdn or uuid or mac type)
+	 * @param isSearchSvcMangNo
+	 *            uaps skt서비스관리번호 조회여부
 	 * @return MajorDeviceInfo
 	 * 
 	 */
-	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) {
+	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType, boolean isSearchSvcMangNo) {
 
 		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
 
@@ -810,7 +812,7 @@ public class MemberCommonComponent {
 		/**
 		 * SKT 가입자일 경우 처리
 		 */
-		if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
+		if (isSearchSvcMangNo && StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
 			/**
 			 * MDN 일경우만 UAPS 연동 하여 (SKT 서비스가입번호를 세팅한다.)
