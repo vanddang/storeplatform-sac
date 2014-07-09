@@ -100,7 +100,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 	@Override
 	public PersonalUpdateProductRes searchUpdateProductList(PersonalUpdateProductReq req, SacRequestHeader header,
 			List<String> packageInfoList) {
-		this.log.info("##### searchUpdateProductList start!!!!!!!!!!");
+		this.log.debug("##### searchUpdateProductList start!!!!!!!!!!");
 		PersonalUpdateProductRes res = new PersonalUpdateProductRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
@@ -251,12 +251,12 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 					List<String> userKeyList = new ArrayList<String>();
 					userKeyList.add(userKey);
 					searchUserSacReq.setUserKeyList(userKeyList);
-					this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
+					this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
 					long start = System.currentTimeMillis();
 					SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
-					this.log.info("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserByUserKey");
+					this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserByUserKey");
 					long end = System.currentTimeMillis();
-					this.log.info("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserByUserKey takes {} ms",
+					this.log.debug("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserByUserKey takes {} ms",
 							(end - start));
 
 					Map<String, UserInfoSac> userInfo = searchUserSacRes.getUserInfo();
@@ -297,13 +297,13 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 						historyListSacReq.setProductList(productListSacInList);
 
 						// 구매내역 조회 실행
-						this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+						this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 						start = System.currentTimeMillis();
 						HistoryListSacInRes historyListSacRes = this.historyInternalSCI
 								.searchHistoryList(historyListSacReq);
-						this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+						this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 						end = System.currentTimeMillis();
-						this.log.info(
+						this.log.debug(
 								"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
 								(end - start));
 						if (historyListSacRes != null) {
@@ -525,7 +525,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 				throw new StorePlatformException("SAC_DSP_0006");
 			}
 		}
-		this.log.info("##### searchUpdateProductList end!!!!!!!!!!");
+		this.log.debug("##### searchUpdateProductList end!!!!!!!!!!");
 		return res;
 	}
 }
