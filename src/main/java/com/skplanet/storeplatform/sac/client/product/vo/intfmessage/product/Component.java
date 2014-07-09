@@ -161,6 +161,11 @@ public class Component extends CommonInfo implements Serializable {
 	 */
 	private String gameCenterVerCd;
 
+    /**
+     * 묶음 상품 소개 메시지
+     */
+    private String message;
+
 	/**
 	 * 
 	 * <pre>
@@ -615,4 +620,12 @@ public class Component extends CommonInfo implements Serializable {
 	public void setGameCenterVerCd(String gameCenterVerCd) {
 		this.gameCenterVerCd = gameCenterVerCd;
 	}
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
