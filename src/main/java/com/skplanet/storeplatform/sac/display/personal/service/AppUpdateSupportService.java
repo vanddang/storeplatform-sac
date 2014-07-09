@@ -9,9 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.service;
 
+import com.skplanet.storeplatform.sac.display.personal.vo.MemberInfo;
 import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -29,5 +31,20 @@ public interface AppUpdateSupportService {
      */
     List<SubContentInfo> searchSubContentByPkg(String deviceModelCd, List<String> pkgList, boolean isHashed);
 
-    java.util.Set<String> getPurchaseSet(String tenantId, String userKey, String deviceKey, List<String> prodIdList);
+    /**
+     * 기구매 내역을 조회한다.
+     * @param tenantId
+     * @param userKey
+     * @param deviceKey
+     * @param prodIdList
+     * @return
+     */
+    Set<String> getPurchaseSet(String tenantId, String userKey, String deviceKey, List<String> prodIdList);
+
+    /**
+     * deviceId로 회원 정보를 조회한다.
+     * @param deviceId
+     * @return
+     */
+    MemberInfo getMemberInfo(String deviceId);
 }
