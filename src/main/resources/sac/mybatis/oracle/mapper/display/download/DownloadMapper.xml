@@ -53,6 +53,8 @@
               , NVL(TB.PROD_ID, '') AS SEED_PRODUCT_ID
               , TB.CASE_REF_CD AS SEED_CASE_REF_CD
               , TB.USE_YN AS SEED_USE_YN
+              , TB.BNCH_PROD_ID
+              , TB.BNCH_DWLD_MSG
               , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
           FROM 
                (

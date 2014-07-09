@@ -96,6 +96,8 @@ public class MetaInfo extends CommonInfo {
 	private String seedUseYn;
 	private String packFee;
 	private String vmVer;
+    private String bnchProdId;
+    private String bnchDwldMsg;
 
 	// ////////////////////////// 멀티미디어 상품 변수 ////////////////////////////
 	private String vodTitlNm;
@@ -4164,4 +4166,20 @@ public class MetaInfo extends CommonInfo {
 	public void setPeriodAmt(Integer periodAmt) {
 		this.periodAmt = periodAmt;
 	}
+
+    public String getBnchProdId() {
+        return bnchProdId;
+    }
+
+    public void setBnchProdId(String bnchProdId) {
+        this.bnchProdId = bnchProdId;
+    }
+
+    public String getBnchDwldMsg() {
+        return bnchDwldMsg;
+    }
+
+    public void setBnchDwldMsg(String bnchDwldMsg) {
+        this.bnchDwldMsg = bnchDwldMsg;
+    }
 }

@@ -256,15 +256,18 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 	 */
 	@Override
 	public List<Identifier> generateComponentIdentifierList(MetaInfo metaInfo) {
-		Identifier identifier = new Identifier();
 		List<Identifier> identifierList = new ArrayList<Identifier>();
-		identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-		identifier.setText(metaInfo.getSeedProductId());
-		identifierList.add(identifier);
-		identifier = new Identifier();
-		identifier.setType(DisplayConstants.DP_GAMECENTER_IDENTIFIER_CD);
-		identifier.setText(metaInfo.getGameCentrId());
-		identifierList.add(identifier);
+
+        if (StringUtils.isNotEmpty(metaInfo.getSeedProductId())) {
+            identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getSeedProductId()));
+        }
+        if (StringUtils.isNotEmpty(metaInfo.getGameCentrId())) {
+            identifierList.add(new Identifier(DisplayConstants.DP_GAMECENTER_IDENTIFIER_CD, metaInfo.getGameCentrId()));
+        }
+        if (StringUtils.isNotEmpty(metaInfo.getBnchProdId())) {
+            identifierList.add(new Identifier("bunch", metaInfo.getBnchProdId()));
+        }
+
 		return identifierList;
 	}
 

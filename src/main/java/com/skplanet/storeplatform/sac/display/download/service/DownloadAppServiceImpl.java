@@ -73,7 +73,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 	@Autowired
 	private DisplayCommonService commonService;
 	@Autowired
-	HistoryInternalSCI historyInternalSCI;
+	private HistoryInternalSCI historyInternalSCI;
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 	@Autowired
@@ -479,10 +479,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			 ************************************************************************************************/
 
 			component.setIdentifierList(this.appInfoGenerator.generateComponentIdentifierList(metaInfo));
-			component.setGameCenterVerCd(StringUtils.isNotEmpty(metaInfo.getGameCentrVerCd()) ? metaInfo
-					.getGameCentrVerCd() : "");
+			component.setGameCenterVerCd(StringUtils.defaultString(metaInfo.getGameCentrVerCd()));
 			component.setUseYn(metaInfo.getSeedUseYn());
 			component.setCaseRefCd(metaInfo.getSeedCaseRefCd());
+            component.setMessage(metaInfo.getBnchDwldMsg());
 
 			/************************************************************************************************
 			 * 상품 정보

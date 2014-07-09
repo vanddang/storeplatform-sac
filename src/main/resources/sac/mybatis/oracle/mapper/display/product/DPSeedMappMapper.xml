@@ -44,6 +44,8 @@
 			,REG_DT
 			,UPD_ID
 			,UPD_DT
+            ,BNCH_PROD_ID
+            ,BNCH_DWLD_MSG
 		)
         VALUES 
         (
@@ -54,7 +56,8 @@
 			,SYSDATE
 			,#{updId, jdbcType=VARCHAR}
 			,SYSDATE			
-
+            ,#{tiedProdId}
+            ,#{tiedDwldMsg}
         ) 
   	]]>
   	</insert>
