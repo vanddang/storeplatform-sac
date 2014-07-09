@@ -114,12 +114,18 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 					throw new StorePlatformException("SAC_PUR_8151");
 				}
 				// prchsId + prchsDtlId
+				Boolean isCpnPublishEquals = false;
 				for (PrchsDtl prchsDtl : purchaseScRes.getPrchsDtlList()) {
 					if (StringUtils.equals(couponUseStatusEcReq.getCouponPublishCode(), prchsDtl.getCpnPublishCd())) {
 						couponUseStatusEcReq.setPrchsId(prchsDtl.getPrchsId()
 								+ StringUtils.leftPad(prchsDtl.getPrchsDtlId().toString(), 4, "0"));
+						isCpnPublishEquals = true;
 					}
 				}
+				if (!isCpnPublishEquals) {
+					throw new StorePlatformException("SAC_PUR_8152");
+				}
+
 			}
 
 		}
