@@ -270,6 +270,10 @@ public class DeviceServiceImpl implements DeviceService {
 		ListDeviceRes res = new ListDeviceRes();
 
 		if (StringUtils.isNotBlank(req.getDeviceId())) {
+
+			/* 모번호 조회 및 셋팅 */
+			req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
+
 			/* 단건 조회 처리 */
 			DeviceInfo deviceInfo = this.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userKey);
 			if (deviceInfo != null) {
@@ -471,28 +475,29 @@ public class DeviceServiceImpl implements DeviceService {
 
 			}
 
-			/* 5. 통합회원에 휴대기기 등록시 무선회원 해지 */
-			SearchUserResponse schUserRes = this.srhUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
-			if (schUserRes.getUserMbr().getImSvcNo() != null) {
+		}
 
-				try {
+		/* 5. 통합회원에 휴대기기 등록시 무선회원 해지 */
+		SearchUserResponse schUserRes = this.srhUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
+		if (schUserRes.getUserMbr().getImSvcNo() != null) {
 
-					AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
-					authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
-					this.idpSCI.authForWap(authForWapEcReq);
+			try {
 
-					SecedeForWapEcReq secedeForWapEcReq = new SecedeForWapEcReq();
-					secedeForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
-					this.idpSCI.secedeForWap(secedeForWapEcReq);
+				AuthForWapEcReq authForWapEcReq = new AuthForWapEcReq();
+				authForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
+				this.idpSCI.authForWap(authForWapEcReq);
 
-				} catch (StorePlatformException ex) {
-					if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-							+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
-						throw ex;
-					}
+				SecedeForWapEcReq secedeForWapEcReq = new SecedeForWapEcReq();
+				secedeForWapEcReq.setUserMdn(deviceInfo.getDeviceId());
+				this.idpSCI.secedeForWap(secedeForWapEcReq);
+
+			} catch (StorePlatformException ex) {
+				if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+						+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
+					throw ex;
 				}
-
 			}
+
 		}
 
 		/* 6. 게임센터 연동 */
@@ -541,8 +546,6 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	@Override
 	public String modDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo, boolean isDeviceIdChange) {
-
-		String gameCenterYn = null;
 
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
@@ -612,9 +615,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 			deviceInfoChangeLog.append("[deviceModelNo]").append(dbUserMbrDevice.getDeviceModelNo()).append("->").append(deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
-
-			/* 단말모델이 변경된 경우 게임센터 연동 */
-			gameCenterYn = "Y";
 
 		}
 
@@ -689,17 +689,6 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
-		/* 게임센터 연동 */
-		if (StringUtils.equals(gameCenterYn, "Y")) {
-			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(dbUserMbrDevice.getUserKey());
-			gameCenterSacReq.setDeviceId(dbUserMbrDevice.getDeviceID());
-			gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-			this.regGameCenterIF(gameCenterSacReq);
-		}
-
 		LOGGER.info("{} update device field : {}", dbUserMbrDevice.getDeviceID(), deviceInfoChangeLog.toString());
 
 		return createDeviceRes.getDeviceKey();
@@ -719,7 +708,6 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public String modDeviceInfoForLogin(SacRequestHeader requestHeader, DeviceInfo deviceInfo, DeviceInfo dbDeviceInfo, String version) {
 
-		String gameCenterYn = null;
 		String oDeviceTelecom = deviceInfo.getDeviceTelecom(); // request 통신사 코드
 		StringBuffer deviceInfoChangeLog = new StringBuffer();
 
@@ -745,15 +733,14 @@ public class DeviceServiceImpl implements DeviceService {
 																											// 휴대기기 부가속성에
 																											// 셋팅
 
-		/* 주요정보(SKT 서비스관리번호, UACD, OMDUACD, 미지원단말처리) 조회 */
+		/* 주요정보(UACD, OMDUACD, 미지원단말처리) 조회 */
 		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceModelNo, deviceInfo.getDeviceTelecom(), deviceInfo.getDeviceId(),
-				deviceInfo.getDeviceIdType());
+				deviceInfo.getDeviceIdType(), false);
 
 		/* 기기정보 필드 */
 		String deviceTelecom = null; // 통신사코드
 		String uacd = null; // UACD
 		String deviceNickName = null; // 모델닉네임
-		String svcMangNum = majorDeviceInfo.getSvcMangNum(); // SKT 서비스관리번호
 		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
 		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getDeviceExtraInfoList()); // rooting 여부
@@ -765,6 +752,13 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceTelecom = majorDeviceInfo.getDeviceTelecom();
 			if (StringUtils.equals(majorDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
 				deviceNickName = majorDeviceInfo.getDeviceNickName();
+			} else {
+
+				/* 정상단말로 로그인시 DB에 단말정보가 미지원단말정보이면 디폴트 모델명을 닉네임에 셋팅 */
+				if (StringUtils.equals(dbDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+						&& StringUtils.equals(dbDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+					deviceNickName = majorDeviceInfo.getDeviceNickName();
+				}
 			}
 			uacd = majorDeviceInfo.getUacd();
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
@@ -775,17 +769,10 @@ public class DeviceServiceImpl implements DeviceService {
 		} else {
 			LOGGER.info("{} deviceHeader model 정보 없거나 default모델 : {}", deviceInfo.getDeviceId(), deviceModelNo);
 			deviceModelNo = null; // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
+
+			// DB에 저장된 단말정보가 미지원단말이 아닌경우는 request에 올라온 통신사정보를 업데이트 한다.
 			if (!StringUtils.equals(dbDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
-					&& !StringUtils.equals(dbDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) { // DB에
-																															// 저장된
-																															// 단말정보가
-																															// 미지원단말이
-																															// 아닌경우는
-																															// request에
-																															// 올라온
-																															// 통신사정보를
-																															// 업데이트
-																															// 한다.
+					&& !StringUtils.equals(dbDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
 				deviceTelecom = deviceInfo.getDeviceTelecom();
 			}
 		}
@@ -832,9 +819,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 			deviceInfoChangeLog.append("[deviceModelNo]").append(dbDeviceInfo.getDeviceModelNo()).append("->").append(deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
-
-			/* 단말모델이 변경된 경우 게임센터 연동 */
-			gameCenterYn = "Y";
 
 		}
 
@@ -940,11 +924,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (StringUtils.isNotBlank(svcMangNum) && !StringUtils.equals(svcMangNum, dbDeviceInfo.getSvcMangNum())) {
-			deviceInfoChangeLog.append("[svcMangNum]").append(dbDeviceInfo.getSvcMangNum()).append("->").append(svcMangNum);
-			userMbrDevice.setSvcMangNum(svcMangNum);
-		}
-
 		if (StringUtils.isNotBlank(deviceNickName) && !StringUtils.equals(deviceNickName, dbDeviceInfo.getDeviceNickName())) {
 			deviceInfoChangeLog.append("[deviceNickName]").append(dbDeviceInfo.getDeviceNickName()).append("->").append(deviceNickName);
 			userMbrDevice.setDeviceNickName(deviceNickName);
@@ -1002,17 +981,6 @@ public class DeviceServiceImpl implements DeviceService {
 			createDeviceReq.setIsNew("N");
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
 			CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
-
-			/* 게임센터 연동 */
-			if (StringUtils.equals(gameCenterYn, "Y")) {
-				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-				gameCenterSacReq.setUserKey(dbDeviceInfo.getUserKey());
-				gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
-				gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-				gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-				this.regGameCenterIF(gameCenterSacReq);
-			}
 
 			LOGGER.info("{} Login update device field : {}", deviceInfo.getDeviceId(), deviceInfoChangeLog.toString());
 			return createDeviceRes.getDeviceKey();
@@ -1102,7 +1070,7 @@ public class DeviceServiceImpl implements DeviceService {
 	public DeviceInfo getDeviceMajorInfo(DeviceInfo deviceInfo) {
 
 		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), deviceInfo.getDeviceTelecom(),
-				deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType());
+				deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType(), true);
 
 		deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
 		deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
