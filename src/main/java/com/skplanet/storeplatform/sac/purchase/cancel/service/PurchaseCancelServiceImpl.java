@@ -219,6 +219,12 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			}
 		}
 
+		if (prchsSacParam.getTotAmt() > 0
+				&& (purchaseCancelDetailSacParam.getPaymentSacParamList() == null || purchaseCancelDetailSacParam
+						.getPaymentSacParamList().isEmpty())) {
+			throw new StorePlatformException("SAC_PUR_8104");
+		}
+
 		/** deviceId 조회 및 셋팅. */
 		prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
 				prchsSacParam.getInsdDeviceId()));
@@ -243,6 +249,12 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
 					PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+				// Biz쿠폰은 구매취소 처리 불가!
+				if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON,
+						prchsDtlSacParam.getPrchsReqPathCd())) {
+					throw new StorePlatformException("SAC_PUR_8128");
+				}
+
 				// 쇼핑상품이면 true 셋팅.
 				shoppingYn = true;
 			}
@@ -591,36 +603,35 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 결제 취소 가능 여부 확인 */
 		List<PaymentSacParam> paymentSacParamList = purchaseCancelDetailSacParam.getPaymentSacParamList();
-		for (PaymentSacParam paymentSacParam : paymentSacParamList) {
-			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_DANAL, paymentSacParam.getPaymentMtdCd())
-					&& !StringUtils.isEmpty(paymentSacParam.getPaymentDt())
-					&& !StringUtils.equals(DateUtil.getToday("yyyyMM"),
-							StringUtils.substring(paymentSacParam.getPaymentDt(), 0, 6))) {
-				// 다날 결제이면서 결제월과 취소월이 다른 경우 취소 불가.
-				throw new StorePlatformException("SAC_PUR_8401");
-			}
+		if (paymentSacParamList != null && !paymentSacParamList.isEmpty()) {
+			for (PaymentSacParam paymentSacParam : paymentSacParamList) {
+				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_DANAL, paymentSacParam.getPaymentMtdCd())
+						&& !StringUtils.isEmpty(paymentSacParam.getPaymentDt())
+						&& !StringUtils.equals(DateUtil.getToday("yyyyMM"),
+								StringUtils.substring(paymentSacParam.getPaymentDt(), 0, 6))) {
+					// 다날 결제이면서 결제월과 취소월이 다른 경우 취소 불가.
+					throw new StorePlatformException("SAC_PUR_8401");
+				}
 
-			if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER, paymentSacParam.getPaymentMtdCd())) {
-				// SKT 후불 결제.
-				UserEcRes userEcRes = this.purchaseUapsRespository
-						.searchUapsMappingInfoByMdn(purchaseCancelDetailSacParam.getPrchsSacParam().getDeviceId());
-				String[] serviceCdList = userEcRes.getServiceCD();
-				if (serviceCdList != null) {
-					for (String serviceCd : serviceCdList) {
-						for (String uapsSvcLimitService : PurchaseConstants.UAPS_SVC_LIMIT_SERVICE) {
-							if (StringUtils.equals(serviceCd, uapsSvcLimitService)
-									&& !StringUtils.equals("Y", purchaseCancelSacParam.getSktLimitUserCancelYn())) {
-								// 한도 가입자이면서 한도가입자 취소여부가 Y가 아니면 에러.
-								throw new StorePlatformException("SAC_PUR_8123");
+				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER, paymentSacParam.getPaymentMtdCd())) {
+					// SKT 후불 결제.
+					UserEcRes userEcRes = this.purchaseUapsRespository
+							.searchUapsMappingInfoByMdn(purchaseCancelDetailSacParam.getPrchsSacParam().getDeviceId());
+					String[] serviceCdList = userEcRes.getServiceCD();
+					if (serviceCdList != null) {
+						for (String serviceCd : serviceCdList) {
+							for (String uapsSvcLimitService : PurchaseConstants.UAPS_SVC_LIMIT_SERVICE) {
+								if (StringUtils.equals(serviceCd, uapsSvcLimitService)
+										&& !StringUtils.equals("Y", purchaseCancelSacParam.getSktLimitUserCancelYn())) {
+									// 한도 가입자이면서 한도가입자 취소여부가 Y가 아니면 에러.
+									throw new StorePlatformException("SAC_PUR_8123");
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-
-		// AS-IS 선물의 경우 선물구매 ID를 넣어준다.
-		String couponPrchsId = purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0).getCouponCmsPrchsId();
 
 		/** 강제 취소가 아닐 경우 쿠폰 사용 유무를 조회해온다. */
 		if (!StringUtils.equals("Y", purchaseCancelSacParam.getShoppingForceCancelYn())) {
@@ -633,7 +644,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			couponUseStatusSacInReq.setDeviceKey(purchaseCancelSacParam.getDeviceKey());
 
 			// prchsId 단위로 처리.
-			couponUseStatusSacInReq.setPrchsId(couponPrchsId);
+			couponUseStatusSacInReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 			CouponUseStatusSacInRes couponUseStatusSacInRes = this.shoppingInternalSCI
 					.getCouponUseStatus(couponUseStatusSacInReq);
 			for (CouponUseStatusDetailSacInRes couponUseStatusDetailSacInRes : couponUseStatusSacInRes
@@ -658,6 +669,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		/** 쇼핑 쿠폰 취소 처리 */
+		// Biz쿠폰의 경우 취소 불가처리! 나중에 취소 가능하게 하려면 for문 돌면서 prchsId + prchsDtlId로 취소 요청 처리.
+		// AS-IS 선물의 경우 선물구매 ID를 넣어준다.
+		String couponPrchsId = purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0).getCouponCmsPrchsId();
+
 		CouponPublishCancelEcReq couponPublishCancelEcReq = new CouponPublishCancelEcReq();
 		couponPublishCancelEcReq.setPrchsId(couponPrchsId);
 		couponPublishCancelEcReq.setForceFlag(purchaseCancelSacParam.getShoppingForceCancelYn());

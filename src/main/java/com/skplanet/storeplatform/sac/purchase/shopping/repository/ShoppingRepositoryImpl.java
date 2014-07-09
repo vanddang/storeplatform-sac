@@ -21,9 +21,13 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishAvail
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusDetailEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusEcRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusDetailSacResult;
@@ -86,7 +90,7 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 		couponUseStatusEcReq.setPrchsId(couponUseStatusSacParam.getPrchsId());
 		couponUseStatusEcReq.setCouponPublishCode(couponUseStatusSacParam.getCpnPublishCd());
 
-		// AS-IS 쇼핑쿠폰 선물일 경우 구매 ID를 선물구매ID로 변경한다.
+		// 구매상세 내역을 조회해 온다.
 		PurchaseScReq purchaseScReq = new PurchaseScReq();
 		purchaseScReq.setTenantId(couponUseStatusSacParam.getTenantId());
 		purchaseScReq.setSystemId(couponUseStatusSacParam.getSystemId());
@@ -97,7 +101,27 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 
 		if (purchaseScRes != null && purchaseScRes.getPrchsDtlList() != null
 				&& purchaseScRes.getPrchsDtlList().size() > 0) {
+			// AS-IS 쇼핑쿠폰 선물일 경우 구매 ID를 선물구매ID로 변경한다.
 			couponUseStatusEcReq.setPrchsId(purchaseScRes.getPrchsDtlList().get(0).getCouponCmsPrchsId());
+
+			if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_BIZ_COUPON, purchaseScRes.getPrchsDtlList().get(0)
+					.getPrchsReqPathCd())
+					&& (StringUtils.isNumeric(purchaseScRes.getPrchsDtlList().get(0).getPrchsId()) && purchaseScRes
+							.getPrchsDtlList().get(0).getPrchsId().compareTo("140000") > 0)) {
+				// BizCoupon이면서 TOBE이면
+				// BizCoupon이면 쿠폰번호가 필수!
+				if (StringUtils.isBlank(couponUseStatusEcReq.getCouponPublishCode())) {
+					throw new StorePlatformException("SAC_PUR_8151");
+				}
+				// prchsId + prchsDtlId
+				for (PrchsDtl prchsDtl : purchaseScRes.getPrchsDtlList()) {
+					if (StringUtils.equals(couponUseStatusEcReq.getCouponPublishCode(), prchsDtl.getCpnPublishCd())) {
+						couponUseStatusEcReq.setPrchsId(prchsDtl.getPrchsId()
+								+ StringUtils.leftPad(prchsDtl.getPrchsDtlId().toString(), 4, "0"));
+					}
+				}
+			}
+
 		}
 
 		return couponUseStatusEcReq;
