@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.display.common.ProductType;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,9 +124,21 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		this.log.info("[DownloadMusicServiceImpl] userKey : {}", userKey);
 		this.log.info("----------------------------------------------------------------");
 
+        MetaInfo metaInfo;
+
 		// 다운로드 Music 상품 조회
-		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.getDownloadMusicInfo",
-				downloadMusicSacReq);
+        ProductInfo info = commonService.selectProductInfo(downloadMusicSacReq.getProductId());
+
+        if (info.getProductType() == ProductType.Music) {
+            metaInfo = this.commonDAO.queryForObject("Download.getDownloadMusicInfo", downloadMusicSacReq, MetaInfo.class);
+        }
+        else if(info.getProductType() == ProductType.RingBell) {
+            // 벨소리 타입인 경우
+            metaInfo = this.commonDAO.queryForObject("Download.getDownloadRingBellInfo", downloadMusicSacReq, MetaInfo.class);
+        }
+        else
+            throw new StorePlatformException("");
+
 		if (metaInfo != null) {
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
 				// 구매내역 조회를 위한 생성자
