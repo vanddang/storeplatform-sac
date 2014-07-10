@@ -164,7 +164,7 @@ public class Component extends CommonInfo implements Serializable {
     /**
      * 묶음 상품 소개 메시지
      */
-    private String message;
+    private String bunchMessage;
 
 	/**
 	 * 
@@ -621,11 +621,11 @@ public class Component extends CommonInfo implements Serializable {
 		this.gameCenterVerCd = gameCenterVerCd;
 	}
 
-    public String getMessage() {
-        return message;
+    public String getBunchMessage() {
+        return bunchMessage;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setBunchMessage(String bunchMessage) {
+        this.bunchMessage = bunchMessage;
     }
 }
