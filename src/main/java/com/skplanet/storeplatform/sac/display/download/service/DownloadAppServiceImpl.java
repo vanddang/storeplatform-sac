@@ -482,7 +482,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			component.setGameCenterVerCd(StringUtils.defaultString(metaInfo.getGameCentrVerCd()));
 			component.setUseYn(metaInfo.getSeedUseYn());
 			component.setCaseRefCd(metaInfo.getSeedCaseRefCd());
-            component.setMessage(metaInfo.getBnchDwldMsg());
+            component.setBunchMessage(metaInfo.getBnchDwldMsg());
 
 			/************************************************************************************************
 			 * 상품 정보
