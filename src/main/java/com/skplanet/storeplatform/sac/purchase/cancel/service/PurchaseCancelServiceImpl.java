@@ -519,6 +519,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		if (!StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_IAP, prchsDtlSacParam.getPrchsReqPathCd())) {
+			// (구)InApp이 아니면 에러.
 			throw new StorePlatformException("SAC_PUR_8129");
 		}
 
