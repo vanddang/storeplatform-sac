@@ -9,21 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
-import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
@@ -36,7 +24,6 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Produc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -45,7 +32,18 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
-import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
@@ -61,25 +59,22 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	HistoryInternalSCI historyInternalSCI;
+	private HistoryInternalSCI historyInternalSCI;
 
 	@Autowired
-	CommonMetaInfoGenerator commonMetaInfoGenerator;
+	private CommonMetaInfoGenerator commonMetaInfoGenerator;
 
 	@Autowired
 	private EbookComicGenerator ebookComicGenerator;
-
-	@Autowired
-	private EncryptionGenerator encryptionGenerator;
-
-	@Autowired
-	private DownloadAES128Helper downloadAES128Helper;
 
 	@Autowired
 	private DeviceSCI deviceSCI;
 
 	@Autowired
 	private DisplayCommonService commonService;
+
+    @Autowired
+    private DownloadSupportService supportService;
 
 	/*
 	 * (non-Javadoc)
@@ -92,7 +87,13 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader header, DownloadEbookSacReq ebookReq) {
-		// 현재일시 및 요청만료일시 조회
+
+        List<Encryption> encryptionList = new ArrayList<Encryption>();
+
+        StopWatch sw = new StopWatch();
+        sw.start();
+
+        // 현재일시 및 요청만료일시 조회
 		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
 		String sysDate = metaInfo.getSysDate();
@@ -107,12 +108,12 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		String deviceKey = ebookReq.getDeviceKey();
 		String userKey = ebookReq.getUserKey();
 
-		this.logger.info("----------------------------------------------------------------");
-		this.logger.info("[DownloadEbookLog] idType : {}", idType);
-		this.logger.info("[DownloadEbookLog] productId : {}", productId);
-		this.logger.info("[DownloadEbookLog] deviceKey : {}", deviceKey);
-		this.logger.info("[DownloadEbookLog] userKey : {}", userKey);
-		this.logger.info("----------------------------------------------------------------");
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("[DownloadEbookLog] idType : {}", idType);
+		this.logger.debug("[DownloadEbookLog] productId : {}", productId);
+		this.logger.debug("[DownloadEbookLog] deviceKey : {}", deviceKey);
+		this.logger.debug("[DownloadEbookLog] userKey : {}", userKey);
+		this.logger.debug("----------------------------------------------------------------");
 
 		// ID유형 유효값 체크
 		if (!"channel".equals(idType) && !"episode".equals(idType)) {
@@ -135,9 +136,9 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				throw new StorePlatformException("SAC_DSP_0013");
 			}
 
-			this.logger.info("----------------------------------------------------------------");
-			this.logger.info("[DownloadEbookLog] scid : {}", metaInfo.getSubContentsId());
-			this.logger.info("----------------------------------------------------------------");
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[DownloadEbookLog] scid : {}", metaInfo.getSubContentsId());
+			this.logger.debug("----------------------------------------------------------------");
 
 			Product product = new Product();
 
@@ -209,29 +210,29 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					historyReq.setCount(1000);
 					historyReq.setProductList(productList);
 
-					this.logger.info("----------------------------------------------------------------");
-					this.logger.info("[DownloadEbookLog] 구매내역 조회 요청 파라미터");
-					this.logger.info("----------------------------------------------------------------");
-					this.logger.info("[DownloadEbookLog] tenantId : {}", historyReq.getTenantId());
-					this.logger.info("[DownloadEbookLog] userKey : {}", historyReq.getUserKey());
-					this.logger.info("[DownloadEbookLog] deviceKey : {}", historyReq.getDeviceKey());
-					this.logger.info("[DownloadEbookLog] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-					this.logger.info("[DownloadEbookLog] prchsProdType : {}", historyReq.getPrchsProdType());
-					this.logger.info("[DownloadEbookLog] startDt : {}", historyReq.getStartDt());
-					this.logger.info("[DownloadEbookLog] endDt : {}", historyReq.getEndDt());
-					this.logger.info("[DownloadEbookLog] prodId[0] : {}", productList.get(0).getProdId());
-					this.logger.info("[DownloadEbookLog] prodId[1] : {}", productList.get(1).getProdId());
-					this.logger.info("----------------------------------------------------------------");
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[DownloadEbookLog] 구매내역 조회 요청 파라미터");
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[DownloadEbookLog] tenantId : {}", historyReq.getTenantId());
+					this.logger.debug("[DownloadEbookLog] userKey : {}", historyReq.getUserKey());
+					this.logger.debug("[DownloadEbookLog] deviceKey : {}", historyReq.getDeviceKey());
+					this.logger.debug("[DownloadEbookLog] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+					this.logger.debug("[DownloadEbookLog] prchsProdType : {}", historyReq.getPrchsProdType());
+					this.logger.debug("[DownloadEbookLog] startDt : {}", historyReq.getStartDt());
+					this.logger.debug("[DownloadEbookLog] endDt : {}", historyReq.getEndDt());
+					this.logger.debug("[DownloadEbookLog] prodId[0] : {}", productList.get(0).getProdId());
+					this.logger.debug("[DownloadEbookLog] prodId[1] : {}", productList.get(1).getProdId());
+					this.logger.debug("----------------------------------------------------------------");
 
 					// 구매내역 조회 실행
 					this.logger
-							.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+							.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 					long start = System.currentTimeMillis();
 					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
 					this.logger
-							.info("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
+							.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
 					long end = System.currentTimeMillis();
-					this.logger.info(
+					this.logger.debug(
 							"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
 							(end - start));
 				} catch (Exception ex) {
@@ -239,15 +240,15 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					this.logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
 				}
 
-				this.logger.info("----------------------------------------------------------------");
-				this.logger.info("[DownloadEbookLog] purchasePassFlag : {}", purchasePassFlag);
-				this.logger.info("[DownloadEbookLog] historyRes : {}", historyRes);
-				this.logger.info("----------------------------------------------------------------");
+				this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("[DownloadEbookLog] purchasePassFlag : {}", purchasePassFlag);
+				this.logger.debug("[DownloadEbookLog] historyRes : {}", historyRes);
+				this.logger.debug("----------------------------------------------------------------");
 
 				if (purchasePassFlag && historyRes != null) {
-					this.logger.info("----------------------------------------------------------------");
-					this.logger.info("[DownloadEbookLog] 구매건수 : {}", historyRes.getTotalCnt());
-					this.logger.info("----------------------------------------------------------------");
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[DownloadEbookLog] 구매건수 : {}", historyRes.getTotalCnt());
+					this.logger.debug("----------------------------------------------------------------");
 
 					String prchsId = null; // 구매ID
 					String prchsDt = null; // 구매일시
@@ -263,7 +264,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 					if (historyRes.getTotalCnt() > 0) {
 						List<Purchase> purchaseList = new ArrayList<Purchase>();
-						List<Encryption> encryptionList = new ArrayList<Encryption>();
 
 						for (int i = 0; i < historyRes.getTotalCnt(); i++) {
 							prchsId = historyRes.getHistoryList().get(i).getPrchsId();
@@ -294,19 +294,19 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 								}
 							}
 
-							this.logger.info("----------------------------------------------------------------");
-							this.logger.info("[DownloadEbookLog] prchsId : {}", prchsId);
-							this.logger.info("[DownloadEbookLog] prchsDt : {}", prchsDt);
-							this.logger.info("[DownloadEbookLog] useExprDt : {}", useExprDt);
-							this.logger.info("[DownloadEbookLog] dwldStartDt : {}", dwldStartDt);
-							this.logger.info("[DownloadEbookLog] dwldExprDt : {}", dwldExprDt);
-							this.logger.info("[DownloadEbookLog] prchsCaseCd : {}", prchsCaseCd);
-							this.logger.info("[DownloadEbookLog] prchsState : {}", prchsState);
-							this.logger.info("[DownloadEbookLog] prchsProdId : {}", prchsProdId);
-							this.logger.info("[DownloadEbookLog] prchsPrice : {}", prchsPrice);
-							this.logger.info("[DownloadEbookLog] drmYn : {}", drmYn);
-							this.logger.info("[DownloadEbookLog] permitDeviceYn : {}", permitDeviceYn);
-							this.logger.info("----------------------------------------------------------------");
+							this.logger.debug("----------------------------------------------------------------");
+							this.logger.debug("[DownloadEbookLog] prchsId : {}", prchsId);
+							this.logger.debug("[DownloadEbookLog] prchsDt : {}", prchsDt);
+							this.logger.debug("[DownloadEbookLog] useExprDt : {}", useExprDt);
+							this.logger.debug("[DownloadEbookLog] dwldStartDt : {}", dwldStartDt);
+							this.logger.debug("[DownloadEbookLog] dwldExprDt : {}", dwldExprDt);
+							this.logger.debug("[DownloadEbookLog] prchsCaseCd : {}", prchsCaseCd);
+							this.logger.debug("[DownloadEbookLog] prchsState : {}", prchsState);
+							this.logger.debug("[DownloadEbookLog] prchsProdId : {}", prchsProdId);
+							this.logger.debug("[DownloadEbookLog] prchsPrice : {}", prchsPrice);
+							this.logger.debug("[DownloadEbookLog] drmYn : {}", drmYn);
+							this.logger.debug("[DownloadEbookLog] permitDeviceYn : {}", permitDeviceYn);
+							this.logger.debug("----------------------------------------------------------------");
 
 							metaInfo.setPurchaseId(prchsId);
 							metaInfo.setPurchaseProdId(prchsProdId);
@@ -332,22 +332,22 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 									deviceReq.setUserKey(ebookReq.getUserKey());
 									deviceReq.setDeviceKey(ebookReq.getDeviceKey());
 
-									this.logger.info("--------------------------------------------------------------");
-									this.logger.info("[DownloadEbookLog] 단말정보 조회 요청 파라미터");
-									this.logger.info("--------------------------------------------------------------");
-									this.logger.info("[DownloadEbookLog] userKey : {}", deviceReq.getUserKey());
-									this.logger.info("[DownloadEbookLog] deviceKey : {}", deviceReq.getDeviceKey());
-									this.logger.info("--------------------------------------------------------------");
+									this.logger.debug("--------------------------------------------------------------");
+									this.logger.debug("[DownloadEbookLog] 단말정보 조회 요청 파라미터");
+									this.logger.debug("--------------------------------------------------------------");
+									this.logger.debug("[DownloadEbookLog] userKey : {}", deviceReq.getUserKey());
+									this.logger.debug("[DownloadEbookLog] deviceKey : {}", deviceReq.getDeviceKey());
+									this.logger.debug("--------------------------------------------------------------");
 
 									// 기기정보 조회
 									this.logger
-											.info("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
+											.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
 									long start = System.currentTimeMillis();
 									deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
 									this.logger
-											.info("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
+											.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
 									long end = System.currentTimeMillis();
-									this.logger.info(
+									this.logger.debug(
 											"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
 											(end - start));
 
@@ -356,10 +356,10 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 									this.logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
 								}
 
-								this.logger.info("----------------------------------------------------------------");
-								this.logger.info("[DownloadEbookLog] memberPassFlag : {}", memberPassFlag);
-								this.logger.info("[DownloadEbookLog] deviceRes : {}", deviceRes);
-								this.logger.info("----------------------------------------------------------------");
+								this.logger.debug("----------------------------------------------------------------");
+								this.logger.debug("[DownloadEbookLog] memberPassFlag : {}", memberPassFlag);
+								this.logger.debug("[DownloadEbookLog] deviceRes : {}", deviceRes);
+								this.logger.debug("----------------------------------------------------------------");
 
 								if (memberPassFlag && deviceRes != null) {
 									// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
@@ -390,37 +390,19 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 										}
 
 										// 암호화 정보 (JSON)
-										EncryptionContents contents = this.encryptionGenerator
-												.generateEncryptionContents(metaInfo);
-
-										// JSON 파싱
-										MarshallingHelper marshaller = new JacksonMarshallingHelper();
-										byte[] jsonData = marshaller.marshal(contents);
-
-										// JSON 암호화
-										byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-										String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
-
-										// 암호화 정보 (AES-128)
-										Encryption encryption = new Encryption();
-										encryption.setProductId(prchsProdId);
-										byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
-										encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
-										encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper
-												.getSacRandomNo()));
-										encryption.setToken(encryptString);
+                                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
 										encryptionList.add(encryption);
 
-										this.logger.info("-----------------------------------------------------------");
-										this.logger.info("[DownloadEbookLog] token : {}", encryption.getToken());
-										this.logger.info("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
-										this.logger.info("-----------------------------------------------------------");
+										this.logger.debug("-----------------------------------------------------------");
+										this.logger.debug("[DownloadEbookLog] token : {}", encryption.getToken());
+										this.logger.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
+										this.logger.debug("-----------------------------------------------------------");
 									} else {
-										this.logger.info("##### [SAC DSP LocalSCI] userKey : {}",
+										this.logger.debug("##### [SAC DSP LocalSCI] userKey : {}",
 												deviceReq.getUserKey());
-										this.logger.info("##### [SAC DSP LocalSCI] deviceKey : {}",
+										this.logger.debug("##### [SAC DSP LocalSCI] deviceKey : {}",
 												deviceReq.getDeviceKey());
-										this.logger.info("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
+										this.logger.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
 												+ deviceRes.getDeviceId());
 									}
 								}
@@ -446,6 +428,13 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		}
 
 		ebookRes.setCommonResponse(commonResponse);
-		return ebookRes;
+
+        sw.stop();
+        for (Encryption enc : encryptionList) {
+            supportService.logDownloadResult(enc.getProductId(),
+                    ReflectionToStringBuilder.toString(enc, ToStringStyle.SHORT_PREFIX_STYLE), sw.getTime());
+        }
+
+        return ebookRes;
 	}
 }
