@@ -9,10 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.service;
 
-import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
+import java.util.Map;
 
-//import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
-//import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.BizCouponReq;
 
 /**
  * 쇼핑쿠폰 Service Interface.
@@ -32,6 +31,7 @@ public interface ShoppingAsyncService {
 	 * @return CouponUseStatusSacResult
 	 * @throws Exception
 	 */
-	public int getShoppingAsync(BizCouponReq request, String systemId, String tenantId) throws Exception;
+	public Map<String, Object> getShoppingAsync(BizCouponReq request, String systemId, String tenantId)
+			throws Exception;
 
 }

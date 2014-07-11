@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.controller;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +58,8 @@ public class ShoppingAsyncController {
 
 	@RequestMapping(value = "/couponAsync/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public int getShoppingAsync(@RequestBody @Validated BizCouponReq request, SacRequestHeader sacRequestHeader)
-			throws Exception {
+	public Map<String, Object> getShoppingAsync(@RequestBody @Validated BizCouponReq request,
+			SacRequestHeader sacRequestHeader) throws Exception {
 
 		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
