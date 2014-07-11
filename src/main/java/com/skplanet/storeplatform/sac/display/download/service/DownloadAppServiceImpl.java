@@ -95,7 +95,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
-		String osVersion = DisplayCommonUtil.getOsVer(deviceHeader.getOs());
+		String osVersion = DisplayCommonUtil.extractOsVer(deviceHeader.getOs());
 		downloadAppSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
 		downloadAppSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);

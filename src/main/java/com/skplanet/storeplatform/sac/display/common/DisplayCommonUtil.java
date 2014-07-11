@@ -4,6 +4,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import org.apache.commons.lang3.math.NumberUtils;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DisplayCommonUtil {
 
@@ -45,52 +49,26 @@ public class DisplayCommonUtil {
 	/**
 	 * <pre>
 	 * OS verion 추출 메소드(HeaderInfo)
+     * 프로비저닝을 위한 버전 정보는 "majVer.minVer" 형태로 DB에 존재하기 때문에 입력 문자열을 가공하기 위한 것이다.
 	 * Ex) Android/4.0.4 -> 4.0 .
 	 * </pre>
 	 * 
-	 * @param osVer
-	 *            osVer
-	 * @return String
+	 * @param osVer 운영체제 정보 문자열
+	 * @return majVer.minVer 형태의 문자열. 읽을 수 없는 형태인 경우 0.0 출력
 	 */
-	public static String getOsVer(String osVer) {
+    private static Pattern RX_EXTRACT_VERSION = Pattern.compile("(?:(?:.+)\\s?/\\s?)?(\\d+)(?:\\.(\\d+))?(?:\\.\\d+)?");
+	public static String extractOsVer(String osVer) {
 		if (StringUtils.isEmpty(osVer))
-			return osVer;
+			return "0.0";
 
-		String osVersion = osVer;
-		String[] temp = osVer.trim().split("/");
-		if (temp.length >= 2) {
-			osVersion = temp[1];
-			String osVersionOrginal = osVersion;
-			String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
-			if (osVersionTemp.length == 3) {
-				osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
-			}
-		}
-		return osVersion;
-	}
+        int majVer = 0, minVer = 0;
+        Matcher m = RX_EXTRACT_VERSION.matcher(osVer);
+        if(m.matches()) {
+            majVer = NumberUtils.toInt(m.group(1));
+            minVer = NumberUtils.toInt(m.group(2));
+        }
 
-	/**
-	 * <pre>
-	 * Updated By  : 2014.07.11 이석희
-	 * OS verion 추출 메소드(Reqeust Parameter)
-	 * Ex) 4.0.4 -> 4.0 .
-	 * </pre>
-	 * 
-	 * @param osVer
-	 *            osVer
-	 * @return String
-	 */
-	public static String getOsVerReq(String osVer) {
-		if (StringUtils.isEmpty(osVer))
-			return osVer;
-
-		String osVersion = osVer;
-		String[] osVersionTemp = StringUtils.split(osVersion, ".");
-		if (osVersionTemp.length == 3) {
-			osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
-		}
-
-		return osVersion;
+		return majVer + "." + minVer;
 	}
 
 	/**

@@ -64,7 +64,7 @@ public class OtherPackageListServiceImpl implements OtherPackageListService {
 		List<Product> productList = new ArrayList<Product>();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		TenantHeader tenantHeader = header.getTenantHeader();
-		String osVersion = DisplayCommonUtil.getOsVer(deviceHeader.getOs());
+		String osVersion = DisplayCommonUtil.extractOsVer(deviceHeader.getOs());
 		this.log.debug("#### osVerion : {}", osVersion);
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("req", req);

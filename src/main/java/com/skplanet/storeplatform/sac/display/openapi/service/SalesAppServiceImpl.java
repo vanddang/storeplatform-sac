@@ -67,7 +67,7 @@ public class SalesAppServiceImpl implements SalesAppService {
 		/*
 		 * Parameter로 넘겨받은 OS Version 가공 추가 2014.07.11 Updated By : 이석희
 		 */
-		salesAppReq.setOsVersion(DisplayCommonUtil.getOsVerReq(salesAppReq.getOsVersion()));
+		salesAppReq.setOsVersion(DisplayCommonUtil.extractOsVer(salesAppReq.getOsVersion()));
 
 		// 헤더 세팅
 		salesAppReq.setTenantId(header.getTenantHeader().getTenantId());
