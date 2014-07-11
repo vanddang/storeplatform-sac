@@ -77,8 +77,6 @@ public class FeedbackController {
 	@ResponseBody
 	public CreateFeedbackSacRes create(@RequestBody @Validated CreateFeedbackSacReq createFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-		LOGGER.info("### 사용후기/평점 등록. ##");
-		LOGGER.info("### req : {}", createFeedbackSacReq);
 		return this.feedbackService.create(createFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -98,8 +96,6 @@ public class FeedbackController {
 	@ResponseBody
 	public ModifyFeedbackSacRes modify(@RequestBody @Validated ModifyFeedbackSacReq modifyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-		LOGGER.info("### 사용후기/평점 수정. ##");
-		LOGGER.info("### req : {}", modifyFeedbackSacReq);
 		return this.feedbackService.modify(modifyFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -119,8 +115,6 @@ public class FeedbackController {
 	@ResponseBody
 	public RemoveFeedbackSacRes remove(@RequestBody @Validated RemoveFeedbackSacReq removeFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-		LOGGER.info("### 사용후기/평점 삭제. ##");
-		LOGGER.info("### req : {}", removeFeedbackSacReq);
 		return this.feedbackService.remove(removeFeedbackSacReq, sacRequestHeader);
 	}
 
