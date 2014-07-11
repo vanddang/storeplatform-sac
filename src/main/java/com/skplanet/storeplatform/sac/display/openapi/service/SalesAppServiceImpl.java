@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
@@ -62,6 +63,11 @@ public class SalesAppServiceImpl implements SalesAppService {
 		if (!"PD000403".equals(salesStatus) && !"PD000404".equals(salesStatus)) {
 			throw new StorePlatformException("SAC_DSP_0003", "salesStatus", salesStatus);
 		}
+
+		/*
+		 * Parameter로 넘겨받은 OS Version 가공 추가 2014.07.11 Updated By : 이석희
+		 */
+		salesAppReq.setOsVersion(DisplayCommonUtil.getOsVerReq(salesAppReq.getOsVersion()));
 
 		// 헤더 세팅
 		salesAppReq.setTenantId(header.getTenantHeader().getTenantId());
