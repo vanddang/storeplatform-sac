@@ -30,10 +30,12 @@ public class ShoppingPlanReq extends CommonInfo {
 	@NotBlank
 	private String planId; // 기획전아이디
 	private String imageCd; // 이미지코드
-
+	private String langCd; // 언어코드
+	private String tenantId; // 테넌트ID
 	private String prodCharge; // 유료/무료 구분
 	private String[] arrayProdGradeCd; // 상품등급코드 Array
 	private String prodGradeCd; // 상품등급코드
+	private String deviceModelCd; // 디바이스 모델 코드
 	private String virtualDeviceModelNo; // android_standard2
 	private String prodRshpCd; // 채널 에피소드 관계
 	private String bannerImgCd; // 배너이미지코드
@@ -70,6 +72,36 @@ public class ShoppingPlanReq extends CommonInfo {
 	 */
 	public void setImageCd(String imageCd) {
 		this.imageCd = imageCd;
+	}
+
+	/**
+	 * @return the langCd
+	 */
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	/**
+	 * @param langCd
+	 *            the langCd to set
+	 */
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+
+	/**
+	 * @return the tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	/**
@@ -115,6 +147,21 @@ public class ShoppingPlanReq extends CommonInfo {
 	 */
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
+	}
+
+	/**
+	 * @return the deviceModelCd
+	 */
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	/**
+	 * @param deviceModelCd
+	 *            the deviceModelCd to set
+	 */
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
 	}
 
 	/**
