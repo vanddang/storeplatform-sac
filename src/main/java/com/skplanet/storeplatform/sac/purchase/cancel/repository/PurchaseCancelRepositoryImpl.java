@@ -291,6 +291,16 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_PAYPIN, paymentSacParam.getPaymentMtdCd())) {
 				// Paypin 결제이면
 				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_GAMECASH, paymentSacParam.getPaymentMtdCd())
+					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_GAMECASH_POINT,
+							paymentSacParam.getPaymentMtdCd())
+					|| StringUtils
+							.equals(PurchaseConstants.PAYMENT_METHOD_TGAMEPASS, paymentSacParam.getPaymentMtdCd())) {
+				// 게임캐쉬 결제이면
+				// 게임캐쉬 보너스 포인트 결제이면
+				// T game pass 결제이면
+				// orderNo는 규격서와 다르게 기존 값 그대로 보내기로 함.
+				pay.setApplyNum("02");
 			} else {
 				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
 				continue;
