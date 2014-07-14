@@ -31,6 +31,8 @@ public class SktPaymentPolicyCheckParam extends CommonInfo {
 	private String tenantProdGrpCd;
 	private double paymentTotAmt;
 
+	private String svcMangNo; // SKT 서비스 관리번호
+
 	/**
 	 * @return the tenantId
 	 */
@@ -179,6 +181,21 @@ public class SktPaymentPolicyCheckParam extends CommonInfo {
 	 */
 	public void setPaymentTotAmt(double paymentTotAmt) {
 		this.paymentTotAmt = paymentTotAmt;
+	}
+
+	/**
+	 * @return the svcMangNo
+	 */
+	public String getSvcMangNo() {
+		return this.svcMangNo;
+	}
+
+	/**
+	 * @param svcMangNo
+	 *            the svcMangNo to set
+	 */
+	public void setSvcMangNo(String svcMangNo) {
+		this.svcMangNo = svcMangNo;
 	}
 
 }

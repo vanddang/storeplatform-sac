@@ -287,6 +287,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		UserEcRes userEcRes = this.uapsRespository.searchUapsMappingInfoByMdn(policyCheckParam.getDeviceId());
 
+		// SKT 서비스 관리번호 세팅 : SKT 후불 결제금액 체크
+		policyCheckParam.setSvcMangNo(userEcRes.getSvcMngNum());
+
 		// --------------------------------------------------------------------------------------------------
 		// 관련 정책 목록 조회
 
@@ -330,43 +333,43 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		// 법인폰 제한 정책 체크
 
-		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_CORP_DEVICE)) {
-			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_CORP_DEVICE);
-
-			boolean bLimit = false;
-			for (PurchaseTenantPolicy policy : policyList) {
-				if ((policyResult.isSkpCorporation() && StringUtils.equals(policy.getApplyValue(),
-						PurchaseConstants.SKP_CORPORATION_NO))
-						|| this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
-					bLimit = true;
-					break;
-				}
-			}
-
-			// 제한 정책에 걸렸을 경우, 허용된 디바이스면 통과
-			if (bLimit) {
-				if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD)) {
-					policyList = policyListMap.get(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD);
-
-					for (PurchaseTenantPolicy policy : policyList) {
-						if (this.isAllowPurchaseCorpDevice(policy, policyCheckParam)) {
-							bAllowDevice = true;
-							break;
-						}
-					}
-
-					policyListMap.remove(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD);
-				}
-
-				if (bAllowDevice == false) {
-					policyResult.setCorporation(true);
-					policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_CORP);
-					return policyResult;
-				}
-			}
-
-			policyListMap.remove(PurchaseConstants.POLICY_ID_CORP_DEVICE);
-		}
+		// if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_CORP_DEVICE)) {
+		// policyList = policyListMap.get(PurchaseConstants.POLICY_ID_CORP_DEVICE);
+		//
+		// boolean bLimit = false;
+		// for (PurchaseTenantPolicy policy : policyList) {
+		// if ((policyResult.isSkpCorporation() && StringUtils.equals(policy.getApplyValue(),
+		// PurchaseConstants.SKP_CORPORATION_NO))
+		// || this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
+		// bLimit = true;
+		// break;
+		// }
+		// }
+		//
+		// // 제한 정책에 걸렸을 경우, 허용된 디바이스면 통과
+		// if (bLimit) {
+		// if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD)) {
+		// policyList = policyListMap.get(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD);
+		//
+		// for (PurchaseTenantPolicy policy : policyList) {
+		// if (this.isAllowPurchaseCorpDevice(policy, policyCheckParam)) {
+		// bAllowDevice = true;
+		// break;
+		// }
+		// }
+		//
+		// policyListMap.remove(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD);
+		// }
+		//
+		// if (bAllowDevice == false) {
+		// policyResult.setCorporation(true);
+		// policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_CORP);
+		// return policyResult;
+		// }
+		// }
+		//
+		// policyListMap.remove(PurchaseConstants.POLICY_ID_CORP_DEVICE);
+		// }
 
 		// --------------------------------------------------------------------------------------------------
 		// SKT 시험폰 체크 (참고, SKT시험폰이라면 100% 법인폰)
@@ -693,6 +696,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			sciReq.setTenantId(policyCheckParam.getTenantId());
 			sciReq.setUserKey(policyCheckParam.getUserKey());
 			sciReq.setDeviceKey(policyCheckParam.getDeviceKey());
+			sciReq.setSvcMangNo(policyCheckParam.getSvcMangNo());
 
 			sciRes = this.purchaseOrderSearchSCI.searchSktAmountDetail(sciReq);
 			this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,PRCHS,{}", sciRes.getVal());
@@ -734,6 +738,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		sciReq.setCondClsfUnitCd(policy.getCondClsfUnitCd());
 		sciReq.setCondPeriodUnitCd(policy.getCondPeriodUnitCd());
 		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
+		sciReq.setSvcMangNo(policyCheckParam.getSvcMangNo()); // SKT 서비스 관리번호
 
 		// (정책 적용조건) 과금조건 조회
 		// 쇼핑상품 구매건수 조회용도 이며, 전월 단위의 건수 조회인 경우만 처리
