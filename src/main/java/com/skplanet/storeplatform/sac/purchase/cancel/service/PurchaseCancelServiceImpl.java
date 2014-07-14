@@ -606,37 +606,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	private void executeCancelShoppingCoupon(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
 
-		/** 결제 취소 가능 여부 확인 */
-		List<PaymentSacParam> paymentSacParamList = purchaseCancelDetailSacParam.getPaymentSacParamList();
-		if (paymentSacParamList != null && !paymentSacParamList.isEmpty()) {
-			for (PaymentSacParam paymentSacParam : paymentSacParamList) {
-				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_DANAL, paymentSacParam.getPaymentMtdCd())
-						&& !StringUtils.isEmpty(paymentSacParam.getPaymentDt())
-						&& !StringUtils.equals(DateUtil.getToday("yyyyMM"),
-								StringUtils.substring(paymentSacParam.getPaymentDt(), 0, 6))) {
-					// 다날 결제이면서 결제월과 취소월이 다른 경우 취소 불가.
-					throw new StorePlatformException("SAC_PUR_8401");
-				}
-
-				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER, paymentSacParam.getPaymentMtdCd())) {
-					// SKT 후불 결제.
-					UserEcRes userEcRes = this.purchaseUapsRespository
-							.searchUapsMappingInfoByMdn(purchaseCancelDetailSacParam.getPrchsSacParam().getDeviceId());
-					String[] serviceCdList = userEcRes.getServiceCD();
-					if (serviceCdList != null) {
-						for (String serviceCd : serviceCdList) {
-							for (String uapsSvcLimitService : PurchaseConstants.UAPS_SVC_LIMIT_SERVICE) {
-								if (StringUtils.equals(serviceCd, uapsSvcLimitService)
-										&& !StringUtils.equals("Y", purchaseCancelSacParam.getSktLimitUserCancelYn())) {
-									// 한도 가입자이면서 한도가입자 취소여부가 Y가 아니면 에러.
-									throw new StorePlatformException("SAC_PUR_8123");
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		this.validateCancelPaymentForShoppingCoupon(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 
 		/** 강제 취소가 아닐 경우 쿠폰 사용 유무를 조회해온다. */
 		if (!StringUtils.equals("Y", purchaseCancelSacParam.getShoppingForceCancelYn())) {
@@ -780,6 +750,47 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		return;
+
+	}
+
+	private void validateCancelPaymentForShoppingCoupon(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam) {
+
+		if (purchaseCancelSacParam.getIgnorePayment()) {
+			return;
+		}
+
+		/** 결제 취소 가능 여부 확인 */
+		List<PaymentSacParam> paymentSacParamList = purchaseCancelDetailSacParam.getPaymentSacParamList();
+		if (paymentSacParamList != null && !paymentSacParamList.isEmpty()) {
+			for (PaymentSacParam paymentSacParam : paymentSacParamList) {
+				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_DANAL, paymentSacParam.getPaymentMtdCd())
+						&& !StringUtils.isEmpty(paymentSacParam.getPaymentDt())
+						&& !StringUtils.equals(DateUtil.getToday("yyyyMM"),
+								StringUtils.substring(paymentSacParam.getPaymentDt(), 0, 6))) {
+					// 다날 결제이면서 결제월과 취소월이 다른 경우 취소 불가.
+					throw new StorePlatformException("SAC_PUR_8401");
+				}
+
+				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER, paymentSacParam.getPaymentMtdCd())) {
+					// SKT 후불 결제.
+					UserEcRes userEcRes = this.purchaseUapsRespository
+							.searchUapsMappingInfoByMdn(purchaseCancelDetailSacParam.getPrchsSacParam().getDeviceId());
+					String[] serviceCdList = userEcRes.getServiceCD();
+					if (serviceCdList != null) {
+						for (String serviceCd : serviceCdList) {
+							for (String uapsSvcLimitService : PurchaseConstants.UAPS_SVC_LIMIT_SERVICE) {
+								if (StringUtils.equals(serviceCd, uapsSvcLimitService)
+										&& !StringUtils.equals("Y", purchaseCancelSacParam.getSktLimitUserCancelYn())) {
+									// 한도 가입자이면서 한도가입자 취소여부가 Y가 아니면 에러.
+									throw new StorePlatformException("SAC_PUR_8123");
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 	}
 
