@@ -36,6 +36,7 @@ import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter
 import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
+import com.skplanet.storeplatform.purchase.client.common.vo.UniqueTid;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.ConfirmPurchaseScReq;
@@ -1160,14 +1161,31 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		List<PrchsProdCnt> prchsProdCntList = this.purchaseOrderMakeDataService.makePrchsProdCntList(prchsDtlMoreList,
 				prchsDtlMore.getStatusCd());
 
-		// 이력생성
+		// TB_PR_UNIQUE_TID : 중복요청 체크 정보 생성
+		UniqueTid uniqueTid = new UniqueTid();
+		uniqueTid.setTid(req.getPaymentList().get(0).getTid());
+		uniqueTid.setPrchsId(prchsId);
 
+		// 이력생성
 		CreateCompletePurchaseScReq createCompletePurchaseScReq = new CreateCompletePurchaseScReq();
 		createCompletePurchaseScReq.setPrchsDtlMoreList(prchsDtlMoreList);
 		createCompletePurchaseScReq.setPaymentList(paymentList);
 		createCompletePurchaseScReq.setPrchsProdCntList(prchsProdCntList);
+		createCompletePurchaseScReq.setUniqueTid(uniqueTid);
 
-		this.purchaseOrderSCI.completePurchase(createCompletePurchaseScReq);
+		try {
+			this.purchaseOrderSCI.completePurchase(createCompletePurchaseScReq);
+
+		} catch (StorePlatformException e) {
+			throw (this.purchaseOrderAssistService.isDuplicateKeyException(e) ? new StorePlatformException(
+					"SAC_PUR_6110") : e); // 중복된 구매요청 체크
+
+		} catch (DuplicateKeyException e) {
+			throw new StorePlatformException("SAC_PUR_6110");
+
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7202", e);
+		}
 
 		return prchsId;
 	}
