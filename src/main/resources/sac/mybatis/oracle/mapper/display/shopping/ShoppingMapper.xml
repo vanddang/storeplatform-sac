@@ -616,19 +616,85 @@
                       ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
                          WHERE PROD_ID = PLAN_ID AND IMG_CD =#{promotionImgCd}
                        )FILE_PATH                      
-                 FROM TB_DP_PLAN_INFO_MANG
+                 FROM TB_DP_PLAN_INFO_MANG KK
                 WHERE SYSDATE BETWEEN PLAN_START_DT AND PLAN_END_DT
                   AND PLAN_STATUS_CD = 'DP006501'
                   AND DP_YN = 'Y'
                 <if test="planId != null">
                   AND PLAN_ID = #{planId}
                 </if>                  
+	              AND EXISTS (
+	                     SELECT
+	                              'X'
+	                       FROM 
+	                                TB_DP_SHPG_BRAND A
+	                               ,TB_DP_SHPG_CATALOG B
+	                               ,TB_DP_SHPG_CATALOG_DESC C
+	                               ,TB_DP_MENU_SHPG_MAPG D
+	                               ,TB_DP_MENU_CATEGORY E
+	                               ,TB_DP_MENU_CATEGORY_DESC F 
+	                               ,TB_DP_PROD_CATALOG_MAPG G 
+	                               ,TB_DP_PROD_RSHP H
+	                               ,TB_DP_SHPG_PROD I
+	                               ,TB_DP_PROD J
+	                               ,TB_DP_TENANT_PROD K
+	                               ,TB_DP_TENANT_PROD K1
+	                               ,TB_DP_TENANT_PROD_PRICE L
+	                               ,TB_DP_PLAN_CATALOG_MANG M
+	                      WHERE 1=1
+	                      AND A.BRAND_ID = B.BRAND_ID
+	                      AND B.CATALOG_ID = C.CATALOG_ID
+	                      AND C.CATALOG_ID = D.CATALOG_ID     
+	                      AND D.MENU_ID = E.MENU_ID
+	                      AND D.MENU_ID = F.MENU_ID
+	                      AND B.CATALOG_ID = G.CATALOG_ID
+	                      AND G.PROD_ID = H.PROD_ID
+	                      AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
+	                      AND H.PART_PROD_ID = I.PROD_ID
+	                      AND I.PROD_ID = J.PROD_ID
+	                      AND I.PROD_ID = K.PROD_ID
+	                      AND I.PROD_ID = L.PROD_ID
+	                      AND G.PROD_ID = K1.PROD_ID
+	                      AND K.TENANT_ID = K1.TENANT_ID
+	                      AND K.TENANT_ID = L.TENANT_ID 
+	                      AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/ 
+	                      AND NVL(B.CHNL_CNT, 0) > 0          
+	                      AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
+	                      AND F.LANG_CD= #{langCd}         /* ko : 한국어 */
+	                      AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+	                      AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+	                      AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+	                      AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+	                      AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+	                      AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+	                      AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+	                      AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
+	                      AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+	                      AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+	                      AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+	                      AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
+	                      AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
+	                      AND M.PLAN_ID = KK.PLAN_ID 
+	                      AND B.CATALOG_ID = M.CATALOG_ID                      
+	                      AND  EXISTS (
+	                          SELECT 1 
+	                            FROM  TB_DP_SPRT_DEVICE DV  
+	                           WHERE PROD_ID = I.PROD_ID
+	                             AND DV.DEVICE_MODEL_CD  = #{deviceModelCd} 
+	                           UNION ALL
+	                          SELECT 1 
+	                            FROM  TB_DP_SPRT_DEVICE DV  
+	                           WHERE PROD_ID = I.PROD_ID                             
+	                             AND DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo} 
+	                           )
+	                     )                 
                 <if test='orderedBy == "recent"'>  
                  order by REG_DT DESC , PLAN_NM
                 </if>
                 <if test='orderedBy == "closingTime"'>  
                  order by PLAN_END_DT , PLAN_NM
-                </if>               
+                </if>      
+                        
             )KK
      )  
      <if test="planId == null"> 

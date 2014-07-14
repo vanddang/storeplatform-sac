@@ -594,6 +594,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		req.setTenantId(tenantHeader.getTenantId());
 		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setBannerImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_BANNER_IMAGE_CD);
 		req.setPromotionImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD);
@@ -686,11 +687,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 
+		req.setTenantId(tenantHeader.getTenantId());
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		req.setBannerImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_BANNER_IMAGE_CD);
 		req.setPromotionImgCd(DisplayConstants.DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD);
+		req.setDeviceModelCd(deviceHeader.getModel());
 		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
-
+		req.setLangCd(tenantHeader.getLangCd());
 		List<MetaInfo> resultList = null;
 		MetaInfo shopping = null;
 
