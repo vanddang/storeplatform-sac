@@ -15,6 +15,9 @@ import java.util.List;
 
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,20 +71,30 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-	@Autowired
+
+    @Autowired
 	private DisplayCommonService commonService;
-	@Autowired
+
+    @Autowired
 	private CommonMetaInfoGenerator commonGenerator;
-	@Autowired
+
+    @Autowired
 	private MusicInfoGenerator musicInfoGenerator;
-	@Autowired
-	HistoryInternalSCI historyInternalSCI;
-	@Autowired
+
+    @Autowired
+	private HistoryInternalSCI historyInternalSCI;
+
+    @Autowired
 	private EncryptionGenerator encryptionGenerator;
-	@Autowired
+
+    @Autowired
 	private DownloadAES128Helper downloadAES128Helper;
-	@Autowired
+
+    @Autowired
 	private DeviceSCI deviceSCI;
+
+    @Autowired
+    private DownloadSupportService supportService;
 
 	/*
 	 * (non-Javadoc)
@@ -94,8 +107,11 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			DownloadMusicSacReq downloadMusicSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+        List<Encryption> encryptionList = new ArrayList<Encryption>();
+        StopWatch sw = new StopWatch();
+        sw.start();
 
-		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
+        MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
 
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
@@ -220,7 +236,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 					if (historyRes.getTotalCnt() > 0) {
 						List<Purchase> purchaseList = new ArrayList<Purchase>();
-						List<Encryption> encryptionList = new ArrayList<Encryption>();
 
 						for (int i = 0; i < historyRes.getTotalCnt(); i++) {
 							prchsId = historyRes.getHistoryList().get(i).getPrchsId();
@@ -443,6 +458,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		}
 		response.setCommonResponse(commonResponse);
 		response.setProduct(product);
+
+        sw.stop();
+        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+
 		return response;
 	}
 }

@@ -430,10 +430,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		ebookRes.setCommonResponse(commonResponse);
 
         sw.stop();
-        for (Encryption enc : encryptionList) {
-            supportService.logDownloadResult(enc.getProductId(),
-                    ReflectionToStringBuilder.toString(enc, ToStringStyle.SHORT_PREFIX_STYLE), sw.getTime());
-        }
+        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
         return ebookRes;
 	}

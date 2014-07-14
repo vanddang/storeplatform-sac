@@ -459,7 +459,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			 ************************************************************************************************/
 
 			identifierList = new ArrayList<Identifier>();
-			Identifier identifier = new Identifier();
+			Identifier identifier;
 
 			identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
 					metaInfo.getProdId());
@@ -503,10 +503,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		response.setProduct(product);
 
         sw.stop();
-        for (Encryption enc : encryptionList) {
-            supportService.logDownloadResult(enc.getProductId(),
-                    ReflectionToStringBuilder.toString(enc, ToStringStyle.SHORT_PREFIX_STYLE), sw.getTime());
-        }
+        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
 	}

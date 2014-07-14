@@ -15,10 +15,17 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -38,8 +45,19 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
     private DownloadAES128Helper downloadAES128Helper;
 
     @Override
-    public void logDownloadResult(String prodId, String dlEnc, long elapTime) {
-        logger.info("DownloadResult: prodId={}, elapTime={}ms, dlEnc={}", prodId, elapTime, dlEnc);
+    public void logDownloadResult(String userKey, String deviceKey, String prodId, List<Encryption> encryptionList, long elapTime) {
+        String dlEnc = "";
+
+        if(CollectionUtils.isNotEmpty(encryptionList)) {
+            List<String> encs = new ArrayList<String>(encryptionList.size());
+            for (Encryption enc : encryptionList) {
+                encs.add(ReflectionToStringBuilder.toString(enc, ToStringStyle.SHORT_PREFIX_STYLE));
+            }
+            dlEnc = StringUtils.join(encs, ",");
+        }
+
+        logger.info("DownloadResult: prodId={}, userKey={}, deviceKey={}, elapTime={}ms, dlEnc={}"
+                ,prodId, userKey, deviceKey, elapTime, dlEnc);
     }
 
     @Override

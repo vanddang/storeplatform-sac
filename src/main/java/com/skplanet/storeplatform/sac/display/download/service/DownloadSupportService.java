@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.display.download.service;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
+import java.util.List;
+
 /**
  * <p>
  * DownloadSupportService
@@ -22,11 +24,13 @@ public interface DownloadSupportService {
 
     /**
      * 다운로드 결과를 로그에 남긴다.
+     * @param userKey
+     * @param deviceKey
      * @param prodId
-     * @param dlEnc
+     * @param encryptionList
      * @param elapTime
      */
-    void logDownloadResult(String prodId, String dlEnc, long elapTime);
+    void logDownloadResult(String userKey, String deviceKey, String prodId, List<Encryption> encryptionList, long elapTime);
 
     /**
      * Encryption을 생성한다.

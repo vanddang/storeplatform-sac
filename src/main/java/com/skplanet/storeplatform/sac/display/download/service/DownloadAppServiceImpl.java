@@ -500,11 +500,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		response.setProduct(product);
 
         sw.stop();
-        for (Encryption enc : encryptionList) {
-            supportService.logDownloadResult(enc.getProductId(),
-                    ReflectionToStringBuilder.toString(enc, ToStringStyle.SHORT_PREFIX_STYLE), sw.getTime());
-        }
-
+        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 		return response;
 	}
 }
