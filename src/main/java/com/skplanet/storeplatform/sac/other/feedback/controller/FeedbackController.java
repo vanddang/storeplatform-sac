@@ -157,8 +157,8 @@ public class FeedbackController {
 	public RemoveRecommendFeedbackSacRes removeRecommend(
 			@RequestBody @Validated RemoveRecommendFeedbackSacReq removeRecommendFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-		LOGGER.info("### 사용후기 추천 취소. ##");
-		LOGGER.info("### req : {}", removeRecommendFeedbackSacReq);
+		// LOGGER.info("### 사용후기 추천 취소. ##");
+		// LOGGER.info("### req : {}", removeRecommendFeedbackSacReq);
 		return this.feedbackService.removeRecommend(removeRecommendFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -177,8 +177,8 @@ public class FeedbackController {
 	@RequestMapping(value = "/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListFeedbackSacRes list(@Validated ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader) {
-		LOGGER.info("### 사용후기 전체 조회. ##");
-		LOGGER.info("### req : {}", listFeedbackSacReq);
+		// LOGGER.info("### 사용후기 전체 조회. ##");
+		// LOGGER.info("### req : {}", listFeedbackSacReq);
 		return this.feedbackService.list(listFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -198,8 +198,8 @@ public class FeedbackController {
 	@ResponseBody
 	public ListMyFeedbackSacRes listMyFeedback(@Validated ListMyFeedbackSacReq listMyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-		LOGGER.info("### 내 사용후기 조회. ##");
-		LOGGER.info("### req : {}", listMyFeedbackSacReq);
+		// LOGGER.info("### 내 사용후기 조회. ##");
+		// LOGGER.info("### req : {}", listMyFeedbackSacReq);
 		return this.feedbackService.listMyFeedback(listMyFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -220,8 +220,8 @@ public class FeedbackController {
 	public CreateSellerFeedbackSacRes createSellerFeedback(
 			@RequestBody @Validated CreateSellerFeedbackSacReq createSellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-		LOGGER.info("### 판매자 댓글 등록. ##");
-		LOGGER.info("### req : {}", createSellerFeedbackSacReq);
+		// LOGGER.info("### 판매자 댓글 등록. ##");
+		// LOGGER.info("### req : {}", createSellerFeedbackSacReq);
 		return this.feedbackService.createSellerFeedback(createSellerFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -242,8 +242,8 @@ public class FeedbackController {
 	public ModifySellerFeedbackSacRes modifySellerFeedback(
 			@RequestBody @Validated ModifySellerFeedbackSacReq modifySellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-		LOGGER.info("### 판매자 댓글 수정. ##");
-		LOGGER.info("### req : {}", modifySellerFeedbackSacReq);
+		// LOGGER.info("### 판매자 댓글 수정. ##");
+		// LOGGER.info("### req : {}", modifySellerFeedbackSacReq);
 		return this.feedbackService.modifySellerFeedback(modifySellerFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -264,8 +264,8 @@ public class FeedbackController {
 	public RemoveSellerFeedbackSacRes removeSellerFeedback(
 			@RequestBody @Validated RemoveSellerFeedbackSacReq removeSellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
-		LOGGER.info("### 판매자 댓글 삭제. ##");
-		LOGGER.info("### req : {}", removeSellerFeedbackSacReq);
+		// LOGGER.info("### 판매자 댓글 삭제. ##");
+		// LOGGER.info("### req : {}", removeSellerFeedbackSacReq);
 		return this.feedbackService.removeSellerFeedback(removeSellerFeedbackSacReq, sacRequestHeader);
 	}
 
