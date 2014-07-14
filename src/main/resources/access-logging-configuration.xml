@@ -3,10 +3,10 @@
     <activation>true</activation> 
     <loggerName>com.skplanet.storeplatform.sac</loggerName>
     <loggingLevel>INFO</loggingLevel>
-    <requestBodyLength>200</requestBodyLength>
-    <responseBodyLength>200</responseBodyLength>
+    <requestBodyLength>50</requestBodyLength>
+    <responseBodyLength>50</responseBodyLength>
     <requestLoggingActivation>true</requestLoggingActivation> 
-    <responseLoggingActivation>true</responseLoggingActivation>
+    <responseLoggingActivation>false</responseLoggingActivation>
     <requestHeaderList>
         <requestHeader>*</requestHeader>
     </requestHeaderList>
