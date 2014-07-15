@@ -293,7 +293,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
         else if(q.matches("DP000203\\.DP001116\\.CT(21|22|24|26)")) {
             info.setProductType(ProductType.EbookComic);
         }
-        else if(q.startsWith("DP000204")) {
+        else if(q.startsWith("DP000204") || q.matches("DP000203\\..*\\.CT(30|31|32|33)")) {
             info.setProductType(ProductType.RingBell);
             info.setMetaType(MetaRingBellType.forCode(info.getMetaClsfCd()));
         }
