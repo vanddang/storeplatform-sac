@@ -259,12 +259,21 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 					paymentSacParam.getPaymentMtdCd())) {
 				// SKT 후불결제이면
 				// 상위 레벨로 이동. //SKT 후불결제 일 때 주던 상품타입을 위에서 처리. pay.setApplyNum(prchsProdType);
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_COUPON, paymentSacParam.getPaymentMtdCd())) {
+				// 쿠폰이면
+				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
+				continue;
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_TSTORE_CASH,
 					paymentSacParam.getPaymentMtdCd())
 					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_TSTORE_POINT,
 							paymentSacParam.getPaymentMtdCd())) {
 				// T CASH 결제이면 충전/사용 취소 구분 - 01 : 충전 취소, 02 : 사용 취소. 결제 테이블에는 사용 취소만 있다.
 				pay.setApplyNum("02");
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_GIFT_RECEIVED,
+					paymentSacParam.getPaymentMtdCd())) {
+				// 선물수신결제
+				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
+				continue;
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_CULTURE, paymentSacParam.getPaymentMtdCd())) {
 				// 문화상품권 결제이면
 				if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_WEB, prchsSacParam.getPrchsReqPathCd())) {
@@ -275,9 +284,25 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 				} else {
 					pay.setApplyNum("00");
 				}
-			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_OCB, paymentSacParam.getPaymentMtdCd())) {
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_TSTORE_GIFTCARD,
+					paymentSacParam.getPaymentMtdCd())) {
 				// T GiftCard 결제이면
-
+				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
+				continue;
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_FIXRATE, paymentSacParam.getPaymentMtdCd())) {
+				// 정액권
+				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
+				continue;
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SERIESPASS,
+					paymentSacParam.getPaymentMtdCd())) {
+				// 시리즈패스권
+				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
+				continue;
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_MOBILE_TMONEY,
+					paymentSacParam.getPaymentMtdCd())) {
+				// T Money
+				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
+				continue;
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_TMEMBERSHIP,
 					paymentSacParam.getPaymentMtdCd())) {
 				// T Membership 결제이면 하드코딩 - 최상훈 2014.03.26
@@ -288,6 +313,20 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 					// 20퍼 할인율 고정.
 					pay.setPaymentTypeCd("1001");
 				}
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_OWN,
+					paymentSacParam.getPaymentMtdCd())) {
+				// 이북/코믹 전권 소장
+				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
+				continue;
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_EBOOKCOMIC_LOAN,
+					paymentSacParam.getPaymentMtdCd())) {
+				// 이북/코믹 전권 대여
+				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
+				continue;
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_B2B, paymentSacParam.getPaymentMtdCd())) {
+				// 타사이트결제(B2B)
+				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
+				continue;
 			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_PAYPIN, paymentSacParam.getPaymentMtdCd())) {
 				// Paypin 결제이면
 				pay.setOrderNo(paymentSacParam.getMoid() == null ? paymentSacParam.getTid() : paymentSacParam.getMoid());
@@ -301,9 +340,34 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 				// T game pass 결제이면
 				// orderNo는 규격서와 다르게 기존 값 그대로 보내기로 함.
 				pay.setApplyNum("02");
-			} else {
+			} else if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SHOPPING_SPECIAL_COUPON,
+					paymentSacParam.getPaymentMtdCd())
+					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_FIXRATE_REFUND,
+							paymentSacParam.getPaymentMtdCd())
+					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_TEST_DEVICE,
+							paymentSacParam.getPaymentMtdCd())
+					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_IAP_COMMERCIAL_CONVERTED,
+							paymentSacParam.getPaymentMtdCd())
+					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_EVENT_ONE_PLUS_ONE,
+							paymentSacParam.getPaymentMtdCd())
+					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_EVENT, paymentSacParam.getPaymentMtdCd())
+					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_STORE_TEST_DEVICE,
+							paymentSacParam.getPaymentMtdCd())
+					|| StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_FREE_PRODUCT,
+							paymentSacParam.getPaymentMtdCd())) {
+				// 쇼핑 특가상품 쿠폰
+				// 정액권 환불
+				// SKT 시험폰 결제
+				// 부분유료화 정식판 전환
+				// 1+1 이벤트
+				// 이벤트 - 유료컨텐츠 비과금 결제
+				// 테스트폰 결제
+				// 무료상품
 				// T Store 결제 취소 지원 안하는 결제 수단은 결제취소 요청을 안보낸다.
 				continue;
+			} else {
+				// 정의되지 않은 결제수단은 에러다.
+				throw new StorePlatformException("SAC_PUR_8132");
 			}
 
 			payList.add(pay);
