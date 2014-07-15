@@ -160,7 +160,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 */
 	@Override
 	public Source generateSource(MetaInfo metaInfo) {
-		Source source = new Source();
+
+        if(StringUtils.isEmpty(metaInfo.getImagePath()) && StringUtils.isEmpty(metaInfo.getFilePath()))
+            return null;
+
+        Source source = new Source();
 
 		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 		if (StringUtils.isNotEmpty(metaInfo.getImagePath())) {
@@ -284,8 +288,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 */
 	@Override
 	public List<Source> generateSourceList(MetaInfo metaInfo) {
+        Source source = this.generateSource(metaInfo);
+        if(source == null)
+            return null;
+
 		List<Source> sourceList = new ArrayList<Source>();
-		Source source = this.generateSource(metaInfo);
 		sourceList.add(source);
 
 		return sourceList;
@@ -456,6 +463,9 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
+        if(metaInfo.getPaticpersCnt() == null || metaInfo.getPrchsCnt() == null || metaInfo.getAvgEvluScore() == null)
+            return null;
+
 		Accrual accrual = new Accrual();
 		accrual.setVoterCount(metaInfo.getPaticpersCnt());
 		accrual.setDownloadCount(metaInfo.getPrchsCnt());

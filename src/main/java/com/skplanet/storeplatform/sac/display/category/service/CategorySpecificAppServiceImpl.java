@@ -84,62 +84,66 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
 		MetaInfo metaInfo = null;
 		List<Product> productList = new ArrayList<Product>();
 
-		if (req.getDummy() == null) {
+        List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
+        if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
+            throw new StorePlatformException("SAC_DSP_0004", "list",
+                    DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
+        }
 
-			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
-			if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
-				throw new StorePlatformException("SAC_DSP_0004", "list",
-						DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
-			}
+        // 상품 기본 정보 List 조회
+        List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+                "CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
 
-			// 상품 기본 정보 List 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
+        if (productBasicInfoList != null) {
+            Map<String, Object> paramMap = new HashMap<String, Object>();
+            paramMap.put("tenantHeader", header.getTenantHeader());
+            paramMap.put("deviceHeader", header.getDeviceHeader());
+            paramMap.put("lang", "ko");
 
-			if (productBasicInfoList != null) {
-				Map<String, Object> paramMap = new HashMap<String, Object>();
-				paramMap.put("tenantHeader", header.getTenantHeader());
-				paramMap.put("deviceHeader", header.getDeviceHeader());
-				paramMap.put("lang", "ko");
+            for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+                String topMenuId = productBasicInfo.getTopMenuId();
+                String svcGrpCd = productBasicInfo.getSvcGrpCd();
+                paramMap.put("productBasicInfo", productBasicInfo);
 
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					String topMenuId = productBasicInfo.getTopMenuId();
-					String svcGrpCd = productBasicInfo.getSvcGrpCd();
-					paramMap.put("productBasicInfo", productBasicInfo);
+                this.log.debug("##### Top Menu Id : {}", topMenuId);
+                this.log.debug("##### Service Group Cd : {}", svcGrpCd);
 
-					this.log.debug("##### Top Menu Id : {}", topMenuId);
-					this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+                // 상품 SVC_GRP_CD 조회
+                // DP000203 : 멀티미디어
+                // DP000206 : Tstore 쇼핑
+                // DP000205 : 소셜쇼핑
+                // DP000204 : 폰꾸미기
+                // DP000201 : 애플리캐이션
 
-					// 상품 SVC_GRP_CD 조회
-					// DP000203 : 멀티미디어
-					// DP000206 : Tstore 쇼핑
-					// DP000205 : 소셜쇼핑
-					// DP000204 : 폰꾸미기
-					// DP000201 : 애플리캐이션
+                // APP 상품의 경우
+                if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+                    if(productBasicInfo.getPartParentClsfCd() == null || productBasicInfo.getPartParentClsfCd().equals("PD012301")) {
+                        paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+                        // metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
 
-					// APP 상품의 경우
-					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						// metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+                        metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo", paramMap,
+                                MetaInfo.class);
+                    }
+                    else if(productBasicInfo.getPartParentClsfCd().equals("PD012302")) {
+                        Map<String, Object> param = new HashMap<String, Object>();
+                        param.put("langCd", header.getTenantHeader().getLangCd());
+                        param.put("tenantId", header.getTenantHeader().getTenantId());
+                        param.put("prodId", productBasicInfo.getProdId());
 
-						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo", paramMap,
-								MetaInfo.class);
+                        metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getInAppMetaInfo", param, MetaInfo.class);
+                    }
 
-						if (metaInfo != null) {
-							product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
-							productList.add(product);
-						}
-					}
-				}
-			}
-			commonResponse.setTotalCount(productList.size());
-			res.setCommonResponse(commonResponse);
-			res.setProductList(productList);
-			return res;
-
-		} else {
-			return this.generateDummy();
-		}
+                    if (metaInfo != null) {
+                        product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
+                        productList.add(product);
+                    }
+                }
+            }
+        }
+        commonResponse.setTotalCount(productList.size());
+        res.setCommonResponse(commonResponse);
+        res.setProductList(productList);
+        return res;
 	}
 
 	/**

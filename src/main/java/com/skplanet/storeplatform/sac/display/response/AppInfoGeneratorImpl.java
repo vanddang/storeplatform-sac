@@ -212,21 +212,17 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 	 */
 	@Override
 	public List<Identifier> generateSpecificIdentifierList(MetaInfo metaInfo) {
-		Identifier identifier = new Identifier();
+
 		List<Identifier> identifierList = new ArrayList<Identifier>();
-		identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-		identifier.setText(metaInfo.getPartProdId());
-		identifierList.add(identifier);
-		identifier = new Identifier();
-		identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-		identifier.setText(metaInfo.getProdId());
-		identifierList.add(identifier);
+        if (StringUtils.isNotEmpty(metaInfo.getProdId())) {
+            identifierList.add(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
+        }
+        if (StringUtils.isNotEmpty(metaInfo.getPartProdId())) {
+            identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
+        }
 		// Cid 설정
 		if (StringUtils.isNotEmpty(metaInfo.getCid())) {
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_CONTENT_IDENTIFIER_CD);
-			identifier.setText(metaInfo.getProdId());
-			identifierList.add(identifier);
+			identifierList.add(new Identifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, metaInfo.getCid()));
 		}
 		return identifierList;
 	}

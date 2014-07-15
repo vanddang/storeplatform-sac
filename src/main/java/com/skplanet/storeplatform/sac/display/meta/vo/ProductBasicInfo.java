@@ -22,6 +22,7 @@ public class ProductBasicInfo extends CommonInfo {
 	private String topMenuId;
 	private String expoOrd;
 	private String firstProdId;
+    private String partParentClsfCd;
 
 	// 쇼핑 관련
 	private String catalogId;
@@ -259,4 +260,11 @@ public class ProductBasicInfo extends CommonInfo {
 		this.etcCd = etcCd;
 	}
 
+    public String getPartParentClsfCd() {
+        return partParentClsfCd;
+    }
+
+    public void setPartParentClsfCd(String partParentClsfCd) {
+        this.partParentClsfCd = partParentClsfCd;
+    }
 }
