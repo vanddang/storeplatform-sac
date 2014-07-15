@@ -91,4 +91,21 @@
         FROM TB_DP_PROD_UPDT_HIS
         WHERE PROD_ID = #{channelId}
     </select>
+
+    <select id="selectProductInfo" parameterType="String" resultType="com.skplanet.storeplatform.sac.display.common.vo.ProductInfo">
+        SELECT /* DisplayCommonMapper.xml, selectProductTypeInfo, SAC : 정희원 , 2014-07-08 */
+            P.PROD_ID,
+            P.SVC_GRP_CD,
+            P.SVC_TYPE_CD,
+            P.META_CLSF_CD,
+            P.CONTENTS_TYPE_CD,
+            P.TOP_MENU_ID,
+            APP.PART_PARENT_CLSF_CD
+        FROM TB_DP_PROD P
+          LEFT OUTER JOIN TB_DP_APP_PROD APP
+            ON APP.PROD_ID = P.PROD_ID
+        WHERE 1=1
+              AND P.PROD_ID = #{prodId}
+    </select>
+
 </mapper>
