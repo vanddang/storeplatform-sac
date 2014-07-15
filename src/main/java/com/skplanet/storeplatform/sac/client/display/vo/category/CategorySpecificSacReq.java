@@ -19,7 +19,7 @@ public class CategorySpecificSacReq extends CommonInfo {
 	}
 
 	public String getDummy() {
-		return "N";
+		return null;
 	}
 
 
