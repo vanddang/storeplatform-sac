@@ -53,8 +53,8 @@
               , NVL(TB.PROD_ID, '') AS SEED_PRODUCT_ID
               , TB.CASE_REF_CD AS SEED_CASE_REF_CD
               , TB.USE_YN AS SEED_USE_YN
-              , TB.BNCH_PROD_ID
-              , TB.BNCH_DWLD_MSG
+              , TB2.BNCH_PROD_ID
+              , TB2.BNCH_DWLD_MSG
               , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
           FROM 
                (
@@ -63,8 +63,7 @@
                       , (SELECT MENU_NM 
                            FROM TB_DP_MENU_CATEGORY_DESC
                           WHERE MENU_ID = KA.TOP_MENU_ID
-                            AND LANG_CD = #{langCd}
-                            AND ROWNUM = 1) AS TOP_MENU_NM        
+                            AND ROWNUM = 1) AS TOP_MENU_NM
                       , KA.MENU_ID
                       , KA.MENU_NM
                       , KA.PROD_ID
@@ -170,8 +169,11 @@
                    AND  KC.EXPO_ORD = '1'
                    AND  KC.LANG_CD = #{langCd}
                    AND  KC.IMG_CD = #{imageCd} 
-               ) TA LEFT OUTER JOIN TB_DP_SEED_MAPP TB 
-                     ON TA.PROD_ID = TB.PROD_ID                       
+               ) TA
+              LEFT OUTER JOIN TB_DP_SEED_MAPP TB
+                ON TA.PROD_ID = TB.PROD_ID AND TB.CASE_REF_CD IN ('PD013018', 'PD013005')
+              LEFT OUTER JOIN TB_DP_SEED_MAPP TB2
+                ON TB2.PROD_ID = TA.PROD_ID AND TB2.CASE_REF_CD = 'PD013020'
     </select>
     
     <!-- 상품정보요청(for download) Vod -->
