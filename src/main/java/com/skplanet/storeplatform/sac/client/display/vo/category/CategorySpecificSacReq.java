@@ -9,8 +9,6 @@ public class CategorySpecificSacReq extends CommonInfo {
 
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String list;
-	// TODO osm1021 dummy data가 필요없어지면 삭제할것
-	private String dummy;
 
 	public String getList() {
 		return this.list;
@@ -21,11 +19,8 @@ public class CategorySpecificSacReq extends CommonInfo {
 	}
 
 	public String getDummy() {
-		return this.dummy;
+		return "N";
 	}
 
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
 
 }
