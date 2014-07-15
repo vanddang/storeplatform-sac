@@ -267,7 +267,6 @@
             , F.PROD_DTL_DESC
             , G.PROD_STATUS_CD
             , D.SELLER_MBR_NO
-            , D.META_CLSF_CD
             , D.CID
             , D.SVC_GRP_CD
             , D.EXPO_SELLER_NM
@@ -282,12 +281,13 @@
             , TB_DP_PROD_DESC               F
             , TB_DP_TENANT_PROD             G
             , TB_DP_TENANT_PROD_PRICE       H
+            , TB_DP_PROD_RSHP RSHP
         WHERE  A.MENU_ID = B.MENU_ID
                AND  A.MENU_ID = C.MENU_ID
                AND  B.PROD_ID = D.PROD_ID
                AND  B.PROD_ID = E.PROD_ID
                AND  B.PROD_ID = F.PROD_ID
-               AND  B.PROD_ID = G.PROD_ID
+               AND  RSHP.PROD_ID = G.PROD_ID
                AND  G.TENANT_ID = H.TENANT_ID
                AND  B.PROD_ID = H.PROD_ID
                AND  A.USE_YN = 'Y'                                    /* Y : 사용 (사용여부) */
@@ -299,6 +299,8 @@
                AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                AND  B.PROD_ID = #{prodId}
                AND  G.TENANT_ID = #{tenantId}            /* 테넌트ID */
+               AND  RSHP.PART_PROD_ID = B.PROD_ID
+               AND  RSHP.PROD_RSHP_CD = 'DP010801'
                AND  ROWNUM = 1
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="MetaInfo">
