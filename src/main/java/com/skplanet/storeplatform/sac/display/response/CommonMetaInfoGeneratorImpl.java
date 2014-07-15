@@ -9,38 +9,25 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 공통 Meta 정보 Generator 구현체.
@@ -288,14 +275,12 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 */
 	@Override
 	public List<Source> generateSourceList(MetaInfo metaInfo) {
+        List<Source> sourceList = new ArrayList<Source>();
         Source source = this.generateSource(metaInfo);
-        if(source == null)
-            return null;
+        if(source != null)
+            sourceList.add(source);
 
-		List<Source> sourceList = new ArrayList<Source>();
-		sourceList.add(source);
-
-		return sourceList;
+        return sourceList;
 	}
 
 	/*
@@ -463,13 +448,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
-        if(metaInfo.getPaticpersCnt() == null || metaInfo.getPrchsCnt() == null || metaInfo.getAvgEvluScore() == null)
-            return null;
 
 		Accrual accrual = new Accrual();
-		accrual.setVoterCount(metaInfo.getPaticpersCnt());
-		accrual.setDownloadCount(metaInfo.getPrchsCnt());
-		accrual.setScore(metaInfo.getAvgEvluScore());
+		accrual.setVoterCount(metaInfo.getPaticpersCnt() != null ? metaInfo.getPaticpersCnt() : 0);
+		accrual.setDownloadCount(metaInfo.getPrchsCnt() != null ? metaInfo.getPrchsCnt() : 0);
+		accrual.setScore(metaInfo.getAvgEvluScore() != null ? metaInfo.getAvgEvluScore() : 0);
 
 		return accrual;
 	}
