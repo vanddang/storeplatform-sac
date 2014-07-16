@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
  * SacServiceDataService 클래스
  *
  * Created on 2014. 06. 02. by 서대영, SK플래닛 : DB 셋업이 될 때 까지 임시 메모리 Map으로 구현
+ * Updated on 2014. 07. 16. by 서대영, SK플래닛 : 마일리지 지원 여부 추가
  */
 @Service
 public class SacServiceDataServiceImpl implements SacServiceDataService {
@@ -37,7 +38,8 @@ public class SacServiceDataServiceImpl implements SacServiceDataService {
 
 	public SacServiceDataServiceImpl() {
 		this.dataSvc = new HashMap<String, Boolean>();
-		this.dataSvc.put("tstore.gamecash.flatrate", true);
+        this.dataSvc.put("tstore.gamecash.flatrate", true); // 게임 캐쉬 정액제 지원
+        this.dataSvc.put("tstore.mileage", true); // 마일리지 지원
 		this.dataSvc.put("SERVICE_SAMPLE", false);
 	}
 

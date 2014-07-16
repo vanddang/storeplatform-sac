@@ -19,7 +19,16 @@ public class SacServiceDataServiceImplTest {
 	}
 
 	@Test
-	public void testGetServiceActiveForActive() {
+	public void testGetServiceActiveWrongForInactive() {
+		SacService vo = new SacService();
+		vo.setServiceCd("tstore.gamecash.flatrate.v2");
+		vo.setSimOperator("450/05");
+		this.dataSvc.getServiceActive(vo);
+		assertFalse(vo.isActive());
+	}
+
+	@Test
+	public void testGetServiceActiveCashForActive() {
 		SacService vo = new SacService();
 		vo.setServiceCd("tstore.gamecash.flatrate");
 		vo.setSimOperator("450/05");
@@ -28,7 +37,7 @@ public class SacServiceDataServiceImplTest {
 	}
 
 	@Test
-	public void testGetServiceActiveForInactive1() {
+	public void testGetServiceActiveCashForInactive1() {
 		SacService vo = new SacService();
 		vo.setServiceCd("tstore.gamecash.flatrate");
 		vo.setSimOperator("450/08");
@@ -37,10 +46,19 @@ public class SacServiceDataServiceImplTest {
 	}
 
 	@Test
-	public void testGetServiceActiveForInactive2() {
+	public void testGetServiceActiveMileageForActive() {
 		SacService vo = new SacService();
-		vo.setServiceCd("tstore.gamecash.flatrate.v2");
+		vo.setServiceCd("tstore.mileage");
 		vo.setSimOperator("450/05");
+		this.dataSvc.getServiceActive(vo);
+		assertTrue(vo.isActive());
+	}
+
+	@Test
+	public void testGetServiceActiveForMileageInactive() {
+		SacService vo = new SacService();
+		vo.setServiceCd("tstore.mileage");
+		vo.setSimOperator("450/08");
 		this.dataSvc.getServiceActive(vo);
 		assertFalse(vo.isActive());
 	}
