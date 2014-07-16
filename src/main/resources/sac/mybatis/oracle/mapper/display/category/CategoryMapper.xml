@@ -3,7 +3,7 @@
 <mapper namespace="Category">
     <!-- 일반 카테고리 앱 상품 조회 -->
     <select id="selectCategoryAppList" parameterType="CategoryAppSacReq" resultType="ProductBasicInfo">
-		SELECT  /* CategoryMapper.xml, selectCategoryAppList, SAC 전시, 2014-05-19 */
+        SELECT  /* CategoryMapper.xml, selectCategoryAppList, SAC 전시, 2014-05-19 */
                 KA.TOTAL_COUNT
               , KA.RNUM
               , KA.TOP_MENU_ID
@@ -65,83 +65,106 @@
     
     <!-- 일반 카테고리 이북/코믹 상품 조회 -->
     <select id="selectCategoryEbookComicList" parameterType="CategoryEbookComicSacReq" resultType="ProductBasicInfo">
-        SELECT /* CategoryMapper.xml, selectCategoryEbookComicList, SAC 전시, 2014-05-30 */
-		       LA.TOTAL_COUNT
-		     , LA.RNUM
-		     , LA.TOP_MENU_ID
-		     , LA.MENU_ID
-		     , LA.PROD_ID
-		     , ( SELECT PART_PROD_ID
-		         FROM   ( SELECT Z1.PROD_ID
-		                        ,Z1.PART_PROD_ID
-		                        ,ROW_NUMBER( ) OVER ( PARTITION BY Z1.PROD_ID
-		                                                  ORDER BY CASE WHEN Z2.BOOK_CLSF_CD = Z3.BOOK_CLSF_CD THEN 1 ELSE 2 END
-		                                                         , Z3.CHAPTER DESC
-		                                                         , NVL( Z4.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
-		                                                         , Z4.LAST_DEPLOY_DT DESC ) AS RN
-		                 FROM   TB_DP_PROD_RSHP  Z1
-		                       ,TB_DP_EBOOK_PROD Z2 /* 채널 상품 */
-		                       ,TB_DP_EBOOK_PROD Z3 /* 에피소드 상품 */
-		                       ,TB_DP_PROD       Z4 /* 에피소드 상품 */
-		                 WHERE  Z1.PROD_ID = Z2.PROD_ID
-		                 AND    Z1.PROD_RSHP_CD = 'DP010802' /* DP010802 : 채널-에피소드 상품 관계 */
-		                 AND    Z1.PART_PROD_ID = Z3.PROD_ID
-		                 AND    Z1.PART_PROD_ID = Z4.PROD_ID
-		                ) Z
-		         WHERE  Z.PROD_ID = LA.PROD_ID
-		         AND    Z.RN = 1
-		       ) AS PART_PROD_ID
-		     , LA.META_CLSF_CD
-		     , LA.CONTENTS_TYPE_CD
-		FROM (
-		      SELECT KA.*
-		        FROM (
-		              SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.LAST_DEPLOY_DT DESC, JA.PROD_NM) AS RNUM
-		                FROM (
-		                      SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-		                        FROM (
-		                              SELECT A.TOP_MENU_ID
-		                                   , A.MENU_ID
-		                                   , D.PROD_ID
-		                                   , D.LAST_DEPLOY_DT
-		                                   , D.META_CLSF_CD
-		                                   , D.CONTENTS_TYPE_CD
-		                                   , F.PROD_NM
-		                                FROM TB_DP_MENU_CATEGORY      A
-		                                   , TB_DP_MENU_CATEGORY_PROD_MAPG B
-		                                   , TB_DP_PROD               D /* 채널 상품 */
-		                                   , TB_DP_EBOOK_PROD         E /* 채널 상품 */
-		                                   , TB_DP_PROD_DESC          F /* 채널 상품 */
-		                                   , TB_DP_TENANT_PROD        G /* 채널 상품 */
-		                                   , TB_DP_TENANT_PROD_PRICE  H /* 채널 상품 */
-		                               WHERE B.MENU_ID = A.MENU_ID 
-		                                 AND D.PROD_ID = B.PROD_ID 
-		                                 AND E.PROD_ID = B.PROD_ID 
-		                                 AND E.PROD_ID = D.PROD_ID 
-		                                 AND F.PROD_ID = D.PROD_ID 
-		                                 AND G.PROD_ID = D.PROD_ID 
-		                                 AND G.TENANT_ID = #{tenantId}             /* header param : tenantId */
-		                                 AND H.PROD_ID = D.PROD_ID
-		                                 AND H.TENANT_ID = #{tenantId}             /* header param : tenantId */
-		                                 AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
-		                                 AND A.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-		                                 AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-		                                 AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
-		                                 AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
-		                                 AND F.LANG_CD = #{langCd}                 /* 언어 코드 */
-		                                 AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
-		                                 AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
-		                                 AND A.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
-		                                 AND D.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
-		                                 AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
-		                                 AND B.MENU_ID = #{menuId}                 /* 메뉴ID */
-		                               <if test="arrayProdGradeCd != null">
+        /* CategoryMapper.xml, selectCategoryEbookComicList, SAC 전시, 서대영, SK 플래닛, 2014-07-16 */
+        SELECT
+               LA.TOTAL_COUNT
+             , LA.RNUM
+             , LA.TOP_MENU_ID
+             , LA.MENU_ID
+             , LA.PROD_ID
+             , ( SELECT PART_PROD_ID
+                 FROM   ( SELECT Z1.PROD_ID
+                                ,Z1.PART_PROD_ID
+                                ,ROW_NUMBER( ) OVER ( PARTITION BY Z1.PROD_ID
+                                                          ORDER BY CASE WHEN Z2.BOOK_CLSF_CD = Z3.BOOK_CLSF_CD THEN 1 ELSE 2 END
+                                                                 , Z3.CHAPTER DESC
+                                                                 , NVL( Z4.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
+                                                                 , Z4.LAST_DEPLOY_DT DESC ) AS RN
+                         FROM   TB_DP_PROD_RSHP  Z1
+                               ,TB_DP_EBOOK_PROD Z2 /* 채널 상품 */
+                               ,TB_DP_EBOOK_PROD Z3 /* 에피소드 상품 */
+                               ,TB_DP_PROD       Z4 /* 에피소드 상품 */
+                         WHERE  Z1.PROD_ID = Z2.PROD_ID
+                         AND    Z1.PROD_RSHP_CD = 'DP010802' /* DP010802 : 채널-에피소드 상품 관계 */
+                         AND    Z1.PART_PROD_ID = Z3.PROD_ID
+                         AND    Z1.PART_PROD_ID = Z4.PROD_ID
+                        ) Z
+                 WHERE  Z.PROD_ID = LA.PROD_ID
+                 AND    Z.RN = 1
+               ) AS PART_PROD_ID
+             , LA.META_CLSF_CD
+             , LA.CONTENTS_TYPE_CD
+        FROM (
+              SELECT KA.*
+                FROM (
+                      SELECT JA.*, 
+                      <choose>
+                        <when test='@org.apache.commons.lang3.StringUtils@startsWith(filteredBy, "recent")'>
+                          ROW_NUMBER() OVER(ORDER BY JA.LAST_DEPLOY_DT DESC, JA.PROD_NM) AS RNUM /* 최신순 */
+                        </when>
+                        <when test='@org.apache.commons.lang3.StringUtils@startsWith(filteredBy, "count")'>
+                          ROW_NUMBER() OVER(ORDER BY JA.PRCHS_CNT DESC, JA.PROD_NM) AS RNUM /* 다운로드순 */
+                        </when>
+                        <when test='@org.apache.commons.lang3.StringUtils@startsWith(filteredBy, "lowprice")'>
+                          ROW_NUMBER() OVER(ORDER BY JA.PROD_AMT ASC, JA.PROD_NM) AS RNUM /* 낮은가격순 */
+                        </when>
+                        <when test='@org.apache.commons.lang3.StringUtils@startsWith(filteredBy, "highprice")'>
+                          ROW_NUMBER() OVER(ORDER BY JA.PROD_AMT DESC, JA.PROD_NM) AS RNUM /* 높은가격순 */
+                        </when>
+                        <otherwise>
+                          ROW_NUMBER() OVER(ORDER BY JA.LAST_DEPLOY_DT DESC, JA.PROD_NM) AS RNUM /* 최신순(Default) */
+                        </otherwise>
+                      </choose>
+                        FROM (
+                              SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
+                                FROM (
+                                      SELECT A.TOP_MENU_ID
+                                           , A.MENU_ID
+                                           , D.PROD_ID
+                                           , D.LAST_DEPLOY_DT
+                                           , D.META_CLSF_CD
+                                           , D.CONTENTS_TYPE_CD
+                                           , F.PROD_NM
+                                           , H.PROD_AMT  /* 가격 */
+                                           , I.PRCHS_CNT /* 구매건수 */
+                                        FROM TB_DP_MENU_CATEGORY      A
+                                           , TB_DP_MENU_CATEGORY_PROD_MAPG B
+                                           , TB_DP_PROD               D /* 채널 상품 */
+                                           , TB_DP_EBOOK_PROD         E /* 채널 상품 */
+                                           , TB_DP_PROD_DESC          F /* 채널 상품 */
+                                           , TB_DP_TENANT_PROD        G /* 채널 상품 */
+                                           , TB_DP_TENANT_PROD_PRICE  H /* 채널 상품 */
+                                           , TB_DP_TENANT_PROD_STATS  I
+                                       WHERE B.MENU_ID = A.MENU_ID 
+                                         AND D.PROD_ID = B.PROD_ID 
+                                         AND E.PROD_ID = B.PROD_ID 
+                                         AND E.PROD_ID = D.PROD_ID 
+                                         AND F.PROD_ID = D.PROD_ID 
+                                         AND G.PROD_ID = D.PROD_ID 
+                                         AND G.TENANT_ID = #{tenantId}             /* header param : tenantId */
+                                         AND H.PROD_ID = D.PROD_ID
+                                         AND H.TENANT_ID = #{tenantId}             /* header param : tenantId */
+                                         AND I.PROD_ID   = D.PROD_ID
+                                         AND I.TENANT_ID = #{tenantId}             /* header param : tenantId */
+                                         AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+                                         AND A.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
+                                         AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
+                                         AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
+                                         AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
+                                         AND F.LANG_CD = #{langCd}                 /* 언어 코드 */
+                                         AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
+                                         AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
+                                         AND A.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
+                                         AND D.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
+                                         AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
+                                         AND B.MENU_ID = #{menuId}                 /* 메뉴ID */
+                                       <if test="arrayProdGradeCd != null">
                                          AND D.PROD_GRD_CD IN
                                          <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
                                            #{prodGradeCd}
                                          </foreach>
                                        </if>  
-                                       <if test='filteredBy == "recent+complete"'>
+                                       <if test='@org.apache.commons.lang3.StringUtils@endsWith(filteredBy, "+complete")'>
                                          AND E.COMPT_YN = 'Y'
                                        </if>
                                        <if test='prodCharge == "Y"'>
@@ -152,22 +175,22 @@
                                          AND (NVL(H.CHNL_UNLMT_AMT, -1) <= 0 AND NVL(H.CHNL_PERIOD_AMT, -1) <= 0) /* 무료 상품 */
                                          ]]>
                                        </if>
-		                                 AND EXISTS (SELECT 'X'
-		                                             FROM   TB_DP_PROD_RSHP   I
-		                                                   ,TB_DP_SPRT_DEVICE L
-		                                                   ,TB_CM_DEVICE      M
-		                                             WHERE  I.PROD_ID = B.PROD_ID
-		                                             AND    I.PART_PROD_ID = L.PROD_ID
-		                                             AND    L.DEVICE_MODEL_CD = M.DEVICE_MODEL_CD
-		                                             AND    I.PROD_RSHP_CD = 'DP010802'  /* DP010802 : 채널-에피소드 상품 관계 */
-		                                             AND    L.DEVICE_MODEL_CD IN (#{deviceModelCd}, 'ANY-PHONE-4MM')
-		                                             AND    M.USE_YN = 'Y' 
-		                                            )
-		                             ) IA
-		                     ) JA
-		             ) KA
-		       WHERE KA.RNUM BETWEEN #{offset} AND #{count}
-		   ) LA
+                                         AND EXISTS (SELECT 'X'
+                                                     FROM   TB_DP_PROD_RSHP   I
+                                                           ,TB_DP_SPRT_DEVICE L
+                                                           ,TB_CM_DEVICE      M
+                                                     WHERE  I.PROD_ID = B.PROD_ID
+                                                     AND    I.PART_PROD_ID = L.PROD_ID
+                                                     AND    L.DEVICE_MODEL_CD = M.DEVICE_MODEL_CD
+                                                     AND    I.PROD_RSHP_CD = 'DP010802'  /* DP010802 : 채널-에피소드 상품 관계 */
+                                                     AND    L.DEVICE_MODEL_CD IN (#{deviceModelCd}, 'ANY-PHONE-4MM')
+                                                     AND    M.USE_YN = 'Y' 
+                                                    )
+                                     ) IA
+                             ) JA
+                     ) KA
+               WHERE KA.RNUM BETWEEN #{offset} AND #{count}
+           ) LA
     </select>
     
 </mapper>
