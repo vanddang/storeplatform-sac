@@ -18,8 +18,9 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 일반 카테고리 앱 상품 조회 Request Value Object.
- * 
+ *
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
+ * Updated on 2014. 07. 16 by 서대영, SK플래닛 : 필터링 조건 추가
  */
 public class CategoryEbookComicSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
@@ -39,7 +40,7 @@ public class CategoryEbookComicSacReq extends CommonInfo {
 	private String menuId; // 메뉴ID
 
 	@NotBlank
-	@Pattern(regexp = "recent|recent\\+complete")
+	@Pattern(regexp = "(recent|count|lowprice|highprice)(\\+complete)?")
 	private String filteredBy; // 조회유형
 
 	@Valid
