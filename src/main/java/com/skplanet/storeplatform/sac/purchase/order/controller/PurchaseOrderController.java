@@ -570,8 +570,7 @@ public class PurchaseOrderController {
 		final String systemId = sacRequestHeader.getTenantHeader().getSystemId();
 		final String clientIp = req.getClientIp();
 		final String prchsReqPathCd = req.getPrchsReqPathCd();
-		final String fdsPrchsCaseCd = StringUtils
-				.equals(req.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+		final String prchsCaseCd = req.getPrchsCaseCd();
 		final String networkTypeCd = req.getNetworkTypeCd();
 		final List<String> prodIdList = new ArrayList<String>();
 		final List<Long> prodPriceList = new ArrayList<Long>();
@@ -585,7 +584,7 @@ public class PurchaseOrderController {
 			public void customize(TLogSentinelShuttle shuttle) {
 				shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_REQUEST).insd_usermbr_no(insdUsermbrNo)
 						.insd_device_id(insdDeviceId).system_id(systemId).purchase_channel(prchsReqPathCd)
-						.purchase_inflow_channel(fdsPrchsCaseCd).device_ip(clientIp).network_type(networkTypeCd)
+						.purchase_inflow_channel(prchsCaseCd).device_ip(clientIp).network_type(networkTypeCd)
 						.product_id(prodIdList).product_price(prodPriceList);
 			}
 		});

@@ -238,15 +238,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (purchaseOrderInfo.isBizShopping() == false) {
 
 			final String imei = purchaseOrderInfo.getImei();
-			String telecom = purchaseOrderInfo.getPurchaseUser().getTelecom();
-			final String mno_type = StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT) ? "SKT" : (StringUtils
-					.equals(telecom, PurchaseConstants.TELECOM_KT) ? "KT" : (StringUtils.equals(telecom,
-					PurchaseConstants.TELECOM_UPLUS) ? "U+" : "")); // SKT, KT, U+
+			final String mno_type = purchaseOrderInfo.getPurchaseUser().getTelecom();
 			final String usermbr_no = purchaseOrderInfo.getPurchaseUser().getUserKey();
 			final String system_id = purchaseOrderInfo.getSystemId();
 			final String purchase_channel = purchaseOrderInfo.getPrchsReqPathCd();
-			final String purchase_inflow_channel = StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
-					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+			final String purchase_inflow_channel = purchaseOrderInfo.getPrchsCaseCd();
 			final String purchase_id = purchaseOrderInfo.getPrchsId();
 			final String purchase_id_recv = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getPrchsId() : "";
 
@@ -714,15 +710,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// final String mbrId = reservedDataMap.get("userId");
 		// final String deviceId = reservedDataMap.get("deviceId");
 		// final String imei = reservedDataMap.get("imei");
-		// final String mno_type = StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) ?
-		// "SKT" : (StringUtils
-		// .equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_KT) ? "KT" : (StringUtils.equals(
-		// reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_UPLUS) ? "U+" : "")); // SKT, KT, U+
+		// final String mno_type = reservedDataMap.get("telecom");
 		// final String usermbr_no = reservedDataMap.get("userKey");
 		// final String system_id = prchsDtlMore.getSystemId();
 		// final String purchase_channel = prchsDtlMore.getPrchsReqPathCd();
-		// final String purchase_inflow_channel = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-		// PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+		// final String purchase_inflow_channel = prchsDtlMore.getPrchsCaseCd();
 		// final String purchase_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
 		// PurchaseConstants.PRCHS_CASE_GIFT_CD) ? prchsDtlMore.getPrchsId() : "";
 		// final String coupon_code = reservedDataMap.get("couponCode");
@@ -987,14 +979,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			final String mbr_id = reservedDataMap.get("userId");
 			final String device_id = reservedDataMap.get("deviceId");
 			final String imei = reservedDataMap.get("imei");
-			final String mno_type = StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) ? "SKT" : (StringUtils
-					.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_KT) ? "KT" : (StringUtils.equals(
-					reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_UPLUS) ? "U+" : "")); // SKT, KT, U+
+			final String mno_type = reservedDataMap.get("telecom");
 			final String usermbr_no = reservedDataMap.get("userKey");
 			final String system_id = prchsDtlMore.getSystemId();
 			final String purchase_channel = prchsDtlMore.getPrchsReqPathCd();
-			final String purchase_inflow_channel = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "FDS00201" : "FDS00202";
+			final String purchase_inflow_channel = prchsDtlMore.getPrchsCaseCd();
 			final String purchase_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
 					PurchaseConstants.PRCHS_CASE_GIFT_CD) ? prchsDtlMore.getPrchsId() : "";
 			final String coupon_code = reservedDataMap.get("couponCode");
