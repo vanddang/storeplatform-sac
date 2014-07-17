@@ -683,7 +683,12 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// 이용 가능한 정액권 기구매 확인 처리
-			if (CollectionUtils.isNotEmpty(product.getAvailableFixrateProdIdList())) {
+			// T프리미엄 요청 경로에 대해서는 정액권 이용 제외
+			if (CollectionUtils.isNotEmpty(product.getAvailableFixrateProdIdList())
+					&& (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
+							PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
+					&& (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
+							PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false)) {
 
 				tempExistenceProdIdList = new ArrayList<String>();
 				for (String fixrateProdId : product.getAvailableFixrateProdIdList()) {
