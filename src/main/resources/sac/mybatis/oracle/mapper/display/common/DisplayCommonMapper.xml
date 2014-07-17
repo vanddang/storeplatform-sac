@@ -39,7 +39,7 @@
         AND (ADD_FIELD_01 =#{pixel2} OR ADD_FIELD_02=#{pixel2})                        
     </select>
 
-    <!-- 해상도 코드 조회 -->
+    <!-- 메뉴에 해당하는 Tmembership 할인율 조회 -->
     <select id="getTmembershipDcRateForMenu" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy">
         SELECT /* DisplayCommonMapper.xml, getTmembershipDcRateForMenu, SAC : 정희원 , 2014-01-24 */
              NVL(SUBSTR(TENANT_PROD_GRP_CD,13,8),'OR006311') PROD_TP
