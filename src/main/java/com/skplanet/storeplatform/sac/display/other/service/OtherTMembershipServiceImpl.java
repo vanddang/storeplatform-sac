@@ -70,15 +70,11 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 	 */
 	@Override
 	public OtherTMembershipRes searchTMembership(OtherTMembershipReq req, SacRequestHeader header) {
-		if (this.logger.isDebugEnabled()) {
-			this.logger
-					.debug("---------------------------------------------------------------------------------------------");
-			this.logger.debug("searchTMembership.start !!");
-			this.logger.debug("req.getProductId() {}", req.getProductId());
-			this.logger.debug("tenantId {}", header.getTenantHeader().getTenantId());
-			this.logger
-					.debug("---------------------------------------------------------------------------------------------");
-		}
+        this.logger.debug("---------------------------------------------------------------------------------------------");
+        this.logger.debug("searchTMembership.start !!");
+        this.logger.debug("req.getProductId() {}", req.getProductId());
+        this.logger.debug("tenantId {}", header.getTenantHeader().getTenantId());
+        this.logger.debug("---------------------------------------------------------------------------------------------");
 
 		int totalCount = 0;
 
@@ -106,9 +102,8 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 		if (appRes.getProductList().isEmpty()) {
 			throw new StorePlatformException("SAC_DSP_0005", "T Membership");
 		}
-		if (this.logger.isDebugEnabled()) {
-			this.logger.debug("appRes {}", appRes);
-		}
+        this.logger.debug("appRes {}", appRes);
+
 		List<Product> productList = appRes.getProductList();
 		Point point = new Point();
 		String svcGrpCd = "";
@@ -124,9 +119,8 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 				if (menu.getType().equalsIgnoreCase(DisplayConstants.DP_MENU_TOPCLASS_TYPE)) {
 					// tmembership 할인율
 					TmembershipDcInfo dcInfo = this.commonService.getTmembershipDcRateForMenu(tenantId, menu.getId());
-					if (this.logger.isDebugEnabled()) {
-						this.logger.debug("dcInfo {}", dcInfo);
-					}
+                    this.logger.debug("dcInfo {}", dcInfo);
+
 					if (svcGrpCd.equalsIgnoreCase(DisplayConstants.DP_TSTORE_FREEPASS_PROD_SVC_GRP_CD)) { // freepass
 						point.setDiscountRate(dcInfo.getFreepassDcRate());
 						point.setType(DisplayConstants.DC_RATE_TYPE_FREEPASS);
@@ -140,9 +134,7 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 				}
 			}
 		}
-		if (this.logger.isDebugEnabled()) {
-			this.logger.debug("point {}", point);
-		}
+        this.logger.debug("point {}", point);
 
 		tmembershipRes.setPoint(point);
 		commonRes.setTotalCount(totalCount);
