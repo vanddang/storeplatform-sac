@@ -93,7 +93,7 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 		} catch (StorePlatformException se) {
 			throw se;
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0005", "T Membership");
+			throw new StorePlatformException("SAC_DSP_9999", e);
 		}
 
 		if (appRes.getCommonResponse().getTotalCount() <= 0) {
