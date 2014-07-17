@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.order.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -51,6 +52,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderMakeDataService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPaymentPageService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPostService;
@@ -77,6 +79,8 @@ public class PurchaseOrderController {
 	private PurchaseOrderPaymentPageService orderPaymentPageService;
 	@Autowired
 	private PurchaseOrderPostService orderPostService;
+	@Autowired
+	private PurchaseOrderMakeDataService purchaseOrderMakeDataService;
 	@Autowired
 	private PurchaseOrderValidationService validationService;
 	@Autowired
@@ -376,6 +380,20 @@ public class PurchaseOrderController {
 
 		NotifyPaymentSacRes res = new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq
 				.getPaymentInfoList().size());
+
+		// 구매완료Noti정보 세팅: IAP 은 skip
+		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) == false) {
+			Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore
+					.getPrchsResvDesc());
+
+			res.setPrchsDt(prchsDtlMore.getPrchsDt());
+			res.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
+			res.setDeviceKey(prchsDtlMore.getUseInsdDeviceId());
+			res.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
+			res.setPublishType(reservedDataMap.get("tstoreNotiPublishType"));
+		}
+
 		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,RES,{}",
 				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		return res;
