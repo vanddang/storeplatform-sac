@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.external.client.tstore.sci.TstoreTransferSCI;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreTransferOwnerEcReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchDcdSupportProductSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
@@ -46,6 +48,9 @@ public class MemberCommonInternalComponent {
 	@Autowired
 	private ExistenceInternalSacSCI existenceInternalSacSCI;
 
+	@Autowired
+	private TstoreTransferSCI tstoreTransferSCI;
+
 	/**
 	 * <pre>
 	 * 회원 OGG 관련 구매/기타 내부메서드 호출.
@@ -66,8 +71,17 @@ public class MemberCommonInternalComponent {
 	 * @param previousDeviceKey
 	 *            이전 휴대기기 Key
 	 */
-	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey,
-			String previousUserKey, String deviceKey, String previousDeviceKey) {
+	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey, String previousUserKey, String deviceKey,
+			String previousDeviceKey) {
+
+		//StackTraceElement[] ste = new Throwable().getStackTrace();
+		//String methodName = ste[1].getMethodName();
+		//				regDeviceInfo : 회원전환(모바일회원 -> ID회원으로 전환);
+		//				rXCreateUserIDP : 통합회원 전환생성정보를 사이트에 배포 - CMD : RXCreateUserIDP
+		//				rXUpdateAgreeUserIDP : 이용동의 변경사이트 목록 배포 - CMD : rXUpdateAgreeUserIDP
+		//				authorizeSaveAndSyncByMac : Save&Sync 인증
+
+		//LOGGER.info("회원 OGG 관련 구매/기타 내부메서드 호출 메서드: {}", ste[1].getMethodName());
 
 		if (isCall) {
 
@@ -76,7 +90,6 @@ public class MemberCommonInternalComponent {
 			changeDisplayUserSacReq.setNewUseKey(userKey);
 			changeDisplayUserSacReq.setOldUserKey(previousUserKey);
 			changeDisplayUserSacReq.setTenantId(tenantId);
-			LOGGER.info("changeDisplayUserSCI.changeUserKey request : {}", changeDisplayUserSacReq);
 			this.changeDisplayUserSCI.changeUserKey(changeDisplayUserSacReq);
 
 			/* 2. 구매 파트 userKey, deviceKey 변경 */
@@ -87,8 +100,15 @@ public class MemberCommonInternalComponent {
 			userInfoSacInReq.setDeviceKey(previousDeviceKey);
 			userInfoSacInReq.setUserKey(previousUserKey);
 			userInfoSacInReq.setNewUserKey(userKey);
-			LOGGER.info("purchaseUserInfoInternalSCI.updateUserDevice request : {}", userInfoSacInReq);
 			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
+
+			/* 3. tenant Cash, 쿠폰 이관요청 */
+			TStoreTransferOwnerEcReq tStoreTransferOwnerEcReq = new TStoreTransferOwnerEcReq();
+			tStoreTransferOwnerEcReq.setUserKey(userKey);
+			tStoreTransferOwnerEcReq.setOldUserKey(previousUserKey);
+			LOGGER.info("tstoreTransferSCI.transferOwner request : {}, {}", tStoreTransferOwnerEcReq.getUserKey(),
+					tStoreTransferOwnerEcReq.getOldUserKey());
+			LOGGER.info("tstoreTransferSCI.transferOwner response : {}", this.tstoreTransferSCI.transferOwner(tStoreTransferOwnerEcReq));
 
 		}
 
