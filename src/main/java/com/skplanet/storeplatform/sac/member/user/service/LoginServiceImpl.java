@@ -1128,38 +1128,33 @@ public class LoginServiceImpl implements LoginService {
 			updateUserRequest.setUserMbr(userMbr);
 			this.userSCI.updateUser(updateUserRequest);
 
+			/* 게임센터 연동 */
+			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			gameCenterSacReq.setUserKey(joinForWapEcRes.getUserKey());
+			gameCenterSacReq.setMbrNo(joinForWapEcRes.getUserKey());
+			gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
+			gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+			this.deviceService.regGameCenterIF(gameCenterSacReq);
+
+			/* MQ 연동 */
+			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+			try {
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+				mqInfo.setUserKey(joinForWapEcRes.getUserKey());
+				mqInfo.setDeviceKey(oldDeviceKey);
+				mqInfo.setDeviceId(deviceInfo.getDeviceId());
+				mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
+				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+			} catch (AmqpException ex) {
+				LOGGER.info("MQ process fail {}", mqInfo);
+			}
+
 			/* usermbr_no가 변경된경우 OGG 연동을 위해 전시/기타, 구매 파트 키 변경 */
 			if (this.isCallChangeKey) {
 				this.mcic.excuteInternalMethod(this.isCallChangeKey, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader()
 						.getTenantId(), joinForWapEcRes.getUserKey(), oldUserKey, oldDeviceKey, oldDeviceKey);
-
-				/* 게임센터 연동 */
-				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-				gameCenterSacReq.setUserKey(joinForWapEcRes.getUserKey());
-				gameCenterSacReq.setMbrNo(joinForWapEcRes.getUserKey());
-				gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
-				gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-				gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-				gameCenterSacReq.setPreUserKey(oldUserKey);
-				gameCenterSacReq.setPreMbrNo(oldUserKey);
-				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
-				this.deviceService.regGameCenterIF(gameCenterSacReq);
-
-				/* MQ 연동 */
-				CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-				try {
-					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-					mqInfo.setOldUserKey(oldUserKey);
-					mqInfo.setOldDeviceKey(oldDeviceKey);
-					mqInfo.setUserKey(joinForWapEcRes.getUserKey());
-					mqInfo.setDeviceKey(oldDeviceKey);
-					mqInfo.setDeviceId(deviceInfo.getDeviceId());
-					mqInfo.setMnoCd(deviceInfo.getDeviceTelecom());
-					this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
-				} catch (AmqpException ex) {
-					LOGGER.info("MQ process fail {}", mqInfo);
-				}
-
 				res.setUserKey(joinForWapEcRes.getUserKey());
 			} else {
 				res.setUserKey(oldUserKey);
