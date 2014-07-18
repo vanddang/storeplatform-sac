@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,15 @@ public class SacServiceDataServiceImpl implements SacServiceDataService {
 
 	@Override
 	public SacService getServiceActive(SacService service) {
+		String serviceId = service.getServiceCd();
+		if (StringUtils.equals(serviceId, "tstore.gamecash.flatrate")) {
+			return this.getServiceActiveForGamecash(service);
+		} else {
+			return this.getServiceActiveForGeneral(service);
+		}
+	}
+
+	private SacService getServiceActiveForGamecash(SacService service) {
 		if (this.simSvc.belongsToSkt(service.getSimOperator())) {
 			String serviceId = service.getServiceCd();
 			if (this.dataSvc.get(service.getServiceCd()) != null) {
@@ -54,6 +64,15 @@ public class SacServiceDataServiceImpl implements SacServiceDataService {
 		} else {
 			// SKT가 아니면 무조건 Service Off
 			service.setActive(false);
+		}
+		return service;
+	}
+
+	private SacService getServiceActiveForGeneral(SacService service) {
+		String serviceId = service.getServiceCd();
+		if (this.dataSvc.get(service.getServiceCd()) != null) {
+			boolean active = this.dataSvc.get(serviceId);
+			service.setActive(active);
 		}
 		return service;
 	}

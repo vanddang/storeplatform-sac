@@ -46,7 +46,7 @@ public class SacServiceDataServiceImplTest {
 	}
 
 	@Test
-	public void testGetServiceActiveMileageForActive() {
+	public void testGetServiceActiveMileageForActive1() {
 		SacService vo = new SacService();
 		vo.setServiceCd("tstore.mileage");
 		vo.setSimOperator("450/05");
@@ -55,12 +55,12 @@ public class SacServiceDataServiceImplTest {
 	}
 
 	@Test
-	public void testGetServiceActiveForMileageInactive() {
+	public void testGetServiceActiveForMileageActive2() {
 		SacService vo = new SacService();
 		vo.setServiceCd("tstore.mileage");
 		vo.setSimOperator("450/08");
 		this.dataSvc.getServiceActive(vo);
-		assertFalse(vo.isActive());
+		assertTrue(vo.isActive());
 	}
 
 }
