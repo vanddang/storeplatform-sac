@@ -96,9 +96,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
 			LOGGER.info("{} 변동성 대상({})", deviceId, StringUtils.equals(isActive, "Y") ? "번호변경" : "번호이동");
-			LOGGER.info(
-					"{} CheckSaveNSyncResponse : isActive={},isSaveNSync={},deviceKey={},userKey={},preDeviceId={},nowDeviceId={}",
-					deviceId, isActive, isSaveNSync, deviceKey, userKey, preDeviceId, nowDeviceId);
+			LOGGER.info("{} CheckSaveNSyncResponse : isActive={},isSaveNSync={},deviceKey={},userKey={},preDeviceId={},nowDeviceId={}", deviceId,
+					isActive, isSaveNSync, deviceKey, userKey, preDeviceId, nowDeviceId);
 
 			/**
 			 * 변동성 대상 회원의 상태를 확인한다.
@@ -196,11 +195,10 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		} catch (StorePlatformException spe) {
 
 			/**
-			 * 가가입일 경우 처리. (이경우에 걸리게 되면 테넌트에서 모바일전용회원가입을 시킨다. [** 신규 가입처리 되므로 회원정보가 복구 되지 않는다. 이때 회원이 클레임을 걸경우 수동으로
-			 * 처리하기로함.])
+			 * 가가입일 경우 처리. (이경우에 걸리게 되면 테넌트에서 모바일전용회원가입을 시킨다. [** 신규 가입처리 되므로
+			 * 회원정보가 복구 되지 않는다. 이때 회원이 클레임을 걸경우 수동으로 처리하기로함.])
 			 */
-			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-					+ IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
+			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 				throw new StorePlatformException("SAC_MEM_0002", "회원(Save&Sync)");
 
@@ -276,13 +274,15 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		reviveUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		reviveUserRequest.setImMbrNo(newMbrNo);
 		reviveUserRequest.setUserKey(userKey);
+		reviveUserRequest.setDeviceID(deviceId);
+		reviveUserRequest.setDeviceKey(deviceKey);
 		this.deviceSCI.reviveUser(reviveUserRequest);
 
 		/**
 		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
 		 */
-		this.mcic.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader
-				.getTenantHeader().getTenantId(), newMbrNo, userKey, deviceKey, deviceKey);
+		this.mcic.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), newMbrNo,
+				userKey, deviceKey, deviceKey);
 
 		return newMbrNo;
 
@@ -335,8 +335,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
 		 */
-		this.mcic.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader
-				.getTenantHeader().getTenantId(), mbrNo, userKey, deviceKey, deviceKey);
+		this.mcic.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), mbrNo,
+				userKey, deviceKey, deviceKey);
 
 	}
 
