@@ -3,6 +3,10 @@ package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.display.common.ProductType;
+import com.skplanet.storeplatform.sac.display.common.VodType;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +61,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 	@Override
 	public PaymentInfoSacRes searchPaymentInfo(PaymentInfoSacReq req) {
 		PaymentInfoSacRes res = new PaymentInfoSacRes();
-		List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>();
+		List<PaymentInfo> paymentInfoList;
 		List<String> prodIdList = req.getProdIdList();
 		String tenantId = req.getTenantId();
 		String langCd = req.getLangCd();
@@ -66,26 +70,30 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 		this.log.debug("##### prodIdList size : {}", prodIdList.size());
 
 		// 파라미터 존재 여부 체크
-		if (prodIdList.size() == 0) {
-			this.log.info(
+		if (CollectionUtils.isEmpty(prodIdList)) {
+			this.log.debug(
 					"searchPaymentInfo[prodIdList is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
 					prodIdList, tenantId, langCd, deviceModelCd);
 			throw new StorePlatformException("SAC_DSP_0002", "prodIdList", prodIdList.toString());
 		}
+        if (prodIdList.size() > DisplayConstants.DP_PAYMENT_INFO_PARAMETER_LIMIT) {
+            throw new StorePlatformException("SAC_DSP_0004", "prodIdList",
+                    DisplayConstants.DP_PAYMENT_INFO_PARAMETER_LIMIT);
+        }
 		if (StringUtils.isEmpty(tenantId)) {
-			this.log.info(
+			this.log.debug(
 					"searchPaymentInfo[tenantId is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
 					prodIdList, tenantId, langCd, deviceModelCd);
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", tenantId);
 		}
 		if (StringUtils.isEmpty(langCd)) {
-			this.log.info(
+			this.log.debug(
 					"searchPaymentInfo[langCd is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
 					prodIdList, tenantId, langCd, deviceModelCd);
 			throw new StorePlatformException("SAC_DSP_0002", "langCd", langCd);
 		}
 		if (StringUtils.isEmpty(deviceModelCd)) {
-			this.log.info(
+			this.log.debug(
 					"searchPaymentInfo[deviceModelCd is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}",
 					prodIdList, tenantId, langCd, deviceModelCd);
 			req.setDeviceModelCd("NULL");
@@ -108,73 +116,60 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 		}
 		req.setDpAnyPhone4mm(DisplayConstants.DP_ANY_PHONE_4MM);
 
-		// 파라미터 유효 값 체크
-		if (prodIdList.size() > DisplayConstants.DP_PAYMENT_INFO_PARAMETER_LIMIT) {
-			throw new StorePlatformException("SAC_DSP_0004", "prodIdList",
-					DisplayConstants.DP_PAYMENT_INFO_PARAMETER_LIMIT);
-		}
 
 		// 상품 군 조회 (VOD는 VOD끼리만, 이북/코믹은 이북/코믹끼리만 요청이 오므로, 1번만 조회)
-		PaymentInfo paymentProdType = this.commonDAO.queryForObject("PaymentInfo.searchProdType", prodIdList.get(0),
-				PaymentInfo.class);
+        ProductInfo prodInfo = displayCommonService.getProductInfo(prodIdList.get(0));
 
-		if (paymentProdType == null) {
-			this.log.info(
-					"searchPaymentInfo[paymentProdType is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}, prodId : {}",
-					prodIdList, tenantId, langCd, deviceModelCd, prodIdList.get(0));
-			throw new StorePlatformException("SAC_DSP_0005", "[상품 군 조회]" + prodIdList.get(0));
-		} else {
-			this.log.debug("##### searchProdType result : {}, {}, {}", paymentProdType.getTopMenuId(),
-					paymentProdType.getSvcGrpCd(), paymentProdType.getInAppYn());
-
-			if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(paymentProdType.getSvcGrpCd())) { // 쇼핑 상품
-				paymentInfoList = this.shoppingService.getShoppingforPayment(req);
-			} else if (DisplayConstants.DP_TSTORE_FREEPASS_PROD_SVC_GRP_CD.equals(paymentProdType.getSvcGrpCd())) { // 정액권_상품
-				paymentInfoList = this.freepassService.getFreePassforPayment(req);
-			} else {
-				for (int i = 0; i < prodIdList.size(); i++) {
-					req.setProdId(prodIdList.get(i)); // prodIdList 에 있는 상품ID 1개씩 setting
-					PaymentInfo paymentInfo = this.commonDAO.queryForObject("PaymentInfo.searchPaymentInfo", req,
-							PaymentInfo.class);
-
-					if (paymentInfo == null) {
-						this.log.info(
-								"searchPaymentInfo[paymentInfo is null] = prodIdList : {}, tenantId : {}, langCd : {}, deviceModelCd : {}, prodId : {}",
-								prodIdList, tenantId, langCd, deviceModelCd, prodIdList.get(i));
-						throw new StorePlatformException("SAC_DSP_0005", "[일반상품 조회]" + prodIdList.get(i));
-					} else {
-						paymentInfo.setTopMenuId(paymentProdType.getTopMenuId());
-						paymentInfo.setSvcGrpCd(paymentProdType.getSvcGrpCd());
-						paymentInfo.setInAppYn(paymentProdType.getInAppYn()); // In-App 여부
-
-						// Chapter 및 채널명 셋팅
-						if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())) { // TV
-							if (StringUtils.isNotEmpty(paymentInfo.getChapter())) {
-								paymentInfo.setChapterText(paymentInfo.getChapter());
-								paymentInfo.setChapterUnit(this.displayCommonService.getVodChapterUnit());
-								paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
-							}
-						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())
-								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(paymentProdType.getTopMenuId())) { // 이북,코믹
-							if (StringUtils.isNotEmpty(paymentInfo.getChapter())
-									&& StringUtils.isNotEmpty(paymentInfo.getBookClsfCd())) {
-								paymentInfo.setChapterText(paymentInfo.getChapter());
-								paymentInfo.setChapterUnit(this.displayCommonService.getEpubChapterUnit(paymentInfo
-										.getBookClsfCd()));
-								paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
-							}
-						}
-
-						// 이용가능한 정액권목록 제공
-						paymentInfo.setAvailableFixrateProdIdList(this.freepassService
-								.getAvailableFixrateProdIdList(req));
-						paymentInfoList.add(paymentInfo);
-					}
-				}
-			}
-		}
+        if (prodInfo.getProductType() == ProductType.Shopping) { // 쇼핑 상품
+            paymentInfoList = this.shoppingService.getShoppingforPayment(req);
+        } else if (prodInfo.getProductType() == ProductType.Freepass) { // 정액권_상품
+            paymentInfoList = this.freepassService.getFreePassforPayment(req);
+        } else {
+            paymentInfoList = getAppNMmProductInfo(req, prodIdList, prodInfo);
+        }
 
 		res.setPaymentInfoList(paymentInfoList);
 		return res;
 	}
+
+    private List<PaymentInfo> getAppNMmProductInfo(PaymentInfoSacReq req, List<String> prodIds, ProductInfo prodInfo) {
+        List<PaymentInfo> res = new ArrayList<PaymentInfo>();
+
+        for (String prodId : prodIds) {
+            req.setProdId(prodId);
+
+            PaymentInfo paymentInfo = this.commonDAO.queryForObject("PaymentInfo.searchPaymentInfo", req,
+                    PaymentInfo.class);
+
+            if (paymentInfo == null) {
+                throw new StorePlatformException("SAC_DSP_0005", "[일반상품 조회]" + prodId);
+            }
+
+            paymentInfo.setTopMenuId(prodInfo.getTopMenuId());
+            paymentInfo.setSvcGrpCd(prodInfo.getSvcGrpCd());
+            paymentInfo.setInAppYn(prodInfo.isIap() ? "Y" : "N"); // In-App 여부
+
+            // Chapter 및 채널명 셋팅
+            if (prodInfo.getProductType() == ProductType.Vod && prodInfo.getVodType() == VodType.Tv) { // TV
+                if (StringUtils.isNotEmpty(paymentInfo.getChapter())) {
+                    paymentInfo.setChapterText(paymentInfo.getChapter());
+                    paymentInfo.setChapterUnit(this.displayCommonService.getVodChapterUnit());
+                    paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
+                }
+            } else if (prodInfo.getProductType() == ProductType.EbookComic) { // 이북,코믹
+                if (StringUtils.isNotEmpty(paymentInfo.getChapter())
+                        && StringUtils.isNotEmpty(paymentInfo.getBookClsfCd())) {
+                    paymentInfo.setChapterText(paymentInfo.getChapter());
+                    paymentInfo.setChapterUnit(this.displayCommonService.getEpubChapterUnit(paymentInfo.getBookClsfCd()));
+                    paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
+                }
+            }
+
+            // 이용가능한 정액권목록 제공
+            paymentInfo.setAvailableFixrateProdIdList(this.freepassService.getAvailableFixrateProdIdList(req));
+            res.add(paymentInfo);
+        }
+
+        return res;
+    }
 }

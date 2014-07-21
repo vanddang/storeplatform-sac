@@ -151,6 +151,6 @@ public interface DisplayCommonService {
      * @param prodId
      * @return
      */
-    ProductInfo selectProductInfo(String prodId);
+    ProductInfo getProductInfo(String prodId);
 
 }

@@ -35,18 +35,18 @@ public class DisplayCommonServiceTest {
 
     @Test(expected = StorePlatformException.class)
     public void test01() {
-        commonService.selectProductInfo("");
+        commonService.getProductInfo("");
     }
 
     @Test
     public void test02() {
-        ProductInfo info = commonService.selectProductInfo("0000651325");
+        ProductInfo info = commonService.getProductInfo("0000651325");
         assert info.getProductType() == ProductType.App;
     }
 
     @Test
     public void test03() {
-        ProductInfo info = commonService.selectProductInfo("H002882740");
+        ProductInfo info = commonService.getProductInfo("H002882740");
         assert info.getProductType() == ProductType.Webtoon;
     }
 }

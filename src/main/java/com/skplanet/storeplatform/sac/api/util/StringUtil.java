@@ -9,16 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.api.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.Character.UnicodeBlock;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * 공통적으로 필요한 데이터 변환기능 및 문자열 조작기능등이 구현되어 있음.
@@ -139,22 +138,6 @@ public class StringUtil extends StringUtils {
 			}
 		}
 		return str;
-	}
-
-	/**
-	 * 문자열을 기본분리자(white space)로 분리하여 문자열배열을 생성함.
-	 * 
-	 * @param str
-	 *            str
-	 * @return 문자열 배열
-	 */
-	public static String[] toStringArray(String str) {
-		Vector vt = new Vector();
-		StringTokenizer st = new StringTokenizer(str);
-		while (st.hasMoreTokens()) {
-			vt.add(st.nextToken());
-		}
-		return toStringArray(vt);
 	}
 
 	/**

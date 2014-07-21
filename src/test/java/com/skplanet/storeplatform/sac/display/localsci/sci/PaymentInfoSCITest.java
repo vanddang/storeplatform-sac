@@ -43,29 +43,20 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	// @Test
+	@Test
 	public void searchInAppPaymentInfo() {
-		try {
-			PaymentInfoSacReq req = new PaymentInfoSacReq();
-			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("0900062560");
-			prodIdList.add("0000048502");
-			req.setProdIdList(prodIdList);
-			req.setTenantId("S01");
-			req.setLangCd("ko");
-			req.setDeviceModelCd("SHW-M100S");
+        PaymentInfoSacReq req = new PaymentInfoSacReq();
+        List<String> prodIdList = new ArrayList<String>();
+        prodIdList.add("0900062560");
+        prodIdList.add("0000048502");
+        req.setProdIdList(prodIdList);
+        req.setTenantId("S01");
+        req.setLangCd("ko");
+        req.setDeviceModelCd("SHW-M100S");
 
-			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
-			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
-			for (int i = 0; i < paymentInfoList.size(); i++) {
-				PaymentInfo paymentInfo = paymentInfoList.get(i);
-				this.log.debug("##### searchPaymentInfo paymentInfo[{}] : {}", i, paymentInfo.toString());
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
+        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
+        printResult(paymentInfoList);
 	}
 
 	/**
@@ -74,30 +65,21 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	// @Test
+	@Test
 	public void searchAppPaymentInfo() {
-		try {
-			PaymentInfoSacReq req = new PaymentInfoSacReq();
-			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("0000060161");
-			// prodIdList.add("0000024009");
-			// prodIdList.add("0000023890");
-			req.setProdIdList(prodIdList);
-			req.setTenantId("S01");
-			req.setLangCd("ko");
-			// req.setDeviceModelCd("SHW-M100S");
+        PaymentInfoSacReq req = new PaymentInfoSacReq();
+        List<String> prodIdList = new ArrayList<String>();
+        prodIdList.add("0000060161");
+        // prodIdList.add("0000024009");
+        // prodIdList.add("0000023890");
+        req.setProdIdList(prodIdList);
+        req.setTenantId("S01");
+        req.setLangCd("ko");
+        // req.setDeviceModelCd("SHW-M100S");
 
-			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
-			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
-			for (int i = 0; i < paymentInfoList.size(); i++) {
-				PaymentInfo paymentInfo = paymentInfoList.get(i);
-				this.log.debug("##### searchPaymentInfo paymentInfo[{}] : {}", i, paymentInfo.toString());
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
+        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
+        printResult(paymentInfoList);
 	}
 
 	/**
@@ -108,26 +90,17 @@ public class PaymentInfoSCITest {
 	 */
 	@Test
 	public void searchEbookPaymentInfo() {
-		try {
-			PaymentInfoSacReq req = new PaymentInfoSacReq();
-			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("H001493615"); // 이북
-			req.setProdIdList(prodIdList);
-			req.setTenantId("S01");
-			req.setLangCd("ko");
-			// req.setDeviceModelCd("SHW-M100S");
+        PaymentInfoSacReq req = new PaymentInfoSacReq();
+        List<String> prodIdList = new ArrayList<String>();
+        prodIdList.add("H001493615"); // 이북
+        req.setProdIdList(prodIdList);
+        req.setTenantId("S01");
+        req.setLangCd("ko");
+        // req.setDeviceModelCd("SHW-M100S");
 
-			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
-			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
-			for (int i = 0; i < paymentInfoList.size(); i++) {
-				PaymentInfo paymentInfo = paymentInfoList.get(i);
-				this.log.debug("##### searchPaymentInfo paymentInfo[{}] : {}", i, paymentInfo.toString());
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
+        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
+        printResult(paymentInfoList);
 	}
 
 	/**
@@ -136,29 +109,20 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	// @Test
+	@Test
 	public void searchShoppingPaymentInfo() {
-		try {
-			PaymentInfoSacReq req = new PaymentInfoSacReq();
-			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("S930000331");
-			// prodIdList.add("S900000579");
-			req.setProdIdList(prodIdList);
-			req.setTenantId("S01");
-			req.setLangCd("ko");
-			req.setDeviceModelCd("SHW-M100S");
+        PaymentInfoSacReq req = new PaymentInfoSacReq();
+        List<String> prodIdList = new ArrayList<String>();
+        prodIdList.add("S930000331");
+        // prodIdList.add("S900000579");
+        req.setProdIdList(prodIdList);
+        req.setTenantId("S01");
+        req.setLangCd("ko");
+        req.setDeviceModelCd("SHW-M100S");
 
-			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
-			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
-			for (int i = 0; i < paymentInfoList.size(); i++) {
-				PaymentInfo paymentInfo = paymentInfoList.get(i);
-				this.log.debug("##### searchPaymentInfo paymentInfo[{}] : {}", i, paymentInfo.toString());
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
+        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
+        printResult(paymentInfoList);
 	}
 
 	/**
@@ -167,30 +131,49 @@ public class PaymentInfoSCITest {
 	 * </pre>
 	 * 
 	 */
-	// @Test
+	@Test
 	public void searchFreePassPaymentInfo() {
-		try {
-			PaymentInfoSacReq req = new PaymentInfoSacReq();
-			List<String> prodIdList = new ArrayList<String>();
-			prodIdList.add("F901000639");
-			// prodIdList.add("H000043062");
-			// prodIdList.add("H000043063");
-			req.setProdIdList(prodIdList);
-			req.setTenantId("S01");
-			req.setLangCd("ko");
-			req.setDeviceModelCd("SHW-M100S");
+        PaymentInfoSacReq req = new PaymentInfoSacReq();
+        List<String> prodIdList = new ArrayList<String>();
+        prodIdList.add("F901000639");
+        // prodIdList.add("H000043062");
+        // prodIdList.add("H000043063");
+        req.setProdIdList(prodIdList);
+        req.setTenantId("S01");
+        req.setLangCd("ko");
+        req.setDeviceModelCd("SHW-M100S");
 
-			PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
-			List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
-			for (int i = 0; i < paymentInfoList.size(); i++) {
-				PaymentInfo paymentInfo = paymentInfoList.get(i);
-				this.log.debug("##### searchPaymentInfo paymentInfo[{}] : {}", i, paymentInfo.toString());
-			}
+        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
+        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
+        printResult(paymentInfoList);
+    }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    @Test
+    public void integratedTest() {
+        String[] prodIds = new String[]{"0000657169", "0900000141", "H000400088","H000043059","H000043062","H001727890","H002725517","H001929394","S900027675", "H002643572"};
+        for (String prodId : prodIds) {
+            invokeApi(prodId);
+        }
+    }
 
-	}
+    private void invokeApi(String prodId) {
+        PaymentInfoSacReq req = new PaymentInfoSacReq();
+        List<String> prodIdList = new ArrayList<String>();
+        prodIdList.add(prodId);
+        req.setProdIdList(prodIdList);
+        req.setTenantId("S01");
+        req.setLangCd("ko");
+        req.setDeviceModelCd("SHW-M100S");
+
+        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
+        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
+        printResult(paymentInfoList);
+    }
+
+    private void printResult(List<PaymentInfo> list) {
+        for (PaymentInfo info : list) {
+            this.log.debug("##### searchPaymentInfo paymentInfo : {}", info.toString());
+        }
+    }
 
 }

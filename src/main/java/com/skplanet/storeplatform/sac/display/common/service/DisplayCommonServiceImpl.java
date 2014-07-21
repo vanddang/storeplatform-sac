@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
@@ -14,6 +13,7 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 import com.skplanet.storeplatform.sac.display.common.ContentType;
 import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
+import com.skplanet.storeplatform.sac.display.common.VodType;
 import com.skplanet.storeplatform.sac.display.common.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -263,7 +263,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
     }
 
     @Override
-    public ProductInfo selectProductInfo(String prodId) {
+    public ProductInfo getProductInfo(String prodId) {
         ProductInfo info = this.commonDAO.queryForObject("DisplayCommon.selectProductInfo", prodId, ProductInfo.class);
 
         if(info == null)
@@ -278,6 +278,8 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
         String metaClsf = StringUtils.defaultString(info.getMetaClsfCd());
         String q = StringUtils.join(new String[]{svcGrp, svcTp, metaClsf}, ".");
 
+        String topMenu = StringUtils.defaultString(info.getTopMenuId());
+
         if(q.startsWith("DP000201")) {
             info.setProductType(ProductType.App);
         }
@@ -286,16 +288,38 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
         }
         else if(q.startsWith("DP000203.DP001115")) {
             info.setProductType(ProductType.Vod);
+            if(info.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID))
+                info.setSubType(VodType.Tv);
+            else
+                info.setSubType(VodType.Movie);
+
+            /*
+              CT13 (단편) 영화/TV방송
+              CT14 (시리즈) 영화/TV방송
+              CT15 (시리즈) 어학/교육
+              CT16 (시리즈) SKT_공연
+             */
+            info.setSeries(!metaClsf.equals("CT13"));
         }
-        else if(q.matches("DP000203\\.DP001116\\.CT(19|20)")) {
-            info.setProductType(ProductType.Webtoon);
+        else if(q.matches("DP000203\\.DP001116.*")) {
+            if ("DP13".equals(topMenu) || "DP14".equals(topMenu)) {
+                info.setProductType(ProductType.EbookComic);
+
+                /*
+                  CT17 툰도시(Comic)/Comic(단편),권
+                  CT18 툰도시(Comic)/Comic(시리즈),회
+                  CT19 이북(eBook)/(단편),회
+                  CT20 이북(eBook)/(시리즈),권
+                 */
+                info.setSeries(metaClsf.equals("CT18") || metaClsf.equals("CT20"));
+            }
+            else if ("DP26".equals(topMenu)) {
+                info.setProductType(ProductType.Webtoon);
+            }
         }
-        else if(q.matches("DP000203\\.DP001116\\.CT(21|22|24|26)")) {
-            info.setProductType(ProductType.EbookComic);
-        }
-        else if(q.startsWith("DP000204") || q.matches("DP000203\\..*\\.CT(30|31|32|33)")) {
+        else if(q.matches("(DP000204|DP000203)\\..*\\.CT(30|31|32|33)")) {
             info.setProductType(ProductType.RingBell);
-            info.setMetaType(MetaRingBellType.forCode(info.getMetaClsfCd()));
+            info.setSubType(MetaRingBellType.forCode(info.getMetaClsfCd()));
         }
         else if(q.startsWith("DP000206")) {
             info.setProductType(ProductType.Shopping);
@@ -304,7 +328,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
             info.setProductType(ProductType.Freepass);
         }
         else
-            throw new IllegalStateException("[" + q + "] 에 해당하는 상품을 찾을 수 없습니다.");
+            throw new StorePlatformException("SAC_DSP_0025", svcGrp, svcTp, metaClsf);
 
         return info;
     }

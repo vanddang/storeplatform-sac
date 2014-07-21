@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.common.vo;
 import com.skplanet.storeplatform.sac.display.common.ContentType;
 import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
+import com.skplanet.storeplatform.sac.display.common.VodType;
 
 /**
  * <p>
@@ -30,7 +31,8 @@ public class ProductInfo {
     private String partParentClsfCd;
     private ContentType contentType;
     private ProductType productType;
-    private Object metaType;
+    private Object subType;
+    private boolean series = false;
 
     public String getProdId() {
         return prodId;
@@ -104,17 +106,28 @@ public class ProductInfo {
         this.productType = productType;
     }
 
-    public Object getMetaType() {
-        return metaType;
+    public void setSubType(Object subType) {
+        this.subType = subType;
     }
 
-    public void setMetaType(Object metaType) {
-        this.metaType = metaType;
+    public boolean isSeries() {
+        return series;
+    }
+
+    public void setSeries(boolean series) {
+        this.series = series;
     }
 
     public MetaRingBellType getMetaRingBellType() {
-        if(metaType instanceof MetaRingBellType)
-            return (MetaRingBellType) metaType;
+        if(subType instanceof MetaRingBellType)
+            return (MetaRingBellType) subType;
+        else
+            return null;
+    }
+
+    public VodType getVodType() {
+        if(subType instanceof VodType)
+            return (VodType) subType;
         else
             return null;
     }
@@ -123,11 +136,7 @@ public class ProductInfo {
      * 인앱상품 여부 조회. (In-App Purchase가 맞으나. In-App Billing으로 사용중임)
      * @return true 이면 인앱상품
      */
-    public boolean isIab() {
-        if(productType == ProductType.App) {
-            return partParentClsfCd.equals("PD012302");
-        }
-        else
-            return false;
+    public boolean isIap() {
+        return productType == ProductType.App && "PD012302".equals(partParentClsfCd);
     }
 }

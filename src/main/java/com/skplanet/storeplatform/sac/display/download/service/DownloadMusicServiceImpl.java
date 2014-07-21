@@ -15,8 +15,6 @@ import java.util.List;
 
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,7 +141,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         MetaInfo metaInfo;
 
 		// 다운로드 Music 상품 조회
-        ProductInfo info = commonService.selectProductInfo(downloadMusicSacReq.getProductId());
+        ProductInfo info = commonService.getProductInfo(downloadMusicSacReq.getProductId());
 
         if (info.getProductType() == ProductType.Music) {
             metaInfo = this.commonDAO.queryForObject("Download.getDownloadMusicInfo", downloadMusicSacReq, MetaInfo.class);
