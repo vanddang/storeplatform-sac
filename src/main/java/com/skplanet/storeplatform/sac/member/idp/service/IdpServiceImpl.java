@@ -735,7 +735,12 @@ public class IdpServiceImpl implements IdpService {
 		if (hashMap.get("user_nation_code") != null)
 			getUserMbr.setUserCountry(hashMap.get("user_nation_code").toString()); // 사용자 국가 코드
 		getUserMbr.setImSiteCode(hashMap.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
-		getUserMbr.setIsMemberPoint(hashMap.get("ocb_join_code").toString()); // 통합 포인트 여부 (Y/N)
+
+		String ocbJoinCodeYn = "N"; // 통합 포인트 여부 (Y/N)
+		if (hashMap.get("join_sst_list").toString().indexOf(MemberConstants.SSO_SST_CD_OCB_WEB) > -1) {
+			ocbJoinCodeYn = "Y";
+		}
+		getUserMbr.setIsMemberPoint(ocbJoinCodeYn); // 통합 포인트 여부 (Y/N)
 
 		if (hashMap.get("telecomCode") != null)
 			getUserMbr.setUserTelecom(hashMap.get("telecomCode").toString());
@@ -1997,6 +2002,12 @@ public class IdpServiceImpl implements IdpService {
 				searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
 				if (searchUserResponse != null) {
+
+					String ocbJoinCodeYn = "N";
+					if (joinSiteTotalList.indexOf(MemberConstants.SSO_SST_CD_OCB_WEB) > -1) {
+						ocbJoinCodeYn = "Y";
+					}
+
 					UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 					updateUserRequest.setCommonRequest(commonRequest);
 					UserMbr userMbr = searchUserResponse.getUserMbr();
@@ -2004,15 +2015,27 @@ public class IdpServiceImpl implements IdpService {
 					if (!"".equals(joinSiteTotalList)) {
 						userMbr.setImSiteCode(joinSiteTotalList);
 					}
-
-					if (joinSiteTotalList.indexOf(MemberConstants.SSO_SST_CD_OCB_WEB) > -1) {
-						userMbr.setIsMemberPoint("Y");
-					} else {
-						userMbr.setIsMemberPoint("N");
-					}
-
+					userMbr.setIsMemberPoint(ocbJoinCodeYn);
 					updateUserRequest.setUserMbr(userMbr);
 					this.userSCI.updateUser(updateUserRequest);
+
+					UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+					updateMbrOneIDRequest.setCommonRequest(commonRequest);
+					MbrOneID mbrOneID = new MbrOneID();
+					mbrOneID.setIntgSvcNumber(imIntSvcNo);
+					mbrOneID.setUserKey(userMbr.getUserKey()); // 내부사용자키를 셋팅
+					mbrOneID.setUserID(userId); // 사용자 ID 셋팅
+					mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
+
+					if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+						mbrOneID.setIsCi("Y");
+					} else {
+						mbrOneID.setIsCi("N");
+					}
+
+					updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+					this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
 				}
 			} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
 				imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
@@ -2593,8 +2616,6 @@ public class IdpServiceImpl implements IdpService {
 		int checkOcbVal = joinSiteTotalList.indexOf(MemberConstants.SSO_SST_CD_OCB_WEB);
 		if (checkOcbVal != -1) {
 			ocbJoinCodeYn = "Y";
-		} else {
-			ocbJoinCodeYn = "N";
 		}
 
 		String[] mbrClauseAgreeArray = null;
