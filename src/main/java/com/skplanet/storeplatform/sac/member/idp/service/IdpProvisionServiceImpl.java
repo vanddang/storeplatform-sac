@@ -969,14 +969,13 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					this.deviceSCI.createDevice(createDeviceReq);
 
 					/* 휴대기기 삭제 요청 */
-					// List<String> removeKeyList = new ArrayList<String>();
-					// removeKeyList.add(deviceKey);
-					//
-					// RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
-					// removeDeviceReq.setCommonRequest(commonRequest);
-					// removeDeviceReq.setUserKey(userKey);
-					// removeDeviceReq.setDeviceKey(removeKeyList);
-					// this.deviceSCI.removeDevice(removeDeviceReq);
+					List<String> removeKeyList = new ArrayList<String>();
+					removeKeyList.add(deviceKey);
+					RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+					removeDeviceReq.setCommonRequest(commonRequest);
+					removeDeviceReq.setUserKey(userKey);
+					removeDeviceReq.setDeviceKey(removeKeyList);
+					this.deviceSCI.removeDevice(removeDeviceReq);
 
 					/* 회원상태 업데이트 */
 					UpdateStatusUserRequest updStatusUserReq = new UpdateStatusUserRequest();
