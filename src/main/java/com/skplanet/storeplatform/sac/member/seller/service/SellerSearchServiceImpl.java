@@ -877,15 +877,18 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 			/* 개인회원의 경우, 생년월일 하나만도 수정 가능. */
 			sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
-			if (mbrAuth != null && StringUtils.equals(MemberConstants.USE_Y, sellerMbr.getIsRealName())) {
-				// 실명인증 판매자 정보 셋팅.
-				sellerMbrRes.setSellerName(mbrAuth.getName());
-				sellerMbrRes.setSellerSex(mbrAuth.getSex());
-			} else {
-				// 판매자 정보 셋팅.
-				sellerMbrRes.setSellerName(sellerMbr.getSellerName());
-				sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
-			}
+			// 판매자 정보에서 응답 셋팅으로 변경 ( 2014.07.21 )
+			// if (mbrAuth != null && StringUtils.equals(MemberConstants.USE_Y, sellerMbr.getIsRealName())) {
+			// // 실명인증 판매자 정보 셋팅.
+			// sellerMbrRes.setSellerName(mbrAuth.getName());
+			// sellerMbrRes.setSellerSex(mbrAuth.getSex());
+			// } else {
+			// // 판매자 정보 셋팅.
+			// sellerMbrRes.setSellerName(sellerMbr.getSellerName());
+			// sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
+			// }
+			sellerMbrRes.setSellerName(sellerMbr.getSellerName());
+			sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
 			sellerMbrRes.setSellerSSNumber(sellerMbr.getSellerSSNumber());
 			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
 			sellerMbrRes.setCharger(sellerMbr.getCharger());
