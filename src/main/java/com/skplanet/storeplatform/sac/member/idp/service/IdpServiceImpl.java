@@ -2005,6 +2005,12 @@ public class IdpServiceImpl implements IdpService {
 						userMbr.setImSiteCode(joinSiteTotalList);
 					}
 
+					if (joinSiteTotalList.indexOf(MemberConstants.SSO_SST_CD_OCB_WEB) > -1) {
+						userMbr.setIsMemberPoint("Y");
+					} else {
+						userMbr.setIsMemberPoint("N");
+					}
+
 					updateUserRequest.setUserMbr(userMbr);
 					this.userSCI.updateUser(updateUserRequest);
 				}
