@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,5 +46,6 @@ public class PurchaseIapRepositoryImplTest {
 		String currMonth = new SimpleDateFormat("yyyyMM").format(new Date());
 
 		int iapBillingAmt = this.purchaseIapRepository.inquiryBillingAmt(mdn, svcMangNo, currMonth);
+		assertThat(iapBillingAmt, is(0));
 	}
 }
