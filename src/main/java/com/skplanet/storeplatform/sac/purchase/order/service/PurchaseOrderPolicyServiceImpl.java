@@ -419,20 +419,16 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// IAP SKT 후불 결제금액 조회
 
 		int iapBillingAmt = 0;
-		String currMonth = new SimpleDateFormat("yyyyMM").format(new Date());
 		try {
-			this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,REQ,{},{},{}", policyCheckParam.getDeviceId(),
-					policyCheckParam.getSvcMangNo(), currMonth);
 			iapBillingAmt = this.iapRepository.inquiryBillingAmt(policyCheckParam.getDeviceId(),
-					policyCheckParam.getSvcMangNo(), currMonth);
-			this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,RES,{}", iapBillingAmt);
+					policyCheckParam.getSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
 		} catch (Exception e) {
 			// 예외 발생 시, IAP측 결제금액 무시 처리 : 구매DB 기준으로 IAP포함 조회
 			if (e instanceof StorePlatformException) {
-				this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,RES,EXCEPTION,{}",
+				this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}",
 						((StorePlatformException) e).getCode());
 			} else {
-				this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,RES,EXCEPTION,{}", e.getMessage());
+				this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}", e.getMessage());
 			}
 		}
 

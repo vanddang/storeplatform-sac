@@ -43,6 +43,5 @@ public class PurchaseIapRepositoryImplTest {
 		String currMonth = new SimpleDateFormat("yyyyMM").format(new Date());
 
 		int iapBillingAmt = this.purchaseIapRepository.inquiryBillingAmt(mdn, svcMangNo, currMonth);
-		System.out.println("AMT: " + iapBillingAmt);
 	}
 }

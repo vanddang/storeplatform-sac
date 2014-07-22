@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +28,8 @@ import com.skplanet.storeplatform.external.client.iap.vo.InquiryBillingAmtEcRes;
  */
 @Component
 public class PurchaseIapRepositoryImpl implements PurchaseIapRepository {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private IapPurchaseSCI iapPurchaseSCI;
 
@@ -48,9 +54,14 @@ public class PurchaseIapRepositoryImpl implements PurchaseIapRepository {
 		inquiryBillingAmtEcReq.setSvcMngNum(svcMangNo);
 		inquiryBillingAmtEcReq.setQueryMonths(queryMonth);
 
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,REQ,{}",
+				ReflectionToStringBuilder.toString(inquiryBillingAmtEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+
 		InquiryBillingAmtEcRes inquiryBillingAmtEcRes = this.iapPurchaseSCI.inquiryBillingAmt(inquiryBillingAmtEcReq);
+
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,RES,{}",
+				ReflectionToStringBuilder.toString(inquiryBillingAmtEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		return inquiryBillingAmtEcRes.getBillingAmt();
 	}
-
 }
