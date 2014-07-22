@@ -445,13 +445,13 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 					
 					String result = this.prodService.registProdSettl(pv);
 					log.info("CMS 정산율 = " + result);
-					
+
+                    // newFree 데이터 처리
                     Date saleStrtDt = DateUtils.parseDate(StringUtils.defaultString(dpProdAppInfo.getSaleStrtDt()).substring(0, 8), "yyyyMMdd");
-                    Date lastDeployDt = DateUtils.parseDate(StringUtils.defaultString(dpProd.getLastDeployDt()).substring(0, 8), "yyyyMMdd");
-                    if(saleStrtDt != null && lastDeployDt != null) {
-                        // 최근배포일 <= 출시일+1개월
-                        Date saleStrtDtPlus1M = org.apache.commons.lang3.time.DateUtils.addMonths(saleStrtDt, 1);
-                        if(lastDeployDt.before(saleStrtDtPlus1M)) {
+                    if(saleStrtDt != null) {
+                        // 출시일이 1개월 이내의 건만 처리.
+                        Date minus1M = org.apache.commons.lang3.time.DateUtils.addMonths(new Date(), -1);
+                        if(saleStrtDt.after(minus1M)) {
                             log.info("CMS New Free Data Insert");
                             String stdDt = displayCommonService.getBatchStandardDateString(pv.getTenantId(), DisplayConstants.DP_LIST_NEWFREE);
                             this.prodService.insertNewFreeData(pv, stdDt);
