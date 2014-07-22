@@ -33,6 +33,8 @@ public class PurchaseIapRepositoryImpl implements PurchaseIapRepository {
 	 * IAP SKT후불 결제 금액 조회.
 	 * </pre>
 	 * 
+	 * @param mdn
+	 *            조회할 MDN
 	 * @param svcMangNo
 	 *            조회할 SKT서비스관리번호
 	 * @param queryMonth
@@ -40,9 +42,14 @@ public class PurchaseIapRepositoryImpl implements PurchaseIapRepository {
 	 * @return IAP SKT후불 결제 금액
 	 */
 	@Override
-	public int inquiryBillingAmt(String svcMangNo, String queryMonth) {
-		InquiryBillingAmtEcRes inquiryBillingAmtEcRes = this.iapPurchaseSCI
-				.inquiryBillingAmt(new InquiryBillingAmtEcReq(svcMangNo, queryMonth));
+	public int inquiryBillingAmt(String mdn, String svcMangNo, String queryMonth) {
+		InquiryBillingAmtEcReq inquiryBillingAmtEcReq = new InquiryBillingAmtEcReq();
+		inquiryBillingAmtEcReq.setMdn(mdn);
+		inquiryBillingAmtEcReq.setSvcMngNum(svcMangNo);
+		inquiryBillingAmtEcReq.setQueryMonths(queryMonth);
+
+		InquiryBillingAmtEcRes inquiryBillingAmtEcRes = this.iapPurchaseSCI.inquiryBillingAmt(inquiryBillingAmtEcReq);
+
 		return inquiryBillingAmtEcRes.getBillingAmt();
 	}
 

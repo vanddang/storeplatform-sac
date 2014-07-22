@@ -23,11 +23,13 @@ public interface PurchaseIapRepository {
 	 * IAP SKT후불 결제 금액 조회.
 	 * </pre>
 	 * 
+	 * @param mdn
+	 *            조회할 MDN
 	 * @param svcMangNo
 	 *            조회할 SKT서비스관리번호
 	 * @param queryMonth
 	 *            조회할 월 (YYYYMM)
 	 * @return IAP SKT후불 결제 금액
 	 */
-	public int inquiryBillingAmt(String svcMangNo, String queryMonth);
+	public int inquiryBillingAmt(String mdn, String svcMangNo, String queryMonth);
 }
