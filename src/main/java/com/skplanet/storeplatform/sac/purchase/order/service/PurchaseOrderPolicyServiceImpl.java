@@ -418,7 +418,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// --------------------------------------------------------------------------------------------------
 		// IAP SKT 후불 결제금액 조회
 
-		int iapBillingAmt = 0;
+		int iapBillingAmt = -1;
 		try {
 			iapBillingAmt = this.iapRepository.inquiryBillingAmt(policyCheckParam.getDeviceId(),
 					policyCheckParam.getSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
@@ -765,8 +765,10 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		sciReq.setCondPeriodUnitCd(policy.getCondPeriodUnitCd());
 		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
 		sciReq.setSvcMangNo(policyCheckParam.getSvcMangNo()); // SKT 서비스 관리번호
-		if (iapBillingAmt > 0) {
+		if (iapBillingAmt >= 0) {
 			sciReq.setExceptTenantProdGrpCd(PurchaseConstants.TENANT_PRODUCT_GROUP_IAP); // IAP 결제금액은 제외하고 조회
+		} else {
+			iapBillingAmt = 0;
 		}
 
 		// (정책 적용조건) 과금조건 조회
