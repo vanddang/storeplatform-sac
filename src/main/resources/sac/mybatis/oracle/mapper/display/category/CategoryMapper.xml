@@ -97,7 +97,7 @@
         FROM (
               SELECT KA.*
                 FROM (
-                      SELECT JA.*, 
+                      SELECT JA.*,
                       <choose>
                         <when test='@org.apache.commons.lang3.StringUtils@startsWith(filteredBy, "recent")'>
                           ROW_NUMBER() OVER(ORDER BY JA.LAST_DEPLOY_DT DESC, JA.PROD_NM) AS RNUM /* 최신순 */
@@ -106,10 +106,10 @@
                           ROW_NUMBER() OVER(ORDER BY JA.PRCHS_CNT DESC, JA.PROD_NM) AS RNUM /* 다운로드순 */
                         </when>
                         <when test='@org.apache.commons.lang3.StringUtils@startsWith(filteredBy, "lowprice")'>
-                          ROW_NUMBER() OVER(ORDER BY JA.PROD_AMT ASC, JA.PROD_NM) AS RNUM /* 낮은가격순 */
+                          ROW_NUMBER() OVER(ORDER BY JA.CHNL_PROD_AMT ASC, JA.PROD_NM) AS RNUM /* 낮은가격순 */
                         </when>
                         <when test='@org.apache.commons.lang3.StringUtils@startsWith(filteredBy, "highprice")'>
-                          ROW_NUMBER() OVER(ORDER BY JA.PROD_AMT DESC, JA.PROD_NM) AS RNUM /* 높은가격순 */
+                          ROW_NUMBER() OVER(ORDER BY JA.CHNL_PROD_AMT DESC, JA.PROD_NM) AS RNUM /* 높은가격순 */
                         </when>
                         <otherwise>
                           ROW_NUMBER() OVER(ORDER BY JA.LAST_DEPLOY_DT DESC, JA.PROD_NM) AS RNUM /* 최신순(Default) */
@@ -127,6 +127,11 @@
                                            , F.PROD_NM
                                            , H.PROD_AMT  /* 가격 */
                                            , I.PRCHS_CNT /* 구매건수 */
+                                           , CASE 
+                                                WHEN (H.CHNL_UNLMT_AMT >= 0 AND E.EPSD_CNT > 0) 
+                                                THEN H.CHNL_UNLMT_AMT
+                                                ELSE NVL(H.CHNL_PERIOD_AMT, 0) 
+                                             END AS CHNL_PROD_AMT /* 정렬용 이북 가격 */
                                         FROM TB_DP_MENU_CATEGORY      A
                                            , TB_DP_MENU_CATEGORY_PROD_MAPG B
                                            , TB_DP_PROD               D /* 채널 상품 */
