@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +32,13 @@ import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * BoughtTogether Product Service 인터페이스(CoreStoreBusiness)
- * 
+ *
  * Updated on : 2014. 02. 18. Updated by : 유시혁.
  */
 @Service
@@ -62,12 +62,18 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 	@Autowired
 	private DisplayCommonService displayCommonService;
 
+	@Autowired
+	private BoughtTogetherProductTypeService typeSvc;
+
+	@Autowired
+	private BoughtTogetherProductDataService dataSvc;
+
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 함게 구매한 상품 리스트 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            BoughtTogetherProductSacReq
 	 * @param requestHeader
@@ -75,22 +81,21 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 	 * @return BoughtTogetherProductSacRes
 	 */
 	@Override
-	public BoughtTogetherProductSacRes searchBoughtTogetherProductList(BoughtTogetherProductSacReq requestVO,
-			SacRequestHeader requestHeader) {
+	public BoughtTogetherProductSacRes searchBoughtTogetherProductList(BoughtTogetherProductSacReq requestVO, SacRequestHeader requestHeader) {
+		BoughtTogetherProduct vo = this.typeSvc.fromReq(requestVO, requestHeader);
+		List<ProductBasicInfo> boughtTogetherProductList = new ArrayList<ProductBasicInfo>();
 
-		// 헤더 값 세팅
-		this.log.debug("헤더 값 세팅");
-		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		requestVO.setLangCd(requestHeader.getTenantHeader().getLangCd());
-		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
-		requestVO.setMmDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+		// 단말 지원정보 조회
+		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(requestHeader.getDeviceHeader().getModel());
+		if (supportDevice != null) {
+			vo.setEbookSprtYn(supportDevice.getEbookSprtYn());
+			vo.setComicSprtYn(supportDevice.getComicSprtYn());
+			vo.setMusicSprtYn(supportDevice.getMusicSprtYn());
+			vo.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
+			vo.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
 
-		// 요청 값 세팅
-		this.log.debug("요청 값 세팅");
-		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
-		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
-		if (!StringUtils.isEmpty(requestVO.getExceptId())) {
-			requestVO.setArrayExceptId(StringUtils.split(requestVO.getExceptId(), "+"));
+			this.log.debug("이 상품과 함께 구매한 상품 조회");
+			boughtTogetherProductList = this.dataSvc.selectList(vo);
 		}
 
 		BoughtTogetherProductSacRes boughtTogetherProductSacRes = new BoughtTogetherProductSacRes();
@@ -98,26 +103,7 @@ public class BoughtTogetherProductServiceImpl implements BoughtTogetherProductSe
 		Map<String, Object> reqMap = new HashMap<String, Object>();
 		MetaInfo retMetaInfo = null;
 		Product product = null;
-
-		List<ProductBasicInfo> boughtTogetherProductList = new ArrayList<ProductBasicInfo>();
 		List<Product> productList = null;
-
-		// 단말 지원정보 조회
-		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(requestHeader.getDeviceHeader()
-				.getModel());
-
-		if (supportDevice != null) {
-			requestVO.setEbookSprtYn(supportDevice.getEbookSprtYn());
-			requestVO.setComicSprtYn(supportDevice.getComicSprtYn());
-			requestVO.setMusicSprtYn(supportDevice.getMusicSprtYn());
-			requestVO.setVideoDrmSprtYn(supportDevice.getVideoDrmSprtYn());
-			requestVO.setSdVideoSprtYn(supportDevice.getSdVideoSprtYn());
-
-			// 이 상품과 유사 상품 조회
-			this.log.debug("이 상품과 함께 구매한 상품 조회");
-			boughtTogetherProductList = this.commonDAO.queryForList(
-					"BoughtTogetherProduct.selectBoughtTogetherProductList", requestVO, ProductBasicInfo.class);
-		}
 
 		if (!boughtTogetherProductList.isEmpty()) {
 			productList = new ArrayList<Product>();

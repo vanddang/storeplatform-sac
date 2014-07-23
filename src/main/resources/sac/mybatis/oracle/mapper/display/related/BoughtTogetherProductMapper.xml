@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="BoughtTogetherProduct">
     <!-- 이 상품과 유사 상품 조회 -->
-    <select id="selectBoughtTogetherProductList" parameterType="BoughtTogetherProductSacReq" resultType="ProductBasicInfo">
+    <select id="selectBoughtTogetherProductList" parameterType="BoughtTogetherProduct" resultType="ProductBasicInfo">
         <if test="testYn != null"> /* 임시 테스트 데이터 */
         WITH TB_DP_ISF_PROD AS (
         SELECT 
@@ -53,7 +53,10 @@
                 AND A.RECOM_PROD_ID = E.PROD_ID
                 AND A.RECOM_PROD_ID = F.PROD_ID
                 AND E.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
-                AND C.USE_YN ='Y'
+                <if test='@org.apache.commons.lang3.StringUtils@isNotBlank(menuId)'>
+                    AND C.MENU_ID = #{menuId}
+                </if>
+                AND C.USE_YN ='Y'                
                 AND D.USE_YN ='Y'
                 AND G.USE_YN = 'Y'
                 AND F.EXPO_YN = 'Y'
@@ -91,7 +94,10 @@
                 AND B.PART_PROD_ID = E.PROD_ID
                 AND B.PART_PROD_ID = F.PROD_ID
                 AND B.PART_PROD_ID = G.PROD_ID
-                AND C.USE_YN = 'Y'
+                <if test='@org.apache.commons.lang3.StringUtils@isNotBlank(menuId)'>
+                    AND C.MENU_ID = #{menuId}
+                </if>
+                AND C.USE_YN = 'Y'                
                 AND D.USE_YN = 'Y'
                 AND F.EXPO_YN = 'Y'
                 AND E.SVC_GRP_CD = 'DP000203'

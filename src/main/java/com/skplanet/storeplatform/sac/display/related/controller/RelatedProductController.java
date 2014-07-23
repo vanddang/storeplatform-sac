@@ -15,6 +15,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.related.AuthorProductSac
 import com.skplanet.storeplatform.sac.client.display.vo.related.AuthorProductSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacV2Req;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacReq;
@@ -27,9 +28,9 @@ import com.skplanet.storeplatform.sac.display.related.service.SellerProductServi
 import com.skplanet.storeplatform.sac.display.related.service.SimilarProductService;
 
 /**
- * 
+ *
  * 메뉴 조회 Controller.
- * 
+ *
  * Updated on : 2014. 02. 20. Updated by : 유시혁.
  */
 
@@ -54,11 +55,11 @@ public class RelatedProductController {
 	private ArtistProductService artistProductService;
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 이 상품과 유사 상품 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            SimilarProductSacReq
 	 * @param requestHeader
@@ -76,33 +77,32 @@ public class RelatedProductController {
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * 이 상품과 함께 구매한 상품 조회.
-	 * </pre>
-	 * 
-	 * @param requestVO
-	 *            BoughtTogetherProductSacReq
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @return BoughtTogetherProductSacRes
+	 * [I03000033] 2.5.2. 이 상품과 함께 구매한 상품 조회 v1
 	 */
 	@RequestMapping(value = "/boughtTogether/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BoughtTogetherProductSacRes searchBoughtTogetherProductList(
-			@Validated BoughtTogetherProductSacReq requestVO, SacRequestHeader requestHeader) {
-
+	public BoughtTogetherProductSacRes searchBoughtTogetherProductList(@Validated BoughtTogetherProductSacReq requestVO, SacRequestHeader requestHeader) {
 		this.logger.debug("RelatedProductController.searchBoughtTogetherProductList start !!");
-
 		return this.boughtTogetherProductService.searchBoughtTogetherProductList(requestVO, requestHeader);
 	}
 
 	/**
-	 * 
+	 * [I03000126] 2.5.6. 이 상품과 함께 구매한 상품 조회 v2
+	 * - 조회 조건에 menuId 추가
+	 */
+	@RequestMapping(value = "/boughtTogether/product/list/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public BoughtTogetherProductSacRes searchBoughtTogetherProductListV2(@Validated BoughtTogetherProductSacV2Req requestVO, SacRequestHeader requestHeader) {
+		this.logger.debug("RelatedProductController.searchBoughtTogetherProductListV2 start !!");
+		return this.boughtTogetherProductService.searchBoughtTogetherProductList(requestVO, requestHeader);
+	}
+
+	/**
+	 *
 	 * <pre>
 	 * 특정 판매자별 상품 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            SellerProductSacReq
 	 * @param requestHeader
@@ -120,11 +120,11 @@ public class RelatedProductController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 특정 작가별 상품 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            AuthorProductSacReq
 	 * @param requestHeader
@@ -142,11 +142,11 @@ public class RelatedProductController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 특정 아티스트별 상품(곡) 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            ArtistProductSacReq
 	 * @param requestHeader
