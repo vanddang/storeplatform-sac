@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.tstore.sci.TstoreTransferSCI;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreTransferOwnerEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreTransferOwnerEcRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchDcdSupportProductSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
@@ -100,7 +101,7 @@ public class MemberCommonInternalComponent {
 			userInfoSacInReq.setDeviceKey(previousDeviceKey);
 			userInfoSacInReq.setUserKey(previousUserKey);
 			userInfoSacInReq.setNewUserKey(userKey);
-			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
+			//this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
 
 			/* 3. tenant Cash, 쿠폰 이관요청 */
 			TStoreTransferOwnerEcReq tStoreTransferOwnerEcReq = new TStoreTransferOwnerEcReq();
@@ -108,7 +109,9 @@ public class MemberCommonInternalComponent {
 			tStoreTransferOwnerEcReq.setOldUserKey(previousUserKey);
 			LOGGER.info("tstoreTransferSCI.transferOwner request : {}, {}", tStoreTransferOwnerEcReq.getUserKey(),
 					tStoreTransferOwnerEcReq.getOldUserKey());
-			LOGGER.info("tstoreTransferSCI.transferOwner response : {}", this.tstoreTransferSCI.transferOwner(tStoreTransferOwnerEcReq));
+			TStoreTransferOwnerEcRes tStoreTransferOwnerEcRes = this.tstoreTransferSCI.transferOwner(tStoreTransferOwnerEcReq);
+			LOGGER.info("tstoreTransferSCI.transferOwner response resultCd : {}, resultMsg : {}", tStoreTransferOwnerEcRes.getResultCd(),
+					tStoreTransferOwnerEcRes.getResultMsg());
 
 		}
 
