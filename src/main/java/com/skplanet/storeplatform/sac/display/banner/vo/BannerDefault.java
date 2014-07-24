@@ -11,13 +11,14 @@ package com.skplanet.storeplatform.sac.display.banner.vo;
 
 /**
  * 배너 리스트 조회 Default Value Object.
- * 
+ *
  * Updated on : 2014. 02. 25. Updated by : 이태희.
  */
 public class BannerDefault {
 	private Integer totalCount;
 	private String bnrMenuId;
 	private String bnrSeq;
+	private String bannerId;
 	private String imgSizeCd;
 	private String bnrInfoTypeCd;
 	private String bnrInfo;
@@ -79,6 +80,21 @@ public class BannerDefault {
 	 */
 	public void setBnrSeq(String bnrSeq) {
 		this.bnrSeq = bnrSeq;
+	}
+
+	/**
+	 * @return the bannerId
+	 */
+	public String getBannerId() {
+		return this.bannerId;
+	}
+
+	/**
+	 * @param bannerId
+	 * 				the bannerId to set
+	 */
+	public void setBannerId(String bannerId) {
+		this.bannerId = bannerId;
 	}
 
 	/**

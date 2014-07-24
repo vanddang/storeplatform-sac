@@ -34,7 +34,7 @@ import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 /**
  * Banner Service 인터페이스(CoreStoreBusiness) 구현체
- * 
+ *
  * Updated on : 2014. 02. 21. Updated by : 이태희.
  */
 @Service
@@ -73,7 +73,7 @@ public class BannerServceImpl implements BannerService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.banner.service.BannerService#searchBannerList(com.skplanet.storeplatform
 	 * .sac.common.header.vo.SacRequestHeader, com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq)
@@ -597,7 +597,7 @@ public class BannerServceImpl implements BannerService {
 	 * <pre>
 	 * 상품 메타정보 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param header
 	 *            header
 	 * @param bannerReq
@@ -671,7 +671,7 @@ public class BannerServceImpl implements BannerService {
 	 * <pre>
 	 * 배너 Response 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param list
 	 *            list
 	 * @return BannerSacResㄴ
@@ -708,7 +708,7 @@ public class BannerServceImpl implements BannerService {
 
 				// 배너ID 정보
 				identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
-						DisplayConstants.DP_BANNER_IDENTIFIER_CD, bannerDf.getBnrSeq()));
+						DisplayConstants.DP_BANNER_IDENTIFIER_CD, bannerDf.getBannerId()));
 
 				// 배너 이미지사이즈 코드 정보
 				banner.setImgSizeCd(bannerDf.getImgSizeCd());
