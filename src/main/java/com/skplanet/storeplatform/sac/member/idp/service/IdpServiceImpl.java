@@ -336,7 +336,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrOneID.setEntryStatusCode(userStatusCode); // 가입자 상태코드
 			mbrOneID.setMemberCaseCode(userType); // 가입자 유형코드
 
-			if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+			if (map.get("user_ci") != null && map.get("user_ci").toString().length() > 0) { // 사용자 CI
 				mbrOneID.setIsCi("Y");
 			} else {
 				mbrOneID.setIsCi("N");
@@ -519,7 +519,7 @@ public class IdpServiceImpl implements IdpService {
 				mbrOneID.setEntryStatusCode(userStatusCode); // 가입자 상태코드
 				mbrOneID.setMemberCaseCode(userType); // 가입자 유형코드
 
-				if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+				if (map.get("user_ci") != null && map.get("user_ci").toString().length() > 0) { // 사용자 CI
 					mbrOneID.setIsCi("Y");
 				} else {
 					mbrOneID.setIsCi("N");
@@ -2697,7 +2697,7 @@ public class IdpServiceImpl implements IdpService {
 								mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
 								mbrOneID.setIsRealName(isRnameAuth); // 실명인증 여부
 
-								if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+								if (map.get("user_ci") != null && map.get("user_ci").toString().length() > 0) { // 사용자 CI
 									mbrOneID.setIsCi("Y");
 								} else {
 									mbrOneID.setIsCi("N");
@@ -2830,7 +2830,7 @@ public class IdpServiceImpl implements IdpService {
 						mbrOneID.setEntryStatusCode(userStatusCode); // 가입자 상태코드
 						mbrOneID.setMemberCaseCode(userType); // 가입자 유형코드
 
-						if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+						if (map.get("user_ci") != null && map.get("user_ci").toString().length() > 0) { // 사용자 CI
 							mbrOneID.setIsCi("Y");
 						} else {
 							mbrOneID.setIsCi("N");
@@ -3152,7 +3152,7 @@ public class IdpServiceImpl implements IdpService {
 						mbrOneID.setEntryStatusCode(userStatusCode); // 가입자 상태코드
 						mbrOneID.setMemberCaseCode(userType); // 가입자 유형코드
 
-						if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+						if (map.get("user_ci") != null && map.get("user_ci").toString().length() > 0) { // 사용자 CI
 							mbrOneID.setIsCi("Y");
 						} else {
 							mbrOneID.setIsCi("N");
