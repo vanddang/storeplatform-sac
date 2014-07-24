@@ -27,9 +27,7 @@ public class CreateCompletePurchaseInfoSac extends CommonInfo {
 	@NotBlank
 	private String tenantId;
 	@NotBlank
-	private String userKey;
-	@NotBlank
-	private String deviceKey;
+	private String deviceId;
 	private String svcMangNo;
 	@NotBlank
 	private String prchsDt;
@@ -85,33 +83,18 @@ public class CreateCompletePurchaseInfoSac extends CommonInfo {
 	}
 
 	/**
-	 * @return the userKey
+	 * @return the deviceId
 	 */
-	public String getUserKey() {
-		return this.userKey;
+	public String getDeviceId() {
+		return this.deviceId;
 	}
 
 	/**
-	 * @param userKey
-	 *            the userKey to set
+	 * @param deviceId
+	 *            the deviceId to set
 	 */
-	public void setUserKey(String userKey) {
-		this.userKey = userKey;
-	}
-
-	/**
-	 * @return the deviceKey
-	 */
-	public String getDeviceKey() {
-		return this.deviceKey;
-	}
-
-	/**
-	 * @param deviceKey
-	 *            the deviceKey to set
-	 */
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	/**
