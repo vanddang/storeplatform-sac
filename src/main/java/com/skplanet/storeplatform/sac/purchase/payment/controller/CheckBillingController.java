@@ -63,6 +63,9 @@ public class CheckBillingController {
 			throw new StorePlatformException("SAC_PUR_9901");
 		}
 
+		// 서비스관리번호 set
+		checkBillingForSktCarrierSacParam.setSvcMangNo(checkBillingForSktCarrierSacRes.getSvcMangNo());
+
 		return checkBillingForSktCarrierSacParam;
 	}
 

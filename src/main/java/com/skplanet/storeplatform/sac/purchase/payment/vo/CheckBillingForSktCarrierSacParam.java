@@ -20,4 +20,21 @@ public class CheckBillingForSktCarrierSacParam extends PurchaseCommonSacParam {
 
 	private static final long serialVersionUID = 1L;
 
+	private String svcMangNo;
+
+	/**
+	 * @return the svcMangNo
+	 */
+	public String getSvcMangNo() {
+		return this.svcMangNo;
+	}
+
+	/**
+	 * @param svcMangNo
+	 *            the svcMangNo to set
+	 */
+	public void setSvcMangNo(String svcMangNo) {
+		this.svcMangNo = svcMangNo;
+	}
+
 }

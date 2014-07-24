@@ -39,6 +39,7 @@ public class CheckBillingServiceImpl implements CheckBillingService {
 		checkBillingForSktCarrierScReq.setSystemId(checkBillingForSktCarrierSacParam.getSystemId());
 		checkBillingForSktCarrierScReq.setUserKey(checkBillingForSktCarrierSacParam.getUserKey());
 		checkBillingForSktCarrierScReq.setDeviceKey(checkBillingForSktCarrierSacParam.getDeviceKey());
+		checkBillingForSktCarrierScReq.setSvcMangNo(checkBillingForSktCarrierSacParam.getSvcMangNo());
 
 		CheckBillingForSktCarrierScRes checkBillingForSktCarrierScRes = this.checkBillingSCI
 				.checkBillingForSktCarrier(checkBillingForSktCarrierScReq);
