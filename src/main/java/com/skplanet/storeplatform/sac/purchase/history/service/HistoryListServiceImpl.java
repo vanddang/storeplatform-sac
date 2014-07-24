@@ -141,9 +141,15 @@ public class HistoryListServiceImpl implements HistoryListService {
 		}
 		scRequest.setGiftRecvConfYn(request.getGiftRecvConfYn());
 
+		int endRow = request.getCount() * request.getOffset();
+		int statrRow = endRow - request.getCount() + 1;
+
+		scRequest.setStartRow(statrRow);
+		scRequest.setEndRow(endRow);
+
 		// pageInfo set
-		scRequest.getPage().setNo(request.getOffset());
-		scRequest.getPage().setRows(request.getCount() > 100 ? 100 : request.getCount());
+		// scRequest.getPage().setNo(request.getOffset());
+		// scRequest.getPage().setRows(request.getCount() > 100 ? 100 : request.getCount());
 
 		/**
 		 * 구매정책을 조회하여 list에 셋팅
