@@ -2027,7 +2027,7 @@ public class IdpServiceImpl implements IdpService {
 					mbrOneID.setUserID(userId); // 사용자 ID 셋팅
 					mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
 
-					if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+					if (map.get("user_ci") != null && map.get("user_ci").toString().length() > 0) { // 사용자 CI
 						mbrOneID.setIsCi("Y");
 					} else {
 						mbrOneID.setIsCi("N");
