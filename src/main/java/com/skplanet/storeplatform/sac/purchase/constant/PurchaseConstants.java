@@ -150,6 +150,10 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String TSTORE_CASH_SVC_CHANNEL_SAC = "02"; // SAC
 	public static final String TSTORE_CASH_SVC_CHANNEL_PAYPLANET = "03"; // PAY PLANET
 	/* 상품군 */
+	public static final String TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH = "00"; // T store Cash
+	public static final String TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH = "01"; // T store GameCash
+	public static final String TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS = "02"; // T game pass
+	/* 상품군 old */
 	public static final String TSTORE_CASH_PRODUCT_GROUP_ALL = "00"; // 전체
 	public static final String TSTORE_CASH_PRODUCT_GROUP_APP = "01"; // Application
 	public static final String TSTORE_CASH_PRODUCT_GROUP_MULTIMEDIA = "02"; // Multimedia
