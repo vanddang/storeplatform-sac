@@ -9,7 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +56,7 @@ import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublish
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseInfoSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacReq;
@@ -1069,6 +1072,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		purchase.setTenantProdGrpCd(purchase.getTenantProdGrpCd().replaceAll("DP00",
 				iapInfo.getMenuId().substring(0, 4)));
 
+		// 회원정보(userKey, deviceKey) 조회
+		String userKey = "Z";
+		String deviceKey = "Z";
+
+		String orderDt = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = this.purchaseMemberRepository
+				.searchOrderUserByDeviceId(purchase.getDeviceId(), orderDt);
+
+		if (searchOrderUserByDeviceIdSacRes != null) {
+			userKey = StringUtils.defaultIfBlank(searchOrderUserByDeviceIdSacRes.getUserKey(), "Z");
+			deviceKey = StringUtils.defaultIfBlank(searchOrderUserByDeviceIdSacRes.getDeviceKey(), "Z");
+		}
+
 		// 구매ID 생성용: 구매 시퀀스
 		SearchPurchaseSequenceAndDateRes searchPurchaseSequenceAndDateRes = this.purchaseOrderSearchSCI
 				.searchPurchaseSequenceAndDate();
@@ -1083,10 +1099,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		prchsDtlMore.setPrchsId(prchsId);
 		prchsDtlMore.setPrchsDtlId(1);
 		prchsDtlMore.setUseTenantId(purchase.getTenantId());
-		prchsDtlMore.setUseInsdUsermbrNo(purchase.getUserKey());
-		prchsDtlMore.setUseInsdDeviceId(purchase.getDeviceKey());
-		prchsDtlMore.setInsdUsermbrNo(purchase.getUserKey());
-		prchsDtlMore.setInsdDeviceId(purchase.getDeviceKey());
+		prchsDtlMore.setUseInsdUsermbrNo(userKey);
+		prchsDtlMore.setUseInsdDeviceId(deviceKey);
+		prchsDtlMore.setInsdUsermbrNo(userKey);
+		prchsDtlMore.setInsdDeviceId(deviceKey);
 		prchsDtlMore.setSvcMangNo(purchase.getSvcMangNo());
 		prchsDtlMore.setPrchsDt(purchase.getPrchsDt());
 		prchsDtlMore.setTotAmt(purchase.getTotAmt());
@@ -1109,7 +1125,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		prchsDtlMore.setSendHidingYn(PurchaseConstants.USE_N);
 		prchsDtlMore.setTid(purchase.getTid());
 		prchsDtlMore.setTxId(purchase.getTxId());
-		prchsDtlMore.setParentProdId(iapInfo.getParentProdId());
+		prchsDtlMore.setParentProdId(purchase.getParentProdId());
 		prchsDtlMore.setPartChrgVer(purchase.getPartChrgVer());
 		prchsDtlMore.setPartChrgProdNm(purchase.getPartChrgProdNm());
 		prchsDtlMore.setRegId(purchase.getRegId());

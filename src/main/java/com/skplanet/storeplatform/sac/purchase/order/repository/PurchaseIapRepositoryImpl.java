@@ -54,12 +54,12 @@ public class PurchaseIapRepositoryImpl implements PurchaseIapRepository {
 		inquiryBillingAmtEcReq.setSvcMngNum(svcMangNo);
 		inquiryBillingAmtEcReq.setQueryMonths(queryMonth);
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,REQ,{}",
+		this.logger.info("PRCHS,ORDER,SAC,IAP,INQUIRY,REQ,{}",
 				ReflectionToStringBuilder.toString(inquiryBillingAmtEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		InquiryBillingAmtEcRes inquiryBillingAmtEcRes = this.iapPurchaseSCI.inquiryBillingAmt(inquiryBillingAmtEcReq);
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,RES,{}",
+		this.logger.info("PRCHS,ORDER,SAC,IAP,INQUIRY,RES,{}",
 				ReflectionToStringBuilder.toString(inquiryBillingAmtEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		return inquiryBillingAmtEcRes.getBillingAmt();

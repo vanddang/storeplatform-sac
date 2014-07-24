@@ -16,6 +16,10 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +34,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInf
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
@@ -47,6 +53,8 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
  */
 @Component
 public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private SearchUserSCI searchUserSCI;
 	@Autowired
@@ -115,6 +123,45 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		// .getCurrDayAge(userDeviceInfoSac.getUserBirthday()) : 0);
 
 		return purchaseUserDevice;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * DeviceId를 이용한 등록된 회원 정보 조회.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 *            디바이스 ID
+	 * @param orderDt
+	 *            등록정보 조회일시
+	 * @return 회원 정보(userKey, deviceKey)
+	 */
+	@Override
+	public SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceId(String deviceId, String orderDt) {
+		SearchOrderUserByDeviceIdSacReq searchOrderUserByDeviceIdSacReq = new SearchOrderUserByDeviceIdSacReq();
+		searchOrderUserByDeviceIdSacReq.setDeviceId(deviceId);
+		searchOrderUserByDeviceIdSacReq.setOrderDt(orderDt);
+
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,searchOrderUser,REQ,{}",
+				ReflectionToStringBuilder.toString(searchOrderUserByDeviceIdSacReq, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = null;
+		try {
+			searchOrderUserByDeviceIdSacRes = this.searchUserSCI
+					.searchOrderUserByDeviceId(searchOrderUserByDeviceIdSacReq);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
+				return null;
+			} else {
+				throw e;
+			}
+		}
+
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,searchOrderUser,RES,{}",
+				ReflectionToStringBuilder.toString(searchOrderUserByDeviceIdSacRes, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		return searchOrderUserByDeviceIdSacRes;
 	}
 
 	/**

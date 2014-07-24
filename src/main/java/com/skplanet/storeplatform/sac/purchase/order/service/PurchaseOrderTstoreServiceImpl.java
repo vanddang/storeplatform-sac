@@ -158,7 +158,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 
 		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
 		tStoreCashEcReq.setUserKey(userKey);
-		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_ALL); // 상품군 : 전체
+		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH); // 상품군 : T store Cash
 
 		TStoreCashBalanceEcRes tStoreCashEcRes = null;
 		try {
@@ -205,7 +205,8 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 
 		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
 		tStoreCashEcReq.setUserKey(userKey);
-		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_APP); // 상품군 : 전체
+		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH); // 상품군 : T store
+																									  // Gamecash
 
 		TStoreCashBalanceEcRes tStoreCashEcRes = null;
 		try {
@@ -265,7 +266,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 
 		// 게임 Cash : Cash 유효기간은 5년
 		TStoreCashChargeReserveDetailEcReq tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
-		tStoreCashChargeReserveDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_APP);
+		tStoreCashChargeReserveDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH);
 		tStoreCashChargeReserveDetailEcReq.setAmt(String.valueOf((int) cashAmt));
 		tStoreCashChargeReserveDetailEcReq.setDate(this.purchaseOrderAssistService.calculateUseDate(useStartDt,
 				PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR, "5")); // 사용 유효기간(만료일시 - yyyyMMddHHmmss)
@@ -275,7 +276,8 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		// 보너스 Point
 		if (bonusPointAmt > 0.0) {
 			tStoreCashChargeReserveDetailEcReq = new TStoreCashChargeReserveDetailEcReq();
-			tStoreCashChargeReserveDetailEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_APP);
+			tStoreCashChargeReserveDetailEcReq
+					.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH);
 			tStoreCashChargeReserveDetailEcReq.setAmt(String.valueOf((int) bonusPointAmt));
 			tStoreCashChargeReserveDetailEcReq.setDate(this.purchaseOrderAssistService.calculateUseDate(useStartDt,
 					bonusPointUsePeriodUnitCd, bonusPointUsePeriod));

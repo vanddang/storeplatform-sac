@@ -14,6 +14,7 @@ import java.util.Map;
 
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
@@ -40,6 +41,20 @@ public interface PurchaseMemberRepository {
 	 * @return 회원/기기 정보
 	 */
 	public PurchaseUserDevice searchUserDeviceByKey(String tenantId, String userKey, String deviceKey);
+
+	/**
+	 * 
+	 * <pre>
+	 * DeviceId를 이용한 등록된 회원 정보 조회.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 *            디바이스 ID
+	 * @param orderDt
+	 *            등록정보 조회일시
+	 * @return 회원 정보(userKey, deviceKey)
+	 */
+	public SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceId(String deviceId, String orderDt);
 
 	/**
 	 * <pre>
