@@ -27,6 +27,8 @@ public class CheckBillingForSktCarrierSacReq extends PurchaseCommonSacReq {
 	@NotBlank
 	private String deviceKey;
 
+	private String svcMangNo;
+
 	/**
 	 * @return the userKey
 	 */
@@ -42,6 +44,21 @@ public class CheckBillingForSktCarrierSacReq extends PurchaseCommonSacReq {
 	@Override
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	/**
+	 * @return the svcMangNo
+	 */
+	public String getSvcMangNo() {
+		return this.svcMangNo;
+	}
+
+	/**
+	 * @param svcMangNo
+	 *            the svcMangNo to set
+	 */
+	public void setSvcMangNo(String svcMangNo) {
+		this.svcMangNo = svcMangNo;
 	}
 
 	/**
