@@ -7,7 +7,7 @@
 		        JA.TOTAL_COUNT
 		      , JA.BNR_MENU_ID
 		      , JA.BNR_SEQ
-		      , (JA.BNR_MENU_ID || '-' || JA.BNR_EXPO_MENU_ID || '-' || JA.BNR_SEQ) AS BANNER_ID
+		      , (JA.BNR_MENU_ID || '.' || JA.BNR_EXPO_MENU_ID || '.' || JA.BNR_SEQ) AS BANNER_ID
 		      , JA.IMG_SIZE_CD
 		      , JA.BNR_INFO_TYPE_CD
 		      , JA.BNR_INFO
