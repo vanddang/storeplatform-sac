@@ -39,8 +39,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String noOcbCard; // OCB 카드번호
 	private String noCouponList; // 쿠폰 List
 	private String cashPointList; // 캐쉬/포인트 잔액 통합 정보
-	private Double tstoreCashAmt; // T store Cash 잔액
-	private Double gameCashAmt; // 게임캐쉬 잔액
 	private String typeTestMdn; // 법인 및 일반 시험폰 처리 타입: T01, T02, T03
 	private String cdPaymentTemplate; // 결제Page 템플릿 코드: TC01-일반, TC02-정액제(게임캐쉬), TC03-대여/소장, TC04-자동결제, TC05-쇼핑, TC06-선물
 	private String topMenuId; // 상품 TOP 메뉴 ID
@@ -346,36 +344,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setCashPointList(String cashPointList) {
 		this.cashPointList = cashPointList;
-	}
-
-	/**
-	 * @return the tstoreCashAmt
-	 */
-	public Double getTstoreCashAmt() {
-		return this.tstoreCashAmt;
-	}
-
-	/**
-	 * @param tstoreCashAmt
-	 *            the tstoreCashAmt to set
-	 */
-	public void setTstoreCashAmt(Double tstoreCashAmt) {
-		this.tstoreCashAmt = tstoreCashAmt;
-	}
-
-	/**
-	 * @return the gameCashAmt
-	 */
-	public Double getGameCashAmt() {
-		return this.gameCashAmt;
-	}
-
-	/**
-	 * @param gameCashAmt
-	 *            the gameCashAmt to set
-	 */
-	public void setGameCashAmt(Double gameCashAmt) {
-		this.gameCashAmt = gameCashAmt;
 	}
 
 	/**
