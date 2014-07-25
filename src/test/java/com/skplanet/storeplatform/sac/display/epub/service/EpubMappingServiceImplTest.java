@@ -50,7 +50,7 @@ public class EpubMappingServiceImplTest {
 	@Test
 	public void testMapPreviewWithZip() {
 		String path = "/path1/path2/file.zip";
-		when(this.commonSvc.makePreviewUrl(path)).thenReturn(this.DOMAIN + path);
+		when(this.commonSvc.makeEpubPreviewUrl(path)).thenReturn(this.DOMAIN + path);
 
 		EpubDetail mapperVO = new EpubDetail();
 		mapperVO.setSamplUrl(path);
@@ -66,13 +66,13 @@ public class EpubMappingServiceImplTest {
 		assertEquals("epub/x-freeview", source.getType());
 		assertEquals("application/zip", source.getMediaType());
 
-		verify(this.commonSvc).makePreviewUrl(path);
+		verify(this.commonSvc).makeEpubPreviewUrl(path);
 	}
 
 	@Test
 	public void testMapPreviewWithEpub() {
 		String path = "/a/b/c/abc.epub";
-		when(this.commonSvc.makePreviewUrl(path)).thenReturn(this.DOMAIN + path);
+		when(this.commonSvc.makeEpubPreviewUrl(path)).thenReturn(this.DOMAIN + path);
 
 		EpubDetail mapperVO = new EpubDetail();
 		mapperVO.setSamplUrl(path);
@@ -88,7 +88,7 @@ public class EpubMappingServiceImplTest {
 		assertEquals("epub/x-freeview", source.getType());
 		assertEquals("application/epub+zip", source.getMediaType());
 
-		verify(this.commonSvc).makePreviewUrl(path);
+		verify(this.commonSvc).makeEpubPreviewUrl(path);
 	}
 
 }
