@@ -153,4 +153,14 @@ public interface DisplayCommonService {
      */
     ProductInfo getProductInfo(String prodId);
 
+    /**
+     * 상품 유형 정보를 조회한다.
+     * @param svcGrp
+     * @param svcTp
+     * @param metaClsf
+     * @param topMenu
+     * @return
+     */
+    ProductTypeInfo getProductTypeInfo(String svcGrp, String svcTp, String metaClsf, String topMenu);
+
 }

@@ -10,9 +10,7 @@
 package com.skplanet.storeplatform.sac.display.common.vo;
 
 import com.skplanet.storeplatform.sac.display.common.ContentType;
-import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
-import com.skplanet.storeplatform.sac.display.common.VodType;
 
 /**
  * <p>
@@ -20,19 +18,16 @@ import com.skplanet.storeplatform.sac.display.common.VodType;
  * </p>
  * Updated on : 2014. 07. 08 Updated by : 정희원, SK 플래닛.
  */
-public class ProductInfo {
+public class ProductInfo extends ProductTypeInfo {
 
     private String prodId;
     private String svcGrpCd;
     private String svcTypeCd;
     private String metaClsfCd;
-    private String contentsTypeCd;
     private String topMenuId;
     private String partParentClsfCd;
+    private String contentsTypeCd;
     private ContentType contentType;
-    private ProductType productType;
-    private Object subType;
-    private boolean series = false;
 
     public String getProdId() {
         return prodId;
@@ -71,6 +66,7 @@ public class ProductInfo {
     }
 
     public void setContentsTypeCd(String contentsTypeCd) {
+        this.contentType = ContentType.forCode(contentsTypeCd);
         this.contentsTypeCd = contentsTypeCd;
     }
 
@@ -92,44 +88,6 @@ public class ProductInfo {
 
     public ContentType getContentType() {
         return contentType;
-    }
-
-    public void setContentType(ContentType contentType) {
-        this.contentType = contentType;
-    }
-
-    public ProductType getProductType() {
-        return productType;
-    }
-
-    public void setProductType(ProductType productType) {
-        this.productType = productType;
-    }
-
-    public void setSubType(Object subType) {
-        this.subType = subType;
-    }
-
-    public boolean isSeries() {
-        return series;
-    }
-
-    public void setSeries(boolean series) {
-        this.series = series;
-    }
-
-    public MetaRingBellType getMetaRingBellType() {
-        if(subType instanceof MetaRingBellType)
-            return (MetaRingBellType) subType;
-        else
-            return null;
-    }
-
-    public VodType getVodType() {
-        if(subType instanceof VodType)
-            return (VodType) subType;
-        else
-            return null;
     }
 
     /**

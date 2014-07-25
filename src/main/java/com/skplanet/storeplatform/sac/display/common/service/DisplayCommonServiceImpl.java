@@ -1,16 +1,12 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
-import com.skplanet.storeplatform.sac.display.common.ContentType;
 import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.VodType;
@@ -269,17 +265,28 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
         if(info == null)
             throw new StorePlatformException("SAC_DSP_0005", prodId);
 
-        // ContentType
-        info.setContentType(ContentType.forCode(info.getContentsTypeCd()));
-
         // ProductType
         String svcGrp = StringUtils.defaultString(info.getSvcGrpCd());
         String svcTp = StringUtils.defaultString(info.getSvcTypeCd());
         String metaClsf = StringUtils.defaultString(info.getMetaClsfCd());
-        String q = StringUtils.join(new String[]{svcGrp, svcTp, metaClsf}, ".");
-
         String topMenu = StringUtils.defaultString(info.getTopMenuId());
 
+        ProductTypeInfo basicInfo = getProductTypeInfo(svcGrp, svcTp, metaClsf, topMenu);
+        info.setProductType(basicInfo.getProductType());
+        info.setSeries(basicInfo.isSeries());
+        info.setSubType(basicInfo.getSubType());
+
+        return info;
+    }
+
+    @Override
+    public ProductTypeInfo getProductTypeInfo(String svcGrp, String svcTp, String metaClsf, String topMenu) {
+        if(StringUtils.isEmpty(svcGrp))
+            throw new IllegalArgumentException("svcGrp cannot be null.");
+
+        String q = StringUtils.join(new String[]{svcGrp, svcTp, metaClsf}, ".");
+
+        ProductTypeInfo info = new ProductTypeInfo();
         if(q.startsWith("DP000201")) {
             info.setProductType(ProductType.App);
         }
@@ -288,30 +295,14 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
         }
         else if(q.startsWith("DP000203.DP001115")) {
             info.setProductType(ProductType.Vod);
-            if(info.getTopMenuId().equals(DisplayConstants.DP_TV_TOP_MENU_ID))
+            if(DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenu))
                 info.setSubType(VodType.Tv);
             else
                 info.setSubType(VodType.Movie);
-
-            /*
-              CT13 (단편) 영화/TV방송
-              CT14 (시리즈) 영화/TV방송
-              CT15 (시리즈) 어학/교육
-              CT16 (시리즈) SKT_공연
-             */
-            info.setSeries(!metaClsf.equals("CT13"));
         }
         else if(q.matches("DP000203\\.DP001116.*")) {
             if ("DP13".equals(topMenu) || "DP14".equals(topMenu)) {
                 info.setProductType(ProductType.EbookComic);
-
-                /*
-                  CT17 툰도시(Comic)/Comic(단편),권
-                  CT18 툰도시(Comic)/Comic(시리즈),회
-                  CT19 이북(eBook)/(단편),회
-                  CT20 이북(eBook)/(시리즈),권
-                 */
-                info.setSeries(metaClsf.equals("CT18") || metaClsf.equals("CT20"));
             }
             else if ("DP26".equals(topMenu)) {
                 info.setProductType(ProductType.Webtoon);
@@ -319,7 +310,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
         }
         else if(q.matches("(DP000204|DP000203)\\..*\\.CT(30|31|32|33)")) {
             info.setProductType(ProductType.RingBell);
-            info.setSubType(MetaRingBellType.forCode(info.getMetaClsfCd()));
+            info.setSubType(MetaRingBellType.forCode(metaClsf));
         }
         else if(q.startsWith("DP000206")) {
             info.setProductType(ProductType.Shopping);
@@ -329,6 +320,9 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
         }
         else
             throw new StorePlatformException("SAC_DSP_0025", svcGrp, svcTp, metaClsf);
+
+        // 시리즈 여부 반영
+        info.setSeries(DisplayConstants.SET_SERIES_META.contains(metaClsf));
 
         return info;
     }

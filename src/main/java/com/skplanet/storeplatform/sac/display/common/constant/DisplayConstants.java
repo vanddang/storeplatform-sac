@@ -9,6 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.common.constant;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  *
  * SAC 전시 상수 클래스 전시 파트 내에서 사용되는 상수는 여기에 정의한다.
@@ -16,6 +21,14 @@ package com.skplanet.storeplatform.sac.display.common.constant;
  * Updated on : 2014. 1. 30. Updated by : 서대영, SK 플래닛.
  */
 public class DisplayConstants {
+
+    static {
+        SET_SERIES_META = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("CT14,CT15,CT16,CT20,CT21,CT22".split(","))));
+    }
+
+    public static final Set<String> SET_SERIES_META; // 시리즈물인 metaClsfCd Set
+
+
 	// 상품 서비스 그룹 코드
 
 	/**
