@@ -41,6 +41,32 @@ public class DownloadControllerTest {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 	
+	@Test
+	public void getDownloadAppInfo() throws Exception {
+    	Map<String, Object> param = new HashMap<String, Object>();
+    	param.put("deviceKey", "DE201403051349270180000124");
+    	param.put("userKey", "US201403051349269830000552");
+    	param.put("productId", "0000412421");
+    	param.put("filteredBy", "id");
+    	String json = this.convertMapToJson(param);
+    	
+    	StopWatch stopWatch = new StopWatch(); 
+    	stopWatch.start("getDownloadComicInfo_Download 앱 정보 조회(for download)");
+    	this.mvc.perform(
+    			post("/display/download/app/detail/v1")
+    			.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+    			.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+    			.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(json))
+    			.andDo(print())
+    			.andExpect(status().isOk())
+    			.andExpect(content().contentType("application/json;charset=UTF-8"));
+    	
+    	stopWatch.stop();
+    	System.out.println(stopWatch.prettyPrint());
+	}
+	
 	
 	@Test
 	public void getDownloadComicInfo() throws Exception {
@@ -95,6 +121,74 @@ public class DownloadControllerTest {
 		System.out.println(stopWatch.prettyPrint());
 	}
 
+	@Test
+	public void downloadVod() throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		/*
+{
+  "idType":"episode",
+  "productId":"H000044711",
+   "userKey":"US201403051403029340000827",
+   "deviceKey":"DE201403051403029520000402"
+}
+		 */
+		param.put("deviceKey", "DE201403051403029520000402");
+		param.put("userKey", "US201403051403029340000827");
+		param.put("productId", "H000044711");
+		param.put("idType", "episode");
+		String json = this.convertMapToJson(param);
+		
+		StopWatch stopWatch = new StopWatch(); 
+		stopWatch.start("downloadVod Download Vod 정보 조회(for download)");
+		this.mvc.perform(
+				post("/display/download/vod/detail/v1")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"));
+		
+		stopWatch.stop();
+		System.out.println(stopWatch.prettyPrint());
+	}
+
+	
+	@Test
+	public void getDownloadMusicInfo() throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+/*
+{
+"deviceKey":"DE201403051349417010000130",
+"userKey":"US201403051349416650000558",
+"productId":"H900380891"
+}
+ */
+		param.put("deviceKey", "DE201403051349270180000124");
+		param.put("userKey", "US201403051349269830000552");
+		param.put("productId", "H900380891");
+		String json = this.convertMapToJson(param);
+		
+		StopWatch stopWatch = new StopWatch(); 
+		stopWatch.start("getDownloadMusicInfo");
+		this.mvc.perform(
+				post("/display/download/music/detail/v1")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"));
+		
+		stopWatch.stop();
+		System.out.println(stopWatch.prettyPrint());
+	}
+	
+	
 
 	private String convertMapToJson(Map<String, Object> param)
 			throws IOException {

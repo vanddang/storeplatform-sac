@@ -150,7 +150,10 @@
                             AND  F.LANG_CD = #{langCd}                     /* ko : 한국어 */
                             AND  G.PROD_STATUS_CD IN ( 'PD000403', 'PD000404', 'PD000409', 'PD000410' )      
                             AND  G.EXPO_YN = 'Y'                      /* Y : 노출 (노출여부) */
-                            AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+                            AND (H.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
+                                                     FROM TB_DP_TENANT_PROD_PRICE PR 
+                                                    WHERE PR.TENANT_ID = H.TENANT_ID
+                                                      AND PR.PROD_ID = H.PROD_ID)
                             AND  G.TENANT_ID = #{tenantId}            /* 테넌트ID */
                             AND  D.TOP_MENU_ID  <![CDATA[ <> ]]>  'DP02' /* DP02 : 폰꾸미기 */
                             AND  I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
@@ -477,7 +480,10 @@
                                                AND M.SALE_YN ='Y'                                       
                                                AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
                                                AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
-                                               AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+                                               AND (O.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
+					                                                     FROM TB_DP_TENANT_PROD_PRICE PR
+					                                                    WHERE PR.TENANT_ID = O.TENANT_ID
+					                                                      AND PR.PROD_ID = O.PROD_ID)
                                                AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */                                               
                                                <if test="idType == 'episode'">
                                                AND J.PROD_ID = #{productId} /* 에피소드 ID 조회 */
@@ -656,7 +662,10 @@
                                    AND  EP_I.EXPO_YN = 'Y'
                                    AND  EP_I.TENANT_ID = #{tenantId}
                                    AND  EP_I.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-                                   AND  SYSDATE BETWEEN EP_J.APPLY_START_DT AND EP_J.APPLY_END_DT
+                                   AND (EP_J.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
+                                   						   FROM TB_DP_TENANT_PROD_PRICE PR
+                                                          WHERE PR.TENANT_ID = EP_J.TENANT_ID
+                                                            AND PR.PROD_ID = EP_J.PROD_ID)
                                    AND  (EP_K.DEVICE_MODEL_CD = #{deviceModelCd} OR EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd})
                                    AND  EP_L.DEVICE_MODEL_CD = #{deviceModelCd}
                                    AND  EP_L.EBOOK_SPRT_YN = 'Y'
@@ -802,7 +811,10 @@
                            AND  EP_I.EXPO_YN = 'Y'
                            AND  EP_I.TENANT_ID = #{tenantId}
                            AND  EP_I.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-                           AND  SYSDATE BETWEEN EP_J.APPLY_START_DT AND EP_J.APPLY_END_DT
+                           AND  (EP_J.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
+					                					   FROM TB_DP_TENANT_PROD_PRICE PR
+					                                      WHERE PR.TENANT_ID = EP_J.TENANT_ID
+					                                        AND PR.PROD_ID = EP_J.PROD_ID)
                            AND  (EP_K.DEVICE_MODEL_CD = #{deviceModelCd} OR EP_K.DEVICE_MODEL_CD = #{anyDeviceModelCd})
                            AND  EP_L.DEVICE_MODEL_CD = #{deviceModelCd}
                            AND  EP_L.COMIC_SPRT_YN = 'Y'
@@ -920,6 +932,10 @@
                    AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
                    AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
                    AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+				   AND O.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
+					   						  FROM TB_DP_TENANT_PROD_PRICE PR
+					                         WHERE PR.TENANT_ID = O.TENANT_ID
+					                           AND PR.PROD_ID = O.PROD_ID)
                    AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */
                    AND J.PROD_ID = #{productId} /* 상품 ID(에피소드) */ 
                  GROUP BY J.PROD_ID
@@ -1011,7 +1027,10 @@
                       AND L.USE_YN ='Y'
                       AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
                       AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
-                      AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+				      AND O.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
+					   						  FROM TB_DP_TENANT_PROD_PRICE PR
+					                         WHERE PR.TENANT_ID = O.TENANT_ID
+					                           AND PR.PROD_ID = O.PROD_ID)
                       AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */
                       AND EP.PROD_ID = #{productId} /* 상품 ID(에피소드) */
                       AND RSHP2.PROD_ID = RSHP.PROD_ID
