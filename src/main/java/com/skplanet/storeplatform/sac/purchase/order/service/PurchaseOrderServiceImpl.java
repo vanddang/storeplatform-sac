@@ -1403,7 +1403,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		try {
 			return this.purchaseOrderPolicyService.checkSktPaymentPolicy(policyCheckParam);
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7209", e);
+			if (e instanceof StorePlatformException) {
+				throw (StorePlatformException) e;
+			} else {
+				throw new StorePlatformException("SAC_PUR_7209", e);
+			}
 		}
 	}
 
