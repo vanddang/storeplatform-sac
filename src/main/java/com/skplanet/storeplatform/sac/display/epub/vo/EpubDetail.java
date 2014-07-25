@@ -16,7 +16,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * 이북/코믹 상세조회 Value Object
  *
- * Updated on : 2014. 2. 2. Updated by : 임근대, SK플래닛.
+ * Created on 2014. 02. 02. by 임근대, SK플래닛.
+ * Updated on 2014. 07. 24. by 서대영, SK플래닛 : 미리보기 관련 필드 2개 추가
  */
 public class EpubDetail extends CommonInfo {
 
@@ -84,10 +85,10 @@ public class EpubDetail extends CommonInfo {
     private String subContentsId;
     private Integer fileSize;
     private String prodVer;
-    
+
     private String usePeriodNm;
-    
-    
+
+
 	// 소장 상품
 	/** 소장 상품ID */
 	private String storeProdId;
@@ -99,7 +100,7 @@ public class EpubDetail extends CommonInfo {
     private String storeProdStatusCd;
     private String storeUsePeriodUnitCd;
 
-    
+
 	// 대여 상품
 	/** 대여 상품ID */
 	private String playProdId;
@@ -177,6 +178,10 @@ public class EpubDetail extends CommonInfo {
 	private Integer bookFreeCnt;
 	private Integer serialFreeCnt;
 	private Integer magazineFreeCnt;
+
+	// 미리보기
+	private String samplUrl;
+	private String samplYn;
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -306,12 +311,12 @@ public class EpubDetail extends CommonInfo {
 	public void setArtist2Nm(String artist2Nm) {
 		this.artist2Nm = artist2Nm;
 	}
-	
+
 	/**
 	 * @return the artist3Nm
 	 */
 	public String getArtist3Nm() {
-		return artist3Nm;
+		return this.artist3Nm;
 	}
 
 	/**
@@ -582,12 +587,12 @@ public class EpubDetail extends CommonInfo {
 	public void setPlayProdAmt(Integer playProdAmt) {
 		this.playProdAmt = playProdAmt;
 	}
-	
+
 	/**
 	 * @return the storeProdNetAmt
 	 */
 	public Integer getStoreProdNetAmt() {
-		return storeProdNetAmt;
+		return this.storeProdNetAmt;
 	}
 
 	/**
@@ -601,7 +606,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the playProdNetAmt
 	 */
 	public Integer getPlayProdNetAmt() {
-		return playProdNetAmt;
+		return this.playProdNetAmt;
 	}
 
 	/**
@@ -751,7 +756,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the bookCnt
 	 */
 	public Integer getBookCnt() {
-		return bookCnt;
+		return this.bookCnt;
 	}
 
 	/**
@@ -765,7 +770,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the serialCnt
 	 */
 	public Integer getSerialCnt() {
-		return serialCnt;
+		return this.serialCnt;
 	}
 
 	/**
@@ -779,7 +784,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the magazineCnt
 	 */
 	public Integer getMagazineCnt() {
-		return magazineCnt;
+		return this.magazineCnt;
 	}
 
 	/**
@@ -793,7 +798,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the bookFreeCnt
 	 */
 	public Integer getBookFreeCnt() {
-		return bookFreeCnt;
+		return this.bookFreeCnt;
 	}
 
 	/**
@@ -807,7 +812,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the serialFreeCnt
 	 */
 	public Integer getSerialFreeCnt() {
-		return serialFreeCnt;
+		return this.serialFreeCnt;
 	}
 
 	/**
@@ -821,7 +826,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the magazineFreeCnt
 	 */
 	public Integer getMagazineFreeCnt() {
-		return magazineFreeCnt;
+		return this.magazineFreeCnt;
 	}
 
 	/**
@@ -924,7 +929,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the comptYn
 	 */
 	public String getComptYn() {
-		return comptYn;
+		return this.comptYn;
 	}
 
 	/**
@@ -938,7 +943,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the usePeriodNm
 	 */
 	public String getUsePeriodNm() {
-		return usePeriodNm;
+		return this.usePeriodNm;
 	}
 
 	/**
@@ -952,7 +957,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the storeUsePeriodUnitCd
 	 */
 	public String getStoreUsePeriodUnitCd() {
-		return storeUsePeriodUnitCd;
+		return this.storeUsePeriodUnitCd;
 	}
 
 	/**
@@ -966,7 +971,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the playUsePeriodUnitCd
 	 */
 	public String getPlayUsePeriodUnitCd() {
-		return playUsePeriodUnitCd;
+		return this.playUsePeriodUnitCd;
 	}
 
 	/**
@@ -975,12 +980,12 @@ public class EpubDetail extends CommonInfo {
 	public void setPlayUsePeriodUnitCd(String playUsePeriodUnitCd) {
 		this.playUsePeriodUnitCd = playUsePeriodUnitCd;
 	}
-	
+
 	/**
 	 * @return the playUsePeriod
 	 */
 	public Integer getPlayUsePeriod() {
-		return playUsePeriod;
+		return this.playUsePeriod;
 	}
 
 	/**
@@ -994,7 +999,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the playUsePeriodUnitCdNm
 	 */
 	public String getPlayUsePeriodUnitCdNm() {
-		return playUsePeriodUnitCdNm;
+		return this.playUsePeriodUnitCdNm;
 	}
 
 	/**
@@ -1008,7 +1013,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the storeProdStatusCd
 	 */
 	public String getStoreProdStatusCd() {
-		return storeProdStatusCd;
+		return this.storeProdStatusCd;
 	}
 
 	/**
@@ -1022,7 +1027,7 @@ public class EpubDetail extends CommonInfo {
 	 * @return the playProdStatusCd
 	 */
 	public String getPlayProdStatusCd() {
-		return playProdStatusCd;
+		return this.playProdStatusCd;
 	}
 
 	/**
@@ -1031,7 +1036,23 @@ public class EpubDetail extends CommonInfo {
 	public void setPlayProdStatusCd(String playProdStatusCd) {
 		this.playProdStatusCd = playProdStatusCd;
 	}
- 
-	
-	
+
+	public String getSamplUrl() {
+		return this.samplUrl;
+	}
+
+	public void setSamplUrl(String samplUrl) {
+		this.samplUrl = samplUrl;
+	}
+
+	public String getSamplYn() {
+		return this.samplYn;
+	}
+
+	public void setSamplYn(String samplYn) {
+		this.samplYn = samplYn;
+	}
+
+
+
 }

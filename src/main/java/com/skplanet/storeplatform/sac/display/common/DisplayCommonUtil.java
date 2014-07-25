@@ -1,13 +1,13 @@
 package com.skplanet.storeplatform.sac.display.common;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import org.apache.commons.lang3.math.NumberUtils;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class DisplayCommonUtil {
 
@@ -37,6 +37,18 @@ public class DisplayCommonUtil {
 					sMimeType = "video/x-ms-wmv";
 				} else if (sFileExtension.equals("wma")) {
 					sMimeType = "audio/x-ms-wma";
+				} else if (sFileExtension.equals("tns")) {
+					sMimeType = "image/tns";
+				} else if (sFileExtension.equals("tmz")) {
+					sMimeType = "binary/tmz";
+				} else if (sFileExtension.equals("epub")) {
+					sMimeType = "application/epub+zip";
+				} else if (sFileExtension.equals("ipub")) {
+					sMimeType = "application/ipub+zip";
+				} else if (sFileExtension.equals("zip")) {
+					sMimeType = "application/zip";
+				} else {
+					sMimeType = "x-planet-application/" + sFileExtension;
 				}
 				return sMimeType;
 			}
@@ -52,7 +64,7 @@ public class DisplayCommonUtil {
      * 프로비저닝을 위한 버전 정보는 "majVer.minVer" 형태로 DB에 존재하기 때문에 입력 문자열을 가공하기 위한 것이다.
 	 * Ex) Android/4.0.4 -> 4.0 .
 	 * </pre>
-	 * 
+	 *
 	 * @param osVer 운영체제 정보 문자열
 	 * @return majVer.minVer 형태의 문자열. 읽을 수 없는 형태인 경우 0.0 출력
 	 */
@@ -73,7 +85,7 @@ public class DisplayCommonUtil {
 
 	/**
 	 * Date타입에 날짜 기간 데이터를 정의해준다.
-	 * 
+	 *
 	 * @param tp
 	 * @param period
 	 * @param unit

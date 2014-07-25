@@ -10,9 +10,9 @@
 package com.skplanet.storeplatform.sac.display.common.constant;
 
 /**
- * 
+ *
  * SAC 전시 상수 클래스 전시 파트 내에서 사용되는 상수는 여기에 정의한다.
- * 
+ *
  * Updated on : 2014. 1. 30. Updated by : 서대영, SK 플래닛.
  */
 public class DisplayConstants {
@@ -534,6 +534,7 @@ public class DisplayConstants {
 	// ////////////////////////////////////// preview //////////////////////////////////////////
 	public static final String DP_PREVIEW_HQ = "video/x-freeview-hq";
 	public static final String DP_PREVIEW_LQ = "video/x-freeview-lq";
+	public static final String DP_EPUB_PREVIEW = "epub/x-freeview";
 
 	/**
 	 * 특정 상품 조회 API 파라미터 제한 개수.
@@ -635,7 +636,7 @@ public class DisplayConstants {
 	// 구매 경로 - T freemium
 	public static final String PRCHS_REQ_PATH_TFREEMIUM1_CD = "OR000413";
 	public static final String PRCHS_REQ_PATH_TFREEMIUM2_CD = "OR000420";
-	
+
 	// 정액제 상품 자동결제 구분
 	public static final String DP_AUTOPAY_AUTO = "auto"; // 자동결제
 	public static final String DP_AUTOPAY_NORMAL = "normal"; // 일반결제
