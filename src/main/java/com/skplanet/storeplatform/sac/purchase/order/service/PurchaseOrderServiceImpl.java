@@ -534,19 +534,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// T store Cash 조회
 
-		res.setTstoreCashAmt(this.purchaseOrderTstoreService.searchTstoreCashAmt(reservedDataMap.get("userKey")));
+		double tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(reservedDataMap.get("userKey"));
 
 		// ------------------------------------------------------------------------------------------------
 		// 게임캐쉬 조회
 
+		double gameCashAmt = 0.0;
 		// if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 		// PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAME)) {
 		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
 				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-			res.setGameCashAmt(this.purchaseOrderTstoreService.searchGameCashAmt(reservedDataMap.get("userKey")));
-		} else {
-			res.setGameCashAmt(0.0);
+			gameCashAmt = this.purchaseOrderTstoreService.searchGameCashAmt(reservedDataMap.get("userKey"));
 		}
 
 		// ------------------------------------------------------------------------------------------------
@@ -558,10 +557,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 캐쉬/포인트 잔액 통합 정보
 
 		StringBuffer sbCashPoint = new StringBuffer();
-		sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":")
-				.append(res.getTstoreCashAmt()).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH)
-				.append(":").append(res.getGameCashAmt()).append(";")
-				.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT).append(":").append(tgamepassAmt);
+		sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":").append(tstoreCashAmt)
+				.append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH).append(":")
+				.append(gameCashAmt).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT)
+				.append(":").append(tgamepassAmt);
 
 		res.setCashPointList(sbCashPoint.toString());
 
