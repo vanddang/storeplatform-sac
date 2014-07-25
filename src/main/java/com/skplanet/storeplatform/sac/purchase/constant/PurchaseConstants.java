@@ -198,6 +198,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYPLANET_PAYMENT_METHOD_GAMECASH = "27"; // 게임캐쉬
 	public static final String PAYPLANET_PAYMENT_METHOD_GAMECASH_POINT = "28"; // 게임캐쉬 보너스 포인트
 	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_POINT = "29"; // T store 포인트
+	public static final String PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT = "30"; // T game pass 포인트
 
 	/** Pay Planet 네트워크 타입 */
 	public static final String PAYPLANET_NETWORK_TYPE_3GLTE = "1"; // 3G, LTE

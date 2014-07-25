@@ -550,12 +550,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		// ------------------------------------------------------------------------------------------------
+		// T game pass 조회
+
+		double tgamepassAmt = this.purchaseOrderTstoreService.searchTgamepassAmt(reservedDataMap.get("userKey"));
+
+		// ------------------------------------------------------------------------------------------------
 		// 캐쉬/포인트 잔액 통합 정보
 
 		StringBuffer sbCashPoint = new StringBuffer();
 		sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":")
 				.append(res.getTstoreCashAmt()).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH)
-				.append(":").append(res.getGameCashAmt());
+				.append(":").append(res.getGameCashAmt()).append(";")
+				.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT).append(":").append(tgamepassAmt);
 
 		res.setCashPointList(sbCashPoint.toString());
 

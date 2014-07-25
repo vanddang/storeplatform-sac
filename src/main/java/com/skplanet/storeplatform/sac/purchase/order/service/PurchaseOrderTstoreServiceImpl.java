@@ -188,6 +188,53 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	/**
 	 * 
 	 * <pre>
+	 * T game pass 잔액 조회.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            내부 회원 NO
+	 * 
+	 * @return T game pass 잔액
+	 */
+	@Override
+	public double searchTgamepassAmt(String userKey) {
+		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// return 0.0;
+		// }
+
+		TStoreCashBalanceEcReq tStoreCashEcReq = new TStoreCashBalanceEcReq();
+		tStoreCashEcReq.setUserKey(userKey);
+		tStoreCashEcReq.setProductGroup(PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS); // 상품군 : T game pass
+
+		TStoreCashBalanceEcRes tStoreCashEcRes = null;
+		try {
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,TGAMEPASS,SEARCH,REQ,{}",
+					ReflectionToStringBuilder.toString(tStoreCashEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+			tStoreCashEcRes = this.tStoreCashSCI.getBalance(tStoreCashEcReq);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,TGAMEPASS,SEARCH,RES,{}",
+					ReflectionToStringBuilder.toString(tStoreCashEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7211", e);
+		}
+
+		if (StringUtils.equals(tStoreCashEcRes.getResultCd(), PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+			throw new StorePlatformException("SAC_PUR_7207", tStoreCashEcRes.getResultCd(),
+					tStoreCashEcRes.getResultMsg());
+		}
+
+		List<TStoreCashBalanceDetailEcRes> tstoreCashList = tStoreCashEcRes.getCashList();
+		double cashAmt = 0.0;
+		for (TStoreCashBalanceDetailEcRes cash : tstoreCashList) {
+			cashAmt += Double.parseDouble(cash.getAmt());
+		}
+
+		return cashAmt;
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 게임캐쉬 잔액 조회.
 	 * </pre>
 	 * 

@@ -55,6 +55,19 @@ public interface PurchaseOrderTstoreService {
 	/**
 	 * 
 	 * <pre>
+	 * T game pass 잔액 조회.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            내부 회원 NO
+	 * 
+	 * @return T game pass 잔액
+	 */
+	public double searchTgamepassAmt(String userKey);
+
+	/**
+	 * 
+	 * <pre>
 	 * 게임캐쉬 잔액 조회.
 	 * </pre>
 	 * 
