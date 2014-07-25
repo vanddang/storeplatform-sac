@@ -44,7 +44,7 @@ public class EpubMappingServiceImpl implements EpubMappingService {
 
             Source source = new Source();
 			source.setType(DisplayConstants.DP_EPUB_PREVIEW);
-			source.setUrl(this.commonService.makePreviewUrl(mapperVO.getSamplUrl()));
+			source.setUrl(this.commonService.makeEpubPreviewUrl(mapperVO.getSamplUrl()));
 			source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getSamplUrl()));
 			sourceList.add(source);
 

@@ -2,18 +2,23 @@ package com.skplanet.storeplatform.sac.display.common.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.display.common.vo.*;
+import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 
 /**
  * 전시 공통 서비스
- * 
+ *
  * Updated on : 2014. 01. 07 Updated by : 정희원, SK 플래닛.
  */
 public interface DisplayCommonService {
 
 	/**
 	 * 배치 완료 기준일시를 리턴.
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트ID
 	 * @param listId
@@ -24,7 +29,7 @@ public interface DisplayCommonService {
 
 	/**
 	 * 메뉴 목록을 조회한다.
-	 * 
+	 *
 	 * @param prodId
 	 *            상품ID
 	 * @param langCd
@@ -35,7 +40,7 @@ public interface DisplayCommonService {
 
 	/**
 	 * 단말 해상도의 코드값을 조회한다.
-	 * 
+	 *
 	 * @param resolution
 	 *            해상도 값(480*720)
 	 * @return String
@@ -44,7 +49,7 @@ public interface DisplayCommonService {
 
 	/**
 	 * DEVICE ID의 유형을 분류한다.
-	 * 
+	 *
 	 * @param deviceId
 	 *            deviceId
 	 * @return String
@@ -53,7 +58,7 @@ public interface DisplayCommonService {
 
 	/**
 	 * 특정 상품의 구매 내역 유무를 확인한다.
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트ID
 	 * @param userKey
@@ -68,7 +73,7 @@ public interface DisplayCommonService {
 
 	/**
 	 * 상품 목록의 구매 내역 유무를 확인한다.
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트ID
 	 * @param userKey
@@ -84,12 +89,21 @@ public interface DisplayCommonService {
 
 	/**
 	 * 미리보기 URL을 작성한다.
-	 * 
+	 *
 	 * @param phyPath
 	 *            파일의 물리 경로
 	 * @return
 	 */
 	public String makePreviewUrl(String phyPath);
+
+	/**
+	 * 이북/코믹 미리보기 URL을 작성한다.
+	 *
+	 * @param phyPath
+	 *            파일의 물리 경로
+	 * @return
+	 */
+	public String makeEpubPreviewUrl(String phyPath);
 
 	/**
 	 * 메뉴에 해당하는 T멤버십 할인율 조회한다.
@@ -103,31 +117,31 @@ public interface DisplayCommonService {
 	 * <pre>
 	 * 단말 지원정보 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param deviceModelCd
 	 * @return HashMap
 	 */
 	public SupportDevice getSupportDeviceInfo(String deviceModelCd);
-	
+
 	/**
 	 * <pre>
 	 * 이북/코믹 Chapter Unit
 	 * </pre>
-	 * 
+	 *
 	 * @param bookClsfCd
 	 * @return String
 	 * 			chapterUnit
 	 */
 	public String getEpubChapterUnit(String bookClsfCd);
-	
+
 	/**
 	 * <pre>
 	 * Vod Chapter Unit
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 * 			chapterUnit
-	 */	
+	 */
 	public String getVodChapterUnit();
 
     /**

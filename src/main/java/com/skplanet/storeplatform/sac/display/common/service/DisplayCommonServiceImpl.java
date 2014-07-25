@@ -1,16 +1,10 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
-import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
-import com.skplanet.storeplatform.sac.display.common.ProductType;
-import com.skplanet.storeplatform.sac.display.common.VodType;
-import com.skplanet.storeplatform.sac.display.common.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +15,31 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
+import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
+import com.skplanet.storeplatform.sac.display.common.ProductType;
+import com.skplanet.storeplatform.sac.display.common.VodType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest;
+import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+import com.skplanet.storeplatform.sac.display.common.vo.MenuItemReq;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 
 /**
  * 전시 공통 서비스
- * 
+ *
  * Updated on : 2014. 01. 07 Updated by : 정희원, SK 플래닛.
  */
 @Service
@@ -48,6 +59,9 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 	@Value("#{propertiesForSac['display.previewUrlPrefix']}")
 	private String previewPrefix;
+
+	@Value("#{propertiesForSac['display.epub.previewUrlPrefix']}")
+	private String previewEpubPrefix;
 
 	/** The message source accessor. */
 	@Autowired
@@ -176,6 +190,14 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	}
 
 	@Override
+	public String makeEpubPreviewUrl(String phyPath) {
+		if (StringUtils.isNotEmpty(phyPath))
+			return this.previewEpubPrefix + phyPath;
+		else
+			return "";
+	}
+
+	@Override
 	@Cacheable(value = "sac:display:tmembershipdcrate:v2", unless = "#result == null")
 	public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String topMenuId) {
 		Map<String, String> req = new HashMap<String, String>();
@@ -199,7 +221,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
 	 */
@@ -214,7 +236,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
 	 */
@@ -233,7 +255,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
 	 */
@@ -271,7 +293,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
         String metaClsf = StringUtils.defaultString(info.getMetaClsfCd());
         String topMenu = StringUtils.defaultString(info.getTopMenuId());
 
-        ProductTypeInfo basicInfo = getProductTypeInfo(svcGrp, svcTp, metaClsf, topMenu);
+        ProductTypeInfo basicInfo = this.getProductTypeInfo(svcGrp, svcTp, metaClsf, topMenu);
         info.setProductType(basicInfo.getProductType());
         info.setSeries(basicInfo.isSeries());
         info.setSubType(basicInfo.getSubType());

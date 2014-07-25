@@ -208,7 +208,7 @@
 			    , T.CHNL_PROD_ID
 			    , T.PROD_NM, T.PROD_BASE_DESC, T.PROD_DTL_DESC, T.PROD_INTR_DSCR
 			    , T.ARTIST1_NM, T.ARTIST2_NM, T.ARTIST3_NM
-			    , T.BOOK_CLSF_CD, T.CHAPTER, T.SAMPL_URL, T.SAMPL_YN
+			    , T.BOOK_CLSF_CD, T.CHAPTER, T.SAMPL_URL
 			    , ( CASE WHEN T.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( T.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
 			    , T.SVC_START_DT , NVL( T.BOOK_PAGE_CNT, 0 ) AS BOOK_PAGE_CNT, T.COMPT_YN, T.ISSUE_DAY
 			    , T.SUB_CONTENTS_ID, T.FILE_SIZE, T.PROD_VER
@@ -226,7 +226,7 @@
 			      SELECT T3.*, COUNT(*) OVER () TOTAL_COUNT, ROWNUM AS RNUM
 			      FROM (
 			            SELECT 
-			            	  T2.CID, T2.CHAPTER, T2.SAMPL_URL, T2.SAMPL_YN
+			            	  T2.CID, T2.CHAPTER, T2.SAMPL_URL
 			                , MAX( T2.PROD_ID ) AS PROD_ID
 			                , MAX( T2.TENANT_ID ) AS TENANT_ID
 			                , MAX( T2.CHNL_PROD_ID ) AS CHNL_PROD_ID
@@ -280,7 +280,6 @@
 		                      , MP.SVC_START_DT, MP.BOOK_PAGE_CNT, MP.ISSUE_DAY
 		                      , MP.CHAPTER
 		                      , MP.SAMPL_URL /* 미리보기 URL */
-		                      , MP.SAMPL_YN /* 미리보기 여부 */
 		                      , PRC.PROD_AMT, PRC.PROD_NET_AMT
 		                      , SC.SUB_CONTENTS_ID, SC.FILE_SIZE, SC.PROD_VER
 		                      , ROW_NUMBER() OVER ( PARTITION BY PD.PROD_ID ORDER BY SC.PROD_VER DESC ) AS RN
@@ -336,7 +335,7 @@
 			              ) T1
 			              WHERE RN = 1
 			          ) T2
-					  GROUP BY T2.CID, T2.CHAPTER, T2.SAMPL_URL, T2.SAMPL_YN
+					  GROUP BY T2.CID, T2.CHAPTER, T2.SAMPL_URL
 					  <if test="orderedBy == 'recent'">
 					  ORDER BY T2.CHAPTER DESC
 	                  </if>

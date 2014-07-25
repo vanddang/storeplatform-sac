@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 이북/코믹 상세조회 Value Object
  *
  * Created on 2014. 02. 02. by 임근대, SK플래닛.
- * Updated on 2014. 07. 24. by 서대영, SK플래닛 : 미리보기 관련 필드 2개 추가
+ * Updated on 2014. 07. 24. by 서대영, SK플래닛 : 미리보기 관련 필드 1개 추가
  */
 public class EpubDetail extends CommonInfo {
 
@@ -181,7 +181,6 @@ public class EpubDetail extends CommonInfo {
 
 	// 미리보기
 	private String samplUrl;
-	private String samplYn;
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -1044,15 +1043,5 @@ public class EpubDetail extends CommonInfo {
 	public void setSamplUrl(String samplUrl) {
 		this.samplUrl = samplUrl;
 	}
-
-	public String getSamplYn() {
-		return this.samplYn;
-	}
-
-	public void setSamplYn(String samplYn) {
-		this.samplYn = samplYn;
-	}
-
-
 
 }
