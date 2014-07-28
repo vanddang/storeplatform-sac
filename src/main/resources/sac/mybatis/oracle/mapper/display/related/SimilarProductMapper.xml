@@ -15,16 +15,18 @@
         )    
         </if>
         SELECT /* SimilarProductMapper.xml, selectSimilarProductList, SAC 전시 , 2014-02-18 */
-            A.TOTAL_COUNT
+              A.TOTAL_COUNT
             , A.TOP_MENU_ID
             , A.MENU_ID
             , A.PROD_ID
             , A.CONTENTS_TYPE_CD
         FROM (
             SELECT 
-                COUNT(A.PROD_ID) OVER() TOTAL_COUNT
+                  COUNT(A.PROD_ID) OVER() TOTAL_COUNT
                 , ROW_NUMBER() OVER(ORDER BY SCORE DESC) RNK
                 , A.RNUM
+                , A.STD_PROD_ID
+                , A.STD_TOP_MENU_ID                
                 , A.TOP_MENU_ID
                 , A.MENU_ID
                 , A.PROD_ID
@@ -32,14 +34,16 @@
                 , A.CONTENTS_TYPE_CD
             FROM (
                 SELECT 
-                    ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
+                      ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
+                    , A.STD_PROD_ID
+                    , (SELECT TOP_MENU_ID FROM TB_DP_PROD WHERE PROD_ID = A.STD_PROD_ID) AS STD_TOP_MENU_ID                      
                     , D.TOP_MENU_ID
                     , D.MENU_ID
                     , B.PROD_ID
                     , A.SCORE
                     , B.CONTENTS_TYPE_CD
                 FROM 
-                    TB_DP_SMLR_PROD_MANG A
+                      TB_DP_SMLR_PROD_MANG A
                     , TB_DP_PROD B
                     , TB_DP_MENU_CATEGORY_PROD_MAPG C
                     , TB_DP_MENU_CATEGORY D
@@ -73,14 +77,16 @@
                 </if>
                 UNION ALL
                 SELECT 
-                    ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
+                      ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY A.SCORE DESC) RNUM
+                    , A.STD_PROD_ID
+                    , (SELECT TOP_MENU_ID FROM TB_DP_PROD WHERE PROD_ID = A.STD_PROD_ID) AS STD_TOP_MENU_ID                      
                     , D.TOP_MENU_ID
                     , D.MENU_ID
                     , B.PROD_ID
                     , A.SCORE
                     , 'PD002501' CONTENTS_TYPE_CD
                 FROM
-                    TB_DP_SMLR_PROD_MANG A
+                      TB_DP_SMLR_PROD_MANG A
                     , TB_DP_PROD_RSHP B
                     , TB_DP_MENU_CATEGORY_PROD_MAPG C
                     , TB_DP_MENU_CATEGORY D
@@ -126,6 +132,7 @@
                 </if>
             ) A
             WHERE RNUM = 1
+              AND A.STD_TOP_MENU_ID = A.TOP_MENU_ID
         ) A
         WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
         ORDER BY A.RNK
