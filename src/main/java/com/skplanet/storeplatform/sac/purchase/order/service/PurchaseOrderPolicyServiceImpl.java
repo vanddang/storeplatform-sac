@@ -341,12 +341,23 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 			boolean bLimit = false;
 			for (PurchaseTenantPolicy policy : policyList) {
-				if ((policyResult.isSkpCorporation() && StringUtils.equals(policy.getApplyValue(),
-						PurchaseConstants.SKP_CORPORATION_NO))
-						|| this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
-					bLimit = true;
+				// SKP법인폰은 위에서 이미 체크
+				if (StringUtils.equals(policy.getApplyValue(), PurchaseConstants.SKP_CORPORATION_NO)) {
+					bLimit = policyResult.isSkpCorporation();
+				} else {
+					bLimit = this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId());
+				}
+
+				if (bLimit) {
 					break;
 				}
+
+				// if ((policyResult.isSkpCorporation() && StringUtils.equals(policy.getApplyValue(),
+				// PurchaseConstants.SKP_CORPORATION_NO))
+				// || this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
+				// bLimit = true;
+				// break;
+				// }
 			}
 
 			// 제한 정책에 걸렸을 경우, 허용된 디바이스면 통과
