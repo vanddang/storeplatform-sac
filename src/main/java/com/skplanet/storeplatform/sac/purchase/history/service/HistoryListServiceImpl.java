@@ -141,8 +141,11 @@ public class HistoryListServiceImpl implements HistoryListService {
 		}
 		scRequest.setGiftRecvConfYn(request.getGiftRecvConfYn());
 
-		int endRow = request.getCount() * request.getOffset();
-		int statrRow = endRow - request.getCount() + 1;
+		int offset = request.getOffset();
+		int count = request.getCount() > 100 ? 100 : request.getCount();
+
+		int endRow = count * offset;
+		int statrRow = endRow - count + 1;
 
 		scRequest.setStartRow(statrRow);
 		scRequest.setEndRow(endRow);
