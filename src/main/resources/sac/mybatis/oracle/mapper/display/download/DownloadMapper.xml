@@ -150,7 +150,7 @@
                             AND  F.LANG_CD = #{langCd}                     /* ko : 한국어 */
                             AND  G.PROD_STATUS_CD IN ( 'PD000403', 'PD000404', 'PD000409', 'PD000410' )      
                             AND  G.EXPO_YN = 'Y'                      /* Y : 노출 (노출여부) */
-                            AND (H.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
+                            AND H.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
                                                      FROM TB_DP_TENANT_PROD_PRICE PR 
                                                     WHERE PR.TENANT_ID = H.TENANT_ID
                                                       AND PR.PROD_ID = H.PROD_ID)
@@ -480,7 +480,7 @@
                                                AND M.SALE_YN ='Y'                                       
                                                AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
                                                AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
-                                               AND (O.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
+                                               AND O.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
 					                                                     FROM TB_DP_TENANT_PROD_PRICE PR
 					                                                    WHERE PR.TENANT_ID = O.TENANT_ID
 					                                                      AND PR.PROD_ID = O.PROD_ID)
@@ -662,7 +662,7 @@
                                    AND  EP_I.EXPO_YN = 'Y'
                                    AND  EP_I.TENANT_ID = #{tenantId}
                                    AND  EP_I.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-                                   AND (EP_J.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
+                                   AND  EP_J.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
                                    						   FROM TB_DP_TENANT_PROD_PRICE PR
                                                           WHERE PR.TENANT_ID = EP_J.TENANT_ID
                                                             AND PR.PROD_ID = EP_J.PROD_ID)
@@ -811,7 +811,7 @@
                            AND  EP_I.EXPO_YN = 'Y'
                            AND  EP_I.TENANT_ID = #{tenantId}
                            AND  EP_I.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
-                           AND  (EP_J.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
+                           AND  EP_J.APPLY_END_DT = (SELECT MAX(APPLY_END_DT) /* ForDownload 판매기간체크 제거, 최종가격정보 조회를 위함 */
 					                					   FROM TB_DP_TENANT_PROD_PRICE PR
 					                                      WHERE PR.TENANT_ID = EP_J.TENANT_ID
 					                                        AND PR.PROD_ID = EP_J.PROD_ID)
