@@ -551,7 +551,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// T game pass 조회
 
-		double tgamepassAmt = this.purchaseOrderTstoreService.searchTgamepassAmt(reservedDataMap.get("userKey"));
+		double tgamepassAmt = 0.0;
+		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
+				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
+			tgamepassAmt = this.purchaseOrderTstoreService.searchTgamepassAmt(reservedDataMap.get("userKey"));
+		}
 
 		// ------------------------------------------------------------------------------------------------
 		// 캐쉬/포인트 잔액 통합 정보
