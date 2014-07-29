@@ -2614,9 +2614,10 @@ public class IdpServiceImpl implements IdpService {
 		// LOGGER.debug("replace after:" + joinSiteTotalList);
 
 		int checkOcbVal = joinSiteTotalList.indexOf(MemberConstants.SSO_SST_CD_OCB_WEB);
-		if (checkOcbVal != -1) {
+		if (checkOcbVal > -1) {
 			ocbJoinCodeYn = "Y";
 		}
+		LOGGER.info("===================[ocbJoinCodeYn] {}", ocbJoinCodeYn);
 
 		String[] mbrClauseAgreeArray = null;
 		String[] tempSplit = joinSiteTotalList.split("\\|");
