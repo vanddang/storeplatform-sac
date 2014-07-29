@@ -225,10 +225,12 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			throw new StorePlatformException("SAC_PUR_8104");
 		}
 
-		/** deviceId 조회 및 셋팅. */
-		prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
-				prchsSacParam.getInsdDeviceId()));
-
+		// 2014.07.29 최상훈c 요건 추가(해당값이 존재하면 회원정보 조회 안함)
+		if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
+			/** deviceId 조회 및 셋팅. */
+			prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
+					prchsSacParam.getInsdDeviceId()));
+		}
 		/*
 		 * 
 		 * ..................................구매 취소 시 상품 정보 확인 불필요하여 주석 처리..............................................
@@ -336,16 +338,18 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		this.purchaseCancelRepository.updatePurchaseCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 
 		/** RO 삭제 처리. */
-		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
-			if (!StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
-					PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) {
-				// APP 상품이 아니면 통과.
-				continue;
-			}
-			try {
-				this.cancelRO(purchaseCancelSacParam, purchaseCancelDetailSacParam, prchsDtlSacParam);
-			} catch (Exception e) {
-				this.logger.info("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
+		if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
+			for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
+				if (!StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) {
+					// APP 상품이 아니면 통과.
+					continue;
+				}
+				try {
+					this.cancelRO(purchaseCancelSacParam, purchaseCancelDetailSacParam, prchsDtlSacParam);
+				} catch (Exception e) {
+					this.logger.info("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
+				}
 			}
 		}
 
@@ -434,8 +438,17 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 						.cancelPaymentToTStore(purchaseCancelSacParam, purchaseCancelDetailSacParam));
 			} else {
 				// PayPlanet 결제.
-				purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
-						.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+				try {
+					purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
+							.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+				} catch (StorePlatformException e) {
+					ErrorInfo errorInfo = e.getErrorInfo();
+					if ("EC_PAYPLANET_9984".equals(errorInfo.getCode()) && purchaseCancelSacParam.getIgnorePayPlanet()) {
+						// skip
+					} else {
+						throw e;
+					}
+				}
 			}
 		}
 
@@ -772,23 +785,29 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 					throw new StorePlatformException("SAC_PUR_8401");
 				}
 
-				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER, paymentSacParam.getPaymentMtdCd())) {
-					// SKT 후불 결제.
-					UserEcRes userEcRes = this.purchaseUapsRespository
-							.searchUapsMappingInfoByMdn(purchaseCancelDetailSacParam.getPrchsSacParam().getDeviceId());
-					String[] serviceCdList = userEcRes.getServiceCD();
-					if (serviceCdList != null) {
-						for (String serviceCd : serviceCdList) {
-							for (String uapsSvcLimitService : PurchaseConstants.UAPS_SVC_LIMIT_SERVICE) {
-								if (StringUtils.equals(serviceCd, uapsSvcLimitService)
-										&& !StringUtils.equals("Y", purchaseCancelSacParam.getSktLimitUserCancelYn())) {
-									// 한도 가입자이면서 한도가입자 취소여부가 Y가 아니면 에러.
-									throw new StorePlatformException("SAC_PUR_8123");
+				if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
+					if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER,
+							paymentSacParam.getPaymentMtdCd())) {
+						// SKT 후불 결제.
+						UserEcRes userEcRes = this.purchaseUapsRespository
+								.searchUapsMappingInfoByMdn(purchaseCancelDetailSacParam.getPrchsSacParam()
+										.getDeviceId());
+						String[] serviceCdList = userEcRes.getServiceCD();
+						if (serviceCdList != null) {
+							for (String serviceCd : serviceCdList) {
+								for (String uapsSvcLimitService : PurchaseConstants.UAPS_SVC_LIMIT_SERVICE) {
+									if (StringUtils.equals(serviceCd, uapsSvcLimitService)
+											&& !StringUtils.equals("Y",
+													purchaseCancelSacParam.getSktLimitUserCancelYn())) {
+										// 한도 가입자이면서 한도가입자 취소여부가 Y가 아니면 에러.
+										throw new StorePlatformException("SAC_PUR_8123");
+									}
 								}
 							}
 						}
 					}
 				}
+
 			}
 		}
 

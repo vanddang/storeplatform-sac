@@ -343,6 +343,11 @@ public class PurchaseCancelController {
 		// request admin type setting.
 		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_ADMIN);
 
+		// 2014.07.29 최상훈c 요건 추가(해당값이 Y이면 PP 결제 오류시 예외처리 하기위해 사용)
+		if (StringUtils.equals(PurchaseConstants.USE_Y, purchaseCancelByAdminSacReq.getIgnorePayPlanet())) {
+			purchaseCancelSacParam.setIgnorePayPlanet(true);
+		}
+
 		// parameter setting.
 		List<PurchaseCancelDetailSacParam> prchsCancelList = new ArrayList<PurchaseCancelDetailSacParam>();
 		for (PurchaseCancelDetailSacReq purchaseCancelDetailSacReq : purchaseCancelByAdminSacReq.getPrchsCancelList()) {
