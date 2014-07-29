@@ -46,6 +46,8 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	@Valid
 	private List<PurchaseCancelDetailSacReq> prchsCancelList;
 
+	private String ignorePayPlanet;
+
 	/**
 	 * @return the reqUserId
 	 */
@@ -112,6 +114,21 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	 */
 	public void setSktLimitUserCancelYn(String sktLimitUserCancelYn) {
 		this.sktLimitUserCancelYn = sktLimitUserCancelYn;
+	}
+
+	/**
+	 * @return the ignorePayPlanet
+	 */
+	public String getIgnorePayPlanet() {
+		return this.ignorePayPlanet;
+	}
+
+	/**
+	 * @param ignorePayPlanet
+	 *            the ignorePayPlanet to set
+	 */
+	public void setIgnorePayPlanet(String ignorePayPlanet) {
+		this.ignorePayPlanet = ignorePayPlanet;
 	}
 
 }
