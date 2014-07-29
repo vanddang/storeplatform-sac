@@ -327,9 +327,20 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 					purchaseCancelDetailSacParam.settStorePayCancelResultList(this.purchaseCancelRepository
 							.cancelPaymentToTStore(purchaseCancelSacParam, purchaseCancelDetailSacParam));
 				} else {
-					// PayPlanet 결제.
-					purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
-							.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+
+					try {
+						// PayPlanet 결제.
+						purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
+								.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
+					} catch (StorePlatformException e) {
+						ErrorInfo errorInfo = e.getErrorInfo();
+						if ("EC_PAYPLANET_9984".equals(errorInfo.getCode())
+								&& purchaseCancelSacParam.getIgnorePayPlanet()) {
+							// skip
+						} else {
+							throw e;
+						}
+					}
 				}
 			}
 		}
@@ -438,17 +449,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 						.cancelPaymentToTStore(purchaseCancelSacParam, purchaseCancelDetailSacParam));
 			} else {
 				// PayPlanet 결제.
-				try {
-					purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
-							.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
-				} catch (StorePlatformException e) {
-					ErrorInfo errorInfo = e.getErrorInfo();
-					if ("EC_PAYPLANET_9984".equals(errorInfo.getCode()) && purchaseCancelSacParam.getIgnorePayPlanet()) {
-						// skip
-					} else {
-						throw e;
-					}
-				}
+				purchaseCancelDetailSacParam.setPayPlanetCancelEcRes(this.purchaseCancelRepository
+						.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
 			}
 		}
 
