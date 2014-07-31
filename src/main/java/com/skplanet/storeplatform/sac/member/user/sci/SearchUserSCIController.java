@@ -23,6 +23,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
@@ -329,4 +331,27 @@ public class SearchUserSCIController implements SearchUserSCI {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * UserKey를 이용하여 회원마일리지 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            SearchUserMileageSacReq
+	 * @return SearchUserMileageSacRes
+	 */
+	@Override
+	@RequestMapping(value = "/searchUserGrade", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchUserGradeSacRes searchUserGrade(@RequestBody @Validated SearchUserGradeSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+
+		// 조회 Service Call.
+		SearchUserGradeSacRes res = this.searchUserSCIService.searchUserGrade(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
 }

@@ -9,22 +9,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -39,10 +41,9 @@ import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
  */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @WebAppConfiguration
-@TransactionConfiguration
-@Transactional
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class SearchUserSCITest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchUserSCITest.class);
@@ -228,6 +229,24 @@ public class SearchUserSCITest {
 		LOGGER.debug("[SearchUserSCI-REQUEST] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 
 		SearchOrderUserByDeviceIdSacRes res = this.searchUserSCI.searchOrderUserByDeviceId(request);
+		LOGGER.debug("[SearchUserSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
+	}
+
+	/**
+	 * <pre>
+	 * 회원 등급정보 조회 SCI TEST.
+	 * </pre>
+	 */
+	@Test
+	public void testSearchUserGrade() {
+
+		SearchUserGradeSacReq request = new SearchUserGradeSacReq();
+
+		request.setUserKey("IM190000008406220140408181722");
+
+		LOGGER.debug("[SearchUserSCI-REQUEST] : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+
+		SearchUserGradeSacRes res = this.searchUserSCI.searchUserGrade(request);
 		LOGGER.debug("[SearchUserSCI-REPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
 	}
 }

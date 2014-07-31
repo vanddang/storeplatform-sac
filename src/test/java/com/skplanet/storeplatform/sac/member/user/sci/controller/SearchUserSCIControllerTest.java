@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
@@ -33,6 +33,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
@@ -48,10 +50,9 @@ import com.skplanet.storeplatform.sac.common.util.MockRequestAttributeInitialize
  */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @WebAppConfiguration
-@TransactionConfiguration
-@Transactional
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class SearchUserSCIControllerTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchUserSCIControllerTest.class);
 
@@ -417,6 +418,31 @@ public class SearchUserSCIControllerTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						SearchOrderUserByDeviceIdSacRes res = (SearchOrderUserByDeviceIdSacRes) result;
+						LOGGER.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 등급 조회.
+	 * </pre>
+	 */
+	@Test
+	public void testSearchUserGrade() {
+		new TestCaseTemplate(this.mvc).url("/member/user/sci/searchUserGrade").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchUserGradeSacReq req = new SearchUserGradeSacReq();
+						req.setUserKey("IM190000008406220140408181722");
+						return req;
+					}
+				}).success(SearchUserGradeSacRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SearchUserGradeSacRes res = (SearchUserGradeSacRes) result;
 						LOGGER.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);

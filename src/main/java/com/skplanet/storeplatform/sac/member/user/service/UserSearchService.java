@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacR
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
@@ -47,7 +48,7 @@ public interface UserSearchService {
 
 	/**
 	 * <pre>
-	 * 회원 가입 여부 조회
+	 * 회원 가입 여부 조회.
 	 * </pre>
 	 * 
 	 * @param headerVo
@@ -60,7 +61,7 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
-	 * 회원 기본 정보 조회
+	 * 회원 기본 정보 조회.
 	 * </pre>
 	 * 
 	 * @param req
@@ -72,7 +73,7 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
-	 * 회원 상세 정보 조회
+	 * 회원 상세 정보 조회.
 	 * </pre>
 	 * 
 	 * @param req
@@ -84,7 +85,7 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
-	 * 회원 프로비저닝 이력 조회
+	 * 회원 프로비저닝 이력 조회.
 	 * </pre>
 	 * 
 	 * @param req
@@ -96,7 +97,7 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
-	 * 회원 정보 조회 SC API
+	 * 회원 정보 조회 SC API.
 	 * </pre>
 	 * 
 	 * @param req
@@ -108,7 +109,7 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
-	 * 회원 부가정보 조회 SC API
+	 * 회원 부가정보 조회 SC API.
 	 * </pre>
 	 * 
 	 * @param req
@@ -120,7 +121,7 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
-	 * 회원 징계정보 조회 SC API
+	 * 회원 징계정보 조회 SC API.
 	 * </pre>
 	 * 
 	 * @param req
@@ -132,7 +133,7 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
-	 * 디바이스 리스트 조회 SC API
+	 * 디바이스 리스트 조회 SC API.
 	 * </pre>
 	 * 
 	 * @param req
@@ -144,7 +145,7 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
-	 * 약관동의목록 조회 SC API
+	 * 약관동의목록 조회 SC API.
 	 * </pre>
 	 * 
 	 * @param req
@@ -168,7 +169,7 @@ public interface UserSearchService {
 
 	/**
 	 * <pre>
-	 * OneID 정보조회
+	 * OneID 정보조회.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -180,7 +181,7 @@ public interface UserSearchService {
 
 	/**
 	 * <pre>
-	 * ID 찾기
+	 * ID 찾기.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -192,7 +193,7 @@ public interface UserSearchService {
 
 	/**
 	 * <pre>
-	 * PASSWORD 찾기
+	 * PASSWORD 찾기.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -204,7 +205,7 @@ public interface UserSearchService {
 
 	/**
 	 * <pre>
-	 * 약관동의목록조회
+	 * 약관동의목록조회.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -216,7 +217,7 @@ public interface UserSearchService {
 
 	/**
 	 * <pre>
-	 * 사용자 정보 조회 userEmail
+	 * 사용자 정보 조회 userEmail.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -227,7 +228,7 @@ public interface UserSearchService {
 
 	/**
 	 * <pre>
-	 * 각 단말의 OS별 누적 가입자 수 조회
+	 * 각 단말의 OS별 누적 가입자 수 조회.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -256,4 +257,17 @@ public interface UserSearchService {
 	 * @return Map<String, UserDeviceInfoSac>
 	 */
 	public Map<String, UserDeviceInfoSac> srhUserByDeviceKey(SacRequestHeader sacHeader, SearchUserDeviceSacReq request);
+
+	/**
+	 * <pre>
+	 * 사용자 정보 조회 V2.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            DetailReq
+	 * @return DetailV2Res
+	 */
+	public DetailV2Res detailV2(SacRequestHeader sacHeader, DetailReq req);
 }

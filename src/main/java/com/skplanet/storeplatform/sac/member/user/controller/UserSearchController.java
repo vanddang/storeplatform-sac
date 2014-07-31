@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacR
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
@@ -251,6 +252,35 @@ public class UserSearchController {
 		ListDailyPhoneOsSacRes res = this.svc.listDailyPhoneOs(sacHeader);
 
 		LOGGER.info("Response Size : {}", res.getDailyPhoneList().size());
+
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.43. 회원 기본정보 조회 V2.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            DetailReq
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @return DetailV2Res
+	 */
+	@RequestMapping(value = "/member/user/detail/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public DetailV2Res detailV2(@RequestBody DetailReq req, SacRequestHeader sacHeader) {
+
+		if (StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getDeviceId())
+				&& StringUtil.isBlank(req.getUserId()) && StringUtil.isBlank(req.getUserKey())) {
+			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
+		}
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		DetailV2Res res = this.svc.detailV2(sacHeader, req);
+
+		LOGGER.info("Response : {}", res.getUserKey());
 
 		return res;
 	}

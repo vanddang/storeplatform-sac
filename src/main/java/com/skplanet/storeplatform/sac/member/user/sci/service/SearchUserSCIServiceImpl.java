@@ -41,6 +41,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerReq
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceOwnerResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserRequest;
@@ -51,10 +53,13 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
@@ -661,7 +666,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	 * </pre>
 	 * 
 	 * @param schUserRes
-	 * @return
+	 *            SearchUserResponse
+	 * @return UserInfo
 	 */
 	private UserInfo userInfo(SearchUserResponse schUserRes) {
 		UserInfo userInfo = new UserInfo();
@@ -751,11 +757,12 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 	/**
 	 * <pre>
-	 * 회원정보조회 - 실명인증정보 세팅
+	 * 회원정보조회 - 실명인증정보 세팅.
 	 * </pre>
 	 * 
 	 * @param schUserRes
-	 * @return
+	 *            SearchUserResponse
+	 * @return MbrAuth
 	 */
 	private MbrAuth mbrAuth(SearchUserResponse schUserRes) {
 		MbrAuth mbrAuth = new MbrAuth();
@@ -783,7 +790,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	 * </pre>
 	 * 
 	 * @param schUserRes
-	 * @return
+	 *            SearchUserResponse
+	 * @return MbrLglAgent
 	 */
 	private MbrLglAgent mbrLglAgent(SearchUserResponse schUserRes) {
 		MbrLglAgent mbrLglAgent = new MbrLglAgent();
@@ -811,7 +819,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	 * </pre>
 	 * 
 	 * @param schUserRes
-	 * @return
+	 *            SearchUserResponse
+	 * @return UserMbrPnsh
 	 */
 	private UserMbrPnsh mbrPnsh(SearchUserResponse schUserRes) {
 		UserMbrPnsh mbrPnsh = new UserMbrPnsh();
@@ -834,7 +843,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	 * </pre>
 	 * 
 	 * @param schUserRes
-	 * @return
+	 *            SearchUserResponse
+	 * @return List
 	 */
 	private List<Agreement> listAgreement(SearchUserResponse schUserRes) {
 		List<Agreement> listAgreement = new ArrayList<Agreement>();
@@ -932,4 +942,45 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * 회원 등급 조회.
+	 * TODO
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchUserGradeSacReq
+	 * @return SearchUserGradeSacRes
+	 */
+	@Override
+	public SearchUserGradeSacRes searchUserGrade(SacRequestHeader header, SearchUserGradeSacReq req) {
+
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		searchExtentUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
+		keySearchList.add(keySchUserKey);
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+
+		searchExtentUserRequest.setGradeInfoYn(MemberConstants.USE_Y);
+
+		// SC Call
+		SearchExtentUserResponse searchExtentUserResponse = this.userSCI.searchExtentUser(searchExtentUserRequest);
+
+		SearchUserGradeSacRes res = new SearchUserGradeSacRes();
+		res.setUserKey(searchExtentUserResponse.getUserKey());
+		GradeInfoSac gradeInfoSac = new GradeInfoSac();
+		if (searchExtentUserResponse.getGrade() != null) {
+			gradeInfoSac.setUserGradeCd(searchExtentUserResponse.getGrade().getUserGradeCd());
+		}
+		res.setGradeInfoSac(gradeInfoSac);
+		return res;
+	}
+
 }
