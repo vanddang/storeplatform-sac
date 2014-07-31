@@ -1652,7 +1652,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 			detailV2Res.setUserMbrPnsh(this.getMbrPnshV2(schUserRes));
 		}
 
-		// TODO 8월 중순 적용
 		// 회원 등급 정보 설정
 		if (StringUtils.equals(MemberConstants.USE_Y, req.getSearchExtent().getGradeInfoYn())) {
 			detailV2Res.setGradeInfo(this.getGradeV2(schUserRes));
