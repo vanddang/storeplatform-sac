@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.common;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
@@ -22,6 +23,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
 
@@ -48,14 +50,21 @@ public class PurchaseTenantPolicyServiceImplTest {
 	@Test
 	public void searchTest() {
 		String tenantId = "S01";
-		// String tenantProdGrpCd = null;
-		String tenantProdGrpCd = "DP150123";
+
+		String tenantProdGrpCd = PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING;
 		List<PurchaseTenantPolicy> policyList = this.policyService.searchPurchaseTenantPolicyList(tenantId,
 				tenantProdGrpCd);
 		assertThat(policyList.size(), not(0));
 
-		String procPatternCd = "CM011606";
+		String procPatternCd = PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST;
 		policyList = this.policyService.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd, procPatternCd, true);
 		assertThat(policyList.size(), not(0));
+
+		procPatternCd = PurchaseConstants.POLICY_PATTERN_TMILEAGE_SAVE_PAYMENT_METHOD;
+		// policyList = this.policyService.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd, procPatternCd,
+		// false);
+		policyList = this.policyService.searchPurchaseTenantPolicyList(tenantId, null, procPatternCd, false);
+		assertThat(policyList.size(), not(0));
+		assertThat(policyList.get(0).getApplyValue(), is("11;12;13;14;20;22;23;24"));
 	}
 }

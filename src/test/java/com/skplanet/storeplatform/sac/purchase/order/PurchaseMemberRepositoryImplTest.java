@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
@@ -45,7 +46,7 @@ public class PurchaseMemberRepositoryImplTest {
 	@Autowired
 	private PurchaseMemberRepository purchaseMemberRepository;
 
-	@Test
+	// @Test
 	public void getUserPolicy() {
 		TenantHeader tenantHeader = new TenantHeader();
 		tenantHeader.setTenantId("S01");
@@ -63,5 +64,20 @@ public class PurchaseMemberRepositoryImplTest {
 		Map<String, IndividualPolicyInfoSac> resMap = this.purchaseMemberRepository.getPurchaseUserPolicy(deviceKey,
 				policyCodeList);
 		assertThat(resMap.size(), not(0));
+	}
+
+	@Test
+	public void searchUserGrade() {
+		TenantHeader tenantHeader = new TenantHeader();
+		tenantHeader.setTenantId("S01");
+		tenantHeader.setSystemId("S01-01002");
+		SacRequestHeader sacRequestHeader = new SacRequestHeader();
+		sacRequestHeader.setTenantHeader(tenantHeader);
+		RequestContextHolder.getRequestAttributes().setAttribute(SacRequestHeader.class.getName(), sacRequestHeader,
+				RequestAttributes.SCOPE_REQUEST);
+
+		String userKey = "IM142100005724280201303121051";
+		String grade = this.purchaseMemberRepository.searchUserGrade(userKey);
+		assertThat(grade, is("silver"));
 	}
 }

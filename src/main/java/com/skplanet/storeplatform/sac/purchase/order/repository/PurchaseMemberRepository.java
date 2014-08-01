@@ -70,6 +70,17 @@ public interface PurchaseMemberRepository {
 	public SearchUserPayplanetSacRes searchUserPayplanet(String userKey, String deviceKey);
 
 	/**
+	 * <pre>
+	 * 회원등급 조회.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            내부 회원 NO
+	 * @return 회원등급
+	 */
+	public String searchUserGrade(String userKey);
+
+	/**
 	 * 
 	 * <pre>
 	 * 회원의 비과금단말 / 구매차단 정책 조회.

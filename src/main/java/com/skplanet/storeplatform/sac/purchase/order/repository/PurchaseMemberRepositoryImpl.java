@@ -39,6 +39,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
@@ -143,7 +145,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		searchOrderUserByDeviceIdSacReq.setDeviceId(deviceId);
 		searchOrderUserByDeviceIdSacReq.setOrderDt(orderDt);
 
-		this.logger.info("PRCHS,ORDER,SAC,MEMBER,searchOrderUser,REQ,{}",
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,ORDER_USER,REQ,{}",
 				ReflectionToStringBuilder.toString(searchOrderUserByDeviceIdSacReq, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = null;
@@ -158,7 +160,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 			}
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,MEMBER,searchOrderUser,RES,{}",
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,ORDER_USER,RES,{}",
 				ReflectionToStringBuilder.toString(searchOrderUserByDeviceIdSacRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		return searchOrderUserByDeviceIdSacRes;
@@ -182,6 +184,30 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		searchUserPayplanetSacReq.setDeviceKey(deviceKey);
 
 		return this.searchUserSCI.searchUserPayplanet(searchUserPayplanetSacReq);
+	}
+
+	/**
+	 * <pre>
+	 * 회원등급 조회.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            내부 회원 NO
+	 * @return 회원등급
+	 */
+	@Override
+	public String searchUserGrade(String userKey) {
+		SearchUserGradeSacReq searchUserGradeSacReq = new SearchUserGradeSacReq();
+		searchUserGradeSacReq.setUserKey(userKey);
+
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,GRADE,REQ,{}", userKey);
+		SearchUserGradeSacRes searchUserGradeSacRes = this.searchUserSCI.searchUserGrade(searchUserGradeSacReq);
+		this.logger.info("PRCHS,ORDER,SAC,MEMBER,GRADE,RES,{},{}", searchUserGradeSacRes.getUserKey(),
+				ReflectionToStringBuilder.toString(searchUserGradeSacRes.getGradeInfoSac(),
+						ToStringStyle.SHORT_PREFIX_STYLE));
+
+		return searchUserGradeSacRes.getGradeInfoSac() == null ? "" : searchUserGradeSacRes.getGradeInfoSac()
+				.getUserGradeCd();
 	}
 
 	/**
