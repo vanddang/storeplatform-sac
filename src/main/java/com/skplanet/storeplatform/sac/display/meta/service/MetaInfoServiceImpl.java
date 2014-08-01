@@ -7,6 +7,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.ContentType;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.meta.util.MetaBeanUtils;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import org.slf4j.Logger;
@@ -36,6 +37,9 @@ public class MetaInfoServiceImpl implements MetaInfoService {
     @Autowired
     private ProductInfoManager productInfoManager;
 
+    @Autowired
+    private MemberBenefitService memberBenefitService;
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -43,10 +47,13 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getAppMetaInfo(Map<String, Object> paramMap) {
+        MetaInfo me;
+
+        TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+
         if(isUseCache()) {
             AppMetaParam param = new AppMetaParam();
             ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
-            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
             DeviceHeader deviceHeader = (DeviceHeader) paramMap.get("deviceHeader");
 
             param.setChannelId(basicInfo.getProdId());
@@ -62,7 +69,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             SubContent subContent = productInfoManager.getSubContent(new SubContentParam(basicInfo.getProdId(), deviceHeader.getModel()));
             MenuInfo menuInfo = productInfoManager.getMenuInfo(new MenuInfoParam(basicInfo.getProdId(), basicInfo.getMenuId(), tenantHeader.getLangCd()));
 
-            MetaInfo me = new MetaInfo();
+            me = new MetaInfo();
             MetaBeanUtils.setProperties(menuInfo, me); // MenuInfo
             MetaBeanUtils.setProperties(subContent, me); // SubContent
             MetaBeanUtils.setProperties(app, me); // App
@@ -74,11 +81,13 @@ public class MetaInfoServiceImpl implements MetaInfoService {
                 me.setPartParentClsfCd("N");
             }
             me.setSubContentsId(null);
-
-            return me;
         }
         else
-            return this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
+            me = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
+
+        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId()));
+
+        return me;
 	}
 
     @Override
@@ -133,10 +142,12 @@ public class MetaInfoServiceImpl implements MetaInfoService {
          */
 	@Override
 	public MetaInfo getMusicMetaInfo(Map<String, Object> paramMap) {
+        MetaInfo me;
+        TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+
         if(isUseCache()) {
             MusicMetaParam param = new MusicMetaParam();
             ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
-            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
 
             param.setChannelId(basicInfo.getProdId());
             param.setLangCd(tenantHeader.getLangCd());
@@ -153,13 +164,15 @@ public class MetaInfoServiceImpl implements MetaInfoService {
                 return null;
             }
 
-            MetaInfo me = new MetaInfo();
+            me = new MetaInfo();
             MetaBeanUtils.setProperties(music, me);
-
-            return me;
         }
         else
-		    return this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
+		    me = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
+
+        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId()));
+
+        return me;
 	}
 
 	/*
@@ -169,9 +182,12 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getVODMetaInfo(Map<String, Object> paramMap) {
+        MetaInfo me;
+        TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+
         if (isUseCache()) {
+
             ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
-            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
 
             VodMetaParam param = new VodMetaParam();
             param.setTenantId(tenantHeader.getTenantId());
@@ -190,7 +206,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
                 return null;
             }
 
-            MetaInfo me = new MetaInfo();
+            me = new MetaInfo();
             MetaBeanUtils.setProperties(meta, me);
             me.setFileSize(0);
 
@@ -200,11 +216,13 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             } else if (param.getContentType() == ContentType.Episode) {
                 me.setProdAmt(meta.getEpsdProdAmt());
             }
-
-            return me;
         }
         else
-		    return this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
+		    me = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
+
+        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId()));
+
+        return me;
 	}
 
 	/*
@@ -214,9 +232,12 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getEbookComicMetaInfo(Map<String, Object> paramMap) {
+
+        MetaInfo me;
+        TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+
         if (isUseCache()) {
             ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
-            TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
 
             EbookComicMetaParam param = new EbookComicMetaParam();
             param.setTenantId(tenantHeader.getTenantId());
@@ -235,7 +256,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
                 return null;
             }
 
-            MetaInfo me = new MetaInfo();
+            me = new MetaInfo();
             MetaBeanUtils.setProperties(meta, me);
 
             me.setContentsTypeCd(param.getContentType().getCode());
@@ -250,11 +271,13 @@ public class MetaInfoServiceImpl implements MetaInfoService {
                 me.setUnlmtAmt(meta.getEpsdUnlmtAmt());
                 me.setPeriodAmt(meta.getEpsdPeriodAmt());
             }
-
-            return me;
         }
         else
-		    return this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
+		    me = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
+
+        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId()));
+
+        return me;
 	}
 
 	/*

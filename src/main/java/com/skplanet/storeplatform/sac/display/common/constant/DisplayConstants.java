@@ -757,4 +757,13 @@ public class DisplayConstants {
 	 * 트리거_신규상품_영화/방송
 	 */
 	public static final String DP_NEW_VOD_TRIGGER = "TGR000000002";
+
+    /**
+     * Poing.name.마일리지
+     */
+    public static final String POINT_NM_MILEAGE = "mileage";
+
+    public static final String POINT_TP_MILEAGE_LV1 = "platinum";
+    public static final String POINT_TP_MILEAGE_LV2 = "gold";
+    public static final String POINT_TP_MILEAGE_LV3 = "silver";
 }

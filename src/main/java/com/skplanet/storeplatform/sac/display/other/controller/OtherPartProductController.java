@@ -15,10 +15,14 @@ import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPartProductRe
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.other.service.OtherPartProductService;
 import com.skplanet.storeplatform.sac.display.other.vo.PartProduct;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,18 +52,26 @@ public class OtherPartProductController {
     @Autowired
     private OtherPartProductService otherPartProductService;
 
+    @Autowired
+    private MemberBenefitService benefitService;
+
+    @Autowired
+    private CommonMetaInfoGenerator metaInfoGenerator;
+
     @RequestMapping(value = "/partProduct/list/v1", method = RequestMethod.GET)
     @ResponseBody
     public OtherPartProductRes getPartProductInfoList(@Validated OtherPartProductReq req, SacRequestHeader header) {
-        List<PartProduct> partProductInfoList = otherPartProductService.getPartProductList(req.getAid(), header.getTenantHeader().getTenantId(), header.getTenantHeader().getLangCd());
+        String tenantId = header.getTenantHeader().getTenantId();
+        List<PartProduct> partProductInfoList = otherPartProductService.getPartProductList(req.getAid(), tenantId, header.getTenantHeader().getLangCd());
 
-        if(partProductInfoList == null || partProductInfoList.size() == 0) {
+        if (partProductInfoList == null || partProductInfoList.size() == 0) {
             throw new StorePlatformException("SAC_DSP_0009");
         }
 
         OtherPartProductRes ppRes = new OtherPartProductRes();
         ppRes.setProductList(new ArrayList<Product>());
 
+        List<Point> pointList = null;
         for (PartProduct pp : partProductInfoList) {
             Product ppro = new Product();
             ppro.setIdentifierList(Arrays.asList(new Identifier("channel", pp.getProdId()), new Identifier("parentChannel", pp.getParentProdId())));
@@ -67,6 +79,13 @@ public class OtherPartProductController {
             ppro.setPrice(new Price(pp.getProdAmt()));
             ppro.setProdKind(pp.getProdKind());
             ppro.setProdCase(pp.getProdCase());
+
+            // 부모상품에 대한 마일리지 정책 적용
+            if(pointList == null)
+                pointList = metaInfoGenerator.generateMileage(benefitService.getMileageInfo(tenantId, pp.getParentTopMenuId(), pp.getParentProdId()));
+
+            ppro.setPointList(pointList);
+
             ppRes.getProductList().add(ppro);
         }
 

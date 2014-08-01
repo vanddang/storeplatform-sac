@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 
 /**
  * Ebook/Comic Meta Info.
@@ -296,6 +297,11 @@ public class MetaInfo extends CommonInfo {
 	private String osVersion;
 	private String previewUrl;
 	private String deviceSupport;
+
+    /**
+     * 마일리지 정보. 메타 조회 공통 메서드에서 참고함.
+     */
+    private MileageInfo mileageInfo;
 
 	/**
 	 * @return the topMenuId
@@ -4181,5 +4187,13 @@ public class MetaInfo extends CommonInfo {
 
     public void setBnchDwldMsg(String bnchDwldMsg) {
         this.bnchDwldMsg = bnchDwldMsg;
+    }
+
+    public MileageInfo getMileageInfo() {
+        return mileageInfo;
+    }
+
+    public void setMileageInfo(MileageInfo mileageInfo) {
+        this.mileageInfo = mileageInfo;
     }
 }

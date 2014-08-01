@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -84,6 +85,10 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		// 페이지당 노출될 ROW 개수 Default 세팅
 		if (req.getCount() == null) {
 			req.setCount(20);
+		}
+		
+		if(StringUtil.isEmpty(req.getOrderedBy())) {
+			req.setOrderedBy("recent");
 		}
 
 		// 헤더값 세팅

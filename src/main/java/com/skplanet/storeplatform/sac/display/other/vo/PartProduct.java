@@ -10,10 +10,13 @@
 package com.skplanet.storeplatform.sac.display.other.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
+
+import java.util.List;
 
 /**
  * <p>
- * DESC
+ * PartProduct
  * </p>
  * Updated on : 2014. 03. 27 Updated by : 정희원, SK 플래닛.
  */
@@ -26,6 +29,8 @@ public class PartProduct extends CommonInfo {
     private String prodCase;
     private String prodKind;
     private String parentProdId;
+    private String parentTopMenuId;
+    private List<Point> pointList;
 
     public String getProdId() {
         return prodId;
@@ -73,5 +78,21 @@ public class PartProduct extends CommonInfo {
 
     public void setParentProdId(String parentProdId) {
         this.parentProdId = parentProdId;
+    }
+
+    public String getParentTopMenuId() {
+        return parentTopMenuId;
+    }
+
+    public void setParentTopMenuId(String parentTopMenuId) {
+        this.parentTopMenuId = parentTopMenuId;
+    }
+
+    public List<Point> getPointList() {
+        return pointList;
+    }
+
+    public void setPointList(List<Point> pointList) {
+        this.pointList = pointList;
     }
 }

@@ -17,9 +17,9 @@ import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -818,4 +818,23 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		return pointList;
 	}
 
+    @Override
+    public List<Point> generateMileage(MileageInfo mileageInfo) {
+
+        if(mileageInfo == null)
+            return new ArrayList<Point>();
+
+        List<Point> res = new ArrayList<Point>();
+        if (mileageInfo.getRateLv1() != null) {
+            res.add(new Point(DisplayConstants.POINT_NM_MILEAGE, DisplayConstants.POINT_TP_MILEAGE_LV1, mileageInfo.getRateLv1(), null));
+        }
+        if (mileageInfo.getRateLv2() != null) {
+            res.add(new Point(DisplayConstants.POINT_NM_MILEAGE, DisplayConstants.POINT_TP_MILEAGE_LV2, mileageInfo.getRateLv2(), null));
+        }
+        if (mileageInfo.getRateLv3() != null) {
+            res.add(new Point(DisplayConstants.POINT_NM_MILEAGE, DisplayConstants.POINT_TP_MILEAGE_LV3, mileageInfo.getRateLv3(), null));
+        }
+
+        return res;
+    }
 }

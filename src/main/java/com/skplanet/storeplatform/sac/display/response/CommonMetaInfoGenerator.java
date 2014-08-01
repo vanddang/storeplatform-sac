@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
@@ -451,6 +452,12 @@ public interface CommonMetaInfoGenerator {
 	 *            metaInfo
 	 * @return Point
 	 */
-
 	public List<Point> generatePoint(TmembershipDcInfo metaInfo);
+
+    /**
+     * 마일리지 객체 생성
+     * @param mileageInfo
+     * @return
+     */
+    public List<Point> generateMileage(MileageInfo mileageInfo);
 }
