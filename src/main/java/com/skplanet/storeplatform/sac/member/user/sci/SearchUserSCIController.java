@@ -333,7 +333,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 
 	/**
 	 * <pre>
-	 * UserKey를 이용하여 회원마일리지 조회.
+	 * UserKey를 이용하여 회원등급 조회.
 	 * </pre>
 	 * 
 	 * @param req

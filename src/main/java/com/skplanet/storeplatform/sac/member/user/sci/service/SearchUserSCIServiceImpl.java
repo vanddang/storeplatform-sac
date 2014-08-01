@@ -946,7 +946,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 	/**
 	 * <pre>
 	 * 회원 등급 조회.
-	 * TODO
 	 * </pre>
 	 * 
 	 * @param header
