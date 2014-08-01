@@ -39,6 +39,9 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String noOcbCard; // OCB 카드번호
 	private String noCouponList; // 쿠폰 List
 	private String cashPointList; // 캐쉬/포인트 잔액 통합 정보
+	private String userGrade; // 회원등급
+	private Integer tMileageSaveRate; // 상품 T마일리지 적립률
+	private String tMileageAvailMtd; // T마일리지 적립 가능 결제수단
 	private String typeTestMdn; // 법인 및 일반 시험폰 처리 타입: T01, T02, T03
 	private String cdPaymentTemplate; // 결제Page 템플릿 코드: TC01-일반, TC02-정액제(게임캐쉬), TC03-대여/소장, TC04-자동결제, TC05-쇼핑, TC06-선물
 	private String topMenuId; // 상품 TOP 메뉴 ID
@@ -344,6 +347,51 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setCashPointList(String cashPointList) {
 		this.cashPointList = cashPointList;
+	}
+
+	/**
+	 * @return the userGrade
+	 */
+	public String getUserGrade() {
+		return this.userGrade;
+	}
+
+	/**
+	 * @param userGrade
+	 *            the userGrade to set
+	 */
+	public void setUserGrade(String userGrade) {
+		this.userGrade = userGrade;
+	}
+
+	/**
+	 * @return the tMileageSaveRate
+	 */
+	public Integer gettMileageSaveRate() {
+		return this.tMileageSaveRate;
+	}
+
+	/**
+	 * @param tMileageSaveRate
+	 *            the tMileageSaveRate to set
+	 */
+	public void settMileageSaveRate(Integer tMileageSaveRate) {
+		this.tMileageSaveRate = tMileageSaveRate;
+	}
+
+	/**
+	 * @return the tMileageAvailMtd
+	 */
+	public String gettMileageAvailMtd() {
+		return this.tMileageAvailMtd;
+	}
+
+	/**
+	 * @param tMileageAvailMtd
+	 *            the tMileageAvailMtd to set
+	 */
+	public void settMileageAvailMtd(String tMileageAvailMtd) {
+		this.tMileageAvailMtd = tMileageAvailMtd;
 	}
 
 	/**
