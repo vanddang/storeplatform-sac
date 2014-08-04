@@ -34,9 +34,9 @@ public class IntimateMessageSacReq extends CommonInfo {
 
 	private String tenantId; // 테넌트ID
 
-	private String deviceChangeFlag; // 기기변경 구분
+	private String deviceChangeYn; // 기기변경 여부
 
-	private String memberPassFlag; // 기기변경 조회 연동 오류 여부
+	private String memberGrade; // 회원등급
 
 	/**
 	 * @return the msgType
@@ -129,32 +129,32 @@ public class IntimateMessageSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the deviceChangeFlag
+	 * @return the deviceChangeYn
 	 */
-	public String getDeviceChangeFlag() {
-		return this.deviceChangeFlag;
+	public String getDeviceChangeYn() {
+		return this.deviceChangeYn;
 	}
 
 	/**
-	 * @param deviceChangeFlag
-	 *            the deviceChangeFlag to set
+	 * @param deviceChangeYn
+	 *            the deviceChangeYn to set
 	 */
-	public void setDeviceChangeFlag(String deviceChangeFlag) {
-		this.deviceChangeFlag = deviceChangeFlag;
+	public void setDeviceChangeYn(String deviceChangeYn) {
+		this.deviceChangeYn = deviceChangeYn;
 	}
 
 	/**
-	 * @return the memberPassFlag
+	 * @return the memberGrade
 	 */
-	public String getMemberPassFlag() {
-		return this.memberPassFlag;
+	public String getMemberGrade() {
+		return this.memberGrade;
 	}
 
 	/**
-	 * @param memberPassFlag
-	 *            the memberPassFlag to set
+	 * @param memberGrade
+	 *            the memberGrade to set
 	 */
-	public void setMemberPassFlag(String memberPassFlag) {
-		this.memberPassFlag = memberPassFlag;
+	public void setMemberGrade(String memberGrade) {
+		this.memberGrade = memberGrade;
 	}
 }
