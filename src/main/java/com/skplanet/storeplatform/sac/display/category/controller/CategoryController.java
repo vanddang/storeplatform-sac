@@ -245,7 +245,7 @@ public class CategoryController {
 
 	/**
 	 * <pre>
-	 * 특정 상품 APP조회.
+	 * [I03000017] 2.4.1.1. 특정 상품 APP 조회
 	 * </pre>
 	 * 
 	 * @param req
@@ -379,7 +379,7 @@ public class CategoryController {
 
 	/**
 	 * <pre>
-	 * 특정 상품 Song 조회.
+	 * [I03000109] 2.4.1.5. 특정 상품 music 조회 (by songID)
 	 * </pre>
 	 * 
 	 * @param req

@@ -165,7 +165,7 @@ public class AppguideController {
 
 	/**
 	 * <pre>
-	 * 테마 추천별 상품 LIST 조회.
+	 * [I03000103] 2.8.8. 테마 추천 상품 리스트
 	 * </pre>
 	 * 
 	 * @param AppguideSacReq

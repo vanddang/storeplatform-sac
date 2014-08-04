@@ -43,7 +43,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 쇼핑 추천/인기 상품 리스트 조회– GET.
+	 * [I03000044] 2.7.1. 쇼핑 추천/인기 상품 조회
 	 * </pre>
 	 * 
 	 * @param header
@@ -64,7 +64,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 쇼핑 신규 상품 조회– GET.
+	 * [I03000045] 2.7.2. 쇼핑 신규 상품 조회
 	 * </pre>
 	 * 
 	 * @param header
@@ -85,7 +85,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 쇼핑 세부카테고리  상품 조회– GET.
+	 * [I03000046] 2.7.3. 쇼핑 세부카테고리 상품 조회
 	 * </pre>
 	 * 
 	 * @param header
@@ -106,7 +106,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 특가 상품 조회– GET.
+	 * [I03000047] 2.7.4. 특가 상품 조회
 	 * </pre>
 	 * 
 	 * @param header
@@ -127,7 +127,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 기획전 상품 조회– GET.
+	 * [I03000048] 2.7.5.1. 기획전 상품 조회
 	 * </pre>
 	 * 
 	 * @param header
@@ -253,7 +253,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * [I03000054] 3.7.8. 특정 카테고리의 다른 상품 / GET
+	 * [I03000054] 2.7.8. 특정 카테고리의 다른 상품 / GET
 	 * </pre>
 	 * 
 	 * @param header
@@ -274,7 +274,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * [I03000055] 3.7.9. 특정 브랜드의 다른 상품
+	 * [I03000055] 2.7.9. 특정 브랜드의 다른 상품
 	 * </pre>
 	 * 
 	 * @param header
@@ -294,7 +294,7 @@ public class ShoppingController {
 	}
 
 	/**
-	 * [I03000056] 3.7.10. 쇼핑상세 조회
+	 * [I03000056] 2.7.10. 쇼핑상세 조회
 	 * 
 	 * @param header
 	 *            header
