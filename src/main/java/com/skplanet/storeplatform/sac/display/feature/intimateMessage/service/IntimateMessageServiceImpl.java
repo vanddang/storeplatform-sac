@@ -27,8 +27,11 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -64,6 +67,9 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 
 	@Autowired
 	private DeviceSCI deviceSCI;
+
+	@Autowired
+	private SearchUserSCI searchUserSCI;
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
@@ -108,17 +114,39 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 
 		// 페이징 계산
 		messageReq.setCount(messageReq.getOffset() + messageReq.getCount() - 1);
-
 		// 헤더정보 세팅
 		messageReq.setTenantId(header.getTenantHeader().getTenantId());
-
-		String memberPassFlag = "Y";
 
 		// 기기변경 이력 조회를 위한 생성자
 		ChangedDeviceHistorySacReq deviceReq = null;
 		ChangedDeviceHistorySacRes deviceRes = null;
 
+		// 회원등급 조회를 위한 생성자
+		SearchUserGradeSacReq gradeReq = null;
+		SearchUserGradeSacRes gradeRes = null;
+
 		if ("all".equals(messageReq.getMsgType())) {
+			try {
+				gradeReq = new SearchUserGradeSacReq();
+				gradeReq.setUserKey(userKey);
+
+				// 회원등급 조회
+				this.logger.info("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserGrade");
+				long start = System.currentTimeMillis();
+				gradeRes = this.searchUserSCI.searchUserGrade(gradeReq);
+				this.logger.info("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserGrade");
+				long end = System.currentTimeMillis();
+				this.logger.info("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserGrade takes {} ms",
+						(end - start));
+			} catch (Exception ex) {
+				this.logger.error("회원등급 조회 연동 중 오류가 발생하였습니다.\n", ex);
+			}
+
+			// 회원등급 세팅
+			if (gradeRes != null) {
+				messageReq.setMemberGrade(gradeRes.getGradeInfoSac().getUserGradeCd());
+			}
+
 			try {
 				deviceReq = new ChangedDeviceHistorySacReq();
 				deviceReq.setUserKey(userKey);
@@ -134,26 +162,14 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 						"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchChangedDeviceHistory takes {} ms",
 						(end - start));
 			} catch (Exception ex) {
-				memberPassFlag = "N";
 				this.logger.error("기기변경 이력 조회 연동 중 오류가 발생하였습니다.\n", ex);
 			}
+
+			// 기기변경이력 세팅
+			if (deviceRes != null) {
+				messageReq.setDeviceChangeYn(deviceRes.getIsChanged());
+			}
 		}
-
-		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("[searchIntimateMessageList] memberPassFlag : {}", memberPassFlag);
-		this.logger.debug("----------------------------------------------------------------");
-
-		// 기기변경 조회 연동 오류 여부
-		messageReq.setMemberPassFlag(memberPassFlag);
-
-		// 기기변경 이력 조회 확인
-		if (memberPassFlag == "Y" && deviceRes != null) {
-			messageReq.setDeviceChangeFlag(deviceRes.getIsChanged());
-		}
-
-		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("[searchIntimateMessageList] deviceChangeFlag : {}", messageReq.getDeviceChangeFlag());
-		this.logger.debug("----------------------------------------------------------------");
 
 		// Intimate Message 조회
 		List<IntimateMessageDefault> resultList = this.commonDAO.queryForList(

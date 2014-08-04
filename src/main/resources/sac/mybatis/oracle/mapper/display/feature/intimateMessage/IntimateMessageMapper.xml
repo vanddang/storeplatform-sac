@@ -18,7 +18,7 @@
 		              , JA.GNB_IMG_PATH
 		              , TO_CHAR(JA.REG_DT, 'YYYYMMDDHH24MISS') REG_DT
 		          FROM (
-		          <if test='msgType == "all" and memberPassFlag == "Y"'>
+		          <if test='msgType == "all"'>
 		                SELECT  IA.MSG_ID
 		                      , IA.MSG_TYPE_CD
 		                      , IA.MAIN_MSG
@@ -54,9 +54,14 @@
 		                                    AND  X.TENANT_ID = #{tenantId}
 		                                    AND  Y.BATCH_ID = 'MBR0000001'
 		                                    AND  X.MBR_NO = #{userKey}
-                               <if test='deviceChangeFlag == "Y"'>
+                               <if test='deviceChangeYn == "Y"'>
 		                                 UNION ALL
 		                                 SELECT 'CH' AS USE_DA, '4' AS MSG_TYPE_CD
+		                                   FROM DUAL
+                               </if>
+                               <if test='memberGrade != null and memberGrade != ""'>
+		                                 UNION ALL
+		                                 SELECT #{memberGrade} AS USE_DA, '5' AS MSG_TYPE_CD
 		                                   FROM DUAL
                                </if>
 		                                ) B
