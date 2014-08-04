@@ -1530,7 +1530,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		/* 정보조회범위 */
 		if (req.getSearchExtent() != null) {
 			/* 회원 정보 + 부가정보 */
-			if (StringUtils.equals(MemberConstants.USE_Y, req.getSearchExtent().getUserInfoYn())) {
+			if (!StringUtils.equals(MemberConstants.USE_Y, req.getSearchExtent().getUserInfoYn())) {
 				res.setUserInfo(null);
 			}
 
