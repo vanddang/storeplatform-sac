@@ -9,11 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.display.app.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,22 +29,33 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.History;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetail;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.display.app.vo.ImageSource;
-import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 /**
@@ -177,7 +193,8 @@ public class AppServiceImpl implements AppService {
 	        
         	product.setPointList(pointList);
         }
-        //2014.08.01. kdlim. 마일리지 적립율
+        //TODO : 2014.08.01. kdlim. 마일리지 적립율 정보
+        /*
         if (!StringUtils.isEmpty(request.getUserKey())) {
         	//회원등급 조회
         	UserInfoSac userInfo = commonService.getUserInfo(request.getUserKey());
@@ -187,6 +204,7 @@ public class AppServiceImpl implements AppService {
         	
         	metaInfoGenerator.generateMileage(mileageInfo);
         }
+        */
         
         product.setSupportList(new ArrayList<Support>());
         product.getSupportList().add(new Support("drm", appDetail.getDrmYn()));

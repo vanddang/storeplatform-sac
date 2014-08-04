@@ -190,7 +190,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 특정 브랜드샵 상품 리스트 조회– GET.
+	 * [I03000051] 2.7.6.2. 특정 브랜드샵 상품 리스트
 	 * </pre>
 	 * 
 	 * @param header
@@ -232,7 +232,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 특정 테마에 대한 상품 리스트 조회– GET.
+	 * [I03000053] 2.7.7.2. 특정 테마에 대한 상품 리스트
 	 * </pre>
 	 * 
 	 * @param header
