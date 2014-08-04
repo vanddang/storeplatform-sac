@@ -145,7 +145,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 			// 회원등급 세팅
 			if (gradeRes != null) {
 				messageReq.setMemberGrade(gradeRes.getGradeInfoSac().getUserGradeCd());
-				this.logger.info("MemberGrade", messageReq.getMemberGrade());
+				this.logger.info("MemberGrade : {}", messageReq.getMemberGrade());
 			}
 
 			try {
@@ -169,7 +169,7 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 			// 기기변경이력 세팅
 			if (deviceRes != null) {
 				messageReq.setDeviceChangeYn(deviceRes.getIsChanged());
-				this.logger.info("DeviceChangeYn", messageReq.getDeviceChangeYn());
+				this.logger.info("DeviceChangeYn : {}", messageReq.getDeviceChangeYn());
 			}
 		}
 
