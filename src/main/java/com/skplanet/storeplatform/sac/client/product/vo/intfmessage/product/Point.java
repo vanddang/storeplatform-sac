@@ -9,11 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
-import java.io.Serializable;
-
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * 할인율 정의
@@ -21,7 +18,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 03. 31. Updated by : 임근대, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class Point extends CommonInfo implements Serializable {
+public class Point extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 할인율 명 (ex. tmembership) */
@@ -34,7 +31,42 @@ public class Point extends CommonInfo implements Serializable {
 	/** 할인가 */
 	private Integer discountPrice;
 
-	/**
+    /**
+     * 적용 금액
+     */
+    private Integer amount;
+
+    /**
+     * 적용 비율
+     */
+    private Integer rate;
+
+    public Point() {}
+
+    public Point(String name, String type, Integer rate, Integer amount) {
+        this.name = name;
+        this.type = type;
+        this.rate = rate;
+        this.amount = amount;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public Integer getRate() {
+        return rate;
+    }
+
+    public void setRate(Integer rate) {
+        this.rate = rate;
+    }
+
+    /**
 	 * @return the name
 	 */
 	public String getName() {
@@ -96,3 +128,4 @@ public class Point extends CommonInfo implements Serializable {
 	
 
 }
+
