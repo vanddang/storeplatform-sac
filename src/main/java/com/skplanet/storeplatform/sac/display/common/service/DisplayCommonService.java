@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.common.service;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
