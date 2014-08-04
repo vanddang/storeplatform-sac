@@ -7,7 +7,7 @@
 		  FROM (SELECT  COUNT(JA.MSG_ID) OVER() AS TOTAL_COUNT
 		              , ROW_NUMBER() OVER(ORDER BY JA.MSG_TYPE_CD DESC, JA.MSG_ID DESC) AS RNUM
 		              , JA.MSG_ID
-		              , DECODE(JA.MSG_TYPE_CD, '1', 'personal', '2', 'seasonal', '3', 'general', '4', 'deviceChanged') AS MSG_TYPE_CD
+		              , DECODE(JA.MSG_TYPE_CD, '1', 'personal', '2', 'seasonal', '3', 'general', '4', 'deviceChanged', '5', 'memberGrade') AS MSG_TYPE_CD
 		              , JA.MAIN_MSG
 		              , JA.INFR_MSG
 		              , JA.OFR_DESC
