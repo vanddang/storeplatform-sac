@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +20,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.display.common.MetaRingBellType;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.VodType;
@@ -54,6 +52,9 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 //	@Autowired
 //	private ExistenceSCI existenceSCI;
 
+	@Autowired
+	private SearchUserSCI searchUserSCI;
+	
     @Autowired
     private ExistenceInternalSacSCI existenceInternalSacSCI;
 
@@ -141,7 +142,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 				(end - start));
         return res.getExistenceListRes() != null && res.getExistenceListRes().size() > 0;
 	}
-
+	
 	@Override
 	public ExistenceListRes checkPurchaseList(String tenantId, String userKey, String deviceKey,
                                               List<String> episodeIdList) {
@@ -348,4 +349,25 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 
         return info;
     }
+    
+    /**
+     * userKey를 이용하여 회원정보 정보조회
+     * @param userKey
+     * @return
+     */
+	@Override
+	public UserInfoSac getUserInfo(String userKey) {
+		SearchUserSacReq req = new SearchUserSacReq();
+		req.setUserKeyList(Lists.newArrayList(userKey));
+        SearchUserSacRes res = searchUserSCI.searchUserByUserKey(req);
+        
+        UserInfoSac userInfo = null;
+        
+        Map<String, UserInfoSac> userInfoMap = res.getUserInfo();
+        if(userInfoMap != null) {
+        	userInfo = userInfoMap.get(userKey);
+        }
+        
+        return userInfo;
+	}
 }

@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,10 @@ import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 /**
  * 앱 상품 상세조회
@@ -77,6 +80,12 @@ public class AppServiceImpl implements AppService {
 	@Autowired
 	private DisplayCommonService commonService;
 
+	@Autowired
+    private MemberBenefitService benefitService;
+	
+    @Autowired
+    private CommonMetaInfoGenerator metaInfoGenerator;
+	
 	@Override
 	public AppDetailRes searchAppDetail(AppDetailParam request) {
         logger.info("channelId={},userKey={},deviceKey={},deviceModel={}",
@@ -168,7 +177,17 @@ public class AppServiceImpl implements AppService {
 	        
         	product.setPointList(pointList);
         }
-
+        //2014.08.01. kdlim. 마일리지 적립율
+        if (!StringUtils.isEmpty(request.getUserKey())) {
+        	//회원등급 조회
+        	UserInfoSac userInfo = commonService.getUserInfo(request.getUserKey());
+        	String userGrade = "";//FIXME: userInfo.get();
+        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), topMenuId, request.getChannelId());
+        	//mileageInfo.get
+        	
+        	metaInfoGenerator.generateMileage(mileageInfo);
+        }
+        
         product.setSupportList(new ArrayList<Support>());
         product.getSupportList().add(new Support("drm", appDetail.getDrmYn()));
         product.getSupportList().add(new Support("iab", appDetail.getPartParentClsfCd() != null ? "Y" : "N"));

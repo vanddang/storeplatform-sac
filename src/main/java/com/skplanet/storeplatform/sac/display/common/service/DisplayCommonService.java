@@ -176,5 +176,12 @@ public interface DisplayCommonService {
      * @return
      */
     ProductTypeInfo getProductTypeInfo(String svcGrp, String svcTp, String metaClsf, String topMenu);
+    
+    /**
+     * userKey를 이용하여 회원정보 정보조회
+     * @param userKey
+     * @return
+     */
+	UserInfoSac getUserInfo(String userKey);
 
 }
