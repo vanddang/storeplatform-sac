@@ -130,7 +130,7 @@ public class PersonalController {
 
 	/**
 	 * <pre>
-	 * 신규 가입 고객 추천 상품 조회.
+	 * [I03000060] 3.8.5. 신규 가입 고객 추천 상품조회
 	 * </pre>
 	 * 
 	 * @param req

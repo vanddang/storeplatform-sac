@@ -39,7 +39,7 @@ public class ThemeRecommendController {
 
 	/**
 	 * <pre>
-	 * 테마 추천(상황별) 목록 조회 method.
+	 * [I03000058] 3.8.2. 테마 추천 –상황별 추천
 	 * </pre>
 	 * 
 	 * @param requestVO

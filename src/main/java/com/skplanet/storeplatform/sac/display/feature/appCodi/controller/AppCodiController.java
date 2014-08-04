@@ -32,7 +32,7 @@ public class AppCodiController {
 
 	/**
 	 * <pre>
-	 * App Codi 조회.
+	 * [I03000057] 3.8.1. App Codi
 	 * </pre>
 	 * 
 	 * @param AppCodiSacReq

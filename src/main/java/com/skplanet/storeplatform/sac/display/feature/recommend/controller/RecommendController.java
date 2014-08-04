@@ -116,7 +116,7 @@ public class RecommendController {
 
 	/**
 	 * <pre>
-	 * 하루에 하나 상품 조회 – GET.
+	 * [I03000011] 3.1.10. 하루에 하나
 	 * </pre>
 	 * 
 	 * @param requestVO

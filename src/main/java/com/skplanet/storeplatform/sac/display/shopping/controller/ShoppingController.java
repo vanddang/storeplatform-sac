@@ -253,7 +253,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 특정 카테고리의 다른 상품 조회– GET.
+	 * [I03000054] 3.7.8. 특정 카테고리의 다른 상품 / GET
 	 * </pre>
 	 * 
 	 * @param header
@@ -274,7 +274,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 특정 브랜드의 다른 상품 조회– GET.
+	 * [I03000055] 3.7.9. 특정 브랜드의 다른 상품
 	 * </pre>
 	 * 
 	 * @param header
@@ -294,9 +294,7 @@ public class ShoppingController {
 	}
 
 	/**
-	 * <pre>
-	 * 상품 상세 – POST.
-	 * </pre>
+	 * [I03000056] 3.7.10. 쇼핑상세 조회
 	 * 
 	 * @param header
 	 *            header
