@@ -68,6 +68,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -109,6 +111,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 	@Autowired
 	private ShoppingInfoGenerator shoppingGenerator;
 
+	@Autowired
+    private MemberBenefitService benefitService;
+	
 	/**
 	 * 쇼핑 추천/인기 상품 리스트 조회.
 	 * 
@@ -1814,6 +1819,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 							tenantHeader.getTenantId(), shopping.getTopMenuId());
 					List<Point> pointList = this.commonGenerator.generatePoint(info);
 
+					// 마일리지 정보
+					//MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), shopping.getTopMenuId(), shopping.getProdI());
+					//this.commonGenerator.generateMileage(mileageInfo);
+					
 					// Title 생성
 					Title title = this.commonGenerator.generateTitle(shopping);
 
