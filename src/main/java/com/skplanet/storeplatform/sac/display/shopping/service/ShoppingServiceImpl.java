@@ -549,6 +549,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// SalesOption 생성
 				SalesOption salesOption = this.shoppingGenerator.generateSalesOption(shopping);
 
+				// TODO : 2014.08.04. kdlim. 마일리지 적립율 정보
+				//this.commonGenerator.generateMileage(mileageInfo);
+				
 				// 데이터 매핑
 				product.setMenuList(menuList);
 				product.setTitle(title);
@@ -1819,7 +1822,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							tenantHeader.getTenantId(), shopping.getTopMenuId());
 					List<Point> pointList = this.commonGenerator.generatePoint(info);
 
-					// 마일리지 정보
+					// 2014.08.04. kdlim. 마일리지 적립율 정보
 					//MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), shopping.getTopMenuId(), shopping.getProdI());
 					//this.commonGenerator.generateMileage(mileageInfo);
 					

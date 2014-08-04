@@ -305,6 +305,8 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 			packageProduct.setIdentifierList(identifierList);
 			packageProduct.setSourceList(sourceList);
 
+			// TODO : 2014.08.04. kdlim. 마일리지 적립율 정보
+			
 			if (StringUtils.equalsIgnoreCase("short", filteredBy)) { // 테마 추천 메인 : 테마 추천 4개 노출
 
 				List<Product> subProductList = new ArrayList<Product>();
