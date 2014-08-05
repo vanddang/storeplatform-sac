@@ -368,7 +368,11 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		SearchUserGradeSacReq gradeReq = new SearchUserGradeSacReq();
 		gradeReq.setUserKey(userKey);
 		SearchUserGradeSacRes gradeRes = null;
-		gradeRes = searchUserSCI.searchUserGrade(gradeReq);
+		try {
+			gradeRes = searchUserSCI.searchUserGrade(gradeReq);
+		} catch(Exception e) {
+			//ignore. 오류 무시.
+		}
         return gradeRes != null ? gradeRes.getGradeInfoSac() : null;
 	}
 }
