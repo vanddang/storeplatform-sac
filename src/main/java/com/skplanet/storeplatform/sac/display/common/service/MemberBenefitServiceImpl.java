@@ -9,8 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.common.service;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -34,9 +36,11 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
     @Override
     public MileageInfo getMileageInfo(String tenantId, String topMenuId, String chnlId) {
         Map<String, Object> req = new HashMap<String, Object>();
+        if(StringUtil.isEmpty(tenantId) || StringUtil.isEmpty(topMenuId)) return null;
+        
         req.put("tenantId", tenantId);
         req.put("topMenuId", topMenuId);
-        req.put("chnlId", chnlId);
+        req.put("chnlId", StringUtil.nvl(chnlId, ""));
 
         MileageInfo mileageInfo = commonDAO.queryForObject("MemberBenefit.getMileageInfo", req, MileageInfo.class);
 
