@@ -253,7 +253,9 @@ public class FreepassServiceImpl implements FreepassService {
 				.getTenantId(), retMetaInfo.getTopMenuId());
 		List<Point> pointList = this.commonGenerator.generatePoint(info);
         //2014.08.05. kdlim. 마일리지 적립율 정보
-        if (StringUtils.isNotEmpty(req.getUserKey())) {
+		//정액제 패스/시리즈 패스만 조회
+        if ((StringUtils.equals(DisplayConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE, retMetaInfo.getCmpxProdClsfCd()) || StringUtils.equals(DisplayConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS, retMetaInfo.getCmpxProdClsfCd()))
+        		&& StringUtils.isNotEmpty(req.getUserKey())) {
         	//회원등급 조회
         	GradeInfoSac userGradeInfo = displayCommonService.getUserGrade(req.getUserKey());
         	if(userGradeInfo != null) {
