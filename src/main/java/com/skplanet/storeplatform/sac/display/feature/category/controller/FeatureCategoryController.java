@@ -91,7 +91,7 @@ public class FeatureCategoryController {
 
 	/**
 	 * <pre>
-	 * Feature Epub 카테고리 상품 조회.
+	 * [I03000007] 2.1.7. Feature eBook/코믹 카테고리 상품 조회
 	 * </pre>
 	 * 
 	 * @param requestVO
