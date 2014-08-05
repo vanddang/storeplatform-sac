@@ -344,7 +344,7 @@ public class VodServiceImpl implements VodService {
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(req.getTenantId(), mapperVO.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
         //2014.08.01. kdlim. 마일리지 적립율 정보
-        if (!StringUtils.isEmpty(req.getUserKey())) {
+        if (StringUtils.isNotEmpty(req.getUserKey())) {
         	//회원등급 조회
         	GradeInfoSac userGradeInfo = commonService.getUserGrade(req.getUserKey());
         	if(userGradeInfo != null) {

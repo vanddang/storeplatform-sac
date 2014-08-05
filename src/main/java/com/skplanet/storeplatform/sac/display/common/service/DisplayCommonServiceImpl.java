@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
@@ -363,6 +364,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
      */
 	@Override
 	public GradeInfoSac getUserGrade(String userKey) {
+		if(StringUtil.isEmpty(userKey)) return null;
 		SearchUserGradeSacReq gradeReq = new SearchUserGradeSacReq();
 		SearchUserGradeSacRes gradeRes = null;
 		

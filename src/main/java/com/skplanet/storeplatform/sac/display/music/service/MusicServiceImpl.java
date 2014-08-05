@@ -127,7 +127,7 @@ public class MusicServiceImpl implements MusicService {
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), topMenuId);
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
         //2014.08.01. kdlim. 마일리지 적립율 정보
-        if (!StringUtils.isEmpty(param.getUserKey())) {
+        if (StringUtils.isNotEmpty(param.getUserKey())) {
         	//회원등급 조회
         	GradeInfoSac userGradeInfo = commonService.getUserGrade(param.getUserKey());
         	if(userGradeInfo != null) {

@@ -463,7 +463,7 @@ public class EpubServiceImpl implements EpubService {
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(mapperVO.getTenantId(), mapperVO.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
         //2014.08.01. kdlim. 마일리지 적립율 정보
-        if (param.get("userKey") != null && !StringUtils.isEmpty((String)param.get("userKey"))) {
+        if (param.get("userKey") != null && StringUtils.isNotEmpty((String)param.get("userKey"))) {
         	String userKey = (String)param.get("userKey");
         	//회원등급 조회
         	GradeInfoSac userGradeInfo = commonService.getUserGrade(userKey);
