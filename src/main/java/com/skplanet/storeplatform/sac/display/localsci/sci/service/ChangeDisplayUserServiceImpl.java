@@ -46,7 +46,7 @@ public class ChangeDisplayUserServiceImpl implements ChangeDisplayUserService {
 	public void updateDisplayUserKey(ChangeDisplayUser changeDisplayUser) {
 		// 회원 평점 테이블 userKey 변경 전 변경 하고자 하는 prodId 별 userKey 가 존재하는지 확인
 		List<Map> prodId = (List<Map>) this.changeDisplayUserRepository.getMbrAvgProdId(changeDisplayUser);
-		LOGGER.info("## changeDisplayUserRepository.getMbrAvgProdId : {}", prodId.size());
+		// LOGGER.info("## changeDisplayUserRepository.getMbrAvgProdId : {}", prodId.size());
 
 		Integer affectedRow = null;
 		if (prodId != null) {
