@@ -27,7 +27,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
  * 음원 상품 전용 정보 Generator 구현체
- * 
+ *
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
 @Component
@@ -38,7 +38,7 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateAccrual(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -55,13 +55,15 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 		} else {
 			accrual.setChangeRank(metaInfo.getRankChgCnt());
 		}
+		accrual.setVoterCount(metaInfo.getPaticpersCnt());
+		accrual.setDownloadCount(metaInfo.getPrchsCnt());
 		accrual.setScore(metaInfo.getAvgEvluScore());
 		return accrual;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateService(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -75,7 +77,7 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateMusic(com.skplanet.storeplatform.sac
 	 * .display.meta.vo.MetaInfo)
@@ -89,7 +91,7 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateServiceList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -108,7 +110,7 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateContributor(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -131,7 +133,7 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateArtistDetailContributor(com.skplanet
 	 * .storeplatform.sac.display.meta.vo.MetaInfo)
