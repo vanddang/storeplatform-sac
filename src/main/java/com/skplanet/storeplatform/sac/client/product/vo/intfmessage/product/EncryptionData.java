@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * EncryptionData Value Object.
- * 
+ *
  * Updated on : 2014. 02. 11. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -38,6 +38,8 @@ public class EncryptionData extends CommonInfo implements Serializable {
 	private EncryptionUsagePolicy usagePolicy;
 	private String userKey;
 	private EncryptionDeviceKey deviceKey;
+	private EncryptionStatus status;
+
 
 	/**
 	 * @return the title
@@ -233,5 +235,15 @@ public class EncryptionData extends CommonInfo implements Serializable {
 	public void setDeviceKey(EncryptionDeviceKey deviceKey) {
 		this.deviceKey = deviceKey;
 	}
+
+	public EncryptionStatus getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(EncryptionStatus status) {
+		this.status = status;
+	}
+
+
 
 }
