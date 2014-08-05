@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 
 /**
  * Ebook/Comic Meta Info.
- * 
+ *
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
 public class MetaInfo extends CommonInfo {
@@ -302,6 +302,10 @@ public class MetaInfo extends CommonInfo {
      * 마일리지 정보. 메타 조회 공통 메서드에서 참고함.
      */
     private MileageInfo mileageInfo;
+
+    // 구매내역 조회 정보 변수 for DL
+    private String purchaseHide;
+    private String updateAlarm;
 
 	/**
 	 * @return the topMenuId
@@ -4174,7 +4178,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
     public String getBnchProdId() {
-        return bnchProdId;
+        return this.bnchProdId;
     }
 
     public void setBnchProdId(String bnchProdId) {
@@ -4182,7 +4186,7 @@ public class MetaInfo extends CommonInfo {
     }
 
     public String getBnchDwldMsg() {
-        return bnchDwldMsg;
+        return this.bnchDwldMsg;
     }
 
     public void setBnchDwldMsg(String bnchDwldMsg) {
@@ -4190,10 +4194,26 @@ public class MetaInfo extends CommonInfo {
     }
 
     public MileageInfo getMileageInfo() {
-        return mileageInfo;
+        return this.mileageInfo;
     }
 
     public void setMileageInfo(MileageInfo mileageInfo) {
         this.mileageInfo = mileageInfo;
     }
+
+	public String getPurchaseHide() {
+		return this.purchaseHide;
+	}
+
+	public void setPurchaseHide(String purchaseHide) {
+		this.purchaseHide = purchaseHide;
+	}
+
+	public String getUpdateAlarm() {
+		return this.updateAlarm;
+	}
+
+	public void setUpdateAlarm(String updateAlarm) {
+		this.updateAlarm = updateAlarm;
+	}
 }

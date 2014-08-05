@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionData;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionDeviceKey;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionStatus;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionSubContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionUsagePolicy;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
@@ -27,7 +28,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
  * for download 전용 상품 암호화 정보 Generator 구현체.
- * 
+ *
  * Updated on : 2014. 03. 26. Updated by : 이태희
  */
 @Component
@@ -40,6 +41,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		EncryptionUsagePolicy usagePolicy = new EncryptionUsagePolicy();
 		EncryptionDeviceKey deviceKey = new EncryptionDeviceKey();
 		Date date = new Date();
+		EncryptionStatus status = new EncryptionStatus();
 
 		List<EncryptionSubContents> subContentsList = new ArrayList<EncryptionSubContents>();
 
@@ -116,6 +118,16 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		deviceKey.setType(metaInfo.getDeviceType());
 		deviceKey.setSubKey(metaInfo.getDeviceSubKey());
 		data.setDeviceKey(deviceKey);
+
+		// 구매내역 숨김 유무 / 업데이트 알람 유무
+		if (StringUtils.isNotEmpty(metaInfo.getPurchaseHide())
+				&& StringUtils.isNotEmpty(metaInfo.getUpdateAlarm())) {
+
+			status.setPurchaseHide(metaInfo.getPurchaseHide());
+			status.setUpdateAlarm(metaInfo.getUpdateAlarm());
+
+			data.setStatus(status);
+		}
 
 		contents.setData(data);
 		return contents;

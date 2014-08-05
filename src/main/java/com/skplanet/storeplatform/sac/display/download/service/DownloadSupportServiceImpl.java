@@ -9,12 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
-import com.skplanet.storeplatform.framework.test.MarshallingHelper;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -24,8 +21,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
+import com.skplanet.storeplatform.framework.test.MarshallingHelper;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
 
 /**
  * <p>
@@ -70,7 +71,9 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         byte[] jsonData = marshaller.marshal(contents);
 
         // JSON 암호화
-        byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
+        int keyIdx = this.downloadAES128Helper.getRandomKeyIndex();
+
+        byte[] encryptByte = this.downloadAES128Helper.encryption(keyIdx, jsonData);
         String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
 
         // 암호화 정보 (AES-128)
@@ -78,8 +81,7 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         encryption.setProductId(prchProdId);
         byte[] digest = this.downloadAES128Helper.getDigest(jsonData);
         encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
-        encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper
-                .getSacRandomNo()));
+        encryption.setKeyIndex(String.valueOf(keyIdx));
         encryption.setToken(encryptString);
         return encryption;
     }

@@ -9,6 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -36,22 +47,10 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.VodGenerator;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
- * 
+ *
  * Updated on : 2014. 1. 22. Updated by : 이석희, 인크로스.
  */
 @Service
@@ -83,7 +82,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.biz.product.service.DownloadVodService#DownloadVodService(com.skplanet
 	 * .storeplatform.sac.client.product.vo.DownloadVodReqVO)
 	 */
@@ -239,7 +238,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					String drmYn = null; // 구매상품 Drm여부
 					String permitDeviceYn = null; // 단말 지원여부
 					String prchsReqPathCd = null; //구매 경로
-					
+					String purchaseHide = null; // 구매내역 숨김 여부
+					String updateAlarm = null; // 업데이트 알람 수신 여부
+
 					if (historyRes.getTotalCnt() > 0) {
 						List<Purchase> purchaseList = new ArrayList<Purchase>();
 
@@ -256,6 +257,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							drmYn = historySacIn.getDrmYn();
 							permitDeviceYn = historySacIn.getPermitDeviceYn();
 							prchsReqPathCd = historySacIn.getPrchsReqPathCd();
+							purchaseHide = historySacIn.getHidingYn();
+							updateAlarm = historySacIn.getAlarmYn();
 
 							// 구매상태 확인
 							downloadVodSacReq.setPrchsDt(prchsDt);
@@ -372,6 +375,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										metaInfo.setDeviceKey(deviceKey);
 										metaInfo.setDeviceType(deviceIdType);
 										metaInfo.setDeviceSubKey(deviceId);
+										metaInfo.setPurchaseHide(purchaseHide);
+										metaInfo.setUpdateAlarm(updateAlarm);
 
 
 										// 소장, 대여 구분(Store : 소장, Play : 대여)
@@ -383,7 +388,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 											metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
 										}
 
-										
+
 										/*
 										if (StringUtils.isNotEmpty(drmYn)) {
 											metaInfo.setStoreDrmYn(drmYn);
@@ -391,11 +396,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										}
 										*/
 
-										
+
 										this.log.debug("DownloadVodServiceImpl prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
 
 										// 암호화 정보 (JSON)
-                                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+                                        Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
 										encryptionList.add(encryption);
 
 										this.log.debug("-------------------------------------------------------------");
@@ -435,18 +440,18 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								this.log.debug("[DownloadVodServiceImpl] End Encription");
 								this.log.debug("----------------------------------------------------------------");
 								this.log.debug("----------------------------  end set Purchase Info  ------------------------------------");
-								
+
 								// 2014.07.01. kdlim. 구매 내역 drmYn 값이 정확하지 않아 상품정보 drmYn으로 변경
 								// 단, T Freemium을 통한 구매건의 경우는 무조건 DRM적용이므로 아래의 조건을 예외처리 해야함.
 								//-	"prchsReqPathCd": "OR0004xx",
 								//-	OR000413, OR000420 2개 코드가 T Freemium을 통한 구매건임.
-								if(StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM1_CD, prchsReqPathCd) 
+								if(StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM1_CD, prchsReqPathCd)
 										|| StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM2_CD, prchsReqPathCd)) {
 									metaInfo.setDrmYn("Y");
 									metaInfo.setStoreDrmYn("Y");
 									metaInfo.setPlayDrmYn("Y");
 								}
-								
+
 								break;
 							}
 						}
@@ -503,7 +508,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		response.setProduct(product);
 
         sw.stop();
-        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
 	}

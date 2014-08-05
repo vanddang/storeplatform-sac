@@ -15,7 +15,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 
 /**
  * DownloadAES128Helper Component
- * 
+ *
  * Updated on : 2014. 02. 21. Updated by : 이태희.
  */
 @Component
@@ -23,91 +23,66 @@ public class DownloadAES128Helper {
 	@Value("#{propertiesForSac['display.forDownload.encrypt.key'].split(',')}")
 	private List<String> sacKey;
 
-	@Value("#{propertiesForSac['display.forDownload.encrypt.dl.iv']}")
-	private String sacDlIv;
+	private static final String DIGEST_MD5 = "MD5";
+	private static final String DIGEST_MD5_HASH_KEY = "spdl-hash-key";
+	private static final String DIGEST_SHA1 = "SHA-1";
+	private static final String ALGORITHM = "AES";
+	private static final String TRANSFORMATION = "AES/CTR/NoPadding";
 
-	private int sacRandomNo;
+	public int getRandomKeyIndex() {
 
-	/**
-	 * <pre>
-	 * AES128-CTR 암호화.
-	 * </pre>
-	 * 
-	 * @param b
-	 *            b
-	 * @return byte[]
-	 */
-	public byte[] encryption(byte[] b) {
-		byte[] row = null;
-		byte[] iv = null;
-		byte[] rtnStrByte = null;
+		Random random = new Random();
+		return (random.nextInt(this.sacKey.size()));
+	}
 
-		IvParameterSpec ivSpec = null;
-		SecretKeySpec key = null;
-		Cipher cipher = null;
+	public byte[] encryption(int keyIdx, byte[] data) {
 
-		try {
-			Random random = new Random();
-			int randomNumber = random.nextInt(this.sacKey.size());
-			this.setSacRandomNo(randomNumber);
+		byte[] rtnByte = null;
 
-			row = this.convertBytes(this.sacKey.get(randomNumber));
-			iv = this.convertBytes(this.sacDlIv);
+		byte[] key = this.convertBytes(this.sacKey.get(keyIdx));
+		byte[] iv = this.generateIV(key);
 
-			ivSpec = new IvParameterSpec(iv);
-			key = new SecretKeySpec(row, "AES");
+		IvParameterSpec ivSpec = new IvParameterSpec(iv);
+	    SecretKeySpec spec = new SecretKeySpec(key, ALGORITHM);
 
-			cipher = Cipher.getInstance("AES/CTR/NoPadding");
-			cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
-			rtnStrByte = cipher.doFinal(b);
-		} catch (Exception e) {
+	    try {
+    	    Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+    	    cipher.init(Cipher.ENCRYPT_MODE, spec, ivSpec);
+    	    rtnByte = cipher.doFinal(data);
+	    } catch (Exception e) {
 			throw new StorePlatformException("SAC_DSP_0018");
 		}
 
-		return rtnStrByte;
-
+		return rtnByte;
 	}
 
-	/**
-	 * <pre>
-	 * AES128-CTR 복호화.
-	 * </pre>
-	 * 
-	 * @param b
-	 *            b
-	 * @return byte[]
-	 */
-	public byte[] decryption(byte[] b) {
-		byte[] row = null;
-		byte[] iv = null;
-		byte[] rtnStrByte = null;
+	public byte[] decryption(int keyIdx, byte[] data) {
 
-		IvParameterSpec ivSpec = null;
-		SecretKeySpec key = null;
-		Cipher cipher = null;
+		byte[] rtnByte = null;
 
-		try {
-			row = this.convertBytes(this.sacKey.get(this.getSacRandomNo()));
-			iv = this.convertBytes(this.sacDlIv);
+		byte[] key = this.convertBytes(this.sacKey.get(keyIdx));
+		byte[] iv = this.generateIV(key);
 
-			ivSpec = new IvParameterSpec(iv);
-			key = new SecretKeySpec(row, "AES");
+		IvParameterSpec ivSpec = new IvParameterSpec(iv);
+	    SecretKeySpec spec = new SecretKeySpec(key, ALGORITHM);
 
-			cipher = Cipher.getInstance("AES/CTR/NoPadding");
-			cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
-			rtnStrByte = cipher.doFinal(b);
-		} catch (Exception e) {
+	    try {
+    	    Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+    	    cipher.init(Cipher.DECRYPT_MODE, spec, ivSpec);
+    	    rtnByte = cipher.doFinal(data);
+	    } catch (Exception e) {
 			throw new StorePlatformException("SAC_DSP_0019");
 		}
 
-		return rtnStrByte;
+		return rtnByte;
 	}
+
 
 	/**
 	 * <pre>
 	 * String to Byte.
 	 * </pre>
-	 * 
+	 *
 	 * @param hex
 	 *            hex
 	 * @return byte[]
@@ -126,7 +101,7 @@ public class DownloadAES128Helper {
 	 * <pre>
 	 * byte to String.
 	 * </pre>
-	 * 
+	 *
 	 * @param b
 	 *            b
 	 * @return String
@@ -143,7 +118,7 @@ public class DownloadAES128Helper {
 	 * <pre>
 	 * getDigest.
 	 * </pre>
-	 * 
+	 *
 	 * @param b
 	 *            b
 	 * @return byte[]
@@ -152,7 +127,7 @@ public class DownloadAES128Helper {
 		MessageDigest md = null;
 
 		try {
-			md = MessageDigest.getInstance("SHA-1");
+			md = MessageDigest.getInstance(DIGEST_SHA1);
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_DSP_0020");
 		}
@@ -160,17 +135,24 @@ public class DownloadAES128Helper {
 	}
 
 	/**
-	 * @return the sacRandomNo
+	 *
+	 * <pre>
+	 * generateIV
+	 * </pre>
+	 * @param key
+	 * @return
 	 */
-	public int getSacRandomNo() {
-		return this.sacRandomNo;
+	public byte [] generateIV(byte [] key) {
+		MessageDigest md = null;
+
+		try {
+    		md = MessageDigest.getInstance(DIGEST_MD5);
+    		md.update(DIGEST_MD5_HASH_KEY.getBytes());
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_DSP_0020");
+		}
+
+		return md.digest(key);
 	}
 
-	/**
-	 * @param sacRandomNo
-	 *            the sacRandomNo to set
-	 */
-	public void setSacRandomNo(int sacRandomNo) {
-		this.sacRandomNo = sacRandomNo;
-	}
 }

@@ -9,6 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
@@ -26,7 +38,11 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Component;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -36,23 +52,10 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
- * 
+ *
  * Updated on : 2014. 1. 21. Updated by : 이석희, 인크로스.
  */
 @Service
@@ -86,7 +89,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.biz.product.service.DownloadAppService#DownloadAppService(com.skplanet
 	 * .storeplatform.sac.client.product.vo.downloadAppSacReqVO)
 	 */
@@ -255,6 +258,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					String puchsPrice = null; // 구매 상품금액
 					String drmYn = null; // 구매상품 Drm여부
 					String permitDeviceYn = null; // 단말 지원여부
+					String purchaseHide = null; // 구매내역 숨김 여부
+					String updateAlarm = null; // 업데이트 알람 수신 여부
 
 					if (historyRes.getTotalCnt() > 0) {
 						List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -270,6 +275,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 							drmYn = historyRes.getHistoryList().get(i).getDrmYn();
 							permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
+							purchaseHide = historyRes.getHistoryList().get(i).getHidingYn();
+							updateAlarm = historyRes.getHistoryList().get(i).getAlarmYn();
 
 							// 구매상태 확인
 							downloadAppSacReq.setPrchsDt(prchsDt);
@@ -370,6 +377,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										metaInfo.setDeviceKey(deviceKey);
 										metaInfo.setDeviceType(deviceIdType);
 										metaInfo.setDeviceSubKey(deviceId);
+										metaInfo.setPurchaseHide(purchaseHide);
+										metaInfo.setUpdateAlarm(updateAlarm);
 
 										// 단말의 통신사가 SKT 일때만 적용
 										if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
@@ -414,7 +423,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										}
 
 										// 암호화 정보 (JSON)
-                                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+                                        Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
                                         encryptionList.add(encryption);
 
 										// JSON 복호화
@@ -500,7 +509,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		response.setProduct(product);
 
         sw.stop();
-        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 		return response;
 	}
 }

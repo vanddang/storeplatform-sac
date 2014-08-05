@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.display.common.ProductType;
-import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +23,6 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
-import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
@@ -40,15 +36,16 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
@@ -58,7 +55,7 @@ import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
- * 
+ *
  * Updated on : 2014. 1. 22. Updated by : 이석희, 인크로스.
  */
 @Service
@@ -96,7 +93,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.biz.product.service.DownloadAppService#DownloadAppService(com.skplanet
 	 * .storeplatform.sac.client.product.vo.DownloadAppReqVO)
 	 */
@@ -141,7 +138,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
         MetaInfo metaInfo;
 
 		// 다운로드 Music 상품 조회
-        ProductInfo info = commonService.getProductInfo(downloadMusicSacReq.getProductId());
+        ProductInfo info = this.commonService.getProductInfo(downloadMusicSacReq.getProductId());
 
         if (info.getProductType() == ProductType.Music) {
             metaInfo = this.commonDAO.queryForObject("Download.getDownloadMusicInfo", downloadMusicSacReq, MetaInfo.class);
@@ -231,6 +228,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					String prchsProdId = null; // 구매 상품ID
 					String puchsPrice = null; // 구매 상품금액
 					String permitDeviceYn = null; // 단말 지원여부
+					String purchaseHide = null; // 구매내역 숨김 여부
+					String updateAlarm = null; // 업데이트 알람 수신 여부
 
 					if (historyRes.getTotalCnt() > 0) {
 						List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -245,6 +244,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 							prchsProdId = historyRes.getHistoryList().get(i).getProdId();
 							puchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
 							permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
+							purchaseHide = historyRes.getHistoryList().get(i).getHidingYn();
+							updateAlarm = historyRes.getHistoryList().get(i).getAlarmYn();
 
 							// 구매상태 확인
 							downloadMusicSacReq.setPrchsDt(prchsDt);
@@ -341,40 +342,18 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 										metaInfo.setDeviceKey(deviceKey);
 										metaInfo.setDeviceType(deviceIdType);
 										metaInfo.setDeviceSubKey(deviceId);
+										metaInfo.setPurchaseHide(purchaseHide);
+										metaInfo.setUpdateAlarm(updateAlarm);
+
 
 										// 암호화 정보 (JSON)
-										EncryptionContents contents = this.encryptionGenerator
-												.generateEncryptionContents(metaInfo);
-
-										// JSON 파싱
-										MarshallingHelper marshaller = new JacksonMarshallingHelper();
-										byte[] jsonData = marshaller.marshal(contents);
-
-										// JSON 암호화
-										byte[] encryptByte = this.downloadAES128Helper.encryption(jsonData);
-										String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
-
-										// 암호화 정보 (AES-128)
-										Encryption encryption = new Encryption();
-										encryption.setProductId(prchsProdId);
-										encryption.setDigest(DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_DIGEST);
-										encryption.setKeyIndex(String.valueOf(this.downloadAES128Helper
-												.getSacRandomNo()));
-										encryption.setToken(encryptString);
+                                        Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
 										encryptionList.add(encryption);
 
-										// JSON 복호화
-										// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-										// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-										//
-										// try {
-										// String decData = new String(decrypt, "UTF-8");
-										// this.log.info("----------------------------------------------------------------");
-										// this.log.info("[DownloadMusicServiceImpl] decData : {}", decData);
-										// this.log.info("----------------------------------------------------------------");
-										// } catch (UnsupportedEncodingException e) {
-										// e.printStackTrace();
-										// }
+										this.log.debug("-----------------------------------------------------------");
+										this.log.debug("[DownloadEbookLog] token : {}", encryption.getToken());
+										this.log.debug("[DownloadEbookLog] keyIdx : {}", encryption.getKeyIndex());
+										this.log.debug("-----------------------------------------------------------");
 									} else {
 										this.log.info("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
 										this.log.info("##### [SAC DSP LocalSCI] deviceKey : {}",
@@ -458,7 +437,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		response.setProduct(product);
 
         sw.stop();
-        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
 	}

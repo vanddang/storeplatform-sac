@@ -9,6 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
@@ -31,23 +43,10 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * DownloadComic Service 인터페이스(CoreStoreBusiness) 구현체
- * 
+ *
  * Updated on : 2014. 1. 28. Updated by : 이태희.
  */
 @Service
@@ -78,7 +77,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.download.service.DownloadComicService#getDownloadComicInfo(com.skplanet
 	 * .storeplatform.sac.common.header.vo.SacRequestHeader,
@@ -246,6 +245,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                     String prchsPrice = null; // 구매금액
                     String drmYn = null; // DRM 지원여부
                     String permitDeviceYn = null; // 단말지원여부
+                    String purchaseHide = null; // 구매내역 숨김 여부
+					String updateAlarm = null; // 업데이트 알람 수신 여부
 
                     if (historyRes.getTotalCnt() > 0) {
                         List<Purchase> purchaseList = new ArrayList<Purchase>();
@@ -261,6 +262,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                             prchsPrice = historyRes.getHistoryList().get(i).getProdAmt();
                             drmYn = historyRes.getHistoryList().get(i).getDrmYn();
                             permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
+                            purchaseHide = historyRes.getHistoryList().get(i).getHidingYn();
+							updateAlarm = historyRes.getHistoryList().get(i).getAlarmYn();
 
                             // 구매상태 확인
                             comicReq.setDwldStartDt(dwldStartDt);
@@ -357,6 +360,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                                         metaInfo.setDeviceKey(deviceKey);
                                         metaInfo.setDeviceType(deviceIdType);
                                         metaInfo.setDeviceSubKey(deviceId);
+                                        metaInfo.setPurchaseHide(purchaseHide);
+										metaInfo.setUpdateAlarm(updateAlarm);
 
                                         // 구매시점 DRM 여부값으로 세팅
                                         if (StringUtils.isNotEmpty(drmYn)) {
@@ -364,7 +369,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                                         }
 
                                         // 암호화 정보 (JSON)
-                                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
+                                        Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
                                         encryptionList.add(encryption);
 
                                         this.logger.debug("-----------------------------------------------------------");
@@ -404,7 +409,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         comicRes.setCommonResponse(commonResponse);
 
         sw.stop();
-        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
         return comicRes;
     }
