@@ -15,9 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.display.music.vo.*;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +28,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 
 /**
@@ -51,6 +56,12 @@ public class MusicServiceImpl implements MusicService {
 
 	@Autowired
 	private DisplayCommonService commonService;
+	
+	@Autowired
+    private MemberBenefitService benefitService;
+	
+    @Autowired
+    private CommonMetaInfoGenerator metaInfoGenerator;
 
 	@Override
 	public MusicDetailComposite searchMusicDetail(MusicDetailParam param) {
@@ -87,6 +98,7 @@ public class MusicServiceImpl implements MusicService {
         String topMenuId = menuList.get(0).getTopMenuId();
 
         //tmembership 할인율
+/*        
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), topMenuId);
         if(tmembershipDcInfo != null) {
         	List<Point> pointList = null; 
@@ -110,6 +122,24 @@ public class MusicServiceImpl implements MusicService {
 	        
         	detailComposite.setPointList(pointList);
         }
+        */
+        //tmembership 할인율
+        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), topMenuId);
+        List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
+        //2014.08.01. kdlim. 마일리지 적립율 정보
+        if (!StringUtils.isEmpty(param.getUserKey())) {
+        	//회원등급 조회
+        	GradeInfoSac userGradeInfo = commonService.getUserGrade(param.getUserKey());
+        	if(userGradeInfo != null) {
+        		if(pointList == null) pointList = new ArrayList<Point>();
+	        	String userGrade = userGradeInfo.getUserGradeCd();
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(param.getTenantId(), topMenuId, param.getChannelId());
+	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
+        	}
+        }
+        if(pointList.size() > 0) detailComposite.setPointList(pointList);
+        
+        
         
         detailComposite.setMusicDetail(musicDetail);
 		detailComposite.setMenuList(menuList);
