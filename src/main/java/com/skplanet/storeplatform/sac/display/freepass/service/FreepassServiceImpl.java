@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecifi
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
@@ -43,6 +44,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.freepass.vo.FreepassProdMap;
@@ -81,6 +84,12 @@ public class FreepassServiceImpl implements FreepassService {
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 
+	@Autowired
+    private MemberBenefitService benefitService;
+	
+    @Autowired
+    private CommonMetaInfoGenerator metaInfoGenerator;
+    
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -243,6 +252,17 @@ public class FreepassServiceImpl implements FreepassService {
 		TmembershipDcInfo info = this.displayCommonService.getTmembershipDcRateForMenu(header.getTenantHeader()
 				.getTenantId(), retMetaInfo.getTopMenuId());
 		List<Point> pointList = this.commonGenerator.generatePoint(info);
+        //2014.08.05. kdlim. 마일리지 적립율 정보
+        if (StringUtils.isNotEmpty(req.getUserKey())) {
+        	//회원등급 조회
+        	GradeInfoSac userGradeInfo = displayCommonService.getUserGrade(req.getUserKey());
+        	if(userGradeInfo != null) {
+        		if(pointList == null) pointList = new ArrayList<Point>();
+	        	String userGrade = userGradeInfo.getUserGradeCd();
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(req.getTenantId(), retMetaInfo.getTopMenuId(), req.getChannelId());
+	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
+        	}
+        }
 		coupon.setPointList(pointList);
 
 		mapList = this.commonDAO.queryForList("Freepass.selectFreepassMapProduct", req, FreepassProdMap.class);

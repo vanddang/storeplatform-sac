@@ -66,7 +66,7 @@ public class FreepassController {
 
 	/**
 	 * <pre>
-	 * 자유 이용권 목록 조회.
+	 * [I03000029] 2.4.7.2. 자유 이용권 상품 목록 조회.
 	 * </pre>
 	 * 
 	 * @param req
