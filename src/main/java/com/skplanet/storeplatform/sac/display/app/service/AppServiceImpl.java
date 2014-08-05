@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -171,40 +171,20 @@ public class AppServiceImpl implements AppService {
 
         //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(request.getTenantId(), topMenuId);
-        if(tmembershipDcInfo != null) {
-        	List<Point> pointList = null; 
-        	
-        	if(tmembershipDcInfo.getNormalDcRate() != null) {
-        		pointList = new ArrayList<Point>();
-		        Point point = new Point();
-		        point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
-		        point.setType(DisplayConstants.DC_RATE_TYPE_NORMAL);
-		        point.setDiscountRate(tmembershipDcInfo.getNormalDcRate());
-		        pointList.add(point);
-        	}
-        	if(tmembershipDcInfo.getFreepassDcRate() != null) {
-        		if(pointList == null) pointList = new ArrayList<Point>();
-        		Point point = new Point();
-        		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
-        		point.setType(DisplayConstants.DC_RATE_TYPE_FREEPASS);
-        		point.setDiscountRate(tmembershipDcInfo.getFreepassDcRate());
-        		pointList.add(point);
-        	}
-	        
-        	product.setPointList(pointList);
-        }
-        //TODO : 2014.08.01. kdlim. 마일리지 적립율 정보
-        /*
+        List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
+        //2014.08.01. kdlim. 마일리지 적립율 정보
         if (!StringUtils.isEmpty(request.getUserKey())) {
         	//회원등급 조회
-        	UserInfoSac userInfo = commonService.getUserInfo(request.getUserKey());
-        	String userGrade = "";//FIXME: userInfo.get();
-        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), topMenuId, request.getChannelId());
-        	//mileageInfo.get
-        	
-        	metaInfoGenerator.generateMileage(mileageInfo);
+        	GradeInfoSac userGradeInfo = commonService.getUserGrade(request.getUserKey());
+        	if(userGradeInfo != null) {
+        		if(pointList == null) pointList = new ArrayList<Point>();
+	        	String userGrade = userGradeInfo.getUserGradeCd();
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), topMenuId, request.getChannelId());
+	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
+        	}
         }
-        */
+        if(pointList.size() > 0) product.setPointList(pointList);
+        
         
         product.setSupportList(new ArrayList<Support>());
         product.getSupportList().add(new Support("drm", appDetail.getDrmYn()));

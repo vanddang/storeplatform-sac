@@ -851,4 +851,30 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
         return res;
     }
+    
+    /**
+     * 회원 등급별 마일리지 객체 생성
+     * @param mileageInfo
+     * @param userGrade
+     * @return
+     */
+    @Override
+    public List<Point> generateMileage(MileageInfo mileageInfo, String userGrade) {
+    	
+    	if(mileageInfo == null)
+    		return new ArrayList<Point>();
+    	
+    	List<Point> res = new ArrayList<Point>();
+    	if (StringUtil.equals(userGrade, DisplayConstants.POINT_TP_MILEAGE_LV1)) {
+    		res.add(new Point(DisplayConstants.POINT_NM_MILEAGE, DisplayConstants.POINT_TP_MILEAGE_LV1, mileageInfo.getRateLv1(), null));
+    	}
+    	else if (StringUtil.equals(userGrade, DisplayConstants.POINT_TP_MILEAGE_LV2)) {
+    		res.add(new Point(DisplayConstants.POINT_NM_MILEAGE, DisplayConstants.POINT_TP_MILEAGE_LV2, mileageInfo.getRateLv2(), null));
+    	}
+    	else if (StringUtil.equals(userGrade, DisplayConstants.POINT_TP_MILEAGE_LV3)) {
+    		res.add(new Point(DisplayConstants.POINT_NM_MILEAGE, DisplayConstants.POINT_TP_MILEAGE_LV3, mileageInfo.getRateLv3(), null));
+    	}
+    	
+    	return res;
+    }
 }

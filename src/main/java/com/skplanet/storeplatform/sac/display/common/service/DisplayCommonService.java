@@ -2,7 +2,7 @@ package com.skplanet.storeplatform.sac.display.common.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
@@ -179,10 +179,10 @@ public interface DisplayCommonService {
     ProductTypeInfo getProductTypeInfo(String svcGrp, String svcTp, String metaClsf, String topMenu);
     
     /**
-     * userKey를 이용하여 회원정보 정보조회
+     * UserKey를 이용하여 회원등급 조회.
      * @param userKey
-     * @return
+     * @return GradeInfoSac
      */
-	UserInfoSac getUserInfo(String userKey);
+    GradeInfoSac getUserGrade(String userKey);
 
 }

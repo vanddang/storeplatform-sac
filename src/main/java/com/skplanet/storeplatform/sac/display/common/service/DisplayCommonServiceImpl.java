@@ -15,15 +15,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
@@ -358,23 +357,17 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
     }
     
     /**
-     * userKey를 이용하여 회원정보 정보조회
+     * UserKey를 이용하여 회원등급 조회.
      * @param userKey
      * @return
      */
 	@Override
-	public UserInfoSac getUserInfo(String userKey) {
-		SearchUserSacReq req = new SearchUserSacReq();
-		req.setUserKeyList(Lists.newArrayList(userKey));
-        SearchUserSacRes res = searchUserSCI.searchUserByUserKey(req);
+	public GradeInfoSac getUserGrade(String userKey) {
+		SearchUserGradeSacReq gradeReq = new SearchUserGradeSacReq();
+		SearchUserGradeSacRes gradeRes = null;
+		
+		gradeRes = searchUserSCI.searchUserGrade(gradeReq);
         
-        UserInfoSac userInfo = null;
-        
-        Map<String, UserInfoSac> userInfoMap = res.getUserInfo();
-        if(userInfoMap != null) {
-        	userInfo = userInfoMap.get(userKey);
-        }
-        
-        return userInfo;
+        return gradeRes != null ? gradeRes.getGradeInfoSac() : null;
 	}
 }

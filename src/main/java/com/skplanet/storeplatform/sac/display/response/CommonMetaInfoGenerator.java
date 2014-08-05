@@ -460,4 +460,12 @@ public interface CommonMetaInfoGenerator {
      * @return
      */
     public List<Point> generateMileage(MileageInfo mileageInfo);
+    
+    /**
+     * 회원 등급별 마일리지 객체 생성
+     * @param mileageInfo
+     * @param userGrade
+     * @return
+     */
+    public List<Point> generateMileage(MileageInfo mileageInfo, String userGrade);
 }

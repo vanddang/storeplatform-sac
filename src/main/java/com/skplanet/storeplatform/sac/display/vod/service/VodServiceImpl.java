@@ -28,6 +28,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -53,8 +54,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.vod.vo.VodDetail;
 
 /**
@@ -78,6 +82,12 @@ public class VodServiceImpl implements VodService {
     //[2.x fadeout] 상품 상세 요청 시 예외 처리
 	@Value("#{propertiesForSac['sc2x.fadeout.dummy.product.vod.channel']}")
 	private String sc2xFadeOutDummyProductChannel;
+    
+	@Autowired
+    private MemberBenefitService benefitService;
+	
+    @Autowired
+    private CommonMetaInfoGenerator metaInfoGenerator;
     
 	/*
 	 * (non-Javadoc)
@@ -305,6 +315,7 @@ public class VodServiceImpl implements VodService {
 		product.setVod(vod);
 		
         //tmembership 할인율
+		/*
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(req.getTenantId(), mapperVO.getTopMenuId());
         if(tmembershipDcInfo != null) {
         	List<Point> pointList = null; 
@@ -328,6 +339,22 @@ public class VodServiceImpl implements VodService {
 	        
         	product.setPointList(pointList);
         }
+        */
+        //tmembership 할인율
+        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(req.getTenantId(), mapperVO.getTopMenuId());
+        List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
+        //2014.08.01. kdlim. 마일리지 적립율 정보
+        if (!StringUtils.isEmpty(req.getUserKey())) {
+        	//회원등급 조회
+        	GradeInfoSac userGradeInfo = commonService.getUserGrade(req.getUserKey());
+        	if(userGradeInfo != null) {
+        		if(pointList == null) pointList = new ArrayList<Point>();
+	        	String userGrade = userGradeInfo.getUserGradeCd();
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(req.getTenantId(), mapperVO.getTopMenuId(), req.getChannelId());
+	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
+        	}
+        }
+        if(pointList.size() > 0) product.setPointList(pointList);
 		
 	}
 

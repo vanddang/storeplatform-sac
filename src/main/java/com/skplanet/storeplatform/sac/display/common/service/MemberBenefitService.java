@@ -20,12 +20,12 @@ import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 public interface MemberBenefitService {
 
     /**
-     * 마일리지 정보를 조회한다.
+     * 마일리지 적립율 정보를 조회한다.
      *
-     * @param tenantId
-     * @param topMenuId
-     * @param chnlId
-     * @return
+     * @param tenantId		Tenant Id
+     * @param topMenuId		Top Menu ID
+     * @param chnlId 		채널ID
+     * @return MileageInfo 마일리지 적립율 정보
      */
     MileageInfo getMileageInfo(String tenantId, String topMenuId, String chnlId);
 

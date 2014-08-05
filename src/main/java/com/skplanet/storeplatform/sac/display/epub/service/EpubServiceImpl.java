@@ -29,6 +29,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -51,10 +52,13 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 /**
  * EPUB Service
@@ -81,6 +85,12 @@ public class EpubServiceImpl implements EpubService {
 	@Value("#{propertiesForSac['sc2x.fadeout.dummy.product.ebook.channel']}")
 	private String sc2xFadeOutDummyProductChannel;
 
+	@Autowired
+    private MemberBenefitService benefitService;
+	
+    @Autowired
+    private CommonMetaInfoGenerator metaInfoGenerator;
+    
     /*
      * (non-Javadoc)
      *
@@ -120,6 +130,8 @@ public class EpubServiceImpl implements EpubService {
         param.put("deviceModel", req.getDeviceModel());
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
         param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+        param.put("userKey", userKey);
+        param.put("deviceKey", deviceKey);
 
 
 		EpubDetail epubDetail = this.getEpubChannel(param);
@@ -422,6 +434,7 @@ public class EpubServiceImpl implements EpubService {
 		product.setDateList(this.mapDateList(mapperVO, sdf));
 
         //tmembership 할인율
+		/*
         TmembershipDcInfo tmembershipDcInfo = this.commonService.getTmembershipDcRateForMenu(mapperVO.getTenantId(), mapperVO.getTopMenuId());
         if(tmembershipDcInfo != null) {
         	List<Point> pointList = null;
@@ -445,6 +458,23 @@ public class EpubServiceImpl implements EpubService {
 
         	product.setPointList(pointList);
         }
+        */
+        //tmembership 할인율
+        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(mapperVO.getTenantId(), mapperVO.getTopMenuId());
+        List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
+        //2014.08.01. kdlim. 마일리지 적립율 정보
+        if (param.get("userKey") != null && !StringUtils.isEmpty((String)param.get("userKey"))) {
+        	String userKey = (String)param.get("userKey");
+        	//회원등급 조회
+        	GradeInfoSac userGradeInfo = commonService.getUserGrade(userKey);
+        	if(userGradeInfo != null) {
+        		if(pointList == null) pointList = new ArrayList<Point>();
+	        	String userGrade = userGradeInfo.getUserGradeCd();
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(mapperVO.getTenantId(), mapperVO.getTopMenuId(), mapperVO.getProdId());
+	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
+        	}
+        }
+        if(pointList.size() > 0) product.setPointList(pointList);
 	}
 
     /**
