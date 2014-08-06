@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
-import com.skplanet.storeplatform.sac.display.other.vo.PartProduct;
-
 import java.util.List;
+
+import com.skplanet.storeplatform.sac.display.other.vo.PartProduct;
 
 /**
  * <p>
@@ -21,5 +21,5 @@ import java.util.List;
  */
 public interface OtherPartProductService {
 
-    List<PartProduct> getPartProductList(String aid, String tenantId, String langCd);
+    List<PartProduct> getPartProductList(String aid, String partProdId, String tenantId, String langCd);
 }

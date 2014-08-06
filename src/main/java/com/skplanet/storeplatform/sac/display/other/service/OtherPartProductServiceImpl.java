@@ -9,15 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.other.vo.PartProduct;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.display.other.vo.PartProduct;
 
 /**
  * <p>
@@ -33,11 +34,12 @@ public class OtherPartProductServiceImpl implements OtherPartProductService {
     private CommonDAO commonDAO;
 
     @Override
-    public List<PartProduct> getPartProductList(String aid, String tenantId, String langCd) {
+    public List<PartProduct> getPartProductList(String aid, String partProdId, String tenantId, String langCd) {
         Map<String, String> req = new HashMap<String, String>();
         req.put("aid", aid);
+        req.put("partProdId", partProdId);
         req.put("tenantId", tenantId);
         req.put("langCd", langCd);
-        return commonDAO.queryForList("OtherPartProduct.getPartProductList", req, PartProduct.class);
+        return this.commonDAO.queryForList("OtherPartProduct.getPartProductList", req, PartProduct.class);
     }
 }

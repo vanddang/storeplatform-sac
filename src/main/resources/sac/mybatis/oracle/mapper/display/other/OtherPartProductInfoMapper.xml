@@ -26,6 +26,9 @@
              AND APROD.AID = #{aid}
              AND CDESC.LANG_CD = #{langCd}
              AND TPRC.TENANT_ID = #{tenantId}
+             <if test="partProdId != null">
+             AND PTPROD.PROD_ID = #{partProdId}
+             </if>
              AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
   </select>
 </mapper>
