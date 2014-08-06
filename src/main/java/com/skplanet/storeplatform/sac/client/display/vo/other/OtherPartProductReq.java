@@ -9,8 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.other;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
@@ -24,11 +25,22 @@ public class OtherPartProductReq extends CommonInfo {
     @NotEmpty
     private String aid;
 
+    private String partProdId;
+
     public String getAid() {
-        return aid;
+        return this.aid;
     }
 
     public void setAid(String aid) {
         this.aid = aid;
     }
+
+	public String getPartProdId() {
+		return this.partProdId;
+	}
+
+	public void setPartProdId(String partProdId) {
+		this.partProdId = partProdId;
+	}
+
 }
