@@ -22,6 +22,11 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 	private String userId;
 
 	/**
+	 * 탈퇴 회원의 deviceId(다수의 휴대기기를 보유한 회원 탈퇴 시 파이프(|) 로 구분)
+	 */
+	private String deviceId;
+
+	/**
 	 * @return the workDt
 	 */
 	public String getWorkDt() {
@@ -65,4 +70,20 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+
+	/**
+	 * @return deviceId
+	 */
+	public String getDeviceId() {
+		return this.deviceId;
+	}
+
+	/**
+	 * @param deviceId
+	 *            String
+	 */
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
 }
