@@ -766,4 +766,10 @@ public class DisplayConstants {
     public static final String POINT_TP_MILEAGE_LV1 = "platinum";
     public static final String POINT_TP_MILEAGE_LV2 = "gold";
     public static final String POINT_TP_MILEAGE_LV3 = "silver";
+    
+	/** 정액제 상품 타입 코드 */
+	public static final String FIXRATE_PROD_TYPE_VOD_FIXRATE = "OR004301"; // VOD 정액권
+	public static final String FIXRATE_PROD_TYPE_VOD_SERIESPASS = "OR004302"; // VOD 시리즈패스
+	public static final String FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN = "OR004303"; // 이북/코믹 전권소장
+	public static final String FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN = "OR004304"; // 이북/코믹 전권대여
 }
