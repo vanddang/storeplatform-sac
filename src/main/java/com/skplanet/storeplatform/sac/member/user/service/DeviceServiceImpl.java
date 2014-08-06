@@ -55,6 +55,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateGameCenterRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
@@ -446,7 +447,7 @@ public class DeviceServiceImpl implements DeviceService {
 			/* 3. 전시/기타, 구매 파트 키 변경 */
 			this.mcic.excuteInternalMethod(true, systemId, tenantId, userKey, previousUserKey, deviceKey, previousDeviceKey);
 
-			/* 4. 실명인증 비교 후 초기화 */
+			/* 4. 실명인증 비교 후 이관 or 초기화 */
 			SearchRealNameRequest schRealNameReq = new SearchRealNameRequest();
 			schRealNameReq.setCommonRequest(commonRequest);
 			schRealNameReq.setUserKey(previousUserKey);
@@ -454,25 +455,41 @@ public class DeviceServiceImpl implements DeviceService {
 
 			schRealNameReq.setUserKey(userKey);
 			SearchRealNameResponse schRealNameRes = this.userSCI.searchRealName(schRealNameReq);
-			if (preSchRealNameRes.getMbrAuth() != null && schRealNameRes.getMbrAuth() != null) {
 
-				if (!StringUtils.equals(preSchRealNameRes.getMbrAuth().getName(), schRealNameRes.getMbrAuth().getName())
-						|| !StringUtils.equals(preSchRealNameRes.getMbrAuth().getBirthDay(), schRealNameRes.getMbrAuth().getBirthDay())
-						|| !StringUtils.equals(preSchRealNameRes.getMbrAuth().getSex(), schRealNameRes.getMbrAuth().getSex())) { // 이름 생년월일 성별이 다른경우 초기화
+			if (preSchRealNameRes.getMbrAuth() != null) {
 
-					UpdateRealNameRequest updRealNameReq = new UpdateRealNameRequest();
-					updRealNameReq.setCommonRequest(commonRequest);
-					updRealNameReq.setIsRealName("N");
-					updRealNameReq.setUserKey(userKey);
-					updRealNameReq.setIsOwn(MemberConstants.AUTH_TYPE_OWN);
-					MbrAuth mbrAuth = new MbrAuth();
-					mbrAuth.setCi(" ");
-					mbrAuth.setIsRealName("N");
-					updRealNameReq.setUserMbrAuth(mbrAuth);
-					LOGGER.info("기등록된 모바일 회원 실명인증 정보 초기화 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
-					this.userSCI.updateRealName(updRealNameReq);
+				if (schRealNameRes.getMbrAuth() == null) { // 모바일 회원의 실명인증정보 -> id회원으로 이관
+
+					LOGGER.info("기등록된 모바일 회원 실명인증 정보 이관 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
+
+					UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
+					updateRealNameRequest.setCommonRequest(commonRequest);
+					updateRealNameRequest.setIsOwn(MemberConstants.AUTH_TYPE_OWN);
+					updateRealNameRequest.setIsRealName(MemberConstants.USE_Y);
+					updateRealNameRequest.setUserKey(userKey);
+					updateRealNameRequest.setUserMbrAuth(preSchRealNameRes.getMbrAuth());
+					UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
+					if (StringUtils.isBlank(updateRealNameResponse.getUserKey())) {
+						throw new StorePlatformException("SAC_MEM_0002", "userKey");
+					}
+				} else {
+					if (!StringUtils.equals(preSchRealNameRes.getMbrAuth().getName(), schRealNameRes.getMbrAuth().getName())
+							|| !StringUtils.equals(preSchRealNameRes.getMbrAuth().getBirthDay(), schRealNameRes.getMbrAuth().getBirthDay())
+							|| !StringUtils.equals(preSchRealNameRes.getMbrAuth().getSex(), schRealNameRes.getMbrAuth().getSex())) { // 이름 생년월일 성별이 다른경우 초기화
+
+						LOGGER.info("기등록된 모바일 회원 실명인증 정보 초기화 deviceId : {}, userKey : {}", deviceInfo.getDeviceId(), userKey);
+						UpdateRealNameRequest updRealNameReq = new UpdateRealNameRequest();
+						updRealNameReq.setCommonRequest(commonRequest);
+						updRealNameReq.setIsRealName("N");
+						updRealNameReq.setUserKey(userKey);
+						updRealNameReq.setIsOwn(MemberConstants.AUTH_TYPE_OWN);
+						MbrAuth mbrAuth = new MbrAuth();
+						mbrAuth.setCi(" ");
+						mbrAuth.setIsRealName("N");
+						updRealNameReq.setUserMbrAuth(mbrAuth);
+						this.userSCI.updateRealName(updRealNameReq);
+					}
 				}
-
 			}
 
 		}
