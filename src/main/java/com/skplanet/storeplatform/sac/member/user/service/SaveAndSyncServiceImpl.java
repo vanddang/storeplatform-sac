@@ -9,9 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,7 +33,10 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
@@ -68,6 +75,14 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	@Autowired
 	private MemberCommonInternalComponent mcic;
 
+	@Autowired
+	@Resource(name = "memberModDeviceAmqpTemplate")
+	private AmqpTemplate memberModDeviceAmqpTemplate;
+
+	@Autowired
+	@Resource(name = "memberAddDeviceAmqpTemplate")
+	private AmqpTemplate memberAddDeviceAmqpTemplate;
+
 	@Override
 	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId) {
 
@@ -87,11 +102,13 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		String isSaveNSync = checkSaveNSyncResponse.getIsSaveNSync(); // 변동성대상여부.
 		String deviceKey = checkSaveNSyncResponse.getDeviceKey(); // 휴대기기 Key.
 		String userKey = checkSaveNSyncResponse.getUserKey(); // 사용자 Key.
+		String preMbrNo = checkSaveNSyncResponse.getImMbrNo(); // 사용자 IDP Key
 		String preDeviceId = checkSaveNSyncResponse.getPreDeviceID(); // 이전 MSISDN.
 		String nowDeviceId = checkSaveNSyncResponse.getDeviceID(); // 현재 MSISDN.
 
 		SaveAndSync saveAndSync = new SaveAndSync();
 		String newMbrNo = null;
+		String gcWorkCd = null;
 
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
@@ -121,6 +138,28 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				 */
 				this.modMbrNo(sacHeader, userKey, deviceKey, deviceId, newMbrNo);
 
+				/** MQ 연동(번호변경) */
+				ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
+				try {
+					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					mqInfo.setUserKey(userKey);
+					mqInfo.setOldUserKey(userKey);
+					mqInfo.setDeviceKey(deviceKey);
+					mqInfo.setOldDeviceKey(deviceKey);
+					mqInfo.setDeviceId(deviceId);
+					mqInfo.setOldDeviceId(preDeviceId);
+					mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+					mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+					mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
+					LOGGER.debug("{} 번호변경 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
+					this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
+
+				} catch (AmqpException ex) {
+					LOGGER.info("MQ process fail {}", mqInfo);
+				}
+
+				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE;
+
 			} else {
 
 				// 번호 이동만.....
@@ -130,12 +169,28 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				 */
 				newMbrNo = this.reviveUser(sacHeader, userKey, deviceId, deviceKey);
 
+				/** MQ 연동(MDN 등록) */
+				CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+				try {
+					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					mqInfo.setUserKey(userKey);
+					mqInfo.setDeviceKey(deviceKey);
+					mqInfo.setDeviceId(deviceId);
+					mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+					this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+					LOGGER.debug("{} 번호이동 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
+				} catch (AmqpException ex) {
+					LOGGER.info("MQ process fail {}", mqInfo);
+				}
+
+				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT;
+
 			}
 
-			/**
-			 * 게임센터 연동.
-			 */
 			if (this.isCall) {
+				/**
+				 * 게임센터 연동.
+				 */
 				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 				gameCenterSacReq.setUserKey(newMbrNo);
 				gameCenterSacReq.setMbrNo(newMbrNo);
@@ -145,11 +200,24 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				gameCenterSacReq.setPreDeviceId(preDeviceId);
 				gameCenterSacReq.setPreUserKey(userKey);
 				gameCenterSacReq.setPreMbrNo(userKey);
-				gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
+				gameCenterSacReq.setWorkCd(gcWorkCd);
 				this.deviceService.regGameCenterIF(gameCenterSacReq);
-
 				saveAndSync.setUserKey(newMbrNo); // OGG연동시에는 mbr_no가 userKey가 된다.
 			} else {
+				/**
+				 * 게임센터 연동.
+				 */
+				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+				gameCenterSacReq.setUserKey(userKey);
+				gameCenterSacReq.setMbrNo(newMbrNo);
+				gameCenterSacReq.setDeviceId(deviceId);
+				gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
+				gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
+				gameCenterSacReq.setPreDeviceId(preDeviceId);
+				gameCenterSacReq.setPreUserKey(userKey);
+				gameCenterSacReq.setPreMbrNo(preMbrNo);
+				gameCenterSacReq.setWorkCd(gcWorkCd);
+				this.deviceService.regGameCenterIF(gameCenterSacReq);
 				saveAndSync.setUserKey(userKey);
 			}
 
