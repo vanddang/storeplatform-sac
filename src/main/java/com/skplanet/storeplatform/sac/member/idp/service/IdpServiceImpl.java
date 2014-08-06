@@ -2683,36 +2683,35 @@ public class IdpServiceImpl implements IdpService {
 						// 통합서비스 관리번호 동일 & mbr_no가 다를 경우만 DB에 있는 데이터를 Request있는 데이터로 db내용을 update시킴
 						if (!searchUserResponse.getUserMbr().getImMbrNo().equals(map.get("user_key").toString())) {
 							UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
-
 							userKey = updateUserResponse.getUserKey();
+						}
 
-							try {
-								// ONEID에 데이터 입력
-								UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-								updateMbrOneIDRequest.setCommonRequest(commonRequest);
-								MbrOneID mbrOneID = new MbrOneID();
-								mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
-								mbrOneID.setIntgSvcNumber(imIntSvcNo);
-								mbrOneID.setUserKey(userKey); // 내부사용자키를 셋팅
-								mbrOneID.setUserID(userId); // 사용자 ID 셋팅
-								mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
-								mbrOneID.setIsRealName(isRnameAuth); // 실명인증 여부
+						try {
+							// ONEID에 데이터 입력
+							UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+							updateMbrOneIDRequest.setCommonRequest(commonRequest);
+							MbrOneID mbrOneID = new MbrOneID();
+							mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
+							mbrOneID.setIntgSvcNumber(imIntSvcNo);
+							mbrOneID.setUserKey(userKey); // 내부사용자키를 셋팅
+							mbrOneID.setUserID(userId); // 사용자 ID 셋팅
+							mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
+							mbrOneID.setIsRealName(isRnameAuth); // 실명인증 여부
 
-								if (map.get("user_ci") != null && map.get("user_ci").toString().length() > 0) { // 사용자 CI
-									mbrOneID.setIsCi("Y");
-								} else {
-									mbrOneID.setIsCi("N");
-								}
-
-								updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-								this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-							} catch (StorePlatformException spe) {
-								LOGGER.error(spe.getMessage(), spe);
-								imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-								imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
-								return imResult;
+							if (map.get("user_ci") != null && map.get("user_ci").toString().length() > 0) { // 사용자 CI
+								mbrOneID.setIsCi("Y");
+							} else {
+								mbrOneID.setIsCi("N");
 							}
+
+							updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+							this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+						} catch (StorePlatformException spe) {
+							LOGGER.error(spe.getMessage(), spe);
+							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+							return imResult;
 						}
 
 					} else { // 통합서비스 번호로 조회된 회원정보가 없는경우
