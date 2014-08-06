@@ -1004,6 +1004,18 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 				}
 
+				/* MQ 연동(회원탈퇴) */
+				RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+				try {
+
+					mqInfo.setUserId(schUserRes.getUserMbr().getUserID());
+					mqInfo.setUserKey(userKey);
+					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+				} catch (AmqpException ex) {
+					LOGGER.info("MQ process fail {}", mqInfo);
+				}
+
 			} else {
 
 				/**************************
@@ -1014,7 +1026,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_NAME_CHANGE;
 				} else {
 					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE;
-					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
+					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE;
 				}
 
 				/* 휴대기기 삭제 요청 */
@@ -1026,6 +1038,22 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				removeDeviceReq.setUserKey(userKey);
 				removeDeviceReq.setDeviceKey(removeKeyList);
 				this.deviceSCI.removeDevice(removeDeviceReq);
+
+				/* MQ 연동(휴대기기 삭제) */
+				RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
+				try {
+					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					mqInfo.setUserKey(userKey);
+					mqInfo.setDeviceKey(deviceKey);
+					mqInfo.setDeviceId(mdn);
+					mqInfo.setSvcMangNo(svcMngNum);
+					mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
+
+					this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
+				} catch (AmqpException ex) {
+					LOGGER.info("MQ process fail {}", mqInfo);
+
+				}
 
 				resultLogStr = "휴대기기삭제";
 
@@ -1043,19 +1071,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			gameCenterSacReq.setWorkCd(gameCenterWorkCd);
 			this.deviceService.regGameCenterIF(gameCenterSacReq);
 
-			/* MQ 연동 */
-			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
-			try {
-				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-				mqInfo.setUserKey(userKey);
-				mqInfo.setDeviceKey(deviceKey);
-				mqInfo.setDeviceId(mdn);
-				mqInfo.setChgCaseCd(gameCenterWorkCd);
-				mqInfo.setSvcMangNo(svcMngNum);
-				this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
-			} catch (AmqpException ex) {
-				LOGGER.info("MQ process fail {}", mqInfo);
-			}
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 
 		} catch (StorePlatformException ex) {
