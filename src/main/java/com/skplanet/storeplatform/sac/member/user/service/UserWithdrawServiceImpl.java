@@ -141,7 +141,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			}
 
 			/** MQ 연동 (회원 탈퇴) */
-			String mqDeviceStr = null;
+			String mqDeviceStr = "";
 			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
 				mqDeviceStr += deviceInfo.getDeviceId() + "|";
 			}
@@ -153,6 +153,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			if (mqDeviceStr != null) {
 				mqInfo.setDeviceId(mqDeviceStr);
 			}
+
+			LOGGER.info("{} 탈퇴 MQ device : {}", req.getUserId(), mqDeviceStr);
 
 			try {
 
