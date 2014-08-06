@@ -113,6 +113,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		String userKey = downloadAppSacReq.getUserKey();
 		String packageName = downloadAppSacReq.getPackageName();
 		List<Identifier> identifierList = null;
+		boolean tingMemberFlag = false;
 
         StopWatch sw = new StopWatch();
         sw.start();
@@ -180,6 +181,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			this.log.debug("[DownloadAppServiceImpl] scid : {}", metaInfo.getSubContentsId());
 			this.log.debug("----------------------------------------------------------------");
 			identifierList = new ArrayList<Identifier>();
+
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
 				// 구매내역 조회를 위한 생성자
@@ -413,6 +415,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 														if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING
 																.equals(uapsEcRes.getServiceCD()[k])) {
 															metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
+
+															tingMemberFlag = true;
 														}
 													}
 													this.log.debug("-------------------------------------------------------------");
@@ -495,7 +499,16 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
 			product.setRights(this.commonGenerator.generateRights(metaInfo)); // 권한
 			product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
-			product.setPacketFee(metaInfo.getProdClsfCd());
+			if (tingMemberFlag == true) {
+				/**
+				 * ting 요금제 가입자가 어학/교육 카테고리를 다운받을때는
+				 * packetFee 값이 'paid'로 내려가야함.
+				 * dl에 암호화된 token에 packetFee는 'half'로 내려가야함.
+				 */
+				product.setPacketFee(DisplayConstants.DP_PACKETFEE_TYPE_PAID);
+			} else {
+				product.setPacketFee(metaInfo.getProdClsfCd());
+			}
 			product.setPlatClsfCd(metaInfo.getPlatClsfCd());
 			product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품금액 정보
 
