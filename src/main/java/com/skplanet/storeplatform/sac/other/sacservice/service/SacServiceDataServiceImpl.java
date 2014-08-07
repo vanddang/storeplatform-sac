@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.sac.other.common.constant.OtherConstants;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
 /**
@@ -40,7 +41,7 @@ public class SacServiceDataServiceImpl implements SacServiceDataService {
 	public SacServiceDataServiceImpl() {
 		this.dataSvc = new HashMap<String, Boolean>();
         this.dataSvc.put("tstore.gamecash.flatrate", true); // 게임 캐쉬 정액제 지원
-        this.dataSvc.put("tstore.mileage", true); // 마일리지 지원
+        this.dataSvc.put(OtherConstants.SAC_SERVICE_MILEAGE, true); // 마일리지 지원
 		this.dataSvc.put("SERVICE_SAMPLE", false);
 	}
 

@@ -18,5 +18,6 @@ package com.skplanet.storeplatform.sac.other.common.constant;
 * Updated by : 서대영, SK 플래닛.
 */
 public class OtherConstants {
-
+	/** 마일리지 서비스 지원 여부 키 */
+	public static final String SAC_SERVICE_MILEAGE = "tstore.mileage";
 }
