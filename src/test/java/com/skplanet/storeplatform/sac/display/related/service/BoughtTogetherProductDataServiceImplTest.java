@@ -38,6 +38,7 @@ public class BoughtTogetherProductDataServiceImplTest {
 	public void test() {
 		BoughtTogetherProduct prd = new BoughtTogetherProduct();
 		prd.setTenantId("S01");
+		prd.setTopMenuId("DP13"); // eBook
 		prd.setProductId("0000309883");
 		prd.setExceptId("0000349719");
 		prd.setOffset(1);

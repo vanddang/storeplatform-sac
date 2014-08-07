@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
 /*
  * BoughtTogetherProductTypeService 클래스
  * <pre>
- * Created on 2014. 02. 18. by 서대영, SK 플래닛
+ * Updated on 2014. 08. 07. by 서대영, SK 플래닛
  * </pre>
  */
 @Service
@@ -44,26 +44,9 @@ public class BoughtTogetherProductTypeServiceImpl implements BoughtTogetherProdu
 		// for v2
 		if (req instanceof BoughtTogetherProductSacV2Req) {
 			BoughtTogetherProductSacV2Req v2Req = (BoughtTogetherProductSacV2Req) req;
-			vo.setMenuId(v2Req.getMenuId());
+			// 주의! menuId 파라미터를 topMenuId 디비칼럼으로 맵핑함
+			vo.setTopMenuId(v2Req.getMenuId());
 		}
-
-		return vo;
-	}
-
-	@Override
-	public BoughtTogetherProduct fromReqV2(BoughtTogetherProductSacV2Req req, SacRequestHeader header) {
-		BoughtTogetherProduct vo = new  BoughtTogetherProduct();
-
-		// from query string
-		vo.setProductId(req.getProductId());
-		vo.setExceptId(req.getExceptId());
-		vo.setOffset(req.getOffset() != null ? req.getOffset() : 1);
-		vo.setCount(req.getCount() != null ? req.getCount() : 20);
-
-		// from header
-		vo.setTenantId(header.getTenantHeader().getTenantId());
-		vo.setDeviceModelCd(header.getDeviceHeader().getModel());
-		vo.setMmDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		return vo;
 	}

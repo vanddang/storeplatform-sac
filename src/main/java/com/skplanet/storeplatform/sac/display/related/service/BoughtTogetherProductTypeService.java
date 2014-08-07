@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
 /*
  * BoughtTogetherProductTypeService 인터페이스
  * <pre>
- * Created on 2014. 02. 18. by 서대영, SK 플래닛
+ * Updated on 2014. 08. 07. by 서대영, SK 플래닛
  * </pre>
  */
 public interface BoughtTogetherProductTypeService {
@@ -26,10 +26,5 @@ public interface BoughtTogetherProductTypeService {
 	 * QuryString과 Header를 이용하여 VO를 만든다.
 	 */
 	BoughtTogetherProduct fromReq(BoughtTogetherProductSacReq req, SacRequestHeader header);
-
-	/*
-	 * QuryString과 Header를 이용하여 VO를 만든다. (v2)
-	 */
-	BoughtTogetherProduct fromReqV2(BoughtTogetherProductSacV2Req req, SacRequestHeader header);
 
 }

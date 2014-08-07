@@ -53,8 +53,8 @@
                 AND A.RECOM_PROD_ID = E.PROD_ID
                 AND A.RECOM_PROD_ID = F.PROD_ID
                 AND E.DEVICE_MODEL_CD = G.DEVICE_MODEL_CD
-                <if test='@org.apache.commons.lang3.StringUtils@isNotBlank(menuId)'>
-                    AND C.MENU_ID = #{menuId}
+                <if test='@org.apache.commons.lang3.StringUtils@isNotBlank(topMenuId)'>
+                    AND B.TOP_MENU_ID = #{topMenuId}
                 </if>
                 AND C.USE_YN ='Y'                
                 AND D.USE_YN ='Y'
@@ -94,8 +94,8 @@
                 AND B.PART_PROD_ID = E.PROD_ID
                 AND B.PART_PROD_ID = F.PROD_ID
                 AND B.PART_PROD_ID = G.PROD_ID
-                <if test='@org.apache.commons.lang3.StringUtils@isNotBlank(menuId)'>
-                    AND C.MENU_ID = #{menuId}
+                <if test='@org.apache.commons.lang3.StringUtils@isNotBlank(topMenuId)'>
+                    AND E.TOP_MENU_ID = #{topMenuId}
                 </if>
                 AND C.USE_YN = 'Y'                
                 AND D.USE_YN = 'Y'

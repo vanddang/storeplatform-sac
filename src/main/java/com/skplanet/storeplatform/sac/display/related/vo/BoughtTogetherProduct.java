@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * BoughtTogetherProduct VO
  * <pre>
- * Created on 2014. 07. 11. by 서대영, SK 플래닛
+ * Updated on 2014. 08. 07. by 서대영, SK 플래닛
  * </pre>
  */
 public class BoughtTogetherProduct extends CommonInfo {
@@ -24,6 +24,7 @@ public class BoughtTogetherProduct extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String productId;
+	private String topMenuId;
 	private String menuId;
 	private String tenantId;
 	private String deviceModelCd;
@@ -43,6 +44,18 @@ public class BoughtTogetherProduct extends CommonInfo {
 	}
 	public void setProductId(String productId) {
 		this.productId = productId;
+	}
+	/**
+	 * @return the topMenuId
+	 */
+	public String getTopMenuId() {
+		return topMenuId;
+	}
+	/**
+	 * @param topMenuId the topMenuId to set
+	 */
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 	public String getMenuId() {
 		return this.menuId;
