@@ -39,6 +39,7 @@ public class EncryptionData extends CommonInfo implements Serializable {
 	private String userKey;
 	private EncryptionDeviceKey deviceKey;
 	private EncryptionStatus status;
+	private String extra;
 
 
 	/**
@@ -242,6 +243,14 @@ public class EncryptionData extends CommonInfo implements Serializable {
 
 	public void setStatus(EncryptionStatus status) {
 		this.status = status;
+	}
+
+	public String getExtra() {
+		return this.extra;
+	}
+
+	public void setExtra(String extra) {
+		this.extra = extra;
 	}
 
 
