@@ -129,6 +129,9 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 			data.setStatus(status);
 		}
 
+		// extra : 값의 형식은 "key=value;key2=value2;"로 구성된다. 추후 정의하여 사용.
+		data.setExtra("");
+
 		contents.setData(data);
 		return contents;
 	}
