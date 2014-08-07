@@ -139,23 +139,44 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				this.modMbrNo(sacHeader, userKey, deviceKey, deviceId, newMbrNo);
 
 				/** MQ 연동(번호변경) */
-				ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
-				try {
-					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-					mqInfo.setUserKey(userKey);
-					mqInfo.setOldUserKey(userKey);
-					mqInfo.setDeviceKey(deviceKey);
-					mqInfo.setOldDeviceKey(deviceKey);
-					mqInfo.setDeviceId(deviceId);
-					mqInfo.setOldDeviceId(preDeviceId);
-					mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
-					mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
-					mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
-					LOGGER.debug("{} 번호변경 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
-					this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
+				if (this.isCall) {
+					ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
+					try {
+						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+						mqInfo.setUserKey(newMbrNo);
+						mqInfo.setOldUserKey(userKey);
+						mqInfo.setDeviceKey(deviceKey);
+						mqInfo.setOldDeviceKey(deviceKey);
+						mqInfo.setDeviceId(deviceId);
+						mqInfo.setOldDeviceId(preDeviceId);
+						mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+						mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+						mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
+						LOGGER.debug("{} 번호변경 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
+						this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
 
-				} catch (AmqpException ex) {
-					LOGGER.info("MQ process fail {}", mqInfo);
+					} catch (AmqpException ex) {
+						LOGGER.info("MQ process fail {}", mqInfo);
+					}
+				} else {
+					ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
+					try {
+						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+						mqInfo.setUserKey(userKey);
+						mqInfo.setOldUserKey(userKey);
+						mqInfo.setDeviceKey(deviceKey);
+						mqInfo.setOldDeviceKey(deviceKey);
+						mqInfo.setDeviceId(deviceId);
+						mqInfo.setOldDeviceId(preDeviceId);
+						mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+						mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+						mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
+						LOGGER.debug("{} 번호변경 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
+						this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
+
+					} catch (AmqpException ex) {
+						LOGGER.info("MQ process fail {}", mqInfo);
+					}
 				}
 
 				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE;
@@ -169,18 +190,34 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				 */
 				newMbrNo = this.reviveUser(sacHeader, userKey, deviceId, deviceKey);
 
-				/** MQ 연동(MDN 등록) */
-				CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-				try {
-					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-					mqInfo.setUserKey(userKey);
-					mqInfo.setDeviceKey(deviceKey);
-					mqInfo.setDeviceId(deviceId);
-					mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
-					this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
-					LOGGER.debug("{} 번호이동 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
-				} catch (AmqpException ex) {
-					LOGGER.info("MQ process fail {}", mqInfo);
+				if (this.isCall) {
+					/** MQ 연동(MDN 등록) */
+					CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+					try {
+						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+						mqInfo.setUserKey(newMbrNo);
+						mqInfo.setDeviceKey(deviceKey);
+						mqInfo.setDeviceId(deviceId);
+						mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+						this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+						LOGGER.debug("{} 번호이동 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
+					} catch (AmqpException ex) {
+						LOGGER.info("MQ process fail {}", mqInfo);
+					}
+				} else {
+					/** MQ 연동(MDN 등록) */
+					CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+					try {
+						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+						mqInfo.setUserKey(userKey);
+						mqInfo.setDeviceKey(deviceKey);
+						mqInfo.setDeviceId(deviceId);
+						mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+						this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+						LOGGER.debug("{} 번호이동 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
+					} catch (AmqpException ex) {
+						LOGGER.info("MQ process fail {}", mqInfo);
+					}
 				}
 
 				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT;
