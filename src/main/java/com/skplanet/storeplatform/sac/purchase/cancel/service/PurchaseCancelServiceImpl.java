@@ -219,11 +219,13 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			}
 		}
 
+		/* 정액권 AI-IS 데이터로 인해 체크 제외 2014.08.05 최상훈C
 		if (prchsSacParam.getTotAmt() > 0
 				&& (purchaseCancelDetailSacParam.getPaymentSacParamList() == null || purchaseCancelDetailSacParam
 						.getPaymentSacParamList().isEmpty())) {
 			throw new StorePlatformException("SAC_PUR_8104");
 		}
+		*/
 
 		// 2014.07.29 최상훈c 요건 추가(해당값이 존재하면 회원정보 조회 안함)
 		if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
@@ -301,7 +303,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			}
 
-			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())) {
+			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())
+					&& !StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+							PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
 				// 정액권 상품 처리.
 				this.updateProdTypeFix(purchaseCancelSacParam, prchsDtlSacParam);
 			}
