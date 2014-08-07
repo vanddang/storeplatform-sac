@@ -9,14 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.payment.vo;
 
-import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseHeaderSacReq;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Class 설명
  * 
  * Updated on : 2014. 2. 26. Updated by : nTels_yjw, nTels.
  */
-public class PaymentPolicySacRes extends PurchaseHeaderSacReq {
+public class PaymentPolicySacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 

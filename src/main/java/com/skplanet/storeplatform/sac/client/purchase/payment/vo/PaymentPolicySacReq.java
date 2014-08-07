@@ -23,44 +23,10 @@ public class PaymentPolicySacReq extends PurchaseHeaderSacReq {
 	private static final long serialVersionUID = 1L;
 
 	@NotBlank
-	private String type;
-
-	private String mdn;
-
-	@NotBlank
 	private String tenantId;
 
-	/**
-	 * @return the type
-	 */
-	@Override
-	public String getType() {
-		return this.type;
-	}
-
-	/**
-	 * @param type
-	 *            the type to set
-	 */
-	@Override
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	/**
-	 * @return the mdn
-	 */
-	public String getMdn() {
-		return this.mdn;
-	}
-
-	/**
-	 * @param mdn
-	 *            the mdn to set
-	 */
-	public void setMdn(String mdn) {
-		this.mdn = mdn;
-	}
+	@NotBlank
+	private String policyType;
 
 	/**
 	 * @return the tenantId
@@ -77,6 +43,21 @@ public class PaymentPolicySacReq extends PurchaseHeaderSacReq {
 	@Override
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the policyType
+	 */
+	public String getPolicyType() {
+		return this.policyType;
+	}
+
+	/**
+	 * @param policyType
+	 *            the policyType to set
+	 */
+	public void setPolicyType(String policyType) {
+		this.policyType = policyType;
 	}
 
 }
