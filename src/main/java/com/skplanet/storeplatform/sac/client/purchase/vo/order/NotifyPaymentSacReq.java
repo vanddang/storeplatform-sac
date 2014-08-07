@@ -38,6 +38,11 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	private String mctSpareParam; // 가맹점 파라미터
 	private String offeringYn; // 오퍼링 적용 여부
 
+	private Double targetPaymentAmt;
+	private Double saveExpectAmt;
+	private Double saveResultAmt;
+	private String procSubStatusCd;
+
 	@Valid
 	private List<PaymentInfo> paymentInfoList; // 결제수단정보 리스트
 
@@ -129,6 +134,66 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	 */
 	public void setOfferingYn(String offeringYn) {
 		this.offeringYn = offeringYn;
+	}
+
+	/**
+	 * @return the targetPaymentAmt
+	 */
+	public Double getTargetPaymentAmt() {
+		return this.targetPaymentAmt;
+	}
+
+	/**
+	 * @param targetPaymentAmt
+	 *            the targetPaymentAmt to set
+	 */
+	public void setTargetPaymentAmt(Double targetPaymentAmt) {
+		this.targetPaymentAmt = targetPaymentAmt;
+	}
+
+	/**
+	 * @return the saveExpectAmt
+	 */
+	public Double getSaveExpectAmt() {
+		return this.saveExpectAmt;
+	}
+
+	/**
+	 * @param saveExpectAmt
+	 *            the saveExpectAmt to set
+	 */
+	public void setSaveExpectAmt(Double saveExpectAmt) {
+		this.saveExpectAmt = saveExpectAmt;
+	}
+
+	/**
+	 * @return the saveResultAmt
+	 */
+	public Double getSaveResultAmt() {
+		return this.saveResultAmt;
+	}
+
+	/**
+	 * @param saveResultAmt
+	 *            the saveResultAmt to set
+	 */
+	public void setSaveResultAmt(Double saveResultAmt) {
+		this.saveResultAmt = saveResultAmt;
+	}
+
+	/**
+	 * @return the procSubStatusCd
+	 */
+	public String getProcSubStatusCd() {
+		return this.procSubStatusCd;
+	}
+
+	/**
+	 * @param procSubStatusCd
+	 *            the procSubStatusCd to set
+	 */
+	public void setProcSubStatusCd(String procSubStatusCd) {
+		this.procSubStatusCd = procSubStatusCd;
 	}
 
 	/**

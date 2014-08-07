@@ -24,6 +24,10 @@ public class CreateCompletePurchaseSacReq extends CommonInfo {
 
 	private CreateCompletePurchaseInfoSac purchase;
 	private List<PaymentInfo> paymentList;
+	private Double targetPaymentAmt;
+	private Double saveExpectAmt;
+	private Double saveResultAmt;
+	private String procSubStatusCd;
 
 	/**
 	 * @return the purchase
@@ -53,6 +57,66 @@ public class CreateCompletePurchaseSacReq extends CommonInfo {
 	 */
 	public void setPaymentList(List<PaymentInfo> paymentList) {
 		this.paymentList = paymentList;
+	}
+
+	/**
+	 * @return the targetPaymentAmt
+	 */
+	public Double getTargetPaymentAmt() {
+		return this.targetPaymentAmt;
+	}
+
+	/**
+	 * @param targetPaymentAmt
+	 *            the targetPaymentAmt to set
+	 */
+	public void setTargetPaymentAmt(Double targetPaymentAmt) {
+		this.targetPaymentAmt = targetPaymentAmt;
+	}
+
+	/**
+	 * @return the saveExpectAmt
+	 */
+	public Double getSaveExpectAmt() {
+		return this.saveExpectAmt;
+	}
+
+	/**
+	 * @param saveExpectAmt
+	 *            the saveExpectAmt to set
+	 */
+	public void setSaveExpectAmt(Double saveExpectAmt) {
+		this.saveExpectAmt = saveExpectAmt;
+	}
+
+	/**
+	 * @return the saveResultAmt
+	 */
+	public Double getSaveResultAmt() {
+		return this.saveResultAmt;
+	}
+
+	/**
+	 * @param saveResultAmt
+	 *            the saveResultAmt to set
+	 */
+	public void setSaveResultAmt(Double saveResultAmt) {
+		this.saveResultAmt = saveResultAmt;
+	}
+
+	/**
+	 * @return the procSubStatusCd
+	 */
+	public String getProcSubStatusCd() {
+		return this.procSubStatusCd;
+	}
+
+	/**
+	 * @param procSubStatusCd
+	 *            the procSubStatusCd to set
+	 */
+	public void setProcSubStatusCd(String procSubStatusCd) {
+		this.procSubStatusCd = procSubStatusCd;
 	}
 
 }
