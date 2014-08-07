@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -54,6 +55,9 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+	
+	@Autowired
+    private MemberBenefitService memberBenefitService;
 
 	/**
 	 * <pre>
@@ -143,6 +147,9 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 					MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 
 					if (retMetaInfo != null) {
+						// 2014.08.06. kdlim. 마일리지 적립율 추가
+						retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
+						
 						Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 						productList.add(product);
 					}

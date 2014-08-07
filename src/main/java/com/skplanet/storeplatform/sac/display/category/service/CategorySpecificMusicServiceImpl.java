@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProduct;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -65,6 +66,9 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 	@Autowired
 	private MusicInfoGenerator musicGenerator;
 
+	@Autowired
+    private MemberBenefitService memberBenefitService;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -206,6 +210,10 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", paramMap,
 								MetaInfo.class);
 						if (metaInfo != null) {
+							
+							// 2014.08.06. kdlim. 마일리지 적립율 추가
+	                    	metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+							
 							product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
 							productList.add(product);
 						}
