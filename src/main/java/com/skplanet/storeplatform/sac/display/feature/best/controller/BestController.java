@@ -43,7 +43,7 @@ public class BestController {
 	/**
 	 * 
 	 * <pre>
-	 * BEST 앱 리스트 조회.
+	 * [I03000001] 2.4.1.1. 특정 상품 APP 조회
 	 * </pre>
 	 * 
 	 * @param requestheader

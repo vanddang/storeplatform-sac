@@ -40,6 +40,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.util.MetaMapper;
 import com.skplanet.storeplatform.sac.display.meta.util.MetaResultGenerator;
@@ -74,6 +76,10 @@ public class BestAppServiceImpl implements BestAppService {
 	@Autowired
 	private ProductInfoManager productInfoManager;
 
+
+	@Autowired
+    private MemberBenefitService benefitService;
+	
 	/**
 	 * 
 	 * <pre>
@@ -88,7 +94,7 @@ public class BestAppServiceImpl implements BestAppService {
 	 */
 	@Override
 	public BestAppSacRes searchBestAppList(SacRequestHeader requestheader, BestAppSacReq bestAppReq) {
-		TenantHeader tenantHeader = requestheader.getTenantHeader();
+		final TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
 		this.log.debug("########################################################");
@@ -177,7 +183,12 @@ public class BestAppServiceImpl implements BestAppService {
 				productList = MetaResultGenerator.fetch(ProductType.App, param, appList, new MetaMapper() {
 					@Override
 					public Product processRow(MetaInfo meta) {
-						return BestAppServiceImpl.this.responseInfoGenerateFacade.generateAppProduct(meta);
+						
+						//2014.08.07. kdlim. 마일리지 적립율 정보
+			        	MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), meta.getTopMenuId(), meta.getProdId(), meta.getProdAmt());
+			        	meta.setMileageInfo(mileageInfo);
+			        	
+						return responseInfoGenerateFacade.generateAppProduct(meta);
 					}
 				});
 
