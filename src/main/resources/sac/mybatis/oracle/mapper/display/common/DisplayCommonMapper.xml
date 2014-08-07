@@ -43,10 +43,7 @@
     <select id="getTmembershipDcRateForMenu" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy">
         SELECT /* DisplayCommonMapper.xml, getTmembershipDcRateForMenu, SAC : 정희원 , 2014-01-24 */
              NVL(SUBSTR(TENANT_PROD_GRP_CD,13,8),'OR006311') PROD_TP
-            ,DECODE(REGEXP_REPLACE(REGEXP_REPLACE(APPLY_VALUE,'(.*)[;](.*)','\1'),'(.*)[:](.*)[:](.*)','\3'),0
-        ,REGEXP_REPLACE(REGEXP_REPLACE(APPLY_VALUE,'(.*)[;](.*)[;](.*)[;](.*)[;](.*)[;](.*)[;](.*)[;](.*)[;](.*)','\1'),'(.*)[:](.*)[:](.*)','\3')
-        ,REGEXP_REPLACE(REGEXP_REPLACE(APPLY_VALUE,'(.*)[;](.*)','\1'),'(.*)[:](.*)[:](.*)','\3')
-             ) DC_RATE
+            ,NVL(SUBSTR(REGEXP_SUBSTR(APPLY_VALUE , '21:MAXAMT:[0-9][0-9]') , 11) , 0) DC_RATE
         FROM    TB_CM_TENANT_SALE_POLICY
         WHERE   1=1
                 AND TENANT_ID = #{tenantId}
