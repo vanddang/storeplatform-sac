@@ -85,7 +85,7 @@ public class OtherPartProductController {
 
             // 부모상품에 대한 마일리지 정책 적용
             if(pointList == null)
-                pointList = this.metaInfoGenerator.generateMileage(this.benefitService.getMileageInfo(tenantId, pp.getParentTopMenuId(), pp.getParentProdId()));
+            	pointList = metaInfoGenerator.generateMileage(benefitService.getMileageInfo(tenantId, pp.getParentTopMenuId(), pp.getParentProdId(), pp.getProdAmt()));
 
             ppro.setPointList(pointList);
 
