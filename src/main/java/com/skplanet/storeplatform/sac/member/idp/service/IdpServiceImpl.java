@@ -1535,6 +1535,7 @@ public class IdpServiceImpl implements IdpService {
 		String userKey = "";
 		String prevMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
 		String currentMbrNoForgameCenter = ""; // 게임센터 연동을 위한 MbrNo
+		String mqDeviceStr = ""; // 회원탈퇴 MQ 연동할 deviceId List
 
 		if (map.get("user_key") != null)
 			currentMbrNoForgameCenter = map.get("user_key").toString(); // 게임센터 연동을 위한 변수mbrNo 셋팅
@@ -1580,6 +1581,22 @@ public class IdpServiceImpl implements IdpService {
 		try {
 
 			if (searchUserResponse != null) {
+
+				/** MQ 연동을 위해 userId가 가지고 있는 휴대기기 목록 조회 */
+				SacRequestHeader requestHeader = new SacRequestHeader();
+				TenantHeader tenant = new TenantHeader();
+				tenant.setSystemId(map.get("systemID").toString());
+				tenant.setTenantId(map.get("tenantID").toString());
+				requestHeader.setTenantHeader(tenant);
+				ListDeviceReq listDeviceReq = new ListDeviceReq();
+				listDeviceReq.setUserId(userId);
+				listDeviceReq.setIsMainDevice("N");
+				ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
+
+				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
+					mqDeviceStr += deviceInfo.getDeviceId() + "|";
+				}
+
 				RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 				removeUserRequest.setCommonRequest(commonRequest);
 				removeUserRequest.setUserKey(searchUserResponse.getUserKey());
@@ -1618,6 +1635,9 @@ public class IdpServiceImpl implements IdpService {
 				RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
 				mqInfo.setUserId(userId);
 				mqInfo.setUserKey(searchUserResponse.getUserKey());
+				if (StringUtils.isNotBlank(mqDeviceStr)) {
+					mqInfo.setDeviceId(mqDeviceStr);
+				}
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 
 				try {
