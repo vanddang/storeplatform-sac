@@ -17,22 +17,35 @@ package com.skplanet.storeplatform.sac.display.common.vo;
  */
 public class MileageInfo {
 
+	/**
+	 * 정책 대상 코드 ( 카테고리, 상품 )
+	 */
+	private String policyTargetCd;
+	
     /**
      * 플래티넘 등급 적립률
      */
     private Integer rateLv1 = 0;
 
     /**
-     * 실버 등급 적립률
+     * 골드 등급 적립률
      */
     private Integer rateLv2 = 0;
 
     /**
-     * 골드 등급 적립률
+     * 실버 등급 적립률
      */
     private Integer rateLv3 = 0;
 
-    public Integer getRateLv1() {
+	public String getPolicyTargetCd() {
+		return policyTargetCd;
+	}
+
+	public void setPolicyTargetCd(String policyTargetCd) {
+		this.policyTargetCd = policyTargetCd;
+	}
+
+	public Integer getRateLv1() {
         return rateLv1;
     }
 
