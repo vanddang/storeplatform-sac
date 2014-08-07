@@ -90,6 +90,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_B2B_NON_BALANCE); // OR000422-B2B Gateway(비정산)
 		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM); // OR000420-T freemium(DRM)
 		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT); // OR000413-T혜택 이벤트
+		this.freeChargeReqCdList.add(PurchaseConstants.PRCHS_REQ_PATH_AOM_AGREE); // OR000446-AOM 수신동의
 	}
 
 	/**
