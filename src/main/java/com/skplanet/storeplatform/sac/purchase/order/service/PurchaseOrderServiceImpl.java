@@ -576,12 +576,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setUserGrade(this.purchaseMemberRepository.searchUserGrade(reservedDataMap.get("userKey")));
 
 		// 상품 적립률
-		res.settMileageSaveRate(Integer.parseInt(StringUtils.defaultIfBlank(reservedDataMap.get("tMileageSaveRate"),
-				"0")));
+		res.settMileageSaveRate("platinum:0;gold:0;silver:0");
 
 		// 적립 가능 결제수단 코드
 		res.settMileageAvailMtd(this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
 				prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd()));
+
+		// T마일리지 적립한도 금액
+		res.settMileageLimitAmt(500000);
+
+		// (이번회) T마일리지 적립예정 금액
+		res.settMileageReseveAmt(0);
 
 		// ------------------------------------------------------------------------------------------------
 		// OCB 적립율
