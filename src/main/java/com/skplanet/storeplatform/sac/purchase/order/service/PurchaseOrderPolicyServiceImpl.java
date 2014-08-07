@@ -448,19 +448,21 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		// --------------------------------------------------------------------------------------------------
-		// IAP SKT 후불 결제금액 조회
+		// IAP SKT 후불 결제금액 조회 : 쇼핑상품 구매 경우는 제외
 
 		int iapBillingAmt = -1;
-		try {
-			iapBillingAmt = this.iapRepository.inquiryBillingAmt(policyCheckParam.getDeviceId(),
-					policyCheckParam.getSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
-		} catch (Exception e) {
-			// 예외 발생 시, IAP측 결제금액 무시 처리 : 구매DB 기준으로 IAP포함 조회
-			if (e instanceof StorePlatformException) {
-				this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}",
-						((StorePlatformException) e).getCode());
-			} else {
-				this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}", e.getMessage());
+		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_SHOPPING_PRCHS_LIMIT) == false) {
+			try {
+				iapBillingAmt = this.iapRepository.inquiryBillingAmt(policyCheckParam.getDeviceId(),
+						policyCheckParam.getSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
+			} catch (Exception e) {
+				// 예외 발생 시, IAP측 결제금액 무시 처리 : 구매DB 기준으로 IAP포함 조회
+				if (e instanceof StorePlatformException) {
+					this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}",
+							((StorePlatformException) e).getCode());
+				} else {
+					this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}", e.getMessage());
+				}
 			}
 		}
 
