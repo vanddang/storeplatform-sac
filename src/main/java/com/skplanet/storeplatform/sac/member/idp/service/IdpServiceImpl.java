@@ -1596,6 +1596,7 @@ public class IdpServiceImpl implements IdpService {
 				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
 					mqDeviceStr += deviceInfo.getDeviceId() + "|";
 				}
+				mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
 
 				RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 				removeUserRequest.setCommonRequest(commonRequest);
