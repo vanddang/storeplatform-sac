@@ -47,7 +47,7 @@ public class PaymentPolicyServiceImpl implements PaymentPolicyService {
 		PaymentPolicySacRes response = new PaymentPolicySacRes();
 
 		String value = null;
-		if ("01".equals(request.getType())) {
+		if ("01".equals(request.getPolicyType())) {
 			value = this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(request.getTenantId(), null);
 		}
 
