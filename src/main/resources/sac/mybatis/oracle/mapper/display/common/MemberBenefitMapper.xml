@@ -5,10 +5,12 @@
     <!--배치 완료 일시 조회-->
     <select id="getMileageInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.common.vo.MileageInfo">
         select /* MemberBenefitMapper.xml, getMileageInfo, SAC : 정희원 , 2014-07-25 */
+        	POLICY_TARGET_CD,
             RATE_1ST AS RATE_LV1,
             RATE_2ND AS RATE_LV2,
             RATE_3RD AS RATE_LV3
         from (
+        	<if test="chnlId != null and chnlId != ''">
             SELECT
                 POLICY_TARGET_CD,
                 RATE_1ST,
@@ -19,6 +21,7 @@
                   AND DCP.POLICY_TARGET_CD='DP01160101'
                   AND DCP.POLICY_TARGET_ID=#{chnlId}
             UNION ALL
+            </if>
             SELECT
                 POLICY_TARGET_CD,
                 RATE_1ST,

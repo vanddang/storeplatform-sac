@@ -134,7 +134,7 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
                     if (metaInfo != null) {
                     	
                     	// 2014.08.06. kdlim. 마일리지 적립율 추가
-                    	metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId()));
+                    	metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
                     	
                         product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
                         productList.add(product);

@@ -98,32 +98,6 @@ public class MusicServiceImpl implements MusicService {
         String topMenuId = menuList.get(0).getTopMenuId();
 
         //tmembership 할인율
-/*        
-        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), topMenuId);
-        if(tmembershipDcInfo != null) {
-        	List<Point> pointList = null; 
-        	
-        	if(tmembershipDcInfo.getNormalDcRate() != null) {
-        		pointList = new ArrayList<Point>();
-		        Point point = new Point();
-		        point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
-		        point.setType(DisplayConstants.DC_RATE_TYPE_NORMAL);
-		        point.setDiscountRate(tmembershipDcInfo.getNormalDcRate());
-		        pointList.add(point);
-        	}
-        	if(tmembershipDcInfo.getFreepassDcRate() != null) {
-        		if(pointList == null) pointList = new ArrayList<Point>();
-        		Point point = new Point();
-        		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
-        		point.setType(DisplayConstants.DC_RATE_TYPE_FREEPASS);
-        		point.setDiscountRate(tmembershipDcInfo.getFreepassDcRate());
-        		pointList.add(point);
-        	}
-	        
-        	detailComposite.setPointList(pointList);
-        }
-        */
-        //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(param.getTenantId(), topMenuId);
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
         //2014.08.01. kdlim. 마일리지 적립율 정보
@@ -133,7 +107,7 @@ public class MusicServiceImpl implements MusicService {
         	if(userGradeInfo != null) {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(param.getTenantId(), topMenuId, param.getChannelId());
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(param.getTenantId(), topMenuId, param.getChannelId(), musicDetail.getProdAmt());
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
         }

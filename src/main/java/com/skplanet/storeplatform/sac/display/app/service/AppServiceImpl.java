@@ -179,7 +179,7 @@ public class AppServiceImpl implements AppService {
         	if(userGradeInfo != null) {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), topMenuId, request.getChannelId());
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), topMenuId, request.getChannelId(), appDetail.getProdAmt());
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
         }

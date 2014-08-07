@@ -434,32 +434,6 @@ public class EpubServiceImpl implements EpubService {
 		product.setDateList(this.mapDateList(mapperVO, sdf));
 
         //tmembership 할인율
-		/*
-        TmembershipDcInfo tmembershipDcInfo = this.commonService.getTmembershipDcRateForMenu(mapperVO.getTenantId(), mapperVO.getTopMenuId());
-        if(tmembershipDcInfo != null) {
-        	List<Point> pointList = null;
-
-        	if(tmembershipDcInfo.getNormalDcRate() != null) {
-        		pointList = new ArrayList<Point>();
-		        Point point = new Point();
-		        point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
-		        point.setType(DisplayConstants.DC_RATE_TYPE_NORMAL);
-		        point.setDiscountRate(tmembershipDcInfo.getNormalDcRate());
-		        pointList.add(point);
-        	}
-        	if(tmembershipDcInfo.getFreepassDcRate() != null) {
-        		if(pointList == null) pointList = new ArrayList<Point>();
-        		Point point = new Point();
-        		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
-        		point.setType(DisplayConstants.DC_RATE_TYPE_FREEPASS);
-        		point.setDiscountRate(tmembershipDcInfo.getFreepassDcRate());
-        		pointList.add(point);
-        	}
-
-        	product.setPointList(pointList);
-        }
-        */
-        //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(mapperVO.getTenantId(), mapperVO.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
         //2014.08.01. kdlim. 마일리지 적립율 정보
@@ -470,7 +444,8 @@ public class EpubServiceImpl implements EpubService {
         	if(userGradeInfo != null) {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(mapperVO.getTenantId(), mapperVO.getTopMenuId(), mapperVO.getProdId());
+	        	Integer prodAmt = mapperVO.getStoreProdAmt() == null || mapperVO.getStoreProdAmt() == 0 ? mapperVO.getPlayProdAmt() : mapperVO.getStoreProdAmt();
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(mapperVO.getTenantId(), mapperVO.getTopMenuId(), mapperVO.getProdId(), prodAmt);
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
         }

@@ -261,7 +261,7 @@ public class FreepassServiceImpl implements FreepassService {
         	if(userGradeInfo != null) {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(req.getTenantId(), retMetaInfo.getTopMenuId(), req.getChannelId());
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(req.getTenantId(), retMetaInfo.getTopMenuId(), req.getChannelId(), retMetaInfo.getProdAmt());
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
         }

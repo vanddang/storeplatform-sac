@@ -772,4 +772,8 @@ public class DisplayConstants {
 	public static final String FIXRATE_PROD_TYPE_VOD_SERIESPASS = "OR004302"; // VOD 시리즈패스
 	public static final String FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN = "OR004303"; // 이북/코믹 전권소장
 	public static final String FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN = "OR004304"; // 이북/코믹 전권대여
+	
+	/** 할인율/적립율 정책 대상 코드 */
+	public static final String POLICY_TARGET_CD_PRODUCT = "DP01160101"; 
+	public static final String POLICY_TARGET_CD_CATEGORY = "DP01160102"; 
 }

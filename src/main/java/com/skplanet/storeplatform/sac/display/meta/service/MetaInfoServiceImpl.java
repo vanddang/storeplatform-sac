@@ -85,7 +85,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
             me = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
 
-        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId()));
+        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
 
         return me;
 	}
@@ -170,7 +170,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
 		    me = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
 
-        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId()));
+        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
 
         return me;
 	}
@@ -220,7 +220,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
 		    me = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
 
-        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId()));
+        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
 
         return me;
 	}
@@ -275,7 +275,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
 		    me = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
 
-        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId()));
+        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
 
         return me;
 	}

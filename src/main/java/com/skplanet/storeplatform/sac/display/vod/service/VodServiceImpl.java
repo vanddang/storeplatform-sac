@@ -350,7 +350,8 @@ public class VodServiceImpl implements VodService {
         	if(userGradeInfo != null) {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(req.getTenantId(), mapperVO.getTopMenuId(), req.getChannelId());
+	        	Integer prodAmt = mapperVO.getStoreProdAmt() == null || mapperVO.getStoreProdAmt() == 0 ? mapperVO.getPlayProdAmt() : mapperVO.getStoreProdAmt();
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(req.getTenantId(), mapperVO.getTopMenuId(), req.getChannelId(), prodAmt);
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
         }

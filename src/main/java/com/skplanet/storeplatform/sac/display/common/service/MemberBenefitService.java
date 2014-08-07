@@ -25,8 +25,9 @@ public interface MemberBenefitService {
      * @param tenantId		Tenant Id
      * @param topMenuId		Top Menu ID
      * @param chnlId 		채널ID
+     * @param prodAmt		상품 가격 (예외 상품이 아닌 경우 무료 상품은 적립율을 노출하지 않는다.) 
      * @return MileageInfo 마일리지 적립율 정보
      */
-    MileageInfo getMileageInfo(String tenantId, String topMenuId, String chnlId);
+    MileageInfo getMileageInfo(String tenantId, String topMenuId, String chnlId, Integer prodAmt);
 
 }
