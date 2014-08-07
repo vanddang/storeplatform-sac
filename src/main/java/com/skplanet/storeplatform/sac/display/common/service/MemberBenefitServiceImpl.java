@@ -50,7 +50,7 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
         Map<String, Object> req = new HashMap<String, Object>();
         if(StringUtil.isEmpty(tenantId) || StringUtil.isEmpty(topMenuId)) return null;
 
-        //2014.08.07. kdlim. 마일리지 적립율 서비스 활성화 여부
+        //Tstore멤버십 적립율 정보
         //TODO : 단말 모델 별 서비스 제공여부 추가
         SacService sacService = new SacService();
         sacService.setServiceCd(OtherConstants.SAC_SERVICE_MILEAGE);
@@ -64,7 +64,8 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
 	
 	        mileageInfo = commonDAO.queryForObject("MemberBenefit.getMileageInfo", req, MileageInfo.class);
 	
-	        //2014.08.07. kdlim. 예외 상품이 아닌 경우 무료 상품은 적립율을 노출하지 않는다.
+	        //Tstore멤버십 적립율 정보
+	        //예외 상품이 아닌 경우 무료 상품은 적립율을 노출하지 않는다.
 	        //무료 상품 && 카테고리 => 마일리지 비노출
 	        if (prodAmt == null || prodAmt == 0
 	        		&& StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)

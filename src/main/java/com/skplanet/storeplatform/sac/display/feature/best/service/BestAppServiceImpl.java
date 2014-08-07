@@ -184,7 +184,7 @@ public class BestAppServiceImpl implements BestAppService {
 					@Override
 					public Product processRow(MetaInfo meta) {
 						
-						//2014.08.07. kdlim. 마일리지 적립율 정보
+						//Tstore멤버십 적립율 정보
 			        	MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), meta.getTopMenuId(), meta.getProdId(), meta.getProdAmt());
 			        	meta.setMileageInfo(mileageInfo);
 			        	

@@ -100,7 +100,7 @@ public class RelatedProductController {
 	/**
 	 *
 	 * <pre>
-	 * 특정 판매자별 상품 조회.
+	 * [I03000034] 2.5.3. 특정 판매자별 상품 조회
 	 * </pre>
 	 *
 	 * @param requestVO
@@ -144,7 +144,7 @@ public class RelatedProductController {
 	/**
 	 *
 	 * <pre>
-	 * 특정 아티스트별 상품(곡) 조회.
+	 * [I03000037] 2.5.5. 특정 아티스트별 상품(곡) 조회
 	 * </pre>
 	 *
 	 * @param requestVO

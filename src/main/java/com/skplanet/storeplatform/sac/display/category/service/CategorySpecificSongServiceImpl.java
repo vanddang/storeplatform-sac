@@ -128,7 +128,7 @@ public class CategorySpecificSongServiceImpl implements CategorySpecificSongServ
 						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo", paramMap,
 								MetaInfo.class);
 						if (metaInfo != null) {
-							// 2014.08.06. kdlim. 마일리지 적립율 추가
+							// Tstore멤버십 적립율 정보
 	                    	metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
 							
 							paramMap.put("outsdContentsId", metaInfo.getOutsdContentsId());

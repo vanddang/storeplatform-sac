@@ -148,7 +148,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 특정 기획전에 대한 상품 조회– GET.
+	 * [I03000049] 2.7.5.2. 특정 기획전에 대한 상품 리스트
 	 * </pre>
 	 * 
 	 * @param header
@@ -169,7 +169,7 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
-	 * 브랜드샵 - 메인  조회– GET.
+	 * [I03000050] 2.7.6.1. 브랜드샵 – 메인
 	 * </pre>
 	 * 
 	 * @param header

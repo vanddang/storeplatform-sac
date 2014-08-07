@@ -731,7 +731,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 		
-        // 2014.08.04. kdlim. 마일리지 적립율 추가
+        // Tstore멤버십 적립율 정보
         appendMileageInfo(metaInfo, product);
 		
 		return product;
@@ -775,7 +775,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setSalesOption(salesOption);
 
-        // 2014.08.04. kdlim. 마일리지 적립율 추가
+        // Tstore멤버십 적립율 정보
         appendMileageInfo(metaInfo, product);
 		
 		return product;

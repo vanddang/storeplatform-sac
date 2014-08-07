@@ -147,7 +147,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 					MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 
 					if (retMetaInfo != null) {
-						// 2014.08.06. kdlim. 마일리지 적립율 추가
+						// Tstore멤버십 적립율 정보
 						retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
 						
 						Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);

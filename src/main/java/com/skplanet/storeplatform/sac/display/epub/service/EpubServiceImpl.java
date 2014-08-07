@@ -218,6 +218,9 @@ public class EpubServiceImpl implements EpubService {
         param.put("representImgCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
         param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
         param.put("count", req.getCount() == null ? 20 : req.getCount());
+        param.put("userKey", userKey);
+        param.put("deviceKey", deviceKey);
+        
         final EpubDetail epubDetail = this.getEpubChannel(param);
 
         if(epubDetail != null) {
@@ -436,7 +439,7 @@ public class EpubServiceImpl implements EpubService {
         //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(mapperVO.getTenantId(), mapperVO.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
-        //2014.08.01. kdlim. 마일리지 적립율 정보
+        //Tstore멤버십 적립율 정보
         if (param.get("userKey") != null && StringUtils.isNotEmpty((String)param.get("userKey"))) {
         	String userKey = (String)param.get("userKey");
         	//회원등급 조회

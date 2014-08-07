@@ -252,7 +252,7 @@ public class FreepassServiceImpl implements FreepassService {
 		TmembershipDcInfo info = this.displayCommonService.getTmembershipDcRateForMenu(header.getTenantHeader()
 				.getTenantId(), retMetaInfo.getTopMenuId());
 		List<Point> pointList = this.commonGenerator.generatePoint(info);
-        //2014.08.05. kdlim. 마일리지 적립율 정보
+        //Tstore멤버십 적립율 정보
 		//정액제 패스/시리즈 패스만 조회
         if ((StringUtils.equals(DisplayConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE, retMetaInfo.getCmpxProdClsfCd()) || StringUtils.equals(DisplayConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS, retMetaInfo.getCmpxProdClsfCd()))
         		&& StringUtils.isNotEmpty(req.getUserKey())) {
