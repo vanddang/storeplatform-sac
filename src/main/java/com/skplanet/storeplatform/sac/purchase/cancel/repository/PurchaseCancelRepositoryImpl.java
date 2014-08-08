@@ -485,6 +485,12 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 				break;
 			}
 
+			for (PrchsProdCnt prchsProdCnt : prchsProdCntList) {
+				if (StringUtils.equals(prchsProdCnt.getProdId(), prchsDtlSacParam.getProdId())) {
+					continue;
+				}
+			}
+
 			PrchsProdCnt prchsProdCnt = new PrchsProdCnt();
 			prchsProdCnt.setTenantId(prchsDtlSacParam.getTenantId());
 			prchsProdCnt.setUseUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
