@@ -33,6 +33,14 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 회원Part 조회 결과 에러 코드 */
 	public static final String SACINNER_MEMBER_RESULT_NOTFOUND = "SC_MEM_9982";
 
+	/** 회원등급 */
+	public static final String USER_GRADE_PLATINUM = "platinum";
+	public static final String USER_GRADE_GOLD = "gold";
+	public static final String USER_GRADE_SILVER = "silver";
+
+	/** T멤버쉽 1회 적립한도 */
+	public static final int TMEMBERSHIP_SAVE_LIMIT = 500000;
+
 	/** SKP 법인번호 */
 	public static final String SKP_CORPORATION_NO = "1101114699794";
 

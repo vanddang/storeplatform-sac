@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
+import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
@@ -90,6 +92,23 @@ public interface PurchaseOrderMakeDataService {
 	 * @return 자동구매 생성을 위한 목록
 	 */
 	public List<AutoPrchs> makeAutoPrchsList(PrchsDtlMore prchsDtlMore, String deviceModelCd);
+
+	/**
+	 * 
+	 * <pre>
+	 * 멤버쉽 적립을 위한 목록 생성.
+	 * </pre>
+	 * 
+	 * @param prchsDtlMore
+	 *            구매생성 정보
+	 * 
+	 * @param mileageSubInfo
+	 *            멤버쉽 정보
+	 * 
+	 * @return 멤버쉽 적립을 위한 목록
+	 */
+	public List<MembershipReserve> makeMembershipReserveList(List<PrchsDtlMore> prchsDtlMoreList,
+			MileageSubInfo mileageSubInfo);
 
 	/**
 	 * <pre>

@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,7 @@ import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
+import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.common.vo.UniqueTid;
@@ -63,13 +65,16 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePur
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
+import com.skplanet.storeplatform.sac.purchase.common.service.MembershipReserveService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShoppingOrderRepository;
+import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
@@ -111,6 +116,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private PurchaseTenantPolicyService purchaseTenantPolicyService;
 	@Autowired
 	private PayPlanetShopService payPlanetShopService;
+	@Autowired
+	private MembershipReserveService membershipReserveService;
 	@Autowired
 	private PurchaseMemberRepository purchaseMemberRepository;
 	@Autowired
@@ -576,17 +583,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setUserGrade(this.purchaseMemberRepository.searchUserGrade(reservedDataMap.get("userKey")));
 
 		// 상품 적립률
-		res.settMileageSaveRate("platinum:0;gold:0;silver:0");
+		res.settMileageSaveRate(reservedDataMap.get("tMileageRateInfo"));
 
 		// 적립 가능 결제수단 코드
 		res.settMileageAvailMtd(this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
 				prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd()));
 
 		// T마일리지 적립한도 금액
-		res.settMileageLimitAmt(500000);
+		res.settMileageLimitAmt(PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT);
 
 		// (이번회) T마일리지 적립예정 금액
-		res.settMileageReseveAmt(0);
+		res.settMileageReseveAmt(this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
+				reservedDataMap.get("userKey"), null));
 
 		// ------------------------------------------------------------------------------------------------
 		// OCB 적립율
@@ -945,14 +953,100 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		confirmPurchaseScReq.setUsePeriodUnitCd(prchsDtlMore.getUsePeriodUnitCd()); // 사용기간 단위
 		confirmPurchaseScReq.setUsePeriod(prchsDtlMore.getUsePeriod()); // 사용기간 값
 
+		// TAKTODO::T멤버쉽
+
+		String tMileageRateInfo = reservedDataMap.get("tMileageRateInfo"); // 상품 적립률
+		Map<String, Integer> rateMap = new HashMap<String, Integer>();
+
+		if (StringUtils.isBlank(tMileageRateInfo)) {
+			rateMap.put(PurchaseConstants.USER_GRADE_PLATINUM, 0);
+			rateMap.put(PurchaseConstants.USER_GRADE_GOLD, 0);
+			rateMap.put(PurchaseConstants.USER_GRADE_SILVER, 0);
+
+		} else {
+			String[] arRates = tMileageRateInfo.split(";");
+			String[] arRate = null;
+			for (String rate : arRates) {
+				arRate = rate.split(":");
+				rateMap.put(arRate[0], Integer.parseInt(StringUtils.defaultIfBlank(arRate[1], "0")));
+			}
+		}
+
+		String userGrade = this.purchaseMemberRepository.searchUserGrade(reservedDataMap.get("userKey")); // 등급
+
+		MileageSubInfo mileageSubInfo = new MileageSubInfo();
+		mileageSubInfo.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_TMEMBERSHIP);
+		mileageSubInfo.setUserGrdCd(userGrade);
+		mileageSubInfo.setProdSaveRate(rateMap.get(userGrade));
+		mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
+
+		if (StringUtils.isBlank(notifyPaymentReq.getProcSubStatusCd()) == false) { // 결제측으로부터 T멤버쉽 정보 받은 경우
+			mileageSubInfo.setPrchsReqPathCd(prchsDtlMore.getPrchsReqPathCd());
+
+			mileageSubInfo.setTargetPaymentAmt(notifyPaymentReq.getTargetPaymentAmt());
+			mileageSubInfo.setSaveExpectAmt(notifyPaymentReq.getSaveExpectAmt());
+			mileageSubInfo.setSaveResultAmt(notifyPaymentReq.getSaveResultAmt());
+			mileageSubInfo.setSaveTypeCd(notifyPaymentReq.getProcSubStatusCd());
+
+		} else {
+			mileageSubInfo.setPrchsReqPathCd(null);
+
+			// 적립 가능 결제수단 금액
+			String availPayMtd = this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
+					prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd());
+			double availPayAmt = 0.0;
+			for (PaymentInfo paymentInfo : notifyPaymentReq.getPaymentInfoList()) {
+				if (StringUtils.contains(availPayMtd,
+						PaymethodUtil.convert2PayPlanetCodeWithoutPointCode(paymentInfo.getPaymentMtdCd()))) {
+					availPayAmt += paymentInfo.getPaymentAmt();
+				}
+			}
+			mileageSubInfo.setTargetPaymentAmt(availPayAmt);
+
+			if (availPayAmt > 0.0) {
+
+				// 적립예정 금액: 10원 미만 버림
+				int expectAmt = (int) ((int) (availPayAmt * rateMap.get(userGrade) * 0.01) * 0.1) * 10;
+
+				// 적립예정 이력 총 금액
+				int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
+						reservedDataMap.get("userKey"), null);
+
+				if (preReserveAmt >= PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT) { // 한도초과
+					mileageSubInfo.setSaveResultAmt(0);
+					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_OVER);
+
+				} else if ((preReserveAmt + expectAmt) <= PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT) { // 전체적립
+					mileageSubInfo.setSaveResultAmt(expectAmt);
+					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_ALL);
+
+				} else { // 부분적립
+					mileageSubInfo.setSaveResultAmt(PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT - preReserveAmt);
+					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_PART);
+				}
+
+				mileageSubInfo.setSaveExpectAmt(expectAmt);
+			}
+		}
+
+		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,{},{}percentage", mileageSubInfo.getTargetPaymentAmt(),
+				mileageSubInfo.getProdSaveRate());
+
+		List<MembershipReserve> membershipReserveList = null;
+		if (mileageSubInfo.getTargetPaymentAmt() > 0 && mileageSubInfo.getProdSaveRate() > 0) {
+			membershipReserveList = this.purchaseOrderMakeDataService.makeMembershipReserveList(prchsDtlMoreList,
+					mileageSubInfo);
+		}
+
+		// -------------------------------------------------------------------------------------------
+		// 구매확정 요청
+
 		confirmPurchaseScReq.setPrchsProdCntList(prchsProdCntList); // 건수집계
 		confirmPurchaseScReq.setPaymentList(paymentList); // 결제
 		confirmPurchaseScReq.setAutoPrchsList(autoPrchsList); // 자동구매
 		confirmPurchaseScReq.setShoppingCouponList(shoppingCouponList); // 쇼핑발급 목록
 		confirmPurchaseScReq.setEbookComicEpisodeList(ebookComicEpisodeList);
-
-		// -------------------------------------------------------------------------------------------
-		// 구매확정 요청
+		confirmPurchaseScReq.setMembershipReserveList(membershipReserveList);
 
 		StorePlatformException checkException = null;
 		try {

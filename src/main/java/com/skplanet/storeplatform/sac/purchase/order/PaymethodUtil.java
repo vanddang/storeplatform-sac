@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.purchase.order;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
@@ -59,7 +61,6 @@ public class PaymethodUtil {
 		convert2PayPlanetMap.put("OR000624", "28"); // 게임캐쉬 보너스 포인트
 		convert2PayPlanetMap.put("OR000608", "29"); // T store Point
 		convert2PayPlanetMap.put("OR000625", "30"); // T game pass
-
 	}
 
 	/**
@@ -90,4 +91,26 @@ public class PaymethodUtil {
 		return convert2PayPlanetMap.containsKey(storeCode) ? convert2PayPlanetMap.get(storeCode) : storeCode;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * Store 결제수단코드를 Pay Planet 코드로 변경 - 포인트 코드는 캐쉬 코드로.
+	 * </pre>
+	 * 
+	 * @param ppCode
+	 *            Store 결제수단코드
+	 * @return Pay Planet 결제수단코드
+	 */
+	public static String convert2PayPlanetCodeWithoutPointCode(String storeCode) {
+		String code = convert2PayPlanetMap.containsKey(storeCode) ? convert2PayPlanetMap.get(storeCode) : storeCode;
+
+		// TAKTODO
+		if (StringUtils.equals(code, "29")) {
+			code = "25";
+		} else if (StringUtils.equals(code, "28")) {
+			code = "27";
+		}
+
+		return code;
+	}
 }

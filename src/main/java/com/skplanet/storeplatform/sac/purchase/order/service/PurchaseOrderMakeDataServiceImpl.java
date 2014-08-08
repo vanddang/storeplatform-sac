@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.DateUtils;
 import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
+import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
@@ -34,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLe
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
+import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
@@ -390,6 +392,68 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	}
 
 	/**
+	 * 
+	 * <pre>
+	 * 멤버쉽 적립을 위한 목록 생성.
+	 * </pre>
+	 * 
+	 * @param prchsDtlMore
+	 *            구매생성 정보
+	 * 
+	 * @param mileageSubInfo
+	 *            멤버쉽 정보
+	 * 
+	 * @return 멤버쉽 적립을 위한 목록
+	 */
+	@Override
+	public List<MembershipReserve> makeMembershipReserveList(List<PrchsDtlMore> prchsDtlMoreList,
+			MileageSubInfo mileageSubInfo) {
+		List<MembershipReserve> membershipReserveList = new ArrayList<MembershipReserve>();
+
+		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
+
+		MembershipReserve membershipReserve = new MembershipReserve();
+
+		membershipReserve.setTenantId(prchsDtlMore.getTenantId());
+		membershipReserve.setTypeCd(mileageSubInfo.getTypeCd());
+		membershipReserve.setPrchsId(prchsDtlMore.getPrchsId());
+		membershipReserve.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+		if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			membershipReserve.setInsdUsermbrNo(prchsDtlMore.getSendInsdUsermbrNo());
+			membershipReserve.setInsdDeviceId(prchsDtlMore.getSendInsdDeviceId());
+		} else {
+			membershipReserve.setInsdUsermbrNo(prchsDtlMore.getUseInsdUsermbrNo());
+			membershipReserve.setInsdDeviceId(prchsDtlMore.getUseInsdDeviceId());
+		}
+		membershipReserve.setTargetDt(prchsDtlMore.getPrchsDt());
+		membershipReserve.setPrchsDt(prchsDtlMore.getPrchsDt());
+		membershipReserve.setCurrencyCd(prchsDtlMore.getCurrencyCd());
+		membershipReserve.setTotAmt(prchsDtlMore.getTotAmt());
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+			membershipReserve.setPrchsProdCnt(1);
+		} else {
+			membershipReserve.setPrchsProdCnt(prchsDtlMoreList.size());
+		}
+		membershipReserve.setProdId(prchsDtlMore.getProdId());
+		membershipReserve.setProdAmt(prchsDtlMore.getProdAmt());
+		membershipReserve.setProdQty(prchsDtlMore.getProdQty());
+		membershipReserve.setUserGrdCd(mileageSubInfo.getUserGrdCd()); // 회원등급코드
+		membershipReserve.setProdSaveRate(mileageSubInfo.getProdSaveRate()); // 상품적립율
+		membershipReserve.setTargetPaymentAmt(mileageSubInfo.getTargetPaymentAmt()); // 적립대상결제금액
+		membershipReserve.setSaveExpectAmt(mileageSubInfo.getSaveExpectAmt()); // 적립예정금액
+		membershipReserve.setSaveResultAmt(mileageSubInfo.getSaveResultAmt()); // 적립결과금액
+		membershipReserve.setPrchsReqPathCd(mileageSubInfo.getPrchsReqPathCd()); // 적립금요청경로
+		membershipReserve.setSaveTypeCd(mileageSubInfo.getSaveTypeCd()); // 처리타입코드
+		membershipReserve.setProcStatusCd(mileageSubInfo.getProcStatusCd()); // 처리상태코드
+		membershipReserve.setRegId(prchsDtlMore.getSystemId());
+		membershipReserve.setUpdId(prchsDtlMore.getSystemId());
+
+		membershipReserveList.add(membershipReserve);
+
+		return membershipReserveList;
+	}
+
+	/**
 	 * <pre>
 	 * 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록 생성.
 	 * </pre>
@@ -531,6 +595,14 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			sbReserveData.append("&receiveNames=").append(StringUtils.defaultString(useUser.getUserName()))
 					.append("&receiveMdns=").append(useUser.getDeviceId()); // 선물수신자 성명, 선물수신자 MDN
 		}
+
+		// T멤버쉽 적립율
+		Map<String, Integer> tMileageRateMap = purchaseOrderInfo.getPurchaseProductList().get(0).getMileageRateMap();
+		sbReserveData.append("&tMileageRateInfo=");
+		for (String key : tMileageRateMap.keySet()) {
+			sbReserveData.append(key).append(":").append(tMileageRateMap.get(key)).append(";");
+		}
+		sbReserveData.setLength(sbReserveData.length() - 1);
 
 		int commonReserveDataLen = sbReserveData.length();
 

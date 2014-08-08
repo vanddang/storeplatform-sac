@@ -184,6 +184,8 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setBnsCashAmt(displayInfo.getBnsCashAmt());
 			purchaseProduct.setBnsUsePeriodUnitCd(displayInfo.getBnsUsePeriodUnitCd());
 			purchaseProduct.setBnsUsePeriod(displayInfo.getBnsUsePeriod());
+			// T멤버쉽 적립율
+			purchaseProduct.setMileageRateMap(displayInfo.getMileageRateMap());
 
 			purchaseProductMap.put(displayInfo.getProdId(), purchaseProduct);
 		}
