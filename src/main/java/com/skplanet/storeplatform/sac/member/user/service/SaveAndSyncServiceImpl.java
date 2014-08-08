@@ -148,7 +148,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 						mqInfo.setDeviceKey(deviceKey);
 						mqInfo.setOldDeviceKey(deviceKey);
 						mqInfo.setDeviceId(deviceId);
-						mqInfo.setOldDeviceId(preDeviceId);
+						mqInfo.setOldDeviceId(nowDeviceId);
 						mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
 						mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
 						mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
@@ -167,7 +167,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 						mqInfo.setDeviceKey(deviceKey);
 						mqInfo.setOldDeviceKey(deviceKey);
 						mqInfo.setDeviceId(deviceId);
-						mqInfo.setOldDeviceId(preDeviceId);
+						mqInfo.setOldDeviceId(nowDeviceId);
 						mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
 						mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
 						mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
@@ -234,7 +234,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				gameCenterSacReq.setDeviceId(deviceId);
 				gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
 				gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
-				gameCenterSacReq.setPreDeviceId(preDeviceId);
+				gameCenterSacReq.setPreDeviceId(nowDeviceId);
 				gameCenterSacReq.setPreUserKey(userKey);
 				gameCenterSacReq.setPreMbrNo(userKey);
 				gameCenterSacReq.setWorkCd(gcWorkCd);
@@ -250,7 +250,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				gameCenterSacReq.setDeviceId(deviceId);
 				gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
 				gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
-				gameCenterSacReq.setPreDeviceId(preDeviceId);
+				gameCenterSacReq.setPreDeviceId(nowDeviceId);
 				gameCenterSacReq.setPreUserKey(userKey);
 				gameCenterSacReq.setPreMbrNo(preMbrNo);
 				gameCenterSacReq.setWorkCd(gcWorkCd);
