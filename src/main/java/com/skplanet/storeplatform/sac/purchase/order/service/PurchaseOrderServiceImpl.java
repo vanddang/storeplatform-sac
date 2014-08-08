@@ -1179,7 +1179,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			throw new StorePlatformException("SAC_PUR_5101", purchase.getProdId());
 		}
 
-		// PurchaseProduct purchaseProduct = purchaseProductMap.get(purchase.getProdId());
+		PurchaseProduct purchaseProduct = purchaseProductMap.get(purchase.getProdId());
 
 		// IAP 여부 체크
 		// if (StringUtils.equals(purchaseProduct.getInAppYn(), PurchaseConstants.USE_Y) == false) {
@@ -1294,12 +1294,83 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		uniqueTid.setTid(req.getPaymentList().get(0).getTid());
 		uniqueTid.setPrchsId(prchsId);
 
+		// TAKTODO::T멤버쉽
+
+		Map<String, Integer> rateMap = purchaseProduct.getMileageRateMap(); // 상품 적립률
+
+		String userGrade = this.purchaseMemberRepository.searchUserGrade(userKey); // 등급
+
+		MileageSubInfo mileageSubInfo = new MileageSubInfo();
+		mileageSubInfo.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_TMEMBERSHIP);
+		mileageSubInfo.setUserGrdCd(userGrade);
+		mileageSubInfo.setProdSaveRate(rateMap.get(userGrade) == null ? 0 : rateMap.get(userGrade));
+		mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
+
+		if (StringUtils.isBlank(req.getProcSubStatusCd()) == false) { // 결제측으로부터 T멤버쉽 정보 받은 경우
+			mileageSubInfo.setPrchsReqPathCd(prchsDtlMore.getPrchsReqPathCd());
+
+			mileageSubInfo.setTargetPaymentAmt(req.getTargetPaymentAmt());
+			mileageSubInfo.setSaveExpectAmt(req.getSaveExpectAmt());
+			mileageSubInfo.setSaveResultAmt(req.getSaveResultAmt());
+			mileageSubInfo.setSaveTypeCd(req.getProcSubStatusCd());
+
+		} else {
+			mileageSubInfo.setPrchsReqPathCd(null);
+
+			// 적립 가능 결제수단 금액
+			String availPayMtd = this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
+					prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd());
+			double availPayAmt = 0.0;
+			for (Payment paymentInfo : paymentList) {
+				if (StringUtils.contains(availPayMtd,
+						PaymethodUtil.convert2PayPlanetCodeWithoutPointCode(paymentInfo.getPaymentMtdCd()))) {
+					availPayAmt += paymentInfo.getPaymentAmt();
+				}
+			}
+			mileageSubInfo.setTargetPaymentAmt(availPayAmt);
+
+			if (availPayAmt > 0.0) {
+
+				// 적립예정 금액: 10원 미만 버림
+				int expectAmt = (int) ((int) (availPayAmt * rateMap.get(userGrade) * 0.01) * 0.1) * 10;
+
+				// 적립예정 이력 총 금액
+				int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
+						userKey, null);
+
+				if (preReserveAmt >= PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT) { // 한도초과
+					mileageSubInfo.setSaveResultAmt(0);
+					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_OVER);
+
+				} else if ((preReserveAmt + expectAmt) <= PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT) { // 전체적립
+					mileageSubInfo.setSaveResultAmt(expectAmt);
+					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_ALL);
+
+				} else { // 부분적립
+					mileageSubInfo.setSaveResultAmt(PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT - preReserveAmt);
+					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_PART);
+				}
+
+				mileageSubInfo.setSaveExpectAmt(expectAmt);
+			}
+		}
+
+		this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,{},{}percentage", mileageSubInfo.getTargetPaymentAmt(),
+				mileageSubInfo.getProdSaveRate());
+
+		List<MembershipReserve> membershipReserveList = null;
+		if (mileageSubInfo.getTargetPaymentAmt() > 0 && mileageSubInfo.getProdSaveRate() > 0) {
+			membershipReserveList = this.purchaseOrderMakeDataService.makeMembershipReserveList(prchsDtlMoreList,
+					mileageSubInfo);
+		}
+
 		// 이력생성
 		CreateCompletePurchaseScReq createCompletePurchaseScReq = new CreateCompletePurchaseScReq();
 		createCompletePurchaseScReq.setPrchsDtlMoreList(prchsDtlMoreList);
 		createCompletePurchaseScReq.setPaymentList(paymentList);
 		createCompletePurchaseScReq.setPrchsProdCntList(prchsProdCntList);
 		createCompletePurchaseScReq.setUniqueTid(uniqueTid);
+		createCompletePurchaseScReq.setMembershipReserveList(membershipReserveList);
 
 		try {
 			this.purchaseOrderSCI.completePurchase(createCompletePurchaseScReq);
