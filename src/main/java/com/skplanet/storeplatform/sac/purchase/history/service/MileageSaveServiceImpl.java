@@ -69,6 +69,7 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 		scRequest.setTenantId(request.getTenantId());
 		scRequest.setUserKey(request.getUserKey());
 		scRequest.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE); // 적립예정 상태
+		scRequest.setStandardDt(request.getStandardDt());
 		/*************************************************
 		 * SC Request Setting End
 		 *************************************************/
