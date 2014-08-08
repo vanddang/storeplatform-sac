@@ -18,6 +18,8 @@ public class MileageSaveSacReq extends PurchaseHeaderSacReq {
 	@NotBlank
 	private String userKey; // 내부사용자번호
 
+	private String standardDt; // 기준일
+
 	/**
 	 * @return the tenantId
 	 */
@@ -48,6 +50,21 @@ public class MileageSaveSacReq extends PurchaseHeaderSacReq {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	/**
+	 * @return the standardDt
+	 */
+	public String getStandardDt() {
+		return this.standardDt;
+	}
+
+	/**
+	 * @param standardDt
+	 *            the standardDt to set
+	 */
+	public void setStandardDt(String standardDt) {
+		this.standardDt = standardDt;
 	}
 
 }
