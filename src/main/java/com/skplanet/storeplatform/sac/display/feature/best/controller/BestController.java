@@ -22,7 +22,7 @@ import com.skplanet.storeplatform.sac.display.feature.best.service.BestDownloadS
 
 /**
  * 
- * Calss 설명(BEST 앱, BEST 컨텐츠, BEST 다운로드 관련)
+ * Class 설명(BEST 앱, BEST 컨텐츠, BEST 다운로드 관련)
  * 
  * Updated on : 2014. 1. 3. Updated by : 이석희, 인크로스
  */
@@ -43,7 +43,7 @@ public class BestController {
 	/**
 	 * 
 	 * <pre>
-	 * [I03000001] 2.4.1.1. 특정 상품 APP 조회
+	 * [I03000001] 2.1.1. BEST 앱 상품 조회
 	 * </pre>
 	 * 
 	 * @param requestheader
@@ -80,7 +80,7 @@ public class BestController {
 	/**
 	 * 
 	 * <pre>
-	 * BEST 다운로드 리스트 조회.
+	 * [I03000003] 2.1.3. BEST 다운로드 상품 조회
 	 * </pre>
 	 * 
 	 * @param requestheader
