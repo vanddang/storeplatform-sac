@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveScRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSave;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveSacRes;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 
 /**
@@ -67,7 +68,7 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 		 *************************************************/
 		scRequest.setTenantId(request.getTenantId());
 		scRequest.setUserKey(request.getUserKey());
-		scRequest.setProcStatusCd("01"); // TODO: 추후 처리상태코드 넘겨줄것~~
+		scRequest.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE); // 적립예정 상태
 		/*************************************************
 		 * SC Request Setting End
 		 *************************************************/
@@ -101,7 +102,7 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 				request.getTenantId(), null));
 
 		// 적립한도 조회
-		response.settMileageLimitAmt("500000"); // TODO : 적립한도 금액을 가져와 셋팅할것
+		response.settMileageLimitAmt(PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT + "");
 
 		response.settMileageReseveList(sacMileageSaveList);
 
