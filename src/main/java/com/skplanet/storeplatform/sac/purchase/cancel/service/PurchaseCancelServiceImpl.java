@@ -33,8 +33,9 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.Payme
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.sci.ShoppingInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusDetailSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInReq;
@@ -219,13 +220,11 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			}
 		}
 
-		/* 정액권 AI-IS 데이터로 인해 체크 제외 2014.08.05 최상훈C
-		if (prchsSacParam.getTotAmt() > 0
-				&& (purchaseCancelDetailSacParam.getPaymentSacParamList() == null || purchaseCancelDetailSacParam
-						.getPaymentSacParamList().isEmpty())) {
-			throw new StorePlatformException("SAC_PUR_8104");
-		}
-		*/
+		/*
+		 * 정액권 AI-IS 데이터로 인해 체크 제외 2014.08.05 최상훈C if (prchsSacParam.getTotAmt() > 0 &&
+		 * (purchaseCancelDetailSacParam.getPaymentSacParamList() == null || purchaseCancelDetailSacParam
+		 * .getPaymentSacParamList().isEmpty())) { throw new StorePlatformException("SAC_PUR_8104"); }
+		 */
 
 		// 2014.07.29 최상훈c 요건 추가(해당값이 존재하면 회원정보 조회 안함)
 		if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
@@ -303,9 +302,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			}
 
-			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())
-					&& !StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
-							PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
+			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())) {
 				// 정액권 상품 처리.
 				this.updateProdTypeFix(purchaseCancelSacParam, prchsDtlSacParam);
 			}
@@ -556,7 +553,11 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	private void updateProdTypeFix(PurchaseCancelSacParam purchaseCancelSacParam, PrchsDtlSacParam prchsDtlSacParam) {
 
 		/** 정액권으로 산 상품이 존재하는지 체크. */
-		HistoryCountSacInReq historyCountSacInReq = new HistoryCountSacInReq();
+		// HistoryCountSacInReq historyCountSacInReq = new HistoryCountSacInReq();
+
+		/** 정액권으로 산 상품이 존재하는지 체크. */
+		HistoryListSacInReq historyListSacInReq = new HistoryListSacInReq();
+
 		// 구매인지 선물인지 구분하여 조회.
 		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsDtlSacParam.getPrchsCaseCd())) {
 			// 정액권 선물일 경우 취소 불가!! 최상훈차장님 결정!! 2014.02.13
@@ -564,18 +565,30 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		// 정액제 상품으로 산 구매내역 조회.
-		historyCountSacInReq.setTenantId(prchsDtlSacParam.getUseTenantId());
-		historyCountSacInReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
-		historyCountSacInReq.setStartDt(prchsDtlSacParam.getUseStartDt());
-		historyCountSacInReq.setEndDt(prchsDtlSacParam.getUseExprDt());
-		historyCountSacInReq.setPrchsCaseCd(prchsDtlSacParam.getPrchsCaseCd());
-		historyCountSacInReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
-		historyCountSacInReq.setUseFixrateProdId(prchsDtlSacParam.getProdId());
+		historyListSacInReq.setTenantId(prchsDtlSacParam.getUseTenantId());
+		historyListSacInReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+		historyListSacInReq.setStartDt(prchsDtlSacParam.getUseStartDt());
+		historyListSacInReq.setEndDt(prchsDtlSacParam.getUseExprDt());
+		historyListSacInReq.setPrchsCaseCd(prchsDtlSacParam.getPrchsCaseCd());
+		historyListSacInReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+		historyListSacInReq.setUseFixrateProdId(prchsDtlSacParam.getProdId());
+		historyListSacInReq.setPrchsProdHaveYn("Y");
+		historyListSacInReq.setOffset(1);
+		historyListSacInReq.setCount(100);
 
-		HistoryCountSacInRes historyCountSacInRes = this.historyInternalSCI.searchHistoryCount(historyCountSacInReq);
-		if (historyCountSacInRes.getTotalCnt() > 0) {
-			// 정액권 상품으로 이용한 상품이 존재!
-			throw new StorePlatformException("SAC_PUR_8111");
+		HistoryListSacInRes historyListSacInRes = this.historyInternalSCI.searchHistoryList(historyListSacInReq);
+		if (historyListSacInRes.getTotalCnt() > 0) {
+
+			for (HistorySacIn historySacIn : historyListSacInRes.getHistoryList()) {
+
+				// 전권소장상품일 경우 제외한다.
+				if (StringUtils.equals(historySacIn.getPrchsId(), prchsDtlSacParam.getPrchsId())) {
+					continue;
+				} else {
+					// 정액권 상품으로 이용한 상품이 존재!
+					throw new StorePlatformException("SAC_PUR_8111");
+				}
+			}
 		}
 
 		// 정액권 자동구매 확인.
