@@ -1637,7 +1637,7 @@ public class IdpServiceImpl implements IdpService {
 				mqInfo.setUserId(userId);
 				mqInfo.setUserKey(searchUserResponse.getUserKey());
 				if (StringUtils.isNotBlank(mqDeviceStr)) {
-					//mqInfo.setDeviceId(mqDeviceStr);
+					mqInfo.setDeviceId(mqDeviceStr);
 				}
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 
