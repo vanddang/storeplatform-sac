@@ -64,14 +64,15 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
 	
 	        mileageInfo = commonDAO.queryForObject("MemberBenefit.getMileageInfo", req, MileageInfo.class);
 	
-	        //Tstore멤버십 적립율 정보
-	        //예외 상품이 아닌 경우 무료 상품은 적립율을 노출하지 않는다.
-	        //무료 상품 && 카테고리 => 마일리지 비노출
-	        if (mileageInfo != null 
-	        		&& prodAmt == null || prodAmt == 0
-	        		&& StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)
-	        		) {
-	        	mileageInfo = null;
+	        if(mileageInfo != null) {
+		        //Tstore멤버십 적립율 정보
+		        //예외 상품이 아닌 경우 무료 상품은 적립율을 노출하지 않는다.
+		        //무료 상품 && 카테고리 => 마일리지 비노출
+		        if (prodAmt == null || prodAmt == 0
+		        		&& StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)
+		        		) {
+		        	mileageInfo = null;
+		        }
 	        }
         }
         
