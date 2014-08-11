@@ -41,7 +41,7 @@ public class SacServiceDataServiceImpl implements SacServiceDataService {
 	public SacServiceDataServiceImpl() {
 		this.dataSvc = new HashMap<String, Boolean>();
         this.dataSvc.put("tstore.gamecash.flatrate", true); // 게임 캐쉬 정액제 지원
-        this.dataSvc.put(OtherConstants.SAC_SERVICE_MILEAGE, false); // 마일리지 지원
+        this.dataSvc.put(OtherConstants.SAC_SERVICE_MILEAGE, on); // 마일리지 지원
 		this.dataSvc.put("SERVICE_SAMPLE", false);
 	}
 
