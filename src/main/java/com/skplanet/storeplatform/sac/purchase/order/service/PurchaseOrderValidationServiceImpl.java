@@ -371,6 +371,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			throw new StorePlatformException("SAC_PUR_5101");
 		}
 
+		this.logger.info("PRCHS,SAC,ORDER,VALID,PRODUCT,MILEAGE,RATEMAP,{}",
+				purchaseProductMap.get(reqProdList.get(0).getProdId()).getMileageRateMap());
+
 		// 상품 체크
 
 		String reqMenuId = purchaseOrderInfo.getTenantProdGrpCd().substring(8, 12);

@@ -599,6 +599,13 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 		// T멤버쉽 적립율
 		Map<String, Integer> tMileageRateMap = purchaseOrderInfo.getPurchaseProductList().get(0).getMileageRateMap();
+		if (tMileageRateMap == null) {
+			tMileageRateMap = new HashMap<String, Integer>();
+			tMileageRateMap.put(PurchaseConstants.USER_GRADE_PLATINUM, 0);
+			tMileageRateMap.put(PurchaseConstants.USER_GRADE_GOLD, 0);
+			tMileageRateMap.put(PurchaseConstants.USER_GRADE_SILVER, 0);
+		}
+
 		sbReserveData.append("&tMileageRateInfo=");
 		for (String key : tMileageRateMap.keySet()) {
 			sbReserveData.append(key).append(":").append(tMileageRateMap.get(key)).append(";");
