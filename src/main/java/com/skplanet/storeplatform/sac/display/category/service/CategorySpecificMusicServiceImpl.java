@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecifi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.BellService;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProduct;
@@ -38,6 +40,7 @@ import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitServic
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
@@ -68,6 +71,9 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 
 	@Autowired
     private MemberBenefitService memberBenefitService;
+	
+	@Autowired
+	private CommonMetaInfoGenerator commonGenerator;
 	
 	/*
 	 * (non-Javadoc)
@@ -155,6 +161,10 @@ public class CategorySpecificMusicServiceImpl implements CategorySpecificMusicSe
 								}
 								music.setBellServiceList(bellServiceList);
 								// }
+								// Tstore멤버십 적립율 정보
+		                    	List<Point> mileage = commonGenerator.generateMileage(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+		                    	product.setPointList(mileage);
+		                    	
 								product.setMusic(music);
 							}
 							productList.add(product);

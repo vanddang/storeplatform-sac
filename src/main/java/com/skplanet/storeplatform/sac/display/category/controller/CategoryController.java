@@ -311,7 +311,7 @@ public class CategoryController {
 
 	/**
 	 * <pre>
-	 * 특정 상품 music 조회.
+	 * [I03000020] 2.4.1.4. 특정 상품 music 조회.
 	 * </pre>
 	 * 
 	 * @param req
