@@ -1303,7 +1303,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		MileageSubInfo mileageSubInfo = new MileageSubInfo();
 		mileageSubInfo.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_TMEMBERSHIP);
 		mileageSubInfo.setUserGrdCd(userGrade);
-		mileageSubInfo.setProdSaveRate(rateMap.get(userGrade) == null ? 0 : rateMap.get(userGrade));
+		mileageSubInfo
+				.setProdSaveRate((rateMap == null || rateMap.get(userGrade) == null) ? 0 : rateMap.get(userGrade));
 		mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
 
 		if (StringUtils.isBlank(req.getProcSubStatusCd()) == false) { // 결제측으로부터 T멤버쉽 정보 받은 경우
