@@ -151,7 +151,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			mqInfo.setUserKey(userInfo.getUserKey());
 			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 			if (mqDeviceStr != null) {
-				mqInfo.setDeviceId(mqDeviceStr);
+				//mqInfo.setDeviceId(mqDeviceStr);
 			}
 
 			LOGGER.info("{} 탈퇴 MQ device : {}", req.getUserId(), mqDeviceStr);
@@ -234,7 +234,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 						mqInfo.setUserId(userInfo.getUserId());
 						mqInfo.setUserKey(userInfo.getUserKey());
 						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-						mqInfo.setDeviceId(req.getDeviceId());
+						//mqInfo.setDeviceId(req.getDeviceId());
 						this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 					} catch (AmqpException ex) {
