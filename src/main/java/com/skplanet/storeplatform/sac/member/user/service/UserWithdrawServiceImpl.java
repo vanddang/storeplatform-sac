@@ -35,9 +35,6 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
@@ -78,10 +75,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	private AmqpTemplate memberRetireAmqpTemplate;
 
 	@Autowired
-	@Resource(name = "memberDelDeviceAmqpTemplate")
-	private AmqpTemplate memberDelDeviceAmqpTemplate;
-
-	@Autowired
 	private UserService userService;
 
 	@Override
@@ -91,8 +84,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		 * 회원 정보 조회 Value Object.
 		 */
 		UserInfo userInfo = null;
-
-		String gcWorkCd = null;
 
 		/**
 		 * 요청 파라미터에 따라서 분기 처리한다.
@@ -107,19 +98,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			LOGGER.info("userId, userAuthKey 둘다 존재 or 모두 존재 Case.");
 			LOGGER.debug("########################################");
 
-			gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
-
 			/**
 			 * userId로 회원 정보 조회.
 			 */
 			userInfo = this.mcc.getUserBaseInfo("userId", req.getUserId(), requestHeader);
-
-			/** MQ 연동을 위해 userId가 가지고 있는 휴대기기 목록 조회 */
-			ListDeviceReq listDeviceReq = new ListDeviceReq();
-			listDeviceReq.setUserId(userInfo.getUserId());
-			listDeviceReq.setIsMainDevice("N");
-			ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
-
 			if (StringUtils.isNotBlank(userInfo.getImSvcNo())) {
 
 				/**********************************************
@@ -138,30 +120,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				this.secedeUser(req.getUserId(), req.getUserAuthKey());
 				this.rem(requestHeader, userInfo.getUserKey());
 
-			}
-
-			/** MQ 연동 (회원 탈퇴) */
-			String mqDeviceStr = "";
-			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
-				mqDeviceStr += deviceInfo.getDeviceId() + "|";
-			}
-			mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
-			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
-			mqInfo.setUserId(userInfo.getUserId());
-			mqInfo.setUserKey(userInfo.getUserKey());
-			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-			if (mqDeviceStr != null) {
-				mqInfo.setDeviceId(mqDeviceStr);
-			}
-
-			LOGGER.info("{} 탈퇴 MQ device : {}", req.getUserId(), mqDeviceStr);
-
-			try {
-
-				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
-
-			} catch (AmqpException ex) {
-				LOGGER.error("MQ process fail {}", mqInfo);
 			}
 
 		} else {
@@ -184,31 +142,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				/**********************************************
 				 * OneId ID 회원 Case.
 				 **********************************************/
-
-				DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(),
-						userInfo.getUserKey());
-
-				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE;
-
 				LOGGER.info("[OneId ID 회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
 				this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId());
 				this.userService.modAdditionalInfoForNonLogin(requestHeader, userInfo.getUserKey(), userInfo.getImSvcNo());
-
-				/** MQ 연동(휴대기기 삭제) */
-				RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
-				try {
-					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-					mqInfo.setUserKey(userInfo.getUserKey());
-					mqInfo.setDeviceKey(deviceInfo.getDeviceKey());
-					mqInfo.setDeviceId(deviceInfo.getDeviceId());
-					mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
-					mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
-
-					this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
-				} catch (AmqpException ex) {
-					LOGGER.info("MQ process fail {}", mqInfo);
-
-				}
 
 			} else {
 
@@ -217,59 +153,18 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					/**********************************************
 					 * 무선 회원 Case.
 					 **********************************************/
-
-					gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
-
 					LOGGER.info("[무선회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
 					this.secedeForWap(req.getDeviceId());
 					this.rem(requestHeader, userInfo.getUserKey());
-
-					/**
-					 * MQ 연동(회원 탈퇴).
-					 */
-					RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
-
-					try {
-
-						mqInfo.setUserId(userInfo.getUserId());
-						mqInfo.setUserKey(userInfo.getUserKey());
-						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-						mqInfo.setDeviceId(req.getDeviceId());
-						this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
-
-					} catch (AmqpException ex) {
-						LOGGER.error("MQ process fail {}", mqInfo);
-					}
 
 				} else if (StringUtils.equals(userInfo.getUserType(), MemberConstants.USER_TYPE_IDPID)) {
 
 					/**********************************************
 					 * IDP ID 회원 Case.
 					 **********************************************/
-					DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(),
-							userInfo.getUserKey());
-
-					gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE;
-
 					LOGGER.info("[IDP ID 회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
 					this.secedeForWap(req.getDeviceId());
 					this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId());
-
-					/** MQ 연동(휴대기기 삭제) */
-					RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
-					try {
-						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-						mqInfo.setUserKey(userInfo.getUserKey());
-						mqInfo.setDeviceKey(deviceInfo.getDeviceKey());
-						mqInfo.setDeviceId(deviceInfo.getDeviceId());
-						mqInfo.setSvcMangNo(deviceInfo.getSvcMangNum());
-						mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
-
-						this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
-					} catch (AmqpException ex) {
-						LOGGER.info("MQ process fail {}", mqInfo);
-
-					}
 
 				} // 모바일회원, IDP ID회원 분기 END
 
@@ -289,8 +184,24 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		}
 		gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
 		gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		gameCenterSacReq.setWorkCd(gcWorkCd);
+		gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
 		this.deviceService.regGameCenterIF(gameCenterSacReq);
+
+		/**
+		 * MQ 연동.
+		 */
+		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+
+		try {
+
+			mqInfo.setUserId(userInfo.getUserId());
+			mqInfo.setUserKey(userInfo.getUserKey());
+			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+
+		} catch (AmqpException ex) {
+			LOGGER.error("MQ process fail {}", mqInfo);
+		}
 
 		/**
 		 * 결과 세팅
