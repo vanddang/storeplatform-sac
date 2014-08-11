@@ -36,7 +36,7 @@ public class CategoryControllerTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void searchWebtoonSeriesList() throws Exception {
 		//2.4.4.웹툰 상품 조회-요일별
 		this.mvc.perform(
@@ -50,6 +50,26 @@ public class CategoryControllerTest {
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andExpect(header().string("x-sac-result-code", "SUCC"))
 		;
+	}
+	
+	/**
+	 * [I03000020] 2.4.1.4. 특정 상품 music 조회.
+	 * @throws Exception
+	 */
+	@Test
+	public void searchSpecificMusicList() throws Exception {
+		//2.4.1.4. 특정 상품 music 조회.
+		this.mvc.perform(
+				get("/display/category/specific/music/list/v1?list=H001617943+H000400186+H001601609")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(header().string("x-sac-result-code", "SUCC"))
+				;
 	}
 
 	
