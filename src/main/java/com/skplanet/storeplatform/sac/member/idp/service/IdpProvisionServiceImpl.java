@@ -1011,7 +1011,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					mqInfo.setUserId(schUserRes.getUserMbr().getUserID());
 					mqInfo.setUserKey(userKey);
 					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-					//mqInfo.setDeviceId(mdn);
+					mqInfo.setDeviceId(mdn);
 					this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 				} catch (AmqpException ex) {
 					LOGGER.info("MQ process fail {}", mqInfo);
