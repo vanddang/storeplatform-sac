@@ -57,7 +57,7 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
         SacService rtnSacService = sacServiceDataService.getServiceActive(sacService);
         
         MileageInfo mileageInfo = null; 
-        if(rtnSacService.isActive()) {
+        if(rtnSacService != null && rtnSacService.isActive()) {
 	        req.put("tenantId", tenantId);
 	        req.put("topMenuId", topMenuId);
 	        req.put("chnlId", StringUtil.nvl(chnlId, ""));
