@@ -147,12 +147,12 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             else
                 mileageInfo = benefitService.getMileageInfo(tenantId, paymentInfo.getTopMenuId(), paymentInfo.getProdId(), prodAmt);
 
-            if(mileageInfo != null) {
-	            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, mileageInfo.getRateLv1());
-	            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV2, mileageInfo.getRateLv2());
-	            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV3, mileageInfo.getRateLv3());
-	            paymentInfo.setMileageRateMap(milMap);
-            }
+            // Tstore 멤버십 - 방어코드 추가
+            if(mileageInfo == null) mileageInfo = new MileageInfo();	 
+            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, mileageInfo.getRateLv1());
+            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV2, mileageInfo.getRateLv2());
+            milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV3, mileageInfo.getRateLv3());
+            paymentInfo.setMileageRateMap(milMap);
         }
 
         res.setPaymentInfoList(paymentInfoList);
