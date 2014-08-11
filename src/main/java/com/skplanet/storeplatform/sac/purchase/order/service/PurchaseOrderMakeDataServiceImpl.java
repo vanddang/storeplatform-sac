@@ -425,7 +425,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			membershipReserve.setInsdUsermbrNo(prchsDtlMore.getUseInsdUsermbrNo());
 			membershipReserve.setInsdDeviceId(prchsDtlMore.getUseInsdDeviceId());
 		}
-		membershipReserve.setTargetDt(prchsDtlMore.getPrchsDt());
+		// membershipReserve.setTargetDt(prchsDtlMore.getPrchsDt());
+		membershipReserve.setTargetDt("20" + prchsDtlMore.getPrchsId().substring(0, 12));
 		membershipReserve.setPrchsDt(prchsDtlMore.getPrchsDt());
 		membershipReserve.setCurrencyCd(prchsDtlMore.getCurrencyCd());
 		membershipReserve.setTotAmt(prchsDtlMore.getTotAmt());

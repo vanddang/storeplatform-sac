@@ -1005,8 +1005,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			if (availPayAmt > 0.0) {
 
-				// 적립예정 금액: 10원 미만 버림
-				int expectAmt = (int) ((int) (availPayAmt * rateMap.get(userGrade) * 0.01) * 0.1) * 10;
+				// 적립예정 금액: 1원 미만 버림
+				int expectAmt = (int) (availPayAmt * rateMap.get(userGrade) * 0.01);
 
 				// 적립예정 이력 총 금액
 				int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
@@ -1332,7 +1332,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			if (availPayAmt > 0.0) {
 
 				// 적립예정 금액: 10원 미만 버림
-				int expectAmt = (int) ((int) (availPayAmt * rateMap.get(userGrade) * 0.01) * 0.1) * 10;
+				int expectAmt = (int) (availPayAmt * rateMap.get(userGrade) * 0.01);
 
 				// 적립예정 이력 총 금액
 				int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
