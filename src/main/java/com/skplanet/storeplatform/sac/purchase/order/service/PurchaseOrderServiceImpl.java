@@ -77,6 +77,7 @@ import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShopping
 import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckResult;
 import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
@@ -205,6 +206,32 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
+		// -------------------------------------------------------------------------------------------
+		// 이북/코믹 전권 소장/대여 에피소드 상품 목록 조회 (T프리미엄 경우)
+
+		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
+
+		PurchaseUserDevice useUser = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getReceiveUser() : purchaseOrderInfo
+				.getPurchaseUser();
+
+		List<EpisodeInfoRes> episodeList = null;
+
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+				PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE)
+				|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_COMIC_FIXRATE)) {
+			episodeList = this.purchaseDisplayRepository.searchEbookComicEpisodeList(prchsDtlMore.getTenantId(),
+					prchsDtlMore.getCurrencyCd(), useUser.getDeviceModelCd(), prchsDtlMore.getProdId(),
+					purchaseOrderInfo.getPurchaseProductList().get(0).getCmpxProdClsfCd());
+		}
+
+		// 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터
+		List<PrchsDtlMore> ebookComicEpisodeList = null;
+		if (CollectionUtils.isNotEmpty(episodeList)) {
+			ebookComicEpisodeList = this.purchaseOrderMakeDataService.makeEbookComicEpisodeList(prchsDtlMore,
+					episodeList, purchaseOrderInfo.getPurchaseProductList().get(0).getCmpxProdClsfCd());
+		}
+
 		// -----------------------------------------------------------------------------
 		// 무료구매 완료 요청
 
@@ -212,6 +239,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		makeFreePurchaseScReq.setPrchsDtlMoreList(prchsDtlMoreList);
 		makeFreePurchaseScReq.setPrchsProdCntList(prchsProdCntList);
 		makeFreePurchaseScReq.setPaymentList(paymentList);
+		makeFreePurchaseScReq.setEbookComicEpisodeList(ebookComicEpisodeList);
 
 		MakeFreePurchaseScRes makeFreePurchaseScRes = null;
 
