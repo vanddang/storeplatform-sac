@@ -539,42 +539,65 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				reservedDataMap.get("deviceId"), prodIdList));
 
 		// ------------------------------------------------------------------------------------------------
-		// T store Cash 조회
+		// 캐쉬/포인트 잔액 통합 정보 : 게임 경우 통합조회 규격, 그 외는 T store Cash 단일 조회
 
-		double tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(reservedDataMap.get("userKey"));
+		String cashIntgAmtInf = "";
 
-		// ------------------------------------------------------------------------------------------------
-		// 게임캐쉬 조회
-
-		double gameCashAmt = 0.0;
-		// if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-		// PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAME)) {
 		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
 				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-			gameCashAmt = this.purchaseOrderTstoreService.searchGameCashAmt(reservedDataMap.get("userKey"));
+			cashIntgAmtInf = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(reservedDataMap
+					.get("userKey"));
+
+		} else {
+			// T store Cash 조회
+			double tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(reservedDataMap.get("userKey"));
+
+			// 캐쉬/포인트 잔액 통합 정보
+			StringBuffer sbCashPoint = new StringBuffer();
+			sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":")
+					.append(tstoreCashAmt).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH)
+					.append(":").append(0).append(";")
+					.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT).append(":").append(0);
+
+			cashIntgAmtInf = sbCashPoint.toString();
 		}
 
-		// ------------------------------------------------------------------------------------------------
-		// T game pass 조회
+		res.setCashPointList(cashIntgAmtInf);
 
-		double tgamepassAmt = 0.0;
-		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
-				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-			tgamepassAmt = this.purchaseOrderTstoreService.searchTgamepassAmt(reservedDataMap.get("userKey"));
-		}
-
-		// ------------------------------------------------------------------------------------------------
-		// 캐쉬/포인트 잔액 통합 정보
-
-		StringBuffer sbCashPoint = new StringBuffer();
-		sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":").append(tstoreCashAmt)
-				.append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH).append(":")
-				.append(gameCashAmt).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT)
-				.append(":").append(tgamepassAmt);
-
-		res.setCashPointList(sbCashPoint.toString());
+		// // T store Cash 조회
+		// double tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(reservedDataMap.get("userKey"));
+		//
+		// // 게임캐쉬 조회
+		// double gameCashAmt = 0.0;
+		// // if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+		// // PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAME)) {
+		// if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
+		// && StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
+		// PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
+		// gameCashAmt = this.purchaseOrderTstoreService.searchGameCashAmt(reservedDataMap.get("userKey"));
+		// }
+		//
+		// // ------------------------------------------------------------------------------------------------
+		// // T game pass 조회
+		//
+		// double tgamepassAmt = 0.0;
+		// if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
+		// && StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
+		// PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
+		// tgamepassAmt = this.purchaseOrderTstoreService.searchTgamepassAmt(reservedDataMap.get("userKey"));
+		// }
+		//
+		// // ------------------------------------------------------------------------------------------------
+		// // 캐쉬/포인트 잔액 통합 정보
+		//
+		// StringBuffer sbCashPoint = new StringBuffer();
+		// sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":").append(tstoreCashAmt)
+		// .append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH).append(":")
+		// .append(gameCashAmt).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT)
+		// .append(":").append(tgamepassAmt);
+		//
+		// res.setCashPointList(cashIntgAmtInf);
 
 		// ------------------------------------------------------------------------------------------------
 		// T마일리지 적립 정보

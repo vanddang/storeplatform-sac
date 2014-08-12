@@ -39,6 +39,9 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeRese
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanceDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanceEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanceEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListEcReq;
@@ -136,6 +139,70 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		} else {
 			return "NULL";
 		}
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * T Store Cash 통합 잔액 조회.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            내부 회원 NO
+	 * 
+	 * @return T Store Cash 통합 잔액 정보
+	 */
+	@Override
+	public String searchTstoreCashIntegrationAmt(String userKey) {
+		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
+		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
+		// return 0.0;
+		// }
+
+		TStoreCashIntgBalanceEcReq tStoreCashIntgBalanceEcReq = new TStoreCashIntgBalanceEcReq();
+		tStoreCashIntgBalanceEcReq.setUserKey(userKey);
+
+		TStoreCashIntgBalanceEcRes tStoreCashIntgBalanceEcRes = null;
+		try {
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,INTEGRATION,SEARCH,REQ,{}",
+					ReflectionToStringBuilder.toString(tStoreCashIntgBalanceEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+
+			tStoreCashIntgBalanceEcRes = this.tStoreCashSCI.getIntegrationBalance(tStoreCashIntgBalanceEcReq);
+
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,CASH,INTEGRATION,SEARCH,RES,{}",
+					ReflectionToStringBuilder.toString(tStoreCashIntgBalanceEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7211", e);
+		}
+
+		if (StringUtils.equals(tStoreCashIntgBalanceEcRes.getResultCd(),
+				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
+			throw new StorePlatformException("SAC_PUR_7207", tStoreCashIntgBalanceEcRes.getResultCd(),
+					tStoreCashIntgBalanceEcRes.getResultMsg());
+		}
+
+		List<TStoreCashIntgBalanceDetailEcRes> tstoreCashList = tStoreCashIntgBalanceEcRes.getCashList();
+
+		StringBuffer sbCashIntgAmt = new StringBuffer();
+		for (TStoreCashIntgBalanceDetailEcRes cash : tstoreCashList) {
+			if (sbCashIntgAmt.length() > 0) {
+				sbCashIntgAmt.append(";");
+			}
+			if (StringUtils.equals(cash.getProductGroup(), PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_CASH)) {
+				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":")
+						.append(Double.parseDouble(cash.getAmt()));
+			} else if (StringUtils.equals(cash.getProductGroup(),
+					PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TSTORE_GAMECASH)) {
+				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH).append(":")
+						.append(Double.parseDouble(cash.getAmt()));
+			} else if (StringUtils
+					.equals(cash.getProductGroup(), PurchaseConstants.TSTORE_CASH_PRODUCT_GROUP_TGAMEPASS)) {
+				sbCashIntgAmt.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT).append(":")
+						.append(Double.parseDouble(cash.getAmt()));
+			}
+		}
+
+		return sbCashIntgAmt.toString();
 	}
 
 	/**

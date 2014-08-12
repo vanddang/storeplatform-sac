@@ -42,6 +42,19 @@ public interface PurchaseOrderTstoreService {
 	/**
 	 * 
 	 * <pre>
+	 * T Store Cash 통합 잔액 조회.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            내부 회원 NO
+	 * 
+	 * @return T Store Cash 통합 잔액 정보
+	 */
+	public String searchTstoreCashIntegrationAmt(String userKey);
+
+	/**
+	 * 
+	 * <pre>
 	 * T Store Cash 잔액 조회.
 	 * </pre>
 	 * 
