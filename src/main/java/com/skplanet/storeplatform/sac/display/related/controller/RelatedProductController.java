@@ -57,7 +57,7 @@ public class RelatedProductController {
 	/**
 	 *
 	 * <pre>
-	 * 이 상품과 유사 상품 조회.
+	 * [I03000032] 2.5.1.이 상품과 유사 상품 조회.
 	 * </pre>
 	 *
 	 * @param requestVO
