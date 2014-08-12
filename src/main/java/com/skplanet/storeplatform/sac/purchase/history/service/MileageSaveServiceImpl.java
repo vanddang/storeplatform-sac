@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.history.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSave;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveSacRes;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 
 /**
@@ -99,8 +101,21 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 		 *************************************************/
 
 		// 적립가능 결제수단 조회
-		response.settMileageAvailMtd(this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
-				request.getTenantId(), null));
+		String availMtd = this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(request.getTenantId(), null);
+
+		if (StringUtils.startsWith(request.getSystemId(), "S01")) { // 테넌트는 테넌트용 결제수단으로 응답
+			if (StringUtils.isNotBlank(availMtd)) {
+				StringBuffer sbAvailMtd = new StringBuffer();
+				for (String mtd : availMtd.split(";")) {
+					if (sbAvailMtd.length() > 0) {
+						sbAvailMtd.append(";");
+					}
+					sbAvailMtd.append(PaymethodUtil.convert2StoreCode(mtd));
+				}
+				availMtd = sbAvailMtd.toString();
+			}
+		}
+		response.settMileageAvailMtd(availMtd);
 
 		// 적립한도 조회
 		response.settMileageLimitAmt(PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT + "");
