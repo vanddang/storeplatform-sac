@@ -38,15 +38,18 @@ public class MembershipReserveServiceImpl implements MembershipReserveService {
 	 *            테넌트ID
 	 * @param insdUsermbrNo
 	 *            내부회원번호
+	 * @param targetDt
+	 *            적립예정일의 기준일
 	 * @param saveDt
 	 *            적립예정일
 	 * @return 마일리지 적립 예상 총 금액
 	 */
 	@Override
-	public int searchSaveExpectTotalAmt(String tenantId, String insdUsermbrNo, String saveDt) {
+	public int searchSaveExpectTotalAmt(String tenantId, String insdUsermbrNo, String targetDt, String saveDt) {
 		SearchSaveExpectTotalAmtScReq searchSaveExpectTotalAmtScReq = new SearchSaveExpectTotalAmtScReq();
 		searchSaveExpectTotalAmtScReq.setTenantId(tenantId);
 		searchSaveExpectTotalAmtScReq.setInsdUsermbrNo(insdUsermbrNo);
+		searchSaveExpectTotalAmtScReq.setTargetDt(targetDt);
 		searchSaveExpectTotalAmtScReq.setSaveDt(saveDt);
 
 		SearchSaveExpectTotalAmtScRes searchSaveExpectTotalAmtScRes = this.membershipReserveSCI

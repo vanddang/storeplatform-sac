@@ -616,8 +616,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.settMileageLimitAmt(PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT);
 
 		// (이번회) T마일리지 적립예정 금액
+		String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 		res.settMileageReseveAmt(this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
-				reservedDataMap.get("userKey"), null));
+				reservedDataMap.get("userKey"), targetDt, null));
 
 		// ------------------------------------------------------------------------------------------------
 		// OCB 적립율
@@ -1032,8 +1033,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				int expectAmt = (int) (availPayAmt * rateMap.get(userGrade) * 0.01);
 
 				// 적립예정 이력 총 금액
+				String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 				int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
-						reservedDataMap.get("userKey"), null);
+						reservedDataMap.get("userKey"), targetDt, null);
 
 				if (preReserveAmt >= PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT) { // 한도초과
 					mileageSubInfo.setSaveResultAmt(0);
@@ -1052,7 +1054,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,{},{}percentage", mileageSubInfo.getTargetPaymentAmt(),
+		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,{},{}%", mileageSubInfo.getTargetPaymentAmt(),
 				mileageSubInfo.getProdSaveRate());
 
 		List<MembershipReserve> membershipReserveList = null;
@@ -1359,8 +1361,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				int expectAmt = (int) (availPayAmt * rateMap.get(userGrade) * 0.01);
 
 				// 적립예정 이력 총 금액
+				String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 				int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
-						userKey, null);
+						userKey, targetDt, null);
 
 				if (preReserveAmt >= PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT) { // 한도초과
 					mileageSubInfo.setSaveResultAmt(0);
@@ -1379,7 +1382,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,{},{}percentage", mileageSubInfo.getTargetPaymentAmt(),
+		this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,{},{}%", mileageSubInfo.getTargetPaymentAmt(),
 				mileageSubInfo.getProdSaveRate());
 
 		List<MembershipReserve> membershipReserveList = null;
