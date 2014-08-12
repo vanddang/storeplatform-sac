@@ -126,7 +126,7 @@
                                            , D.CONTENTS_TYPE_CD
                                            , F.PROD_NM
                                            , H.PROD_AMT  /* 가격 */
-                                           , I.PRCHS_CNT /* 구매건수 */
+                                           , NVL(I.PRCHS_CNT, 0) AS PRCHS_CNT /* 구매건수 */
                                            , CASE 
                                                 WHEN (H.CHNL_UNLMT_AMT >= 0 AND E.EPSD_CNT > 0) 
                                                 THEN H.CHNL_UNLMT_AMT
@@ -149,8 +149,8 @@
                                          AND G.TENANT_ID = #{tenantId}             /* header param : tenantId */
                                          AND H.PROD_ID = D.PROD_ID
                                          AND H.TENANT_ID = #{tenantId}             /* header param : tenantId */
-                                         AND I.PROD_ID   = D.PROD_ID
-                                         AND I.TENANT_ID = #{tenantId}             /* header param : tenantId */
+                                         AND I.PROD_ID(+) = D.PROD_ID
+                                         AND I.TENANT_ID(+) = #{tenantId}             /* header param : tenantId */
                                          AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                                          AND A.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                          AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
