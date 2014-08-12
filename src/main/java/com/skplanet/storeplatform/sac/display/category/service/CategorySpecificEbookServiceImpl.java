@@ -94,9 +94,9 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 		if (req.getDummy() == null) {
 
 			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
-			if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
+			if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_EBOOK_PARAMETER_LIMIT) {
 				throw new StorePlatformException("SAC_DSP_0004", "list",
-						DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
+						DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_EBOOK_PARAMETER_LIMIT);
 			}
 
 			// 상품 기본 정보 List 조회
