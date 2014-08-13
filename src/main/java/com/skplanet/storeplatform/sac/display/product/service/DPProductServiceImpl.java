@@ -9,14 +9,16 @@
 package com.skplanet.storeplatform.sac.display.product.service;
 
 
+import com.skplanet.icms.refactoring.deploy.DPProductVO;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.icms.refactoring.deploy.DPProductVO;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <pre>
@@ -51,10 +53,8 @@ public class DPProductServiceImpl implements DPProductService {
 	 * @see com.skplanet.icms.deploy.tstore.service.DPProductService#deleteDPProduct(java.lang.String)
 	 */
 	public void deleteDPProduct(String pid) {
-		String prodId = pid;
-		log.debug("*****DPProductServiceImpl delete***********************  {}",prodId);
-		
-		this.commonDAO.delete("DP_PRODUCT.deleteDPProduct", prodId);
+		log.debug("*****DPProductServiceImpl delete***********************  {}",pid);
+		this.commonDAO.delete("DP_PRODUCT.deleteDPProduct", pid);
 		
 	}
 
@@ -66,9 +66,9 @@ public class DPProductServiceImpl implements DPProductService {
 		DPProductVO parameter = new DPProductVO();
 		log.debug("*****DPProductServiceImpl delete***********************  {}",prodId);
 		parameter.setProdId(prodId);
-		
-		this.commonDAO.delete("DP_PRODUCT.deleteDPProduct", prodId);
-	}	
 
-	
+		this.commonDAO.delete("DP_PRODUCT.deleteDPProduct", prodId);
+	}
+
+
 }
