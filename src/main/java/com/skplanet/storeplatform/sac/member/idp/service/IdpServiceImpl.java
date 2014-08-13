@@ -2638,7 +2638,6 @@ public class IdpServiceImpl implements IdpService {
 		if (checkOcbVal > -1) {
 			ocbJoinCodeYn = "Y";
 		}
-		LOGGER.info("===================[ocbJoinCodeYn] {}", ocbJoinCodeYn);
 
 		String[] mbrClauseAgreeArray = null;
 		String[] tempSplit = joinSiteTotalList.split("\\|");
@@ -2697,15 +2696,23 @@ public class IdpServiceImpl implements IdpService {
 
 					if (searchUserResponse != null) { // 통합서비스 번호로 조회된 회원정보가 있는경우
 
-						map.put("im_reg_date", "");
+						//map.put("im_reg_date", "");
 						UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 						updateUserRequest.setCommonRequest(commonRequest);
 
 						// 통합서비스 관리번호 동일 & mbr_no가 다를 경우만 DB에 있는 데이터를 Request있는 데이터로 db내용을 update시킴
-						if (!searchUserResponse.getUserMbr().getImMbrNo().equals(map.get("user_key").toString())) {
-							UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
-							userKey = updateUserResponse.getUserKey();
-						}
+						// 해당 케이스는 나올수 없으므로 삭제 2014-08-13 vanddang
+						//						if (!searchUserResponse.getUserMbr().getImMbrNo().equals(map.get("user_key").toString())) {
+						//							UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map, searchUserResponse));
+						//							userKey = updateUserResponse.getUserKey();
+						//						}
+						// OCB 가입여무, 이용동의 가입사이트 리스트 업데이트 2014.08-13 vanddang
+						UserMbr userMbr = new UserMbr();
+						userMbr.setUserKey(userKey);
+						userMbr.setIsMemberPoint(ocbJoinCodeYn); // 통합 포인트 여부 (Y/N)
+						userMbr.setImSiteCode(map.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
+						updateUserRequest.setUserMbr(userMbr);
+						this.userSCI.updateUser(updateUserRequest);
 
 						try {
 							// ONEID에 데이터 입력
