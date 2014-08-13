@@ -118,16 +118,21 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					prchsDtlMore.setUseInsdDeviceId(purchaseOrderInfo.getDeviceKey());
 				}
 				prchsDtlMore.setTotAmt(purchaseOrderInfo.getRealTotAmt());
-				prchsDtlMore
-						.setPrchsReqPathCd(product.isFullProd() ? PurchaseConstants.PRCHS_REQ_PATH_IAP_COMMERCIAL_CONVERTED : purchaseOrderInfo
-								.getPrchsReqPathCd());
+				if (product.isFullProd()) {
+					prchsDtlMore.setTenantProdGrpCd(PurchaseConstants.TENANT_PRODUCT_GROUP_APP
+							+ purchaseOrderInfo.getTenantProdGrpCd().substring(8, 12)
+							+ PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT);
+					prchsDtlMore.setPrchsReqPathCd(PurchaseConstants.PRCHS_REQ_PATH_IAP_COMMERCIAL_CONVERTED);
+				} else {
+					prchsDtlMore.setTenantProdGrpCd(purchaseOrderInfo.getTenantProdGrpCd());
+					prchsDtlMore.setPrchsReqPathCd(purchaseOrderInfo.getPrchsReqPathCd());
+				}
 				prchsDtlMore.setClientIp(purchaseOrderInfo.getClientIp());
 				prchsDtlMore.setUseHidingYn(PurchaseConstants.USE_N);
 				prchsDtlMore.setSendHidingYn(PurchaseConstants.USE_N);
 				prchsDtlMore.setRegId(purchaseOrderInfo.getSystemId());
 				prchsDtlMore.setUpdId(purchaseOrderInfo.getSystemId());
 				prchsDtlMore.setPrchsCaseCd(purchaseOrderInfo.getPrchsCaseCd());
-				prchsDtlMore.setTenantProdGrpCd(purchaseOrderInfo.getTenantProdGrpCd());
 				prchsDtlMore.setCurrencyCd(purchaseOrderInfo.getCurrencyCd()); // PRCHS
 				prchsDtlMore.setNetworkTypeCd(purchaseOrderInfo.getNetworkTypeCd()); // PRCHS
 

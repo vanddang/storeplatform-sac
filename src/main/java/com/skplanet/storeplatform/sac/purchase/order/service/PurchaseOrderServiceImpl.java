@@ -1248,6 +1248,24 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		purchase.setTenantProdGrpCd(purchase.getTenantProdGrpCd().replaceAll("DP00",
 				iapInfo.getMenuId().substring(0, 4)));
 
+		// 정식판 전환 상품 조회
+		if (StringUtils.equals(iapInfo.getHasFullProdYn(), PurchaseConstants.USE_Y)
+				&& StringUtils.isNotBlank(iapInfo.getFullProdId())) {
+			List<String> fullProdIdList = new ArrayList<String>();
+			fullProdIdList.add(iapInfo.getFullProdId());
+			Map<String, PurchaseProduct> fullProductMap = this.purchaseDisplayRepository.searchPurchaseProductList(
+					purchase.getTenantId(), purchase.getCurrencyCd(), null, fullProdIdList, false);
+			if (fullProductMap == null || fullProductMap.size() < 1) {
+				throw new StorePlatformException("SAC_PUR_5101", iapInfo.getFullProdId());
+			}
+
+			PurchaseProduct fullProd = fullProductMap.get(iapInfo.getFullProdId());
+			fullProd.setFullProd(true);
+			fullProd.setProdQty(1);
+			purchaseProduct.setFullIapProductInfo(fullProd);
+
+		}
+
 		// 회원정보(userKey, deviceKey) 조회
 		String userKey = "Z";
 		String deviceKey = "Z";
@@ -1311,6 +1329,56 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		List<PrchsDtlMore> prchsDtlMoreList = new ArrayList<PrchsDtlMore>();
 		prchsDtlMoreList.add(prchsDtlMore);
+
+		// 정식판 전환 상품
+		if (purchaseProduct.getFullIapProductInfo() != null) {
+			PurchaseProduct iapFullProd = purchaseProduct.getFullIapProductInfo();
+
+			prchsDtlMore = new PrchsDtlMore();
+			prchsDtlMore.setNetworkTypeCd(purchase.getNetworkTypeCd());
+			prchsDtlMore.setTenantId(purchase.getTenantId());
+			prchsDtlMore.setSystemId(purchase.getRegId());
+			prchsDtlMore.setPrchsId(prchsId);
+			prchsDtlMore.setPrchsDtlId(2);
+			prchsDtlMore.setUseTenantId(purchase.getTenantId());
+			prchsDtlMore.setUseInsdUsermbrNo(userKey);
+			prchsDtlMore.setUseInsdDeviceId(deviceKey);
+			prchsDtlMore.setInsdUsermbrNo(userKey);
+			prchsDtlMore.setInsdDeviceId(deviceKey);
+			prchsDtlMore.setSvcMangNo(purchase.getSvcMangNo());
+			prchsDtlMore.setPrchsDt(purchase.getPrchsDt());
+			prchsDtlMore.setTotAmt(purchase.getTotAmt());
+			prchsDtlMore.setCurrencyCd(purchase.getCurrencyCd());
+			prchsDtlMore.setClientIp(purchase.getClientIp());
+			prchsDtlMore.setProdId(iapFullProd.getProdId());
+			prchsDtlMore.setProdAmt(iapFullProd.getProdAmt());
+			prchsDtlMore.setProdQty(1);
+			prchsDtlMore.setPrchsReqPathCd(PurchaseConstants.PRCHS_REQ_PATH_IAP_COMMERCIAL_CONVERTED);
+			prchsDtlMore.setTenantProdGrpCd(PurchaseConstants.TENANT_PRODUCT_GROUP_APP
+					+ purchase.getTenantProdGrpCd().substring(8, 12)
+					+ PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT);
+			prchsDtlMore.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+			prchsDtlMore.setPrchsCaseCd(PurchaseConstants.PRCHS_CASE_PURCHASE_CD);
+			prchsDtlMore.setDrmYn(purchase.getDrmYn());
+			prchsDtlMore.setUseStartDt(purchase.getUseStartDt());
+			prchsDtlMore.setUseExprDt(purchase.getUseExprDt());
+			prchsDtlMore.setDwldStartDt(purchase.getDwldStartDt());
+			prchsDtlMore.setDwldExprDt(purchase.getDwldExprDt());
+			prchsDtlMore.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_UNIT);
+			prchsDtlMore.setUseHidingYn(PurchaseConstants.USE_N);
+			prchsDtlMore.setSendHidingYn(PurchaseConstants.USE_N);
+			prchsDtlMore.setTid(null);
+			prchsDtlMore.setTxId(null);
+			prchsDtlMore.setParentProdId(null);
+			prchsDtlMore.setPartChrgVer(null);
+			prchsDtlMore.setPartChrgProdNm(null);
+			prchsDtlMore.setRegId(purchase.getRegId());
+			prchsDtlMore.setUpdId(purchase.getUpdId());
+			prchsDtlMore.setAlarmYn(PurchaseConstants.USE_Y);
+			prchsDtlMore.setContentsType(null);
+
+			prchsDtlMoreList.add(prchsDtlMore);
+		}
 
 		// 결제정보 생성
 		List<Payment> paymentList = this.purchaseOrderMakeDataService.makePaymentList(prchsDtlMore,

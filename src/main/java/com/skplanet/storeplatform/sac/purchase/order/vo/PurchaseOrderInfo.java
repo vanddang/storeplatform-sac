@@ -104,6 +104,10 @@ public class PurchaseOrderInfo extends CommonInfo {
 
 	// ================================================================================================
 
+	public PurchaseOrderInfo() {
+		this.createPurchaseReq = null;
+	}
+
 	/**
 	 * @param createPurchaseReq
 	 *            createPurchaseReq
