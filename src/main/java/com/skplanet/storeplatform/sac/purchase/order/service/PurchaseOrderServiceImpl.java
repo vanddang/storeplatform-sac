@@ -645,8 +645,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// (이번회) T마일리지 적립예정 금액
 		String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
-		res.settMileageReseveAmt(this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
-				reservedDataMap.get("userKey"), targetDt, null));
+
+		// TAKTODO::오타때문에 2개 항목 세팅
+		int reserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
+				reservedDataMap.get("userKey"), targetDt, null);
+		res.settMileageReseveAmt(reserveAmt);
+		res.settMileageReserveAmt(reserveAmt);
 
 		// ------------------------------------------------------------------------------------------------
 		// OCB 적립율
