@@ -61,7 +61,7 @@
                                </if>
                                <if test='memberGrade != null and memberGrade != ""'>
 		                                 UNION ALL
-		                                 SELECT #{memberGrade} AS USE_DA, '5' AS MSG_TYPE_CD
+		                                 SELECT #{memberGrade} AS USE_DA, '1' AS MSG_TYPE_CD
 		                                   FROM DUAL
                                </if>
 		                                ) B
