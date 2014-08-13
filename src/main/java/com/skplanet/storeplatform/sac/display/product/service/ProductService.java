@@ -9,23 +9,23 @@ import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
 
 public interface ProductService {
 	
-	public DPProductVO selectDpProd(DPProductVO vo);
+	public DPProductVO selectDpProd(DPProductVO vo) throws StorePlatformException;
 	
-	public long selectNewFreeDataCnt(String tenantId, String prodId);
+	public long selectNewFreeDataCnt(ProductVo vo) throws StorePlatformException;
 	
-	public void insertNewFreeData(String tenantId, String prodId, String stdDt);
+	public void insertNewFreeData(ProductVo vo, String stdDt) throws StorePlatformException;
 	
-	public ProductVo selectMemberInfo(String mbrNo);
+	public ProductVo selectMemberInfo(ProductVo vo) throws StorePlatformException;
 	
-	public Map<String, Object> selectDpProd(DPTenantProductVO vo);
+	public Map<String, Object> selectDpProd(DPTenantProductVO vo) throws StorePlatformException;
 	
-	public long registSaleStatHis(ProductVo vo);
+	public long registSaleStatHis(ProductVo vo) throws StorePlatformException;
 	
-	public String registProdSettl(ProductVo vo);
+	public String registProdSettl(ProductVo vo) throws StorePlatformException;
 	
-	public void removeAdminRecommand(String tenantId, String prodId);
+	public void removeAdminRecommand(ProductVo vo) throws StorePlatformException;
 	
-	public void insertWhiteList(String prodId);
+	public void insertWhiteList(String prodId) throws StorePlatformException;
 	
-	public void registTotalSalesHis(ProductVo vo);
+	public void registTotalSalesHis(ProductVo vo) throws StorePlatformException;
 }

@@ -30,21 +30,24 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public long selectNewFreeDataCnt(String tenantId, String prodId) {
-        Map<String, Object> req = new HashMap<String, Object>();
-        req.put("tenantId", tenantId);
-        req.put("prodId", prodId);
-        return this.commonDAO.queryForLong("Display_Product.selectNewFreeDataCnt", req);
-    }
+	public long selectNewFreeDataCnt(ProductVo vo) {
+		return this.commonDAO.queryForLong("Display_Product.selectNewFreeDataCnt", vo);
+	}
 
 	@Override
-	public void insertNewFreeData(String tenantId, String prodId, String stdDt) {
-        Map<String, String> req = new HashMap<String, String>();
-        req.put("tenantId", tenantId);
-        req.put("prodId", prodId);
-        req.put("stdDt", stdDt);
+	public void insertNewFreeData(ProductVo vo, String stdDt) {
+		long newFreeCnt = selectNewFreeDataCnt(vo);
+		logger.info("newFreeCnt = " + newFreeCnt);
+		if (0 == newFreeCnt) {
+			logger.info("newFree Insert = " + vo.getProdId());
 
-        this.commonDAO.insert("Display_Product.insertNewFreeData", req);
+            Map<String, String> req = new HashMap<String, String>();
+            req.put("tenantId", vo.getTenantId());
+            req.put("prodId", vo.getProdId());
+            req.put("stdDt", stdDt);
+
+            this.commonDAO.insert("Display_Product.insertNewFreeData", req);
+		}
 	}
 
 	@Override
@@ -54,11 +57,9 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public ProductVo selectMemberInfo(String mbrNo) {
-        Map<String, Object> req = new HashMap<String, Object>();
-        req.put("mbrNo", mbrNo);
-        return this.commonDAO.queryForObject("Display_Product.selectMemberInfo", req, ProductVo.class);
-    }
+	public ProductVo selectMemberInfo(ProductVo vo) {
+		return (ProductVo) this.commonDAO.queryForObject("Display_Product.selectMemberInfo", vo);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -78,14 +79,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public void removeAdminRecommand(String tenantId, String prodId) {
-        Map<String, Object> req = new HashMap<String, Object>();
-        req.put("tenantId", tenantId);
-        req.put("prodId", prodId);
-        this.commonDAO.delete("Display_Product.deleteAdminRecommand", req);
-    }
-
-    @Override
+	public void removeAdminRecommand(ProductVo vo) throws StorePlatformException {
+		this.commonDAO.delete("Display_Product.deleteAdminRecommand", vo);
+	}
+	
+	@Override
 	public void insertWhiteList(String prodId) throws StorePlatformException {
 		this.commonDAO.insert("Display_Product.insertWhiteList", prodId);
 	};

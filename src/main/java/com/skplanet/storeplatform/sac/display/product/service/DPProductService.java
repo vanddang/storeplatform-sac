@@ -14,7 +14,7 @@ public interface DPProductService {
 
 	/**
 	 * 
-	 * @param dpProd
+	 * @param content
 	 */
 	void insertDPProduct(DPProductVO dpProd);
 

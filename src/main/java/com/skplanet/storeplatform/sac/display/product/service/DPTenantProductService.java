@@ -37,11 +37,4 @@ public interface DPTenantProductService {
 	 * @param dpCatNo
 	 */
 	void deleteDPTenant(String prodId);
-
-    /**
-     * 상품에 대해 배포된 테넌트 목록을 조회한다.
-     * @param prodId 상품ID
-     * @return 테넌트ID 목록
-     */
-    List<String> getDPTenantId(String prodId);
 }

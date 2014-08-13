@@ -15,8 +15,8 @@ public interface DisplayProductInitializer {
 
 	/**
 	 * 
-	 * @param notification
+	 * @param pid
 	 */
-	void deleteProdInfo(NotificationRefactoringSac notification);
-
+	void deleteProdInfo(NotificationRefactoringSac notification) throws StorePlatformException;
+	
 }

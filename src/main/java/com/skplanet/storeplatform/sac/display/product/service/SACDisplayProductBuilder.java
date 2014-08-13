@@ -1,22 +1,23 @@
 package com.skplanet.storeplatform.sac.display.product.service;
 
 import com.skplanet.icms.refactoring.deploy.*;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.product.constant.IFConstants;
 import com.skplanet.storeplatform.sac.display.product.exception.IcmsProcessException;
 import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 
@@ -80,7 +81,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
     private DisplayCommonService displayCommonService;
 
 	@Override
-	public void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList, Set<String> prodExistTenant) {
+	public void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList) throws StorePlatformException {
 
 		DPProductVO dpProd = notification.getDpProductTotal().getDpProduct();
 		String prodId = dpProd.getProdId(); // 상품_아이디
@@ -421,57 +422,67 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 			}
 		}
 		
-		if (CollectionUtils.isNotEmpty(tenantInfo)) {
+		if (null != tenantInfo) {
 			log.info("CMS tenantInfo Size = " + tenantInfo.size());
-
-            for (DPTenantProductVO vo : tenantInfo) {
-
-                String tenantId = vo.getTenantId();
-
-                log.info("CMS PROD INFO = " + prodId + " | " + mbrNo);
-
-                // 테넌트별 신규 등록 상품에 한해 수행
-                if (!prodExistTenant.contains(tenantId)) {
-
-                    // 정산율 등록
-                    ProductVo pv = this.prodService.selectMemberInfo(mbrNo);
-                    if (pv == null)
+			
+			if (0 < tenantInfo.size()) {
+				for (DPTenantProductVO vo : tenantInfo) {
+					String oldProdStatCd = ""; // 기존_판매_상태
+					String oldTopMenuId = "";
+							
+					log.info("CMS PROD INFO = " + prodId + " | " + mbrNo);
+					ProductVo pv = new ProductVo();
+					pv.setMbrNo(mbrNo);
+					pv = this.prodService.selectMemberInfo(pv);
+					if (null == pv)
                         throw new IcmsProcessException(IFConstants.CMS_RST_CODE_DP_DATA_INVALID_ERROR, "MBR_NO [ " + mbrNo + " ] 로 등록되어진 회원 정보가 없습니다.");
-
-                    pv.setProdId(prodId);
-                    pv.setRegDt(vo.getRegDt());
-                    pv.setTenantId(vo.getTenantId());
-                    pv.setProdStatCd(vo.getProdStatusCd());
-                    String result = this.prodService.registProdSettl(pv);
-                    log.info("CMS 정산율 = " + result);
+					
+					//ProductVo 값 설정
+					pv.setProdId(prodId);
+					pv.setRegDt(vo.getRegDt());
+					pv.setTenantId(vo.getTenantId());
+					pv.setProdStatCd(vo.getProdStatusCd());
+					
+					String result = this.prodService.registProdSettl(pv);
+					log.info("CMS 정산율 = " + result);
 
                     // newFree 데이터 처리
-                    String stdDt = displayCommonService.getBatchStandardDateString(tenantId, DisplayConstants.DP_LIST_NEWFREE);
-                    this.prodService.insertNewFreeData(tenantId, prodId, stdDt);
-                    log.info("CMS New Free Data Insert");
-                }
+                    Date saleStrtDt = DateUtils.parseDate(StringUtils.defaultString(dpProdAppInfo.getSaleStrtDt()).substring(0, 8), "yyyyMMdd");
+                    if(saleStrtDt != null) {
+                        // 출시일이 1개월 이내의 건만 처리.
+                        Date minus1M = org.apache.commons.lang3.time.DateUtils.addMonths(new Date(), -1);
+                        if(saleStrtDt.after(minus1M)) {
+                            log.info("CMS New Free Data Insert");
+                            String stdDt = displayCommonService.getBatchStandardDateString(pv.getTenantId(), DisplayConstants.DP_LIST_NEWFREE);
+                            this.prodService.insertNewFreeData(pv, stdDt);
+                        }
+                    }
 
-                if (tempList != null) {
-                    for (Map<String, Object> oldProd : tempList) {
-                        if (StringUtils.equals((String)oldProd.get("TENANTID"), tenantId)) {
-                            String oldProdStatCd = (String) oldProd.get("PRODSTATUSCD");
-                            String oldTopMenuId = (String) oldProd.get("TOPMENUID");
 
-                            // 판매중인 상품의 카테고리 대분류가 변경될시 운영자추천상품 - SUB 상품 삭제
-                            log.info("CMS 운영자 추천 상품 삭제 여부 Check | " + oldProdStatCd);
-                            if (IFConstants.CONTENT_SALE_STAT_ING.equals(oldProdStatCd)) {
-                                String topCatCd = dpProd.getTopMenuId();
-                                log.info(oldTopMenuId + " == " + topCatCd);
-                                if (!oldTopMenuId.equals(topCatCd)) {
-                                    this.prodService.removeAdminRecommand(tenantId, prodId);
+                    if(tempList != null) {
+                        for(Map<String, Object> oldProd : tempList) {
+                            if(null != oldProd.get("TENANTID")){
+                                if(oldProd.get("TENANTID").equals(vo.getTenantId())){
+                                    oldProdStatCd = (String)oldProd.get("PRODSTATUSCD");
+                                    oldTopMenuId     = (String)oldProd.get("TOPMENUID");
+
+                                    // 판매중인 상품의 카테고리 대분류가 변경될시 운영자추천상품 - SUB 상품 삭제
+                                    log.info("CMS 운영자 추천 상품 삭제 여부 Check | " + oldProdStatCd);
+                                    if (IFConstants.CONTENT_SALE_STAT_ING.equals(oldProdStatCd)) {
+                                        String topCatCd = dpProd.getTopMenuId();
+                                        log.info(oldTopMenuId + " == " + topCatCd);
+                                        if (!oldTopMenuId.equals(topCatCd)) {
+                                            this.prodService.removeAdminRecommand(pv);
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            }
-
-            // 바이너리 수정이 있을 경우 화이트 리스트 배포
+				}
+			}
+			
+			// 바이너리 수정이 있을 경우 화이트 리스트 배포
 			log.info("CMS White List Regist");
 			this.prodService.insertWhiteList(prodId);
 
