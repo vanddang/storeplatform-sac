@@ -447,6 +447,7 @@ public class EpubServiceImpl implements EpubService {
         	if(userGradeInfo != null) {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
+                Integer prodAmt = 0;
                 if(mapperVO.getStoreProdAmt() != null && mapperVO.getStoreProdAmt() > 0)
                     prodAmt = mapperVO.getStoreProdAmt();
                 else if(mapperVO.getPlayProdAmt() != null && mapperVO.getPlayProdAmt() > 0)
