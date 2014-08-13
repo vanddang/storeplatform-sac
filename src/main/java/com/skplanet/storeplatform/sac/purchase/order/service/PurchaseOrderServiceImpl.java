@@ -1270,9 +1270,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		String userKey = "Z";
 		String deviceKey = "Z";
 
+		SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = null;
+
 		String orderDt = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = this.purchaseMemberRepository
-				.searchOrderUserByDeviceId(purchase.getDeviceId(), orderDt);
+		try {
+			searchOrderUserByDeviceIdSacRes = this.purchaseMemberRepository.searchOrderUserByDeviceId(
+					purchase.getDeviceId(), orderDt);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTEXIST_KEY)) {
+				;
+			} else {
+				throw e;
+			}
+		}
 
 		if (searchOrderUserByDeviceIdSacRes != null) {
 			userKey = StringUtils.defaultIfBlank(searchOrderUserByDeviceIdSacRes.getUserKey(), "Z");
