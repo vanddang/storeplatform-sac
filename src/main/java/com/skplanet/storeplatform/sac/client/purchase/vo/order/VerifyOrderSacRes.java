@@ -44,6 +44,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String tMileageAvailMtd; // T마일리지 적립 가능 결제수단 (결제수단코드;결제수단코드;[반복])
 	private Integer tMileageLimitAmt; // T마일리지 적립한도 금액
 	private Integer tMileageReseveAmt; // T마일리지 적립예정 금액 (적립예정일:예정금액;[반복])
+	private Integer tMileageReserveAmt; // T마일리지 적립예정 금액 (적립예정일:예정금액;[반복])
 	private String typeTestMdn; // 법인 및 일반 시험폰 처리 타입: T01, T02, T03
 	private String cdPaymentTemplate; // 결제Page 템플릿 코드: TC01-일반, TC02-정액제(게임캐쉬), TC03-대여/소장, TC04-자동결제, TC05-쇼핑, TC06-선물
 	private String topMenuId; // 상품 TOP 메뉴 ID
@@ -424,6 +425,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void settMileageReseveAmt(Integer tMileageReseveAmt) {
 		this.tMileageReseveAmt = tMileageReseveAmt;
+	}
+
+	/**
+	 * @return the tMileageReserveAmt
+	 */
+	public Integer gettMileageReserveAmt() {
+		return this.tMileageReserveAmt;
+	}
+
+	/**
+	 * @param tMileageReserveAmt
+	 *            the tMileageReserveAmt to set
+	 */
+	public void settMileageReserveAmt(Integer tMileageReserveAmt) {
+		this.tMileageReserveAmt = tMileageReserveAmt;
 	}
 
 	/**
