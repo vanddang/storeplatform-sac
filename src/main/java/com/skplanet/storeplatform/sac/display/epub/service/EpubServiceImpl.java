@@ -447,7 +447,10 @@ public class EpubServiceImpl implements EpubService {
         	if(userGradeInfo != null) {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
-	        	Integer prodAmt = mapperVO.getStoreProdAmt() == null || mapperVO.getStoreProdAmt() == 0 ? mapperVO.getPlayProdAmt() : mapperVO.getStoreProdAmt();
+	        	Integer prodAmt = 0;
+	        	if(product.getPrice() != null) {
+	        		prodAmt = product.getPrice().getText();
+	        	}
 	        	MileageInfo mileageInfo = benefitService.getMileageInfo(mapperVO.getTenantId(), mapperVO.getTopMenuId(), mapperVO.getProdId(), prodAmt);
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
