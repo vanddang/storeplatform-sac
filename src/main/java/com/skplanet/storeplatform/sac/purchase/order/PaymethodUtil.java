@@ -61,6 +61,8 @@ public class PaymethodUtil {
 		convert2PayPlanetMap.put("OR000624", "28"); // 게임캐쉬 보너스 포인트
 		convert2PayPlanetMap.put("OR000608", "29"); // T store Point
 		convert2PayPlanetMap.put("OR000625", "30"); // T game pass
+		convert2PayPlanetMap.put("OR000694", PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER); // 시험폰: T멤버쉽 QA테스트
+																									  // 지원
 	}
 
 	/**
