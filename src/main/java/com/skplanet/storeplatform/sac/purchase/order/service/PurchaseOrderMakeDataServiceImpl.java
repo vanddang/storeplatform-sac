@@ -658,11 +658,16 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 						// .append("&sellerNm=").append(StringUtils.defaultString(product.getSellerNm()))
 						// .append("&sellerEmail=").append(StringUtils.defaultString(product.getSellerEmail()))
 						// .append("&sellerTelno=").append(StringUtils.defaultString(product.getSellerTelno()))
-						.append("&sellerMbrNo=").append(StringUtils.defaultString(product.getSellerMbrNo()))
-						.append("&mallCd=").append(StringUtils.defaultString(product.getMallCd()))
-						.append("&outsdContentsId=").append(StringUtils.defaultString(product.getOutsdContentsId()))
-						.append("&autoPrchsYn=").append(StringUtils.defaultString(product.getAutoPrchsYN()))
-						.append("&specialCouponId=")
+						.append("&sellerMbrNo=")
+						.append(StringUtils.defaultString(product.getSellerMbrNo()))
+						.append("&mallCd=")
+						.append(StringUtils.defaultString(product.getMallCd()))
+						.append("&outsdContentsId=")
+						.append(StringUtils.defaultString(product.getOutsdContentsId()))
+						.append("&autoPrchsYn=")
+						.append(StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+								PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) ? "N" : StringUtils.defaultString(product
+								.getAutoPrchsYN())).append("&specialCouponId=")
 						.append(StringUtils.defaultString(product.getSpecialSaleCouponId()))
 						.append("&specialCouponAmt=").append(product.getSpecialCouponAmt()).append("&cmpxProdClsfCd=")
 						.append(product.getCmpxProdClsfCd()).append("&prodCaseCd=").append(product.getProdCaseCd());
