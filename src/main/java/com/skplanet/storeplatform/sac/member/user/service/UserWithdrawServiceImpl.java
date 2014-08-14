@@ -142,15 +142,17 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 			/** MQ 연동 (회원 탈퇴) */
 			String mqDeviceStr = "";
-			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
-				mqDeviceStr += deviceInfo.getDeviceId() + "|";
+			if (listDeviceRes.getDeviceInfoList() != null) {
+				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
+					mqDeviceStr += deviceInfo.getDeviceId() + "|";
+				}
+				mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
 			}
-			mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
 			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
 			mqInfo.setUserId(userInfo.getUserId());
 			mqInfo.setUserKey(userInfo.getUserKey());
 			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-			if (mqDeviceStr != null) {
+			if (StringUtils.isNotBlank(mqDeviceStr)) {
 				mqInfo.setDeviceId(mqDeviceStr);
 			}
 

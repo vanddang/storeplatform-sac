@@ -1593,10 +1593,12 @@ public class IdpServiceImpl implements IdpService {
 				listDeviceReq.setIsMainDevice("N");
 				ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
 
-				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
-					mqDeviceStr += deviceInfo.getDeviceId() + "|";
+				if (listDeviceRes.getDeviceInfoList() != null) {
+					for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두 전달
+						mqDeviceStr += deviceInfo.getDeviceId() + "|";
+					}
+					mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
 				}
-				mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
 
 				RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 				removeUserRequest.setCommonRequest(commonRequest);
@@ -2952,11 +2954,13 @@ public class IdpServiceImpl implements IdpService {
 								if (searchUserResponse != null) {
 									ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, req);
 
-									for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
-										if (StringUtils.equals(deviceInfo.getIsPrimary(), "Y")) {
-											isPrimary = "Y";
-										} else {
-											isPrimary = "N";
+									if (listDeviceRes.getDeviceInfoList() != null) {
+										for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
+											if (StringUtils.equals(deviceInfo.getIsPrimary(), "Y")) {
+												isPrimary = "Y";
+											} else {
+												isPrimary = "N";
+											}
 										}
 									}
 
