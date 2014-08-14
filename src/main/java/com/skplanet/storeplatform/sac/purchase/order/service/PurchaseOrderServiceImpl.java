@@ -641,7 +641,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd()));
 
 		// T마일리지 적립한도 금액
-		res.settMileageLimitAmt(PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT);
+		res.settMileageLimitAmt(this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
+				prchsDtlMore.getTenantProdGrpCd()));
 
 		// (이번회) T마일리지 적립예정 금액
 		String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
@@ -1078,16 +1079,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
 						reservedDataMap.get("userKey"), targetDt, null);
 
-				if (preReserveAmt >= PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT) { // 한도초과
+				int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
+						prchsDtlMore.getTenantProdGrpCd());
+
+				if (preReserveAmt >= limitAmt) { // 한도초과
 					mileageSubInfo.setSaveResultAmt(0);
 					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_OVER);
 
-				} else if ((preReserveAmt + expectAmt) <= PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT) { // 전체적립
+				} else if ((preReserveAmt + expectAmt) <= limitAmt) { // 전체적립
 					mileageSubInfo.setSaveResultAmt(expectAmt);
 					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_ALL);
 
 				} else { // 부분적립
-					mileageSubInfo.setSaveResultAmt(PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT - preReserveAmt);
+					mileageSubInfo.setSaveResultAmt(limitAmt - preReserveAmt);
 					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_PART);
 				}
 
@@ -1406,16 +1410,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
 						userKey, targetDt, null);
 
-				if (preReserveAmt >= PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT) { // 한도초과
+				int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
+						prchsDtlMore.getTenantProdGrpCd());
+
+				if (preReserveAmt >= limitAmt) { // 한도초과
 					mileageSubInfo.setSaveResultAmt(0);
 					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_OVER);
 
-				} else if ((preReserveAmt + expectAmt) <= PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT) { // 전체적립
+				} else if ((preReserveAmt + expectAmt) <= limitAmt) { // 전체적립
 					mileageSubInfo.setSaveResultAmt(expectAmt);
 					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_ALL);
 
 				} else { // 부분적립
-					mileageSubInfo.setSaveResultAmt(PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT - preReserveAmt);
+					mileageSubInfo.setSaveResultAmt(limitAmt - preReserveAmt);
 					mileageSubInfo.setSaveTypeCd(PurchaseConstants.MEMBERSHIP_SAVE_TYPE_PART);
 				}
 

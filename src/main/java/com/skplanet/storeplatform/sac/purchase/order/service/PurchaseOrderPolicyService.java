@@ -40,6 +40,22 @@ public interface PurchaseOrderPolicyService {
 	/**
 	 * 
 	 * <pre>
+	 * T마일리지 적립 한도 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트 ID
+	 * 
+	 * @param tenantProdGrpCd
+	 *            테넌트상품분류코드
+	 * 
+	 * @return T마일리지 적립 한도
+	 */
+	public int searchtMileageSaveLimit(String tenantId, String tenantProdGrpCd);
+
+	/**
+	 * 
+	 * <pre>
 	 * T마일리지 적립 가능 결제수단 조회.
 	 * </pre>
 	 * 

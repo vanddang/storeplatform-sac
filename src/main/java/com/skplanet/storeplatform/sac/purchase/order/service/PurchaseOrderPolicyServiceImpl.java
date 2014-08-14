@@ -87,6 +87,27 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	/**
 	 * 
 	 * <pre>
+	 * T마일리지 적립 한도 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트 ID
+	 * 
+	 * @param tenantProdGrpCd
+	 *            테넌트상품분류코드
+	 * 
+	 * @return T마일리지 적립 한도
+	 */
+	@Override
+	public int searchtMileageSaveLimit(String tenantId, String tenantProdGrpCd) {
+		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
+				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_TMILEAGE_SAVE_LIMIT, false);
+		return CollectionUtils.isEmpty(policyList) ? 0 : Integer.parseInt(policyList.get(0).getApplyValue());
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * T마일리지 적립 가능 결제수단 조회.
 	 * </pre>
 	 * 

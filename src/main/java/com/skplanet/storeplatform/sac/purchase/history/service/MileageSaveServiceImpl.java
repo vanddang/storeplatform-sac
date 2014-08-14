@@ -118,7 +118,8 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 		response.settMileageAvailMtd(availMtd);
 
 		// 적립한도 조회
-		response.settMileageLimitAmt(PurchaseConstants.TMEMBERSHIP_SAVE_LIMIT + "");
+		response.settMileageLimitAmt(this.purchaseOrderPolicyService.searchtMileageSaveLimit(request.getTenantId(),
+				null) + "");
 
 		response.settMileageReseveList(sacMileageSaveList);
 
