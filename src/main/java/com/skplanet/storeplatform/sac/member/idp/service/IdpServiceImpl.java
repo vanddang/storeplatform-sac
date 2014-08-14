@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
@@ -99,9 +98,6 @@ public class IdpServiceImpl implements IdpService {
 	@Resource(name = "memberRetireAmqpTemplate")
 	@Autowired
 	private AmqpTemplate memberRetireAmqpTemplate;
-
-	@Value("#{propertiesForSac['member.ogg.internal.method.iscall']}")
-	public boolean isCall;
 
 	/*
 	 * 
@@ -537,59 +533,6 @@ public class IdpServiceImpl implements IdpService {
 
 			LOGGER.debug("ONEID DATA UPDATE COMPLETE");
 
-			if (this.isCall) { // OGG 시에만 사용하고 그 이후에는 불필요 로직 property로 사용함 전환,변경시
-				try {
-					/* 게임센터 연동 */
-
-					SacRequestHeader requestHeader = new SacRequestHeader();
-					TenantHeader tenant = new TenantHeader();
-					tenant.setSystemId(systemId);
-					tenant.setTenantId(tenantId);
-					requestHeader.setTenantHeader(tenant);
-
-					ListDeviceReq req = new ListDeviceReq();
-
-					req.setUserKey(currentMbrNoForgameCenter);
-					req.setIsMainDevice("N");
-
-					ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, req);
-
-					if (listDeviceRes.getDeviceInfoList() != null) {
-						for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
-							// 게임센터 연동
-							GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-							gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
-							gameCenterSacReq.setPreDeviceId(deviceInfo.getDeviceId());
-							// Post UserKey를 가져오려했으나 sc쪽에 userKey는 수정후에도 넘겨받는값 userKey updateUserRequest의 userkKey를
-							// 그대로
-							// 리턴해주고있어서현재 param으로 넘어온 mbrNo 그대로 셋팅해주고 있음 임시로직이기 때문에 문제 없음.
-							gameCenterSacReq.setUserKey(currentMbrNoForgameCenter);
-							gameCenterSacReq.setPreUserKey(userKey);
-							gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
-							gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
-							gameCenterSacReq.setSystemId(systemId);
-							gameCenterSacReq.setTenantId(tenantId);
-							gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE); // 통합회원전환
-							this.deviceService.regGameCenterIF(gameCenterSacReq);
-						}
-					}
-				} catch (StorePlatformException spe) {
-					LOGGER.error(spe.getMessage(), spe);
-					LOGGER.info("{} 의 휴대기기 정보가 없음 : {}", oldId, spe.getErrorInfo().getCode());
-					imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-					imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
-					return imResult;
-				}
-			}
-
-			/**
-			 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
-			 */
-			if (this.isCall) {
-				String newMbrNo = map.get("user_key").toString();
-				String prevMbrNo = prevMbrNoForgameCenter;
-				this.mcic.excuteInternalMethod(this.isCall, systemId, tenantId, newMbrNo, prevMbrNo, null, null);
-			}
 		}
 
 		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
@@ -3202,59 +3145,6 @@ public class IdpServiceImpl implements IdpService {
 
 					LOGGER.debug("ONEID DATA UPDATE COMPLETE");
 
-					try {
-
-						if (this.isCall) { // OGG 연동기간에만 사용함.
-							if (searchUserResponse != null) {
-								SacRequestHeader requestHeader = new SacRequestHeader();
-								TenantHeader tenant = new TenantHeader();
-								tenant.setSystemId(systemId);
-								tenant.setTenantId(tenantId);
-								requestHeader.setTenantHeader(tenant);
-
-								ListDeviceReq req = new ListDeviceReq();
-
-								req.setUserKey(userKey);
-								req.setIsMainDevice("N");
-
-								ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, req);
-
-								if (listDeviceRes.getDeviceInfoList() != null) {
-									for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
-										// 게임센터 연동
-										GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-										gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
-										gameCenterSacReq.setPreDeviceId(deviceInfo.getDeviceId());
-										// Post UserKey를 가져오려했으나 sc쪽에 userKey는 수정후에도 넘겨받는값 userKey updateUserRequest의
-										// userkKey를 그대로 리턴해주고있어서현재 param으로 넘어온 mbrNo 그대로 셋팅해주고 있음 임시로직이기 때문에 문제 없음.
-										gameCenterSacReq.setUserKey(currentMbrNoForgameCenter);
-										gameCenterSacReq.setPreUserKey(userKey);
-										gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
-										gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
-										gameCenterSacReq.setSystemId(systemId);
-										gameCenterSacReq.setTenantId(tenantId);
-										gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_IMUSER_CHANGE); // 통합회원전환
-										this.deviceService.regGameCenterIF(gameCenterSacReq);
-									}
-								}
-							}
-						}
-
-						/**
-						 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
-						 */
-						if (this.isCall) {
-							String newMbrNo = map.get("user_key").toString();
-							String prevMbrNo = prevMbrNoForgameCenter;
-							this.mcic.excuteInternalMethod(this.isCall, systemId, tenantId, newMbrNo, prevMbrNo, null, null);
-						}
-					} catch (StorePlatformException spe) {
-						LOGGER.error(spe.getMessage(), spe);
-						imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-						imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
-						return imResult;
-
-					}
 				}
 
 			}

@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
@@ -65,9 +64,6 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 	@Autowired
 	private MemberCommonComponent mcc;
-
-	@Value("#{propertiesForSac['member.ogg.internal.method.iscall']}")
-	public boolean isCall;
 
 	@Autowired
 	private DeviceService deviceService;
@@ -139,44 +135,23 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				this.modMbrNo(sacHeader, userKey, deviceKey, deviceId, newMbrNo);
 
 				/** MQ 연동(번호변경) */
-				if (this.isCall) {
-					ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
-					try {
-						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-						mqInfo.setUserKey(newMbrNo);
-						mqInfo.setOldUserKey(userKey);
-						mqInfo.setDeviceKey(deviceKey);
-						mqInfo.setOldDeviceKey(deviceKey);
-						mqInfo.setDeviceId(deviceId);
-						mqInfo.setOldDeviceId(nowDeviceId);
-						mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
-						mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
-						mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
-						LOGGER.debug("{} 번호변경 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
-						this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
+				ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
+				try {
+					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					mqInfo.setUserKey(userKey);
+					mqInfo.setOldUserKey(userKey);
+					mqInfo.setDeviceKey(deviceKey);
+					mqInfo.setOldDeviceKey(deviceKey);
+					mqInfo.setDeviceId(deviceId);
+					mqInfo.setOldDeviceId(nowDeviceId);
+					mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+					mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+					mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
+					LOGGER.debug("{} 번호변경 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
+					this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
 
-					} catch (AmqpException ex) {
-						LOGGER.info("MQ process fail {}", mqInfo);
-					}
-				} else {
-					ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
-					try {
-						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-						mqInfo.setUserKey(userKey);
-						mqInfo.setOldUserKey(userKey);
-						mqInfo.setDeviceKey(deviceKey);
-						mqInfo.setOldDeviceKey(deviceKey);
-						mqInfo.setDeviceId(deviceId);
-						mqInfo.setOldDeviceId(nowDeviceId);
-						mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
-						mqInfo.setOldMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
-						mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
-						LOGGER.debug("{} 번호변경 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
-						this.memberModDeviceAmqpTemplate.convertAndSend(mqInfo);
-
-					} catch (AmqpException ex) {
-						LOGGER.info("MQ process fail {}", mqInfo);
-					}
+				} catch (AmqpException ex) {
+					LOGGER.info("MQ process fail {}", mqInfo);
 				}
 
 				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE;
@@ -189,75 +164,40 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
 				 */
 				newMbrNo = this.reviveUser(sacHeader, userKey, deviceId, deviceKey);
-
-				if (this.isCall) {
-					/** MQ 연동(MDN 등록) */
-					CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-					try {
-						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-						mqInfo.setUserKey(newMbrNo);
-						mqInfo.setDeviceKey(deviceKey);
-						mqInfo.setDeviceId(deviceId);
-						mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
-						this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
-						LOGGER.debug("{} 번호이동 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
-					} catch (AmqpException ex) {
-						LOGGER.info("MQ process fail {}", mqInfo);
-					}
-				} else {
-					/** MQ 연동(MDN 등록) */
-					CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
-					try {
-						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-						mqInfo.setUserKey(userKey);
-						mqInfo.setDeviceKey(deviceKey);
-						mqInfo.setDeviceId(deviceId);
-						mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
-						this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
-						LOGGER.debug("{} 번호이동 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
-					} catch (AmqpException ex) {
-						LOGGER.info("MQ process fail {}", mqInfo);
-					}
+				/** MQ 연동(MDN 등록) */
+				CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
+				try {
+					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					mqInfo.setUserKey(userKey);
+					mqInfo.setDeviceKey(deviceKey);
+					mqInfo.setDeviceId(deviceId);
+					mqInfo.setMnoCd(MemberConstants.DEVICE_TELECOM_SKT);
+					this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+					LOGGER.debug("{} 번호이동 변동성 회원 MQ 정보 : {}", deviceId, mqInfo);
+				} catch (AmqpException ex) {
+					LOGGER.info("MQ process fail {}", mqInfo);
 				}
 
 				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT;
 
 			}
 
-			if (this.isCall) {
-				/**
-				 * 게임센터 연동.
-				 */
-				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-				gameCenterSacReq.setUserKey(newMbrNo);
-				gameCenterSacReq.setMbrNo(newMbrNo);
-				gameCenterSacReq.setDeviceId(deviceId);
-				gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
-				gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
-				gameCenterSacReq.setPreDeviceId(nowDeviceId);
-				gameCenterSacReq.setPreUserKey(userKey);
-				gameCenterSacReq.setPreMbrNo(userKey);
-				gameCenterSacReq.setWorkCd(gcWorkCd);
-				this.deviceService.regGameCenterIF(gameCenterSacReq);
-				saveAndSync.setUserKey(newMbrNo); // OGG연동시에는 mbr_no가 userKey가 된다.
-			} else {
-				/**
-				 * 게임센터 연동.
-				 */
-				GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-				gameCenterSacReq.setUserKey(userKey);
-				gameCenterSacReq.setMbrNo(newMbrNo);
-				gameCenterSacReq.setDeviceId(deviceId);
-				gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
-				gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
-				gameCenterSacReq.setPreDeviceId(nowDeviceId);
-				gameCenterSacReq.setPreUserKey(userKey);
-				gameCenterSacReq.setPreMbrNo(preMbrNo);
-				gameCenterSacReq.setWorkCd(gcWorkCd);
-				this.deviceService.regGameCenterIF(gameCenterSacReq);
-				saveAndSync.setUserKey(userKey);
-			}
+			/**
+			 * 게임센터 연동.
+			 */
+			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			gameCenterSacReq.setUserKey(userKey);
+			gameCenterSacReq.setMbrNo(newMbrNo);
+			gameCenterSacReq.setDeviceId(deviceId);
+			gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
+			gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
+			gameCenterSacReq.setPreDeviceId(nowDeviceId);
+			gameCenterSacReq.setPreUserKey(userKey);
+			gameCenterSacReq.setPreMbrNo(preMbrNo);
+			gameCenterSacReq.setWorkCd(gcWorkCd);
+			this.deviceService.regGameCenterIF(gameCenterSacReq);
 
+			saveAndSync.setUserKey(userKey);
 			saveAndSync.setDeviceKey(deviceKey); // 휴대기기 Key
 
 		} else {
@@ -383,12 +323,6 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		reviveUserRequest.setDeviceKey(deviceKey);
 		this.deviceSCI.reviveUser(reviveUserRequest);
 
-		/**
-		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
-		 */
-		this.mcic.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), newMbrNo,
-				userKey, deviceKey, deviceKey);
-
 		return newMbrNo;
 
 	}
@@ -436,12 +370,6 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		userMbr.setImMbrNo(mbrNo); // MBR_NO
 		updateUserRequest.setUserMbr(userMbr);
 		this.userSCI.updateUser(updateUserRequest);
-
-		/**
-		 * 구매/기타 UserKey 변경.(OGG 시에만 사용하고 그 이후에는 불필요 로직임.)
-		 */
-		this.mcic.excuteInternalMethod(this.isCall, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), mbrNo,
-				userKey, deviceKey, deviceKey);
 
 	}
 

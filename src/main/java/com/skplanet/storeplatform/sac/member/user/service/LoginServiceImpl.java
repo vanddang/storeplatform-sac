@@ -118,9 +118,6 @@ public class LoginServiceImpl implements LoginService {
 	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
 	private String tempUserAuthKey;
 
-	@Value("#{propertiesForSac['member.ogg.internal.method.iscall']}")
-	private boolean isCallChangeKey;
-
 	@Autowired
 	@Resource(name = "memberAddDeviceAmqpTemplate")
 	private AmqpTemplate memberAddDeviceAmqpTemplate;
@@ -1151,15 +1148,7 @@ public class LoginServiceImpl implements LoginService {
 				LOGGER.info("MQ process fail {}", mqInfo);
 			}
 
-			/* usermbr_no가 변경된경우 OGG 연동을 위해 전시/기타, 구매 파트 키 변경 */
-			if (this.isCallChangeKey) {
-				this.mcic.excuteInternalMethod(this.isCallChangeKey, requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader()
-						.getTenantId(), joinForWapEcRes.getUserKey(), oldUserKey, oldDeviceKey, oldDeviceKey);
-				res.setUserKey(joinForWapEcRes.getUserKey());
-			} else {
-				res.setUserKey(oldUserKey);
-			}
-
+			res.setUserKey(oldUserKey);
 			res.setDeviceKey(oldDeviceKey);
 
 		}
