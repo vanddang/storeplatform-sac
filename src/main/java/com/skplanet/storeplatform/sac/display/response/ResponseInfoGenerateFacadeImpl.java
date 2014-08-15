@@ -1167,10 +1167,11 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
      		} else
      			mileageInfo = null;
      		*/
+        	
+        	// 앱상품 && 인앱상품이 존재하면 노출
+        	// 인앱 지원 여부 참조. AppInfoGeneratorImpl.generateSupportList
          	if(StringUtils.isEmpty(metaInfo.getPartParentClsfCd())) {
-         	// 인앱 지원 여부 참조. AppInfoGeneratorImpl.generateSupportList
-         	// 앱상품 && 인앱상품이 존재하면 노출
-         	} else mileageInfo = null;
+         	} mileageInfo = null;
          }
         
         
