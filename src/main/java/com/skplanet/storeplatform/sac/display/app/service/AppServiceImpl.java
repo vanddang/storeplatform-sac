@@ -179,7 +179,18 @@ public class AppServiceImpl implements AppService {
         	if(userGradeInfo != null) {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), topMenuId, request.getChannelId(), appDetail.getProdAmt());
+	        	Integer prodAmt = appDetail.getProdAmt();
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), topMenuId, request.getChannelId(), prodAmt);
+	        	
+	        	//무료인 경우 예외처리
+	        	if(prodAmt == null || prodAmt == 0) {
+	        		if(StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)
+	        				&& !supportInApp(appDetail)) {
+	        			//무료 && 카테고리 (예외상품 아님) && 인앱 미지원
+	        			// 마일리지 정보를 내려주지 않는다.
+	        			mileageInfo = new MileageInfo(); 
+	        		}
+	        	}
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
         }
@@ -188,7 +199,7 @@ public class AppServiceImpl implements AppService {
         
         product.setSupportList(new ArrayList<Support>());
         product.getSupportList().add(new Support("drm", appDetail.getDrmYn()));
-        product.getSupportList().add(new Support("iab", appDetail.getPartParentClsfCd() != null ? "Y" : "N"));
+        product.getSupportList().add(new Support("iab", supportInApp(appDetail) ? "Y" : "N"));
 
         // Source
         List<Source> sourceList = getImageList(request.getChannelId(), request.getLangCd());
@@ -253,6 +264,17 @@ public class AppServiceImpl implements AppService {
 
 		res.setProduct(product);
 		return res;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * @param appDetail
+	 * @return
+	 */
+	private boolean supportInApp(AppDetail appDetail) {
+		return StringUtils.isNotEmpty(appDetail.getPartParentClsfCd());
 	}
 
     private List<Source> getImageList(String channelId, String langCd) {
