@@ -1154,16 +1154,23 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
          		&& StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)
          		) {
          	//무료 상품 && 카테고리		
+         	/*
          	String topMenuId = metaInfo.getTopMenuId();
-     		if ((DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
+     		if (StringUtils.isNotEmpty(metaInfo.getPartParentClsfCd()) // 인앱 지원 여부 참조. AppInfoGeneratorImpl.generateSupportList
+     				&& 
+     				(DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
      				|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
      				|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
      				|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId))
-     				&& StringUtils.isNotEmpty(metaInfo.getPartParentClsfCd()) // 인앱 지원 여부 참조. AppInfoGeneratorImpl.generateSupportList 
      				) {
      			// 앱상품 && 인앱상품이 존재하면 노출
      		} else
      			mileageInfo = null;
+     		*/
+         	if(StringUtils.isNotEmpty(metaInfo.getPartParentClsfCd())) {
+         	// 인앱 지원 여부 참조. AppInfoGeneratorImpl.generateSupportList
+         	// 앱상품 && 인앱상품이 존재하면 노출
+         	} else mileageInfo = null;
          }
         
         
