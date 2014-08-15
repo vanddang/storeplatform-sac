@@ -126,7 +126,7 @@ public class CategoryController {
 	/**
 	 * 
 	 * <pre>
-	 * 일반 카테고리 ebook/만화 상품 조회.
+	 * [I03000024] 2.4.3.일반 카테고리 ebook/코믹 상품 조회.
 	 * </pre>
 	 * 
 	 * @param req
@@ -192,7 +192,7 @@ public class CategoryController {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * [I03000015] 음원 컨텐츠 조회
 	 * </pre>
 	 * 
 	 * @param requestVO

@@ -274,7 +274,7 @@ public class AppServiceImpl implements AppService {
 	 * @return
 	 */
 	private boolean supportInApp(AppDetail appDetail) {
-		return StringUtils.isNotEmpty(appDetail.getPartParentClsfCd());
+		return appDetail.getPartParentClsfCd() != null;
 	}
 
     private List<Source> getImageList(String channelId, String langCd) {

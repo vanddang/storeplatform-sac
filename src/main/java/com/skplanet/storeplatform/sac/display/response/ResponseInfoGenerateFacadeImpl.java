@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -1171,7 +1172,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
         	// 앱상품 && 인앱상품이 존재하면 노출
         	// 인앱 지원 여부 참조. AppInfoGeneratorImpl.generateSupportList
          	if(StringUtils.isEmpty(metaInfo.getPartParentClsfCd())) {
-         	} mileageInfo = null;
+         		mileageInfo = null;
+         	} 
          }
         
         
