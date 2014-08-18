@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +70,7 @@ public class OtherPartProductController {
 
         List<PartProduct> partProductInfoList = this.otherPartProductService.getPartProductList(aid, partProdId, tenantId, langCd);
 
-        if (partProductInfoList == null || partProductInfoList.size() == 0) {
+        if (CollectionUtils.isEmpty(partProductInfoList)) {
             throw new StorePlatformException("SAC_DSP_0009");
         }
 
@@ -82,6 +85,8 @@ public class OtherPartProductController {
             ppro.setPrice(new Price(pp.getProdAmt()));
             ppro.setProdKind(pp.getProdKind());
             ppro.setProdCase(pp.getProdCase());
+            ppro.setMenuList(new ArrayList<Menu>());
+            ppro.getMenuList().add(new Menu(pp.getParentMenuId(), pp.getParentMenuNm(), DisplayConstants.DP_MENU_TOPCLASS_TYPE));
 
             // 부모상품에 대한 마일리지 정책 적용
             if(pointList == null)

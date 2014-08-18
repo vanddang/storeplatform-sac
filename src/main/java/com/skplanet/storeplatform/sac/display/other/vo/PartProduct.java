@@ -30,6 +30,8 @@ public class PartProduct extends CommonInfo {
     private String prodKind;
     private String parentProdId;
     private String parentTopMenuId;
+    private String parentMenuId;
+    private String parentMenuNm;
     private List<Point> pointList;
 
     public String getProdId() {
@@ -94,5 +96,21 @@ public class PartProduct extends CommonInfo {
 
     public void setPointList(List<Point> pointList) {
         this.pointList = pointList;
+    }
+
+    public String getParentMenuId() {
+        return parentMenuId;
+    }
+
+    public void setParentMenuId(String parentMenuId) {
+        this.parentMenuId = parentMenuId;
+    }
+
+    public String getParentMenuNm() {
+        return parentMenuNm;
+    }
+
+    public void setParentMenuNm(String parentMenuNm) {
+        this.parentMenuNm = parentMenuNm;
     }
 }
