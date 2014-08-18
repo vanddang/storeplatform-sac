@@ -86,7 +86,8 @@ public class OtherPartProductController {
             ppro.setProdKind(pp.getProdKind());
             ppro.setProdCase(pp.getProdCase());
             ppro.setMenuList(new ArrayList<Menu>());
-            ppro.getMenuList().add(new Menu(pp.getParentMenuId(), pp.getParentMenuNm(), DisplayConstants.DP_MENU_TOPCLASS_TYPE));
+            ppro.getMenuList().add(new Menu(pp.getParentTopMenuId(), pp.getParentTopMenuNm(), DisplayConstants.DP_MENU_TOPCLASS_TYPE));
+            ppro.getMenuList().add(new Menu(pp.getParentMenuId(), pp.getParentMenuNm(), null));
 
             // 부모상품에 대한 마일리지 정책 적용
             if(pointList == null)
