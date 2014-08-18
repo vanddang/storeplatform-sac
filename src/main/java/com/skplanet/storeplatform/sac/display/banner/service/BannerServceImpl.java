@@ -135,6 +135,7 @@ public class BannerServceImpl implements BannerService {
 		Integer reqImgCnt = null; // 요청 이미지 개수
 
 		String bnrMenuId = null; // 배너메뉴ID
+		String bnrExpoMenuId = null; // 배너노출메뉴ID
 		String bnrType = null; // 배너타입
 		String prodId = null; // 상품ID
 		String topMenuId = null; // 탑메뉴ID
@@ -203,6 +204,7 @@ public class BannerServceImpl implements BannerService {
 			for (int j = 0; j < bannerList.size(); j++) {
 				bannerDefault = bannerList.get(j);
 				bnrMenuId = bannerDefault.getBnrMenuId();
+				bnrExpoMenuId = bannerDefault.getBnrExpoMenuId();
 				bnrType = bannerDefault.getBnrInfoTypeCd();
 
 				this.logger.debug("----------------------------------------------------------------");
@@ -329,7 +331,7 @@ public class BannerServceImpl implements BannerService {
 				}
 				// 이북 보관함 메인
 				else if ("DP010998".equals(reqBnrMenuId)) {
-					if ("DP010920".equals(bnrMenuId)) { // eBook 배너 n개
+					if ("DP010920".equals(bnrMenuId) && "DP011105".equals(bnrExpoMenuId)) { // 이북 Store 장르소설 테마 n개
 						if (ebookStoreBannerFlag) {
 							continue;
 						}
@@ -338,7 +340,7 @@ public class BannerServceImpl implements BannerService {
 							ebookStoreBannerFlag = true;
 							continue;
 						}
-					} else if ("DP010921".equals(bnrMenuId)) { // comic 배너 n개
+					} else if ("DP010921".equals(bnrMenuId) && "DP011104".equals(bnrExpoMenuId)) { // 이북 Store 만화 테마 n개
 						if (passCnt > 0 && !ebookStoreBannerFlag) {
 							passCnt = 0;
 							ebookStoreBannerFlag = true;

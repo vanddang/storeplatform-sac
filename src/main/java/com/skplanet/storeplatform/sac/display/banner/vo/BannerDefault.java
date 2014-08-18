@@ -18,6 +18,7 @@ public class BannerDefault {
 	private Integer totalCount;
 	private String bnrMenuId;
 	private String bnrSeq;
+	private String bnrExpoMenuId;
 	private String bannerId;
 	private String imgSizeCd;
 	private String bnrInfoTypeCd;
@@ -80,6 +81,21 @@ public class BannerDefault {
 	 */
 	public void setBnrSeq(String bnrSeq) {
 		this.bnrSeq = bnrSeq;
+	}
+
+	/**
+	 * @return the bnrExpoMenuId
+	 */
+	public String getBnrExpoMenuId() {
+		return this.bnrExpoMenuId;
+	}
+
+	/**
+	 * @param bnrExpoMenuId
+	 *            the bnrExpoMenuId to set
+	 */
+	public void setBnrExpoMenuId(String bnrExpoMenuId) {
+		this.bnrExpoMenuId = bnrExpoMenuId;
 	}
 
 	/**

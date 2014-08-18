@@ -7,6 +7,7 @@
 		        JA.TOTAL_COUNT
 		      , JA.BNR_MENU_ID
 		      , JA.BNR_SEQ
+		      , JA.BNR_EXPO_MENU_ID
 		      , (JA.BNR_MENU_ID || '.' || JA.BNR_EXPO_MENU_ID || '.' || JA.BNR_SEQ) AS BANNER_ID
 		      , JA.IMG_SIZE_CD
 		      , JA.BNR_INFO_TYPE_CD
@@ -128,12 +129,13 @@
                         </when>
                         <when test='bnrMenuId == "DP010998"'><!-- 이북보관함 메인 배너 -->
                            AND  A.BNR_MENU_ID IN ('DP010920', 'DP010921')<!-- 이북, 코믹 -->
+                           AND  B.BNR_EXPO_MENU_ID IN ('DP011104', 'DP011105')
                         </when>
                         <otherwise>
                            AND  A.BNR_MENU_ID = #{bnrMenuId}
                         </otherwise>
                     </choose>
-                    <if test='bnrExpoMenuId != null and bnrExpoMenuId != ""'>
+                    <if test='bnrMenuId != "DP010998" and bnrExpoMenuId != null and bnrExpoMenuId != ""'>
 		                   AND  B.BNR_EXPO_MENU_ID = #{bnrExpoMenuId}
                     </if>
                            AND  SYSDATE BETWEEN DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, B.EXPO_START_DT) AND DECODE(B.EXPO_STATUS_CD, 'DP010202', SYSDATE, NVL(B.EXPO_END_DT, SYSDATE))
