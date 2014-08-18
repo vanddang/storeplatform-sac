@@ -128,8 +128,8 @@
                            AND  A.BNR_MENU_ID IN ('DP010912', 'DP010910')<!-- 앱가이드, BEST 앱 -->
                         </when>
                         <when test='bnrMenuId == "DP010998"'><!-- 이북보관함 메인 배너 -->
-                           AND  A.BNR_MENU_ID IN ('DP010920', 'DP010921')<!-- 이북, 코믹 -->
-                           AND  B.BNR_EXPO_MENU_ID IN ('DP011104', 'DP011105')
+                           AND  ((A.BNR_MENU_ID = 'DP010920' AND B.BNR_EXPO_MENU_ID = 'DP011105')
+                                 OR (A.BNR_MENU_ID = 'DP010921' AND B.BNR_EXPO_MENU_ID = 'DP011104')) <!-- 장르소설 테마, 만화 테마 -->
                         </when>
                         <otherwise>
                            AND  A.BNR_MENU_ID = #{bnrMenuId}
