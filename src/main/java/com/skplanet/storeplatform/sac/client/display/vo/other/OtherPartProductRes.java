@@ -23,7 +23,17 @@ import java.util.List;
 public class OtherPartProductRes extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
+    private Product parentProduct;
+
     private List<Product> productList;
+
+    public Product getParentProduct() {
+        return parentProduct;
+    }
+
+    public void setParentProduct(Product parentProduct) {
+        this.parentProduct = parentProduct;
+    }
 
     public List<Product> getProductList() {
         return productList;
