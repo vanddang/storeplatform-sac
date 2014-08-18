@@ -47,13 +47,13 @@
             WHERE   tenant_id = #{tenantId}
             AND     menu_category_cd = #{menuCategoryCd}
             AND     expo_yn = 'Y'
-            AND     ROWNUM    &lt;= ( SELECT add_field_01 FROM TB_CM_CD WHERE cd_id = #{menuCategoryCd} )
             ORDER BY expo_ord, expo_ord_sub
         ) B
         ON (A.TENANT_MENU_ID = B.MENU_ID)
         WHERE A.TENANT_ID = #{tenantId}
         AND A.SYSTEM_ID = #{systemId}
         AND A.USE_YN = 'Y'
+        AND B.rn &lt;= ( SELECT add_field_01 FROM TB_CM_CD WHERE cd_id = #{menuCategoryCd} )
         ORDER BY B.rn
     </select>
 
