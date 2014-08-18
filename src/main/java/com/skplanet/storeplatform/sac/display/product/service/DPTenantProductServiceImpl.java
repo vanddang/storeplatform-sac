@@ -8,7 +8,9 @@
  */
 package com.skplanet.storeplatform.sac.display.product.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -67,4 +69,11 @@ public class DPTenantProductServiceImpl implements DPTenantProductService {
 
 		this.commonDAO.delete(NAMESPACE + ".deleteDPTenant", parameter);
 	}
+
+    @Override
+    public List<String> getDPTenantId(String prodId) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("prodId", prodId);
+        return this.commonDAO.queryForList(NAMESPACE + ".selectDPTenentId", req, String.class);
+    }
 }

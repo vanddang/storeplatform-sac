@@ -3,14 +3,14 @@
 
 <mapper namespace="Display_Product">
 
-    <select id="Display_Product.selectNewFreeDataCnt" parameterType="ProductVo" resultType="java.lang.Long">
+    <select id="Display_Product.selectNewFreeDataCnt" parameterType="map" resultType="java.lang.Long">
 		SELECT 
 			COUNT(*) as prodCount 
 		FROM 
 			TB_DP_LIST_PROD 
 		WHERE 
 			PROD_ID = #{prodId} 
-			AND TENANT_ID = 'S01'
+			AND TENANT_ID = #{tenantId}
 			AND LIST_ID = 'ADM000000001'
     </select> 
     
@@ -113,7 +113,7 @@
 	</insert>
     
      <!-- 회원정보 조회 -->
-	<select id="Display_Product.selectMemberInfo" parameterType="ProductVo" resultType="ProductVo">
+	<select id="Display_Product.selectMemberInfo" parameterType="map" resultType="ProductVo">
 		SELECT /* DisplayProductMapper.xml, Display_Product.selectMemberInfo, mhcha123, 2014-01-24 */ 
             T1.INSD_SELLERMBR_NO AS "mbrNo"
             , T1.SELLERMBR_ID AS "mbrId"

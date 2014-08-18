@@ -2,9 +2,9 @@ package com.skplanet.storeplatform.sac.display.product.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.skplanet.icms.refactoring.deploy.NotificationRefactoringSac;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 
 /**
  * 
@@ -17,9 +17,10 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 public interface DisplayProductBuilder {
 
 	/**
-	 * 
-	 * @param notification
-	 */
-	void insertProdInfo(NotificationRefactoringSac notification,List<Map<String, Object>> tempList) throws StorePlatformException;
+     * @param notification
+* @param tempList
+     * @param prodExistTenant
+     */
+	void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList, Set<String> prodExistTenant);
 
 }

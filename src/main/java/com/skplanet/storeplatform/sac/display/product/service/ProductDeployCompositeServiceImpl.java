@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,9 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 
 	@Autowired
 	private CacheEvictHelperComponent cacheEvictHelperComponent;
+
+    @Autowired
+    private DPTenantProductService dpTenantProductService;
 
 	@Override
 	public void executeProcess(NotificationRefactoringSac message) {
@@ -95,15 +99,20 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 						}
 					}
 
+                    /*
+                     * 동일 식별자의 상품 존재 여부 확인
+                     */
+                    List<String> existProdTenantList = dpTenantProductService.getDPTenantId(prodId);
+
 					/*
 					 * 이전에 배포된 전시 상품 데이터 삭제
 					 */
-					this.initializer.deleteProdInfo(message); // FIXME
+					this.initializer.deleteProdInfo(message);
 					this.log.info("CMS executeProcess 21");
 					/*
 					 * 데이터 재구성
 					 */
-					this.builder.insertProdInfo(message, tempList); // FIXME
+					this.builder.insertProdInfo(message, tempList, new HashSet<String>(existProdTenantList));
 					this.log.info("CMS executeProcess 22");
 					// 결과 설정
 					cv.setResultCd(IFConstants.CMS_RST_CODE_SUCCESS);
