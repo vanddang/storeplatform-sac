@@ -1354,6 +1354,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// TAKTODO::T멤버쉽
 
 		Map<String, Integer> rateMap = purchaseProduct.getMileageRateMap(); // 상품 적립률
+		if (rateMap == null) {
+			rateMap = new HashMap<String, Integer>();
+			rateMap.put(PurchaseConstants.USER_GRADE_PLATINUM, 0);
+			rateMap.put(PurchaseConstants.USER_GRADE_GOLD, 0);
+			rateMap.put(PurchaseConstants.USER_GRADE_SILVER, 0);
+		}
 		StringBuffer sbtMileageRateInfo = new StringBuffer();
 		for (String key : rateMap.keySet()) {
 			sbtMileageRateInfo.append(key).append(":").append(rateMap.get(key)).append(";");
