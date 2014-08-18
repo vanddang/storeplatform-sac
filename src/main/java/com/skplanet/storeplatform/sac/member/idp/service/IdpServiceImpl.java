@@ -452,16 +452,17 @@ public class IdpServiceImpl implements IdpService {
 
 						userKey = updateUserResponse.getUserKey();
 
-						// 공통_기타 회원ID 변경 시작
-						ChangeDisplayUserSacReq changeDisplayUserSacReqByUserID = new ChangeDisplayUserSacReq();
-						changeDisplayUserSacReqByUserID.setNewUserId(userId);
-						changeDisplayUserSacReqByUserID.setOldUserId(oldId);
-						changeDisplayUserSacReqByUserID.setTenantId(tenantId);
-						changeDisplayUserSacReqByUserID.setOldUserKey(searchUserResponse.getUserKey());
-						this.mcic.changeUserId(changeDisplayUserSacReqByUserID);
-						// 공통_기타 회원ID 변경 끝
 					}
 					LOGGER.debug("변경가입,변경전환 정보 입력 완료");
+
+					// 공통_기타 회원ID 변경 시작
+					ChangeDisplayUserSacReq changeDisplayUserSacReqByUserID = new ChangeDisplayUserSacReq();
+					changeDisplayUserSacReqByUserID.setNewUserId(userId);
+					changeDisplayUserSacReqByUserID.setOldUserId(oldId);
+					changeDisplayUserSacReqByUserID.setTenantId(tenantId);
+					changeDisplayUserSacReqByUserID.setOldUserKey(searchUserResponse.getUserKey());
+					this.mcic.changeUserId(changeDisplayUserSacReqByUserID);
+					// 공통_기타 회원ID 변경 끝
 
 					/* FDS LOG START */
 					final String fdsMbrIdPre = oldId;
