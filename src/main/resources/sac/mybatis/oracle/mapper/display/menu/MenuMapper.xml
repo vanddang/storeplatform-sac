@@ -39,22 +39,20 @@
             , A.REG_DT 
             , A.UPD_ID 
             , A.UPD_DT 
-        FROM TB_DP_TENANT_MENU A
-        INNER JOIN (
-            SELECT  ROWNUM AS rn,
-            menu_id
-            FROM    TB_DP_LIST_MENU_CATEGORY
-            WHERE   tenant_id = #{tenantId}
-            AND     menu_category_cd = #{menuCategoryCd}
-            AND     expo_yn = 'Y'
-            ORDER BY expo_ord, expo_ord_sub
-        ) B
-        ON (A.TENANT_MENU_ID = B.MENU_ID)
-        WHERE A.TENANT_ID = #{tenantId}
-        AND A.SYSTEM_ID = #{systemId}
-        AND A.USE_YN = 'Y'
-        AND B.rn &lt;= ( SELECT add_field_01 FROM TB_CM_CD WHERE cd_id = #{menuCategoryCd} )
-        ORDER BY B.rn
+        FROM (
+       		SELECT MENU_ID
+	       	FROM   TB_DP_LIST_MENU_CATEGORY
+	       	WHERE  TENANT_ID = #{tenantId}
+	       	AND    MENU_CATEGORY_CD = #{menuCategoryCd}
+	       	AND    EXPO_YN = 'Y'
+	       	ORDER BY EXPO_ORD, EXPO_ORD_SUB
+		) B
+		JOIN   TB_DP_TENANT_MENU  A
+       	ON( B.menu_id = A.tenant_menu_id )
+		WHERE  A.TENANT_ID = #{tenantId}
+		AND    A.SYSTEM_ID = #{systemId}
+		AND    A.USE_YN = 'Y'
+		AND    ROWNUM &lt;= (SELECT ADD_FIELD_01 FROM TB_CM_CD WHERE CD_ID = #{menuCategoryCd})
     </select>
 
     <!-- Menu 리스트 조회-->
