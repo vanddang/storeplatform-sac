@@ -365,9 +365,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			if (null != authCntObj) {
 				authCnt = (Integer) authCntObj + 1;
 				if (this.smsAuthCnt <= authCnt) {
-					LOGGER.info("######################################################## smsAuthCnt : "
-							+ this.smsAuthCnt);
-					LOGGER.info("######################################################## authCnt : " + authCnt);
+					LOGGER.debug("smsAuthCnt : " + this.smsAuthCnt);
+					LOGGER.debug("authCnt : " + authCnt);
 					serviceAuthInfo.setAuthComptYn("F"); // 실패 처리 카운트(프로퍼티) 값과 처리전 카운트 + 1 값이 같으면 실패 처리 : F
 				}
 				this.commonDao.update("Miscellaneous.updateServiceAuthCnt", serviceAuthInfo);
@@ -388,8 +387,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			throw new StorePlatformException("SAC_MEM_3002");
 		}
 
-		if (resultInfo.getAuthCnt() >= this.smsAuthCnt)
-			throw new StorePlatformException("SAC_MEM_3005", this.smsAuthCnt);
+		if ("F".equals(resultInfo.getAuthComptYn())) {
+			throw new StorePlatformException("SAC_MEM_3003");
+		}
 
 		String authSeq = resultInfo.getAuthSeq();
 		if (StringUtils.isNotBlank(authSeq)) {
