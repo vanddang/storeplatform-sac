@@ -380,16 +380,16 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			}
 		}
 
-		if (resultInfo.getAuthCnt() >= this.smsAuthCnt)
-			throw new StorePlatformException("SAC_MEM_3005", this.smsAuthCnt);
-
-		if (!MemberConstants.USE_N.equals(resultInfo.getAuthComptYn())) { // Y:처리완료, F:3회인증실패
+		if (MemberConstants.USE_Y.equals(resultInfo.getAuthComptYn())) {
 			throw new StorePlatformException("SAC_MEM_3001");
 		}
 
 		if (StringUtils.isNotBlank(resultInfo.getCurrDt()) && Double.parseDouble(resultInfo.getCurrDt()) < 0) {
 			throw new StorePlatformException("SAC_MEM_3002");
 		}
+
+		if (resultInfo.getAuthCnt() >= this.smsAuthCnt)
+			throw new StorePlatformException("SAC_MEM_3005", this.smsAuthCnt);
 
 		String authSeq = resultInfo.getAuthSeq();
 		if (StringUtils.isNotBlank(authSeq)) {
