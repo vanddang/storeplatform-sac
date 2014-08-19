@@ -97,6 +97,11 @@ public class ServiceAuth extends CommonInfo {
 	private String timeToLive;
 
 	/**
+	 * 인증 실패 횟수
+	 */
+	private int authCnt;
+
+	/**
 	 * @return the authSeq
 	 */
 	public String getAuthSeq() {
@@ -349,6 +354,21 @@ public class ServiceAuth extends CommonInfo {
 	 */
 	public void setTimeToLive(String timeToLive) {
 		this.timeToLive = timeToLive;
+	}
+
+	/**
+	 * @return the authCnt
+	 */
+	public int getAuthCnt() {
+		return this.authCnt;
+	}
+
+	/**
+	 * @param authCnt
+	 *            the authCnt to set
+	 */
+	public void setAuthCnt(int authCnt) {
+		this.authCnt = authCnt;
 	}
 
 }

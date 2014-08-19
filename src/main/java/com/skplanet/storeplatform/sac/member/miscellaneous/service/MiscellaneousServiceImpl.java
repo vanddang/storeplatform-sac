@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UafmapEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -48,6 +50,8 @@ import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDCDRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.DCDInfo;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
@@ -62,6 +66,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhon
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateDCDReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateDCDRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
@@ -123,6 +129,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDao;
+
+	@Value("#{propertiesForSac['sms.auth.cnt']}")
+	private int smsAuthCnt;
 
 	/**
 	 * <pre>
@@ -241,6 +250,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		confirmSendedSmsReq.setSystemId(systemId);
 		confirmSendedSmsReq.setAuthMdn(request.getRecvMdn());
 		confirmSendedSmsReq.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_SMS);
+		confirmSendedSmsReq.setAuthCnt(this.smsAuthCnt); // 인증 실패 횟수 3회
 		ServiceAuth confirmSendedSmsRes = this.commonDao.queryForObject("Miscellaneous.confirmSendedSms",
 				confirmSendedSmsReq, ServiceAuth.class);
 
@@ -318,12 +328,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * 휴대폰 인증 코드 확인.
 	 * </pre>
 	 * 
+	 * @param sacRequestHeader
+	 *            SacRequestHeader
 	 * @param request
 	 *            ConfirmPhoneAuthorizationCodeReq
 	 * @return ConfirmPhoneAuthorizationCodeRes
 	 */
 	@Override
-	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request) {
+	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(SacRequestHeader sacRequestHeader,
+			ConfirmPhoneAuthorizationCodeReq request) {
+		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
+		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
 
 		ConfirmPhoneAuthorizationCodeRes res = new ConfirmPhoneAuthorizationCodeRes();
 		String authCode = request.getPhoneAuthCode();
@@ -341,11 +356,34 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				ServiceAuth.class);
 
 		if (resultInfo == null) {
-			// (인증코드 불일치, 인증Sign 불일치, 인증정보 없음)
-			throw new StorePlatformException("SAC_MEM_3003");
+			// (인증코드 불일치, 인증Sign 불일치, 인증정보 없음), 인증 실패 카운트 update
+			serviceAuthInfo.setAuthMdn(userPhone);
+			serviceAuthInfo.setTenantId(tenantId);
+			serviceAuthInfo.setSystemId(systemId);
+			int authCnt = -1;
+			Object authCntObj = this.commonDao.queryForObject("Miscellaneous.searchPhoneAuthCnt", serviceAuthInfo);
+			if (null != authCntObj) {
+				authCnt = (Integer) authCntObj + 1;
+				if (this.smsAuthCnt <= authCnt) {
+					LOGGER.info("######################################################## smsAuthCnt : "
+							+ this.smsAuthCnt);
+					LOGGER.info("######################################################## authCnt : " + authCnt);
+					serviceAuthInfo.setAuthComptYn("F"); // 실패 처리 카운트(프로퍼티) 값과 처리전 카운트 + 1 값이 같으면 실패 처리 : F
+				}
+				this.commonDao.update("Miscellaneous.updateServiceAuthCnt", serviceAuthInfo);
+			}
+
+			if (authCnt >= this.smsAuthCnt) {
+				throw new StorePlatformException("SAC_MEM_3005", this.smsAuthCnt); // 인증 실패 횟수 3회 이상
+			} else {
+				throw new StorePlatformException("SAC_MEM_3003");
+			}
 		}
 
-		if (MemberConstants.USE_Y.equals(resultInfo.getAuthComptYn())) {
+		if (resultInfo.getAuthCnt() >= this.smsAuthCnt)
+			throw new StorePlatformException("SAC_MEM_3005", this.smsAuthCnt);
+
+		if (!MemberConstants.USE_N.equals(resultInfo.getAuthComptYn())) { // Y:처리완료, F:3회인증실패
 			throw new StorePlatformException("SAC_MEM_3001");
 		}
 
@@ -845,6 +883,67 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		LOGGER.debug("==>>[SAC] RemoveIndividualPolicyRes.toString() : {}", res.toString());
 		LOGGER.debug("###### MiscellaneousServiceImpl.removeIndividualPolicy [END] ######");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.3.16. DCD 가입.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateDCDReq
+	 * @return CreateDCDRes
+	 */
+	@Override
+	public CreateDCDRes createDCD(SacRequestHeader header, CreateDCDReq req) {
+		String systemId = header.getTenantHeader().getSystemId();
+		String tenantId = header.getTenantHeader().getTenantId();
+		String devideId = req.getDeviceId();
+		String regCd = req.getEntryClass();
+		String prodId = req.getProdId();
+		String svcMngNum = "";
+
+		// DCD 가입 요청 체크
+		if (MemberConstants.DCD_REG_CD.equals(regCd) && MemberConstants.DCD_REG_PROD_ID.equals(prodId)) {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setTenantID(tenantId);
+			commonRequest.setSystemID(systemId);
+
+			UapsEcReq uapsReq = new UapsEcReq();
+			uapsReq.setDeviceId(devideId);
+			uapsReq.setType("mdn");
+
+			UserEcRes uapsRes = this.uapsSCI.getMappingInfo(uapsReq);
+			if (uapsRes != null) {
+				if (StringUtils.isNotBlank(uapsRes.getSvcMngNum())) {
+					svcMngNum = uapsRes.getSvcMngNum();
+
+					DCDInfo dcdInfo = new DCDInfo();
+					dcdInfo.setRegChannel(systemId);
+					dcdInfo.setTenantID(tenantId);
+					dcdInfo.setEntryClass(regCd);
+					dcdInfo.setServiceNumber(svcMngNum);
+					dcdInfo.setDeviceID(devideId);
+					dcdInfo.setRegDeviceID(null);
+					dcdInfo.setPriorityClass("0");
+					dcdInfo.setProductID(prodId);
+
+					CreateDCDRequest createDcdReq = new CreateDCDRequest();
+					createDcdReq.setCommonRequest(commonRequest);
+					createDcdReq.setDCDInfo(dcdInfo);
+					this.userSCI.createDCD(createDcdReq);
+				} else {
+					// else svcMngNum 존재하지 않을 경우
+					LOGGER.info("## svcMngNum is not exists : " + devideId);
+				}
+			}
+		}
+
+		CreateDCDRes res = new CreateDCDRes();
+		res.setDeviceId(devideId);
 		return res;
 	}
 }
