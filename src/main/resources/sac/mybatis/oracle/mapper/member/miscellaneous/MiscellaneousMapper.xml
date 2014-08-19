@@ -22,6 +22,7 @@
                </if>
              , TO_CHAR(auth_value_create_dt, 'yyyyMMdd hh24:mi:ss') AS auth_value_create_dt 
              , auth_compt_yn
+             , NVL(auth_cnt, 0) auth_cnt
          FROM  tb_cm_svc_auth
         WHERE  auth_type_cd = #{authTypeCd}
           AND  auth_sign = #{authSign}
@@ -37,6 +38,35 @@
           , upd_dt = SYSDATE
      WHERE  auth_seq = #{authSeq}
     </update>
+    
+    <!--  휴대폰 SMS 인증 카운트 업데이트 -->
+    <update id="updateServiceAuthCnt" parameterType="ServiceAuth">
+    UPDATE /* MiscellaneousMapper.updateServiceAuthCnt, 휴대폰 SMS 인증 카운트 업데이트, 김영균/지티소프트, 2014-08-27 */ 
+            tb_cm_svc_auth 
+    SET AUTH_CNT = NVL(auth_cnt, 0) + 1
+        <if test=' "F" == authComptYn '>
+            , AUTH_COMPT_YN = 'F'
+        </if>
+    WHERE  tenant_id = #{tenantId}
+       AND  system_id = #{systemId}
+       AND  auth_mdn = #{authMdn}
+       AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */ 
+       AND  auth_compt_yn = 'N'       
+       AND auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (#{timeToLive} / 24 / 60))        /* 3분이내 */
+    </update>
+    
+    <!--  휴대폰 SMS 인증 카운트 -->
+    <select id="searchPhoneAuthCnt" parameterType="ServiceAuth" resultType="Integer">
+    SELECT /* MiscellaneousMapper.searchPhoneAuthCnt, 휴대폰 SMS 인증 카운트, 김영균/지티소프트, 2014-08-27 */ 
+            NVL(auth_cnt, 0) auth_cnt
+    FROM tb_cm_svc_auth
+    WHERE  tenant_id = #{tenantId}
+       AND  system_id = #{systemId}
+       AND  auth_mdn = #{authMdn}
+       AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */ 
+       AND  auth_compt_yn = 'N'       
+       AND auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (#{timeToLive} / 24 / 60))        /* 3분이내 */
+    </select>
     
     <!-- 휴대폰 SMS 및 이메일 인증 코드 정보 저장 -->
     <insert id="createServiceAuthCode" parameterType="ServiceAuth">
@@ -114,7 +144,8 @@
        AND  auth_mdn = #{authMdn}
        AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */ 
        AND  auth_compt_yn = 'N'       
-       AND auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (3 / 24 / 60))        /* 3분이내 */
+       AND ( auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (3 / 24 / 60))
+            AND NVL(auth_cnt, 0) <![CDATA[<]]> #{authCnt} )           /* 3분이내, 3회 실패 */ 
     </select>
     
     <!-- 미인증 이메일 코드 존재여부 확인 -->
