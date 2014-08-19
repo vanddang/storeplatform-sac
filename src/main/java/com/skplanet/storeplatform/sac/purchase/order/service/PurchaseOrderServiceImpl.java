@@ -954,7 +954,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		List<Payment> paymentList = this.purchaseOrderMakeDataService.makePaymentList(prchsDtlMore,
 				notifyPaymentReq.getPaymentInfoList(), PurchaseConstants.PRCHS_STATUS_COMPT);
 
-		boolean bSktTest = false;
+		boolean bSktTest = false; // 시험폰 결제 여부
 		for (Payment payment : paymentList) {
 			if (StringUtils.equals(payment.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_SKT_TEST_DEVICE)) {
 				bSktTest = true;
@@ -1037,7 +1037,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		mileageSubInfo.setProdSaveRate(rateMap.get(userGrade));
 		mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
 
-		if (StringUtils.isBlank(notifyPaymentReq.getProcSubStatusCd()) == false) { // 결제측으로부터 T멤버쉽 정보 받은 경우
+		// 시험폰 경우, 후불결제 금액 제외: 시험폰 적립 WhiteList로 변경 예정
+		boolean bSktSave = true;
+		if (bSktTest) {
+			bSktSave = false;
+		}
+
+		if ((bSktTest == false) && StringUtils.isNotBlank(notifyPaymentReq.getProcSubStatusCd())) { // T멤버쉽 정보 받은 경우
+
 			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,CHECK,BYREQ,{},{},{}", prchsDtlMore.getPrchsId(),
 					userGrade, tMileageRateInfo);
 
@@ -1055,6 +1062,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// 적립 가능 결제수단 금액
 			String availPayMtd = this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
 					prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd());
+			if (bSktSave == false) {
+				availPayMtd = availPayMtd.replaceAll("11;", "");
+			}
 
 			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,CHECK,BYSERVER,{},{},{},{}", prchsDtlMore.getPrchsId(),
 					userGrade, tMileageRateInfo, availPayMtd);
@@ -1342,9 +1352,20 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		List<Payment> paymentList = this.purchaseOrderMakeDataService.makePaymentList(prchsDtlMore,
 				req.getPaymentList(), prchsDtlMore.getStatusCd());
 
-		// 구매건수 정보 생성
-		List<PrchsProdCnt> prchsProdCntList = this.purchaseOrderMakeDataService.makePrchsProdCntList(prchsDtlMoreList,
-				prchsDtlMore.getStatusCd());
+		boolean bSktTest = false; // 시험폰 결제 여부
+		for (Payment payment : paymentList) {
+			if (StringUtils.equals(payment.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_SKT_TEST_DEVICE)) {
+				bSktTest = true;
+				break;
+			}
+		}
+
+		// 구매집계 요청 데이터 : 시험폰 결제 경우 제외
+		List<PrchsProdCnt> prchsProdCntList = null;
+		if (bSktTest == false) {
+			prchsProdCntList = this.purchaseOrderMakeDataService.makePrchsProdCntList(prchsDtlMoreList,
+					prchsDtlMore.getStatusCd());
+		}
 
 		// TB_PR_UNIQUE_TID : 중복요청 체크 정보 생성
 		UniqueTid uniqueTid = new UniqueTid();
@@ -1375,7 +1396,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				.setProdSaveRate((rateMap == null || rateMap.get(userGrade) == null) ? 0 : rateMap.get(userGrade));
 		mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
 
-		if (StringUtils.isBlank(req.getProcSubStatusCd()) == false) { // 결제측으로부터 T멤버쉽 정보 받은 경우
+		// 시험폰 경우, 후불결제 금액 제외: 시험폰 적립 WhiteList로 변경 예정
+		boolean bSktSave = true;
+		if (bSktTest) {
+			bSktSave = false;
+		}
+
+		if ((bSktTest == false) && StringUtils.isNotBlank(req.getProcSubStatusCd())) { // T멤버쉽 정보 받은 경우
 
 			this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,CHECK,BYREQ,{},{},{}", prchsDtlMore.getPrchsId(),
 					userGrade, sbtMileageRateInfo.toString());
@@ -1393,6 +1420,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// 적립 가능 결제수단 금액
 			String availPayMtd = this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
 					prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd());
+			if (bSktSave == false) {
+				availPayMtd = availPayMtd.replaceAll("11;", "");
+			}
 
 			this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,CHECK,BYSERVER,{},{},{},{}", prchsDtlMore.getPrchsId(),
 					userGrade, sbtMileageRateInfo.toString(), availPayMtd);
