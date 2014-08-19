@@ -63,8 +63,8 @@
       	  WHERE PROD_ID = #{prodId}
 	</delete>
 
-    <select id="getDPTenantId"  parameterType="map" resultType="String">
-        SELECT  /* DP_TENANT-getDPTenantId : 정희원/SKP (2014-08-13) */
+    <select id="selectDPTenantId"  parameterType="map" resultType="String">
+        SELECT  /* DP_TENANT-selectDPTenantId : 정희원/SKP (2014-08-13) */
             TENANT_ID
         FROM TB_DP_TENANT_PROD
         WHERE PROD_ID = #{prodId}
