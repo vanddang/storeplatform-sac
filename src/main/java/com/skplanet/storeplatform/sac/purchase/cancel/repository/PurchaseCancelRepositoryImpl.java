@@ -39,6 +39,8 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCanc
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSaveCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSaveCancelEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
@@ -49,10 +51,12 @@ import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScRes;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes;
+import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
+import com.skplanet.storeplatform.purchase.client.membership.sci.MembershipReserveSCI;
 import com.skplanet.storeplatform.purchase.client.product.count.sci.PurchaseCountSCI;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.InsertPurchaseProductCountScReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
@@ -100,6 +104,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 	@Autowired
 	private PurchaseCountSCI purchaseCountSCI;
+
+	@Autowired
+	private MembershipReserveSCI membershipReserveSCI;
 
 	@Override
 	public PurchaseCancelDetailSacParam setPurchaseDetailInfo(PurchaseCancelSacParam purchaseCancelSacParam,
@@ -553,6 +560,70 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		return purchaseCancelDetailSacParam;
 
+	}
+
+	@Override
+	public PurchaseCancelDetailSacParam updateSaveCancel(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, MembershipReserve membershipReserveRes) {
+
+		try {
+
+			// 적립 정보가 있을경우 처리
+			if (membershipReserveRes != null) {
+
+				this.logger.info("### MembershipReserve ProcStatusCd = " + membershipReserveRes.getProcStatusCd());
+
+				// 처리상태가 적립예정인 경우
+				if (StringUtils.equals(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE,
+						membershipReserveRes.getProcStatusCd())) {
+
+					membershipReserveRes.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE_CANCEL); // 적립예정취소
+					membershipReserveRes.setUpdId(purchaseCancelSacParam.getSystemId());
+					this.membershipReserveSCI.updateProcStatus(membershipReserveRes);
+
+				}
+				// 처리상태가 적립완료인 경우
+				else if (StringUtils.equals(PurchaseConstants.MEMBERSHIP_PROC_STATUS_COMPLETE,
+						membershipReserveRes.getProcStatusCd())) {
+
+					// 적립취소요청
+					TStoreCashSaveCancelEcReq tStoreCashSaveCancelEcReq = new TStoreCashSaveCancelEcReq();
+					tStoreCashSaveCancelEcReq.setUserKey(membershipReserveRes.getInsdUsermbrNo());
+					tStoreCashSaveCancelEcReq.setIdentifier("PO000000151397527858");
+					tStoreCashSaveCancelEcReq.setOrderNo(membershipReserveRes.getPrchsId());
+
+					TStoreCashSaveCancelEcRes tStoreCashSaveCancelEcRes = this.tStoreCashSCI
+							.cancelSave(tStoreCashSaveCancelEcReq);
+
+					// 적립취소 성공
+					if (StringUtils.equals(PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS,
+							tStoreCashSaveCancelEcRes.getResultCd())) {
+
+						membershipReserveRes.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_CANCEL); // 적립취소
+						membershipReserveRes.setUpdId(purchaseCancelSacParam.getSystemId());
+						this.membershipReserveSCI.updateProcStatus(membershipReserveRes);
+
+					} else {
+
+						this.logger.error("### PurchaseCancel MembershopReserve Fail : {}" + tStoreCashSaveCancelEcRes);
+
+						// 적립취소실패
+						membershipReserveRes.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_FAIL); // 처리실패
+						membershipReserveRes.setUpdId(purchaseCancelSacParam.getSystemId());
+						this.membershipReserveSCI.updateProcStatus(membershipReserveRes);
+					}
+				}
+			}
+		} catch (Exception e) {
+			this.logger.info("### PurchaseCancel MembershopReserve Fail : {}" + e.toString());
+
+			// 적립취소실패
+			membershipReserveRes.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_FAIL); // 처리실패
+			membershipReserveRes.setUpdId(purchaseCancelSacParam.getSystemId());
+			this.membershipReserveSCI.updateProcStatus(membershipReserveRes);
+		}
+
+		return purchaseCancelDetailSacParam;
 	}
 
 	@Override

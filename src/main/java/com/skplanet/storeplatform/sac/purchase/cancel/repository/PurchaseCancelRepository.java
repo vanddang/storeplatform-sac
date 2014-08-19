@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCanc
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
+import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
@@ -98,6 +99,20 @@ public interface PurchaseCancelRepository {
 	 */
 	PurchaseCancelDetailSacParam updatePurchaseCancel(PurchaseCancelSacParam purchaseCancelSacParam,
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam);
+
+	/**
+	 * <pre>
+	 * T마일리지 적립 취소 처리 DB 업데이트.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelSacParam
+	 *            purchaseCancelSacParam
+	 * @param purchaseCancelDetailSacParam
+	 *            purchaseCancelDetailSacParam
+	 * @return PurchaseCancelDetailSacParam
+	 */
+	PurchaseCancelDetailSacParam updateSaveCancel(PurchaseCancelSacParam purchaseCancelSacParam,
+			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, MembershipReserve membershipReserveResult);
 
 	/**
 	 * 

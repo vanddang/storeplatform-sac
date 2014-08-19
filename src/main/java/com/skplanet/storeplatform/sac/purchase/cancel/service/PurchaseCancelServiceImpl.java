@@ -26,8 +26,10 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
+import com.skplanet.storeplatform.purchase.client.membership.sci.MembershipReserveSCI;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
@@ -91,6 +93,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	@Autowired
 	private PayPlanetShopService payPlanetShopService;
+
+	@Autowired
+	private MembershipReserveSCI membershipReserveSCI;
 
 	@Override
 	public PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam) {
@@ -218,6 +223,21 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			if (!StringUtils.equals(purchaseCancelSacParam.getUserKey(), prchsSacParam.getInsdUsermbrNo())) {
 				throw new StorePlatformException("SAC_PUR_8102");
 			}
+		}
+
+		/** 마일리지 적립 정보 조회. */
+		MembershipReserve membershipReserveReq = new MembershipReserve();
+		membershipReserveReq.setTenantId(prchsSacParam.getTenantId());
+		membershipReserveReq.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_TMEMBERSHIP);
+		membershipReserveReq.setPrchsId(prchsSacParam.getPrchsId());
+		membershipReserveReq.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+		MembershipReserve membershipReserveRes = this.membershipReserveSCI.getSaveInfo(membershipReserveReq);
+
+		// 마일리지 적립 정보가 존재하며 처리상태가 처리중인 경우 취소불가
+		if (membershipReserveRes != null
+				&& StringUtils.equals(PurchaseConstants.MEMBERSHIP_PROC_STATUS_WORKING,
+						membershipReserveRes.getProcStatusCd())) {
+			throw new StorePlatformException("SAC_PUR_8501");
 		}
 
 		/*
@@ -348,6 +368,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		/** 구매 DB 취소 처리. */
 		this.purchaseCancelRepository.updatePurchaseCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam);
+
+		/** 마일리지 적립 취소 처리 */
+		this.purchaseCancelRepository.updateSaveCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam,
+				membershipReserveRes);
 
 		/** RO 삭제 처리. */
 		if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
@@ -539,8 +563,27 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			throw new StorePlatformException("SAC_PUR_8129");
 		}
 
+		/** 마일리지 적립 정보 조회. */
+		MembershipReserve membershipReserveReq = new MembershipReserve();
+		membershipReserveReq.setTenantId(prchsDtlSacParam.getTenantId());
+		membershipReserveReq.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_TMEMBERSHIP);
+		membershipReserveReq.setPrchsId(prchsDtlSacParam.getPrchsId());
+		membershipReserveReq.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+		MembershipReserve membershipReserveRes = this.membershipReserveSCI.getSaveInfo(membershipReserveReq);
+
+		// 마일리지 적립 정보가 존재하며 처리상태가 처리중인 경우 취소불가
+		if (membershipReserveRes != null
+				&& StringUtils.equals(PurchaseConstants.MEMBERSHIP_PROC_STATUS_WORKING,
+						membershipReserveRes.getProcStatusCd())) {
+			throw new StorePlatformException("SAC_PUR_8501");
+		}
+
 		/** 구매 DB 취소 처리. */
 		this.purchaseCancelRepository.updatePurchaseCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam);
+
+		/** 마일리지 적립 취소 처리 */
+		this.purchaseCancelRepository.updateSaveCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam,
+				membershipReserveRes);
 
 		purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
