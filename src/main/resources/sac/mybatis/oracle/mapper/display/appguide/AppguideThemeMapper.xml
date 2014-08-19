@@ -19,7 +19,7 @@
 		 FROM
           (
           SELECT
-                A.TOTAL_COUNT
+                COUNT(*) OVER() AS TOTAL_COUNT
               , ROWNUM AS RNN
               , A.PROD_ID
               , A.SVC_GRP_CD
@@ -31,8 +31,7 @@
               , A.PART_PROD_ID
               , A.RN
            FROM (
-                   SELECT COUNT(*) OVER() AS TOTAL_COUNT
-						, P2.PROD_ID
+                   SELECT P2.PROD_ID
 						, P2.SVC_GRP_CD
 						, P2.SVC_TYPE_CD
 						, P2.CONTENTS_TYPE_CD
