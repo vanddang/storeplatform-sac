@@ -74,6 +74,6 @@ public class DPTenantProductServiceImpl implements DPTenantProductService {
     public List<String> getDPTenantId(String prodId) {
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("prodId", prodId);
-        return this.commonDAO.queryForList(NAMESPACE + ".selectDPTenentId", req, String.class);
+        return this.commonDAO.queryForList(NAMESPACE + ".selectDPTenantId", req, String.class);
     }
 }
