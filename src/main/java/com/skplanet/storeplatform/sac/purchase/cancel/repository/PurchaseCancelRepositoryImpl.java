@@ -589,7 +589,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 					// 적립취소요청
 					TStoreCashSaveCancelEcReq tStoreCashSaveCancelEcReq = new TStoreCashSaveCancelEcReq();
 					tStoreCashSaveCancelEcReq.setUserKey(membershipReserveRes.getInsdUsermbrNo());
-					tStoreCashSaveCancelEcReq.setIdentifier("PO000000151397527858");
+					tStoreCashSaveCancelEcReq.setIdentifier(membershipReserveRes.getPointId());
 					tStoreCashSaveCancelEcReq.setOrderNo(membershipReserveRes.getPrchsId());
 
 					TStoreCashSaveCancelEcRes tStoreCashSaveCancelEcRes = this.tStoreCashSCI
