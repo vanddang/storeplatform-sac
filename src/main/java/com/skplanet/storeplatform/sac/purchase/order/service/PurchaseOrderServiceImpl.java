@@ -18,6 +18,8 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1038,15 +1040,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
 
 		// 시험폰 경우, 후불결제 금액 제외: 시험폰 적립 WhiteList로 변경 예정
-		boolean bSktSave = true;
+		boolean bSktSaveMileage = true;
 		if (bSktTest) {
-			bSktSave = false;
+			bSktSaveMileage = false;
 		}
 
-		if ((bSktTest == false) && StringUtils.isNotBlank(notifyPaymentReq.getProcSubStatusCd())) { // T멤버쉽 정보 받은 경우
+		if (StringUtils.isNotBlank(notifyPaymentReq.getProcSubStatusCd()) && bSktSaveMileage) { // T멤버쉽 정보 받은 경우
 
-			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,CHECK,BYREQ,{},{},{}", prchsDtlMore.getPrchsId(),
-					userGrade, tMileageRateInfo);
+			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,CHECK,BYREQ,({},{}),{},{},{}", bSktTest, bSktSaveMileage,
+					prchsDtlMore.getPrchsId(), userGrade, tMileageRateInfo);
 
 			mileageSubInfo.setPrchsReqPathCd(prchsDtlMore.getPrchsReqPathCd());
 
@@ -1062,12 +1064,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// 적립 가능 결제수단 금액
 			String availPayMtd = this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
 					prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd());
-			if (bSktSave == false) {
+			if (bSktSaveMileage == false) {
 				availPayMtd = availPayMtd.replaceAll("11;", "");
 			}
 
-			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,CHECK,BYSERVER,{},{},{},{}", prchsDtlMore.getPrchsId(),
-					userGrade, tMileageRateInfo, availPayMtd);
+			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,CHECK,BYSERVER,({},{}),{},{},{},{}", bSktTest,
+					bSktSaveMileage, prchsDtlMore.getPrchsId(), userGrade, tMileageRateInfo, availPayMtd);
 
 			double availPayAmt = 0.0;
 			for (PaymentInfo paymentInfo : notifyPaymentReq.getPaymentInfoList()) {
@@ -1108,8 +1110,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,CHECK,PAY,{},{},{}%", prchsDtlMore.getPrchsId(),
-				mileageSubInfo.getTargetPaymentAmt(), mileageSubInfo.getProdSaveRate());
+		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,MILEAGE,CHECK,PAY,{},{}", prchsDtlMore.getPrchsId(),
+				ReflectionToStringBuilder.toString(mileageSubInfo, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		List<MembershipReserve> membershipReserveList = null;
 		if (mileageSubInfo.getTargetPaymentAmt() > 0 && mileageSubInfo.getProdSaveRate() > 0) {
@@ -1397,15 +1399,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
 
 		// 시험폰 경우, 후불결제 금액 제외: 시험폰 적립 WhiteList로 변경 예정
-		boolean bSktSave = true;
+		boolean bSktSaveMileage = true;
 		if (bSktTest) {
-			bSktSave = false;
+			bSktSaveMileage = false;
 		}
 
-		if ((bSktTest == false) && StringUtils.isNotBlank(req.getProcSubStatusCd())) { // T멤버쉽 정보 받은 경우
+		if (StringUtils.isNotBlank(req.getProcSubStatusCd()) && bSktSaveMileage) { // T멤버쉽 정보 받은 경우
 
-			this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,CHECK,BYREQ,{},{},{}", prchsDtlMore.getPrchsId(),
-					userGrade, sbtMileageRateInfo.toString());
+			this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,CHECK,BYREQ,({},{}),{},{},{}", bSktTest,
+					bSktSaveMileage, prchsDtlMore.getPrchsId(), userGrade, sbtMileageRateInfo.toString());
 
 			mileageSubInfo.setPrchsReqPathCd(prchsDtlMore.getPrchsReqPathCd());
 
@@ -1420,12 +1422,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// 적립 가능 결제수단 금액
 			String availPayMtd = this.purchaseOrderPolicyService.searchtMileageSavePaymentMethod(
 					prchsDtlMore.getTenantId(), prchsDtlMore.getTenantProdGrpCd());
-			if (bSktSave == false) {
+			if (bSktSaveMileage == false) {
 				availPayMtd = availPayMtd.replaceAll("11;", "");
 			}
 
-			this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,CHECK,BYSERVER,{},{},{},{}", prchsDtlMore.getPrchsId(),
-					userGrade, sbtMileageRateInfo.toString(), availPayMtd);
+			this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,CHECK,BYSERVER,({},{}),{},{},{},{}", bSktTest,
+					bSktSaveMileage, prchsDtlMore.getPrchsId(), userGrade, sbtMileageRateInfo.toString(), availPayMtd);
 
 			double availPayAmt = 0.0;
 			for (Payment paymentInfo : paymentList) {
@@ -1466,8 +1468,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,CHECK,PAY,{},{},{}%", prchsDtlMore.getPrchsId(),
-				mileageSubInfo.getTargetPaymentAmt(), mileageSubInfo.getProdSaveRate());
+		this.logger.info("PRCHS,ORDER,SAC,COMPLETE,MILEAGE,CHECK,PAY,{},{}", prchsDtlMore.getPrchsId(),
+				ReflectionToStringBuilder.toString(mileageSubInfo, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		List<MembershipReserve> membershipReserveList = null;
 		if (mileageSubInfo.getTargetPaymentAmt() > 0 && mileageSubInfo.getProdSaveRate() > 0) {
