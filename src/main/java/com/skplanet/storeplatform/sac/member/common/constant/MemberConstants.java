@@ -275,6 +275,11 @@ public final class MemberConstants {
 	/** EMAIL 인증 타입 코드 */
 	public static final String AUTH_TYPE_CD_EMAIL = "CM010902";
 
+	/** DCD 가입 코드 */
+	public static final String DCD_REG_CD = "4097";
+	/** DCD 가입 상품 아이디 */
+	public static final String DCD_REG_PROD_ID = "A000Z00001";
+
 	/**
 	 * 판매자 회원 상수들.
 	 * 
