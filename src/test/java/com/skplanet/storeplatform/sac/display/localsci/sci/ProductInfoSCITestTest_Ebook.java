@@ -45,16 +45,8 @@ public class ProductInfoSCITestTest_Ebook {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	/**
-	 * Test method for
-	 * {@link com.skplanet.storeplatform.sac.display.localsci.sci.ProductInfoSCITest#searchEbookProductList()}.
-	 * 
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonGenerationException
-	 */
 	@Test
-	public void testSearchEbookProductList() throws JsonGenerationException, JsonMappingException, IOException {
+	public void testSearchEbookProductList() {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
 		list.add("H001380128");
@@ -75,16 +67,8 @@ public class ProductInfoSCITestTest_Ebook {
 		}
 	}
 
-	/**
-	 * Test method for
-	 * {@link com.skplanet.storeplatform.sac.display.localsci.sci.ProductInfoSCITest#searchEbookProductList()}.
-	 * 
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonGenerationException
-	 */
 	@Test
-	public void testSearchComicProductList() throws JsonGenerationException, JsonMappingException, IOException {
+	public void testSearchComicProductList() {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
 		list.add("H900005941");

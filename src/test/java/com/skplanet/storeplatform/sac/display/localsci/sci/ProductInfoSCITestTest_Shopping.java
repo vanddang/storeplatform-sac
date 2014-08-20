@@ -43,16 +43,8 @@ public class ProductInfoSCITestTest_Shopping {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	/**
-	 * Test method for
-	 * {@link com.skplanet.storeplatform.sac.display.localsci.sci.ProductInfoSCITest#testSearchFreePassProductList()}.
-	 * 
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonGenerationException
-	 */
 	@Test
-	public void testSearchFreePassProductList() throws JsonGenerationException, JsonMappingException, IOException {
+	public void testSearchFreePassProductList() {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
 
@@ -70,21 +62,10 @@ public class ProductInfoSCITestTest_Shopping {
 			this.log.debug("##### FreePass productInfo VO : {}",
 					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
 		}
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json = objectMapper.writeValueAsString(productList);
-		this.log.debug("##### FreePass productInfo  JSON : {}", json);
 	}
 
-	/**
-	 * Test method for
-	 * {@link com.skplanet.storeplatform.sac.display.localsci.sci.ProductInfoSCITest#testSearchShoppingProductList()}.
-	 * 
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonGenerationException
-	 */
 	// @Test
-	public void testSearchShoppingProductList() throws JsonGenerationException, JsonMappingException, IOException {
+	public void testSearchShoppingProductList() {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
 		list.add("S930000331");
@@ -98,8 +79,5 @@ public class ProductInfoSCITestTest_Shopping {
 			this.log.debug("##### Shopping productInfo VO : {}",
 					ReflectionToStringBuilder.toString(productInfo, ToStringStyle.MULTI_LINE_STYLE));
 		}
-		ObjectMapper objectMapper = new ObjectMapper();
-		String json = objectMapper.writeValueAsString(productList);
-		this.log.debug("##### Shopping productInfo  JSON : {}", json);
 	}
 }

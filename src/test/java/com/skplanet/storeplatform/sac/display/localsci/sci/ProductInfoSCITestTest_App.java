@@ -45,16 +45,8 @@ public class ProductInfoSCITestTest_App {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	/**
-	 * Test method for
-	 * {@link com.skplanet.storeplatform.sac.display.localsci.sci.ProductInfoSCITest#searchEbookProductList()}.
-	 * 
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonGenerationException
-	 */
 	@Test
-	public void testSearchAppProductList() throws JsonGenerationException, JsonMappingException, IOException {
+	public void testSearchAppProductList() {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
 		list.add("0000018125");
@@ -73,19 +65,11 @@ public class ProductInfoSCITestTest_App {
 		}
 	}
 
-	/**
-	 * Test method for
-	 * {@link com.skplanet.storeplatform.sac.display.localsci.sci.ProductInfoSCITest#searchEbookProductList()}.
-	 * 
-	 * @throws IOException
-	 * @throws JsonMappingException
-	 * @throws JsonGenerationException
-	 */
 	@Test
-	public void testSearchInAppProductList() throws JsonGenerationException, JsonMappingException, IOException {
+	public void testSearchInAppProductList() {
 		ProductInfoSacReq req = new ProductInfoSacReq();
 		List<String> list = new ArrayList<String>();
-		list.add("0900050500");
+		list.add("0910008953");
 
 		req.setList(list);
 		req.setDeviceModelNo("SHW-M100S");

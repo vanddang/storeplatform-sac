@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.common.EbookComicType;
+import com.skplanet.storeplatform.sac.display.common.ProductType;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +48,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 	private DisplayCommonService displayCommonService;
 
 	@Autowired
-	SellerSearchSCI sellerSearchSCI;
+	private SellerSearchSCI sellerSearchSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -77,95 +80,66 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 			paramMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 			paramMap.put("supportDevice", supportDevice);
 			paramMap.put("dpAnyPhone4mm", DisplayConstants.DP_ANY_PHONE_4MM);
+
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 				String topMenuId = productBasicInfo.getTopMenuId();
 				String svcGrpCd = productBasicInfo.getSvcGrpCd();
+                String svcTp = productBasicInfo.getSvcTypeCd();
+                String metaClsfCd = productBasicInfo.getMetaClsfCd();
+
+                ProductTypeInfo typeInfo = displayCommonService.getProductTypeInfo(svcGrpCd, svcTp, metaClsfCd, topMenuId);
+
+                ProductInfo product = null;
 				paramMap.put("productBasicInfo", productBasicInfo);
 
 				this.log.debug("##### Top Menu Id : {}", topMenuId);
 				this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+				this.log.debug(":: ProductType={}", typeInfo.getProductType().toString());
+				this.log.debug(":: MetaClsfCd={}", metaClsfCd);
 
-				// 상품 SVC_GRP_CD 조회
-				// DP000203 : 멀티미디어
-				// DP000206 : Tstore 쇼핑
-				// DP000205 : 소셜쇼핑
-				// DP000204 : 폰꾸미기
-				// DP000201 : 애플리캐이션
-
-				// APP 상품의 경우
-				if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+				if (typeInfo.getProductType() == ProductType.App) {
 					paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 					paramMap.put("inAppRshpCd", DisplayConstants.DP_PARENT_CHILD_RELATIONSHIP_CD);
-					this.log.debug("##### Search for app product");
-					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getAppMetaInfo", paramMap,
-							ProductInfo.class);
-					if (product != null) {
-						productList.add(product);
-					}
-				} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)
-						|| DisplayConstants.DP_PHONE_DECO_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 or 폰 꾸미기 타입일 경우
-					// 영화/방송 상품의 경우
-					if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-							|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-						this.log.debug("##### Search for Vod specific product");
-						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getVODMetaInfo", paramMap,
-								ProductInfo.class);
-						if (product != null) {
-							product.setChapterUnit(this.displayCommonService.getVodChapterUnit());
-							productList.add(product);
-						}
-					} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
-						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-						} else {
-							paramMap.put("imageCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD);
-						}
-						this.log.debug("##### Search for EbookComic specific product");
-						ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getEbookComicMetaInfo",
-								paramMap, ProductInfo.class);
-						String chapterUnit = null;
-						if (product != null) {
-							chapterUnit = this.displayCommonService.getEpubChapterUnit(product.getBookClsfCd());
-							product.setChapterUnit(chapterUnit);
-							productList.add(product);
-						}
-					} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)
-							|| DisplayConstants.DP_DISPLAY_PHONE_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-						// productBasicInfo.setMenuId("DP004901");
-						String metaClsfCd = productBasicInfo.getMetaClsfCd();
-						paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-						this.log.debug("##### Search for Music specific product");
-						this.log.debug("##### Meta Class Cd : {} " + metaClsfCd);
-						ProductInfo product = null;
-						if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
-							product = this.commonDAO.queryForObject("ProductInfo.getMusicMetaInfo", paramMap,
-									ProductInfo.class);
-						} else {
-							// RING OR BELL일 경우에는 채널 기준으로 조회한다.
-							product = this.commonDAO.queryForObject("ProductInfo.getRingBellMetaInfo", paramMap,
-									ProductInfo.class);
-						}
+					product = this.commonDAO.queryForObject("ProductInfo.getAppMetaInfo", paramMap, ProductInfo.class);
+				}
+                else if(typeInfo.getProductType() == ProductType.Vod) {
+                    paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+                    product = this.commonDAO.queryForObject("ProductInfo.getVODMetaInfo", paramMap,
+                            ProductInfo.class);
 
-						if (product != null) {
-							productList.add(product);
-						}
-					}
-				} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
+                    if (product != null) {
+                        product.setChapterUnit(this.displayCommonService.getVodChapterUnit());
+                    }
+                }
+                else if(typeInfo.getProductType() == ProductType.EbookComic) {
+                    if (typeInfo.getEbookComicType() == EbookComicType.Ebook) {
+                        paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+                    } else {
+                        paramMap.put("imageCd", DisplayConstants.DP_COMIC_EPISODE_REPRESENT_IMAGE_CD);
+                    }
+                    product = this.commonDAO.queryForObject("ProductInfo.getEbookComicMetaInfo", paramMap, ProductInfo.class);
+
+                    if (product != null) {
+                        product.setChapterUnit(this.displayCommonService.getEpubChapterUnit(product.getBookClsfCd()));
+                    }
+                }
+                else if(typeInfo.getProductType() == ProductType.Music) {
+                    paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+                    product = this.commonDAO.queryForObject("ProductInfo.getMusicMetaInfo", paramMap, ProductInfo.class);
+                }
+                else if(typeInfo.getProductType() == ProductType.RingBell) {
+                    paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+                    product = this.commonDAO.queryForObject("ProductInfo.getRingBellMetaInfo", paramMap, ProductInfo.class);
+                }
+                else if (typeInfo.getProductType() == ProductType.Shopping) { // 쇼핑 상품의 경우
 					paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 					paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-					this.log.debug("##### Search for Shopping specific product");
-					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getShoppingMetaInfo", paramMap,
-							ProductInfo.class);
-					if (product != null) {
-						productList.add(product);
-					}
-				} else if (DisplayConstants.DP_TSTORE_FREEPASS_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 정액 상품의 경우
+					product = this.commonDAO.queryForObject("ProductInfo.getShoppingMetaInfo", paramMap, ProductInfo.class);
+				}
+                else if (typeInfo.getProductType() == ProductType.Freepass) { // 정액 상품의 경우
 					paramMap.put("imageCd", DisplayConstants.DP_FREEPASS_THUMBNAIL_IMAGE_CD);
 					paramMap.put("ebookImageCd", DisplayConstants.DP_FREEPASS_EBOOK_THUMBNAIL_IMAGE_CD);
-					this.log.debug("##### Search for freePass  product");
-					ProductInfo product = this.commonDAO.queryForObject("ProductInfo.getFreePassMetaInfo", paramMap,
+					product = this.commonDAO.queryForObject("ProductInfo.getFreePassMetaInfo", paramMap,
 							ProductInfo.class);
 					List<MapgProdMeta> mapgProdIdList = null;
 					mapgProdIdList = this.commonDAO.queryForList("ProductInfo.getMapgProdIdList", paramMap,
@@ -180,10 +154,12 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 						}
 					}
 
-					if (product != null) {
-						productList.add(product);
-					}
 				}
+
+                if (product != null) {
+                    product.setSeriesYn(typeInfo.isSeries() ? "Y" : "N");
+                    productList.add(product);
+                }
 			}
 		}
 
@@ -208,15 +184,15 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
 			sellerReq.setSellerKeyList(sellerKeyList);
 
-			this.log.info("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformationListForProduct");
+			this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : sellerSearchSCI.detailInformationListForProduct");
 			long start = System.currentTimeMillis();
 
 			// 회원 판매자 정보 조회
 			sellerRes = this.sellerSearchSCI.detailInformationListForProduct(sellerReq);
 
-			this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformationListForProduct");
+			this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformationListForProduct");
 			long end = System.currentTimeMillis();
-			this.log.info("##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms", (end - start));
+			this.log.debug("##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms", (end - start));
 
 			for (int j = 0; j < productList.size(); j++) {
 				ProductInfo product = productList.get(j);
