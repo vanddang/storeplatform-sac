@@ -100,8 +100,12 @@
                 ON RSHP.PROD_ID = CPROD.PROD_ID AND PROD_RSHP_CD = 'DP010802' -- CHNL - EPSD
             INNER JOIN TB_DP_PROD RPROD
                 ON RPROD.PROD_ID = RSHP.PART_PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID = RSHP.PART_PROD_ID
         WHERE 1=1
               AND CPROD.PROD_ID = #{channelId}
+              AND TP.TENANT_ID = #{tenantId}
+              AND TP.PROD_STATUS_CD = 'PD000403'
               AND RPROD.META_CLSF_CD IN
         <foreach collection="metaCodes" separator="," item="v" open="(" close=")">#{v}</foreach>
     </select>

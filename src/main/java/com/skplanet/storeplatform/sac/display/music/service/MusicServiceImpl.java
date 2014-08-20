@@ -92,6 +92,7 @@ public class MusicServiceImpl implements MusicService {
         Map<String, Object> relProdListReq = new HashMap<String, Object>();
         relProdListReq.put("channelId", param.getChannelId());
         relProdListReq.put("metaCodes", MUSIC_RELATED_PROD_META_CLS);
+        relProdListReq.put("tenantId", param.getTenantId());
         List<RelatedProduct> relProdList = this.commonDAO.queryForList("MusicDetail.getRelatedProductList", relProdListReq, RelatedProduct.class);
 
         
