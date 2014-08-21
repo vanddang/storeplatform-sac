@@ -15,7 +15,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Download 앱 상품 정보 조회 Value Object.
- * 
+ *
  * Updated on : 2014. 01. 21. Updated by : 이석희, 아이에스플러스.
  */
 public class DownloadAppSacReq extends CommonInfo {
@@ -40,13 +40,15 @@ public class DownloadAppSacReq extends CommonInfo {
 	private String prchsDt; // 구매일시
 	private String dwldStartDt; // 다운로드 시작일시
 	private String dwldExprDt; // 다운로드 만료일시
+	private String parentBunchId;
+	private String bnchProdId;
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * tenantId.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getTenantId() {
@@ -54,11 +56,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * tenantId.
 	 * </pre>
-	 * 
+	 *
 	 * @param tenantId
 	 *            tenantId
 	 */
@@ -67,11 +69,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 시스템Id.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getSystemId() {
@@ -79,11 +81,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 시스템Id.
 	 * </pre>
-	 * 
+	 *
 	 * @param systemId
 	 *            systemId
 	 */
@@ -92,11 +94,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 단말모델코드.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getDeviceModelCd() {
@@ -104,11 +106,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 단말모델코드.
 	 * </pre>
-	 * 
+	 *
 	 * @param deviceModelCd
 	 *            deviceModelCd
 	 */
@@ -132,11 +134,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 언어코드.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getLangCd() {
@@ -144,11 +146,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 언어코드.
 	 * </pre>
-	 * 
+	 *
 	 * @param langCd
 	 *            langCd
 	 */
@@ -172,11 +174,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * os 버전.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getOsVersion() {
@@ -184,11 +186,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 언어코드.
 	 * </pre>
-	 * 
+	 *
 	 * @param osVersion
 	 *            osVersion
 	 */
@@ -197,11 +199,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 상품 유형.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getCategory() {
@@ -209,11 +211,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 상품 유형.
 	 * </pre>
-	 * 
+	 *
 	 * @param category
 	 *            category
 	 */
@@ -222,11 +224,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 조회 유형.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getFilteredBy() {
@@ -234,11 +236,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 조회 유형.
 	 * </pre>
-	 * 
+	 *
 	 * @param filteredBy
 	 *            filteredBy
 	 */
@@ -247,11 +249,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 상품 ID.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getProductId() {
@@ -259,11 +261,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 상품 ID.
 	 * </pre>
-	 * 
+	 *
 	 * @param productId
 	 *            productId
 	 */
@@ -272,11 +274,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 패키지 명.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getPackageName() {
@@ -284,11 +286,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 패키지 명.
 	 * </pre>
-	 * 
+	 *
 	 * @param packageName
 	 *            packageName
 	 */
@@ -297,11 +299,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * device key.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getDeviceKey() {
@@ -309,11 +311,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * device key.
 	 * </pre>
-	 * 
+	 *
 	 * @param deviceKey
 	 *            deviceKey
 	 */
@@ -322,11 +324,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 사용자 Key.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getUserKey() {
@@ -334,11 +336,11 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 사용자 Key.
 	 * </pre>
-	 * 
+	 *
 	 * @param userKey
 	 *            userKey
 	 */
@@ -405,5 +407,22 @@ public class DownloadAppSacReq extends CommonInfo {
 	public void setDwldExprDt(String dwldExprDt) {
 		this.dwldExprDt = dwldExprDt;
 	}
+
+	public String getParentBunchId() {
+		return this.parentBunchId;
+	}
+
+	public void setParentBunchId(String parentBunchId) {
+		this.parentBunchId = parentBunchId;
+	}
+
+	public String getBnchProdId() {
+		return this.bnchProdId;
+	}
+
+	public void setBnchProdId(String bnchProdId) {
+		this.bnchProdId = bnchProdId;
+	}
+
 
 }
