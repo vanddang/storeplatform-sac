@@ -134,6 +134,11 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_HOUR_SUFFIX = "시간 이용권";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_MONTH_SUFFIX = "개월 이용권";
 
+	/** 결제Page 가맹점 서비스 구분 */
+	public static final String PAYMENT_PAGE_SERVICE_ID_SHOPCLIENT = "TS001"; // Tstore 샵클라이언트
+	public static final String PAYMENT_PAGE_SERVICE_ID_EBOOK = "TS002"; // Tstore ebook
+	public static final String PAYMENT_PAGE_SERVICE_ID_IAP = "TS003"; // Tstore IAP
+
 	/** T Store Cash */
 	/* 서비스 타입 */
 	public static final String TSTORE_CASH_CLASS_POINT = "01";

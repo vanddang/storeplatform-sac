@@ -47,7 +47,8 @@ public class PaymentPageParam extends CommonInfo {
 	private String typeNetwork; // 결제요청Network (1: 3G(LTE) , 2:Wifi)
 	private String carrier; // 통신사 (1: SKT , 2: LGU, 3: KT)
 	private String noSim; // SIM Serial Number
-	private String flgSim; // SIM 조회가능여부
+	// private String flgSim; // SIM 조회가능여부
+	private String serviceId; // 가맹점 내 서비스 구분 (TS001: Tstore 샵클라이언트, TS002: Tstore ebook, TS003: Tstore IAP)
 
 	// ==========================================================================================
 
@@ -427,18 +428,18 @@ public class PaymentPageParam extends CommonInfo {
 	}
 
 	/**
-	 * @return the flgSim
+	 * @return the serviceId
 	 */
-	public String getFlgSim() {
-		return this.flgSim;
+	public String getServiceId() {
+		return this.serviceId;
 	}
 
 	/**
-	 * @param flgSim
-	 *            the flgSim to set
+	 * @param serviceId
+	 *            the serviceId to set
 	 */
-	public void setFlgSim(String flgSim) {
-		this.flgSim = flgSim;
+	public void setServiceId(String serviceId) {
+		this.serviceId = serviceId;
 	}
 
 }

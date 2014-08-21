@@ -94,7 +94,15 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			paymentPageParam.setCarrier(PurchaseConstants.PAYPLANET_TELECOM_UNKNOWN); // UKNOWN
 		}
 		paymentPageParam.setNoSim(purchaseOrderInfo.getSimNo());
-		paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
+		// paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
+		if (StringUtils.equals(purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.PRCHS_REQ_PATH_IAP)) {
+			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_IAP);
+		} else if (StringUtils.equals(purchaseOrderInfo.getTenantProdGrpCd(),
+				PurchaseConstants.PRCHS_REQ_PATH_EBOOK_STORAGE)) {
+			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_EBOOK);
+		} else {
+			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_SHOPCLIENT);
+		}
 
 		// pDescription
 		paymentPageParam.setpDescription(this.makeProductDescription(purchaseOrderInfo.getTenantProdGrpCd(),
@@ -285,7 +293,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				.append("&nmDevice=").append(StringUtils.defaultString(paymentPageParam.getNmDevice()))
 				.append("&imei=").append(StringUtils.defaultString(paymentPageParam.getImei())).append("&typeNetwork=")
 				.append(paymentPageParam.getTypeNetwork()).append("&carrier=").append(paymentPageParam.getCarrier())
-				.append("&noSim=").append(StringUtils.defaultString(paymentPageParam.getNoSim()));
+				.append("&noSim=").append(StringUtils.defaultString(paymentPageParam.getNoSim())).append("&serviceId=")
+				.append(paymentPageParam.getServiceId());
 
 		String plainData = sb.toString();
 		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", plainData);
