@@ -81,7 +81,7 @@
                       , KA.PART_PARENT_CLSF_CD
                       , KA.DRM_YN
                       , DECODE( KA.PROD_CLSF_CD , 'PD000601', 'paid' , 'PD000602', 'library' , 'PD000603', 'vm' , 'PD000604', 'free' , 'PD000605', 'paid-rss' , 'PD000606', 'free-rss' , 'paid' ) AS PROD_CLSF_CD
-                      , KA.VER_MAJOR || '.' || KA.VER_MINOR AS PROD_VER
+                      , KB.APK_VER_NM AS PROD_VER
                       , NVL(KB.APK_PKG_NM, '' ) AS APK_PKG_NM
                       , NVL2( KB.APK_VER, KB.APK_VER, KA.PKG_VER_CD ) AS APK_VER   
                       , KA.PLAT_CLSF_CD
@@ -174,9 +174,9 @@
                    AND  KC.IMG_CD = #{imageCd} 
                ) TA
               LEFT OUTER JOIN TB_DP_SEED_MAPP TB
-                ON TA.PROD_ID = TB.PROD_ID AND TB.CASE_REF_CD IN ('PD013018', 'PD013005')
+                ON TA.PROD_ID = TB.PROD_ID AND TB.CASE_REF_CD IN ('PD013018', 'PD013005') /* PD013018: T store 런쳐, PD013005: T store 게임센터 */
               LEFT OUTER JOIN TB_DP_SEED_MAPP TB2
-                ON TB2.PROD_ID = TA.PROD_ID AND TB2.CASE_REF_CD = 'PD013020'
+                ON TB2.PROD_ID = TA.PROD_ID AND TB2.CASE_REF_CD = 'PD013020' /* TID */
     </select>
     
     <!-- 상품정보요청(for download) Vod -->
