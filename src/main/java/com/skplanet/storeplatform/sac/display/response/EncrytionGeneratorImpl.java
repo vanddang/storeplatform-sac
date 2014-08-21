@@ -138,7 +138,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		}
 
 		// extra : 값의 형식은 "key=value;key2=value2;"로 구성된다. 추후 정의하여 사용.
-		data.setExtra("");
+		data.setExtra(this.makeExtra(metaInfo));
 
 		contents.setData(data);
 		return contents;
@@ -149,5 +149,16 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 			return "";
 		}
 		return str;
+	}
+
+	private String makeExtra(MetaInfo metaInfo) {
+
+		StringBuffer extra = new StringBuffer("");
+
+		if (StringUtils.isNotBlank(metaInfo.getParentBunchId())) {
+			extra.append("parentBunchId=").append(metaInfo.getParentBunchId()).append(";");
+		}
+
+		return extra.toString();
 	}
 }

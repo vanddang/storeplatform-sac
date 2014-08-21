@@ -46,6 +46,46 @@
      WHERE ROWNUM <![CDATA[<=]]> 1                     
     </select>
 
+    <!-- TID bunchId Provisioning -->
+    <select id="getBunchIdProvisioning" parameterType="DownloadAppSacReq" resultType="java.lang.Integer">
+        SELECT /* DownloadMapper.getBunchIdProvisioning, TID BunchId Provisioning for DL (App), 양해엽, 2014-08-21 */
+            COUNT(P.PROD_ID)
+		FROM            TB_DP_PROD              P
+		    INNER JOIN  TB_DP_APP_PROD          APP ON P.PROD_ID = APP.PROD_ID
+		    INNER JOIN  TB_DP_TENANT_PROD       TP  ON P.PROD_ID = TP.PROD_ID 
+		    INNER JOIN  TB_DP_PROD_IMG          PI  ON P.PROD_ID = PI.PROD_ID
+		    INNER JOIN  TB_DP_SPRT_DEVICE       SDV ON P.PROD_ID = SDV.PROD_ID 
+		    INNER JOIN  TB_CM_DEVICE            CDV ON SDV.DEVICE_MODEL_CD = CDV.DEVICE_MODEL_CD
+		    INNER JOIN  TB_DP_SUB_CONTENTS      SC  ON SDV.PROD_ID = SC.PROD_ID AND SDV.SUB_CONTENTS_ID = SC.SUB_CONTENTS_ID
+		WHERE   1 = 1
+		    AND P.PROD_CHRG_YN      = 'N'               /* 무료상품 */
+		    AND P.SVC_GRP_CD        = 'DP000201'        /* DP000201 : App 상품 */
+		    AND P.PROD_ID           = #{bnchProdId}     /* Bunch Prod Id */
+		    AND TP.TENANT_ID        = 'S01' 
+		    AND TP.PROD_STATUS_CD   = 'PD000403'        /* PD000403 : 판매중 */
+		    AND TP.EXPO_YN          = 'Y'
+		    AND PI.EXPO_ORD         = 1
+		    AND PI.LANG_CD          = #{langCd}
+		    AND PI.IMG_CD           = #{imageCd}        /* 'DP000101' : App 대표 이미지코드 */
+		    AND SDV.DEVICE_MODEL_CD = #{deviceModelCd}
+		    AND CDV.USE_YN          ='Y'
+		    AND DECODE( CDV.UA_CD , '9999', NVL2( APP.PART_PARENT_CLSF_CD, 0, 1 ) + DECODE( P.DRM_YN, 'N', 1, 0 ), 2 ) = 2 /* UA_CD: 9999 (외산단말) */
+		    AND (APP.PART_PARENT_CLSF_CD = 'PD012301' OR APP.PART_PARENT_CLSF_CD IS NULL)    /* PD012301 : 부분 유료화 부모상품 */   
+		    AND SC.SALE_YN          = 'Y'
+		    AND SC.VM_VER  LIKE '%'||#{osVersion}||'%'   /* Provisioning OS VERSION 체크 */     
+    </select>
+    
+    <!-- validate by parentBunchId -->
+    <select id="getValidateParentBunchId" parameterType="DownloadAppSacReq" resultType="java.lang.Integer">
+        SELECT /* DownloadMapper.getValidateParentBunchId, validate by parentBunchId for DL (App), 양해엽, 2014-08-21 */
+            COUNT(PROD_ID)
+		FROM    TB_DP_SEED_MAPP
+		WHERE   1=1
+		    AND PROD_ID         = #{parentBunchId}
+		    AND CASE_REF_CD     = 'PD013020'  /* PD013020 : TID 상품 */
+		    AND BNCH_PROD_ID    = #{productId}
+	</select>
+	
     <!-- 상품정보요청(for download) App -->
     <select id="getDownloadAppInfo" parameterType="DownloadAppSacReq" resultType="MetaInfo">
       SELECT  /* DownloadMapper.getDownloadAppInfo, 상품정보요청(for download) App , 이석희/아이에스플러스, 2014-01-23 */

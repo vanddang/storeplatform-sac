@@ -307,6 +307,8 @@ public class MetaInfo extends CommonInfo {
     private String purchaseHide;
     private String updateAlarm;
 
+    private String parentBunchId;
+
 	/**
 	 * @return the topMenuId
 	 */
@@ -4216,4 +4218,14 @@ public class MetaInfo extends CommonInfo {
 	public void setUpdateAlarm(String updateAlarm) {
 		this.updateAlarm = updateAlarm;
 	}
+
+	public String getParentBunchId() {
+		return this.parentBunchId;
+	}
+
+	public void setParentBunchId(String parentBunchId) {
+		this.parentBunchId = parentBunchId;
+	}
+
+
 }

@@ -182,6 +182,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			this.log.debug("----------------------------------------------------------------");
 			identifierList = new ArrayList<Identifier>();
 
+			this.doBunchProdProvisioning(downloadAppSacReq, metaInfo);
+			this.validateParentBunchProd(downloadAppSacReq, metaInfo);
+
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
 				// 구매내역 조회를 위한 생성자
@@ -525,4 +528,28 @@ public class DownloadAppServiceImpl implements DownloadAppService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 		return response;
 	}
+
+
+	public void doBunchProdProvisioning(DownloadAppSacReq downloadAppSacReq, MetaInfo metaInfo) {
+
+		if (StringUtils.isBlank(metaInfo.getBnchProdId())) return;
+
+
+		downloadAppSacReq.setBnchProdId(metaInfo.getBnchProdId());
+
+		if ( (Integer)this.commonDAO.queryForObject("Download.getBunchIdProvisioning", downloadAppSacReq) > 0 ) return;
+
+		metaInfo.setBnchProdId(null);
+		metaInfo.setBnchDwldMsg(null);
+	}
+
+	public void validateParentBunchProd(DownloadAppSacReq downloadAppSacReq, MetaInfo metaInfo) {
+
+		if (StringUtils.isBlank(downloadAppSacReq.getParentBunchId())) return;
+
+		if ( (Integer)this.commonDAO.queryForObject("Download.getValidateParentBunchId", downloadAppSacReq) <= 0 ) return;
+
+		metaInfo.setParentBunchId(downloadAppSacReq.getParentBunchId());
+	}
 }
+
