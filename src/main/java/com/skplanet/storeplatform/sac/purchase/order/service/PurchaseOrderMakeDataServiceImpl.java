@@ -245,14 +245,14 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			payment.setBillKey(paymentInfo.getBillKey());
 			payment.setCpnId(paymentInfo.getCpnId());
 			payment.setCpnMakeHost(paymentInfo.getCpnMakeHost());
-			if (StringUtils.equals(paymentInfo.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_COUPON)) {
+			if (StringUtils.equals(payment.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_COUPON)) {
 				payment.setCpnType(paymentInfo.getCpnType());
-			} else if (StringUtils.equals(paymentInfo.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_OCB)) {
+			} else if (StringUtils.equals(payment.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_OCB)) {
 				payment.setCpnType(paymentInfo.getOcbType());
 			}
 			payment.setMoid(paymentInfo.getMoid());
 
-			if (StringUtils.equals(paymentInfo.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER)
+			if (StringUtils.equals(payment.getPaymentMtdCd(), PurchaseConstants.PAYMENT_METHOD_SKT_CARRIER)
 					&& StringUtils.equals(paymentInfo.getSktTestDeviceYn(), PurchaseConstants.USE_Y)) {
 				payment.setPaymentMtdCd(PurchaseConstants.PAYMENT_METHOD_SKT_TEST_DEVICE);
 			}

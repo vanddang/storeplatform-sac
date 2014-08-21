@@ -713,26 +713,27 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setBonusCashPoint(reservedDataMap.get("bonusPoint")); // 보너스 캐쉬 지급 Point
 			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		}
-		// 대여/소장
-		if (StringUtils.isNotBlank(reservedDataMap.get("loanPid"))
-				&& StringUtils
-						.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)) {
-			res.setBasePid(reservedDataMap.get("loanPid"));
-		} else {
-			res.setBasePid(prchsDtlMore.getProdId());
-		}
-		res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
-		res.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt")); // 이용기간(일)
-		res.setLoanPid(reservedDataMap.get("loanPid")); // 대여하기 상품 ID
-		if (StringUtils.isNotBlank(reservedDataMap.get("loanAmt"))) {
-			res.setLoanAmt(Double.parseDouble(StringUtils.defaultString(reservedDataMap.get("loanAmt"), "0"))); // 대여하기
-																												// 상품 금액
-		}
-		res.setOwnPid(reservedDataMap.get("ownPid")); // 소장하기 상품 ID
-		if (StringUtils.isNotBlank(reservedDataMap.get("ownAmt"))) {
-			res.setOwnAmt(Double.parseDouble(StringUtils.defaultString(reservedDataMap.get("ownAmt"), "0"))); // 소장하기 상품
-																											  // 금액
-		}
+		// 대여/소장 TAB 제거 : 2014/08/27 적용
+		// // 대여/소장
+		// if (StringUtils.isNotBlank(reservedDataMap.get("loanPid"))
+		// && StringUtils
+		// .startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)) {
+		// res.setBasePid(reservedDataMap.get("loanPid"));
+		// } else {
+		// res.setBasePid(prchsDtlMore.getProdId());
+		// }
+		// res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
+		// res.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt")); // 이용기간(일)
+		// res.setLoanPid(reservedDataMap.get("loanPid")); // 대여하기 상품 ID
+		// if (StringUtils.isNotBlank(reservedDataMap.get("loanAmt"))) {
+		// res.setLoanAmt(Double.parseDouble(StringUtils.defaultString(reservedDataMap.get("loanAmt"), "0"))); // 대여하기
+		// // 상품 금액
+		// }
+		// res.setOwnPid(reservedDataMap.get("ownPid")); // 소장하기 상품 ID
+		// if (StringUtils.isNotBlank(reservedDataMap.get("ownAmt"))) {
+		// res.setOwnAmt(Double.parseDouble(StringUtils.defaultString(reservedDataMap.get("ownAmt"), "0"))); // 소장하기 상품
+		// // 금액
+		// }
 
 		// 판매자 정보 조회 - 쇼핑상품 경우만 조회
 		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
@@ -1657,7 +1658,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
 							.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
 					&& StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) == false) {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN; // 대여/소장: TC03
+				// return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN; // 대여/소장: TC03
+				// 대여/소장 TAB 제거 : 2014/08/27 적용
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_NORMAL; // 대여/소장: TC03
 
 			} else if (StringUtils.startsWith(tenantProdGrpCd,
 					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
