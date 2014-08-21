@@ -315,32 +315,6 @@ public class VodServiceImpl implements VodService {
 		product.setVod(vod);
 		
         //tmembership 할인율
-		/*
-        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(req.getTenantId(), mapperVO.getTopMenuId());
-        if(tmembershipDcInfo != null) {
-        	List<Point> pointList = null; 
-        	
-        	if(tmembershipDcInfo.getNormalDcRate() != null) {
-        		pointList = new ArrayList<Point>();
-		        Point point = new Point();
-		        point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
-		        point.setType(DisplayConstants.DC_RATE_TYPE_NORMAL);
-		        point.setDiscountRate(tmembershipDcInfo.getNormalDcRate());
-		        pointList.add(point);
-        	}
-        	if(tmembershipDcInfo.getFreepassDcRate() != null) {
-        		if(pointList == null) pointList = new ArrayList<Point>();
-        		Point point = new Point();
-        		point.setName(DisplayConstants.DC_RATE_TMEMBERSHIP);
-        		point.setType(DisplayConstants.DC_RATE_TYPE_FREEPASS);
-        		point.setDiscountRate(tmembershipDcInfo.getFreepassDcRate());
-        		pointList.add(point);
-        	}
-	        
-        	product.setPointList(pointList);
-        }
-        */
-        //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(req.getTenantId(), mapperVO.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
         //Tstore멤버십 적립율 정보
@@ -902,8 +876,20 @@ public class VodServiceImpl implements VodService {
             videoInfo.setVersion(mapperVO.getSdProdVer());
             videoInfoList.add(videoInfo);
         }
-        /** HD 고화질 정보 */
-        if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId())) {
+        
+        // Full HD 정보 우선, 없으며 HD 정보를 내려줌
+        if (StringUtils.isNotEmpty(mapperVO.getFhdSubContsId())) {
+        	/** FHD 고화질 정보 */
+        	videoInfo = new VideoInfo();
+        	videoInfo.setPictureSize(mapperVO.getFhdDpPicRatio());
+        	videoInfo.setPixel(mapperVO.getFhdDpPixel());
+        	videoInfo.setScid(mapperVO.getFhdSubContsId());
+        	videoInfo.setSize(mapperVO.getFhdFileSize().toString());
+        	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
+        	videoInfo.setVersion(mapperVO.getFhdProdVer());
+        	videoInfoList.add(videoInfo);
+        } else if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId())) {
+        	/** HD 고화질 정보 */
             videoInfo = new VideoInfo();
             videoInfo.setPictureSize(mapperVO.getHdDpPicRatio());
             videoInfo.setPixel(mapperVO.getHdDpPixel());

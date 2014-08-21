@@ -258,6 +258,17 @@ public class VodDetail extends CommonInfo {
 	private String hdDpPixel;
 	/** HD화질 화면비율. */
 	private String hdDpPicRatio;
+	
+	/** FHD화질 sub 컨텐츠 Id. */
+	private String fhdSubContsId;
+	/** FHD화질 상품버전. */
+	private String fhdProdVer;
+	/** FHD화질 파일용량.  */
+	private String fhdFileSize;
+	/** FHD화질 해상도. */
+	private String fhdDpPixel;
+	/** FHD화질 화면비율. */
+	private String fhdDpPicRatio;
 
 
 
@@ -1348,6 +1359,76 @@ public class VodDetail extends CommonInfo {
 	 */
 	public void setPlayUsePeriodUnitCdNm(String playUsePeriodUnitCdNm) {
 		this.playUsePeriodUnitCdNm = playUsePeriodUnitCdNm;
+	}
+
+	/**
+	 * @return the fhdSubContsId
+	 */
+	public String getFhdSubContsId() {
+		return fhdSubContsId;
+	}
+
+	/**
+	 * @param fhdSubContsId the fhdSubContsId to set
+	 */
+	public void setFhdSubContsId(String fhdSubContsId) {
+		this.fhdSubContsId = fhdSubContsId;
+	}
+
+	/**
+	 * @return the fhdProdVer
+	 */
+	public String getFhdProdVer() {
+		return fhdProdVer;
+	}
+
+	/**
+	 * @param fhdProdVer the fhdProdVer to set
+	 */
+	public void setFhdProdVer(String fhdProdVer) {
+		this.fhdProdVer = fhdProdVer;
+	}
+
+	/**
+	 * @return the fhdFileSize
+	 */
+	public String getFhdFileSize() {
+		return fhdFileSize;
+	}
+
+	/**
+	 * @param fhdFileSize the fhdFileSize to set
+	 */
+	public void setFhdFileSize(String fhdFileSize) {
+		this.fhdFileSize = fhdFileSize;
+	}
+
+	/**
+	 * @return the fhdDpPixel
+	 */
+	public String getFhdDpPixel() {
+		return fhdDpPixel;
+	}
+
+	/**
+	 * @param fhdDpPixel the fhdDpPixel to set
+	 */
+	public void setFhdDpPixel(String fhdDpPixel) {
+		this.fhdDpPixel = fhdDpPixel;
+	}
+
+	/**
+	 * @return the fhdDpPicRatio
+	 */
+	public String getFhdDpPicRatio() {
+		return fhdDpPicRatio;
+	}
+
+	/**
+	 * @param fhdDpPicRatio the fhdDpPicRatio to set
+	 */
+	public void setFhdDpPicRatio(String fhdDpPicRatio) {
+		this.fhdDpPicRatio = fhdDpPicRatio;
 	}
 
 	
