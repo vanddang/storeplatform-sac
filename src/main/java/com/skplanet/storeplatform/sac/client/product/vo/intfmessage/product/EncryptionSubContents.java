@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * EncryptionSubContents Value Object.
- * 
+ *
  * Updated on : 2014. 02. 11. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -28,6 +28,8 @@ public class EncryptionSubContents extends CommonInfo implements Serializable {
 	private String path; // 물리파일경로
 	private String type;
 	private String deltaPath;
+	private Integer size;
+	private Integer deltaSize;
 
 	/**
 	 * @return the scid
@@ -88,4 +90,40 @@ public class EncryptionSubContents extends CommonInfo implements Serializable {
 	public void setDeltaPath(String deltaPath) {
 		this.deltaPath = deltaPath;
 	}
+
+	/**
+	 *
+	 * @return the size
+	 */
+	public Integer getSize() {
+		return this.size;
+	}
+
+	/**
+	 *
+	 * @param size
+	 * 			the size to set
+	 */
+	public void setSize(Integer size) {
+		this.size = size;
+	}
+
+	/**
+	 *
+	 * @return the deltaSize
+	 */
+	public Integer getDeltaSize() {
+		return this.deltaSize;
+	}
+
+	/**
+	 *
+	 * @param deltaSize
+	 * 			the deltaSize to set
+	 */
+	public void setDeltaSize(Integer deltaSize) {
+		this.deltaSize = deltaSize;
+	}
+
+
 }
