@@ -71,6 +71,8 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 				subContents = new EncryptionSubContents();
 				subContents.setType("");
 				subContents.setDeltaPath("");
+				subContents.setSize(Integer.parseInt(metaInfo.getNmFileSize()));
+				subContents.setDeltaSize(0);
 				subContents.setScid(metaInfo.getNmSubContsId());
 				subContents.setPath(metaInfo.getNmFilePath());
 				subContentsList.add(subContents);
@@ -79,6 +81,8 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 				subContents = new EncryptionSubContents();
 				subContents.setType("");
 				subContents.setDeltaPath("");
+				subContents.setSize(Integer.parseInt(metaInfo.getSdFileSize()));
+				subContents.setDeltaSize(0);
 				subContents.setScid(metaInfo.getSdSubContsId());
 				subContents.setPath(metaInfo.getSdFilePath());
 				subContentsList.add(subContents);
@@ -87,6 +91,8 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 				subContents = new EncryptionSubContents();
 				subContents.setType("");
 				subContents.setDeltaPath("");
+				subContents.setSize(Integer.parseInt(metaInfo.getHdFileSize()));
+				subContents.setDeltaSize(0);
 				subContents.setScid(metaInfo.getHdSubContsId());
 				subContents.setPath(metaInfo.getHdFilePath());
 				subContentsList.add(subContents);
@@ -95,6 +101,8 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 			subContents = new EncryptionSubContents();
 			subContents.setType("");
 			subContents.setDeltaPath("");
+			subContents.setSize(metaInfo.getFileSize());
+			subContents.setDeltaSize(0);
 			subContents.setScid(metaInfo.getSubContentsId());
 			subContents.setPath(metaInfo.getFilePath());
 			subContentsList.add(subContents);
