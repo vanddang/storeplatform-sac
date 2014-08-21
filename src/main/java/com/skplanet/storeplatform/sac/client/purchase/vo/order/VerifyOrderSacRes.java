@@ -53,13 +53,14 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String afterAutoPayDt; // 다음 자동 결제일
 	private String useStartDt; // 이용 시작 일시
 	private String useExprDt; // 이용 종료 일시
-	private String dwldAvailableDayCnt; // 다운로드 가능기간(일)
-	private String usePeriodCnt; // 이용기간(일)
-	private String basePid; // 기본 상품 ID (대여/소장 TAB 하이라이트 처리)
-	private String loanPid; // 대여하기 상품 ID
-	private Double loanAmt; // 대여하기 상품 금액
-	private String ownPid; // 소장하기 상품 ID
-	private Double ownAmt; // 소장하기 상품 금액
+	// 대여/소장 TAB 제거 : 2014/08/27 적용
+	// private String dwldAvailableDayCnt; // 다운로드 가능기간(일)
+	// private String usePeriodCnt; // 이용기간(일)
+	// private String basePid; // 기본 상품 ID (대여/소장 TAB 하이라이트 처리)
+	// private String loanPid; // 대여하기 상품 ID
+	// private Double loanAmt; // 대여하기 상품 금액
+	// private String ownPid; // 소장하기 상품 ID
+	// private Double ownAmt; // 소장하기 상품 금액
 	private String prodKind; // 쇼핑상품 종류
 	private String nmSeller; // 판매자명
 	private String emailSeller; // 판매자 이메일 주소
@@ -560,111 +561,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setUseExprDt(String useExprDt) {
 		this.useExprDt = useExprDt;
-	}
-
-	/**
-	 * @return the dwldAvailableDayCnt
-	 */
-	public String getDwldAvailableDayCnt() {
-		return this.dwldAvailableDayCnt;
-	}
-
-	/**
-	 * @param dwldAvailableDayCnt
-	 *            the dwldAvailableDayCnt to set
-	 */
-	public void setDwldAvailableDayCnt(String dwldAvailableDayCnt) {
-		this.dwldAvailableDayCnt = dwldAvailableDayCnt;
-	}
-
-	/**
-	 * @return the usePeriodCnt
-	 */
-	public String getUsePeriodCnt() {
-		return this.usePeriodCnt;
-	}
-
-	/**
-	 * @param usePeriodCnt
-	 *            the usePeriodCnt to set
-	 */
-	public void setUsePeriodCnt(String usePeriodCnt) {
-		this.usePeriodCnt = usePeriodCnt;
-	}
-
-	/**
-	 * @return the basePid
-	 */
-	public String getBasePid() {
-		return this.basePid;
-	}
-
-	/**
-	 * @param basePid
-	 *            the basePid to set
-	 */
-	public void setBasePid(String basePid) {
-		this.basePid = basePid;
-	}
-
-	/**
-	 * @return the loanPid
-	 */
-	public String getLoanPid() {
-		return this.loanPid;
-	}
-
-	/**
-	 * @param loanPid
-	 *            the loanPid to set
-	 */
-	public void setLoanPid(String loanPid) {
-		this.loanPid = loanPid;
-	}
-
-	/**
-	 * @return the loanAmt
-	 */
-	public Double getLoanAmt() {
-		return this.loanAmt;
-	}
-
-	/**
-	 * @param loanAmt
-	 *            the loanAmt to set
-	 */
-	public void setLoanAmt(Double loanAmt) {
-		this.loanAmt = loanAmt;
-	}
-
-	/**
-	 * @return the ownPid
-	 */
-	public String getOwnPid() {
-		return this.ownPid;
-	}
-
-	/**
-	 * @param ownPid
-	 *            the ownPid to set
-	 */
-	public void setOwnPid(String ownPid) {
-		this.ownPid = ownPid;
-	}
-
-	/**
-	 * @return the ownAmt
-	 */
-	public Double getOwnAmt() {
-		return this.ownAmt;
-	}
-
-	/**
-	 * @param ownAmt
-	 *            the ownAmt to set
-	 */
-	public void setOwnAmt(Double ownAmt) {
-		this.ownAmt = ownAmt;
 	}
 
 	/**
