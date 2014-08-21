@@ -340,13 +340,18 @@ public class HistoryListServiceImpl implements HistoryListService {
 				this.logger.debug("### productInfoSacReq  : {}" + productInfoSacReq.toString());
 
 				long prodTime = System.currentTimeMillis();
-				this.logger.error(
+				this.logger.info(
 						"##### [SAC History CallTime]  : LOCAL SCI prod productInfoSCI.getProductList param {}",
 						productInfoSacReq);
 				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
-				this.logger.error(
+				this.logger.info(
 						"##### [SAC History CallTime] LOCAL SCI prod productInfoSCI.getProductList END takes {} ms",
 						(System.currentTimeMillis() - prodTime));
+				if ((System.currentTimeMillis() - prodTime) >= Integer.parseInt(PurchaseConstants.ERROR_LOG_MS_TIME)) {
+					this.logger
+							.error("##### [SAC History CallTime] LOCAL SCI prod productInfoSCI.getProductList END takes {} ms",
+									(System.currentTimeMillis() - prodTime));
+				}
 			}
 
 			if (fixProdIdList.size() > 0) {
@@ -356,13 +361,19 @@ public class HistoryListServiceImpl implements HistoryListService {
 				fixProductInfoSacReq.setList(fixProdIdList);
 
 				long fixprodTime = System.currentTimeMillis();
-				this.logger.error(
+				this.logger.info(
 						"##### [SAC History CallTime]  : LOCAL SCI fix productInfoSCI.getProductList param {}",
 						fixProductInfoSacReq);
 				fixProductInfoSacRes = this.freePassInfoSCI.searchFreepassBasicList(fixProductInfoSacReq);
-				this.logger.error(
+				this.logger.info(
 						"##### [SAC History CallTime] LOCAL SCI fix productInfoSCI.getProductList END takes {} ms",
 						(System.currentTimeMillis() - fixprodTime));
+
+				if ((System.currentTimeMillis() - fixprodTime) >= Integer.parseInt(PurchaseConstants.ERROR_LOG_MS_TIME)) {
+					this.logger.error(
+							"##### [SAC History CallTime] LOCAL SCI fix productInfoSCI.getProductList END takes {} ms",
+							(System.currentTimeMillis() - fixprodTime));
+				}
 
 			}
 
@@ -423,13 +434,19 @@ public class HistoryListServiceImpl implements HistoryListService {
 			try {
 				// member InternalSCI Call
 				long uDevicdTime = System.currentTimeMillis();
-				this.logger.error(
+				this.logger.info(
 						"##### [SAC History CallTime]  : LOCAL SCI use searchUserSCI.searchUserByDeviceKey param {}",
 						searchUserDeviceSacReq);
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
 				this.logger
-						.error("##### [SAC History CallTime] LOCAL SCI use searchUserSCI.searchUserByDeviceKey END takes {} ms",
+						.info("##### [SAC History CallTime] LOCAL SCI use searchUserSCI.searchUserByDeviceKey END takes {} ms",
 								(System.currentTimeMillis() - uDevicdTime));
+
+				if ((System.currentTimeMillis() - uDevicdTime) >= Integer.parseInt(PurchaseConstants.ERROR_LOG_MS_TIME)) {
+					this.logger
+							.error("##### [SAC History CallTime] LOCAL SCI use searchUserSCI.searchUserByDeviceKey END takes {} ms",
+									(System.currentTimeMillis() - uDevicdTime));
+				}
 
 				useDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
 			} catch (Exception e) {
@@ -448,13 +465,20 @@ public class HistoryListServiceImpl implements HistoryListService {
 			try {
 				// member InternalSCI Call
 				long sDevicdTime = System.currentTimeMillis();
-				this.logger.error(
+				this.logger.info(
 						"##### [SAC History CallTime]  : LOCAL SCI send searchUserSCI.searchUserByDeviceKey param {}",
 						searchUserDeviceSacReq);
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
 				this.logger
-						.error("##### [SAC History CallTime] LOCAL SCI send searchUserSCI.searchUserByDeviceKey END takes {} ms",
-								(sDevicdTime - System.currentTimeMillis()));
+						.info("##### [SAC History CallTime] LOCAL SCI send searchUserSCI.searchUserByDeviceKey END takes {} ms",
+								(System.currentTimeMillis() - sDevicdTime));
+
+				if ((System.currentTimeMillis() - sDevicdTime) >= Integer.parseInt(PurchaseConstants.ERROR_LOG_MS_TIME)) {
+					this.logger
+							.error("##### [SAC History CallTime] LOCAL SCI use searchUserSCI.searchUserByDeviceKey END takes {} ms",
+									(System.currentTimeMillis() - sDevicdTime));
+				}
+
 				sendDeviceMap = searchUserDeviceSacRes.getUserDeviceInfo();
 
 			} catch (Exception e) {
