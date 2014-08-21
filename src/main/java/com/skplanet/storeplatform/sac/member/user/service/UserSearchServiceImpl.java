@@ -1578,7 +1578,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		String keyType = "";
 		String keyValue = "";
 		if (StringUtils.isNotBlank(req.getUserKey())) {
-			keyType = MemberConstants.KEY_TYPE_USERMBR_NO;
+			keyType = MemberConstants.KEY_TYPE_INSD_USERMBR_NO;
 			keyValue = req.getUserKey();
 		} else if (StringUtils.isNotBlank(req.getUserId())) {
 			keyType = MemberConstants.KEY_TYPE_MBR_ID;
