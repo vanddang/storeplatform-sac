@@ -86,7 +86,7 @@
     
     <!-- SERVICE LOGGER -->
     <logger name="com.skplanet.storeplatform.sac" additivity="false">
-        <level value="DEBUG" />
+        <level value="INFO" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
         <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
@@ -128,9 +128,9 @@
         <level value="OFF" /> 
     </logger> 
     <logger name="jdbc.sqltiming" additivity="false">
-        <level value="INFO" /> 
+        <level value="ERROR" /> 
         <appender-ref ref="SQL_ERROR_LOGGING_ROLLINGFILE_ASYNC" />
-        <appender-ref ref="SQL_LOGGING_ROLLINGFILE" />
+        <!--<appender-ref ref="SQL_LOGGING_ROLLINGFILE" />-->
     </logger>
     
     <!-- MQ BLOCKINGQUEU LOGGER -->
@@ -140,7 +140,7 @@
     </logger>
     
     <root>
-        <level value="INFO" />
+        <level value="WARN" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
         <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </root>
