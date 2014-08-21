@@ -458,6 +458,7 @@ public class BannerServceImpl implements BannerService {
 					this.logger.debug("[searchBannerLog] 배너타입 : 운영자 임의 추천");
 					this.logger.debug("----------------------------------------------------------------");
 
+
 					recommendId = bannerDefault.getBnrInfo();
 
 					// 배치완료 기준일시 조회
@@ -471,26 +472,44 @@ public class BannerServceImpl implements BannerService {
 						bannerReq.setStdDt(stdDt);
 						bannerReq.setRecommendId(recommendId);
 
-						// 운영자 추천 상품 리스트 조회
-						recommendProdList = this.commonDAO.queryForList("Banner.searchRecommendProdList", bannerReq,
-								BannerDefault.class);
+						// 이북/코믹은 추천 리스트 및 단말 Provisioning.
+    			        if ("DP010920".equals(bnrMenuId)
+    			              || "DP010921".equals(bnrMenuId)
+    			              || "DP010928".equals(bnrMenuId) ) { // 이북, 코믹, 보관함 메인 이벤트
 
-						if (recommendProdList != null && !recommendProdList.isEmpty()) {
-							for (int k = 0; k < recommendProdList.size(); k++) {
-								bannerReq.setProdId(recommendProdList.get(k).getPartProdId());
-								bannerReq.setTopMenuId(recommendProdList.get(k).getTopMenuId());
+    			        	// 상품 프로비저닝
+							provCnt = (Integer) this.commonDAO.queryForObject("Banner.getRecommendProvisioning",
+									bannerReq);
 
-								// 상품 프로비저닝
-								provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing",
-										bannerReq);
-
-								if (provCnt > 0) {
-									++passCnt;
-									resultList.add(bannerDefault);
-									break;
-								}
+							if (provCnt > 0) {
+								++passCnt;
+								resultList.add(bannerDefault);
 							}
-						}
+
+    			        } else {
+
+    						// 운영자 추천 상품 리스트 조회
+    						recommendProdList = this.commonDAO.queryForList("Banner.searchRecommendProdList", bannerReq,
+    								BannerDefault.class);
+
+    						if (recommendProdList != null && !recommendProdList.isEmpty()) {
+    							for (int k = 0; k < recommendProdList.size(); k++) {
+    								bannerReq.setProdId(recommendProdList.get(k).getPartProdId());
+    								bannerReq.setTopMenuId(recommendProdList.get(k).getTopMenuId());
+
+    								// 상품 프로비저닝
+    								provCnt = (Integer) this.commonDAO.queryForObject("Banner.getBannerProvisioing",
+    										bannerReq);
+
+    								if (provCnt > 0) {
+    									++passCnt;
+    									resultList.add(bannerDefault);
+    									break;
+    								}
+    							}
+    						}
+    			        }
+
 					}
 				}
 				// 배너타입 : 특정 브랜드샵

@@ -151,6 +151,28 @@
 		       ) JA
     </select>
     
+    <!-- 운영자 임의추천 상품 Provisioning (이북/코믹) -->
+    <select id="getRecommendProvisioning" parameterType="BannerSacReq" resultType="java.lang.Integer">
+	    SELECT /* BannerMapper.getRecommendProvisioning, 운영자 임의추천 Provisioning for ebook,comic, 양해엽, 2014-08-21 */
+		    COUNT(LP.PROD_ID)   AS PROD_CNT
+		FROM            TB_DP_LIST      L
+		    INNER JOIN  TB_DP_LIST_PROD LP  ON L.TENANT_ID = LP.TENANT_ID AND L.LIST_ID = LP.LIST_ID
+		    INNER JOIN  TB_CM_DEVICE    CD  ON CD.DEVICE_MODEL_CD = #{deviceModelCd}
+		WHERE   1 = 1
+		    AND L.TENANT_ID         = #{tenantId}
+		    AND L.EXPO_YN           = 'Y'
+		    AND L.LIST_ID           = #{recommendId}
+		    AND LP.EXPO_YN          = 'Y'
+		    AND LP.STD_DT           = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+		    AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+		    <if test='bnrMenuId == "DP010920" or bnrMenuId == "DP010928"'>
+		    AND CD.EBOOK_SPRT_YN    = 'Y'
+		    </if>
+		    <if test='bnrMenuId == "DP010921" or bnrMenuId == "DP010928"'>
+		    AND CD.COMIC_SPRT_YN    = 'Y'
+		    </if>   
+	</select>
+    
     <!-- 운영자 임의추천 상품 리스트 조회 -->
     <select id="searchRecommendProdList" parameterType="BannerSacReq" resultType="BannerDefault">
 		SELECT  /* BannerMapper.searchRecommendProdList, 운영자 임의추천 상품 리스트 조회, 이태희/부르칸, 2014-03-17 */
