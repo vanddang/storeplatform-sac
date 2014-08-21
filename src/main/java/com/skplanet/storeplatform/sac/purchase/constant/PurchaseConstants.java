@@ -233,4 +233,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 비회원 구분 userKey */
 	public static final String NON_MEMBER = "NONMEMBER";
 
+	/** 에러레벨 로그 시간 */
+	public static final String ERROR_LOG_MS_TIME = "3000";
+
 }
