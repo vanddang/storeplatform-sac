@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveGetSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveGetSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -57,6 +59,25 @@ public class MileageSaveController {
 		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
 		return this.mileageSaveService.searchMileageSave(request);
+	}
+
+	/**
+	 * T마일리지 조회 기능을 제공한다.
+	 * 
+	 * @param request
+	 *            T마일리지요청
+	 * @param requestHeader
+	 *            공통헤더정보
+	 * @return MileageSaveSacRes
+	 */
+	@RequestMapping(value = "/mileage/get/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public MileageSaveGetSacRes getMileageSave(@RequestBody @Validated MileageSaveGetSacReq request,
+			SacRequestHeader sacRequestHeader) {
+
+		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
+
+		return this.mileageSaveService.getMileageSave(request);
 	}
 
 }

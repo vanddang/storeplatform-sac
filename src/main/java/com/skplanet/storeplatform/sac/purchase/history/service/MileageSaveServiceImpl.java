@@ -19,10 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.MileageSaveSCI;
+import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveGetScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveGetScRes;
 import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.MileageSaveScRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSave;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveGetSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveGetSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.MileageSaveSacRes;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -122,6 +126,54 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 				null) + "");
 
 		response.settMileageReseveList(sacMileageSaveList);
+
+		return response;
+	}
+
+	/**
+	 * T마일리지 조회 기능을 제공한다.
+	 * 
+	 * @param request
+	 *            T마일리지요청
+	 * @return MileageSaveSacRes
+	 */
+	@Override
+	public MileageSaveGetSacRes getMileageSave(MileageSaveGetSacReq request) {
+		this.logger.info("MileageSaveSac Request Param : {}", request);
+
+		// SC request/response VO
+		MileageSaveGetScReq scRequest = new MileageSaveGetScReq();
+		MileageSaveGetScRes scResponse = null;
+
+		// SAC Response VO
+		MileageSaveGetSacRes response = new MileageSaveGetSacRes();
+
+		/*************************************************
+		 * SC Request Setting Start
+		 *************************************************/
+		scRequest.setTenantId(request.getTenantId());
+		scRequest.setPrchsId(request.getPrchsId());
+		scRequest.setTypeCd(request.getTypeCd());
+		/*************************************************
+		 * SC Request Setting End
+		 *************************************************/
+
+		/**
+		 * Purchase SC Call
+		 */
+		this.logger.debug("##### MileageSave SC Call Start");
+		scResponse = this.mileageSaveSci.getMileageSave(scRequest);
+		this.logger.debug("##### MileageSave SC Call End");
+
+		/*************************************************
+		 * SC -> SAC Response Setting Start
+		 *************************************************/
+		response.setProcStatusCd(scResponse.getProcStatusCd());
+		response.setSaveDt(scResponse.getSaveDt());
+		response.setSaveResultAmt(scResponse.getSaveResultAmt());
+		/*************************************************
+		 * SC -> SAC Response Setting Start
+		 *************************************************/
 
 		return response;
 	}
