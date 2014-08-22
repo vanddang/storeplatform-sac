@@ -439,6 +439,7 @@
             AND RSHP.PROD_RSHP_CD = 'DP010802'
             <if test="prodIdType == 'CHANNEL'">
             AND RSHP.PROD_ID = #{prodId}
+            AND ETPROD.PROD_STATUS_CD = 'PD000403'
             </if>
             <if test="prodIdType == 'EPISODE'">
                 AND RSHP.PART_PROD_ID = #{prodId}
