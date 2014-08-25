@@ -340,8 +340,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				this.logger.debug("### productInfoSacReq  : {}" + productInfoSacReq.toString());
 
 				long prodTime = System.currentTimeMillis();
-				this.logger.info(
-						"##### [SAC History CallTime]  : LOCAL SCI prod productInfoSCI.getProductList param {}",
+				this.logger.info("##### [SAC History CallTime] LOCAL SCI prod productInfoSCI.getProductList param {}",
 						productInfoSacReq);
 				productInfoSacRes = this.productInfoSCI.getProductList(productInfoSacReq);
 				this.logger.info(
@@ -361,8 +360,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				fixProductInfoSacReq.setList(fixProdIdList);
 
 				long fixprodTime = System.currentTimeMillis();
-				this.logger.info(
-						"##### [SAC History CallTime]  : LOCAL SCI fix productInfoSCI.getProductList param {}",
+				this.logger.info("##### [SAC History CallTime] LOCAL SCI fix productInfoSCI.getProductList param {}",
 						fixProductInfoSacReq);
 				fixProductInfoSacRes = this.freePassInfoSCI.searchFreepassBasicList(fixProductInfoSacReq);
 				this.logger.info(
@@ -435,7 +433,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				// member InternalSCI Call
 				long uDevicdTime = System.currentTimeMillis();
 				this.logger.info(
-						"##### [SAC History CallTime]  : LOCAL SCI use searchUserSCI.searchUserByDeviceKey param {}",
+						"##### [SAC History CallTime] LOCAL SCI use searchUserSCI.searchUserByDeviceKey param {}",
 						searchUserDeviceSacReq);
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
 				this.logger
@@ -466,7 +464,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				// member InternalSCI Call
 				long sDevicdTime = System.currentTimeMillis();
 				this.logger.info(
-						"##### [SAC History CallTime]  : LOCAL SCI send searchUserSCI.searchUserByDeviceKey param {}",
+						"##### [SAC History CallTime] LOCAL SCI send searchUserSCI.searchUserByDeviceKey param {}",
 						searchUserDeviceSacReq);
 				searchUserDeviceSacRes = this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
 				this.logger
