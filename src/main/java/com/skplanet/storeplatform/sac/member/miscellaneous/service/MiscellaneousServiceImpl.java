@@ -916,37 +916,37 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			uapsReq.setDeviceId(devideId);
 			uapsReq.setType("mdn");
 
+			UserEcRes uapsRes = null;
 			try {
-
-				UserEcRes uapsRes = this.uapsSCI.getMappingInfo(uapsReq);
-				if (uapsRes != null) {
-					if (StringUtils.isNotBlank(uapsRes.getSvcMngNum())) {
-						svcMngNum = uapsRes.getSvcMngNum();
-
-						DCDInfo dcdInfo = new DCDInfo();
-						dcdInfo.setRegChannel(systemId);
-						dcdInfo.setTenantID(tenantId);
-						dcdInfo.setEntryClass(regCd);
-						dcdInfo.setServiceNumber(svcMngNum);
-						dcdInfo.setDeviceID(devideId);
-						dcdInfo.setRegDeviceID(null);
-						dcdInfo.setPriorityClass("0");
-						dcdInfo.setProductID(prodId);
-
-						CreateDCDRequest createDcdReq = new CreateDCDRequest();
-						createDcdReq.setCommonRequest(commonRequest);
-						createDcdReq.setDCDInfo(dcdInfo);
-						this.userSCI.createDCD(createDcdReq);
-					} else {
-						// else svcMngNum 존재하지 않을 경우
-						LOGGER.info("## svcMngNum is not exists : " + devideId);
-					}
-				}
-
+				uapsRes = this.uapsSCI.getMappingInfo(uapsReq);
 			} catch (StorePlatformException e) {
-				// ignore
+				LOGGER.info("## {} createDCD uaps error : {} {}", devideId, e.getErrorInfo().getCode(), e
+						.getErrorInfo().getMessage());
 			}
 
+			if (uapsRes != null) {
+				if (StringUtils.isNotBlank(uapsRes.getSvcMngNum())) {
+					svcMngNum = uapsRes.getSvcMngNum();
+
+					DCDInfo dcdInfo = new DCDInfo();
+					dcdInfo.setRegChannel(systemId);
+					dcdInfo.setTenantID(tenantId);
+					dcdInfo.setEntryClass(regCd);
+					dcdInfo.setServiceNumber(svcMngNum);
+					dcdInfo.setDeviceID(devideId);
+					dcdInfo.setRegDeviceID(null);
+					dcdInfo.setPriorityClass("0");
+					dcdInfo.setProductID(prodId);
+
+					CreateDCDRequest createDcdReq = new CreateDCDRequest();
+					createDcdReq.setCommonRequest(commonRequest);
+					createDcdReq.setDCDInfo(dcdInfo);
+					this.userSCI.createDCD(createDcdReq);
+				} else {
+					// else svcMngNum 존재하지 않을 경우
+					LOGGER.info("## {} createDCD svcMngNum is not exists : ", devideId);
+				}
+			}
 		}
 
 		CreateDCDRes res = new CreateDCDRes();
