@@ -45,7 +45,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
-import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.service.CategorySpecificMetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -53,7 +53,8 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
 /**
  * 특정 상품 ebook/코믹 조회 Service 구현체
  * 
- * Updated on : 2014. 2. 3. Updated by : 이승훈, 엔텔스.
+ * Created on : 2014. 2. 3. Created by : 이승훈, 엔텔스.
+ * Updated on : 2014. 2. 3. Updated by : 서대영, SK플래닛. : 메타에 캐시 적용
  */
 @Service
 public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookService {
@@ -70,7 +71,7 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 	private DisplayCommonService displayCommonService;
 
 	@Autowired
-	private MetaInfoService metaInfoService;
+	private CategorySpecificMetaInfoService metaInfoService;
 
 	@Autowired
     private MemberBenefitService memberBenefitService;
@@ -131,9 +132,7 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 																							  // 경우
 
 							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
-									paramMap, MetaInfo.class);
-							// metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
+							metaInfo = this.metaInfoService.getSpecificEbookList(paramMap);
 							if (metaInfo != null) {
 		                    	// Tstore멤버십 적립율 정보
 		                    	metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
