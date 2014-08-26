@@ -272,8 +272,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		// -------------------------------------------------------------------------------------------
-		// 구매완료 TLog
-		// TAKTODO:: 일단은 Biz 쿠폰 발급 경우는 T Log 제외
+		// 구매완료 TLog : Biz 쿠폰 발급 경우는 T Log 제외
 
 		if (purchaseOrderInfo.isBizShopping() == false) {
 
@@ -1186,6 +1185,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					.getSendInsdDeviceId();
 			final String mbr_id = reservedDataMap.get("userId");
 			final String device_id = reservedDataMap.get("deviceId");
+			final String device_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
+					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "" : reservedDataMap.get("useDeviceId");
 			final String imei = reservedDataMap.get("imei");
 			final String mno_type = reservedDataMap.get("telecom");
 			final String usermbr_no = reservedDataMap.get("userKey");
@@ -1197,6 +1198,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			final String coupon_code = reservedDataMap.get("couponCode");
 			final String coupon_item_code = reservedDataMap.get("itemCode");
 			final String auto_payment_yn = StringUtils.defaultIfBlank(reservedDataMap.get("autoPrchsYn"), "N");
+
+			final List<String> topCatCodeList = new ArrayList<String>();
+			topCatCodeList.add(prchsDtlMore.getTenantProdGrpCd().substring(8, 12));
 
 			for (PrchsDtlMore prchsInfo : prchsDtlMoreList) {
 				final List<String> prodIdList = new ArrayList<String>();
@@ -1225,7 +1229,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 								.purchase_prod_num(purchase_prod_num).purchase_prod_num_recv(purchase_prod_num_recv)
 								.tid(tid).tx_id(tx_id).use_start_time(use_start_time).use_end_time(use_end_time)
 								.download_expired_time(download_expired_time).product_qty(product_qty)
-								.coupon_publish_code(coupon_publish_code).result_code(result_code);
+								.coupon_publish_code(coupon_publish_code).device_id_recv(device_id_recv)
+								.top_cat_code(topCatCodeList).result_code(result_code);
 						if (StringUtils.equals(result_code, "SUCC") == false) {
 							shuttle.result_message(result_message).exception_log(exception_log);
 						}
