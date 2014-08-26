@@ -386,9 +386,11 @@ public class PurchaseOrderController {
 		NotifyPaymentSacRes res = new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq
 				.getPaymentInfoList().size());
 
-		// 구매완료Noti정보 세팅: IAP 은 skip
+		// 구매완료Noti정보 세팅: PayPlanet 결제건 또는 IAP 은 skip
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
-		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) == false) {
+		if ((bPayPlanet == false)
+				&& (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) == false)) {
 			Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore
 					.getPrchsResvDesc());
 
