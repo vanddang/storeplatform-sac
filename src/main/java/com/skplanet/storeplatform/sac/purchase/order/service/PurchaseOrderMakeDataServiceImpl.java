@@ -607,10 +607,10 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 		// 마일리지 적립 테이블 저장용 상품명
 		try {
-			if (purchaseOrderInfo.getPurchaseProductList().get(0).getProdNm().length() > 20) {
+			if (purchaseOrderInfo.getPurchaseProductList().get(0).getProdNm().length() > 10) {
 				sbReserveData.append("&prodNm=").append(
 						URLEncoder.encode(purchaseOrderInfo.getPurchaseProductList().get(0).getProdNm()
-								.substring(0, 20), PurchaseConstants.DEFAULT_ENCODING));
+								.substring(0, 10), PurchaseConstants.DEFAULT_ENCODING));
 			} else {
 				sbReserveData.append("&prodNm=").append(
 						URLEncoder.encode(purchaseOrderInfo.getPurchaseProductList().get(0).getProdNm(),
