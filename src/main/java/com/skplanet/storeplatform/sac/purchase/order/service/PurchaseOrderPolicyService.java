@@ -131,6 +131,22 @@ public interface PurchaseOrderPolicyService {
 	/**
 	 * 
 	 * <pre>
+	 * 마일리지 적립 가능한 SKT시험폰 여부 체크.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param deviceId
+	 *            MDN
+	 * @param tenantProdGrpCd
+	 *            테넌트상품분류코드
+	 * @return 마일리지 적립 가능한 SKT시험폰 여부: true-적립 대상, false-적립 미대상
+	 */
+	public boolean isMileageSaveSktTestDevice(String tenantId, String deviceId, String tenantProdGrpCd);
+
+	/**
+	 * 
+	 * <pre>
 	 * SKT 후불 결제 진행 시 관련 정책 체크.
 	 * </pre>
 	 * 

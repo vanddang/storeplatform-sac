@@ -1052,7 +1052,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 시험폰 경우, 후불결제 금액 제외: 시험폰 적립 WhiteList로 변경 예정
 		boolean bSktSaveMileage = true;
 		if (bSktTest) {
-			bSktSaveMileage = false;
+			bSktSaveMileage = this.purchaseOrderPolicyService.isMileageSaveSktTestDevice(prchsDtlMore.getTenantId(),
+					reservedDataMap.get("deviceId"), prchsDtlMore.getTenantProdGrpCd());
 		}
 
 		if (StringUtils.isNotBlank(notifyPaymentReq.getProcSubStatusCd()) && bSktSaveMileage) { // T멤버쉽 정보 받은 경우
@@ -1418,7 +1419,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 시험폰 경우, 후불결제 금액 제외: 시험폰 적립 WhiteList로 변경 예정
 		boolean bSktSaveMileage = true;
 		if (bSktTest) {
-			bSktSaveMileage = false;
+			bSktSaveMileage = this.purchaseOrderPolicyService.isMileageSaveSktTestDevice(prchsDtlMore.getTenantId(),
+					purchase.getDeviceId(), prchsDtlMore.getTenantProdGrpCd());
 		}
 
 		if (StringUtils.isNotBlank(req.getProcSubStatusCd()) && bSktSaveMileage) { // T멤버쉽 정보 받은 경우
