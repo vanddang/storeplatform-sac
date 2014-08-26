@@ -608,7 +608,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		// 마일리지 적립 테이블 저장용 상품명
 		try {
 			sbReserveData.append("&prodNm=").append(
-					URLEncoder.encode(purchaseOrderInfo.getPurchaseProductList().get(0).getProdNm(),
+					URLEncoder.encode(purchaseOrderInfo.getPurchaseProductList().get(0).getProdNm().substring(0, 20),
 							PurchaseConstants.DEFAULT_ENCODING));
 		} catch (UnsupportedEncodingException e) {
 			;
