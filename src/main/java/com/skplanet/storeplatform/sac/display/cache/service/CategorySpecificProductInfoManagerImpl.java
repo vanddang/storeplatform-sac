@@ -13,7 +13,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -21,6 +20,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
  * 특정 상품 메타 캐시 조회 서비스 클래스
+ * (캐시 적용하려 하였으나, 성능 개선 효과가 미비하여 적용 취소)
  * 
  * Updated on : 2014. 8. 25.
  * Updated by : 서대영, SK플래닛
@@ -37,7 +37,7 @@ public class CategorySpecificProductInfoManagerImpl implements CategorySpecificP
 	}
 
 	@Override
-    @Cacheable(value = "sac:display:category:product:ebookcomic", unless = "#result == null")
+    // @Cacheable(value = "sac:display:category:product:ebookcomic", unless = "#result == null")
     public MetaInfo getEbookComicMeta(Map<String, Object> paramMap) {
         return commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo", paramMap, MetaInfo.class);
     }
