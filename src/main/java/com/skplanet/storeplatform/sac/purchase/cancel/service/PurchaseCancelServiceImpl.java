@@ -818,7 +818,14 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		for (PaymentSacParam paymentSacParam : purchaseCancelDetailSacParam.getPaymentSacParamList()) {
 			// PayPlanet 결제이면 authKey, mid 셋팅.
-			if (StringUtils.equals(payPlanetShop.getMid(), paymentSacParam.getMoid())) {
+			/*
+			 * if (StringUtils.equals(payPlanetShop.getMid(), paymentSacParam.getMoid())) {
+			 * paymentSacParam.setAuthKey(payPlanetShop.getAuthKey()); paymentSacParam.setMid(payPlanetShop.getMid()); }
+			 */
+
+			// PayPlanet 결제이면 authKey, mid 셋팅. MOID에 서비스 관리번호가 들어가면서 아래와 같이 로직 변경
+			if (StringUtils.startsWith(paymentSacParam.getTid(), PurchaseConstants.PAYPLANET_TID_PREFIX)) {
+				this.logger.info("[##PurchaseCancel] PayPlanet 결제처리");
 				paymentSacParam.setAuthKey(payPlanetShop.getAuthKey());
 				paymentSacParam.setMid(payPlanetShop.getMid());
 			}
