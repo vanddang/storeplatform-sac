@@ -29,6 +29,8 @@ public interface PurchaseOrderPostService {
 	 * 
 	 * @param prchsDtlMoreList
 	 *            구매정보 목록
+	 * @param bPayPlanet
+	 *            Pay Planet 결제 여부
 	 */
-	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList);
+	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList, boolean bPayPlanet);
 }

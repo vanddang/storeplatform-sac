@@ -48,9 +48,11 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	 * 
 	 * @param prchsDtlMoreList
 	 *            구매정보 목록
+	 * @param bPayPlanet
+	 *            Pay Planet 결제 여부
 	 */
 	@Override
-	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList) {
+	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList, boolean bPayPlanet) {
 		this.logger.info("PRCHS,ORDER,SAC,POST,START,{}", prchsDtlMoreList.get(0).getPrchsId());
 
 		// ------------------------------------------------------------------------------------
@@ -72,6 +74,17 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 		 * prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getUseInsdDeviceId(),
 		 * reservedDataMap.get("tstoreNotiPublishType")); }
 		 */
+
+		// PayPlanet 결제 건은 Tstore 측으로 구매완료 Noti
+		if (bPayPlanet) {
+			PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
+			Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore
+					.getPrchsResvDesc());
+			this.purchaseOrderTstoreService.postTstoreNoti(prchsDtlMore.getPrchsId(), prchsDtlMore.getPrchsDt(),
+					prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getUseInsdDeviceId(),
+					reservedDataMap.get("tstoreNotiPublishType"));
+		}
+
 		this.logger.info("PRCHS,ORDER,SAC,POST,END,{}", prchsDtlMoreList.get(0).getPrchsId());
 	}
 

@@ -373,7 +373,12 @@ public class PurchaseOrderController {
 		// ------------------------------------------------------------------------------
 		// 구매 후 처리 - 씨네21/인터파크, 구매건수 증가 등등
 
-		this.orderPostService.postPurchase(prchsDtlMoreList);
+		boolean bPayPlanet = false; // PayPlanet 결제 여부
+		if (StringUtils.equals(notifyPaymentReq.getPaymentInfoList().get(0).getTid(),
+				PurchaseConstants.PAYPLANET_TID_PREFIX)) {
+			bPayPlanet = true;
+		}
+		this.orderPostService.postPurchase(prchsDtlMoreList, bPayPlanet);
 
 		// ------------------------------------------------------------------------------
 		// 응답
