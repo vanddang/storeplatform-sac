@@ -53,9 +53,9 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String afterAutoPayDt; // 다음 자동 결제일
 	private String useStartDt; // 이용 시작 일시
 	private String useExprDt; // 이용 종료 일시
+	private String dwldAvailableDayCnt; // 다운로드 가능기간(일)
+	private String usePeriodCnt; // 이용기간(일)
 	// 대여/소장 TAB 제거 : 2014/08/27 적용
-	// private String dwldAvailableDayCnt; // 다운로드 가능기간(일)
-	// private String usePeriodCnt; // 이용기간(일)
 	// private String basePid; // 기본 상품 ID (대여/소장 TAB 하이라이트 처리)
 	// private String loanPid; // 대여하기 상품 ID
 	// private Double loanAmt; // 대여하기 상품 금액
@@ -561,6 +561,36 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setUseExprDt(String useExprDt) {
 		this.useExprDt = useExprDt;
+	}
+
+	/**
+	 * @return the dwldAvailableDayCnt
+	 */
+	public String getDwldAvailableDayCnt() {
+		return this.dwldAvailableDayCnt;
+	}
+
+	/**
+	 * @param dwldAvailableDayCnt
+	 *            the dwldAvailableDayCnt to set
+	 */
+	public void setDwldAvailableDayCnt(String dwldAvailableDayCnt) {
+		this.dwldAvailableDayCnt = dwldAvailableDayCnt;
+	}
+
+	/**
+	 * @return the usePeriodCnt
+	 */
+	public String getUsePeriodCnt() {
+		return this.usePeriodCnt;
+	}
+
+	/**
+	 * @param usePeriodCnt
+	 *            the usePeriodCnt to set
+	 */
+	public void setUsePeriodCnt(String usePeriodCnt) {
+		this.usePeriodCnt = usePeriodCnt;
 	}
 
 	/**
