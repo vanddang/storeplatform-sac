@@ -94,9 +94,9 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		}
 		paymentPageParam.setNoSim(purchaseOrderInfo.getSimNo());
 		// paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
-		if (StringUtils.equals(purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.PRCHS_REQ_PATH_IAP)) {
+		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_IAP)) {
 			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_IAP);
-		} else if (StringUtils.equals(purchaseOrderInfo.getTenantProdGrpCd(),
+		} else if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
 				PurchaseConstants.PRCHS_REQ_PATH_EBOOK_STORAGE)) {
 			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_EBOOK);
 		} else {
