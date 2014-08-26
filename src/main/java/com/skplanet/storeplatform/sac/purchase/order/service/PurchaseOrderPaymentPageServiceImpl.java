@@ -194,14 +194,15 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 						.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))) {
 
 			PossLendProductInfo possLendProductInfo = purchaseProduct.getPossLendProductInfo();
-			if (possLendProductInfo == null) { // 소장/대여 중 하나만 존재하는 경우에만 세팅 : 소장이 디폴트
-				if (StringUtils.equals(purchaseProduct.getPossLendClsfCd(),
-						PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL)) {
-					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_LOAN;
-				} else {
-					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN;
-				}
+			// 대여/소장 TAB 제거 : 2014/08/27 적용
+			// if (possLendProductInfo == null) { // 소장/대여 중 하나만 존재하는 경우에만 세팅 : 소장이 디폴트
+			if (StringUtils.equals(purchaseProduct.getPossLendClsfCd(),
+					PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL)) {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_LOAN;
+			} else {
+				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN;
 			}
+			// }
 
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			if (StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_DELIVERY)) {
