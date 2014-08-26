@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -443,6 +445,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		membershipReserve.setProdId(prchsDtlMore.getProdId());
 		membershipReserve.setProdAmt(prchsDtlMore.getProdAmt());
 		membershipReserve.setProdQty(prchsDtlMore.getProdQty());
+		membershipReserve.setProdNm(mileageSubInfo.getProdNm()); // 상품명
 		membershipReserve.setUserGrdCd(mileageSubInfo.getUserGrdCd()); // 회원등급코드
 		membershipReserve.setProdSaveRate(mileageSubInfo.getProdSaveRate()); // 상품적립율
 		membershipReserve.setTargetPaymentAmt(mileageSubInfo.getTargetPaymentAmt()); // 적립대상결제금액
@@ -600,6 +603,15 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		if (purchaseOrderInfo.isGift()) {
 			sbReserveData.append("&receiveNames=").append(StringUtils.defaultString(useUser.getUserName()))
 					.append("&receiveMdns=").append(useUser.getDeviceId()); // 선물수신자 성명, 선물수신자 MDN
+		}
+
+		// 마일리지 적립 테이블 저장용 상품명
+		try {
+			sbReserveData.append("&prodNm=").append(
+					URLEncoder.encode(purchaseOrderInfo.getPurchaseProductList().get(0).getProdNm(),
+							PurchaseConstants.DEFAULT_ENCODING));
+		} catch (UnsupportedEncodingException e) {
+			;
 		}
 
 		// T멤버쉽 적립율

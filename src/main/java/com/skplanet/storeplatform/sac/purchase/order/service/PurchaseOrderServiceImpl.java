@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1038,6 +1040,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		mileageSubInfo.setUserGrdCd(userGrade);
 		mileageSubInfo.setProdSaveRate(rateMap.get(userGrade));
 		mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
+		if (StringUtils.isNotBlank(reservedDataMap.get("prodNm"))) { // 상품명
+			try {
+				mileageSubInfo.setProdNm(URLDecoder.decode(reservedDataMap.get("prodNm"),
+						PurchaseConstants.DEFAULT_ENCODING));
+			} catch (UnsupportedEncodingException e1) {
+				;
+			}
+		}
 
 		// 시험폰 경우, 후불결제 금액 제외: 시험폰 적립 WhiteList로 변경 예정
 		boolean bSktSaveMileage = true;
@@ -1403,6 +1413,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		mileageSubInfo
 				.setProdSaveRate((rateMap == null || rateMap.get(userGrade) == null) ? 0 : rateMap.get(userGrade));
 		mileageSubInfo.setProcStatusCd(PurchaseConstants.MEMBERSHIP_PROC_STATUS_RESERVE);
+		mileageSubInfo.setProdNm(purchaseProduct.getProdNm()); // 상품명
 
 		// 시험폰 경우, 후불결제 금액 제외: 시험폰 적립 WhiteList로 변경 예정
 		boolean bSktSaveMileage = true;

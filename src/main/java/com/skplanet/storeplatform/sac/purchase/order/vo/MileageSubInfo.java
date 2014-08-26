@@ -14,6 +14,7 @@ public class MileageSubInfo extends CommonInfo {
 	private String prchsReqPathCd; // 적립금요청경로
 	private String saveTypeCd; // 처리타입코드
 	private String procStatusCd; // 처리상태코드
+	private String prodNm; // 상품명
 
 	/**
 	 * @return the typeCd
@@ -148,6 +149,21 @@ public class MileageSubInfo extends CommonInfo {
 	 */
 	public void setProcStatusCd(String procStatusCd) {
 		this.procStatusCd = procStatusCd;
+	}
+
+	/**
+	 * @return the prodNm
+	 */
+	public String getProdNm() {
+		return this.prodNm;
+	}
+
+	/**
+	 * @param prodNm
+	 *            the prodNm to set
+	 */
+	public void setProdNm(String prodNm) {
+		this.prodNm = prodNm;
 	}
 
 }
