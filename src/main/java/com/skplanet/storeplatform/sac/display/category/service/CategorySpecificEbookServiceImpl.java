@@ -42,10 +42,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.cache.service.CategorySpecificProductInfoManager;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
-import com.skplanet.storeplatform.sac.display.meta.service.CategorySpecificMetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -71,7 +71,7 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 	private DisplayCommonService displayCommonService;
 
 	@Autowired
-	private CategorySpecificMetaInfoService metaInfoService;
+	private CategorySpecificProductInfoManager metaInfoService;
 
 	@Autowired
     private MemberBenefitService memberBenefitService;
@@ -132,7 +132,7 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 																							  // 경우
 
 							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-							metaInfo = this.metaInfoService.getSpecificEbookList(paramMap);
+							metaInfo = this.metaInfoService.getEbookComicMeta(paramMap);
 							if (metaInfo != null) {
 		                    	// Tstore멤버십 적립율 정보
 		                    	metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));

@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.display.meta.service;
+package com.skplanet.storeplatform.sac.display.cache.service;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,17 +27,17 @@ import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({"classpath*:/spring-test/context-repository.xml"})
-public class CategorySpecificMetaInfoServiceImplTest {
-	
+public class CategorySpecificProductInfoManagerImplTest {
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 	
-	private CategorySpecificMetaInfoServiceImpl svc;
+	private CategorySpecificProductInfoManagerImpl svc;
 	
 	@Before
 	public void setUp() {
-		svc = new CategorySpecificMetaInfoServiceImpl();
+		svc = new CategorySpecificProductInfoManagerImpl();
 		svc.setCommonDAO(commonDAO);
 	}
 
@@ -58,7 +58,7 @@ public class CategorySpecificMetaInfoServiceImplTest {
 		paramMap.put("tenantHeader", tenantHeader);
 		paramMap.put("productBasicInfo", productBasicInfo);
 		
-		MetaInfo meta = svc.getSpecificEbookList(paramMap);
+		MetaInfo meta = svc.getEbookComicMeta(paramMap);
 		System.out.println("### testGetSpecificEbookList() ###\n" + meta);
 		assertEquals("H900108521", meta.getProdId());
 	}
