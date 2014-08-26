@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -193,8 +192,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
 						.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))) {
 
-			PossLendProductInfo possLendProductInfo = purchaseProduct.getPossLendProductInfo();
 			// 대여/소장 TAB 제거 : 2014/08/27 적용
+			// PossLendProductInfo possLendProductInfo = purchaseProduct.getPossLendProductInfo();
 			// if (possLendProductInfo == null) { // 소장/대여 중 하나만 존재하는 경우에만 세팅 : 소장이 디폴트
 			if (StringUtils.equals(purchaseProduct.getPossLendClsfCd(),
 					PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL)) {
