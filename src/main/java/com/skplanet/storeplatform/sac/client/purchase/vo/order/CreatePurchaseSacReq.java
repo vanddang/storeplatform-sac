@@ -44,6 +44,8 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String deviceKey; // 내부 디바이스 ID
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String opmdNo; // OPMD 번호
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String recvUserKey; // (선물 경우 필수) 수신자 내부 회원 번호
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String recvDeviceKey; // (선물 경우 필수) 수신자 내부 디바이스 ID
@@ -121,6 +123,21 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return the opmdNo
+	 */
+	public String getOpmdNo() {
+		return this.opmdNo;
+	}
+
+	/**
+	 * @param opmdNo
+	 *            the opmdNo to set
+	 */
+	public void setOpmdNo(String opmdNo) {
+		this.opmdNo = opmdNo;
 	}
 
 	/**
