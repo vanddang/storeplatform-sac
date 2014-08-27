@@ -168,9 +168,11 @@ public class MileageSaveServiceImpl implements MileageSaveService {
 		/*************************************************
 		 * SC -> SAC Response Setting Start
 		 *************************************************/
-		response.setProcStatusCd(scResponse.getProcStatusCd());
-		response.setSaveDt(scResponse.getSaveDt());
-		response.setSaveResultAmt(scResponse.getSaveResultAmt());
+		if (scResponse != null) {
+			response.setProcStatusCd(scResponse.getProcStatusCd());
+			response.setSaveDt(scResponse.getSaveDt());
+			response.setSaveResultAmt(scResponse.getSaveResultAmt());
+		}
 		/*************************************************
 		 * SC -> SAC Response Setting Start
 		 *************************************************/
