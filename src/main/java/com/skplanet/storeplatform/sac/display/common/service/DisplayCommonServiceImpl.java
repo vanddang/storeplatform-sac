@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.display.common.EbookComicType;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -332,6 +333,7 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
         else if(q.matches("DP000203\\.DP001116.*")) {
             if ("DP13".equals(topMenu) || "DP14".equals(topMenu)) {
                 info.setProductType(ProductType.EbookComic);
+                info.setSubType("DP13".equals(topMenu) ? EbookComicType.Ebook : EbookComicType.Comic);
             }
             else if ("DP26".equals(topMenu)) {
                 info.setProductType(ProductType.Webtoon);
