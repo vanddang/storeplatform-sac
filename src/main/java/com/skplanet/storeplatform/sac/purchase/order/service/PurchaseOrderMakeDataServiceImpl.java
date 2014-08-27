@@ -443,7 +443,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		membershipReserve.setProdId(prchsDtlMore.getProdId());
 		membershipReserve.setProdAmt(prchsDtlMore.getProdAmt());
 		membershipReserve.setProdQty(prchsDtlMore.getProdQty());
-		membershipReserve.setProdNm(mileageSubInfo.getProdNm()); // 상품명
+		// membershipReserve.setProdNm(mileageSubInfo.getProdNm()); // 상품명
 		membershipReserve.setUserGrdCd(mileageSubInfo.getUserGrdCd()); // 회원등급코드
 		membershipReserve.setProdSaveRate(mileageSubInfo.getProdSaveRate()); // 상품적립율
 		membershipReserve.setTargetPaymentAmt(mileageSubInfo.getTargetPaymentAmt()); // 적립대상결제금액
