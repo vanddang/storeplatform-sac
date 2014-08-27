@@ -1,66 +1,54 @@
 package com.skplanet.storeplatform.sac.other.sacservice.service;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
+@ActiveProfiles(value = "local")
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration({"classpath*:/spring-test/context-repository.xml"})
 public class SacServiceDataServiceImplTest {
 
-	private SacServiceDataServiceImpl dataSvc;
-
+	@Autowired
+	@Qualifier("sac")
+	private CommonDAO commonDAO;
+	
+	private SacServiceDataServiceImpl svc;
+	
 	@Before
 	public void setUp() {
-		this.dataSvc = new SacServiceDataServiceImpl();
-		this.dataSvc.setSimSvc(new SacServiceSimServiceImpl());
+		svc = new SacServiceDataServiceImpl();
+		svc.setCommonDAO(commonDAO);
 	}
-
+	
 	@Test
-	public void testGetServiceActiveWrongForInactive() {
-		SacService vo = new SacService();
-		vo.setServiceCd("tstore.gamecash.flatrate.v2");
-		vo.setSimOperator("450/05");
-		this.dataSvc.getServiceActive(vo);
-		assertFalse(vo.isActive());
+	public void testSelectOne() {
+		SacService vo = svc.selectService("tstore.test");
+		System.out.println("<<< testDetail() >>>\n" + vo);
 	}
-
+	
 	@Test
-	public void testGetServiceActiveCashForActive() {
-		SacService vo = new SacService();
-		vo.setServiceCd("tstore.gamecash.flatrate");
-		vo.setSimOperator("450/05");
-		this.dataSvc.getServiceActive(vo);
-		assertTrue(vo.isActive());
+	public void testSelectSimOperatorList() {
+		List<String> list = svc.selectSimOperatorList("tstore.gamecash.flatrate");
+		System.out.println("<<< testSelectSimOperatorList >>>\n" + list);
 	}
-
+	
 	@Test
-	public void testGetServiceActiveCashForInactive1() {
-		SacService vo = new SacService();
-		vo.setServiceCd("tstore.gamecash.flatrate");
-		vo.setSimOperator("450/08");
-		this.dataSvc.getServiceActive(vo);
-		assertFalse(vo.isActive());
-	}
-
-	@Test
-	public void testGetServiceActiveMileageForActive1() {
-		SacService vo = new SacService();
-		vo.setServiceCd("tstore.mileage");
-		vo.setSimOperator("450/05");
-		this.dataSvc.getServiceActive(vo);
-		assertTrue(vo.isActive());
-	}
-
-	@Test
-	public void testGetServiceActiveForMileageActive2() {
-		SacService vo = new SacService();
-		vo.setServiceCd("tstore.mileage");
-		vo.setSimOperator("450/08");
-		this.dataSvc.getServiceActive(vo);
-		assertTrue(vo.isActive());
+	public void testSelectModel() {
+		List<String> list = svc.selectModelList("tstore.test");
+		System.out.println("<<< testSelectModel >>>\n" + list);
 	}
 
 }

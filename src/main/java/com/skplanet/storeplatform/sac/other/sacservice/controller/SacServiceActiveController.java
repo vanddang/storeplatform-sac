@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveRes;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.SetActiveReq;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.SetActiveRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceDataService;
+import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceService;
 import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceTypeService;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
@@ -42,13 +42,13 @@ public class SacServiceActiveController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SacServiceActiveController.class);
 
 	@Autowired
-	private SacServiceDataService dataSvc;
+	private SacServiceService svc;
 
 	@Autowired
 	private SacServiceTypeService typeSvc;
 
-	public void setDataSvc(SacServiceDataService dataSvc) {
-		this.dataSvc = dataSvc;
+	public void setDataSvc(SacServiceService dataSvc) {
+		this.svc = dataSvc;
 	}
 
 	public void setTypeSvc(SacServiceTypeService typeSvc) {
@@ -60,7 +60,7 @@ public class SacServiceActiveController {
 	public GetActiveRes getActive(@RequestBody @Validated GetActiveReq req, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("/getActive/v1's req : {}", req);
 		SacService vo = this.typeSvc.fromGetReq(req);
-		vo = this.dataSvc.getServiceActive(vo);
+		vo = this.svc.getServiceActive(vo);
 		GetActiveRes res = this.typeSvc.toGetRes(vo);
 		return res;
 	}
@@ -70,7 +70,7 @@ public class SacServiceActiveController {
 	public SetActiveRes setActive(@RequestBody @Validated SetActiveReq req, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("/setActive/v1's req : {}", req);
 		SacService vo = this.typeSvc.fromSetReq(req);
-		vo = this.dataSvc.getServiceActive(vo);
+		vo = this.svc.getServiceActive(vo);
 		SetActiveRes res = this.typeSvc.toSetRes(vo);
 		return res;
 	}
@@ -80,7 +80,7 @@ public class SacServiceActiveController {
 	public List<GetActiveRes> getActiveList(@RequestBody @Validated List<GetActiveReq> reqList, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("/getActiveList/v1's reqList : {}", reqList);
 		List<SacService> voList = this.typeSvc.fromGetReqList(reqList);
-		this.dataSvc.getServiceActiveList(voList);
+		this.svc.getServiceActiveList(voList);
 		List<GetActiveRes> resList = this.typeSvc.toGetResList(voList);
 		return resList;
 	}
@@ -90,7 +90,7 @@ public class SacServiceActiveController {
 	public List<SetActiveRes> setActiveList(@RequestBody @Validated List<SetActiveReq> reqList, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("/setActiveList/v1's reqList : {}", reqList);
 		List<SacService> voList = this.typeSvc.fromSetReqList(reqList);
-		this.dataSvc.getServiceActiveList(voList);
+		this.svc.getServiceActiveList(voList);
 		List<SetActiveRes> resList = this.typeSvc.toSetResList(voList);
 		return resList;
 	}

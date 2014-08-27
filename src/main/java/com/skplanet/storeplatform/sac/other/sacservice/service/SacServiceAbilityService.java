@@ -9,23 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.other.sacservice.service;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
 /**
- * SacServiceDataService 인터페이스
+ * SacServiceAbilityService 인터페이스
  *
  * Created on 2014. 08. 26. by 서대영, SK플래닛
  */
-public interface SacServiceDataService {
+public interface SacServiceAbilityService {
 
-	public SacService selectService(String serviceCd);
-
-	public List<String> selectSimOperatorList(String serviceCd);
-	
-	public List<String> selectModelList(String serviceCd);
-	
-	void flushCache();
+	boolean isServiceEnabled(SacService svc);
 	
 }

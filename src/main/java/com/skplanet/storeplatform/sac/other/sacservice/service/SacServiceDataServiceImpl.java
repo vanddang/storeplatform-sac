@@ -9,15 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.other.sacservice.service;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.sac.other.common.constant.OtherConstants;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
 /**
@@ -25,77 +26,53 @@ import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
  *
  * Created on 2014. 06. 02. by 서대영, SK플래닛 : DB 셋업이 될 때 까지 임시 메모리 Map으로 구현
  * Updated on 2014. 07. 16. by 서대영, SK플래닛 : 마일리지 지원 여부 추가
+ * Updated on 2014. 08. 27. by 서대영, SK플래닛 : 임시 Map에서 DB 조회 방식으로 변경 + 캐시 적용
  */
 @Service
 public class SacServiceDataServiceImpl implements SacServiceDataService {
 
-	private final Map<String, Boolean> dataSvc;
-
 	@Autowired
-	private SacServiceSimService simSvc;
-
-	public void setSimSvc(SacServiceSimService simSvc) {
-		this.simSvc = simSvc;
+	@Qualifier("sac")
+	private CommonDAO commonDAO;
+	
+	public void setCommonDAO(CommonDAO commonDAO) {
+		this.commonDAO = commonDAO;
 	}
 
-	public SacServiceDataServiceImpl() {
-		this.dataSvc = new HashMap<String, Boolean>();
-        this.dataSvc.put("tstore.gamecash.flatrate", false); // 게임 캐쉬 정액제 지원
-        this.dataSvc.put(OtherConstants.SAC_SERVICE_MILEAGE, true); // 마일리지 지원
-        this.dataSvc.put("tcloud.collaboration", true); // T cloud 동의여부
-		this.dataSvc.put("SERVICE_SAMPLE", false);
-	}
-
+	@Cacheable(value = "sac:other:sacservice:selectService")
 	@Override
-	public SacService getServiceActive(SacService service) {
-		String serviceId = service.getServiceCd();
-		if (StringUtils.equals(serviceId, "tstore.gamecash.flatrate")) {
-			return this.getServiceActiveForGamecash(service);
-		} else {
-			return this.getServiceActiveForGeneral(service);
+	public SacService selectService(String serviceCd) {
+		return commonDAO.queryForObject("SacService.selectOne", serviceCd, SacService.class);
+	}
+
+	@Cacheable(value = "sac:other:sacservice:selectSimOperatorList")
+	@Override
+	public List<String> selectSimOperatorList(String serviceCd) {
+		List<String> list = commonDAO.queryForList("SacService.selectSimOperatorList", serviceCd, String.class);
+		if (list == null) {
+			list = Collections.emptyList();
 		}
+		return list;
 	}
 
-	private SacService getServiceActiveForGamecash(SacService service) {
-		if (this.simSvc.belongsToSkt(service.getSimOperator())) {
-			String serviceId = service.getServiceCd();
-			if (this.dataSvc.get(service.getServiceCd()) != null) {
-				boolean active = this.dataSvc.get(serviceId);
-				service.setActive(active);
-			}
-		} else {
-			// SKT가 아니면 무조건 Service Off
-			service.setActive(false);
+	@Cacheable(value = "sac:other:sacservice:selectModelList")
+	@Override
+	public List<String> selectModelList(String serviceCd) {
+		List<String> list = commonDAO.queryForList("SacService.selectModelList", serviceCd, String.class);
+		if (list == null) {
+			list = Collections.emptyList();
 		}
-		return service;
+		return list;
 	}
 
-	private SacService getServiceActiveForGeneral(SacService service) {
-		String serviceId = service.getServiceCd();
-		if (this.dataSvc.get(service.getServiceCd()) != null) {
-			boolean active = this.dataSvc.get(serviceId);
-			service.setActive(active);
-		}
-		return service;
-	}
-
+    @CacheEvict(value = {
+    		"sac:other:sacservice:selectService",
+    		"sac:other:sacservice:selectSimOperatorList",
+    		"sac:other:sacservice:selectModelList"},
+    		allEntries = true)
 	@Override
-	public SacService setServiceActive(SacService service) {
-		String serviceId = service.getServiceCd();
-		boolean active = service.isActive();
-		this.dataSvc.put(serviceId, active);
-		service.setApplied(true);
-		return service;
+	public void flushCache() {
 	}
 
-	@Override
-	public void getServiceActiveList(List<SacService> service) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void setServiceActiveList(List<SacService> service) {
-		// TODO Auto-generated method stub
-	}
 
 }

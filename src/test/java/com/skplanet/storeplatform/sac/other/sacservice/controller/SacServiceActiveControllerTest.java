@@ -12,7 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveReq;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveRes;
-import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceDataService;
+import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceService;
 import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceTypeServiceImpl;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
@@ -23,7 +23,7 @@ public class SacServiceActiveControllerTest {
 	private SacServiceActiveController controller;
 
 	@Mock
-	private SacServiceDataService dataSvc;
+	private SacServiceService svc;
 
 	@Before
 	public void setUp() {
@@ -48,7 +48,7 @@ public class SacServiceActiveControllerTest {
 		vo2.setSimOperator(simOperator);
 		vo2.setActive(true);
 
-		when(this.dataSvc.getServiceActive(vo1)).thenReturn(vo2);
+		when(this.svc.getServiceActive(vo1)).thenReturn(vo2);
 
 		GetActiveRes res = this.controller.getActive(req, null);
 		assertTrue(res.isActive());
