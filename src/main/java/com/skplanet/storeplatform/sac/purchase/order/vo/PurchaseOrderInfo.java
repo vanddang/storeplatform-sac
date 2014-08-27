@@ -33,6 +33,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String langCd; // 언어 코드
 	private String userKey; // 내부 회원 번호
 	private String deviceKey; // 내부 디바이스 ID
+	private String opmdNo; // OPMD 번호
 	private String prchsReqPathCd; // 구매 요청 경로 코드
 	private String currencyCd; // 통화 코드
 	private String saleAmtProcType; // 판매금액 처리 타입: OR020501-일반처리, OR020502-서버기준처리, OR020503-요청기준처리
@@ -191,6 +192,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return the opmdNo
+	 */
+	public String getOpmdNo() {
+		return this.opmdNo;
+	}
+
+	/**
+	 * @param opmdNo
+	 *            the opmdNo to set
+	 */
+	public void setOpmdNo(String opmdNo) {
+		this.opmdNo = opmdNo;
 	}
 
 	/**

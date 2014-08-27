@@ -423,6 +423,7 @@ public class PurchaseOrderController {
 		purchaseOrderInfo.setLangCd(tenantHeader.getLangCd()); // 언어 코드
 		purchaseOrderInfo.setUserKey(createPurchaseSacReq.getUserKey()); // 구매(선물발신) 내부 회원 번호
 		purchaseOrderInfo.setDeviceKey(createPurchaseSacReq.getDeviceKey()); // 구매(선물발신) 내부 디바이스 ID
+		purchaseOrderInfo.setOpmdNo(createPurchaseSacReq.getOpmdNo()); // OPMD 번호
 		purchaseOrderInfo.setPrchsReqPathCd(createPurchaseSacReq.getPrchsReqPathCd()); // 구매 요청 경로 코드
 		purchaseOrderInfo.setCurrencyCd(createPurchaseSacReq.getCurrencyCd()); // 통화 코드
 		purchaseOrderInfo.setSaleAmtProcType(createPurchaseSacReq.getSaleAmtProcType()); // 판매금액 처리 타입
