@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -603,22 +601,6 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		if (purchaseOrderInfo.isGift()) {
 			sbReserveData.append("&receiveNames=").append(StringUtils.defaultString(useUser.getUserName()))
 					.append("&receiveMdns=").append(useUser.getDeviceId()); // 선물수신자 성명, 선물수신자 MDN
-		}
-
-		// 마일리지 적립 테이블 저장용 상품명
-		try {
-			if (purchaseOrderInfo.getPurchaseProductList().get(0).getProdNm().length() > 10) {
-				sbReserveData.append("&prodNm=").append(
-						URLEncoder.encode(purchaseOrderInfo.getPurchaseProductList().get(0).getProdNm()
-								.substring(0, 10), PurchaseConstants.DEFAULT_ENCODING));
-			} else {
-				sbReserveData.append("&prodNm=").append(
-						URLEncoder.encode(purchaseOrderInfo.getPurchaseProductList().get(0).getProdNm(),
-								PurchaseConstants.DEFAULT_ENCODING));
-
-			}
-		} catch (UnsupportedEncodingException e) {
-			;
 		}
 
 		// T멤버쉽 적립율
