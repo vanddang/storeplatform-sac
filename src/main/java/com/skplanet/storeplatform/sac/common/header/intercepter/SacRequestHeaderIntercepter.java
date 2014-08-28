@@ -1,24 +1,5 @@
 package com.skplanet.storeplatform.sac.common.header.intercepter;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletWebRequest;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.common.header.extractor.TenantExtractor;
@@ -26,6 +7,21 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.NetworkHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
 
@@ -118,7 +114,7 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
         String headerStr = webRequest.getHeader(CommonConstants.HEADER_DEVICE);
         this.assignValues(headerStr, device);
 
-        logger.info("DeviceInfo: mdl={}, res={}, dpi={}, os={}, pkg={}, svc={} << {}",
+        logger.debug("DeviceInfo: mdl={}, res={}, dpi={}, os={}, pkg={}, svc={} << {}",
                 device.getModel(), device.getResolution(), device.getDpi(), device.getOs(), device.getPkg(), device.getSvc(), headerStr);
 
 		return device;
@@ -141,7 +137,7 @@ public class SacRequestHeaderIntercepter extends HandlerInterceptorAdapter {
         String headerStr = webRequest.getHeader(CommonConstants.HEADER_NETWORK);
         this.assignValues(headerStr, network);
 
-        logger.info("NetworkInfo: oper={}, soper={}, type={} << {}",
+        logger.debug("NetworkInfo: oper={}, soper={}, type={} << {}",
                 network.getOperator(), network.getSimOperator(), network.getType(), headerStr);
 
 		return network;
