@@ -1091,7 +1091,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 			mileageSubInfo.setTargetPaymentAmt(availPayAmt);
 
-			if (availPayAmt > 0.0 && rateMap.get(userGrade) > 0) {
+			if (availPayAmt > 0.0 && rateMap.get(userGrade) != null && rateMap.get(userGrade) > 0) {
 
 				// 적립예정 금액: 1원 미만 버림
 				int expectAmt = (int) (availPayAmt * rateMap.get(userGrade) * 0.01);
@@ -1297,19 +1297,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		String userKey = "Z";
 		String deviceKey = "Z";
 
-		SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = null;
-
 		String orderDt = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		try {
-			searchOrderUserByDeviceIdSacRes = this.purchaseMemberRepository.searchOrderUserByDeviceId(
-					purchase.getDeviceId(), orderDt);
-		} catch (StorePlatformException e) {
-			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTEXIST_KEY)) {
-				;
-			} else {
-				throw e;
-			}
-		}
+		SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = this.purchaseMemberRepository
+				.searchOrderUserByDeviceId(purchase.getDeviceId(), orderDt);
 
 		if (searchOrderUserByDeviceIdSacRes != null) {
 			userKey = StringUtils.defaultIfBlank(searchOrderUserByDeviceIdSacRes.getUserKey(), "Z");
@@ -1406,7 +1396,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 		sbtMileageRateInfo.setLength(sbtMileageRateInfo.length() - 1);
 
-		String userGrade = this.purchaseMemberRepository.searchUserGrade(userKey); // 등급
+		String userGrade = null; // 등급
+		try {
+			userGrade = this.purchaseMemberRepository.searchUserGrade(userKey);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTEXIST_KEY)) {
+				;
+			} else {
+				throw e;
+			}
+		}
 
 		MileageSubInfo mileageSubInfo = new MileageSubInfo();
 		mileageSubInfo.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_TMEMBERSHIP);
@@ -1457,7 +1456,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 			mileageSubInfo.setTargetPaymentAmt(availPayAmt);
 
-			if (availPayAmt > 0.0 && rateMap.get(userGrade) > 0) {
+			if (availPayAmt > 0.0 && rateMap.get(userGrade) != null && rateMap.get(userGrade) > 0) {
 
 				// 적립예정 금액: 10원 미만 버림
 				int expectAmt = (int) (availPayAmt * rateMap.get(userGrade) * 0.01);
