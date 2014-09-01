@@ -28,6 +28,7 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
 import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
 
 /**
  *
@@ -191,6 +192,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                     paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
                 }
             }
+
+            // 시리즈 여부 세팅
+            paymentInfo.setSeriesYn(SET_SERIES_META.contains(paymentInfo.getMetaClsfCd()) ? "Y" : "N");
 
             // 이용가능한 정액권목록 제공
             paymentInfo.setAvailableFixrateProdIdList(this.freepassService.getAvailableFixrateProdIdList(req));

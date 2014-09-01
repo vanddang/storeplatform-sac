@@ -25,6 +25,7 @@
     <select id="searchPaymentInfo" parameterType="PaymentInfoSacReq" resultType="PaymentInfo">
         SELECT /* PaymentInfoMapper.xml, searchPaymentInfo, SAC 전시, 2014-06-12 */
             A.PROD_ID,
+            A.META_CLSF_CD,
             B.PROD_NM,
             D.PROD_AMT,
             CASE WHEN AP.PART_PARENT_CLSF_CD = 'PD012302'
