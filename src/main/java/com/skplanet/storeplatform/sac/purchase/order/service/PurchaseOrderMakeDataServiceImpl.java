@@ -31,7 +31,6 @@ import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.PurchaseUserInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
@@ -443,7 +442,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		membershipReserve.setProdId(prchsDtlMore.getProdId());
 		membershipReserve.setProdAmt(prchsDtlMore.getProdAmt());
 		membershipReserve.setProdQty(prchsDtlMore.getProdQty());
-		//membershipReserve.setProdNm(mileageSubInfo.getProdNm()); // 상품명
+		// membershipReserve.setProdNm(mileageSubInfo.getProdNm()); // 상품명
 		membershipReserve.setUserGrdCd(mileageSubInfo.getUserGrdCd()); // 회원등급코드
 		membershipReserve.setProdSaveRate(mileageSubInfo.getProdSaveRate()); // 상품적립율
 		membershipReserve.setTargetPaymentAmt(mileageSubInfo.getTargetPaymentAmt()); // 적립대상결제금액
@@ -674,34 +673,49 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 						.append(product.getCmpxProdClsfCd()).append("&prodCaseCd=").append(product.getProdCaseCd());
 
 				// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
+				// 소장/대여 TAB 처리 제거: 2014.09.01
 				if (purchaseOrderInfo.getPurchaseProductList().size() == 1 && purchaseOrderInfo.getRealTotAmt() > 0.0
 						&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
 						&& purchaseOrderInfo.isFlat() == false) {
 
-					PossLendProductInfo possLendProductInfo = product.getPossLendProductInfo();
-					if (possLendProductInfo == null) {
-						if (StringUtils.equals(product.getPossLendClsfCd(),
-								PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)) {
-							sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=&loanPid=&loanAmt=0")
-									.append("&ownPid=").append(product.getProdId()).append("&ownAmt=")
-									.append(product.getProdAmt());
-						} else {
-							sbReserveData.append("&dwldAvailableDayCnt=").append(product.getUsePeriod())
-									.append("&usePeriodCnt=").append(product.getUsePeriod()).append("&loanPid=")
-									.append(product.getProdId()).append("&loanAmt=").append(product.getProdAmt())
-									.append("&ownPid=&ownAmt=0");
-						}
-
+					if (StringUtils.equals(StringUtils.defaultIfBlank(product.getPossLendClsfCd(),
+							PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION),
+							PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)) {
+						sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=&loanPid=&loanAmt=0")
+								.append("&ownPid=").append(product.getProdId()).append("&ownAmt=")
+								.append(product.getProdAmt());
 					} else {
-						sbReserveData.append("&usePeriodUnitCd=").append(possLendProductInfo.getUsePeriodUnitCd())
-								.append("&usePeriod=").append(possLendProductInfo.getUsePeriod())
-								.append("&dwldAvailableDayCnt=").append(possLendProductInfo.getDownPossiblePeriod())
-								.append("&usePeriodCnt=").append(possLendProductInfo.getUsePeriod())
-								.append("&loanPid=").append(possLendProductInfo.getLendProdId()).append("&loanAmt=")
-								.append(possLendProductInfo.getLendProdAmt()).append("&ownPid=")
-								.append(possLendProductInfo.getPossProdId()).append("&ownAmt=")
-								.append(possLendProductInfo.getPossProdAmt());
+						sbReserveData.append("&dwldAvailableDayCnt=").append(product.getUsePeriod())
+								.append("&usePeriodCnt=").append(product.getUsePeriod()).append("&loanPid=")
+								.append(product.getProdId()).append("&loanAmt=").append(product.getProdAmt())
+								.append("&ownPid=&ownAmt=0");
 					}
+
+					// PossLendProductInfo possLendProductInfo = product.getPossLendProductInfo();
+					// if (possLendProductInfo == null) {
+					// if (StringUtils.equals(StringUtils.defaultIfBlank(product.getPossLendClsfCd(),
+					// PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION),
+					// PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)) {
+					// sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=&loanPid=&loanAmt=0")
+					// .append("&ownPid=").append(product.getProdId()).append("&ownAmt=")
+					// .append(product.getProdAmt());
+					// } else {
+					// sbReserveData.append("&dwldAvailableDayCnt=").append(product.getUsePeriod())
+					// .append("&usePeriodCnt=").append(product.getUsePeriod()).append("&loanPid=")
+					// .append(product.getProdId()).append("&loanAmt=").append(product.getProdAmt())
+					// .append("&ownPid=&ownAmt=0");
+					// }
+					//
+					// } else {
+					// sbReserveData.append("&usePeriodUnitCd=").append(possLendProductInfo.getUsePeriodUnitCd())
+					// .append("&usePeriod=").append(possLendProductInfo.getUsePeriod())
+					// .append("&dwldAvailableDayCnt=").append(possLendProductInfo.getDownPossiblePeriod())
+					// .append("&usePeriodCnt=").append(possLendProductInfo.getUsePeriod())
+					// .append("&loanPid=").append(possLendProductInfo.getLendProdId()).append("&loanAmt=")
+					// .append(possLendProductInfo.getLendProdAmt()).append("&ownPid=")
+					// .append(possLendProductInfo.getPossProdId()).append("&ownAmt=")
+					// .append(possLendProductInfo.getPossProdAmt());
+					// }
 
 				} else {
 					sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=&loanPid=&loanAmt=0&ownPid=&ownAmt=0");

@@ -715,7 +715,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setBonusCashUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt")); // 보너스 캐쉬 유효기간(일)
 		}
 		res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
-		res.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt")); // 이용기간(일)
+		res.setUsePeriodCnt(StringUtils.defaultIfBlank(reservedDataMap.get("usePeriodCnt"), "")); // 이용기간(일)
 		// 대여/소장 TAB 제거 : 2014/08/27 적용
 		// // 대여/소장
 		// if (StringUtils.isNotBlank(reservedDataMap.get("loanPid"))
