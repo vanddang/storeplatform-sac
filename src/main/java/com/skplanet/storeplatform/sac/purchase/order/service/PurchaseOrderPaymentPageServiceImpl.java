@@ -103,6 +103,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_SHOPCLIENT);
 		}
 		paymentPageParam.setOPMDLineNo(purchaseOrderInfo.getOpmdNo());
+		paymentPageParam.setUserKey(purchaseOrderInfo.getUserKey());
 
 		// pDescription
 		paymentPageParam.setpDescription(this.makeProductDescription(purchaseOrderInfo.getTenantProdGrpCd(),
@@ -166,6 +167,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 					+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권") + " 대여";
 
 		} else {
+			// if (StringUtils.equals(purchaseProduct.getSeriesYn(), PurchaseConstants.USE_Y) &&
+			// StringUtils.isNotBlank(purchaseProduct.getChapterText())) {
 			if (StringUtils.isNotBlank(purchaseProduct.getChapterText())) {
 				return purchaseProduct.getProdNm() + " " + purchaseProduct.getChapterText()
 						+ purchaseProduct.getChapterUnit();
@@ -296,7 +299,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				.append(paymentPageParam.getTypeNetwork()).append("&carrier=").append(paymentPageParam.getCarrier())
 				.append("&noSim=").append(StringUtils.defaultString(paymentPageParam.getNoSim())).append("&serviceId=")
 				.append(paymentPageParam.getServiceId()).append("&OPMDLineNo=")
-				.append(paymentPageParam.getOPMDLineNo());
+				.append(paymentPageParam.getOPMDLineNo()).append("&userKey=").append(paymentPageParam.getUserKey());
 
 		String plainData = sb.toString();
 		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", plainData);

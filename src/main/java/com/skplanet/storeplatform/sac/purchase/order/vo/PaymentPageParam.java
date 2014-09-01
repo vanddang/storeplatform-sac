@@ -50,6 +50,7 @@ public class PaymentPageParam extends CommonInfo {
 	// private String flgSim; // SIM 조회가능여부
 	private String serviceId; // 가맹점 내 서비스 구분 (TS001: Tstore 샵클라이언트, TS002: Tstore ebook, TS003: Tstore IAP)
 	private String OPMDLineNo; // OPMD 번호
+	private String userKey; // 결제자 UserKey
 
 	// ==========================================================================================
 
@@ -456,6 +457,21 @@ public class PaymentPageParam extends CommonInfo {
 	 */
 	public void setOPMDLineNo(String oPMDLineNo) {
 		this.OPMDLineNo = oPMDLineNo;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }
