@@ -167,14 +167,14 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 					+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권") + " 대여";
 
 		} else {
-			// if (StringUtils.equals(purchaseProduct.getSeriesYn(), PurchaseConstants.USE_Y) &&
-			// StringUtils.isNotBlank(purchaseProduct.getChapterText())) {
-			if (StringUtils.isNotBlank(purchaseProduct.getChapterText())) {
-				return purchaseProduct.getProdNm() + " " + purchaseProduct.getChapterText()
-						+ purchaseProduct.getChapterUnit();
-			} else {
-				return purchaseProduct.getProdNm();
-			}
+			// 상품명은 전시에서 회차 정보까지 구성해서 넘겨주는 값 그대로 사용. 2014.09.02 반영
+			return purchaseProduct.getProdNm();
+			// if (StringUtils.isNotBlank(purchaseProduct.getChapterText())) {
+			// return purchaseProduct.getProdNm() + " " + purchaseProduct.getChapterText()
+			// + purchaseProduct.getChapterUnit();
+			// } else {
+			// return purchaseProduct.getProdNm();
+			// }
 		}
 	}
 
