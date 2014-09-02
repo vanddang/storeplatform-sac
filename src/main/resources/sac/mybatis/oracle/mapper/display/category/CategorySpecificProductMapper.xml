@@ -771,17 +771,10 @@
                       , I.PART_PROD_ID                                     
                       , C.MENU_NM
                       , C.MENU_DESC
-                    <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
-                      , D.PROD_GRD_CD   -- 채널 상품 ID 조회       
-                    </if>
-                    <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-                      , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
-                    </if>    
                       , J.USE_PERIOD_UNIT_CD
                       , D.META_CLSF_CD
                       , D.CONTENTS_TYPE_CD
                       , E.STRM_EPSD_CNT
-                      , E.ISSUE_DAY
                       , E.CHNL_COMP_NM
                       , E.EPSD_CNT
                       , E.COMPT_YN
@@ -796,36 +789,36 @@
                       , J.DRM_YN
                       , J.PROD_CHRG_YN
                       , L.CHAPTER
-                      , L.BOOK_CLSF_CD
-                      <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-                      , M.FILE_PATH
-                      , M.FILE_NM
-                      , M.FILE_SIZE          
-                      </if>
-                      <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-                      , NVL(M1.FILE_PATH, M.FILE_PATH) AS FILE_PATH
-                      , NVL(M1.FILE_NM, M.FILE_NM) AS FILE_NM
-                      , NVL(M1.FILE_SIZE, M.FILE_SIZE) AS FILE_SIZE
-                      </if>
+                      , L.BOOK_CLSF_CD 
                       , N.PATICPERS_CNT
                       , N.PRCHS_CNT
                       , N.AVG_EVLU_SCORE              
                       , O.PROD_AMT
                       , O.PROD_NET_AMT 
                       , G.PROD_STATUS_CD
-                      , D.SELLER_MBR_NO
-			         <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-			          , D.CID     -- 채널 상품 ID 조회       
-			         </if>
-			         <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-			          , J.CID   -- 에피소드 상품 ID 조회
-			         </if>      
+                      , D.SELLER_MBR_NO    
                       , L.OUTSD_CONTENTS_ID
                       , D.SVC_GRP_CD      
                       , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM  
                       , D.EXPO_SELLER_NM
                       , D.EXPO_SELLER_TELNO
-                      , D.EXPO_SELLER_EMAIL              
+                      , D.EXPO_SELLER_EMAIL  
+                    <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
+                      , D.PROD_GRD_CD   -- 채널 상품 ID 조회   
+                      , D.CID     -- 채널 상품 ID 조회  
+                      , E.ISSUE_DAY    
+                      , M.FILE_PATH
+                      , M.FILE_NM
+                      , M.FILE_SIZE   
+                    </if>
+                    <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                      , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
+                      , J.CID   -- 에피소드 상품 ID 조회
+                      , L.ISSUE_DAY    
+                      , NVL(M1.FILE_PATH, M.FILE_PATH) AS FILE_PATH
+                      , NVL(M1.FILE_NM, M.FILE_NM) AS FILE_NM
+                      , NVL(M1.FILE_SIZE, M.FILE_SIZE) AS FILE_SIZE                      
+                    </if>              
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
