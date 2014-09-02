@@ -34,6 +34,10 @@ public class AppguideThemeProdSacReq extends CommonInfo {
 
 	private int count = 100; // 페이지당 노출 ROW 수
 
+	private String prodGradeCd; // 상품등급코드
+
+	private String[] arrayProdGradeCd; // 상품등급코드 Array
+
 	/**
 	 * @return the themeId
 	 */
@@ -77,6 +81,36 @@ public class AppguideThemeProdSacReq extends CommonInfo {
 	 */
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	/**
+	 * @return the prodGradeCd
+	 */
+	public String getProdGradeCd() {
+		return this.prodGradeCd;
+	}
+
+	/**
+	 * @param prodGradeCd
+	 *            the prodGradeCd to set
+	 */
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
+	}
+
+	/**
+	 * @return the arrayProdGradeCd
+	 */
+	public String[] getArrayProdGradeCd() {
+		return this.arrayProdGradeCd;
+	}
+
+	/**
+	 * @param arrayProdGradeCd
+	 *            the arrayProdGradeCd to set
+	 */
+	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
+		this.arrayProdGradeCd = arrayProdGradeCd;
 	}
 
 }
