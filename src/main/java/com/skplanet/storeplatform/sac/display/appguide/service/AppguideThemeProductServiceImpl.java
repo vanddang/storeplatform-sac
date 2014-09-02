@@ -14,13 +14,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.mysql.jdbc.StringUtils;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
@@ -90,6 +90,29 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 		mapReq.put("virtualDeviceModel", DisplayConstants.DP_ANY_PHONE_4MM);
 
 		mapReq.put("themeId", requestVO.getThemeId()); // 앱가이드 테마추천ID
+		/*
+		 * 상품이용등급코드 추가 2014.08.21 이석희 , 아이에스플러스
+		 */
+		// 파라미터 유효값 체크
+		if (StringUtils.isNotEmpty(requestVO.getProdGradeCd())) {
+			String[] arrayProdGradeCd = requestVO.getProdGradeCd().split("\\+");
+			for (int i = 0; i < arrayProdGradeCd.length; i++) {
+				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+								arrayProdGradeCd[i]);
+					}
+				}
+			}
+		}
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(requestVO.getProdGradeCd())) {
+			String[] arrayProdGradeCd = requestVO.getProdGradeCd().split("\\+");
+			mapReq.put("arrayProdGradeCd", arrayProdGradeCd);
+		}
 
 		int start = 1;
 		int end = 100;
@@ -120,7 +143,7 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 		themeProduct.setTitle(themeNm);
 		themeProduct.setThemeType(theme.getThemeType());
 
-		if (!StringUtils.isNullOrEmpty(theme.getThemeImg())) {
+		if (!StringUtils.isEmpty(theme.getThemeImg())) {
 			List<Source> themeUrlList = new ArrayList<Source>();
 			Source themeUrl = new Source();
 			themeUrl.setUrl(theme.getThemeImg());
@@ -263,5 +286,4 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 
 		return responseVO;
 	}
-
 }

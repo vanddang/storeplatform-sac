@@ -39,8 +39,7 @@
 						, P2.TOP_MENU_ID
 						, CP.MENU_ID
 						, P.PROD_ID AS PART_PROD_ID
-						, ROW_NUMBER( ) OVER ( PARTITION BY PR.PROD_ID
-						                           ORDER BY P.REG_DT DESC ) AS RN
+						, ROW_NUMBER( ) OVER ( PARTITION BY PR.PROD_ID ORDER BY P.REG_DT DESC ) AS RN
 					FROM TB_DP_LIST A
 					   , TB_DP_LIST_PROD AP
 					   , TB_DP_PROD_RSHP PR
@@ -105,6 +104,12 @@
 						            END
 						       ELSE 1
 						 END) = 1
+                     <if test="arrayProdGradeCd != null">
+                       AND P2.PROD_GRD_CD IN
+                         <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                           #{prodGradeCd}
+                         </foreach>
+                     </if>						 
                    ORDER BY AP.EXPO_ORD_ALWAYS_YN DESC
                           , AP.EXPO_ORD, AP.EXPO_ORD_SUB, P2.REG_DT DESC
               ) A
