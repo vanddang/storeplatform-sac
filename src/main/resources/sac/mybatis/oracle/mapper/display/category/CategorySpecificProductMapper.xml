@@ -494,7 +494,8 @@
                            , TB_DP_VOD_PROD                L
                            , TB_DP_PROD_IMG                M
                            , TB_DP_TENANT_PROD_STATS       N
-                           , TB_DP_TENANT_PROD_PRICE       O        
+                           , TB_DP_TENANT_PROD_PRICE       O
+                           , TB_DP_TENANT_PROD             P
                        WHERE A.MENU_ID = B.MENU_ID
                          AND A.MENU_ID = C.MENU_ID
                          AND B.PROD_ID = D.PROD_ID
@@ -507,11 +508,13 @@
                          AND G.TENANT_ID = H.TENANT_ID                      
                          AND G.TENANT_ID = N.TENANT_ID(+)
                          AND G.TENANT_ID = O.TENANT_ID           
-                         AND G.PROD_ID = N.PROD_ID(+)           
+                         AND G.TENANT_ID = P.TENANT_ID
+                         AND G.PROD_ID = N.PROD_ID(+)
                          AND I.PART_PROD_ID = J.PROD_ID
                          AND I.PART_PROD_ID = L.PROD_ID
                          AND I.PART_PROD_ID = O.PROD_ID
-                         AND A.USE_YN = 'Y'        
+                         AND I.PART_PROD_ID = P.PROD_ID
+                         AND A.USE_YN = 'Y'
                          AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                          AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
                          AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
@@ -532,12 +535,14 @@
                          -- INPUT PARAMETER
                          ----------------------------------------------------------------------------- 
                          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-                              AND B.PROD_ID = #{productBasicInfo.prodId}      -- 채널 상품 ID 조회       
+                              AND I.PROD_ID = #{productBasicInfo.prodId}      -- 채널 상품 ID 조회
+                              AND P.PROD_STATUS_CD = 'PD000403'
                          </if>
                          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                               AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
                          </if>
                          AND G.TENANT_ID = #{tenantHeader.tenantId} /* 테넌트ID */
+                         ORDER BY L.CHAPTER DESC
                      ) JA 
                      WHERE ROWNUM = 1
                ) LA
