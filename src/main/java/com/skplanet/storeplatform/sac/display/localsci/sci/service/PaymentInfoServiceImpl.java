@@ -196,6 +196,11 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             // 시리즈 여부 세팅
             paymentInfo.setSeriesYn(SET_SERIES_META.contains(paymentInfo.getMetaClsfCd()) ? "Y" : "N");
 
+            if (paymentInfo.getSeriesYn().equals("Y")) {
+                String prodNm = paymentInfo.getChnlProdNm() + " " + paymentInfo.getChapterText() + paymentInfo.getChapterUnit();
+                paymentInfo.setProdNm(prodNm);
+            }
+
             // 이용가능한 정액권목록 제공
             paymentInfo.setAvailableFixrateProdIdList(this.freepassService.getAvailableFixrateProdIdList(req));
             res.add(paymentInfo);
