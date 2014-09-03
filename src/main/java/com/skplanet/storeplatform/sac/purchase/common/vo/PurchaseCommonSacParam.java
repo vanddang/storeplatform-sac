@@ -27,6 +27,7 @@ public class PurchaseCommonSacParam extends CommonInfo {
 	private String userKey;
 	private String deviceKey;
 	private String langCd;
+	private String model;
 
 	public PurchaseCommonSacParam() {
 
@@ -42,6 +43,7 @@ public class PurchaseCommonSacParam extends CommonInfo {
 		this.systemId = sacRequestHeader.getTenantHeader().getSystemId();
 		this.userKey = purchaseCommonReq.getUserKey();
 		this.deviceKey = purchaseCommonReq.getDeviceKey();
+		this.model = sacRequestHeader.getDeviceHeader().getModel();
 	}
 
 	/**
@@ -117,6 +119,21 @@ public class PurchaseCommonSacParam extends CommonInfo {
 	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
+	}
+
+	/**
+	 * @return the model
+	 */
+	public String getModel() {
+		return this.model;
+	}
+
+	/**
+	 * @param model
+	 *            the model to set
+	 */
+	public void setModel(String model) {
+		this.model = model;
 	}
 
 }
