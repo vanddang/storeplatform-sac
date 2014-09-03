@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -392,6 +393,14 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
 		purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_0000"));
+
+		try {
+
+			this.giftSendSms(purchaseCancelDetailSacParam, prchsSacParam, purchaseCancelSacParam);
+
+		} catch (Exception e) {
+			this.logger.error("### 구매 취소 SMS 발송 실패  prchsId : " + purchaseCancelDetailSacParam.getPrchsId());
+		}
 
 		this.logger.info("### 구매 취소 성공! ###");
 		this.logger.info("purchaseCancelDetailSacParam data : {}", purchaseCancelDetailSacParam);
@@ -876,9 +885,76 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 						}
 					}
 				}
-
 			}
 		}
+	}
+
+	private String devicdKeyToMdn(String deviceKey) {
+
+		deviceKey = deviceKey.replaceAll("Ab", "0").replaceAll("cDe", "5").replaceAll("Fg", "2")
+				.replaceAll("HiJk", "6").replaceAll("Lm", "4").replaceAll("NoP", "1").replaceAll("qR", "8")
+				.replaceAll("sTu", "7").replaceAll("Vw", "3").replaceAll("XyZ", "9");
+
+		return deviceKey;
+	}
+
+	private void giftSendSms(PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, PrchsSacParam prchsSacParam,
+			PurchaseCancelSacParam purchaseCancelSacParam) {
+
+		// 비회원 선물하기 인 경우 SMS를 발송한다.
+		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
+			if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, prchsDtlSacParam.getPrchsCaseCd())
+					&& StringUtils.equals(PurchaseConstants.NON_MEMBER, prchsDtlSacParam.getUseInsdUsermbrNo())) {
+
+				this.logger.info("#####################비회원 선물");
+				List<String> prodIdList = new ArrayList<String>();
+
+				PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
+				paymentInfoSacReq.setTenantId(prchsSacParam.getTenantId());
+				prodIdList.add(prchsDtlSacParam.getProdId());
+				paymentInfoSacReq.setProdIdList(prodIdList);
+				paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
+				paymentInfoSacReq.setDeviceModelCd(purchaseCancelSacParam.getModel());
+
+				// 상품정보 조회
+				PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq);
+
+				String prodNm = null;
+
+				if (paymentInfoSacRes != null && paymentInfoSacRes.getPaymentInfoList().size() > 0) {
+					prodNm = paymentInfoSacRes.getPaymentInfoList().get(0).getProdNm();
+				}
+
+				String sendMdn = prchsSacParam.getDeviceId(); // 보낸사람MDN
+				if (StringUtils.isBlank(sendMdn)) {
+					sendMdn = this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
+							prchsSacParam.getInsdDeviceId());
+				}
+
+				sendMdn = this.makePhoneNumber(sendMdn);
+
+				String recvMdn = this.devicdKeyToMdn(prchsDtlSacParam.getUseInsdDeviceId()); // 받는사람 MDN
+				String msg = sendMdn + "님이 선물하신 \"<" + prodNm + ">\"을 취소하셨습니다.";
+
+				this.logger.info("### 비회원선물하기 recvMdn =  " + recvMdn);
+				this.logger.info("### 비회원선물하기 msg =  " + msg);
+
+				// SMS 발송 요청
+				this.purchaseCancelRepository.sendSms(recvMdn, msg);
+
+				break; // 1회만 SMS 발송
+			}
+		}
+	}
+
+	private String makePhoneNumber(String phoneNumber) {
+
+		String regEx = "(\\d{3})(\\d{3,4})(\\d{4})";
+
+		if (!Pattern.matches(regEx, phoneNumber))
+			return phoneNumber;
+
+		return phoneNumber.replaceAll(regEx, "$1-$2-$3");
 
 	}
 
