@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class CacheEvictManagerImpl implements CacheEvictManager {
 
     @Override
-    @CacheEvict(value = "sac:display:product:app", key = "#param.getCacheKey()")
+    @CacheEvict(value = {"sac:display:product:app","sac:display:product:app:v2"}, key = "#param.getCacheKey()")
     public void evictAppMeta(AppMetaParam param) {
 
     }
@@ -41,13 +41,13 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = "sac:display:product:music", key = "#param.getCacheKey()")
+    @CacheEvict(value = {"sac:display:product:music","sac:display:product:music:v2"}, key = "#param.getCacheKey()")
     public void evictMusicMeta(MusicMetaParam param) {
 
     }
 
     @Override
-    @CacheEvict(value = "sac:display:product:vod", key = "#param.getCacheKey()")
+    @CacheEvict(value = {"sac:display:product:vod","sac:display:product:vod:v2"}, key = "#param.getCacheKey()")
     public void evictVodMeta(VodMetaParam param) {
 
     }
@@ -77,17 +77,17 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = {"sac:display:product:app","sac:display:subcontent","sac:display:menuinfo"}, allEntries = true)
+    @CacheEvict(value = {"sac:display:product:app","sac:display:product:app:v2","sac:display:subcontent","sac:display:menuinfo"}, allEntries = true)
     public void evictAllAppMeta() { }
 
     @Override
-    @CacheEvict(value = "sac:display:product:music", allEntries = true)
+    @CacheEvict(value = {"sac:display:product:music","sac:display:product:music:v2"}, allEntries = true)
     public void evictAllMusicMeta() {
 
     }
 
     @Override
-    @CacheEvict(value = "sac:display:product:vod", allEntries = true)
+    @CacheEvict(value = {"sac:display:product:vod","sac:display:product:vod:v2"}, allEntries = true)
     public void evictAllVodMeta() {
 
     }
@@ -123,7 +123,7 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = "sac:display:updateProductInfo", allEntries = true)
+    @CacheEvict(value = {"sac:display:updateProductInfo","sac:display:updateProductInfo:v2"}, allEntries = true)
     public void evictAllUpdateProduct() {
 
     }

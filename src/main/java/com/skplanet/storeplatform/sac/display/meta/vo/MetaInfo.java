@@ -37,7 +37,7 @@ public class MetaInfo extends CommonInfo {
 	private String artist1Nm;
 	private String artist2Nm;
 	private String artist3Nm;
-	private Integer fileSize;
+	private Long fileSize;
 	private String contentsTypeCd;
 	private Map<String, Object> supportList;
 	private String sellerMbrNo;
@@ -88,7 +88,7 @@ public class MetaInfo extends CommonInfo {
 	private String apkVer;
 	private String fakeYn;
 	private String apkVerCd;
-	private Integer apkFileSize;
+	private Long apkFileSize;
 	private String seedProductId;
 	private String gameCentrId;
 	private String gameCentrVerCd;
@@ -135,7 +135,7 @@ public class MetaInfo extends CommonInfo {
 	private String usePeriod;
 	private String usePeriodNm;
 	private String ebookFilePath;
-	private Integer ebookFileSize;
+	private Long ebookFileSize;
 	private String hdcpYn;
 	private String btvYn;
 	private String epsdPlayTm;
@@ -191,7 +191,7 @@ public class MetaInfo extends CommonInfo {
 	private String bellSprtYn;
 	private String colorringSprtYn;
 	private String outsdContentsId;
-	private Integer fileSizeH;
+	private Long fileSizeH;
 	private String artistId;
 	private String artistNm;
 	private String debutDay;
@@ -654,22 +654,15 @@ public class MetaInfo extends CommonInfo {
 		this.artist3Nm = artist3Nm;
 	}
 
-	/**
-	 * @return the fileSize
-	 */
-	public Integer getFileSize() {
-		return this.fileSize;
-	}
+    public Long getFileSize() {
+        return fileSize;
+    }
 
-	/**
-	 * @param fileSize
-	 *            the fileSize to set
-	 */
-	public void setFileSize(Integer fileSize) {
-		this.fileSize = fileSize;
-	}
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
+    }
 
-	/**
+    /**
 	 * @return the contentsTypeCd
 	 */
 	public String getContentsTypeCd() {
@@ -1347,7 +1340,7 @@ public class MetaInfo extends CommonInfo {
 	/**
 	 * @return the apkFileSize
 	 */
-	public Integer getApkFileSize() {
+	public Long getApkFileSize() {
 		return this.apkFileSize;
 	}
 
@@ -1355,7 +1348,7 @@ public class MetaInfo extends CommonInfo {
 	 * @param apkFileSize
 	 *            the apkFileSize to set
 	 */
-	public void setApkFileSize(Integer apkFileSize) {
+	public void setApkFileSize(Long apkFileSize) {
 		this.apkFileSize = apkFileSize;
 	}
 
@@ -1992,7 +1985,7 @@ public class MetaInfo extends CommonInfo {
 	/**
 	 * @return the ebookFileSize
 	 */
-	public Integer getEbookFileSize() {
+	public Long getEbookFileSize() {
 		return this.ebookFileSize;
 	}
 
@@ -2000,7 +1993,7 @@ public class MetaInfo extends CommonInfo {
 	 * @param ebookFileSize
 	 *            the ebookFileSize to set
 	 */
-	public void setEbookFileSize(Integer ebookFileSize) {
+	public void setEbookFileSize(Long ebookFileSize) {
 		this.ebookFileSize = ebookFileSize;
 	}
 
@@ -2712,7 +2705,7 @@ public class MetaInfo extends CommonInfo {
 	/**
 	 * @return the fileSizeH
 	 */
-	public Integer getFileSizeH() {
+	public Long getFileSizeH() {
 		return this.fileSizeH;
 	}
 
@@ -2720,7 +2713,7 @@ public class MetaInfo extends CommonInfo {
 	 * @param fileSizeH
 	 *            the fileSizeH to set
 	 */
-	public void setFileSizeH(Integer fileSizeH) {
+	public void setFileSizeH(Long fileSizeH) {
 		this.fileSizeH = fileSizeH;
 	}
 

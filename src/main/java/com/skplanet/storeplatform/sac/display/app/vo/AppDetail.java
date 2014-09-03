@@ -23,7 +23,7 @@ public class AppDetail extends CommonInfo {
     private String apkPkgNm;
     private String apkVer;
     private String apkVerNm;
-    private Integer fileSize;
+    private Long fileSize;
     private String vmVer;
     private String sellerMbrNo;
     private String prodGbn;
@@ -113,11 +113,11 @@ public class AppDetail extends CommonInfo {
         this.prodStatusCd = prodStatusCd;
     }
 
-    public Integer getFileSize() {
+    public Long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(Integer fileSize) {
+    public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
     }
 

@@ -37,7 +37,7 @@ public class UpdateProduct extends CommonInfo{
     private String prodNm;
     private String apkPkgNm;
     private Integer apkVer;
-    private Integer fileSize;
+    private Long fileSize;
     private String filePath;
     private String imagePath;
     private Integer imageSize;
@@ -167,11 +167,11 @@ public class UpdateProduct extends CommonInfo{
         this.apkVer = apkVer;
     }
 
-    public Integer getFileSize() {
+    public Long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(Integer fileSize) {
+    public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
     }
 

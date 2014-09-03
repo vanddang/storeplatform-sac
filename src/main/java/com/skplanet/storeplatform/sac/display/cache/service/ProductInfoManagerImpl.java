@@ -50,7 +50,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     private static final String FREEPASS_SVC_GRP_CD = "DP000207";
 
     @Override
-    @Cacheable(value = "sac:display:product:app", key = "#param.getCacheKey()", unless = "#result == null")
+    @Cacheable(value = "sac:display:product:app:v2", key = "#param.getCacheKey()", unless = "#result == null")
     public AppMeta getAppMeta(AppMetaParam param) {
 
         Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -78,7 +78,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
-    @Cacheable(value = "sac:display:product:music", key = "#param.getCacheKey()", unless = "#result == null")
+    @Cacheable(value = "sac:display:product:music:v2", key = "#param.getCacheKey()", unless = "#result == null")
     public MusicMeta getMusicMeta(MusicMetaParam param) {
 
         Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -122,7 +122,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
-    @Cacheable(value = "sac:display:product:vod", key = "#param.getCacheKey()", unless = "#result == null")
+    @Cacheable(value = "sac:display:product:vod:v2", key = "#param.getCacheKey()", unless = "#result == null")
     public VodMeta getVodMeta(VodMetaParam param) {
         Map<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("prodId", param.getProdId());

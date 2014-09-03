@@ -83,7 +83,7 @@ public class EpubDetail extends CommonInfo {
 	private String dwldAreaLimtYn;
 
     private String subContentsId;
-    private Integer fileSize;
+    private Long fileSize;
     private String prodVer;
 
     private String usePeriodNm;
@@ -136,7 +136,7 @@ public class EpubDetail extends CommonInfo {
 	/** thumbnail fileName */
 	private String imgNm;
 	/** thumbnail fileSize */
-	private Integer imgSize;
+	private Long imgSize;
 
 	// Accrual
 	/** 참여자수 */
@@ -447,7 +447,7 @@ public class EpubDetail extends CommonInfo {
 	 *
 	 * @return thumbnail fileSize
 	 */
-	public Integer getImgSize() {
+	public Long getImgSize() {
 		return this.imgSize;
 	}
 
@@ -457,7 +457,7 @@ public class EpubDetail extends CommonInfo {
 	 * @param imgSize
 	 *            thumbnail fileSize
 	 */
-	public void setImgSize(Integer imgSize) {
+	public void setImgSize(Long imgSize) {
 		this.imgSize = imgSize;
 	}
 
@@ -892,11 +892,11 @@ public class EpubDetail extends CommonInfo {
         this.subContentsId = subContentsId;
     }
 
-    public Integer getFileSize() {
+    public Long getFileSize() {
         return this.fileSize;
     }
 
-    public void setFileSize(Integer fileSize) {
+    public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
     }
 

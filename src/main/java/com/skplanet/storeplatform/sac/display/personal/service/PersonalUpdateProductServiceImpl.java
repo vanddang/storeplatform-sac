@@ -507,7 +507,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							(String) updateTargetApp.get("APK_PKG_NM"),
 							ObjectUtils.toString(updateTargetApp.get("APK_VER")),
 							ObjectUtils.toString(updateTargetApp.get("PROD_VER")),
-							((Integer) updateTargetApp.get("FILE_SIZE")), null, null,
+							((Long) updateTargetApp.get("FILE_SIZE")), null, null,
 							ObjectUtils.toString(updateTargetApp.get("FILE_PATH")));
 
 					Update update = this.appGenerator.generateUpdate(

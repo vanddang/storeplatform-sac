@@ -8,7 +8,7 @@ public class SubContent {
 
     private String dpPgQultCd;
     private String filePath;
-    private int fileSize;
+    private long fileSize;
 
     public String getDpPgQultCd() {
         return dpPgQultCd;
@@ -26,11 +26,11 @@ public class SubContent {
         this.filePath = filePath;
     }
 
-    public int getFileSize() {
+    public long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(int fileSize) {
+    public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
 }

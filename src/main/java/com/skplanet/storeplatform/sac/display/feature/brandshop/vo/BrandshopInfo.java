@@ -20,7 +20,7 @@ public class BrandshopInfo {
 	private String brandShopNm;
 	private String categoryNo;
 	private String logImgPos;
-	private int bnrImgSize;
+	private Long bnrImgSize;
 	private String expoOrd;
 	private String mbrNo;
 	private String menuNm;
@@ -66,7 +66,7 @@ public class BrandshopInfo {
 	/**
 	 * @return the bnrImgSize
 	 */
-	public int getBnrImgSize() {
+	public Long getBnrImgSize() {
 		return this.bnrImgSize;
 	}
 
@@ -74,7 +74,7 @@ public class BrandshopInfo {
 	 * @param bnrImgSize
 	 *            the bnrImgSize to set
 	 */
-	public void setBnrImgSize(int bnrImgSize) {
+	public void setBnrImgSize(Long bnrImgSize) {
 		this.bnrImgSize = bnrImgSize;
 	}
 

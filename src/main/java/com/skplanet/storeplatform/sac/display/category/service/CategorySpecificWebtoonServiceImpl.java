@@ -81,197 +81,64 @@ public class CategorySpecificWebtoonServiceImpl implements CategorySpecificWebto
 	@Override
 	public CategorySpecificSacRes getSpecificWebtoonList(CategorySpecificSacReq req, SacRequestHeader header) {
 
-		if (req.getDummy() == null) {
+        CategorySpecificSacRes res = new CategorySpecificSacRes();
+        CommonResponse commonResponse = new CommonResponse();
+        Product product = null;
+        MetaInfo metaInfo = null;
+        List<Product> productList = new ArrayList<Product>();
 
-			CategorySpecificSacRes res = new CategorySpecificSacRes();
-			CommonResponse commonResponse = new CommonResponse();
-			Product product = null;
-			MetaInfo metaInfo = null;
-			List<Product> productList = new ArrayList<Product>();
+        List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
+        if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
+            throw new StorePlatformException("SAC_DSP_0004", "list",
+                    DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
+        }
 
-			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
-			if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
-				throw new StorePlatformException("SAC_DSP_0004", "list",
-						DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
-			}
+        // 상품 기본 정보 List 조회
+        List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+                "CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
 
-			// 상품 기본 정보 List 조회
-			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
-					"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
+        if (productBasicInfoList != null) {
+            Map<String, Object> paramMap = new HashMap<String, Object>();
+            paramMap.put("tenantHeader", header.getTenantHeader());
+            paramMap.put("deviceHeader", header.getDeviceHeader());
+            paramMap.put("lang", "ko");
 
-			if (productBasicInfoList != null) {
-				Map<String, Object> paramMap = new HashMap<String, Object>();
-				paramMap.put("tenantHeader", header.getTenantHeader());
-				paramMap.put("deviceHeader", header.getDeviceHeader());
-				paramMap.put("lang", "ko");
+            for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+                String topMenuId = productBasicInfo.getTopMenuId();
+                String svcGrpCd = productBasicInfo.getSvcGrpCd();
+                paramMap.put("productBasicInfo", productBasicInfo);
 
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					String topMenuId = productBasicInfo.getTopMenuId();
-					String svcGrpCd = productBasicInfo.getSvcGrpCd();
-					paramMap.put("productBasicInfo", productBasicInfo);
+                this.log.debug("##### Top Menu Id : {}", topMenuId);
+                this.log.debug("##### Service Group Cd : {}", svcGrpCd);
 
-					this.log.debug("##### Top Menu Id : {}", topMenuId);
-					this.log.debug("##### Service Group Cd : {}", svcGrpCd);
+                // 상품 SVC_GRP_CD 조회
+                // DP000203 : 멀티미디어
+                // DP000206 : Tstore 쇼핑
+                // DP000205 : 소셜쇼핑
+                // DP000204 : 폰꾸미기
+                // DP000201 : 애플리캐이션
 
-					// 상품 SVC_GRP_CD 조회
-					// DP000203 : 멀티미디어
-					// DP000206 : Tstore 쇼핑
-					// DP000205 : 소셜쇼핑
-					// DP000204 : 폰꾸미기
-					// DP000201 : 애플리캐이션
+                // Webtoon 상품의 경우
+                if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+                    if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // Webtoon 상품의 경우
 
-					// Webtoon 상품의 경우
-					if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-						if (DisplayConstants.DP_WEBTOON_TOP_MENU_ID.equals(topMenuId)) { // Webtoon 상품의 경우
-
-							paramMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getWebtoonMetaInfo",
-									paramMap, MetaInfo.class);
-							// metaInfo = this.metaInfoService.getWebtoonMetaInfo(paramMap);
-							if (metaInfo != null) {
-								product = this.responseInfoGenerateFacade.generateSpecificWebtoonProduct(metaInfo);
-								productList.add(product);
-							}
-						}
-					}
-				}
-			}
-			commonResponse.setTotalCount(productList.size());
-			res.setCommonResponse(commonResponse);
-			res.setProductList(productList);
-			return res;
-		} else {
-			return this.generateDummy();
-		}
+                        paramMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
+                        metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getWebtoonMetaInfo",
+                                paramMap, MetaInfo.class);
+                        // metaInfo = this.metaInfoService.getWebtoonMetaInfo(paramMap);
+                        if (metaInfo != null) {
+                            product = this.responseInfoGenerateFacade.generateSpecificWebtoonProduct(metaInfo);
+                            productList.add(product);
+                        }
+                    }
+                }
+            }
+        }
+        commonResponse.setTotalCount(productList.size());
+        res.setCommonResponse(commonResponse);
+        res.setProductList(productList);
+        return res;
 	}
 
-	/**
-	 * <pre>
-	 * 더미 데이터 생성.
-	 * </pre>
-	 * 
-	 * @return CategorySpecificSacRes
-	 */
-	private CategorySpecificSacRes generateDummy() {
-		Identifier identifier = new Identifier();
-		List<Identifier> identifierList = new ArrayList<Identifier>();
-		Support support = null;
-		Menu menu = null;
-		Contributor contributor = null;
-		Accrual accrual = null;
-		Rights rights = null;
-		Title title = null;
-		Source source = null;
-		Price price = null;
-		Distributor distributor = null;
-		Book book = null;
-		Chapter chapter = null;
 
-		List<Menu> menuList = new ArrayList<Menu>();
-		List<Source> sourceList = new ArrayList<Source>();
-		List<Support> supportList = new ArrayList<Support>();
-		Product product = new Product();
-		List<Product> productList = new ArrayList<Product>();
-		CommonResponse commonResponse = new CommonResponse();
-		CategorySpecificSacRes res = new CategorySpecificSacRes();
-
-		accrual = new Accrual();
-		rights = new Rights();
-		source = new Source();
-		price = new Price();
-		title = new Title();
-		support = new Support();
-		distributor = new Distributor();
-		book = new Book();
-		chapter = new Chapter();
-		contributor = new Contributor();
-
-		// Identifier 설정
-		identifier.setType("episodeId");
-		identifier.setText("H090123977");
-		identifierList.add(identifier);
-		identifier = new Identifier();
-		identifier.setType("channel");
-		identifier.setText("H090121356");
-		identifierList.add(identifier);
-
-		// support (지원구분) 설정
-		support = new Support();
-		support.setType("play");
-		support.setText("N");
-		supportList.add(support);
-		support = new Support();
-		support.setType("store");
-		support.setText("Y");
-		supportList.add(support);
-
-		// mene 설정
-		menu = new Menu();
-		menu.setId("DP26");
-		menu.setName("웹툰");
-		menu.setType("topClass");
-		menuList.add(menu);
-		menu = new Menu();
-		menu.setId("DP26001");
-		menu.setName("코믹");
-		menuList.add(menu);
-		menu = new Menu();
-		menu.setId("CT27");
-		menu.setType("metaClass");
-		menuList.add(menu);
-
-		// accrual 설정
-		accrual.setVoterCount(3);
-		accrual.setDownloadCount(2);
-		accrual.setScore(10.0);
-
-		// rights 설정
-		rights.setGrade("PD004401");
-
-		// title 설정
-		title.setText("[QA] 웹툰 등록테스트");
-
-		// source 설정
-		source.setMediaType("image/jpeg");
-		source.setType("thumbnail");
-		source.setSize(659069);
-		source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
-		sourceList.add(source);
-
-		// price 설정
-		price.setText(0);
-
-		// distributor 설정
-		distributor.setName("ubivelox");
-		distributor.setTel("0211112222");
-		distributor.setEmail("signtest@yopmail.com");
-
-		// contributor 설정
-		contributor.setName("김기백");
-		contributor.setPublisher("코믹플러스");
-
-		// book 설정
-		chapter.setUnit("4");
-		book.setChapter(chapter);
-		book.setSupportList(supportList);
-
-		product.setIdentifierList(identifierList);
-		product.setSupportList(supportList);
-		product.setMenuList(menuList);
-		product.setAccrual(accrual);
-		product.setRights(rights);
-		product.setTitle(title);
-		product.setSourceList(sourceList);
-		product.setProductExplain("[QA] 웹툰 등록테스트");
-		product.setPrice(price);
-		product.setDistributor(distributor);
-		product.setContributor(contributor);
-
-		productList.add(product);
-
-		commonResponse.setTotalCount(productList.size());
-		res.setCommonResponse(commonResponse);
-		res.setProductList(productList);
-		return res;
-	}
 }

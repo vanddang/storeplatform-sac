@@ -205,7 +205,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 * java.lang.String)
 	 */
 	@Override
-	public Source generateSource(String type, String url, Integer size) {
+	public Source generateSource(String type, String url, Long size) {
 		Source source = new Source();
 
 		if (StringUtils.isNotEmpty(url)) {

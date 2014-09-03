@@ -57,7 +57,7 @@ public class VodMeta extends CommonInfo {
     private Double avgEvluScore;
     private String filePath;
     private String topMenuNm;
-    private Integer fileSize;
+    private Long fileSize;
     private String prodDtlDesc;
     private String prodStatusCd;
     private String brdcCompNm;
@@ -358,11 +358,11 @@ public class VodMeta extends CommonInfo {
         this.topMenuNm = topMenuNm;
     }
 
-    public Integer getFileSize() {
+    public Long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(Integer fileSize) {
+    public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
     }
 

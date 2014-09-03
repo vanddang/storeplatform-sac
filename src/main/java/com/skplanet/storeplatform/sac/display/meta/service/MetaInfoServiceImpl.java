@@ -208,7 +208,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
             me = new MetaInfo();
             MetaBeanUtils.setProperties(meta, me);
-            me.setFileSize(0);
+            me.setFileSize(0L);
 
             me.setContentsTypeCd(param.getContentType().getCode());
             if (param.getContentType() == ContentType.Channel) {
@@ -350,7 +350,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             me = new MetaInfo();
             MetaBeanUtils.setProperties(meta, me);
             me.setNo("1");
-            me.setFileSize(0);
+            me.setFileSize(0L);
 
         }
         else

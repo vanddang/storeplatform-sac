@@ -110,7 +110,7 @@ public interface AppInfoGenerator {
 	 *            filePath
 	 * @return App
 	 */
-	public App generateApp(String aid, String packageNm, String apkVer, String prodVer, Integer fileSize,
+	public App generateApp(String aid, String packageNm, String apkVer, String prodVer, Long fileSize,
 			String supportOs, String scid, String filePath);
 
 	/**

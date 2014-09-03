@@ -35,7 +35,7 @@ public class UpdateProductInfoManagerImpl implements UpdateProductInfoManager {
     private CommonDAO commonDAO;
 
     @Override
-    @Cacheable(value = "sac:display:updateProductInfo", key = "#param.getCacheKey()")
+    @Cacheable(value = "sac:display:updateProductInfo:v2", key = "#param.getCacheKey()")
     public UpdateProduct getUpdateProductInfo(UpdateProductParam param) {
 
         Map<String, Object> updateTargetMap = new HashMap<String, Object>();

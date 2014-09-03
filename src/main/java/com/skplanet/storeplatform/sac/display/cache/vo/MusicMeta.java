@@ -42,7 +42,7 @@ public class MusicMeta extends CommonInfo {
     private String issueDay;
     private String filePath;
     private String fileNm;
-    private Integer fileSize;
+    private Long fileSize;
     private String contentsTypeCd;
     private String prodStatusCd;
     private String prodBaseDesc;
@@ -238,11 +238,11 @@ public class MusicMeta extends CommonInfo {
         this.fileNm = fileNm;
     }
 
-    public Integer getFileSize() {
+    public Long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(Integer fileSize) {
+    public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
     }
 

@@ -140,7 +140,7 @@ public class VodDetail extends CommonInfo {
 	/** thumbnail fileName */
 	private String imgNm;
 	/** thumbnail fileSize */
-	private Integer imgSize;
+	private Long imgSize;
 
 	// ---------------------------------------------------
 	// Accrual
@@ -573,7 +573,7 @@ public class VodDetail extends CommonInfo {
 	 *
 	 * @return thumbnail fileSize
 	 */
-	public Integer getImgSize() {
+	public Long getImgSize() {
 		return this.imgSize;
 	}
 
@@ -583,7 +583,7 @@ public class VodDetail extends CommonInfo {
 	 * @param imgSize
 	 *            thumbnail fileSize
 	 */
-	public void setImgSize(Integer imgSize) {
+	public void setImgSize(Long imgSize) {
 		this.imgSize = imgSize;
 	}
 

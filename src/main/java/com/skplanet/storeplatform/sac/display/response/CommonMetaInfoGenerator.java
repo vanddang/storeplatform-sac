@@ -106,9 +106,10 @@ public interface CommonMetaInfoGenerator {
 	 *            type
 	 * @param url
 	 *            url
-	 * @return Source
+	 * @param size
+     * @return Source
 	 */
-	public Source generateSource(String type, String url, Integer size);
+	public Source generateSource(String type, String url, Long size);
 
 	/**
 	 * <pre>

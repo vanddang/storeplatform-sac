@@ -161,149 +161,44 @@ public class BestAppServiceImpl implements BestAppService {
 		// BEST 앱 상품 조회
 		List<ProductBasicInfo> appList = null;
 
-		if (bestAppReq.getDummy() == null) {
-			// dummy 호출이 아닐때
+        if (!"ADM000000001".equals(bestAppReq.getListId())) {
+            // 추천, 인기(매출), 인기신규 상품 조회
+            appList = this.commonDAO.queryForList("BestApp.selectBestAppList", bestAppReq, ProductBasicInfo.class);
+        } else {
+            // 신규 상품조회
+            appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq,
+                    ProductBasicInfo.class);
+        }
 
-			if (!"ADM000000001".equals(bestAppReq.getListId())) {
-				// 추천, 인기(매출), 인기신규 상품 조회
-				appList = this.commonDAO.queryForList("BestApp.selectBestAppList", bestAppReq, ProductBasicInfo.class);
-			} else {
-				// 신규 상품조회
-				appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq,
-						ProductBasicInfo.class);
-			}
+        if (!appList.isEmpty()) {
+            MetaFetchParam param = new MetaFetchParam();
+            param.setTenantId(tenantHeader.getTenantId());
+            param.setLangCd(tenantHeader.getLangCd());
+            param.setDeviceModelCd(deviceHeader.getModel());
 
-			if (!appList.isEmpty()) {
-				MetaFetchParam param = new MetaFetchParam();
-				param.setTenantId(tenantHeader.getTenantId());
-				param.setLangCd(tenantHeader.getLangCd());
-				param.setDeviceModelCd(deviceHeader.getModel());
+            // /// [임시로직] 캐쉬를 타지 않도록 요청한 경우 prodId목록으로 일괄조회.
+            productList = MetaResultGenerator.fetch(ProductType.App, param, appList, new MetaMapper() {
+                @Override
+                public Product processRow(MetaInfo meta) {
 
-				// /// [임시로직] 캐쉬를 타지 않도록 요청한 경우 prodId목록으로 일괄조회.
-				productList = MetaResultGenerator.fetch(ProductType.App, param, appList, new MetaMapper() {
-					@Override
-					public Product processRow(MetaInfo meta) {
-						
-						//Tstore멤버십 적립율 정보
-			        	MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), meta.getTopMenuId(), meta.getProdId(), meta.getProdAmt());
-			        	meta.setMileageInfo(mileageInfo);
-			        	
-						return responseInfoGenerateFacade.generateAppProduct(meta);
-					}
-				});
+                    //Tstore멤버십 적립율 정보
+                    MileageInfo mileageInfo = benefitService.getMileageInfo(tenantHeader.getTenantId(), meta.getTopMenuId(), meta.getProdId(), meta.getProdAmt());
+                    meta.setMileageInfo(mileageInfo);
 
-				commonResponse.setTotalCount(appList.get(0).getTotalCount());
-				response.setProductList(productList);
-				response.setCommonResponse(commonResponse);
+                    return responseInfoGenerateFacade.generateAppProduct(meta);
+                }
+            });
 
-			} else {
-				// 조회 결과 없음
-				commonResponse.setTotalCount(0);
-				response.setProductList(productList);
-				response.setCommonResponse(commonResponse);
-			}
+            commonResponse.setTotalCount(appList.get(0).getTotalCount());
+            response.setProductList(productList);
+            response.setCommonResponse(commonResponse);
 
-		} else {
-			// dummy data를 호출할때
-			Product product = null;
-			Identifier identifier = null;
-			App app = null;
-			Accrual accrual = null;
-			Rights rights = null;
-			Source source = null;
-			Price price = null;
-			Title title = null;
-			Support support = null;
-			Menu menu = null;
-
-			menuList = new ArrayList<Menu>();
-			supportList = new ArrayList<Support>();
-			sourceList = new ArrayList<Source>();
-
-			product = new Product();
-			app = new App();
-			accrual = new Accrual();
-			rights = new Rights();
-			source = new Source();
-			price = new Price();
-			title = new Title();
-			support = new Support();
-
-			// 상품ID
-			identifierList = new ArrayList<Identifier>();
-			identifier = new Identifier();
-			identifier.setType("episode");
-			identifier.setText("0000643818");
-			identifierList.add(identifier);
-
-			support.setType("Y");
-			support.setText("iab");
-			supportList.add(support);
-
-			/*
-			 * Menu(메뉴정보) Id, Name, Type
-			 */
-			menu = new Menu();
-			menu.setId("DP000501");
-			menu.setName("게임");
-			menu.setType("topClass");
-			menuList.add(menu);
-			menu = new Menu();
-			menu.setId("DP01004");
-			menu.setName("RPG");
-			menuList.add(menu);
-
-			/*
-			 * App aid, packagename, versioncode, version
-			 */
-			app.setAid("OA00643818");
-			app.setPackageName("proj.syjt.tstore");
-			app.setVersionCode("11000");
-			app.setVersion("1.1");
-			app.setSize(5908912);
-
-			/*
-			 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
-			 */
-			accrual.setVoterCount(14305);
-			accrual.setDownloadCount(513434);
-			accrual.setScore(4.8);
-
-			/*
-			 * Rights grade
-			 */
-			rights.setGrade("0");
-
-			title.setText("워밸리 온라인");
-
-			/*
-			 * source mediaType, size, type, url
-			 */
-			source.setMediaType("image/png");
-			source.setSize(1234);
-			source.setType("thumbnail");
-			source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
-			sourceList.add(source);
-
-			/*
-			 * Price text
-			 */
-			price.setText(0);
-
-			product = new Product();
-			product.setIdentifierList(identifierList);
-			product.setSupportList(supportList);
-			product.setMenuList(menuList);
-			product.setApp(app);
-			product.setAccrual(accrual);
-			product.setRights(rights);
-			product.setTitle(title);
-			product.setSourceList(sourceList);
-			product.setProductExplain("★이벤트★세상에 없던 모바일 MMORPG!");
-			product.setPrice(price);
-
-			productList.add(product);
-		}
+        } else {
+            // 조회 결과 없음
+            commonResponse.setTotalCount(0);
+            response.setProductList(productList);
+            response.setCommonResponse(commonResponse);
+        }
 
 		response.setCommonResponse(commonResponse);
 		response.setProductList(productList);

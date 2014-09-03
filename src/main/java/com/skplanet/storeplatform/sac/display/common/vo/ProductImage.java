@@ -18,7 +18,7 @@ public class ProductImage {
 	/** 파일 명 */
 	private String fileNm;
 	/** 파일 사이즈 */
-	private Integer fileSize;
+	private Long fileSize;
 
 	/**
 	 * 상품ID
@@ -139,7 +139,7 @@ public class ProductImage {
 	 *
 	 * @return 파일 사이즈
 	 */
-	public Integer getFileSize() {
+	public Long getFileSize() {
 		return this.fileSize;
 	}
 
@@ -149,7 +149,7 @@ public class ProductImage {
 	 * @param fileSize
 	 *            파일 사이즈
 	 */
-	public void setFileSize(Integer fileSize) {
+	public void setFileSize(Long fileSize) {
 		this.fileSize = fileSize;
 	}
 

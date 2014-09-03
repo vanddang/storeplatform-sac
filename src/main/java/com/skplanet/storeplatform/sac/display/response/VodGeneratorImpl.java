@@ -172,7 +172,7 @@ public class VodGeneratorImpl implements VodGenerator {
 			videoInfo.setPictureSize(metaInfo.getNmDpPicRatio());
 			videoInfo.setPixel(metaInfo.getNmDpPixel());
 			videoInfo.setScid(metaInfo.getNmSubContsId());
-			videoInfo.setSize(metaInfo.getNmFileSize().toString());
+			videoInfo.setSize(metaInfo.getNmFileSize());
 			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
 			videoInfo.setVersion(metaInfo.getNmProdVer());
 			videoInfo.setFilePath(metaInfo.getNmFilePath());
@@ -188,7 +188,7 @@ public class VodGeneratorImpl implements VodGenerator {
 			videoInfo.setPictureSize(metaInfo.getSdDpPicRatio());
 			videoInfo.setPixel(metaInfo.getSdDpPixel());
 			videoInfo.setScid(metaInfo.getSdSubContsId());
-			videoInfo.setSize(metaInfo.getSdFileSize().toString());
+			videoInfo.setSize(metaInfo.getSdFileSize());
 			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_SD);
 			videoInfo.setVersion(metaInfo.getSdProdVer());
 			videoInfo.setFilePath(metaInfo.getSdFilePath());
@@ -204,7 +204,7 @@ public class VodGeneratorImpl implements VodGenerator {
 			videoInfo.setPictureSize(metaInfo.getHdDpPicRatio());
 			videoInfo.setPixel(metaInfo.getHdDpPixel());
 			videoInfo.setScid(metaInfo.getHdSubContsId());
-			videoInfo.setSize(metaInfo.getHdFileSize().toString());
+			videoInfo.setSize(metaInfo.getHdFileSize());
 			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
 			videoInfo.setVersion(metaInfo.getHdProdVer());
 			videoInfo.setFilePath(metaInfo.getHdFilePath());
