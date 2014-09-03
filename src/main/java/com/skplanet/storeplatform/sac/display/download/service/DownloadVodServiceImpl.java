@@ -381,53 +381,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										metaInfo.setPurchaseHide(purchaseHide);
 										metaInfo.setUpdateAlarm(updateAlarm);
 
-										// 정액권 상품으로 구매한 경우 정액권 상품의 DRM_YN 정보를 내려준다.
-										String fixrateProdDrmYn = "N";
-										
-										
-										// 2014.07.01. kdlim. 구매 내역 drmYn 값이 정확하지 않아 상품정보 drmYn으로 변경
-										// 단, T Freemium을 통한 구매건의 경우는 무조건 DRM적용이므로 아래의 조건을 예외처리 해야함.
-										//-	"prchsReqPathCd": "OR0004xx",
-										//-	OR000413, OR000420 2개 코드가 T Freemium을 통한 구매건임.
-										if(StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM1_CD, prchsReqPathCd)
-												|| StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM2_CD, prchsReqPathCd)) {
-											metaInfo.setDrmYn("Y");
-											metaInfo.setStoreDrmYn("Y");
-											metaInfo.setPlayDrmYn("Y");
-										} else {
-											
-											if(StringUtils.isNotEmpty(useFixrateProdId)) {
-												Map<String, String> paramFixrateProd = new HashMap<String, String>();
-												paramFixrateProd.put("fixrateProdId", useFixrateProdId);
-												paramFixrateProd.put("prodId", metaInfo.getEspdProdId());
-												
-												MetaInfo fixrateProd = (MetaInfo) this.commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
-												
-												// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
-												if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-													metaInfo.setStoreDrmYn(fixrateProd.getStoreDrmYn());
-													metaInfo.setDrmYn(fixrateProd.getStoreDrmYn());
-												} else {
-													metaInfo.setPlayDrmYn(fixrateProd.getPlayDrmYn());
-													metaInfo.setDrmYn(fixrateProd.getPlayDrmYn());
-												}
-												
-												metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
-											
-											} else {
-												//정액권 상품이 아닌 경우 상품의 DRM_YN 을 리턴 
-												// 소장, 대여 구분(Store : 소장, Play : 대여)
-												if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-													metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-													metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
-												} else {
-													metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-													metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
-												}
-											}
-										}
-
-										this.log.debug("DownloadVodServiceImpl fixrateProdDrmYn={}, prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", fixrateProdDrmYn, prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
+										//DRM_YN
+										mapDrmYn(metaInfo, historySacIn);
+										this.log.debug("DownloadVodServiceImpl prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
 
 										// 암호화 정보 (JSON)
                                         Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
@@ -531,5 +487,62 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * @param metaInfo
+	 * @param prchsProdId
+	 * @param prchsReqPathCd
+	 * @param useFixrateProdId
+	 */
+	private void mapDrmYn(MetaInfo metaInfo, HistorySacIn historySacIn) {
+		String prchsProdId = historySacIn.getProdId();
+		String prchsReqPathCd = historySacIn.getPrchsReqPathCd();
+		String useFixrateProdId = historySacIn.getUseFixrateProdId();
+		
+		// 2014.07.01. kdlim. 구매 내역 drmYn 값이 정확하지 않아 상품정보 drmYn으로 변경
+		// 단, T Freemium을 통한 구매건의 경우는 무조건 DRM적용이므로 아래의 조건을 예외처리 해야함.
+		//-	"prchsReqPathCd": "OR0004xx",
+		//-	OR000413, OR000420 2개 코드가 T Freemium을 통한 구매건임.
+		if(StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM1_CD, prchsReqPathCd)
+				|| StringUtils.equals(DisplayConstants.PRCHS_REQ_PATH_TFREEMIUM2_CD, prchsReqPathCd)) {
+			metaInfo.setDrmYn("Y");
+			metaInfo.setStoreDrmYn("Y");
+			metaInfo.setPlayDrmYn("Y");
+		} else {
+			
+			if(StringUtils.isNotEmpty(useFixrateProdId)) {
+				Map<String, String> paramFixrateProd = new HashMap<String, String>();
+				paramFixrateProd.put("fixrateProdId", useFixrateProdId);
+				paramFixrateProd.put("prodId", metaInfo.getEspdProdId());
+				
+				MetaInfo fixrateProd = (MetaInfo) this.commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
+				
+				// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
+				if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+					metaInfo.setStoreDrmYn(fixrateProd.getStoreDrmYn());
+					metaInfo.setDrmYn(fixrateProd.getStoreDrmYn());
+				} else {
+					metaInfo.setPlayDrmYn(fixrateProd.getPlayDrmYn());
+					metaInfo.setDrmYn(fixrateProd.getPlayDrmYn());
+				}
+				
+				metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+			
+			} else {
+				//정액권 상품이 아닌 경우 상품의 DRM_YN 을 리턴 
+				// 소장, 대여 구분(Store : 소장, Play : 대여)
+				if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+					metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
+					metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+				} else {
+					metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
+					metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+				}
+			}
+		}
 	}
 }
