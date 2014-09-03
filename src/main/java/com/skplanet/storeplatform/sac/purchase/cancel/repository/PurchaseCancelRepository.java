@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.cancel.repository;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.PayCancelResult;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
@@ -205,5 +206,21 @@ public interface PurchaseCancelRepository {
 	 * @return String
 	 */
 	String getAutoPrchsStatus(PurchaseCancelSacParam purchaseCancelSacParam, PrchsDtlSacParam prchsDtlSacParam);
+
+	/**
+	 * 
+	 * <pre>
+	 * SMS발송.
+	 * </pre>
+	 * 
+	 * @param sendMdn
+	 *            보낸사람
+	 * @param recvMdn
+	 *            받는사람
+	 * @param msg
+	 *            메세지
+	 * @return SmsSendEcRes
+	 */
+	SmsSendEcRes sendSms(String recvMdn, String msg);
 
 }

@@ -23,9 +23,12 @@ import com.skplanet.storeplatform.external.client.arm.vo.RemoveLicenseEcRes;
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.AomSendEcReq;
 import com.skplanet.storeplatform.external.client.message.vo.AomSendEcRes;
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.payplanet.sci.CancelSCI;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcReq;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
+import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcResPaymethod;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStorePaymentSCI;
 import com.skplanet.storeplatform.external.client.tstore.vo.Pay;
@@ -180,6 +183,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 				String.valueOf(paymentSacParam.getTotAmt().intValue()), paymentSacParam.getMid()));
 		cancelEcReq.setTid(paymentSacParam.getTid()); // StringUtils.substringBefore(paymentSacParam.getTid(), ":")
 		cancelEcReq.setCdCancelReason(PurchaseConstants.PAYPLANET_PAYMENT_CANCEL_REASON_VOC);
+		cancelEcReq.setUserKey(paymentSacParam.getInsdUsermbrNo()); // 2014.09.01 규격 추가
 
 		return this.cancelSCI.cancelPayment(cancelEcReq);
 
@@ -459,6 +463,8 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 					purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 					purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
 					purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+
+					// T Store 결제일 경우 처리
 					if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
 							&& purchaseCancelDetailSacParam.gettStorePayCancelResultList().size() > 0) {
 						for (PayCancelResult payCancelResult : purchaseCancelDetailSacParam
@@ -472,6 +478,25 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 								}
 								purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(payCancelResult
 										.getPayCancelResultCd());
+							}
+						}
+					}
+
+					// Pay Planet 결제일 경우 처리 2014.09.01
+					if (purchaseCancelDetailSacParam.getPayPlanetCancelEcRes() != null
+							&& purchaseCancelDetailSacParam.getPayPlanetCancelEcRes().getResPaymethod().size() > 0) {
+						for (CancelEcResPaymethod cancelEcResPaymethod : purchaseCancelDetailSacParam
+								.getPayPlanetCancelEcRes().getResPaymethod()) {
+							if (StringUtils.equals(cancelEcResPaymethod.getCdPaymethod(),
+									paymentSacParam.getPaymentMtdCd())) {
+								if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYPLANET_CANCEL_SUCCESS,
+										cancelEcResPaymethod.getResultCode())) {
+									// PayPlanet 결제 취소 실패이면
+									purchaseCancelPaymentDetailScReq
+											.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
+								}
+								purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(cancelEcResPaymethod
+										.getResultCode());
 							}
 						}
 					}
@@ -881,4 +906,21 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		return autoPaymentScRes.getAutoPrchs().getAutoPaymentStatusCd();
 	}
 
+	@Override
+	public SmsSendEcRes sendSms(String recvMdn, String msg) {
+
+		SmsSendEcReq smsSendEcReq = new SmsSendEcReq();
+
+		recvMdn = "01027883104"; // TODO : 테스트용
+
+		smsSendEcReq.setSendMdn("15990011");
+		smsSendEcReq.setRecvMdn(recvMdn);
+		smsSendEcReq.setMsg(msg);
+
+		smsSendEcReq.setTeleSvcId("0"); // 텔레서비스ID(0:단문SMS)
+		smsSendEcReq.setCarrier("");
+		smsSendEcReq.setSrcId("US004530"); // 구매결제취소
+
+		return this.messageSCI.smsSend(smsSendEcReq);
+	}
 }
