@@ -112,7 +112,8 @@
                    AND Z2.LANG_CD = B.LANG_CD
                    AND Z1.PART_PROD_ID = A.PROD_ID
                    AND ROWNUM = 1
-            )                   AS CHNL_PROD_NM /* 채널상품명 */
+            )                   AS CHNL_PROD_NM /* 채널상품명 */,
+            (SELECT RSHP.PROD_ID FROM TB_DP_PROD_RSHP RSHP WHERE RSHP.PART_PROD_ID = A.PROD_ID AND RSHP.PROD_RSHP_CD = 'DP010801') AS PARENT_PROD_ID
         FROM TB_DP_PROD A
             , TB_DP_PROD_DESC B
             , TB_DP_TENANT_PROD C
