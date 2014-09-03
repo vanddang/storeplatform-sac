@@ -1086,4 +1086,17 @@
                     AND  TB.IMG_CD = #{imageCd}
     </select>
     
+    
+	<!-- 정액권 상품 정보 조회 -->
+    <select id="selectFixrateProdInfo" parameterType="Map" resultType="MetaInfo">
+		  SELECT  /* DownloadMapper.selectFixrateProdInfo, 정액권 상품 정보 조회, 임근대/SKP, 2014-09-02 */
+		          a.prod_id as freepass_prod_id, a.part_prod_id as chnl_prod_id, b.part_prod_id as prod_id, 
+		          a.dwld_drm_yn as store_drm_yn, a.strm_drm_yn as play_drm_yn
+		    FROM  tb_dp_fixrate_prod_mapg a, tb_dp_prod_rshp b
+		   WHERE  a.prod_id = #{fixrateProdId} /* 정액권 상품ID */
+		     AND  a.part_prod_id = b.prod_id
+		     AND  b.part_prod_id = #{prodId} /* 상품ID */
+
+    </select>
+    
 </mapper>
