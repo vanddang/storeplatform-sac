@@ -28,7 +28,7 @@ public class Source extends CommonInfo implements Serializable {
 	 * Contents의 MimeType (image/png : PNG 이미지, image/jpeg : JPG 이미지)
 	 */
 	private String mediaType;
-	private Integer size; // 파일 사이즈
+	private Long size; // 파일 사이즈
 	/*
 	 * Resource 타입 (product : 상품, thumbnail : 썸네일, movie : 동영상, screenshot : 스크린샷, screenshot/large : 스크린샷(큰사이즈), music
 	 * : 음악, barcode : 바코드이미지, 음악의 경우 audio/mp3-192, audio/mp3-128로 구분한다. preview : vod 미리보기, DLM : 다운로드 메타 이미지)
@@ -59,7 +59,7 @@ public class Source extends CommonInfo implements Serializable {
 	/**
 	 * @return the size
 	 */
-	public Integer getSize() {
+	public Long getSize() {
 		return this.size;
 	}
 
@@ -67,7 +67,7 @@ public class Source extends CommonInfo implements Serializable {
 	 * @param size
 	 *            the size to set
 	 */
-	public void setSize(Integer size) {
+	public void setSize(Long size) {
 		this.size = size;
 	}
 

@@ -28,8 +28,8 @@ public class EncryptionSubContents extends CommonInfo implements Serializable {
 	private String path; // 물리파일경로
 	private String type;
 	private String deltaPath;
-	private Integer size;
-	private Integer deltaSize;
+	private Long size;
+	private Long deltaSize;
 
 	/**
 	 * @return the scid
@@ -91,39 +91,19 @@ public class EncryptionSubContents extends CommonInfo implements Serializable {
 		this.deltaPath = deltaPath;
 	}
 
-	/**
-	 *
-	 * @return the size
-	 */
-	public Integer getSize() {
-		return this.size;
-	}
+    public Long getSize() {
+        return size;
+    }
 
-	/**
-	 *
-	 * @param size
-	 * 			the size to set
-	 */
-	public void setSize(Integer size) {
-		this.size = size;
-	}
+    public void setSize(Long size) {
+        this.size = size;
+    }
 
-	/**
-	 *
-	 * @return the deltaSize
-	 */
-	public Integer getDeltaSize() {
-		return this.deltaSize;
-	}
+    public Long getDeltaSize() {
+        return deltaSize;
+    }
 
-	/**
-	 *
-	 * @param deltaSize
-	 * 			the deltaSize to set
-	 */
-	public void setDeltaSize(Integer deltaSize) {
-		this.deltaSize = deltaSize;
-	}
-
-
+    public void setDeltaSize(Long deltaSize) {
+        this.deltaSize = deltaSize;
+    }
 }

@@ -29,7 +29,7 @@ public class App extends CommonInfo {
 	private String packageName; // 패키지명
 	private String versionCode; // 패키지 버전 코드
 	private String version; // App 상품 버전
-	private Integer size; // 용량 (byte단위)
+	private Long size; // 용량 (byte단위)
 	private Date date; // 상품 등록일자
 	private History history; // update history
 	private Install install; // Install 정보
@@ -188,7 +188,7 @@ public class App extends CommonInfo {
 	 * 
 	 * @return Integer
 	 */
-	public Integer getSize() {
+	public Long getSize() {
 		return this.size;
 	}
 
@@ -201,7 +201,7 @@ public class App extends CommonInfo {
 	 * @param size
 	 *            size
 	 */
-	public void setSize(Integer size) {
+	public void setSize(Long size) {
 		this.size = size;
 	}
 

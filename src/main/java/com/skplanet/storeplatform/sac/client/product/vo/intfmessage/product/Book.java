@@ -49,7 +49,7 @@ public class Book extends CommonInfo implements Serializable {
 	/**
 	 * 용량 (byte 단위).
 	 */
-	private Integer size;
+	private Long size;
 	/**
 	 * 회차 정보.
 	 */
@@ -191,22 +191,15 @@ public class Book extends CommonInfo implements Serializable {
 		this.scid = scid;
 	}
 
-	/**
-	 * @return the size
-	 */
-	public Integer getSize() {
-		return this.size;
-	}
+    public Long getSize() {
+        return size;
+    }
 
-	/**
-	 * @param size
-	 *            the size to set
-	 */
-	public void setSize(Integer size) {
-		this.size = size;
-	}
+    public void setSize(Long size) {
+        this.size = size;
+    }
 
-	/**
+    /**
 	 * @return the chapter
 	 */
 	public Chapter getChapter() {
