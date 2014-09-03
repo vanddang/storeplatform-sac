@@ -381,9 +381,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										metaInfo.setPurchaseHide(purchaseHide);
 										metaInfo.setUpdateAlarm(updateAlarm);
 
+										//PROD_CHRG
+										mapProdChrg(metaInfo, prchsProdId);
 										//DRM_YN
 										mapDrmYn(metaInfo, historySacIn);
-										this.log.debug("DownloadVodServiceImpl prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
+										
+										this.log.debug("DownloadVodServiceImpl ProdChrg={}, prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", metaInfo.getProdChrg(), prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
 
 										// 암호화 정보 (JSON)
                                         Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
@@ -495,6 +498,21 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	 * </pre>
 	 * @param metaInfo
 	 * @param prchsProdId
+	 */
+	private void mapProdChrg(MetaInfo metaInfo, String prchsProdId) {
+		if (StringUtils.equals(prchsProdId, metaInfo.getStoreProdId())) {
+			metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
+		} else {
+			metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
+		}
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * @param metaInfo
+	 * @param prchsProdId
 	 * @param prchsReqPathCd
 	 * @param useFixrateProdId
 	 */
@@ -529,18 +547,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					metaInfo.setPlayDrmYn(fixrateProd.getPlayDrmYn());
 					metaInfo.setDrmYn(fixrateProd.getPlayDrmYn());
 				}
-				
-				metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
 			
 			} else {
 				//정액권 상품이 아닌 경우 상품의 DRM_YN 을 리턴 
 				// 소장, 대여 구분(Store : 소장, Play : 대여)
-				if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+				if (StringUtils.equals(prchsProdId, metaInfo.getStoreProdId())) {
 					metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-					metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
 				} else {
 					metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-					metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
 				}
 			}
 		}
