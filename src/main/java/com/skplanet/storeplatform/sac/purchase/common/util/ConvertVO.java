@@ -35,6 +35,7 @@ public class ConvertVO {
 		purchaseCommonSacParam.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		purchaseCommonSacParam.setSystemId(sacRequestHeader.getTenantHeader().getSystemId());
 		purchaseCommonSacParam.setLangCd(sacRequestHeader.getTenantHeader().getLangCd());
+		purchaseCommonSacParam.setModel(sacRequestHeader.getDeviceHeader().getModel());
 
 		purchaseCommonSacParam.setUserKey(purchaseCommonSacReq.getUserKey());
 		purchaseCommonSacParam.setDeviceKey(purchaseCommonSacReq.getDeviceKey());
