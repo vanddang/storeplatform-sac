@@ -42,6 +42,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	private String dwldExprDt; // 다운로드 만료일시
 	private String parentBunchId;
 	private String bnchProdId;
+	private Integer apkVerCd;
 
 	/**
 	 *
@@ -422,6 +423,14 @@ public class DownloadAppSacReq extends CommonInfo {
 
 	public void setBnchProdId(String bnchProdId) {
 		this.bnchProdId = bnchProdId;
+	}
+
+	public Integer getApkVerCd() {
+		return this.apkVerCd;
+	}
+
+	public void setApkVerCd(Integer apkVerCd) {
+		this.apkVerCd = apkVerCd;
 	}
 
 
