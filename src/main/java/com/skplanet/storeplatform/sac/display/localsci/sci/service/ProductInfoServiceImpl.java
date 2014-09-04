@@ -1,20 +1,5 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.skplanet.storeplatform.sac.display.common.EbookComicType;
-import com.skplanet.storeplatform.sac.display.common.ProductType;
-import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.MapgProdMeta;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
@@ -24,10 +9,24 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
+import com.skplanet.storeplatform.sac.display.common.EbookComicType;
+import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 

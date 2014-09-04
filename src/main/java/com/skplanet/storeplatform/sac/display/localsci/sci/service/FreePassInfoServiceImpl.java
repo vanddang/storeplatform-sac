@@ -1,29 +1,21 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 

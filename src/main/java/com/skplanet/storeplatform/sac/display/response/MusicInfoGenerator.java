@@ -9,13 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+
+import java.util.List;
 
 /**
  * 음원 상품 전용 정보 Generator

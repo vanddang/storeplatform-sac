@@ -9,13 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.device.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceChangeSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSacReq;
@@ -23,6 +16,12 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSa
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DeviceChange Service 인터페이스(CoreStoreBusiness) 구현체

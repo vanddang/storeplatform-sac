@@ -9,22 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionData;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionDeviceKey;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionStatus;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionSubContents;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionUsagePolicy;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * for download 전용 상품 암호화 정보 Generator 구현체.

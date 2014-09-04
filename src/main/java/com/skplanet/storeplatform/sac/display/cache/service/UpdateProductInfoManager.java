@@ -12,8 +12,6 @@ package com.skplanet.storeplatform.sac.display.cache.service;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
 
-import java.util.Map;
-
 /**
  * <p>
  * 업데이트 상품 정보

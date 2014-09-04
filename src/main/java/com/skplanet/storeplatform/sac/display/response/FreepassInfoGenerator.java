@@ -9,16 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.List;
-
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cash;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+
+import java.util.List;
 
 /**
  * 

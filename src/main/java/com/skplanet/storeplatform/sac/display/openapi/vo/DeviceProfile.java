@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.vo;
 
-import java.util.Map;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
+import java.util.Map;
 
 /**
  * Calss 설명

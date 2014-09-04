@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.display.related.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacV2Req;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
 

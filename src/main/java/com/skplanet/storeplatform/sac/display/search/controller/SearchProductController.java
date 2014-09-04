@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.search.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductReq;
+import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.search.service.SearchVodBoxProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductReq;
-import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.search.service.SearchVodBoxProductService;
 
 /**
  * Meta 정보 조회 Prototype Controller

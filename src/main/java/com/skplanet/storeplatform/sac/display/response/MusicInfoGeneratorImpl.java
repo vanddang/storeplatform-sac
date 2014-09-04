@@ -9,13 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
@@ -24,6 +17,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Musi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 음원 상품 전용 정보 Generator 구현체

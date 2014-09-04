@@ -9,9 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.related.vo;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * BoughtTogetherProduct VO

@@ -9,13 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppInfoSacReq;
@@ -30,6 +23,12 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * OpenApi SalesApp Service 인터페이스(CoreStoreBusiness) 구현체
@@ -43,10 +42,10 @@ public class SalesAppServiceImpl implements SalesAppService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	CommonMetaInfoGenerator commonMetaInfoGenerator;
+	private CommonMetaInfoGenerator commonMetaInfoGenerator;
 
 	@Autowired
-	AppInfoGenerator appInfoGenerator;
+    private AppInfoGenerator appInfoGenerator;
 
 	/*
 	 * (non-Javadoc)

@@ -9,16 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq;
@@ -34,10 +24,18 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -52,8 +50,6 @@ public class NewAppRecommendServiceImpl implements NewAppRecommendService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-	@Autowired
-	private DisplayCommonService commonService;
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 	@Autowired

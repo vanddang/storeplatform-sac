@@ -9,18 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.freepass.service;
 
-import java.util.List;
-
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.*;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+
+import java.util.List;
 
 /**
  * Freepass Service 인터페이스(CoreStoreBusiness)

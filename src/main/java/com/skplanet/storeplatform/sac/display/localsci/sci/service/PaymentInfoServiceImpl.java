@@ -1,15 +1,21 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.VodType;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
+import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,18 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
-import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
-import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
-import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.SET_SERIES_META;
 
 /**
  *

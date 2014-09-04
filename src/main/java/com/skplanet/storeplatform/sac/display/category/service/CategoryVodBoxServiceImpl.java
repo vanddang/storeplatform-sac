@@ -9,11 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.category.vo.CategoryVodBox;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,31 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.category.vo.CategoryVodBox;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGeneratorImpl;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Category Vod Box Service 인터페이스(CoreStoreBusiness) 구현체

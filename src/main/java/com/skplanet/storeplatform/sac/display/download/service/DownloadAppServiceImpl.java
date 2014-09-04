@@ -9,18 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
@@ -38,11 +26,7 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Component;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -52,6 +36,17 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체

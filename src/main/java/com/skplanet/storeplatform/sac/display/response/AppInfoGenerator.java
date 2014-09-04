@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -19,6 +17,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Inst
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+
+import java.util.List;
 
 /**
  * App 상품 전용 정보 Generator

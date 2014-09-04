@@ -2,9 +2,6 @@ package com.skplanet.storeplatform.sac.display.music.service;
 
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetailComposite;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetailParam;
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
-
-import java.util.Map;
 
 /**
  * 음악 상세 보기

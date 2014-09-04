@@ -1,10 +1,5 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
@@ -12,6 +7,10 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Change
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq.GroupChangeDisplayUserKey;
 import com.skplanet.storeplatform.sac.display.localsci.sci.service.ChangeDisplayUserService;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * 

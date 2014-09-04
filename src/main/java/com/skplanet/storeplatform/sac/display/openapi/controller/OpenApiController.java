@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.controller;
 
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
-
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.openapi.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,59 +20,10 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByProductIdSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadAppSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadMMSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.BestDownloadMMSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.NewAppRecommendSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.NoProvisionSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppInfoSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppInfoSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SalesAppSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchAppNameSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchSellerNameSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SearchSellerNameSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppDetailReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppDetailRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerIdAppListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SupportGameCenterSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SupportGameCenterSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
-import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
-import com.skplanet.storeplatform.sac.display.openapi.service.AppDetailByPkgNmService;
-import com.skplanet.storeplatform.sac.display.openapi.service.AppDetailByProdIdService;
-import com.skplanet.storeplatform.sac.display.openapi.service.BestDownloadAppService;
-import com.skplanet.storeplatform.sac.display.openapi.service.BestDownloadMMService;
-import com.skplanet.storeplatform.sac.display.openapi.service.DownloadBestService;
-import com.skplanet.storeplatform.sac.display.openapi.service.NewAppRecommendService;
-import com.skplanet.storeplatform.sac.display.openapi.service.NoProvisionService;
-import com.skplanet.storeplatform.sac.display.openapi.service.SalesAppService;
-import com.skplanet.storeplatform.sac.display.openapi.service.SearchAppNameService;
-import com.skplanet.storeplatform.sac.display.openapi.service.SearchSellerNameService;
-import com.skplanet.storeplatform.sac.display.openapi.service.SellerAppDetailService;
-import com.skplanet.storeplatform.sac.display.openapi.service.SellerAppListService;
-import com.skplanet.storeplatform.sac.display.openapi.service.SellerIdAppListService;
-import com.skplanet.storeplatform.sac.display.openapi.service.SupportGameCenterService;
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
 
 /**
  * Open API 관련 Controller
@@ -82,13 +33,7 @@ import com.skplanet.storeplatform.sac.display.openapi.service.SupportGameCenterS
 @Controller
 @RequestMapping("/display/openapi")
 public class OpenApiController {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-	@Autowired
-	private DeviceProfileService deviceProfileService;
-
-	@Autowired
-	private DeviceProductProvisioningService deviceProductProvisioningService;
+	private static final Logger log = LoggerFactory.getLogger(OpenApiController.class);
 
 	@Autowired
 	private DownloadBestService downloadBestService;

@@ -1,6 +1,5 @@
 package com.skplanet.storeplatform.sac.display.feature.appCodi.service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -23,7 +22,6 @@ public interface AppCodiService {
 	 *            requestHeader
 	 * @return AppCodiListRes
 	 */
-	public AppCodiListSacRes searchAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader)
-			throws StorePlatformException;
+	public AppCodiListSacRes searchAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader);
 
 }

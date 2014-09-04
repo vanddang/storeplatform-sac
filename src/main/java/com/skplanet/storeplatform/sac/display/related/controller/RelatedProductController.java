@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.display.related.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.related.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.related.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,24 +11,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.related.AuthorProductSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.related.AuthorProductSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacV2Req;
-import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.related.service.ArtistProductService;
-import com.skplanet.storeplatform.sac.display.related.service.AuthorProductService;
-import com.skplanet.storeplatform.sac.display.related.service.BoughtTogetherProductService;
-import com.skplanet.storeplatform.sac.display.related.service.SellerProductService;
-import com.skplanet.storeplatform.sac.display.related.service.SimilarProductService;
 
 /**
  *

@@ -2,7 +2,6 @@ package com.skplanet.storeplatform.sac.display.product.service;
 
 import com.skplanet.icms.deploy.DPProductVO;
 import com.skplanet.icms.refactoring.deploy.DPTenantProductVO;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.product.vo.ProductVo;
 import org.slf4j.Logger;
@@ -86,12 +85,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-	public void insertWhiteList(String prodId) throws StorePlatformException {
+	public void insertWhiteList(String prodId) {
 		this.commonDAO.insert("Display_Product.insertWhiteList", prodId);
-	};
+	}
 
 	@Override
-	public void registTotalSalesHis(ProductVo vo) throws StorePlatformException {
+	public void registTotalSalesHis(ProductVo vo) {
 		this.commonDAO.insert("Display_Product.updateTotalSalesHis", vo);
-	};
+	}
 }

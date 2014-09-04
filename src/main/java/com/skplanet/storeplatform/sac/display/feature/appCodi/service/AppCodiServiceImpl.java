@@ -9,20 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.appCodi.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.external.client.isf.vo.MultiValueType;
 import com.skplanet.storeplatform.external.client.isf.vo.MultiValuesType;
@@ -34,20 +20,9 @@ import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiSacReq;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -65,6 +40,15 @@ import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * App Codi Service 인터페이스(CoreStoreBusiness) 구현체
@@ -100,8 +84,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public AppCodiListSacRes searchAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader)
-			throws StorePlatformException {
+	public AppCodiListSacRes searchAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader) {
 
 		boolean isExists = true;
 

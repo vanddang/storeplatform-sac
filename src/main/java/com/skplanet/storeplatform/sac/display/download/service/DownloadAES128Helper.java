@@ -1,17 +1,15 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.security.MessageDigest;
-import java.util.List;
-import java.util.Random;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import java.security.MessageDigest;
+import java.util.List;
+import java.util.Random;
 
 /**
  * DownloadAES128Helper Component

@@ -8,12 +8,11 @@
  */
 package com.skplanet.storeplatform.sac.display.product.service;
 
+import com.skplanet.icms.refactoring.deploy.DPSprtDeviceVO;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import com.skplanet.icms.refactoring.deploy.DPSprtDeviceVO;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 
 /**
  * <pre>

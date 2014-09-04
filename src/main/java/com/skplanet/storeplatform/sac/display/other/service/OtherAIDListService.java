@@ -9,11 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherAIDListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherAIDListRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+
+import java.util.List;
 
 /**
  * AID로 상품 ID 조회 Service

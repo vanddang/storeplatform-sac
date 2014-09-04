@@ -3,18 +3,6 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -34,8 +22,14 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * 상품 상세 정보 요청(Package Name) Service 구현체
@@ -53,9 +47,7 @@ public class SupportGameCenterServiceImpl implements SupportGameCenterService {
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 	@Autowired
-	private AppInfoGenerator appInfoGenerator;
-	@Autowired
-	HistoryInternalSCI historyInternalSCI;
+	private HistoryInternalSCI historyInternalSCI;
 
 	/*
 	 * (non-Javadoc)

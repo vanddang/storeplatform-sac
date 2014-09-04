@@ -9,13 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.common.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
@@ -23,6 +16,12 @@ import com.skplanet.storeplatform.sac.other.common.constant.OtherConstants;
 import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceService;
 import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceTypeService;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>

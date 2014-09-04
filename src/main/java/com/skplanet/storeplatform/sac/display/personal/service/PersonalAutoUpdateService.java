@@ -3,11 +3,11 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.service;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
 import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+
+import java.util.List;
 
 /**
  * 자동 Update 목록 조회 Service.

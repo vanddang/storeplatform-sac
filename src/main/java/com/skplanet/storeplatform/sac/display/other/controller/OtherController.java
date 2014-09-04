@@ -9,9 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.other.controller;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.display.vo.other.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.other.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,28 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherAIDListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherAIDListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistRes;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackageListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPackageListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipRes;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipUseStatusRes;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.other.service.OtherAIDListService;
-import com.skplanet.storeplatform.sac.display.other.service.OtherArtistService;
-import com.skplanet.storeplatform.sac.display.other.service.OtherPackageListService;
-import com.skplanet.storeplatform.sac.display.other.service.OtherServiceGroupService;
-import com.skplanet.storeplatform.sac.display.other.service.OtherTMembershipService;
-import com.skplanet.storeplatform.sac.display.other.service.OtherTagService;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 기타 카테고리 Controller

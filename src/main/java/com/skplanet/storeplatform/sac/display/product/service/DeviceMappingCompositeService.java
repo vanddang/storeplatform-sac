@@ -1,7 +1,6 @@
 package com.skplanet.storeplatform.sac.display.product.service;
 
 import com.skplanet.icms.devicemapping.DeviceMappingQueueVO;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 
 
 /**

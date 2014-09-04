@@ -9,10 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.related.service;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
+
+import java.util.List;
 
 /**
  * BoughtTogetherProductDataService 인터페이스

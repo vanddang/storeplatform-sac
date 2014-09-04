@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+
 import static com.skplanet.storeplatform.sac.display.common.ProductType.*;
 
 /**

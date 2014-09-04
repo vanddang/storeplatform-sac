@@ -9,34 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.display.freepass.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.*;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
@@ -54,6 +34,16 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Freepass Service (CoreStoreBusiness)
@@ -511,58 +501,6 @@ public class FreepassServiceImpl implements FreepassService {
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setCouponList(couponList);
 		return responseVO;
-	}
-
-	/**
-	 * <pre>
-	 * 기구매 체크. => 공통메서드로 변경되어 추후 삭제 예정
-	 * </pre>
-	 * 
-	 * @param req
-	 *            FreepassDetailReq
-	 * @param metaInfo
-	 *            MetaInfo
-	 * @return HistoryCountSacInRes
-	 * 
-	 */
-	public HistoryListSacInRes getPrchsInfo(FreepassDetailReq req, MetaInfo metaInfo) {
-
-		// 구매내역 조회를 위한 생성자
-		ProductListSacIn productListSacIn = new ProductListSacIn();
-		List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
-		HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
-		HistoryListSacInRes historyListSacRes = null;
-
-		try {
-			// 정액제 상품ID
-			productListSacIn.setProdId(metaInfo.getProdId());
-			productList.add(productListSacIn);
-
-			historyListSacReq.setTenantId(req.getTenantId());
-			historyListSacReq.setUserKey(req.getUserKey());
-			historyListSacReq.setDeviceKey(req.getDeviceKey());
-			historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-			historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-			historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-			historyListSacReq.setEndDt(metaInfo.getSysDate());
-			historyListSacReq.setProductList(productList);
-
-			// 구매내역 조회 실행
-			this.log.info("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
-			long start = System.currentTimeMillis();
-
-			// historyCountSacRes = this.historyInternalSCI.searchHistoryCount(historyCountSacReq);
-			historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
-			this.log.info("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
-			long end = System.currentTimeMillis();
-			this.log.info("##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
-					(end - start));
-
-		} catch (Exception ex) {
-			// ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로 처리한다.
-			this.log.info("FREEPASS 상세 조회시 기구매 체크 연동 오류");
-		}
-		return historyListSacRes;
 	}
 
 	/**

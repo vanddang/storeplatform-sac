@@ -1,5 +1,9 @@
 package com.skplanet.storeplatform.sac.display.feature.appCodi.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiListSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiSacReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.feature.appCodi.service.AppCodiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiListSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiSacReq;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.feature.appCodi.service.AppCodiService;
 
 /**
  * 
@@ -44,7 +42,7 @@ public class AppCodiController {
 	@RequestMapping(value = "/appCodi/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AppCodiListSacRes searchAppCodiList(@RequestBody @Validated AppCodiSacReq requestVO,
-			SacRequestHeader requestHeader) throws StorePlatformException {
+			SacRequestHeader requestHeader) {
 
 		this.logger.debug("AppCodiController.searchAppCodiList start !!");
 		this.logger.debug("request {}", requestVO);

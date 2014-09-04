@@ -1,19 +1,13 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.localsci.sci.service.FreePassInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * 

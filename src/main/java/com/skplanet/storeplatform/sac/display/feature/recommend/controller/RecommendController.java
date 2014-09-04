@@ -4,6 +4,12 @@
 
 package com.skplanet.storeplatform.sac.display.feature.recommend.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminService;
+import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendOnedayService;
+import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendTodayService;
+import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendWebtoonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +20,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendOnedaySacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendOnedaySacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminService;
-import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendOnedayService;
-import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendTodayService;
-import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendWebtoonService;
 
 /**
  * 카네고리 메인(앱) 컨트롤러.

@@ -9,15 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
-import java.util.*;
-
-import com.skplanet.storeplatform.framework.core.util.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
@@ -30,6 +21,13 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.other.vo.OtherServiceGroup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * 

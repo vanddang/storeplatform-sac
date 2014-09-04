@@ -9,17 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.related.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacRes;
@@ -35,6 +24,16 @@ import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * BoughtTogether Product Service 인터페이스(CoreStoreBusiness)

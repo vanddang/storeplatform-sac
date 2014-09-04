@@ -9,13 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.appzine.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineAppListSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineAppListSacRes;
@@ -23,6 +16,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Appzine;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.appzine.vo.AppzineAppList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AppzineAppListService 인터페이스(CoreStoreBusiness) 구현체

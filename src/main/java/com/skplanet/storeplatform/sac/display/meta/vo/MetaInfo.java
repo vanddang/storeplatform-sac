@@ -1,10 +1,10 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
-import java.util.Date;
-import java.util.Map;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
+
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Ebook/Comic Meta Info.

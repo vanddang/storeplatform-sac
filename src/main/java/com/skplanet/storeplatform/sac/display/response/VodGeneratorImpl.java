@@ -9,25 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * VOD 상품 전용 정보 Generator 구현체

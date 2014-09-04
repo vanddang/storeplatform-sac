@@ -1,9 +1,9 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+
 import java.util.List;
 import java.util.Map;
-
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
  * Meta 정보 조회 Service.

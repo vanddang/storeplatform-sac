@@ -9,13 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.related.service;
 
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacV2Req;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
+import org.springframework.stereotype.Service;
 
 /*
  * BoughtTogetherProductTypeService 클래스

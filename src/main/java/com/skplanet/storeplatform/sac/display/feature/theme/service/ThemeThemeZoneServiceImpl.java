@@ -32,7 +32,7 @@ import com.skplanet.storeplatform.sac.display.feature.theme.vo.ThemeThemeZoneInf
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
-import com.skplanet.storeplatform.sac.display.response.*;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -56,18 +56,6 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 
 	@Autowired
 	private MetaInfoService metaInfoService;
-
-	@Autowired
-	private MusicInfoGenerator musicGenerator;
-
-	@Autowired
-	private VodGenerator vodGenerator;
-
-	@Autowired
-	private EbookComicGenerator ebookComicGenerator;
-
-	@Autowired
-	private ShoppingInfoGenerator shoppingInfoGenerator;
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
@@ -358,7 +346,7 @@ public class ThemeThemeZoneServiceImpl implements ThemeThemeZoneService {
 		req.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
 		ThemeThemeZoneSacRes res = new ThemeThemeZoneSacRes();
-        // return this.generateDummy1();
+
         // 필수 파라미터 체크 channelId
         int offset = 1; // default
         int count = 20; // default

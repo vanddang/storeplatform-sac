@@ -9,12 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.controller;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
-
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpdateService;
+import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateAlarmService;
+import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService;
+import com.skplanet.storeplatform.sac.display.personal.service.RecommendNewMemberProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,26 +26,12 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductRes;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.RecommendNewMemberProductRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpdateService;
-import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateAlarmService;
-import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService;
-import com.skplanet.storeplatform.sac.display.personal.service.RecommendNewMemberProductService;
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 개인화 관련 Controller

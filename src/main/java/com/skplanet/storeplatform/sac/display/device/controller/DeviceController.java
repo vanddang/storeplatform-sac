@@ -9,36 +9,23 @@
  */
 package com.skplanet.storeplatform.sac.display.device.controller;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceChangeSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningReq;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.device.*;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceChangeService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
 import com.skplanet.storeplatform.sac.display.device.service.UseableDeviceService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 특정 단말 조회 관련 Controller

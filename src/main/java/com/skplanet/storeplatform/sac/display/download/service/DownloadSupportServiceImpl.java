@@ -9,9 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
+import com.skplanet.storeplatform.framework.test.MarshallingHelper;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -21,12 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
-import com.skplanet.storeplatform.framework.test.MarshallingHelper;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>

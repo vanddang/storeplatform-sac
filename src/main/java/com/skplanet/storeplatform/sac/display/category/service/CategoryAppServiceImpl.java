@@ -9,18 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacReq;
@@ -36,6 +24,17 @@ import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * CategoryApp Service 인터페이스(CoreStoreBusiness) 구현체
@@ -131,60 +130,37 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
 
-		if (req.getDummy() == null) { // Dummy 가 아닐 경우
-			// 일반 카테고리 앱 상품 조회
-			List<ProductBasicInfo> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
-					ProductBasicInfo.class);
+        // 일반 카테고리 앱 상품 조회
+        List<ProductBasicInfo> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
+                ProductBasicInfo.class);
 
-			if (!appList.isEmpty()) {
-				Map<String, Object> reqMap = new HashMap<String, Object>();
-				reqMap.put("tenantHeader", tenantHeader);
-				reqMap.put("deviceHeader", deviceHeader);
-				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-				for (ProductBasicInfo productBasicInfo : appList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
-					reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-					MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+        if (!appList.isEmpty()) {
+            Map<String, Object> reqMap = new HashMap<String, Object>();
+            reqMap.put("tenantHeader", tenantHeader);
+            reqMap.put("deviceHeader", deviceHeader);
+            reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+            for (ProductBasicInfo productBasicInfo : appList) {
+                reqMap.put("productBasicInfo", productBasicInfo);
+                reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+                MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 
-					if (retMetaInfo != null) {
-						// Tstore멤버십 적립율 정보
-						retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
-						
-						Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
-						productList.add(product);
-					}
-				}
-				commonResponse.setTotalCount(appList.get(0).getTotalCount());
-				appRes.setProductList(productList);
-				appRes.setCommonResponse(commonResponse);
-			} else {
-				// 조회 결과 없음
-				commonResponse.setTotalCount(0);
-				appRes.setProductList(productList);
-				appRes.setCommonResponse(commonResponse);
-			}
-		} else {
-			// Dummy 일 경우
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+                if (retMetaInfo != null) {
+                    // Tstore멤버십 적립율 정보
+                    retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
 
-			ProductBasicInfo productBasicInfo = new ProductBasicInfo();
-			productBasicInfo.setProdId("0000142301");
-
-			reqMap.put("productBasicInfo", productBasicInfo);
-			reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-			MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
-
-			if (retMetaInfo != null) {
-				Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
-				productList.add(product);
-			}
-			commonResponse.setTotalCount(1);
-			appRes.setProductList(productList);
-			appRes.setCommonResponse(commonResponse);
-		}
+                    Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+                    productList.add(product);
+                }
+            }
+            commonResponse.setTotalCount(appList.get(0).getTotalCount());
+            appRes.setProductList(productList);
+            appRes.setCommonResponse(commonResponse);
+        } else {
+            // 조회 결과 없음
+            commonResponse.setTotalCount(0);
+            appRes.setProductList(productList);
+            appRes.setCommonResponse(commonResponse);
+        }
 
 		return appRes;
 	}

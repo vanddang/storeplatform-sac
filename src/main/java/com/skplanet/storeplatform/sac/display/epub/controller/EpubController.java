@@ -10,7 +10,10 @@
 package com.skplanet.storeplatform.sac.display.epub.controller;
 
 
-import com.skplanet.storeplatform.sac.client.display.vo.epub.*;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.epub.service.EpubService;
 import org.slf4j.Logger;

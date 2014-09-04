@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.display.shopping.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,23 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandAnotherReq;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandReq;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingCategoryAnotherReq;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailReq;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailRes;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeatureReq;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSpcialSaleRes;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSubReq;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeReq;
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 
 /**
  * 쇼핑 컨트롤러

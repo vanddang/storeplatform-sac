@@ -1,8 +1,8 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UpdatePurchaseCountSacReq;
+
+import java.util.List;
 
 /**
  * UpdatePurchaseCount Service 인터페이스(CoreStoreBusiness)

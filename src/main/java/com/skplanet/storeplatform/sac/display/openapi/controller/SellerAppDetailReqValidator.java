@@ -9,13 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.controller;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppDetailReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.openapi.SellerAppDetailReq;
 
 public class SellerAppDetailReqValidator implements Validator {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

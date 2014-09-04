@@ -9,19 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.appguide.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.mysql.jdbc.StringUtils;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideThemeSacReq;
@@ -37,6 +25,16 @@ import com.skplanet.storeplatform.sac.display.appguide.vo.Appguide;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * App guide 테마 추천 목록 Service 인터페이스(CoreStoreBusiness) 구현체
@@ -63,8 +61,7 @@ public class AppguideThemeListServiceImpl implements AppguideThemeListService {
 	 * requestVO, SacRequestHeader requestHeader)
 	 */
 	@Override
-	public AppguideSacRes searchThemeRecommendList(AppguideThemeSacReq requestVO, SacRequestHeader requestHeader)
-			throws StorePlatformException {
+	public AppguideSacRes searchThemeRecommendList(AppguideThemeSacReq requestVO, SacRequestHeader requestHeader) {
 
 		AppguideSacRes responseVO = new AppguideSacRes();
 		CommonResponse commonResponse = new CommonResponse();

@@ -1,5 +1,10 @@
 package com.skplanet.storeplatform.sac.display.appzine.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.appzine.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.appzine.service.AppzineAppListService;
+import com.skplanet.storeplatform.sac.display.appzine.service.AppzineDetailService;
+import com.skplanet.storeplatform.sac.display.appzine.service.AppzineVolListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,17 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineAppListSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineAppListSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineDetailSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineDetailSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineVolListSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineVolListSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.appzine.service.AppzineAppListService;
-import com.skplanet.storeplatform.sac.display.appzine.service.AppzineDetailService;
-import com.skplanet.storeplatform.sac.display.appzine.service.AppzineVolListService;
 
 /**
  * 

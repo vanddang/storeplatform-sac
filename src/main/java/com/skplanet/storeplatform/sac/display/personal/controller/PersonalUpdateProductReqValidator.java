@@ -9,13 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.controller;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
 
 public class PersonalUpdateProductReqValidator implements Validator {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

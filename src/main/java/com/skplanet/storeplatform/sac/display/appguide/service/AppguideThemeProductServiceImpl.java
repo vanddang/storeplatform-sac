@@ -9,18 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.appguide.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.appguide.AppguideSacRes;
@@ -41,6 +29,17 @@ import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * App guide 테마 추천별 상품 목록 조회 Service 인터페이스(CoreStoreBusiness) 구현체
@@ -74,7 +73,7 @@ public class AppguideThemeProductServiceImpl implements AppguideThemeProductServ
 	 */
 	@Override
 	public AppguideSacRes searchThemeRecommendProductList(AppguideThemeProdSacReq requestVO,
-			SacRequestHeader requestHeader) throws StorePlatformException {
+			SacRequestHeader requestHeader) {
 
 		AppguideSacRes responseVO = new AppguideSacRes();
 		List<Product> productList = new ArrayList<Product>();

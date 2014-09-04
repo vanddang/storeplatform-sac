@@ -2,9 +2,6 @@ package com.skplanet.storeplatform.sac.display.app.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
-import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
-
-import java.util.List;
 
 /**
  * AppService

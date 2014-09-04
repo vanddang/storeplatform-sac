@@ -9,23 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipRes;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTMembershipUseStatusRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
@@ -35,6 +21,15 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Tmembership 할인율 조회

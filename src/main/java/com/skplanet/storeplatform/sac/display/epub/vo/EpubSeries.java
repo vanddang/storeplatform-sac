@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.epub.vo;
 
-import java.util.Date;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
+import java.util.Date;
 
 /**
  * 이북/코믹 시리즈조회 Value Object

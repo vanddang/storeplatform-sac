@@ -9,18 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.theme.recommend.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.ObjectUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.external.client.isf.vo.MultiValueType;
 import com.skplanet.storeplatform.external.client.isf.vo.MultiValuesType;
@@ -30,11 +18,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.ThemeRecommendSacRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
@@ -47,6 +31,17 @@ import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.IsfEcInvokerImpl;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
 import com.skplanet.storeplatform.sac.display.feature.theme.recommend.vo.ThemeRecommend;
+import org.apache.commons.lang.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -69,8 +64,7 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 	private DisplayCommonService displayCommonService;
 
 	@Override
-	public ThemeRecommendSacRes searchThemeRecommendList(ThemeRecommendSacReq requestVO, SacRequestHeader requestHeader)
-			throws StorePlatformException {
+	public ThemeRecommendSacRes searchThemeRecommendList(ThemeRecommendSacReq requestVO, SacRequestHeader requestHeader) {
 
 		Map<String, Object> mapReq = new HashMap<String, Object>();
 

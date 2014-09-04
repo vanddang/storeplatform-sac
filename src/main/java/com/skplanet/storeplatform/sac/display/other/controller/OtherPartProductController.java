@@ -9,12 +9,21 @@
  */
 package com.skplanet.storeplatform.sac.display.other.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPartProductReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPartProductRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.other.service.OtherPartProductService;
+import com.skplanet.storeplatform.sac.display.other.vo.PartProduct;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,19 +34,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPartProductReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherPartProductRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
-import com.skplanet.storeplatform.sac.display.other.service.OtherPartProductService;
-import com.skplanet.storeplatform.sac.display.other.vo.PartProduct;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>

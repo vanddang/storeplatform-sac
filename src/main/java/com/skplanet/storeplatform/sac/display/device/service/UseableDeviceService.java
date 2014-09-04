@@ -9,11 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.device.service;
 
-import org.springframework.validation.annotation.Validated;
-
 import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.UseableDeviceSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * 이용 가능 단말 조회.

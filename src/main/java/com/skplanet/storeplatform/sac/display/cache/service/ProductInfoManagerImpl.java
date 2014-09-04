@@ -14,7 +14,6 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.ContentType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

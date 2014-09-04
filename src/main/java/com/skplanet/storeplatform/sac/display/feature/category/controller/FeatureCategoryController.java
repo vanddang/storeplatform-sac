@@ -9,6 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryAppService;
+import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryEpubService;
+import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryVodService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryAppService;
-import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryEpubService;
-import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryVodService;
 
 /**
  * Feature 카테고리 컨트롤러.

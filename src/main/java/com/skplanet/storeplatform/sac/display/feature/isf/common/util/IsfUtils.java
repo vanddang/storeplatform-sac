@@ -3,17 +3,12 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.isf.common.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.slf4j.Logger;
-
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import org.slf4j.Logger;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Calss 설명

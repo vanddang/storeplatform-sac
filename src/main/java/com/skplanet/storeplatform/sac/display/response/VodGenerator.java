@@ -9,14 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import java.util.List;
-
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+
+import java.util.List;
 
 /**
  * VOD 상품 전용 정보 Generator

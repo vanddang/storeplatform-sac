@@ -1,25 +1,19 @@
 package com.skplanet.storeplatform.sac.display.feature.isf.invoker;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-
 import com.skplanet.storeplatform.external.client.isf.vo.ISFReq;
 import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * ISF EC Invoker Interface 구현체
@@ -38,7 +32,7 @@ public class IsfEcInvokerImpl implements IsfEcInvoker {
 	private String domainName;
 
 	@Override
-	public ISFRes invoke(IsfEcReq requestVO) throws StorePlatformException {
+	public ISFRes invoke(IsfEcReq requestVO) {
 		if (this.log.isDebugEnabled()) {
 			this.log.debug(this.getClass().getName() + ".invoke start...... !!");
 		}

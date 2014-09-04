@@ -9,11 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.intimateMessage.controller;
 
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacReq;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 public class IntimateMessageSacReqValidator implements Validator {
 

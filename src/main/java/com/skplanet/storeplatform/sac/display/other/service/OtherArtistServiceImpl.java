@@ -3,15 +3,6 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistRes;
@@ -19,8 +10,15 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 아티스트별 정보 조회 Service 구현체
@@ -35,9 +33,6 @@ public class OtherArtistServiceImpl implements OtherArtistService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-
-	@Autowired
-	private CommonMetaInfoGenerator commonGenerator;
 
 	@Autowired
 	private MusicInfoGenerator musicGenerator;

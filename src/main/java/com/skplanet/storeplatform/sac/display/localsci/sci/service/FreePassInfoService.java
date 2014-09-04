@@ -1,11 +1,6 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
 
 /**
  * 

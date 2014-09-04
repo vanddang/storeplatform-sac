@@ -1,11 +1,10 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.repository;
 
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.localsci.sci.vo.ChangeDisplayUser;
 
 /**
  * 

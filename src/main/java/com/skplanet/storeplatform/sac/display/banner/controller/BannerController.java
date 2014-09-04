@@ -1,5 +1,9 @@
 package com.skplanet.storeplatform.sac.display.banner.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.banner.service.BannerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.banner.service.BannerService;
 
 /**
  * 배너 리스트 조회

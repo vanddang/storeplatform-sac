@@ -1,33 +1,15 @@
 package com.skplanet.storeplatform.sac.display.download.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.download.*;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.download.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.download.service.DownloadAppService;
-import com.skplanet.storeplatform.sac.display.download.service.DownloadComicService;
-import com.skplanet.storeplatform.sac.display.download.service.DownloadEbookService;
-import com.skplanet.storeplatform.sac.display.download.service.DownloadMusicService;
-import com.skplanet.storeplatform.sac.display.download.service.DownloadVodService;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 상품 정보 요청(for download)
