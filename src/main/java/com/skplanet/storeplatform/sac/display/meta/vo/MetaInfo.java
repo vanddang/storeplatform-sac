@@ -1,10 +1,10 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
-
 import java.util.Date;
 import java.util.Map;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 
 /**
  * Ebook/Comic Meta Info.
@@ -306,8 +306,11 @@ public class MetaInfo extends CommonInfo {
     // 구매내역 조회 정보 변수 for DL
     private String purchaseHide;
     private String updateAlarm;
-
     private String parentBunchId;
+    private String systemId;
+    private String deltaType;
+    private Long   deltaFileSize;
+    private String deltaFilePath;
 
 	/**
 	 * @return the topMenuId
@@ -655,7 +658,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
     public Long getFileSize() {
-        return fileSize;
+        return this.fileSize;
     }
 
     public void setFileSize(Long fileSize) {
@@ -4218,6 +4221,38 @@ public class MetaInfo extends CommonInfo {
 
 	public void setParentBunchId(String parentBunchId) {
 		this.parentBunchId = parentBunchId;
+	}
+
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
+
+	public String getDeltaType() {
+		return this.deltaType;
+	}
+
+	public void setDeltaType(String deltaType) {
+		this.deltaType = deltaType;
+	}
+
+	public Long getDeltaFileSize() {
+		return this.deltaFileSize;
+	}
+
+	public void setDeltaFileSize(Long deltaFileSize) {
+		this.deltaFileSize = deltaFileSize;
+	}
+
+	public String getDeltaFilePath() {
+		return this.deltaFilePath;
+	}
+
+	public void setDeltaFilePath(String deltaFilePath) {
+		this.deltaFilePath = deltaFilePath;
 	}
 
 

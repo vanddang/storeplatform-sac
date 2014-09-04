@@ -9,6 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -36,17 +48,6 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.VodGenerator;
-import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -261,7 +262,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							purchaseHide = historySacIn.getHidingYn();
 							updateAlarm = historySacIn.getAlarmYn();
 							useFixrateProdId = historySacIn.getUseFixrateProdId();
-							
+
 							// 구매상태 확인
 							downloadVodSacReq.setPrchsDt(prchsDt);
 							downloadVodSacReq.setDwldStartDt(dwldStartDt);
@@ -381,13 +382,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										metaInfo.setUpdateAlarm(updateAlarm);
 
 										//PROD_CHRG
-										mapProdChrg(metaInfo, prchsProdId);
+										this.mapProdChrg(metaInfo, prchsProdId);
 										//DRM_YN
-										mapDrmYn(metaInfo, historySacIn);
-										
+										this.mapDrmYn(metaInfo, historySacIn);
+
 										this.log.debug("DownloadVodServiceImpl ProdChrg={}, prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", metaInfo.getProdChrg(), prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
 
 										// 암호화 정보 (JSON)
+										metaInfo.setSystemId(tanantHeader.getSystemId());
                                         Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
 										encryptionList.add(encryption);
 
@@ -519,7 +521,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		String prchsProdId = historySacIn.getProdId();
 		String prchsReqPathCd = historySacIn.getPrchsReqPathCd();
 		String useFixrateProdId = historySacIn.getUseFixrateProdId();
-		
+
 		// 2014.07.01. kdlim. 구매 내역 drmYn 값이 정확하지 않아 상품정보 drmYn으로 변경
 		// 단, T Freemium을 통한 구매건의 경우는 무조건 DRM적용이므로 아래의 조건을 예외처리 해야함.
 		//-	"prchsReqPathCd": "OR0004xx",
@@ -530,14 +532,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			metaInfo.setStoreDrmYn("Y");
 			metaInfo.setPlayDrmYn("Y");
 		} else {
-			
+
 			if(StringUtils.isNotEmpty(useFixrateProdId)) {
 				Map<String, String> paramFixrateProd = new HashMap<String, String>();
 				paramFixrateProd.put("fixrateProdId", useFixrateProdId);
 				paramFixrateProd.put("prodId", metaInfo.getEspdProdId());
-				
+
 				MetaInfo fixrateProd = (MetaInfo) this.commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
-				
+
 				// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
 				if (prchsProdId.equals(metaInfo.getStoreProdId())) {
 					metaInfo.setStoreDrmYn(fixrateProd.getStoreDrmYn());
@@ -546,9 +548,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					metaInfo.setPlayDrmYn(fixrateProd.getPlayDrmYn());
 					metaInfo.setDrmYn(fixrateProd.getPlayDrmYn());
 				}
-			
+
 			} else {
-				//정액권 상품이 아닌 경우 상품의 DRM_YN 을 리턴 
+				//정액권 상품이 아닌 경우 상품의 DRM_YN 을 리턴
 				// 소장, 대여 구분(Store : 소장, Play : 대여)
 				if (StringUtils.equals(prchsProdId, metaInfo.getStoreProdId())) {
 					metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
