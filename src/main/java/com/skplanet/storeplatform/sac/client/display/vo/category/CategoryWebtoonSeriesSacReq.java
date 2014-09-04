@@ -20,18 +20,7 @@ public class CategoryWebtoonSeriesSacReq extends CommonInfo {
 	private String deviceModelCd; // 디바이스 모델 코드
 	private String topMenuId; // TOP 메뉴 아이디
 
-	// TODO osm1021 dummy data가 필요없어지면 삭제할것
-	private String dummy;
-
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	public String getChannelId() {
+    public String getChannelId() {
 		return this.channelId;
 	}
 

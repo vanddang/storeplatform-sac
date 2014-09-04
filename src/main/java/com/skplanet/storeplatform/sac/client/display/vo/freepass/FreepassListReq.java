@@ -47,12 +47,8 @@ public class FreepassListReq extends CommonInfo {
 	// topMenuId 복수개 허용
 	private String[] arrTopMenuId; // topMenuId 복수개
 
-	// Dummy Data용
-	private String dummy; // 더미체크
 
-	
-
-	/**
+    /**
 	 * @return the topMenuId
 	 */
 	public String getTopMenuId() {
@@ -150,21 +146,7 @@ public class FreepassListReq extends CommonInfo {
 		this.count = count;
 	}
 
-	/**
-	 * @return the dummy
-	 */
-	public String getDummy() {
-		return dummy;
-	}
-
-	/**
-	 * @param dummy the dummy to set
-	 */
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	/**
+    /**
 	 * @return the serialversionuid
 	 */
 	public static long getSerialversionuid() {

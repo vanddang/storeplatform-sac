@@ -18,9 +18,5 @@ public class CategorySpecificSacReq extends CommonInfo {
 		this.list = list;
 	}
 
-	public String getDummy() {
-		return null;
-	}
-
 
 }

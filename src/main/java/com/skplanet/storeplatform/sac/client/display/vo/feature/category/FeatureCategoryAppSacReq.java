@@ -35,10 +35,7 @@ public class FeatureCategoryAppSacReq extends CommonInfo {
 
 	private String[] prodGradeCdArr;
 
-	// Dummy Data용
-	private String dummy; // 메뉴ID
-
-	/**
+    /**
 	 * 
 	 * <pre>
 	 * 리스트ID.
@@ -275,32 +272,7 @@ public class FeatureCategoryAppSacReq extends CommonInfo {
 		this.deviceModelCd = deviceModelCd;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * dummy.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * dummy.
-	 * </pre>
-	 * 
-	 * @param dummy
-	 *            dummy
-	 */
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	/**
+    /**
 	 * 
 	 * <pre>
 	 * 배치완료일자.

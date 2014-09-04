@@ -54,10 +54,7 @@ public class ThemeThemeZoneListSacReq extends CommonInfo {
         this.shpgSprtYn = shpgSprtYn;
     }
 
-    // TODO osm1021 dummy data가 필요없어지면 삭제할것
-	private String dummy;
-
-	public Integer getOffset() {
+    public Integer getOffset() {
 		return this.offset;
 	}
 
@@ -137,15 +134,7 @@ public class ThemeThemeZoneListSacReq extends CommonInfo {
 		this.b2bProd = b2bProd;
 	}
 
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	public String getTenantId() {
+    public String getTenantId() {
 		return this.tenantId;
 	}
 

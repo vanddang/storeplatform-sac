@@ -44,8 +44,7 @@ public class BestContentsSacReq extends CommonInfo {
 	private Integer offset; // 시작점 ROW
 	@Valid
 	private Integer count; // 페이지당 노출 ROW 수
-	private String dummy;
-	private String imgCd;
+    private String imgCd;
 
 	private String ebookSprtYn; // eBook 상품 지원여부
 
@@ -405,32 +404,7 @@ public class BestContentsSacReq extends CommonInfo {
 		this.count = count;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * dummy data check.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * dummy data check.
-	 * </pre>
-	 * 
-	 * @param dummy
-	 *            dummy
-	 */
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	/**
+    /**
 	 * @return the imgCd
 	 */
 	public String getImgCd() {

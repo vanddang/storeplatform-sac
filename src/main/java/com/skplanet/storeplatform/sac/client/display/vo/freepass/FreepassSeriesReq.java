@@ -28,10 +28,7 @@ public class FreepassSeriesReq  extends CommonInfo {
 	private String deviceModelCd; // 단말모델
 	private String virtualDeviceModelNo; // android_standard2
 
-	// Dummy Data용
-	private String dummy; // 더미체크
-
-	/**
+    /**
 	 * @return the menuId
 	 */
 	public String getMenuId() {
@@ -199,21 +196,7 @@ public class FreepassSeriesReq  extends CommonInfo {
 		this.virtualDeviceModelNo = virtualDeviceModelNo;
 	}
 
-	/**
-	 * @return the dummy
-	 */
-	public String getDummy() {
-		return dummy;
-	}
-
-	/**
-	 * @param dummy the dummy to set
-	 */
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	/**
+    /**
 	 * @return the serialversionuid
 	 */
 	public static long getSerialversionuid() {

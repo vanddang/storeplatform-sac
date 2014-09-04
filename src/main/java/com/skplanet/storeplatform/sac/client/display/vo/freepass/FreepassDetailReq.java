@@ -40,10 +40,7 @@ public class FreepassDetailReq {
 	private String userKey; // 사용자키
 	private String deviceKey; // 단말키
 
-	// Dummy Data용
-	private String dummy; // 더미체크
-
-	/**
+    /**
 	 * @return the topMenuId
 	 */
 	public String getTopMenuId() {
@@ -268,22 +265,7 @@ public class FreepassDetailReq {
 		this.deviceModelCd = deviceModelCd;
 	}
 
-	/**
-	 * @return the dummy
-	 */
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	/**
-	 * @param dummy
-	 *            the dummy to set
-	 */
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	/**
+    /**
 	 * @return the serialversionuid
 	 */
 	public static long getSerialversionuid() {

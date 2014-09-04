@@ -40,35 +40,7 @@ public class FeatureCategoryEpubSacReq extends CommonInfo {
 
 	private String[] prodGradeCdArr; // 상품등급코드 배열
 
-	// Dummy Data용
-	private String dummy; // 메뉴ID
-
-	/**
-	 * 
-	 * <pre>
-	 * dummy.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * dummy.
-	 * </pre>
-	 * 
-	 * @param dummy
-	 *            dummy
-	 */
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	/**
+    /**
 	 * 
 	 * <pre>
 	 * 리스트 ID.

@@ -34,10 +34,7 @@ public class ThemeBrandshopSacReq extends CommonInfo {
 	private String topMenuId; // TOP 메뉴 아이디
 	private String bnrMenuId; // 배너 메뉴 아이디
 
-	// TODO osm1021 dummy data가 필요없어지면 삭제할것
-	private String dummy;
-
-	public String getChannelId() {
+    public String getChannelId() {
 		return this.channelId;
 	}
 
@@ -101,15 +98,7 @@ public class ThemeBrandshopSacReq extends CommonInfo {
 		this.bnrMenuId = bnrMenuId;
 	}
 
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	public Integer getOffset() {
+    public Integer getOffset() {
 		return this.offset;
 	}
 

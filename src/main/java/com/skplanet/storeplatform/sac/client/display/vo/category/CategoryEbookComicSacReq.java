@@ -57,9 +57,7 @@ public class CategoryEbookComicSacReq extends CommonInfo {
 
 	private String langCd; // 언어 코드
 
-	private String dummy; // dummy Data
-
-	private String ebookSprtYn; // eBook 상품 지원여부
+    private String ebookSprtYn; // eBook 상품 지원여부
 
 	private String comicSprtYn; // Comic 상품 지원여부
 
@@ -243,22 +241,7 @@ public class CategoryEbookComicSacReq extends CommonInfo {
 		this.langCd = langCd;
 	}
 
-	/**
-	 * @return the dummy
-	 */
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	/**
-	 * @param dummy
-	 *            the dummy to set
-	 */
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	/**
+    /**
 	 * @return the ebookSprtYn
 	 */
 	public String getEbookSprtYn() {

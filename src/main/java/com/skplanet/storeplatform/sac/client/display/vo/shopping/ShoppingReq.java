@@ -36,8 +36,7 @@ public class ShoppingReq extends CommonInfo {
 	private String stdDt; // 기준일자
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
-	private String dummy; // 더비 구분값
-	private String planId; // 기획전ID
+    private String planId; // 기획전ID
 	private String brandId; // 브랜드샵 ID
 	private String themeId; // 테마 ID
 	private String exceptId; // 제외할 메뉴ID – 지정하면 응답에서 해당 메뉴 제외
@@ -267,22 +266,7 @@ public class ShoppingReq extends CommonInfo {
 		this.deviceModelCd = deviceModelCd;
 	}
 
-	/**
-	 * @return the dummy
-	 */
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	/**
-	 * @param dummy
-	 *            the dummy to set
-	 */
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
-	}
-
-	/**
+    /**
 	 * @return the planId
 	 */
 	public String getPlanId() {

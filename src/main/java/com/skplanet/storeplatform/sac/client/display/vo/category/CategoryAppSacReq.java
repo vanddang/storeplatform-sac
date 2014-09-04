@@ -53,9 +53,7 @@ public class CategoryAppSacReq extends CommonInfo {
 
 	private String langCd; // 언어 코드
 
-	private String dummy; // dummy Data
-
-	public String getProdCharge() {
+    public String getProdCharge() {
 		return this.prodCharge;
 	}
 
@@ -141,14 +139,6 @@ public class CategoryAppSacReq extends CommonInfo {
 
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
-	}
-
-	public String getDummy() {
-		return this.dummy;
-	}
-
-	public void setDummy(String dummy) {
-		this.dummy = dummy;
 	}
 
 }
