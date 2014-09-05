@@ -13,14 +13,14 @@ import com.skplanet.icms.refactoring.deploy.DPAppDeltaDeployFileVO;
 public interface DPAppDeltaDeployFileService {
 
 	/**
-	 * 
+	 *
 	 * @param dpAppDeltaDeployFile
 	 */
 	void insertDPAppDeltaDeployFile(DPAppDeltaDeployFileVO dpAppDeltaDeployFile);
 
 	/**
-	 * 
-	 * @param cid
+	 *
+	 * @param pid
 	 */
-	void deleteDPAppDeltaDeployFile(String cid);
+	void deleteDPAppDeltaDeployFile(String pid);
 }

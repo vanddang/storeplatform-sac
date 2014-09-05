@@ -5,12 +5,11 @@
 
 	<insert id="insertDPAppDeltaDeployFile" parameterType="com.skplanet.icms.refactoring.deploy.DPAppDeltaDeployFileVO">
 		INSERT    /* TB_DP_APP_DELTA_DEPLOY_FILE-insertDPAppDeltaDeployFile : mhcha123 (2014-04-29) */
-		INTO TB_DP_APP_DELTA_DEPLOY_FILE (
-			DELTA_FILE_SEQ
-			,CID
+		INTO TB_DP_APP_DELTA_DEPLOY_FILE (		
+			PROD_ID
 			,SUB_CONTENTS_ID
-			,VERIFY_VER_SEQ
-			,PRE_VERIFY_VER_SEQ
+			,APK_VER			
+			,PRE_APK_VER
 			,DELTA_FILE_PATH
 			,DELTA_FILE_SIZE
 			,REG_ID
@@ -19,11 +18,10 @@
 			,UPD_DT
 		)
 		VALUES(
-			#{deltaFileSeq}
-			,#{cid}
+			#{prodId}
 			,#{subContentsId}
-			,#{verifyVerSeq}
-			,#{preVerifyVerSeq}
+			,#{apkVer}			
+			,#{preApkVer}			
 			,#{deltaFilePath}
 			,#{deltaFileSize}
 			,'SYSTEM'
@@ -37,7 +35,7 @@
 	<delete id="deleteDPAppDeltaDeployFile"  parameterType="com.skplanet.icms.refactoring.deploy.DPAppDeltaDeployFileVO" >
 		DELETE  /* TB_DP_APP_DELTA_DEPLOY_FILE-deleteDPAppDeltaDeployFile : mhcha123 (2014-04-29) */
 		  FROM TB_DP_APP_DELTA_DEPLOY_FILE
-      	  WHERE CID = #{cid}
+      	  WHERE PROD_ID = #{prodId}
 	</delete>	
 
 
