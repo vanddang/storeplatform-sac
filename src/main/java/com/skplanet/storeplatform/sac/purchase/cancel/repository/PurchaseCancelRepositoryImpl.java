@@ -527,6 +527,14 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 				continue;
 			}
 
+			// 전권대여/소장 에피소드 상품은 상품 구매수 업데이트 제외
+			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)
+					&& !StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())
+					&& !StringUtils.isEmpty(prchsDtlSacParam.getUseFixrateProdId())) {
+				continue;
+			}
+
 			PrchsProdCnt prchsProdCnt = new PrchsProdCnt();
 			prchsProdCnt.setTenantId(prchsDtlSacParam.getTenantId());
 			prchsProdCnt.setUseUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
@@ -558,6 +566,8 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			prchsProdCnt.setUseFixrateProdId(prchsDtlSacParam.getUseFixrateProdId());
 
 			prchsProdCntList.add(prchsProdCnt);
+
+			this.logger.info("################################## 구매건수 등록 테이블" + prchsProdCntList);
 		}
 		insertPurchaseProductCountScReq.setPrchsProdCntList(prchsProdCntList);
 
@@ -637,6 +647,8 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 						membershipReserveRes.setUpdId(purchaseCancelSacParam.getSystemId());
 						this.membershipReserveSCI.updateProcStatus(membershipReserveRes);
 					}
+				} else {
+					this.logger.error("### PurchaseCancel MembershopReserve 적립상태가 적립예정 또는 적립 완료가 아닙니다.");
 				}
 			}
 		} catch (Exception e) {
@@ -922,5 +934,26 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		smsSendEcReq.setSrcId("US004530"); // 구매결제취소
 
 		return this.messageSCI.smsSend(smsSendEcReq);
+	}
+
+	/**
+	 * <pre>
+	 * 마일리지 적립 정보 조회
+	 * </pre>
+	 * 
+	 * @param prchsSacParam
+	 *            prchsSacParam
+	 * @return PurchaseCancelDetailSacParam
+	 */
+	@Override
+	public MembershipReserve getMembershipReserve(PrchsSacParam prchsSacParam) {
+
+		MembershipReserve membershipReserveReq = new MembershipReserve();
+		membershipReserveReq.setTenantId(prchsSacParam.getTenantId());
+		membershipReserveReq.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_TMEMBERSHIP);
+		membershipReserveReq.setPrchsId(prchsSacParam.getPrchsId());
+		membershipReserveReq.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+
+		return this.membershipReserveSCI.getSaveInfo(membershipReserveReq);
 	}
 }

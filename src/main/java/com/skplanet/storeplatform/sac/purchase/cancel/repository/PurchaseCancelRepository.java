@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRe
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 
@@ -222,5 +223,16 @@ public interface PurchaseCancelRepository {
 	 * @return SmsSendEcRes
 	 */
 	SmsSendEcRes sendSms(String recvMdn, String msg);
+
+	/**
+	 * <pre>
+	 * 마일리지 적립 정보 조회
+	 * </pre>
+	 * 
+	 * @param prchsSacParam
+	 *            prchsSacParam
+	 * @return PurchaseCancelDetailSacParam
+	 */
+	MembershipReserve getMembershipReserve(PrchsSacParam prchsSacParam);
 
 }

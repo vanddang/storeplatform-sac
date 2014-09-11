@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
@@ -36,9 +37,8 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.Payme
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.sci.ShoppingInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusDetailSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInReq;
@@ -227,12 +227,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		/** 마일리지 적립 정보 조회. */
-		MembershipReserve membershipReserveReq = new MembershipReserve();
-		membershipReserveReq.setTenantId(prchsSacParam.getTenantId());
-		membershipReserveReq.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_TMEMBERSHIP);
-		membershipReserveReq.setPrchsId(prchsSacParam.getPrchsId());
-		membershipReserveReq.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
-		MembershipReserve membershipReserveRes = this.membershipReserveSCI.getSaveInfo(membershipReserveReq);
+		MembershipReserve membershipReserveRes = this.purchaseCancelRepository.getMembershipReserve(prchsSacParam);
 
 		// 마일리지 적립 정보가 존재하며 처리상태가 처리중인 경우 취소불가
 		if (membershipReserveRes != null
@@ -323,11 +318,17 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			}
 
+			// 정액권 상품 체크 (이북/코믹 정액권 인 경우 체크 제외한다. 전권상품일 경우 )
 			if (StringUtils.equals(PurchaseConstants.PRCHS_PROD_TYPE_AUTH, prchsDtlSacParam.getPrchsProdType())) {
-				// 정액권 상품 처리.
-				this.updateProdTypeFix(purchaseCancelSacParam, prchsDtlSacParam);
-			}
 
+				if (!StringUtils.equals(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE,
+						prchsDtlSacParam.getTenantProdGrpCd())
+						|| !StringUtils.equals(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE,
+								prchsDtlSacParam.getTenantProdGrpCd())) {
+					// 정액권 상품 처리.
+					this.updateProdTypeFix(purchaseCancelSacParam, prchsDtlSacParam);
+				}
+			}
 		}
 
 		/** 쇼핑 상품 처리. */
@@ -371,8 +372,10 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		this.purchaseCancelRepository.updatePurchaseCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam);
 
 		/** 마일리지 적립 취소 처리 */
-		this.purchaseCancelRepository.updateSaveCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam,
-				membershipReserveRes);
+		if (membershipReserveRes != null) {
+			this.purchaseCancelRepository.updateSaveCancel(purchaseCancelSacParam, purchaseCancelDetailSacParam,
+					membershipReserveRes);
+		}
 
 		/** RO 삭제 처리. */
 		if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
@@ -394,10 +397,16 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
 		purchaseCancelDetailSacResult.setResultMsg(this.multiMessageSourceAccessor.getMessage("SAC_PUR_0000"));
 
+		/** 비회원 선물건이면 SMS를 발송한다. */
 		try {
+			for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
+				if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, prchsDtlSacParam.getPrchsCaseCd())
+						&& StringUtils.equals(PurchaseConstants.NON_MEMBER, prchsDtlSacParam.getUseInsdUsermbrNo())) {
 
-			this.giftSendSms(purchaseCancelDetailSacParam, prchsSacParam, purchaseCancelSacParam);
-
+					this.giftSendSms(prchsDtlSacParam, prchsSacParam, purchaseCancelSacParam);
+					break;
+				}
+			}
 		} catch (Exception e) {
 			this.logger.error("### 구매 취소 SMS 발송 실패  prchsId : " + purchaseCancelDetailSacParam.getPrchsId());
 		}
@@ -605,10 +614,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	private void updateProdTypeFix(PurchaseCancelSacParam purchaseCancelSacParam, PrchsDtlSacParam prchsDtlSacParam) {
 
 		/** 정액권으로 산 상품이 존재하는지 체크. */
-		// HistoryCountSacInReq historyCountSacInReq = new HistoryCountSacInReq();
-
-		/** 정액권으로 산 상품이 존재하는지 체크. */
-		HistoryListSacInReq historyListSacInReq = new HistoryListSacInReq();
+		HistoryCountSacInReq historyCountSacInReq = new HistoryCountSacInReq();
 
 		// 구매인지 선물인지 구분하여 조회.
 		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsDtlSacParam.getPrchsCaseCd())) {
@@ -617,30 +623,18 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		// 정액제 상품으로 산 구매내역 조회.
-		historyListSacInReq.setTenantId(prchsDtlSacParam.getUseTenantId());
-		historyListSacInReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
-		historyListSacInReq.setStartDt(prchsDtlSacParam.getUseStartDt());
-		historyListSacInReq.setEndDt(prchsDtlSacParam.getUseExprDt());
-		historyListSacInReq.setPrchsCaseCd(prchsDtlSacParam.getPrchsCaseCd());
-		historyListSacInReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
-		historyListSacInReq.setUseFixrateProdId(prchsDtlSacParam.getProdId());
-		historyListSacInReq.setPrchsProdHaveYn("Y");
-		historyListSacInReq.setOffset(1);
-		historyListSacInReq.setCount(100);
+		historyCountSacInReq.setTenantId(prchsDtlSacParam.getUseTenantId());
+		historyCountSacInReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
+		historyCountSacInReq.setStartDt(prchsDtlSacParam.getUseStartDt());
+		historyCountSacInReq.setEndDt(prchsDtlSacParam.getUseExprDt());
+		historyCountSacInReq.setPrchsCaseCd(prchsDtlSacParam.getPrchsCaseCd());
+		historyCountSacInReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+		historyCountSacInReq.setUseFixrateProdId(prchsDtlSacParam.getProdId());
 
-		HistoryListSacInRes historyListSacInRes = this.historyInternalSCI.searchHistoryList(historyListSacInReq);
-		if (historyListSacInRes.getTotalCnt() > 0) {
-
-			for (HistorySacIn historySacIn : historyListSacInRes.getHistoryList()) {
-
-				// 전권소장상품일 경우 제외한다.
-				if (StringUtils.equals(historySacIn.getPrchsId(), prchsDtlSacParam.getPrchsId())) {
-					continue;
-				} else {
-					// 정액권 상품으로 이용한 상품이 존재!
-					throw new StorePlatformException("SAC_PUR_8111");
-				}
-			}
+		HistoryCountSacInRes historyCountSacInRes = this.historyInternalSCI.searchHistoryCount(historyCountSacInReq);
+		if (historyCountSacInRes.getTotalCnt() > 0) {
+			// 정액권 상품으로 이용한 상품이 존재!
+			throw new StorePlatformException("SAC_PUR_8111");
 		}
 
 		// 정액권 자동구매 확인.
@@ -898,53 +892,51 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		return deviceKey;
 	}
 
-	private void giftSendSms(PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, PrchsSacParam prchsSacParam,
+	private void giftSendSms(PrchsDtlSacParam prchsDtlSacParam, PrchsSacParam prchsSacParam,
 			PurchaseCancelSacParam purchaseCancelSacParam) {
 
-		// 비회원 선물하기 인 경우 SMS를 발송한다.
-		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
-			if (StringUtils.equals(PurchaseConstants.PRCHS_CASE_GIFT_CD, prchsDtlSacParam.getPrchsCaseCd())
-					&& StringUtils.equals(PurchaseConstants.NON_MEMBER, prchsDtlSacParam.getUseInsdUsermbrNo())) {
+		this.logger.info("### NONMEMBER CANCEL SMS TARGET");
+		List<String> prodIdList = new ArrayList<String>();
 
-				this.logger.info("#####################비회원 선물");
-				List<String> prodIdList = new ArrayList<String>();
+		PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
+		paymentInfoSacReq.setTenantId(prchsSacParam.getTenantId());
+		prodIdList.add(prchsDtlSacParam.getProdId());
+		paymentInfoSacReq.setProdIdList(prodIdList);
+		paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
+		paymentInfoSacReq.setDeviceModelCd(purchaseCancelSacParam.getModel());
 
-				PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
-				paymentInfoSacReq.setTenantId(prchsSacParam.getTenantId());
-				prodIdList.add(prchsDtlSacParam.getProdId());
-				paymentInfoSacReq.setProdIdList(prodIdList);
-				paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
-				paymentInfoSacReq.setDeviceModelCd(purchaseCancelSacParam.getModel());
+		// 상품정보 조회
+		PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq);
 
-				// 상품정보 조회
-				PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq);
+		String prodNm = null;
 
-				String prodNm = null;
-
-				if (paymentInfoSacRes != null && paymentInfoSacRes.getPaymentInfoList().size() > 0) {
-					prodNm = paymentInfoSacRes.getPaymentInfoList().get(0).getProdNm();
-				}
-
-				String sendMdn = prchsSacParam.getDeviceId(); // 보낸사람MDN
-				if (StringUtils.isBlank(sendMdn)) {
-					sendMdn = this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
-							prchsSacParam.getInsdDeviceId());
-				}
-
-				sendMdn = this.makePhoneNumber(sendMdn);
-
-				String recvMdn = this.devicdKeyToMdn(prchsDtlSacParam.getUseInsdDeviceId()); // 받는사람 MDN
-				String msg = sendMdn + "님이 선물하신 \"<" + prodNm + ">\"을 취소하셨습니다.";
-
-				this.logger.info("### 비회원선물하기 recvMdn =  " + recvMdn);
-				this.logger.info("### 비회원선물하기 msg =  " + msg);
-
-				// SMS 발송 요청
-				this.purchaseCancelRepository.sendSms(recvMdn, msg);
-
-				break; // 1회만 SMS 발송
-			}
+		if (paymentInfoSacRes != null && paymentInfoSacRes.getPaymentInfoList().size() > 0) {
+			prodNm = paymentInfoSacRes.getPaymentInfoList().get(0).getProdNm();
 		}
+
+		String sendMdn = prchsSacParam.getDeviceId(); // 보낸사람MDN
+		if (StringUtils.isBlank(sendMdn)) {
+			sendMdn = this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
+					prchsSacParam.getInsdDeviceId());
+		}
+
+		sendMdn = this.makePhoneNumber(sendMdn);
+
+		String recvMdn = this.devicdKeyToMdn(prchsDtlSacParam.getUseInsdDeviceId()); // 받는사람 MDN
+		String msg = sendMdn + "님이 선물하신 \"<" + prodNm + ">\"을 취소하셨습니다.";
+
+		this.logger.info("### NONMEMBER CANCEL SMS recvMdn =  " + recvMdn);
+		this.logger.info("### NONMEMBER CANCEL SMS  msg =  " + msg);
+
+		// SMS 발송 요청
+		SmsSendEcRes res = this.purchaseCancelRepository.sendSms(recvMdn, msg);
+
+		if (res != null && StringUtils.equals("success", res.getResultStatus())) {
+			this.logger.info("### NONMEMBER CANCEL SMS SUCCESS");
+		} else {
+			this.logger.error("### NONMEMBER CANCEL SMS FAIL");
+		}
+
 	}
 
 	private String makePhoneNumber(String phoneNumber) {
