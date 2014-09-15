@@ -185,6 +185,8 @@
         <!-- for download App 정보 조회 -->
         <typeAlias alias="DownloadAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq" />
         <typeAlias alias="DownloadApp"  type="com.skplanet.storeplatform.sac.display.download.vo.DownloadApp" />
+        <typeAlias alias="AppDeltaUpdate"  type="com.skplanet.storeplatform.sac.display.download.vo.AppDeltaUpdate" />
+        <typeAlias alias="AppDeltaUpdateParam"  type="com.skplanet.storeplatform.sac.display.download.vo.AppDeltaUpdateParam" />
         
         <!-- for download Vod 정보 조회 -->
         <typeAlias alias="DownloadVodSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq" />

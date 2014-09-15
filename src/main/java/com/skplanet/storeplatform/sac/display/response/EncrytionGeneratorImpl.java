@@ -9,16 +9,22 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
-import com.skplanet.storeplatform.sac.common.util.DateUtils;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionData;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionDeviceKey;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionStatus;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionSubContents;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionUsagePolicy;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
  * for download 전용 상품 암호화 정보 Generator 구현체.
@@ -93,10 +99,16 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 			}
 		} else {
             EncryptionSubContents sc = new EncryptionSubContents();
-			sc.setType("");
-			sc.setDeltaPath("");
+            if (StringUtils.isNotBlank(metaInfo.getDeltaType())) {
+            	sc.setType(metaInfo.getDeltaType());
+            	sc.setDeltaPath(metaInfo.getDeltaFilePath());
+            	sc.setDeltaSize(metaInfo.getDeltaFileSize());
+			} else {
+				sc.setType("");
+				sc.setDeltaPath("");
+				sc.setDeltaSize(0L);
+			}
 			sc.setSize(metaInfo.getFileSize());
-			sc.setDeltaSize(0L);
 			sc.setScid(metaInfo.getSubContentsId());
 			sc.setPath(metaInfo.getFilePath());
 			subContentsList.add(sc);
@@ -140,7 +152,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 
 	private String makeExtra(MetaInfo metaInfo) {
 
-        StringBuilder extra = new StringBuilder();
+        StringBuilder extra = new StringBuilder("");
 
 		if (StringUtils.isNotBlank(metaInfo.getSystemId())) {
 			extra.append("systemId=").append(metaInfo.getSystemId()).append(";");

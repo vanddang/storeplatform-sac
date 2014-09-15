@@ -86,6 +86,24 @@
 		    AND BNCH_PROD_ID    = #{productId}
 	</select>
 	
+	<!-- get Delta Meta for App Delta Update -->
+	<select id="getDownloadAppDeltaUpdate" parameterType="AppDeltaUpdateParam" resultType="AppDeltaUpdate">
+        SELECT /* DownloadMapper.getDownloadAppDeltaUpdate, get Delta Meta for App Delta Update, 양해엽, 2014-09-15 */
+            PROD_ID
+		    ,SUB_CONTENTS_ID
+		    ,APK_VER 
+		    ,PRE_APK_VER
+		    ,DELTA_FILE_SIZE
+		    ,DELTA_FILE_PATH        
+		FROM    TB_DP_APP_DELTA_DEPLOY_FILE 
+		WHERE   1=1
+		    AND PROD_ID         = #{prodId}
+		    AND SUB_CONTENTS_ID = #{subContentsId}
+		    AND APK_VER         = #{apkVer}
+		    AND PRE_APK_VER     = #{preApkVer}
+    </select>
+	
+	
     <!-- 상품정보요청(for download) App -->
     <select id="getDownloadAppInfo" parameterType="DownloadAppSacReq" resultType="MetaInfo">
       SELECT  /* DownloadMapper.getDownloadAppInfo, 상품정보요청(for download) App , 이석희/아이에스플러스, 2014-01-23 */

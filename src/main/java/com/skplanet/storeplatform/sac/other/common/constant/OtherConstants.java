@@ -20,4 +20,7 @@ package com.skplanet.storeplatform.sac.other.common.constant;
 public class OtherConstants {
 	/** 마일리지 서비스 지원 여부 키 */
 	public static final String SAC_SERVICE_MILEAGE = "tstore.mileage";
+	/** 앱 델타 업데이트 지원 여부 키 */
+	public static final String SAC_SERVICE_APPDELTA = "tstore.app.delta.update";
+
 }

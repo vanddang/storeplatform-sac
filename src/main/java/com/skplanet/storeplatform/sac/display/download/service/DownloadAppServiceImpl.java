@@ -49,9 +49,14 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.download.vo.AppDeltaUpdate;
+import com.skplanet.storeplatform.sac.display.download.vo.AppDeltaUpdateParam;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.other.common.constant.OtherConstants;
+import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceService;
+import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -86,6 +91,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
     @Autowired
     private DownloadSupportService supportService;
+
+    @Autowired
+    private SacServiceService sacServiceDataService;
 
 	/*
 	 * (non-Javadoc)
@@ -430,6 +438,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										}
 
 										// 암호화 정보 (JSON)
+										this.genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
+
 										metaInfo.setSystemId(tanantHeader.getSystemId());
                                         Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
                                         encryptionList.add(encryption);
@@ -531,7 +541,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 	}
 
 
-	public void doBunchProdProvisioning(DownloadAppSacReq downloadAppSacReq, MetaInfo metaInfo) {
+	private void doBunchProdProvisioning(DownloadAppSacReq downloadAppSacReq, MetaInfo metaInfo) {
 
 		if (StringUtils.isBlank(metaInfo.getBnchProdId())) return;
 
@@ -544,13 +554,43 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		metaInfo.setBnchDwldMsg(null);
 	}
 
-	public void validateParentBunchProd(DownloadAppSacReq downloadAppSacReq, MetaInfo metaInfo) {
+	private void validateParentBunchProd(DownloadAppSacReq downloadAppSacReq, MetaInfo metaInfo) {
 
 		if (StringUtils.isBlank(downloadAppSacReq.getParentBunchId())) return;
 
 		if ( (Integer)this.commonDAO.queryForObject("Download.getValidateParentBunchId", downloadAppSacReq) <= 0 ) return;
 
 		metaInfo.setParentBunchId(downloadAppSacReq.getParentBunchId());
+	}
+
+	private boolean isActiveAppDeltaUpdate() {
+
+		SacService sacService = new SacService();
+		sacService.setServiceCd(OtherConstants.SAC_SERVICE_APPDELTA);
+
+		return this.sacServiceDataService.getServiceActive(sacService).isActive();
+	}
+
+	private void genenateMetaForAppDeltaUpdate(MetaInfo metaInfo, Integer preApkVer) {
+
+		if (preApkVer == null || preApkVer == 0) return;
+
+		if ( !this.isActiveAppDeltaUpdate() ) return;
+
+		AppDeltaUpdateParam param = new AppDeltaUpdateParam();
+		param.setProdId(metaInfo.getProdId());
+		param.setSubContentsId(metaInfo.getSubContentsId());
+		param.setApkVer(Integer.parseInt(metaInfo.getApkVer()));
+		param.setPreApkVer(preApkVer);
+
+		AppDeltaUpdate appDeltaUpdate = this.commonDAO.queryForObject("Download.getDownloadAppDeltaUpdate", param, AppDeltaUpdate.class);
+		if( appDeltaUpdate == null ) return;
+
+		metaInfo.setDeltaType("delta");
+		metaInfo.setDeltaFileSize(appDeltaUpdate.getDeltaFileSize());
+		metaInfo.setDeltaFilePath(appDeltaUpdate.getDeltaFilePath());
+
+		return;
 	}
 }
 
