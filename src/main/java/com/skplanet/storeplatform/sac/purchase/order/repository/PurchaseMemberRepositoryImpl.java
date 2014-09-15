@@ -250,7 +250,9 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 
 		List<IndividualPolicyInfoSac> individualPolicyInfoSacList = getIndividualPolicySacRes.getPolicyList();
 		for (IndividualPolicyInfoSac individualPolicyInfoSac : individualPolicyInfoSacList) {
-			resMap.put(individualPolicyInfoSac.getPolicyCode(), individualPolicyInfoSac);
+			if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+				resMap.put(individualPolicyInfoSac.getPolicyCode(), individualPolicyInfoSac);
+			}
 		}
 
 		return resMap;
