@@ -140,7 +140,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 
 	private String makeExtra(MetaInfo metaInfo) {
 
-        StringBuilder extra = new StringBuilder("");
+        StringBuilder extra = new StringBuilder();
 
 		if (StringUtils.isNotBlank(metaInfo.getSystemId())) {
 			extra.append("systemId=").append(metaInfo.getSystemId()).append(";");
