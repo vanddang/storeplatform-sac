@@ -37,7 +37,6 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 	public EncryptionContents generateEncryptionContents(MetaInfo metaInfo) {
 		EncryptionContents contents = new EncryptionContents();
 		EncryptionData data = new EncryptionData();
-		EncryptionSubContents subContents = null;
 		EncryptionUsagePolicy usagePolicy = new EncryptionUsagePolicy();
 		EncryptionDeviceKey deviceKey = new EncryptionDeviceKey();
 		Date date = new Date();
@@ -67,39 +66,46 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
 				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
 
-            subContents = new EncryptionSubContents();
-            subContents.setType("");
-            subContents.setDeltaPath("");
-            subContents.setDeltaSize(0L);
-
 			// 서브 컨텐츠 정보
 			if (StringUtils.isNotEmpty(metaInfo.getNmSubContsId())) {
-				subContents.setSize(Long.parseLong(metaInfo.getNmFileSize()));
-				subContents.setScid(metaInfo.getNmSubContsId());
-				subContents.setPath(metaInfo.getNmFilePath());
-                subContentsList.add(subContents);
+                EncryptionSubContents nmSc = new EncryptionSubContents();
+                nmSc.setType("");
+                nmSc.setDeltaPath("");
+                nmSc.setDeltaSize(0L);
+				nmSc.setSize(Long.parseLong(metaInfo.getNmFileSize()));
+				nmSc.setScid(metaInfo.getNmSubContsId());
+				nmSc.setPath(metaInfo.getNmFilePath());
+                subContentsList.add(nmSc);
 			}
 			if (StringUtils.isNotEmpty(metaInfo.getSdSubContsId())) {
-				subContents.setSize(Long.parseLong(metaInfo.getSdFileSize()));
-				subContents.setScid(metaInfo.getSdSubContsId());
-				subContents.setPath(metaInfo.getSdFilePath());
-                subContentsList.add(subContents);
+                EncryptionSubContents sdSc = new EncryptionSubContents();
+                sdSc.setType("");
+                sdSc.setDeltaPath("");
+                sdSc.setDeltaSize(0L);
+				sdSc.setSize(Long.parseLong(metaInfo.getSdFileSize()));
+				sdSc.setScid(metaInfo.getSdSubContsId());
+				sdSc.setPath(metaInfo.getSdFilePath());
+                subContentsList.add(sdSc);
 			}
 			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
-				subContents.setSize(Long.parseLong(metaInfo.getHdFileSize()));
-				subContents.setScid(metaInfo.getHdSubContsId());
-				subContents.setPath(metaInfo.getHdFilePath());
-                subContentsList.add(subContents);
+                EncryptionSubContents hdSc = new EncryptionSubContents();
+                hdSc.setType("");
+                hdSc.setDeltaPath("");
+                hdSc.setDeltaSize(0L);
+				hdSc.setSize(Long.parseLong(metaInfo.getHdFileSize()));
+				hdSc.setScid(metaInfo.getHdSubContsId());
+				hdSc.setPath(metaInfo.getHdFilePath());
+                subContentsList.add(hdSc);
 			}
 		} else {
-			subContents = new EncryptionSubContents();
-			subContents.setType("");
-			subContents.setDeltaPath("");
-			subContents.setSize(metaInfo.getFileSize());
-			subContents.setDeltaSize(0L);
-			subContents.setScid(metaInfo.getSubContentsId());
-			subContents.setPath(metaInfo.getFilePath());
-			subContentsList.add(subContents);
+            EncryptionSubContents sc = new EncryptionSubContents();
+			sc.setType("");
+			sc.setDeltaPath("");
+			sc.setSize(metaInfo.getFileSize());
+			sc.setDeltaSize(0L);
+			sc.setScid(metaInfo.getSubContentsId());
+			sc.setPath(metaInfo.getFilePath());
+			subContentsList.add(sc);
 
 		}
 		data.setSubContents(subContentsList);
