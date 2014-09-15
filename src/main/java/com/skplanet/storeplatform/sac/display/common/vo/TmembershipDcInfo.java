@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
- * DESC
+ * TmembershipDcInfo
  * </p>
  * Updated on : 2014. 03. 31 Updated by : 정희원, SK 플래닛.
  */
@@ -21,8 +21,8 @@ public class TmembershipDcInfo extends CommonInfo {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer normalDcRate;
-    private Integer freepassDcRate;
+    private Integer normalDcRate = 0;
+    private Integer freepassDcRate = 0;
 
     public Integer getNormalDcRate() {
         return normalDcRate;

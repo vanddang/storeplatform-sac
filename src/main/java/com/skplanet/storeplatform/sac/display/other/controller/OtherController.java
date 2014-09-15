@@ -57,7 +57,7 @@ public class OtherController {
 
 	/**
 	 * <pre>
-	 * T Membership 할인율 조회
+	 * [I03000119] T Membership 할인율 조회
 	 * </pre>
 	 * 
 	 * @param req

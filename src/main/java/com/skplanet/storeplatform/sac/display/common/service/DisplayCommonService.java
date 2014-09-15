@@ -103,6 +103,7 @@ public interface DisplayCommonService {
 
 	/**
 	 * 메뉴에 해당하는 T멤버십 할인율 조회한다.
+     * topMenuId에 DisplayConstants.REQUEST_TMEMBERSHIP_ALL_MENU 입력시 최대값을 보여준다.
 	 * @param tenantId
 	 * @param topMenuId
 	 * @return

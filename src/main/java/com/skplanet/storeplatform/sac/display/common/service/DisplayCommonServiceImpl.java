@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.sac.display.common.ProductType;
 import com.skplanet.storeplatform.sac.display.common.VodType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.vo.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +29,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 전시 공통 서비스
@@ -199,31 +197,54 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 	@Override
 	@Cacheable(value = "sac:display:tmembershipdcrate:v2", unless = "#result == null")
 	public TmembershipDcInfo getTmembershipDcRateForMenu(String tenantId, String topMenuId) {
+        if(topMenuId == null)
+            throw new IllegalArgumentException();
+
 		Map<String, String> req = new HashMap<String, String>();
 		req.put("tenantId", tenantId);
 		req.put("policyId", "policy014"); // policy014 - TMembership 할인정책
-		req.put("menuId", topMenuId);
+
+        if(!topMenuId.equals(DisplayConstants.REQUEST_TMEMBERSHIP_ALL_MENU))
+		    req.put("menuId", topMenuId);
 
 		List<TenantSalePolicy> tenantSalePolicies = this.commonDAO.queryForList(
 				"DisplayCommon.getTmembershipDcRateForMenu", req, TenantSalePolicy.class);
-		TmembershipDcInfo tmembershipDcInfo = new TmembershipDcInfo();
-		for (TenantSalePolicy tsp : tenantSalePolicies) {
-			if (tsp.getProdTp().equals("OR006311")) {
-				tmembershipDcInfo.setNormalDcRate(tsp.getDcRate());
-			} else if (tsp.getProdTp().equals("OR006331")) {
-				tmembershipDcInfo.setFreepassDcRate(tsp.getDcRate());
-			}
-		}
 
-		return tmembershipDcInfo;
+        if (topMenuId.equals(DisplayConstants.REQUEST_TMEMBERSHIP_ALL_MENU)) {
+            if (CollectionUtils.isNotEmpty(tenantSalePolicies)) {
+                TenantSalePolicy maxDcInfo = Collections.max(tenantSalePolicies, new Comparator<TenantSalePolicy>() {
+                    @Override
+                    public int compare(TenantSalePolicy tenantSalePolicy, TenantSalePolicy tenantSalePolicy2) {
+                        if(tenantSalePolicy.getDcRate() < tenantSalePolicy2.getDcRate())
+                            return -1;
+                        else if(tenantSalePolicy.getDcRate() > tenantSalePolicy2.getDcRate())
+                            return 1;
+                        else
+                            return 0;
+                    }
+                });
+                tenantSalePolicies = Arrays.asList(maxDcInfo);
+            }
+        }
+
+        TmembershipDcInfo tmembershipDcInfo = new TmembershipDcInfo();
+        for (TenantSalePolicy tsp : tenantSalePolicies) {
+            if ("OR006311".equals(tsp.getProdTp())) {
+                tmembershipDcInfo.setNormalDcRate(tsp.getDcRate());
+            } else if ("OR006331".equals(tsp.getProdTp())) {
+                tmembershipDcInfo.setFreepassDcRate(tsp.getDcRate());
+            }
+        }
+        return tmembershipDcInfo;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
-	 */
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService#getSupportDeviceInfo(java.lang.String)
+     */
 	@Override
 	public SupportDevice getSupportDeviceInfo(String deviceModelCd) {
 		if (StringUtils.isEmpty(deviceModelCd)) {

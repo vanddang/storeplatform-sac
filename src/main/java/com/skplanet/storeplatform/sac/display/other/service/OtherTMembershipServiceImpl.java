@@ -10,26 +10,21 @@
 package com.skplanet.storeplatform.sac.display.other.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.other.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Tmembership 할인율 조회
@@ -45,10 +40,6 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 
 	@Autowired
 	private DisplayCommonService commonService;
-
-	@Autowired
-	@Qualifier("sac")
-	private CommonDAO commonDAO;
 
 	/**
 	 * <pre>
@@ -151,18 +142,10 @@ public class OtherTMembershipServiceImpl implements OtherTMembershipService {
 	@Override
 	public OtherTMembershipUseStatusRes searchTMembershipUseStatus(SacRequestHeader header) {
 
-		Double tMemberShipDcRate;
-		OtherTMembershipUseStatusRes res = new OtherTMembershipUseStatusRes();
-		TenantHeader tenantHeader = header.getTenantHeader();
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("tenantHeader", tenantHeader);
-		tMemberShipDcRate = (Double) this.commonDAO.queryForObject("OtherTmembership.searchTMembershipUseStatus",
-				paramMap);
-		if (tMemberShipDcRate == null || tMemberShipDcRate <= 0) {
-			res.setUseStatus("N");
-		} else if (tMemberShipDcRate > 0) {
-			res.setUseStatus("Y");
-		}
-		return res;
-	}
+        TmembershipDcInfo dcInfo = commonService.getTmembershipDcRateForMenu(header.getTenantHeader().getTenantId(), DisplayConstants.REQUEST_TMEMBERSHIP_ALL_MENU);
+        OtherTMembershipUseStatusRes res = new OtherTMembershipUseStatusRes();
+        res.setUseStatus(dcInfo.getFreepassDcRate() <= 0 && dcInfo.getNormalDcRate() <= 0 ? "N" : "Y");
+
+        return res;
+    }
 }

@@ -780,5 +780,10 @@ public class DisplayConstants {
 	
 	/** 할인율/적립율 정책 대상 코드 */
 	public static final String POLICY_TARGET_CD_PRODUCT = "DP01160101"; 
-	public static final String POLICY_TARGET_CD_CATEGORY = "DP01160102"; 
+	public static final String POLICY_TARGET_CD_CATEGORY = "DP01160102";
+
+    /**
+     * DisplayCommonService.getTmembershipDcRateForMenu() 요청시 모든 메뉴
+     */
+    public static final String REQUEST_TMEMBERSHIP_ALL_MENU = "*";
 }

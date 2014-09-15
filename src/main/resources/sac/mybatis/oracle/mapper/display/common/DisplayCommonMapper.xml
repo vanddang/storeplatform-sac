@@ -48,7 +48,9 @@
         WHERE   1=1
                 AND TENANT_ID = #{tenantId}
                 AND POLICY_ID = #{policyId}
+            <if test="menuId != null">
                 AND SUBSTR(TENANT_PROD_GRP_CD,9,4) = #{menuId}
+            </if>
     </select>
     
     <!-- 단말 지원정보 조회 -->

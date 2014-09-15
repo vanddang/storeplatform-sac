@@ -1,8 +1,11 @@
 package com.skplanet.storeplatform.sac.display.common;
 
+import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.TenantSalePolicy;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -35,6 +38,9 @@ public class CommonServiceTest {
     @Autowired
     private DisplayCommonService commonService;
 
+    @Autowired
+    private CacheEvictManager cacheEvictManager;
+
     @Test
     public void getBatchStandardDateTest()
     {
@@ -65,6 +71,13 @@ public class CommonServiceTest {
         TmembershipDcInfo tmembershipDcRateForMenu = commonService.getTmembershipDcRateForMenu("S01", "DP18");
         assert tmembershipDcRateForMenu.getNormalDcRate() == 50;
         assert tmembershipDcRateForMenu.getFreepassDcRate() == 50;
+    }
+
+    @Test
+    public void testGetTmembershipDcRateMax() {
+        cacheEvictManager.evictAllTmembershipDcRate();
+        TmembershipDcInfo tmembershipDcRateForMenu = commonService.getTmembershipDcRateForMenu("S01", DisplayConstants.REQUEST_TMEMBERSHIP_ALL_MENU);
+        logger.info(ReflectionToStringBuilder.toString(tmembershipDcRateForMenu));
     }
 
     @Test
