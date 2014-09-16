@@ -191,7 +191,7 @@ public class VodGeneratorImpl implements VodGenerator {
 		 * Full HD 정보 우선, 없으며 HD 정보를 내려줌
 		 * HD 고화질 정보
 		 */
-		if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
+		if (StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
 			// videoInfo.setBtvcid(metaInfo.getHdBtvCid());
 			videoInfo.setPictureSize(metaInfo.getFhdDpPicRatio());
 			videoInfo.setPixel(metaInfo.getFhdDpPixel());
