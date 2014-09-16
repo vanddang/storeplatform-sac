@@ -747,7 +747,7 @@
                ON TIG.LANG_CD = IV.LANG_CD 
                AND IV.PROD_ID = TIG.PROD_ID 
                AND TIG.IMG_CD = (
-                    CASE WHEN IV.PLAN_TYPE IN ('OR004301','OR004302') THEN  #{imageCd}
+                    CASE WHEN IV.PLAN_TYPE IN ('OR004301','OR004302','OR004305') THEN  #{imageCd}
                          WHEN IV.PLAN_TYPE IN ('OR004303','OR004304') THEN  #{ebookImageCd}
                     END
                     )
