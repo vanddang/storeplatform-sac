@@ -87,7 +87,13 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 				sdSc.setPath(metaInfo.getSdFilePath());
                 subContentsList.add(sdSc);
 			}
-			if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
+			//Full HD 정보 우선, 없으며 HD 정보를 내려줌
+			if (StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
+				subContents.setSize(Long.parseLong(metaInfo.getFhdFileSize()));
+				subContents.setScid(metaInfo.getFhdSubContsId());
+				subContents.setPath(metaInfo.getFhdFilePath());
+				subContentsList.add(subContents);
+			} else if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
                 EncryptionSubContents hdSc = new EncryptionSubContents();
                 hdSc.setType("");
                 hdSc.setDeltaPath("");

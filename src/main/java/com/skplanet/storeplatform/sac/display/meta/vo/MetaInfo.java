@@ -153,17 +153,24 @@ public class MetaInfo extends CommonInfo {
 	private String sdFileSize;
 	private String sdProdVer;
 	private String hdBtvCid;
+	private String fhdBtvCid;
 	private String hdDpPicRatio;
+	private String fhdDpPicRatio;
 	private String hdDpPixel;
+	private String fhdDpPixel;
 	private String hdSubContsId;
+	private String fhdSubContsId;
 	private String hdFileSize;
+	private String fhdFileSize;
 	private String hdProdVer;
+	private String fhdProdVer;
 	private String dwldAreaLimtYn;
 	private String strmNetworkCd;
 	private String dwldNetworkCd;
 	private String nmFilePath;
 	private String sdFilePath;
 	private String hdFilePath;
+	private String fhdFilePath;
 	private String chnlProdNm;
 	private String genreCd;
 	private String genreCd2;
@@ -4255,5 +4262,60 @@ public class MetaInfo extends CommonInfo {
 		this.deltaFilePath = deltaFilePath;
 	}
 
+	public String getFhdFileSize() {
+		return fhdFileSize;
+	}
+	
+	public void setFhdFileSize(String fhdFileSize) {
+		this.fhdFileSize = fhdFileSize;
+	}
+
+	public String getFhdFilePath() {
+		return fhdFilePath;
+	}
+
+	public void setFhdFilePath(String fhdFilePath) {
+		this.fhdFilePath = fhdFilePath;
+	}
+
+	public String getFhdBtvCid() {
+		return fhdBtvCid;
+	}
+
+	public void setFhdBtvCid(String fhdBtvCid) {
+		this.fhdBtvCid = fhdBtvCid;
+	}
+
+	public String getFhdDpPixel() {
+		return fhdDpPixel;
+	}
+
+	public void setFhdDpPixel(String fhdDpPixel) {
+		this.fhdDpPixel = fhdDpPixel;
+	}
+
+	public String getFhdSubContsId() {
+		return fhdSubContsId;
+	}
+
+	public void setFhdSubContsId(String fhdSubContsId) {
+		this.fhdSubContsId = fhdSubContsId;
+	}
+
+	public String getFhdProdVer() {
+		return fhdProdVer;
+	}
+
+	public void setFhdProdVer(String fhdProdVer) {
+		this.fhdProdVer = fhdProdVer;
+	}
+
+	public String getFhdDpPicRatio() {
+		return fhdDpPicRatio;
+	}
+
+	public void setFhdDpPicRatio(String fhdDpPicRatio) {
+		this.fhdDpPicRatio = fhdDpPicRatio;
+	}
 
 }
