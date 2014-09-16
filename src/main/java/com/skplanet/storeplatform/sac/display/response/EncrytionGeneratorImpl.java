@@ -89,10 +89,14 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 			}
 			//Full HD 정보 우선, 없으며 HD 정보를 내려줌
 			if (StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
-				subContents.setSize(Long.parseLong(metaInfo.getFhdFileSize()));
-				subContents.setScid(metaInfo.getFhdSubContsId());
-				subContents.setPath(metaInfo.getFhdFilePath());
-				subContentsList.add(subContents);
+				EncryptionSubContents hdSc = new EncryptionSubContents();
+				hdSc.setType("");
+				hdSc.setDeltaPath("");
+				hdSc.setDeltaSize(0L);
+				hdSc.setSize(Long.parseLong(metaInfo.getFhdFileSize()));
+				hdSc.setScid(metaInfo.getFhdSubContsId());
+				hdSc.setPath(metaInfo.getFhdFilePath());
+				subContentsList.add(hdSc);
 			} else if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
                 EncryptionSubContents hdSc = new EncryptionSubContents();
                 hdSc.setType("");
