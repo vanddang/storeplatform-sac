@@ -1624,12 +1624,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			StringBuffer sbOcbAccum = new StringBuffer(64);
 
 			if (StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT)) {
-				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:1.0;"); // 시험폰, SKP법인폰 결제 제외
+				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:0.1;"); // 시험폰, SKP법인폰 결제 제외
 			} else {
-				sbOcbAccum.append("12:1.0;"); // 다날
+				sbOcbAccum.append("12:0.1;"); // 다날
 			}
 
-			sbOcbAccum.append("13:1.0;14:1.0;25:1.0"); // 신용카드, PayPin, T store Cash
+			sbOcbAccum.append("13:0.1;14:0.1;25:0.1"); // 신용카드, PayPin, T store Cash
 
 			return sbOcbAccum.toString();
 		}
