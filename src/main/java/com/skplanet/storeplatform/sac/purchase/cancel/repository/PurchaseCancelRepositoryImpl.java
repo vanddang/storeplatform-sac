@@ -566,8 +566,6 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			prchsProdCnt.setUseFixrateProdId(prchsDtlSacParam.getUseFixrateProdId());
 
 			prchsProdCntList.add(prchsProdCnt);
-
-			this.logger.info("################################## 구매건수 등록 테이블" + prchsProdCntList);
 		}
 		insertPurchaseProductCountScReq.setPrchsProdCntList(prchsProdCntList);
 
