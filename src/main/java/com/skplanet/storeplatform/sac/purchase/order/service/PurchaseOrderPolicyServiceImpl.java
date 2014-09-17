@@ -510,25 +510,6 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		// --------------------------------------------------------------------------------------------------
-		// IAP SKT 후불 결제금액 조회 : 쇼핑상품 구매 경우는 제외
-
-		int iapBillingAmt = -1;
-		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_SHOPPING_PRCHS_LIMIT) == false) {
-			try {
-				iapBillingAmt = this.iapRepository.inquiryBillingAmt(policyCheckParam.getDeviceId(),
-						policyCheckParam.getSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
-			} catch (Exception e) {
-				// 예외 발생 시, IAP측 결제금액 무시 처리 : 구매DB 기준으로 IAP포함 조회
-				if (e instanceof StorePlatformException) {
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}",
-							((StorePlatformException) e).getCode());
-				} else {
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}", e.getMessage());
-				}
-			}
-		}
-
-		// --------------------------------------------------------------------------------------------------
 		// SKT 후불 쇼핑상품 한도금액 제한
 
 		policyResult.setSktRestAmt(policyCheckParam.getPaymentTotAmt());
@@ -566,9 +547,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				for (PurchaseTenantPolicy policy : policyList) {
 					if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_SKT_PRCHS_LIMIT)) {
 
-						sktRestAmtObj = this.checkSktLimitRest(policy, policyCheckParam, iapBillingAmt); // CM011601:
-																										 // SKT후불 결제
-																										 // 한도제한
+						sktRestAmtObj = this.checkSktLimitRest(policy, policyCheckParam, -1); // CM011601:
+																							  // SKT후불 결제
+																							  // 한도제한
 
 						if (sktRestAmtObj != null && sktRestAmtObj.doubleValue() < policyResult.getSktRestAmt()) {
 							policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SHOPPING_LIMIT);
@@ -603,6 +584,23 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			}
 
 			policyListMap.remove(PurchaseConstants.POLICY_ID_SKT_SHOPPING_PRCHS_LIMIT);
+		}
+
+		// --------------------------------------------------------------------------------------------------
+		// IAP SKT 후불 결제금액 조회
+
+		int iapBillingAmt = -1;
+		try {
+			iapBillingAmt = this.iapRepository.inquiryBillingAmt(policyCheckParam.getDeviceId(),
+					policyCheckParam.getSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
+		} catch (Exception e) {
+			// 예외 발생 시, IAP측 결제금액 무시 처리 : 구매DB 기준으로 IAP포함 조회
+			if (e instanceof StorePlatformException) {
+				this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}",
+						((StorePlatformException) e).getCode());
+			} else {
+				this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}", e.getMessage());
+			}
 		}
 
 		// --------------------------------------------------------------------------------------------------
