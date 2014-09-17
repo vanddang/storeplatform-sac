@@ -764,7 +764,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
 		// 부모키로 조회 : 수정 2014-09-17
-		keySearch.setKeyString(searchLoginInRes.getLoginInfo().getParentSellerKey());
+		if (StringUtils.equals(MemberConstants.USE_Y, searchLoginInRes.getLoginInfo().getIsSubSeller())) {
+			keySearch.setKeyString(searchLoginInRes.getLoginInfo().getParentSellerKey());
+		} else {
+			keySearch.setKeyString(searchLoginInRes.getLoginInfo().getSellerKey());
+		}
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
 		searchSellerReq.setKeySearchList(list);
