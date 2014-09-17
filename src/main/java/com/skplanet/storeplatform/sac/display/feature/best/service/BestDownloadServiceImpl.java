@@ -9,6 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.best.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadSacReq;
@@ -20,18 +32,11 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.feature.best.util.BestUtils;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -127,8 +132,13 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 			if (stdDt.length() != 8) { // 날짜 형식 틀림
 				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
 			}
+			
+			// 주간 집계 리스트일 경우, 지나간 최신 일요일로 조회 기준일 변경
+			if (BestUtils.isListCollectedWeekly(bestDownloadReq.getListId())) {
+				stdDt = BestUtils.getPastSunday(stdDt);
+			}
 
-			if (this.recentStdDt(bestDownloadReq.getListId(), stdDt)) { // 집계 일자가 최신 일자이면 리스트 테이블 조회
+			if (BestUtils.isListRecentlyCollectedOn(bestDownloadReq.getListId(), stdDt)) { // 집계 일자가 최신 일자이면 리스트 테이블 조회
 				bestDownloadReq.setSearchHisYn("N"); // TB_DP_LIST_PROD : 리스트 테이블 조회
 			} else {
 				bestDownloadReq.setSearchHisYn("Y"); // TB_DP_LIST_PROD_HIS : 리스트 이력 테이블 조회
@@ -271,26 +281,4 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 		return response;
 	}
 
-	public boolean recentStdDt(String listId, String stdDt) {
-		Calendar calendar = Calendar.getInstance();
-		String recentDate = "";
-		if ("RNK000000006".equals(listId) || "RNK000000003".equals(listId)) { // 일간 BEST
-			recentDate = new Integer(calendar.get(Calendar.YEAR)).toString()
-					+ StringUtils.leftPad(new Integer(calendar.get(Calendar.MONTH) + 1).toString(), 2, '0')
-					+ StringUtils.leftPad(new Integer(calendar.get(Calendar.DATE)).toString(), 2, '0'); // YYYYMMDD_형식의_날짜
-		} else if ("RNK000000008".equals(listId) || "RNK000000005".equals(listId)) { // 주간 BEST
-			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); // 요일 set
-			recentDate = new Integer(calendar.get(Calendar.YEAR)).toString()
-					+ StringUtils.leftPad(new Integer(calendar.get(Calendar.MONTH) + 1).toString(), 2, '0')
-					+ StringUtils.leftPad(new Integer(calendar.get(Calendar.DATE)).toString(), 2, '0'); // YYYYMMDD_형식의_날짜(일요일)
-		} else if ("RNK000000007".equals(listId) || "RNK000000004".equals(listId)) { // 월간 BEST
-			recentDate = new Integer(calendar.get(Calendar.YEAR)).toString()
-					+ StringUtils.leftPad(new Integer(calendar.get(Calendar.MONTH) + 1).toString(), 2, '0') + "01"; // YYYYMM01_형식의_날짜
-		}
-		if (stdDt.equals(recentDate)) { // 집계 일자가 최신 일자이면
-			return true;
-		} else {
-			return false;
-		}
-	}
 }
