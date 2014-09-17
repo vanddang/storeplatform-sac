@@ -415,30 +415,30 @@ public class SellerServiceImpl implements SellerService {
 						LoginInfo loginInfo = new LoginInfo();
 						// 만료일시 생성
 						String expireDate = this.component.getExpirationTime(Integer.parseInt(req.getExpireDate()));
-						loginInfo.setSellerKey(logInSellerResponse.getSellerKey());
 						loginInfo.setIpAddress(req.getIpAddress());
 						loginInfo.setSessionKey(UUID.randomUUID().toString().replaceAll("-", ""));
 						loginInfo.setExpireDate(expireDate);
-						updateLoginInfoRequest.setLoginInfo(loginInfo);
 
 						/** 4-1. 공통 헤더 생성 및 주입. */
 						updateLoginInfoRequest.setCommonRequest(commonRequest);
 
-						/** 4-2. SC회원 - 상태변경(회원인증키) Call. */
-						this.sellerSCI.updateLoginInfo(updateLoginInfoRequest);
-						/** 4-3. [RESPONSE] 회원 인증키 주입. */
+						/** 4-2. [RESPONSE] 회원 인증키 주입. */
 						res.setSessionKey(loginInfo.getSessionKey());
 						res.setExpireDate(expireDate);
 						sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
+
 						// 서브 계정 Key
 						if (StringUtils.equals(MemberConstants.USE_Y, logInSellerResponse.getIsSubSeller())) {
 							loginInfo.setSellerKey(logInSellerResponse.getSubSellerKey());
-							loginInfo.setSessionKey(null);
-							// 서브 계정 로그인info 업데이트
-							this.sellerSCI.updateLoginInfo(updateLoginInfoRequest);
 							// Return Tenant
 							res.setSubSellerKey(logInSellerResponse.getSubSellerKey());
+						} else { // 주계정
+							loginInfo.setSellerKey(logInSellerResponse.getSellerKey());
 						}
+
+						/** 4-3. SC회원 - 상태변경(회원인증키) Call. */
+						updateLoginInfoRequest.setLoginInfo(loginInfo);
+						this.sellerSCI.updateLoginInfo(updateLoginInfoRequest);
 					}
 				}
 				/** 2-1. [RESPONSE] 회원 상태 및 로그인 상태 주입. */

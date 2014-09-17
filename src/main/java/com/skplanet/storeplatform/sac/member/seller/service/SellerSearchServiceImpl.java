@@ -763,7 +763,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		searchSellerReq.setCommonRequest(commonRequest);
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
-		keySearch.setKeyString(searchLoginInRes.getLoginInfo().getSellerKey());
+		// 부모키로 조회 : 수정 2014-09-17
+		keySearch.setKeyString(searchLoginInRes.getLoginInfo().getParentSellerKey());
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
 		searchSellerReq.setKeySearchList(list);
