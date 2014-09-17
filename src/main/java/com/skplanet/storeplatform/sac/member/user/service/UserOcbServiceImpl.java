@@ -120,12 +120,16 @@ public class UserOcbServiceImpl implements UserOcbService {
 		/**
 		 * 유효한 카드번호를 삭제 하는것인지 체크 한다.
 		 */
+		boolean isExsitOcbCard = false; // 삭제할 OCB 카드 존재유무
 		for (MemberPoint dbOcbInfo : searchMemberPointResponse.getMemberPointList()) {
-			LOGGER.debug("### >> 비교 DB  cardNumber : {}", dbOcbInfo.getCardNumber());
-			LOGGER.debug("### >> 비교 REQ cardNumber : {}", ocbCardNumber);
-			if (!StringUtils.equals(dbOcbInfo.getCardNumber(), ocbCardNumber)) {
-				throw new StorePlatformException("SAC_MEM_1700", ocbCardNumber);
+			if (StringUtils.equals(dbOcbInfo.getCardNumber(), ocbCardNumber)) {
+				isExsitOcbCard = true;
+				break;
 			}
+		}
+
+		if (!isExsitOcbCard) {
+			throw new StorePlatformException("SAC_MEM_1700", ocbCardNumber);
 		}
 
 		RemoveMemberPointRequest removeMemberPointRequest = new RemoveMemberPointRequest();
