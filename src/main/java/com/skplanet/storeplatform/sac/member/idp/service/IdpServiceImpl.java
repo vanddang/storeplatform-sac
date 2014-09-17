@@ -1112,11 +1112,8 @@ public class IdpServiceImpl implements IdpService {
 	public ImResult rXUpdateUserNameIDP(HashMap map) {
 		// 실명 인증 정보
 		UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
-		String idpResult = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE;
-		String idpResultText = IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
-
-		// 초기화값 가져오기
-		String authType = map.get("rname_auth_type_cd").toString();
+		String idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
+		String idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 
 		// 공통 헤더 세팅
 		CommonRequest commonRequest = new CommonRequest();
@@ -1141,98 +1138,117 @@ public class IdpServiceImpl implements IdpService {
 
 			if (searchUserRespnse.getUserMbr() != null) {
 
-				// 실명인증 대상 본인/법정대리인 여부
-				// 본인
-				updateRealNameRequest.setIsOwn(MemberConstants.AUTH_TYPE_OWN);
-				updateRealNameRequest.setCommonRequest(commonRequest);
-				if (authType.equals("C")) {
-					updateRealNameRequest.setIsRealName("N");
-				}
-				// updateRealNameRequest.setIsRealName(map.get("is_rname_auth").toString());
-				updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
-
-				MbrAuth mbrAuth = new MbrAuth();
-				if (!authType.equals("C")) {// 초기화 값이 아닐때
-					if (map.get("user_birthday") != null)
-						mbrAuth.setBirthDay(map.get("user_birthday").toString());
-					// ci는 DB 필수 값임으로 없을 경우 공백 입력
-					if (map.get("user_ci") == null || map.get("user_ci").toString().length() <= 0) {
-						mbrAuth.setCi(" ");
-					} else {
-						mbrAuth.setCi(map.get("user_ci").toString());
+				if (map.get("rname_auth_type_cd") == null) { // 실명인증 유형코드가 빈값으로
+															 // 온경우
+					// tb_us_usermbr 테이블의 이름,
+					// 생년월일, 성별만 업데이트
+					UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+					updateUserRequest.setCommonRequest(commonRequest);
+					UserMbr userMbr = new UserMbr();
+					userMbr.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
+					if (map.get("user_name") != null) {
+						userMbr.setUserName(map.get("user_name").toString());
 					}
-					if (map.get("user_di") != null)
-						mbrAuth.setDi(map.get("user_di").toString());
-					// mbrAuth.setIsRealName(map.get("is_rname_auth").toString());
-					// 내국인여부
-					if (map.get("rname_auth_mbr_code") != null) {
-						// 내국인
-						if (map.get("rname_auth_mbr_code").toString().equals("10")) {
-							mbrAuth.setIsDomestic("Y");
-						} else {// 외국인
-							mbrAuth.setIsDomestic("N");
-						}
+					if (map.get("user_birthday") != null) {
+						userMbr.setUserBirthDay(map.get("user_birthday").toString());
 					}
-					// systemid 입력
-					mbrAuth.setRealNameSite((String) map.get("systemID"));
-					if (map.get("rname_auth_date") != null)
-						mbrAuth.setRealNameDate(map.get("rname_auth_date").toString());
-					mbrAuth.setMemberCategory(searchUserRespnse.getMbrAuth().getMemberCategory());
-					mbrAuth.setTelecom(searchUserRespnse.getMbrAuth().getTelecom());
-					mbrAuth.setPhone(searchUserRespnse.getMbrAuth().getPhone());
-					if (map.get("user_sex") != null)
-						mbrAuth.setSex(map.get("user_sex").toString());
-					if (map.get("user_name") != null)
-						mbrAuth.setName(map.get("user_name").toString());
-					mbrAuth.setMemberKey(searchUserRespnse.getMbrAuth().getMemberKey());
-					if (map.get("rname_auth_mns_code") != null) {
-						if (map.get("rname_auth_mns_code").toString().equals("1")) {// 휴대폰 인증{
-							mbrAuth.setRealNameMethod(MemberConstants.REAL_NAME_AUTH_MOBILE);
-						} else if (map.get("rname_auth_mns_code").toString().equals("2")) {// 아이핀 인증
-							mbrAuth.setRealNameMethod(MemberConstants.REAL_NAME_AUTH_IPIN);
-						}
+					if (map.get("user_sex") != null) {
+						userMbr.setUserSex(map.get("user_sex").toString());
 					}
-				} else {// 실명인증 정보 초기화 요청 시
-					// CI 필수값만 세팅
-					mbrAuth.setCi(" ");
-					mbrAuth.setIsDomestic(" ");
-					mbrAuth.setIsRealName("N");
-				}
 
-				updateRealNameRequest.setUserMbrAuth(mbrAuth);
+					updateUserRequest.setUserMbr(userMbr);
+					this.userSCI.updateUser(updateUserRequest);
 
-				UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-				LOGGER.debug("response param : {}", updateRealNameResponse.getUserKey());
-
-				// oneID 테이블 업데이트
-				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-				updateMbrOneIDRequest.setCommonRequest(commonRequest);
-				MbrOneID mbrOneID = new MbrOneID();
-				mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
-				// 실명 인증여부
-				// CI값 존재 여부
-				if (authType.equals("C")) {
-					mbrOneID.setIsRealName("N");
-					mbrOneID.setIsCi("N");
 				} else {
-					mbrOneID.setIsRealName(map.get("is_rname_auth").toString());
-					if (map.get("user_ci") == null || map.get("user_ci").toString().length() <= 0) {
-						mbrOneID.setIsCi("N");
-					} else {
-						mbrOneID.setIsCi("Y");
-					}
-				}
-				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
-				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-				if (updateMbrOneIDResponse != null) {
-					if (updateRealNameResponse.getCommonResponse().getResultCode()
-							.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)
-							&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
-									.equals(this.SC_RETURN + MemberConstants.RESULT_SUCCES)) {
-						idpResult = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE;
-						idpResultText = IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+					// 실명인증 대상 본인/법정대리인 여부
+					// 본인
+					updateRealNameRequest.setIsOwn(MemberConstants.AUTH_TYPE_OWN);
+					updateRealNameRequest.setCommonRequest(commonRequest);
+
+					// updateRealNameRequest.setIsRealName(map.get("is_rname_auth").toString());
+					updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
+
+					MbrAuth mbrAuth = new MbrAuth();
+					MbrOneID mbrOneID = new MbrOneID();
+					if (StringUtils.equals(map.get("rname_auth_type_cd").toString(), "C")) {// 실명인증 정보 초기화 요청 시
+
+						updateRealNameRequest.setIsRealName("N");
+
+						// CI 필수값만 세팅
+						mbrAuth.setCi(" ");
+						mbrAuth.setIsDomestic(" ");
+						mbrAuth.setIsRealName("N");
+
+						mbrOneID.setIsRealName("N");
+						mbrOneID.setIsCi("N");
+
+					} else {
+
+						if (map.get("user_birthday") != null) {
+							mbrAuth.setBirthDay(map.get("user_birthday").toString());
+						}
+
+						// ci는 DB 필수 값임으로 없을 경우 공백 입력
+						if (map.get("user_ci") != null) {
+							mbrAuth.setCi(map.get("user_ci").toString());
+							mbrOneID.setIsCi("Y");
+						} else {
+							mbrAuth.setCi(" ");
+							mbrOneID.setIsCi("N");
+						}
+						if (map.get("user_di") != null)
+							mbrAuth.setDi(map.get("user_di").toString());
+						// mbrAuth.setIsRealName(map.get("is_rname_auth").toString());
+						// 내국인여부
+						if (map.get("rname_auth_mbr_code") != null) {
+							// 내국인
+							if (map.get("rname_auth_mbr_code").toString().equals("10")) {
+								mbrAuth.setIsDomestic("Y");
+							} else {// 외국인
+								mbrAuth.setIsDomestic("N");
+							}
+						}
+						// systemid 입력
+						mbrAuth.setRealNameSite((String) map.get("systemID"));
+						if (map.get("rname_auth_date") != null) {
+							mbrAuth.setRealNameDate(map.get("rname_auth_date").toString());
+						}
+
+						mbrAuth.setMemberCategory(searchUserRespnse.getMbrAuth().getMemberCategory());
+						mbrAuth.setTelecom(searchUserRespnse.getMbrAuth().getTelecom());
+						mbrAuth.setPhone(searchUserRespnse.getMbrAuth().getPhone());
+						if (map.get("user_sex") != null) {
+							mbrAuth.setSex(map.get("user_sex").toString());
+						}
+
+						if (map.get("user_name") != null) {
+							mbrAuth.setName(map.get("user_name").toString());
+						}
+						mbrAuth.setMemberKey(searchUserRespnse.getMbrAuth().getMemberKey());
+						if (map.get("rname_auth_mns_code") != null) {
+							if (map.get("rname_auth_mns_code").toString().equals("1")) {// 휴대폰 인증{
+								mbrAuth.setRealNameMethod(MemberConstants.REAL_NAME_AUTH_MOBILE);
+							} else if (map.get("rname_auth_mns_code").toString().equals("2")) {// 아이핀 인증
+								mbrAuth.setRealNameMethod(MemberConstants.REAL_NAME_AUTH_IPIN);
+							}
+						}
+
+						mbrOneID.setIsRealName(map.get("is_rname_auth").toString());
 					}
+
+					updateRealNameRequest.setUserMbrAuth(mbrAuth);
+
+					UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
+					LOGGER.debug("response param : {}", updateRealNameResponse.getUserKey());
+
+					// oneID 테이블 업데이트
+					UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+					updateMbrOneIDRequest.setCommonRequest(commonRequest);
+					mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
+					updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+					this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
 				}
 			}
 		} catch (StorePlatformException spe) {
