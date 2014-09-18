@@ -127,7 +127,8 @@
                      <if test='orderedBy != "recent" and orderedBy != "download" and orderedBy != "popular"'>
                      , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB, A.PROD_NM) AS RNUM
                      </if>
-                 FROM (SELECT A.TENANT_ID
+                 FROM (SELECT /*+ LEADING(A D B C E I F G H) USE_NL(A D B C E I F G H) NO_MERGE(A)*/
+ 							  A.TENANT_ID
                             , D.MENU_ID
                             , A.PROD_ID
                             , D.TOP_MENU_ID
@@ -170,6 +171,7 @@
                         WHERE A.PROD_ID = B.PROD_ID
                           AND B.PROD_RSHP_CD = 'DP010802'
                           AND A.MENU_ID = C.MENU_ID
+                          AND A.MENU_ID = D.MENU_ID
                           AND B.PART_PROD_ID = C.PROD_ID
                           AND C.USE_YN = 'Y'
                           AND C.MENU_ID = D.MENU_ID
