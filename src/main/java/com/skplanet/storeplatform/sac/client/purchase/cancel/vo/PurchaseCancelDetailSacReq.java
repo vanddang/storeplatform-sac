@@ -25,6 +25,8 @@ public class PurchaseCancelDetailSacReq extends CommonInfo {
 	@NotBlank
 	private String prchsId;
 
+	private String cancelMdn;
+
 	/**
 	 * @return the prchsId
 	 */
@@ -38,6 +40,21 @@ public class PurchaseCancelDetailSacReq extends CommonInfo {
 	 */
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the cancelMdn
+	 */
+	public String getCancelMdn() {
+		return this.cancelMdn;
+	}
+
+	/**
+	 * @param cancelMdn
+	 *            the cancelMdn to set
+	 */
+	public void setCancelMdn(String cancelMdn) {
+		this.cancelMdn = cancelMdn;
 	}
 
 }
