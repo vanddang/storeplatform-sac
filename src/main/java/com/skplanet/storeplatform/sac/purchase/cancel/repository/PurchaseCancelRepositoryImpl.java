@@ -940,8 +940,6 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		SmsSendEcReq smsSendEcReq = new SmsSendEcReq();
 
-		recvMdn = "01027883104"; // TODO : 테스트용
-
 		smsSendEcReq.setSendMdn("15990011");
 		smsSendEcReq.setRecvMdn(recvMdn);
 		smsSendEcReq.setMsg(msg);
