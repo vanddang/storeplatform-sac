@@ -34,6 +34,8 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 	private Boolean ignoreCouponCms = false;
 	private Boolean ignorePayPlanet = false;
 
+	private String cancelMdn;
+
 	private List<PurchaseCancelDetailSacParam> prchsCancelList;
 
 	/**
@@ -170,6 +172,21 @@ public class PurchaseCancelSacParam extends PurchaseCommonSacParam {
 	 */
 	public void setIgnorePayPlanet(Boolean ignorePayPlanet) {
 		this.ignorePayPlanet = ignorePayPlanet;
+	}
+
+	/**
+	 * @return the cancelMdn
+	 */
+	public String getCancelMdn() {
+		return this.cancelMdn;
+	}
+
+	/**
+	 * @param cancelMdn
+	 *            the cancelMdn to set
+	 */
+	public void setCancelMdn(String cancelMdn) {
+		this.cancelMdn = cancelMdn;
 	}
 
 }

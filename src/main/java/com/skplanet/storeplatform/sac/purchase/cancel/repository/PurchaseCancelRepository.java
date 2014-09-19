@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCanc
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
@@ -57,6 +58,19 @@ public interface PurchaseCancelRepository {
 	 * @return deviceId
 	 */
 	String getDeviceId(String userKey, String deviceKey);
+
+	/**
+	 * <pre>
+	 * deviceId로 useKey, deviceKey를 조회해온다.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 *            deviceId
+	 * @param orderDt
+	 *            orderDt
+	 * @return SearchOrderUserByDeviceIdSacRes
+	 */
+	SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceId(String deviceId, String orderDt);
 
 	/**
 	 * 

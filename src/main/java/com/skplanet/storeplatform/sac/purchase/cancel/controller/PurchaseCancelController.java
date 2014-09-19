@@ -355,6 +355,7 @@ public class PurchaseCancelController {
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
 
 			purchaseCancelDetailSacParam.setPrchsId(purchaseCancelDetailSacReq.getPrchsId());
+			purchaseCancelDetailSacParam.setCancelMdn(purchaseCancelDetailSacReq.getCancelMdn());
 
 			prchsCancelList.add(purchaseCancelDetailSacParam);
 

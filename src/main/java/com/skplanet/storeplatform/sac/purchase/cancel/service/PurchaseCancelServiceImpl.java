@@ -36,6 +36,7 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInRes;
@@ -242,12 +243,29 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		 * .getPaymentSacParamList().isEmpty())) { throw new StorePlatformException("SAC_PUR_8104"); }
 		 */
 
-		// 2014.07.29 최상훈c 요건 추가(해당값이 존재하면 회원정보 조회 안함)
-		if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
-			/** deviceId 조회 및 셋팅. */
-			prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
-					prchsSacParam.getInsdDeviceId()));
+		/** deviceId 조회 및 셋팅. */
+		if (StringUtils.isBlank(purchaseCancelDetailSacParam.getCancelMdn())) {
+			// 2014.07.29 최상훈c 요건 추가(해당값이 존재하면 회원정보 조회 안함)
+			if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
+
+				prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
+						prchsSacParam.getInsdDeviceId()));
+			}
+		} else {
+			SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = this.purchaseCancelRepository
+					.searchOrderUserByDeviceId(purchaseCancelDetailSacParam.getCancelMdn(), prchsSacParam.getPrchsDt());
+
+			if (searchOrderUserByDeviceIdSacRes != null) {
+				if (!StringUtils.equals(searchOrderUserByDeviceIdSacRes.getUserKey(), prchsSacParam.getInsdUsermbrNo())
+						|| !StringUtils.equals(searchOrderUserByDeviceIdSacRes.getDeviceKey(),
+								prchsSacParam.getInsdDeviceId())) {
+					throw new StorePlatformException("SAC_PUR_4107");
+				}
+			}
+
+			prchsSacParam.setDeviceId(purchaseCancelDetailSacParam.getCancelMdn());
 		}
+
 		/*
 		 * 
 		 * ..................................구매 취소 시 상품 정보 확인 불필요하여 주석 처리..............................................
@@ -454,8 +472,23 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		/** deviceId 조회 및 셋팅. */
-		prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
-				prchsSacParam.getInsdDeviceId()));
+		if (StringUtils.isBlank(purchaseCancelDetailSacParam.getCancelMdn())) {
+			prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
+					prchsSacParam.getInsdDeviceId()));
+		} else {
+			SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = this.purchaseCancelRepository
+					.searchOrderUserByDeviceId(purchaseCancelDetailSacParam.getCancelMdn(), prchsSacParam.getPrchsDt());
+
+			if (searchOrderUserByDeviceIdSacRes != null) {
+				if (!StringUtils.equals(searchOrderUserByDeviceIdSacRes.getUserKey(), prchsSacParam.getInsdUsermbrNo())
+						|| !StringUtils.equals(searchOrderUserByDeviceIdSacRes.getDeviceKey(),
+								prchsSacParam.getInsdDeviceId())) {
+					throw new StorePlatformException("SAC_PUR_4107");
+				}
+			}
+
+			prchsSacParam.setDeviceId(purchaseCancelDetailSacParam.getCancelMdn());
+		}
 
 		/** 결제가 PayPlanet결제 인지 TStore 결제인지 구분하고 PayPlanet결제이면 authKey, mid 셋팅. */
 		this.setPaymentShopInfo(purchaseCancelSacParam, purchaseCancelDetailSacParam);

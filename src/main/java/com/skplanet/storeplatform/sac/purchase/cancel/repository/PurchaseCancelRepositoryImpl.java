@@ -63,8 +63,11 @@ import com.skplanet.storeplatform.purchase.client.membership.sci.MembershipReser
 import com.skplanet.storeplatform.purchase.client.product.count.sci.PurchaseCountSCI;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.InsertPurchaseProductCountScReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
@@ -73,6 +76,7 @@ import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
 
 /**
  * 구매 취소 repository implements.
@@ -110,6 +114,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 	@Autowired
 	private MembershipReserveSCI membershipReserveSCI;
+
+	@Autowired
+	private SearchUserSCI searchUserSCI;
 
 	@Override
 	public PurchaseCancelDetailSacParam setPurchaseDetailInfo(PurchaseCancelSacParam purchaseCancelSacParam,
@@ -169,6 +176,17 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		}
 
 		return searchDeviceIdSacRes.getDeviceId();
+
+	}
+
+	@Override
+	public SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceId(String deviceId, String orderDt) {
+
+		SearchOrderUserByDeviceIdSacReq searchOrderUserByDeviceIdSacReq = new SearchOrderUserByDeviceIdSacReq();
+		searchOrderUserByDeviceIdSacReq.setDeviceId(deviceId);
+		searchOrderUserByDeviceIdSacReq.setOrderDt(orderDt);
+
+		return this.searchUserSCI.searchOrderUserByDeviceId(searchOrderUserByDeviceIdSacReq);
 
 	}
 
@@ -487,7 +505,8 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 							&& purchaseCancelDetailSacParam.getPayPlanetCancelEcRes().getResPaymethod().size() > 0) {
 						for (CancelEcResPaymethod cancelEcResPaymethod : purchaseCancelDetailSacParam
 								.getPayPlanetCancelEcRes().getResPaymethod()) {
-							if (StringUtils.equals(cancelEcResPaymethod.getCdPaymethod(),
+							if (StringUtils.equals(
+									PaymethodUtil.convert2StoreCode(cancelEcResPaymethod.getCdPaymethod()),
 									paymentSacParam.getPaymentMtdCd())) {
 								if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYPLANET_CANCEL_SUCCESS,
 										cancelEcResPaymethod.getResultCode())) {

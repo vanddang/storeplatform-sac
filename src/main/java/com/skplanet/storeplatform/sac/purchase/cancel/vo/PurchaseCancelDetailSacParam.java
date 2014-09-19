@@ -25,6 +25,7 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String prchsId;
+	private String cancelMdn;
 
 	/** 구매 내역. */
 	private PrchsSacParam prchsSacParam;
@@ -211,6 +212,21 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	 */
 	public void setPayPlanetCancelEcRes(CancelEcRes payPlanetCancelEcRes) {
 		this.payPlanetCancelEcRes = payPlanetCancelEcRes;
+	}
+
+	/**
+	 * @return the cancelMdn
+	 */
+	public String getCancelMdn() {
+		return this.cancelMdn;
+	}
+
+	/**
+	 * @param cancelMdn
+	 *            the cancelMdn to set
+	 */
+	public void setCancelMdn(String cancelMdn) {
+		this.cancelMdn = cancelMdn;
 	}
 
 }
