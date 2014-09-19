@@ -1,5 +1,17 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.MapgProdMeta;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
@@ -16,23 +28,12 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.common.vo.ProductTypeInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
- * 
- * 
+ *
+ *
  * 구매 내역 조회 시 필요한 상품 메타 정보 조회 서비스 구현체.
- * 
+ *
  * Updated on : 2014. 2. 24. Updated by : 오승민, 인크로스
  */
 @Service
@@ -51,7 +52,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.localsci.sci.service.ProductInfoService#getProductList(com.skplanet.
 	 * storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq)
 	 */
@@ -86,7 +87,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
                 String svcTp = productBasicInfo.getSvcTypeCd();
                 String metaClsfCd = productBasicInfo.getMetaClsfCd();
 
-                ProductTypeInfo typeInfo = displayCommonService.getProductTypeInfo(svcGrpCd, svcTp, metaClsfCd, topMenuId);
+                ProductTypeInfo typeInfo = this.displayCommonService.getProductTypeInfo(svcGrpCd, svcTp, metaClsfCd, topMenuId);
 
                 ProductInfo product = null;
 				paramMap.put("productBasicInfo", productBasicInfo);
@@ -191,7 +192,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 
 			this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformationListForProduct");
 			long end = System.currentTimeMillis();
-			this.log.debug("##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms", (end - start));
+			this.log.debug("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformationListForProduct takes {} ms", (end - start));
 
 			for (int j = 0; j < productList.size(); j++) {
 				ProductInfo product = productList.get(j);
