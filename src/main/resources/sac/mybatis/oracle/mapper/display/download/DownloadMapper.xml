@@ -61,7 +61,7 @@
 		    AND P.PROD_CHRG_YN      = 'N'               /* 무료상품 */
 		    AND P.SVC_GRP_CD        = 'DP000201'        /* DP000201 : App 상품 */
 		    AND P.PROD_ID           = #{bnchProdId}     /* Bunch Prod Id */
-		    AND TP.TENANT_ID        = 'S01' 
+		    AND TP.TENANT_ID        = #{tenantId} 
 		    AND TP.PROD_STATUS_CD   = 'PD000403'        /* PD000403 : 판매중 */
 		    AND TP.EXPO_YN          = 'Y'
 		    AND PI.EXPO_ORD         = 1
