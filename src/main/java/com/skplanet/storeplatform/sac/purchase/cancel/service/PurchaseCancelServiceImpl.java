@@ -472,23 +472,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		/** deviceId 조회 및 셋팅. */
-		if (StringUtils.isBlank(purchaseCancelDetailSacParam.getCancelMdn())) {
-			prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
-					prchsSacParam.getInsdDeviceId()));
-		} else {
-			SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = this.purchaseCancelRepository
-					.searchOrderUserByDeviceId(purchaseCancelDetailSacParam.getCancelMdn(), prchsSacParam.getPrchsDt());
-
-			if (searchOrderUserByDeviceIdSacRes != null) {
-				if (!StringUtils.equals(searchOrderUserByDeviceIdSacRes.getUserKey(), prchsSacParam.getInsdUsermbrNo())
-						|| !StringUtils.equals(searchOrderUserByDeviceIdSacRes.getDeviceKey(),
-								prchsSacParam.getInsdDeviceId())) {
-					throw new StorePlatformException("SAC_PUR_4107");
-				}
-			}
-
-			prchsSacParam.setDeviceId(purchaseCancelDetailSacParam.getCancelMdn());
-		}
+		prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
+				prchsSacParam.getInsdDeviceId()));
 
 		/** 결제가 PayPlanet결제 인지 TStore 결제인지 구분하고 PayPlanet결제이면 authKey, mid 셋팅. */
 		this.setPaymentShopInfo(purchaseCancelSacParam, purchaseCancelDetailSacParam);
