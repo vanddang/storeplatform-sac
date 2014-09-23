@@ -107,7 +107,7 @@ public class RelatedProductController {
 	/**
 	 *
 	 * <pre>
-	 * 특정 작가별 상품 조회.
+	 * [I03000036] 2.5.4.특정 작가별 상품 조회
 	 * </pre>
 	 *
 	 * @param requestVO
