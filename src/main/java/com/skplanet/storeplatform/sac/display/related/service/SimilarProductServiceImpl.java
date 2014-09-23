@@ -13,10 +13,13 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -61,6 +64,9 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 	@Autowired
 	private DisplayCommonService displayCommonService;
 
+	@Autowired
+    private MemberBenefitService benefitService;
+	
 	/**
 	 * 
 	 * <pre>
@@ -163,7 +169,12 @@ public class SimilarProductServiceImpl implements SimilarProductService {
 							MetaInfo.class); // 뮤직 메타
 					// retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap); // 뮤직 공통 메타
 					if (retMetaInfo != null) {
+						// Tstore멤버십 적립율 정보
+			        	MileageInfo mileageInfo = benefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt());
+			        	List<Point> pointList = commonGenerator.generateMileage(mileageInfo);
+						
 						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+						product.setPointList(pointList);
 						product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
 						product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
 						productList.add(product);
