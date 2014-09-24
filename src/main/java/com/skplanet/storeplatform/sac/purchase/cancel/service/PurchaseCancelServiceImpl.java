@@ -648,6 +648,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		historyCountSacInReq.setPrchsCaseCd(prchsDtlSacParam.getPrchsCaseCd());
 		historyCountSacInReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 		historyCountSacInReq.setUseFixrateProdId(prchsDtlSacParam.getProdId());
+		historyCountSacInReq.setPrchsProdHaveYn("Y");
 
 		HistoryCountSacInRes historyCountSacInRes = this.historyInternalSCI.searchHistoryCount(historyCountSacInReq);
 		if (historyCountSacInRes.getTotalCnt() > 0) {
