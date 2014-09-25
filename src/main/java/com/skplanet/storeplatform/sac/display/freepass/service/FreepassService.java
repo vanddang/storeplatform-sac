@@ -75,6 +75,19 @@ public interface FreepassService {
 	FreepassListRes searchFreepassListByChannel(FreepassSpecificReq req, SacRequestHeader header);
 
 	/**
+	 * <pre>
+	 * 특정 상품에 적용할 자유 이용권 조회 V2.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            FreepassListReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @return FreepassListRes
+	 */
+	FreepassListRes searchFreepassListByChannelV2(FreepassSpecificReq req, SacRequestHeader header);
+
+	/**
 	 * 이용가능한 정액권목록 구매내역 필요한 정보.
 	 * 
 	 * @param req

@@ -122,4 +122,28 @@ public class FreepassController {
 
 		return this.freepassService.searchFreepassListByChannel(req, header);
 	}
+
+	/**
+	 * <pre>
+	 * 특정 상품에 적용할 자유 이용권 조회? GET.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return CategoryAppRes
+	 */
+
+	@RequestMapping(value = "/specific/list/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public FreepassListRes searchFreepassListByChannelV2(@RequestBody @Validated FreepassSpecificReq req,
+			SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchFreepassListByChannelV2 Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.freepassService.searchFreepassListByChannelV2(req, header);
+	}
 }
