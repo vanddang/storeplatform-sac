@@ -655,18 +655,12 @@
                                <if test='filteredBy == "ebook+normal"'>  /* 이북 일반 */
                            AND E.MENU_ID NOT IN (SELECT MENU_ID
                                                    FROM TB_DP_MENU_CATEGORY
-                                                  WHERE (MENU_ID LIKE 'DP13004%'
-                                                         OR MENU_ID  IN ('DP13027002', 'DP13027008', 'DP13027009', 'DP13027010' )
-                                                        )
-                                                 )
+                                                  WHERE MENU_ID LIKE 'DP1304%')
                                </if>
                                <if test='filteredBy == "ebook+genre"'>  /* 이북 장르 */
                            AND E.MENU_ID IN (SELECT MENU_ID
                                                FROM TB_DP_MENU_CATEGORY
-                                              WHERE (MENU_ID LIKE 'DP13004%'
-                                                     OR MENU_ID  IN ('DP13027002', 'DP13027008', 'DP13027009', 'DP13027010' )
-                                                     )
-                                            )  
+                                              WHERE MENU_ID LIKE 'DP1304%')  
                                </if>
                            </if>
                            AND F.PROD_ID = G.PROD_ID
@@ -737,25 +731,22 @@
                    AND D.TOP_MENU_ID = #{topMenuId}
                    <if test='topMenuId == "DP13"'>
                        <if test='filteredBy == "normal"'>
-                       /* 인기도서 일반 - 장르소설 / 작가출판>장르소설을 제외한 나머지 */
+                       /* 인기도서 일반 - 장르소설을 제외한 나머지 */
                        AND D.MENU_ID NOT IN (SELECT MENU_ID
                                                FROM TB_DP_MENU_CATEGORY
-                                              WHERE (MENU_ID LIKE 'DP13004%'  /* 장르소설 */
-                                                     OR MENU_ID IN ('DP13027002', 'DP13027008', 'DP13027009', 'DP13027010' )  /* 작가출판 장르소설 */
-                                                    )
-                                             )
+                                              WHERE MENU_ID LIKE 'DP1304%')
                        </if>
                        <if test='filteredBy == "fantasy"'>
-                       /* 인기도서 판타지 - 장르소설>SF/판타지, 작가출판>장르소설-SF/판타지 */
-                       AND D.MENU_ID IN ('DP13004003', 'DP13027010')
+                       /* 인기도서 판타지 - 장르소설>SF/판타지 */
+                       AND D.MENU_ID = 'DP13042'
                        </if>
                        <if test='filteredBy == "rommance"'>
-                       /* 인기도서 로맨스 - 장르소설>로맨스, 작가출판>장르소설-로맨스 */
-                       AND D.MENU_ID IN ( 'DP13004001', 'DP13027008' )
+                       /* 인기도서 로맨스 - 장르소설>로맨스 */
+                       AND D.MENU_ID = 'DP13040'
                        </if>
                        <if test='filteredBy == "martialArts"'>
-                       /* 인기도서 무협 - 장르소설>무협, 작가출판>장르소설-무협 */
-                       AND D.MENU_ID IN ( 'DP13004002', 'DP13027009' )
+                       /* 인기도서 무협 - 장르소설>무협 */
+                       AND D.MENU_ID = 'DP13041'
                        </if>
                    </if>
                    <if test='topMenuId == "DP14"'>

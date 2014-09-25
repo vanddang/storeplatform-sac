@@ -189,22 +189,14 @@
                                        AND B.MENU_ID NOT IN ( SELECT MENU_ID
 		                                                        FROM TB_DP_MENU_CATEGORY
 		                                                       WHERE USE_YN = 'Y'
-		                                                         AND MENU_ID LIKE 'DP13004%'
-		                                                          OR MENU_ID IN ( 'DP13027002'
-		                                                                        , 'DP13027008'
-		                                                                        , 'DP13027009'
-		                                                                        , 'DP13027010' ) )
+		                                                         AND MENU_ID LIKE 'DP1304%' )
 		                           </if>
 		                           <if test='filteredBy == "ebook+genre"'>
 		                               AND B.TOP_MENU_ID = 'DP13'
                                        AND B.MENU_ID IN ( SELECT MENU_ID
                                                             FROM TB_DP_MENU_CATEGORY
                                                            WHERE USE_YN = 'Y'
-                                                             AND MENU_ID LIKE 'DP13004%'
-                                                              OR MENU_ID IN ( 'DP13027002'
-                                                                            , 'DP13027008'
-                                                                            , 'DP13027009'
-                                                                            , 'DP13027010' ) )
+                                                             AND MENU_ID LIKE 'DP1304%' )
                                    </if>
                                    <if test='possLendClsfCd != null and possLendClsfCd != "" '>
                                        AND E.POSS_LEND_CLSF_CD = #{possLendClsfCd}  /* 소장/대여 구분 코드 */
