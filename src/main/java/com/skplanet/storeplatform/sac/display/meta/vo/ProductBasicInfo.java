@@ -22,7 +22,7 @@ public class ProductBasicInfo extends CommonInfo {
 	private String topMenuId;
 	private String expoOrd;
 	private String firstProdId;
-    private String partParentClsfCd;
+	private String partParentClsfCd;
 
 	// 쇼핑 관련
 	private String catalogId;
@@ -33,6 +33,9 @@ public class ProductBasicInfo extends CommonInfo {
 
 	// eBook
 	private String etcCd;
+
+	// 정액권 관련
+	private String prodStatusCd;
 
 	/**
 	 * @return the totalCount
@@ -260,11 +263,27 @@ public class ProductBasicInfo extends CommonInfo {
 		this.etcCd = etcCd;
 	}
 
-    public String getPartParentClsfCd() {
-        return partParentClsfCd;
-    }
+	public String getPartParentClsfCd() {
+		return this.partParentClsfCd;
+	}
 
-    public void setPartParentClsfCd(String partParentClsfCd) {
-        this.partParentClsfCd = partParentClsfCd;
-    }
+	public void setPartParentClsfCd(String partParentClsfCd) {
+		this.partParentClsfCd = partParentClsfCd;
+	}
+
+	/**
+	 * @return the prodStatusCd
+	 */
+	public String getProdStatusCd() {
+		return this.prodStatusCd;
+	}
+
+	/**
+	 * @param prodStatusCd
+	 *            the prodStatusCd to set
+	 */
+	public void setProdStatusCd(String prodStatusCd) {
+		this.prodStatusCd = prodStatusCd;
+	}
+
 }
