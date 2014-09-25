@@ -16,7 +16,8 @@ public class FreepassSpecificReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String kind; // 자유이용권 종류
-	@NotNull @NotBlank
+	@NotNull
+	@NotBlank
 	private String productId; // 상품ID
 	private int offset; // offset
 	private int count; // count
@@ -31,19 +32,23 @@ public class FreepassSpecificReq extends CommonInfo {
 	private String langCd; // 언어
 	private String deviceModelCd; // 단말모델
 	private String virtualDeviceModelNo; // android_standard2
-	
+
 	// topMenuId 복수개 허용
 	private String[] arrKind; // kind 복수개
 
-    /**
+	private String deviceKey; // 디바이스키
+	private String userKey; // 사용자고유키
+
+	/**
 	 * @return the kind
 	 */
 	public String getKind() {
-		return kind;
+		return this.kind;
 	}
 
 	/**
-	 * @param kind the kind to set
+	 * @param kind
+	 *            the kind to set
 	 */
 	public void setKind(String kind) {
 		this.kind = kind;
@@ -53,11 +58,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the productId
 	 */
 	public String getProductId() {
-		return productId;
+		return this.productId;
 	}
 
 	/**
-	 * @param productId the productId to set
+	 * @param productId
+	 *            the productId to set
 	 */
 	public void setProductId(String productId) {
 		this.productId = productId;
@@ -67,11 +73,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the offset
 	 */
 	public int getOffset() {
-		return offset;
+		return this.offset;
 	}
 
 	/**
-	 * @param offset the offset to set
+	 * @param offset
+	 *            the offset to set
 	 */
 	public void setOffset(int offset) {
 		this.offset = offset;
@@ -81,11 +88,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the count
 	 */
 	public int getCount() {
-		return count;
+		return this.count;
 	}
 
 	/**
-	 * @param count the count to set
+	 * @param count
+	 *            the count to set
 	 */
 	public void setCount(int count) {
 		this.count = count;
@@ -95,11 +103,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the bannerImageCd
 	 */
 	public String getBannerImageCd() {
-		return bannerImageCd;
+		return this.bannerImageCd;
 	}
 
 	/**
-	 * @param bannerImageCd the bannerImageCd to set
+	 * @param bannerImageCd
+	 *            the bannerImageCd to set
 	 */
 	public void setBannerImageCd(String bannerImageCd) {
 		this.bannerImageCd = bannerImageCd;
@@ -109,11 +118,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the thumbnailImageCd
 	 */
 	public String getThumbnailImageCd() {
-		return thumbnailImageCd;
+		return this.thumbnailImageCd;
 	}
 
 	/**
-	 * @param thumbnailImageCd the thumbnailImageCd to set
+	 * @param thumbnailImageCd
+	 *            the thumbnailImageCd to set
 	 */
 	public void setThumbnailImageCd(String thumbnailImageCd) {
 		this.thumbnailImageCd = thumbnailImageCd;
@@ -123,11 +133,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the prodStatusCd
 	 */
 	public String getProdStatusCd() {
-		return prodStatusCd;
+		return this.prodStatusCd;
 	}
 
 	/**
-	 * @param prodStatusCd the prodStatusCd to set
+	 * @param prodStatusCd
+	 *            the prodStatusCd to set
 	 */
 	public void setProdStatusCd(String prodStatusCd) {
 		this.prodStatusCd = prodStatusCd;
@@ -137,11 +148,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the standardModelCd
 	 */
 	public String getStandardModelCd() {
-		return standardModelCd;
+		return this.standardModelCd;
 	}
 
 	/**
-	 * @param standardModelCd the standardModelCd to set
+	 * @param standardModelCd
+	 *            the standardModelCd to set
 	 */
 	public void setStandardModelCd(String standardModelCd) {
 		this.standardModelCd = standardModelCd;
@@ -151,11 +163,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the prodRshpCd
 	 */
 	public String getProdRshpCd() {
-		return prodRshpCd;
+		return this.prodRshpCd;
 	}
 
 	/**
-	 * @param prodRshpCd the prodRshpCd to set
+	 * @param prodRshpCd
+	 *            the prodRshpCd to set
 	 */
 	public void setProdRshpCd(String prodRshpCd) {
 		this.prodRshpCd = prodRshpCd;
@@ -165,11 +178,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the tenantId
 	 */
 	public String getTenantId() {
-		return tenantId;
+		return this.tenantId;
 	}
 
 	/**
-	 * @param tenantId the tenantId to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
@@ -179,11 +193,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the langCd
 	 */
 	public String getLangCd() {
-		return langCd;
+		return this.langCd;
 	}
 
 	/**
-	 * @param langCd the langCd to set
+	 * @param langCd
+	 *            the langCd to set
 	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
@@ -193,11 +208,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the deviceModelCd
 	 */
 	public String getDeviceModelCd() {
-		return deviceModelCd;
+		return this.deviceModelCd;
 	}
 
 	/**
-	 * @param deviceModelCd the deviceModelCd to set
+	 * @param deviceModelCd
+	 *            the deviceModelCd to set
 	 */
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
@@ -207,11 +223,12 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the virtualDeviceModelNo
 	 */
 	public String getVirtualDeviceModelNo() {
-		return virtualDeviceModelNo;
+		return this.virtualDeviceModelNo;
 	}
 
 	/**
-	 * @param virtualDeviceModelNo the virtualDeviceModelNo to set
+	 * @param virtualDeviceModelNo
+	 *            the virtualDeviceModelNo to set
 	 */
 	public void setVirtualDeviceModelNo(String virtualDeviceModelNo) {
 		this.virtualDeviceModelNo = virtualDeviceModelNo;
@@ -221,23 +238,52 @@ public class FreepassSpecificReq extends CommonInfo {
 	 * @return the arrKind
 	 */
 	public String[] getArrKind() {
-		return arrKind;
+		return this.arrKind;
 	}
 
 	/**
-	 * @param arrKind the arrKind to set
+	 * @param arrKind
+	 *            the arrKind to set
 	 */
 	public void setArrKind(String[] arrKind) {
 		this.arrKind = arrKind;
 	}
 
-    /**
+	/**
+	 * @return the deviceKey
+	 */
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	/**
+	 * @param deviceKey
+	 *            the deviceKey to set
+	 */
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	/**
 	 * @return the serialversionuid
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
 
 }
