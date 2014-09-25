@@ -420,7 +420,7 @@
                                 ELSE 'Y' END
                             ELSE 'Y' END
                         )
-            AND TP.PROD_STATUS_CD in ('PD013202','PD013203')   /* PD013202  : 판매중 , PD013203 : 판매중지*/
+            AND TP.PROD_STATUS_CD IN ('PD013202','PD013203')   /* PD013202  : 판매중 , PD013203 : 판매중지*/
             AND TP.EXPO_YN = 'Y'
             <if test='kind != null and kind != ""'>
             AND CM.CMPX_PROD_CLSF_CD IN 

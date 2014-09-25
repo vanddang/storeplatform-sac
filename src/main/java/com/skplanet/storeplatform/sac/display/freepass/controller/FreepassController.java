@@ -9,9 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.freepass.controller;
 
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.*;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
 
 /**
  * 정액제 Controller
@@ -125,7 +132,7 @@ public class FreepassController {
 
 	/**
 	 * <pre>
-	 * 특정 상품에 적용할 자유 이용권 조회? GET.
+	 * 특정 상품에 적용할 자유 이용권 조회? POST.
 	 * </pre>
 	 * 
 	 * @param req
