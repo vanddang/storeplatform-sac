@@ -9,10 +9,27 @@
  */
 package com.skplanet.storeplatform.sac.display.freepass.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.*;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
@@ -36,16 +53,6 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Freepass Service (CoreStoreBusiness)
@@ -553,6 +560,11 @@ public class FreepassServiceImpl implements FreepassService {
 		if (StringUtils.isEmpty(req.getUserKey())) {
 			throw new StorePlatformException("SAC_DSP_0002", "userKey", req.getUserKey());
 		}
+
+		if (StringUtils.isEmpty(req.getDeviceKey())) {
+			throw new StorePlatformException("SAC_DSP_0002", "deviceKey", req.getDeviceKey());
+		}
+
 		// '+'로 연결 된 상품등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getKind())) {
 			try {
