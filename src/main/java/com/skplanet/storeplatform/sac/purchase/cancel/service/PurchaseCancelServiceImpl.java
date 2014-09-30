@@ -341,7 +341,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 				if (!StringUtils.equals(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE,
 						prchsDtlSacParam.getTenantProdGrpCd())
-						|| !StringUtils.equals(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_EBOOK_FIXRATE,
+						&& !StringUtils.equals(PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_COMIC_FIXRATE,
 								prchsDtlSacParam.getTenantProdGrpCd())) {
 					// 정액권 상품 처리.
 					this.updateProdTypeFix(purchaseCancelSacParam, prchsDtlSacParam);
