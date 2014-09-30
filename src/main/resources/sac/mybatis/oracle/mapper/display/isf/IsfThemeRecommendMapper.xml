@@ -126,7 +126,8 @@
                                                         A.META_CLSF_CD, '|' ) ).EXTRACT( '//text()' )), '|' ) AS PROD_INF
                 FROM
                    (
-                   SELECT UP.PKG_ID
+                   SELECT /*+ leading(UP UPD) use_nl(UPD) */
+                          UP.PKG_ID
                         , UP.PKG_NM
                         , UP.IMG2
                         , UP.SET_IMG1
@@ -148,13 +149,9 @@
                                                   ORDER BY PP.PRCHS_CNT DESC ) AS RNUM
                      FROM TB_DP_RECOM_PKG UP
                         , TB_DP_RECOM_PKG_DTL UPD
-                        , TB_DP_TENANT_PROD_STATS PP
-                        , TB_DP_PROD_RSHP CP
+                        , TB_DP_TENANT_PROD_STATS PP                        
                         , TB_DP_PROD P
-                        , TB_DP_MENU_CATEGORY_PROD_MAPG MP
-                        , TB_DP_TENANT_PROD TP
-                        , TB_DP_PROD P2
-                        , TB_DP_TENANT_PROD TP2
+                        , TB_DP_MENU_CATEGORY_PROD_MAPG MP                        
                         , TB_DP_PROD_DESC PD
 			      <if test="multiValueId  != null">
 			            , (
@@ -164,20 +161,13 @@
 			              ) ISF
 			      </if>
                     WHERE UPD.TENANT_ID = UP.TENANT_ID
-                      AND UPD.PKG_ID = UP.PKG_ID
-                      AND UPD.PROD_ID = CP.PROD_ID  -- channel id
-                      AND CP.PROD_RSHP_CD = 'DP010802'
+                      AND UPD.PKG_ID = UP.PKG_ID                      
                       AND PP.TENANT_ID(+) = UPD.TENANT_ID
                       AND PP.PROD_ID(+) = UPD.PROD_ID
                       AND P.PROD_ID = UPD.PROD_ID
-                      AND TP.TENANT_ID = UP.TENANT_ID
-                      AND TP.PROD_ID = P.PROD_ID
                       AND MP.PROD_ID = P.PROD_ID
                       AND PD.PROD_ID = P.PROD_ID
                       AND PD.LANG_CD = #{tenantHeader.langCd}
-                      AND P2.PROD_ID = CP.PART_PROD_ID  -- episode id
-                      AND TP2.TENANT_ID = TP.TENANT_ID
-                      AND TP2.PROD_ID = P2.PROD_ID
                       AND (SYSDATE BETWEEN UP.EXPO_START_DT AND UP.EXPO_END_DT OR UP.ALWAYS_EXPO_YN = 'Y')
 			    <if test="multiValueId != null">
 			          AND UP.PKG_ID = ISF.ISF_ID
@@ -187,46 +177,60 @@
                 </if>
                       AND UP.TENANT_ID = #{tenantHeader.tenantId}
                       AND UP.EXPO_YN = 'Y'
-                      AND UPD.EXPO_YN = 'Y'
-                      AND TP.PROD_STATUS_CD = 'PD000403'
+                      AND UPD.EXPO_YN = 'Y'                      
                       AND MP.BASE_YN = 'Y'
                       AND MP.USE_YN = 'Y'
-                      AND TP2.PROD_STATUS_CD = 'PD000403'
-                      AND TP.TENANT_ID = #{tenantHeader.tenantId}
                       AND EXISTS (
-		            			SELECT 'X' 
-		            			  FROM TB_DP_SPRT_DEVICE SH 
-		            			 WHERE SH.PROD_ID = P2.PROD_ID
-		              			   AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
-                                 )
-                      AND (CASE WHEN P.TOP_MENU_ID = 'DP13' THEN
-                                     CASE WHEN #{ebookSprtYn} = 'Y' THEN 1
-                                          ELSE 0
-                                     END
-                                WHEN P.TOP_MENU_ID = 'DP14' THEN
-                                     CASE WHEN #{comicSprtYn} = 'Y' THEN 1 
-                                          ELSE 0 
-                                     END
-                                WHEN P.TOP_MENU_ID = 'DP15' THEN
-                                     CASE WHEN #{sclShpgSprtYn} = 'Y' THEN 1 
-                                          ELSE 0 
-                                     END
-                                WHEN P.TOP_MENU_ID = 'DP16' THEN
-                                     CASE WHEN P2.META_CLSF_CD = 'CT25' THEN 
-                                          CASE WHEN #{musicSprtYn} = 'Y' THEN 1 
-                                               ELSE 0
-                                          END
-                                          ELSE 1
-                                     END
-                                WHEN P.TOP_MENU_ID IN ('DP17', 'DP18') THEN
-                                     CASE WHEN #{videoDrmSprtYn} = 'N' THEN
-                                               CASE WHEN P2.DRM_YN ='N' THEN 1
-                                                    ELSE 0
-                                               END
-                                          ELSE 1
-                                     END
-                                ELSE 1
-                          END) = 1
+                               SELECT 1
+                                 FROM TB_DP_PROD_RSHP CP
+                                    , TB_DP_TENANT_PROD TP
+                                    , TB_DP_PROD P2
+                                    , TB_DP_TENANT_PROD TP2
+                                WHERE UPD.PROD_ID = CP.PROD_ID  -- channel id
+                                  AND CP.PROD_RSHP_CD = 'DP010802'
+                                  AND TP.TENANT_ID = UP.TENANT_ID
+                                  AND TP.PROD_ID = P.PROD_ID
+                                  AND P2.PROD_ID = CP.PART_PROD_ID  -- episode id
+                                  AND TP2.TENANT_ID = TP.TENANT_ID
+                                  AND TP2.PROD_ID = P2.PROD_ID
+                                  AND TP.PROD_STATUS_CD = 'PD000403'
+                                  AND TP2.PROD_STATUS_CD = 'PD000403'
+                                  AND TP.TENANT_ID = #{tenantHeader.tenantId}
+			                      AND EXISTS (
+					            			SELECT 'X' 
+					            			  FROM TB_DP_SPRT_DEVICE SH 
+					            			 WHERE SH.PROD_ID = P2.PROD_ID
+					              			   AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
+			                                 )
+			                      AND (CASE WHEN P.TOP_MENU_ID = 'DP13' THEN
+			                                     CASE WHEN #{ebookSprtYn} = 'Y' THEN 1
+			                                          ELSE 0
+			                                     END
+			                                WHEN P.TOP_MENU_ID = 'DP14' THEN
+			                                     CASE WHEN #{comicSprtYn} = 'Y' THEN 1 
+			                                          ELSE 0 
+			                                     END
+			                                WHEN P.TOP_MENU_ID = 'DP15' THEN
+			                                     CASE WHEN #{sclShpgSprtYn} = 'Y' THEN 1 
+			                                          ELSE 0 
+			                                     END
+			                                WHEN P.TOP_MENU_ID = 'DP16' THEN
+			                                     CASE WHEN P2.META_CLSF_CD = 'CT25' THEN 
+			                                          CASE WHEN #{musicSprtYn} = 'Y' THEN 1 
+			                                               ELSE 0
+			                                          END
+			                                          ELSE 1
+			                                     END
+			                                WHEN P.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+			                                     CASE WHEN #{videoDrmSprtYn} = 'N' THEN
+			                                               CASE WHEN P2.DRM_YN ='N' THEN 1
+			                                                    ELSE 0
+			                                               END
+			                                          ELSE 1
+			                                     END
+			                                ELSE 1
+			                          END) = 1
+			                 )
                      ) A
                    , TB_DP_PROD_IMG PI
                WHERE PI.PROD_ID = A.PROD_ID
