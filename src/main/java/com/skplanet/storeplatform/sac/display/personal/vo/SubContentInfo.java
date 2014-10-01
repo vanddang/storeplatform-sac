@@ -21,9 +21,10 @@ public class SubContentInfo {
     private String apkPkgNm;
     private Integer apkVer;
     private String subContentsId;
+    private Integer priority;
 
     public String getProdId() {
-        return prodId;
+        return this.prodId;
     }
 
     public void setProdId(String prodId) {
@@ -31,7 +32,7 @@ public class SubContentInfo {
     }
 
     public String getApkPkgNm() {
-        return apkPkgNm;
+        return this.apkPkgNm;
     }
 
     public void setApkPkgNm(String apkPkgNm) {
@@ -39,7 +40,7 @@ public class SubContentInfo {
     }
 
     public Integer getApkVer() {
-        return apkVer;
+        return this.apkVer;
     }
 
     public void setApkVer(Integer apkVer) {
@@ -47,10 +48,19 @@ public class SubContentInfo {
     }
 
     public String getSubContentsId() {
-        return subContentsId;
+        return this.subContentsId;
     }
 
     public void setSubContentsId(String subContentsId) {
         this.subContentsId = subContentsId;
     }
+
+	public Integer getPriority() {
+		return this.priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
 }

@@ -18,6 +18,7 @@
                     ,( SELECT COUNT(PROD_ID)
                        FROM TB_CM_AUTO_UPGRD_ALTR_PROD AUAP
                        WHERE AUAP.PROD_ID = LA.PART_PROD_ID
+                             AND AUAP.CLSF_CD = 'DP012501' /* DP012501 : 운영자 지정 업데이트 */
                      ) AS FAKE_CNT
                 FROM (
                          SELECT

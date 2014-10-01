@@ -11,11 +11,13 @@
              , SC.APK_PKG_NM
              , SC.APK_VER
              , SC.SUB_CONTENTS_ID
+             , NVL(AUAP.PRIORITY, 0) AS PRIORITY
              ,ROW_NUMBER() OVER (PARTITION BY SC.APK_PKG_NM ORDER BY SC.APK_VER DESC) AS RNUM
          FROM TB_DP_APP_PROD APPPROD
              ,TB_DP_SUB_CONTENTS SC
              ,TB_DP_SPRT_DEVICE DEVICE
              ,TB_CM_DEVICE CMDEVICE
+             ,TB_CM_AUTO_UPGRD_ALTR_PROD AUAP
          WHERE
              <if test="pkgList != null">SC.APK_PKG_NM IN <foreach collection="pkgList" item="v" open="(" separator="," close=")">#{v}</foreach></if>
              <if test="hashedPkgList != null">SC.APK_PKG_HASH IN<foreach collection="hashedPkgList" item="v" open="(" separator="," close=")">#{v}</foreach></if>
@@ -26,6 +28,8 @@
              AND DEVICE.DEVICE_MODEL_CD = CMDEVICE.DEVICE_MODEL_CD
              AND (APPPROD.PART_PARENT_CLSF_CD = #{parentClsfCd} or APPPROD.PART_PARENT_CLSF_CD is null)
              AND CMDEVICE.USE_YN = 'Y'
+             AND AUAP.PROD_ID(+) = APPPROD.PROD_ID
+             AND AUAP.CLSF_CD(+) = 'DP012502' /* DP012502 : 우선순위 지정 업데이트 */
          )LA
          WHERE RNUM = 1
      </select>

@@ -9,6 +9,22 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -24,14 +40,6 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.personal.vo.MemberInfo;
 import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * <p>
@@ -41,7 +49,7 @@ import java.util.*;
  */
 @Service
 public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(AppUpdateSupportServiceImpl.class);
 
     @Autowired
@@ -55,6 +63,15 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
     private SearchUserSCI searchUserSCI;
 
     private static final int VAR_WINDOW_SIZE = 100;
+
+    class PriorityDescComparator implements Comparator<SubContentInfo> {
+
+		@Override
+		public int compare(SubContentInfo o1, SubContentInfo o2) {
+
+			return o1.getPriority() > o2.getPriority() ? -1 : o1.getPriority() < o2.getPriority() ? 1:0;
+		}
+    }
 
     @Override
     public List<SubContentInfo> searchSubContentByPkg(String deviceModelCd, List<String> pkgList, boolean isHashed) {
@@ -88,8 +105,10 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
             else
                 req.put("pkgList", reqProdId);
 
-            res.addAll(commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", req, SubContentInfo.class));
+            res.addAll(this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", req, SubContentInfo.class));
         }
+
+        Collections.sort(res, new PriorityDescComparator());
 
         return res;
     }
@@ -111,7 +130,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
             existenceReq.setDeviceKey(deviceKey);
             existenceReq.setExistenceItem(existenceItemList);
 
-            ExistenceListRes existenceListRes = existenceInternalSacSCI.searchExistenceList(existenceReq);
+            ExistenceListRes existenceListRes = this.existenceInternalSacSCI.searchExistenceList(existenceReq);
 
             for(ExistenceRes er : existenceListRes.getExistenceListRes()) {
                 res.add(er.getProdId());
@@ -131,7 +150,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
         userInfoSacReq.setDeviceId(deviceId);
         logger.debug("##### [SAC DSP LocalSCI] SAC Member Start : searchUserSCI.searchUserBydeviceId");
         long start = System.currentTimeMillis();
-        UserInfoSacRes userInfoSacRes = searchUserSCI.searchUserBydeviceId(userInfoSacReq);
+        UserInfoSacRes userInfoSacRes = this.searchUserSCI.searchUserBydeviceId(userInfoSacReq);
         logger.debug("##### [SAC DSP LocalSCI] SAC Member End : searchUserSCI.searchUserBydeviceId");
         long end = System.currentTimeMillis();
         logger.debug("##### [SAC DSP LocalSCI] SAC Member searchUserSCI.searchUserBydeviceId takes {} ms",
