@@ -762,9 +762,23 @@ public class DeviceServiceImpl implements DeviceService {
 																										  // 휴대기기 부가속성에
 																										  // 셋팅
 
-		/* 주요정보(UACD, OMDUACD, 미지원단말처리) 조회 */
+		boolean isSearchSvcMangNo = false;
+		/* 통신사가 자사로 들어왔는데 SKT서비스관리번호가 존재하지 않을 때 보정처리 */
+		if (StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+				&& StringUtils.isBlank(dbDeviceInfo.getSvcMangNum())) {
+			isSearchSvcMangNo = true;
+		}
+
+		/* 주요정보(UACD, OMDUACD, 미지원단말처리, SKT 서비스관리번호) 조회 */
 		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceModelNo,
-				deviceInfo.getDeviceTelecom(), deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType(), false);
+				deviceInfo.getDeviceTelecom(), deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType(),
+				isSearchSvcMangNo);
+
+		if (isSearchSvcMangNo) {
+			deviceInfoChangeLog.append("[svcMangNum]").append(dbDeviceInfo.getSvcMangNum()).append("->")
+					.append(majorDeviceInfo.getSvcMangNum());
+			userMbrDevice.setSvcMangNum(majorDeviceInfo.getSvcMangNum());
+		}
 
 		/* 기기정보 필드 */
 		String deviceTelecom = null; // 통신사코드
