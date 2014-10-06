@@ -17,6 +17,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDevi
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
@@ -98,5 +100,30 @@ public class DeviceSCIController implements DeviceSCI {
 		LOGGER.info("Response : changed Yn : {}", response.getIsChanged());
 		return response;
 
+	}
+
+	/**
+	 * <pre>
+	 * @TODO [QA] 2014-10-07 적용 예정.
+	 * 2.1.9.	등록된 단말 정보 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            SearchOrderDeviceIdSacReq
+	 * @return SearchOrderDeviceIdSacRes
+	 */
+	@Override
+	@RequestMapping(value = "/searchOrderDeviceId/", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchOrderDeviceIdSacRes searchOrderDeviceId(@RequestBody @Validated SearchOrderDeviceIdSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		// 공통 파라미터 셋팅
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+
+		SearchOrderDeviceIdSacRes res = this.deviceService.searchOrderDeviceId(requestHeader, req);
+
+		LOGGER.info("Response : {}", res.getDeviceId());
+		return res;
 	}
 }

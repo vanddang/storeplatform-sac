@@ -14,6 +14,8 @@ import java.util.Map;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
@@ -194,4 +196,17 @@ public interface SearchUserSCIService {
 	 * @return SearchUserGradeSacRes
 	 */
 	public SearchUserGradeSacRes searchUserGrade(SacRequestHeader header, SearchUserGradeSacReq req);
+
+	/**
+	 * <pre>
+	 * 회원정보 조회(전시용).
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchUserForDisplaySacReq
+	 * @return SearchUserForDisplaySacRes
+	 */
+	public SearchUserSegmentSacRes searchUserSegment(SacRequestHeader header, SearchUserSegmentSacReq req);
 }

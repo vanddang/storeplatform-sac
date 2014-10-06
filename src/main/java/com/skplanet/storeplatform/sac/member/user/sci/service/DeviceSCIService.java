@@ -5,6 +5,8 @@ package com.skplanet.storeplatform.sac.member.user.sci.service;
 
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -44,4 +46,17 @@ public interface DeviceSCIService {
 	 */
 	public ChangedDeviceHistorySacRes srhChangedDeviceHistory(SacRequestHeader sacHeader,
 			ChangedDeviceHistorySacReq request);
+
+	/**
+	 * <pre>
+	 * 2.1.10.	등록된 단말 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchOrderDeviceIdSacReq
+	 * @return SearchOrderDeviceIdSacRes
+	 */
+	public SearchOrderDeviceIdSacRes searchOrderDeviceId(SacRequestHeader header, SearchOrderDeviceIdSacReq req);
 }

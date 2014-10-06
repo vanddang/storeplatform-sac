@@ -49,6 +49,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserRequest
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserSegmentRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserSegmentResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
@@ -62,6 +64,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserG
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
@@ -982,4 +986,44 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 회원정보 조회(전시용).
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchUserForDisplaySacReq
+	 * @return SearchUserForDisplaySacRes
+	 */
+	@Override
+	public SearchUserSegmentSacRes searchUserSegment(SacRequestHeader header, SearchUserSegmentSacReq req) {
+
+		SearchUserSegmentRequest searchUserSegmentRequest = new SearchUserSegmentRequest();
+		searchUserSegmentRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		searchUserSegmentRequest.setUserKey(req.getUserKey());
+		searchUserSegmentRequest.setDeviceKey(req.getDeviceKey());
+
+		// SC Call
+		SearchUserSegmentResponse searchUserSegmentResponse = this.userSCI.searchUserSegment(searchUserSegmentRequest);
+
+		SearchUserSegmentSacRes res = new SearchUserSegmentSacRes();
+		// 기변여부
+		res.setIsChanged(searchUserSegmentResponse.getIsChanged());
+		// 가입일
+		res.setEntryDay(searchUserSegmentResponse.getEntryDay());
+		// 등급
+		res.setUserGradeCd(searchUserSegmentResponse.getUserGradeCd());
+		// 생년월일
+		res.setUserBirthDay(searchUserSegmentResponse.getUserBirthDay());
+		// 회원키
+		res.setUserKey(searchUserSegmentResponse.getUserKey());
+		// 성별
+		res.setUserSex(searchUserSegmentResponse.getUserSex());
+		// 통신사
+		res.setUserTelecom(searchUserSegmentResponse.getUserTelecom());
+
+		return res;
+	}
 }

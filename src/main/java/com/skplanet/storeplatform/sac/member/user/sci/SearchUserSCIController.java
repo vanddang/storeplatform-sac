@@ -29,6 +29,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserP
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSacRes;
@@ -354,4 +356,28 @@ public class SearchUserSCIController implements SearchUserSCI {
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * @TODO [QA] 2014-10-07 적용 예정.
+	 * 2.1.9.	회원 segment 정보 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            SearchUserForDisplaySacReq
+	 * @return SearchUserForDisplaySacRes
+	 */
+	@RequestMapping(value = "/searchUserForDisplay/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchUserSegmentSacRes searchUserSegment(@RequestBody @Validated SearchUserSegmentSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+
+		SearchUserSegmentSacRes res = this.searchUserSCIService.searchUserSegment(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
 }

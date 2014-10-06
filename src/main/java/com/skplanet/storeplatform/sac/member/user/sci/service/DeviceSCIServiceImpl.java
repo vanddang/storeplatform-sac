@@ -17,9 +17,13 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceReque
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -160,4 +164,42 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 
 	}
 
+	/**
+	 * <pre>
+	 * 2.1.10.	등록된 단말 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchOrderDeviceIdSacReq
+	 * @return SearchOrderDeviceIdSacRes
+	 */
+	@Override
+	public SearchOrderDeviceIdSacRes searchOrderDeviceId(SacRequestHeader header, SearchOrderDeviceIdSacReq req) {
+		// 공통 파라미터 셋팅
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+
+		// SC 회원 기기변경이력 조회 기능 호출.
+		SearchOrderDeviceRequest searchOrderDeviceRequest = new SearchOrderDeviceRequest();
+		searchOrderDeviceRequest.setUserKey(req.getUserKey());
+		searchOrderDeviceRequest.setDeviceKey(req.getDeviceKey());
+		searchOrderDeviceRequest.setCommonRequest(commonRequest);
+
+		LOGGER.debug("[DeviceSCIController.searchOrderDeviceId] SC Request deviceSCI.searchOrderDevice : {}",
+				searchOrderDeviceRequest);
+		SearchOrderDeviceResponse searchOrderDeviceResponse = this.deviceSCI
+				.searchOrderDevice(searchOrderDeviceRequest);
+
+		SearchOrderDeviceIdSacRes res = new SearchOrderDeviceIdSacRes();
+
+		res.setAuthYn(searchOrderDeviceResponse.getAuthYn());
+		res.setDeviceId(searchOrderDeviceResponse.getDeviceId());
+		res.setDeviceTelecom(searchOrderDeviceResponse.getDeviceTelecom());
+		res.setTableName(searchOrderDeviceResponse.getTableName());
+
+		return res;
+	}
 }
