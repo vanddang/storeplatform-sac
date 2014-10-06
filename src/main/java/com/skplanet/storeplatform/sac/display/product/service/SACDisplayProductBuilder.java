@@ -80,12 +80,13 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
     private DisplayCommonService displayCommonService;
 
 	@Override
-	public void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList, Set<String> prodExistTenant) {
+	public void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList, Set<String> prodExistTenant, String oldRegId) {
 
 		DPProductVO dpProd = notification.getDpProductTotal().getDpProduct();
 		String prodId = dpProd.getProdId(); // 상품_아이디
 		String mbrNo = dpProd.getSellerMbrNo(); // 회원_번호
-		
+        String newRegId = notification.getDpProductTotal().getDpProduct().getRegId();   // prod.regId
+
 		/*
 		 * 전시상품 정보
 		 */
@@ -161,107 +162,12 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 			dpAppProductService.insertDPAppProduct(notification.getDpProductTotal().getDpAppProduct());
 
 		}
-		
-		
-		
-		/*
-		 * IN-APP 정보
-		 */
-		List<DPProductTotalVO> displayInAppProductList = notification.getDpProductTotalList();
-		if( displayInAppProductList != null){
-			
-			for (DPProductTotalVO inAppProduct : displayInAppProductList) {
-				/*
-				 * IN-APP 전시상품 정보
-				 */
-				DPProductVO inAppDpProdInfo = inAppProduct.getDpProduct(); 
-				if (null != inAppDpProdInfo.getProdId()) {
-					
-					// IN-APP 전시상품 정보 등록
-					log.info("Insert CMS InAppDpProdInfo Info");
-					dpProductService.insertDPProduct(inAppProduct.getDpProduct());
-				}			
-				
-				/*
-				 * IN-APP 상품정보 매핑
-				 */
-				DPProductRshpVO inAppDpProdRshpInfo = inAppProduct.getDpProductRshp(); 
-				if (null != inAppDpProdRshpInfo.getProdId()) {
-					
-					// IN-APP 상품정보 매핑 등록
-					log.info("Insert CMS InAppDpProdRshp Info");
-					dpProductRshpService.insertDPProductRshp(inAppProduct.getDpProductRshp());
-				}					
-				
-				/*
-				 * IN-APP 테넌트 정보
-				 */
 
-				List<DPTenantProductVO> inAppTenantInfo = inAppProduct.getDpTenantProduct(); 
-				if (null != inAppTenantInfo) {
-					log.info("CMS InAppTenantInfo Size = " + tenantInfo.size());
-					
-					if (0 < inAppTenantInfo.size()) {
-						for (DPTenantProductVO vo : inAppTenantInfo) {
-							
-							// IN-APP 테넌트 정보 등록
-							log.info("Insert CMS InAppTenant Info");
-							dpTenantProductService.insertDPTenant(vo);
-						}
-					}
+        /*
+         * InApp 상품 처리
+         */
+        insertInAppInfo(notification, tenantInfo);
 
-				}
-				
-				
-				/*
-				 * IN-APP 테넌트 상품 가격
-				 */
-				List<DPTenantProductPriceVO> inAppTenantPriceInfo = inAppProduct.getDpTenantProductPrice(); 
-				if (null != inAppTenantPriceInfo) {
-					log.info("CMS InAppTenantPriceInfo Size = " + inAppTenantPriceInfo.size());
-					
-					if (0 < inAppTenantPriceInfo.size()) {
-						for (DPTenantProductPriceVO vo : inAppTenantPriceInfo) {
-							
-							// IN-APP 테넌트 상품 가격 등록
-							log.info("Insert CMS InAppTenantPrice Info");
-							dpTenantProductPriceService.insertDPTenantPrice(vo);
-						}
-					}
-
-				}
-				
-				/*
-				 * IN-APP 전시상품 상품상세
-				 */
-				List<DPProductDescVO> inAppDpProdDesc = inAppProduct.getDpProductDesc(); 
-				if (null != inAppDpProdDesc) {
-					log.info("CMS InAppDpProdDesc Size = " + inAppDpProdDesc.size());
-					
-					if (0 < inAppDpProdDesc.size()) {
-						for (DPProductDescVO vo : inAppDpProdDesc) {
-							
-							// IN-APP 전시상품 상품상세 등록
-							log.info("Insert CMS InAppDpProdDesc Info");
-							dpProductDescService.insertDPProductDesc(vo);
-						}
-					}
-
-				}				
-				
-				/*
-				 * IN-APP 전시상품 APP 상품
-				 */
-				DPAppProductVO inAppDpProdAppInfo = inAppProduct.getDpAppProduct(); 
-				if (null != inAppDpProdAppInfo.getProdId()) {
-					
-					// IN-APP 전시상품 APP 상품 등록
-					log.info("Insert CMS inAppDpProdApp Info #{}", inAppDpProdInfo.getProdId());
-					dpAppProductService.insertDPAppProduct(inAppProduct.getDpAppProduct());
-				}
-
-			}
-		}
 
 		
 		/*
@@ -430,9 +336,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 
                 log.info("CMS PROD INFO = " + prodId + " | " + mbrNo);
 
-                // 테넌트별 신규 등록 상품에 한해 수행
-                if (!prodExistTenant.contains(tenantId)) {
-
+                if(!prodExistTenant.contains(tenantId) || !StringUtils.equals(oldRegId, newRegId)) {
                     // 정산율 등록
                     ProductVo pv = this.prodService.selectMemberInfo(mbrNo);
                     if (pv == null)
@@ -444,6 +348,9 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
                     pv.setProdStatCd(vo.getProdStatusCd());
                     String result = this.prodService.registProdSettl(pv);
                     log.info("CMS 정산율 = " + result);
+                }
+
+                if (!prodExistTenant.contains(tenantId)) {
 
                     // newFree 데이터 처리
                     String stdDt = displayCommonService.getBatchStandardDateString(tenantId, DisplayConstants.DP_LIST_NEWFREE);
@@ -477,4 +384,105 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 
 		}		
 	}
+
+    private void insertInAppInfo(NotificationRefactoringSac notification, List<DPTenantProductVO> tenantInfo) {
+    /*
+     * IN-APP 정보
+     */
+        List<DPProductTotalVO> displayInAppProductList = notification.getDpProductTotalList();
+        if( displayInAppProductList != null){
+
+            for (DPProductTotalVO inAppProduct : displayInAppProductList) {
+                /*
+                 * IN-APP 전시상품 정보
+                 */
+                DPProductVO inAppDpProdInfo = inAppProduct.getDpProduct();
+                if (null != inAppDpProdInfo.getProdId()) {
+
+                    // IN-APP 전시상품 정보 등록
+                    log.info("Insert CMS InAppDpProdInfo Info");
+                    dpProductService.insertDPProduct(inAppProduct.getDpProduct());
+                }
+
+                /*
+                 * IN-APP 상품정보 매핑
+                 */
+                DPProductRshpVO inAppDpProdRshpInfo = inAppProduct.getDpProductRshp();
+                if (null != inAppDpProdRshpInfo.getProdId()) {
+
+                    // IN-APP 상품정보 매핑 등록
+                    log.info("Insert CMS InAppDpProdRshp Info");
+                    dpProductRshpService.insertDPProductRshp(inAppProduct.getDpProductRshp());
+                }
+
+                /*
+                 * IN-APP 테넌트 정보
+                 */
+
+                List<DPTenantProductVO> inAppTenantInfo = inAppProduct.getDpTenantProduct();
+                if (null != inAppTenantInfo) {
+                    log.info("CMS InAppTenantInfo Size = " + tenantInfo.size());
+
+                    if (0 < inAppTenantInfo.size()) {
+                        for (DPTenantProductVO vo : inAppTenantInfo) {
+
+                            // IN-APP 테넌트 정보 등록
+                            log.info("Insert CMS InAppTenant Info");
+                            dpTenantProductService.insertDPTenant(vo);
+                        }
+                    }
+
+                }
+
+
+                /*
+                 * IN-APP 테넌트 상품 가격
+                 */
+                List<DPTenantProductPriceVO> inAppTenantPriceInfo = inAppProduct.getDpTenantProductPrice();
+                if (null != inAppTenantPriceInfo) {
+                    log.info("CMS InAppTenantPriceInfo Size = " + inAppTenantPriceInfo.size());
+
+                    if (0 < inAppTenantPriceInfo.size()) {
+                        for (DPTenantProductPriceVO vo : inAppTenantPriceInfo) {
+
+                            // IN-APP 테넌트 상품 가격 등록
+                            log.info("Insert CMS InAppTenantPrice Info");
+                            dpTenantProductPriceService.insertDPTenantPrice(vo);
+                        }
+                    }
+
+                }
+
+                /*
+                 * IN-APP 전시상품 상품상세
+                 */
+                List<DPProductDescVO> inAppDpProdDesc = inAppProduct.getDpProductDesc();
+                if (null != inAppDpProdDesc) {
+                    log.info("CMS InAppDpProdDesc Size = " + inAppDpProdDesc.size());
+
+                    if (0 < inAppDpProdDesc.size()) {
+                        for (DPProductDescVO vo : inAppDpProdDesc) {
+
+                            // IN-APP 전시상품 상품상세 등록
+                            log.info("Insert CMS InAppDpProdDesc Info");
+                            dpProductDescService.insertDPProductDesc(vo);
+                        }
+                    }
+
+                }
+
+                /*
+                 * IN-APP 전시상품 APP 상품
+                 */
+                DPAppProductVO inAppDpProdAppInfo = inAppProduct.getDpAppProduct();
+                if (null != inAppDpProdAppInfo.getProdId()) {
+
+                    // IN-APP 전시상품 APP 상품 등록
+                    log.info("Insert CMS inAppDpProdApp Info #{}", inAppDpProdInfo.getProdId());
+                    dpAppProductService.insertDPAppProduct(inAppProduct.getDpAppProduct());
+                }
+
+            }
+        }
+    }
 }

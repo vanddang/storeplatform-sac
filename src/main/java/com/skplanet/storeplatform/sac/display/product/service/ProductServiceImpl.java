@@ -93,4 +93,12 @@ public class ProductServiceImpl implements ProductService {
 	public void registTotalSalesHis(ProductVo vo) {
 		this.commonDAO.insert("Display_Product.updateTotalSalesHis", vo);
 	}
+
+    @Override
+    public String getProductRegId(String prodId) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("prodId", prodId);
+
+        return this.commonDAO.queryForObject("Display_Product.selectProductRegId", req, String.class);
+    }
 }

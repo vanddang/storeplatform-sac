@@ -179,6 +179,14 @@
 	    
 	<select id="sp_regist_prod" statementType="CALLABLE" parameterMap="SpRegistProdMap">
 	    {CALL SP_SETT_REG_PROD(?,?,null,null,null,?,?)}
-	</select>	
+	</select>
+
+    <!-- 회원정보 조회 -->
+    <select id="Display_Product.selectProductRegId" parameterType="map" resultType="String">
+        SELECT /* DisplayProductMapper.xml, Display_Product.selectProductRegId, joyspring22, 2014-10-06 */
+        DP.REG_ID
+        FROM TB_DP_PROD DP
+        WHERE DP.PROD_ID = #{prodId, jdbcType=VARCHAR}
+    </select>
 	
 </mapper>

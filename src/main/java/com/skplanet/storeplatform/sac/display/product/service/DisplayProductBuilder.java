@@ -18,9 +18,10 @@ public interface DisplayProductBuilder {
 
 	/**
      * @param notification
-* @param tempList
+     * @param tempList
      * @param prodExistTenant
+     * @param oldRegId 이전 판매자ID
      */
-	void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList, Set<String> prodExistTenant);
+	void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList, Set<String> prodExistTenant, String oldRegId);
 
 }

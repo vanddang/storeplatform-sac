@@ -103,6 +103,7 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
                      * 동일 식별자의 상품 존재 여부 확인
                      */
                     List<String> existProdTenantList = dpTenantProductService.getDPTenantId(prodId);
+                    String oldRegId = prodService.getProductRegId(prodId);
 
 					/*
 					 * 이전에 배포된 전시 상품 데이터 삭제
@@ -112,7 +113,7 @@ public class ProductDeployCompositeServiceImpl implements ProductDeployComposite
 					/*
 					 * 데이터 재구성
 					 */
-					this.builder.insertProdInfo(message, tempList, new HashSet<String>(existProdTenantList));
+					this.builder.insertProdInfo(message, tempList, new HashSet<String>(existProdTenantList), oldRegId);
 					this.log.info("CMS executeProcess 22");
 					// 결과 설정
 					cv.setResultCd(IFConstants.CMS_RST_CODE_SUCCESS);

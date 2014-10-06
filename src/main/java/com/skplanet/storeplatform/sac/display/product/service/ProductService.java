@@ -27,4 +27,11 @@ public interface ProductService {
 	public void insertWhiteList(String prodId);
 	
 	public void registTotalSalesHis(ProductVo vo);
+
+    /**
+     * 상품의 판매자ID를 조회한다.
+     * @param prodId
+     * @return
+     */
+    String getProductRegId(String prodId);
 }
