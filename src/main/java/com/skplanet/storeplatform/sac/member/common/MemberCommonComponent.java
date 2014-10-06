@@ -737,14 +737,15 @@ public class MemberCommonComponent {
 	 * @return MajorDeviceInfo
 	 * 
 	 */
-	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType, boolean isSearchSvcMangNo) {
+	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType,
+			boolean isSearchSvcMangNo) {
 
 		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
 
 		/**
 		 * 폰정보 조회후 단말 정보 세팅.
 		 */
-		//if (StringUtils.isBlank(model) || this.isDefaultDeviceModel(model)) {
+		// if (StringUtils.isBlank(model) || this.isDefaultDeviceModel(model)) {
 		if (StringUtils.isBlank(model)) {
 
 			/**
@@ -787,8 +788,7 @@ public class MemberCommonComponent {
 				}
 
 				/**
-				 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS
-				 * 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+				 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 				 */
 				if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 					if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -1025,8 +1025,8 @@ public class MemberCommonComponent {
 			for (AgreementInfo info : agreementList) {
 
 				if (StringUtils.isBlank(info.getExtraAgreementId()) || StringUtils.isBlank(info.getIsExtraAgreement())) {
-					throw new StorePlatformException("SAC_MEM_0001", StringUtils.isBlank(info.getExtraAgreementId()) ? "extraAgreementId"
-							: "isExtraAgreement");
+					throw new StorePlatformException("SAC_MEM_0001",
+							StringUtils.isBlank(info.getExtraAgreementId()) ? "extraAgreementId" : "isExtraAgreement");
 				}
 
 				/**
@@ -1105,10 +1105,10 @@ public class MemberCommonComponent {
 		String year_20 = sdf.format(ownCal.getTime());
 
 		if (Integer.parseInt(parentBirth) > Integer.parseInt(year_20)) {
-			/**
-			 * TODO 샵클에서 준비가 되지 않아 준비될때까지 스킵하기로함. (2014.05.22 - 임재호 과장)
-			 */
-			// throw new StorePlatformException("SAC_MEM_0005", ownBirth, parentBirth);
+
+			// 1. 샵클에서 준비가 되지 않아 준비될때까지 스킵하기로함. (2014.05.22 - 임재호 과장)
+			// 2. 19 체크로직 적용 (2014.10.01 - Rejoice)
+			throw new StorePlatformException("SAC_MEM_0005", ownBirth, parentBirth);
 		}
 
 	}
