@@ -351,6 +351,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		serviceAuthInfo.setAuthSign(authSign);
 		serviceAuthInfo.setAuthValue(authCode);
 		serviceAuthInfo.setTimeToLive(request.getTimeToLive());
+		// 인증정보 확인시 MDN 추가 확인 (2014.10.01)
+		serviceAuthInfo.setAuthMdn(request.getUserPhone());
 
 		ServiceAuth resultInfo = this.commonDao.queryForObject("Miscellaneous.searchPhoneAuthInfo", serviceAuthInfo,
 				ServiceAuth.class);

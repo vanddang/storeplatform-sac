@@ -27,6 +27,7 @@
         WHERE  auth_type_cd = #{authTypeCd}
           AND  auth_sign = #{authSign}
           AND  auth_value = #{authValue}
+          AND  auth_mdn = #{authMdn}
     </select>
     
     <!--  휴대폰 SMS 및 이메일 인증 여부 업데이트(인증성공) -->
@@ -145,7 +146,7 @@
        AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */ 
        AND  auth_compt_yn = 'N'       
        AND ( auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (3 / 24 / 60))
-            AND NVL(auth_cnt, 0) <![CDATA[<]]> #{authCnt} )           /* 3분이내, 3회 실패 */ 
+       AND NVL(auth_cnt, 0) <![CDATA[<]]> #{authCnt} )           /* 3분이내, 3회 실패 */ 
     </select>
     
     <!-- 미인증 이메일 코드 존재여부 확인 -->
