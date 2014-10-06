@@ -66,6 +66,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
@@ -176,6 +178,22 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		}
 
 		return searchDeviceIdSacRes.getDeviceId();
+
+	}
+
+	@Override
+	public String searchOrderDeviceId(String userKey, String deviceKey) {
+
+		SearchOrderDeviceIdSacReq searchOrderDeviceIdSacReq = new SearchOrderDeviceIdSacReq();
+		searchOrderDeviceIdSacReq.setUserKey(userKey);
+		searchOrderDeviceIdSacReq.setDeviceKey(deviceKey);
+		SearchOrderDeviceIdSacRes searchOrderDeviceIdSacRes = this.deviceSCI
+				.searchOrderDeviceId(searchOrderDeviceIdSacReq);
+		if (searchOrderDeviceIdSacRes == null || StringUtils.isEmpty(searchOrderDeviceIdSacRes.getDeviceId())) {
+			throw new StorePlatformException("SAC_PUR_4101");
+		}
+
+		return searchOrderDeviceIdSacRes.getDeviceId();
 
 	}
 
@@ -597,7 +615,15 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 						.getSystemId() : purchaseCancelSacParam.getReqUserId());
 		purchaseCancelScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelScReq.setCancelReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
-		purchaseCancelScReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+
+		// 2014.10.06 망상취소일 경우 구매상태는 실패로 업데이트
+		if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_PAYMENT_ERROR_CANCEL,
+				purchaseCancelSacParam.getCancelReqPathCd())) {
+			purchaseCancelScReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_FAIL);
+		} else {
+			purchaseCancelScReq.setPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+		}
+
 		purchaseCancelScReq.setCurrPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 		purchaseCancelScReq.setPurchaseCancelPaymentDetailScReqList(purchaseCancelPaymentDetailScReqList);
 		purchaseCancelScReq.setInsertPurchaseProductCountScReq(insertPurchaseProductCountScReq);

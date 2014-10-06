@@ -248,8 +248,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			// 2014.07.29 최상훈c 요건 추가(해당값이 존재하면 회원정보 조회 안함)
 			if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
 
-				prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
-						prchsSacParam.getInsdDeviceId()));
+				prchsSacParam.setDeviceId(this.purchaseCancelRepository.searchOrderDeviceId(
+						prchsSacParam.getInsdUsermbrNo(), prchsSacParam.getInsdDeviceId()));
 			}
 		} else {
 			SearchOrderUserByDeviceIdSacRes searchOrderUserByDeviceIdSacRes = this.purchaseCancelRepository
@@ -472,7 +472,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		/** deviceId 조회 및 셋팅. */
-		prchsSacParam.setDeviceId(this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
+		prchsSacParam.setDeviceId(this.purchaseCancelRepository.searchOrderDeviceId(prchsSacParam.getInsdUsermbrNo(),
 				prchsSacParam.getInsdDeviceId()));
 
 		/** 결제가 PayPlanet결제 인지 TStore 결제인지 구분하고 PayPlanet결제이면 authKey, mid 셋팅. */
@@ -776,7 +776,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, PrchsDtlSacParam prchsDtlSacParam) {
 
 		/** 사용자 deviceId 조회. */
-		String deviceId = this.purchaseCancelRepository.getDeviceId(prchsDtlSacParam.getUseInsdUsermbrNo(),
+		String deviceId = this.purchaseCancelRepository.searchOrderDeviceId(prchsDtlSacParam.getUseInsdUsermbrNo(),
 				prchsDtlSacParam.getUseInsdDeviceId());
 
 		/** appId 조회. */
@@ -935,7 +935,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		String sendMdn = prchsSacParam.getDeviceId(); // 보낸사람MDN
 		if (StringUtils.isBlank(sendMdn)) {
-			sendMdn = this.purchaseCancelRepository.getDeviceId(prchsSacParam.getInsdUsermbrNo(),
+			sendMdn = this.purchaseCancelRepository.searchOrderDeviceId(prchsSacParam.getInsdUsermbrNo(),
 					prchsSacParam.getInsdDeviceId());
 		}
 

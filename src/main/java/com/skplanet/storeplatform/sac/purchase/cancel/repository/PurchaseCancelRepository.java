@@ -61,6 +61,19 @@ public interface PurchaseCancelRepository {
 
 	/**
 	 * <pre>
+	 * deviceId를 조회해온다.(탈퇴회원포함)
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            userKey
+	 * @param deviceKey
+	 *            deviceKey
+	 * @return deviceId
+	 */
+	String searchOrderDeviceId(String userKey, String deviceKey);
+
+	/**
+	 * <pre>
 	 * deviceId로 useKey, deviceKey를 조회해온다.
 	 * </pre>
 	 * 
