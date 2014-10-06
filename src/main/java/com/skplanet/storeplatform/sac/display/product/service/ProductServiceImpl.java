@@ -95,10 +95,10 @@ public class ProductServiceImpl implements ProductService {
 	}
 
     @Override
-    public String getProductRegId(String prodId) {
+    public String getProductSellerMbrNo(String prodId) {
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("prodId", prodId);
 
-        return this.commonDAO.queryForObject("Display_Product.selectProductRegId", req, String.class);
+        return this.commonDAO.queryForObject("Display_Product.selectProductSellerMbrNo", req, String.class);
     }
 }

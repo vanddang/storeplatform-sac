@@ -181,10 +181,10 @@
 	    {CALL SP_SETT_REG_PROD(?,?,null,null,null,?,?)}
 	</select>
 
-    <!-- 회원정보 조회 -->
-    <select id="Display_Product.selectProductRegId" parameterType="map" resultType="String">
-        SELECT /* DisplayProductMapper.xml, Display_Product.selectProductRegId, joyspring22, 2014-10-06 */
-        DP.REG_ID
+    <!-- 판매자 정보 조회 -->
+    <select id="Display_Product.selectProductSellerMbrNo" parameterType="map" resultType="String">
+        SELECT /* DisplayProductMapper.xml, Display_Product.selectProductSellerMbrNo, joyspring22, 2014-10-06 */
+        DP.SELLER_MBR_NO
         FROM TB_DP_PROD DP
         WHERE DP.PROD_ID = #{prodId, jdbcType=VARCHAR}
     </select>

@@ -80,12 +80,12 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
     private DisplayCommonService displayCommonService;
 
 	@Override
-	public void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList, Set<String> prodExistTenant, String oldRegId) {
+	public void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList, Set<String> prodExistTenant, String oldSellerMbrNo) {
 
 		DPProductVO dpProd = notification.getDpProductTotal().getDpProduct();
 		String prodId = dpProd.getProdId(); // 상품_아이디
 		String mbrNo = dpProd.getSellerMbrNo(); // 회원_번호
-        String newRegId = notification.getDpProductTotal().getDpProduct().getRegId();   // prod.regId
+        String newSellerMbrNo = notification.getDpProductTotal().getDpProduct().getSellerMbrNo();   // prod.sellerMbrNo
 
 		/*
 		 * 전시상품 정보
@@ -336,7 +336,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 
                 log.info("CMS PROD INFO = " + prodId + " | " + mbrNo);
 
-                if(!prodExistTenant.contains(tenantId) || !StringUtils.equals(oldRegId, newRegId)) {
+                if(!prodExistTenant.contains(tenantId) || !StringUtils.equals(oldSellerMbrNo, newSellerMbrNo)) {
                     // 정산율 등록
                     ProductVo pv = this.prodService.selectMemberInfo(mbrNo);
                     if (pv == null)

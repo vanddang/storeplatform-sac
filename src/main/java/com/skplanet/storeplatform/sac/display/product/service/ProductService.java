@@ -33,5 +33,5 @@ public interface ProductService {
      * @param prodId
      * @return
      */
-    String getProductRegId(String prodId);
+    String getProductSellerMbrNo(String prodId);
 }
