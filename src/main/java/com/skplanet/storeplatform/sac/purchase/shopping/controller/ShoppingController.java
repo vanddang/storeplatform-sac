@@ -131,6 +131,7 @@ public class ShoppingController {
 		couponPublishAvailableSacParam.setItemCode(couponPublishAvailableSacReq.getItemCode());
 		couponPublishAvailableSacParam.setItemCount(couponPublishAvailableSacReq.getItemCount());
 		couponPublishAvailableSacParam.setMdn(couponPublishAvailableSacReq.getMdn());
+		couponPublishAvailableSacParam.setProdId(couponPublishAvailableSacReq.getProdId());
 
 		return couponPublishAvailableSacParam;
 

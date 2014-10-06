@@ -24,6 +24,7 @@ public class CouponPublishAvailableSacParam extends PurchaseCommonSacParam {
 	private String itemCode;
 	private Integer itemCount;
 	private String mdn;
+	private String prodId;
 
 	/**
 	 * @return the couponCode
@@ -83,6 +84,21 @@ public class CouponPublishAvailableSacParam extends PurchaseCommonSacParam {
 	 */
 	public void setMdn(String mdn) {
 		this.mdn = mdn;
+	}
+
+	/**
+	 * @return the prodId
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            the prodId to set
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
 }

@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.repository;
 
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
@@ -45,5 +46,17 @@ public interface ShoppingRepository {
 	 */
 	public CouponPublishAvailableSacResult getCouponPublishAvailable(
 			CouponPublishAvailableSacParam couponPublishAvailableSacParam);
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품ID로 상품정보 조회
+	 * </pre>
+	 * 
+	 * @param couponPublishAvailableSacParam
+	 *            couponPublishAvailableSacParam
+	 * @return CouponPublishAvailableSacResult
+	 */
+	public PaymentInfoSacRes searchPaymentInfo(CouponPublishAvailableSacParam couponPublishAvailableSacParam);
 
 }

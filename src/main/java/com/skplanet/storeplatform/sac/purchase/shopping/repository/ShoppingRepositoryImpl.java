@@ -27,6 +27,9 @@ import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
@@ -47,6 +50,9 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 
 	@Autowired
 	private ShoppingSCI shoppingSCI;
+
+	@Autowired
+	private PaymentInfoSCI paymentInfoSCI;
 
 	@Override
 	public CouponUseStatusSacResult getCouponUseStatus(CouponUseStatusSacParam couponUseStatusSacParam) {
@@ -70,6 +76,22 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 				.getCouponPublishAvailable(couponPublishAvailableEcReq);
 
 		return this.convertResForGetCouponPublishAvailable(couponPublishAvailableEcRes);
+
+	}
+
+	@Override
+	public PaymentInfoSacRes searchPaymentInfo(CouponPublishAvailableSacParam couponPublishAvailableSacParam) {
+
+		List<String> prodIdList = new ArrayList<String>();
+		prodIdList.add(couponPublishAvailableSacParam.getProdId());
+
+		PaymentInfoSacReq req = new PaymentInfoSacReq();
+		req.setTenantId(couponPublishAvailableSacParam.getTenantId());
+		req.setLangCd(couponPublishAvailableSacParam.getLangCd());
+		req.setDeviceModelCd(couponPublishAvailableSacParam.getModel());
+		req.setProdIdList(prodIdList);
+
+		return this.paymentInfoSCI.searchPaymentInfo(req);
 
 	}
 
