@@ -35,6 +35,8 @@ public class CouponPublishAvailableSacReq extends PurchaseCommonSacReq {
 	@NotBlank
 	private String mdn;
 
+	private String prodId;
+
 	/**
 	 * @return the couponCode
 	 */
@@ -93,6 +95,21 @@ public class CouponPublishAvailableSacReq extends PurchaseCommonSacReq {
 	 */
 	public void setMdn(String mdn) {
 		this.mdn = mdn;
+	}
+
+	/**
+	 * @return the prodId
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            the prodId to set
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
 }
