@@ -41,7 +41,8 @@
             , A.REG_ID 
             , A.REG_DT 
             , A.UPD_ID 
-            , A.UPD_DT  
+            , A.UPD_DT
+            , CASE WHEN A.MENU_ID LIKE 'DP1304%' THEN 'genre' ELSE NULL AS SECTION
         FROM (
             SELECT 
                  NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
