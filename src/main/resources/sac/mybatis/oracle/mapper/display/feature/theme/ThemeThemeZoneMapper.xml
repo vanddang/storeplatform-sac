@@ -56,7 +56,8 @@
                      , Z1.EXPO_ORD_SUB
                      , COUNT(Z1.PROD_ID) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY Z1.EXPO_ORD_ALWAYS_YN DESC, Z1.EXPO_ORD, Z1.EXPO_ORD_SUB) AS RNUM
-                  FROM (SELECT A.TENANT_ID
+                  FROM (SELECT /*+ LEADING(A B D E F G) USE_NL(B C D E F G) */
+                               A.TENANT_ID
                              , E.MENU_ID
                              , C.PROD_ID
                              , C.PART_PROD_ID
@@ -75,8 +76,7 @@
                              , TB_DP_MENU_CATEGORY_PROD_MAPG D
                              , TB_DP_MENU_CATEGORY E
                              , TB_DP_PROD F  
-                             , TB_DP_TENANT_PROD G
-                             , TB_DP_SPRT_DEVICE H
+                             , TB_DP_TENANT_PROD G                             
                        WHERE 1=1
                        AND A.LIST_ID = #{themeZoneId}
                        AND A.LIST_ID = B.LIST_ID
@@ -93,7 +93,7 @@
                        AND D.USE_YN = 'Y'
                        AND D.MENU_ID = E.MENU_ID
                        AND E.USE_YN = 'Y'
-                       AND C.PROD_ID = F.PROD_ID
+                       AND B.PROD_ID = F.PROD_ID
                        AND F.PROD_ID = G.PROD_ID
                        <if test='prodCharge != "A"'>
                          AND  F.PROD_CHRG_YN = #{prodCharge}       /* 상품유료여부 */
@@ -105,7 +105,11 @@
                             </foreach>
                        </if>
                        AND G.EXPO_YN = 'Y'
-                       AND (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                       AND EXISTS (SELECT /*+ UNNEST NL_SJ INDEX(H (DEVICE_MODEL_CD, PROD_ID)) */
+                                          1
+                                     FROM TB_DP_SPRT_DEVICE H
+                                    WHERE (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = #{anyDeviceModelCd})
+                                      AND C.PART_PROD_ID = H.PROD_ID)                       
                        AND C.PART_PROD_ID = H.PROD_ID
 		               AND (CASE WHEN F.TOP_MENU_ID = 'DP13' THEN
 		                                CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
@@ -120,7 +124,8 @@
 		                                     ELSE CASE WHEN #{sdVideoSprtYn} = 'Y' THEN 1 ELSE 0 END END
 		                           ELSE 1 END) = 1
                         UNION ALL
-                        SELECT A.TENANT_ID
+                        SELECT /*+ LEADING(A B D E ESM I) USE_NL(B C D E F G H I J ESM) */
+                               A.TENANT_ID
 				             , ESM.MENU_ID
 				             , C.PROD_ID
 				             , C.PART_PROD_ID
@@ -145,8 +150,7 @@
 				            ,TB_DP_TENANT_PROD G
 				            ,TB_DP_SHPG_PROD H
 				            ,TB_DP_MENU_CATEGORY I
-				            ,TB_DP_TENANT_PROD_PRICE J
-                            ,TB_DP_SPRT_DEVICE DV
+				            ,TB_DP_TENANT_PROD_PRICE J                            
 				        WHERE 1 = 1
 				            AND A.LIST_ID = #{themeZoneId}
 				            AND A.LIST_ID = B.LIST_ID
@@ -185,8 +189,11 @@
 		                         #{prodGradeCd}
 		                       </foreach>
 		                    </if>
-                            AND DV.DEVICE_MODEL_CD = #{anyDeviceModelCd}
-                            AND DV.PROD_ID = C.PART_PROD_ID
+		                    AND EXISTS (SELECT /*+ UNNEST NL_SJ INDEX(DV (DEVICE_MODEL_CD, PROD_ID)) */
+		                                       1
+                                        FROM  TB_DP_SPRT_DEVICE DV
+                                        WHERE DV.DEVICE_MODEL_CD = #{anyDeviceModelCd}
+                                           AND DV.PROD_ID = C.PART_PROD_ID)                            
                             AND #{shpgSprtYn} = 'Y'
 
 	                         <if test='b2bProd != "A"'>
