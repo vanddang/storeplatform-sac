@@ -230,6 +230,7 @@ public class CategoryServiceImpl implements CategoryService {
 					menuDetail2Depth.setLnbFileSize(menu.getLnbFileSize());
 					menuDetail2Depth.setPreCategoryInfo(menu.getPreCategoryInfo());
 					menuDetail2Depth.setCategoryMenuYn(menu.getCategoryMenuYn());
+					menuDetail2Depth.setSection(menu.getSection());
 
 					List<MenuDetail> menuDetail3DepthList = new ArrayList<MenuDetail>();
 
@@ -267,6 +268,7 @@ public class CategoryServiceImpl implements CategoryService {
 							menuDetail3Depth.setLnbFileSize(subMenu.getLnbFileSize());
 							menuDetail3Depth.setPreCategoryInfo(subMenu.getPreCategoryInfo());
 							menuDetail3Depth.setCategoryMenuYn(subMenu.getCategoryMenuYn());
+							menuDetail3Depth.setSection(subMenu.getSection());
 
 							menuDetail3DepthList.add(menuDetail3Depth);
 						}
