@@ -42,7 +42,7 @@
             , A.REG_DT 
             , A.UPD_ID 
             , A.UPD_DT
-            , CASE WHEN A.MENU_ID LIKE 'DP1304%' THEN 'genre' ELSE NULL AS SECTION /* 일반 장르 구분 (장르 : genre, 일반 : null) */
+            , CASE WHEN A.MENU_ID LIKE 'DP1304%' THEN 'genre' ELSE NULL END AS SECTION /* 일반 장르 구분 (장르 : genre, 일반 : null) */
         FROM (
             SELECT 
                  NVL(C.MENU_PROD_CNT, 0) MENU_PROD_CNT
