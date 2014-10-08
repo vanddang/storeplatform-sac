@@ -109,8 +109,7 @@
                                           1
                                      FROM TB_DP_SPRT_DEVICE H
                                     WHERE (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = #{anyDeviceModelCd})
-                                      AND C.PART_PROD_ID = H.PROD_ID)                       
-                       AND C.PART_PROD_ID = H.PROD_ID
+                                      AND C.PART_PROD_ID = H.PROD_ID)                     
 		               AND (CASE WHEN F.TOP_MENU_ID = 'DP13' THEN
 		                                CASE WHEN #{ebookSprtYn} = 'Y' THEN 1 ELSE 0 END
 		                           WHEN F.TOP_MENU_ID = 'DP14' THEN
