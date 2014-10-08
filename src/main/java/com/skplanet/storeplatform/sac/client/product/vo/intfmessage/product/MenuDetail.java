@@ -56,6 +56,7 @@ public class MenuDetail extends CommonInfo {
 	private Integer lnbFileSize;
 	private String preCategoryInfo;
 	private String categoryMenuYn;
+	private String section;
 
 	/**
 	 * 
@@ -830,6 +831,32 @@ public class MenuDetail extends CommonInfo {
 	 */
 	public void setCategoryMenuYn(String categoryMenuYn) {
 		this.categoryMenuYn = categoryMenuYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 일반 장르 구분 (장르 : genre, 일반 : null) - 이북에서만 의미
+	 * </pre>
+	 * 
+	 * @param section
+	 *            String
+	 */
+	public String getSection() {
+		return section;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 일반 장르 구분 (장르 : genre, 일반 : null) - 이북에서만 의미
+	 * </pre>
+	 * 
+	 * @param section
+	 *            String
+	 */
+	public void setSection(String section) {
+		this.section = section;
 	}
 
 }
