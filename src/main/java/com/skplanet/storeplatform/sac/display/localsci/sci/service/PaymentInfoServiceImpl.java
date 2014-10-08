@@ -11,6 +11,7 @@ import com.skplanet.storeplatform.sac.display.common.VodType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.service.ProductExtraInfoService;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
@@ -56,6 +57,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
     @Autowired
     private MemberBenefitService benefitService;
+
+    @Autowired
+    private ProductExtraInfoService extraInfoService;
 
     /**
      * <pre>
@@ -177,6 +181,11 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             paymentInfo.setSvcGrpCd(prodInfo.getSvcGrpCd());
             paymentInfo.setInAppYn(prodInfo.isIap() ? "Y" : "N"); // In-App 여부
 
+            // 인앱 상품의 경우 S2S 정보 조회
+            if (paymentInfo.getInAppYn().equals("Y")) {
+                searchS2SInfo(prodId, paymentInfo);
+            }
+
             // Chapter 및 채널명 셋팅
             if (prodInfo.getProductType() == ProductType.Vod && prodInfo.getVodType() == VodType.Tv) { // TV
                 if (StringUtils.isNotEmpty(paymentInfo.getChapter())) {
@@ -207,5 +216,13 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         }
 
         return res;
+    }
+
+    private static final String EXINFO_S2S_SEARCH = "DP011701";
+    private void searchS2SInfo(String prodId, PaymentInfo paymentInfo) {
+        String info = extraInfoService.getInfo(prodId, EXINFO_S2S_SEARCH);
+        if (StringUtils.isNotEmpty(info)) {
+            paymentInfo.setSearchPriceUrl(info);
+        }
     }
 }
