@@ -375,10 +375,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 								.cancelPaymentToPayPlanet(purchaseCancelSacParam, purchaseCancelDetailSacParam));
 					} catch (StorePlatformException e) {
 						ErrorInfo errorInfo = e.getErrorInfo();
-						if ("EC_PAYPLANET_9984".equals(errorInfo.getCode())
-								&& purchaseCancelSacParam.getIgnorePayPlanet()) {
-							// skip
-						} else {
+						if (!"EC_PAYPLANET_9984".equals(errorInfo.getCode())) {
 							throw e;
 						}
 					}
@@ -650,6 +647,13 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		historyCountSacInReq.setUseFixrateProdId(prchsDtlSacParam.getProdId());
 		historyCountSacInReq.setPrchsProdHaveYn("Y");
 
+		// Device 기반 체크를 위해 셋팅해줌
+		if (StringUtils.isNotBlank(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 8))) {
+			historyCountSacInReq.setTenantProdGrpCd(StringUtils.substring(prchsDtlSacParam.getTenantProdGrpCd(), 0, 8));
+		} else {
+			historyCountSacInReq.setTenantProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd());
+		}
+
 		HistoryCountSacInRes historyCountSacInRes = this.historyInternalSCI.searchHistoryCount(historyCountSacInReq);
 		if (historyCountSacInRes.getTotalCnt() > 0) {
 			// 정액권 상품으로 이용한 상품이 존재!
@@ -750,13 +754,17 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		couponPublishCancelEcReq.setForceFlag(purchaseCancelSacParam.getShoppingForceCancelYn());
 		try {
 			this.shoppingSCI.cancelCouponPublish(couponPublishCancelEcReq);
-		} catch (Exception e) {
-			this.logger.info("SAC_PUR_8122 Exception : {}", e.getMessage());
+		} catch (StorePlatformException e) {
+
 			if (!purchaseCancelSacParam.getIgnoreCouponCms()) {
-				throw new StorePlatformException("SAC_PUR_8122", e);
+				ErrorInfo errorInfo = e.getErrorInfo();
+				this.logger.info("Shopping Coupon Exception CODE : {}", errorInfo.getCode());
+				if (!StringUtils.equals("EC_SCPNCMS_3215", errorInfo.getCode())) {
+					this.logger.info("SAC_PUR_8122 Exception : {}", e.getMessage());
+					throw new StorePlatformException("SAC_PUR_8122", e);
+				}
 			}
 		}
-
 	}
 
 	/**
