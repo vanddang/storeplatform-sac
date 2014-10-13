@@ -43,6 +43,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSac
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseIapRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
@@ -77,6 +78,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	private PurchaseMemberRepository purchaseMemberRepository;
 	@Autowired
 	private PurchaseDisplayRepository purchaseDisplayRepository;
+	@Autowired
+	private PurchaseIapRepository purchaseIapRepository;
 	@Autowired
 	private ShoppingRepository shoppingRepository;
 
@@ -121,14 +124,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 		}
 
-		// 정액상품 경우, 한 건만 구매 가능
-		if (req.getProductList().size() > 1
-				&& (StringUtils.endsWith(req.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) || StringUtils.endsWith(
-						req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE))) {
-			throw new StorePlatformException("SAC_PUR_5100", "정액상품은 한 건만 구매가능");
-		}
-
 		// TAKTODO:: 링&벨
 		// if( StringUtils.startsWith(req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
 		// for(CreatePurchaseSacReqProduct product : req.getProductList()) {
@@ -138,8 +133,16 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// }
 		// }
 
-		// 상품ID 중복 체크
 		if (CollectionUtils.isNotEmpty(req.getProductList())) {
+			// 정액상품 경우, 한 건만 구매 가능
+			if (req.getProductList().size() > 1
+					&& (StringUtils.endsWith(req.getTenantProdGrpCd(),
+							PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) || StringUtils.endsWith(
+							req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE))) {
+				throw new StorePlatformException("SAC_PUR_5100", "정액상품은 한 건만 구매가능");
+			}
+
+			// 상품ID 중복 체크
 			Set<String> prodIdSet = new HashSet<String>();
 			for (CreatePurchaseSacReqProduct product : req.getProductList()) {
 				if (prodIdSet.add(product.getProdId()) == false) {
@@ -453,6 +456,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						}
 					}
 				}
+			}
+
+			// S2S 상품 가격 조회
+			if (StringUtils.isNotBlank(purchaseProduct.getSearchPriceUrl())) {
+				String reqTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+				double price = this.purchaseIapRepository.searchIapS2SPrice(purchaseProduct.getSearchPriceUrl(),
+						reqTime, purchaseProduct.getAid(), purchaseProduct.getProdId(), purchaseOrderInfo
+								.getPurchaseProductList().get(0).getTid());
+				purchaseProduct.setProdAmt(price);
 			}
 
 			// 요청한 가격으로 세팅하는 경우

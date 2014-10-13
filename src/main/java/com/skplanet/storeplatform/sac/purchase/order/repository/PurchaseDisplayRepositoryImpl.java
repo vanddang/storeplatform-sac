@@ -186,6 +186,8 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setBnsUsePeriod(displayInfo.getBnsUsePeriod());
 			// T멤버쉽 적립율
 			purchaseProduct.setMileageRateMap(displayInfo.getMileageRateMap());
+			// S2S
+			purchaseProduct.setSearchPriceUrl(displayInfo.getSearchPriceUrl());
 
 			purchaseProductMap.put(displayInfo.getProdId(), purchaseProduct);
 		}

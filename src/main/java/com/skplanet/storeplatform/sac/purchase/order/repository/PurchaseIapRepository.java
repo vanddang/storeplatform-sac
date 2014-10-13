@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
+
 /**
  * 
  * IAP Repository
@@ -32,4 +33,24 @@ public interface PurchaseIapRepository {
 	 * @return IAP SKT후불 결제 금액
 	 */
 	public int inquiryBillingAmt(String mdn, String svcMangNo, String queryMonth);
+
+	/**
+	 * 
+	 * <pre>
+	 * IAP S2S 상품 가격 조회.
+	 * </pre>
+	 * 
+	 * @param url
+	 *            BP사 서버 URL
+	 * @param reqTime
+	 *            요청시간
+	 * @param aid
+	 *            App ID
+	 * @param prodId
+	 *            IAP 상품 ID
+	 * @param tid
+	 *            TID
+	 * @return IAP S2S 상품 가격
+	 */
+	public Double searchIapS2SPrice(String url, String reqTime, String aid, String prodId, String tid);
 }

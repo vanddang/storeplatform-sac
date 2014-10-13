@@ -39,7 +39,7 @@ public class PurchaseIapRepositoryImplTest {
 	@Autowired
 	private PurchaseIapRepository purchaseIapRepository;
 
-	@Test
+	// @Test
 	public void inquiryIapBillingAmt() {
 		String mdn = "01046353524";
 		String svcMangNo = "7021874265";
@@ -47,5 +47,19 @@ public class PurchaseIapRepositoryImplTest {
 
 		int iapBillingAmt = this.purchaseIapRepository.inquiryBillingAmt(mdn, svcMangNo, currMonth);
 		assertThat(iapBillingAmt, is(0));
+	}
+
+	@Test
+	public void searchPrice() {
+		String url = "https://175.126.56.200/payment/tstoreiap/search_price";
+		String reqTime = "20110516131001";
+		String aid = "OA00054612";
+		String prodId = "0900012345";
+		String tid = "dkfjeijfiej_232323_dkfjkefkej";
+
+		Double price = this.purchaseIapRepository.searchIapS2SPrice(url, reqTime, aid, prodId, tid);
+		System.out.println("PRICE: " + price);
+
+		assertThat(price.intValue(), is(1000));
 	}
 }

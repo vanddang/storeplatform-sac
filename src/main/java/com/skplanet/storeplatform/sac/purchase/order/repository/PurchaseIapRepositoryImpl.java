@@ -17,8 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.iap.sci.IapPurchaseSCI;
+import com.skplanet.storeplatform.external.client.iap.sci.IapS2SPurchaseSCI;
 import com.skplanet.storeplatform.external.client.iap.vo.InquiryBillingAmtEcReq;
 import com.skplanet.storeplatform.external.client.iap.vo.InquiryBillingAmtEcRes;
+import com.skplanet.storeplatform.external.client.iap.vo.SearchPriceEcReq;
+import com.skplanet.storeplatform.external.client.iap.vo.SearchPriceEcRes;
 
 /**
  * 
@@ -30,8 +33,12 @@ import com.skplanet.storeplatform.external.client.iap.vo.InquiryBillingAmtEcRes;
 public class PurchaseIapRepositoryImpl implements PurchaseIapRepository {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	public static final String IAP_S2S_SERVICE_ID_SEARCH_PRICE = "INAPP_SEARCH_PRICE";
+
 	@Autowired
 	private IapPurchaseSCI iapPurchaseSCI;
+	@Autowired
+	private IapS2SPurchaseSCI iapS2SPurchaseSCI;
 
 	/**
 	 * 
@@ -63,5 +70,44 @@ public class PurchaseIapRepositoryImpl implements PurchaseIapRepository {
 				ReflectionToStringBuilder.toString(inquiryBillingAmtEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		return inquiryBillingAmtEcRes.getBillingAmt();
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * IAP S2S 상품 가격 조회.
+	 * </pre>
+	 * 
+	 * @param url
+	 *            BP사 서버 URL
+	 * @param reqTime
+	 *            요청시간
+	 * @param aid
+	 *            App ID
+	 * @param prodId
+	 *            IAP 상품 ID
+	 * @param tid
+	 *            TID
+	 * @return IAP S2S 상품 가격
+	 */
+	@Override
+	public Double searchIapS2SPrice(String url, String reqTime, String aid, String prodId, String tid) {
+		SearchPriceEcReq searchPriceEcReq = new SearchPriceEcReq();
+		searchPriceEcReq.setServiceId(IAP_S2S_SERVICE_ID_SEARCH_PRICE);
+		searchPriceEcReq.setServerUrl(url);
+		searchPriceEcReq.setRequestTime(reqTime);
+		searchPriceEcReq.setAppId(aid);
+		searchPriceEcReq.setProdId(prodId);
+		searchPriceEcReq.setTid(tid);
+
+		this.logger.info("PRCHS,ORDER,SAC,IAP,S2S,PRICE,REQ,{}",
+				ReflectionToStringBuilder.toString(searchPriceEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		SearchPriceEcRes searchPriceEcRes = this.iapS2SPurchaseSCI.searchPrice(searchPriceEcReq);
+
+		this.logger.info("PRCHS,ORDER,SAC,IAP,S2S,PRICE,RES,{}",
+				ReflectionToStringBuilder.toString(searchPriceEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		return Double.parseDouble(searchPriceEcRes.getPrice());
 	}
 }
