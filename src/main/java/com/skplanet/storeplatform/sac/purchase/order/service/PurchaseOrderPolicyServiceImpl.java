@@ -999,25 +999,30 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return White List 등록 여부: true-White List 등록, false-White List 등록 안됨
 	 */
 	private boolean isSktTestMdnWhiteList(String memberPolicyCd, String deviceId) {
-		return true; // 2014.06.09: SKT시험폰 항상 허용됨
+		// return true; // 2014.06.09: SKT시험폰 항상 허용됨
 
-		// List<String> policyCodeList = new ArrayList<String>();
-		// policyCodeList.add(memberPolicyCd);
-		//
-		// Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-		// deviceId, policyCodeList);
-		//
-		// if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
-		// return false;
-		// }
-		//
-		// IndividualPolicyInfoSac individualPolicyInfoSac = policyResMap.get(memberPolicyCd);
-		//
-		// if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
-		// return true;
-		// }
-		//
-		// return false;
+		// 2014.10.15. PASS 코드 적용
+		if (StringUtils.equals(memberPolicyCd, "PASS")) {
+			return true;
+		}
+
+		List<String> policyCodeList = new ArrayList<String>();
+		policyCodeList.add(memberPolicyCd);
+
+		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
+				deviceId, policyCodeList);
+
+		if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
+			return false;
+		}
+
+		IndividualPolicyInfoSac individualPolicyInfoSac = policyResMap.get(memberPolicyCd);
+
+		if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/*
