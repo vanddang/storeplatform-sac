@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.client.purchase.shopping.vo;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSacReq;
@@ -21,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSa
  * 
  * Updated on : 2014. 2. 6. Updated by : nTels_cswoo81, nTels.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CouponPublishAvailableSacReq extends PurchaseCommonSacReq {
 
 	private static final long serialVersionUID = 1L;
