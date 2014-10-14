@@ -640,7 +640,6 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		// 정액제 상품으로 산 구매내역 조회.
 		historyCountSacInReq.setTenantId(prchsDtlSacParam.getUseTenantId());
 		historyCountSacInReq.setUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
-		historyCountSacInReq.setDeviceKey(prchsDtlSacParam.getUseInsdDeviceId());
 		historyCountSacInReq.setStartDt(prchsDtlSacParam.getUseStartDt());
 		historyCountSacInReq.setEndDt(prchsDtlSacParam.getUseExprDt());
 		historyCountSacInReq.setPrchsCaseCd(prchsDtlSacParam.getPrchsCaseCd());
