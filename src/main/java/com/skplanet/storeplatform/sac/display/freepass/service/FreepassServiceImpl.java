@@ -596,9 +596,12 @@ public class FreepassServiceImpl implements FreepassService {
 					prodIdList.add(productBasicInfo.getProdId());
 				}
 			}
+
 			try {
-				res = this.displayCommonService.checkPurchaseList(header.getTenantHeader().getTenantId(),
-						req.getUserKey(), req.getDeviceKey(), prodIdList);
+				if (prodIdList.size() > 0) {
+					res = this.displayCommonService.checkPurchaseList(header.getTenantHeader().getTenantId(),
+							req.getUserKey(), req.getDeviceKey(), prodIdList);
+				}
 			} catch (StorePlatformException e) {
 				// ignore : 구매 연동 오류 발생해도 상세 조회는 오류 없도록 처리. 구매 연동오류는 VOC 로 처리한다.
 				res = new ExistenceListRes();
