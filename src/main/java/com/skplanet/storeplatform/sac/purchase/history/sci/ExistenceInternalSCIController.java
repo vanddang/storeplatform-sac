@@ -66,6 +66,11 @@ public class ExistenceInternalSCIController implements ExistenceInternalSacSCI {
 			if (StringUtils.isBlank(existenceReq.getDeviceKey())) {
 				throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
 			}
+			if (existenceReq.getExistenceItem() == null) {
+				throw new StorePlatformException("SAC_PUR_0001", "ProductList");
+			} else if (existenceReq.getExistenceItem().size() < 1) {
+				throw new StorePlatformException("SAC_PUR_0001", "ProdId");
+			}
 		}
 		ExistenceScReq req = this.reqConvert(existenceReq);
 		// 로컬SCI는 빈값셋팅
