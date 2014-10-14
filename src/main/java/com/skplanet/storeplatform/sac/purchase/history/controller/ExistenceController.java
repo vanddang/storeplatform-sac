@@ -102,6 +102,11 @@ public class ExistenceController {
 			if (StringUtils.isBlank(existenceSacReq.getDeviceKey())) {
 				throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
 			}
+			if (existenceSacReq.getProductList() == null) {
+				throw new StorePlatformException("SAC_PUR_0001", "ProductList");
+			} else if (existenceSacReq.getProductList().size() < 1) {
+				throw new StorePlatformException("SAC_PUR_0001", "ProdId");
+			}
 		}
 		req.setTenantId(header.getTenantId());
 		req.setSystemId(header.getSystemId());
