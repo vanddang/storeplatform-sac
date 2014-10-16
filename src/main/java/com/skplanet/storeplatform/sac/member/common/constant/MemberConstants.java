@@ -94,6 +94,8 @@ public final class MemberConstants {
 	public static final String DEVICE_TELECOM_NON = "US001206"; // NON
 	public static final String DEVICE_TELECOM_IOS = "US001207"; // iOS
 	public static final String DEVICE_TELECOM_SKM = "US001208"; // SKM
+	public static final String DEVICE_TELECOM_KTM = "US001209"; // KTM
+	public static final String DEVICE_TELECOM_LGM = "US001210"; // LGM
 
 	/** 통신사 코드. */
 	public static final String NM_DEVICE_TELECOM_SKT = "SKT"; // SKT
@@ -104,6 +106,8 @@ public final class MemberConstants {
 	public static final String NM_DEVICE_TELECOM_NON = "NON"; // NON
 	public static final String NM_DEVICE_TELECOM_IOS = "ISB"; // iOS
 	public static final String NM_DEVICE_TELECOM_SKM = "SKM"; // SKM
+	public static final String NM_DEVICE_TELECOM_KTM = "KTM"; // KTM
+	public static final String NM_DEVICE_TELECOM_LGM = "LGM"; // LGM
 
 	/** 사용자 부가속성. */
 	public static final String USER_EXTRA_CERTIFICATION = "US010901"; // 공인인증여부
