@@ -95,12 +95,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
     @Autowired
     private SacServiceService sacServiceDataService;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.DownloadAppService#DownloadAppService(com.skplanet
-	 * .storeplatform.sac.client.product.vo.downloadAppSacReqVO)
-	 */
 	@Override
 	public DownloadAppSacRes searchDownloadApp(SacRequestHeader requestheader, DownloadAppSacReq downloadAppSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
@@ -128,8 +122,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		// 파라미터 체크
 		if ("package".equals(filteredBy)) {
-			productId = (String) commonDAO
-					.queryForObject("Download.getProductIdForPackageName", downloadAppSacReq);
+			productId = (String) commonDAO.queryForObject("Download.getProductIdForPackageName", downloadAppSacReq);
 			downloadAppSacReq.setProductId(productId);
 
 			if (StringUtils.isEmpty(productId)) {
@@ -152,21 +145,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
-		MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
-				MetaInfo.class);
+		MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "",	MetaInfo.class);
 		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
 
-		// OS VERSION 가공
-
-		// String[] temp = deviceHeader.getOs().trim().split("/");
-		//
-		// String osVersion = temp[1];
-		// String osVersionOrginal = osVersion;
-		// String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
-		// if (osVersionTemp.length == 3) {
-		// osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
-		// }
 
 		DownloadAppSacRes response = new DownloadAppSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -179,8 +161,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		log.debug("----------------------------------------------------------------");
 
 		// 다운로드 앱 상품 조회
-		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadAppInfo", downloadAppSacReq,
-				MetaInfo.class);
+		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadAppInfo", downloadAppSacReq, MetaInfo.class);
 
         List<Encryption> encryptionList = new ArrayList<Encryption>();
 
@@ -192,6 +173,12 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 			doBunchProdProvisioning(downloadAppSacReq, metaInfo);
 			validateParentBunchProd(downloadAppSacReq, metaInfo);
+
+			/*
+			 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
+			 */
+			metaInfo.setSystemId(tanantHeader.getSystemId());
+			metaInfo.setVisitPathNm(downloadAppSacReq.getVisitPathNm());
 
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
@@ -237,19 +224,11 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					log.debug("----------------------------------------------------------------");
 
 					// 구매내역 조회 실행
-					log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
-					long start = System.currentTimeMillis();
 					historyRes = historyInternalSCI.searchHistoryList(historyReq);
-					log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
-					long end = System.currentTimeMillis();
-					log.debug(
-							"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
-							(end - start));
 
 				} catch (Exception ex) {
 					purchaseFlag = false;
-					log.debug("[DownloadAppServiceImpl] Purchase History Search Exception : {}");
-					log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+					log.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
 					// throw new StorePlatformException("SAC_DSP_2001", ex);
 				}
 
@@ -295,8 +274,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							downloadAppSacReq.setPrchsDt(prchsDt);
 							downloadAppSacReq.setDwldStartDt(dwldStartDt);
 							downloadAppSacReq.setDwldExprDt(dwldExprDt);
-							// prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
-							// downloadAppSacReq);
+
 							prchsState = (String) ((HashMap) commonDAO.queryForObject(
 									"Download.getDownloadPurchaseState", downloadAppSacReq)).get("PURCHASE_STATE");
 
@@ -357,19 +335,13 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 									log.debug("----------------------------------------------------------------");
 
 									// 기기정보 조회
-									log.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
-									long start = System.currentTimeMillis();
 									deviceRes = deviceSCI.searchDeviceId(deviceReq);
-									log.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
-									long end = System.currentTimeMillis();
-									log.debug(
-											"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
-											(end - start));
+
+
 								} catch (Exception ex) {
 									memberFlag = false;
-									log.debug("[DownloadAppServiceImpl] SearchDevice Id Search Exception : {}");
-									log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-									// throw new StorePlatformException("SAC_DSP_1001", ex);
+									log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
+									// 예외 무시
 								}
 
 								log.debug("----------------------------------------------------------------");
@@ -406,23 +378,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 													uapsEcReq.setType("mdn");
 													log.debug("----------------------------------------------------------------");
 													log.debug("********************UAPS 정보 조회************************");
-													log.debug("[DownloadAppServiceImpl] DeviceId : {}",
-															uapsEcReq.getDeviceId());
-													log.debug("[DownloadAppServiceImpl] Type : {}",
-															uapsEcReq.getType());
+													log.debug("[DownloadAppServiceImpl] DeviceId : {}",	uapsEcReq.getDeviceId());
+													log.debug("[DownloadAppServiceImpl] Type : {}",uapsEcReq.getType());
 													log.debug("----------------------------------------------------------------");
-													log.debug("##### [SAC DSP LocalSCI] SAC EC Start : uapsSCI.getMappingInfo");
-													long start = System.currentTimeMillis();
+
 													UserEcRes uapsEcRes = uapsSCI.getMappingInfo(uapsEcReq);
-													log.debug("##### [SAC DSP LocalSCI] SAC EC End : uapsSCI.getMappingInfo");
-													long end = System.currentTimeMillis();
-													log.debug(
-															"##### [SAC DSP LocalSCI] SAC Member uapsSCI.getMappingInfo takes {} ms",
-															(end - start));
-													log.debug("-------------------------------------------------------------");
+
 													for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-														log.debug("[DownloadAppServiceImpl] serviceCd	:{}",
-																uapsEcRes.getServiceCD()[k]);
+														log.debug("[DownloadAppServiceImpl] serviceCd	:{}", uapsEcRes.getServiceCD()[k]);
 														if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING
 																.equals(uapsEcRes.getServiceCD()[k])) {
 															metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_HALFPAID);
@@ -430,9 +393,10 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 															tingMemberFlag = true;
 														}
 													}
-													log.debug("-------------------------------------------------------------");
+
 												} catch (Exception e) {
-													log.debug("[DownloadAppServiceImpl] :	PacketFee Is Not Half");
+													log.error("UAPS 조회 연동 중 오류가 발생하였습니다.\n", e);
+													// 예외 무시
 												}
 											}
 										}
@@ -440,23 +404,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										// 암호화 정보 (JSON)
 										genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
 
-										metaInfo.setSystemId(tanantHeader.getSystemId());
                                         Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
                                         encryptionList.add(encryption);
-
-										// JSON 복호화
-										// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-										// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-										//
-										// try {
-										// String decData = new String(decrypt, "UTF-8");
-										// this.log.debug("----------------------------------------------------------------");
-										// this.log.debug("[DownloadVodServiceImpl] decData : {}", decData);
-										// System.out.println("decData	:	" + decData);
-										// this.log.debug("----------------------------------------------------------------");
-										// } catch (UnsupportedEncodingException e) {
-										// e.printStackTrace();
-										// }
 
 										log.debug("-------------------------------------------------------------");
 										log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
@@ -464,10 +413,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										log.debug("-------------------------------------------------------------");
 									} else {
 										log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
-										log.debug("##### [SAC DSP LocalSCI] deviceKey : {}",
-												deviceReq.getDeviceKey());
-										log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
-												+ deviceRes.getDeviceId());
+										log.debug("##### [SAC DSP LocalSCI] deviceKey : {}", deviceReq.getDeviceKey());
+										log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 									}
 								}
 								product.setPurchaseList(purchaseList);
@@ -482,10 +429,11 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 					} else {
 						/**
-						 * 구매내역이 존재하지 않는 경우 예외적으로 다운로드 허용 (ex, 앱가이드..)
+						 * 구매내역이 존재하지 않는 경우 예외적으로 다운로드 허용
+						 * 예) 앱가이드, 스마트청구서, T 통화 도우미
 						 */
 						if ( isProdWithoutPrchsHis(tanantHeader.getTenantId(), productId) ) {
-							makeDefaultMetaWithoutPrchsHis(metaInfo, downloadAppSacReq, tanantHeader, reqExpireDate);
+							makeDefaultMetaWithoutPrchsHis(metaInfo, downloadAppSacReq, reqExpireDate);
 
 							Encryption encryption = supportService.generateEncryption(metaInfo, productId);
 							encryptionList.add(encryption);
@@ -620,15 +568,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			}
 
 		} catch (Exception ex) {
+			log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
 			// 예외 무시
 		}
 
 		return;
 	}
 
-	private void makeDefaultMetaWithoutPrchsHis(MetaInfo metaInfo, final DownloadAppSacReq sacReq, final TenantHeader header, final String expiredDate) {
+	private void makeDefaultMetaWithoutPrchsHis(MetaInfo metaInfo, final DownloadAppSacReq sacReq, final String expiredDate) {
 
-		metaInfo.setSystemId(header.getSystemId());
 		metaInfo.setExpiredDate(expiredDate);
 		metaInfo.setPurchaseProdId(sacReq.getProductId());
 		metaInfo.setUserKey(sacReq.getUserKey());

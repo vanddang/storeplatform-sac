@@ -75,14 +75,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
     @Autowired
     private DownloadSupportService supportService;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.download.service.DownloadComicService#getDownloadComicInfo(com.skplanet
-	 * .storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq)
-	 */
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader header, DownloadComicSacReq comicReq) {
@@ -93,7 +86,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         sw.start();
 
         // 현재일시 및 만료일시 조회
-        MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
+        MetaInfo metaInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadSystemDate", null);
 
         String sysDate = metaInfo.getSysDate();
         String reqExpireDate = metaInfo.getExpiredDate();
@@ -106,11 +99,11 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         String deviceKey = comicReq.getDeviceKey();
         String userKey = comicReq.getUserKey();
 
-        this.logger.debug("----------------------------------------------------------------");
-        this.logger.debug("[DownloadComicLog] productId : {}", productId);
-        this.logger.debug("[DownloadComicLog] deviceKey : {}", deviceKey);
-        this.logger.debug("[DownloadComicLog] userKey : {}", userKey);
-        this.logger.debug("----------------------------------------------------------------");
+        logger.debug("----------------------------------------------------------------");
+        logger.debug("[DownloadComicLog] productId : {}", productId);
+        logger.debug("[DownloadComicLog] deviceKey : {}", deviceKey);
+        logger.debug("[DownloadComicLog] userKey : {}", userKey);
+        logger.debug("----------------------------------------------------------------");
 
         // 헤더정보 세팅
         comicReq.setTenantId(header.getTenantHeader().getTenantId());
@@ -120,25 +113,31 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         comicReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
         // comic 상품 정보 조회(for download)
-        metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadComicInfo", comicReq);
+        metaInfo = (MetaInfo) commonDAO.queryForObject("Download.selectDownloadComicInfo", comicReq);
 
         if (metaInfo != null) {
-            this.logger.debug("----------------------------------------------------------------");
-            this.logger.debug("[DownloadComicLog] scid : {}", metaInfo.getSubContentsId());
-            this.logger.debug("----------------------------------------------------------------");
+            logger.debug("----------------------------------------------------------------");
+            logger.debug("[DownloadComicLog] scid : {}", metaInfo.getSubContentsId());
+            logger.debug("----------------------------------------------------------------");
+
+            /*
+			 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
+			 */
+            metaInfo.setSystemId(header.getTenantHeader().getSystemId());
+            metaInfo.setVisitPathNm(comicReq.getVisitPathNm());
 
             Product product = new Product();
 
             // 상품 ID 정보
             List<Identifier> identifierList = new ArrayList<Identifier>();
-            identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
+            identifierList.add(commonMetaInfoGenerator.generateIdentifier(
                     DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
-            identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
+            identifierList.add(commonMetaInfoGenerator.generateIdentifier(
                     DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId()));
             product.setIdentifierList(identifierList);
 
             // 상품명 정보
-            product.setTitle(this.commonMetaInfoGenerator.generateTitle(metaInfo));
+            product.setTitle(commonMetaInfoGenerator.generateTitle(metaInfo));
             product.setChnlProdNm(metaInfo.getChnlProdNm());
 
             // 상품 설명 정보
@@ -146,25 +145,25 @@ public class DownloadComicServiceImpl implements DownloadComicService {
             product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 
             // 이미지 정보
-            product.setSourceList(this.commonMetaInfoGenerator.generateDownloadSourceList(metaInfo));
+            product.setSourceList(commonMetaInfoGenerator.generateDownloadSourceList(metaInfo));
 
             // 메뉴 정보
-            product.setMenuList(this.commonMetaInfoGenerator.generateMenuList(metaInfo));
+            product.setMenuList(commonMetaInfoGenerator.generateMenuList(metaInfo));
 
             // 도서 정보
-            product.setBook(this.ebookComicGenerator.generateForDownloadBook(metaInfo));
+            product.setBook(ebookComicGenerator.generateForDownloadBook(metaInfo));
 
             // 상품금액 정보
-            product.setPrice(this.commonMetaInfoGenerator.generatePrice(metaInfo));
+            product.setPrice(commonMetaInfoGenerator.generatePrice(metaInfo));
 
             // 이용권한 정보
-            product.setRights(this.commonMetaInfoGenerator.generateRights(metaInfo));
+            product.setRights(commonMetaInfoGenerator.generateRights(metaInfo));
 
             // 배포자 정보
-            product.setDistributor(this.commonMetaInfoGenerator.generateDistributor(metaInfo));
+            product.setDistributor(commonMetaInfoGenerator.generateDistributor(metaInfo));
 
             // 저작자 정보
-            product.setContributor(this.ebookComicGenerator.generateComicContributor(metaInfo));
+            product.setContributor(ebookComicGenerator.generateComicContributor(metaInfo));
 
             if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
                 // 구매내역 조회를 위한 생성자
@@ -195,44 +194,36 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                     historyReq.setCount(1000);
                     historyReq.setProductList(productList);
 
-                    this.logger.debug("----------------------------------------------------------------");
-                    this.logger.debug("[DownloadComicLog] 구매내역 조회 요청 파라미터");
-                    this.logger.debug("----------------------------------------------------------------");
-                    this.logger.debug("[DownloadComicLog] tenantId : {}", historyReq.getTenantId());
-                    this.logger.debug("[DownloadComicLog] userKey : {}", historyReq.getUserKey());
-                    this.logger.debug("[DownloadComicLog] deviceKey : {}", historyReq.getDeviceKey());
-                    this.logger.debug("[DownloadComicLog] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-                    this.logger.debug("[DownloadComicLog] prchsProdType : {}", historyReq.getPrchsProdType());
-                    this.logger.debug("[DownloadComicLog] startDt : {}", historyReq.getStartDt());
-                    this.logger.debug("[DownloadComicLog] endDt : {}", historyReq.getEndDt());
-                    this.logger.debug("[DownloadComicLog] prodId : {}", productList.get(0).getProdId());
-                    this.logger.debug("----------------------------------------------------------------");
+                    logger.debug("----------------------------------------------------------------");
+                    logger.debug("[DownloadComicLog] 구매내역 조회 요청 파라미터");
+                    logger.debug("----------------------------------------------------------------");
+                    logger.debug("[DownloadComicLog] tenantId : {}", historyReq.getTenantId());
+                    logger.debug("[DownloadComicLog] userKey : {}", historyReq.getUserKey());
+                    logger.debug("[DownloadComicLog] deviceKey : {}", historyReq.getDeviceKey());
+                    logger.debug("[DownloadComicLog] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+                    logger.debug("[DownloadComicLog] prchsProdType : {}", historyReq.getPrchsProdType());
+                    logger.debug("[DownloadComicLog] startDt : {}", historyReq.getStartDt());
+                    logger.debug("[DownloadComicLog] endDt : {}", historyReq.getEndDt());
+                    logger.debug("[DownloadComicLog] prodId : {}", productList.get(0).getProdId());
+                    logger.debug("----------------------------------------------------------------");
 
                     // 구매내역 조회 실행
-                    this.logger
-                            .debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
-                    long start = System.currentTimeMillis();
-                    historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
-                    this.logger
-                            .debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
-                    long end = System.currentTimeMillis();
-                    this.logger.debug(
-                            "##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
-                            (end - start));
+                    historyRes = historyInternalSCI.searchHistoryList(historyReq);
+
                 } catch (Exception ex) {
                     purchasePassFlag = false;
-                    this.logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
+                    logger.error("구매내역 조회 연동 중 오류가 발생하였습니다.\n", ex);
                 }
 
-                this.logger.debug("----------------------------------------------------------------");
-                this.logger.debug("[DownloadComicLog] purchasePassFlag : {}", purchasePassFlag);
-                this.logger.debug("[DownloadComicLog] historyRes : {}", historyRes);
-                this.logger.debug("----------------------------------------------------------------");
+                logger.debug("----------------------------------------------------------------");
+                logger.debug("[DownloadComicLog] purchasePassFlag : {}", purchasePassFlag);
+                logger.debug("[DownloadComicLog] historyRes : {}", historyRes);
+                logger.debug("----------------------------------------------------------------");
 
                 if (purchasePassFlag && historyRes != null) {
-                    this.logger.debug("----------------------------------------------------------------");
-                    this.logger.debug("[DownloadComicLog] 구매건수 : {}", historyRes.getTotalCnt());
-                    this.logger.debug("----------------------------------------------------------------");
+                    logger.debug("----------------------------------------------------------------");
+                    logger.debug("[DownloadComicLog] 구매건수 : {}", historyRes.getTotalCnt());
+                    logger.debug("----------------------------------------------------------------");
 
                     String prchsId = null; // 구매ID
                     String prchsDt = null; // 구매일시
@@ -268,7 +259,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                             // 구매상태 확인
                             comicReq.setDwldStartDt(dwldStartDt);
                             comicReq.setDwldExprDt(dwldExprDt);
-                            prchsState = (String) ((HashMap) this.commonDAO.queryForObject(
+                            prchsState = (String) ((HashMap) commonDAO.queryForObject(
                                     "Download.getDownloadPurchaseState", comicReq)).get("PURCHASE_STATE");
 
                             // 구매상태 만료여부 확인
@@ -281,19 +272,19 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                                 }
                             }
 
-                            this.logger.debug("----------------------------------------------------------------");
-                            this.logger.debug("[DownloadComicLog] prchsId : {}", prchsId);
-                            this.logger.debug("[DownloadComicLog] prchsDt : {}", prchsDt);
-                            this.logger.debug("[DownloadComicLog] useExprDt : {}", useExprDt);
-                            this.logger.debug("[DownloadComicLog] dwldStartDt : {}", dwldStartDt);
-                            this.logger.debug("[DownloadComicLog] dwldExprDt : {}", dwldExprDt);
-                            this.logger.debug("[DownloadComicLog] prchsCaseCd : {}", prchsCaseCd);
-                            this.logger.debug("[DownloadComicLog] prchsState : {}", prchsState);
-                            this.logger.debug("[DownloadComicLog] prchsProdId : {}", prchsProdId);
-                            this.logger.debug("[DownloadComicLog] prchsPrice : {}", prchsPrice);
-                            this.logger.debug("[DownloadComicLog] drmYn : {}", drmYn);
-                            this.logger.debug("[DownloadComicLog] permitDeviceYn : {}", permitDeviceYn);
-                            this.logger.debug("----------------------------------------------------------------");
+                            logger.debug("----------------------------------------------------------------");
+                            logger.debug("[DownloadComicLog] prchsId : {}", prchsId);
+                            logger.debug("[DownloadComicLog] prchsDt : {}", prchsDt);
+                            logger.debug("[DownloadComicLog] useExprDt : {}", useExprDt);
+                            logger.debug("[DownloadComicLog] dwldStartDt : {}", dwldStartDt);
+                            logger.debug("[DownloadComicLog] dwldExprDt : {}", dwldExprDt);
+                            logger.debug("[DownloadComicLog] prchsCaseCd : {}", prchsCaseCd);
+                            logger.debug("[DownloadComicLog] prchsState : {}", prchsState);
+                            logger.debug("[DownloadComicLog] prchsProdId : {}", prchsProdId);
+                            logger.debug("[DownloadComicLog] prchsPrice : {}", prchsPrice);
+                            logger.debug("[DownloadComicLog] drmYn : {}", drmYn);
+                            logger.debug("[DownloadComicLog] permitDeviceYn : {}", permitDeviceYn);
+                            logger.debug("----------------------------------------------------------------");
 
                             metaInfo.setPurchaseId(prchsId);
                             metaInfo.setPurchaseProdId(prchsProdId);
@@ -303,7 +294,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                             metaInfo.setPurchasePrice(Integer.parseInt(prchsPrice));
 
                             // 구매 정보
-                            purchaseList.add(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
+                            purchaseList.add(commonMetaInfoGenerator.generatePurchase(metaInfo));
 
                             // 구매상태 만료여부 및 단말 지원여부 확인
                             if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
@@ -319,40 +310,31 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                                     deviceReq.setUserKey(comicReq.getUserKey());
                                     deviceReq.setDeviceKey(comicReq.getDeviceKey());
 
-                                    this.logger.debug("--------------------------------------------------------------");
-                                    this.logger.debug("[DownloadComicLog] 단말정보 조회 요청 파라미터");
-                                    this.logger.debug("--------------------------------------------------------------");
-                                    this.logger.debug("[DownloadComicLog] userKey : {}", deviceReq.getUserKey());
-                                    this.logger.debug("[DownloadComicLog] deviceKey : {}", deviceReq.getDeviceKey());
-                                    this.logger.debug("--------------------------------------------------------------");
+                                    logger.debug("--------------------------------------------------------------");
+                                    logger.debug("[DownloadComicLog] 단말정보 조회 요청 파라미터");
+                                    logger.debug("--------------------------------------------------------------");
+                                    logger.debug("[DownloadComicLog] userKey : {}", deviceReq.getUserKey());
+                                    logger.debug("[DownloadComicLog] deviceKey : {}", deviceReq.getDeviceKey());
+                                    logger.debug("--------------------------------------------------------------");
 
                                     // 기기정보 조회
-                                    this.logger
-                                            .debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
-                                    long start = System.currentTimeMillis();
-                                    deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-                                    this.logger
-                                            .debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
-                                    long end = System.currentTimeMillis();
-                                    this.logger.debug(
-                                            "##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
-                                            (end - start));
+                                    deviceRes = deviceSCI.searchDeviceId(deviceReq);
 
                                 } catch (Exception ex) {
                                     memberPassFlag = false;
-                                    this.logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
+                                    logger.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
                                 }
 
-                                this.logger.debug("----------------------------------------------------------------");
-                                this.logger.debug("[DownloadComicLog] memberPassFlag : {}", memberPassFlag);
-                                this.logger.debug("[DownloadComicLog] deviceRes : {}", deviceRes);
-                                this.logger.debug("----------------------------------------------------------------");
+                                logger.debug("----------------------------------------------------------------");
+                                logger.debug("[DownloadComicLog] memberPassFlag : {}", memberPassFlag);
+                                logger.debug("[DownloadComicLog] deviceRes : {}", deviceRes);
+                                logger.debug("----------------------------------------------------------------");
 
                                 if (memberPassFlag && deviceRes != null) {
                                     // MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
                                     if ("Y".equals(deviceRes.getAuthYn())) {
                                         deviceId = deviceRes.getDeviceId();
-                                        deviceIdType = this.commonService.getDeviceIdType(deviceId);
+                                        deviceIdType = commonService.getDeviceIdType(deviceId);
 
                                         metaInfo.setExpiredDate(reqExpireDate);
                                         metaInfo.setUseExprDt(useExprDt);
@@ -369,21 +351,17 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                                         }
 
                                         // 암호화 정보 (JSON)
-                                        metaInfo.setSystemId(header.getTenantHeader().getSystemId());
-                                        Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
+                                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
                                         encryptionList.add(encryption);
 
-                                        this.logger.debug("-----------------------------------------------------------");
-                                        this.logger.debug("[DownloadComicLog] token : {}", encryption.getToken());
-                                        this.logger.debug("[DownloadComicLog] keyIdx : {}", encryption.getKeyIndex());
-                                        this.logger.debug("-----------------------------------------------------------");
+                                        logger.debug("-----------------------------------------------------------");
+                                        logger.debug("[DownloadComicLog] token : {}", encryption.getToken());
+                                        logger.debug("[DownloadComicLog] keyIdx : {}", encryption.getKeyIndex());
+                                        logger.debug("-----------------------------------------------------------");
                                     } else {
-                                        this.logger.debug("##### [SAC DSP LocalSCI] userKey : {}",
-                                                deviceReq.getUserKey());
-                                        this.logger.debug("##### [SAC DSP LocalSCI] deviceKey : {}",
-                                                deviceReq.getDeviceKey());
-                                        this.logger.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
-                                                + deviceRes.getDeviceId());
+                                        logger.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
+                                        logger.debug("##### [SAC DSP LocalSCI] deviceKey : {}", deviceReq.getDeviceKey());
+                                        logger.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
                                     }
                                 }
                                 // 구매 정보
@@ -410,7 +388,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
         comicRes.setCommonResponse(commonResponse);
 
         sw.stop();
-        this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
         return comicRes;
     }

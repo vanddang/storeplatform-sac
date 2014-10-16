@@ -310,7 +310,7 @@ public class MetaInfo extends CommonInfo {
      */
     private MileageInfo mileageInfo;
 
-    // 구매내역 조회 정보 변수 for DL
+    // encryption token for DL
     private String purchaseHide;
     private String updateAlarm;
     private String parentBunchId;
@@ -318,12 +318,13 @@ public class MetaInfo extends CommonInfo {
     private String deltaType;
     private Long   deltaFileSize;
     private String deltaFilePath;
+    private String visitPathNm;
 
 	/**
 	 * @return the topMenuId
 	 */
 	public String getTopMenuId() {
-		return this.topMenuId;
+		return topMenuId;
 	}
 
 	/**
@@ -338,7 +339,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the topMenuNm
 	 */
 	public String getTopMenuNm() {
-		return this.topMenuNm;
+		return topMenuNm;
 	}
 
 	/**
@@ -353,7 +354,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the upMenuNm
 	 */
 	public String getUpMenuNm() {
-		return this.upMenuNm;
+		return upMenuNm;
 	}
 
 	/**
@@ -368,7 +369,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the menuId
 	 */
 	public String getMenuId() {
-		return this.menuId;
+		return menuId;
 	}
 
 	/**
@@ -383,7 +384,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the menuNm
 	 */
 	public String getMenuNm() {
-		return this.menuNm;
+		return menuNm;
 	}
 
 	/**
@@ -398,7 +399,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the menuDesc
 	 */
 	public String getMenuDesc() {
-		return this.menuDesc;
+		return menuDesc;
 	}
 
 	/**
@@ -413,7 +414,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the metaClsfCd
 	 */
 	public String getMetaClsfCd() {
-		return this.metaClsfCd;
+		return metaClsfCd;
 	}
 
 	/**
@@ -428,7 +429,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodId
 	 */
 	public String getProdId() {
-		return this.prodId;
+		return prodId;
 	}
 
 	/**
@@ -443,7 +444,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the partProdId
 	 */
 	public String getPartProdId() {
-		return this.partProdId;
+		return partProdId;
 	}
 
 	/**
@@ -458,7 +459,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodNm
 	 */
 	public String getProdNm() {
-		return this.prodNm;
+		return prodNm;
 	}
 
 	/**
@@ -473,7 +474,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodBaseDesc
 	 */
 	public String getProdBaseDesc() {
-		return this.prodBaseDesc;
+		return prodBaseDesc;
 	}
 
 	/**
@@ -488,7 +489,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodDtlDesc
 	 */
 	public String getProdDtlDesc() {
-		return this.prodDtlDesc;
+		return prodDtlDesc;
 	}
 
 	/**
@@ -503,7 +504,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodAmt
 	 */
 	public Integer getProdAmt() {
-		return this.prodAmt;
+		return prodAmt;
 	}
 
 	/**
@@ -518,7 +519,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodGrdCd
 	 */
 	public String getProdGrdCd() {
-		return this.prodGrdCd;
+		return prodGrdCd;
 	}
 
 	/**
@@ -533,7 +534,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the partParentClsfCd
 	 */
 	public String getPartParentClsfCd() {
-		return this.partParentClsfCd;
+		return partParentClsfCd;
 	}
 
 	/**
@@ -548,7 +549,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the filePath
 	 */
 	public String getFilePath() {
-		return this.filePath;
+		return filePath;
 	}
 
 	/**
@@ -563,7 +564,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the fileNm
 	 */
 	public String getFileNm() {
-		return this.fileNm;
+		return fileNm;
 	}
 
 	/**
@@ -578,7 +579,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the paticpersCnt
 	 */
 	public Integer getPaticpersCnt() {
-		return this.paticpersCnt;
+		return paticpersCnt;
 	}
 
 	/**
@@ -593,7 +594,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prchsCnt
 	 */
 	public Integer getPrchsCnt() {
-		return this.prchsCnt;
+		return prchsCnt;
 	}
 
 	/**
@@ -608,7 +609,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the avgEvluScore
 	 */
 	public Double getAvgEvluScore() {
-		return this.avgEvluScore;
+		return avgEvluScore;
 	}
 
 	/**
@@ -623,7 +624,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the artist1Nm
 	 */
 	public String getArtist1Nm() {
-		return this.artist1Nm;
+		return artist1Nm;
 	}
 
 	/**
@@ -638,7 +639,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the artist2Nm
 	 */
 	public String getArtist2Nm() {
-		return this.artist2Nm;
+		return artist2Nm;
 	}
 
 	/**
@@ -653,7 +654,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the artist3Nm
 	 */
 	public String getArtist3Nm() {
-		return this.artist3Nm;
+		return artist3Nm;
 	}
 
 	/**
@@ -665,7 +666,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
     public Long getFileSize() {
-        return this.fileSize;
+        return fileSize;
     }
 
     public void setFileSize(Long fileSize) {
@@ -676,7 +677,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the contentsTypeCd
 	 */
 	public String getContentsTypeCd() {
-		return this.contentsTypeCd;
+		return contentsTypeCd;
 	}
 
 	/**
@@ -691,7 +692,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the supportList
 	 */
 	public Map<String, Object> getSupportList() {
-		return this.supportList;
+		return supportList;
 	}
 
 	/**
@@ -706,7 +707,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the sellerMbrNo
 	 */
 	public String getSellerMbrNo() {
-		return this.sellerMbrNo;
+		return sellerMbrNo;
 	}
 
 	/**
@@ -721,7 +722,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the expoSellerEmail
 	 */
 	public String getExpoSellerEmail() {
-		return this.expoSellerEmail;
+		return expoSellerEmail;
 	}
 
 	/**
@@ -736,7 +737,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the expoSellerNm
 	 */
 	public String getExpoSellerNm() {
-		return this.expoSellerNm;
+		return expoSellerNm;
 	}
 
 	/**
@@ -751,7 +752,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the expoSellerTelNo
 	 */
 	public String getExpoSellerTelNo() {
-		return this.expoSellerTelNo;
+		return expoSellerTelNo;
 	}
 
 	/**
@@ -766,7 +767,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the subContentsId
 	 */
 	public String getSubContentsId() {
-		return this.subContentsId;
+		return subContentsId;
 	}
 
 	/**
@@ -781,7 +782,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the imagePath
 	 */
 	public String getImagePath() {
-		return this.imagePath;
+		return imagePath;
 	}
 
 	/**
@@ -796,7 +797,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the imageNm
 	 */
 	public String getImageNm() {
-		return this.imageNm;
+		return imageNm;
 	}
 
 	/**
@@ -811,7 +812,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the imageSize
 	 */
 	public Integer getImageSize() {
-		return this.imageSize;
+		return imageSize;
 	}
 
 	/**
@@ -826,7 +827,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the previewImagePath
 	 */
 	public String getPreviewImagePath() {
-		return this.previewImagePath;
+		return previewImagePath;
 	}
 
 	/**
@@ -841,7 +842,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the previewImageSize
 	 */
 	public Integer getPreviewImageSize() {
-		return this.previewImageSize;
+		return previewImageSize;
 	}
 
 	/**
@@ -856,7 +857,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the previewCurCnt
 	 */
 	public Integer getPreviewCurCnt() {
-		return this.previewCurCnt;
+		return previewCurCnt;
 	}
 
 	/**
@@ -871,7 +872,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the imageCode
 	 */
 	public String getImageCode() {
-		return this.imageCode;
+		return imageCode;
 	}
 
 	/**
@@ -886,7 +887,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the chnlProdId
 	 */
 	public String getChnlProdId() {
-		return this.chnlProdId;
+		return chnlProdId;
 	}
 
 	/**
@@ -901,7 +902,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the sysDate
 	 */
 	public String getSysDate() {
-		return this.sysDate;
+		return sysDate;
 	}
 
 	/**
@@ -916,7 +917,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the totalCount
 	 */
 	public Integer getTotalCount() {
-		return this.totalCount;
+		return totalCount;
 	}
 
 	/**
@@ -931,7 +932,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodClsfCd
 	 */
 	public String getProdClsfCd() {
-		return this.prodClsfCd;
+		return prodClsfCd;
 	}
 
 	/**
@@ -946,7 +947,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the platClsfCd
 	 */
 	public String getPlatClsfCd() {
-		return this.platClsfCd;
+		return platClsfCd;
 	}
 
 	/**
@@ -961,7 +962,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the purchaseId
 	 */
 	public String getPurchaseId() {
-		return this.purchaseId;
+		return purchaseId;
 	}
 
 	/**
@@ -976,7 +977,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the purchaseProdId
 	 */
 	public String getPurchaseProdId() {
-		return this.purchaseProdId;
+		return purchaseProdId;
 	}
 
 	/**
@@ -991,7 +992,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the purchaseDt
 	 */
 	public String getPurchaseDt() {
-		return this.purchaseDt;
+		return purchaseDt;
 	}
 
 	/**
@@ -1006,7 +1007,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the purchaseState
 	 */
 	public String getPurchaseState() {
-		return this.purchaseState;
+		return purchaseState;
 	}
 
 	/**
@@ -1021,7 +1022,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the purchaseDwldExprDt
 	 */
 	public String getPurchaseDwldExprDt() {
-		return this.purchaseDwldExprDt;
+		return purchaseDwldExprDt;
 	}
 
 	/**
@@ -1036,7 +1037,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the purchasePrice
 	 */
 	public Integer getPurchasePrice() {
-		return this.purchasePrice;
+		return purchasePrice;
 	}
 
 	/**
@@ -1051,7 +1052,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bpJoinFileNo
 	 */
 	public String getBpJoinFileNo() {
-		return this.bpJoinFileNo;
+		return bpJoinFileNo;
 	}
 
 	/**
@@ -1066,7 +1067,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bpJoinFileType
 	 */
 	public String getBpJoinFileType() {
-		return this.bpJoinFileType;
+		return bpJoinFileType;
 	}
 
 	/**
@@ -1081,7 +1082,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the expiredDate
 	 */
 	public String getExpiredDate() {
-		return this.expiredDate;
+		return expiredDate;
 	}
 
 	/**
@@ -1096,7 +1097,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodChrg
 	 */
 	public String getProdChrg() {
-		return this.prodChrg;
+		return prodChrg;
 	}
 
 	/**
@@ -1111,7 +1112,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the useExprDt
 	 */
 	public String getUseExprDt() {
-		return this.useExprDt;
+		return useExprDt;
 	}
 
 	/**
@@ -1126,7 +1127,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dwldExprDt
 	 */
 	public String getDwldExprDt() {
-		return this.dwldExprDt;
+		return dwldExprDt;
 	}
 
 	/**
@@ -1141,7 +1142,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the deviceKey
 	 */
 	public String getDeviceKey() {
-		return this.deviceKey;
+		return deviceKey;
 	}
 
 	/**
@@ -1156,7 +1157,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the deviceType
 	 */
 	public String getDeviceType() {
-		return this.deviceType;
+		return deviceType;
 	}
 
 	/**
@@ -1171,7 +1172,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the deviceSubKey
 	 */
 	public String getDeviceSubKey() {
-		return this.deviceSubKey;
+		return deviceSubKey;
 	}
 
 	/**
@@ -1186,7 +1187,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the userKey
 	 */
 	public String getUserKey() {
-		return this.userKey;
+		return userKey;
 	}
 
 	/**
@@ -1201,7 +1202,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the company
 	 */
 	public String getCompany() {
-		return this.company;
+		return company;
 	}
 
 	/**
@@ -1216,7 +1217,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the cid
 	 */
 	public String getCid() {
-		return this.cid;
+		return cid;
 	}
 
 	/**
@@ -1231,7 +1232,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the curCount
 	 */
 	public Integer getCurCount() {
-		return this.curCount;
+		return curCount;
 	}
 
 	/**
@@ -1246,7 +1247,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the aid
 	 */
 	public String getAid() {
-		return this.aid;
+		return aid;
 	}
 
 	/**
@@ -1261,7 +1262,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the drmYn
 	 */
 	public String getDrmYn() {
-		return this.drmYn;
+		return drmYn;
 	}
 
 	/**
@@ -1276,7 +1277,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodVer
 	 */
 	public String getProdVer() {
-		return this.prodVer;
+		return prodVer;
 	}
 
 	/**
@@ -1291,7 +1292,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the apkPkgNm
 	 */
 	public String getApkPkgNm() {
-		return this.apkPkgNm;
+		return apkPkgNm;
 	}
 
 	/**
@@ -1306,7 +1307,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the apkVer
 	 */
 	public String getApkVer() {
-		return this.apkVer;
+		return apkVer;
 	}
 
 	/**
@@ -1321,7 +1322,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the fakeYn
 	 */
 	public String getFakeYn() {
-		return this.fakeYn;
+		return fakeYn;
 	}
 
 	/**
@@ -1336,7 +1337,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the apkVerCd
 	 */
 	public String getApkVerCd() {
-		return this.apkVerCd;
+		return apkVerCd;
 	}
 
 	/**
@@ -1351,7 +1352,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the apkFileSize
 	 */
 	public Long getApkFileSize() {
-		return this.apkFileSize;
+		return apkFileSize;
 	}
 
 	/**
@@ -1366,7 +1367,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the seedProductId
 	 */
 	public String getSeedProductId() {
-		return this.seedProductId;
+		return seedProductId;
 	}
 
 	/**
@@ -1381,7 +1382,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the gameCentrId
 	 */
 	public String getGameCentrId() {
-		return this.gameCentrId;
+		return gameCentrId;
 	}
 
 	/**
@@ -1396,7 +1397,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the gameCentrVerCd
 	 */
 	public String getGameCentrVerCd() {
-		return this.gameCentrVerCd;
+		return gameCentrVerCd;
 	}
 
 	/**
@@ -1411,7 +1412,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the seedCaseRefCd
 	 */
 	public String getSeedCaseRefCd() {
-		return this.seedCaseRefCd;
+		return seedCaseRefCd;
 	}
 
 	/**
@@ -1426,7 +1427,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the supportedOs
 	 */
 	public String getSupportedOs() {
-		return this.supportedOs;
+		return supportedOs;
 	}
 
 	/**
@@ -1441,7 +1442,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the seedUseYn
 	 */
 	public String getSeedUseYn() {
-		return this.seedUseYn;
+		return seedUseYn;
 	}
 
 	/**
@@ -1456,7 +1457,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the packFee
 	 */
 	public String getPackFee() {
-		return this.packFee;
+		return packFee;
 	}
 
 	/**
@@ -1471,7 +1472,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the vmVer
 	 */
 	public String getVmVer() {
-		return this.vmVer;
+		return vmVer;
 	}
 
 	/**
@@ -1486,7 +1487,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the vodTitlNm
 	 */
 	public String getVodTitlNm() {
-		return this.vodTitlNm;
+		return vodTitlNm;
 	}
 
 	/**
@@ -1501,7 +1502,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the chapter
 	 */
 	public String getChapter() {
-		return this.chapter;
+		return chapter;
 	}
 
 	/**
@@ -1516,7 +1517,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the issueDay
 	 */
 	public String getIssueDay() {
-		return this.issueDay;
+		return issueDay;
 	}
 
 	/**
@@ -1531,7 +1532,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the chnlCompNm
 	 */
 	public String getChnlCompNm() {
-		return this.chnlCompNm;
+		return chnlCompNm;
 	}
 
 	/**
@@ -1546,7 +1547,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the agencyNm
 	 */
 	public String getAgencyNm() {
-		return this.agencyNm;
+		return agencyNm;
 	}
 
 	/**
@@ -1561,7 +1562,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the hdvYn
 	 */
 	public String getHdvYn() {
-		return this.hdvYn;
+		return hdvYn;
 	}
 
 	/**
@@ -1576,7 +1577,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dolbySprtYn
 	 */
 	public String getDolbySprtYn() {
-		return this.dolbySprtYn;
+		return dolbySprtYn;
 	}
 
 	/**
@@ -1591,7 +1592,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the epsdCnt
 	 */
 	public Integer getEpsdCnt() {
-		return this.epsdCnt;
+		return epsdCnt;
 	}
 
 	/**
@@ -1606,7 +1607,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the strmEpsdCnt
 	 */
 	public Integer getStrmEpsdCnt() {
-		return this.strmEpsdCnt;
+		return strmEpsdCnt;
 	}
 
 	/**
@@ -1621,7 +1622,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the supportStore
 	 */
 	public String getSupportStore() {
-		return this.supportStore;
+		return supportStore;
 	}
 
 	/**
@@ -1636,7 +1637,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the supportPlay
 	 */
 	public String getSupportPlay() {
-		return this.supportPlay;
+		return supportPlay;
 	}
 
 	/**
@@ -1651,7 +1652,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bookType
 	 */
 	public String getBookType() {
-		return this.bookType;
+		return bookType;
 	}
 
 	/**
@@ -1666,7 +1667,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bookCount
 	 */
 	public Integer getBookCount() {
-		return this.bookCount;
+		return bookCount;
 	}
 
 	/**
@@ -1681,7 +1682,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bookStatus
 	 */
 	public String getBookStatus() {
-		return this.bookStatus;
+		return bookStatus;
 	}
 
 	/**
@@ -1696,7 +1697,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bookClsfCd
 	 */
 	public String getBookClsfCd() {
-		return this.bookClsfCd;
+		return bookClsfCd;
 	}
 
 	/**
@@ -1711,7 +1712,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the comptYn
 	 */
 	public String getComptYn() {
-		return this.comptYn;
+		return comptYn;
 	}
 
 	/**
@@ -1726,7 +1727,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the storeProdId
 	 */
 	public String getStoreProdId() {
-		return this.storeProdId;
+		return storeProdId;
 	}
 
 	/**
@@ -1741,7 +1742,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the storeProdAmt
 	 */
 	public Integer getStoreProdAmt() {
-		return this.storeProdAmt;
+		return storeProdAmt;
 	}
 
 	/**
@@ -1756,7 +1757,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the storeProdNetAmt
 	 */
 	public Integer getStoreProdNetAmt() {
-		return this.storeProdNetAmt;
+		return storeProdNetAmt;
 	}
 
 	/**
@@ -1771,7 +1772,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the storeDrmYn
 	 */
 	public String getStoreDrmYn() {
-		return this.storeDrmYn;
+		return storeDrmYn;
 	}
 
 	/**
@@ -1786,7 +1787,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the storeProdStatusCd
 	 */
 	public String getStoreProdStatusCd() {
-		return this.storeProdStatusCd;
+		return storeProdStatusCd;
 	}
 
 	/**
@@ -1801,7 +1802,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the storeProdChrg
 	 */
 	public String getStoreProdChrg() {
-		return this.storeProdChrg;
+		return storeProdChrg;
 	}
 
 	/**
@@ -1816,7 +1817,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the storeUsePeriodUnitCd
 	 */
 	public String getStoreUsePeriodUnitCd() {
-		return this.storeUsePeriodUnitCd;
+		return storeUsePeriodUnitCd;
 	}
 
 	/**
@@ -1831,7 +1832,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the playProdId
 	 */
 	public String getPlayProdId() {
-		return this.playProdId;
+		return playProdId;
 	}
 
 	/**
@@ -1846,7 +1847,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the playProdAmt
 	 */
 	public Integer getPlayProdAmt() {
-		return this.playProdAmt;
+		return playProdAmt;
 	}
 
 	/**
@@ -1861,7 +1862,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the playProdNetAmt
 	 */
 	public Integer getPlayProdNetAmt() {
-		return this.playProdNetAmt;
+		return playProdNetAmt;
 	}
 
 	/**
@@ -1876,7 +1877,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the playDrmYn
 	 */
 	public String getPlayDrmYn() {
-		return this.playDrmYn;
+		return playDrmYn;
 	}
 
 	/**
@@ -1891,7 +1892,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the playProdStatusCd
 	 */
 	public String getPlayProdStatusCd() {
-		return this.playProdStatusCd;
+		return playProdStatusCd;
 	}
 
 	/**
@@ -1906,7 +1907,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the playProdChrg
 	 */
 	public String getPlayProdChrg() {
-		return this.playProdChrg;
+		return playProdChrg;
 	}
 
 	/**
@@ -1921,7 +1922,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the playUsePeriodUnitCd
 	 */
 	public String getPlayUsePeriodUnitCd() {
-		return this.playUsePeriodUnitCd;
+		return playUsePeriodUnitCd;
 	}
 
 	/**
@@ -1936,7 +1937,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the usePeriodUnitCd
 	 */
 	public String getUsePeriodUnitCd() {
-		return this.usePeriodUnitCd;
+		return usePeriodUnitCd;
 	}
 
 	/**
@@ -1951,7 +1952,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the usePeriod
 	 */
 	public String getUsePeriod() {
-		return this.usePeriod;
+		return usePeriod;
 	}
 
 	/**
@@ -1966,7 +1967,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the usePeriodNm
 	 */
 	public String getUsePeriodNm() {
-		return this.usePeriodNm;
+		return usePeriodNm;
 	}
 
 	/**
@@ -1981,7 +1982,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the ebookFilePath
 	 */
 	public String getEbookFilePath() {
-		return this.ebookFilePath;
+		return ebookFilePath;
 	}
 
 	/**
@@ -1996,7 +1997,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the ebookFileSize
 	 */
 	public Long getEbookFileSize() {
-		return this.ebookFileSize;
+		return ebookFileSize;
 	}
 
 	/**
@@ -2011,7 +2012,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the hdcpYn
 	 */
 	public String getHdcpYn() {
-		return this.hdcpYn;
+		return hdcpYn;
 	}
 
 	/**
@@ -2026,7 +2027,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the btvYn
 	 */
 	public String getBtvYn() {
-		return this.btvYn;
+		return btvYn;
 	}
 
 	/**
@@ -2041,7 +2042,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the epsdPlayTm
 	 */
 	public String getEpsdPlayTm() {
-		return this.epsdPlayTm;
+		return epsdPlayTm;
 	}
 
 	/**
@@ -2056,7 +2057,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the chapterUnit
 	 */
 	public String getChapterUnit() {
-		return this.chapterUnit;
+		return chapterUnit;
 	}
 
 	/**
@@ -2071,7 +2072,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the nmBtvCid
 	 */
 	public String getNmBtvCid() {
-		return this.nmBtvCid;
+		return nmBtvCid;
 	}
 
 	/**
@@ -2086,7 +2087,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the nmDpPicRatio
 	 */
 	public String getNmDpPicRatio() {
-		return this.nmDpPicRatio;
+		return nmDpPicRatio;
 	}
 
 	/**
@@ -2101,7 +2102,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the nmDpPixel
 	 */
 	public String getNmDpPixel() {
-		return this.nmDpPixel;
+		return nmDpPixel;
 	}
 
 	/**
@@ -2116,7 +2117,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the nmSubContsId
 	 */
 	public String getNmSubContsId() {
-		return this.nmSubContsId;
+		return nmSubContsId;
 	}
 
 	/**
@@ -2131,7 +2132,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the nmFileSize
 	 */
 	public String getNmFileSize() {
-		return this.nmFileSize;
+		return nmFileSize;
 	}
 
 	/**
@@ -2146,7 +2147,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the nmProdVer
 	 */
 	public String getNmProdVer() {
-		return this.nmProdVer;
+		return nmProdVer;
 	}
 
 	/**
@@ -2161,7 +2162,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the sdBtvCid
 	 */
 	public String getSdBtvCid() {
-		return this.sdBtvCid;
+		return sdBtvCid;
 	}
 
 	/**
@@ -2176,7 +2177,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the sdDpPicRatio
 	 */
 	public String getSdDpPicRatio() {
-		return this.sdDpPicRatio;
+		return sdDpPicRatio;
 	}
 
 	/**
@@ -2191,7 +2192,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the sdDpPixel
 	 */
 	public String getSdDpPixel() {
-		return this.sdDpPixel;
+		return sdDpPixel;
 	}
 
 	/**
@@ -2206,7 +2207,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the sdSubContsId
 	 */
 	public String getSdSubContsId() {
-		return this.sdSubContsId;
+		return sdSubContsId;
 	}
 
 	/**
@@ -2221,7 +2222,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the sdFileSize
 	 */
 	public String getSdFileSize() {
-		return this.sdFileSize;
+		return sdFileSize;
 	}
 
 	/**
@@ -2236,7 +2237,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the sdProdVer
 	 */
 	public String getSdProdVer() {
-		return this.sdProdVer;
+		return sdProdVer;
 	}
 
 	/**
@@ -2251,7 +2252,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the hdBtvCid
 	 */
 	public String getHdBtvCid() {
-		return this.hdBtvCid;
+		return hdBtvCid;
 	}
 
 	/**
@@ -2266,7 +2267,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the hdDpPicRatio
 	 */
 	public String getHdDpPicRatio() {
-		return this.hdDpPicRatio;
+		return hdDpPicRatio;
 	}
 
 	/**
@@ -2281,7 +2282,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the hdDpPixel
 	 */
 	public String getHdDpPixel() {
-		return this.hdDpPixel;
+		return hdDpPixel;
 	}
 
 	/**
@@ -2296,7 +2297,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the hdSubContsId
 	 */
 	public String getHdSubContsId() {
-		return this.hdSubContsId;
+		return hdSubContsId;
 	}
 
 	/**
@@ -2311,7 +2312,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the hdFileSize
 	 */
 	public String getHdFileSize() {
-		return this.hdFileSize;
+		return hdFileSize;
 	}
 
 	/**
@@ -2326,7 +2327,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the hdProdVer
 	 */
 	public String getHdProdVer() {
-		return this.hdProdVer;
+		return hdProdVer;
 	}
 
 	/**
@@ -2341,7 +2342,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dwldAreaLimtYn
 	 */
 	public String getDwldAreaLimtYn() {
-		return this.dwldAreaLimtYn;
+		return dwldAreaLimtYn;
 	}
 
 	/**
@@ -2356,7 +2357,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the strmNetworkCd
 	 */
 	public String getStrmNetworkCd() {
-		return this.strmNetworkCd;
+		return strmNetworkCd;
 	}
 
 	/**
@@ -2371,7 +2372,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dwldNetworkCd
 	 */
 	public String getDwldNetworkCd() {
-		return this.dwldNetworkCd;
+		return dwldNetworkCd;
 	}
 
 	/**
@@ -2386,7 +2387,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the nmFilePath
 	 */
 	public String getNmFilePath() {
-		return this.nmFilePath;
+		return nmFilePath;
 	}
 
 	/**
@@ -2401,7 +2402,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the sdFilePath
 	 */
 	public String getSdFilePath() {
-		return this.sdFilePath;
+		return sdFilePath;
 	}
 
 	/**
@@ -2416,7 +2417,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the hdFilePath
 	 */
 	public String getHdFilePath() {
-		return this.hdFilePath;
+		return hdFilePath;
 	}
 
 	/**
@@ -2431,7 +2432,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the chnlProdNm
 	 */
 	public String getChnlProdNm() {
-		return this.chnlProdNm;
+		return chnlProdNm;
 	}
 
 	/**
@@ -2446,7 +2447,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the genreCd
 	 */
 	public String getGenreCd() {
-		return this.genreCd;
+		return genreCd;
 	}
 
 	/**
@@ -2461,7 +2462,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the genreCd2
 	 */
 	public String getGenreCd2() {
-		return this.genreCd2;
+		return genreCd2;
 	}
 
 	/**
@@ -2476,7 +2477,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bookPageCnt
 	 */
 	public Integer getBookPageCnt() {
-		return this.bookPageCnt;
+		return bookPageCnt;
 	}
 
 	/**
@@ -2491,7 +2492,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the colorSprtYn
 	 */
 	public String getColorSprtYn() {
-		return this.colorSprtYn;
+		return colorSprtYn;
 	}
 
 	/**
@@ -2506,7 +2507,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the isbn
 	 */
 	public String getIsbn() {
-		return this.isbn;
+		return isbn;
 	}
 
 	/**
@@ -2521,7 +2522,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the mgzinCoverYn
 	 */
 	public String getMgzinCoverYn() {
-		return this.mgzinCoverYn;
+		return mgzinCoverYn;
 	}
 
 	/**
@@ -2536,7 +2537,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dlmImagePath
 	 */
 	public String getDlmImagePath() {
-		return this.dlmImagePath;
+		return dlmImagePath;
 	}
 
 	/**
@@ -2551,7 +2552,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the samplUrl
 	 */
 	public String getSamplUrl() {
-		return this.samplUrl;
+		return samplUrl;
 	}
 
 	/**
@@ -2566,7 +2567,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the scSamplUrl
 	 */
 	public String getScSamplUrl() {
-		return this.scSamplUrl;
+		return scSamplUrl;
 	}
 
 	/**
@@ -2581,7 +2582,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the mallCd
 	 */
 	public String getMallCd() {
-		return this.mallCd;
+		return mallCd;
 	}
 
 	/**
@@ -2596,7 +2597,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the iconYn
 	 */
 	public String getIconYn() {
-		return this.iconYn;
+		return iconYn;
 	}
 
 	/**
@@ -2611,7 +2612,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the updDt
 	 */
 	public Date getUpdDt() {
-		return this.updDt;
+		return updDt;
 	}
 
 	/**
@@ -2626,7 +2627,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the musicId
 	 */
 	public String getMusicId() {
-		return this.musicId;
+		return musicId;
 	}
 
 	/**
@@ -2641,7 +2642,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the rankChgCnt
 	 */
 	public String getRankChgCnt() {
-		return this.rankChgCnt;
+		return rankChgCnt;
 	}
 
 	/**
@@ -2656,7 +2657,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the mp3SprtYn
 	 */
 	public String getMp3SprtYn() {
-		return this.mp3SprtYn;
+		return mp3SprtYn;
 	}
 
 	/**
@@ -2671,7 +2672,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bellSprtYn
 	 */
 	public String getBellSprtYn() {
-		return this.bellSprtYn;
+		return bellSprtYn;
 	}
 
 	/**
@@ -2686,7 +2687,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the colorringSprtYn
 	 */
 	public String getColorringSprtYn() {
-		return this.colorringSprtYn;
+		return colorringSprtYn;
 	}
 
 	/**
@@ -2701,7 +2702,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the outsdContentsId
 	 */
 	public String getOutsdContentsId() {
-		return this.outsdContentsId;
+		return outsdContentsId;
 	}
 
 	/**
@@ -2716,7 +2717,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the fileSizeH
 	 */
 	public Long getFileSizeH() {
-		return this.fileSizeH;
+		return fileSizeH;
 	}
 
 	/**
@@ -2731,7 +2732,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the artistId
 	 */
 	public String getArtistId() {
-		return this.artistId;
+		return artistId;
 	}
 
 	/**
@@ -2746,7 +2747,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the artistNm
 	 */
 	public String getArtistNm() {
-		return this.artistNm;
+		return artistNm;
 	}
 
 	/**
@@ -2761,7 +2762,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the debutDay
 	 */
 	public String getDebutDay() {
-		return this.debutDay;
+		return debutDay;
 	}
 
 	/**
@@ -2776,7 +2777,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the debutMusicNm
 	 */
 	public String getDebutMusicNm() {
-		return this.debutMusicNm;
+		return debutMusicNm;
 	}
 
 	/**
@@ -2791,7 +2792,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the country
 	 */
 	public String getCountry() {
-		return this.country;
+		return country;
 	}
 
 	/**
@@ -2806,7 +2807,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dcRate
 	 */
 	public Double getDcRate() {
-		return this.dcRate;
+		return dcRate;
 	}
 
 	/**
@@ -2821,7 +2822,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dcAmt
 	 */
 	public String getDcAmt() {
-		return this.dcAmt;
+		return dcAmt;
 	}
 
 	/**
@@ -2836,7 +2837,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dlvProdYn
 	 */
 	public String getDlvProdYn() {
-		return this.dlvProdYn;
+		return dlvProdYn;
 	}
 
 	/**
@@ -2851,7 +2852,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dwldQty
 	 */
 	public String getDwldQty() {
-		return this.dwldQty;
+		return dwldQty;
 	}
 
 	/**
@@ -2866,7 +2867,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prchsQty
 	 */
 	public String getPrchsQty() {
-		return this.prchsQty;
+		return prchsQty;
 	}
 
 	/**
@@ -2881,7 +2882,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the expoOrd
 	 */
 	public String getExpoOrd() {
-		return this.expoOrd;
+		return expoOrd;
 	}
 
 	/**
@@ -2896,7 +2897,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the brandId
 	 */
 	public String getBrandId() {
-		return this.brandId;
+		return brandId;
 	}
 
 	/**
@@ -2911,7 +2912,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the brandNm
 	 */
 	public String getBrandNm() {
-		return this.brandNm;
+		return brandNm;
 	}
 
 	/**
@@ -2926,7 +2927,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the no
 	 */
 	public String getNo() {
-		return this.no;
+		return no;
 	}
 
 	/**
@@ -2941,7 +2942,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the newYn
 	 */
 	public String getNewYn() {
-		return this.newYn;
+		return newYn;
 	}
 
 	/**
@@ -2956,7 +2957,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the regDt
 	 */
 	public String getRegDt() {
-		return this.regDt;
+		return regDt;
 	}
 
 	/**
@@ -2971,7 +2972,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the applyStartDt
 	 */
 	public String getApplyStartDt() {
-		return this.applyStartDt;
+		return applyStartDt;
 	}
 
 	/**
@@ -2986,7 +2987,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the applyEndDt
 	 */
 	public String getApplyEndDt() {
-		return this.applyEndDt;
+		return applyEndDt;
 	}
 
 	/**
@@ -3001,7 +3002,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodCaseCd
 	 */
 	public String getProdCaseCd() {
-		return this.prodCaseCd;
+		return prodCaseCd;
 	}
 
 	/**
@@ -3016,7 +3017,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodNetAmt
 	 */
 	public Integer getProdNetAmt() {
-		return this.prodNetAmt;
+		return prodNetAmt;
 	}
 
 	/**
@@ -3031,7 +3032,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the catalogId
 	 */
 	public String getCatalogId() {
-		return this.catalogId;
+		return catalogId;
 	}
 
 	/**
@@ -3046,7 +3047,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the catalogNm
 	 */
 	public String getCatalogNm() {
-		return this.catalogNm;
+		return catalogNm;
 	}
 
 	/**
@@ -3061,7 +3062,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the specialSale
 	 */
 	public String getSpecialSale() {
-		return this.specialSale;
+		return specialSale;
 	}
 
 	/**
@@ -3076,7 +3077,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the soldOut
 	 */
 	public String getSoldOut() {
-		return this.soldOut;
+		return soldOut;
 	}
 
 	/**
@@ -3091,7 +3092,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the planId
 	 */
 	public String getPlanId() {
-		return this.planId;
+		return planId;
 	}
 
 	/**
@@ -3106,7 +3107,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the planNm
 	 */
 	public String getPlanNm() {
-		return this.planNm;
+		return planNm;
 	}
 
 	/**
@@ -3121,7 +3122,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the subTitlNm
 	 */
 	public String getSubTitlNm() {
-		return this.subTitlNm;
+		return subTitlNm;
 	}
 
 	/**
@@ -3136,7 +3137,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the planStartDt
 	 */
 	public String getPlanStartDt() {
-		return this.planStartDt;
+		return planStartDt;
 	}
 
 	/**
@@ -3151,7 +3152,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the planEndDt
 	 */
 	public String getPlanEndDt() {
-		return this.planEndDt;
+		return planEndDt;
 	}
 
 	/**
@@ -3166,7 +3167,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the przwnerAnnoDt
 	 */
 	public String getPrzwnerAnnoDt() {
-		return this.przwnerAnnoDt;
+		return przwnerAnnoDt;
 	}
 
 	/**
@@ -3181,7 +3182,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the planGiftNm
 	 */
 	public String getPlanGiftNm() {
-		return this.planGiftNm;
+		return planGiftNm;
 	}
 
 	/**
@@ -3196,7 +3197,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the allow
 	 */
 	public String getAllow() {
-		return this.allow;
+		return allow;
 	}
 
 	/**
@@ -3211,7 +3212,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the b2bProdYn
 	 */
 	public String getB2bProdYn() {
-		return this.b2bProdYn;
+		return b2bProdYn;
 	}
 
 	/**
@@ -3226,7 +3227,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the saleCnt
 	 */
 	public String getSaleCnt() {
-		return this.saleCnt;
+		return saleCnt;
 	}
 
 	/**
@@ -3241,7 +3242,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the mthMaxCnt
 	 */
 	public String getMthMaxCnt() {
-		return this.mthMaxCnt;
+		return mthMaxCnt;
 	}
 
 	/**
@@ -3256,7 +3257,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dlyMaxCnt
 	 */
 	public String getDlyMaxCnt() {
-		return this.dlyMaxCnt;
+		return dlyMaxCnt;
 	}
 
 	/**
@@ -3271,7 +3272,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the mthUsrMaxCnt
 	 */
 	public String getMthUsrMaxCnt() {
-		return this.mthUsrMaxCnt;
+		return mthUsrMaxCnt;
 	}
 
 	/**
@@ -3286,7 +3287,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dlyUsrMaxCnt
 	 */
 	public String getDlyUsrMaxCnt() {
-		return this.dlyUsrMaxCnt;
+		return dlyUsrMaxCnt;
 	}
 
 	/**
@@ -3301,7 +3302,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the eachMaxCnt
 	 */
 	public String getEachMaxCnt() {
-		return this.eachMaxCnt;
+		return eachMaxCnt;
 	}
 
 	/**
@@ -3316,7 +3317,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the usePlac
 	 */
 	public String getUsePlac() {
-		return this.usePlac;
+		return usePlac;
 	}
 
 	/**
@@ -3331,7 +3332,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the useLimtDesc
 	 */
 	public String getUseLimtDesc() {
-		return this.useLimtDesc;
+		return useLimtDesc;
 	}
 
 	/**
@@ -3346,7 +3347,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the noticeMatt
 	 */
 	public String getNoticeMatt() {
-		return this.noticeMatt;
+		return noticeMatt;
 	}
 
 	/**
@@ -3361,7 +3362,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prchsCancelDrbkReason
 	 */
 	public String getPrchsCancelDrbkReason() {
-		return this.prchsCancelDrbkReason;
+		return prchsCancelDrbkReason;
 	}
 
 	/**
@@ -3376,7 +3377,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the opt1Nm
 	 */
 	public String getOpt1Nm() {
-		return this.opt1Nm;
+		return opt1Nm;
 	}
 
 	/**
@@ -3391,7 +3392,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the optPdNm
 	 */
 	public String getOptPdNm() {
-		return this.optPdNm;
+		return optPdNm;
 	}
 
 	/**
@@ -3406,7 +3407,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the subYn
 	 */
 	public String getSubYn() {
-		return this.subYn;
+		return subYn;
 	}
 
 	/**
@@ -3421,7 +3422,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the couponCode
 	 */
 	public String getCouponCode() {
-		return this.couponCode;
+		return couponCode;
 	}
 
 	/**
@@ -3436,7 +3437,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the itemCode
 	 */
 	public String getItemCode() {
-		return this.itemCode;
+		return itemCode;
 	}
 
 	/**
@@ -3451,7 +3452,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the specialCouponId
 	 */
 	public String getSpecialCouponId() {
-		return this.specialCouponId;
+		return specialCouponId;
 	}
 
 	/**
@@ -3466,7 +3467,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the tagCd
 	 */
 	public String getTagCd() {
-		return this.tagCd;
+		return tagCd;
 	}
 
 	/**
@@ -3481,7 +3482,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the tagNm
 	 */
 	public String getTagNm() {
-		return this.tagNm;
+		return tagNm;
 	}
 
 	/**
@@ -3496,7 +3497,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the tagTypeCd
 	 */
 	public String getTagTypeCd() {
-		return this.tagTypeCd;
+		return tagTypeCd;
 	}
 
 	/**
@@ -3511,7 +3512,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodAlias
 	 */
 	public String getProdAlias() {
-		return this.prodAlias;
+		return prodAlias;
 	}
 
 	/**
@@ -3526,7 +3527,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the cmpxProdClsfCd
 	 */
 	public String getCmpxProdClsfCd() {
-		return this.cmpxProdClsfCd;
+		return cmpxProdClsfCd;
 	}
 
 	/**
@@ -3541,7 +3542,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the autoApprYn
 	 */
 	public String getAutoApprYn() {
-		return this.autoApprYn;
+		return autoApprYn;
 	}
 
 	/**
@@ -3556,7 +3557,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the maxSaleCnt
 	 */
 	public String getMaxSaleCnt() {
-		return this.maxSaleCnt;
+		return maxSaleCnt;
 	}
 
 	/**
@@ -3571,7 +3572,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the salePocCd
 	 */
 	public String getSalePocCd() {
-		return this.salePocCd;
+		return salePocCd;
 	}
 
 	/**
@@ -3586,7 +3587,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dupPrchsLimtYn
 	 */
 	public String getDupPrchsLimtYn() {
-		return this.dupPrchsLimtYn;
+		return dupPrchsLimtYn;
 	}
 
 	/**
@@ -3601,7 +3602,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bannerFilePath
 	 */
 	public String getBannerFilePath() {
-		return this.bannerFilePath;
+		return bannerFilePath;
 	}
 
 	/**
@@ -3616,7 +3617,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the thumbnailFilePath
 	 */
 	public String getThumbnailFilePath() {
-		return this.thumbnailFilePath;
+		return thumbnailFilePath;
 	}
 
 	/**
@@ -3631,7 +3632,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodIntrDscr
 	 */
 	public String getProdIntrDscr() {
-		return this.prodIntrDscr;
+		return prodIntrDscr;
 	}
 
 	/**
@@ -3646,7 +3647,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the prodStatusCd
 	 */
 	public String getProdStatusCd() {
-		return this.prodStatusCd;
+		return prodStatusCd;
 	}
 
 	/**
@@ -3661,7 +3662,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the cashAmt
 	 */
 	public Integer getCashAmt() {
-		return this.cashAmt;
+		return cashAmt;
 	}
 
 	/**
@@ -3676,7 +3677,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bnsCashAmtClsfCd
 	 */
 	public String getBnsCashAmtClsfCd() {
-		return this.bnsCashAmtClsfCd;
+		return bnsCashAmtClsfCd;
 	}
 
 	/**
@@ -3691,7 +3692,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bnsCashAmt
 	 */
 	public Integer getBnsCashAmt() {
-		return this.bnsCashAmt;
+		return bnsCashAmt;
 	}
 
 	/**
@@ -3706,7 +3707,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bnsCashRatio
 	 */
 	public Double getBnsCashRatio() {
-		return this.bnsCashRatio;
+		return bnsCashRatio;
 	}
 
 	/**
@@ -3721,7 +3722,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bnsUsePeriodUnitCd
 	 */
 	public String getBnsUsePeriodUnitCd() {
-		return this.bnsUsePeriodUnitCd;
+		return bnsUsePeriodUnitCd;
 	}
 
 	/**
@@ -3736,7 +3737,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the bnsUsePeriod
 	 */
 	public String getBnsUsePeriod() {
-		return this.bnsUsePeriod;
+		return bnsUsePeriod;
 	}
 
 	/**
@@ -3751,7 +3752,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the opt2Nm
 	 */
 	public String getOpt2Nm() {
-		return this.opt2Nm;
+		return opt2Nm;
 	}
 
 	/**
@@ -3766,7 +3767,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the expoDt
 	 */
 	public String getExpoDt() {
-		return this.expoDt;
+		return expoDt;
 	}
 
 	/**
@@ -3781,7 +3782,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the expoStartDt
 	 */
 	public String getExpoStartDt() {
-		return this.expoStartDt;
+		return expoStartDt;
 	}
 
 	/**
@@ -3796,7 +3797,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the expoEndDt
 	 */
 	public String getExpoEndDt() {
-		return this.expoEndDt;
+		return expoEndDt;
 	}
 
 	/**
@@ -3811,7 +3812,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the oneSeq
 	 */
 	public String getOneSeq() {
-		return this.oneSeq;
+		return oneSeq;
 	}
 
 	/**
@@ -3826,7 +3827,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the partChrgmonyAppYn
 	 */
 	public String getPartChrgmonyAppYn() {
-		return this.partChrgmonyAppYn;
+		return partChrgmonyAppYn;
 	}
 
 	/**
@@ -3841,7 +3842,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the freeItemAmt
 	 */
 	public Integer getFreeItemAmt() {
-		return this.freeItemAmt;
+		return freeItemAmt;
 	}
 
 	/**
@@ -3856,7 +3857,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the deviceModelCd
 	 */
 	public String getDeviceModelCd() {
-		return this.deviceModelCd;
+		return deviceModelCd;
 	}
 
 	/**
@@ -3871,7 +3872,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the deviceModelNm
 	 */
 	public String getDeviceModelNm() {
-		return this.deviceModelNm;
+		return deviceModelNm;
 	}
 
 	/**
@@ -3886,7 +3887,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the mnftCompCd
 	 */
 	public String getMnftCompCd() {
-		return this.mnftCompCd;
+		return mnftCompCd;
 	}
 
 	/**
@@ -3901,7 +3902,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the mnftCompNm
 	 */
 	public String getMnftCompNm() {
-		return this.mnftCompNm;
+		return mnftCompNm;
 	}
 
 	/**
@@ -3916,7 +3917,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the listImagePath
 	 */
 	public String getListImagePath() {
-		return this.listImagePath;
+		return listImagePath;
 	}
 
 	/**
@@ -3931,7 +3932,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the dtlImagePath
 	 */
 	public String getDtlImagePath() {
-		return this.dtlImagePath;
+		return dtlImagePath;
 	}
 
 	/**
@@ -3946,7 +3947,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the uaCd
 	 */
 	public String getUaCd() {
-		return this.uaCd;
+		return uaCd;
 	}
 
 	/**
@@ -3961,7 +3962,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the tinyUrl
 	 */
 	public String getTinyUrl() {
-		return this.tinyUrl;
+		return tinyUrl;
 	}
 
 	/**
@@ -3976,7 +3977,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the webUrl
 	 */
 	public String getWebUrl() {
-		return this.webUrl;
+		return webUrl;
 	}
 
 	/**
@@ -3991,7 +3992,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the expoSellerId
 	 */
 	public String getExpoSellerId() {
-		return this.expoSellerId;
+		return expoSellerId;
 	}
 
 	/**
@@ -4006,7 +4007,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the platform
 	 */
 	public String getPlatform() {
-		return this.platform;
+		return platform;
 	}
 
 	/**
@@ -4021,7 +4022,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the osVersion
 	 */
 	public String getOsVersion() {
-		return this.osVersion;
+		return osVersion;
 	}
 
 	/**
@@ -4036,7 +4037,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the previewUrl
 	 */
 	public String getPreviewUrl() {
-		return this.previewUrl;
+		return previewUrl;
 	}
 
 	/**
@@ -4051,7 +4052,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the svcGrpCd
 	 */
 	public String getSvcGrpCd() {
-		return this.svcGrpCd;
+		return svcGrpCd;
 	}
 
 	/**
@@ -4066,7 +4067,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the svcGrpNm
 	 */
 	public String getSvcGrpNm() {
-		return this.svcGrpNm;
+		return svcGrpNm;
 	}
 
 	/**
@@ -4081,7 +4082,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the deviceSupport
 	 */
 	public String getDeviceSupport() {
-		return this.deviceSupport;
+		return deviceSupport;
 	}
 
 	/**
@@ -4096,7 +4097,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the brdcCompNm
 	 */
 	public String getBrdcCompNm() {
-		return this.brdcCompNm;
+		return brdcCompNm;
 	}
 
 	/**
@@ -4111,7 +4112,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the espdProdId
 	 */
 	public String getEspdProdId() {
-		return this.espdProdId;
+		return espdProdId;
 	}
 
 	/**
@@ -4126,7 +4127,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the chnlClsfCd
 	 */
 	public String getChnlClsfCd() {
-		return this.chnlClsfCd;
+		return chnlClsfCd;
 	}
 
 	/**
@@ -4141,7 +4142,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the rankChgClsfCd
 	 */
 	public String getRankChgClsfCd() {
-		return this.rankChgClsfCd;
+		return rankChgClsfCd;
 	}
 
 	/**
@@ -4156,7 +4157,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the unlmtAmt
 	 */
 	public Integer getUnlmtAmt() {
-		return this.unlmtAmt;
+		return unlmtAmt;
 	}
 
 	/**
@@ -4171,7 +4172,7 @@ public class MetaInfo extends CommonInfo {
 	 * @return the periodAmt
 	 */
 	public Integer getPeriodAmt() {
-		return this.periodAmt;
+		return periodAmt;
 	}
 
 	/**
@@ -4183,7 +4184,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
     public String getBnchProdId() {
-        return this.bnchProdId;
+        return bnchProdId;
     }
 
     public void setBnchProdId(String bnchProdId) {
@@ -4191,7 +4192,7 @@ public class MetaInfo extends CommonInfo {
     }
 
     public String getBnchDwldMsg() {
-        return this.bnchDwldMsg;
+        return bnchDwldMsg;
     }
 
     public void setBnchDwldMsg(String bnchDwldMsg) {
@@ -4199,7 +4200,7 @@ public class MetaInfo extends CommonInfo {
     }
 
     public MileageInfo getMileageInfo() {
-        return this.mileageInfo;
+        return mileageInfo;
     }
 
     public void setMileageInfo(MileageInfo mileageInfo) {
@@ -4207,7 +4208,7 @@ public class MetaInfo extends CommonInfo {
     }
 
 	public String getPurchaseHide() {
-		return this.purchaseHide;
+		return purchaseHide;
 	}
 
 	public void setPurchaseHide(String purchaseHide) {
@@ -4215,7 +4216,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getUpdateAlarm() {
-		return this.updateAlarm;
+		return updateAlarm;
 	}
 
 	public void setUpdateAlarm(String updateAlarm) {
@@ -4223,7 +4224,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getParentBunchId() {
-		return this.parentBunchId;
+		return parentBunchId;
 	}
 
 	public void setParentBunchId(String parentBunchId) {
@@ -4231,7 +4232,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getSystemId() {
-		return this.systemId;
+		return systemId;
 	}
 
 	public void setSystemId(String systemId) {
@@ -4239,7 +4240,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getDeltaType() {
-		return this.deltaType;
+		return deltaType;
 	}
 
 	public void setDeltaType(String deltaType) {
@@ -4247,7 +4248,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public Long getDeltaFileSize() {
-		return this.deltaFileSize;
+		return deltaFileSize;
 	}
 
 	public void setDeltaFileSize(Long deltaFileSize) {
@@ -4255,7 +4256,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getDeltaFilePath() {
-		return this.deltaFilePath;
+		return deltaFilePath;
 	}
 
 	public void setDeltaFilePath(String deltaFilePath) {
@@ -4265,7 +4266,7 @@ public class MetaInfo extends CommonInfo {
 	public String getFhdFileSize() {
 		return fhdFileSize;
 	}
-	
+
 	public void setFhdFileSize(String fhdFileSize) {
 		this.fhdFileSize = fhdFileSize;
 	}
@@ -4317,5 +4318,15 @@ public class MetaInfo extends CommonInfo {
 	public void setFhdDpPicRatio(String fhdDpPicRatio) {
 		this.fhdDpPicRatio = fhdDpPicRatio;
 	}
+
+	public String getVisitPathNm() {
+		return visitPathNm;
+	}
+
+	public void setVisitPathNm(String visitPathNm) {
+		this.visitPathNm = visitPathNm;
+	}
+
+
 
 }
