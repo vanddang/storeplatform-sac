@@ -160,21 +160,21 @@
                    FROM (
                           SELECT /*+ full(I) */
                                 B.CATALOG_ID 
-                               ,C.CATALOG_NM 
+                             --,C.CATALOG_NM                      --REMOVED BY 2014.10.10
                                ,A.BRAND_ID  
                                ,D.MENU_ID  
                                ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
-                               ,I.REG_DT   
+                             --,I.REG_DT                          --REMOVED BY 2014.10.10     
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
-                                 ,TB_DP_SHPG_CATALOG_DESC C
+                              -- ,TB_DP_SHPG_CATALOG_DESC C       --REMOVED BY 2014.10.10
                                  ,TB_DP_MENU_SHPG_MAPG D
-                                 ,TB_DP_MENU_CATEGORY E
-                                 ,TB_DP_MENU_CATEGORY_DESC F 
+                              -- ,TB_DP_MENU_CATEGORY E           --REMOVED BY 2014.10.10
+                              -- ,TB_DP_MENU_CATEGORY_DESC F      --REMOVED BY 2014.10.10
                                  ,TB_DP_PROD_CATALOG_MAPG G 
                                  ,TB_DP_PROD_RSHP H
                                  ,TB_DP_SHPG_PROD I
@@ -195,10 +195,10 @@
                                   )N
                         WHERE 1=1
                         AND A.BRAND_ID = B.BRAND_ID
-                        AND B.CATALOG_ID = C.CATALOG_ID
-                        AND C.CATALOG_ID = D.CATALOG_ID     
-                        AND D.MENU_ID = E.MENU_ID
-                        AND D.MENU_ID = F.MENU_ID
+                        AND B.CATALOG_ID = D.CATALOG_ID               --Modified by 2014.10.10
+                      --AND C.CATALOG_ID = D.CATALOG_ID               --REMOVED BY 2014.10.10  
+                      --AND D.MENU_ID = E.MENU_ID                     --REMOVED BY 2014.10.10
+                      --AND D.MENU_ID = F.MENU_ID                     --REMOVED BY 2014.10.10
                         AND B.CATALOG_ID = G.CATALOG_ID
                         AND G.PROD_ID = H.PROD_ID
                         AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
@@ -213,11 +213,10 @@
                          </if>                        
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                         AND NVL(B.CHNL_CNT, 0) > 0          
-                        AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
-                        AND F.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
+
                         AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
-                        AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+                      --AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */           --REMOVED BY 2014.10.10
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
@@ -234,17 +233,25 @@
                                         #{req.prodGradeCd}
                                       </foreach>                        
                         </if>      
-                        AND  EXISTS (
-                            SELECT 1 
+                        AND  EXISTS ( --Modified by 2014.10.10
+                                SELECT  /*+ UNNEST NL_SJ INDEX(H (DEVICE_MODEL_CD, PROD_ID)) */ 1  
                               FROM  TB_DP_SPRT_DEVICE DV  
                              WHERE PROD_ID = I.PROD_ID
-                               AND DV.DEVICE_MODEL_CD  = #{deviceHeader.model}  
-                             UNION ALL
-                            SELECT 1 
-                              FROM  TB_DP_SPRT_DEVICE DV  
-                             WHERE PROD_ID = I.PROD_ID                             
-                               AND DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo} 
-                            )                        
+                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
+                            )     
+                        AND EXISTS (                                                           --Added by 2014.10.10
+                            SELECT /*+ NL_SJ INDEX(C (CATALOG_ID,LANG_CD)) */ 1
+                              FROM TB_DP_SHPG_CATALOG_DESC C
+                            WHERE C.CATALOG_ID = B.CATALOG_ID
+                              AND C.LANG_CD= #{tenantHeader.langCd} )
+                        AND EXISTS (                                                           --Added by 2014.10.10
+                            SELECT /*+ NL_SJ */ 1
+                              FROM TB_DP_MENU_CATEGORY E,
+                                   TB_DP_MENU_CATEGORY_DESC F
+                            WHERE F.MENU_ID = D.MENU_ID
+                              AND F.MENU_ID = E.MENU_ID
+                              AND F.LANG_CD= #{tenantHeader.langCd}
+                              AND E.USE_YN='Y' )                                                                             
                    ) 
                  WHERE NO =1
                  ORDER BY DBMS_RANDOM.VALUE
@@ -278,7 +285,8 @@
                                ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
-                               ,H.PART_PROD_ID  
+                               ,H.PART_PROD_ID 
+                               <if test='req.orderedBy == "recent"'>
                                ,NVL((
                                     SELECT 
                                          MAX(SP.REG_DT)
@@ -289,8 +297,7 @@
                                       AND CM.PROD_ID = SP.PROD_ID
                                       AND CM.USE_YN ='Y'
                                       AND CM.BASE_YN ='Y'
-                               ),I.REG_DT) AS REG_DT                                   
-                               <if test='req.orderedBy == "recent"'>
+                               ),I.REG_DT) AS REG_DT
                                ,'1' EXPO_ORD
                                </if>
                                <if test='req.orderedBy == "popular"'>                 
@@ -391,7 +398,7 @@
                                       </foreach>                        
                         </if>   
                         AND  EXISTS (
-                            SELECT 1 
+                            SELECT /*+ UNNEST NL_SJ INDEX(H (DEVICE_MODEL_CD, PROD_ID)) */  1                  --ADDED BY 2014.10.13 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -800,7 +807,7 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT /*+ UNNEST NL_SJ INDEX(H (DEVICE_MODEL_CD, PROD_ID)) */ 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -987,7 +994,8 @@
                                ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
-                               ,H.PART_PROD_ID  
+                               ,H.PART_PROD_ID
+                               <if test='req.orderedBy == "recent"'>   
                                ,NVL((
                                     SELECT 
                                          MAX(SP.REG_DT)
@@ -999,7 +1007,6 @@
                                       AND CM.USE_YN ='Y'
                                       AND CM.BASE_YN ='Y'
                                ),I.REG_DT) AS REG_DT                                  
-                               <if test='req.orderedBy == "recent"'>                 
                                ,'1' EXPO_ORD
                                </if>
                                <if test='req.orderedBy == "popular"'>                 
@@ -1100,7 +1107,7 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT /*+ UNNEST NL_SJ INDEX(H (DEVICE_MODEL_CD, PROD_ID)) */ 1    --ADDED BY 2014.10.14
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -1309,7 +1316,7 @@
              FROM (
                   SELECT  * 
                    FROM (
-                          SELECT 
+                          SELECT /*+ LEADING(E F D C B A) USE_MERGE(M N) USE_NL(A B C D F G) INDEX(D (MENU_ID)) */ --ADDED BY 2014.10.14 
                                 B.CATALOG_ID 
                                ,C.CATALOG_NM 
                                ,A.BRAND_ID  
@@ -1317,7 +1324,8 @@
                                ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
-                               ,H.PART_PROD_ID  
+                               ,H.PART_PROD_ID
+                               <if test='req.orderedBy == "recent"'>  
                                ,NVL((
                                     SELECT 
                                          MAX(SP.REG_DT)
@@ -1329,7 +1337,6 @@
                                       AND CM.USE_YN ='Y'
                                       AND CM.BASE_YN ='Y'
                                ),I.REG_DT) AS REG_DT                                  
-                               <if test='req.orderedBy == "recent"'>                 
                                ,'1' EXPO_ORD
                                </if>
                                <if test='req.orderedBy == "popular"'>                 
@@ -1352,7 +1359,8 @@
                                  ,TB_DP_TENANT_PROD_PRICE L
                                  <if test='req.orderedBy == "popular"'>
                                 ,(
-                                    SELECT  TDLP.TENANT_ID
+                                    SELECT  /*+ NO_MERGE */ --ADDED BY 2014.10.14
+                                            TDLP.TENANT_ID
                                           , TDLP.LIST_ID
                                           , TDLP.MENU_ID
                                           , TDLP.PROD_ID
@@ -1375,7 +1383,7 @@
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
                                  </if>
-                                 ,(SELECT /*+ ORDERED */
+                                 ,(SELECT /*+ NO_MEGRE */ --ADDED BY 2014.10.14
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
@@ -1433,7 +1441,7 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT /*+ UNNEST NL_SJ INDEX(DV (DEVICE_MODEL_CD, PROD_ID)) */ 1   --ADDED BY 2014.10.14
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -1484,6 +1492,7 @@
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
+                               <if test='req.orderedBy == "recent"'>    
                                ,NVL((
                                     SELECT 
                                          MAX(SP.REG_DT)
@@ -1495,7 +1504,6 @@
                                       AND CM.USE_YN ='Y'
                                       AND CM.BASE_YN ='Y'
                                ),I.REG_DT) AS REG_DT                                  
-                               <if test='req.orderedBy == "recent"'>                 
                                ,'1' EXPO_ORD
                                </if>
                                <if test='req.orderedBy == "popular"'>                 
@@ -1600,7 +1608,7 @@
                                       </foreach>                        
                         </if>      
                         AND EXISTS (
-                            SELECT 1 
+                            SELECT /*+ UNNEST NL_SJ INDEX(H (DEVICE_MODEL_CD, PROD_ID)) */ 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
@@ -1901,7 +1909,10 @@
                             WHERE 1=1
                               AND (DV.DEVICE_MODEL_CD  = #{deviceHeader.model} OR DV.DEVICE_MODEL_CD = #{req.virtualDeviceModelNo}) 
                               AND PROD_ID = I.PROD_ID
-                    )                   
+                    )    
+                <if test="endRow != null">
+                AND K.PROD_STATUS_CD ='PD000403'    <!--  배송상품인 경우 에피소드ID 값이 안나오게 처리 2014.10.14 Jade 수정-->
+                </if>                                   
                      
            ) KK
            <if test="endRow != null">
