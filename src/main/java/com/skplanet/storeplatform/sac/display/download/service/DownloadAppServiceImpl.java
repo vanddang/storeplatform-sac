@@ -128,7 +128,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		// 파라미터 체크
 		if ("package".equals(filteredBy)) {
-			productId = (String) this.commonDAO
+			productId = (String) commonDAO
 					.queryForObject("Download.getProductIdForPackageName", downloadAppSacReq);
 			downloadAppSacReq.setProductId(productId);
 
@@ -141,18 +141,18 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			throw new StorePlatformException("SAC_DSP_0024");
 		}
 
-		Map chkSupportOs = (Map) this.commonDAO.queryForObject("Download.selectSupportOsVersion", downloadAppSacReq);
+		Map chkSupportOs = (Map) commonDAO.queryForObject("Download.selectSupportOsVersion", downloadAppSacReq);
 
 		if (chkSupportOs != null) {
 			if ("N".equals(chkSupportOs.get("VM_VER"))) {
 				throw new StorePlatformException("SAC_DSP_0023");
 			}
 		} else {
-			this.log.debug("About Check OS Provisioning Not Found Product Info");
+			log.debug("About Check OS Provisioning Not Found Product Info");
 			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
-		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
+		MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
 		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
@@ -172,26 +172,26 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		CommonResponse commonResponse = new CommonResponse();
 		Product product = new Product();
 		Component component = new Component();
-		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("[DownloadAppServiceImpl] productId : {}", productId);
-		this.log.debug("[DownloadAppServiceImpl] deviceKey : {}", deviceKey);
-		this.log.debug("[DownloadAppServiceImpl] userKey : {}", userKey);
-		this.log.debug("----------------------------------------------------------------");
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadAppServiceImpl] productId : {}", productId);
+		log.debug("[DownloadAppServiceImpl] deviceKey : {}", deviceKey);
+		log.debug("[DownloadAppServiceImpl] userKey : {}", userKey);
+		log.debug("----------------------------------------------------------------");
 
 		// 다운로드 앱 상품 조회
-		MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadAppInfo", downloadAppSacReq,
+		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadAppInfo", downloadAppSacReq,
 				MetaInfo.class);
 
         List<Encryption> encryptionList = new ArrayList<Encryption>();
 
 		if (metaInfo != null) {
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("[DownloadAppServiceImpl] scid : {}", metaInfo.getSubContentsId());
-			this.log.debug("----------------------------------------------------------------");
+			log.debug("----------------------------------------------------------------");
+			log.debug("[DownloadAppServiceImpl] scid : {}", metaInfo.getSubContentsId());
+			log.debug("----------------------------------------------------------------");
 			identifierList = new ArrayList<Identifier>();
 
-			this.doBunchProdProvisioning(downloadAppSacReq, metaInfo);
-			this.validateParentBunchProd(downloadAppSacReq, metaInfo);
+			doBunchProdProvisioning(downloadAppSacReq, metaInfo);
+			validateParentBunchProd(downloadAppSacReq, metaInfo);
 
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
@@ -222,43 +222,43 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					historyReq.setCount(1000);
 					historyReq.setProductList(productList);
 
-					this.log.debug("----------------------------------------------------------------");
-					this.log.debug("********************	구매 요청 파라미터	***************************");
-					this.log.debug("[DownloadAppServiceImpl] tenantId : {}", historyReq.getTenantId());
-					this.log.debug("[DownloadAppServiceImpl] userKey : {}", historyReq.getUserKey());
-					this.log.debug("[DownloadAppServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
-					this.log.debug("[DownloadAppServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-					this.log.debug("[DownloadAppServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
-					this.log.debug("[DownloadAppServiceImpl] startDt : {}", historyReq.getStartDt());
-					this.log.debug("[DownloadAppServiceImpl] endDt : {}", historyReq.getEndDt());
-					this.log.debug("[DownloadAppServiceImpl] offset : {}", historyReq.getOffset());
-					this.log.debug("[DownloadAppServiceImpl] count : {}", historyReq.getCount());
-					this.log.debug("[DownloadAppServiceImpl] prodId : {}", productList.get(0).getProdId());
-					this.log.debug("----------------------------------------------------------------");
+					log.debug("----------------------------------------------------------------");
+					log.debug("********************	구매 요청 파라미터	***************************");
+					log.debug("[DownloadAppServiceImpl] tenantId : {}", historyReq.getTenantId());
+					log.debug("[DownloadAppServiceImpl] userKey : {}", historyReq.getUserKey());
+					log.debug("[DownloadAppServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+					log.debug("[DownloadAppServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+					log.debug("[DownloadAppServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+					log.debug("[DownloadAppServiceImpl] startDt : {}", historyReq.getStartDt());
+					log.debug("[DownloadAppServiceImpl] endDt : {}", historyReq.getEndDt());
+					log.debug("[DownloadAppServiceImpl] offset : {}", historyReq.getOffset());
+					log.debug("[DownloadAppServiceImpl] count : {}", historyReq.getCount());
+					log.debug("[DownloadAppServiceImpl] prodId : {}", productList.get(0).getProdId());
+					log.debug("----------------------------------------------------------------");
 
 					// 구매내역 조회 실행
-					this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
+					log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
 					long start = System.currentTimeMillis();
-					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
-					this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
+					historyRes = historyInternalSCI.searchHistoryList(historyReq);
+					log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
 					long end = System.currentTimeMillis();
-					this.log.debug(
+					log.debug(
 							"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
 							(end - start));
 
 				} catch (Exception ex) {
 					purchaseFlag = false;
-					this.log.debug("[DownloadAppServiceImpl] Purchase History Search Exception : {}");
-					this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+					log.debug("[DownloadAppServiceImpl] Purchase History Search Exception : {}");
+					log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 					// throw new StorePlatformException("SAC_DSP_2001", ex);
 				}
 
-				this.log.debug("---------------------------------------------------------------------");
-				this.log.debug("[DownloadAppServiceImpl] purchaseFlag :{}", purchaseFlag);
-				this.log.debug("[DownloadAppServiceImpl] historyRes :{}", historyRes);
+				log.debug("---------------------------------------------------------------------");
+				log.debug("[DownloadAppServiceImpl] purchaseFlag :{}", purchaseFlag);
+				log.debug("[DownloadAppServiceImpl] historyRes :{}", historyRes);
 				if (purchaseFlag && historyRes != null) {
-					this.log.debug("[DownloadAppServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
-					this.log.debug("---------------------------------------------------------------------");
+					log.debug("[DownloadAppServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
+					log.debug("---------------------------------------------------------------------");
 
 					String prchsId = null; // 구매ID
 					String prchsDt = null; // 구매일시
@@ -297,7 +297,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							downloadAppSacReq.setDwldExprDt(dwldExprDt);
 							// prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
 							// downloadAppSacReq);
-							prchsState = (String) ((HashMap) this.commonDAO.queryForObject(
+							prchsState = (String) ((HashMap) commonDAO.queryForObject(
 									"Download.getDownloadPurchaseState", downloadAppSacReq)).get("PURCHASE_STATE");
 
 							// 구매상태 만료여부 확인
@@ -310,17 +310,17 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 								}
 							}
 
-							this.log.debug("----------------------------------------------------------------");
-							this.log.debug("[DownloadAppServiceImpl] prchsId : {}", prchsId);
-							this.log.debug("[DownloadAppServiceImpl] prchsDt : {}", prchsDt);
-							this.log.debug("[DownloadAppServiceImpl] useExprDt : {}", useExprDt);
-							this.log.debug("[DownloadAppServiceImpl] dwldStartDt : {}", dwldStartDt);
-							this.log.debug("[DownloadAppServiceImpl] dwldExprDt : {}", dwldExprDt);
-							this.log.debug("[DownloadAppServiceImpl] prchsCaseCd : {}", prchsCaseCd);
-							this.log.debug("[DownloadAppServiceImpl] prchsState : {}", prchsState);
-							this.log.debug("[DownloadAppServiceImpl] prchsProdId : {}", prchsProdId);
-							this.log.debug("[DownloadAppServiceImpl] prchsPrice : {}", puchsPrice);
-							this.log.debug("----------------------------------------------------------------");
+							log.debug("----------------------------------------------------------------");
+							log.debug("[DownloadAppServiceImpl] prchsId : {}", prchsId);
+							log.debug("[DownloadAppServiceImpl] prchsDt : {}", prchsDt);
+							log.debug("[DownloadAppServiceImpl] useExprDt : {}", useExprDt);
+							log.debug("[DownloadAppServiceImpl] dwldStartDt : {}", dwldStartDt);
+							log.debug("[DownloadAppServiceImpl] dwldExprDt : {}", dwldExprDt);
+							log.debug("[DownloadAppServiceImpl] prchsCaseCd : {}", prchsCaseCd);
+							log.debug("[DownloadAppServiceImpl] prchsState : {}", prchsState);
+							log.debug("[DownloadAppServiceImpl] prchsProdId : {}", prchsProdId);
+							log.debug("[DownloadAppServiceImpl] prchsPrice : {}", puchsPrice);
+							log.debug("----------------------------------------------------------------");
 
 							metaInfo.setPurchaseId(prchsId);
 							metaInfo.setPurchaseProdId(prchsProdId);
@@ -330,7 +330,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
 							metaInfo.setDrmYn(drmYn);
 							// 구매 정보
-							purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
+							purchaseList.add(commonGenerator.generatePurchase(metaInfo));
 
 							/************************************************************************************************
 							 * 구매 정보에 따른 암호화 시작
@@ -350,39 +350,39 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 									deviceReq.setUserKey(downloadAppSacReq.getUserKey());
 									deviceReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
 
-									this.log.debug("----------------------------------------------------------------");
-									this.log.debug("*******************회원 단말 정보 조회 파라미터*********************");
-									this.log.debug("[DownloadAppServiceImpl] userKey : {}", deviceReq.getUserKey());
-									this.log.debug("[DownloadAppServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
-									this.log.debug("----------------------------------------------------------------");
+									log.debug("----------------------------------------------------------------");
+									log.debug("*******************회원 단말 정보 조회 파라미터*********************");
+									log.debug("[DownloadAppServiceImpl] userKey : {}", deviceReq.getUserKey());
+									log.debug("[DownloadAppServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+									log.debug("----------------------------------------------------------------");
 
 									// 기기정보 조회
-									this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
+									log.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
 									long start = System.currentTimeMillis();
-									deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-									this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
+									deviceRes = deviceSCI.searchDeviceId(deviceReq);
+									log.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
 									long end = System.currentTimeMillis();
-									this.log.debug(
+									log.debug(
 											"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
 											(end - start));
 								} catch (Exception ex) {
 									memberFlag = false;
-									this.log.debug("[DownloadAppServiceImpl] SearchDevice Id Search Exception : {}");
-									this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
+									log.debug("[DownloadAppServiceImpl] SearchDevice Id Search Exception : {}");
+									log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
 									// throw new StorePlatformException("SAC_DSP_1001", ex);
 								}
 
-								this.log.debug("----------------------------------------------------------------");
-								this.log.debug("[DownloadAppServiceImpl] memberFlag	:	{}", memberFlag);
-								this.log.debug("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
-								this.log.debug("----------------------------------------------------------------");
+								log.debug("----------------------------------------------------------------");
+								log.debug("[DownloadAppServiceImpl] memberFlag	:	{}", memberFlag);
+								log.debug("[DownloadAppServiceImpl] deviceRes	:	{}", deviceRes);
+								log.debug("----------------------------------------------------------------");
 
 								if (memberFlag && deviceRes != null) {
 									// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
 									if ("Y".equals(deviceRes.getAuthYn())) {
 										deviceId = deviceRes.getDeviceId();
 										deviceTelecom = deviceRes.getDeviceTelecom();
-										deviceIdType = this.commonService.getDeviceIdType(deviceId);
+										deviceIdType = commonService.getDeviceIdType(deviceId);
 
 										metaInfo.setExpiredDate(reqExpireDate);
 										metaInfo.setUseExprDt(useExprDt);
@@ -404,24 +404,24 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 													UapsEcReq uapsEcReq = new UapsEcReq();
 													uapsEcReq.setDeviceId(deviceId);
 													uapsEcReq.setType("mdn");
-													this.log.debug("----------------------------------------------------------------");
-													this.log.debug("********************UAPS 정보 조회************************");
-													this.log.debug("[DownloadAppServiceImpl] DeviceId : {}",
+													log.debug("----------------------------------------------------------------");
+													log.debug("********************UAPS 정보 조회************************");
+													log.debug("[DownloadAppServiceImpl] DeviceId : {}",
 															uapsEcReq.getDeviceId());
-													this.log.debug("[DownloadAppServiceImpl] Type : {}",
+													log.debug("[DownloadAppServiceImpl] Type : {}",
 															uapsEcReq.getType());
-													this.log.debug("----------------------------------------------------------------");
-													this.log.debug("##### [SAC DSP LocalSCI] SAC EC Start : uapsSCI.getMappingInfo");
+													log.debug("----------------------------------------------------------------");
+													log.debug("##### [SAC DSP LocalSCI] SAC EC Start : uapsSCI.getMappingInfo");
 													long start = System.currentTimeMillis();
-													UserEcRes uapsEcRes = this.uapsSCI.getMappingInfo(uapsEcReq);
-													this.log.debug("##### [SAC DSP LocalSCI] SAC EC End : uapsSCI.getMappingInfo");
+													UserEcRes uapsEcRes = uapsSCI.getMappingInfo(uapsEcReq);
+													log.debug("##### [SAC DSP LocalSCI] SAC EC End : uapsSCI.getMappingInfo");
 													long end = System.currentTimeMillis();
-													this.log.debug(
+													log.debug(
 															"##### [SAC DSP LocalSCI] SAC Member uapsSCI.getMappingInfo takes {} ms",
 															(end - start));
-													this.log.debug("-------------------------------------------------------------");
+													log.debug("-------------------------------------------------------------");
 													for (int k = 0; k < uapsEcRes.getServiceCD().length; k++) {
-														this.log.debug("[DownloadAppServiceImpl] serviceCd	:{}",
+														log.debug("[DownloadAppServiceImpl] serviceCd	:{}",
 																uapsEcRes.getServiceCD()[k]);
 														if (DisplayConstants.DP_DEVICE_SERVICE_TYPE_TING
 																.equals(uapsEcRes.getServiceCD()[k])) {
@@ -430,18 +430,18 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 															tingMemberFlag = true;
 														}
 													}
-													this.log.debug("-------------------------------------------------------------");
+													log.debug("-------------------------------------------------------------");
 												} catch (Exception e) {
-													this.log.debug("[DownloadAppServiceImpl] :	PacketFee Is Not Half");
+													log.debug("[DownloadAppServiceImpl] :	PacketFee Is Not Half");
 												}
 											}
 										}
 
 										// 암호화 정보 (JSON)
-										this.genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
+										genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
 
 										metaInfo.setSystemId(tanantHeader.getSystemId());
-                                        Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
+                                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
                                         encryptionList.add(encryption);
 
 										// JSON 복호화
@@ -458,15 +458,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										// e.printStackTrace();
 										// }
 
-										this.log.debug("-------------------------------------------------------------");
-										this.log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
-										this.log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-										this.log.debug("-------------------------------------------------------------");
+										log.debug("-------------------------------------------------------------");
+										log.debug("[DownloadAppServiceImpl] token : {}", encryption.getToken());
+										log.debug("[DownloadAppServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+										log.debug("-------------------------------------------------------------");
 									} else {
-										this.log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
-										this.log.debug("##### [SAC DSP LocalSCI] deviceKey : {}",
+										log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
+										log.debug("##### [SAC DSP LocalSCI] deviceKey : {}",
 												deviceReq.getDeviceKey());
-										this.log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
+										log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
 												+ deviceRes.getDeviceId());
 									}
 								}
@@ -480,6 +480,18 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							}
 						}
 
+					} else {
+						/**
+						 * 구매내역이 존재하지 않는 경우 예외적으로 다운로드 허용 (ex, 앱가이드..)
+						 */
+						if ( isProdWithoutPrchsHis(tanantHeader.getTenantId(), productId) ) {
+							makeDefaultMetaWithoutPrchsHis(metaInfo, downloadAppSacReq, tanantHeader, reqExpireDate);
+
+							Encryption encryption = supportService.generateEncryption(metaInfo, productId);
+							encryptionList.add(encryption);
+							product.setDl(encryptionList);
+						}
+
 					}
 				}
 			}
@@ -488,7 +500,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			 * Seed App 정보
 			 ************************************************************************************************/
 
-			component.setIdentifierList(this.appInfoGenerator.generateComponentIdentifierList(metaInfo));
+			component.setIdentifierList(appInfoGenerator.generateComponentIdentifierList(metaInfo));
 			component.setGameCenterVerCd(StringUtils.defaultString(metaInfo.getGameCentrVerCd()));
 			component.setUseYn(metaInfo.getSeedUseYn());
 			component.setCaseRefCd(metaInfo.getSeedCaseRefCd());
@@ -498,21 +510,21 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			 * 상품 정보
 			 ************************************************************************************************/
 
-			identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+			identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
 					metaInfo.getProdId()));
-			identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+			identifierList.add(commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
 					metaInfo.getProdId()));
 			product.setIdentifierList(identifierList); // 상품 Id
-			product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
-			product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
+			product.setTitle(commonGenerator.generateTitle(metaInfo)); // 상품명
+			product.setSourceList(commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
 			List<Support> supportList = new ArrayList<Support>();
-			supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
+			supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM,
 					metaInfo.getDrmYn()));
 			product.setSupportList(supportList);
-			product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
-			product.setApp(this.appInfoGenerator.generateApp(metaInfo)); // App 상세정보
-			product.setRights(this.commonGenerator.generateRights(metaInfo)); // 권한
-			product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
+			product.setMenuList(commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
+			product.setApp(appInfoGenerator.generateApp(metaInfo)); // App 상세정보
+			product.setRights(commonGenerator.generateRights(metaInfo)); // 권한
+			product.setDistributor(commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 			if (tingMemberFlag == true) {
 				/**
 				 * ting 요금제 가입자가 어학/교육 카테고리를 다운받을때는
@@ -524,7 +536,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				product.setPacketFee(metaInfo.getProdClsfCd());
 			}
 			product.setPlatClsfCd(metaInfo.getPlatClsfCd());
-			product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품금액 정보
+			product.setPrice(commonGenerator.generatePrice(metaInfo)); // 상품금액 정보
 
 			commonResponse.setTotalCount(1);
 		} else {
@@ -536,7 +548,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		response.setProduct(product);
 
         sw.stop();
-        this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 		return response;
 	}
 
@@ -548,7 +560,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		downloadAppSacReq.setBnchProdId(metaInfo.getBnchProdId());
 
-		if ( (Integer)this.commonDAO.queryForObject("Download.getBunchIdProvisioning", downloadAppSacReq) > 0 ) return;
+		if ( (Integer)commonDAO.queryForObject("Download.getBunchIdProvisioning", downloadAppSacReq) > 0 ) return;
 
 		metaInfo.setBnchProdId(null);
 		metaInfo.setBnchDwldMsg(null);
@@ -558,7 +570,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		if (StringUtils.isBlank(downloadAppSacReq.getParentBunchId())) return;
 
-		if ( (Integer)this.commonDAO.queryForObject("Download.getValidateParentBunchId", downloadAppSacReq) <= 0 ) return;
+		if ( (Integer)commonDAO.queryForObject("Download.getValidateParentBunchId", downloadAppSacReq) <= 0 ) return;
 
 		metaInfo.setParentBunchId(downloadAppSacReq.getParentBunchId());
 	}
@@ -568,14 +580,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		SacService sacService = new SacService();
 		sacService.setServiceCd(OtherConstants.SAC_SERVICE_APPDELTA);
 
-		return this.sacServiceDataService.getServiceActive(sacService).isActive();
+		return sacServiceDataService.getServiceActive(sacService).isActive();
 	}
 
 	private void genenateMetaForAppDeltaUpdate(MetaInfo metaInfo, Integer preApkVer) {
 
 		if (preApkVer == null || preApkVer == 0) return;
 
-		if ( !this.isActiveAppDeltaUpdate() ) return;
+		if ( !isActiveAppDeltaUpdate() ) return;
 
 		AppDeltaUpdateParam param = new AppDeltaUpdateParam();
 		param.setProdId(metaInfo.getProdId());
@@ -583,7 +595,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		param.setApkVer(Integer.parseInt(metaInfo.getApkVer()));
 		param.setPreApkVer(preApkVer);
 
-		AppDeltaUpdate appDeltaUpdate = this.commonDAO.queryForObject("Download.getDownloadAppDeltaUpdate", param, AppDeltaUpdate.class);
+		AppDeltaUpdate appDeltaUpdate = commonDAO.queryForObject("Download.getDownloadAppDeltaUpdate", param, AppDeltaUpdate.class);
 		if( appDeltaUpdate == null ) return;
 
 		metaInfo.setDeltaType("delta");
@@ -591,6 +603,54 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		metaInfo.setDeltaFilePath(appDeltaUpdate.getDeltaFilePath());
 
 		return;
+	}
+
+	private void makeDeviceSubKey(MetaInfo metaInfo, final String userKey, final String deviceKey) {
+
+		SearchDeviceIdSacReq deviceReq = new SearchDeviceIdSacReq();
+		deviceReq.setUserKey(userKey);
+		deviceReq.setDeviceKey(deviceKey);
+
+		try {
+			SearchDeviceIdSacRes deviceRes = deviceSCI.searchDeviceId(deviceReq);
+
+			if ( deviceRes != null ) {
+				metaInfo.setDeviceType(commonService.getDeviceIdType(deviceRes.getDeviceId()));
+				metaInfo.setDeviceSubKey(deviceRes.getDeviceId());
+			}
+
+		} catch (Exception ex) {
+			// 예외 무시
+		}
+
+		return;
+	}
+
+	private void makeDefaultMetaWithoutPrchsHis(MetaInfo metaInfo, final DownloadAppSacReq sacReq, final TenantHeader header, final String expiredDate) {
+
+		metaInfo.setSystemId(header.getSystemId());
+		metaInfo.setExpiredDate(expiredDate);
+		metaInfo.setPurchaseProdId(sacReq.getProductId());
+		metaInfo.setUserKey(sacReq.getUserKey());
+		metaInfo.setUseExprDt("99991231235959");
+		metaInfo.setDeviceKey(sacReq.getDeviceKey());
+
+		makeDeviceSubKey(metaInfo, sacReq.getUserKey(), sacReq.getDeviceKey());
+
+		metaInfo.setPurchaseHide("N");
+		metaInfo.setUpdateAlarm("Y");
+	}
+
+	private boolean isProdWithoutPrchsHis(final String tenantId, final String prodId) {
+
+		Map<String, Object> req = new HashMap<String, Object>();
+		req.put("tenantId", tenantId);
+		req.put("prodId", prodId);
+
+		if ( commonDAO.queryForObject("Download.getDwldPolicy", req, Integer.class) <= 0 )
+			return false;
+		else
+			return true;
 	}
 }
 

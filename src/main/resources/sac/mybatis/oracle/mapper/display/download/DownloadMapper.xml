@@ -103,6 +103,16 @@
 		    AND PRE_APK_VER     = #{preApkVer}
     </select>
 	
+	<!-- 구매내역이 없는 상품이면서 다운로드 가능한 예외 상품 조회 -->
+    <select id="getDwldPolicy" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT /* DownloadMapper.getDwldPolicy, 다운로드 예외 상품명 조회 for DL (App), 양해엽, 2014-08-21 */
+            COUNT(PROD_ID)
+        FROM   TB_DP_DWLD_POLICY
+        WHERE   1=1
+            AND TENANT_ID   = #{tenantId}
+            AND PROD_ID     = #{prodId}
+            AND CLSF_CD     = 'DP012601' /* FOR D/L WHITE 상품 리스트 */ 
+    </select>
 	
     <!-- 상품정보요청(for download) App -->
     <select id="getDownloadAppInfo" parameterType="DownloadAppSacReq" resultType="MetaInfo">
