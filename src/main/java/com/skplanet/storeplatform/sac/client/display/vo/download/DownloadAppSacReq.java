@@ -21,6 +21,19 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class DownloadAppSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+
+	/* interface values */
+	@NotBlank
+	private String filteredBy; // 조회유형
+	private String productId; // 상품Id
+	private String packageName; // 패키지명
+	private String deviceKey; // device key
+	private String userKey; // 판매자 회원번호
+	private String parentBunchId;
+	private Integer apkVerCd;
+	private String visitPathNm; // 다운로드 요청 경로
+
+	/* internal values */
 	private String tenantId; // tenantId
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
@@ -29,20 +42,12 @@ public class DownloadAppSacReq extends CommonInfo {
 	private String osVersion; // os 버전
 	private String lcdSize; // lcd 크기
 	private String category; // 상품 유형
-
-	@NotBlank
-	private String filteredBy; // 조회유형
-	private String productId; // 상품Id
-	private String packageName; // 패키지명
-	private String deviceKey; // device key
-	private String userKey; // 판매자 회원번호
 	private String imageCd; // 이미지 코드
 	private String prchsDt; // 구매일시
 	private String dwldStartDt; // 다운로드 시작일시
 	private String dwldExprDt; // 다운로드 만료일시
-	private String parentBunchId;
 	private String bnchProdId;
-	private Integer apkVerCd;
+
 
 	/**
 	 *
@@ -53,7 +58,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getTenantId() {
-		return this.tenantId;
+		return tenantId;
 	}
 
 	/**
@@ -78,7 +83,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getSystemId() {
-		return this.systemId;
+		return systemId;
 	}
 
 	/**
@@ -103,7 +108,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getDeviceModelCd() {
-		return this.deviceModelCd;
+		return deviceModelCd;
 	}
 
 	/**
@@ -123,7 +128,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return the anyDeviceModelCd
 	 */
 	public String getAnyDeviceModelCd() {
-		return this.anyDeviceModelCd;
+		return anyDeviceModelCd;
 	}
 
 	/**
@@ -143,7 +148,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getLangCd() {
-		return this.langCd;
+		return langCd;
 	}
 
 	/**
@@ -163,7 +168,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return the lcdSize
 	 */
 	public String getLcdSize() {
-		return this.lcdSize;
+		return lcdSize;
 	}
 
 	/**
@@ -183,7 +188,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getOsVersion() {
-		return this.osVersion;
+		return osVersion;
 	}
 
 	/**
@@ -208,7 +213,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getCategory() {
-		return this.category;
+		return category;
 	}
 
 	/**
@@ -233,7 +238,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getFilteredBy() {
-		return this.filteredBy;
+		return filteredBy;
 	}
 
 	/**
@@ -258,7 +263,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getProductId() {
-		return this.productId;
+		return productId;
 	}
 
 	/**
@@ -283,7 +288,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getPackageName() {
-		return this.packageName;
+		return packageName;
 	}
 
 	/**
@@ -308,7 +313,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getDeviceKey() {
-		return this.deviceKey;
+		return deviceKey;
 	}
 
 	/**
@@ -333,7 +338,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return String
 	 */
 	public String getUserKey() {
-		return this.userKey;
+		return userKey;
 	}
 
 	/**
@@ -353,7 +358,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return the imgCd
 	 */
 	public String getImageCd() {
-		return this.imageCd;
+		return imageCd;
 	}
 
 	/**
@@ -368,7 +373,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return the prchsDt
 	 */
 	public String getPrchsDt() {
-		return this.prchsDt;
+		return prchsDt;
 	}
 
 	/**
@@ -383,7 +388,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return the dwldStartDt
 	 */
 	public String getDwldStartDt() {
-		return this.dwldStartDt;
+		return dwldStartDt;
 	}
 
 	/**
@@ -398,7 +403,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	 * @return the dwldExprDt
 	 */
 	public String getDwldExprDt() {
-		return this.dwldExprDt;
+		return dwldExprDt;
 	}
 
 	/**
@@ -410,7 +415,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	public String getParentBunchId() {
-		return this.parentBunchId;
+		return parentBunchId;
 	}
 
 	public void setParentBunchId(String parentBunchId) {
@@ -418,7 +423,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	public String getBnchProdId() {
-		return this.bnchProdId;
+		return bnchProdId;
 	}
 
 	public void setBnchProdId(String bnchProdId) {
@@ -426,12 +431,19 @@ public class DownloadAppSacReq extends CommonInfo {
 	}
 
 	public Integer getApkVerCd() {
-		return this.apkVerCd;
+		return apkVerCd;
 	}
 
 	public void setApkVerCd(Integer apkVerCd) {
 		this.apkVerCd = apkVerCd;
 	}
 
+	public String getVisitPathNm() {
+		return visitPathNm;
+	}
+
+	public void setVisitPathNm(String visitPathNm) {
+		this.visitPathNm = visitPathNm;
+	}
 
 }

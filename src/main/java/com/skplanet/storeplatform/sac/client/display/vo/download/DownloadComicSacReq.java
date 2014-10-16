@@ -15,40 +15,35 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Comic 상품 정보 조회(for download) Request Value Object.
- * 
+ *
  * Updated on : 2014. 02. 03. Updated by : 이태희.
  */
 public class DownloadComicSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	/* interface values */
 	@NotBlank
 	private String productId; // 상품ID
-
 	private String deviceKey; // 디바이스키
-
 	private String userKey; // 사용자고유키
+	private String visitPathNm; // 다운로드 요청 경로
 
+	/* internal values */
 	private String prchsDt; // 구매일시
-
 	private String dwldStartDt; // 다운로드 시작일시
-
 	private String dwldExprDt; // 다운로드 만료일시
-
 	private String tenantId; // 테넌트ID
-
 	private String langCd; // 언어코드
-
 	private String deviceModelCd; // 디바이스모델코드
-
 	private String imageCd; // 이미지코드
-
 	private String anyDeviceModelCd; // 가상 프로비저닝 단말모델코드
+
 
 	/**
 	 * @return the productId
 	 */
 	public String getProductId() {
-		return this.productId;
+		return productId;
 	}
 
 	/**
@@ -63,7 +58,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	 * @return the deviceKey
 	 */
 	public String getDeviceKey() {
-		return this.deviceKey;
+		return deviceKey;
 	}
 
 	/**
@@ -78,7 +73,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	 * @return the userKey
 	 */
 	public String getUserKey() {
-		return this.userKey;
+		return userKey;
 	}
 
 	/**
@@ -93,7 +88,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	 * @return the prchsDt
 	 */
 	public String getPrchsDt() {
-		return this.prchsDt;
+		return prchsDt;
 	}
 
 	/**
@@ -108,7 +103,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	 * @return the dwldStartDt
 	 */
 	public String getDwldStartDt() {
-		return this.dwldStartDt;
+		return dwldStartDt;
 	}
 
 	/**
@@ -123,7 +118,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	 * @return the dwldExprDt
 	 */
 	public String getDwldExprDt() {
-		return this.dwldExprDt;
+		return dwldExprDt;
 	}
 
 	/**
@@ -138,7 +133,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	 * @return the tenantId
 	 */
 	public String getTenantId() {
-		return this.tenantId;
+		return tenantId;
 	}
 
 	/**
@@ -153,7 +148,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	 * @return the langCd
 	 */
 	public String getLangCd() {
-		return this.langCd;
+		return langCd;
 	}
 
 	/**
@@ -168,7 +163,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	 * @return the deviceModelCd
 	 */
 	public String getDeviceModelCd() {
-		return this.deviceModelCd;
+		return deviceModelCd;
 	}
 
 	/**
@@ -183,7 +178,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	 * @return the imageCd
 	 */
 	public String getImageCd() {
-		return this.imageCd;
+		return imageCd;
 	}
 
 	/**
@@ -198,7 +193,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	 * @return the anyDeviceModelCd
 	 */
 	public String getAnyDeviceModelCd() {
-		return this.anyDeviceModelCd;
+		return anyDeviceModelCd;
 	}
 
 	/**
@@ -208,4 +203,14 @@ public class DownloadComicSacReq extends CommonInfo {
 	public void setAnyDeviceModelCd(String anyDeviceModelCd) {
 		this.anyDeviceModelCd = anyDeviceModelCd;
 	}
+
+	public String getVisitPathNm() {
+		return visitPathNm;
+	}
+
+	public void setVisitPathNm(String visitPathNm) {
+		this.visitPathNm = visitPathNm;
+	}
+
+
 }
