@@ -1606,14 +1606,16 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public boolean isEqualsLoginDevice(String deviceId, String reqVal, String dbVal, String equalsType) {
 
-		// DB에 값이 없을 경우 아래와 같이 처리
-		// 1. gmail : 불일치. 단, 단말에서 gmail 없이 올라온 경우 일치로 판별
-		// 2. 통신사, IMEI : 일치.
+		// 통신사 : DB값이 NSH, DB값이 없음, Request 값과 DB값이 일치 한경우 일치하다고 판단
+		// IMEI : DB값이 없음, Request 값과 DB값이 일치 한경우 일치하다고 판단
+		// GMAIL : Request 값과 DB값이 모두 없음, Request 값과 DB값이 일치 한경우 일치하다고 판단
+
 		boolean isEquals = false;
 
 		if (StringUtils.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
 
-			if (StringUtils.isBlank(dbVal) || StringUtils.equals(reqVal, dbVal)) {
+			if (StringUtils.equals(dbVal, MemberConstants.DEVICE_TELECOM_NSH) || StringUtils.isBlank(dbVal)
+					|| StringUtils.equals(reqVal, dbVal)) {
 				isEquals = true;
 			}
 
@@ -1627,6 +1629,50 @@ public class DeviceServiceImpl implements DeviceService {
 
 			if ((StringUtils.isBlank(reqVal) && StringUtils.isBlank(dbVal)) || StringUtils.equals(reqVal, dbVal)) {
 				isEquals = true;
+			} else if (StringUtils.isNotBlank(reqVal) && StringUtils.isNotBlank(dbVal)
+					&& (reqVal.indexOf(",") > -1 || dbVal.indexOf(",") > -1)) {
+
+				Integer gmailMaxCnt = 3;// 추출할 Gmail 카운트
+				String tempReqGmailArr[] = reqVal.split("\\,");
+				String tempDbGmailArr[] = dbVal.split("\\,");
+				ArrayList<String> reqGmailList = new ArrayList<String>();
+				ArrayList<String> dbGmailList = new ArrayList<String>();
+
+				// Request Gmail정보에서 gmail 계정만 순서대로 추출
+				for (int i = 0; i < tempReqGmailArr.length; i++) {
+					if (tempReqGmailArr[i].indexOf("@gmail.com") > -1) {
+						if (reqGmailList.size() == gmailMaxCnt) {
+							break;
+						}
+						reqGmailList.add(tempReqGmailArr[i]);
+					}
+				}
+
+				// DB Gmail 정보에서 gmail 계정만 순서대로 추출
+				for (int i = 0; i < tempDbGmailArr.length; i++) {
+					if (tempDbGmailArr[i].indexOf("@gmail.com") > -1) {
+						if (dbGmailList.size() == gmailMaxCnt) {
+							break;
+						}
+						dbGmailList.add(tempDbGmailArr[i]);
+					}
+				}
+
+				LOGGER.info("{} {} request mail list{}", deviceId, equalsType, reqGmailList.toString());
+				LOGGER.info("{} {} db mail list{}", deviceId, equalsType, reqGmailList.toString());
+
+				// 한개만 같으면 Gmail 비교 일치 처리
+				for (String reqGmail : reqGmailList) {
+					for (String dbGmail : dbGmailList) {
+						if (StringUtils.equals(reqGmail, dbGmail)) {
+							isEquals = true;
+							LOGGER.info("{} {} request : {}, db : {}", deviceId, equalsType, reqGmail, dbGmail);
+							break;
+						}
+					}
+					if (isEquals)
+						break;
+				}
 			}
 
 		}
