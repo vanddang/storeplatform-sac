@@ -754,7 +754,6 @@ public class MemberCommonComponent {
 			LOGGER.debug("## 미지원 단말 세팅.");
 			LOGGER.info("<getDeviceBaseInfo> NOT SUPPORT DEVICE. mdn : {}, model : {}", deviceId, model);
 			majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
-			majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
 			majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
 			majorDeviceInfo.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM); // 기기명
 
@@ -768,7 +767,6 @@ public class MemberCommonComponent {
 				LOGGER.debug("## 미지원 단말 세팅.");
 				LOGGER.info("<getDeviceBaseInfo> NOT SUPPORT DEVICE. mdn : {}, model : {}", deviceId, model);
 				majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
-				majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
 				majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
 				majorDeviceInfo.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM); // 기기명
 
@@ -777,15 +775,6 @@ public class MemberCommonComponent {
 				majorDeviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
 				majorDeviceInfo.setDeviceModelNo(deviceDTO.getDeviceModelCd()); // 기기 모델 번호
 				majorDeviceInfo.setDeviceNickName(deviceDTO.getModelNm()); // 기기명
-
-				/**
-				 * 미지원 단말 예외처리. (UA 코드 여부에 따라 이동통신사 코드 변경)
-				 */
-				if (StringUtils.equals(deviceDTO.getUaCd(), MemberConstants.NOT_SUPPORT_HP_UACODE)) {
-					majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
-				} else {
-					majorDeviceInfo.setDeviceTelecom(deviceTelecom); // 이동 통신사
-				}
 
 				/**
 				 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
@@ -807,6 +796,12 @@ public class MemberCommonComponent {
 				}
 			}
 
+		}
+
+		/** 통신사 정보 확인 */
+		majorDeviceInfo.setDeviceTelecom(deviceTelecom);
+		if (!this.isValidDeviceTelecomCode(deviceTelecom)) {
+			majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH);
 		}
 
 		/**
@@ -831,6 +826,33 @@ public class MemberCommonComponent {
 
 		return majorDeviceInfo;
 
+	}
+
+	/**
+	 * <pre>
+	 * 미지원 통신사 처리를 위해 체크하는 메서드. false가 리턴되는 통신사 코드는 NSH가 된다.
+	 * </pre>
+	 * 
+	 * @param deviceTelecomCode
+	 *            String
+	 * @return boolean
+	 */
+	public boolean isValidDeviceTelecomCode(String deviceTelecomCode) {
+		if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKT)) {
+			return true;
+		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_KT)) {
+			return true;
+		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGT)) {
+			return true;
+		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_NON)) {
+			return true;
+		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_IOS)) {
+			return true;
+		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKM)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
