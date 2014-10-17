@@ -1659,7 +1659,7 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 
 				LOGGER.info("{} {} request mail list{}", deviceId, equalsType, reqGmailList.toString());
-				LOGGER.info("{} {} db mail list{}", deviceId, equalsType, reqGmailList.toString());
+				LOGGER.info("{} {} db mail list{}", deviceId, equalsType, dbGmailList.toString());
 
 				// 한개만 같으면 Gmail 비교 일치 처리
 				for (String reqGmail : reqGmailList) {
