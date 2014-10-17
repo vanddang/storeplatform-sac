@@ -1630,7 +1630,8 @@ public class DeviceServiceImpl implements DeviceService {
 			if ((StringUtils.isBlank(reqVal) && StringUtils.isBlank(dbVal)) || StringUtils.equals(reqVal, dbVal)) {
 				isEquals = true;
 			} else if (StringUtils.isNotBlank(reqVal) && StringUtils.isNotBlank(dbVal)
-					&& (reqVal.indexOf(",") > -1 || dbVal.indexOf(",") > -1)) {
+					&& (reqVal.indexOf(",") > -1 || dbVal.indexOf(",") > -1)) { // 메일이 여러 건인경우 gmail만 3건씩 추출해서 한건이라도
+																				// 같으면 일치 처리
 
 				Integer gmailMaxCnt = 3;// 추출할 Gmail 카운트
 				String tempReqGmailArr[] = reqVal.split("\\,");
