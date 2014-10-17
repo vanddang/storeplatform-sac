@@ -737,10 +737,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// // 금액
 		// }
 
-		// 판매자 정보 조회 - 쇼핑상품 경우만 조회
-		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-			SellerMbrSac sellerInfo = this.searchSellerInfo(reservedDataMap.get("sellerMbrNo"));
+		SellerMbrSac sellerInfo = this.searchSellerInfo(reservedDataMap.get("sellerMbrNo"));
+		res.setNmSellerCompany(sellerInfo.getSellerCompany()); // 회사명
 
+		// 쇼핑상품 판매자 정보 세팅
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			res.setNmSeller(sellerInfo.getSellerNickName()); // 쇼핑 노출명
 			res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
 			res.setNoTelSeller(sellerInfo.getRepPhone()); // 대표전화번호
