@@ -180,16 +180,18 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
 					if (device == null) {
-						LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", mdn, uacd, svcMngNum);
+						LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}",
+								mdn, uacd, svcMngNum);
 						uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 						modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
-						deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
 						deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 					} else {
 						modelCd = device.getDeviceModelCd();
 						// 저장된 정보가 미지원단말인경우 디폴트 모델명을 닉네임으로 셋팅
-						if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-								&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+						if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(),
+								MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+								&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(),
+										MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 							deviceNickName = device.getModelNm();
 						}
 					}
@@ -252,17 +254,19 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
 					if (device == null) {
-						LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", mdn, uacd, svcMngNum);
+						LOGGER.info("<changeMobileNumber> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}",
+								mdn, uacd, svcMngNum);
 						uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 						modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
-						deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
 						deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 					} else {
 
 						modelCd = device.getDeviceModelCd();
 						// 저장된 정보가 미지원단말인경우 디폴트 모델명을 닉네임으로 셋팅
-						if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-								&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+						if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(),
+								MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+								&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(),
+										MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 							deviceNickName = device.getModelNm();
 						}
 						if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
@@ -281,7 +285,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							try {
 								policyResponse = this.userSCI.searchPolicyList(policyRequest);
 							} catch (StorePlatformException e) {
-								//ignore
+								// ignore
 							}
 
 							if (policyResponse != null) {
@@ -299,7 +303,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 										mdn, modelCd, uacd, svcMngNum);
 								uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 								modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
-								deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
 								deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 							}
 
@@ -380,8 +383,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				updPolicyValueReq.setNewApplyValue(mdn);
 				UpdatePolicyValueResponse updPolicyValueRes = this.userSCI.updatePolicyValue(updPolicyValueReq);
 
-				LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 policyKey : {},  policyValue : {}", updPolicyKeyRes.getUpdateCount(),
-						updPolicyValueRes.getUpdateCount());
+				LOGGER.info("::: 사용자제한정책 mdn 변경 카운트 policyKey : {},  policyValue : {}",
+						updPolicyKeyRes.getUpdateCount(), updPolicyValueRes.getUpdateCount());
 			}
 
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
@@ -410,7 +413,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				changeDeviceLog.setPreData(beMdn);
 
 				/* DCD 연동정보 저장 */
-				this.insertDcdInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn, IdpConstants.DCD_ENTRY_CHANGE_NUMBER);
+				this.insertDcdInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn,
+						IdpConstants.DCD_ENTRY_CHANGE_NUMBER);
 
 			} else if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_NO_DATA)) {
 				changeDeviceLog.setPreData("FAIL");
@@ -445,9 +449,10 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL_SAC_MEM_0002").result_code("SUCC").result_message("").insd_usermbr_no(fdsLogUserKey)
-								.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
-								.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
+						shuttle.log_id("TL_SAC_MEM_0002").result_code("SUCC").result_message("")
+								.insd_usermbr_no(fdsLogUserKey).insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn)
+								.device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum)
+								.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
 								.request_system_id(fdsSystemId).exception_log("");
 					}
 				});
@@ -455,9 +460,10 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id("TL_SAC_MEM_0002").result_code(fdsResult).result_message(fdsResultMsg).insd_usermbr_no(fdsLogUserKey)
-								.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn).device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
-								.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
+						shuttle.log_id("TL_SAC_MEM_0002").result_code(fdsResult).result_message(fdsResultMsg)
+								.insd_usermbr_no(fdsLogUserKey).insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn)
+								.device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum)
+								.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
 								.request_system_id(fdsSystemId).exception_log("");
 					}
 				});
@@ -506,8 +512,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 	 * @throws StorePlatformException
 	 *             Exception
 	 */
-	public void insertDcdInfo(CommonRequest commonRequest, String userKey, String deviceKey, String svcMngNum, String mdn, String entryClass)
-			throws StorePlatformException {
+	public void insertDcdInfo(CommonRequest commonRequest, String userKey, String deviceKey, String svcMngNum,
+			String mdn, String entryClass) throws StorePlatformException {
 
 		DCDInfo dcdInfo = new DCDInfo();
 
@@ -543,10 +549,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			createDcdReq.setDCDInfo(dcdInfo);
 			this.userSCI.createDCD(createDcdReq);
 
-		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE) || StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_JOIN)) { // DCD
-																																					// 등록
-																																					// 및
-																																					// 해지
+		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE)
+				|| StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_JOIN)) { // DCD
+																				 // 등록
+																				 // 및
+																				 // 해지
 
 			/* DCD 상품 조회 */
 			DcdSupportProductRes dcdSupportProductRes = this.mcic.srhDcdSupportProduct();
@@ -678,7 +685,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						mdn, null, uacd, svcMngNum);
 				uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 				modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
-				deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
 				deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 				v4SprtYn = "N"; // V4 무조건 해지
 
@@ -686,8 +692,10 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 				modelCd = device.getDeviceModelCd();
 				// 저장된 정보가 미지원단말인경우 디폴트 모델명을 닉네임으로 셋팅
-				if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-						&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+				if (StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceNickName(),
+						MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+						&& StringUtils.equals(schDeviceRes.getUserMbrDevice().getDeviceModelNo(),
+								MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 					deviceNickName = device.getModelNm();
 				}
 				v4SprtYn = device.getItoppV4SprtYn() == null ? "N" : device.getItoppV4SprtYn(); // DCD 연동 지원여부
@@ -712,7 +720,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					try {
 						policyResponse = this.userSCI.searchPolicyList(policyRequest);
 					} catch (StorePlatformException e) {
-						//ignore
+						// ignore
 					}
 
 					if (policyResponse != null) {
@@ -725,8 +733,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					}
 
 					if (StringUtil.equals(isTestModel, "Y")) {
-						LOGGER.info("<changeMobileID> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd,
-								svcMngNum);
+						LOGGER.info(
+								"<changeMobileID> 단말 테스터이고 타겟 단말 mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+								mdn, modelCd, uacd, svcMngNum);
 					} else {
 						LOGGER.info(
 								"<changeMobileID> NOT SUPPORT DEVICE.(타겟단말이고 단말테스터가 아닌경우- 미지원 휴대폰) mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
@@ -734,7 +743,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						// 일반 사용자인 경우 - 미지원 휴대폰으로
 						uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 						modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
-						deviceTelecom = MemberConstants.DEVICE_TELECOM_NSH;
 						deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
 						v4SprtYn = "N"; // V4 무조건 해지
 					}
@@ -753,8 +761,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 			userMbrDevice.setDeviceNickName(deviceNickName);
 			/*
-			 * 기기변경시 nativeId 가 변경되어 변동성 확인 API에서 지메일까지 불일치 하면 회원이 탈퇴처리 되므로
-			 * 기기변경프로비져닝에서 변경된 기기의 nativeId를 업데이트 한다.
+			 * 기기변경시 nativeId 가 변경되어 변동성 확인 API에서 지메일까지 불일치 하면 회원이 탈퇴처리 되므로 기기변경프로비져닝에서 변경된 기기의 nativeId를 업데이트 한다.
 			 */
 			userMbrDevice.setNativeID(this.deviceService.getIcasImei(mdn));
 			userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_MODEL_CHANGE); // 휴대기기 변경 유형코드 : 기기변경
@@ -777,39 +784,47 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 			/* 게임센터 연동 */
-			//			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			//			gameCenterSacReq.setUserKey(userKey);
-			//			gameCenterSacReq.setDeviceId(mdn);
-			//			gameCenterSacReq.setSystemId(systemId);
-			//			gameCenterSacReq.setTenantId(tenantId);
-			//			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-			//			this.deviceService.regGameCenterIF(gameCenterSacReq);
+			// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			// gameCenterSacReq.setUserKey(userKey);
+			// gameCenterSacReq.setDeviceId(mdn);
+			// gameCenterSacReq.setSystemId(systemId);
+			// gameCenterSacReq.setTenantId(tenantId);
+			// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+			// this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 			/* DCD 연동 */
 			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<changeMobileID> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
+				LOGGER.info("<changeMobileID> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, modelCd, uacd, svcMngNum);
 
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
+						IdpConstants.DCD_ENTRY_SECEDE);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<changeMobileID> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
+				LOGGER.info("<changeMobileID> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, modelCd, uacd, svcMngNum);
 
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_CHANGE_MODEL);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
+						IdpConstants.DCD_ENTRY_CHANGE_MODEL);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
 
-				LOGGER.info("<changeMobileID> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd, uacd, svcMngNum);
+				LOGGER.info("<changeMobileID> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, modelCd, uacd, svcMngNum);
 
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_JOIN);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
+						IdpConstants.DCD_ENTRY_JOIN);
 
 			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
 
-				LOGGER.info("<changeMobileID> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}", mdn, modelCd,
-						uacd, svcMngNum);
+				LOGGER.info(
+						"<changeMobileID> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
+						mdn, modelCd, uacd, svcMngNum);
 
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn, IdpConstants.DCD_ENTRY_SECEDE);
+				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
+						IdpConstants.DCD_ENTRY_SECEDE);
 
 			}
 
@@ -1060,8 +1075,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			}
 
-			LOGGER.info("{},결과:{},Type:{},svcRsnCd:{},changeCaseCode:{},gameCenterWorkCd:{}", mdn, resultLogStr, schUserRes.getUserMbr()
-					.getUserType(), svcRsnCd, changeCaseCode, gameCenterWorkCd);
+			LOGGER.info("{},결과:{},Type:{},svcRsnCd:{},changeCaseCode:{},gameCenterWorkCd:{}", mdn, resultLogStr,
+					schUserRes.getUserMbr().getUserType(), svcRsnCd, changeCaseCode, gameCenterWorkCd);
 
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
@@ -1357,8 +1372,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							Device device = this.mcc.getPhoneInfoByUacd(uaCd);
 							String deviceModelNo = null;
 							if (device == null) {
-								LOGGER.info("<executeAdjustWiredProfile> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", deviceId, uaCd,
-										svcMangNum);
+								LOGGER.info(
+										"<executeAdjustWiredProfile> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}",
+										deviceId, uaCd, svcMangNum);
 								deviceModelNo = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 								uaCd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 							} else {
@@ -1386,13 +1402,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 									modifyDevice.setDeviceID(deviceId);
 									modifyDevice.setDeviceModelNo(deviceModelNo);
 									if (device == null) {
-										modifyDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH);
 										modifyDevice.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
 									} else {
 										modifyDevice.setDeviceTelecom(this.mcc.convertDeviceTelecomCode(deviceTelecom));
 										// 저장된 정보가 미지원단말인경우 디폴트 모델명을 닉네임으로 셋팅
-										if (StringUtils.equals(userMbrDevice.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-												&& StringUtils.equals(userMbrDevice.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+										if (StringUtils.equals(userMbrDevice.getDeviceNickName(),
+												MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+												&& StringUtils.equals(userMbrDevice.getDeviceModelNo(),
+														MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 											modifyDevice.setDeviceNickName(device.getModelNm());
 										}
 									}
@@ -1483,8 +1500,9 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						Device device = this.mcc.getPhoneInfoByUacd(uaCd);
 						String deviceModelNo = null;
 						if (device == null) {
-							LOGGER.info("<executeAdjustWiredProfile> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}", deviceId, uaCd,
-									svcMangNum);
+							LOGGER.info(
+									"<executeAdjustWiredProfile> NOT SUPPORT DEVICE. mdn : {}, uacd : {}, svc_mng_num : {}",
+									deviceId, uaCd, svcMangNum);
 							uaCd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 							deviceModelNo = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 						} else {
@@ -1512,13 +1530,14 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 								modifyDevice.setDeviceID(deviceId);
 								modifyDevice.setDeviceModelNo(deviceModelNo);
 								if (device == null) {
-									modifyDevice.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH);
 									modifyDevice.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
 								} else {
 									modifyDevice.setDeviceTelecom(this.mcc.convertDeviceTelecomCode(deviceTelecom));
 									// 저장된 정보가 미지원단말인경우 디폴트 모델명을 닉네임으로 셋팅
-									if (StringUtils.equals(userMbrDevice.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-											&& StringUtils.equals(userMbrDevice.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+									if (StringUtils.equals(userMbrDevice.getDeviceNickName(),
+											MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+											&& StringUtils.equals(userMbrDevice.getDeviceModelNo(),
+													MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 										modifyDevice.setDeviceNickName(device.getModelNm());
 									}
 								}

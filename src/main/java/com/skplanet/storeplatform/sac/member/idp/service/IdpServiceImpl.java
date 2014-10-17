@@ -3016,7 +3016,6 @@ public class IdpServiceImpl implements IdpService {
 										getDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD);
 										getDeviceInfo.setModelNm(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
 										modelIdByMdnInfo = MemberConstants.NOT_SUPPORT_HP_UACODE;
-										telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_NSH;
 									} else {
 										getDeviceInfo.setDeviceModelNo(device.getDeviceModelCd());
 										// getDeviceInfo.setModelNm(device.getModelNm());
