@@ -428,11 +428,8 @@ public class LoginServiceImpl implements LoginService {
 							isVariability = "N";
 
 						} else { // GMAIL 일치한 경우
-							if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {// GMAIL 이
-																											 // 여러 건인
-																											 // 경우에
-																											 // GMAIL정보가
-																											 // 다르면 업데이트
+							// GMAIL 정보가 일치했으나, 여러 건인 경우 String 비교 시 다를 수 있다. 때문에 다른경우 Request GMAIL로 업데이트
+							if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
 								gmailupdateYn = "Y";
 							}
 						}
@@ -457,6 +454,11 @@ public class LoginServiceImpl implements LoginService {
 
 						isVariability = "N";
 
+					} else { // GMAIL 일치한 경우
+						// GMAIL 정보가 일치했으나, 여러 건인 경우 String 비교 시 다를 수 있다. 때문에 다른경우 Request GMAIL로 업데이트
+						if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
+							gmailupdateYn = "Y";
+						}
 					}
 
 				}
