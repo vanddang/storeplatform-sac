@@ -148,6 +148,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "",	MetaInfo.class);
 		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
+		String purchaseDt = downloadSystemDate.getPurchaseDt();
 
 
 		DownloadAppSacRes response = new DownloadAppSacRes();
@@ -433,7 +434,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						 * 예) 앱가이드, 스마트청구서, T 통화 도우미
 						 */
 						if ( isProdWithoutPrchsHis(tanantHeader.getTenantId(), productId) ) {
-							makeDefaultMetaWithoutPrchsHis(metaInfo, downloadAppSacReq, reqExpireDate);
+							makeDefaultMetaWithoutPrchsHis(metaInfo, downloadAppSacReq, purchaseDt, reqExpireDate);
 
 							Encryption encryption = supportService.generateEncryption(metaInfo, productId);
 							encryptionList.add(encryption);
@@ -575,10 +576,12 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		return;
 	}
 
-	private void makeDefaultMetaWithoutPrchsHis(MetaInfo metaInfo, final DownloadAppSacReq sacReq, final String expiredDate) {
+	private void makeDefaultMetaWithoutPrchsHis(MetaInfo metaInfo, final DownloadAppSacReq sacReq, final String purchaseDt, final String expiredDate) {
 
 		metaInfo.setExpiredDate(expiredDate);
+		metaInfo.setPurchaseId("FREE1000000000000000");
 		metaInfo.setPurchaseProdId(sacReq.getProductId());
+		metaInfo.setPurchaseDt(purchaseDt);
 		metaInfo.setUserKey(sacReq.getUserKey());
 		metaInfo.setUseExprDt("99991231235959");
 		metaInfo.setDeviceKey(sacReq.getDeviceKey());

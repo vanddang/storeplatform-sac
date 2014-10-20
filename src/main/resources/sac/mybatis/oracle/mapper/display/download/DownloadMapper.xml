@@ -595,6 +595,7 @@
         SELECT  /* DownloadMapper.selectDownloadSystemDate, for download 현재일시 및 요청만료일시 조회, 이태희/부르칸, 2014-03-17 */
                 '20991231235959' AS SYS_DATE
              ,  TO_CHAR(SYSDATE + 1 / 24, 'YYYYMMDDHH24MISS') AS EXPIRED_DATE
+             ,  TO_CHAR(SYSDATE - 1 / 24, 'YYYYMMDDHH24MISS') AS PURCHASE_DT
           FROM  DUAL
     </select>
     
