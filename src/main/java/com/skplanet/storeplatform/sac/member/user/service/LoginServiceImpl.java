@@ -427,6 +427,14 @@ public class LoginServiceImpl implements LoginService {
 
 							isVariability = "N";
 
+						} else { // GMAIL 일치한 경우
+							if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {// GMAIL 이
+																											 // 여러 건인
+																											 // 경우에
+																											 // GMAIL정보가
+																											 // 다르면 업데이트
+								gmailupdateYn = "Y";
+							}
 						}
 
 					} else { // nativeID가 같은경우
