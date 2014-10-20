@@ -24,4 +24,17 @@ public interface AppCodiService {
 	 */
 	public AppCodiListSacRes searchAppCodiList(AppCodiSacReq requestVO, SacRequestHeader requestHeader);
 
+	/**
+	 * <pre>
+	 * App Codi 조회 V2.
+	 * </pre>
+	 * 
+	 * @param AppCodiSacReq
+	 *            requestVO
+	 * @param SacRequestHeader
+	 *            requestHeader
+	 * @return AppCodiListRes
+	 */
+	public AppCodiListSacRes searchAppCodiListV2(AppCodiSacReq requestVO, SacRequestHeader requestHeader);
+
 }

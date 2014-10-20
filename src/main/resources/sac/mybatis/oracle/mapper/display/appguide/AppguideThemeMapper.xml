@@ -120,108 +120,117 @@
 
     <select id="getThemeRecommendList" parameterType="java.util.Map" resultType="Appguide">
         SELECT /* AppguideThemeMapper.xml, getThemeRecommendList, 앱가이드 테마추천 리스트, 윤주영/SK플래닛 , 2014-03-03 */
-               AA.*
-          FROM (
-                 SELECT COUNT(*) OVER() AS TOTAL_COUNT
-                      , ROWNUM AS RNUM
-                      , A.THEME_ID
-                      , A.THEME_NM
-                      , A.THEME_TYPE
-                      , A.IMG_PATH AS THEME_IMG
-                      , A.EXPO_ORD
-                      , A.EXPO_ORD_SUB
-                   FROM (
-                       SELECT DISTINCT A.LIST_ID THEME_ID ,
-						      A.LIST_NM THEME_NM ,
-						      DECODE(A.IMG_PATH, NULL, 2, 1) THEME_TYPE ,
-						      A.IMG_PATH ,
-						      ROW_NUMBER() OVER( PARTITION BY A.LIST_ID
-									       ORDER BY AP.EXPO_ORD_ALWAYS_YN, 
-											        AP.EXPO_ORD, 
-											        AP.EXPO_ORD_SUB, 
-											        AP.REG_DT DESC ) AS RN ,
-						      A.EXPO_ORD ,
-						      A.EXPO_ORD_SUB ,
-						      AP.EXPO_ORD_ALWAYS_YN ,
-						      A.REG_DT ,
-						      AP.PROD_ID
-						FROM  TB_DP_LIST A ,
-						      TB_DP_LIST_PROD AP ,                       
-						      TB_DP_PROD_RSHP PR ,
-						      TB_DP_MENU_CATEGORY_PROD_MAPG CP ,
-						      TB_DP_MENU_CATEGORY C ,
-						      TB_DP_PROD P /* EPSD */,
-						      TB_DP_TENANT_PROD TP ,
-						      TB_DP_PROD P2 /* CHNL */,
-						      TB_DP_TENANT_PROD TP2
-						WHERE SYSDATE BETWEEN NVL( A.EXPO_START_DT, SYSDATE ) AND NVL( A.EXPO_END_DT, SYSDATE )
-						  AND A.TENANT_ID = AP.TENANT_ID
-						  AND A.LIST_ID = AP.LIST_ID
-                          AND A.TENANT_ID = #{tenantHeader.tenantId}
-                       <if test="listId  != null">
-                          AND A.LIST_ID IN (<foreach collection="listId" item="listId" separator=",">#{listId}</foreach>)
-                       </if>
-                          AND A.LIST_GRP_CD = #{listGrpCd}
-						  AND A.EXPO_YN = 'Y'
-						  AND AP.EXPO_YN = 'Y'
-						  AND PR.PROD_ID = AP.PROD_ID /* CHNL */
-						  AND CP.PROD_ID = AP.PROD_ID
-						  AND P2.PROD_ID = PR.PROD_ID  /* CHNL */
-						  AND TP2.TENANT_ID = #{tenantHeader.tenantId}
-						  AND TP2.PROD_ID = P2.PROD_ID
-						  AND P.PROD_ID = PR.PART_PROD_ID  /* EPSD */
-						  AND TP.TENANT_ID = #{tenantHeader.tenantId}
-						  AND TP.PROD_ID = P.PROD_ID
-						  AND C.MENU_ID = CP.MENU_ID
-						  AND PR.PROD_RSHP_CD = 'DP010802' /* 채널-에피소드 상품 관계 */
-						  AND CP.BASE_YN = 'Y'
-						  AND CP.USE_YN = 'Y'
-						  AND C.USE_YN = 'Y'
-						  AND TP.PROD_STATUS_CD = 'PD000403'
-						  AND TP2.PROD_STATUS_CD = 'PD000403'
-						  AND P2.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
-						  AND P.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
-						  AND EXISTS (
-						              SELECT 'X' 
-						                FROM TB_DP_SPRT_DEVICE SH 
-						               WHERE SH.PROD_ID = P.PROD_ID
-						                 AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
-						             )
-	                      AND (CASE WHEN P2.TOP_MENU_ID = 'DP13' THEN
-	                                     CASE WHEN #{ebookSprtYn} = 'Y' THEN 1
-	                                          ELSE 0
-	                                     END
-	                                WHEN P2.TOP_MENU_ID = 'DP14' THEN
-	                                     CASE WHEN #{comicSprtYn} = 'Y' THEN 1
-	                                          ELSE 0
-	                                     END
-	                                WHEN P2.TOP_MENU_ID = 'DP15' THEN
-										 CASE WHEN #{sclShpgSprtYn} = 'Y' THEN 1 
-										      ELSE 0 
-										 END
-	                                WHEN P2.TOP_MENU_ID = 'DP16' THEN
-	                                     CASE WHEN P.META_CLSF_CD = 'CT25' THEN 
-	                                          CASE WHEN #{musicSprtYn} = 'Y' THEN 1 
-	                                               ELSE 0
-	                                          END
-	                                          ELSE 1
-	                                     END
-	                                WHEN P2.TOP_MENU_ID IN ('DP17', 'DP18') THEN
-	                                     CASE WHEN #{videoDrmSprtYn} = 'N' THEN
-	                                               CASE WHEN P.DRM_YN ='N' THEN 1
-	                                                    ELSE 0
-	                                               END
-	                                          ELSE 1
-	                                     END
-	                                ELSE 1
-	                          END) = 1
-                        ) A
-                  WHERE RN = 1
-                  ORDER BY A.EXPO_ORD_ALWAYS_YN DESC,
-                           A.EXPO_ORD, A.EXPO_ORD_SUB, A.REG_DT DESC
-               ) AA
-         WHERE RNUM BETWEEN #{START_ROW} AND #{END_ROW}
-         ORDER BY AA.EXPO_ORD ASC, AA.EXPO_ORD_SUB ASC, RNUM
+                       AA.*
+                  FROM (
+                         SELECT COUNT(*) OVER() AS TOTAL_COUNT
+                              , ROWNUM AS RNUM
+                              , A.THEME_ID
+                              , A.THEME_NM
+                              , A.THEME_TYPE
+                              , A.IMG_PATH AS THEME_IMG
+                              , A.EXPO_ORD
+                              , A.EXPO_ORD_SUB
+                           FROM (
+                               SELECT DISTINCT A.LIST_ID THEME_ID ,
+                          A.LIST_NM THEME_NM ,
+                          DECODE(A.IMG_PATH, NULL, 2, 1) THEME_TYPE ,
+                          A.IMG_PATH ,
+                          ROW_NUMBER() OVER( PARTITION BY A.LIST_ID
+                                       ORDER BY AP.EXPO_ORD_ALWAYS_YN, 
+                                            AP.EXPO_ORD, 
+                                            AP.EXPO_ORD_SUB, 
+                                            AP.REG_DT DESC ) AS RN ,
+                          A.EXPO_ORD ,
+                          A.EXPO_ORD_SUB ,
+                          AP.EXPO_ORD_ALWAYS_YN ,
+                          A.REG_DT ,
+                          AP.PROD_ID
+                    FROM  TB_DP_LIST A ,
+                          TB_DP_LIST_PROD AP ,                       
+                          TB_DP_PROD_RSHP PR ,
+                          --TB_DP_MENU_CATEGORY_PROD_MAPG CP ,        REMOVED BY 2014.10.13
+                          --TB_DP_MENU_CATEGORY C ,                   REMOVED BY 2014.10.13 
+                          TB_DP_PROD P /* EPSD */,
+                          TB_DP_TENANT_PROD TP ,
+                          TB_DP_PROD P2 /* CHNL */,
+                          TB_DP_TENANT_PROD TP2
+                    WHERE SYSDATE BETWEEN NVL( A.EXPO_START_DT, SYSDATE ) AND NVL( A.EXPO_END_DT, SYSDATE )
+                      AND A.TENANT_ID = AP.TENANT_ID
+                      AND A.LIST_ID = AP.LIST_ID
+                                  AND A.TENANT_ID = #{tenantHeader.tenantId}
+                               <if test="listId  != null">
+                                  AND A.LIST_ID IN (<foreach collection="listId" item="listId" separator=",">#{listId}</foreach>)
+                               </if>
+                                  AND A.LIST_GRP_CD = #{listGrpCd}
+                                  AND A.EXPO_YN = 'Y'
+                                  AND AP.EXPO_YN = 'Y'
+                                  AND PR.PROD_ID = AP.PROD_ID /* CHNL */
+                                  --AND CP.PROD_ID = AP.PROD_ID                   REMOVED BY 2014.10.13        
+                                  AND P2.PROD_ID = PR.PROD_ID  /* CHNL */
+                                  AND TP2.TENANT_ID = #{tenantHeader.tenantId}
+                                  AND TP2.PROD_ID = P2.PROD_ID
+                                  AND P.PROD_ID = PR.PART_PROD_ID  /* EPSD */
+                                  AND TP.TENANT_ID = #{tenantHeader.tenantId} 
+                                  AND TP.PROD_ID = P.PROD_ID
+                                  --AND C.MENU_ID = CP.MENU_ID                    REMOVED BY 2014.10.13
+                                  AND PR.PROD_RSHP_CD = 'DP010802' /* 채널-에피소드 상품 관계 */
+                                  --AND CP.BASE_YN = 'Y'                          REMOVED BY 2014.10.13    
+                                  --AND CP.USE_YN = 'Y'                           REMOVED BY 2014.10.13
+                                  --AND C.USE_YN = 'Y'                            REMOVED BY 2014.10.13  
+                                  AND TP.PROD_STATUS_CD = 'PD000403'
+                                  AND TP2.PROD_STATUS_CD = 'PD000403'
+                                  AND P2.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
+                                  AND P.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
+                                  AND EXISTS (
+                                              SELECT /*+ UNNEST NL_SJ INDEX(H (DEVICE_MODEL_CD, PROD_ID)) */ 'X'   -- ADDED BY 2014.10.13
+                                                FROM TB_DP_SPRT_DEVICE SH 
+                                               WHERE SH.PROD_ID = P.PROD_ID
+                                                 AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model}  OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel} )
+                                             )
+                                  AND EXISTS (                                        -- ADDED BY 2014.10.13
+                                              SELECT /*+ UNNEST NL_SJ */ 'X'
+                                                FROM TB_DP_MENU_CATEGORY_PROD_MAPG CP,
+                                                     TB_DP_MENU_CATEGORY C
+                                               WHERE CP.PROD_ID = AP.PROD_ID
+                                                 AND C.MENU_ID = CP.MENU_ID
+                                                 AND CP.BASE_YN = 'Y'
+                                                 AND CP.USE_YN = 'Y'
+                                                 AND C.USE_YN = 'Y' )
+                                  AND (CASE WHEN P2.TOP_MENU_ID = 'DP13' THEN
+                                                 CASE WHEN #{ebookSprtYn}  = 'Y' THEN 1
+                                                      ELSE 0
+                                                 END
+                                            WHEN P2.TOP_MENU_ID = 'DP14' THEN
+                                                 CASE WHEN #{comicSprtYn}  = 'Y' THEN 1
+                                                      ELSE 0
+                                                 END
+                                            WHEN P2.TOP_MENU_ID = 'DP15' THEN
+                                 CASE WHEN #{sclShpgSprtYn}  = 'Y' THEN 1 
+                                      ELSE 0 
+                                  END
+                                            WHEN P2.TOP_MENU_ID = 'DP16' THEN
+                                                 CASE WHEN P.META_CLSF_CD = 'CT25' THEN 
+                                                      CASE WHEN #{musicSprtYn}  = 'Y' THEN 1 
+                                                           ELSE 0
+                                                      END
+                                                      ELSE 1
+                                                 END
+                                            WHEN P2.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+                                                 CASE WHEN #{videoDrmSprtYn}  = 'N' THEN
+                                                           CASE WHEN P.DRM_YN ='N' THEN 1
+                                                                ELSE 0
+                                                           END
+                                                      ELSE 1
+                                                 END
+                                            ELSE 1
+                                      END) = 1
+                                ) A
+                          WHERE RN = 1
+                          ORDER BY A.EXPO_ORD_ALWAYS_YN DESC,
+                                   A.EXPO_ORD, A.EXPO_ORD_SUB, A.REG_DT DESC
+                       ) AA
+                 WHERE RNUM BETWEEN #{START_ROW}  AND #{END_ROW} 
+                 ORDER BY AA.EXPO_ORD ASC, AA.EXPO_ORD_SUB ASC, RNUM
     </select>
     
     <select id="getThemeRecommendMainList" parameterType="java.util.Map" resultType="java.lang.String">

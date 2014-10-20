@@ -87,36 +87,33 @@
     </select>
  
      <select id="getRelProdList" resultType="java.util.HashMap" parameterType="java.util.Map">
-		    SELECT /* IsfAppguideMapper.xml, getRelProdList, 앱가이드 연관 상품 조회, 윤주영/SK플래닛, 2014-02-06 */
-		           P.TOP_MENU_ID
-		         , CP.PROD_ID
-		         , PD.PROD_NM
-		         , TRIM(REPLACE((SELECT MENU_NM 
-		                          FROM TB_DP_MENU_CATEGORY_DESC 
-		                         WHERE MENU_ID = P.TOP_MENU_ID 
-		                           AND LANG_CD = #{tenantHeader.langCd}), 'TOP', '')) AS TOP_MENU_NM
-		         , DC.MENU_NM
-		      FROM TB_DP_PROD P
-		         , TB_DP_PROD_RSHP PR
-		         , TB_DP_MENU_CATEGORY_PROD_MAPG CP
-		         , TB_DP_MENU_CATEGORY C
-		         , TB_DP_PROD_DESC PD
-		         , TB_DP_MENU_CATEGORY_DESC DC
-		         , TB_DP_TENANT_PROD TP
-		     WHERE P.PROD_ID = PR.PROD_ID
-		       AND CP.PROD_ID = P.PROD_ID
-		       AND PD.PROD_ID = P.PROD_ID
-		       AND CP.MENU_ID = C.MENU_ID
-		       AND DC.MENU_ID = C.MENU_ID
-		       AND P.PROD_ID = TP.PROD_ID
-		       AND TP.TENANT_ID = #{tenantHeader.tenantId}
-		       AND DC.LANG_CD = #{tenantHeader.langCd}
-		       AND PR.PROD_RSHP_CD = 'DP010802' /* 채널-에피소드 상품 관계 */
-	      <if test="pidList  != null">
-	           AND PR.PART_PROD_ID IN (
-	              <foreach collection="pidList" item="pid" separator=",">#{pid}</foreach>
-	          )
-	      </if>
+        SELECT /* IsfAppguideMapper.xml, getRelProdList, 앱 가이드 연관 상품 목록 조회 , 윤주영/SK플래닛, 2014-02-06 */
+               P.TOP_MENU_ID
+             , P.PROD_ID
+             , PD.PROD_NM
+             , TRIM(REPLACE((SELECT MENU_NM 
+                                  FROM TB_DP_MENU_CATEGORY_DESC 
+                                  WHERE MENU_ID = P.TOP_MENU_ID 
+                                  AND LANG_CD = #{tenantHeader.langCd}), 'TOP', '')) AS TOP_MENU_NM
+             , DC.MENU_NM
+        FROM TB_DP_PROD P
+             , TB_DP_MENU_CATEGORY_PROD_MAPG CP
+             , TB_DP_MENU_CATEGORY C
+             , TB_DP_PROD_DESC PD
+             , TB_DP_MENU_CATEGORY_DESC DC
+             , TB_DP_TENANT_PROD TP
+        WHERE CP.PROD_ID = P.PROD_ID
+          AND PD.PROD_ID = P.PROD_ID
+          AND CP.MENU_ID = C.MENU_ID
+          AND DC.MENU_ID = C.MENU_ID
+          AND P.PROD_ID = TP.PROD_ID
+          AND DC.LANG_CD = #{tenantHeader.langCd}
+          AND TP.TENANT_ID = #{tenantHeader.tenantId}
+        <if test="pidList  != null">
+          AND P.PROD_ID IN (
+        <foreach collection="pidList" item="pid" separator=",">#{pid}</foreach>
+          )
+        </if>
     </select>
  
 </mapper>
