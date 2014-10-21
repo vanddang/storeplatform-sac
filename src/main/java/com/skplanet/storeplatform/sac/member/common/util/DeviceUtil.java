@@ -318,21 +318,16 @@ public class DeviceUtil {
 				cnt++;
 			}
 		}
-		gmailStr = gmailStr.substring(0, gmailStr.lastIndexOf(","));
+
+		if (gmailStr.indexOf(",") > -1) {
+			gmailStr = gmailStr.substring(0, gmailStr.lastIndexOf(","));
+		}
+
 		return gmailStr;
 
 	}
 
 	public static void main(String[] args) {
-
-		System.out.println(getGmailStr(null));
-		System.out.println(getGmailStr(""));
-		System.out.println(getGmailStr("vanddang@gmail.com"));
-		System.out.println(getGmailStr("vanddang@gmail.com,vanddang10@gmail.com,vanddang@naver.com"));
-		System.out
-				.println(getGmailStr("vanddang@gmail.com,vanddang10@gmail.com,vanddang@naver.com,vanddang20@gmail.com"));
-		System.out
-				.println(getGmailStr("vanddang@gmail.com,vanddang10@gmail.com,vanddang20@gmail.com,vanddang30@gmail.com"));
 
 	}
 

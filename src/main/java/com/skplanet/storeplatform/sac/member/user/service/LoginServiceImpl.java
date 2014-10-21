@@ -411,13 +411,6 @@ public class LoginServiceImpl implements LoginService {
 				userKey = deviceInfo.getUserKey();
 				deviceKey = deviceInfo.getDeviceKey();
 
-				/* DB에 통신사 정보가 없거나 NSH 통신사코드인 경우 Request 통신사코드로 업데이트 */
-				if (StringUtils.isBlank(deviceInfo.getDeviceTelecom())
-						|| (StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH) && !StringUtils
-								.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH))) {
-					telecomUpdateYn = "Y";
-				}
-
 				/* 통산사가 일치한 경우 IMEI와 GMAIL이 다르면 변동성 체크 실패 */
 				if (this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceTelecom(),
 						deviceInfo.getDeviceTelecom(), MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_TELECOM)) {
@@ -436,7 +429,6 @@ public class LoginServiceImpl implements LoginService {
 
 				} else { /* 통신사가 다른경우 GMAIL이 다르면 변동성 체크 실패 */
 
-					telecomUpdateYn = "Y";
 					LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceTelecom(),
 							req.getDeviceTelecom());
 					if (!this.deviceService.isEqualsLoginDevice(req.getDeviceId(), req.getDeviceAccount(),
@@ -473,11 +465,17 @@ public class LoginServiceImpl implements LoginService {
 
 				if (deviceInfo != null) {
 
+					/* gmail 업데이트 유무 확인 */
 					String gmailStr = DeviceUtil.getGmailStr(req.getDeviceAccount());
-
 					if (!StringUtils.equals(gmailStr, deviceInfo.getDeviceAccount())) {
 						gmailupdateYn = "Y";
 						req.setDeviceAccount(gmailStr);
+					}
+
+					/* 통신사 업데이트 유무 확인 */
+					if (StringUtils.isBlank(deviceInfo.getDeviceTelecom())
+							|| !StringUtils.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())) {
+						telecomUpdateYn = "Y";
 					}
 				}
 
