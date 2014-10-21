@@ -410,7 +410,7 @@ public class LoginServiceImpl implements LoginService {
 				userKey = deviceInfo.getUserKey();
 				deviceKey = deviceInfo.getDeviceKey();
 
-				/* DB에 통신사 정보가 없거나 NSH 통신사코드인경우 Request 통신사코드로 업데이트 */
+				/* DB에 통신사 정보가 없거나 NSH 통신사코드인 경우 Request 통신사코드로 업데이트 */
 				if (StringUtils.isBlank(deviceInfo.getDeviceTelecom())
 						|| (StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH) && !StringUtils
 								.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH))) {
