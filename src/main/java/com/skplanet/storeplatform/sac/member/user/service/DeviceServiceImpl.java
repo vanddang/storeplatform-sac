@@ -649,7 +649,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (StringUtils.isNotBlank(deviceAccount)) {
+		if (deviceAccount != null) { // 변동성 확인 API에서 gmail은 ""으로 값을 초기화 시키는 케이스가 존재하여 null체크만 한다.
 
 			deviceInfoChangeLog.append("[deviceAccount]").append(dbUserMbrDevice.getDeviceAccount()).append("->")
 					.append(deviceAccount);
@@ -814,10 +814,10 @@ public class DeviceServiceImpl implements DeviceService {
 			LOGGER.info("{} deviceHeader model 정보 없거나 default모델 : {}", deviceInfo.getDeviceId(), deviceModelNo);
 			deviceModelNo = null; // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
 
-			// DB에 저장된 단말정보가 미지원단말이 아닌경우는 request에 올라온 통신사정보를 업데이트 한다.
+			// DB에 저장된 단말정보가 미지원단말이 아닌경우는 통신사정보를 업데이트 한다.
 			if (!StringUtils.equals(dbDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
 					&& !StringUtils.equals(dbDeviceInfo.getDeviceNickName(), MemberConstants.NOT_SUPPORT_HP_MODEL_NM)) {
-				deviceTelecom = deviceInfo.getDeviceTelecom();
+				deviceTelecom = majorDeviceInfo.getDeviceTelecom();
 			}
 		}
 
@@ -1630,34 +1630,10 @@ public class DeviceServiceImpl implements DeviceService {
 			if ((StringUtils.isBlank(reqVal) && StringUtils.isBlank(dbVal)) || StringUtils.equals(reqVal, dbVal)) {
 				isEquals = true;
 			} else if (StringUtils.isNotBlank(reqVal) && StringUtils.isNotBlank(dbVal)
-					&& (reqVal.indexOf(",") > -1 || dbVal.indexOf(",") > -1)) { // 메일이 여러 건인경우 gmail만 3건씩 추출해서 한건이라도
-																				// 같으면 일치 처리
+					&& (reqVal.indexOf(",") > -1 || dbVal.indexOf(",") > -1)) { // gmail이 여러건인 경우 비교
 
-				Integer gmailMaxCnt = 3;// 추출할 Gmail 카운트
-				String tempReqGmailArr[] = reqVal.split("\\,");
-				String tempDbGmailArr[] = dbVal.split("\\,");
-				ArrayList<String> reqGmailList = new ArrayList<String>();
-				ArrayList<String> dbGmailList = new ArrayList<String>();
-
-				// Request Gmail정보에서 gmail 계정만 순서대로 추출
-				for (int i = 0; i < tempReqGmailArr.length; i++) {
-					if (tempReqGmailArr[i].indexOf("@gmail.com") > -1) {
-						if (reqGmailList.size() == gmailMaxCnt) {
-							break;
-						}
-						reqGmailList.add(tempReqGmailArr[i]);
-					}
-				}
-
-				// DB Gmail 정보에서 gmail 계정만 순서대로 추출
-				for (int i = 0; i < tempDbGmailArr.length; i++) {
-					if (tempDbGmailArr[i].indexOf("@gmail.com") > -1) {
-						if (dbGmailList.size() == gmailMaxCnt) {
-							break;
-						}
-						dbGmailList.add(tempDbGmailArr[i]);
-					}
-				}
+				ArrayList<String> reqGmailList = DeviceUtil.getGmailList(reqVal);
+				ArrayList<String> dbGmailList = DeviceUtil.getGmailList(dbVal);
 
 				LOGGER.info("{} {} request mail list{}", deviceId, equalsType, reqGmailList.toString());
 				LOGGER.info("{} {} db mail list{}", deviceId, equalsType, dbGmailList.toString());

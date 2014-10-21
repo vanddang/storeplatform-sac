@@ -392,6 +392,7 @@ public class LoginServiceImpl implements LoginService {
 		String deviceKey = null;
 		String telecomUpdateYn = "N";
 		String gmailupdateYn = "N";
+		DeviceInfo deviceInfo = null;
 
 		/* 모번호 조회 및 셋팅 */
 		req.setDeviceId(this.commService.getOpmdMdnInfo(oDeviceId));
@@ -404,7 +405,7 @@ public class LoginServiceImpl implements LoginService {
 
 			if (!isOpmd) { // OPMD단말인경우 변동성 체크를 하지 않는다.
 				/* 휴대기기 정보 조회 */
-				DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+				deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
 						req.getDeviceId(), null);
 
 				userKey = deviceInfo.getUserKey();
@@ -429,17 +430,6 @@ public class LoginServiceImpl implements LoginService {
 
 							isVariability = "N";
 
-						} else { // GMAIL 일치한 경우
-							// GMAIL 정보가 일치했으나, 여러 건인 경우 String 비교 시 다를 수 있다. 때문에 다른경우 Request GMAIL로 업데이트
-							if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
-								gmailupdateYn = "Y";
-							}
-						}
-
-					} else { // nativeID가 같은경우
-
-						if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
-							gmailupdateYn = "Y";
 						}
 
 					}
@@ -454,11 +444,6 @@ public class LoginServiceImpl implements LoginService {
 
 						isVariability = "N";
 
-					} else { // GMAIL 일치한 경우
-						// GMAIL 정보가 일치했으나, 여러 건인 경우 String 비교 시 다를 수 있다. 때문에 다른경우 Request GMAIL로 업데이트
-						if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
-							gmailupdateYn = "Y";
-						}
 					}
 
 				}
@@ -485,6 +470,16 @@ public class LoginServiceImpl implements LoginService {
 
 			if (!isOpmd) { // OPMD 단말인경우 휴대기기 정보 업데이트를 하지 않는다.
 				LOGGER.info("{} 변동성 체크 성공", req.getDeviceId());
+
+				if (deviceInfo != null) {
+
+					String gmailStr = DeviceUtil.getGmailStr(req.getDeviceAccount());
+
+					if (!StringUtils.equals(gmailStr, deviceInfo.getDeviceAccount())) {
+						gmailupdateYn = "Y";
+						req.setDeviceAccount(gmailStr);
+					}
+				}
 
 				/* 휴대기기 정보 수정 (통신사, GMAIL) */
 				DeviceInfo paramDeviceInfo = new DeviceInfo();

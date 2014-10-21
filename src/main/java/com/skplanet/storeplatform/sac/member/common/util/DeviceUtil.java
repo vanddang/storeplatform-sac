@@ -61,7 +61,8 @@ public class DeviceUtil {
 	 *            휴대기기 부가속성 리스트
 	 * @return extraProfileValue String
 	 */
-	public static String getUserMbrDeviceDetailValue(String extraProfile, List<UserMbrDeviceDetail> userMbrDeviceDetailList) {
+	public static String getUserMbrDeviceDetailValue(String extraProfile,
+			List<UserMbrDeviceDetail> userMbrDeviceDetailList) {
 
 		String extraProfileValue = null;
 
@@ -90,7 +91,8 @@ public class DeviceUtil {
 	 *            휴대기기 휴대기기 정보
 	 * @return deviceExtraInfoList List<DeviceExtraInfo>
 	 */
-	public static List<DeviceExtraInfo> setDeviceExtraValue(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
+	public static List<DeviceExtraInfo> setDeviceExtraValue(String extraProfile, String extraProfileValue,
+			DeviceInfo deviceInfo) {
 
 		List<DeviceExtraInfo> deviceExtraInfoList = deviceInfo.getDeviceExtraInfoList();
 
@@ -143,7 +145,7 @@ public class DeviceUtil {
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
 		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
-		//deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
+		// deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
 		deviceInfo.setIsAuthenticated("Y"); // TODO. Y로 강제 셋팅
 		deviceInfo.setDeviceExtraInfoList(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 
@@ -229,7 +231,8 @@ public class DeviceUtil {
 		if (deviceInfo.getDeviceExtraInfoList() != null && deviceInfo.getDeviceExtraInfoList().size() > 0) {
 			userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 			for (DeviceExtraInfo deviceExtraInfo : deviceInfo.getDeviceExtraInfoList()) {
-				if (StringUtils.isNotBlank(deviceExtraInfo.getExtraProfile()) && StringUtils.isNotBlank(deviceExtraInfo.getExtraProfileValue())) {
+				if (StringUtils.isNotBlank(deviceExtraInfo.getExtraProfile())
+						&& StringUtils.isNotBlank(deviceExtraInfo.getExtraProfileValue())) {
 					userMbrDeviceDetail = new UserMbrDeviceDetail();
 					userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
 					userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
@@ -242,6 +245,94 @@ public class DeviceUtil {
 		}
 
 		return userMbrDeviceDetailList;
+
+	}
+
+	/**
+	 * <pre>
+	 * gmail 정보를 LIST로 리턴.
+	 * </pre>
+	 * 
+	 * @param gmail
+	 *            String
+	 * @return ArrayList<String>
+	 */
+	public static ArrayList<String> getGmailList(String gmail) {
+		Integer gmailCnt = 3;
+		String delim = "\\,";
+		String tempGmailArr[] = gmail.split(delim);
+		ArrayList<String> gmailList = new ArrayList<String>();
+
+		if (StringUtils.equals(gmail, "") || tempGmailArr.length == 0) {
+			return gmailList;
+		}
+
+		// Request Gmail정보에서 gmail 계정만 순서대로 추출
+		for (int i = 0; i < tempGmailArr.length; i++) {
+			if (tempGmailArr[i].indexOf("@gmail.com") > -1) {
+				if (gmailList.size() == gmailCnt) {
+					break;
+				}
+				gmailList.add(tempGmailArr[i]);
+			}
+		}
+
+		return gmailList;
+	}
+
+	/**
+	 * <pre>
+	 * gmail 정보를 String으로 리턴.
+	 * </pre>
+	 * 
+	 * @param gmail
+	 *            String
+	 * @return String
+	 */
+	public static String getGmailStr(String gmail) {
+
+		Integer cnt = 0;
+		Integer gmailCnt = 3;
+		String delim = "\\,";
+		String gmailStr = "";
+
+		if (gmail == null || StringUtils.equals(gmail, "")) {
+			return "";
+		}
+
+		String tempGmailArr[] = gmail.split(delim);
+
+		if (tempGmailArr.length == 0) {
+			return "";
+		}
+
+		for (int i = 0; i < tempGmailArr.length; i++) {
+
+			if (tempGmailArr[i].indexOf("@gmail.com") > -1) {
+
+				if (cnt == gmailCnt) {
+					break;
+				}
+
+				gmailStr = gmailStr + tempGmailArr[i] + ",";
+				cnt++;
+			}
+		}
+		gmailStr = gmailStr.substring(0, gmailStr.lastIndexOf(","));
+		return gmailStr;
+
+	}
+
+	public static void main(String[] args) {
+
+		System.out.println(getGmailStr(null));
+		System.out.println(getGmailStr(""));
+		System.out.println(getGmailStr("vanddang@gmail.com"));
+		System.out.println(getGmailStr("vanddang@gmail.com,vanddang10@gmail.com,vanddang@naver.com"));
+		System.out
+				.println(getGmailStr("vanddang@gmail.com,vanddang10@gmail.com,vanddang@naver.com,vanddang20@gmail.com"));
+		System.out
+				.println(getGmailStr("vanddang@gmail.com,vanddang10@gmail.com,vanddang20@gmail.com,vanddang30@gmail.com"));
 
 	}
 
