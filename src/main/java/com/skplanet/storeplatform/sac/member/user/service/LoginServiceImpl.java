@@ -410,9 +410,11 @@ public class LoginServiceImpl implements LoginService {
 				userKey = deviceInfo.getUserKey();
 				deviceKey = deviceInfo.getDeviceKey();
 
-				if (StringUtils.isBlank(deviceInfo.getDeviceTelecom())) {
+				/* DB에 통신사 정보가 없거나 NSH 통신사코드인경우 Request 통신사코드로 업데이트 */
+				if (StringUtils.isBlank(deviceInfo.getDeviceTelecom())
+						|| (StringUtils.equals(deviceInfo.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH) && !StringUtils
+								.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_NSH))) {
 					telecomUpdateYn = "Y";
-					LOGGER.info("{} telecom 정보 수정 {} -> {}", req.getDeviceId(), "null", req.getDeviceTelecom());
 				}
 
 				/* 통산사가 일치한 경우 IMEI와 GMAIL이 다르면 변동성 체크 실패 */
@@ -437,8 +439,6 @@ public class LoginServiceImpl implements LoginService {
 					} else { // nativeID가 같은경우
 
 						if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
-							LOGGER.info("{} GMAIL 정보 수정 {} -> {}", req.getDeviceId(), deviceInfo.getDeviceAccount(),
-									req.getDeviceAccount());
 							gmailupdateYn = "Y";
 						}
 
