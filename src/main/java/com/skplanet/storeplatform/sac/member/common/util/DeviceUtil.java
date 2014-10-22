@@ -302,8 +302,8 @@ public class DeviceUtil {
 
 		String tempGmailArr[] = gmail.split(delim);
 
-		if (tempGmailArr.length == 0) {
-			return "";
+		if (tempGmailArr.length == 1) { // 한 건인 경우
+			return gmail;
 		}
 
 		for (int i = 0; i < tempGmailArr.length; i++) {
@@ -328,7 +328,7 @@ public class DeviceUtil {
 	}
 
 	public static void main(String[] args) {
-
+		System.out.println(DeviceUtil.getGmailStr("vanddang@gmail.com,vanddang10@gmail.com"));
 	}
 
 }
