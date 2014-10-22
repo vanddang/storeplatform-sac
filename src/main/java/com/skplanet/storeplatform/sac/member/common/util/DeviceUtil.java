@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
@@ -27,8 +25,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
  * Updated on : 2014. 1. 22. Updated by : 반범진, 지티소프트
  */
 public class DeviceUtil {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceUtil.class);
 
 	/**
 	 * SAC 휴대기기 부가속성값을 구한다.
