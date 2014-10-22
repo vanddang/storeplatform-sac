@@ -1004,6 +1004,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				}
 			}
 		}
+		confirmPurchaseScReq.setMediaId(reservedDataMap.get("mediaId")); // CPS 매체ID 세팅
 
 		// 소장/대여 TAB 상품
 		confirmPurchaseScReq.setProdId(prchsDtlMore.getProdId()); // 상품ID

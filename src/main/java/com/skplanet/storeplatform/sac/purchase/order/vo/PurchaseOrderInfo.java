@@ -51,6 +51,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String uacd; // 단말 모델 식별 번호
 	private String simNo; // SIM Serial Number
 	private String simYn; // SIM 조회 가능 여부
+	private String mediaId; // CPS CPID
 
 	// ------------------------------------------------------------------------
 	// 추가 구매 진행 정보
@@ -402,6 +403,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
+	}
+
+	/**
+	 * @return the mediaId
+	 */
+	public String getMediaId() {
+		return this.mediaId;
+	}
+
+	/**
+	 * @param mediaId
+	 *            the mediaId to set
+	 */
+	public void setMediaId(String mediaId) {
+		this.mediaId = mediaId;
 	}
 
 	/**

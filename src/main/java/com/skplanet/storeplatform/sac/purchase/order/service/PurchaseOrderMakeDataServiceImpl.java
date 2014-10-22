@@ -184,6 +184,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 				prchsDtlMore.setMenuId(product.getMenuId()); // 메뉴_ID
 				prchsDtlMore.setGenreClsfCd(product.getGenreClsfCd()); // 장르_구분_코드
 
+				prchsDtlMore.setMediId(purchaseOrderInfo.getMediaId());
+
 				prchsDtlMoreList.add(prchsDtlMore);
 			}
 		}
@@ -596,7 +598,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 				.append(useUser.getDeviceKey()).append("&useDeviceId=").append(useUser.getDeviceId())
 				.append("&useDeviceModelCd=").append(useUser.getDeviceModelCd()).append("&networkTypeCd=")
 				.append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
-				.append(purchaseOrderInfo.getCurrencyCd());
+				.append(purchaseOrderInfo.getCurrencyCd()).append("&mediaId=")
+				.append(StringUtils.defaultString(purchaseOrderInfo.getMediaId()));
 		if (purchaseOrderInfo.isGift()) {
 			sbReserveData.append("&receiveNames=").append(StringUtils.defaultString(useUser.getUserName()))
 					.append("&receiveMdns=").append(useUser.getDeviceId()); // 선물수신자 성명, 선물수신자 MDN
