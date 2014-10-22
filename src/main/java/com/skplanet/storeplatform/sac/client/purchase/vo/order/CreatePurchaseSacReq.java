@@ -80,6 +80,8 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String simNo; // SIM Serial Number
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String simYn; // SIM 조회 가능 여부
+	@Null(groups = { GroupCreateBizPurchase.class })
+	private String mediaId; // CPS CPID
 
 	@Null(groups = { GroupCreateBizPurchase.class })
 	@NotEmpty(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
@@ -423,6 +425,21 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	 */
 	public void setReceiverList(List<PurchaseUserInfo> receiverList) {
 		this.receiverList = receiverList;
+	}
+
+	/**
+	 * @return the mediaId
+	 */
+	public String getMediaId() {
+		return this.mediaId;
+	}
+
+	/**
+	 * @param mediaId
+	 *            the mediaId to set
+	 */
+	public void setMediaId(String mediaId) {
+		this.mediaId = mediaId;
 	}
 
 }
