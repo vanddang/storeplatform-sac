@@ -653,7 +653,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (deviceAccount != null) { // 변동성 확인 API에서 gmail은 ""으로 값을 초기화 시키는 케이스가 존재하여 null체크만 한다.
+		if (deviceAccount != null) { // gmail은 ""으로 초기화 시킬 수 있다.
 
 			deviceInfoChangeLog.append("[deviceAccount]").append(dbUserMbrDevice.getDeviceAccount()).append("->")
 					.append(deviceAccount);
@@ -966,9 +966,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (StringUtils.isNotBlank(deviceAccount)
+		// gmail은 ""으로 초기화 시킬 수 있다.
+		if (!(StringUtils.isBlank(deviceAccount) && StringUtils.isBlank(dbDeviceInfo.getDeviceAccount()))
 				&& !StringUtils.equals(deviceAccount, dbDeviceInfo.getDeviceAccount())) {
-
 			deviceInfoChangeLog.append("[deviceAccount]").append(dbDeviceInfo.getDeviceAccount()).append("->")
 					.append(deviceAccount);
 			userMbrDevice.setDeviceAccount(deviceAccount);
