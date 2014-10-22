@@ -737,18 +737,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// // 금액
 		// }
 
-		SellerMbrSac sellerInfo = this.searchSellerInfo(reservedDataMap.get("sellerMbrNo"));
+		// 판매자 정보 세팅
+		SellerMbrSac sellerInfo = this.searchSellerInfo(reservedDataMap.get("sellerMbrNo"),
+				prchsDtlMore.getTenantProdGrpCd());
 		res.setNmSellerCompany(sellerInfo.getSellerCompany()); // 회사명
-
-		// 쇼핑상품 판매자 정보 세팅
-		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-			res.setNmSeller(sellerInfo.getSellerNickName()); // 쇼핑 노출명
-			res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
-			res.setNoTelSeller(sellerInfo.getRepPhone()); // 대표전화번호
-
-			// 쇼핑상품 종류
-			res.setProdKind(reservedDataMap.get("prodCaseCd"));
-		}
+		res.setNmSeller(sellerInfo.getSellerNickName()); // 쇼핑 노출명
+		res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
+		res.setNoTelSeller(sellerInfo.getRepPhone()); // 대표전화번호
+		res.setProdKind(reservedDataMap.get("prodCaseCd")); // 쇼핑상품 종류
 
 		// 선물 수신자
 		res.setNmDelivery(reservedDataMap.get("receiveNames")); // 선물수신자 성명
@@ -1800,9 +1796,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param sellerKey 판매자 내부 회원 번호
 	 * 
+	 * @param tenantProdGrpCd 테넌트 상품 분류 코드
+	 * 
 	 * @return 판매자 정보
 	 */
-	private SellerMbrSac searchSellerInfo(String sellerKey) {
+	private SellerMbrSac searchSellerInfo(String sellerKey, String tenantProdGrpCd) {
 		SellerMbrSac sellerMbrSac = null;
 
 		if (StringUtils.isNotBlank(sellerKey)) {
@@ -1811,9 +1809,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		if (sellerMbrSac == null) {
 			sellerMbrSac = new SellerMbrSac();
-			sellerMbrSac.setSellerNickName(PurchaseConstants.SHOPPING_SELLER_DEFAULT_NAME); // 판매자명
-			sellerMbrSac.setSellerEmail(PurchaseConstants.SHOPPING_SELLER_DEFAULT_EMAIL); // 판매자 이메일 주소
-			sellerMbrSac.setRepPhone(PurchaseConstants.SHOPPING_SELLER_DEFAULT_TEL); // 판매자 전화번호
+
+			// 쇼핑상품 경우, 디폴트 값 정의
+			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+				sellerMbrSac.setSellerNickName(PurchaseConstants.SHOPPING_SELLER_DEFAULT_NAME); // 판매자명
+				sellerMbrSac.setSellerEmail(PurchaseConstants.SHOPPING_SELLER_DEFAULT_EMAIL); // 판매자 이메일 주소
+				sellerMbrSac.setRepPhone(PurchaseConstants.SHOPPING_SELLER_DEFAULT_TEL); // 판매자 전화번호
+			}
 		}
 
 		return sellerMbrSac;
