@@ -420,6 +420,10 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUserKey(userKey);
 		deviceInfo.setTenantId(tenantId);
 
+		if (StringUtils.isNotBlank(deviceInfo.getDeviceAccount())) {
+			deviceInfo.setDeviceAccount(DeviceUtil.getGmailStr(deviceInfo.getDeviceAccount()));
+		}
+
 		UserMbrDevice userMbrDevice = DeviceUtil.getConverterUserMbrDeviceInfo(deviceInfo);
 		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
@@ -613,7 +617,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 수정 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
 		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
-		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
+		String deviceAccount = DeviceUtil.getGmailStr(deviceInfo.getDeviceAccount()); // gmailAddr
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
 		String isPrimary = deviceInfo.getIsPrimary(); // 대표폰 여부
@@ -785,7 +789,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String uacd = null; // UACD
 		String deviceNickName = null; // 모델닉네임
 		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
-		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
+		String deviceAccount = DeviceUtil.getGmailStr(deviceInfo.getDeviceAccount()); // gmailAddr
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN,
 				deviceInfo.getDeviceExtraInfoList()); // rooting 여부
 

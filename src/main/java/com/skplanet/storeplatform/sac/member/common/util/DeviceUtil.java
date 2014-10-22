@@ -142,7 +142,6 @@ public class DeviceUtil {
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setJoinId(userMbrDevice.getJoinId());
 		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
-		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
 		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
 		// deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());

@@ -466,10 +466,8 @@ public class LoginServiceImpl implements LoginService {
 				if (deviceInfo != null) {
 
 					/* gmail 업데이트 유무 확인 */
-					String gmailStr = DeviceUtil.getGmailStr(req.getDeviceAccount());
-					if (!StringUtils.equals(gmailStr, deviceInfo.getDeviceAccount())) {
+					if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
 						gmailupdateYn = "Y";
-						req.setDeviceAccount(gmailStr);
 					}
 
 					/* 통신사 업데이트 유무 확인 */
