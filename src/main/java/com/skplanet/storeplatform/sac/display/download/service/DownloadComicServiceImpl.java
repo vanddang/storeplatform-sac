@@ -340,8 +340,13 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                                         metaInfo.setUseExprDt(useExprDt);
                                         metaInfo.setUserKey(userKey);
                                         metaInfo.setDeviceKey(deviceKey);
-                                        metaInfo.setDeviceType(deviceIdType);
-                                        metaInfo.setDeviceSubKey(deviceId);
+                                        if (StringUtils.isNotBlank(comicReq.getAdditionalMsisdn())) {
+                                        	metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
+                                        	metaInfo.setDeviceSubKey(comicReq.getAdditionalMsisdn());
+                                        } else {
+                                        	metaInfo.setDeviceType(deviceIdType);
+                                        	metaInfo.setDeviceSubKey(deviceId);
+                                        }
                                         metaInfo.setPurchaseHide(purchaseHide);
 										metaInfo.setUpdateAlarm(updateAlarm);
 

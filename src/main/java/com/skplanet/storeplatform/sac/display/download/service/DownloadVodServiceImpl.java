@@ -97,7 +97,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
-		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
+		MetaInfo downloadSystemDate = commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
 				MetaInfo.class);
 
 		String sysDate = downloadSystemDate.getSysDate();
@@ -126,15 +126,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
 		}
 
-		this.log.debug("----------------------------------------------------------------");
-		this.log.debug("[DownloadVodServiceImpl] idType : {}", idType);
-		this.log.debug("[DownloadVodServiceImpl] productId : {}", productId);
-		this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceKey);
-		this.log.debug("[DownloadVodServiceImpl] userKey : {}", userKey);
-		this.log.debug("----------------------------------------------------------------");
+		log.debug("----------------------------------------------------------------");
+		log.debug("[DownloadVodServiceImpl] idType : {}", idType);
+		log.debug("[DownloadVodServiceImpl] productId : {}", productId);
+		log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceKey);
+		log.debug("[DownloadVodServiceImpl] userKey : {}", userKey);
+		log.debug("----------------------------------------------------------------");
 
 		// 다운로드 Vod 상품 조회
-		MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq,
+		MetaInfo metaInfo = commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq,
 				MetaInfo.class);
 
 		Product product = new Product();
@@ -146,12 +146,18 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				}
 			}
 
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("[DownloadVodServiceImpl] NORMAL scid : {}", metaInfo.getNmSubContsId());
-			this.log.debug("[DownloadVodServiceImpl] SD scid : {}", metaInfo.getSdSubContsId());
-			this.log.debug("[DownloadVodServiceImpl] HD scid : {}", metaInfo.getHdSubContsId());
-			this.log.debug("[DownloadVodServiceImpl] CID : {}", metaInfo.getCid());
-			this.log.debug("----------------------------------------------------------------");
+			log.debug("----------------------------------------------------------------");
+			log.debug("[DownloadVodServiceImpl] NORMAL scid : {}", metaInfo.getNmSubContsId());
+			log.debug("[DownloadVodServiceImpl] SD scid : {}", metaInfo.getSdSubContsId());
+			log.debug("[DownloadVodServiceImpl] HD scid : {}", metaInfo.getHdSubContsId());
+			log.debug("[DownloadVodServiceImpl] CID : {}", metaInfo.getCid());
+			log.debug("----------------------------------------------------------------");
+
+			/*
+			 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
+			 */
+            metaInfo.setSystemId(tanantHeader.getSystemId());
+
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
 				// 구매내역 조회를 위한 생성자
@@ -187,45 +193,39 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					historyReq.setCount(1000);
 					historyReq.setProductList(productList);
 
-					this.log.debug("----------------------------------------------------------------");
-					this.log.debug("********************	구매 요청 파라미터	***************************");
-					this.log.debug("[DownloadVodServiceImpl] tenantId : {}", historyReq.getTenantId());
-					this.log.debug("[DownloadVodServiceImpl] userKey : {}", historyReq.getUserKey());
-					this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
-					this.log.debug("[DownloadVodServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
-					this.log.debug("[DownloadVodServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
-					this.log.debug("[DownloadVodServiceImpl] startDt : {}", historyReq.getStartDt());
-					this.log.debug("[DownloadVodServiceImpl] endDt : {}", historyReq.getEndDt());
-					this.log.debug("[DownloadVodServiceImpl] offset : {}", historyReq.getOffset());
-					this.log.debug("[DownloadVodServiceImpl] count : {}", historyReq.getCount());
-					this.log.debug("[DownloadVodServiceImpl] store prodId : {}", productList.get(0).getProdId());
-					this.log.debug("[DownloadVodServiceImpl] play prodId : {}", productList.get(1).getProdId());
-					this.log.debug("----------------------------------------------------------------");
+					log.debug("----------------------------------------------------------------");
+					log.debug("********************	구매 요청 파라미터	***************************");
+					log.debug("[DownloadVodServiceImpl] tenantId : {}", historyReq.getTenantId());
+					log.debug("[DownloadVodServiceImpl] userKey : {}", historyReq.getUserKey());
+					log.debug("[DownloadVodServiceImpl] deviceKey : {}", historyReq.getDeviceKey());
+					log.debug("[DownloadVodServiceImpl] prchsProdHaveYn : {}", historyReq.getPrchsProdHaveYn());
+					log.debug("[DownloadVodServiceImpl] prchsProdtype : {}", historyReq.getPrchsProdType());
+					log.debug("[DownloadVodServiceImpl] startDt : {}", historyReq.getStartDt());
+					log.debug("[DownloadVodServiceImpl] endDt : {}", historyReq.getEndDt());
+					log.debug("[DownloadVodServiceImpl] offset : {}", historyReq.getOffset());
+					log.debug("[DownloadVodServiceImpl] count : {}", historyReq.getCount());
+					log.debug("[DownloadVodServiceImpl] store prodId : {}", productList.get(0).getProdId());
+					log.debug("[DownloadVodServiceImpl] play prodId : {}", productList.get(1).getProdId());
+					log.debug("----------------------------------------------------------------");
 
 					// 구매내역 조회 실행
-					this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase Start : historyInternalSCI.searchHistoryList");
-					long start = System.currentTimeMillis();
-					historyRes = this.historyInternalSCI.searchHistoryList(historyReq);
-					this.log.debug("##### [SAC DSP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList");
-					long end = System.currentTimeMillis();
-					this.log.debug(
-							"##### [SAC DSP LocalSCI] SAC Purchase historyInternalSCI.searchHistoryList takes {} ms",
-							(end - start));
+					historyRes = historyInternalSCI.searchHistoryList(historyReq);
+
 
 				} catch (Exception ex) {
 					purchaseFlag = false;
-					this.log.debug("[DownloadVodServiceImpl] Purchase History Search Exception : {}");
-					this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-					// throw new StorePlatformException("SAC_DSP_2001", ex);
+					log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n", ex);
 				}
 
-				this.log.debug("---------------------------------------------------------------------");
-				this.log.debug("[DownloadVodServiceImpl] purchaseFlag :{}", purchaseFlag);
-				this.log.debug("[DownloadVodServiceImpl] historyRes :{}", historyRes);
+				log.debug("---------------------------------------------------------------------");
+				log.debug("[DownloadVodServiceImpl] purchaseFlag :{}", purchaseFlag);
+				log.debug("[DownloadVodServiceImpl] historyRes :{}", historyRes);
+				log.debug("---------------------------------------------------------------------");
 
 				if (purchaseFlag && historyRes != null) {
-					this.log.debug("[DownloadVodServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
-					this.log.debug("---------------------------------------------------------------------");
+					log.debug("---------------------------------------------------------------------");
+					log.debug("[DownloadVodServiceImpl] 구매건수 :{}", historyRes.getTotalCnt());
+					log.debug("---------------------------------------------------------------------");
 
 					String prchsId = null; // 구매ID
 					String prchsDt = null; // 구매일시
@@ -267,10 +267,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							downloadVodSacReq.setPrchsDt(prchsDt);
 							downloadVodSacReq.setDwldStartDt(dwldStartDt);
 							downloadVodSacReq.setDwldExprDt(dwldExprDt);
-							// prchsState = (String) this.commonDAO.queryForObject("Download.getDownloadPurchaseState",
-							// downloadVodSacReq);
 
-							prchsState = (String) ((HashMap) this.commonDAO.queryForObject(
+							prchsState = (String) ((HashMap) commonDAO.queryForObject(
 									"Download.getDownloadPurchaseState", downloadVodSacReq)).get("PURCHASE_STATE");
 
 							// 구매상태 만료여부 확인
@@ -283,17 +281,17 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								}
 							}
 
-							this.log.debug("----------------------------------------------------------------");
-							this.log.debug("[DownloadVodServiceImpl] prchsId : {}", prchsId);
-							this.log.debug("[DownloadVodServiceImpl] prchsDt : {}", prchsDt);
-							this.log.debug("[DownloadVodServiceImpl] useExprDt : {}", useExprDt);
-							this.log.debug("[DownloadVodServiceImpl] dwldStartDt : {}", dwldStartDt);
-							this.log.debug("[DownloadVodServiceImpl] dwldExprDt : {}", dwldExprDt);
-							this.log.debug("[DownloadVodServiceImpl] prchsCaseCd : {}", prchsCaseCd);
-							this.log.debug("[DownloadVodServiceImpl] prchsState : {}", prchsState);
-							this.log.debug("[DownloadVodServiceImpl] prchsProdId : {}", prchsProdId);
-							this.log.debug("[DownloadVodServiceImpl] prchsPrice : {}", puchsPrice);
-							this.log.debug("----------------------------------------------------------------");
+							log.debug("----------------------------------------------------------------");
+							log.debug("[DownloadVodServiceImpl] prchsId : {}", prchsId);
+							log.debug("[DownloadVodServiceImpl] prchsDt : {}", prchsDt);
+							log.debug("[DownloadVodServiceImpl] useExprDt : {}", useExprDt);
+							log.debug("[DownloadVodServiceImpl] dwldStartDt : {}", dwldStartDt);
+							log.debug("[DownloadVodServiceImpl] dwldExprDt : {}", dwldExprDt);
+							log.debug("[DownloadVodServiceImpl] prchsCaseCd : {}", prchsCaseCd);
+							log.debug("[DownloadVodServiceImpl] prchsState : {}", prchsState);
+							log.debug("[DownloadVodServiceImpl] prchsProdId : {}", prchsProdId);
+							log.debug("[DownloadVodServiceImpl] prchsPrice : {}", puchsPrice);
+							log.debug("----------------------------------------------------------------");
 
 							metaInfo.setPurchaseId(prchsId);
 							metaInfo.setPurchaseProdId(prchsProdId);
@@ -303,19 +301,19 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 							metaInfo.setPurchasePrice(Integer.parseInt(puchsPrice));
 
 							// 구매 정보
-							purchaseList.add(this.commonGenerator.generatePurchase(metaInfo));
+							purchaseList.add(commonGenerator.generatePurchase(metaInfo));
 
 							/************************************************************************************************
 							 * 구매 정보에 따른 암호화 시작
 							 ************************************************************************************************/
-							this.log.debug("----------------------------------------------------------------");
-							this.log.debug("[DownloadVodServiceImpl] prchsState	:	{}", prchsState);
-							this.log.debug("----------------------------------------------------------------");
+							log.debug("----------------------------------------------------------------");
+							log.debug("[DownloadVodServiceImpl] prchsState	:	{}", prchsState);
+							log.debug("----------------------------------------------------------------");
 
 							// 구매상태 만료 여부 확인
 							if (!DisplayConstants.PRCHS_STATE_TYPE_EXPIRED.equals(prchsState)
 									&& permitDeviceYn.equals("Y")) {
-								this.log.debug("----------------------------  start set Purchase Info  ------------------------------------");
+
 								String deviceId = null; // Device Id
 								String deviceIdType = null; // Device Id 유형
 								SearchDeviceIdSacReq deviceReq = null;
@@ -326,111 +324,76 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									deviceReq = new SearchDeviceIdSacReq();
 									deviceReq.setUserKey(downloadVodSacReq.getUserKey());
 									deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
-									this.log.debug("----------------------------------------------------------------");
-									this.log.debug("*******************회원 단말 정보 조회 파라미터*********************");
-									this.log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
-									this.log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
-									this.log.debug("----------------------------------------------------------------");
+									log.debug("----------------------------------------------------------------");
+									log.debug("[DownloadVodServiceImpl] 단말정보 조회 요청 파라미터");
+									log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());
+									log.debug("[DownloadVodServiceImpl] deviceKey : {}", deviceReq.getDeviceKey());
+									log.debug("----------------------------------------------------------------");
 
 									// 기기정보 조회
-									this.log.debug("##### [SAC DSP LocalSCI] SAC Member Start : deviceSCI.searchDeviceId");
-									long start = System.currentTimeMillis();
-									deviceRes = this.deviceSCI.searchDeviceId(deviceReq);
-									this.log.debug("##### [SAC DSP LocalSCI] SAC Member End : deviceSCI.searchDeviceId");
-									long end = System.currentTimeMillis();
-									this.log.debug(
-											"##### [SAC DSP LocalSCI] SAC Member deviceSCI.searchDeviceId takes {} ms",
-											(end - start));
-									this.log.debug("---------------------------------------------------------------");
-									this.log.debug("[DownloadVodServiceImpl] deviceRes.getDeviceId{} : "
-											+ deviceRes.getDeviceId());
-									this.log.debug("---------------------------------------------------------------");
+									deviceRes = deviceSCI.searchDeviceId(deviceReq);
+
 								} catch (Exception ex) {
 									memberFlag = false;
-									this.log.debug("[DownloadVodServiceImpl] Device Search Exception : {}");
-									this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-									// throw new StorePlatformException("SAC_DSP_1001", ex);
+									log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n", ex);
 								}
 
-								this.log.debug("----------------------------------------------------------------");
-								this.log.debug("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
-								this.log.debug("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
-								this.log.debug("----------------------------------------------------------------");
+								log.debug("----------------------------------------------------------------");
+								log.debug("[DownloadVodServiceImpl] memberFlag	:	{}", memberFlag);
+								log.debug("[DownloadVodServiceImpl] deviceRes	:	{}", deviceRes);
+								log.debug("----------------------------------------------------------------");
 
 								if (memberFlag && deviceRes != null) {
 									// MDN 인증여부 확인 (2014.05.22 회원 API 변경에 따른 추가)
 									if ("Y".equals(deviceRes.getAuthYn())) {
-										this.log.debug("----------------------------------------------------------------");
-										this.log.debug("[DownloadVodServiceImpl] Start Encription");
 
 										deviceId = deviceRes.getDeviceId();
-										this.log.debug("[DownloadVodServiceImpl] deviceId	: {}", deviceId);
-										deviceIdType = this.commonService.getDeviceIdType(deviceId);
-										this.log.debug("[DownloadVodServiceImpl] deviceIdType	:	{}", deviceIdType);
-										this.log.debug("[DownloadVodServiceImpl] reqExpireDate	:	{}", reqExpireDate);
-										this.log.debug("[DownloadVodServiceImpl] useExprDt	:	{}", useExprDt);
-										this.log.debug("[DownloadVodServiceImpl] userKey	:	{}", userKey);
-										this.log.debug("[DownloadVodServiceImpl] deviceKey	:	{}", deviceKey);
+										deviceIdType = commonService.getDeviceIdType(deviceId);
 
 										metaInfo.setExpiredDate(reqExpireDate);
 										metaInfo.setUseExprDt(useExprDt);
 										metaInfo.setUserKey(userKey);
 										metaInfo.setDeviceKey(deviceKey);
-										metaInfo.setDeviceType(deviceIdType);
-										metaInfo.setDeviceSubKey(deviceId);
+										if (StringUtils.isNotBlank(downloadVodSacReq.getAdditionalMsisdn())) {
+                                        	metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
+                                        	metaInfo.setDeviceSubKey(downloadVodSacReq.getAdditionalMsisdn());
+                                        } else {
+                                        	metaInfo.setDeviceType(deviceIdType);
+                                        	metaInfo.setDeviceSubKey(deviceId);
+                                        }
 										metaInfo.setPurchaseHide(purchaseHide);
 										metaInfo.setUpdateAlarm(updateAlarm);
 
 										//PROD_CHRG
-										this.mapProdChrg(metaInfo, prchsProdId);
+										mapProdChrg(metaInfo, prchsProdId);
 										//DRM_YN
-										this.mapDrmYn(metaInfo, historySacIn);
+										mapDrmYn(metaInfo, historySacIn);
 
-										this.log.debug("DownloadVodServiceImpl ProdChrg={}, prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", metaInfo.getProdChrg(), prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
+										log.debug("DownloadVodServiceImpl ProdChrg={}, prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}",
+												metaInfo.getProdChrg(), prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
 
 										// 암호화 정보 (JSON)
-										metaInfo.setSystemId(tanantHeader.getSystemId());
-                                        Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId);
+                                        Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
 										encryptionList.add(encryption);
 
-										this.log.debug("-------------------------------------------------------------");
-										this.log.debug("[DownloadVodServiceImpl] token : {}", encryption.getToken());
-										this.log.debug("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
-										this.log.debug("--------------------------------------------------------------");
-										// JSON 복호화
-										// byte[] decryptString = this.downloadAES128Helper.convertBytes(encryptString);
-										// byte[] decrypt = this.downloadAES128Helper.decryption(decryptString);
-										//
-										// try {
-										// String decData = new String(decrypt, "UTF-8");
-										// this.log.debug("----------------------------------------------------------------");
-										// this.log.debug("[DownloadVodServiceImpl] decData : {}", decData);
-										// System.out.println("decData	:	" + decData);
-										// this.log.debug("----------------------------------------------------------------");
-										// } catch (UnsupportedEncodingException e) {
-										// e.printStackTrace();
-										// }
+										log.debug("-------------------------------------------------------------");
+										log.debug("[DownloadVodServiceImpl] token : {}", encryption.getToken());
+										log.debug("[DownloadVodServiceImpl] keyIdx : {}", encryption.getKeyIndex());
+										log.debug("--------------------------------------------------------------");
+
 									} else {
-										this.log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
-										this.log.debug("##### [SAC DSP LocalSCI] deviceKey : {}",
-												deviceReq.getDeviceKey());
-										this.log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : "
-												+ deviceRes.getDeviceId());
+										log.debug("##### [SAC DSP LocalSCI] userKey : {}", deviceReq.getUserKey());
+										log.debug("##### [SAC DSP LocalSCI] deviceKey : {}", deviceReq.getDeviceKey());
+										log.debug("##### [SAC DSP LocalSCI] NOT VALID DEVICE_ID : {}", deviceRes.getDeviceId());
 									}
 								}
 								// 구매 정보
 								product.setPurchaseList(purchaseList);
-								this.log.debug("----------------------------------------------------------------");
+
 								// 암호화 정보
 								if (!encryptionList.isEmpty()) {
-									this.log.debug("[DownloadVodServiceImpl]	setDl : {}");
 									product.setDl(encryptionList);
 								}
-
-								this.log.debug("[DownloadVodServiceImpl] End Encription");
-								this.log.debug("----------------------------------------------------------------");
-								this.log.debug("----------------------------  end set Purchase Info  ------------------------------------");
-
 
 								break;
 							}
@@ -446,38 +409,38 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			identifierList = new ArrayList<Identifier>();
 			Identifier identifier;
 
-			identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
+			identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD,
 					metaInfo.getProdId());
 			identifierList.add(identifier);
 
 			metaInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
-			identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+			identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
 					metaInfo.getEspdProdId());
 			identifierList.add(identifier);
 
 			// CID
-			identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD,
+			identifier = commonGenerator.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD,
 					metaInfo.getCid());
 			identifierList.add(identifier);
 
 			product.setIdentifierList(identifierList); // 상품 ID
 			// product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 			supportList = new ArrayList<Support>();
-			supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM,
+			supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM,
 					metaInfo.getHdcpYn()));
-			supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM,
+			supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM,
 					metaInfo.getHdvYn()));
-			supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM, "Y"));
-			supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM,
+			supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM, "Y"));
+			supportList.add(commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM,
 					metaInfo.getDolbySprtYn()));
 			product.setSupportList(supportList);
-			product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
-			product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
-			product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
-			product.setVod(this.vodGenerator.generateVod(metaInfo)); // VOD 정보
-			product.setRights(this.commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
-			product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
+			product.setTitle(commonGenerator.generateTitle(metaInfo)); // 상품명
+			product.setMenuList(commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
+			product.setSourceList(commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
+			product.setVod(vodGenerator.generateVod(metaInfo)); // VOD 정보
+			product.setRights(commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
+			product.setDistributor(commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 
 			commonResponse.setTotalCount(1);
 		} else {
@@ -488,7 +451,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		response.setProduct(product);
 
         sw.stop();
-        this.supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
+        supportService.logDownloadResult(userKey, deviceKey, productId, encryptionList, sw.getTime());
 
 		return response;
 	}
@@ -538,7 +501,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				paramFixrateProd.put("fixrateProdId", useFixrateProdId);
 				paramFixrateProd.put("prodId", metaInfo.getEspdProdId());
 
-				MetaInfo fixrateProd = (MetaInfo) this.commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
+				MetaInfo fixrateProd = (MetaInfo) commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
 
 				// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
 				if (prchsProdId.equals(metaInfo.getStoreProdId())) {

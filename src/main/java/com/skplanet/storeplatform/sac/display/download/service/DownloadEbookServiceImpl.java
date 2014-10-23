@@ -364,8 +364,13 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 										metaInfo.setUseExprDt(useExprDt);
 										metaInfo.setUserKey(userKey);
 										metaInfo.setDeviceKey(deviceKey);
-										metaInfo.setDeviceType(deviceIdType);
-										metaInfo.setDeviceSubKey(deviceId);
+										if (StringUtils.isNotBlank(ebookReq.getAdditionalMsisdn())) {
+                                        	metaInfo.setDeviceType(DisplayConstants.DP_DEVICE_ID_TYPE_MSISDN);
+                                        	metaInfo.setDeviceSubKey(ebookReq.getAdditionalMsisdn());
+                                        } else {
+                                        	metaInfo.setDeviceType(deviceIdType);
+                                        	metaInfo.setDeviceSubKey(deviceId);
+                                        }
 										metaInfo.setPurchaseHide(purchaseHide);
 										metaInfo.setUpdateAlarm(updateAlarm);
 
