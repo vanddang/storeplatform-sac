@@ -57,6 +57,8 @@ public class VodDetail extends CommonInfo {
 
 	/** 등록일시 */
 	private Date regDt;
+	/** 최종 배포일시 */
+	private Date lastDeployDt;
 
     /** VOD 타이틀명 */
 	private String vodTitlNm;
@@ -1431,6 +1433,19 @@ public class VodDetail extends CommonInfo {
 		this.fhdDpPicRatio = fhdDpPicRatio;
 	}
 
-	
+	/**
+	 * @return the lastDeployDt
+	 */
+	public Date getLastDeployDt() {
+		return lastDeployDt;
+	}
+
+	/**
+	 * @param lastDeployDt the lastDeployDt to set
+	 */
+	public void setLastDeployDt(Date lastDeployDt) {
+		this.lastDeployDt = lastDeployDt;
+	}
+
 	
 }

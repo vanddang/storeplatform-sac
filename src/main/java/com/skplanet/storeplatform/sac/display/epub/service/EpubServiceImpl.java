@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -905,6 +906,13 @@ public class EpubServiceImpl implements EpubService {
             date.setType(DisplayConstants.DP_DATE_RELEASE);
             date.setText(mapperVO.getIssueDay());
             dateList.add(date);
+        }
+        
+        if(mapperVO.getLastDeployDt() != null) {
+        	Date date = new Date();
+        	date.setType(DisplayConstants.DP_DATE_SALE_REG);
+        	date.setText(sdf.format(mapperVO.getLastDeployDt()));
+        	dateList.add(date);
         }
 		return dateList;
 	}

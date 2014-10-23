@@ -653,6 +653,13 @@ public class VodServiceImpl implements VodService {
             date.setText(mapperVO.getIssueDay());
             dateList.add(date);
         }
+        
+        if(mapperVO.getLastDeployDt() != null) {
+        	Date date = new Date();
+        	date.setType(DisplayConstants.DP_DATE_SALE_REG);
+        	date.setText(sdf.format(mapperVO.getLastDeployDt()));
+        	dateList.add(date);
+        }
 		return dateList;
 	}
 

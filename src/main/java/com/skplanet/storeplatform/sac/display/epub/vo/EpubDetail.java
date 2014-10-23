@@ -51,6 +51,8 @@ public class EpubDetail extends CommonInfo {
     private String regId;
 	/** 등록일시 */
 	private Date regDt;
+	/** 최종 배포일시 */
+	private Date lastDeployDt;
 
 	/** 상품명 */
 	private String prodNm;
@@ -1043,5 +1045,14 @@ public class EpubDetail extends CommonInfo {
 	public void setSamplUrl(String samplUrl) {
 		this.samplUrl = samplUrl;
 	}
+
+	public Date getLastDeployDt() {
+		return lastDeployDt;
+	}
+
+	public void setLastDeployDt(Date lastDeployDt) {
+		this.lastDeployDt = lastDeployDt;
+	}
+
 
 }
