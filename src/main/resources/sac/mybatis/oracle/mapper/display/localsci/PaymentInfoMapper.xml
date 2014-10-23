@@ -274,9 +274,12 @@
                              , B.PART_PROD_ID
                         FROM TB_DP_FIXRATE_PROD_MAPG A
                              ,TB_DP_PROD_RSHP B
+                             ,TB_DP_EBOOK_PROD C
                        WHERE A.PART_PROD_ID = B.PROD_ID
                          AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                          AND B.PART_PROD_ID= #{prodId}
+						 AND B.PART_PROD_ID = C.PROD_ID(+)
+   						 AND (C.PROD_ID IS NULL OR C.BOOK_CLSF_CD = 'DP004301') /*이북,단행만 전권구매 가능하도록(연재제외)*/
                      )PM                    
                 WHERE  PD.PROD_ID = CM.PROD_ID
                 AND PD.PROD_ID = DC.PROD_ID
