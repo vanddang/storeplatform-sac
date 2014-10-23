@@ -618,7 +618,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
 		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
 		String deviceAccount = DeviceUtil.getGmailStr(deviceInfo.getDeviceAccount()); // gmailAddr
-		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
+		String deviceTelecom = this.commService.validDeviceTelecomCode(deviceInfo.getDeviceTelecom()); // 통신사코드
 		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
 		String isPrimary = deviceInfo.getIsPrimary(); // 대표폰 여부
 		String isRecvSms = deviceInfo.getIsRecvSms(); // sms 수신여부

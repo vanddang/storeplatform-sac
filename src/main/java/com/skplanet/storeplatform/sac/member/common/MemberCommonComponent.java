@@ -799,10 +799,7 @@ public class MemberCommonComponent {
 		}
 
 		/** 통신사 정보 확인 */
-		majorDeviceInfo.setDeviceTelecom(deviceTelecom);
-		if (!this.isValidDeviceTelecomCode(deviceTelecom)) {
-			majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH);
-		}
+		majorDeviceInfo.setDeviceTelecom(this.validDeviceTelecomCode(deviceTelecom));
 
 		/**
 		 * SKT 가입자일 경우 처리
@@ -830,28 +827,24 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * 미지원 통신사 처리를 위해 체크하는 메서드. false가 리턴되는 통신사 코드는 NSH가 된다.
+	 * 정상 통신사가 아니면 NSH 통신사 코드로 셋팅.
 	 * </pre>
 	 * 
 	 * @param deviceTelecomCode
 	 *            String
-	 * @return boolean
+	 * @return String 통신사코드
 	 */
-	public boolean isValidDeviceTelecomCode(String deviceTelecomCode) {
-		if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKT)) {
-			return true;
-		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_KT)) {
-			return true;
-		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGT)) {
-			return true;
-		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_NON)) {
-			return true;
-		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_IOS)) {
-			return true;
-		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKM)) {
-			return true;
+	public String validDeviceTelecomCode(String deviceTelecomCode) {
+		if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKT)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_KT)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGT)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_NON)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_IOS)
+				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKM)) {
+
+			return deviceTelecomCode;
 		} else {
-			return false;
+			return MemberConstants.DEVICE_TELECOM_NSH;
 		}
 	}
 
@@ -871,10 +864,6 @@ public class MemberCommonComponent {
 			return MemberConstants.NM_DEVICE_TELECOM_KT;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_LGT)) {
 			return MemberConstants.NM_DEVICE_TELECOM_LGT;
-		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_OMD)) {
-			return MemberConstants.NM_DEVICE_TELECOM_OMD;
-		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_NSH)) {
-			return MemberConstants.NM_DEVICE_TELECOM_NSH;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_NON)) {
 			return MemberConstants.NM_DEVICE_TELECOM_NON;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -882,7 +871,7 @@ public class MemberCommonComponent {
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKM)) {
 			return MemberConstants.NM_DEVICE_TELECOM_SKM;
 		} else {
-			throw new StorePlatformException("SAC_MEM_1103", deviceTelecom);
+			return MemberConstants.NM_DEVICE_TELECOM_NSH;
 		}
 	}
 
@@ -902,10 +891,6 @@ public class MemberCommonComponent {
 			return MemberConstants.DEVICE_TELECOM_KT;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_LGT)) {
 			return MemberConstants.DEVICE_TELECOM_LGT;
-		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_OMD)) {
-			return MemberConstants.DEVICE_TELECOM_OMD;
-		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_NSH)) {
-			return MemberConstants.DEVICE_TELECOM_NSH;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_NON)) {
 			return MemberConstants.DEVICE_TELECOM_NON;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_IOS)) {
@@ -913,7 +898,7 @@ public class MemberCommonComponent {
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_SKM)) {
 			return MemberConstants.DEVICE_TELECOM_SKM;
 		} else {
-			throw new StorePlatformException("SAC_MEM_1103", deviceTelecom);
+			return MemberConstants.DEVICE_TELECOM_NSH;
 		}
 	}
 
