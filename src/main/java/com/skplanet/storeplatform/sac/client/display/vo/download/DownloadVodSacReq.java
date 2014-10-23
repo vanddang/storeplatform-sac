@@ -15,47 +15,52 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Download 앱 상품 정보 조회 Value Object.
- * 
+ *
  * Updated on : 2014. 01. 21. Updated by : 이석희, 인크로스.
  */
 public class DownloadVodSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+
+	/* interface values */
+	@NotBlank
+	private String idType; // Id 유형
+	@NotBlank
+	private String productId; // 상품Id
+	private String deviceKey; // device Key
+	private String userKey; // 사용자 Key
+	private String additionalMsisdn; // 989로 시작하는 자번호
+
+	/* internal values */
 	private String tenantId; // tenantId
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
 	private String anyDeviceModelCd; // 가상 프로비저닝 단말모델코드
 	private String langCd; // 언어코드
 	private String category; // 상품 유형
-	@NotBlank
-	private String productId; // 상품Id
-	@NotBlank
-	private String idType; // Id 유형
-	private String deviceKey; // device Key
-	private String userKey; // 사용자 Key
 	private String imageCd; // 이미지 코드
 	private String prchsDt; // 구매일시
 	private String dwldStartDt; // 다운로드 시작일시
 	private String dwldExprDt; // 다운로드 만료일시
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * tenantId.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getTenantId() {
-		return this.tenantId;
+		return tenantId;
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * tenantId.
 	 * </pre>
-	 * 
+	 *
 	 * @param tenantId
 	 *            tenantId
 	 */
@@ -64,23 +69,23 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 시스템Id.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getSystemId() {
-		return this.systemId;
+		return systemId;
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 시스템Id.
 	 * </pre>
-	 * 
+	 *
 	 * @param systemId
 	 *            systemId
 	 */
@@ -89,23 +94,23 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 단말모델코드.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getDeviceModelCd() {
-		return this.deviceModelCd;
+		return deviceModelCd;
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 단말모델코드.
 	 * </pre>
-	 * 
+	 *
 	 * @param deviceModelCd
 	 *            deviceModelCd
 	 */
@@ -117,7 +122,7 @@ public class DownloadVodSacReq extends CommonInfo {
 	 * @return the anyDeviceModelCd
 	 */
 	public String getAnyDeviceModelCd() {
-		return this.anyDeviceModelCd;
+		return anyDeviceModelCd;
 	}
 
 	/**
@@ -129,23 +134,23 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 언어코드.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getLangCd() {
-		return this.langCd;
+		return langCd;
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 언어코드.
 	 * </pre>
-	 * 
+	 *
 	 * @param langCd
 	 *            langCd
 	 */
@@ -154,23 +159,23 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 상품 유형.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getCategory() {
-		return this.category;
+		return category;
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 상품 유형.
 	 * </pre>
-	 * 
+	 *
 	 * @param category
 	 *            category
 	 */
@@ -179,23 +184,23 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 상품 ID.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getProductId() {
-		return this.productId;
+		return productId;
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 상품 ID.
 	 * </pre>
-	 * 
+	 *
 	 * @param productId
 	 *            productId
 	 */
@@ -204,23 +209,23 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * ID 유형.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getIdType() {
-		return this.idType;
+		return idType;
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * ID 유형.
 	 * </pre>
-	 * 
+	 *
 	 * @param idType
 	 *            idType
 	 */
@@ -229,23 +234,23 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * device Key.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getDeviceKey() {
-		return this.deviceKey;
+		return deviceKey;
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * device Key.
 	 * </pre>
-	 * 
+	 *
 	 * @param deviceKey
 	 *            deviceKey
 	 */
@@ -254,23 +259,23 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 사용자 key.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getUserKey() {
-		return this.userKey;
+		return userKey;
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 사용자 key.
 	 * </pre>
-	 * 
+	 *
 	 * @param userKey
 	 *            userKey
 	 */
@@ -279,23 +284,23 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 이미지 코드.
 	 * </pre>
-	 * 
+	 *
 	 * @return String
 	 */
 	public String getImageCd() {
-		return this.imageCd;
+		return imageCd;
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 이미지 코드.
 	 * </pre>
-	 * 
+	 *
 	 * @param imageCd
 	 *            imageCd
 	 */
@@ -307,7 +312,7 @@ public class DownloadVodSacReq extends CommonInfo {
 	 * @return the prchsDt
 	 */
 	public String getPrchsDt() {
-		return this.prchsDt;
+		return prchsDt;
 	}
 
 	/**
@@ -322,7 +327,7 @@ public class DownloadVodSacReq extends CommonInfo {
 	 * @return the dwldStartDt
 	 */
 	public String getDwldStartDt() {
-		return this.dwldStartDt;
+		return dwldStartDt;
 	}
 
 	/**
@@ -337,7 +342,7 @@ public class DownloadVodSacReq extends CommonInfo {
 	 * @return the dwldExprDt
 	 */
 	public String getDwldExprDt() {
-		return this.dwldExprDt;
+		return dwldExprDt;
 	}
 
 	/**
@@ -347,4 +352,14 @@ public class DownloadVodSacReq extends CommonInfo {
 	public void setDwldExprDt(String dwldExprDt) {
 		this.dwldExprDt = dwldExprDt;
 	}
+
+	public String getAdditionalMsisdn() {
+		return additionalMsisdn;
+	}
+
+	public void setAdditionalMsisdn(String additionalMsisdn) {
+		this.additionalMsisdn = additionalMsisdn;
+	}
+
+
 }

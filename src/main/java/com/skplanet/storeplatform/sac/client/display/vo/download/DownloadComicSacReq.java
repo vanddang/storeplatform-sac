@@ -27,6 +27,7 @@ public class DownloadComicSacReq extends CommonInfo {
 	private String deviceKey; // 디바이스키
 	private String userKey; // 사용자고유키
 	private String visitPathNm; // 다운로드 요청 경로
+	private String additionalMsisdn; // 989로 시작하는 자번호
 
 	/* internal values */
 	private String prchsDt; // 구매일시
@@ -211,6 +212,16 @@ public class DownloadComicSacReq extends CommonInfo {
 	public void setVisitPathNm(String visitPathNm) {
 		this.visitPathNm = visitPathNm;
 	}
+
+	public String getAdditionalMsisdn() {
+		return additionalMsisdn;
+	}
+
+	public void setAdditionalMsisdn(String additionalMsisdn) {
+		this.additionalMsisdn = additionalMsisdn;
+	}
+
+
 
 
 }
