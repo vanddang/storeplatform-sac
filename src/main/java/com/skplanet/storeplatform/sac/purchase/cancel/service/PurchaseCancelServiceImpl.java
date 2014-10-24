@@ -733,7 +733,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 					if (StringUtils.equals("1", couponUseStatusDetailSacInRes.getCpnUseStatusCd())) {
 						throw new StorePlatformException("SAC_PUR_8121");
 					} else if (StringUtils.equals("2", couponUseStatusDetailSacInRes.getCpnUseStatusCd())) {
-						// 2014.10.22 취소/환불된 쿠폰일 경우 구매취소 정상처리한다. 최상훈C
+						// 2014.10.24 취소/환불된 쿠폰일 경우 구매취소 정상처리한다. 최상훈C
 						// throw new StorePlatformException("SAC_PUR_8124");
 					} else if (StringUtils.equals("3", couponUseStatusDetailSacInRes.getCpnUseStatusCd())) {
 						throw new StorePlatformException("SAC_PUR_8125");
