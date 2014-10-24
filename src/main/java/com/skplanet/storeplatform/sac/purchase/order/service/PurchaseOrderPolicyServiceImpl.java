@@ -587,7 +587,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		// --------------------------------------------------------------------------------------------------
-		// IAP SKT 후불 결제금액 조회as
+		// IAP SKT 후불 결제금액 조회
 
 		int iapBillingAmt = -1;
 		try {
