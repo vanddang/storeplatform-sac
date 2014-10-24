@@ -613,7 +613,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		if ( visitPathNmArr.length != 2 ) return;
 
 		if ( StringUtils.equals(visitPathNmArr[1], prodId) )
-			metaInfo.setVisitPathNm(visitPathNmArr[1]);
+			metaInfo.setVisitPathNm(visitPathNmArr[0]);
 	}
 }
 
