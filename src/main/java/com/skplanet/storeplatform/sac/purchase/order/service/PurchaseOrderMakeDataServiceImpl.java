@@ -291,14 +291,17 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		List<PrchsProdCnt> prchsProdCntList = new ArrayList<PrchsProdCnt>();
 		PrchsProdCnt prchsProdCnt = null;
 
-		List<String> procProdIdList = new ArrayList<String>();
+		List<String> procProdIdDeviceKeyList = new ArrayList<String>();
 		String tenantProdGrpCd = null;
 
+		String procProdIdDeviceKey = null;
 		for (PrchsDtlMore prchsDtlMore : prchsDtlMoreList) {
-			if (procProdIdList.contains(prchsDtlMore.getProdId())) {
+			procProdIdDeviceKey = prchsDtlMore.getProdId() + prchsDtlMore.getUseInsdDeviceId(); // 1:N 선물 지원
+
+			if (procProdIdDeviceKeyList.contains(procProdIdDeviceKey)) {
 				continue;
 			}
-			procProdIdList.add(prchsDtlMore.getProdId());
+			procProdIdDeviceKeyList.add(procProdIdDeviceKey);
 
 			prchsProdCnt = new PrchsProdCnt();
 
@@ -324,7 +327,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			tenantProdGrpCd = prchsDtlMore.getTenantProdGrpCd();
 			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
 					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd() + prchsDtlMore.getPrchsId());
+				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd() + prchsDtlMore.getPrchsId()
+						+ prchsDtlMore.getPrchsDtlId());
 			} else {
 				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd());
 			}
