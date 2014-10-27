@@ -463,28 +463,14 @@ public class LoginServiceImpl implements LoginService {
 			if (!isOpmd) { // OPMD 단말인경우 휴대기기 정보 업데이트를 하지 않는다.
 				LOGGER.info("{} 변동성 체크 성공", req.getDeviceId());
 
-				if (deviceInfo != null) {
-
-					/* gmail 업데이트 유무 확인 */
-					if (!StringUtils.equals(req.getDeviceAccount(), deviceInfo.getDeviceAccount())) {
-						gmailupdateYn = "Y";
-					}
-
-					/* 통신사 업데이트 유무 확인 */
-					if (StringUtils.isBlank(deviceInfo.getDeviceTelecom())
-							|| !StringUtils.equals(req.getDeviceTelecom(), deviceInfo.getDeviceTelecom())) {
-						telecomUpdateYn = "Y";
-					}
-				}
-
 				/* 휴대기기 정보 수정 (통신사, GMAIL) */
 				DeviceInfo paramDeviceInfo = new DeviceInfo();
 				paramDeviceInfo.setUserKey(userKey);
 				paramDeviceInfo.setDeviceId(req.getDeviceId());
-				if (StringUtils.equals(telecomUpdateYn, "Y")) {
+				if (StringUtils.isNotBlank(req.getDeviceTelecom())) {
 					paramDeviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 				}
-				if (StringUtils.equals(gmailupdateYn, "Y")) {
+				if (StringUtils.isNotBlank(req.getDeviceAccount())) {
 					paramDeviceInfo.setDeviceAccount(req.getDeviceAccount());
 				}
 

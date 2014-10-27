@@ -653,7 +653,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (deviceAccount != null) { // gmail은 ""으로 초기화 시킬 수 있다.
+		// gmail은 ""으로 초기화 시킬 수 있다.
+		if (deviceAccount != null && !StringUtils.equals(deviceAccount, dbUserMbrDevice.getDeviceAccount())) {
 
 			deviceInfoChangeLog.append("[deviceAccount]").append(dbUserMbrDevice.getDeviceAccount()).append("->")
 					.append(deviceAccount);
@@ -661,7 +662,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (StringUtils.isNotBlank(deviceTelecom)) {
+		if (StringUtils.isNotBlank(deviceTelecom)
+				&& !StringUtils.equals(deviceTelecom, dbUserMbrDevice.getDeviceTelecom())) {
 
 			deviceInfoChangeLog.append("[deviceTelecom]").append(dbUserMbrDevice.getDeviceTelecom()).append("->")
 					.append(deviceTelecom);
