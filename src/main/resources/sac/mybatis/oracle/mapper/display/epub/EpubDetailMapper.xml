@@ -10,7 +10,17 @@
       	  AND A.PART_PROD_ID = B.PROD_ID
           AND B.SVC_GRP_CD = 'DP000203'  AND B.CONTENTS_TYPE_CD = 'PD002502' AND B.SVC_TYPE_CD = 'DP001116'
 	</select>    
-    
+	
+    <select id="selectContentIdListByEpisodeIdList" parameterType="map" resultType="string">
+		SELECT /* EpubDetailMapper.xml, selectContentIdListByEpisodeIdList, SAC : 임근대 , 2014-10-23 */
+				DISTINCT CID
+		FROM TB_DP_PROD
+		WHERE PROD_ID IN
+		<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+	  	</foreach>
+	</select>
+	
 	<select id="selectEbookSourceList" parameterType="map" resultType="ProductImage">
 		SELECT /* EpubDetailMapper.xml, selectEbookSourceList, SAC : 임근대 , 2014-01-28 */
            FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
@@ -298,9 +308,9 @@
 		                    WHERE PR.PROD_ID = #{channelId}
 		                      AND PR.PART_PROD_ID = PD.PROD_ID
 		                      <if test="orderedBy == 'nonPayment'">
-							  <if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
-							  AND PR.PART_PROD_ID NOT IN  
-								  <foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
+							  <if test="paymentContentIdList !=null and paymentContentIdList.size() > 0">
+							  AND PD.CID NOT IN  
+								  <foreach collection="paymentContentIdList" item="item" index="index" open="(" separator="," close=")">
 								  #{item}
 								</foreach>
 							  </if>
