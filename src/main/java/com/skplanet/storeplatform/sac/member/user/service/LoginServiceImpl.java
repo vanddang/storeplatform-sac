@@ -390,8 +390,6 @@ public class LoginServiceImpl implements LoginService {
 		String isSaveAndSyncTarget = "N"; // 변동성 mdn 유무
 		String userKey = null;
 		String deviceKey = null;
-		String telecomUpdateYn = "N";
-		String gmailupdateYn = "N";
 		DeviceInfo deviceInfo = null;
 
 		/* 모번호 조회 및 셋팅 */
