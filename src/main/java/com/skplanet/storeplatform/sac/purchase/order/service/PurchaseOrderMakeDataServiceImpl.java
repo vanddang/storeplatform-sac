@@ -291,19 +291,40 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		List<PrchsProdCnt> prchsProdCntList = new ArrayList<PrchsProdCnt>();
 		PrchsProdCnt prchsProdCnt = null;
 
-		List<String> procProdIdDeviceKeyList = new ArrayList<String>();
+		List<String> procKeyList = new ArrayList<String>();
 		String tenantProdGrpCd = null;
 
-		String procProdIdDeviceKey = null;
+		String procKey = null;
 		for (PrchsDtlMore prchsDtlMore : prchsDtlMoreList) {
-			procProdIdDeviceKey = prchsDtlMore.getProdId() + prchsDtlMore.getUseInsdDeviceId(); // 1:N 선물 지원
+			prchsProdCnt = new PrchsProdCnt();
 
-			if (procProdIdDeviceKeyList.contains(procProdIdDeviceKey)) {
+			// 1:N 선물 지원 - 중복 구매 가능한 쇼핑상품 / 부분유료화 상품 처리
+			tenantProdGrpCd = prchsDtlMore.getTenantProdGrpCd();
+			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+
+				if (prchsDtlMore.getProdQty() > 1) { // 1개 상품을 복수구매 경우
+					procKey = prchsDtlMore.getProdId() + prchsDtlMore.getUseInsdDeviceId();
+
+				} else { // 1개 상품을 1개씩 복수선물 경우 포함
+					procKey = prchsDtlMore.getProdId() + prchsDtlMore.getUseInsdDeviceId()
+							+ prchsDtlMore.getPrchsDtlId();
+				}
+
+				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd() + prchsDtlMore.getPrchsId()
+						+ prchsDtlMore.getPrchsDtlId());
+
+			} else {
+				// 1:N 선물 지원 & 중복 구매 불가한 상품에 대한 중복 체크
+				procKey = prchsDtlMore.getProdId() + prchsDtlMore.getUseInsdDeviceId();
+
+				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd());
+			}
+
+			if (procKeyList.contains(procKey)) {
 				continue;
 			}
-			procProdIdDeviceKeyList.add(procProdIdDeviceKey);
-
-			prchsProdCnt = new PrchsProdCnt();
+			procKeyList.add(procKey);
 
 			prchsProdCnt.setTenantId(prchsDtlMore.getTenantId());
 			prchsProdCnt.setUseUserKey(prchsDtlMore.getUseInsdUsermbrNo());
@@ -322,16 +343,6 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			prchsProdCnt
 					.setSprcProdYn(StringUtils.defaultString(prchsDtlMore.getSprcProdYn(), PurchaseConstants.USE_N));
 			prchsProdCnt.setUseFixrateProdId(prchsDtlMore.getUseFixrateProdId());
-
-			// 중복 구매 가능한 쇼핑상품 / 부분유료화 상품 처리
-			tenantProdGrpCd = prchsDtlMore.getTenantProdGrpCd();
-			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
-					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd() + prchsDtlMore.getPrchsId()
-						+ prchsDtlMore.getPrchsDtlId());
-			} else {
-				prchsProdCnt.setProdGrpCd(prchsDtlMore.getTenantProdGrpCd());
-			}
 
 			prchsProdCnt.setCntProcStatus(PurchaseConstants.USE_N);
 
