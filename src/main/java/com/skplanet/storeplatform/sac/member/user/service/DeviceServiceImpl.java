@@ -1633,10 +1633,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 		} else if (StringUtils.equals(equalsType, MemberConstants.LOGIN_DEVICE_EQUALS_DEVICE_ACCOUNT)) {
 
-			if ((StringUtils.isBlank(reqVal) && StringUtils.isBlank(dbVal)) || StringUtils.equals(reqVal, dbVal)) {
+			if ((StringUtils.isBlank(reqVal) && StringUtils.isBlank(dbVal))
+					|| StringUtils.equals(reqVal, dbVal)
+					|| (StringUtils.isBlank(DeviceUtil.getGmailStr(reqVal)) && StringUtils.isBlank(DeviceUtil
+							.getGmailStr(dbVal)))) {
 				isEquals = true;
-			} else if (StringUtils.isNotBlank(reqVal) && StringUtils.isNotBlank(dbVal)
-					&& (reqVal.indexOf(",") > -1 || dbVal.indexOf(",") > -1)) { // gmail이 여러건인 경우 비교
+			} else { // gmail 계정만 비교처리
 
 				ArrayList<String> reqGmailList = DeviceUtil.getGmailList(reqVal);
 				ArrayList<String> dbGmailList = DeviceUtil.getGmailList(dbVal);

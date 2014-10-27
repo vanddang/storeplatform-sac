@@ -301,9 +301,9 @@ public class DeviceUtil {
 
 		String tempGmailArr[] = gmail.split(delim);
 
-		if (tempGmailArr.length == 1) { // 한 건인 경우
-			return gmail;
-		}
+		/*
+		 * if (tempGmailArr.length == 1) { // 한 건인 경우 return gmail; }
+		 */
 
 		for (int i = 0; i < tempGmailArr.length; i++) {
 
