@@ -75,6 +75,9 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
     @Autowired
     private DownloadSupportService supportService;
 
+    @Autowired
+    private DownloadCommonService downloadCommonService;
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -143,7 +146,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
 			 */
 			metaInfo.setSystemId(header.getTenantHeader().getSystemId());
-			metaInfo.setVisitPathNm(ebookReq.getVisitPathNm());
+			downloadCommonService.validateVisitPathNm(metaInfo, ebookReq.getVisitPathNm(), productId);
 
 			Product product = new Product();
 

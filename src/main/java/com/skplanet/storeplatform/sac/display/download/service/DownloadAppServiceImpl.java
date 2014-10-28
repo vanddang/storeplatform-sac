@@ -95,6 +95,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
     @Autowired
     private SacServiceService sacServiceDataService;
 
+    @Autowired
+    private DownloadCommonService downloadCommonService;
+
 	@Override
 	public DownloadAppSacRes searchDownloadApp(SacRequestHeader requestheader, DownloadAppSacReq downloadAppSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
@@ -179,7 +182,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
 			 */
 			metaInfo.setSystemId(tanantHeader.getSystemId());
-			validateVisitPathNm(metaInfo, downloadAppSacReq.getVisitPathNm(), productId);
+			downloadCommonService.validateVisitPathNm(metaInfo, downloadAppSacReq.getVisitPathNm(), productId);
 
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
@@ -604,16 +607,5 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			return true;
 	}
 
-	private void validateVisitPathNm(MetaInfo metaInfo, final String visitPathNm, final String prodId) {
-
-		if (StringUtils.isBlank(visitPathNm)) return;
-
-		String[] visitPathNmArr = visitPathNm .split("\\.");
-
-		if ( visitPathNmArr.length != 2 ) return;
-
-		if ( StringUtils.equals(visitPathNmArr[1], prodId) )
-			metaInfo.setVisitPathNm(visitPathNmArr[0]);
-	}
 }
 
