@@ -113,6 +113,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
@@ -1728,6 +1729,19 @@ public class UserSearchServiceImpl implements UserSearchService {
 				userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
 			}
 
+			String ageChk = "";
+			String userSex = userInfo.getUserSex();
+			String userBirthDay = userInfo.getUserBirthDay();
+			if (StringUtil.isNotBlank(userSex) && StringUtil.isNotBlank(userBirthDay)) {
+				if ("M".equals(userSex)) {
+					ageChk = ("19".equals(userBirthDay.substring(0, 2))) ? "1" : "3";
+				} else if ("F".equals(userSex)) {
+					ageChk = ("19".equals(userBirthDay.substring(0, 2))) ? "2" : "4";
+				}
+
+				int age = CommonUtils.getAgeBySocalNumber(userBirthDay.substring(2, 8), ageChk);
+				// userInfo.setuserAge(age);
+			}
 		} else if (StringUtils.equals(MemberConstants.USE_N, schUserRes.getMbrAuth().getIsRealName())) {
 			userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
 			userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
