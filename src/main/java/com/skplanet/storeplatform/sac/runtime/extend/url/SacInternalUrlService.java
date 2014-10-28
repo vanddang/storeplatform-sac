@@ -105,11 +105,11 @@ public class SacInternalUrlService {
 			return 8010;
 		}
 
-		if (port == 8010 || port == 8020) {
+		if (port == 8010 || port == 8020 || port == 8030 || port == 8040) {
 			LOGGER.warn("####SAC-PORT-TEST#### 정상 > 포트 : " + port);
 			return port;
 		} else {
-			LOGGER.warn("####SAC-PORT-TEST#### 비정상 > 포트 : " + port + " 예상포트(8010, 8020)가 아님");
+			LOGGER.warn("####SAC-PORT-TEST#### 비정상 > 포트 : " + port + " 예상포트(8010, 8020, 8030, 8040)가 아님");
 			return 8010;
 		}
 
