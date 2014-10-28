@@ -359,10 +359,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 										// 소장, 대여 구분(Store : 소장, Play : 대여)
 										if (prchsProdId.equals(metaInfo.getStoreProdId())) {
 											metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-											metaInfo.setProdChrg(metaInfo.getStoreProdChrg());
 										} else {
 											metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
-											metaInfo.setProdChrg(metaInfo.getPlayProdChrg());
 										}
 
                                         // 암호화 정보 (JSON)
