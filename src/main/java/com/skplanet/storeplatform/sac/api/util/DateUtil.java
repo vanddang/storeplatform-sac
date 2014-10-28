@@ -10,6 +10,7 @@
 
 package com.skplanet.storeplatform.sac.api.util;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -481,5 +482,15 @@ public class DateUtil {
 		} else {
 			return date;
 		}
+	}
+
+	/**
+	 * 현재 날짜를 MM형식으로 반환한다.
+	 * 
+	 * @return
+	 */
+	public static String getCurrentDate() {
+		DateFormat df = new SimpleDateFormat("yyyyMMdd");
+		return df.format(new Date(System.currentTimeMillis()));
 	}
 }
