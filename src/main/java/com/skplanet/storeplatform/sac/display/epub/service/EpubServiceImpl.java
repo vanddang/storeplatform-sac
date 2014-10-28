@@ -230,14 +230,10 @@ public class EpubServiceImpl implements EpubService {
 				existenceListRes = this.commonService.checkPurchaseList(req.getTenantId(), userKey, deviceKey, episodeIdList);
 
 				List<String> paymentProdIdList = new ArrayList<String>();
-				//FIXME:
-				paymentProdIdList.add("H000400482");
-				/*
 				for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
 					paymentProdIdList.add(existenceRes.getProdId());
 				}
-				*/
-				
+
 				//#24889 VOD/이북 전권 소장/대여 후 미구매로 정렬 시 대여/소장이 노출되는 문제 수정
 				//episode id 로 filter 하면 전권대여/소장 구매 시 대여소장 상품 모두 Filtering 되지 않기 때문에 content id 로 filter.
 				List<String> paymentContentIdList = getContentIdListByEpisodeIdList(paymentProdIdList);
