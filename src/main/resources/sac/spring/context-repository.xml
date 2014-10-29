@@ -67,7 +67,7 @@
         <property name="sqlSessionTemplate" ref="sqlSessionTemplateForSac" />
     </bean>
     
-    <beans profile="dev,qa,real">
+    <beans profile="dev,qa,stg,real">
         <bean id="defaultDataSourceForSac" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
             <constructor-arg ref="defaultDataSourceForSacJNDI" />
         </bean>

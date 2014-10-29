@@ -65,7 +65,7 @@
         <property name="sqlSessionTemplate" ref="sqlSessionTemplateForCmsApp" />
     </bean>
     
-    <beans profile="dev,qa,real">
+    <beans profile="dev,qa,stg,real">
         <bean id="defaultDataSourceForCmsApp" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
             <constructor-arg ref="defaultDataSourceForCmsAppJNDI" />
         </bean>

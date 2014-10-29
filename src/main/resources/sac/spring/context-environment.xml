@@ -47,7 +47,19 @@
 	        </property>
 	    </bean>
     </beans>
-        
+
+    <beans profile="stg"> 
+        <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+            <property name="logbackPath">
+                <list>
+                   <value>sac/log/logback-stg.xml</value>
+                   <value>member/log/logback-stg.xml</value>
+                   <value>purchase/log/logback-stg.xml</value>
+                </list>
+            </property>
+        </bean>
+    </beans>
+            
     <beans profile="real"> 
 	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
 	        <property name="logbackPath">
@@ -90,6 +102,16 @@
         </bean>
     </beans>
 
+    <beans profile="stg">   
+        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.qa.properties" /> 
+        <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="fileEncoding" value="UTF-8" />
+            <property name="locations" >
+                <list merge="true"><value>classpath:sac/conf/external.stg.properties</value></list>
+            </property>
+        </bean>
+    </beans>
+    
     <beans profile="real">
        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.real.properties" /> 
        <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
