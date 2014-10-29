@@ -267,9 +267,14 @@ public class EpubServiceImpl implements EpubService {
 	 * @return
 	 */
 	private List<String> getContentIdListByEpisodeIdList(List<String> paymentProdIdList) {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("prodIdList", paymentProdIdList);
-		List<String> contentIdList = this.commonDAO.queryForList("EpubDetail.selectContentIdListByEpisodeIdList", param, String.class);
+        List<String> contentIdList = null;
+        if(paymentProdIdList.size() == 0) {
+            contentIdList = new ArrayList<String>();
+        } else {
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("prodIdList", paymentProdIdList);
+			contentIdList = this.commonDAO.queryForList("EpubDetail.selectContentIdListByEpisodeIdList", param, String.class);
+        }
 		return contentIdList;
 	}
 
