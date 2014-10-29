@@ -407,7 +407,7 @@
 						<if test="orderedBy == 'recent'">
 					    ORDER BY T1.CHAPTER DESC, LAST_DEPLOY_DT DESC
 					  	</if>
-					  	<if test="orderedBy == 'regDate'">
+					  	<if test="orderedBy == 'regDate' or orderedBy == 'nonPayment'">
 					    ORDER BY T1.CHAPTER ASC, LAST_DEPLOY_DT DESC
 					  	</if>
 		            ) T2

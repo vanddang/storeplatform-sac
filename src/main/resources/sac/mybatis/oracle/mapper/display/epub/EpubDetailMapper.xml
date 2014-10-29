@@ -350,7 +350,7 @@
 					  <if test="orderedBy == 'recent'">
 					  ORDER BY T2.CHAPTER DESC
 	                  </if>
-	                  <if test="orderedBy == 'regDate'">
+	                  <if test="orderedBy == 'regDate' or orderedBy == 'nonPayment'">
 	                  ORDER BY T2.CHAPTER ASC
 	                  </if>
 			    ) T3
