@@ -629,18 +629,22 @@
                                   THEN
                                         (  SELECT 
                                                 SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD
-                                            WHERE PROD_ID IN (
+                                             FROM TB_DP_SHPG_PROD SP
+                                                 ,TB_DP_SPRC_PROD SP1
+                                            WHERE 1=1
+                                              AND SP.PROD_ID = SP1.PROD_ID
+                                              AND SP.PROD_ID IN (
                                                     SELECT 
                                                            B.PART_PROD_ID 
                                                       FROM TB_DP_SHPG_PROD A 
                                                           ,TB_DP_PROD_RSHP B
                                                      WHERE A.PROD_ID = B.PROD_ID 
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
-                                             ) AND ROWNUM =1     
+                                                   ) 
+                                               AND ROWNUM =1     
                                           )                                   
                                   ELSE #{prodId}
-                                  END             
+                                  END         
           AND A.EXPO_YN = 'Y' 
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
     </select>
@@ -656,18 +660,22 @@
                                   THEN
                                         (  SELECT 
                                                 SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD
-                                            WHERE PROD_ID IN (
+                                             FROM TB_DP_SHPG_PROD SP
+                                                 ,TB_DP_SPRC_PROD SP1
+                                            WHERE 1=1
+                                              AND SP.PROD_ID = SP1.PROD_ID
+                                              AND SP.PROD_ID IN (
                                                     SELECT 
                                                            B.PART_PROD_ID 
                                                       FROM TB_DP_SHPG_PROD A 
                                                           ,TB_DP_PROD_RSHP B
                                                      WHERE A.PROD_ID = B.PROD_ID 
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
-                                             ) AND ROWNUM =1     
+                                                   ) 
+                                               AND ROWNUM =1     
                                           )                                   
                                   ELSE #{prodId}
-                                  END           
+                                  END         
     </select>
     
     <!--특가 상품 상세 조회-->
@@ -689,18 +697,22 @@
                                   THEN
                                         (  SELECT 
                                                 SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD
-                                            WHERE PROD_ID IN (
+                                             FROM TB_DP_SHPG_PROD SP
+                                                 ,TB_DP_SPRC_PROD SP1
+                                            WHERE 1=1
+                                              AND SP.PROD_ID = SP1.PROD_ID
+                                              AND SP.PROD_ID IN (
                                                     SELECT 
                                                            B.PART_PROD_ID 
                                                       FROM TB_DP_SHPG_PROD A 
                                                           ,TB_DP_PROD_RSHP B
                                                      WHERE A.PROD_ID = B.PROD_ID 
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
-                                             ) AND ROWNUM =1     
+                                                   ) 
+                                               AND ROWNUM =1     
                                           )                                   
                                   ELSE #{prodId}
-                                  END   		  
+                                  END	  
 		  AND A.EXPO_YN = 'Y' 
 		  AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
 		  AND ROWNUM =1
