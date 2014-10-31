@@ -624,7 +624,23 @@
         FROM   TB_DP_SPRC_PROD A
               ,TB_DP_SHPG_PROD B
         WHERE A.PROD_ID = B.PROD_ID
-          AND B.SRC_CONTENT_ID =  #{prodId}
+          AND B.SRC_CONTENT_ID =  
+                                 CASE WHEN PROD_CASE_CD = 'DP006303'
+                                  THEN
+                                        (  SELECT 
+                                                SRC_CONTENT_ID 
+                                             FROM TB_DP_SHPG_PROD
+                                            WHERE PROD_ID IN (
+                                                    SELECT 
+                                                           B.PART_PROD_ID 
+                                                      FROM TB_DP_SHPG_PROD A 
+                                                          ,TB_DP_PROD_RSHP B
+                                                     WHERE A.PROD_ID = B.PROD_ID 
+                                                      AND A.SRC_CONTENT_ID =#{prodId}       
+                                             ) AND ROWNUM =1     
+                                          )                                   
+                                  ELSE #{prodId}
+                                  END             
           AND A.EXPO_YN = 'Y' 
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
     </select>
@@ -635,7 +651,23 @@
         SELECT 
             COUNT(PROD_ID) as CNT
         FROM TB_DP_SHPG_PROD
-        WHERE SRC_CONTENT_ID = #{prodId}
+        WHERE SRC_CONTENT_ID = 
+                                 CASE WHEN PROD_CASE_CD = 'DP006303'
+                                  THEN
+                                        (  SELECT 
+                                                SRC_CONTENT_ID 
+                                             FROM TB_DP_SHPG_PROD
+                                            WHERE PROD_ID IN (
+                                                    SELECT 
+                                                           B.PART_PROD_ID 
+                                                      FROM TB_DP_SHPG_PROD A 
+                                                          ,TB_DP_PROD_RSHP B
+                                                     WHERE A.PROD_ID = B.PROD_ID 
+                                                      AND A.SRC_CONTENT_ID =#{prodId}       
+                                             ) AND ROWNUM =1     
+                                          )                                   
+                                  ELSE #{prodId}
+                                  END           
     </select>
     
     <!--특가 상품 상세 조회-->
@@ -652,7 +684,23 @@
 		      ,TB_DP_SHPG_PROD C
 		WHERE A.PROD_ID = B.PROD_ID
 		  AND A.PROD_ID = C.PROD_ID
-		  AND C.SRC_CONTENT_ID =  #{prodId}
+		  AND C.SRC_CONTENT_ID =  
+                                 CASE WHEN PROD_CASE_CD = 'DP006303'
+                                  THEN
+                                        (  SELECT 
+                                                SRC_CONTENT_ID 
+                                             FROM TB_DP_SHPG_PROD
+                                            WHERE PROD_ID IN (
+                                                    SELECT 
+                                                           B.PART_PROD_ID 
+                                                      FROM TB_DP_SHPG_PROD A 
+                                                          ,TB_DP_PROD_RSHP B
+                                                     WHERE A.PROD_ID = B.PROD_ID 
+                                                      AND A.SRC_CONTENT_ID =#{prodId}       
+                                             ) AND ROWNUM =1     
+                                          )                                   
+                                  ELSE #{prodId}
+                                  END   		  
 		  AND A.EXPO_YN = 'Y' 
 		  AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
 		  AND ROWNUM =1
