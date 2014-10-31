@@ -29,15 +29,6 @@
         <property name="virtualHost" ><value>#{propertiesForSac['skp.mq.server.virtualHost']}</value></property>
     </bean>
 
-    <!-- MQ에서 수신하는 큐 이름들이 정의되어야 합니다. 수신MQ는 rabbit:queue name속성시 buildInboundQueueName을 적용해야 합니다.-->
-    <bean id="inboundQueueNames" class="com.skplanet.storeplatform.sac.common.util.MqUtils" factory-method="buildQueueName">
-        <constructor-arg>
-            <list>
-                <value>icms-app-refactoring-deploy.sac.deploy.async</value>
-                <value>icms-app-admin.sac.device-mapping.async</value>
-            </list>
-        </constructor-arg>
-    </bean>
     
     <!-- 
     <value>cmsapp.sac.request.sync.content.test99999</value>
@@ -136,4 +127,17 @@
         <property name="routingKey" value="tstore.icms-app-admin.rmc.sync" />
     </bean>
 
+    
+    <!-- MQ에서 수신하는 큐 이름들이 정의되어야 합니다. 수신MQ는 rabbit:queue name속성시 buildInboundQueueName을 적용해야 합니다.-->
+    <!-- Staging 서버에서는 수신받지 않도록 profile 예외처리 적용 -->
+    <beans profile="!stg">
+	    <bean id="inboundQueueNames" class="com.skplanet.storeplatform.sac.common.util.MqUtils" factory-method="buildQueueName">
+	        <constructor-arg>
+	            <list>
+	                <value>icms-app-refactoring-deploy.sac.deploy.async</value>
+	                <value>icms-app-admin.sac.device-mapping.async</value>
+	            </list>
+	        </constructor-arg>
+	    </bean>
+    </beans>
 </beans> 
