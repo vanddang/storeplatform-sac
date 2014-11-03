@@ -30,8 +30,9 @@ public class DownloadAppSacReq extends CommonInfo {
 	private String deviceKey; // device key
 	private String userKey; // 판매자 회원번호
 	private String parentBunchId;
-	private Integer apkVerCd;
+	private Integer apkVerCd; // Pre package versionCode
 	private String visitPathNm; // 다운로드 요청 경로
+	private String dwldTypeCd; // 다운로드 유형 코드 (DP012701:다운로드, DP012702:자동 업데이트, DP012703:수동 업데이트, DP012704:이어받기)
 
 	/* internal values */
 	private String tenantId; // tenantId
@@ -445,5 +446,15 @@ public class DownloadAppSacReq extends CommonInfo {
 	public void setVisitPathNm(String visitPathNm) {
 		this.visitPathNm = visitPathNm;
 	}
+
+	public String getDwldTypeCd() {
+		return dwldTypeCd;
+	}
+
+	public void setDwldTypeCd(String dwldTypeCd) {
+		this.dwldTypeCd = dwldTypeCd;
+	}
+
+
 
 }
