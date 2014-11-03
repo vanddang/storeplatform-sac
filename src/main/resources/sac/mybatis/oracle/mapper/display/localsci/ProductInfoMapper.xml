@@ -88,6 +88,7 @@
               , TB.EXPO_SELLER_NM
               , TB.EXPO_SELLER_TELNO
               , TB.SELLER_MBR_NO
+              , TB.CASE_REF_CD AS SEED_CASE_REF_CD
               , (CASE
 		           WHEN TB.PART_PARENT_CLSF_CD = 'PD012302'
 		           THEN
@@ -139,6 +140,7 @@
                                     E.SALE_STATUS_INFO
                              ELSE  TENANT.PROD_STATUS_CD
                              END) AS PROD_STATUS_CD
+                      , SMAP.CASE_REF_CD
                   FROM  TB_DP_MENU_CATEGORY           A
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
@@ -148,12 +150,14 @@
                       , TB_DP_PROD_DESC               DESC2
                       , TB_DP_PROD_RSHP               RSHP
                       , TB_DP_TENANT_PROD             TENANT
+                      , TB_DP_SEED_MAPP               SMAP
                  WHERE  A.MENU_ID = B.MENU_ID
                    AND  A.MENU_ID = C.MENU_ID
                    AND  B.PROD_ID = D.PROD_ID
                    AND  B.PROD_ID = E.PROD_ID
                    AND  B.PROD_ID = F.PROD_ID
                    AND  B.PROD_ID = TENANT.PROD_ID
+                   AND  SMAP.PROD_ID(+) = E.PROD_ID
                    AND  TENANT.TENANT_ID = #{tenantId}
                    AND  C.LANG_CD = #{lang}                /* ko : 한국어 */
                    <if test='productBasicInfo.svcGrpCd != null'>

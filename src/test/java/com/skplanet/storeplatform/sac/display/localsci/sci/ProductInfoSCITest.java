@@ -52,6 +52,7 @@ public class ProductInfoSCITest {
         // Episode Only
         List<TestProd> prods = new ArrayList<TestProd>();
         prods.add(new TestProd("0000657169", ProductType.App));
+        prods.add(new TestProd("0000651962", ProductType.App)); // SeedMapg 존재하는 앱 상품
         prods.add(new TestProd("0900000141", ProductType.App));
         prods.add(new TestProd("H000400088", ProductType.Music));
         prods.add(new TestProd("H000043059", ProductType.Vod));
