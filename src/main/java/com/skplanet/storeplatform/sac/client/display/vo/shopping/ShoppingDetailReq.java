@@ -40,7 +40,7 @@ public class ShoppingDetailReq extends CommonInfo {
 	private String userKey; // 사용자고유키
 	private String saleDtUseYn; // 판매 기간이 넘어갈 경우 조회시
 	private String specialType;
-	private String includeProdStopStatus;
+	private String includeProdStopStatus;// 판매 상태 여부
 	private String imageCd; // 이미지코드
 	private String langCd; // 언어코드
 	private String virtualDeviceModelNo; // android_standard2
