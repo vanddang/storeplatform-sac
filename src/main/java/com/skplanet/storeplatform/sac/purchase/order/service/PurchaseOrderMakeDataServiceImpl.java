@@ -565,24 +565,18 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		}
 
 		/*
-		 * 구매예약 시 저장할 데이터 (공통) - tenantId, systemId, networkTypeCd, currencyCd - 결제자: userKey, userId, deviceKey,
-		 * deviceId, deviceModelCd, telecom, imei, oneId - 보유자: useUserKey, useDeviceKey, useDeviceId, useDeviceModelCd
+		 * 구매예약 시 저장할 데이터 (공통) - systemId, networkTypeCd - 결제자: userId, deviceId, deviceModelCd, telecom, imei, oneId -
+		 * 보유자: useDeviceId, useDeviceModelCd
 		 */
 		PurchaseUserDevice useUser = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getReceiveUser() : purchaseOrderInfo
 				.getPurchaseUser();
 
 		StringBuffer sbReserveData = new StringBuffer(1024);
 		sbReserveData
-				.append("tenantId=")
-				.append(useUser.getTenantId())
-				.append("&systemId=")
+				.append("systemId=")
 				.append(purchaseOrderInfo.getSystemId())
-				.append("&userKey=")
-				.append(purchaseOrderInfo.getUserKey())
 				.append("&userId=")
 				.append(purchaseOrderInfo.getPurchaseUser().getUserId())
-				.append("&deviceKey=")
-				.append(purchaseOrderInfo.getDeviceKey())
 				.append("&deviceId=")
 				.append(purchaseOrderInfo.getPurchaseUser().getDeviceId())
 				.append("&deviceModelCd=")
@@ -594,11 +588,9 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 				.append("&oneId=")
 				.append(StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getUserType(),
 						PurchaseConstants.USER_TYPE_ONEID) ? purchaseOrderInfo.getPurchaseUser().getUserId() : "")
-				.append("&useUserKey=").append(useUser.getUserKey()).append("&useDeviceKey=")
-				.append(useUser.getDeviceKey()).append("&useDeviceId=").append(useUser.getDeviceId())
-				.append("&useDeviceModelCd=").append(useUser.getDeviceModelCd()).append("&networkTypeCd=")
-				.append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
-				.append(purchaseOrderInfo.getCurrencyCd()).append("&mediaId=")
+				.append("&useDeviceId=").append(useUser.getDeviceId()).append("&useDeviceModelCd=")
+				.append(useUser.getDeviceModelCd()).append("&networkTypeCd=")
+				.append(purchaseOrderInfo.getNetworkTypeCd()).append("&mediaId=")
 				.append(StringUtils.defaultString(purchaseOrderInfo.getMediaId()));
 		if (purchaseOrderInfo.isGift()) {
 			sbReserveData.append("&receiveNames=").append(StringUtils.defaultString(useUser.getUserName()))
@@ -637,15 +629,10 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			for (i = 0; i < product.getProdQty(); i++) {
 				// 구매예약 시 저장할 데이터 (상품별)
 				sbReserveData.setLength(commonReserveDataLen);
-				sbReserveData
-						.append("&aid=")
-						.append(StringUtils.defaultString(product.getAid()))
-						.append("&couponCode=")
-						.append(StringUtils.defaultString(product.getCouponCode()))
-						.append("&itemCode=")
-						.append(StringUtils.defaultString(product.getItemCode()))
-						.append("&bonusPoint=")
-						.append(StringUtils.defaultString(product.getBnsCashAmt(), "0"))
+				sbReserveData.append("&aid=").append(StringUtils.defaultString(product.getAid()))
+						.append("&couponCode=").append(StringUtils.defaultString(product.getCouponCode()))
+						.append("&itemCode=").append(StringUtils.defaultString(product.getItemCode()))
+						.append("&bonusPoint=").append(StringUtils.defaultString(product.getBnsCashAmt(), "0"))
 						.append("&bonusPointUsePeriodUnitCd=")
 						.append(StringUtils.defaultString(product.getBnsUsePeriodUnitCd()))
 						.append("&bonusPointUsePeriod=")
@@ -656,28 +643,19 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 						.append(StringUtils.defaultString(product.getAutoPrchsPeriodUnitCd()))
 						.append("&autoPrchsPeriodValue=")
 						.append(StringUtils.defaultString(String.valueOf(product.getAutoPrchsPeriodValue()), "0"))
-						.append("&afterAutoPayDt=")
-						.append(StringUtils.defaultString(product.getAfterAutoPayDt()))
-						// .append("&sellerNm=").append(StringUtils.defaultString(product.getSellerNm()))
-						// .append("&sellerEmail=").append(StringUtils.defaultString(product.getSellerEmail()))
-						// .append("&sellerTelno=").append(StringUtils.defaultString(product.getSellerTelno()))
-						.append("&sellerMbrNo=")
-						.append(StringUtils.defaultString(product.getSellerMbrNo()))
-						.append("&mallCd=")
-						.append(StringUtils.defaultString(product.getMallCd()))
-						.append("&outsdContentsId=")
-						.append(StringUtils.defaultString(product.getOutsdContentsId()))
+						.append("&afterAutoPayDt=").append(StringUtils.defaultString(product.getAfterAutoPayDt()))
+						.append("&sellerMbrNo=").append(StringUtils.defaultString(product.getSellerMbrNo()))
+						.append("&mallCd=").append(StringUtils.defaultString(product.getMallCd()))
+						.append("&outsdContentsId=").append(StringUtils.defaultString(product.getOutsdContentsId()))
 						.append("&autoPrchsYn=")
-						.append(StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-								PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) ? "N" : StringUtils.defaultString(product
-								.getAutoPrchsYN())).append("&specialCouponId=")
+						.append(purchaseOrderInfo.isIap() ? "N" : StringUtils.defaultString(product.getAutoPrchsYN()))
+						.append("&specialCouponId=")
 						.append(StringUtils.defaultString(product.getSpecialSaleCouponId()))
 						.append("&specialCouponAmt=").append(product.getSpecialCouponAmt()).append("&cmpxProdClsfCd=")
 						.append(product.getCmpxProdClsfCd()).append("&prodCaseCd=")
 						.append(StringUtils.defaultString(product.getProdCaseCd()));
 
 				// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
-				// 소장/대여 TAB 처리 제거: 2014.09.01
 				if (purchaseOrderInfo.getPurchaseProductList().size() == 1 && purchaseOrderInfo.getRealTotAmt() > 0.0
 						&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
 						&& purchaseOrderInfo.isFlat() == false) {
@@ -685,44 +663,25 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					if (StringUtils.equals(StringUtils.defaultIfBlank(product.getPossLendClsfCd(),
 							PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION),
 							PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)) {
-						sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=&loanPid=&loanAmt=0")
-								.append("&ownPid=").append(product.getProdId()).append("&ownAmt=")
-								.append(product.getProdAmt());
+						sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=");
 					} else {
 						sbReserveData.append("&dwldAvailableDayCnt=").append(product.getUsePeriod())
-								.append("&usePeriodCnt=").append(product.getUsePeriod()).append("&loanPid=")
-								.append(product.getProdId()).append("&loanAmt=").append(product.getProdAmt())
-								.append("&ownPid=&ownAmt=0");
+								.append("&usePeriodCnt=").append(product.getUsePeriod());
 					}
 
-					// PossLendProductInfo possLendProductInfo = product.getPossLendProductInfo();
-					// if (possLendProductInfo == null) {
-					// if (StringUtils.equals(StringUtils.defaultIfBlank(product.getPossLendClsfCd(),
-					// PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION),
-					// PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)) {
-					// sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=&loanPid=&loanAmt=0")
-					// .append("&ownPid=").append(product.getProdId()).append("&ownAmt=")
-					// .append(product.getProdAmt());
-					// } else {
-					// sbReserveData.append("&dwldAvailableDayCnt=").append(product.getUsePeriod())
-					// .append("&usePeriodCnt=").append(product.getUsePeriod()).append("&loanPid=")
-					// .append(product.getProdId()).append("&loanAmt=").append(product.getProdAmt())
-					// .append("&ownPid=&ownAmt=0");
-					// }
-					//
-					// } else {
-					// sbReserveData.append("&usePeriodUnitCd=").append(possLendProductInfo.getUsePeriodUnitCd())
-					// .append("&usePeriod=").append(possLendProductInfo.getUsePeriod())
-					// .append("&dwldAvailableDayCnt=").append(possLendProductInfo.getDownPossiblePeriod())
-					// .append("&usePeriodCnt=").append(possLendProductInfo.getUsePeriod())
-					// .append("&loanPid=").append(possLendProductInfo.getLendProdId()).append("&loanAmt=")
-					// .append(possLendProductInfo.getLendProdAmt()).append("&ownPid=")
-					// .append(possLendProductInfo.getPossProdId()).append("&ownAmt=")
-					// .append(possLendProductInfo.getPossProdAmt());
-					// }
-
 				} else {
-					sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=&loanPid=&loanAmt=0&ownPid=&ownAmt=0");
+					sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=");
+				}
+
+				// IAP P/P 처리
+				if (purchaseOrderInfo.isIap()) {
+					sbReserveData.append("&iapYn=Y").append("&iapPostbackUrl=")
+							.append(StringUtils.defaultString(product.getIapPostbackUrl())).append("&iapProdKind=")
+							.append(StringUtils.defaultString(product.getIapProdKind())).append("&iapProdCase=")
+							.append(StringUtils.defaultString(product.getIapProdCase()));
+					if (product.getIapUsePeriod() != null) {
+						sbReserveData.append("&iapUsePeriod=").append(product.getIapUsePeriod());
+					}
 				}
 
 				prchsDtlMoreList.get(idx++).setPrchsResvDesc(sbReserveData.toString());

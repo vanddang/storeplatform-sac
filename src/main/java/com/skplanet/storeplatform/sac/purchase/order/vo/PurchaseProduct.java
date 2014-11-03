@@ -24,7 +24,7 @@ public class PurchaseProduct extends PaymentInfo {
 	private PossLendProductInfo possLendProductInfo; // 소장/대여 상품 정보
 	private PurchaseProduct fullIapProductInfo; // IAP 정식판 전환 상품 정보
 
-	/* 게임 캐쉬 */
+	// 게임 캐쉬
 	private String bonusCashUsableDayCnt; // 보너스 캐쉬 유효기간(일)
 	private String afterAutoPayDt; // 다음 자동 결제일
 
@@ -38,14 +38,20 @@ public class PurchaseProduct extends PaymentInfo {
 	private String useExprDt; // [비과금 구매요청 시 사용]
 	private String useFixrateProdId; // 이용한 정액제 상품ID
 	private String useFixrateProdClsfCd; // 이용한 정액제 상품 타입
-	/* IAP */
+	// IAP
 	private String tid; // 부분유료화 개발사 구매Key
 	private String txId; // 부분유료화 전자영수증 번호
 	private String parentProdId; // 부모_상품_ID
 	private String partChrgVer; // 부분_유료_버전
 	private String partChrgProdNm; // 부분_유료_상품_명
 	private boolean fullProd; // 정식판 전환 상품 여부
-	/* Ring & Bell */
+	// IAP P/P
+	private String iapPostbackUrl; // 모상품 결제결과 전송 URL
+	private String iapProdKind; // 부분유료화 상품 유형
+	private String iapProdCase; // 부분유료화 상품 종류
+	private Integer iapUsePeriod; // 이용기간 값
+
+	// Ring & Bell
 	private String rnBillCd; // RN_과금_코드
 	private String infoUseFee; // 정보_이용_요금 (ISU_AMT_ADD)
 	private String cid; // 컨텐츠ID
@@ -306,6 +312,7 @@ public class PurchaseProduct extends PaymentInfo {
 	/**
 	 * @return the parentProdId
 	 */
+	@Override
 	public String getParentProdId() {
 		return this.parentProdId;
 	}
@@ -314,6 +321,7 @@ public class PurchaseProduct extends PaymentInfo {
 	 * @param parentProdId
 	 *            the parentProdId to set
 	 */
+	@Override
 	public void setParentProdId(String parentProdId) {
 		this.parentProdId = parentProdId;
 	}
@@ -361,6 +369,66 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setFullProd(boolean fullProd) {
 		this.fullProd = fullProd;
+	}
+
+	/**
+	 * @return the iapProdKind
+	 */
+	public String getIapProdKind() {
+		return this.iapProdKind;
+	}
+
+	/**
+	 * @param iapProdKind
+	 *            the iapProdKind to set
+	 */
+	public void setIapProdKind(String iapProdKind) {
+		this.iapProdKind = iapProdKind;
+	}
+
+	/**
+	 * @return the iapProdCase
+	 */
+	public String getIapProdCase() {
+		return this.iapProdCase;
+	}
+
+	/**
+	 * @param iapProdCase
+	 *            the iapProdCase to set
+	 */
+	public void setIapProdCase(String iapProdCase) {
+		this.iapProdCase = iapProdCase;
+	}
+
+	/**
+	 * @return the iapUsePeriod
+	 */
+	public Integer getIapUsePeriod() {
+		return this.iapUsePeriod;
+	}
+
+	/**
+	 * @param iapUsePeriod
+	 *            the iapUsePeriod to set
+	 */
+	public void setIapUsePeriod(Integer iapUsePeriod) {
+		this.iapUsePeriod = iapUsePeriod;
+	}
+
+	/**
+	 * @return the iapPostbackUrl
+	 */
+	public String getIapPostbackUrl() {
+		return this.iapPostbackUrl;
+	}
+
+	/**
+	 * @param iapPostbackUrl
+	 *            the iapPostbackUrl to set
+	 */
+	public void setIapPostbackUrl(String iapPostbackUrl) {
+		this.iapPostbackUrl = iapPostbackUrl;
 	}
 
 	/**

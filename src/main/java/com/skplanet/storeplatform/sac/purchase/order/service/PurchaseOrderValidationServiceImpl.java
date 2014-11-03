@@ -518,6 +518,12 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				}
 				purchaseProduct.setParentProdId(iapInfo.getParentProdId()); // 부모 상품ID
 				purchaseProduct.setContentsType(iapInfo.getProdKind()); // 상품 유형 (컨텐츠_타입)
+
+				// purchaseProduct.setIapPostbackUrl(iapInfo.getPostbackUrl());
+				purchaseProduct.setIapProdKind(iapInfo.getProdKind());
+				purchaseProduct.setIapProdCase(iapInfo.getProdCase());
+				purchaseProduct.setIapUsePeriod(iapInfo.getUsePeriod());
+
 				if (StringUtils.equals(iapInfo.getProdKind(), "PK0002")) { // 소멸성 건당 상품
 					purchaseOrderInfo.setPossibleDuplication(true); // 중복 구매 가능 여부
 				}

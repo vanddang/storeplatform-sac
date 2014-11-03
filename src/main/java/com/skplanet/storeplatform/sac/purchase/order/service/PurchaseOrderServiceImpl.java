@@ -66,6 +66,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePur
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderIapInfoSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.common.service.MembershipReserveService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
@@ -461,6 +462,17 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
+		String payUserKey = null;
+		String payDeviceKey = null;
+
+		if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_PURCHASE_CD)) {
+			payUserKey = prchsDtlMore.getUseInsdUsermbrNo();
+			payDeviceKey = prchsDtlMore.getUseInsdDeviceId();
+		} else {
+			payUserKey = prchsDtlMore.getSendInsdUsermbrNo();
+			payDeviceKey = prchsDtlMore.getSendInsdDeviceId();
+		}
+
 		// ------------------------------------------------------------------------------------------------
 		// 구매인증 응답 데이터 처리
 
@@ -473,8 +485,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 회원 - 결제 관련 정보 조회
 		SearchUserPayplanetSacRes userPayRes = null;
 		try {
-			userPayRes = this.purchaseMemberRepository.searchUserPayplanet(reservedDataMap.get("userKey"),
-					reservedDataMap.get("deviceKey"));
+			userPayRes = this.purchaseMemberRepository.searchUserPayplanet(payUserKey, payDeviceKey);
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7208", e);
 		}
@@ -567,7 +578,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		for (PrchsDtlMore productInfo : prchsDtlMoreList) {
 			prodIdList.add(productInfo.getProdId());
 		}
-		res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreCouponList(reservedDataMap.get("userKey"),
+		res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreCouponList(payUserKey,
 				reservedDataMap.get("deviceId"), prodIdList));
 
 		// ------------------------------------------------------------------------------------------------
@@ -578,12 +589,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
 				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-			cashIntgAmtInf = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(reservedDataMap
-					.get("userKey"));
+			cashIntgAmtInf = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(payUserKey);
 
 		} else {
 			// T store Cash 조회
-			double tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(reservedDataMap.get("userKey"));
+			double tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(payUserKey);
 
 			// 캐쉬/포인트 잔액 통합 정보
 			StringBuffer sbCashPoint = new StringBuffer();
@@ -598,7 +608,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setCashPointList(cashIntgAmtInf);
 
 		// // T store Cash 조회
-		// double tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(reservedDataMap.get("userKey"));
+		// double tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(payUserKey);
 		//
 		// // 게임캐쉬 조회
 		// double gameCashAmt = 0.0;
@@ -607,7 +617,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
 		// && StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
 		// PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-		// gameCashAmt = this.purchaseOrderTstoreService.searchGameCashAmt(reservedDataMap.get("userKey"));
+		// gameCashAmt = this.purchaseOrderTstoreService.searchGameCashAmt(payUserKey);
 		// }
 		//
 		// // ------------------------------------------------------------------------------------------------
@@ -617,7 +627,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
 		// && StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
 		// PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-		// tgamepassAmt = this.purchaseOrderTstoreService.searchTgamepassAmt(reservedDataMap.get("userKey"));
+		// tgamepassAmt = this.purchaseOrderTstoreService.searchTgamepassAmt(payUserKey);
 		// }
 		//
 		// // ------------------------------------------------------------------------------------------------
@@ -635,7 +645,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// T마일리지 적립 정보
 
 		// 회원등급
-		res.setUserGrade(this.purchaseMemberRepository.searchUserGrade(reservedDataMap.get("userKey")));
+		res.setUserGrade(this.purchaseMemberRepository.searchUserGrade(payUserKey));
 
 		// 상품 적립률
 		res.settMileageSaveRate(reservedDataMap.get("tMileageRateInfo"));
@@ -652,8 +662,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 
 		// TAKTODO::오타때문에 2개 항목 세팅
-		int reserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
-				reservedDataMap.get("userKey"), targetDt, null);
+		int reserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(), payUserKey,
+				targetDt, null);
 		res.settMileageReseveAmt(reserveAmt);
 		res.settMileageReserveAmt(reserveAmt);
 
@@ -717,25 +727,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 		res.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt")); // 다운로드 가능기간(일)
 		res.setUsePeriodCnt(StringUtils.defaultIfBlank(reservedDataMap.get("usePeriodCnt"), "")); // 이용기간(일)
-		// 대여/소장 TAB 제거 : 2014/08/27 적용
-		// // 대여/소장
-		// if (StringUtils.isNotBlank(reservedDataMap.get("loanPid"))
-		// && StringUtils
-		// .startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)) {
-		// res.setBasePid(reservedDataMap.get("loanPid"));
-		// } else {
-		// res.setBasePid(prchsDtlMore.getProdId());
-		// }
-		// res.setLoanPid(reservedDataMap.get("loanPid")); // 대여하기 상품 ID
-		// if (StringUtils.isNotBlank(reservedDataMap.get("loanAmt"))) {
-		// res.setLoanAmt(Double.parseDouble(StringUtils.defaultString(reservedDataMap.get("loanAmt"), "0"))); // 대여하기
-		// // 상품 금액
-		// }
-		// res.setOwnPid(reservedDataMap.get("ownPid")); // 소장하기 상품 ID
-		// if (StringUtils.isNotBlank(reservedDataMap.get("ownAmt"))) {
-		// res.setOwnAmt(Double.parseDouble(StringUtils.defaultString(reservedDataMap.get("ownAmt"), "0"))); // 소장하기 상품
-		// // 금액
-		// }
+
+		// IAP P/P 정보 세팅
+		if (StringUtils.equals("Y", reservedDataMap.get("iapYn"))) {
+			VerifyOrderIapInfoSac iapProdInfo = new VerifyOrderIapInfoSac();
+			iapProdInfo.setPostbackUrl(reservedDataMap.get("iapPostbackUrl"));
+			iapProdInfo.setProdKind(reservedDataMap.get("iapProdKind"));
+			iapProdInfo.setProdCase(reservedDataMap.get("iapProdCase"));
+			if (StringUtils.isNotBlank(reservedDataMap.get("iapUsePeriod"))) {
+				iapProdInfo.setUsePeriod(Integer.parseInt(reservedDataMap.get("iapUsePeriod")));
+			}
+
+			res.setIapProdInfo(iapProdInfo);
+		}
 
 		// 판매자 정보 세팅
 		SellerMbrSac sellerInfo = this.searchSellerInfo(reservedDataMap.get("sellerMbrNo"),
@@ -783,7 +787,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 공통 작업용 세팅
 		for (PrchsDtlMore createPurchaseInfo : prchsDtlMoreList) {
 			createPurchaseInfo.setSystemId(reservedDataMap.get("systemId"));
-			createPurchaseInfo.setCurrencyCd(reservedDataMap.get("currencyCd"));
 			createPurchaseInfo.setNetworkTypeCd(reservedDataMap.get("networkTypeCd"));
 
 			createPurchaseInfo.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT); // 구매확정
@@ -799,57 +802,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
-		// 구매완료 TLog 중간 세팅
-		// final String insdUsermbrNo = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-		// PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? prchsDtlMore.getUseInsdUsermbrNo() : prchsDtlMore
-		// .getSendInsdUsermbrNo();
-		// final String insdDeviceId = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-		// PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? prchsDtlMore.getUseInsdDeviceId() : prchsDtlMore
-		// .getSendInsdDeviceId();
-		// final String mbrId = reservedDataMap.get("userId");
-		// final String deviceId = reservedDataMap.get("deviceId");
-		// final String imei = reservedDataMap.get("imei");
-		// final String mno_type = reservedDataMap.get("telecom");
-		// final String usermbr_no = reservedDataMap.get("userKey");
-		// final String system_id = prchsDtlMore.getSystemId();
-		// final String purchase_channel = prchsDtlMore.getPrchsReqPathCd();
-		// final String purchase_inflow_channel = prchsDtlMore.getPrchsCaseCd();
-		// final String purchase_id_recv = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-		// PurchaseConstants.PRCHS_CASE_GIFT_CD) ? prchsDtlMore.getPrchsId() : "";
-		// final String coupon_code = reservedDataMap.get("couponCode");
-		// final String coupon_item_code = reservedDataMap.get("itemCode");
-		// final String auto_payment_yn = StringUtils.defaultIfBlank(reservedDataMap.get("autoPrchsYn"), "N");
-		// final List<String> prodIdTempList = new ArrayList<String>();
-		// for (PrchsDtlMore tempPrchsDtlMore : prchsDtlMoreList) {
-		// prodIdTempList.add(tempPrchsDtlMore.getProdId());
-		// }
-		//
-		// new TLogUtil().set(new ShuttleSetter() {
-		// @Override
-		// public void customize(TLogSentinelShuttle shuttle) {
-		// shuttle.insd_usermbr_no(insdUsermbrNo).insd_device_id(insdDeviceId).mbr_id(mbrId).device_id(deviceId)
-		// .product_id(prodIdTempList).imei(imei).mno_type(mno_type).usermbr_no(usermbr_no)
-		// .system_id(system_id).purchase_channel(purchase_channel)
-		// .purchase_inflow_channel(purchase_inflow_channel).purchase_id_recv(purchase_id_recv)
-		// .coupon_code(coupon_code).coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn);
-		// }
-		// });
+		String payUserKey = null;
 
-		// 소장/대여 TAB으로 구매요청이 아닌 상품 구매 시
-		if (StringUtils.isNotBlank(notifyPaymentReq.getProdId())
-				&& StringUtils.isNotBlank(reservedDataMap.get("ownPid"))
-				&& StringUtils.isNotBlank(reservedDataMap.get("loanPid"))
-				&& (StringUtils.equals(notifyPaymentReq.getProdId(), prchsDtlMore.getProdId()) == false)) {
-
-			if (StringUtils.equals(notifyPaymentReq.getProdId(), reservedDataMap.get("ownPid")) == false
-					&& StringUtils.equals(notifyPaymentReq.getProdId(), reservedDataMap.get("loanPid")) == false) {
-				throw new StorePlatformException("SAC_PUR_7101");
-			}
-			prchsDtlMore.setUsePeriodUnitCd(reservedDataMap.get("usePeriodUnitCd"));
-			prchsDtlMore.setUsePeriod(StringUtils.defaultString(reservedDataMap.get("usePeriod"), "0"));
-			prchsDtlMore.setProdId(notifyPaymentReq.getProdId());
-			prchsDtlMore.setProdAmt(notifyPaymentReq.getTotAmt());
-			prchsDtlMore.setTotAmt(notifyPaymentReq.getTotAmt());
+		if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_PURCHASE_CD)) {
+			payUserKey = prchsDtlMore.getUseInsdUsermbrNo();
+		} else {
+			payUserKey = prchsDtlMore.getSendInsdUsermbrNo();
 		}
 
 		// ------------------------------------------------------------------------------
@@ -1006,13 +964,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 		confirmPurchaseScReq.setMediaId(reservedDataMap.get("mediaId")); // CPS 매체ID 세팅
 
-		// 소장/대여 TAB 상품
-		confirmPurchaseScReq.setProdId(prchsDtlMore.getProdId()); // 상품ID
-		confirmPurchaseScReq.setProdAmt(prchsDtlMore.getProdAmt()); // 상품 가격
-		confirmPurchaseScReq.setTotAmt(prchsDtlMore.getTotAmt()); // 총 결제 금액
-		confirmPurchaseScReq.setUsePeriodUnitCd(prchsDtlMore.getUsePeriodUnitCd()); // 사용기간 단위
-		confirmPurchaseScReq.setUsePeriod(prchsDtlMore.getUsePeriod()); // 사용기간 값
-
 		// TAKTODO::T멤버쉽
 
 		String tMileageRateInfo = reservedDataMap.get("tMileageRateInfo"); // 상품 적립률
@@ -1032,7 +983,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			}
 		}
 
-		String userGrade = this.purchaseMemberRepository.searchUserGrade(reservedDataMap.get("userKey")); // 등급
+		String userGrade = this.purchaseMemberRepository.searchUserGrade(payUserKey); // 등급
 
 		MileageSubInfo mileageSubInfo = new MileageSubInfo();
 		mileageSubInfo.setTypeCd(PurchaseConstants.MEMBERSHIP_TYPE_TMEMBERSHIP);
@@ -1100,7 +1051,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				// 적립예정 이력 총 금액
 				String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 				int preReserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(),
-						reservedDataMap.get("userKey"), targetDt, null);
+						payUserKey, targetDt, null);
 
 				int limitAmt = this.purchaseOrderPolicyService.searchtMileageSaveLimit(prchsDtlMore.getTenantId(),
 						prchsDtlMore.getTenantProdGrpCd());
@@ -1200,7 +1151,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					PurchaseConstants.PRCHS_CASE_PURCHASE_CD) ? "" : reservedDataMap.get("useDeviceId");
 			final String imei = reservedDataMap.get("imei");
 			final String mno_type = reservedDataMap.get("telecom");
-			final String usermbr_no = reservedDataMap.get("userKey");
+			final String usermbr_no = payUserKey;
 			final String system_id = prchsDtlMore.getSystemId();
 			final String purchase_channel = prchsDtlMore.getPrchsReqPathCd();
 			final String purchase_inflow_channel = prchsDtlMore.getPrchsCaseCd();
