@@ -1713,7 +1713,10 @@
                 AND PI.IMG_CD = #{imageCd}                
                 AND C.CATALOG_ID = M.PROD_ID(+)                           
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
-               -- AND NVL(B.CHNL_CNT, 0) > 0          
+                <if test="req.includeProdStopStatus != null  ">
+                AND NVL(B.CHNL_CNT, 0) <![CDATA[ > ]]> 0      
+                AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                </if>   
                 AND C.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
@@ -1888,7 +1891,11 @@
                 AND K.TENANT_ID = L.TENANT_ID
                 AND I.PROD_ID = N.PROD_ID(+)
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
-               -- AND NVL(B.CHNL_CNT, 0) > 0          
+                <if test="req.includeProdStopStatus != null ">
+                AND NVL(B.CHNL_CNT, 0) <![CDATA[> ]]> 0
+                AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */       
+                </if>  
+                 
                 AND C.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                 AND O.LANG_CD= #{lang}          /* ko : 한국어 */
@@ -1974,7 +1981,18 @@
           AND E.EXPO_YN ='Y'                                /* Y : 기본(기본여부) */
           AND E.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
           AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
-    
+         <if test="req.includeProdStopStatus != null">
+          AND (CASE WHEN A.EXPO_ORD=1 THEN NVL( A.EXPO_YN, 'N' ) 
+               ELSE ( SELECT TPO2.EXPO_YN
+                        FROM TB_DP_PROD_OPT TPO2
+                       WHERE TPO2.CHNL_PROD_ID = A.CHNL_PROD_ID
+                         AND TPO2.OPT1_NM = A.OPT1_NM
+                         AND TPO2.EXPO_ORD = 1 
+                         AND ROWNUM =1
+                     ) 
+               END
+              ) = 'Y'         
+         </if>    
           <if test="req.saleDtUseYn == null">
           AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
           </if>
