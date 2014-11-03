@@ -1785,7 +1785,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getSaleDtUseYn())) {
 			req.setSaleDtUseYn(null);
 		}
-		this.log.info("++++++++++++++++getIncludeProdStopStatus+++++++++++++++" + req.getIncludeProdStopStatus());
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
 		reqMap.put("req", req);
