@@ -40,6 +40,7 @@ public class ShoppingDetailReq extends CommonInfo {
 	private String userKey; // 사용자고유키
 	private String saleDtUseYn; // 판매 기간이 넘어갈 경우 조회시
 	private String specialType;
+	private String includeProdStopStatus;
 	private String imageCd; // 이미지코드
 	private String langCd; // 언어코드
 	private String virtualDeviceModelNo; // android_standard2
@@ -150,6 +151,21 @@ public class ShoppingDetailReq extends CommonInfo {
 	 */
 	public void setSpecialType(String specialType) {
 		this.specialType = specialType;
+	}
+
+	/**
+	 * @return the includeProdStopStatus
+	 */
+	public String getIncludeProdStopStatus() {
+		return this.includeProdStopStatus;
+	}
+
+	/**
+	 * @param includeProdStopStatus
+	 *            the includeProdStopStatus to set
+	 */
+	public void setIncludeProdStopStatus(String includeProdStopStatus) {
+		this.includeProdStopStatus = includeProdStopStatus;
 	}
 
 	/**
