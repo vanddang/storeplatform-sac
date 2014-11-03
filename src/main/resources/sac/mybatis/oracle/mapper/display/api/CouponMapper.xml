@@ -283,12 +283,12 @@
     <!--상품 ID로 카탈로그 가져오기 조회-->
     <select id="selectTbDpProdCatalogMapgInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo" resultType="String">
      /* CouponMapper.xml, selectTbDpProdCatalogMapgInfo,상품 ID로 카탈로그 가져오기 조회, 김형식/SK플래닛  , 2014-01-08 */
-		SELECT CATALOG_ID 
-		  FROM TB_DP_PROD_CATALOG_MAPG
-		 WHERE PROD_ID= #{prodId}
-		   AND BASE_YN ='Y'
-		   AND USE_YN ='Y'
-		   AND ROWNUM =1
+        SELECT CATALOG_ID 
+          FROM TB_DP_PROD_CATALOG_MAPG
+         WHERE PROD_ID= #{prodId}
+           AND BASE_YN ='Y'
+           AND USE_YN ='Y'
+           AND ROWNUM =1
     </select>    
     
      <!--TB_DP_PROD_CATALOG_MAPG 테이블에 UPDATE--> 
@@ -483,15 +483,15 @@
         )
     </insert>
 
-	<parameterMap id="procMap" type="hashmap">
-	    <parameter property="prodId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-	    <parameter property="settlRt" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+    <parameterMap id="procMap" type="hashmap">
+        <parameter property="prodId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+        <parameter property="settlRt" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
         <parameter property="saleMbrNo" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
         <parameter property="saleStdDt" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
         <parameter property="saleEndDt" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
         <parameter property="regId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
-	    <parameter property="rtn" mode="OUT" jdbcType="VARCHAR" javaType="String" />
-	</parameterMap>   
+        <parameter property="rtn" mode="OUT" jdbcType="VARCHAR" javaType="String" />
+    </parameterMap>   
     
    <select id="selectSpSettleRegProd" statementType="CALLABLE" parameterMap="procMap">
       /* CouponMapper.xml, selectSpSettleRegProd,SP_SETT_REG_PROD 프로시저 호출, 김형식/SK플래닛   , 2014-01-08 */
@@ -537,16 +537,16 @@
         UPDATE 
              TB_DP_SHPG_PROD
         SET EPSD_CNT = (
-				SELECT 
-				       COUNT(B.PART_PROD_ID)  
-				FROM   TB_DP_SHPG_PROD A 
-				      ,(SELECT PART_PROD_ID FROM TB_DP_PROD_RSHP WHERE PROD_ID =  #{prodId} ) B
-				      ,TB_DP_TENANT_PROD C
-				WHERE A.PROD_ID = B.PART_PROD_ID
-				  AND A.PROD_ID =C.PROD_ID
-				  AND C.PROD_STATUS_CD = 'PD000403'
-				  AND C.EXPO_YN ='Y'
-				  AND C.TENANT_ID =#{tenentId}
+                SELECT 
+                       COUNT(B.PART_PROD_ID)  
+                FROM   TB_DP_SHPG_PROD A 
+                      ,(SELECT PART_PROD_ID FROM TB_DP_PROD_RSHP WHERE PROD_ID =  #{prodId} ) B
+                      ,TB_DP_TENANT_PROD C
+                WHERE A.PROD_ID = B.PART_PROD_ID
+                  AND A.PROD_ID =C.PROD_ID
+                  AND C.PROD_STATUS_CD = 'PD000403'
+                  AND C.EXPO_YN ='Y'
+                  AND C.TENANT_ID =#{tenentId}
         )
         WHERE PROD_ID = #{prodId}
     </update>    
@@ -557,25 +557,25 @@
         UPDATE 
             TB_DP_SHPG_CATALOG
         SET CHNL_CNT =  (
-				  SELECT 
-				        COUNT(B.PROD_ID)
-				  FROM  TB_DP_PROD_CATALOG_MAPG A
-				       ,TB_DP_TENANT_PROD B
-				  WHERE A.PROD_ID = B.PROD_ID
-				    AND A.BASE_YN ='Y'
-				    AND A.USE_YN ='Y'
-				    AND B.EXPO_YN ='Y' 
-				    AND B.PROD_STATUS_CD = 'PD000403' 
-				    AND B.TENANT_ID =#{tenentId}     
-				    AND A.CATALOG_ID = (
-				         SELECT 
-				             CATALOG_ID 
-				         FROM TB_DP_PROD_CATALOG_MAPG
-				         WHERE PROD_ID =#{prodId}
-			               AND BASE_YN ='Y'
-			               AND USE_YN ='Y'    	
-			               AND ROWNUM =1			         
-				   )                 
+                  SELECT 
+                        COUNT(B.PROD_ID)
+                  FROM  TB_DP_PROD_CATALOG_MAPG A
+                       ,TB_DP_TENANT_PROD B
+                  WHERE A.PROD_ID = B.PROD_ID
+                    AND A.BASE_YN ='Y'
+                    AND A.USE_YN ='Y'
+                    AND B.EXPO_YN ='Y' 
+                    AND B.PROD_STATUS_CD = 'PD000403' 
+                    AND B.TENANT_ID =#{tenentId}     
+                    AND A.CATALOG_ID = (
+                         SELECT 
+                             CATALOG_ID 
+                         FROM TB_DP_PROD_CATALOG_MAPG
+                         WHERE PROD_ID =#{prodId}
+                           AND BASE_YN ='Y'
+                           AND USE_YN ='Y'      
+                           AND ROWNUM =1                     
+                   )                 
         )
         WHERE CATALOG_ID =
         (
@@ -624,27 +624,7 @@
         FROM   TB_DP_SPRC_PROD A
               ,TB_DP_SHPG_PROD B
         WHERE A.PROD_ID = B.PROD_ID
-          AND B.SRC_CONTENT_ID =  
-                                 CASE WHEN PROD_CASE_CD = 'DP006303'
-                                  THEN
-                                        (  SELECT 
-                                                SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD SP
-                                                 ,TB_DP_SPRC_PROD SP1
-                                            WHERE 1=1
-                                              AND SP.PROD_ID = SP1.PROD_ID
-                                              AND SP.PROD_ID IN (
-                                                    SELECT 
-                                                           B.PART_PROD_ID 
-                                                      FROM TB_DP_SHPG_PROD A 
-                                                          ,TB_DP_PROD_RSHP B
-                                                     WHERE A.PROD_ID = B.PROD_ID 
-                                                      AND A.SRC_CONTENT_ID =#{prodId}       
-                                                   ) 
-                                               AND ROWNUM =1     
-                                          )                                   
-                                  ELSE #{prodId}
-                                  END         
+          AND B.SRC_CONTENT_ID =  #{prodId}
           AND A.EXPO_YN = 'Y' 
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
     </select>
@@ -655,67 +635,27 @@
         SELECT 
             COUNT(PROD_ID) as CNT
         FROM TB_DP_SHPG_PROD
-        WHERE SRC_CONTENT_ID = 
-                                 CASE WHEN PROD_CASE_CD = 'DP006303'
-                                  THEN
-                                        (  SELECT 
-                                                SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD SP
-                                                 ,TB_DP_SPRC_PROD SP1
-                                            WHERE 1=1
-                                              AND SP.PROD_ID = SP1.PROD_ID
-                                              AND SP.PROD_ID IN (
-                                                    SELECT 
-                                                           B.PART_PROD_ID 
-                                                      FROM TB_DP_SHPG_PROD A 
-                                                          ,TB_DP_PROD_RSHP B
-                                                     WHERE A.PROD_ID = B.PROD_ID 
-                                                      AND A.SRC_CONTENT_ID =#{prodId}       
-                                                   ) 
-                                               AND ROWNUM =1     
-                                          )                                   
-                                  ELSE #{prodId}
-                                  END         
+        WHERE SRC_CONTENT_ID = #{prodId}
     </select>
     
     <!--특가 상품 상세 조회-->
     <select id="GET_SPECIAL_PRODUCT_DETAIL" resultType="com.skplanet.storeplatform.external.client.shopping.vo.CouponRes" parameterType="String">
        /* CouponMapper.xml, GET_SPECIAL_PRODUCT_DETAIL, 특가 상품 상세 조회, 김형식/SK플래닛  , 2014-01-08 */
-		SELECT 
-			   A.PROD_ID as couponCode
-			  ,B.PROD_NM  as eventName
-			  ,TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  as eventStartDate
-			  ,TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')    as eventEndDate
-			  ,A.SPRC_DC_RATE as eventDcRate 
-		FROM   TB_DP_SPRC_PROD A
-		      ,TB_DP_PROD_DESC B
-		      ,TB_DP_SHPG_PROD C
-		WHERE A.PROD_ID = B.PROD_ID
-		  AND A.PROD_ID = C.PROD_ID
-		  AND C.SRC_CONTENT_ID =  
-                                 CASE WHEN PROD_CASE_CD = 'DP006303'
-                                  THEN
-                                        (  SELECT 
-                                                SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD SP
-                                                 ,TB_DP_SPRC_PROD SP1
-                                            WHERE 1=1
-                                              AND SP.PROD_ID = SP1.PROD_ID
-                                              AND SP.PROD_ID IN (
-                                                    SELECT 
-                                                           B.PART_PROD_ID 
-                                                      FROM TB_DP_SHPG_PROD A 
-                                                          ,TB_DP_PROD_RSHP B
-                                                     WHERE A.PROD_ID = B.PROD_ID 
-                                                      AND A.SRC_CONTENT_ID =#{prodId}       
-                                                   ) 
-                                               AND ROWNUM =1     
-                                          )                                   
-                                  ELSE #{prodId}
-                                  END	  
-		  AND A.EXPO_YN = 'Y' 
-		  AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
-		  AND ROWNUM =1
+        SELECT 
+               A.PROD_ID as couponCode
+              ,B.PROD_NM  as eventName
+              ,TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  as eventStartDate
+              ,TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')    as eventEndDate
+              ,A.SPRC_DC_RATE as eventDcRate 
+        FROM   TB_DP_SPRC_PROD A
+              ,TB_DP_PROD_DESC B
+              ,TB_DP_SHPG_PROD C
+        WHERE A.PROD_ID = B.PROD_ID
+          AND A.PROD_ID = C.PROD_ID
+          AND C.SRC_CONTENT_ID =  #{prodId}
+          AND A.EXPO_YN = 'Y' 
+          AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
+          AND ROWNUM =1
     </select>    
         
     <!--  쿠폰 판매상태 여부 상태값  -->
