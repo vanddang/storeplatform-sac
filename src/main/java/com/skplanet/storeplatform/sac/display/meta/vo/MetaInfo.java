@@ -319,6 +319,7 @@ public class MetaInfo extends CommonInfo {
     private Long   deltaFileSize;
     private String deltaFilePath;
     private String visitPathNm;
+    private String dwldTypeCd;
 
 	/**
 	 * @return the topMenuId
@@ -4327,6 +4328,12 @@ public class MetaInfo extends CommonInfo {
 		this.visitPathNm = visitPathNm;
 	}
 
+	public String getDwldTypeCd() {
+		return dwldTypeCd;
+	}
 
+	public void setDwldTypeCd(String dwldTypeCd) {
+		this.dwldTypeCd = dwldTypeCd;
+	}
 
 }

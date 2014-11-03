@@ -183,6 +183,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			 */
 			metaInfo.setSystemId(tanantHeader.getSystemId());
 			downloadCommonService.validateVisitPathNm(metaInfo, downloadAppSacReq.getVisitPathNm(), productId);
+			metaInfo.setDwldTypeCd(downloadAppSacReq.getDwldTypeCd());
 
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {

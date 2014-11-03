@@ -176,6 +176,10 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 			extra.append("visitPathNm=").append(metaInfo.getVisitPathNm()).append(";");
 		}
 
+		if (StringUtils.isNotBlank(metaInfo.getDwldTypeCd())) {
+			extra.append("dwldTypeCd=").append(metaInfo.getDwldTypeCd()).append(";");
+		}
+
 		return extra.toString();
 	}
 }
