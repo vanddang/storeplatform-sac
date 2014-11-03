@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class VerifyOrderSacRes extends CommonInfo {
 	private static final long serialVersionUID = 201420261L;
 
+	private String tenantId; // 테넌트 ID
 	private String mdn; // 결제 단말 번호
 	private String oneId; // ONE ID 회원 ID
 	private String flgMbrStatus; // 회원상태: 0-비정상, 1-정상
@@ -62,12 +63,30 @@ public class VerifyOrderSacRes extends CommonInfo {
 	// private String ownPid; // 소장하기 상품 ID
 	// private Double ownAmt; // 소장하기 상품 금액
 	private String prodKind; // 쇼핑상품 종류
+
+	private VerifyOrderIapInfoSac iapProdInfo; // IAP상품 정보
+
 	private String nmSellerCompany; // 회사명
 	private String nmSeller; // 판매자명
 	private String emailSeller; // 판매자 이메일 주소
 	private String noTelSeller; // 판매자 전화번호
 	private String nmDelivery; // 선물수신자 성명
 	private String noMdnDelivery; // 선물수신자 MDN
+
+	/**
+	 * @return the tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
 	/**
 	 * @return the mdn
@@ -607,6 +626,21 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setProdKind(String prodKind) {
 		this.prodKind = prodKind;
+	}
+
+	/**
+	 * @return the iapProdInfo
+	 */
+	public VerifyOrderIapInfoSac getIapProdInfo() {
+		return this.iapProdInfo;
+	}
+
+	/**
+	 * @param iapProdInfo
+	 *            the iapProdInfo to set
+	 */
+	public void setIapProdInfo(VerifyOrderIapInfoSac iapProdInfo) {
+		this.iapProdInfo = iapProdInfo;
 	}
 
 	/**
