@@ -61,7 +61,7 @@
                 <entry key="sac:display:menuinfo" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:tmembershipdcrate:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:updateProductInfo" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:updateProductInfo:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:updateProductInfo:v3" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
             </map>
         </property>
     </bean>

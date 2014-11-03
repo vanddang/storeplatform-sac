@@ -9,17 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct;
-import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct;
+import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
  * <p>
@@ -35,7 +36,7 @@ public class UpdateProductInfoManagerImpl implements UpdateProductInfoManager {
     private CommonDAO commonDAO;
 
     @Override
-    @Cacheable(value = "sac:display:updateProductInfo:v2", key = "#param.getCacheKey()")
+    @Cacheable(value = "sac:display:updateProductInfo:v3", key = "#param.getCacheKey()")
     public UpdateProduct getUpdateProductInfo(UpdateProductParam param) {
 
         Map<String, Object> updateTargetMap = new HashMap<String, Object>();

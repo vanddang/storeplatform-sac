@@ -1,7 +1,20 @@
 /**
- * 
+ *
  */
 package com.skplanet.storeplatform.sac.display.personal.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -17,8 +30,19 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistorySacIn;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.History;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -31,22 +55,10 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 업데이트 대상 목록 조회 Service 구현체
- * 
+ *
  * Updated on : 2014. 2. 10. Updated by : 오승민, 인크로스.
  */
 @Service
@@ -77,7 +89,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService#searchUpdateProductList(
 	 * com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq,
@@ -138,6 +150,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
                 prod.put("FILE_SIZE", up.getFileSize());
                 prod.put("FILE_PATH", up.getFilePath());
                 prod.put("LAST_DEPLOY_DT", up.getLastDeployDt());
+                prod.put("UPDT_TEXT", up.getUpdtText());
 
                 listPkg.add(prod);
             }
@@ -498,7 +511,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
 					Update update = this.appGenerator.generateUpdate(
 							new Date(null, (java.util.Date)updateTargetApp.get("LAST_DEPLOY_DT")),
-							null);
+							(String)updateTargetApp.get("UPDT_TEXT"));
 					updateList.add(update);
 					history.setUpdate(updateList);
 					app.setHistory(history);

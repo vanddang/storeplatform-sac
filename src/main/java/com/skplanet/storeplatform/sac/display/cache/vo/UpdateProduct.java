@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-
 import java.util.Date;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
@@ -46,6 +46,7 @@ public class UpdateProduct extends CommonInfo{
     private String topMenuNm;
     private String prodVer;
     private String fakeYn;
+    private String updtText;
 
     public String getAid() {
         return aid;
@@ -239,4 +240,14 @@ public class UpdateProduct extends CommonInfo{
     public void setFakeYn(String fakeYn) {
         this.fakeYn = fakeYn;
     }
+
+	public String getUpdtText() {
+		return updtText;
+	}
+
+	public void setUpdtText(String updtText) {
+		this.updtText = updtText;
+	}
+
+
 }

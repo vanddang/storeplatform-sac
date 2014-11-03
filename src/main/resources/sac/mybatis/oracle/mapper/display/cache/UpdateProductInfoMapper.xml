@@ -12,6 +12,7 @@
                     AND LANG_CD = LB.LANG_CD
                     AND ROWNUM = 1) AS TOP_MENU_NM
             ,LB.VER_MAJOR || '.' || LB.VER_MINOR AS PROD_VER
+            ,(SELECT UPDT_TEXT FROM (SELECT UPDT_TEXT FROM TB_DP_PROD_UPDT_HIS WHERE PROD_ID = #{epsdId} ORDER BY PROD_UPD_DT DESC) WHERE ROWNUM = 1) AS UPDT_TEXT
         FROM(
                 SELECT
                     LA.*
@@ -83,6 +84,6 @@
                                  AND   SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
                      ) LA
             )LB
-    </select>
-
+    </select>   
+    
 </mapper>
