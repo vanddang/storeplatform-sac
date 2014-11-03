@@ -1772,10 +1772,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 				req.setSaleDtUseYn(null);
 			}
 		}
+		if (StringUtils.isNotEmpty(req.getIncludeProdStopStatus())) {
+			if (!"Y".equals(req.getIncludeProdStopStatus()) && !"N".equals(req.getIncludeProdStopStatus())) {
+				throw new StorePlatformException("SAC_DSP_0003", "includeProdStopStatus",
+						req.getIncludeProdStopStatus());
+			}
+			if ("Y".equals(req.getIncludeProdStopStatus())) {
+				req.setIncludeProdStopStatus(null);
+			}
+		}
+
 		if (StringUtils.isEmpty(req.getSaleDtUseYn())) {
 			req.setSaleDtUseYn(null);
 		}
-
+		this.log.info("++++++++++++++++getIncludeProdStopStatus+++++++++++++++" + req.getIncludeProdStopStatus());
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
 		reqMap.put("req", req);
