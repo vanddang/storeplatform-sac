@@ -203,6 +203,11 @@ public class UserInfo extends CommonInfo {
 	 */
 	private String imSiteCode;
 
+	/**
+	 * 회원의 연령대 정보.
+	 */
+	private String prodExpoLevl;
+
 	/* 사용자 부가정보 */
 	private List<UserExtraInfo> userExtraInfoList;
 
@@ -512,6 +517,14 @@ public class UserInfo extends CommonInfo {
 
 	public void setTotalDeviceCount(String totalDeviceCount) {
 		this.totalDeviceCount = totalDeviceCount;
+	}
+
+	public String getProdExpoLevl() {
+		return this.prodExpoLevl;
+	}
+
+	public void setProdExpoLevl(String prodExpoLevl) {
+		this.prodExpoLevl = prodExpoLevl;
 	}
 
 }

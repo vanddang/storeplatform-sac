@@ -148,6 +148,11 @@ public class DeviceInfo extends CommonInfo {
 	private List<DeviceExtraInfo> deviceExtraInfoList;
 
 	/**
+	 * 타사 회선의 고유 Key.
+	 */
+	private String marketDeviceKey;
+
+	/**
 	 * @return deviceKey
 	 */
 	public String getDeviceKey() {
@@ -535,6 +540,14 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	public void setoDeviceId(String oDeviceId) {
 		this.oDeviceId = oDeviceId;
+	}
+
+	public String getMarketDeviceKey() {
+		return this.marketDeviceKey;
+	}
+
+	public void setMarketDeviceKey(String marketDeviceKey) {
+		this.marketDeviceKey = marketDeviceKey;
 	}
 
 }

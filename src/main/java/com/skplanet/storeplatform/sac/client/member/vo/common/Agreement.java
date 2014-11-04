@@ -20,6 +20,7 @@ public class Agreement extends CommonInfo {
 	private String isMandatory;
 	private String regDate;
 	private String updateDate;
+	private String extraAgreementURL;
 
 	public String getExtraAgreementId() {
 		return this.extraAgreementId;
@@ -76,4 +77,18 @@ public class Agreement extends CommonInfo {
 		this.updateDate = updateDate;
 	}
 
+	/**
+	 * @return String : extraAgreementURL
+	 */
+	public String getExtraAgreementURL() {
+		return this.extraAgreementURL;
+	}
+
+	/**
+	 * @param extraAgreementURL
+	 *            String : the extraAgreementURL to set
+	 */
+	public void setExtraAgreementURL(String extraAgreementURL) {
+		this.extraAgreementURL = extraAgreementURL;
+	}
 }
