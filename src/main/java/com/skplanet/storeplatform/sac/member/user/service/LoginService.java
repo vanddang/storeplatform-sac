@@ -80,7 +80,6 @@ public interface LoginService {
 	 *            AuthorizeForAutoUpdateReq
 	 * @return AuthorizeByIdRes
 	 */
-	@Deprecated
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req);
 
 	/**

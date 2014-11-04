@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckDevicePinSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckDevicePinSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDevicePinSacReq;
@@ -35,6 +33,7 @@ public class DeviceSetController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceSetController.class);
 
+	/** DeviceSet Service InterFace. */
 	@Autowired
 	private DeviceSetService deviceSetService;
 
@@ -54,12 +53,8 @@ public class DeviceSetController {
 	public CreateDevicePinSacRes createDevicePin(SacRequestHeader header,
 			@RequestBody @Validated CreateDevicePinSacReq req) {
 
-		if (StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getDeviceId())) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceId || deviceKey");
-		}
-
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-		CreateDevicePinSacRes res = this.deviceSetService.createDevicePin(header, req);
+		CreateDevicePinSacRes res = this.deviceSetService.regDevicePin(header, req);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
@@ -79,12 +74,10 @@ public class DeviceSetController {
 	@ResponseBody
 	public ModifyDevicePinSacRes modifyDevicePin(SacRequestHeader header,
 			@RequestBody @Validated ModifyDevicePinSacReq req) {
-		if (StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getDeviceId())) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceId || deviceKey");
-		}
+
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		ModifyDevicePinSacRes res = this.deviceSetService.modifyDevicePin(header, req);
+		ModifyDevicePinSacRes res = this.deviceSetService.modDevicePin(header, req);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
@@ -104,9 +97,7 @@ public class DeviceSetController {
 	@ResponseBody
 	public SearchDevicePinSacRes searchDevicePin(SacRequestHeader header,
 			@RequestBody @Validated SearchDevicePinSacReq req) {
-		if (StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getDeviceId())) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceId || deviceKey");
-		}
+
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		SearchDevicePinSacRes res = this.deviceSetService.searchDevicePin(header, req);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
@@ -127,13 +118,10 @@ public class DeviceSetController {
 	@RequestMapping(value = "/checkDevicePin/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CheckDevicePinSacRes checkDevicePin(SacRequestHeader header, @RequestBody @Validated CheckDevicePinSacReq req) {
-		if (StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getDeviceId())) {
-			throw new StorePlatformException("SAC_MEM_0001", "deviceId || deviceKey");
-		}
+
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		CheckDevicePinSacRes res = this.deviceSetService.checkDevicePin(header, req);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
-
 }

@@ -150,9 +150,8 @@ public class LoginController {
 	 *            AuthorizeSimpleByMdnReq
 	 * @return AuthorizeByIdRes
 	 */
-	// @RequestMapping(value = "/member/user/authorizeSimpleByMdn/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/authorizeSimpleByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	@Deprecated
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeSimpleByMdnReq req) {
 

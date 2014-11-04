@@ -53,6 +53,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListR
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
@@ -892,45 +894,27 @@ public class LoginServiceImpl implements LoginService {
 		/* 모번호 조회 */
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
 
-		/* 휴대기기 정보 조회 */
-		DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
-				deviceId, null);
+		SimpleLoginRequest simpleLoginRequest = new SimpleLoginRequest();
+
+		simpleLoginRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+
+		simpleLoginRequest.setDeviceID(deviceId);
+		simpleLoginRequest.setConnIp(deviceId);
+
+		String svcVersion = requestHeader.getDeviceHeader().getSvc();
+		if (StringUtils.isNotBlank(svcVersion)) {
+			simpleLoginRequest.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
+		}
+
+		SimpleLoginResponse simpleLoginResponse = this.userSCI.simpleLogin(simpleLoginRequest);
 
 		AuthorizeSimpleByMdnRes res = new AuthorizeSimpleByMdnRes();
-
-		if (deviceInfo != null) {
-
+		if (StringUtils.equals(MemberConstants.USE_Y, simpleLoginResponse.getIsLoginSuccess())) {
+			res.setDeviceKey(simpleLoginResponse.getDeviceKey());
+			res.setUserKey(simpleLoginResponse.getUserKey());
 			res.setUserAuthKey(this.tempUserAuthKey);
-			res.setUserKey(deviceInfo.getUserKey());
-			res.setDeviceKey(deviceInfo.getDeviceKey());
-			res.setIsLoginSuccess("Y");
-
-			/* 로그인 히스토리 저장 */
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
-			LoginUserRequest loginReq = new LoginUserRequest();
-			loginReq.setCommonRequest(commonRequest);
-			loginReq.setUserID(deviceId);
-			loginReq.setUserPW(null);
-			loginReq.setIsSuccess("Y");
-			loginReq.setIsOneID("Y");
-			loginReq.setIsMobile("Y");
-			loginReq.setIsAutoLogin("Y");
-
-			String svcVersion = requestHeader.getDeviceHeader().getSvc();
-			if (StringUtils.isNotBlank(svcVersion)) {
-				loginReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
-			}
-			loginReq.setIpAddress(deviceId);
-			this.userSCI.updateLoginUser(loginReq);
-
-		} else {
-
-			res.setIsLoginSuccess("N");
-
 		}
+		res.setIsLoginSuccess(simpleLoginResponse.getIsLoginSuccess());
 
 		return res;
 

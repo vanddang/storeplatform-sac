@@ -31,6 +31,8 @@ public final class MemberConstants {
 	public static final String SC_ERROR_DARK = "SC_MEM_9991"; // SC 알수없는에러(보통 DB에 2건이상 존재할때)
 	public static final String SC_ERROR_NO_DATA = "SC_MEM_9982"; // SC 검색결과 없음
 	public static final String SC_ERROR_NO_USERKEY = "SC_MEM_9995"; // 회원키 없음
+	public static final String SC_ERROR_DUPLICATED_DEVICE_ID = "SC_MEM_9985"; // 디바이스크 중복
+	public static final String SC_ERROR_EDIT_INPUT_ITEM_NOT_FOUND = "SC_MEM_9994"; // 수정 또는 추가할 항목이 없음
 
 	/** SAC회원 결과 코드. */
 	public static final String SAC_ERROR_NO_ONEID = "SAC_MEM_1302"; // OneID 회원이 아님

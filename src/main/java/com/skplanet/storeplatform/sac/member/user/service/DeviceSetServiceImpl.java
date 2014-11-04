@@ -42,6 +42,8 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 public class DeviceSetServiceImpl implements DeviceSetService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceSetServiceImpl.class);
+
+	/** DeviceSetSCI. */
 	@Autowired
 	private DeviceSetSCI deviceSetSCI;
 
@@ -63,7 +65,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 	 * @return CreateDevicePinSacRes
 	 */
 	@Override
-	public CreateDevicePinSacRes createDevicePin(SacRequestHeader header, CreateDevicePinSacReq req) {
+	public CreateDevicePinSacRes regDevicePin(SacRequestHeader header, CreateDevicePinSacReq req) {
 		CreateDevicePinRequest createDevicePinRequest = new CreateDevicePinRequest();
 
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
@@ -73,20 +75,30 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		 * 검색 조건 setting
 		 */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		if (StringUtils.isNotBlank(req.getDeviceKey())) {
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-			keySchUserKey.setKeyString(req.getDeviceKey());
-		} else if (StringUtils.isNotBlank(req.getDeviceId())) {
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			keySchUserKey.setKeyString(req.getDeviceId());
-		}
+		KeySearch keySchUserKey = null;
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySchUserKey.setKeyString(req.getDeviceKey());
+		keySearchList.add(keySchUserKey);
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
 		keySearchList.add(keySchUserKey);
 
 		createDevicePinRequest.setPinNo(req.getPinNo());
 		createDevicePinRequest.setKeySearchList(keySearchList);
+		CreateDevicePinResponse createDevicePinResponse = null;
+		try {
 
-		CreateDevicePinResponse createDevicePinResponse = this.deviceSetSCI.createDevicePin(createDevicePinRequest);
+			createDevicePinResponse = this.deviceSetSCI.createDevicePin(createDevicePinRequest);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(MemberConstants.SC_ERROR_DUPLICATED_DEVICE_ID, e.getErrorInfo().getCode())) {
+				throw new StorePlatformException("SAC_MEM_2012", "userKey : " + req.getUserKey() + ", deviceKey :"
+						+ req.getDeviceKey());
+			} else {
+				throw e;
+			}
+		}
 
 		CreateDevicePinSacRes res = new CreateDevicePinSacRes();
 		res.setDeviceId(createDevicePinResponse.getDeviceId());
@@ -108,7 +120,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 	 * @return ModifyDevicePinSacRes
 	 */
 	@Override
-	public ModifyDevicePinSacRes modifyDevicePin(SacRequestHeader header, ModifyDevicePinSacReq req) {
+	public ModifyDevicePinSacRes modDevicePin(SacRequestHeader header, ModifyDevicePinSacReq req) {
 		ModifyDevicePinRequest modifyDevicePinRequest = new ModifyDevicePinRequest();
 
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
@@ -118,14 +130,14 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		 * 검색 조건 setting
 		 */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		if (StringUtils.isNotBlank(req.getDeviceKey())) {
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-			keySchUserKey.setKeyString(req.getDeviceKey());
-		} else if (StringUtils.isNotBlank(req.getDeviceId())) {
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			keySchUserKey.setKeyString(req.getDeviceId());
-		}
+		KeySearch keySchUserKey = null;
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySchUserKey.setKeyString(req.getDeviceKey());
+		keySearchList.add(keySchUserKey);
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
 		keySearchList.add(keySchUserKey);
 
 		modifyDevicePinRequest.setPinNo(req.getPinNo());
@@ -133,7 +145,16 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		modifyDevicePinRequest.setKeySearchList(keySearchList);
 
 		// SC Call
-		ModifyDevicePinResponse modifyDevicePinResponse = this.deviceSetSCI.modifyDevicePin(modifyDevicePinRequest);
+		ModifyDevicePinResponse modifyDevicePinResponse = null;
+		try {
+			modifyDevicePinResponse = this.deviceSetSCI.modifyDevicePin(modifyDevicePinRequest);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(MemberConstants.SC_ERROR_EDIT_INPUT_ITEM_NOT_FOUND, e.getErrorInfo().getCode())) {
+				throw new StorePlatformException("SAC_MEM_1513");
+			} else {
+				throw e;
+			}
+		}
 
 		ModifyDevicePinSacRes res = new ModifyDevicePinSacRes();
 		res.setDeviceId(modifyDevicePinResponse.getDeviceId());
@@ -165,15 +186,16 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		 * 검색 조건 setting
 		 */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		if (StringUtils.isNotBlank(req.getDeviceKey())) {
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-			keySchUserKey.setKeyString(req.getDeviceKey());
-		} else if (StringUtils.isNotBlank(req.getDeviceId())) {
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			keySchUserKey.setKeyString(req.getDeviceId());
-		}
+		KeySearch keySchUserKey = null;
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySchUserKey.setKeyString(req.getDeviceKey());
 		keySearchList.add(keySchUserKey);
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
+		keySearchList.add(keySchUserKey);
+
 		searchDevicePinRequest.setKeySearchList(keySearchList);
 
 		// SC Call
@@ -210,15 +232,16 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		 * 검색 조건 setting
 		 */
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		if (StringUtils.isNotBlank(req.getDeviceKey())) {
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-			keySchUserKey.setKeyString(req.getDeviceKey());
-		} else if (StringUtils.isNotBlank(req.getDeviceId())) {
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			keySchUserKey.setKeyString(req.getDeviceId());
-		}
+		KeySearch keySchUserKey = null;
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySchUserKey.setKeyString(req.getDeviceKey());
 		keySearchList.add(keySchUserKey);
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
+		keySearchList.add(keySchUserKey);
+
 		checkDevicePinRequest.setKeySearchList(keySearchList);
 		checkDevicePinRequest.setPinNo(req.getPinNo());
 
@@ -237,5 +260,4 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 		return res;
 	}
-
 }
