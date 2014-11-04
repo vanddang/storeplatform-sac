@@ -333,6 +333,11 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private String prodKind;
 
+    /**
+     * 부분유료화 상품 사용 기간
+     */
+    private Integer usePeriod;
+
 	/**
 	 * 할인율 정보 (tmembership)
 	 */
@@ -1324,4 +1329,12 @@ public class Product extends CommonInfo implements Serializable {
 	public void setSticker(String sticker) {
 		this.sticker = sticker;
 	}
+
+    public Integer getUsePeriod() {
+        return usePeriod;
+    }
+
+    public void setUsePeriod(Integer usePeriod) {
+        this.usePeriod = usePeriod;
+    }
 }
