@@ -77,6 +77,9 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 	private ProductService prodService;
 
     @Autowired
+    private DpSapProdMapgService dpSapProdMapgService;
+
+    @Autowired
     private DisplayCommonService displayCommonService;
 
 	@Override
@@ -326,8 +329,16 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				}
 			}
 		}
-		
-		if (CollectionUtils.isNotEmpty(tenantInfo)) {
+
+        /**
+         * SAP 상품 매핑 정보 - Phase 1에서만 이용함
+         */
+        log.info("Insert CMS DpSapProdMapg Info");
+        DPSapMappingVO dpSapMapping = notification.getDpSapMapping();
+        dpSapProdMapgService.insertDPSapProdMapg(dpSapMapping);
+
+
+        if (CollectionUtils.isNotEmpty(tenantInfo)) {
 			log.info("CMS tenantInfo Size = " + tenantInfo.size());
 
             for (DPTenantProductVO vo : tenantInfo) {

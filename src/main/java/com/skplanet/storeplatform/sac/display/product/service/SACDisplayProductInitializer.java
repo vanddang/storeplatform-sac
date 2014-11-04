@@ -62,11 +62,14 @@ public class SACDisplayProductInitializer implements DisplayProductInitializer {
 
 	@Autowired
 	private DPAppDeltaDeployFileService dPAppDeltaDeployFileService;
-	
-	/*
-	 * (non-Javadoc)
-	 * @see com.skplanet.icms.deploy.job.initializer.DisplayProductInitializer#clear(java.lang.String)
-	 */
+
+    @Autowired
+    private DpSapProdMapgService dpSapProdMapgService;
+
+    /*
+     * (non-Javadoc)
+     * @see com.skplanet.icms.deploy.job.initializer.DisplayProductInitializer#clear(java.lang.String)
+     */
 	public void deleteProdInfo(NotificationRefactoringSac notification) {
 		
 		String pid= notification.getDpProductTotal().getDpProduct().getProdId();
@@ -193,7 +196,8 @@ public class SACDisplayProductInitializer implements DisplayProductInitializer {
 		 * 전시상품 정보
 		 */
 		dpProductService.deleteDPProduct(pid);
-		
-	}
+
+        dpSapProdMapgService.deleteDPSapProdMapg(pid);
+    }
 
 }
