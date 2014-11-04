@@ -158,7 +158,7 @@
              FROM (
                   SELECT  * 
                    FROM (
-                          SELECT /*+ full(I) */
+                          SELECT /*+ LEADING(A B D) USE_NL(A B D)*/
                                 B.CATALOG_ID 
                              --,C.CATALOG_NM                      --REMOVED BY 2014.10.10
                                ,A.BRAND_ID  
