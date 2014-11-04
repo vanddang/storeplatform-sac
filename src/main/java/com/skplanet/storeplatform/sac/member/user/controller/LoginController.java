@@ -24,6 +24,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
@@ -189,4 +191,57 @@ public class LoginController {
 		return res;
 
 	}
+
+	/**
+	 * <pre>
+	 * PayPlanet에 InApp용으로 제공되는 T Store 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForInAppSacReq
+	 * @return AuthorizeForInAppSacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeForInApp/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeForInAppSacRes authorizeForInApp(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForInAppSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		AuthorizeForInAppSacRes res = this.loginService.authorizeForInApp(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * PayPlanet에 InApp용으로 제공되는 3사 통합 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForInAppSacReq
+	 * @return AuthorizeForInAppSacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeForInApp/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeForInAppSacRes authorizeForInAppV2(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForInAppSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		AuthorizeForInAppSacRes res = this.loginService.authorizeForInAppV2(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
+
+	}
+
 }

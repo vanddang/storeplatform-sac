@@ -18,9 +18,12 @@ import com.skplanet.storeplatform.external.client.tstore.sci.TstoreTransferSCI;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreTransferOwnerEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreTransferOwnerEcRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.IapProductInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchDcdSupportProductSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.DcdSupportProductRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
@@ -52,6 +55,9 @@ public class MemberCommonInternalComponent {
 	@Autowired
 	private TstoreTransferSCI tstoreTransferSCI;
 
+	@Autowired
+	IapProductInfoSCI iapProductInfoSCI;
+
 	/**
 	 * <pre>
 	 * 회원 OGG 관련 구매/기타 내부메서드 호출.
@@ -72,17 +78,17 @@ public class MemberCommonInternalComponent {
 	 * @param previousDeviceKey
 	 *            이전 휴대기기 Key
 	 */
-	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey, String previousUserKey, String deviceKey,
-			String previousDeviceKey) {
+	public void excuteInternalMethod(boolean isCall, String systemId, String tenantId, String userKey,
+			String previousUserKey, String deviceKey, String previousDeviceKey) {
 
-		//StackTraceElement[] ste = new Throwable().getStackTrace();
-		//String methodName = ste[1].getMethodName();
-		//				regDeviceInfo : 회원전환(모바일회원 -> ID회원으로 전환);
-		//				rXCreateUserIDP : 통합회원 전환생성정보를 사이트에 배포 - CMD : RXCreateUserIDP
-		//				rXUpdateAgreeUserIDP : 이용동의 변경사이트 목록 배포 - CMD : rXUpdateAgreeUserIDP
-		//				authorizeSaveAndSyncByMac : Save&Sync 인증
+		// StackTraceElement[] ste = new Throwable().getStackTrace();
+		// String methodName = ste[1].getMethodName();
+		// regDeviceInfo : 회원전환(모바일회원 -> ID회원으로 전환);
+		// rXCreateUserIDP : 통합회원 전환생성정보를 사이트에 배포 - CMD : RXCreateUserIDP
+		// rXUpdateAgreeUserIDP : 이용동의 변경사이트 목록 배포 - CMD : rXUpdateAgreeUserIDP
+		// authorizeSaveAndSyncByMac : Save&Sync 인증
 
-		//LOGGER.info("회원 OGG 관련 구매/기타 내부메서드 호출 메서드: {}", ste[1].getMethodName());
+		// LOGGER.info("회원 OGG 관련 구매/기타 내부메서드 호출 메서드: {}", ste[1].getMethodName());
 
 		if (isCall) {
 
@@ -109,9 +115,10 @@ public class MemberCommonInternalComponent {
 			tStoreTransferOwnerEcReq.setOldUserKey(previousUserKey);
 			LOGGER.info("tstoreTransferSCI.transferOwner request : {}, {}", tStoreTransferOwnerEcReq.getUserKey(),
 					tStoreTransferOwnerEcReq.getOldUserKey());
-			TStoreTransferOwnerEcRes tStoreTransferOwnerEcRes = this.tstoreTransferSCI.transferOwner(tStoreTransferOwnerEcReq);
-			LOGGER.info("tstoreTransferSCI.transferOwner response resultCd : {}, resultMsg : {}", tStoreTransferOwnerEcRes.getResultCd(),
-					tStoreTransferOwnerEcRes.getResultMsg());
+			TStoreTransferOwnerEcRes tStoreTransferOwnerEcRes = this.tstoreTransferSCI
+					.transferOwner(tStoreTransferOwnerEcReq);
+			LOGGER.info("tstoreTransferSCI.transferOwner response resultCd : {}, resultMsg : {}",
+					tStoreTransferOwnerEcRes.getResultCd(), tStoreTransferOwnerEcRes.getResultMsg());
 
 		}
 
@@ -152,5 +159,24 @@ public class MemberCommonInternalComponent {
 	 */
 	public ExistenceListRes srhExistenceList(ExistenceReq req) {
 		return this.existenceInternalSacSCI.searchExistenceList(req);
+	}
+
+	/**
+	 * <pre>
+	 * IAP상품 정보조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            String
+	 * @param prodId
+	 *            String
+	 * @return IapProductInfoRes
+	 */
+	public IapProductInfoRes getIapProdInfo(String tenantId, String prodId) {
+		IapProductInfoReq req = new IapProductInfoReq();
+		// req.setTenantId(tenantId);
+		req.setPartProdId(prodId);
+
+		return this.iapProductInfoSCI.getIapProductInfo(req);
 	}
 }

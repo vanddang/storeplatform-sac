@@ -270,6 +270,8 @@ public final class MemberConstants {
 	public static final String TENANT_ID_NON_SPECIFIC = "S00";
 	/** T store TenantID */
 	public static final String TENANT_ID_TSTORE = "S01";
+	public static final String TENANT_ID_OLLEH_KT = "S02";
+	public static final String TENANT_ID_LG_UPLUS = "S03";
 
 	/** 개발자센터 SystemID */
 	public static final String SYSTEM_ID_DEV_POC = "S00-02001";
@@ -283,6 +285,12 @@ public final class MemberConstants {
 	public static final String DCD_REG_CD = "4097";
 	/** DCD 가입 상품 아이디 */
 	public static final String DCD_REG_PROD_ID = "A000Z00001";
+
+	/** InApp 회원상태코드. */
+	public static final String INAPP_USER_STATUS_NORMAL = "US014601"; // 성공(정상회원)
+	public static final String INAPP_USER_STATUS_PAUSE = "US014602"; // 이용제한 회원
+	public static final String INAPP_USER_STATUS_NO_MEMBER = "US014603"; // 비회원
+	public static final String INAPP_USER_STATUS_IMEI_MISMATCH = "US014604"; // IMEI 불일치
 
 	/**
 	 * 판매자 회원 상수들.
