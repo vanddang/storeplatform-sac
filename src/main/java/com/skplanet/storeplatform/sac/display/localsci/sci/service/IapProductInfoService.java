@@ -19,4 +19,6 @@ import com.skplanet.storeplatform.sac.display.localsci.sci.vo.IapProductInfo;
  */
 public interface IapProductInfoService {
     IapProductInfo getIapProductInfo(String partProdId);
+
+    String getTenantProdId(String tenantId, String prodId);
 }

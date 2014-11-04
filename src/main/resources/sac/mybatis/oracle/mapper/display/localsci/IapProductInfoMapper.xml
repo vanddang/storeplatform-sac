@@ -3,7 +3,7 @@
 <mapper namespace="IapProductInfo">
 
 	<select id="getIapProductInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.localsci.sci.vo.IapProductInfo">
-        SELECT
+        SELECT /* IapProductInfo.getIapProductInfo, 정희원/SKP, 2014-11-04 */
              RSHP.PROD_ID AS PARENT_PROD_ID
             ,RSHP.PART_PROD_ID
             ,PARTAPP.PROD_CASE || NVL2(PARTAPP.PROD_KIND, '/'||PARTAPP.PROD_KIND, '') AS PART_PRODUCT_TYPE
@@ -24,6 +24,16 @@
               AND RSHP.PROD_RSHP_CD = 'DP010801'
               AND PARTAPP.PART_PARENT_CLSF_CD = 'PD012302'
               AND RSHP.PART_PROD_ID = #{partProdId}
+    </select>
+
+    <select id="getSapProdMapg" parameterType="String" resultType="map">
+        SELECT /* IapProductInfo.getSapProdMapg, 정희원/SKP, 2014-11-04 */
+            AID,
+            PROD_ID AS S01_PROD_ID,
+            CASE KT_CHECK_YN WHEN 'Y' THEN KT_PROD_ID ELSE null END AS S02_PROD_ID,
+            CASE LG_CHECK_YN WHEN 'Y' THEN LG_PROD_ID ELSE null END AS S03_PROD_ID
+        FROM TB_DP_SAP_PROD_MAPG
+        WHERE PROD_ID = #{id}
     </select>
 
 </mapper>

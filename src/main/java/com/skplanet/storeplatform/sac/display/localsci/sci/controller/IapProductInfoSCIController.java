@@ -34,18 +34,29 @@ public class IapProductInfoSCIController implements IapProductInfoSCI {
     @Override
     public IapProductInfoRes getIapProductInfo(@Validated IapProductInfoReq req) {
         IapProductInfo iapProductInfo = iapProductInfoService.getIapProductInfo(req.getPartProdId());
-        IapProductInfoRes res = null;
-        if (iapProductInfo != null) {
-            res = new IapProductInfoRes();
-            res.setParentProdId(iapProductInfo.getParentProdId());
-            res.setPartProdId(iapProductInfo.getPartProdId());
-            res.setFullAid(iapProductInfo.getFullAid());
-            res.setHasFullProdYn(iapProductInfo.getHasFullProdYn());
-            res.setMenuId(iapProductInfo.getMenuId());
-            res.setProdCase(iapProductInfo.getProdCase());
-            res.setProdKind(iapProductInfo.getProdKind());
-            res.setFullProdId(iapProductInfo.getFullProdId());
-        }
+        if (iapProductInfo == null)
+            return null;
+
+        IapProductInfoRes res = new IapProductInfoRes();
+
+        /*
+         * SAP 상품 식별자 매핑 정보 조회
+         * SAP Phase 1 기간에만 유지되는 로직임
+         */
+        // ----- Start -----
+        String parentProdId = iapProductInfoService.getTenantProdId(req.getTenantId(), iapProductInfo.getParentProdId());
+        if(parentProdId == null)
+            return null;
+        // -----  End  -----
+
+        res.setParentProdId(parentProdId);
+        res.setPartProdId(iapProductInfo.getPartProdId());
+        res.setFullAid(iapProductInfo.getFullAid());
+        res.setHasFullProdYn(iapProductInfo.getHasFullProdYn());
+        res.setMenuId(iapProductInfo.getMenuId());
+        res.setProdCase(iapProductInfo.getProdCase());
+        res.setProdKind(iapProductInfo.getProdKind());
+        res.setFullProdId(iapProductInfo.getFullProdId());
 
         return res;
     }
