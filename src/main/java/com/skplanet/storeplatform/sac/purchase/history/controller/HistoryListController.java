@@ -23,6 +23,8 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSac
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacV2Req;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacV2Res;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
@@ -36,7 +38,7 @@ import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListServic
 @RequestMapping(value = "/purchase/history")
 public class HistoryListController {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private HistoryListService historyListService;
@@ -61,6 +63,25 @@ public class HistoryListController {
 		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
 		return this.historyListService.searchHistoryList(request);
+	}
+
+	/**
+	 * 구매내역 조회 기능을 제공한다. v2
+	 * 
+	 * @param request
+	 *            구매내역요청
+	 * @param requestHeader
+	 *            공통헤더정보
+	 * @return HistoryListSacRes
+	 */
+	@RequestMapping(value = "/list/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public HistoryListSacV2Res searchHistoryListV2(@RequestBody @Validated HistoryListSacV2Req request,
+			SacRequestHeader sacRequestHeader) {
+
+		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
+
+		return this.historyListService.searchHistoryListV2(request);
 	}
 
 	/**
