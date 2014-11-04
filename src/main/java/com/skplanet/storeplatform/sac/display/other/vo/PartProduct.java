@@ -33,6 +33,8 @@ public class PartProduct extends CommonInfo {
     private String parentTopMenuNm;
     private String parentMenuId;
     private String parentMenuNm;
+    private Integer usePeriod;
+    private String salesStatus;
     private List<Point> pointList;
 
     public String getProdId() {
@@ -121,5 +123,21 @@ public class PartProduct extends CommonInfo {
 
     public void setParentTopMenuNm(String parentTopMenuNm) {
         this.parentTopMenuNm = parentTopMenuNm;
+    }
+
+    public Integer getUsePeriod() {
+        return usePeriod;
+    }
+
+    public void setUsePeriod(Integer usePeriod) {
+        this.usePeriod = usePeriod;
+    }
+
+    public String getSalesStatus() {
+        return salesStatus;
+    }
+
+    public void setSalesStatus(String salesStatus) {
+        this.salesStatus = salesStatus;
     }
 }

@@ -84,6 +84,8 @@ public class OtherPartProductController {
             ppro.setPrice(new Price(pp.getProdAmt()));
             ppro.setProdKind(pp.getProdKind());
             ppro.setProdCase(pp.getProdCase());
+            ppro.setUsePeriod(pp.getUsePeriod());
+            ppro.setSalesStatus(pp.getSalesStatus());
 
             if (ppRes.getParentProduct() == null) {
                 ppRes.setParentProduct(new Product());
