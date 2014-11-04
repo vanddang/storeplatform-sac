@@ -1991,7 +1991,8 @@
                          AND ROWNUM =1
                      ) 
                END
-              ) = 'Y'         
+              ) = 'Y' 
+          AND E.PROD_STATUS_CD ='PD000403'  
          </if>    
           <if test="req.saleDtUseYn == null">
           AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
