@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Produc
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.velocity.util.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -84,6 +85,27 @@ public class ProductInfoSCITest {
                     throw new RuntimeException("시리즈 여부가 일치하지 않습니다.");
             }
         }
+    }
+
+    @Test
+    public void integratedTestProd2() {
+//        String strReq = "H001578408,S930000018,S930000018,S930000732,S930001020,0000289283,S930001020,H002797317,0000654465,0000654480,S930000732,0000646768,0000654464,H002795912,F901000867,H001319405,H001287490,H002796749,H001535053,H001478925,0000651010,H000046822,0000036197,0000652916,H001491582,H001453210,0000654428,H001226577,0000651702,0000649183,0000325500,H900736484,H001477758,H900722153,H001579410,H002796764,H002796763,H002795530,H002796762,H002795479,H002795941,H002795536,H002795530,0000411082,H001535053,0000651010,H002796015,H002795612,0000410688,S930000018,S930000018,H002621961,H002794927,H002794925,0000326758,0000649063,0000649063,H001118870,H001593434,H002795912,0000290423,H001169876,0000654409,H002794868,0000132081,H000045030,H002795887,S930000732,H001505727,H001181693,H900366974,H001611312,H001606653,0000654407,0000654407,H002794756,H002795381,H001610044,0000266426,S930000018,H002621961,H002621961,0000654336,H001598309,H002795285,H900158143,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,H002795381,0000654251,0000654251";
+        String strReq = "0000642920,0000405537,0000408104,0000650997";
+
+        // Episode Only
+        List<String> prods = Arrays.asList(StringUtils.split(strReq, ","));
+
+        ProductInfoSacReq req = new ProductInfoSacReq();
+        req.setDeviceModelNo("IM-A880S");
+        req.setTenantId("S01");
+        req.setLang("ko");
+        req.setList(prods);
+
+        ProductInfoSacRes res = this.productInfoSCI.getProductList(req);
+        List<ProductInfo> productList = res.getProductList();
+
+        if(productList.size() == 0)
+            throw new RuntimeException("응답 데이터가 없습니다.");
     }
 
     class TestProd {
