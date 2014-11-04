@@ -1622,7 +1622,6 @@ public class SellerServiceImpl implements SellerService {
 		// 담당자 명
 		sellerMbr.setCharger(req.getCharger());
 		sellerMbr.setWebsite(req.getWebsite());
-		// @TODO 2014-11-12 반영 예정
 		// 판매자 회원명
 		sellerMbr.setSellerName(req.getSellerName());
 		updateSellerRequest.setSellerMbr(sellerMbr);
