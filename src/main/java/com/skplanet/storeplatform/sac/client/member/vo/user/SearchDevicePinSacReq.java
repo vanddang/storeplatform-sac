@@ -2,11 +2,12 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * Calss 설명
+ * 2.1.46. 휴대기기 PIN 번호 찾기. [REQUEST]
  * 
  * Updated on : 2014. 10. 31. Updated by : Rejoice, Burkhan
  */
@@ -14,10 +15,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SearchDevicePinSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+
 	/** 기기Key. */
+	@NotBlank
 	private String deviceKey;
-	/** 기기 ID. */
-	private String deviceId;
+	/** 회원 Key. */
+	@NotBlank
+	private String userKey;
 
 	/**
 	 * @return the deviceKey
@@ -35,18 +39,18 @@ public class SearchDevicePinSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the deviceId
+	 * @return the userKey
 	 */
-	public String getDeviceId() {
-		return this.deviceId;
+	public String getUserKey() {
+		return this.userKey;
 	}
 
 	/**
-	 * @param deviceId
-	 *            the deviceId to set
+	 * @param userKey
+	 *            the userKey to set
 	 */
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }

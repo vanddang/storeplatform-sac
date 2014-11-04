@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * Calss 설명
+ * 2.1.45. 휴대기기 PIN 번호 수정. [RESPONSE]
  * 
  * Updated on : 2014. 10. 31. Updated by : Rejoice, Burkhan
  */
