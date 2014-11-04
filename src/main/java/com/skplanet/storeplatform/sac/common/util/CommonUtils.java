@@ -14,7 +14,7 @@ public class CommonUtils {
 	 * 
 	 * @author 김영균
 	 * @param socialNum1
-	 *            주민번호 앞자리(생년월일)
+	 *            주민번호 앞자리(생년월일 YYMMDD)
 	 * @param socialNum2
 	 *            주민번호 뒤 1자리 (생년월일과 성별로 체크한 값)
 	 * @return 만 나이
@@ -50,7 +50,14 @@ public class CommonUtils {
 		int yearMultiplication = 0;
 
 		/**
-		 * 주민번호 뒷자리 첫번째 숫자 부여 체계 짝수 여성, 홀수 남성 구분 1800년도생 1900년도생 2000년도생 내국인 9, 0 1, 2 3, 4 외국인 5, 6 7, 8
+		 ** 주민번호 뒷자리 첫번째 숫자 부여 체계 짝수 여성, 홀수 남성 구분
+		 * 
+		 ** 1800년도생 : 9, 0
+		 * 
+		 ** 1900년도생 내국인 : 1, 2 외국인 : 5, 6
+		 * 
+		 ** 2000년도생 내국인 : 3, 4 외국인 : 7, 8
+		 * 
 		 */
 		switch (sexPerfix) {
 		case 1:
