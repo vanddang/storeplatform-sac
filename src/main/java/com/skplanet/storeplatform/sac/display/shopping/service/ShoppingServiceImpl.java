@@ -879,7 +879,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<MetaInfo> hotBrandList = null;
 		List<MetaInfo> detailList = null;
 		List<MetaInfo> menuBrandList = null;
-
+		int brandTotalCount = 0;
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		req.setTenantId(tenantHeader.getTenantId());
@@ -920,7 +920,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 				for (int i = 0; i < menuBrandList.size(); i++) {
 					req.setMenuId(menuBrandList.get(i).getMenuId());
 					detailList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
+					int kk = 0;
 					for (MetaInfo detailShopping : detailList) {
+						if (kk == 0) {
+							brandTotalCount = brandTotalCount + detailShopping.getTotalCount();
+							kk++;
+						}
 						resultList.add(detailShopping);
 					}
 				}
@@ -975,7 +980,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			res.setProductList(productList);
 			if (!DisplayConstants.DP_SHOPPING_BRAND_HOT.equals(req.getBrandType())) {
 				if (!menuIdFlag) {
-					commonResponse.setTotalCount(resultList.size());
+					commonResponse.setTotalCount(brandTotalCount);
 				}
 			}
 
