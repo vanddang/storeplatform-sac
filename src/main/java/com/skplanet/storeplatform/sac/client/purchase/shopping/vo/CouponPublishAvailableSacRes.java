@@ -23,11 +23,11 @@ public class CouponPublishAvailableSacRes extends PurchaseCommonSacRes {
 	private String statusCd;
 	private String statusMsg;
 
-	private String saleMonthLimit; // 월 판매 가능 쿠폰 개수
-	private String saleDayLimit; // 일 판매 가능 쿠폰 개수
-	private String saleMonthLimitPerson; // Mdn별 월 판매 가능 쿠폰 개수
-	private String saleDayLimitPerson; // Mdn별 일 판매 가능 쿠폰 개수
-	private String saleOnceLimit; // 한번에 구매 가능한 쿠폰 개수
+	private int saleMonthLimit = 0; // 월 판매 가능 쿠폰 개수
+	private int saleDayLimit = 0; // 일 판매 가능 쿠폰 개수
+	private int saleMonthLimitPerson = 0; // Mdn별 월 판매 가능 쿠폰 개수
+	private int saleDayLimitPerson = 0; // Mdn별 일 판매 가능 쿠폰 개수
+	private int saleOnceLimit = 0; // 한번에 구매 가능한 쿠폰 개수
 
 	/**
 	 * @return the statusCd
@@ -62,7 +62,7 @@ public class CouponPublishAvailableSacRes extends PurchaseCommonSacRes {
 	/**
 	 * @return the saleMonthLimit
 	 */
-	public String getSaleMonthLimit() {
+	public int getSaleMonthLimit() {
 		return this.saleMonthLimit;
 	}
 
@@ -70,14 +70,14 @@ public class CouponPublishAvailableSacRes extends PurchaseCommonSacRes {
 	 * @param saleMonthLimit
 	 *            the saleMonthLimit to set
 	 */
-	public void setSaleMonthLimit(String saleMonthLimit) {
+	public void setSaleMonthLimit(int saleMonthLimit) {
 		this.saleMonthLimit = saleMonthLimit;
 	}
 
 	/**
 	 * @return the saleDayLimit
 	 */
-	public String getSaleDayLimit() {
+	public int getSaleDayLimit() {
 		return this.saleDayLimit;
 	}
 
@@ -85,14 +85,14 @@ public class CouponPublishAvailableSacRes extends PurchaseCommonSacRes {
 	 * @param saleDayLimit
 	 *            the saleDayLimit to set
 	 */
-	public void setSaleDayLimit(String saleDayLimit) {
+	public void setSaleDayLimit(int saleDayLimit) {
 		this.saleDayLimit = saleDayLimit;
 	}
 
 	/**
 	 * @return the saleMonthLimitPerson
 	 */
-	public String getSaleMonthLimitPerson() {
+	public int getSaleMonthLimitPerson() {
 		return this.saleMonthLimitPerson;
 	}
 
@@ -100,14 +100,14 @@ public class CouponPublishAvailableSacRes extends PurchaseCommonSacRes {
 	 * @param saleMonthLimitPerson
 	 *            the saleMonthLimitPerson to set
 	 */
-	public void setSaleMonthLimitPerson(String saleMonthLimitPerson) {
+	public void setSaleMonthLimitPerson(int saleMonthLimitPerson) {
 		this.saleMonthLimitPerson = saleMonthLimitPerson;
 	}
 
 	/**
 	 * @return the saleDayLimitPerson
 	 */
-	public String getSaleDayLimitPerson() {
+	public int getSaleDayLimitPerson() {
 		return this.saleDayLimitPerson;
 	}
 
@@ -115,14 +115,14 @@ public class CouponPublishAvailableSacRes extends PurchaseCommonSacRes {
 	 * @param saleDayLimitPerson
 	 *            the saleDayLimitPerson to set
 	 */
-	public void setSaleDayLimitPerson(String saleDayLimitPerson) {
+	public void setSaleDayLimitPerson(int saleDayLimitPerson) {
 		this.saleDayLimitPerson = saleDayLimitPerson;
 	}
 
 	/**
 	 * @return the saleOnceLimit
 	 */
-	public String getSaleOnceLimit() {
+	public int getSaleOnceLimit() {
 		return this.saleOnceLimit;
 	}
 
@@ -130,7 +130,7 @@ public class CouponPublishAvailableSacRes extends PurchaseCommonSacRes {
 	 * @param saleOnceLimit
 	 *            the saleOnceLimit to set
 	 */
-	public void setSaleOnceLimit(String saleOnceLimit) {
+	public void setSaleOnceLimit(int saleOnceLimit) {
 		this.saleOnceLimit = saleOnceLimit;
 	}
 
