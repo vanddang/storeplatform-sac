@@ -1740,14 +1740,18 @@ public class UserSearchServiceImpl implements UserSearchService {
 			String ageChk = "";
 			String userSex = userInfo.getUserSex();
 			String userBirthDay = userInfo.getUserBirthDay();
-			if ("M".equals(userSex)) {
-				ageChk = ("19".equals(userBirthDay.substring(0, 2))) ? "1" : "3";
-			} else if ("F".equals(userSex)) {
-				ageChk = ("19".equals(userBirthDay.substring(0, 2))) ? "2" : "4";
-			}
-			if (StringUtils.isNotBlank(userInfo.getUserBirthDay())) {
-				int age = CommonUtils.getAgeBySocalNumber(userBirthDay.substring(2, 8), ageChk);
-				userInfo.setRealAge(String.valueOf(age));
+			// 생년월일 검증
+			if (CommonUtils.isValidation(CommonUtils.regxNumber(userBirthDay)) != null) {
+
+				if ("M".equals(userSex)) {
+					ageChk = ("19".equals(userBirthDay.substring(0, 2))) ? "1" : "3";
+				} else if ("F".equals(userSex)) {
+					ageChk = ("19".equals(userBirthDay.substring(0, 2))) ? "2" : "4";
+				}
+				if (StringUtils.isNotBlank(userInfo.getUserBirthDay())) {
+					int age = CommonUtils.getAgeBySocalNumber(userBirthDay.substring(2, 8), ageChk);
+					userInfo.setRealAge(String.valueOf(age));
+				}
 			}
 		}
 

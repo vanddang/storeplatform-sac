@@ -1,5 +1,10 @@
 package com.skplanet.storeplatform.sac.common.util;
 
+import java.util.Calendar;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 
@@ -90,5 +95,45 @@ public class CommonUtils {
 		}
 
 		return age;
+	}
+
+	/**
+	 * <pre>
+	 * 숫자만으로된 문자열인지 체크.
+	 * </pre>
+	 * 
+	 * @param num
+	 * @return String 결과 "YYYYMMDD"
+	 */
+	public static String regxNumber(String num) {
+		String regex = "^[0-9]*$";
+		if (Pattern.matches(regex, StringUtils.defaultString(num))) {
+			if (num.length() == 8) {
+				return num;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 요청 문자열이 YYYYMMDD 형식의 현재일보다 작은지 체크.
+	 * </pre>
+	 * 
+	 * @param birth
+	 * @return String
+	 */
+	public static String isValidation(String birth) {
+		Calendar cal = Calendar.getInstance();
+		String nowDateTime = String.format("%04d%02d%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1,
+				cal.get(Calendar.DATE));
+		if (Integer.parseInt(nowDateTime) >= Integer.parseInt(StringUtils.defaultString(birth, "0"))) {
+			return birth;
+		} else {
+			return null;
+		}
 	}
 }
