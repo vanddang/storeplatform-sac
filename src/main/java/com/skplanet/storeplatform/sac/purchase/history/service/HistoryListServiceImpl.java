@@ -587,6 +587,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
 		scRequest.setGiftRecvConfYn(request.getGiftRecvConfYn());
 		scRequest.setCount(request.getCount() + 1); // startKey 생성을 위해 +1 처리함
+		scRequest.setNotTenantProdGrpCd(request.getNotTenantProdGrpCd());
 
 		if (StringUtils.isNotBlank(request.getStartKey())) {
 			String str[] = StringUtils.split(request.getStartKey(), ";");
@@ -726,6 +727,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				historySac.setTimbreSctn(obj.getTimbreSctn());
 				historySac.setMenuId(obj.getMenuId());
 				historySac.setGenreClsfCd(obj.getGenreClsfCd());
+				historySac.setGiftMsg(obj.getGiftMsg());
 
 				sacHistoryList.add(historySac);
 
