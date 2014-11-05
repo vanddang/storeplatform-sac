@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.client.member.vo.common;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -7,6 +10,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 11. 3. Updated by : 반범진, SK 플래닛.
  */
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class TstoreEtcInfo extends CommonInfo {
 
 	/**
@@ -17,22 +21,22 @@ public class TstoreEtcInfo extends CommonInfo {
 	/**
 	 * SKT 통신과금 부가서비스 가입여부.
 	 */
-	private String svcJoinResult;
+	private String svcJoinResult = "";
 
 	/**
 	 * OneId 실명인증 여부.
 	 */
-	private String isRealName;
+	private String isRealName = "";
 
 	/**
 	 * OneId CI 존재여부.
 	 */
-	private String ciYn;
+	private String ciYn = "";
 
 	/**
 	 * OCB 이용동의 여부.
 	 */
-	private String isMemberPoint;
+	private String isMemberPoint = "";
 
 	/**
 	 * @return svcJoinResult
