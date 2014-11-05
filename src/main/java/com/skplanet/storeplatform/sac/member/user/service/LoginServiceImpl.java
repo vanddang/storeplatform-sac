@@ -37,6 +37,8 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
+import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
+import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -140,6 +142,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private IdpSCI idpSCI;
+
+	// @Autowired
+	// private MarketSCI marketSCI;
 
 	@Autowired
 	private MemberCommonInternalComponent mcic;
@@ -1249,16 +1254,29 @@ public class LoginServiceImpl implements LoginService {
 				tenant.setTenantId(tenantId);
 				requestHeader.setTenantHeader(tenant);
 
+				// 타사 마켓회원 인증 요청
+				MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+				marketReq.setTrxNo(req.getTrxNo());
+				marketReq.setDeviceId(req.getDeviceId());
+				marketReq.setDeviceTelecom(req.getDeviceTelecom());
+				marketReq.setNativeId(req.getNativeId());
+				marketReq.setSimSerialNo(req.getSimSerialNo());
+				marketReq.setUserVerifyReason("InApp");
+
+				MarketAuthorizeEcRes res = null;
 				if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())) {
-
+					// res = this.marketSCI.authorizeKT(marketReq);
 				} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())) {
-
+					// res = this.marketSCI.authorizeLGT(marketReq);
 				}
+
+				LOGGER.info("=================>{}", res);
 
 			}
 
 			return null;
 		}
+
 	}
 
 	/**
@@ -1332,12 +1350,10 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeForInAppSacRes res = new AuthorizeForInAppSacRes();
 
-		String tenantId = MemberConstants.TENANT_ID_TSTORE; // Tstore 회원 전용
-
 		res.setTrxNo(req.getTrxNo());
-		res.setTenantId(tenantId);
 		res.setDeviceId(req.getDeviceId());
 		res.setDeviceTelecom(req.getDeviceTelecom());
+		res.setTenantId(MemberConstants.TENANT_ID_TSTORE);
 
 		DetailReq detailReq = new DetailReq();
 		SearchExtentReq searchExtent = new SearchExtentReq();
@@ -1358,7 +1374,7 @@ public class LoginServiceImpl implements LoginService {
 
 		if (detailRes == null || detailRes.getUserInfo() == null || detailRes.getDeviceInfoList().size() == 0) { // 비회원
 			res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NO_MEMBER);
-			res.setUserJoinUrl(""); // TODO. Tstore 전용회원이므로 가입페이지는 없다???
+			// res.setUserJoinUrl("");
 			return res;
 		}
 
@@ -1388,7 +1404,7 @@ public class LoginServiceImpl implements LoginService {
 				agreementList.add(info);
 			} else {
 				Agreement tempInfo = info;
-				tempInfo.setExtraAgreementURL(this.getExtraAgreementURL(tenantId, info.getExtraAgreementId()));
+				tempInfo.setExtraAgreementURL(this.getExtraAgreementURL(info.getExtraAgreementId()));
 				agreementList.add(tempInfo);
 			}
 		}
@@ -1412,7 +1428,8 @@ public class LoginServiceImpl implements LoginService {
 		res.setAgreementList(agreementList);
 		res.setDeviceInfo(deviceInfo);
 		res.setMbrAuth(detailRes.getMbrAuth()); // 실명인증정보
-		res.setTstoreEtcInfo(this.getTstoreEtcInfo(requestHeader, req.getDeviceId(), req.getDeviceTelecom(), userInfo)); // 기타정보
+		res.setTstoreEtcInfo(this.getTstoreEtcInfo(requestHeader, deviceInfo.getDeviceId(),
+				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
 		return res;
 	}
@@ -1452,10 +1469,17 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return 약관동의 URL
 	 */
-	private String getExtraAgreementURL(String tenantId, String extraAgreementId) {
+	private String getExtraAgreementURL(String extraAgreementId) {
 
 		String extraAgreementURL = "";
-		// TODO. 약관 코드별 URL 확인 필요
+		// TODO. 약관 코드별 URL 확인 필요 US010603 US010609 US010612
+		if (StringUtils.equals(extraAgreementId, MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE)) {
+			extraAgreementURL = "";
+		} else if (StringUtils.equals(extraAgreementId, MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE)) {
+			extraAgreementURL = "";
+		} else if (StringUtils.equals(extraAgreementId, MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE)) {
+			extraAgreementURL = "";
+		}
 		return extraAgreementURL;
 
 	}
