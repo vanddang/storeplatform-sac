@@ -23,6 +23,12 @@ public class CouponPublishAvailableSacResult extends PurchaseCommonSacResult {
 	private String statusCd;
 	private String statusMsg;
 
+	private int saleMonthLimit; // 월 판매 가능 쿠폰 개수
+	private int saleDayLimit; // 일 판매 가능 쿠폰 개수
+	private int saleMonthLimitPerson; // Mdn별 월 판매 가능 쿠폰 개수
+	private int saleDayLimitPerson; // Mdn별 일 판매 가능 쿠폰 개수
+	private int saleOnceLimit; // 한번에 구매 가능한 쿠폰 개수
+
 	/**
 	 * @return the statusCd
 	 */
@@ -52,4 +58,80 @@ public class CouponPublishAvailableSacResult extends PurchaseCommonSacResult {
 	public void setStatusMsg(String statusMsg) {
 		this.statusMsg = statusMsg;
 	}
+
+	/**
+	 * @return the saleMonthLimit
+	 */
+	public int getSaleMonthLimit() {
+		return this.saleMonthLimit;
+	}
+
+	/**
+	 * @param saleMonthLimit
+	 *            the saleMonthLimit to set
+	 */
+	public void setSaleMonthLimit(int saleMonthLimit) {
+		this.saleMonthLimit = saleMonthLimit;
+	}
+
+	/**
+	 * @return the saleDayLimit
+	 */
+	public int getSaleDayLimit() {
+		return this.saleDayLimit;
+	}
+
+	/**
+	 * @param saleDayLimit
+	 *            the saleDayLimit to set
+	 */
+	public void setSaleDayLimit(int saleDayLimit) {
+		this.saleDayLimit = saleDayLimit;
+	}
+
+	/**
+	 * @return the saleMonthLimitPerson
+	 */
+	public int getSaleMonthLimitPerson() {
+		return this.saleMonthLimitPerson;
+	}
+
+	/**
+	 * @param saleMonthLimitPerson
+	 *            the saleMonthLimitPerson to set
+	 */
+	public void setSaleMonthLimitPerson(int saleMonthLimitPerson) {
+		this.saleMonthLimitPerson = saleMonthLimitPerson;
+	}
+
+	/**
+	 * @return the saleDayLimitPerson
+	 */
+	public int getSaleDayLimitPerson() {
+		return this.saleDayLimitPerson;
+	}
+
+	/**
+	 * @param saleDayLimitPerson
+	 *            the saleDayLimitPerson to set
+	 */
+	public void setSaleDayLimitPerson(int saleDayLimitPerson) {
+		this.saleDayLimitPerson = saleDayLimitPerson;
+	}
+
+	/**
+	 * @return the saleOnceLimit
+	 */
+	public int getSaleOnceLimit() {
+		return this.saleOnceLimit;
+	}
+
+	/**
+	 * @param saleOnceLimit
+	 *            the saleOnceLimit to set
+	 */
+	public void setSaleOnceLimit(int saleOnceLimit) {
+		this.saleOnceLimit = saleOnceLimit;
+	}
+
 }

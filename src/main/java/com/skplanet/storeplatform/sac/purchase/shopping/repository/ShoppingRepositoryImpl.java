@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishAvailableEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishAvailableEcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponStockEcReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponStockEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusDetailEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusEcRes;
@@ -33,6 +35,8 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Paymen
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacParam;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacResult;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusDetailSacResult;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
@@ -76,6 +80,17 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 				.getCouponPublishAvailable(couponPublishAvailableEcReq);
 
 		return this.convertResForGetCouponPublishAvailable(couponPublishAvailableEcRes);
+
+	}
+
+	@Override
+	public CouponStockSacResult getCouponStock(CouponStockSacParam couponStockSacParam) {
+
+		CouponStockEcReq couponStockEcReq = this.convertReqForGetCouponStock(couponStockSacParam);
+
+		CouponStockEcRes couponStockEcRes = this.shoppingSCI.getCouponStock(couponStockEcReq);
+
+		return this.convertResForGetCouponStock(couponStockEcRes);
 
 	}
 
@@ -210,6 +225,27 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 	/**
 	 * 
 	 * <pre>
+	 * convertReqForGetCouponPublishAvailable.
+	 * </pre>
+	 * 
+	 * @param couponPublishAvailableSacParam
+	 *            couponPublishAvailableSacParam
+	 * @return CouponPublishAvailableEcReq
+	 */
+	private CouponStockEcReq convertReqForGetCouponStock(CouponStockSacParam couponStockSacParam) {
+
+		CouponStockEcReq couponStockEcReq = new CouponStockEcReq();
+
+		couponStockEcReq.setCouponCode(couponStockSacParam.getCouponCode());
+		couponStockEcReq.setItemCode(couponStockSacParam.getItemCode());
+		couponStockEcReq.setMdn(couponStockSacParam.getMdn());
+
+		return couponStockEcReq;
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * convertResForGetCouponPublishAvailable.
 	 * </pre>
 	 * 
@@ -226,6 +262,35 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 		couponPublishAvailableSacResult.setStatusMsg(couponPublishAvailableEcRes.getStatusMsg());
 
 		return couponPublishAvailableSacResult;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * convertResForGetCouponStock.
+	 * </pre>
+	 * 
+	 * @param couponStockEcRes
+	 *            couponStockEcRes
+	 * @return CouponStockSacResult
+	 */
+	private CouponStockSacResult convertResForGetCouponStock(CouponStockEcRes couponStockEcRes) {
+
+		CouponStockSacResult couponStockSacResult = new CouponStockSacResult();
+
+		couponStockSacResult.setMaxCount(couponStockEcRes.getMaxCount());
+		couponStockSacResult.setMaxMonth(couponStockEcRes.getMaxMonth());
+		couponStockSacResult.setMaxMonthMdn(couponStockEcRes.getMaxMonthMdn());
+		couponStockSacResult.setMaxDay(couponStockEcRes.getMaxDay());
+		couponStockSacResult.setMaxDayMdn(couponStockEcRes.getMaxDayMdn());
+		couponStockSacResult.setBuyMaxLimit(couponStockEcRes.getBuyMaxLimit());
+		couponStockSacResult.setCurCount(couponStockEcRes.getCurCount());
+		couponStockSacResult.setCurMonth(couponStockEcRes.getCurMonth());
+		couponStockSacResult.setCurMonthMdn(couponStockEcRes.getCurMonthMdn());
+		couponStockSacResult.setCurDay(couponStockEcRes.getCurDay());
+		couponStockSacResult.setCurDayMdn(couponStockEcRes.getCurDayMdn());
+
+		return couponStockSacResult;
 	}
 
 }
