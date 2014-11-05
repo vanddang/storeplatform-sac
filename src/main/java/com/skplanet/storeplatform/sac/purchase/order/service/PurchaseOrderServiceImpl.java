@@ -607,40 +607,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		res.setCashPointList(cashIntgAmtInf);
 
-		// // T store Cash 조회
-		// double tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(payUserKey);
-		//
-		// // 게임캐쉬 조회
-		// double gameCashAmt = 0.0;
-		// // if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-		// // PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAME)) {
-		// if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
-		// && StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
-		// PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-		// gameCashAmt = this.purchaseOrderTstoreService.searchGameCashAmt(payUserKey);
-		// }
-		//
-		// // ------------------------------------------------------------------------------------------------
-		// // T game pass 조회
-		//
-		// double tgamepassAmt = 0.0;
-		// if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
-		// && StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
-		// PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-		// tgamepassAmt = this.purchaseOrderTstoreService.searchTgamepassAmt(payUserKey);
-		// }
-		//
-		// // ------------------------------------------------------------------------------------------------
-		// // 캐쉬/포인트 잔액 통합 정보
-		//
-		// StringBuffer sbCashPoint = new StringBuffer();
-		// sbCashPoint.append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TSTORE_CASH).append(":").append(tstoreCashAmt)
-		// .append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_GAMECASH).append(":")
-		// .append(gameCashAmt).append(";").append(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT)
-		// .append(":").append(tgamepassAmt);
-		//
-		// res.setCashPointList(sbCashPoint.toString());
-
 		// ------------------------------------------------------------------------------------------------
 		// T마일리지 적립 정보
 
@@ -681,7 +647,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 결제Page 템플릿
 
 		res.setCdPaymentTemplate(this.adjustPaymentPageTemplate(prchsDtlMore.getPrchsCaseCd(),
-				prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("cmpxProdClsfCd"), prchsDtlMoreList.size()));
+				prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("cmpxProdClsfCd"),
+				reservedDataMap.get("s2sAutoYn"), prchsDtlMoreList.size()));
 
 		// ------------------------------------------------------------------------------------------------
 		// (다날) 컨텐츠 종류: 실물 / 디지털 : 쇼핑상품만 실물로 처리
@@ -695,6 +662,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// 기타 응답 값
 
+		res.setTenantId(prchsDtlMore.getTenantId());
 		res.setMdn(reservedDataMap.get("deviceId")); // 결제 MDN
 		res.setOneId(reservedDataMap.get("oneId")); // ONE ID
 		res.setFlgMbrStatus(PurchaseConstants.VERIFYORDER_USER_STATUS_NORMAL); // [fix] 회원상태: 1-정상
@@ -1596,17 +1564,22 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param cmpxProdClsfCd 정액상품 구분 코드
 	 * 
+	 * @param s2sAutoYn IAP S2S 월자동결제 상품 여부
+	 * 
 	 * @param prchsProdCnt 구매하는 상품 갯수
 	 * 
 	 * @return 결제Page 템플릿 코드
 	 */
 	private String adjustPaymentPageTemplate(String prchsCaseCd, String tenantProdGrpCd, String cmpxProdClsfCd,
-			int prchsProdCnt) {
+			String s2sAutoYn, int prchsProdCnt) {
 		if (StringUtils.equals(prchsCaseCd, PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GIFT; // 선물: TC06
 
 		} else {
-			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			if (StringUtils.equals("Y", s2sAutoYn)) { // IAP S2S 월자동결제 상품
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
+
+			} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING; // 쇼핑: TC05
 
 			} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)

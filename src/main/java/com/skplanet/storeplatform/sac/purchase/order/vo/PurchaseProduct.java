@@ -46,6 +46,7 @@ public class PurchaseProduct extends PaymentInfo {
 	private String partChrgProdNm; // 부분_유료_상품_명
 	private boolean fullProd; // 정식판 전환 상품 여부
 	// IAP P/P
+	private String s2sAutoPrchsYn; // S2S 월자동결제 상품 여부
 	private String iapPostbackUrl; // 모상품 결제결과 전송 URL
 	private String iapProdKind; // 부분유료화 상품 유형
 	private String iapProdCase; // 부분유료화 상품 종류
@@ -414,6 +415,21 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setIapUsePeriod(Integer iapUsePeriod) {
 		this.iapUsePeriod = iapUsePeriod;
+	}
+
+	/**
+	 * @return the s2sAutoPrchsYn
+	 */
+	public String getS2sAutoPrchsYn() {
+		return this.s2sAutoPrchsYn;
+	}
+
+	/**
+	 * @param s2sAutoPrchsYn
+	 *            the s2sAutoPrchsYn to set
+	 */
+	public void setS2sAutoPrchsYn(String s2sAutoPrchsYn) {
+		this.s2sAutoPrchsYn = s2sAutoPrchsYn;
 	}
 
 	/**

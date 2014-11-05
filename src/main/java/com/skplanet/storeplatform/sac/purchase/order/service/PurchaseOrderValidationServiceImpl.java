@@ -519,6 +519,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				purchaseProduct.setParentProdId(iapInfo.getParentProdId()); // 부모 상품ID
 				purchaseProduct.setContentsType(iapInfo.getProdKind()); // 상품 유형 (컨텐츠_타입)
 
+				purchaseProduct.setS2sAutoPrchsYn(iapInfo.getS2sMonthlyFreepassYn());
 				// purchaseProduct.setIapPostbackUrl(iapInfo.getPostbackUrl());
 				purchaseProduct.setIapProdKind(iapInfo.getProdKind());
 				purchaseProduct.setIapProdCase(iapInfo.getProdCase());
