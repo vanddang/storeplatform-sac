@@ -154,6 +154,12 @@ public class ShoppingController {
 		couponPublishAvailableSacRes.setStatusCd(couponUseStatusSacResult.getStatusCd());
 		couponPublishAvailableSacRes.setStatusMsg(couponUseStatusSacResult.getStatusMsg());
 
+		couponPublishAvailableSacRes.setSaleDayLimit(couponUseStatusSacResult.getSaleDayLimit());
+		couponPublishAvailableSacRes.setSaleDayLimitPerson(couponUseStatusSacResult.getSaleDayLimitPerson());
+		couponPublishAvailableSacRes.setSaleMonthLimit(couponUseStatusSacResult.getSaleMonthLimit());
+		couponPublishAvailableSacRes.setSaleMonthLimitPerson(couponUseStatusSacResult.getSaleMonthLimitPerson());
+		couponPublishAvailableSacRes.setSaleOnceLimit(couponUseStatusSacResult.getSaleOnceLimit());
+
 		return couponPublishAvailableSacRes;
 
 	}
