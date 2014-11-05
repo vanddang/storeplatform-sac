@@ -50,7 +50,7 @@ public class CommonUtils {
 			return 0;
 
 		int age = 0;
-		int birth = Integer.parseInt(socialNum1.substring(0, 2));
+		int birthYear = Integer.parseInt(socialNum1.substring(0, 2));
 		int sexPerfix = Integer.parseInt(socialNum2.substring(0, 1));
 		int yearMultiplication = 0;
 
@@ -83,14 +83,14 @@ public class CommonUtils {
 			break;
 		}
 		System.out.println("yearMultiplication : " + yearMultiplication);
-		age = targetYear - (1900 + birth + (yearMultiplication * 100));
+		age = targetYear - (1900 + birthYear + (yearMultiplication * 100));
 
 		// 월/일까지 계산하여 나이 계산하도록 수정함.
 		String curMMDD = DateUtil.getCurrentDate().substring(4);
 		String userMMDD = socialNum1.substring(2);
 
 		// 만나이로 할려면 생일이 지나지 않은 경우는 한살 뺌
-		if (Integer.parseInt(userMMDD) < Integer.parseInt(curMMDD)) {
+		if (Integer.parseInt(userMMDD) >= Integer.parseInt(curMMDD)) {
 			age--;
 		}
 
