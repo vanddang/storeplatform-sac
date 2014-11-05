@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.member.user.controller;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
@@ -33,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdn
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
@@ -209,35 +212,16 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+		if (!StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+				&& !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
+				&& !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
+			throw new StorePlatformException("SAC_MEM_1203");
+		}
+
 		AuthorizeForInAppSacRes res = this.loginService.authorizeForInApp(requestHeader, req);
 
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
-
-		return res;
-
-	}
-
-	/**
-	 * <pre>
-	 * PayPlanet에 InApp용으로 제공되는 3사 통합 회원인증.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            AuthorizeForInAppSacReq
-	 * @return AuthorizeForInAppSacRes
-	 */
-	@RequestMapping(value = "/member/user/authorizeForInApp/v2", method = RequestMethod.POST)
-	@ResponseBody
-	public AuthorizeForInAppSacRes authorizeForInAppV2(SacRequestHeader requestHeader,
-			@Valid @RequestBody AuthorizeForInAppSacReq req) {
-
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		AuthorizeForInAppSacRes res = this.loginService.authorizeForInAppV2(requestHeader, req);
-
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.info("Response : {}, {}, {}, {}", res.getTenantId(), res.getDeviceId(), res.getDeviceTelecom(),
+				res.getUserStatus());
 
 		return res;
 

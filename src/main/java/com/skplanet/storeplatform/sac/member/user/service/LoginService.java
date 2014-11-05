@@ -110,18 +110,4 @@ public interface LoginService {
 	public AuthorizeForInAppSacRes authorizeForInApp(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForInAppSacReq req);
 
-	/**
-	 * <pre>
-	 * PayPlanet에 InApp용으로 제공되는 3사 회원인증.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            AuthorizeForInAppSacReq
-	 * @return AuthorizeForInAppSacRes
-	 */
-	public AuthorizeForInAppSacRes authorizeForInAppV2(SacRequestHeader requestHeader,
-			@Valid @RequestBody AuthorizeForInAppSacReq req);
-
 }

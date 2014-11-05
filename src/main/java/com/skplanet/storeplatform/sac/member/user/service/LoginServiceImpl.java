@@ -37,8 +37,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
-import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
-import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -61,13 +59,10 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.TstoreEtcInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserAuthMethod;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
@@ -96,7 +91,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
@@ -142,9 +136,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private IdpSCI idpSCI;
-
-	// @Autowired
-	// private MarketSCI marketSCI;
 
 	@Autowired
 	private MemberCommonInternalComponent mcic;
@@ -1215,128 +1206,9 @@ public class LoginServiceImpl implements LoginService {
 		return this.getTstoreMemberInfoForInApp(requestHeader, req);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeForInAppV2(com.skplanet.storeplatform
-	 * .sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq)
-	 */
-	@Override
-	public AuthorizeForInAppSacRes authorizeForInAppV2(SacRequestHeader requestHeader,
-			@Valid @RequestBody AuthorizeForInAppSacReq req) {
-
-		// 타 마켓인증 flow 전에는 S01
-		TenantHeader tenant = requestHeader.getTenantHeader();
-		tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
-		requestHeader.setTenantHeader(tenant);
-
-		String tenantId = this.getTenantId(req.getDeviceTelecom()); // 이통사 정보로 TenantID 부여
-		IapProductInfoRes iapProductInfoRes = this.mcic.getIapProdInfo(tenantId, req.getProdId()); // 마켓배포상품 정보조회
-
-		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, tenantId)
-				|| iapProductInfoRes.getParentProdId() != null) {
-
-			// SKT로 인증요청 && 마켓배포상품이 아니면 Tstore 인증
-			return this.getTstoreMemberInfoForInApp(requestHeader, req);
-
-		} else { // 타사 && 마켓배포상품인 경우
-
-			if (this.isPurchasedFromTstore(requestHeader, req.getDeviceId(), iapProductInfoRes.getParentProdId())) {
-
-				// 타사 폰에서 Tstore 샵클을 이용하여 상품을 구매한 회원이므로 Tstore 인증
-				return this.getTstoreMemberInfoForInApp(requestHeader, req);
-
-			} else { // 타마켓인증 flow
-
-				// 타사 tenantId 셋팅
-				tenant.setTenantId(tenantId);
-				requestHeader.setTenantHeader(tenant);
-
-				// 타사 마켓회원 인증 요청
-				MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
-				marketReq.setTrxNo(req.getTrxNo());
-				marketReq.setDeviceId(req.getDeviceId());
-				marketReq.setDeviceTelecom(req.getDeviceTelecom());
-				marketReq.setNativeId(req.getNativeId());
-				marketReq.setSimSerialNo(req.getSimSerialNo());
-				marketReq.setUserVerifyReason("InApp");
-
-				MarketAuthorizeEcRes res = null;
-				if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())) {
-					// res = this.marketSCI.authorizeKT(marketReq);
-				} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())) {
-					// res = this.marketSCI.authorizeLGT(marketReq);
-				}
-
-				LOGGER.info("=================>{}", res);
-
-			}
-
-			return null;
-		}
-
-	}
-
 	/**
 	 * <pre>
-	 * Tstore 구매내역 조회.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 * @param deviceId
-	 * @param parentProdId
-	 * @return boolean
-	 */
-	public boolean isPurchasedFromTstore(SacRequestHeader requestHeader, String deviceId, String parentProdId) {
-
-		boolean isPurchasedFromTstore = false;
-
-		// 회원 정보 조회
-		DetailReq detailReq = new DetailReq();
-		SearchExtentReq searchExtent = new SearchExtentReq();
-		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
-		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
-		detailReq.setDeviceId(deviceId);
-		detailReq.setSearchExtent(searchExtent);
-		DetailV2Res detailRes = null;
-
-		try {
-			detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-		} catch (StorePlatformException e) {
-			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-				throw e;
-			}
-		}
-
-		if (detailRes.getUserInfo() != null || detailRes.getDeviceInfoList().size() > 0) {
-
-			List<ExistenceItem> existenceItemList = new ArrayList<ExistenceItem>();
-			ExistenceItem existenceItem = new ExistenceItem();
-			existenceItem.setProdId(parentProdId);
-			existenceItemList.add(existenceItem);
-
-			// 기구매체크
-			ExistenceReq existenceReq = new ExistenceReq();
-			existenceReq.setTenantId(MemberConstants.TENANT_ID_TSTORE);
-			existenceReq.setUserKey(detailRes.getUserInfo().getUserKey());
-			existenceReq.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-			existenceReq.setExistenceItem(existenceItemList);
-			ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
-
-			if (existenceListRes.getExistenceListRes().size() > 0) { // 구매내역 존재
-				isPurchasedFromTstore = true;
-			}
-		}
-
-		return isPurchasedFromTstore;
-
-	}
-
-	/**
-	 * <pre>
-	 * InApp 인증 시 Tstore 회원정보 조회.
+	 * PayPlanet InApp 에 제공할 Tstore 회원정보 조회.
 	 * </pre>
 	 * 
 	 * @param requestHeader
@@ -1356,12 +1228,12 @@ public class LoginServiceImpl implements LoginService {
 		res.setTenantId(MemberConstants.TENANT_ID_TSTORE);
 
 		DetailReq detailReq = new DetailReq();
+		detailReq.setDeviceId(req.getDeviceId());
 		SearchExtentReq searchExtent = new SearchExtentReq();
 		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 		searchExtent.setAgreementInfoYn(MemberConstants.USE_Y);
 		searchExtent.setMbrAuthInfoYn(MemberConstants.USE_Y);
-		detailReq.setDeviceId(req.getDeviceId());
 		detailReq.setSearchExtent(searchExtent);
 		DetailV2Res detailRes = null;
 		try {
@@ -1375,6 +1247,12 @@ public class LoginServiceImpl implements LoginService {
 		if (detailRes == null || detailRes.getUserInfo() == null || detailRes.getDeviceInfoList().size() == 0) { // 비회원
 			res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NO_MEMBER);
 			// res.setUserJoinUrl("");
+			res.setUserInfo(new UserInfo());
+			res.setAgreementList(new ArrayList<Agreement>());
+			res.setDeviceInfo(new DeviceInfo());
+			res.setUserInfo(new UserInfo());
+			res.setMbrAuth(new MbrAuth());
+			res.setTstoreEtcInfo(new TstoreEtcInfo());
 			return res;
 		}
 
@@ -1391,11 +1269,7 @@ public class LoginServiceImpl implements LoginService {
 		userInfo.setIsRealName(detailRes.getUserInfo().getIsRealName());
 		userInfo.setUserCountry(detailRes.getUserInfo().getUserCountry());
 		userInfo.setUserLanguage(detailRes.getUserInfo().getUserLanguage());
-		if (StringUtils.equals(detailRes.getUserInfo().getIsRealName(), MemberConstants.USE_Y)
-				&& detailRes.getMbrAuth() != null) {
-			userInfo.setProdExpoLevl(this.getProdExpoLevl(detailRes.getMbrAuth().getBirthDay(), detailRes.getMbrAuth()
-					.getSex())); // TODO. 회원의 연령대 정보(어떤정보로 연령대 체크 할지 정책 정해지지 않음)
-		}
+		userInfo.setProdExpoLevl(this.getProdExpoLevl(detailRes.getUserInfo().getRealAge()));
 
 		// 약관정보
 		ArrayList<Agreement> agreementList = new ArrayList<Agreement>();
@@ -1432,30 +1306,6 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
 		return res;
-	}
-
-	/**
-	 * <pre>
-	 * 통신사에 따라서 tenantId를 구분한다.
-	 * </pre>
-	 * 
-	 * @param deviceTelecom
-	 *            String
-	 * @return tenantId
-	 */
-	private String getTenantId(String deviceTelecom) {
-
-		String tenantId = null;
-		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
-			tenantId = MemberConstants.TENANT_ID_TSTORE;
-		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
-			tenantId = MemberConstants.TENANT_ID_OLLEH_KT;
-		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
-			tenantId = MemberConstants.TENANT_ID_LG_UPLUS;
-		} else {
-			// TODO. 예외로직 두어야 하는지 확인필요!
-		}
-		return tenantId;
 	}
 
 	/**
@@ -1538,14 +1388,14 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @return 회원의 연령대 정보
 	 */
-	private String getProdExpoLevl(String birthDay, String gender) {
-		// - US014701: 만 12세 미만
-		// - US014702: 만 12세 이상
-		// - US014703: 만 15세 이상
-		// - US014704: 만 18세 이상
-		// - US014705: 만 19세 이상
-		String prodExpoLevl = null;
-		int age = CommonUtils.getAgeBySocalNumber(birthDay, StringUtils.equals(gender, "M") ? "1" : "2");
+	private String getProdExpoLevl(String realAge) {
+
+		String prodExpoLevl = "";
+
+		if (StringUtils.isBlank(realAge)) {
+			return prodExpoLevl;
+		}
+		int age = Integer.parseInt(realAge);
 
 		if (age >= 19) {
 			prodExpoLevl = "US014705";
