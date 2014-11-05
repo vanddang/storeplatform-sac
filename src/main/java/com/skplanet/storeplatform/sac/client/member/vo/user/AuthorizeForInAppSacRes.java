@@ -2,6 +2,9 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import java.util.ArrayList;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
@@ -14,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
  * 
  * Updated on : 2014. 11. 3. Updated by : 반범진, SK 플래닛.
  */
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class AuthorizeForInAppSacRes extends CommonInfo {
 
 	/**
@@ -24,31 +28,31 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	/**
 	 * 트랜잭션 번호.
 	 */
-	private String trxNo;
+	private String trxNo = "";
 	/**
 	 * 테넌트 ID.
 	 */
-	private String tenantId;
+	private String tenantId = "";
 	/**
 	 * 기기 ID (msisdn).
 	 */
-	private String deviceId;
+	private String deviceId = "";
 	/**
 	 * 통신사.
 	 */
-	private String deviceTelecom;
+	private String deviceTelecom = "";
 	/**
 	 * 회원 상태코드.
 	 */
-	private String userStatus;
+	private String userStatus = "";
 	/**
 	 * 각 마켓 회원가입 URL.
 	 */
-	private String userJoinUrl;
+	private String userJoinUrl = "";
 	/**
 	 * 인증 Key.
 	 */
-	private String userAuthKey;
+	private String userAuthKey = "";
 
 	/**
 	 * 사용자 정보.
