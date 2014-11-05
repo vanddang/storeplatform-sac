@@ -29,25 +29,38 @@ public interface PurchaseOrderService {
 	/**
 	 * 
 	 * <pre>
-	 * 무료구매 처리.
+	 * 상품 구매요청 처리.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 * @return 생성된 구매이력 건수
 	 */
-	public int freePurchase(PurchaseOrderInfo purchaseOrderInfo);
+	public int processPurchase(PurchaseOrderInfo purchaseOrderInfo);
 
 	/**
 	 * 
 	 * <pre>
-	 * 유료구매 - 구매예약.
+	 * 비과금 구매 처리.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
+	 * @return 생성된 구매이력 건수
 	 */
-	public void reservePurchase(PurchaseOrderInfo purchaseOrderInfo);
+	public int processFreeChargePurchase(PurchaseOrderInfo purchaseOrderInfo);
+
+	/**
+	 * 
+	 * <pre>
+	 * Biz 쿠폰 발급 요청 처리.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매요청 정보
+	 * @return 생성된 구매이력 건수
+	 */
+	public int processBizPurchase(PurchaseOrderInfo purchaseOrderInfo);
 
 	/**
 	 * 

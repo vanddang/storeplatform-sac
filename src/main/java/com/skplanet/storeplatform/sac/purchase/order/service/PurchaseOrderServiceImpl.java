@@ -113,11 +113,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	@Autowired
 	private PurchaseOrderMakeDataService purchaseOrderMakeDataService;
 	@Autowired
+	private PurchaseOrderPaymentPageService orderPaymentPageService;
+	@Autowired
 	private PurchaseOrderPolicyService purchaseOrderPolicyService;
 	@Autowired
 	private PurchaseOrderTstoreService purchaseOrderTstoreService;
 	@Autowired
 	private PurchaseTenantPolicyService purchaseTenantPolicyService;
+	@Autowired
+	private PurchaseOrderValidationService purchaseOrderValidationService;
 	@Autowired
 	private PayPlanetShopService payPlanetShopService;
 	@Autowired
@@ -132,7 +136,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	/**
 	 * 
 	 * <pre>
-	 * 무료구매 처리.
+	 * 비과금 구매 처리.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo
@@ -140,23 +144,72 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 생성된 구매이력 건수
 	 */
 	@Override
-	public int freePurchase(PurchaseOrderInfo purchaseOrderInfo) {
-		// CLINK 예외 처리
-		boolean bAtLeastOne = false;
-		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
-			if (StringUtils.isBlank(product.getResultCd())) {
-				bAtLeastOne = true;
-				break;
+	public int processFreeChargePurchase(PurchaseOrderInfo purchaseOrderInfo) {
+		this.purchaseOrderValidationService.validateFreeChargeAuth(purchaseOrderInfo.getPrchsReqPathCd()); // 비과금 구매요청
+																										   // 권한 체크
+
+		return this.processPurchase(purchaseOrderInfo);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Biz 쿠폰 발급 요청 처리.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매요청 정보
+	 * @return 생성된 구매이력 건수
+	 */
+	@Override
+	public int processBizPurchase(PurchaseOrderInfo purchaseOrderInfo) {
+		this.purchaseOrderValidationService.validateBizAuth(purchaseOrderInfo.getPrchsReqPathCd()); // Biz 구매요청 권한 체크
+
+		return this.processPurchase(purchaseOrderInfo);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 구매요청 처리.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매요청 정보
+	 * @return 생성된 구매이력 건수
+	 */
+	@Override
+	public int processPurchase(PurchaseOrderInfo purchaseOrderInfo) {
+		// 구매 정합성 체크
+		this.validatePurchaseOrder(purchaseOrderInfo);
+
+		if (purchaseOrderInfo.getRealTotAmt() <= 0) {
+			// CLINK 예외 처리: 무료 구매 건에 대해서만.
+			boolean bAtLeastOne = false;
+			for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
+				if (StringUtils.isBlank(product.getResultCd())) {
+					bAtLeastOne = true;
+					break;
+				}
+			}
+
+			if (bAtLeastOne == false) {
+				purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_FREE);
+				purchaseOrderInfo.setPaymentPageUrlParam(this.makeClinkResProductResult(purchaseOrderInfo
+						.getPurchaseProductList()));
+
+				return 0;
+			}
+
+		} else {
+			// 구매(결제)차단 여부 체크
+			if (this.purchaseOrderPolicyService.isBlockPayment(purchaseOrderInfo.getTenantId(), purchaseOrderInfo
+					.getPurchaseUser().getDeviceId(), purchaseOrderInfo.getTenantProdGrpCd())) {
+				throw new StorePlatformException("SAC_PUR_6103");
 			}
 		}
 
-		if (bAtLeastOne == false) {
-			return 0;
-		}
-
-		// -----------------------------------------------------------------------------
 		// 구매ID, 구매일시 세팅
-
 		SearchPurchaseSequenceAndDateRes searchPurchaseSequenceAndDateRes = this.purchaseOrderSearchSCI
 				.searchPurchaseSequenceAndDate();
 
@@ -166,6 +219,35 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		purchaseOrderInfo.setPrchsDt(searchPurchaseSequenceAndDateRes.getNowDate());
+
+		// --
+
+		int cnt = 0;
+
+		if (purchaseOrderInfo.getRealTotAmt() <= 0) {
+			cnt = this.freePurchase(purchaseOrderInfo);
+
+			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_FREE);
+
+		} else {
+			cnt = this.reservePurchase(purchaseOrderInfo); // 구매예약
+
+			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_PAYMENT);
+			this.orderPaymentPageService.buildPaymentPageUrlParam(purchaseOrderInfo); // 결제Page 정보 세팅
+		}
+
+		return cnt;
+	}
+
+	/*
+	 * 
+	 * <pre> 무료구매 처리. </pre>
+	 * 
+	 * @param purchaseOrderInfo 구매요청 정보
+	 * 
+	 * @return 생성된 구매이력 건수
+	 */
+	private int freePurchase(PurchaseOrderInfo purchaseOrderInfo) {
 
 		// -----------------------------------------------------------------------------
 		// 무료구매 완료 요청 데이터 생성
@@ -328,17 +410,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		return count;
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 유료구매 - 구매예약.
-	 * </pre>
+	 * <pre> 유료구매 - 구매예약. </pre>
 	 * 
-	 * @param purchaseOrderInfo
-	 *            구매요청 정보
+	 * @param purchaseOrderInfo 구매요청 정보
 	 */
-	@Override
-	public void reservePurchase(PurchaseOrderInfo purchaseOrderInfo) {
+	private int reservePurchase(PurchaseOrderInfo purchaseOrderInfo) {
 		// -----------------------------------------------------------------------------
 		// PayPlanet 가맹점 정보 조회
 
@@ -347,22 +425,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		purchaseOrderInfo.setAuthKey(payPlanetShop.getAuthKey());
 		purchaseOrderInfo.setEncKey(payPlanetShop.getEncKey());
 		purchaseOrderInfo.setPaymentPageUrl(payPlanetShop.getPaymentUrl());
-
-		// -----------------------------------------------------------------------------
-		// 구매ID 생성
-
-		SearchPurchaseSequenceAndDateRes searchPurchaseSequenceAndDateRes = this.purchaseOrderSearchSCI
-				.searchPurchaseSequenceAndDate();
-
-		if (StringUtils.isBlank(purchaseOrderInfo.getPrchsId())) {
-			purchaseOrderInfo.setPrchsId(this.purchaseOrderAssistService.makePrchsId(
-					searchPurchaseSequenceAndDateRes.getNextSequence(), searchPurchaseSequenceAndDateRes.getNowDate()));
-		}
-
-		// -----------------------------------------------------------------------------
-		// 구매시간 세팅
-
-		purchaseOrderInfo.setPrchsDt(searchPurchaseSequenceAndDateRes.getNowDate());
 
 		// -----------------------------------------------------------------------------
 		// 구매생성 요청 데이터 생성
@@ -374,19 +436,20 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 구매예약 생성 요청
 
 		StorePlatformException checkException = null;
+		int reserveCount = 0;
 
 		try {
 			ReservePurchaseScRes reservePurchaseScRes = this.purchaseOrderSCI.reservePurchase(new ReservePurchaseScReq(
 					prchsDtlMoreList));
 
-			int count = reservePurchaseScRes.getCount();
+			reserveCount = reservePurchaseScRes.getCount();
 
 			if (CollectionUtils.isNotEmpty(purchaseOrderInfo.getReceiveUserList())) {
-				if (count != purchaseOrderInfo.getReceiveUserList().size()) {
+				if (reserveCount != purchaseOrderInfo.getReceiveUserList().size()) {
 					throw new StorePlatformException("SAC_PUR_7201");
 				}
 			} else {
-				if (count != prchsDtlMoreList.size()) {
+				if (reserveCount != prchsDtlMoreList.size()) {
 					throw new StorePlatformException("SAC_PUR_7201");
 				}
 			}
@@ -441,6 +504,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				}
 			});
 		}
+
+		return reserveCount;
 	}
 
 	/**
@@ -1440,6 +1505,95 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	}
 
 	// ======================================================================================================================
+
+	/*
+	 * <pre> 구매 전처리 - 구매 정합성 체크. </pre>
+	 * 
+	 * @param purchaseOrderInfo 구매진행 정보
+	 */
+	private void validatePurchaseOrder(PurchaseOrderInfo purchaseOrderInfo) {
+
+		ErrorInfo errorInfo = null;
+
+		try {
+			this.purchaseOrderValidationService.validateMember(purchaseOrderInfo); // 회원 적합성 체크
+			this.purchaseOrderValidationService.validateProduct(purchaseOrderInfo); // 상품 적합성 체크
+			this.purchaseOrderPolicyService.checkUserPolicy(purchaseOrderInfo); // 회원정책 체크 : TestMDN
+			this.purchaseOrderValidationService.validatePurchase(purchaseOrderInfo); // 구매 적합성(&가능여부) 체크
+
+		} catch (StorePlatformException e) {
+			errorInfo = e.getErrorInfo();
+			throw e;
+
+		} finally {
+
+			// T Log SET
+			if (purchaseOrderInfo.getPurchaseUser() != null) {
+				final String mbrId = purchaseOrderInfo.getPurchaseUser().getUserId();
+				final String deviceId = purchaseOrderInfo.getPurchaseUser().getDeviceId();
+				new TLogUtil().set(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.mbr_id(mbrId).device_id(deviceId);
+					}
+				});
+			}
+
+			// 구매 선결조건 체크 결과 LOGGING
+			if (errorInfo == null) {
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_PRECHECK).result_code("SUCC");
+					}
+				});
+
+			} else {
+				String msg = null;
+				try {
+					msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+				} catch (NoSuchMessageException e) {
+					msg = "";
+				}
+
+				final String result_code = errorInfo.getCode();
+				final String result_message = msg;
+				final String exception_log = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
+
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_PRECHECK).result_code(result_code)
+								.result_message(result_message).exception_log(exception_log);
+					}
+				});
+			}
+		}
+
+	}
+
+	/*
+	 * 
+	 * <pre> CLINK 상품 별 구매 결과 응답 값 생성. </pre>
+	 * 
+	 * @param productList 구매요청 상품 목록
+	 * 
+	 * @return 상품 별 구매 결과
+	 */
+	private String makeClinkResProductResult(List<PurchaseProduct> productList) {
+		StringBuffer sb = new StringBuffer();
+
+		for (PurchaseProduct product : productList) {
+			sb.append(product.getProdId()).append(":")
+					.append(StringUtils.defaultIfBlank(product.getResultCd(), "0000")).append(",");
+		}
+
+		if (sb.length() > 0) {
+			sb.setLength(sb.length() - 1);
+		}
+
+		return sb.toString();
+	}
 
 	/*
 	 * 

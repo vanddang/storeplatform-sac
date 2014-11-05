@@ -19,7 +19,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -29,8 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
@@ -59,7 +56,6 @@ import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPostSe
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderValidationService;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
 
@@ -107,47 +103,22 @@ public class PurchaseOrderController {
 		this.logger.info("PRCHS,ORDER,SAC,CREATE,REQ,{},{}",
 				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
 
-		// T Log SET
-		this.loggingPurchaseReq(req, sacRequestHeader);
+		this.loggingPurchaseReq(req, sacRequestHeader); // T Log SET
 
-		// 요청 값 검증
-		this.validationService.validatePurchaseRequestParameter(req);
+		this.validationService.validatePurchaseRequestParameter(req); // 요청 값 검증
 
 		// 구매진행 정보 세팅
 		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
 
-		// 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
-		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
-
-		// 진행 처리: 무료구매완료 처리 || 결제Page 요청 준비작업
-		if (purchaseOrderInfo.getRealTotAmt() > 0) {
-			// 구매(결제)차단 여부 체크
-			if (this.policyService.isBlockPayment(purchaseOrderInfo.getTenantId(), purchaseOrderInfo.getPurchaseUser()
-					.getDeviceId(), purchaseOrderInfo.getTenantProdGrpCd())) {
-				throw new StorePlatformException("SAC_PUR_6103");
-			}
-
-			this.orderService.reservePurchase(purchaseOrderInfo); // 구매예약
-			this.orderPaymentPageService.buildPaymentPageUrlParam(purchaseOrderInfo); // 결제Page 정보 세팅
-			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_PAYMENT);
-
-		} else {
-			this.orderService.freePurchase(purchaseOrderInfo); // 구매생성 (무료)
-			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_FREE);
-		}
+		// 구매 처리: 무료구매완료 처리 || 결제Page 요청 준비작업
+		this.orderService.processPurchase(purchaseOrderInfo);
 
 		// 응답 세팅
 		CreatePurchaseSacRes res = new CreatePurchaseSacRes();
-		res.setResultType(purchaseOrderInfo.getResultType());
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
-
-		if (StringUtils.equals(purchaseOrderInfo.getResultType(), PurchaseConstants.CREATE_PURCHASE_RESULT_PAYMENT)) {
-			res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
-			res.setPaymentPageParam(purchaseOrderInfo.getPaymentPageUrlParam());
-
-		} else if (purchaseOrderInfo.isClink()) { // CLINK 예외 처리용
-			res.setPaymentPageParam(this.makeClinkResProductResult(purchaseOrderInfo.getPurchaseProductList()));
-		}
+		res.setResultType(purchaseOrderInfo.getResultType());
+		res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
+		res.setPaymentPageParam(purchaseOrderInfo.getPaymentPageUrlParam());
 
 		this.logger.info("PRCHS,ORDER,SAC,CREATE,RES,{}",
 				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
@@ -172,27 +143,20 @@ public class PurchaseOrderController {
 		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,REQ,{},{}",
 				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
 
-		// T Log SET
-		this.loggingPurchaseReq(req, sacRequestHeader);
-
-		// 비과금 구매요청 권한 체크
-		this.validationService.validateFreeChargeAuth(req.getPrchsReqPathCd());
+		this.loggingPurchaseReq(req, sacRequestHeader); // T Log SET
 
 		// 구매진행 정보 세팅
 		req.setTotAmt(0.0);
 		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
 		purchaseOrderInfo.setFreeChargeReq(true); // 비과금 요청
 
-		// 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
-		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
-
 		// 비과금 구매완료 처리
-		this.orderService.freePurchase(purchaseOrderInfo);
+		this.orderService.processFreeChargePurchase(purchaseOrderInfo);
 
 		// 응답 세팅
 		CreateFreePurchaseSacRes res = new CreateFreePurchaseSacRes();
-		res.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_FREE);
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
+		res.setResultType(purchaseOrderInfo.getResultType());
 
 		this.logger.info("PRCHS,ORDER,SAC,CREATEFREE,RES,{}",
 				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
@@ -217,22 +181,13 @@ public class PurchaseOrderController {
 		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,REQ,{},{}",
 				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
 
-		// T Log
-		// this.loggingPurchaseReq(req, sacRequestHeader);
-
-		// Biz 구매요청 권한 체크
-		this.validationService.validateBizAuth(req.getPrchsReqPathCd());
-
 		// 구매진행 정보 세팅
 		req.setTotAmt(0.0);
 		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
 		purchaseOrderInfo.setFreeChargeReq(true); // 비과금 요청
 
-		// 구매전처리: 회원/상품/구매 정보 세팅 및 적합성 체크, 구매 가능여부 체크, 제한정책 체크
-		this.preCheckBeforeProcessOrder(purchaseOrderInfo);
-
-		// 비과금 구매완료 처리
-		int count = this.orderService.freePurchase(purchaseOrderInfo);
+		// Biz쿠폰 발행 요청
+		int count = this.orderService.processBizPurchase(purchaseOrderInfo);
 
 		// 응답 세팅
 		CreateBizPurchaseSacRes res = new CreateBizPurchaseSacRes();
@@ -260,9 +215,6 @@ public class PurchaseOrderController {
 			@RequestBody @Validated CreateCompletePurchaseSacReq req, SacRequestHeader sacRequestHeader) {
 		this.logger.info("PRCHS,ORDER,SAC,CREATECOMPLETE,REQ,{},{}",
 				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
-
-		// IAP 구매/결제 통합 구매이력 생성 요청 권한 체크
-		// this.validationService.validateCompleteAuth(req.getPrchsReqPathCd());
 
 		// IAP 구매/결제 통합 구매이력 생성 처리
 		String prchsId = this.orderService.completeIapPurchase(req);
@@ -508,82 +460,6 @@ public class PurchaseOrderController {
 	}
 
 	/*
-	 * <pre> 구매 전처리 - 구매 정합성 체크. </pre>
-	 * 
-	 * @param purchaseOrderInfo 구매진행 정보
-	 */
-	private void preCheckBeforeProcessOrder(PurchaseOrderInfo purchaseOrderInfo) {
-
-		ErrorInfo errorInfo = null;
-
-		try {
-			// 회원 적합성 체크
-			this.validationService.validateMember(purchaseOrderInfo);
-
-			// 상품 적합성 체크
-			this.validationService.validateProduct(purchaseOrderInfo);
-
-			// 회원정책 체크 : TestMDN
-			this.policyService.checkUserPolicy(purchaseOrderInfo);
-
-			// 구매 적합성(&가능여부) 체크
-			this.validationService.validatePurchase(purchaseOrderInfo);
-
-		} catch (StorePlatformException e) {
-
-			errorInfo = e.getErrorInfo();
-
-			throw e;
-
-		} finally {
-
-			// T Log SET
-			if (purchaseOrderInfo.getPurchaseUser() != null) {
-				final String mbrId = purchaseOrderInfo.getPurchaseUser().getUserId();
-				final String deviceId = purchaseOrderInfo.getPurchaseUser().getDeviceId();
-				new TLogUtil().set(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.mbr_id(mbrId).device_id(deviceId);
-					}
-				});
-			}
-
-			// 구매 선결조건 체크 결과 LOGGING
-			if (errorInfo == null) {
-				new TLogUtil().log(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_PRECHECK).result_code("SUCC");
-					}
-				});
-			} else {
-
-				String msg = null;
-
-				try {
-					msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
-				} catch (NoSuchMessageException e) {
-					msg = "";
-				}
-
-				final String result_code = errorInfo.getCode();
-				final String result_message = msg;
-				final String exception_log = errorInfo.getCause() == null ? "" : errorInfo.getCause().toString();
-
-				new TLogUtil().log(new ShuttleSetter() {
-					@Override
-					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_PRECHECK).result_code(result_code)
-								.result_message(result_message).exception_log(exception_log);
-					}
-				});
-			}
-		}
-
-	}
-
-	/*
 	 * 
 	 * <pre> 구매인입 T Log 작성. </pre>
 	 * 
@@ -615,30 +491,5 @@ public class PurchaseOrderController {
 						.product_id(prodIdList).product_price(prodPriceList);
 			}
 		});
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * CLINK 상품 별 구매 결과 응답 값 생성.
-	 * </pre>
-	 * 
-	 * @param productList
-	 *            구매요청 상품 목록
-	 * @return 상품 별 구매 결과
-	 */
-	private String makeClinkResProductResult(List<PurchaseProduct> productList) {
-		StringBuffer sb = new StringBuffer();
-
-		for (PurchaseProduct product : productList) {
-			sb.append(product.getProdId()).append(":")
-					.append(StringUtils.defaultIfBlank(product.getResultCd(), "0000")).append(",");
-		}
-
-		if (sb.length() > 0) {
-			sb.setLength(sb.length() - 1);
-		}
-
-		return sb.toString();
 	}
 }
