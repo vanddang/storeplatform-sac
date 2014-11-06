@@ -247,16 +247,17 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 		// SC Call
 		CheckDevicePinResponse checkDevicePinResponse = this.deviceSetSCI.checkDevicePin(checkDevicePinRequest);
-		if (StringUtils.equals(MemberConstants.USE_N, checkDevicePinResponse.getIsSuccess())) {
-			throw new StorePlatformException("SAC_MEM_3005", checkDevicePinResponse.getUserMbrDeviceSet().getAuthCnt());
-		}
-		if (StringUtils.equals(MemberConstants.USE_Y, checkDevicePinResponse.getUserMbrDeviceSet().getAuthLockYn())) {
+		// Pin 계정 잠김 상태 - 인증 5회 실패로 인한
+		if (StringUtils.equals(MemberConstants.USE_Y, checkDevicePinResponse.getUserMbrDeviceSet().getAuthLockYn())
+				&& StringUtils.equals("0", checkDevicePinResponse.getFailCnt())) {
 			throw new StorePlatformException("SAC_MEM_1512");
 		}
+
 		CheckDevicePinSacRes res = new CheckDevicePinSacRes();
 		res.setDeviceId(checkDevicePinResponse.getDeviceId());
 		res.setDeviceKey(checkDevicePinResponse.getDeviceKey());
 		res.setUserKey(checkDevicePinResponse.getUserKey());
+		res.setFailCnt(checkDevicePinResponse.getUserMbrDeviceSet().getAuthCnt());
 
 		return res;
 	}
