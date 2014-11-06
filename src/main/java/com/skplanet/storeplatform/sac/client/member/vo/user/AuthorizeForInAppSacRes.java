@@ -8,6 +8,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MarketPinInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.TstoreEtcInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
@@ -68,6 +69,11 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	 * 휴대기기 정보.
 	 */
 	private DeviceInfo deviceInfo;
+
+	/**
+	 * 결제PIN 정보.
+	 */
+	private MarketPinInfo pinInfo;
 
 	/**
 	 * 실명인증 정보.
@@ -257,6 +263,21 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	 */
 	public void setTstoreEtcInfo(TstoreEtcInfo tstoreEtcInfo) {
 		this.tstoreEtcInfo = tstoreEtcInfo;
+	}
+
+	/**
+	 * @return pinInfo
+	 */
+	public MarketPinInfo getPinInfo() {
+		return this.pinInfo;
+	}
+
+	/**
+	 * @param pinInfo
+	 *            MarketPinInfo
+	 */
+	public void setPinInfo(MarketPinInfo pinInfo) {
+		this.pinInfo = pinInfo;
 	}
 
 }
