@@ -835,7 +835,9 @@ public class MemberCommonComponent {
 	 * @return String 통신사코드
 	 */
 	public String validDeviceTelecomCode(String deviceTelecomCode) {
-		if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKT)
+		if (StringUtils.isBlank(deviceTelecomCode)) {
+			return "";
+		} else if (StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_SKT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_KT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_LGT)
 				|| StringUtils.equals(deviceTelecomCode, MemberConstants.DEVICE_TELECOM_NON)
@@ -858,7 +860,9 @@ public class MemberCommonComponent {
 	 * @return 이동통신사 변환
 	 */
 	public String convertDeviceTelecom(String deviceTelecom) {
-		if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
+		if (StringUtils.isBlank(deviceTelecom)) {
+			return "";
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 			return MemberConstants.NM_DEVICE_TELECOM_SKT;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_KT)) {
 			return MemberConstants.NM_DEVICE_TELECOM_KT;
@@ -885,7 +889,9 @@ public class MemberCommonComponent {
 	 * @return String 이동통신사 변환
 	 */
 	public String convertDeviceTelecomCode(String deviceTelecom) {
-		if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_SKT)) {
+		if (StringUtils.isBlank(deviceTelecom)) {
+			return "";
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_SKT)) {
 			return MemberConstants.DEVICE_TELECOM_SKT;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.NM_DEVICE_TELECOM_KT)) {
 			return MemberConstants.DEVICE_TELECOM_KT;
