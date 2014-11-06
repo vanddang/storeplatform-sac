@@ -1313,20 +1313,18 @@ public class LoginServiceImpl implements LoginService {
 		keySearchList.add(keySearch);
 		searchDeviceSetInfoRequest.setKeySearchList(keySearchList);
 
+		MarketPinInfo pinInfo = new MarketPinInfo();
 		try {
 
 			SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
 					.searchDeviceSetInfo(searchDeviceSetInfoRequest);
-			MarketPinInfo pinInfo = new MarketPinInfo();
+
 			pinInfo.setIsPinSet(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
 			pinInfo.setIsPinRetry(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry());
 			pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
-			res.setPinInfo(pinInfo);
 
 		} catch (StorePlatformException e) {
-			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-				res.setPinInfo(new MarketPinInfo());
-			} else {
+			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 				throw e;
 			}
 		}
@@ -1336,6 +1334,7 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserInfo(userInfo);
 		res.setAgreementList(agreementList);
 		res.setDeviceInfo(deviceInfo);
+		res.setPinInfo(pinInfo);
 		res.setMbrAuth(detailRes.getMbrAuth()); // 실명인증정보
 		res.setTstoreEtcInfo(this.getTstoreEtcInfo(requestHeader, deviceInfo.getDeviceId(),
 				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
