@@ -21,6 +21,8 @@ public class CheckDevicePinSacRes extends CommonInfo {
 	private String deviceId;
 	/** 사용자 Key. */
 	private String userKey;
+	/** PIN 인증 실패 횟수. */
+	private String failCnt;
 
 	/**
 	 * @return the deviceKey
@@ -65,6 +67,21 @@ public class CheckDevicePinSacRes extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	/**
+	 * @return the failCnt
+	 */
+	public String getFailCnt() {
+		return this.failCnt;
+	}
+
+	/**
+	 * @param failCnt
+	 *            the failCnt to set
+	 */
+	public void setFailCnt(String failCnt) {
+		this.failCnt = failCnt;
 	}
 
 }
