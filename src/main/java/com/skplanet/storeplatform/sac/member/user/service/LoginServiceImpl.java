@@ -37,6 +37,7 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
+import com.skplanet.storeplatform.external.client.market.vo.MarketClauseExtraInfo;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -1199,9 +1200,7 @@ public class LoginServiceImpl implements LoginService {
 	public AuthorizeForInAppSacRes authorizeForInApp(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForInAppSacReq req) {
 
-		TenantHeader tenant = requestHeader.getTenantHeader();
-		tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
-		requestHeader.setTenantHeader(tenant);
+		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
 
 		return this.getTstoreMemberInfoForInApp(requestHeader, req);
 	}
@@ -1219,6 +1218,11 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	private AuthorizeForInAppSacRes getTstoreMemberInfoForInApp(SacRequestHeader requestHeader,
 			AuthorizeForInAppSacReq req) {
+
+		// tenantId S01
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+		requestHeader.setTenantHeader(tenant);
 
 		AuthorizeForInAppSacRes res = new AuthorizeForInAppSacRes();
 
@@ -1250,7 +1254,6 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserInfo(new UserInfo());
 			res.setAgreementList(new ArrayList<Agreement>());
 			res.setDeviceInfo(new DeviceInfo());
-			res.setUserInfo(new UserInfo());
 			res.setMbrAuth(new MbrAuth());
 			res.setTstoreEtcInfo(new TstoreEtcInfo());
 			return res;
@@ -1278,7 +1281,8 @@ public class LoginServiceImpl implements LoginService {
 				agreementList.add(info);
 			} else {
 				Agreement tempInfo = info;
-				tempInfo.setExtraAgreementURL(this.getExtraAgreementURL(info.getExtraAgreementId()));
+				tempInfo.setExtraAgreementURL(this.getExtraAgreementURL(MemberConstants.TENANT_ID_TSTORE,
+						info.getExtraAgreementId(), null));
 				agreementList.add(tempInfo);
 			}
 		}
@@ -1286,7 +1290,6 @@ public class LoginServiceImpl implements LoginService {
 		// 휴대기기 정보
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-		// deviceInfo.setMarketDeviceKey(""); // 타사 회선의 고유 Key
 		deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
 		deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
 		deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
@@ -1317,19 +1320,29 @@ public class LoginServiceImpl implements LoginService {
 	 *            String
 	 * @param extraAgreementId
 	 *            String
+	 * @param clauseExtraInfoList
+	 *            타사인증후 받은 약관동의정보
 	 * @return 약관동의 URL
 	 */
-	private String getExtraAgreementURL(String extraAgreementId) {
+	private String getExtraAgreementURL(String tenantId, String extraAgreementId,
+			ArrayList<MarketClauseExtraInfo> clauseExtraInfoList) {
 
 		String extraAgreementURL = "";
-		// TODO. 약관 코드별 URL 확인 필요 US010603 US010609 US010612
-		if (StringUtils.equals(extraAgreementId, MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE)) {
-			extraAgreementURL = "";
-		} else if (StringUtils.equals(extraAgreementId, MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE)) {
-			extraAgreementURL = "";
-		} else if (StringUtils.equals(extraAgreementId, MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE)) {
-			extraAgreementURL = "";
+
+		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, tenantId)) {
+			// TODO. 약관 코드별 URL 확인 필요 US010603 US010609 US010612
+			if (StringUtils.equals(extraAgreementId, MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE)) {
+				extraAgreementURL = "";
+			} else if (StringUtils.equals(extraAgreementId,
+					MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE)) {
+				extraAgreementURL = "";
+			} else if (StringUtils.equals(extraAgreementId, MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE)) {
+				extraAgreementURL = "";
+			}
+		} else {
+
 		}
+
 		return extraAgreementURL;
 
 	}
