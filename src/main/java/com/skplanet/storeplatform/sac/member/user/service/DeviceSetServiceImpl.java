@@ -19,16 +19,25 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDevicePinReque
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDevicePinResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDevicePinRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDevicePinResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDeviceSetInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ModifyDeviceSetInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDevicePinRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDevicePinResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceSet;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckDevicePinSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckDevicePinSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDevicePinSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDevicePinSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDevicePinSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDevicePinSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceSetInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceSetInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDevicePinSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDevicePinSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -43,7 +52,6 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceSetServiceImpl.class);
 
-	/** DeviceSetSCI. */
 	@Autowired
 	private DeviceSetSCI deviceSetSCI;
 
@@ -261,4 +269,117 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * 2.1.48. 휴대기기 설정 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SearchDeviceSetInfoSacRes
+	 * @param req
+	 *            SearchDeviceSetInfoSacReq
+	 * @return SearchDeviceSetInfoSacRes
+	 */
+	@Override
+	public SearchDeviceSetInfoSacRes searchDeviceSetInfo(SacRequestHeader header, SearchDeviceSetInfoSacReq req) {
+		SearchDeviceSetInfoRequest searchDeviceSetInfoRequest = new SearchDeviceSetInfoRequest();
+
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+		searchDeviceSetInfoRequest.setCommonRequest(commonRequest);
+
+		/**
+		 * 검색 조건 setting
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = null;
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySchUserKey.setKeyString(req.getDeviceKey());
+		keySearchList.add(keySchUserKey);
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
+		keySearchList.add(keySchUserKey);
+
+		searchDeviceSetInfoRequest.setKeySearchList(keySearchList);
+
+		// SC Call
+		SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
+				.searchDeviceSetInfo(searchDeviceSetInfoRequest);
+
+		SearchDeviceSetInfoSacRes res = new SearchDeviceSetInfoSacRes();
+		res.setAutoUpdateSet(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
+				.getAutoUpdateSet(), null));
+		res.setIsAdult(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsAdult(), null));
+		res.setIsAutoUpdate(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
+				.getIsAutoUpdate(), null));
+		res.setIsAutoUpdateWifi(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
+				.getIsAutoUpdateWifi(), null));
+		res.setIsLoginLock(StringUtils.defaultString(
+				searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsLoginLock(), null));
+		res.setIsPin(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
+		res.setIsPinRetry(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry(),
+				null));
+		res.setIsPinClosed(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn(),
+				null));
+
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.49. 휴대기기 설정 정보 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ModifyDeviceSetInfoSacReq
+	 * @return ModifyDeviceSetInfoSacRes
+	 */
+	@Override
+	public ModifyDeviceSetInfoSacRes modDeviceSetInfo(SacRequestHeader header, ModifyDeviceSetInfoSacReq req) {
+		ModifyDeviceSetInfoRequest modifyDeviceSetInfoRequest = new ModifyDeviceSetInfoRequest();
+
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+		modifyDeviceSetInfoRequest.setCommonRequest(commonRequest);
+
+		/**
+		 * 검색 조건 setting
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = null;
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySchUserKey.setKeyString(req.getDeviceKey());
+		keySearchList.add(keySchUserKey);
+		keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
+		keySearchList.add(keySchUserKey);
+
+		modifyDeviceSetInfoRequest.setKeySearchList(keySearchList);
+
+		UserMbrDeviceSet userMbrDeviceSet = new UserMbrDeviceSet();
+		userMbrDeviceSet.setIsAutoUpdate(req.getIsAutoUpdate());
+		userMbrDeviceSet.setAutoUpdateSet(req.getAutoUpdateSet());
+		userMbrDeviceSet.setIsAutoUpdateWifi(req.getIsAutoUpdateWifi());
+		userMbrDeviceSet.setIsLoginLock(req.getIsLoginLock());
+		userMbrDeviceSet.setIsPinRetry(req.getIsPinRetry());
+		userMbrDeviceSet.setIsAdult(req.getIsAdult());
+		modifyDeviceSetInfoRequest.setUserMbrDeviceSet(userMbrDeviceSet);
+
+		// SC Call
+		ModifyDeviceSetInfoResponse modifyDeviceSetInfoResponse = this.deviceSetSCI
+				.modifyDeviceSetInfo(modifyDeviceSetInfoRequest);
+
+		ModifyDeviceSetInfoSacRes res = new ModifyDeviceSetInfoSacRes();
+		res.setDeviceId(modifyDeviceSetInfoResponse.getDeviceId());
+		res.setDeviceKey(modifyDeviceSetInfoResponse.getDeviceKey());
+		res.setUserKey(modifyDeviceSetInfoResponse.getUserKey());
+
+		return res;
+	}
+
 }

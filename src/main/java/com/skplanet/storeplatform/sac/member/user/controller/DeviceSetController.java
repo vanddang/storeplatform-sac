@@ -16,8 +16,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDevicePinSacRe
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDevicePinSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDevicePinSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDevicePinSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceSetInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceSetInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDevicePinSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDevicePinSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchDeviceSetInfoSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceSetService;
@@ -121,6 +125,50 @@ public class DeviceSetController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		CheckDevicePinSacRes res = this.deviceSetService.checkDevicePin(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.48. 휴대기기 설정 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SearchDeviceSetInfoSacRes
+	 * @param req
+	 *            SearchDeviceSetInfoSacReq
+	 * @return SearchDeviceSetInfoSacRes
+	 */
+	@RequestMapping(value = "/searchDeviceSetInfo/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchDeviceSetInfoSacRes searchDeviceSetInfo(SacRequestHeader header,
+			@RequestBody @Validated SearchDeviceSetInfoSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		SearchDeviceSetInfoSacRes res = this.deviceSetService.searchDeviceSetInfo(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.49. 휴대기기 설정 정보 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ModifyDeviceSetInfoSacReq
+	 * @return ModifyDeviceSetInfoSacRes
+	 */
+	@RequestMapping(value = "/modifyDeviceSetInfo/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyDeviceSetInfoSacRes modifyDeviceSetInfo(SacRequestHeader header,
+			@RequestBody @Validated ModifyDeviceSetInfoSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		ModifyDeviceSetInfoSacRes res = this.deviceSetService.modDeviceSetInfo(header, req);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
