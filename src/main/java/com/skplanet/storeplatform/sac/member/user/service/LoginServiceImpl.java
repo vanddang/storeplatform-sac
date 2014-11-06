@@ -1321,7 +1321,11 @@ public class LoginServiceImpl implements LoginService {
 
 			pinInfo.setIsPinSet(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
 			pinInfo.setIsPinRetry(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry());
-			pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
+			if (StringUtils.isBlank(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn())) {
+				pinInfo.setIsPinClosed(MemberConstants.USE_N);
+			} else {
+				pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
+			}
 
 		} catch (StorePlatformException e) {
 			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
