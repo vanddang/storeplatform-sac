@@ -9,10 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
+import javax.validation.constraints.Null;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchaseV2;
 
 /**
  * 
@@ -23,12 +26,15 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSac
 public class PurchaseUserInfo extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	@NotBlank(groups = { GroupCreateBizPurchase.class })
+	@NotBlank(groups = { GroupCreateBizPurchase.class, GroupCreatePurchaseV2.class })
 	private String userKey;
-	@NotBlank(groups = { GroupCreateBizPurchase.class })
+	@NotBlank(groups = { GroupCreateBizPurchase.class, GroupCreatePurchaseV2.class })
 	private String deviceKey;
 	@NotBlank(groups = { GroupCreateBizPurchase.class })
+	@Null(groups = { GroupCreatePurchaseV2.class })
 	private String deviceId;
+	@Null(groups = { GroupCreateBizPurchase.class })
+	private String giftMsg;
 
 	/**
 	 * @return the userKey
@@ -73,6 +79,21 @@ public class PurchaseUserInfo extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return the giftMsg
+	 */
+	public String getGiftMsg() {
+		return this.giftMsg;
+	}
+
+	/**
+	 * @param giftMsg
+	 *            the giftMsg to set
+	 */
+	public void setGiftMsg(String giftMsg) {
+		this.giftMsg = giftMsg;
 	}
 
 }

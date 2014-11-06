@@ -31,6 +31,9 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	public interface GroupCreatePurchase {
 	}
 
+	public interface GroupCreatePurchaseV2 {
+	}
+
 	public interface GroupCreateFreePurchase {
 	}
 
@@ -39,32 +42,40 @@ public class CreatePurchaseSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 201401031L;
 
-	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class,
+			GroupCreatePurchaseV2.class })
 	private String userKey; // 내부 회원 번호
-	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class,
+			GroupCreatePurchaseV2.class })
 	private String deviceKey; // 내부 디바이스 ID
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String opmdNo; // OPMD 번호
-	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class, GroupCreatePurchaseV2.class })
 	private String recvUserKey; // (선물 경우 필수) 수신자 내부 회원 번호
-	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class, GroupCreatePurchaseV2.class })
 	private String recvDeviceKey; // (선물 경우 필수) 수신자 내부 디바이스 ID
-	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class,
+			GroupCreatePurchaseV2.class })
 	private String prchsReqPathCd; // 구매 요청 경로 코드
-	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class,
+			GroupCreatePurchaseV2.class })
 	private String currencyCd; // 통화 코드
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String saleAmtProcType; // 판매금액 처리 타입: OR020501-일반처리, OR020502-서버기준처리, OR020503-요청기준처리
-	@NotNull(groups = { GroupCreatePurchase.class })
+	@NotNull(groups = { GroupCreatePurchase.class, GroupCreatePurchaseV2.class })
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private Double totAmt; // 총 결제 금액
-	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class,
+			GroupCreatePurchaseV2.class })
 	private String clientIp; // 클라이언트 IP
-	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class,
+			GroupCreatePurchaseV2.class })
 	private String networkTypeCd; // 네트워크 타입 코드
-	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class,
+			GroupCreatePurchaseV2.class })
 	private String prchsCaseCd; // 구매 유형 코드
-	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	@NotBlank(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreateBizPurchase.class,
+			GroupCreatePurchaseV2.class })
 	@Size(min = 20, max = 20, groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class,
 			GroupCreateBizPurchase.class })
 	private String tenantProdGrpCd; // 테넌트 상품 분류 코드
@@ -84,11 +95,11 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String mediaId; // CPS CPID
 
 	@Null(groups = { GroupCreateBizPurchase.class })
-	@NotEmpty(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
+	@NotEmpty(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreatePurchaseV2.class })
 	@Valid
 	private List<CreatePurchaseSacReqProduct> productList; // 구매할 상품 리스트
 
-	@Null(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class })
+	@Null(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreatePurchaseV2.class })
 	@NotBlank(groups = { GroupCreateBizPurchase.class })
 	private String prodId; // biz상품 ID
 
