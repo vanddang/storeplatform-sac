@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -24,9 +25,11 @@ public class ModifyDevicePinSacReq extends CommonInfo {
 	private String userKey;
 	/** PIN 번호. */
 	@NotBlank
+	@Length(min = 4, max = 4)
 	private String pinNo;
 	/** 변경할 PIN 번호. */
 	@NotBlank
+	@Length(min = 4, max = 4)
 	private String newPinNo;
 
 	/**
