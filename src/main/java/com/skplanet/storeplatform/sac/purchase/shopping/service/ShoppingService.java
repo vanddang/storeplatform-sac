@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.purchase.shopping.service;
 
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacParam;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacResult;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
 
@@ -45,5 +47,17 @@ public interface ShoppingService {
 	 */
 	public CouponPublishAvailableSacResult getCouponPublishAvailable(
 			CouponPublishAvailableSacParam couponPublishAvailableSacParam);
+
+	/**
+	 * 
+	 * <pre>
+	 * 쇼핑쿠폰 재고 조회.
+	 * </pre>
+	 * 
+	 * @param couponStockSacParam
+	 *            couponStockSacParam
+	 * @return CouponStockSacResult
+	 */
+	public CouponStockSacResult getCouponStock(CouponStockSacParam couponStockSacParam);
 
 }
