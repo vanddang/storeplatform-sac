@@ -37,7 +37,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
-import com.skplanet.storeplatform.external.client.market.vo.MarketClauseExtraInfo;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -1324,8 +1323,7 @@ public class LoginServiceImpl implements LoginService {
 	 *            타사인증후 받은 약관동의정보
 	 * @return 약관동의 URL
 	 */
-	private String getExtraAgreementURL(String tenantId, String extraAgreementId,
-			ArrayList<MarketClauseExtraInfo> clauseExtraInfoList) {
+	private String getExtraAgreementURL(String tenantId, String extraAgreementId, Object obj) {
 
 		String extraAgreementURL = "";
 
