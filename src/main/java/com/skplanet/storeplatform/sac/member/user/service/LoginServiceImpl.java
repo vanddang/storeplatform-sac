@@ -43,6 +43,7 @@ import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
+import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
@@ -51,6 +52,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginRequest;
@@ -62,6 +65,7 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MarketPinInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.TstoreEtcInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserAuthMethod;
@@ -136,6 +140,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private IdpSCI idpSCI;
+
+	@Autowired
+	private DeviceSetSCI deviceSetSCI;
 
 	@Autowired
 	private MemberCommonInternalComponent mcic;
@@ -1249,10 +1256,10 @@ public class LoginServiceImpl implements LoginService {
 
 		if (detailRes == null || detailRes.getUserInfo() == null || detailRes.getDeviceInfoList().size() == 0) { // 비회원
 			res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NO_MEMBER);
-			// res.setUserJoinUrl("");
 			res.setUserInfo(new UserInfo());
 			res.setAgreementList(new ArrayList<Agreement>());
 			res.setDeviceInfo(new DeviceInfo());
+			res.setPinInfo(new MarketPinInfo());
 			res.setMbrAuth(new MbrAuth());
 			res.setTstoreEtcInfo(new TstoreEtcInfo());
 			return res;
@@ -1296,7 +1303,32 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceAccount(detailRes.getDeviceInfoList().get(0).getDeviceAccount());
 		deviceInfo.setDeviceExtraInfoList(detailRes.getDeviceInfoList().get(0).getDeviceExtraInfoList());
 
-		// TODO. PIN 정보 (현재 미개발)
+		// PIN 정보
+		SearchDeviceSetInfoRequest searchDeviceSetInfoRequest = new SearchDeviceSetInfoRequest();
+		searchDeviceSetInfoRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySearch.setKeyString(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+		keySearchList.add(keySearch);
+		searchDeviceSetInfoRequest.setKeySearchList(keySearchList);
+
+		try {
+
+			SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
+					.searchDeviceSetInfo(searchDeviceSetInfoRequest);
+			MarketPinInfo pinInfo = new MarketPinInfo();
+			pinInfo.setIsPinSet(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
+			pinInfo.setIsPinRetry(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry());
+			pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
+
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+				res.setPinInfo(new MarketPinInfo());
+			} else {
+				throw e;
+			}
+		}
 
 		res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL); // 회원상태 정상
 		res.setUserAuthKey(this.tempUserAuthKey); // 임시 인증키
