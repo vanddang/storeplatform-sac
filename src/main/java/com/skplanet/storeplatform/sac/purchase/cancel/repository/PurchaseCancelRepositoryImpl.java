@@ -548,20 +548,18 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		// 상품 구매수 업데이트 위한 정보 셋팅.
 		InsertPurchaseProductCountScReq insertPurchaseProductCountScReq = new InsertPurchaseProductCountScReq();
 		List<PrchsProdCnt> prchsProdCntList = new ArrayList<PrchsProdCnt>();
+
+		List<String> procKeyList = new ArrayList<String>();
+		String tenantProdGrpCd = null;
+		String procKey = null;
+
 		for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
+
+			PrchsProdCnt prchsProdCnt = new PrchsProdCnt();
+
 			// 시험폰일 경우 상품 구매수 업데이트 제외.
 			if (isSktTestMdn) {
 				break;
-			}
-
-			boolean isEqualProdId = false;
-			for (PrchsProdCnt prchsProdCnt : prchsProdCntList) {
-				if (StringUtils.equals(prchsProdCnt.getProdId(), prchsDtlSacParam.getProdId())) {
-					isEqualProdId = true;
-				}
-			}
-			if (isEqualProdId) {
-				continue;
 			}
 
 			// 전권대여/소장 에피소드 상품은 상품 구매수 업데이트 제외
@@ -572,24 +570,39 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 				continue;
 			}
 
-			PrchsProdCnt prchsProdCnt = new PrchsProdCnt();
+			// 1:N 선물 지원 - 중복 구매 가능한 쇼핑상품 / 부분유료화 상품 처리
+			tenantProdGrpCd = prchsDtlSacParam.getTenantProdGrpCd();
+			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+
+				if (prchsDtlSacParam.getProdQty() > 1) { // 1개 상품을 복수구매 경우
+					procKey = prchsDtlSacParam.getProdId() + prchsDtlSacParam.getUseInsdDeviceId();
+
+				} else { // 1개 상품을 1개씩 복수선물 경우 포함
+					procKey = prchsDtlSacParam.getProdId() + prchsDtlSacParam.getUseInsdDeviceId()
+							+ prchsDtlSacParam.getPrchsDtlId();
+				}
+
+				prchsProdCnt.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd() + prchsDtlSacParam.getPrchsId()
+						+ prchsDtlSacParam.getPrchsDtlId());
+
+			} else {
+				// 1:N 선물 지원 & 중복 구매 불가한 상품에 대한 중복 체크
+				procKey = prchsDtlSacParam.getProdId() + prchsDtlSacParam.getUseInsdDeviceId();
+
+				prchsProdCnt.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd());
+			}
+
+			if (procKeyList.contains(procKey)) {
+				continue;
+			}
+			procKeyList.add(procKey);
+
 			prchsProdCnt.setTenantId(prchsDtlSacParam.getTenantId());
 			prchsProdCnt.setUseUserKey(prchsDtlSacParam.getUseInsdUsermbrNo());
 			prchsProdCnt.setUseDeviceKey(prchsDtlSacParam.getUseInsdDeviceId());
 			prchsProdCnt.setPrchsId(prchsDtlSacParam.getPrchsId());
 			prchsProdCnt.setPrchsClas(prchsDtlSacParam.getPrchsReqPathCd());
-
-			// 중복 구매 가능한 쇼핑상품 / 부분유료화 상품 처리
-			// String tenantProdGrpCd = prchsDtlSacParam.getTenantProdGrpCd();
-			if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
-					PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
-					|| StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
-							PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				prchsProdCnt.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd() + prchsDtlSacParam.getPrchsId());
-			} else {
-				prchsProdCnt.setProdGrpCd(prchsDtlSacParam.getTenantProdGrpCd());
-			}
-
 			prchsProdCnt.setProdId(prchsDtlSacParam.getProdId());
 			prchsProdCnt.setProdAmt(prchsDtlSacParam.getProdAmt());
 			prchsProdCnt.setProdQty(prchsDtlSacParam.getProdQty());
