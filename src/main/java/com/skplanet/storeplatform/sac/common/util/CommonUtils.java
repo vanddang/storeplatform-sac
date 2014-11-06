@@ -90,7 +90,7 @@ public class CommonUtils {
 		String userMMDD = socialNum1.substring(2);
 
 		// 만나이로 할려면 생일이 지나지 않은 경우는 한살 뺌
-		if (Integer.parseInt(userMMDD) >= Integer.parseInt(curMMDD)) {
+		if (Integer.parseInt(userMMDD) > Integer.parseInt(curMMDD)) {
 			age--;
 		}
 
