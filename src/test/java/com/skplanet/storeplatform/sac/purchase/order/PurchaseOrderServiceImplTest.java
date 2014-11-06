@@ -77,9 +77,13 @@ public class PurchaseOrderServiceImplTest {
 		this.purchaseInfo.setSystemId("S01-01002"); // 구매(선물발신) 시스템 ID
 		this.purchaseInfo.setUserKey(this.createPurchaseReq.getUserKey()); // 구매(선물발신) 내부 회원 번호
 		this.purchaseInfo.setDeviceKey(this.createPurchaseReq.getDeviceKey()); // 구매(선물발신) 내부 디바이스 ID
-		this.purchaseInfo.setRecvTenantId("S01"); // 선물수신 테넌트 ID
-		this.purchaseInfo.setRecvUserKey(this.createPurchaseReq.getRecvUserKey()); // 선물수신 내부 회원 번호
-		this.purchaseInfo.setRecvDeviceKey(this.createPurchaseReq.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
+		PurchaseUserDevice receiver = new PurchaseUserDevice();
+		receiver.setTenantId("S01");
+		receiver.setUserKey(this.createPurchaseReq.getRecvUserKey()); // 선물수신 내부 회원 번호
+		receiver.setDeviceKey(this.createPurchaseReq.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
+		List<PurchaseUserDevice> receiveUserList = new ArrayList<PurchaseUserDevice>();
+		receiveUserList.add(receiver);
+		this.purchaseInfo.setReceiveUserList(receiveUserList);
 		this.purchaseInfo.setPrchsReqPathCd(this.createPurchaseReq.getPrchsReqPathCd()); // 구매 요청 경로 코드
 		this.purchaseInfo.setCurrencyCd(this.createPurchaseReq.getCurrencyCd()); // 통화 코드
 		this.purchaseInfo.setTotAmt(this.createPurchaseReq.getTotAmt()); // 총 결제 금액
@@ -134,17 +138,12 @@ public class PurchaseOrderServiceImplTest {
 		this.purchaseInfo.setPurchaseUser(user);
 
 		if (StringUtils.equals(this.purchaseInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			user = new PurchaseUserDevice();
-			user.setTenantId(tenantId);
-			user.setUserKey(this.purchaseInfo.getRecvUserKey());
+			user = this.purchaseInfo.getReceiveUserList().get(0);
 			user.setUserId("testid01");
-			user.setDeviceKey(this.purchaseInfo.getRecvDeviceKey());
 			user.setDeviceId("01046353524");
 			user.setDeviceModelCd("SHV-E210S");
 			user.setUserMainStatus("US010201");
 			user.setAge(20);
-
-			this.purchaseInfo.setReceiveUser(user);
 		}
 	}
 
@@ -173,7 +172,7 @@ public class PurchaseOrderServiceImplTest {
 	 */
 	@Test
 	public void freePurchaseInsert() throws Exception {
-		this.purchaseOrderService.freePurchase(this.purchaseInfo);
+		this.purchaseOrderService.processFreeChargePurchase(this.purchaseInfo);
 	}
 
 	/**
@@ -187,6 +186,6 @@ public class PurchaseOrderServiceImplTest {
 	 */
 	@Test
 	public void reservePurchase() throws Exception {
-		this.purchaseOrderService.reservePurchase(this.purchaseInfo);
+		this.purchaseOrderService.processPurchase(this.purchaseInfo);
 	}
 }

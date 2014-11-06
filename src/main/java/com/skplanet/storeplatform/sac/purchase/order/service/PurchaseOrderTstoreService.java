@@ -174,4 +174,26 @@ public interface PurchaseOrderTstoreService {
 	 *            알림 타입
 	 */
 	public void postTstoreNoti(String prchsId, String prchsDt, String userKey, String deviceKey, String notiType);
+
+	/**
+	 * 
+	 * <pre>
+	 * Tstore 측으로 구매완료 알림: 이메일 발송, SMS / MMS 등등 처리.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 *            구매ID
+	 * @param prchsDt
+	 *            구매일시
+	 * @param userKey
+	 *            내부 회원 번호
+	 * @param deviceKey
+	 *            내부 디바이스 ID
+	 * @param notiType
+	 *            알림 타입
+	 * @param giftYn
+	 *            선물여부
+	 */
+	public void postTstoreNotiV2(String prchsId, String prchsDt, String userKey, String deviceKey, String notiType,
+			String giftYn);
 }

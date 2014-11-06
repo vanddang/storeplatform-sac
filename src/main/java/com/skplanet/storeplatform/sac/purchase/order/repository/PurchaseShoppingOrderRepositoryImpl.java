@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCance
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
 /**
@@ -42,6 +44,50 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 
 	@Autowired
 	private ShoppingSCI shoppingSCI;
+
+	/**
+	 * 
+	 * <pre>
+	 * 쿠폰 발급 V2 요청.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 *            구매 ID
+	 * @param couponCode
+	 *            CMS 쿠폰코드
+	 * @param itemCode
+	 *            CMS 단품코드
+	 * @param buyDeviceId
+	 *            구매자 MDN
+	 * @param useDeviceIdList
+	 *            이용자 MDN 목록
+	 * @return 발급 요청 결과 개체
+	 */
+	@Override
+	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String couponCode, String itemCode,
+			String buyDeviceId, List<String> useDeviceIdList) {
+		CouponPublishV2EcReq couponPublishV2EcReq = new CouponPublishV2EcReq();
+		couponPublishV2EcReq.setPrchsId(prchsId);
+		couponPublishV2EcReq.setCouponCode(couponCode);
+		couponPublishV2EcReq.setItemCode(itemCode);
+		couponPublishV2EcReq.setBuyMdn(buyDeviceId);
+		StringBuffer sbMdns = new StringBuffer();
+		for (String mdn : useDeviceIdList) {
+			if (sbMdns.length() > 0) {
+				sbMdns.append(",");
+			}
+			sbMdns.append(mdn);
+		}
+		couponPublishV2EcReq.setUseMdns(sbMdns.toString());
+
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,PUBLISH,REQ,V2,{}",
+				ReflectionToStringBuilder.toString(couponPublishV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+		CouponPublishV2EcRes couponPublishV2EcRes = this.shoppingSCI.createCouponPublishV2(couponPublishV2EcReq);
+		this.logger.info("PRCHS,ORDER,SAC,SHOPPING,PUBLISH,RES,V2,{}",
+				ReflectionToStringBuilder.toString(couponPublishV2EcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		return couponPublishV2EcRes;
+	}
 
 	/**
 	 * 

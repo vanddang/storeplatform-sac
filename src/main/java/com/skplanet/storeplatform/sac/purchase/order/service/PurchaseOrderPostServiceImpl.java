@@ -13,12 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
+import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.service.InterworkingSacService;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.InterworkingSacReq;
@@ -80,9 +82,19 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 			Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore
 					.getPrchsResvDesc());
-			this.purchaseOrderTstoreService.postTstoreNoti(prchsDtlMore.getPrchsId(), prchsDtlMore.getPrchsDt(),
-					prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getUseInsdDeviceId(),
-					reservedDataMap.get("tstoreNotiPublishType"));
+
+			// 쇼핑 1:N 선물 경우는 Noti V2 버전으로 요청
+			if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)
+					&& prchsDtlMoreList.size() > 1 && prchsDtlMore.getProdQty() == 1) {
+				this.purchaseOrderTstoreService.postTstoreNotiV2(prchsDtlMore.getPrchsId(), prchsDtlMore.getPrchsDt(),
+						prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getUseInsdDeviceId(),
+						reservedDataMap.get("tstoreNotiPublishType"), "Y");
+
+			} else {
+				this.purchaseOrderTstoreService.postTstoreNoti(prchsDtlMore.getPrchsId(), prchsDtlMore.getPrchsDt(),
+						prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getUseInsdDeviceId(),
+						reservedDataMap.get("tstoreNotiPublishType"));
+			}
 		}
 
 		this.logger.info("PRCHS,ORDER,SAC,POST,END,{}", prchsDtlMoreList.get(0).getPrchsId());

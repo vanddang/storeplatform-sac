@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order.repository;
 import java.util.List;
 
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
 /**
@@ -21,6 +22,27 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
  * Updated on : 2014. 2. 27. Updated by : ntels_yjw, nTels.
  */
 public interface PurchaseShoppingOrderRepository {
+
+	/**
+	 * 
+	 * <pre>
+	 * 쿠폰 발급 V2 요청.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 *            구매 ID
+	 * @param couponCode
+	 *            CMS 쿠폰코드
+	 * @param itemCode
+	 *            CMS 단품코드
+	 * @param buyDeviceId
+	 *            구매자 MDN
+	 * @param useDeviceIdList
+	 *            이용자 MDN 목록
+	 * @return 발급 요청 결과 개체
+	 */
+	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String couponCode, String itemCode,
+			String buyDeviceId, List<String> useDeviceIdList);
 
 	/**
 	 * 

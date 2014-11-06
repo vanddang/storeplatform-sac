@@ -28,6 +28,8 @@ public class PurchaseOrderInfo extends CommonInfo {
 	// 구매요청 파라미터 정보
 	private final CreatePurchaseSacReq createPurchaseReq;
 
+	private int apiVer; // 요청 규격 버전
+
 	private String tenantId; // 테넌트 ID
 	private String systemId; // 시스템 ID
 	private String langCd; // 언어 코드
@@ -41,9 +43,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String clientIp; // 클라이언트 IP
 	private String networkTypeCd; // 네트워크 타입 코드
 	private String prchsCaseCd; // 구매 유형 코드
-	private String recvTenantId; // 수신자 테넌트 ID
-	private String recvUserKey; // 수신자 내부 회원 번호
-	private String recvDeviceKey; // 수신자 내부 디바이스 ID
 	private String tenantProdGrpCd; // 테넌트 상품 분류 코드
 	private String deviceModelCd; // 디바이스 모델 코드
 	private String telecomCd; // 통신사: US001201-SKT, US001202-KT, US001203-LG U+
@@ -69,7 +68,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	// ------------------------------------------------------------------------
 	// 회원 정보
 	private PurchaseUserDevice purchaseUser; // 구매(선물발신) 회원정보
-	private PurchaseUserDevice receiveUser; // 선물수신 회원정보
 	private List<PurchaseUserDevice> receiveUserList; // 선물 수신 회원 목록
 
 	// ------------------------------------------------------------------------
@@ -119,6 +117,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	}
 
 	// ================================================================================================
+
+	/**
+	 * @return the apiVer
+	 */
+	public int getApiVer() {
+		return this.apiVer;
+	}
+
+	/**
+	 * @param apiVer
+	 *            the apiVer to set
+	 */
+	public void setApiVer(int apiVer) {
+		this.apiVer = apiVer;
+	}
 
 	/**
 	 * @return the tenantId
@@ -343,51 +356,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setPrchsCaseCd(String prchsCaseCd) {
 		this.prchsCaseCd = prchsCaseCd;
-	}
-
-	/**
-	 * @return the recvTenantId
-	 */
-	public String getRecvTenantId() {
-		return this.recvTenantId;
-	}
-
-	/**
-	 * @param recvTenantId
-	 *            the recvTenantId to set
-	 */
-	public void setRecvTenantId(String recvTenantId) {
-		this.recvTenantId = recvTenantId;
-	}
-
-	/**
-	 * @return the recvUserKey
-	 */
-	public String getRecvUserKey() {
-		return this.recvUserKey;
-	}
-
-	/**
-	 * @param recvUserKey
-	 *            the recvUserKey to set
-	 */
-	public void setRecvUserKey(String recvUserKey) {
-		this.recvUserKey = recvUserKey;
-	}
-
-	/**
-	 * @return the recvDeviceKey
-	 */
-	public String getRecvDeviceKey() {
-		return this.recvDeviceKey;
-	}
-
-	/**
-	 * @param recvDeviceKey
-	 *            the recvDeviceKey to set
-	 */
-	public void setRecvDeviceKey(String recvDeviceKey) {
-		this.recvDeviceKey = recvDeviceKey;
 	}
 
 	/**
@@ -650,21 +618,6 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setPurchaseUser(PurchaseUserDevice purchaseUser) {
 		this.purchaseUser = purchaseUser;
-	}
-
-	/**
-	 * @return the receiveUser
-	 */
-	public PurchaseUserDevice getReceiveUser() {
-		return this.receiveUser;
-	}
-
-	/**
-	 * @param receiveUser
-	 *            the receiveUser to set
-	 */
-	public void setReceiveUser(PurchaseUserDevice receiveUser) {
-		this.receiveUser = receiveUser;
 	}
 
 	/**

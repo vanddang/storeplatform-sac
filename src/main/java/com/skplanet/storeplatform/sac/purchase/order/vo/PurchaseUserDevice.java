@@ -88,6 +88,11 @@ public class PurchaseUserDevice extends CommonInfo {
 	private String telecom;
 
 	/**
+	 * 선물 메시지
+	 */
+	private String giftMsg;
+
+	/**
 	 * @return the tenantId
 	 */
 	public String getTenantId() {
@@ -280,6 +285,21 @@ public class PurchaseUserDevice extends CommonInfo {
 	 */
 	public void setTelecom(String telecom) {
 		this.telecom = telecom;
+	}
+
+	/**
+	 * @return the giftMsg
+	 */
+	public String getGiftMsg() {
+		return this.giftMsg;
+	}
+
+	/**
+	 * @param giftMsg
+	 *            the giftMsg to set
+	 */
+	public void setGiftMsg(String giftMsg) {
+		this.giftMsg = giftMsg;
 	}
 
 }

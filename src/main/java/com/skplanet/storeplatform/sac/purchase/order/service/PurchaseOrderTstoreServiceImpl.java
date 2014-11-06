@@ -44,6 +44,8 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanc
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashIntgBalanceEcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiV2EcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreNotiV2EcRes;
 import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.UserCouponListEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -545,6 +547,49 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			TStoreNotiEcRes tStoreNotiEcRes = this.tStoreNotiSCI.postTStoreNoti(tStoreNotiEcReq);
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,RES,{}",
 					ReflectionToStringBuilder.toString(tStoreNotiEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+		} catch (Exception e) {
+			// 예외 throw 차단
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,ERROR,{},{}", prchsId, e.getMessage());
+		}
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Tstore 측으로 구매완료 알림: 이메일 발송, SMS / MMS 등등 처리.
+	 * </pre>
+	 * 
+	 * @param prchsId
+	 *            구매ID
+	 * @param prchsDt
+	 *            구매일시
+	 * @param userKey
+	 *            내부 회원 번호
+	 * @param deviceKey
+	 *            내부 디바이스 ID
+	 * @param notiType
+	 *            알림 타입
+	 * @param giftYn
+	 *            선물여부
+	 */
+	@Override
+	public void postTstoreNotiV2(String prchsId, String prchsDt, String userKey, String deviceKey, String notiType,
+			String giftYn) {
+		TStoreNotiV2EcReq tStoreNotiV2EcReq = new TStoreNotiV2EcReq();
+		tStoreNotiV2EcReq.setPrchsId(prchsId);
+		tStoreNotiV2EcReq.setPrchsDt(prchsDt);
+		tStoreNotiV2EcReq.setUserKey(userKey);
+		tStoreNotiV2EcReq.setDeviceKey(deviceKey);
+		tStoreNotiV2EcReq.setPublishType(notiType);
+		tStoreNotiV2EcReq.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
+		tStoreNotiV2EcReq.setPublishType(giftYn);
+
+		try {
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,REQ,{}",
+					ReflectionToStringBuilder.toString(tStoreNotiV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+			TStoreNotiV2EcRes tStoreNotiV2Res = this.tStoreNotiSCI.postTStoreNotiV2(tStoreNotiV2EcReq);
+			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,RES,{}",
+					ReflectionToStringBuilder.toString(tStoreNotiV2Res, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
 			// 예외 throw 차단
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,ERROR,{},{}", prchsId, e.getMessage());

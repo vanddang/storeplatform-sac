@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -39,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSac
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateFreePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchase;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchaseV2;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
@@ -88,6 +91,24 @@ public class PurchaseOrderController {
 	/**
 	 * 
 	 * <pre>
+	 * 구매 요청 처리 V2: 무료구매 경우는 구매완료 처리, 유료구매 경우는 PayPlanet 결제Page 요청을 위한 처리.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            구매요청 정보
+	 * @return 구매요청 처리 결과: 무료구매완료 또는 결제page요청정보
+	 */
+	@RequestMapping(value = "/create/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public CreatePurchaseSacRes createPurchaseV2(
+			@RequestBody @Validated(GroupCreatePurchaseV2.class) CreatePurchaseSacReq req,
+			SacRequestHeader sacRequestHeader, HttpServletRequest request) {
+		return this.createPurchase(req, sacRequestHeader, request);
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 구매 요청 처리: 무료구매 경우는 구매완료 처리, 유료구매 경우는 PayPlanet 결제Page 요청을 위한 처리.
 	 * </pre>
 	 * 
@@ -95,11 +116,11 @@ public class PurchaseOrderController {
 	 *            구매요청 정보
 	 * @return 구매요청 처리 결과: 무료구매완료 또는 결제page요청정보
 	 */
-	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
+	@RequestMapping(value = { "/create/v1" }, method = RequestMethod.POST)
 	@ResponseBody
 	public CreatePurchaseSacRes createPurchase(
 			@RequestBody @Validated(GroupCreatePurchase.class) CreatePurchaseSacReq req,
-			SacRequestHeader sacRequestHeader) {
+			SacRequestHeader sacRequestHeader, HttpServletRequest request) {
 		this.logger.info("PRCHS,ORDER,SAC,CREATE,REQ,{},{}",
 				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
 
@@ -109,6 +130,8 @@ public class PurchaseOrderController {
 
 		// 구매진행 정보 세팅
 		PurchaseOrderInfo purchaseOrderInfo = this.readyPurchaseOrderInfo(req, sacRequestHeader.getTenantHeader());
+		String requestUrl = request.getRequestURL().toString();
+		purchaseOrderInfo.setApiVer(Integer.parseInt(requestUrl.substring(requestUrl.indexOf("/v") + 2))); // API 버전
 
 		// 구매 처리: 무료구매완료 처리 || 결제Page 요청 준비작업
 		this.orderService.processPurchase(purchaseOrderInfo);
@@ -387,22 +410,29 @@ public class PurchaseOrderController {
 		purchaseOrderInfo.setTelecomCd(createPurchaseSacReq.getTelecomCd()); // 통신사
 		if (StringUtils.equals(createPurchaseSacReq.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			purchaseOrderInfo.setGift(true); // 선물 여부
+
+			List<PurchaseUserDevice> receiveUserList = new ArrayList<PurchaseUserDevice>();
+			PurchaseUserDevice purchaseUserDevice = null;
+
 			if (createPurchaseSacReq.getReceiverList() == null) {
-				purchaseOrderInfo.setRecvTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID
-				purchaseOrderInfo.setRecvUserKey(createPurchaseSacReq.getRecvUserKey()); // 선물수신 내부 회원 번호
-				purchaseOrderInfo.setRecvDeviceKey(createPurchaseSacReq.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
+				purchaseUserDevice = new PurchaseUserDevice();
+				purchaseUserDevice.setTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID
+				purchaseUserDevice.setUserKey(createPurchaseSacReq.getRecvUserKey()); // 선물수신 내부 회원 번호
+				purchaseUserDevice.setDeviceKey(createPurchaseSacReq.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
+				receiveUserList.add(purchaseUserDevice);
+
 			} else {
-				List<PurchaseUserDevice> receiveUserList = new ArrayList<PurchaseUserDevice>();
-				PurchaseUserDevice purchaseUserDevice = null;
 				for (PurchaseUserInfo receiver : createPurchaseSacReq.getReceiverList()) {
 					purchaseUserDevice = new PurchaseUserDevice();
+					purchaseUserDevice.setTenantId(tenantHeader.getTenantId());
 					purchaseUserDevice.setUserKey(receiver.getUserKey());
 					purchaseUserDevice.setDeviceKey(receiver.getDeviceKey());
 					purchaseUserDevice.setDeviceId(receiver.getDeviceId());
+					purchaseUserDevice.setGiftMsg(receiver.getGiftMsg());
 					receiveUserList.add(purchaseUserDevice);
 				}
-				purchaseOrderInfo.setReceiveUserList(receiveUserList);
 			}
+			purchaseOrderInfo.setReceiveUserList(receiveUserList);
 		}
 		purchaseOrderInfo.setImei(createPurchaseSacReq.getImei()); // 단말 식별 번호
 		purchaseOrderInfo.setUacd(createPurchaseSacReq.getUacd()); // 단말 모델 식별 번호
