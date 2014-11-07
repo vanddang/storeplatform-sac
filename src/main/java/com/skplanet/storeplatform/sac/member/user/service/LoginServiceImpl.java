@@ -1206,9 +1206,20 @@ public class LoginServiceImpl implements LoginService {
 	public AuthorizeForInAppSacRes authorizeForInApp(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForInAppSacReq req) {
 
-		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
+		// tenantId S01
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+		tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2);
+		requestHeader.setTenantHeader(tenant);
 
-		return this.getTstoreMemberInfoForInApp(requestHeader, req);
+		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회
+
+		AuthorizeForInAppSacRes res = this.getTstoreMemberInfoForInApp(requestHeader, req); // 회원 정보 조회
+
+		this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", ""); // 로그인 이력 저장
+
+		return res;
+
 	}
 
 	/**
@@ -1224,11 +1235,6 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	private AuthorizeForInAppSacRes getTstoreMemberInfoForInApp(SacRequestHeader requestHeader,
 			AuthorizeForInAppSacReq req) {
-
-		// tenantId S01
-		TenantHeader tenant = requestHeader.getTenantHeader();
-		tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
-		requestHeader.setTenantHeader(tenant);
 
 		AuthorizeForInAppSacRes res = new AuthorizeForInAppSacRes();
 
