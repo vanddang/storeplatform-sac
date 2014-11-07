@@ -448,7 +448,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			reserveCount = reservePurchaseScRes.getCount();
 
 			if (CollectionUtils.isNotEmpty(purchaseOrderInfo.getReceiveUserList())) {
-				if (reserveCount != purchaseOrderInfo.getReceiveUserList().size()) {
+				if (reserveCount != purchaseOrderInfo.getReceiveUserList().size()
+						* purchaseOrderInfo.getPurchaseProductList().size()) {
 					throw new StorePlatformException("SAC_PUR_7201");
 				}
 			} else {
