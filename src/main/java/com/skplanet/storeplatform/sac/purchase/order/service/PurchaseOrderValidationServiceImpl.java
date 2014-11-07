@@ -599,7 +599,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			purchaseOrderInfo.setRealTotAmt(0.0);
 
 		} else {
-			checkTotAmt *= purchaseOrderInfo.getReceiveUserList().size(); // 결제총금액 계산: 수신자 수 만큼 상품 가격 반영
+			if (CollectionUtils.isNotEmpty(purchaseOrderInfo.getReceiveUserList())) {
+				checkTotAmt *= purchaseOrderInfo.getReceiveUserList().size(); // 결제총금액 계산: 수신자 수 만큼 상품 가격 반영
+			}
 
 			if (StringUtils.equals(purchaseOrderInfo.getSaleAmtProcType(), PurchaseConstants.SALE_AMT_PROC_TYPE_SERVER) == false
 					&& checkTotAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt().doubleValue()) {
