@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
@@ -63,7 +63,7 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	/**
 	 * 약관동의 리스트.
 	 */
-	private ArrayList<Agreement> agreementList;
+	private List<Agreement> agreementList;
 
 	/**
 	 * 휴대기기 정보.
@@ -208,15 +208,15 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	/**
 	 * @return agreementList
 	 */
-	public ArrayList<Agreement> getAgreementList() {
+	public List<Agreement> getAgreementList() {
 		return this.agreementList;
 	}
 
 	/**
 	 * @param agreementList
-	 *            ArrayList<Agreement>
+	 *            List<Agreement>
 	 */
-	public void setAgreementList(ArrayList<Agreement> agreementList) {
+	public void setAgreementList(List<Agreement> agreementList) {
 		this.agreementList = agreementList;
 	}
 
