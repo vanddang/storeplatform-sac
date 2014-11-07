@@ -938,20 +938,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		shoppingReq.setItemCount(publishQty);
 		shoppingReq.setMdn(purchaseUser.getDeviceId());
 
-		this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,REQ,{},",
+		this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,REQ,ONLY,{},",
 				ReflectionToStringBuilder.toString(shoppingReq, ToStringStyle.SHORT_PREFIX_STYLE));
-		try {
-			// 정상 응답이 아니면 Exception 발생됨
-			this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
-			this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,RES,true");
-		} catch (Exception e) {
-			if (e instanceof StorePlatformException) {
-				this.logger
-						.info("PRCHS,SAC,ORDER,VALID,SHOPPING,RES,false,{},", ((StorePlatformException) e).getCode());
-			} else {
-				this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,RES,false");
-			}
-		}
+		// 정상 응답이 아니면 Exception 발생됨
+		this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
 	}
 
 	/*
