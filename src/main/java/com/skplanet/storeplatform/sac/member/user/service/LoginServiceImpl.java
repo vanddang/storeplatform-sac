@@ -1287,19 +1287,6 @@ public class LoginServiceImpl implements LoginService {
 		userInfo.setUserLanguage(detailRes.getUserInfo().getUserLanguage());
 		userInfo.setProdExpoLevl(this.getProdExpoLevl(detailRes.getUserInfo().getRealAge()));
 
-		// 약관정보
-		ArrayList<Agreement> agreementList = new ArrayList<Agreement>();
-		for (Agreement info : detailRes.getAgreementList()) {
-			if (StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) {
-				agreementList.add(info);
-			} else {
-				Agreement tempInfo = info;
-				tempInfo.setExtraAgreementURL(this.getExtraAgreementURL(MemberConstants.TENANT_ID_TSTORE,
-						info.getExtraAgreementId(), null));
-				agreementList.add(tempInfo);
-			}
-		}
-
 		// 휴대기기 정보
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
@@ -1343,7 +1330,7 @@ public class LoginServiceImpl implements LoginService {
 		res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL); // 회원상태 정상
 		res.setUserAuthKey(this.tempUserAuthKey); // 임시 인증키
 		res.setUserInfo(userInfo);
-		res.setAgreementList(agreementList);
+		res.setAgreementList(detailRes.getAgreementList()); // 약관정보
 		res.setDeviceInfo(deviceInfo);
 		res.setPinInfo(pinInfo);
 		res.setMbrAuth(detailRes.getMbrAuth()); // 실명인증정보
@@ -1351,41 +1338,6 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
 		return res;
-	}
-
-	/**
-	 * <pre>
-	 * Tstore 모바일 약관동의 URL 조회.
-	 * </pre>
-	 * 
-	 * @param tenantId
-	 *            String
-	 * @param extraAgreementId
-	 *            String
-	 * @param clauseExtraInfoList
-	 *            타사인증후 받은 약관동의정보
-	 * @return 약관동의 URL
-	 */
-	private String getExtraAgreementURL(String tenantId, String extraAgreementId, Object obj) {
-
-		String extraAgreementURL = "";
-
-		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, tenantId)) {
-			// TODO. 약관 코드별 URL 확인 필요 US010603 US010609 US010612
-			if (StringUtils.equals(extraAgreementId, MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE)) {
-				extraAgreementURL = "";
-			} else if (StringUtils.equals(extraAgreementId,
-					MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE)) {
-				extraAgreementURL = "";
-			} else if (StringUtils.equals(extraAgreementId, MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE)) {
-				extraAgreementURL = "";
-			}
-		} else {
-
-		}
-
-		return extraAgreementURL;
-
 	}
 
 	/**
