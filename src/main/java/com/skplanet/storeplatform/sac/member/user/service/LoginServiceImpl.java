@@ -1249,20 +1249,18 @@ public class LoginServiceImpl implements LoginService {
 		try {
 			detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 		} catch (StorePlatformException e) {
-			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NO_MEMBER);
+				res.setUserInfo(new UserInfo());
+				res.setAgreementList(new ArrayList<Agreement>());
+				res.setDeviceInfo(new DeviceInfo());
+				res.setPinInfo(new MarketPinInfo());
+				res.setMbrAuth(new MbrAuth());
+				res.setTstoreEtcInfo(new TstoreEtcInfo());
+				return res;
+			} else {
 				throw e;
 			}
-		}
-
-		if (detailRes == null || detailRes.getUserInfo() == null || detailRes.getDeviceInfoList().size() == 0) { // 비회원
-			res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NO_MEMBER);
-			res.setUserInfo(new UserInfo());
-			res.setAgreementList(new ArrayList<Agreement>());
-			res.setDeviceInfo(new DeviceInfo());
-			res.setPinInfo(new MarketPinInfo());
-			res.setMbrAuth(new MbrAuth());
-			res.setTstoreEtcInfo(new TstoreEtcInfo());
-			return res;
 		}
 
 		// 사용자 기본정보
