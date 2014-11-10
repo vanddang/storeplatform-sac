@@ -118,7 +118,7 @@
                         FROM (
                               SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
                                 FROM (
-                                      SELECT A.TOP_MENU_ID
+                                      SELECT /*+ LEADING(A B G) USE_NL(D)*/ A.TOP_MENU_ID 
                                            , A.MENU_ID
                                            , D.PROD_ID
                                            , D.LAST_DEPLOY_DT
@@ -146,6 +146,7 @@
                                          AND E.PROD_ID = D.PROD_ID 
                                          AND F.PROD_ID = D.PROD_ID 
                                          AND G.PROD_ID = D.PROD_ID 
+                                         AND G.PROD_ID = B.PROD_ID
                                          AND G.TENANT_ID = #{tenantId}             /* header param : tenantId */
                                          AND H.PROD_ID = D.PROD_ID
                                          AND H.TENANT_ID = #{tenantId}             /* header param : tenantId */
@@ -180,7 +181,7 @@
                                          AND (NVL(H.CHNL_UNLMT_AMT, -1) <= 0 AND NVL(H.CHNL_PERIOD_AMT, -1) <= 0) /* 무료 상품 */
                                          ]]>
                                        </if>
-                                         AND EXISTS (SELECT 'X'
+                                         AND EXISTS (SELECT /*+ NO_UNNEST NO_PUSH_SUBQ */ 'X'
                                                      FROM   TB_DP_PROD_RSHP   I
                                                            ,TB_DP_SPRT_DEVICE L
                                                            ,TB_CM_DEVICE      M
