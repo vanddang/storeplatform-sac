@@ -715,9 +715,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// 결제Page 템플릿
 
+		boolean bIapAutoPrchs = false;
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+				&& StringUtils.equals(reservedDataMap.get("autoPrchsYn"), "Y")) {
+			bIapAutoPrchs = true;
+		}
+
 		res.setCdPaymentTemplate(this.adjustPaymentPageTemplate(prchsDtlMore.getPrchsCaseCd(),
-				prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("cmpxProdClsfCd"),
-				reservedDataMap.get("s2sAutoYn"), prchsDtlMoreList.size()));
+				prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("cmpxProdClsfCd"), bIapAutoPrchs,
+				StringUtils.equals(reservedDataMap.get("s2sAutoYn"), "Y"), prchsDtlMoreList.size()));
 
 		// ------------------------------------------------------------------------------------------------
 		// (다날) 컨텐츠 종류: 실물 / 디지털 : 쇼핑상품만 실물로 처리
@@ -1760,20 +1766,25 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param cmpxProdClsfCd 정액상품 구분 코드
 	 * 
-	 * @param s2sAutoYn IAP S2S 월자동결제 상품 여부
+	 * @param bIapAutoPrchs IAP 월자동결제 상품 여부
+	 * 
+	 * @param bS2sAutoPrchs IAP S2S 월자동결제 상품 여부
 	 * 
 	 * @param prchsProdCnt 구매하는 상품 갯수
 	 * 
 	 * @return 결제Page 템플릿 코드
 	 */
 	private String adjustPaymentPageTemplate(String prchsCaseCd, String tenantProdGrpCd, String cmpxProdClsfCd,
-			String s2sAutoYn, int prchsProdCnt) {
+			boolean bIapAutoPrchs, boolean bS2sAutoPrchs, int prchsProdCnt) {
 		if (StringUtils.equals(prchsCaseCd, PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GIFT; // 선물: TC06
 
 		} else {
-			if (StringUtils.equals("Y", s2sAutoYn)) { // IAP S2S 월자동결제 상품
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
+			if (bS2sAutoPrchs) { // IAP S2S 월자동결제 상품
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY; // S2S 자동결제: TC08
+
+			} else if (bIapAutoPrchs) { // IAP 월자동결제 상품
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY; // IAP 자동결제: TC07
 
 			} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING; // 쇼핑: TC05

@@ -118,6 +118,8 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYMENT_PAGE_TEMPLATE_AUTOPAY = "TC04"; // 자동결제
 	public static final String PAYMENT_PAGE_TEMPLATE_SHOPPING = "TC05"; // 쇼핑
 	public static final String PAYMENT_PAGE_TEMPLATE_GIFT = "TC06"; // 선물
+	public static final String PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY = "TC07"; // IAP 자동결제
+	public static final String PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY = "TC08"; // S2S 자동결제
 
 	/** 결제Page 상품설명 */
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_DELIVERY = "배송 상품";
