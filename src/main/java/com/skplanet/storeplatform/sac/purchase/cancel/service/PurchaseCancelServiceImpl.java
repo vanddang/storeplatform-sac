@@ -419,11 +419,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 						&& StringUtils.equals(PurchaseConstants.NON_MEMBER, prchsDtlSacParam.getUseInsdUsermbrNo())) {
 
 					this.giftSendSms(prchsDtlSacParam, prchsSacParam, purchaseCancelSacParam);
-
-					if (prchsDtlSacParam.getProdQty() > 1) {
-						break;
-					}
-
+					break;
 				}
 			}
 		} catch (Exception e) {
