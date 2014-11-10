@@ -54,6 +54,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		PurchaseProduct product = purchaseOrderInfo.getPurchaseProductList().get(0);
 
 		PaymentPageParam paymentPageParam = new PaymentPageParam();
+		paymentPageParam.setTenantId(purchaseOrderInfo.getTenantId());
 		paymentPageParam.setMid(purchaseOrderInfo.getMid());
 		paymentPageParam.setAuthKey(purchaseOrderInfo.getAuthKey());
 		paymentPageParam.setOrderId(purchaseOrderInfo.getPrchsId());
@@ -282,8 +283,9 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	private String encryptPaymentData(PaymentPageParam paymentPageParam, String encKey) {
 		// 암호화 데이터 구성
 		StringBuffer sb = new StringBuffer(1024);
-		sb.append("mid=").append(paymentPageParam.getMid()).append("&orderId=").append(paymentPageParam.getOrderId())
-				.append("&mctTrDate=").append(paymentPageParam.getMctTrDate()).append("&amtPurchase=")
+		sb.append("tenantId=").append(paymentPageParam.getTenantId()).append("&mid=").append(paymentPageParam.getMid())
+				.append("&orderId=").append(paymentPageParam.getOrderId()).append("&mctTrDate=")
+				.append(paymentPageParam.getMctTrDate()).append("&amtPurchase=")
 				.append(paymentPageParam.getAmtPurchase()).append("&pid=").append(paymentPageParam.getPid())
 				.append("&pName=").append(paymentPageParam.getpName()).append("&pDescription=")
 				.append(paymentPageParam.getpDescription()).append("&aid=")

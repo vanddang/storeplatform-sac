@@ -26,6 +26,8 @@ public class PaymentPageParam extends CommonInfo {
 
 	private String authKey; // 가맹점 인증키
 
+	private String tenantId;
+
 	private String mid; // 가맹점ID
 	private String orderId; // 가맹점 주문번호
 	private String mctTrDate; // 결제요청일시
@@ -112,6 +114,21 @@ public class PaymentPageParam extends CommonInfo {
 	 */
 	public void setAuthKey(String authKey) {
 		this.authKey = authKey;
+	}
+
+	/**
+	 * @return the tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	/**
