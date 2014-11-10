@@ -39,10 +39,12 @@ public interface PurchaseShoppingOrderRepository {
 	 *            구매자 MDN
 	 * @param useDeviceIdList
 	 *            이용자 MDN 목록
+	 * @param bGift
+	 *            선물여부 (true: 선물)
 	 * @return 발급 요청 결과 개체
 	 */
 	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String couponCode, String itemCode,
-			String buyDeviceId, List<String> useDeviceIdList);
+			String buyDeviceId, List<String> useDeviceIdList, boolean bGift);
 
 	/**
 	 * 

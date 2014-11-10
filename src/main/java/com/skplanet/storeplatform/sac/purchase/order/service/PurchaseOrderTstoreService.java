@@ -191,9 +191,9 @@ public interface PurchaseOrderTstoreService {
 	 *            내부 디바이스 ID
 	 * @param notiType
 	 *            알림 타입
-	 * @param giftYn
+	 * @param bGift
 	 *            선물여부
 	 */
 	public void postTstoreNotiV2(String prchsId, String prchsDt, String userKey, String deviceKey, String notiType,
-			String giftYn);
+			boolean bGift);
 }

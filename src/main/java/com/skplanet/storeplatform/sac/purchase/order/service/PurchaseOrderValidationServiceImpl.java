@@ -22,7 +22,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -799,19 +798,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 							String exprDt = this.purchaseOrderAssistService.calculateUseDate(currDt,
 									product.getUsePeriodUnitCd(), product.getUsePeriod());
 							if (exprDt.compareTo(useExistenceScRes.getUseExprDt()) > 0) {
-								// 자동결제 배치 시간 변동으로 인한 에피소드 이용기간 연장 : 다음결제일의 23:59:59 까지
-								// TAKTODO:: 다음결제일 판별 - 정액권 유효기간이 달라지면, 전일235959/금일HHmmss 2가지 형태... 분별 방안 필요
-								// 일단은 정액권 유효기간이 235959 로 끝나는 여부로 처리
-								if (currDt.substring(0, 8).compareTo(useExistenceScRes.getUseExprDt().substring(0, 8)) >= 0) {
-									if (StringUtils.equals(useExistenceScRes.getUseExprDt().substring(8, 14), "235959")) {
-										product.setDwldExprDt(new SimpleDateFormat("yyyyMMdd").format(DateUtils
-												.addDays(currDateObj, 1)) + "235959");
-									} else {
-										product.setDwldExprDt(currDt.substring(0, 8) + "235959");
-									}
-								} else {
-									product.setDwldExprDt(useExistenceScRes.getUseExprDt());
-								}
+								product.setDwldExprDt(useExistenceScRes.getUseExprDt());
 							}
 
 							product.setUseFixrateProdId(useExistenceScRes.getProdId()); // 사용할 정액권ID 세팅

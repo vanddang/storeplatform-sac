@@ -83,12 +83,25 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore
 					.getPrchsResvDesc());
 
-			// 쇼핑 1:N 선물 경우는 Noti V2 버전으로 요청
-			if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)
-					&& prchsDtlMoreList.size() > 1 && prchsDtlMore.getProdQty() == 1) {
+			// 구매요청 API 버전
+			int apiVer = Integer.parseInt(StringUtils.defaultString(reservedDataMap.get("apiVer"), "1"));
+
+			// 구매요청 버전 V2 부터는 신규 구매완료Noti 규격 이용 (구매/선물 구분)
+			if (apiVer > 1) {
+				String userKey = null;
+				String deviceKey = null;
+
+				boolean bGift = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD);
+				if (bGift) {
+					userKey = prchsDtlMore.getSendInsdUsermbrNo();
+					deviceKey = prchsDtlMore.getSendInsdDeviceId();
+				} else {
+					userKey = prchsDtlMore.getUseInsdUsermbrNo();
+					deviceKey = prchsDtlMore.getUseInsdDeviceId();
+				}
+
 				this.purchaseOrderTstoreService.postTstoreNotiV2(prchsDtlMore.getPrchsId(), prchsDtlMore.getPrchsDt(),
-						prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getUseInsdDeviceId(),
-						reservedDataMap.get("tstoreNotiPublishType"), "Y");
+						userKey, deviceKey, reservedDataMap.get("tstoreNotiPublishType"), bGift);
 
 			} else {
 				this.purchaseOrderTstoreService.postTstoreNoti(prchsDtlMore.getPrchsId(), prchsDtlMore.getPrchsDt(),

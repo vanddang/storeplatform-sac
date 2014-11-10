@@ -61,16 +61,19 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 	 *            구매자 MDN
 	 * @param useDeviceIdList
 	 *            이용자 MDN 목록
+	 * @param bGift
+	 *            선물여부 (true: 선물)
 	 * @return 발급 요청 결과 개체
 	 */
 	@Override
 	public CouponPublishV2EcRes createCouponPublishV2(String prchsId, String couponCode, String itemCode,
-			String buyDeviceId, List<String> useDeviceIdList) {
+			String buyDeviceId, List<String> useDeviceIdList, boolean bGift) {
 		CouponPublishV2EcReq couponPublishV2EcReq = new CouponPublishV2EcReq();
 		couponPublishV2EcReq.setPrchsId(prchsId);
 		couponPublishV2EcReq.setCouponCode(couponCode);
 		couponPublishV2EcReq.setItemCode(itemCode);
 		couponPublishV2EcReq.setBuyMdn(buyDeviceId);
+		couponPublishV2EcReq.setGiftFlag(bGift ? "Y" : "N");
 		StringBuffer sbMdns = new StringBuffer();
 		for (String mdn : useDeviceIdList) {
 			if (sbMdns.length() > 0) {

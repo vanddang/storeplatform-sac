@@ -610,6 +610,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 		StringBuffer sbReserveData = new StringBuffer(1024);
 		sbReserveData
+				.append("apiVer=")
+				.append(purchaseOrderInfo.getApiVer())
 				.append("systemId=")
 				.append(purchaseOrderInfo.getSystemId())
 				.append("&userId=")

@@ -890,15 +890,20 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		if (prchsDtlMore.getTenantProdGrpCd().startsWith(PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 
-			// 1:N 선물 구분
-			if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)
-					&& prchsDtlMoreList.size() > 1 && prchsDtlMore.getProdQty() == 1) {
+			// 구매요청 API 버전
+			int apiVer = Integer.parseInt(StringUtils.defaultString(reservedDataMap.get("apiVer"), "1"));
+
+			// if (StringUtils.equals(giftYn, "Y") && prchsDtlMoreList.size() > 1 && prchsDtlMore.getProdQty() == 1)
+			// {1:N선물구분
+
+			if (apiVer > 1) { // 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (1:N 선물 지원)
 
 				List<String> useMdnList = this.concatResvDescByList(prchsDtlMoreList, "useDeviceId");
 
 				CouponPublishV2EcRes couponPublishV2EcRes = this.purchaseShoppingOrderRepository.createCouponPublishV2(
 						prchsDtlMore.getPrchsId(), reservedDataMap.get("couponCode"), reservedDataMap.get("itemCode"),
-						reservedDataMap.get("deviceId"), useMdnList);
+						reservedDataMap.get("deviceId"), useMdnList,
+						StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD));
 
 				String availStartDt = couponPublishV2EcRes.getAvailStartdate();
 				String availEndDt = couponPublishV2EcRes.getAvailEnddate();
