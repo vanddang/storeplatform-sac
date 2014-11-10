@@ -582,7 +582,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreNotiV2EcReq.setDeviceKey(deviceKey);
 		tStoreNotiV2EcReq.setPublishType(notiType);
 		tStoreNotiV2EcReq.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
-		tStoreNotiV2EcReq.setPublishType(giftYn);
+		tStoreNotiV2EcReq.setGiftYn(giftYn);
 
 		try {
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,REQ,{}",
