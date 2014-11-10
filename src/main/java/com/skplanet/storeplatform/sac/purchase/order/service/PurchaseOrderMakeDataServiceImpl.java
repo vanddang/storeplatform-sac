@@ -612,7 +612,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		sbReserveData
 				.append("apiVer=")
 				.append(purchaseOrderInfo.getApiVer())
-				.append("systemId=")
+				.append("&systemId=")
 				.append(purchaseOrderInfo.getSystemId())
 				.append("&userId=")
 				.append(purchaseOrderInfo.getPurchaseUser().getUserId())
