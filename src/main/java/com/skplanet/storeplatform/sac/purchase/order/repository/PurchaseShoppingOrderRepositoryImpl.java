@@ -75,10 +75,12 @@ public class PurchaseShoppingOrderRepositoryImpl implements PurchaseShoppingOrde
 		couponPublishV2EcReq.setBuyMdn(buyDeviceId);
 		couponPublishV2EcReq.setGiftFlag(bGift ? "Y" : "N");
 		StringBuffer sbMdns = new StringBuffer();
+		int cnt = 0;
 		for (String mdn : useDeviceIdList) {
-			if (sbMdns.length() > 0) {
+			if (cnt > 0) {
 				sbMdns.append(",");
 			}
+			cnt++;
 			sbMdns.append(mdn);
 		}
 		couponPublishV2EcReq.setUseMdns(sbMdns.toString());

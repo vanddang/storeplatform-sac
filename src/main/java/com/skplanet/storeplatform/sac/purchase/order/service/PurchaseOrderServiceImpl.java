@@ -1634,18 +1634,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 상품 별 구매 결과
 	 */
 	private String makeClinkResProductResult(List<PurchaseProduct> productList) {
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sbResult = new StringBuffer();
 
 		for (PurchaseProduct product : productList) {
-			sb.append(product.getProdId()).append(":")
+			sbResult.append(product.getProdId()).append(":")
 					.append(StringUtils.defaultIfBlank(product.getResultCd(), "0000")).append(",");
 		}
 
-		if (sb.length() > 0) {
-			sb.setLength(sb.length() - 1);
+		if (sbResult.length() > 0) {
+			sbResult.setLength(sbResult.length() - 1);
 		}
 
-		return sb.toString();
+		return sbResult.toString();
 	}
 
 	/*
@@ -1974,12 +1974,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		StringBuffer sbConcat = new StringBuffer();
 		String resvDesc = null;
 		int tmpIdx = 0;
+		int cnt = 0;
 
 		for (PrchsDtlMore resvPrchsDtlMore : prchsDtlMoreList) {
 
-			if (sbConcat.length() > 0) {
+			if (cnt > 0) {
 				sbConcat.append(separator);
 			}
+			cnt++;
 
 			resvDesc = resvPrchsDtlMore.getPrchsResvDesc();
 
