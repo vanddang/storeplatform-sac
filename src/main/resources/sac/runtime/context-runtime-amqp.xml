@@ -142,7 +142,7 @@
     </beans>
     
 	<!-- Staging 서버에서는 MQ 송수신 하지않도록 "stg" profile 예외처리 적용 -->
-    <beans profile="local, stg">
+    <beans profile="local,stg">
         <!-- 
 		<bean id="inboundQueueNames" class="java.lang.String">
 		    <constructor-arg>
