@@ -65,6 +65,7 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String prodKind; // 쇼핑상품 종류
 
 	private VerifyOrderIapInfoSac iapProdInfo; // IAP상품 정보
+	// private List<VerifyOrderPromotionInfoSac> promotionList; // 프로모션 정보
 
 	private String nmSellerCompany; // 회사명
 	private String nmSeller; // 판매자명
