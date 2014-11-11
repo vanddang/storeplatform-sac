@@ -19,17 +19,6 @@
 		http://www.springframework.org/schema/integration/amqp    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.2.xsd
         http://www.springframework.org/schema/rabbit              http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
 
- 	<import resource="classpath*:runtime/context-runtime-amqp.xml"/>
- 	
- 	<bean class="com.rabbitmq.client.ConnectionFactory">
-        <property name="host" ><value>#{propertiesForSac['skp.mq.server.host']}</value></property>
-        <property name="port" ><value>#{propertiesForSac['skp.mq.server.port']}</value></property>
-        <property name="username" ><value>#{propertiesForSac['skp.mq.server.username']}</value></property>
-        <property name="password" ><value>#{propertiesForSac['skp.mq.server.password']}</value></property>
-        <property name="virtualHost" ><value>#{propertiesForSac['skp.mq.server.virtualHost']}</value></property>
-    </bean>
-
-    
     <!-- 
     <value>cmsapp.sac.request.sync.content.test99999</value>
     <value>cmsapp.sac.request.sync.content.test0001</value>
@@ -68,23 +57,23 @@
     </rabbit:queue>
     
     
-    <rabbit:admin connection-factory="sacRabbitConnectionFactory" auto-startup="true" />
-            
-    <!--<rabbit:connection-factory id="sacRabbitConnectionFactory" />-->
-    
-    <bean id="sacRabbitConnectionFactory" class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory" >
-        <constructor-arg ref="com.rabbitmq.client.ConnectionFactory" />
-        <property name="channelCacheSize" value="10"/>
-    </bean>
-    
-    <rabbit:template id="storeplatformRabbitTemplate" connection-factory="sacRabbitConnectionFactory" message-converter="sacRabbitJsonMessageConverter" reply-timeout="60000" />
-    
     <bean id="sacRabbitJsonMessageConverter" class="org.springframework.amqp.support.converter.JsonMessageConverter" />
 
     
     <!-- MQ에서 수신하는 큐 이름들이 정의되어야 합니다. 수신MQ는 rabbit:queue name속성시 buildInboundQueueName을 적용해야 합니다.-->
     <!-- Staging 서버에서는 수신받지 않도록 profile 예외처리 적용 -->
     <beans profile="dev,qa,real">
+        <import resource="classpath*:runtime/context-runtime-amqp.xml"/>
+ 	
+	 	<bean class="com.rabbitmq.client.ConnectionFactory">
+	        <property name="host" ><value>#{propertiesForSac['skp.mq.server.host']}</value></property>
+	        <property name="port" ><value>#{propertiesForSac['skp.mq.server.port']}</value></property>
+	        <property name="username" ><value>#{propertiesForSac['skp.mq.server.username']}</value></property>
+	        <property name="password" ><value>#{propertiesForSac['skp.mq.server.password']}</value></property>
+	        <property name="virtualHost" ><value>#{propertiesForSac['skp.mq.server.virtualHost']}</value></property>
+	    </bean>
+        
+ 	
 	    <bean id="inboundQueueNames" class="com.skplanet.storeplatform.sac.common.util.MqUtils" factory-method="buildQueueName">
 	        <constructor-arg>
 	            <list>
@@ -93,6 +82,17 @@
 	            </list>
 	        </constructor-arg>
 	    </bean>
+
+		<rabbit:admin connection-factory="sacRabbitConnectionFactory" auto-startup="true" />
+	   	<!--<rabbit:connection-factory id="sacRabbitConnectionFactory" />-->
+	   
+		<bean id="sacRabbitConnectionFactory" class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory" >
+	    	<constructor-arg ref="com.rabbitmq.client.ConnectionFactory" />
+	       	<property name="channelCacheSize" value="10"/>
+	   	</bean>
+	   
+	   	<rabbit:template id="storeplatformRabbitTemplate" connection-factory="sacRabbitConnectionFactory" message-converter="sacRabbitJsonMessageConverter" reply-timeout="60000" />
+	   
     
 	    <!-- CMS DISPLAY RESULT Rabbit Template -->
 	    <bean id="cmsAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
@@ -143,11 +143,13 @@
     
 	<!-- Staging 서버에서는 MQ 송수신 하지않도록 "stg" profile 예외처리 적용 -->
     <beans profile="local, stg">
+        <!-- 
 		<bean id="inboundQueueNames" class="java.lang.String">
 		    <constructor-arg>
 				<value>sac.dummy.dont-delete-me.async</value>
 			</constructor-arg>
 	    </bean>
+	    -->
 	    <!-- CMS DISPLAY RESULT Rabbit Template -->
 	    <bean id="cmsAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
 	    <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
