@@ -103,7 +103,7 @@
     </beans>
 
     <beans profile="stg">   
-        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.qa.properties" /> 
+        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.stg.properties" /> 
         <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
             <property name="fileEncoding" value="UTF-8" />
             <property name="locations" >
