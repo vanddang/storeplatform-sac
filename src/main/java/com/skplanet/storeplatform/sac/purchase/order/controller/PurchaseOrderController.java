@@ -308,6 +308,8 @@ public class PurchaseOrderController {
 
 		// TAKTODO:: 결제실패 경우 처리 - 구매실패(결제실패) 이력 관리 할건가?
 		if (Integer.parseInt(notifyPaymentReq.getResultCd()) != 0) {
+			this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,FAIL,{},{}", notifyPaymentReq.getResultCd(),
+					notifyPaymentReq.getResultMsg());
 			return new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq.getPaymentInfoList().size());
 		}
 
