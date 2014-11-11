@@ -1306,26 +1306,13 @@ public class LoginServiceImpl implements LoginService {
 		keySearch.setKeyString(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 		keySearchList.add(keySearch);
 		searchDeviceSetInfoRequest.setKeySearchList(keySearchList);
+		SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
+				.searchDeviceSetInfo(searchDeviceSetInfoRequest);
 
 		MarketPinInfo pinInfo = new MarketPinInfo();
-		try {
-
-			SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
-					.searchDeviceSetInfo(searchDeviceSetInfoRequest);
-
-			pinInfo.setIsPinSet(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
-			pinInfo.setIsPinRetry(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry());
-			if (StringUtils.isBlank(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn())) {
-				pinInfo.setIsPinClosed(MemberConstants.USE_N);
-			} else {
-				pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
-			}
-
-		} catch (StorePlatformException e) {
-			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
-				throw e;
-			}
-		}
+		pinInfo.setIsPinSet(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
+		pinInfo.setIsPinRetry(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry());
+		pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
 
 		res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL); // 회원상태 정상
 		res.setUserAuthKey(this.tempUserAuthKey); // 임시 인증키
