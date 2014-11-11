@@ -272,15 +272,8 @@ public class PurchaseOrderController {
 		String tenantId = null;
 		String systemId = null;
 
-		if (StringUtils.isNotBlank(req.getMctSpareParam())) { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
-			tenantId = req.getMctSpareParam();
-		} else {
-			if (tenantHeader != null) {
-				tenantId = tenantHeader.getTenantId();
-			}
-		}
-
 		if (tenantHeader != null) {
+			tenantId = tenantHeader.getTenantId();
 			systemId = tenantHeader.getSystemId();
 		}
 

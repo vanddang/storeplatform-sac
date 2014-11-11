@@ -702,7 +702,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				int publishQty = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getReceiveUserList().size()
 						* product.getProdQty() : product.getProdQty();
 
-				this.checkAvailableCouponPublish(purchaseOrderInfo.getPurchaseUser(), product, publishQty);
+				this.checkAvailableCouponPublish(purchaseOrderInfo.getPurchaseUser(), product, publishQty,
+						purchaseOrderInfo.isGift());
 			}
 
 			// ---------------------- 구매자 혹은 수신자 수 만큼 반복 체크
@@ -902,8 +903,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 * @param product 구매 상품 정보
 	 * 
 	 * @param publishQty 총 구매 수량
+	 * 
+	 * @param bGift 선물여부
 	 */
-	private void checkAvailableCouponPublish(PurchaseUserDevice purchaseUser, PurchaseProduct product, int publishQty) {
+	private void checkAvailableCouponPublish(PurchaseUserDevice purchaseUser, PurchaseProduct product, int publishQty,
+			boolean bGift) {
 
 		// 특가상품 구매가능 건수 체크
 		if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
@@ -938,11 +942,17 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		shoppingReq.setItemCode(product.getItemCode());
 		shoppingReq.setItemCount(publishQty);
 		shoppingReq.setMdn(purchaseUser.getDeviceId());
+		shoppingReq.setGiftFlag(bGift ? "Y" : "N");
 
-		this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,REQ,ONLY,{},",
+		this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,REQ,{},",
 				ReflectionToStringBuilder.toString(shoppingReq, ToStringStyle.SHORT_PREFIX_STYLE));
-		// 정상 응답이 아니면 Exception 발생됨
-		this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
+		try {
+			// 정상 응답이 아니면 Exception 발생됨
+			this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
+		} catch (StorePlatformException e) {
+			this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,ERROR,{},{},", e.getCode(), e.getMessage());
+			throw e;
+		}
 	}
 
 	/*

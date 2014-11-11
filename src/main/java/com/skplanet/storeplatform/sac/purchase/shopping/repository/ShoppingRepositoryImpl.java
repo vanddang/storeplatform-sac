@@ -218,6 +218,7 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 		couponPublishAvailableEcReq.setItemCode(couponPublishAvailableSacParam.getItemCode());
 		couponPublishAvailableEcReq.setItemCount(couponPublishAvailableSacParam.getItemCount());
 		couponPublishAvailableEcReq.setMdn(couponPublishAvailableSacParam.getMdn());
+		couponPublishAvailableEcReq.setGiftFlag(couponPublishAvailableSacParam.getGiftFlag());
 
 		return couponPublishAvailableEcReq;
 	}

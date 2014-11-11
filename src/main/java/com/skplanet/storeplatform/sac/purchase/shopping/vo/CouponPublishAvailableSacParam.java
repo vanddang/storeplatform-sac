@@ -25,6 +25,7 @@ public class CouponPublishAvailableSacParam extends PurchaseCommonSacParam {
 	private Integer itemCount;
 	private String mdn;
 	private String prodId;
+	private String giftFlag;
 
 	/**
 	 * @return the couponCode
@@ -99,6 +100,21 @@ public class CouponPublishAvailableSacParam extends PurchaseCommonSacParam {
 	 */
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
+	}
+
+	/**
+	 * @return the giftFlag
+	 */
+	public String getGiftFlag() {
+		return this.giftFlag;
+	}
+
+	/**
+	 * @param giftFlag
+	 *            the giftFlag to set
+	 */
+	public void setGiftFlag(String giftFlag) {
+		this.giftFlag = giftFlag;
 	}
 
 }

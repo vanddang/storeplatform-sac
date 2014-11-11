@@ -786,6 +786,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setIapProdInfo(iapProdInfo);
 		}
 
+		// 프로모션 정보
+		// TAKTEST:: PP만
+		// if (StringUtils.startsWith(verifyOrderInfo.getSystemId(), "S00")) {
+		// res.setPromotionList(this.searchPromotionListTemp(prchsDtlMore));
+		// }
+
 		// 판매자 정보 세팅
 		SellerMbrSac sellerInfo = this.searchSellerInfo(reservedDataMap.get("sellerMbrNo"),
 				prchsDtlMore.getTenantProdGrpCd());
@@ -2019,4 +2025,39 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		return valList;
 	}
+
+	/*
+	 * 
+	 * <pre> 프로모션 정보 조회. </pre>
+	 * 
+	 * @return
+	 */
+	// private List<VerifyOrderPromotionInfoSac> searchPromotionListTemp(PrchsDtlMore prchsDtlMore) {
+	// // TAKTODO:: 프로모션/배너 관리 이전까지 하드코딩
+	//
+	// // 쇼핑 상품 경우는 프로모션 없는 테스트
+	// if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+	// return null;
+	// }
+	//
+	// List<VerifyOrderPromotionInfoSac> promotionList = new ArrayList<VerifyOrderPromotionInfoSac>();
+	//
+	// VerifyOrderPromotionInfoSac promotion = new VerifyOrderPromotionInfoSac();
+	// promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD);
+	// promotion.setTitle("신용카드 2014년 11월 1차 TEST 프로모션");
+	// promotion.setImagePath("/data/img/banner/sc/shopping/B_20141106103300066.jpg");
+	// promotion.setLinkUrl("m.nate.com");
+	// promotion.setBackColorCd("#D5C8EB");
+	// promotionList.add(promotion);
+	//
+	// promotion = new VerifyOrderPromotionInfoSac();
+	// promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP);
+	// promotion.setTitle("T멤버쉽 2014년 11월 1차 TEST 프로모션");
+	// promotion.setImagePath("/data/img/banner/sc/shopping/B_20141106103300066.jpg");
+	// promotion.setLinkUrl("m.google.com");
+	// promotion.setBackColorCd("#D5C8EB");
+	// promotionList.add(promotion);
+	//
+	// return promotionList;
+	// }
 }
