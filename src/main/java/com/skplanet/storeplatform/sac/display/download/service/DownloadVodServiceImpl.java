@@ -485,6 +485,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		String prchsReqPathCd = historySacIn.getPrchsReqPathCd();
 		String useFixrateProdId = historySacIn.getUseFixrateProdId();
 
+		
+		
 		// 2014.07.01. kdlim. 구매 내역 drmYn 값이 정확하지 않아 상품정보 drmYn으로 변경
 		// 단, T Freemium을 통한 구매건의 경우는 무조건 DRM적용이므로 아래의 조건을 예외처리 해야함.
 		//-	"prchsReqPathCd": "OR0004xx",
@@ -501,15 +503,17 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				paramFixrateProd.put("fixrateProdId", useFixrateProdId);
 				paramFixrateProd.put("prodId", metaInfo.getEspdProdId());
 
-				MetaInfo fixrateProd = (MetaInfo) commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
+				MetaInfo fixrateProdMeta = (MetaInfo) commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
 
-				// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
-				if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-					metaInfo.setStoreDrmYn(fixrateProd.getStoreDrmYn());
-					metaInfo.setDrmYn(fixrateProd.getStoreDrmYn());
-				} else {
-					metaInfo.setPlayDrmYn(fixrateProd.getPlayDrmYn());
-					metaInfo.setDrmYn(fixrateProd.getPlayDrmYn());
+				if(fixrateProdMeta != null) {
+					// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
+					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+						metaInfo.setStoreDrmYn(fixrateProdMeta.getStoreDrmYn());
+						metaInfo.setDrmYn(fixrateProdMeta.getStoreDrmYn());
+					} else if (prchsProdId.equals(metaInfo.getPlayProdId())) {
+						metaInfo.setPlayDrmYn(fixrateProdMeta.getPlayDrmYn());
+						metaInfo.setDrmYn(fixrateProdMeta.getPlayDrmYn());
+					}
 				}
 
 			} else {
@@ -517,9 +521,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				// 소장, 대여 구분(Store : 소장, Play : 대여)
 				if (StringUtils.equals(prchsProdId, metaInfo.getStoreProdId())) {
 					metaInfo.setDrmYn(metaInfo.getStoreDrmYn());
-				} else {
+				} else if (StringUtils.equals(prchsProdId, metaInfo.getPlayProdId())) {
 					metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
 				}
+			}
+			
+			//상품/정액권의 DRM_YN 설정 값이 없을 경우
+			//구매 DRM_YN 을 참조
+			if(StringUtils.isEmpty(metaInfo.getDrmYn())) {
+				metaInfo.setDrmYn(historySacIn.getDrmYn());
 			}
 		}
 	}
