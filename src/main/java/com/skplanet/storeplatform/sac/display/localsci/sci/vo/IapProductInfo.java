@@ -29,6 +29,7 @@ public class IapProductInfo extends CommonInfo {
     private String menuId;
     private String prodCase;
     private String prodKind;
+    private Integer usePeriod;
 
     public String getProdCase() {
         return prodCase;
@@ -100,5 +101,13 @@ public class IapProductInfo extends CommonInfo {
 
     public void setFullProdId(String fullProdId) {
         this.fullProdId = fullProdId;
+    }
+
+    public Integer getUsePeriod() {
+        return usePeriod;
+    }
+
+    public void setUsePeriod(Integer usePeriod) {
+        this.usePeriod = usePeriod;
     }
 }

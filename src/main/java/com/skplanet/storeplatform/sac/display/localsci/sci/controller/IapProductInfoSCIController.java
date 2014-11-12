@@ -13,10 +13,15 @@ import com.skplanet.storeplatform.framework.integration.bean.LocalSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.IapProductInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
+import com.skplanet.storeplatform.sac.display.common.service.ProductExtraInfoService;
 import com.skplanet.storeplatform.sac.display.localsci.sci.service.IapProductInfoService;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.IapProductInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
+
+import java.util.Map;
 
 
 /**
@@ -30,6 +35,9 @@ public class IapProductInfoSCIController implements IapProductInfoSCI {
 
     @Autowired
     private IapProductInfoService iapProductInfoService;
+
+    @Autowired
+    private ProductExtraInfoService extraInfoService;
 
     @Override
     public IapProductInfoRes getIapProductInfo(@Validated IapProductInfoReq req) {
@@ -57,6 +65,15 @@ public class IapProductInfoSCIController implements IapProductInfoSCI {
         res.setProdCase(iapProductInfo.getProdCase());
         res.setProdKind(iapProductInfo.getProdKind());
         res.setFullProdId(iapProductInfo.getFullProdId());
+        res.setUsePeriod(iapProductInfo.getUsePeriod());
+
+        Map infoMap = extraInfoService.getInfoAsJSON(res.getPartProdId(), EXINFO_S2S_INFO);
+        if (infoMap != null) {
+            if(infoMap.containsKey("s2sMonthlyFreepassYn"))
+                res.setS2sMonthlyFreepassYn("" + infoMap.get("s2sMonthlyFreepassYn"));
+            if(infoMap.containsKey("postbackUrl"))
+                res.setPostbackUrl("" + infoMap.get("postbackUrl"));
+        }
 
         return res;
     }

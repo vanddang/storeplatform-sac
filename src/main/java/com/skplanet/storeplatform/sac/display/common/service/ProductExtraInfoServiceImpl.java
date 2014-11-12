@@ -10,6 +10,9 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -37,5 +40,23 @@ public class ProductExtraInfoServiceImpl implements ProductExtraInfoService {
         req.put("infoClsfCd", infoClsfCd);
 
         return commonDAO.queryForObject("ProductExtraInfoService.getInfo", req, String.class);
+    }
+
+    @Override
+    public Map<String, Object> getInfoAsJSON(String prodId, String infoClsfCd) {
+        String info = getInfo(prodId, infoClsfCd);
+        if(info == null)
+            return null;
+
+        Map value;
+        try {
+            value = (Map)(new JSONParser().parse(info));
+        }
+        catch (ParseException e) {
+            value = new HashMap(1);
+            value.put("_info", info);
+        }
+
+        return value;
     }
 }

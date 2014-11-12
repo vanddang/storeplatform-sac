@@ -58,4 +58,24 @@ public class IapProductInfoSCITest {
         IapProductInfoRes iapProductInfo = iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq("0000653878"));
         assert iapProductInfo == null;
     }
+
+    @Test
+    public void test04_SAP매핑테스트() {
+        IapProductInfoRes iapProductInfo = iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq("0000633033"));
+        assert iapProductInfo != null;
+
+        IapProductInfoRes iapProductInfo2 = iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq("0000633033", "S02"));
+        assert iapProductInfo2 == null;
+
+        IapProductInfoRes iapProductInfo3 = iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq("0000633033", "S03"));
+        assert iapProductInfo3 == null;
+    }
+
+    @Test
+    public void test05_추가파라메터확인() {
+        IapProductInfoRes iapProductInfo = iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq("0900950257"));
+        logger.info("{}", iapProductInfo);
+
+        assert iapProductInfo != null;
+    }
 }

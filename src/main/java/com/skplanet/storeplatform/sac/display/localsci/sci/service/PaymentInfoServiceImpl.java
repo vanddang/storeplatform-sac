@@ -18,6 +18,8 @@ import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
 import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 import org.apache.commons.collections.CollectionUtils;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.SET_SERIES_META;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
 
 /**
  *
@@ -183,7 +186,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
             // 인앱 상품의 경우 S2S 정보 조회
             if (paymentInfo.getInAppYn().equals("Y")) {
-                searchS2SInfo(prodId, paymentInfo);
+                bindS2SInfo(prodId, paymentInfo);
             }
 
             // Chapter 및 채널명 셋팅
@@ -218,11 +221,17 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         return res;
     }
 
-    private static final String EXINFO_S2S_SEARCH = "DP011701";
-    private void searchS2SInfo(String prodId, PaymentInfo paymentInfo) {
-        String info = extraInfoService.getInfo(prodId, EXINFO_S2S_SEARCH);
-        if (StringUtils.isNotEmpty(info)) {
-            paymentInfo.setSearchPriceUrl(info);
+    private void bindS2SInfo(String prodId, PaymentInfo paymentInfo) {
+        Map infoMap = extraInfoService.getInfoAsJSON(prodId, EXINFO_S2S_INFO);
+        if(infoMap == null)
+            return;
+
+        if (infoMap.containsKey("_info"))
+            paymentInfo.setSearchPriceUrl("" + infoMap.get("_info"));
+        else {
+            if(infoMap.containsKey("searchPriceUrl"))
+                paymentInfo.setSearchPriceUrl("" + infoMap.get("searchPriceUrl"));
         }
+
     }
 }

@@ -786,4 +786,9 @@ public class DisplayConstants {
      * DisplayCommonService.getTmembershipDcRateForMenu() 요청시 모든 메뉴
      */
     public static final String REQUEST_TMEMBERSHIP_ALL_MENU = "*";
+
+    /**
+     * 부가정보 조회시 S2S정보 코드
+     */
+    public static final String EXINFO_S2S_INFO = "DP011701";
 }

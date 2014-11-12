@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.common.service;
 
+import java.util.Map;
+
 /**
  * <p>
  * 상품 부가정보 서비스.
@@ -26,6 +28,6 @@ public interface ProductExtraInfoService {
      */
     String getInfo(String prodId, String infoClsfCd);
 
-//    Object getInfoAsJSON(String prodId, String infoClsfCd);
+    Map<String, Object> getInfoAsJSON(String prodId, String infoClsfCd);
 
 }
