@@ -94,6 +94,17 @@ public interface ShoppingService {
 	public ShoppingRes getBrandshopMainList(SacRequestHeader header, ShoppingReq req);
 
 	/**
+	 * 브랜드샵 – 상세조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	public ShoppingRes getBrandshopDetail(SacRequestHeader header, ShoppingReq req);
+
+	/**
 	 * 특정 브랜드샵 상품 리스트.
 	 * 
 	 * @param header

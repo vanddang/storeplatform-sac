@@ -997,6 +997,96 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	/**
+	 * 브랜드샵 – 상세조회.
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@Override
+	public ShoppingRes getBrandshopDetail(SacRequestHeader header, ShoppingReq req) {
+		// 공통 응답 변수 선언
+		ShoppingRes res = null;
+		CommonResponse commonResponse = new CommonResponse();
+		List<MetaInfo> resultList = null;
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setImageCd(DisplayConstants.DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD);
+		req.setVirtualDeviceModelNo(DisplayConstants.DP_ANY_PHONE_4MM);
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
+		}
+
+		if (StringUtils.isEmpty(req.getBrandId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "blandId", req.getBrandId());
+		}
+
+		// offset, Count default setting
+		resultList = new ArrayList<MetaInfo>();
+
+		// 브랜드샵 정보 가져오기
+		resultList = this.commonDAO.queryForList("Shopping.getBrandshopDetail", req, MetaInfo.class);
+
+		if (resultList != null) {
+			MetaInfo shopping = null;
+			shopping = new MetaInfo();
+
+			// Response VO를 만들기위한 생성자
+			Product product = null;
+			List<Identifier> identifierList = null;
+
+			List<Product> productList = new ArrayList<Product>();
+
+			for (int i = 0; i < resultList.size(); i++) {
+				shopping = resultList.get(i);
+
+				// 상품 정보 (상품ID)
+				product = new Product();
+				identifierList = new ArrayList<Identifier>();
+				identifierList.add(this.commonGenerator.generateIdentifier(DisplayConstants.DP_BRAND_IDENTIFIER_CD,
+						shopping.getBrandId()));
+
+				// MenuList 생성
+				List<Menu> menuList = this.commonGenerator.generateMenuList(shopping);
+
+				// 상품 정보 (상품명)
+				Title title = this.commonGenerator.generateTitle(shopping);
+
+				// SourceList 생성
+				List<Source> sourceList = this.commonGenerator.generateSourceList(shopping);
+
+				// 데이터 매핑
+				product.setIdentifierList(identifierList);
+				product.setMenuList(menuList);
+				product.setTitle(title);
+				product.setSourceList(sourceList);
+
+				productList.add(i, product);
+				commonResponse.setTotalCount(shopping.getTotalCount());
+			}
+
+			res = new ShoppingRes();
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
+		} else {
+			// 조회 결과 없음
+			res = new ShoppingRes();
+			List<Product> productList = new ArrayList<Product>();
+			res.setProductList(productList);
+			commonResponse.setTotalCount(0);
+			res.setCommonResponse(commonResponse);
+		}
+		return res;
+	}
+
+	/**
 	 * 특정 브랜드샵 상품 리스트.
 	 * 
 	 * @param header

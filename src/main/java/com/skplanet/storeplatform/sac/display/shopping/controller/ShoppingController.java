@@ -176,6 +176,27 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
+	 * [I03000162] 2.7.16. 브랜드샵 – 상세조회
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/brandshop/detail/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getBrandshopDetail(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getBrandshopDetail Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getBrandshopDetail(header, req);
+
+	}
+
+	/**
+	 * <pre>
 	 * [I03000051] 2.7.6.2. 특정 브랜드샵 상품 리스트
 	 * </pre>
 	 * 
