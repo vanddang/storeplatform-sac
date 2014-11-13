@@ -10,6 +10,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
@@ -109,5 +111,32 @@ public interface LoginService {
 	 */
 	public AuthorizeForInAppSacRes authorizeForInApp(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForInAppSacReq req);
+
+	/**
+	 * <pre>
+	 * PayPlanet에 InApp용으로 제공되는 3사 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForInAppSacReq
+	 * @return AuthorizeForInAppSacRes
+	 */
+	public AuthorizeForInAppSacRes authorizeForInAppV2(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForInAppSacReq req);
+
+	/**
+	 * <pre>
+	 * PayPlanet에 제공되는 T Store 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeSacReq
+	 * @return AuthorizeSacRes
+	 */
+	public AuthorizeSacRes authorize(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSacReq req);
 
 }

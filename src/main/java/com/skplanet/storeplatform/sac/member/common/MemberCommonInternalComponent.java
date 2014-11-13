@@ -174,7 +174,7 @@ public class MemberCommonInternalComponent {
 	 */
 	public IapProductInfoRes getIapProdInfo(String tenantId, String prodId) {
 		IapProductInfoReq req = new IapProductInfoReq();
-		// req.setTenantId(tenantId);
+		req.setTenantId(tenantId);
 		req.setPartProdId(prodId);
 
 		return this.iapProductInfoSCI.getIapProductInfo(req);

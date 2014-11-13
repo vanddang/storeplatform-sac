@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.skplanet.storeplatform.external.client.example.daum.sci.DaumWebSearchSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
@@ -37,16 +38,26 @@ import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.AuthForIdEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.SetLoginStatusEcReq;
+import com.skplanet.storeplatform.external.client.market.sci.MarketSCI;
+import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
+import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
+import com.skplanet.storeplatform.external.client.market.vo.MarketClauseExtraInfoEc;
+import com.skplanet.storeplatform.external.client.tstore.sci.TstoreTransferSCI;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
+import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
@@ -58,11 +69,18 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MarketPinInfo;
@@ -78,6 +96,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
@@ -133,6 +153,9 @@ public class LoginServiceImpl implements LoginService {
 	private UserSearchService userSearchService;
 
 	@Autowired
+	private UserWithdrawService userWithdrawService;
+
+	@Autowired
 	private MiscellaneousService miscellaneousService;
 
 	@Autowired
@@ -145,14 +168,35 @@ public class LoginServiceImpl implements LoginService {
 	private DeviceSetSCI deviceSetSCI;
 
 	@Autowired
-	private MemberCommonInternalComponent mcic;
+	private DeviceSCI deviceSCI;
 
-	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
-	private String tempUserAuthKey;
+	@Autowired
+	private MarketSCI marketSCI;
+
+	@Autowired
+	private DaumWebSearchSCI daumWebSearchSCI;
+
+	@Autowired
+	private MemberCommonInternalComponent mcic;
 
 	@Autowired
 	@Resource(name = "memberAddDeviceAmqpTemplate")
 	private AmqpTemplate memberAddDeviceAmqpTemplate;
+
+	@Autowired
+	private TstoreTransferSCI tstoreTransferSCI;
+
+	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
+	private String tempUserAuthKey;
+
+	@Value("#{propertiesForSac['member.user.pincode.set.url']}")
+	private String pinCodeSetUrl;
+
+	@Value("#{propertiesForSac['member.user.pincode.init.url']}")
+	private String pinCodeInitUrl;
+
+	@Value("#{propertiesForSac['member.user.pincode.confirm.url']}")
+	private String pinCodeConfirmUrl;
 
 	/*
 	 * (non-Javadoc)
@@ -1206,7 +1250,7 @@ public class LoginServiceImpl implements LoginService {
 	public AuthorizeForInAppSacRes authorizeForInApp(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForInAppSacReq req) {
 
-		// tenantId S01
+		// Tstore 회원전용이므로 tenantId S01
 		TenantHeader tenant = requestHeader.getTenantHeader();
 		tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
 		tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2);
@@ -1218,6 +1262,96 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+		}
+
+		return res;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeForInAppV2(com.skplanet.storeplatform
+	 * .sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq)
+	 */
+	@Override
+	public AuthorizeForInAppSacRes authorizeForInAppV2(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForInAppSacReq req) {
+
+		// 타사 인증전 까지는 tenantId S01
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+		tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2);
+		requestHeader.setTenantHeader(tenant);
+
+		AuthorizeForInAppSacRes res = new AuthorizeForInAppSacRes();
+
+		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
+		String tenantId = this.getTenantIdByDeviceTelecom(req.getDeviceTelecom()); // 이통사 정보로 TenantID 부여
+		IapProductInfoRes iapProductInfoRes = this.mcic.getIapProdInfo(tenantId, req.getProdId()); // 마켓배포상품 정보조회
+
+		LOGGER.info("{} tenantId : {}, 마켓배포상품여부 : {}", req.getDeviceId(), tenantId,
+				StringUtils.isBlank(iapProductInfoRes.getParentProdId()) ? false : true);
+
+		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, tenantId)
+				|| StringUtils.isBlank(iapProductInfoRes.getParentProdId())) {
+
+			// SKT로 인증요청 or 마켓배포상품이 아니면 Tstore 회원인증
+			res = this.getTstoreMemberInfoForInApp(requestHeader, req);
+
+		} else { // 타사 && 마켓배포상품인 경우
+
+			if (this.isPurchasedFromTstore(requestHeader, req.getDeviceId(), iapProductInfoRes.getParentProdId())) {
+
+				// 타사 폰에서 Tstore 샵클을 이용하여 상품을 구매한 회원이므로 Tstore 회원인증
+				LOGGER.info("{} 타사회원이면서 Tstore 구매내역 존재", req.getDeviceId());
+				res = this.getTstoreMemberInfoForInApp(requestHeader, req);
+
+			} else {
+
+				LOGGER.info("{} 타사 마켓 인증 연동", req.getDeviceId());
+
+				// 통신사에 따라 tenantId 셋팅
+				tenant.setTenantId(tenantId);
+				requestHeader.setTenantHeader(tenant);
+
+				res = this.getMarketMemberInfoForInApp(requestHeader, req, tenantId);
+
+			}
+		}
+
+		// 로그인 이력 저장
+		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+		}
+
+		return res;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorize(com.skplanet.storeplatform.sac.common
+	 * .header.vo.SacRequestHeader, com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq)
+	 */
+	@Override
+	public AuthorizeSacRes authorize(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSacReq req) {
+
+		// Tstore 회원전용이므로 tenantId S01
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+		tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2);
+		requestHeader.setTenantHeader(tenant);
+
+		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
+
+		AuthorizeSacRes res = this.getTstoreMemberInfoForPayPlanet(requestHeader, req);
+
+		// 로그인 이력 저장
+		if (StringUtils.equals(res.getUserMainStatus(), MemberConstants.MAIN_STATUS_NORMAL)) {
 			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
 		}
 
@@ -1306,13 +1440,14 @@ public class LoginServiceImpl implements LoginService {
 		keySearch.setKeyString(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 		keySearchList.add(keySearch);
 		searchDeviceSetInfoRequest.setKeySearchList(keySearchList);
+
 		SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
 				.searchDeviceSetInfo(searchDeviceSetInfoRequest);
-
 		MarketPinInfo pinInfo = new MarketPinInfo();
 		pinInfo.setIsPinSet(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
 		pinInfo.setIsPinRetry(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry());
 		pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
+		pinInfo.setSetPinUrl(this.getPinSetUrl(pinInfo));
 
 		res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL); // 회원상태 정상
 		res.setUserAuthKey(this.tempUserAuthKey); // 임시 인증키
@@ -1325,6 +1460,34 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
 
 		return res;
+	}
+
+	/**
+	 * <pre>
+	 * Tstore 회원의 PIN 정보에 따라서 PIN 설정 URL을 리턴.
+	 * </pre>
+	 * 
+	 * @param pinInfo
+	 *            MarketPinInfo
+	 * @return pinSetUrl String
+	 */
+	private String getPinSetUrl(MarketPinInfo pinInfo) {
+		String pinSetUrl = "";
+
+		if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_N)) { // PIN 설정
+			pinSetUrl = this.pinCodeSetUrl;
+		} else if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_Y)
+				&& StringUtils.equals(pinInfo.getIsPinRetry(), MemberConstants.USE_Y)
+				&& StringUtils.equals(pinInfo.getIsPinClosed(), MemberConstants.USE_N)) { // PIN 확인
+			pinSetUrl = this.pinCodeConfirmUrl;
+		} else if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_Y)
+				&& StringUtils.equals(pinInfo.getIsPinRetry(), MemberConstants.USE_Y)
+				&& StringUtils.equals(pinInfo.getIsPinClosed(), MemberConstants.USE_Y)) { // PIN 재설정
+			pinSetUrl = this.pinCodeInitUrl;
+		}
+
+		return pinSetUrl;
+
 	}
 
 	/**
@@ -1375,11 +1538,9 @@ public class LoginServiceImpl implements LoginService {
 	 * 회원의 연령대 정보를 코드로 반환.
 	 * </pre>
 	 * 
-	 * @param birthDay
+	 * @param realAge
 	 *            String
-	 * @param gender
-	 *            String
-	 * @return 회원의 연령대 정보
+	 * @return prodExpoLevl 회원의 연령대 코드
 	 */
 	private String getProdExpoLevl(String realAge) {
 
@@ -1862,4 +2023,566 @@ public class LoginServiceImpl implements LoginService {
 
 	}
 
+	/**
+	 * <pre>
+	 * 타사 마켓회원 인증 연동.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForInAppSacReq
+	 * @param tenantId
+	 *            String
+	 * @return AuthorizeForInAppSacRes
+	 */
+	private AuthorizeForInAppSacRes getMarketMemberInfoForInApp(SacRequestHeader requestHeader,
+			AuthorizeForInAppSacReq req, String tenantId) {
+
+		AuthorizeForInAppSacRes res = new AuthorizeForInAppSacRes();
+		MarketAuthorizeEcRes marketRes = null;
+
+		res.setTrxNo(req.getTrxNo());
+		res.setTenantId(tenantId);
+		res.setDeviceId(req.getDeviceId());
+		res.setDeviceTelecom(req.getDeviceTelecom());
+
+		// 타사 마켓회원 인증 요청
+		MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+		marketReq.setTrxNo(req.getTrxNo());
+		marketReq.setDeviceId(req.getDeviceId());
+		marketReq.setDeviceTelecom(req.getDeviceTelecom());
+		marketReq.setNativeId(req.getNativeId());
+		marketReq.setSimSerialNo(req.getSimSerialNo());
+		marketReq.setUserVerifyReason("InApp");
+
+		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())) {
+			marketRes = this.marketSCI.authorizeForOllehMarket(marketReq);
+			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(), marketRes);
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())) {
+			marketRes = this.marketSCI.authorizeForUplusStore(marketReq);
+			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(), marketRes);
+		}
+
+		if (marketRes != null
+				&& StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상인증
+
+			this.validChkMarketUserInfo(marketRes); // 타사 회원정보 유효성 체크
+
+			// Tstore 회원가입여부 조회
+			DetailReq detailReq = new DetailReq();
+			SearchExtentReq searchExtent = new SearchExtentReq();
+			searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+			searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+			searchExtent.setAgreementInfoYn(MemberConstants.USE_Y);
+			detailReq.setDeviceId(req.getDeviceId());
+			detailReq.setSearchExtent(searchExtent);
+
+			DetailV2Res detailRes = null;
+
+			try {
+
+				detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+				LOGGER.info("{} Tstore 회원", req.getDeviceId());
+
+				if (!StringUtils.equals(detailRes.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey())) {
+
+					// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
+					LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes.getUserInfo()
+							.getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
+					this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
+					this.joinMaketUser(requestHeader, req, marketRes);
+
+					// 재가입시킨 회원정보 재조회
+					detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+				} else if (!StringUtils.equals(detailRes.getDeviceInfoList().get(0).getDeviceId(),
+						marketRes.getDeviceId())) {
+
+					// 번호변경 케이스로 판단하여 deviceId 업데이트
+					LOGGER.info("{} deviceId 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList().get(0)
+							.getDeviceId(), marketRes.getDeviceId());
+					DeviceInfo deviceInfo = new DeviceInfo();
+					deviceInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+					deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+					deviceInfo.setDeviceId(marketRes.getDeviceId());
+					this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
+
+					// 변경된 deviceId로 회원정보 재조회
+					detailReq.setDeviceId(marketRes.getDeviceId());
+					detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+				}
+
+			} catch (StorePlatformException e) {
+				if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+					// 회원정보 없으면 Tstore 회원가입
+					LOGGER.info("{} Tstore 회원가입", req.getDeviceId());
+					this.joinMaketUser(requestHeader, req, marketRes);
+					// 가입시킨 회원정보 재조회
+					detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+				} else {
+					throw e;
+				}
+			}
+
+			// 사용자 기본정보
+			UserInfo userInfo = new UserInfo();
+			userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+			userInfo.setUserId(detailRes.getUserInfo().getUserId());
+			userInfo.setUserType(detailRes.getUserInfo().getUserType());
+			userInfo.setImMbrNo(detailRes.getUserInfo().getImMbrNo());
+			userInfo.setProdExpoLevl(marketRes.getDeviceInfo().getProdExpoLevl());
+
+			// 약관 정보
+			List<Agreement> agreementList = this.getMarketClauseAgreeMappingInfo(marketRes.getDeviceInfo()
+					.getClauseExtraInfoList());
+
+			// 휴대기기 정보
+			DeviceInfo deviceInfo = new DeviceInfo();
+			deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+			deviceInfo.setMarketDeviceKey(detailRes.getUserInfo().getImMbrNo()); // 타사 회선의 고유 Key
+			deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+			deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
+			deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
+
+			// Pin 정보
+			MarketPinInfo pinInfo = new MarketPinInfo();
+			pinInfo.setIsPinSet(marketRes.getDeviceInfo().getPinInfo().getIsSet());
+			pinInfo.setIsPinClosed(marketRes.getDeviceInfo().getPinInfo().getIsPinClosed());
+			if (StringUtils.isNotBlank(marketRes.getDeviceInfo().getPinInfo().getIsNotShowingAgain())) {
+				// 결제핀 입력여부가 타사와는 반대의 의미이다.
+				if (StringUtils.equals(marketRes.getDeviceInfo().getPinInfo().getIsNotShowingAgain(),
+						MemberConstants.USE_N)) {
+					pinInfo.setIsPinRetry(MemberConstants.USE_Y);
+				} else {
+					pinInfo.setIsPinRetry(MemberConstants.USE_N);
+				}
+			}
+
+			res.setUserStatus(marketRes.getUserStatus());
+			res.setUserAuthKey(this.tempUserAuthKey);
+			res.setUserInfo(userInfo);
+			res.setAgreementList(agreementList);
+			res.setDeviceInfo(deviceInfo);
+			res.setPinInfo(pinInfo);
+			res.setMbrAuth(new MbrAuth()); // 타사회원은 존재하지 않음
+			res.setTstoreEtcInfo(new TstoreEtcInfo()); // 타사회원은 존재하지 않음
+
+		} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
+
+			res.setUserStatus(marketRes.getUserStatus());
+			res.setUserInfo(new UserInfo());
+			res.setAgreementList(new ArrayList<Agreement>());
+			res.setDeviceInfo(new DeviceInfo());
+			res.setPinInfo(new MarketPinInfo());
+			res.setMbrAuth(new MbrAuth());
+			res.setTstoreEtcInfo(new TstoreEtcInfo());
+
+		} else { // 이용제한 회원 or IMEI 불일치
+
+			res.setUserStatus(marketRes.getUserStatus());
+			res.setUserInfo(new UserInfo());
+			res.setAgreementList(new ArrayList<Agreement>());
+			res.setDeviceInfo(new DeviceInfo());
+			res.setPinInfo(new MarketPinInfo());
+			res.setMbrAuth(new MbrAuth());
+			res.setTstoreEtcInfo(new TstoreEtcInfo());
+
+		}
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * 타사 회원 약관 수정.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param deviceId
+	 *            String
+	 * @param userKey
+	 *            String
+	 * @param agreementList
+	 *            List<Agreement>
+	 * @param marketClauseAgreeList
+	 *            List<MbrClauseAgree>
+	 */
+	private void updateMarketClauseAgree(SacRequestHeader requestHeader, String deviceId, String userKey,
+			List<Agreement> agreementList, List<MbrClauseAgree> marketClauseAgreeList) {
+		boolean isUpdate = false;
+
+		StringBuffer logBuf = new StringBuffer();
+
+		for (Agreement clauseInfo : agreementList) {
+			for (MbrClauseAgree marketClauseInfo : marketClauseAgreeList) {
+				if (StringUtils.equals(clauseInfo.getExtraAgreementId(), marketClauseInfo.getExtraAgreementID())) {
+					if (!StringUtils.equals(clauseInfo.getIsExtraAgreement(), marketClauseInfo.getIsExtraAgreement())) {
+						logBuf.append(" ").append(clauseInfo.getExtraAgreementId()).append(" : ")
+								.append(clauseInfo.getIsExtraAgreement()).append(" -> ")
+								.append(marketClauseInfo.getIsExtraAgreement());
+						isUpdate = true;
+					}
+				}
+			}
+		}
+
+		if (isUpdate) {
+			LOGGER.info("{} 약관 수정 : {}", deviceId, logBuf.toString());
+			UpdateAgreementRequest updateAgreementRequest = new UpdateAgreementRequest();
+			updateAgreementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+			updateAgreementRequest.setUserKey(userKey);
+			updateAgreementRequest.setMbrClauseAgreeList(marketClauseAgreeList);
+			this.userSCI.updateAgreement(updateAgreementRequest); // 약관정보수정
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 타사 회원 정보 유효성 체크.
+	 * </pre>
+	 * 
+	 * @param marketRes
+	 *            MarketAuthorizeEcRes
+	 */
+	private void validChkMarketUserInfo(MarketAuthorizeEcRes marketRes) {
+
+		if (marketRes.getDeviceId() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "타사 회원 MDN");
+		}
+
+		if (marketRes.getDeviceTelecom() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "타사 회원 이동통신사");
+		}
+
+		if (marketRes.getUserStatus() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "타사 회원상태코드");
+		}
+
+		if (marketRes.getDeviceInfo() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "타사 회원정보");
+		}
+
+		if (marketRes.getDeviceInfo().getDeviceKey() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "타사 회원 고유 Key");
+		}
+
+		if (marketRes.getDeviceInfo().getProdExpoLevl() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "타사 회원 연령대");
+		}
+
+		if (marketRes.getDeviceInfo().getPinInfo() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "타사 회원 결제PIN 정보");
+		}
+
+		if (marketRes.getDeviceInfo().getClauseExtraInfoList() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "타사 회원 약관");
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * 타사 회원 탈퇴처리.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userKey
+	 *            String
+	 */
+	private void removeMarketUser(SacRequestHeader requestHeader, String userKey) {
+		RemoveUserRequest scReq = new RemoveUserRequest();
+		scReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		scReq.setUserKey(userKey);
+		scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
+		scReq.setSecedeReasonMessage("");
+		this.userSCI.remove(scReq);
+	}
+
+	/**
+	 * <pre>
+	 * 타사 마켓회원 Tstore 회원가입 처리.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForInAppSacReq
+	 * @param marketRes
+	 *            MarketAuthorizeEcRes
+	 * @return userKey String
+	 */
+	private String joinMaketUser(SacRequestHeader requestHeader, AuthorizeForInAppSacReq req,
+			MarketAuthorizeEcRes marketRes) {
+
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+		createUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader)); // 공통코드 셋팅
+
+		// SC 사용자 기본정보 setting
+		UserMbr userMbr = new UserMbr();
+		userMbr.setImMbrNo(marketRes.getDeviceInfo().getDeviceKey()); // MBR_NO
+		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
+		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
+		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
+		createUserRequest.setUserMbr(userMbr);
+
+		// SC 사용자 가입요청
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
+		}
+
+		// SC 휴대기기 등록
+		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+		createDeviceReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		createDeviceReq.setIsNew("Y");
+		createDeviceReq.setUserKey(createUserResponse.getUserKey());
+
+		UserMbrDevice userMbrDevice = new UserMbrDevice();
+		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
+		userMbrDevice.setDeviceID(req.getDeviceId()); // 기기 ID
+		userMbrDevice.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+		userMbrDevice.setDeviceModelNo(MemberConstants.DP_ANY_PHONE_4APP); // 단말 모델
+		userMbrDevice.setNativeID(req.getNativeId()); // 기기고유 ID (imei)
+		userMbrDevice.setIsPrimary(MemberConstants.USE_Y); // 대표기기 유무
+		createDeviceReq.setUserMbrDevice(userMbrDevice);
+
+		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
+
+		if (StringUtils.isBlank(createDeviceRes.getDeviceKey())) {
+			throw new StorePlatformException("SAC_MEM_1102"); // 휴대기기 등록에 실패하였습니다.
+		}
+
+		return createUserResponse.getUserKey();
+	}
+
+	/**
+	 * <pre>
+	 * 타사 약관코드를 Tstore 약관코드로 변환.
+	 * </pre>
+	 * 
+	 * @param marketClauseAgreeList
+	 *            List<MarketClauseExtraInfoEc>
+	 * @return List<Agreement>
+	 */
+	private List<Agreement> getMarketClauseAgreeMappingInfo(List<MarketClauseExtraInfoEc> marketClauseAgreeList) {
+
+		String tenantId = MemberConstants.TENANT_ID_TSTORE;
+		List<Agreement> agreementList = new ArrayList<Agreement>();
+		List<AgreementInfo> agreementInfoList = new ArrayList<AgreementInfo>();
+
+		if (marketClauseAgreeList != null) {
+			for (MarketClauseExtraInfoEc info : marketClauseAgreeList) {
+				String extraAgreementId = "";
+
+				if (StringUtils.equals(info.getExtraProfile(), "US003505")) { // 개인정보 수집 및 이용동의
+					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE;
+				} else if (StringUtils.equals(info.getExtraProfile(), "US003509")) { // 통신과금서비스 이용약관
+					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE;
+				} else if (StringUtils.equals(info.getExtraProfile(), "US003511")) { // 마켓 서비스 이용약관
+					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE;
+				} else { // 규격서에 정의되지 않은 약관코드인 경우
+					throw new StorePlatformException("SAC_MEM_1105", info.getExtraProfile());
+				}
+
+				AgreementInfo agreement = new AgreementInfo();
+				agreement.setExtraAgreementId(extraAgreementId);
+				agreement.setIsExtraAgreement(info.getExtraProfileValue());
+				agreementInfoList.add(agreement);
+			}
+		}
+
+		// 필수 약관여부, 버젼 맵핑
+		agreementInfoList = this.commService.getClauseMappingInfo(tenantId, agreementInfoList);
+
+		for (AgreementInfo info : agreementInfoList) {
+			Agreement agreement = new Agreement();
+			agreement.setExtraAgreementId(info.getExtraAgreementId());
+			agreement.setIsExtraAgreement(info.getIsExtraAgreement());
+			agreement.setExtraAgreementVersion(info.getExtraAgreementVersion());
+			agreement.setIsMandatory(info.getMandAgreeYn());
+			agreementList.add(agreement);
+		}
+
+		return agreementList;
+	}
+
+	/**
+	 * <pre>
+	 * PayPlanet 인증시 요청한 상품 Tstore 구매내역 조회.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param deviceId
+	 *            String
+	 * @param parentProdId
+	 *            String
+	 * @return boolean 구매내역 존재유무
+	 */
+	private boolean isPurchasedFromTstore(SacRequestHeader requestHeader, String deviceId, String parentProdId) {
+
+		boolean isPurchasedFromTstore = false;
+
+		// 회원 정보 조회
+		DetailReq detailReq = new DetailReq();
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+		detailReq.setDeviceId(deviceId);
+		detailReq.setSearchExtent(searchExtent);
+
+		try {
+
+			DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+			List<ExistenceItem> existenceItemList = new ArrayList<ExistenceItem>();
+			ExistenceItem existenceItem = new ExistenceItem();
+			existenceItem.setProdId(parentProdId);
+			existenceItemList.add(existenceItem);
+
+			// 기구매체크
+			ExistenceReq existenceReq = new ExistenceReq();
+			existenceReq.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+			existenceReq.setUserKey(detailRes.getUserInfo().getUserKey());
+			existenceReq.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+			existenceReq.setExistenceItem(existenceItemList);
+			ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
+
+			if (existenceListRes != null && existenceListRes.getExistenceListRes() != null
+					&& existenceListRes.getExistenceListRes().size() > 0) { // 구매내역 존재
+				isPurchasedFromTstore = true;
+			}
+
+		} catch (StorePlatformException e) {
+			if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				throw e;
+			}
+		}
+
+		return isPurchasedFromTstore;
+
+	}
+
+	/**
+	 * <pre>
+	 * 통신사에 따라서 tenantId를 구분한다.
+	 * </pre>
+	 * 
+	 * @param deviceTelecom
+	 *            String
+	 * @return tenantId
+	 */
+	private String getTenantIdByDeviceTelecom(String deviceTelecom) {
+
+		String tenantId = "";
+		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			tenantId = MemberConstants.TENANT_ID_TSTORE;
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
+			tenantId = MemberConstants.TENANT_ID_OLLEH_KT;
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
+			tenantId = MemberConstants.TENANT_ID_LG_UPLUS;
+		}
+		return tenantId;
+	}
+
+	/**
+	 * <pre>
+	 * PayPlanet 통합인증에 제공 할 Tstore 회원정보 조회.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeSacReq
+	 * @return AuthorizeSacRes
+	 */
+	private AuthorizeSacRes getTstoreMemberInfoForPayPlanet(SacRequestHeader requestHeader, AuthorizeSacReq req) {
+
+		AuthorizeSacRes res = new AuthorizeSacRes();
+
+		// 회원정보조회
+		DetailReq detailReq = new DetailReq();
+		detailReq.setDeviceId(req.getDeviceId());
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+		searchExtent.setAgreementInfoYn(MemberConstants.USE_Y);
+		searchExtent.setMbrAuthInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+		DetailV2Res detailRes = null;
+		try {
+			detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+
+				/* 회원 정보가 존재 하지 않습니다. */
+				throw new StorePlatformException("SAC_MEM_0003", "deviceId", req.getDeviceId());
+
+			} else {
+				throw e;
+			}
+		}
+
+		// 사용자 기본정보
+		UserInfo userInfo = new UserInfo();
+		userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+		userInfo.setUserId(detailRes.getUserInfo().getUserId());
+		userInfo.setUserType(detailRes.getUserInfo().getUserType());
+		userInfo.setImSvcNo(detailRes.getUserInfo().getImSvcNo());
+		userInfo.setImMbrNo(detailRes.getUserInfo().getImMbrNo());
+		userInfo.setUserPhoneCountry(detailRes.getUserInfo().getUserPhoneCountry());
+		userInfo.setUserEmail(detailRes.getUserInfo().getUserEmail());
+		userInfo.setIsRecvEmail(detailRes.getUserInfo().getIsRecvEmail());
+		userInfo.setIsRealName(detailRes.getUserInfo().getIsRealName());
+		userInfo.setUserCountry(detailRes.getUserInfo().getUserCountry());
+		userInfo.setUserLanguage(detailRes.getUserInfo().getUserLanguage());
+
+		// 휴대기기 정보
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+		deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+		deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
+		deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
+		deviceInfo.setSvcMangNum(detailRes.getDeviceInfoList().get(0).getSvcMangNum());
+		deviceInfo.setDeviceAccount(detailRes.getDeviceInfoList().get(0).getDeviceAccount());
+		deviceInfo.setDeviceExtraInfoList(detailRes.getDeviceInfoList().get(0).getDeviceExtraInfoList());
+
+		// PIN 정보
+		SearchDeviceSetInfoRequest searchDeviceSetInfoRequest = new SearchDeviceSetInfoRequest();
+		searchDeviceSetInfoRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySearch.setKeyString(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+		keySearchList.add(keySearch);
+		searchDeviceSetInfoRequest.setKeySearchList(keySearchList);
+
+		SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
+				.searchDeviceSetInfo(searchDeviceSetInfoRequest);
+		MarketPinInfo pinInfo = new MarketPinInfo();
+		pinInfo.setIsPinSet(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
+		pinInfo.setIsPinRetry(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry());
+		pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
+		pinInfo.setSetPinUrl(this.getPinSetUrl(pinInfo));
+
+		res.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 회원상태 정상
+		res.setUserAuthKey(this.tempUserAuthKey); // 임시 인증키
+		res.setUserInfo(userInfo);
+		res.setAgreementList(detailRes.getAgreementList());
+		res.setDeviceInfo(deviceInfo);
+		res.setPinInfo(pinInfo);
+		res.setMbrAuth(detailRes.getMbrAuth()); // 실명인증정보
+		res.setTstoreEtcInfo(this.getTstoreEtcInfo(requestHeader, deviceInfo.getDeviceId(),
+				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
+
+		return res;
+	}
 }

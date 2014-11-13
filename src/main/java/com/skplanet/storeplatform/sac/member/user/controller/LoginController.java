@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
@@ -227,4 +229,61 @@ public class LoginController {
 
 	}
 
+	/**
+	 * <pre>
+	 * PayPlanet에 InApp용으로 제공되는 3사 통합 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForInAppSacReq
+	 * @return AuthorizeForInAppSacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeForInApp/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeForInAppSacRes authorizeForInAppV2(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForInAppSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if (!StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+				&& !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
+				&& !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
+			throw new StorePlatformException("SAC_MEM_1203");
+		}
+
+		AuthorizeForInAppSacRes res = this.loginService.authorizeForInAppV2(requestHeader, req);
+
+		LOGGER.info("Response : {}, {}, {}, {}", res.getTenantId(), res.getDeviceId(), res.getDeviceTelecom(),
+				res.getUserStatus());
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * PayPlanet에 제공되는 T Store 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeSacReq
+	 * @return AuthorizeSacRes
+	 */
+	@RequestMapping(value = "/member/user/authorize/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeSacRes authorize(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		AuthorizeSacRes res = this.loginService.authorize(requestHeader, req);
+
+		LOGGER.info("Response : {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserMainStatus());
+
+		return res;
+
+	}
 }
