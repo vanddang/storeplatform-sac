@@ -231,6 +231,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			cnt = this.freePurchase(purchaseOrderInfo);
 
 			purchaseOrderInfo.setResultType(PurchaseConstants.CREATE_PURCHASE_RESULT_FREE);
+			if (purchaseOrderInfo.isClink()) { // CLINK 예외처리
+				purchaseOrderInfo.setPaymentPageUrlParam(this.makeClinkResProductResult(purchaseOrderInfo
+						.getPurchaseProductList()));
+			}
 
 		} else {
 			cnt = this.reservePurchase(purchaseOrderInfo); // 구매예약
