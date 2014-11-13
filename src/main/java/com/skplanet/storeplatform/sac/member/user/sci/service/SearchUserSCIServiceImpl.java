@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.member.user.sci.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceReque
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserExtraInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserExtraInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserSegmentRequest;
@@ -60,6 +63,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
@@ -67,6 +72,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserS
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserExtraInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
@@ -1024,6 +1030,56 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		// 통신사
 		res.setUserTelecom(searchUserSegmentResponse.getUserTelecom());
 
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.11. 회원 부가속성 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchUserExtraInfoSacReq
+	 * @return SearchUserExtraInfoSacRes
+	 */
+	@Override
+	public SearchUserExtraInfoSacRes searchUserExtraInfo(SacRequestHeader header, SearchUserExtraInfoSacReq req) {
+		SearchUserExtraInfoRequest searchUserExtraInfoRequest = new SearchUserExtraInfoRequest();
+		searchUserExtraInfoRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
+		searchUserExtraInfoRequest.setUserKeyList(req.getUserKeyList());
+		searchUserExtraInfoRequest.setExtraProfileList(req.getExtraProfileList());
+
+		SearchUserExtraInfoResponse searchUserExtraInfoResponse = this.userSCI
+				.searchUserExtraInfo(searchUserExtraInfoRequest);
+
+		Map<String, List<MbrMangItemPtcr>> searchUserExtraInfoResponseMap = searchUserExtraInfoResponse
+				.getSearchUserExtraInfoMap();
+
+		// return Map
+		Map<String, List<UserExtraInfoSac>> searchUserExtraInfoSacRes = new HashMap<String, List<UserExtraInfoSac>>();
+		List<UserExtraInfoSac> userExtraInfoSacList = null;
+
+		Iterator<String> keys = searchUserExtraInfoResponseMap.keySet().iterator();
+		while (keys.hasNext()) {
+			String key = keys.next();
+			for (MbrMangItemPtcr mangItemPtcr : searchUserExtraInfoResponseMap.get(key)) {
+				userExtraInfoSacList = new ArrayList<UserExtraInfoSac>();
+				for (MbrMangItemPtcr resultMangItemPtcr : searchUserExtraInfoResponseMap.get(key)) {
+					if (StringUtils.equals(key, mangItemPtcr.getUserKey())) {
+						UserExtraInfoSac userExtraInfoSac = new UserExtraInfoSac();
+						userExtraInfoSac.setExtraProfile(resultMangItemPtcr.getExtraProfile());
+						userExtraInfoSac.setExtraProfileValue(resultMangItemPtcr.getExtraProfileValue());
+						userExtraInfoSacList.add(userExtraInfoSac);
+					}
+				}
+			}
+			searchUserExtraInfoSacRes.put(key, userExtraInfoSacList);
+		}
+
+		SearchUserExtraInfoSacRes res = new SearchUserExtraInfoSacRes();
+		res.setSearchUserExtraInfoSacRes(searchUserExtraInfoSacRes);
 		return res;
 	}
 }

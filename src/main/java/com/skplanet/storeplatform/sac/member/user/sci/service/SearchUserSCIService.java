@@ -14,12 +14,14 @@ import java.util.Map;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacReq;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -209,4 +211,17 @@ public interface SearchUserSCIService {
 	 * @return SearchUserForDisplaySacRes
 	 */
 	public SearchUserSegmentSacRes searchUserSegment(SacRequestHeader header, SearchUserSegmentSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.11. 회원 부가속성 정보 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            SearchUserExtraInfoSacReq
+	 * @return SearchUserExtraInfoSacRes
+	 */
+	public SearchUserExtraInfoSacRes searchUserExtraInfo(SacRequestHeader header, SearchUserExtraInfoSacReq req);
 }

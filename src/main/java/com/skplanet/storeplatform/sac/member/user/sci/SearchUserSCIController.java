@@ -23,6 +23,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserGradeSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacReq;
@@ -367,6 +369,7 @@ public class SearchUserSCIController implements SearchUserSCI {
 	 *            SearchUserForDisplaySacReq
 	 * @return SearchUserForDisplaySacRes
 	 */
+	@Override
 	@RequestMapping(value = "/searchUserForDisplay/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchUserSegmentSacRes searchUserSegment(@RequestBody @Validated SearchUserSegmentSacReq req) {
@@ -375,6 +378,28 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
 		SearchUserSegmentSacRes res = this.searchUserSCIService.searchUserSegment(requestHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.11. 회원 부가속성 정보 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            SearchUserExtraInfoSacReq
+	 * @return SearchUserExtraInfoSacRes
+	 */
+	@Override
+	@RequestMapping(value = "/searchUserExtraInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchUserExtraInfoSacRes searchUserExtraInfo(@RequestBody @Validated SearchUserExtraInfoSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		SacRequestHeader header = SacRequestHeaderHolder.getValue();
+
+		SearchUserExtraInfoSacRes res = this.searchUserSCIService.searchUserExtraInfo(header, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
