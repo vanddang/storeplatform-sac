@@ -13,32 +13,17 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * 구매인증 시, 프로모션 정보
+ * 구매인증 시, 배너 정보
  * 
- * Updated on : 2014. 11. 11. Updated by : 이승택, nTels.
+ * Updated on : 2014. 11. 13. Updated by : 이승택, nTels.
  */
-public class VerifyOrderPromotionInfoSac extends CommonInfo {
+public class VerifyOrderBannerInfoSac extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	private String paymentMtdCd;
-	private String title; // Promotion 명
-	private String description; // Promotion 문구
-	private String linkUrl; // Mobile Web Page URL
-
-	/**
-	 * @return the paymentMtdCd
-	 */
-	public String getPaymentMtdCd() {
-		return this.paymentMtdCd;
-	}
-
-	/**
-	 * @param paymentMtdCd
-	 *            the paymentMtdCd to set
-	 */
-	public void setPaymentMtdCd(String paymentMtdCd) {
-		this.paymentMtdCd = paymentMtdCd;
-	}
+	private String title; // 배너명
+	private String imagePath; // 배너 이미지 Path
+	private String linkUrl; // 배너 클릭 시 이동 URL
+	private String backColorCd; // 배너 배경 색상 코드
 
 	/**
 	 * @return the title
@@ -56,18 +41,18 @@ public class VerifyOrderPromotionInfoSac extends CommonInfo {
 	}
 
 	/**
-	 * @return the description
+	 * @return the imagePath
 	 */
-	public String getDescription() {
-		return this.description;
+	public String getImagePath() {
+		return this.imagePath;
 	}
 
 	/**
-	 * @param description
-	 *            the description to set
+	 * @param imagePath
+	 *            the imagePath to set
 	 */
-	public void setDescription(String description) {
-		this.description = description;
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	/**
@@ -83,6 +68,21 @@ public class VerifyOrderPromotionInfoSac extends CommonInfo {
 	 */
 	public void setLinkUrl(String linkUrl) {
 		this.linkUrl = linkUrl;
+	}
+
+	/**
+	 * @return the backColorCd
+	 */
+	public String getBackColorCd() {
+		return this.backColorCd;
+	}
+
+	/**
+	 * @param backColorCd
+	 *            the backColorCd to set
+	 */
+	public void setBackColorCd(String backColorCd) {
+		this.backColorCd = backColorCd;
 	}
 
 }

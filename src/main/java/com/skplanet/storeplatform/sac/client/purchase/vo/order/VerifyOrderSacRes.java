@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -65,7 +67,8 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String prodKind; // 쇼핑상품 종류
 
 	private VerifyOrderIapInfoSac iapProdInfo; // IAP상품 정보
-	// private List<VerifyOrderPromotionInfoSac> promotionList; // 프로모션 정보
+	private List<VerifyOrderPromotionInfoSac> promotionList; // 프로모션 정보
+	private List<VerifyOrderBannerInfoSac> bannerList; // 배너 정보
 
 	private String nmSellerCompany; // 회사명
 	private String nmSeller; // 판매자명
@@ -642,6 +645,36 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setIapProdInfo(VerifyOrderIapInfoSac iapProdInfo) {
 		this.iapProdInfo = iapProdInfo;
+	}
+
+	/**
+	 * @return the promotionList
+	 */
+	public List<VerifyOrderPromotionInfoSac> getPromotionList() {
+		return this.promotionList;
+	}
+
+	/**
+	 * @param promotionList
+	 *            the promotionList to set
+	 */
+	public void setPromotionList(List<VerifyOrderPromotionInfoSac> promotionList) {
+		this.promotionList = promotionList;
+	}
+
+	/**
+	 * @return the bannerList
+	 */
+	public List<VerifyOrderBannerInfoSac> getBannerList() {
+		return this.bannerList;
+	}
+
+	/**
+	 * @param bannerList
+	 *            the bannerList to set
+	 */
+	public void setBannerList(List<VerifyOrderBannerInfoSac> bannerList) {
+		this.bannerList = bannerList;
 	}
 
 	/**
