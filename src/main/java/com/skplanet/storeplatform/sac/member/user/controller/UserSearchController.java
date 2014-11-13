@@ -280,11 +280,6 @@ public class UserSearchController {
 
 		DetailV2Res res = this.svc.detailV2(sacHeader, req);
 
-		// @TODO 11월 2차 패치시 삭제 예정
-		if (res.getUserInfo() != null) {
-			res.getUserInfo().setRealAge(null);
-		}
-
 		LOGGER.info("Response : {}", res.getUserKey());
 
 		return res;
