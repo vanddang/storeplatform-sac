@@ -47,10 +47,6 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	 */
 	private String userStatus = "";
 	/**
-	 * 각 마켓 회원가입 URL.
-	 */
-	private String userJoinUrl = "";
-	/**
 	 * 인증 Key.
 	 */
 	private String userAuthKey = "";
@@ -158,21 +154,6 @@ public class AuthorizeForInAppSacRes extends CommonInfo {
 	 */
 	public void setUserStatus(String userStatus) {
 		this.userStatus = userStatus;
-	}
-
-	/**
-	 * @return userJoinUrl
-	 */
-	public String getUserJoinUrl() {
-		return this.userJoinUrl;
-	}
-
-	/**
-	 * @param userJoinUrl
-	 *            String
-	 */
-	public void setUserJoinUrl(String userJoinUrl) {
-		this.userJoinUrl = userJoinUrl;
 	}
 
 	/**
