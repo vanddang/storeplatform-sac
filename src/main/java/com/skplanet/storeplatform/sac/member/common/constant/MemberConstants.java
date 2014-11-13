@@ -273,8 +273,8 @@ public final class MemberConstants {
 	public static final String TENANT_ID_NON_SPECIFIC = "S00";
 	/** T store TenantID */
 	public static final String TENANT_ID_TSTORE = "S01";
-	public static final String TENANT_ID_OLLEH_KT = "S02";
-	public static final String TENANT_ID_LG_UPLUS = "S03";
+	public static final String TENANT_ID_OLLEH_MARKET = "S02";
+	public static final String TENANT_ID_UPLUS_STORE = "S03";
 
 	/** 개발자센터 SystemID */
 	public static final String SYSTEM_ID_DEV_POC = "S00-02001";

@@ -1299,6 +1299,7 @@ public class LoginServiceImpl implements LoginService {
 				|| StringUtils.isBlank(iapProductInfoRes.getParentProdId())) {
 
 			// SKT로 인증요청 or 마켓배포상품이 아니면 Tstore 회원인증
+			LOGGER.info("{} Tstore 회원인증", req.getDeviceId());
 			res = this.getTstoreMemberInfoForInApp(requestHeader, req);
 
 		} else { // 타사 && 마켓배포상품인 경우
@@ -1306,12 +1307,13 @@ public class LoginServiceImpl implements LoginService {
 			if (this.isPurchasedFromTstore(requestHeader, req.getDeviceId(), iapProductInfoRes.getParentProdId())) {
 
 				// 타사 폰에서 Tstore 샵클을 이용하여 상품을 구매한 회원이므로 Tstore 회원인증
-				LOGGER.info("{} 타사회원이면서 Tstore 구매내역 존재", req.getDeviceId());
+				LOGGER.info("{} 타사폰에서 Tstore 구매내역 존재", req.getDeviceId());
+				LOGGER.info("{} Tstore 회원인증", req.getDeviceId());
 				res = this.getTstoreMemberInfoForInApp(requestHeader, req);
 
 			} else {
 
-				LOGGER.info("{} 타사 마켓 인증 연동", req.getDeviceId());
+				LOGGER.info("{} 타사 마켓 회원인증", req.getDeviceId());
 
 				// 통신사에 따라 tenantId 셋팅
 				tenant.setTenantId(tenantId);
@@ -2486,9 +2488,9 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 			tenantId = MemberConstants.TENANT_ID_TSTORE;
 		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
-			tenantId = MemberConstants.TENANT_ID_OLLEH_KT;
+			tenantId = MemberConstants.TENANT_ID_OLLEH_MARKET;
 		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
-			tenantId = MemberConstants.TENANT_ID_LG_UPLUS;
+			tenantId = MemberConstants.TENANT_ID_UPLUS_STORE;
 		}
 		return tenantId;
 	}
