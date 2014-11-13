@@ -11,6 +11,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,6 +78,9 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 	private ProductService prodService;
 
     @Autowired
+    private DpSapProdMapgService dpSapProdMapgService;
+
+    @Autowired
     private DisplayCommonService displayCommonService;
 
 	@Override
@@ -86,6 +90,8 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 		String prodId = dpProd.getProdId(); // 상품_아이디
 		String mbrNo = dpProd.getSellerMbrNo(); // 회원_번호
         String newSellerMbrNo = notification.getDpProductTotal().getDpProduct().getSellerMbrNo();   // prod.sellerMbrNo
+
+        execSapPhase1(notification);
 
 		/*
 		 * 전시상품 정보
@@ -326,13 +332,23 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 				}
 			}
 		}
-		
-		if (CollectionUtils.isNotEmpty(tenantInfo)) {
+
+        /**
+         * SAP 상품 매핑 정보 - Phase 1에서만 이용함
+         */
+        log.info("Insert CMS DpSapProdMapg Info");
+        DPSapMappingVO dpSapMapping = notification.getDpSapMapping();
+        dpSapProdMapgService.insertDPSapProdMapg(dpSapMapping);
+
+
+        if (CollectionUtils.isNotEmpty(tenantInfo)) {
 			log.info("CMS tenantInfo Size = " + tenantInfo.size());
 
             for (DPTenantProductVO vo : tenantInfo) {
 
                 String tenantId = vo.getTenantId();
+                if(!"S01".equals(tenantId))
+                    continue;
 
                 log.info("CMS PROD INFO = " + prodId + " | " + mbrNo);
 
@@ -384,6 +400,45 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 
 		}		
 	}
+
+    private void execSapPhase1(NotificationRefactoringSac notification) {
+        boolean s02 = notification.getDpSapMapping() != null && "Y".equals(notification.getDpSapMapping().getKtCheckYn());
+        boolean s03 = notification.getDpSapMapping() != null && "Y".equals(notification.getDpSapMapping().getLgCheckYn());
+
+        List<DPTenantProductVO> tenantInfo = notification.getDpProductTotal().getDpTenantProduct();
+        if(CollectionUtils.isNotEmpty(tenantInfo) && tenantInfo.size() == 1) {
+            DPTenantProductVO tpS01 = tenantInfo.get(0);
+            if(s02) {
+                DPTenantProductVO tpS02 = new DPTenantProductVO();
+                BeanUtils.copyProperties(tpS01, tpS02);
+                tpS02.setTenantId("S02");
+                tenantInfo.add(tpS02);
+            }
+            if(s03) {
+                DPTenantProductVO tpS03 = new DPTenantProductVO();
+                BeanUtils.copyProperties(tpS01, tpS03);
+                tpS03.setTenantId("S03");
+                tenantInfo.add(tpS03);
+            }
+        }
+
+        List<DPTenantProductPriceVO> tenantPriceInfo = notification.getDpProductTotal().getDpTenantProductPrice();
+        if(CollectionUtils.isNotEmpty(tenantPriceInfo) && tenantPriceInfo.size() == 1) {
+            DPTenantProductPriceVO tppS01 = tenantPriceInfo.get(0);
+            if(s02) {
+                DPTenantProductPriceVO tppS02 = new DPTenantProductPriceVO();
+                BeanUtils.copyProperties(tppS01, tppS02);
+                tppS02.setTenantId("S02");
+                tenantPriceInfo.add(tppS02);
+            }
+            if(s03) {
+                DPTenantProductPriceVO tppS03 = new DPTenantProductPriceVO();
+                BeanUtils.copyProperties(tppS01, tppS03);
+                tppS03.setTenantId("S03");
+                tenantPriceInfo.add(tppS03);
+            }
+        }
+    }
 
     private void insertInAppInfo(NotificationRefactoringSac notification, List<DPTenantProductVO> tenantInfo) {
     /*
