@@ -6,6 +6,7 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.sci;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividu
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.miscellaneous.sci.service.MiscellaneousSCIService;
@@ -46,9 +48,7 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.sci
-	 * .MiscellaneousSCI
+	 * @see com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.sci .MiscellaneousSCI
 	 * #getIndividualPolicy(com.skplanet.storeplatform.sac.client
 	 * .internal.member.miscellaneous.vo.GetIndividualPolicySacReq)
 	 */
@@ -67,12 +67,17 @@ public class MiscellaneousSCIController implements MiscellaneousSCI {
 			code.setPolicyCode(req.getPolicyCodeList().get(i).getPolicyCode());
 			codeList.add(code);
 		}
+		// @TODO 11월 18일 QA 반영 TENANT_ID
+		TenantHeader tenantHeader = requestHeader.getTenantHeader();
+		tenantHeader.setTenantId(StringUtils.defaultString(req.getTenantId(), tenantHeader.getTenantId()));
+		requestHeader.setTenantHeader(tenantHeader);
 
 		GetIndividualPolicyReq getIndividualPolicyReq = new GetIndividualPolicyReq();
 		getIndividualPolicyReq.setKey(req.getKey());
 		getIndividualPolicyReq.setPolicyCodeList(codeList);
 
-		GetIndividualPolicyRes getIndividualPolicyRes = this.miscellaneousSCIService.getIndividualPolicy(requestHeader, getIndividualPolicyReq);
+		GetIndividualPolicyRes getIndividualPolicyRes = this.miscellaneousSCIService.getIndividualPolicy(requestHeader,
+				getIndividualPolicyReq);
 
 		GetIndividualPolicySacRes sacRes = new GetIndividualPolicySacRes();
 		List<IndividualPolicyInfoSac> infoSacList = new ArrayList<IndividualPolicyInfoSac>();
