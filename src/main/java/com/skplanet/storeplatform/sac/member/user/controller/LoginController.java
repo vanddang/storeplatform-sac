@@ -222,7 +222,7 @@ public class LoginController {
 
 		AuthorizeForInAppSacRes res = this.loginService.authorizeForInApp(requestHeader, req);
 
-		LOGGER.info("Response : {}, {}, {}, {}", res.getTenantId(), res.getDeviceId(), res.getDeviceTelecom(),
+		LOGGER.info("Response : {}, {}, {}, {}", res.getTenantId(), res.getDeviceId(), res.getUserInfo().getUserKey(),
 				res.getUserStatus());
 
 		return res;
@@ -255,8 +255,8 @@ public class LoginController {
 
 		AuthorizeForInAppSacRes res = this.loginService.authorizeForInAppV2(requestHeader, req);
 
-		LOGGER.info("Response : {}, {}, {}, {}", res.getTenantId(), res.getDeviceId(), res.getDeviceTelecom(),
-				res.getUserStatus());
+		LOGGER.info("Response : {}, {}, {}, {}, {}", res.getTenantId(), res.getDeviceId(), res.getUserInfo()
+				.getUserKey(), res.getUserInfo().getImMbrNo(), res.getUserStatus());
 
 		return res;
 
@@ -281,7 +281,8 @@ public class LoginController {
 
 		AuthorizeSacRes res = this.loginService.authorize(requestHeader, req);
 
-		LOGGER.info("Response : {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserMainStatus());
+		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
+				res.getUserMainStatus());
 
 		return res;
 
