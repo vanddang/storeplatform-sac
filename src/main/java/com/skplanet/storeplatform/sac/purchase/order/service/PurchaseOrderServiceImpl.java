@@ -68,7 +68,9 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePur
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderBannerInfoSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderIapInfoSac;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderPromotionInfoSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.common.service.MembershipReserveService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
@@ -791,10 +793,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		// 프로모션 정보
-		// TAKTEST:: PP만
-		// if (StringUtils.startsWith(verifyOrderInfo.getSystemId(), "S00")) {
-		// res.setPromotionList(this.searchPromotionListTemp(prchsDtlMore));
-		// }
+		if (StringUtils.startsWith(verifyOrderInfo.getSystemId(), "S00")) {
+			res.setPromotionList(this.searchPromotionList(prchsDtlMore));
+			res.setBannerList(this.searchBannerList(prchsDtlMore));
+		}
 
 		// 판매자 정보 세팅
 		SellerMbrSac sellerInfo = this.searchSellerInfo(reservedDataMap.get("sellerMbrNo"),
@@ -2036,32 +2038,54 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @return
 	 */
-	// private List<VerifyOrderPromotionInfoSac> searchPromotionListTemp(PrchsDtlMore prchsDtlMore) {
-	// // TAKTODO:: 프로모션/배너 관리 이전까지 하드코딩
-	//
-	// // 쇼핑 상품 경우는 프로모션 없는 테스트
-	// if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-	// return null;
-	// }
-	//
-	// List<VerifyOrderPromotionInfoSac> promotionList = new ArrayList<VerifyOrderPromotionInfoSac>();
-	//
-	// VerifyOrderPromotionInfoSac promotion = new VerifyOrderPromotionInfoSac();
-	// promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD);
-	// promotion.setTitle("신용카드 2014년 11월 1차 TEST 프로모션");
-	// promotion.setImagePath("/data/img/banner/sc/shopping/B_20141106103300066.jpg");
-	// promotion.setLinkUrl("m.nate.com");
-	// promotion.setBackColorCd("#D5C8EB");
-	// promotionList.add(promotion);
-	//
-	// promotion = new VerifyOrderPromotionInfoSac();
-	// promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP);
-	// promotion.setTitle("T멤버쉽 2014년 11월 1차 TEST 프로모션");
-	// promotion.setImagePath("/data/img/banner/sc/shopping/B_20141106103300066.jpg");
-	// promotion.setLinkUrl("m.google.com");
-	// promotion.setBackColorCd("#D5C8EB");
-	// promotionList.add(promotion);
-	//
-	// return promotionList;
-	// }
+	private List<VerifyOrderPromotionInfoSac> searchPromotionList(PrchsDtlMore prchsDtlMore) {
+		// TAKTODO:: 프로모션 관리 이전까지 하드코딩
+
+		// 쇼핑 상품 경우는 프로모션 없는 테스트
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			return null;
+		}
+
+		List<VerifyOrderPromotionInfoSac> promotionList = new ArrayList<VerifyOrderPromotionInfoSac>();
+
+		VerifyOrderPromotionInfoSac promotion = new VerifyOrderPromotionInfoSac();
+		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD);
+		promotion.setTitle("신용카드 2014년 11월 1차 TEST 프로모션");
+		promotion.setLinkUrl("m.nate.com");
+		promotionList.add(promotion);
+
+		promotion = new VerifyOrderPromotionInfoSac();
+		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP);
+		promotion.setTitle("T멤버쉽 2014년 11월 1차 TEST 프로모션");
+		promotion.setLinkUrl("m.google.com");
+		promotionList.add(promotion);
+
+		return promotionList;
+	}
+
+	/*
+	 * 
+	 * <pre> 배너 정보 조회. </pre>
+	 * 
+	 * @return
+	 */
+	private List<VerifyOrderBannerInfoSac> searchBannerList(PrchsDtlMore prchsDtlMore) {
+		// TAKTODO:: 배너 관리 이전까지 하드코딩
+
+		// 쇼핑 상품 경우는 배너 없는 테스트
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			return null;
+		}
+
+		List<VerifyOrderBannerInfoSac> bannerList = new ArrayList<VerifyOrderBannerInfoSac>();
+
+		VerifyOrderBannerInfoSac banner = new VerifyOrderBannerInfoSac();
+		banner.setTitle("테스트 배너");
+		banner.setImagePath("/data/img/banner/sc/shopping/B_20141106103300066.jpg");
+		banner.setLinkUrl("m.nate.com");
+		banner.setBackColorCd("#D5C8EB");
+		bannerList.add(banner);
+
+		return bannerList;
+	}
 }
