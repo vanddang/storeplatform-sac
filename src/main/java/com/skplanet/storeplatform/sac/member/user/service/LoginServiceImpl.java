@@ -2058,10 +2058,10 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setSimSerialNo(req.getSimSerialNo());
 		marketReq.setUserVerifyReason("InApp");
 
-		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, req.getDeviceTelecom())) {
+		if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, tenantId)) {
 			marketRes = this.marketSCI.authorizeForOllehMarket(marketReq);
 			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(), marketRes);
-		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, req.getDeviceTelecom())) {
+		} else if (StringUtils.equals(MemberConstants.TENANT_ID_UPLUS_STORE, tenantId)) {
 			marketRes = this.marketSCI.authorizeForUplusStore(marketReq);
 			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(), marketRes);
 		}
