@@ -19,9 +19,13 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,8 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpItemInfo;
+import com.skplanet.storeplatform.external.client.shopping.vo.NotificationIprm;
+import com.skplanet.storeplatform.external.client.shopping.vo.ProductVO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
@@ -73,6 +79,10 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 	@Autowired
 	private CacheEvictHelperComponent cacheEvictHelperComponent;
+
+	@Autowired
+	@Resource(name = "shoppingIprmAmqpTemplate")
+	private AmqpTemplate shoppingIprmAmqpTemplate; // MQ 연동.
 
 	@Override
 	public boolean insertCouponInfo(CouponReq couponReq) {
@@ -984,6 +994,34 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// 저장
 			this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
 			this.log.info("■■■■■ setCallSpSettRegProd End ■■■■■");
+
+			/**
+			 * MQ 연동.
+			 */
+			NotificationIprm noti = new NotificationIprm();
+			try {
+
+				noti.setTransactionKey("transactionKey-001"); // 이놈도 문의 필요. 그냥 유니크한 값을 주면 되는지..??
+
+				/**
+				 * 상품정보 세팅.
+				 */
+				ProductVO productVO = new ProductVO();
+				productVO.setProdId("S000000001");
+				productVO.setProdNm("쇼핑상품명");
+				/**
+				 * TODO 상품정보 세팅 필요....
+				 */
+				noti.setProduct(productVO);
+
+				this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // async
+				// Object obj = this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // sync
+
+			} catch (AmqpException ae) {
+				this.log.error("MQ 연동중 Error 발생. - error msg:{}, NotificationIprm:{}", ae.getMessage(), noti);
+				ae.printStackTrace();
+			}
+
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), e.getMessage(), null);
 		} catch (Exception e) {
