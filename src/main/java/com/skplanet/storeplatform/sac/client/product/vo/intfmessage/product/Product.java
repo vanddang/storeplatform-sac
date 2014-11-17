@@ -275,6 +275,10 @@ public class Product extends CommonInfo implements Serializable {
 	private String partChrgmonyAppYn;
 
 	/**
+	 * 부분유료화 상품 사용 기간
+	 */
+	private Integer usePeriod;
+	/**
 	 * 테마 타입
 	 */
 	private String themeType;
@@ -1365,5 +1369,20 @@ public class Product extends CommonInfo implements Serializable {
 
 	public void setLikeYn(String likeYn) {
 		this.likeYn = likeYn;
+	}
+
+	/**
+	 * @return the usePeriod
+	 */
+	public Integer getUsePeriod() {
+		return this.usePeriod;
+	}
+
+	/**
+	 * @param usePeriod
+	 *            the usePeriod to set
+	 */
+	public void setUsePeriod(Integer usePeriod) {
+		this.usePeriod = usePeriod;
 	}
 }
