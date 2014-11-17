@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.feature.appCodi.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiV2SacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -26,15 +27,15 @@ public interface AppCodiService {
 
 	/**
 	 * <pre>
-	 * App Codi 조회 V2.
+	 * App Codi V2 조회.
 	 * </pre>
 	 * 
-	 * @param AppCodiSacReq
+	 * @param requestVO
 	 *            requestVO
-	 * @param SacRequestHeader
+	 * @param requestHeader
 	 *            requestHeader
-	 * @return AppCodiListRes
+	 * @return AppCodiListSacRes
 	 */
-	public AppCodiListSacRes searchAppCodiListV2(AppCodiSacReq requestVO, SacRequestHeader requestHeader);
+	public AppCodiListSacRes searchAppCodiListV2(AppCodiV2SacReq requestVO, SacRequestHeader requestHeader);
 
 }

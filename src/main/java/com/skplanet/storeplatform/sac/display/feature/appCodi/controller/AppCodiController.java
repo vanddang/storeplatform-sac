@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiListSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.appCodi.AppCodiV2SacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.appCodi.service.AppCodiService;
 
@@ -52,22 +53,20 @@ public class AppCodiController {
 
 	/**
 	 * <pre>
-	 * [I03000128] 2.8.1. App Codi
+	 * [I03000137] 2.8.9.App Codi(V2) 조회.
 	 * </pre>
 	 * 
-	 * @param AppCodiSacReq
+	 * @param requestVO
 	 *            requestVO
-	 * @param SacRequestHeader
+	 * @param requestHeader
 	 *            requestHeader
-	 * @return AppCodiListRes
+	 * @return AppCodiListSacRes
 	 */
 	@RequestMapping(value = "/appCodi/list/v2", method = RequestMethod.POST)
 	@ResponseBody
-	public AppCodiListSacRes searchAppCodiListV2(@RequestBody @Validated AppCodiSacReq requestVO,
+	public AppCodiListSacRes searchAppCodiListV2(@RequestBody @Validated AppCodiV2SacReq requestVO,
 			SacRequestHeader requestHeader) {
 
-		this.logger.debug("AppCodiController.searchAppCodiListV2 start !!");
-		this.logger.debug("request {}", requestVO);
 		return this.appCodiService.searchAppCodiListV2(requestVO, requestHeader);
 	}
 }

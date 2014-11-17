@@ -37,6 +37,9 @@ public class ProductBasicInfo extends CommonInfo {
 	// 정액권 관련
 	private String prodStatusCd;
 
+	// 앱코디 관련
+	private String recmReason;
+
 	/**
 	 * @return the totalCount
 	 */
@@ -286,4 +289,18 @@ public class ProductBasicInfo extends CommonInfo {
 		this.prodStatusCd = prodStatusCd;
 	}
 
+	/**
+	 * @return the recmReason
+	 */
+	public String getRecmReason() {
+		return this.recmReason;
+	}
+
+	/**
+	 * @param recmReason
+	 *            the recmReason to set
+	 */
+	public void setRecmReason(String recmReason) {
+		this.recmReason = recmReason;
+	}
 }

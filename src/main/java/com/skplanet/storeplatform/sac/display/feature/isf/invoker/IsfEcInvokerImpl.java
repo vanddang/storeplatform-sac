@@ -1,19 +1,28 @@
 package com.skplanet.storeplatform.sac.display.feature.isf.invoker;
 
-import com.skplanet.storeplatform.external.client.isf.vo.ISFReq;
-import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
-import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import com.skplanet.storeplatform.external.client.isf.sci.ISFSCI;
+import com.skplanet.storeplatform.external.client.isf.vo.ISFReq;
+import com.skplanet.storeplatform.external.client.isf.vo.ISFRes;
+import com.skplanet.storeplatform.external.client.isf.vo.IsfV2EcReq;
+import com.skplanet.storeplatform.external.client.isf.vo.IsfV2EcRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
+import com.skplanet.storeplatform.sac.display.feature.isf.invoker.vo.IsfEcReq;
 
 /**
  * ISF EC Invoker Interface 구현체
@@ -27,6 +36,9 @@ public class IsfEcInvokerImpl implements IsfEcInvoker {
 
 	@Autowired
 	private RestTemplate restTemplate;
+
+	@Autowired
+	private ISFSCI isfSCI;
 
 	@Value("#{propertiesForSac['component.external.baseUrl']}")
 	private String domainName;
@@ -94,4 +106,15 @@ public class IsfEcInvokerImpl implements IsfEcInvoker {
 		return isfRes;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.feature.isf.invoker.IsfEcInvoker#invokeV2(com.skplanet.storeplatform.external
+	 * .client.isf.vo.IsfV2EcReq)
+	 */
+	@Override
+	public IsfV2EcRes invokeV2(IsfV2EcReq ecReq) {
+		return this.isfSCI.getV2(ecReq);
+	}
 }
