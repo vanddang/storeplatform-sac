@@ -40,6 +40,7 @@ public class ShoppingPlanReq extends CommonInfo {
 	private String prodRshpCd; // 채널 에피소드 관계
 	private String bannerImgCd; // 배너이미지코드
 	private String promotionImgCd; // 프로모션이미지코드
+	private String promotionDetailImgCd; // 프로모션상세이미지코드
 	private String orderedBy; // 정렬순서
 	private Integer offset; // offset
 	private Integer count; // count
@@ -222,6 +223,21 @@ public class ShoppingPlanReq extends CommonInfo {
 	 */
 	public void setPromotionImgCd(String promotionImgCd) {
 		this.promotionImgCd = promotionImgCd;
+	}
+
+	/**
+	 * @return the promotionDetailImgCd
+	 */
+	public String getPromotionDetailImgCd() {
+		return this.promotionDetailImgCd;
+	}
+
+	/**
+	 * @param promotionDetailImgCd
+	 *            the promotionDetailImgCd to set
+	 */
+	public void setPromotionDetailImgCd(String promotionDetailImgCd) {
+		this.promotionDetailImgCd = promotionDetailImgCd;
 	}
 
 	/**

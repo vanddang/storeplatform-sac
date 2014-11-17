@@ -36,11 +36,14 @@ public class FreepassDetailReq {
 	private String langCd; // 언어
 	private String deviceModelCd; // 단말모델
 
+	private String[] arrayProdGradeCd; // 상품등급코드 Array
+	private String prodGradeCd; // 상품등급코드
+
 	// 구매내역 체크
 	private String userKey; // 사용자키
 	private String deviceKey; // 단말키
 
-    /**
+	/**
 	 * @return the topMenuId
 	 */
 	public String getTopMenuId() {
@@ -265,11 +268,41 @@ public class FreepassDetailReq {
 		this.deviceModelCd = deviceModelCd;
 	}
 
-    /**
+	/**
 	 * @return the serialversionuid
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	/**
+	 * @return the arrayProdGradeCd
+	 */
+	public String[] getArrayProdGradeCd() {
+		return this.arrayProdGradeCd;
+	}
+
+	/**
+	 * @param arrayProdGradeCd
+	 *            the arrayProdGradeCd to set
+	 */
+	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
+		this.arrayProdGradeCd = arrayProdGradeCd;
+	}
+
+	/**
+	 * @return the prodGradeCd
+	 */
+	public String getProdGradeCd() {
+		return this.prodGradeCd;
+	}
+
+	/**
+	 * @param prodGradeCd
+	 *            the prodGradeCd to set
+	 */
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
 	}
 
 	/**

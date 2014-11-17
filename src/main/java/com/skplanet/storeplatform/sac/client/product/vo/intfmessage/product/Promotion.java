@@ -57,6 +57,7 @@ public class Promotion extends CommonInfo implements Serializable {
 	private String guideEvent; // 이벤트 안내
 	private String guideUsage; // 이용안내
 	private String promotionExplain; // promotion 설명
+	private String promotionExplainDesc; // promotion 상세설명
 	private String usagePeriod; // 이용기간
 	private String releaseDate; // 종료일자
 	private String giveaway; // 경품
@@ -242,6 +243,21 @@ public class Promotion extends CommonInfo implements Serializable {
 	 */
 	public void setPromotionExplain(String promotionExplain) {
 		this.promotionExplain = promotionExplain;
+	}
+
+	/**
+	 * @return the promotionExplainDesc
+	 */
+	public String getPromotionExplainDesc() {
+		return this.promotionExplainDesc;
+	}
+
+	/**
+	 * @param promotionExplainDesc
+	 *            the promotionExplainDesc to set
+	 */
+	public void setPromotionExplainDesc(String promotionExplainDesc) {
+		this.promotionExplainDesc = promotionExplainDesc;
 	}
 
 	/**

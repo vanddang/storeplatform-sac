@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonRawValue;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -126,6 +127,7 @@ public class Product extends CommonInfo implements Serializable {
 	 * 음악 부가 정보.
 	 */
 	private Music music;
+
 	/**
 	 * VOD 부가 정보.
 	 */
@@ -146,6 +148,16 @@ public class Product extends CommonInfo implements Serializable {
 	 * 제작자 정보.
 	 */
 	private Contributor contributor;
+
+	/**
+	 * 사용자 선호도 정보
+	 */
+	@Deprecated
+	private Preference preference;
+	/**
+	 * 좋아요 여부
+	 */
+	private String likeYn;
 	/**
 	 * 제작사 또는 개발사 정보.
 	 */
@@ -333,11 +345,6 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private String prodKind;
 
-    /**
-     * 부분유료화 상품 사용 기간
-     */
-    private Integer usePeriod;
-
 	/**
 	 * 할인율 정보 (tmembership)
 	 */
@@ -347,6 +354,12 @@ public class Product extends CommonInfo implements Serializable {
 	 * 이북/코믹 스티커
 	 */
 	private String sticker;
+
+	/*
+	 * ETC_PROP
+	 */
+	@JsonRawValue
+	private String etcProp;
 
 	public String getProdCase() {
 		return this.prodCase;
@@ -1330,11 +1343,27 @@ public class Product extends CommonInfo implements Serializable {
 		this.sticker = sticker;
 	}
 
-    public Integer getUsePeriod() {
-        return usePeriod;
-    }
+	public String getEtcProp() {
+		return this.etcProp;
+	}
 
-    public void setUsePeriod(Integer usePeriod) {
-        this.usePeriod = usePeriod;
-    }
+	public void setEtcProp(String etcProp) {
+		this.etcProp = etcProp;
+	}
+
+	public Preference getPreference() {
+		return this.preference;
+	}
+
+	public void setPreference(Preference preference) {
+		this.preference = preference;
+	}
+
+	public String getLikeYn() {
+		return this.likeYn;
+	}
+
+	public void setLikeYn(String likeYn) {
+		this.likeYn = likeYn;
+	}
 }

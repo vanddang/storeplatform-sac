@@ -39,6 +39,9 @@ public class FreepassSpecificReq extends CommonInfo {
 	private String deviceKey; // 디바이스키
 	private String userKey; // 사용자고유키
 
+	private String[] arrayProdGradeCd; // 상품등급코드 Array
+	private String prodGradeCd; // 상품등급코드
+
 	/**
 	 * @return the kind
 	 */
@@ -284,6 +287,36 @@ public class FreepassSpecificReq extends CommonInfo {
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	/**
+	 * @return the arrayProdGradeCd
+	 */
+	public String[] getArrayProdGradeCd() {
+		return this.arrayProdGradeCd;
+	}
+
+	/**
+	 * @param arrayProdGradeCd
+	 *            the arrayProdGradeCd to set
+	 */
+	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
+		this.arrayProdGradeCd = arrayProdGradeCd;
+	}
+
+	/**
+	 * @return the prodGradeCd
+	 */
+	public String getProdGradeCd() {
+		return this.prodGradeCd;
+	}
+
+	/**
+	 * @param prodGradeCd
+	 *            the prodGradeCd to set
+	 */
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
 	}
 
 }

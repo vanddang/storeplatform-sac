@@ -36,7 +36,7 @@ public class ShoppingReq extends CommonInfo {
 	private String stdDt; // 기준일자
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
-    private String planId; // 기획전ID
+	private String planId; // 기획전ID
 	private String brandId; // 브랜드샵 ID
 	private String themeId; // 테마 ID
 	private String exceptId; // 제외할 메뉴ID – 지정하면 응답에서 해당 메뉴 제외
@@ -49,12 +49,15 @@ public class ShoppingReq extends CommonInfo {
 	private String type; // type: channel, episode
 	private String prodRshpCd; // 채널 에피소드 관계
 	private String brandType; // 브랜드 타입
+	private String specialTypeCd; // 쇼핑 특가 타입 코드
+	private String[] arraySpecialTypeCd; // 상품등급코드 Array
 
 	private Integer offset; // offset
 	private Integer count; // count
 
 	private String bannerImgCd; // 배너이미지코드
 	private String promotionImgCd; // 프로모션이미지코드
+	private String promotionDetailImgCd; // 프로모션상세이미지코드
 
 	/**
 	 * @return the tenantId
@@ -266,7 +269,7 @@ public class ShoppingReq extends CommonInfo {
 		this.deviceModelCd = deviceModelCd;
 	}
 
-    /**
+	/**
 	 * @return the planId
 	 */
 	public String getPlanId() {
@@ -492,6 +495,36 @@ public class ShoppingReq extends CommonInfo {
 	}
 
 	/**
+	 * @return the specialTypeCd
+	 */
+	public String getSpecialTypeCd() {
+		return this.specialTypeCd;
+	}
+
+	/**
+	 * @param specialTypeCd
+	 *            the specialTypeCd to set
+	 */
+	public void setSpecialTypeCd(String specialTypeCd) {
+		this.specialTypeCd = specialTypeCd;
+	}
+
+	/**
+	 * @return the arraySpecialTypeCd
+	 */
+	public String[] getArraySpecialTypeCd() {
+		return this.arraySpecialTypeCd;
+	}
+
+	/**
+	 * @param arraySpecialTypeCd
+	 *            the arraySpecialTypeCd to set
+	 */
+	public void setArraySpecialTypeCd(String[] arraySpecialTypeCd) {
+		this.arraySpecialTypeCd = arraySpecialTypeCd;
+	}
+
+	/**
 	 * @return the bannerImgCd
 	 */
 	public String getBannerImgCd() {
@@ -519,6 +552,21 @@ public class ShoppingReq extends CommonInfo {
 	 */
 	public void setPromotionImgCd(String promotionImgCd) {
 		this.promotionImgCd = promotionImgCd;
+	}
+
+	/**
+	 * @return the promotionDetailImgCd
+	 */
+	public String getPromotionDetailImgCd() {
+		return this.promotionDetailImgCd;
+	}
+
+	/**
+	 * @param promotionDetailImgCd
+	 *            the promotionDetailImgCd to set
+	 */
+	public void setPromotionDetailImgCd(String promotionDetailImgCd) {
+		this.promotionDetailImgCd = promotionDetailImgCd;
 	}
 
 }
