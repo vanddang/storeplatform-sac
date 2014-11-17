@@ -153,22 +153,16 @@ public class MetaInfo extends CommonInfo {
 	private String sdFileSize;
 	private String sdProdVer;
 	private String hdBtvCid;
-	private String hd2BtvCid;
 	private String fhdBtvCid;
 	private String hdDpPicRatio;
-	private String hd2DpPicRatio;
 	private String fhdDpPicRatio;
 	private String hdDpPixel;
-	private String hd2DpPixel;
 	private String fhdDpPixel;
 	private String hdSubContsId;
-	private String hd2SubContsId;
 	private String fhdSubContsId;
 	private String hdFileSize;
-	private String hd2FileSize;
 	private String fhdFileSize;
 	private String hdProdVer;
-	private String hd2ProdVer;
 	private String fhdProdVer;
 	private String dwldAreaLimtYn;
 	private String strmNetworkCd;
@@ -176,7 +170,6 @@ public class MetaInfo extends CommonInfo {
 	private String nmFilePath;
 	private String sdFilePath;
 	private String hdFilePath;
-	private String hd2FilePath;
 	private String fhdFilePath;
 	private String chnlProdNm;
 	private String genreCd;
@@ -322,7 +315,7 @@ public class MetaInfo extends CommonInfo {
 	 */
 	private MileageInfo mileageInfo;
 
-	// 구매내역 조회 정보 변수 for DL
+	// encryption token for DL
 	private String purchaseHide;
 	private String updateAlarm;
 	private String parentBunchId;
@@ -330,6 +323,8 @@ public class MetaInfo extends CommonInfo {
 	private String deltaType;
 	private Long deltaFileSize;
 	private String deltaFilePath;
+	private String visitPathNm;
+	private String dwldTypeCd;
 
 	/**
 	 * @return the topMenuId
@@ -3145,21 +3140,6 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the planDesc
-	 */
-	public String getPlanDesc() {
-		return this.planDesc;
-	}
-
-	/**
-	 * @param planDesc
-	 *            the planDesc to set
-	 */
-	public void setPlanDesc(String planDesc) {
-		this.planDesc = planDesc;
-	}
-
-	/**
 	 * @return the planStartDt
 	 */
 	public String getPlanStartDt() {
@@ -3340,36 +3320,6 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the statsClsf
-	 */
-	public String getStatsClsf() {
-		return this.statsClsf;
-	}
-
-	/**
-	 * @param statsClsf
-	 *            the statsClsf to set
-	 */
-	public void setStatsClsf(String statsClsf) {
-		this.statsClsf = statsClsf;
-	}
-
-	/**
-	 * @return the likeYn
-	 */
-	public String getLikeYn() {
-		return this.likeYn;
-	}
-
-	/**
-	 * @param likeYn
-	 *            the likeYn to set
-	 */
-	public void setLikeYn(String likeYn) {
-		this.likeYn = likeYn;
-	}
-
-	/**
 	 * @return the usePlac
 	 */
 	public String getUsePlac() {
@@ -3517,21 +3467,6 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setSpecialCouponId(String specialCouponId) {
 		this.specialCouponId = specialCouponId;
-	}
-
-	/**
-	 * @return the detailPromotionPath
-	 */
-	public String getDetailPromotionPath() {
-		return this.detailPromotionPath;
-	}
-
-	/**
-	 * @param detailPromotionPath
-	 *            the detailPromotionPath to set
-	 */
-	public void setDetailPromotionPath(String detailPromotionPath) {
-		this.detailPromotionPath = detailPromotionPath;
 	}
 
 	/**
@@ -4334,62 +4269,6 @@ public class MetaInfo extends CommonInfo {
 		this.deltaFilePath = deltaFilePath;
 	}
 
-	public String getHd2BtvCid() {
-		return this.hd2BtvCid;
-	}
-
-	public void setHd2BtvCid(String hd2BtvCid) {
-		this.hd2BtvCid = hd2BtvCid;
-	}
-
-	public String getHd2DpPicRatio() {
-		return this.hd2DpPicRatio;
-	}
-
-	public void setHd2DpPicRatio(String hd2DpPicRatio) {
-		this.hd2DpPicRatio = hd2DpPicRatio;
-	}
-
-	public String getHd2DpPixel() {
-		return this.hd2DpPixel;
-	}
-
-	public void setHd2DpPixel(String hd2DpPixel) {
-		this.hd2DpPixel = hd2DpPixel;
-	}
-
-	public String getHd2SubContsId() {
-		return this.hd2SubContsId;
-	}
-
-	public void setHd2SubContsId(String hd2SubContsId) {
-		this.hd2SubContsId = hd2SubContsId;
-	}
-
-	public String getHd2FileSize() {
-		return this.hd2FileSize;
-	}
-
-	public void setHd2FileSize(String hd2FileSize) {
-		this.hd2FileSize = hd2FileSize;
-	}
-
-	public String getHd2ProdVer() {
-		return this.hd2ProdVer;
-	}
-
-	public void setHd2ProdVer(String hd2ProdVer) {
-		this.hd2ProdVer = hd2ProdVer;
-	}
-
-	public String getHd2FilePath() {
-		return this.hd2FilePath;
-	}
-
-	public void setHd2FilePath(String hd2FilePath) {
-		this.hd2FilePath = hd2FilePath;
-	}
-
 	public String getFhdFileSize() {
 		return this.fhdFileSize;
 	}
@@ -4444,6 +4323,82 @@ public class MetaInfo extends CommonInfo {
 
 	public void setFhdDpPicRatio(String fhdDpPicRatio) {
 		this.fhdDpPicRatio = fhdDpPicRatio;
+	}
+
+	public String getVisitPathNm() {
+		return this.visitPathNm;
+	}
+
+	public void setVisitPathNm(String visitPathNm) {
+		this.visitPathNm = visitPathNm;
+	}
+
+	public String getDwldTypeCd() {
+		return this.dwldTypeCd;
+	}
+
+	public void setDwldTypeCd(String dwldTypeCd) {
+		this.dwldTypeCd = dwldTypeCd;
+	}
+
+	/**
+	 * @return the planDesc
+	 */
+	public String getPlanDesc() {
+		return this.planDesc;
+	}
+
+	/**
+	 * @param planDesc
+	 *            the planDesc to set
+	 */
+	public void setPlanDesc(String planDesc) {
+		this.planDesc = planDesc;
+	}
+
+	/**
+	 * @return the statsClsf
+	 */
+	public String getStatsClsf() {
+		return this.statsClsf;
+	}
+
+	/**
+	 * @param statsClsf
+	 *            the statsClsf to set
+	 */
+	public void setStatsClsf(String statsClsf) {
+		this.statsClsf = statsClsf;
+	}
+
+	/**
+	 * @return the likeYn
+	 */
+	public String getLikeYn() {
+		return this.likeYn;
+	}
+
+	/**
+	 * @param likeYn
+	 *            the likeYn to set
+	 */
+	public void setLikeYn(String likeYn) {
+		this.likeYn = likeYn;
+	}
+
+	/**
+	 * @return the detailPromotionPath
+	 */
+	public String getDetailPromotionPath() {
+		return this.detailPromotionPath;
+	}
+
+	/**
+	 * @param detailPromotionPath
+	 *            the detailPromotionPath to set
+	 */
+	public void setDetailPromotionPath(String detailPromotionPath) {
+		this.detailPromotionPath = detailPromotionPath;
 	}
 
 }
