@@ -198,12 +198,13 @@
                TOP_MENU_ID,
                CONTENTS_TYPE_CD,
                PROD_ID AS PART_PROD_ID,
-               CASE WHEN (RCD != '903001' AND (R_PROD_NM IS NULL OR R_MENU_NM IS NULL)) THEN '요즘 HOT! Power User의 BEST 상품을 소개합니다.'
+               CASE WHEN (RCD != '903001' AND RCD != '909001') AND (R_PROD_NM IS NULL OR R_MENU_NM IS NULL) THEN '요즘 HOT! Power User의 BEST 상품을 소개합니다.'
                     ELSE CASE WHEN RCD = '901001' THEN '따끈따끈 ' || R_PROD_NM || '의 신작이 나왔어요!'
                               WHEN RCD = '901002' THEN R_PROD_NM || '의 다음 이야기가 궁금하시다면? 지금 확인하세요!'
-                              WHEN RCD = '903001' THEN MENU_NM || '매니아들이 선택한 오늘의 ' || MENU_NM
+                              WHEN RCD = '903001' THEN MENU_NM || ' 매니아들이 선택한 오늘의 ' || MENU_NM
                               WHEN RCD = '904001' THEN R_PROD_NM || '를 좋아하셨다면, 이 ' || MENU_NM || '도 좋아하실거에요.'
                               WHEN RCD = '904002' THEN '나의 ' || R_MENU_NM || ' MATE들이 추천하는 ' || MENU_NM
+                              WHEN RCD = '909001' THEN '나의 ' || R_MENU_NM || ' MATE들이 추천하는 ' || MENU_NM
                               WHEN (R_PROD_NM = '' OR R_MENU_NM = '') THEN '요즘 HOT! Power User의 BEST 상품을 소개합니다.'
                               ELSE '요즘 HOT! Power User의 BEST 상품을 소개합니다.' END
                     END AS RECM_REASON
@@ -221,9 +222,10 @@
                            AND LANG_CD = #{tenantHeader.langCd}
                            AND ROWNUM = 1) AS R_PROD_NM,
                        (SELECT MENU_NM
-                          FROM TB_DP_MENU_CATEGORY_DESC
-                         WHERE MENU_ID = B.TOP_MENU_ID
-                           AND LANG_CD = #{tenantHeader.langCd}
+                          FROM TB_DP_PROD X, TB_DP_MENU_CATEGORY_DESC Y
+                         WHERE X.PROD_ID = RID
+                           AND X.TOP_MENU_ID = Y.MENU_ID
+                           AND Y.LANG_CD = #{tenantHeader.langCd}
                            AND ROWNUM = 1) AS R_MENU_NM
                   FROM (
                         SELECT ID, RK, RID, RCD
