@@ -15,6 +15,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
@@ -29,6 +30,8 @@ public class AppCodiListSacRes extends CommonInfo {
 
 	private CommonResponse commonResponse;
 
+	private Layout layout;
+
 	private List<Product> productList;
 
 	public CommonResponse getCommonResponse() {
@@ -37,6 +40,14 @@ public class AppCodiListSacRes extends CommonInfo {
 
 	public void setCommonRes(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
+	}
+
+	public Layout getLayout() {
+		return this.layout;
+	}
+
+	public void setLayout(Layout layout) {
+		this.layout = layout;
 	}
 
 	public List<Product> getProductList() {
