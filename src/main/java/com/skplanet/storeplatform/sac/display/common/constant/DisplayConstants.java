@@ -15,19 +15,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ * 
  * SAC 전시 상수 클래스 전시 파트 내에서 사용되는 상수는 여기에 정의한다.
- *
+ * 
  * Updated on : 2014. 1. 30. Updated by : 서대영, SK 플래닛.
  */
 public class DisplayConstants {
 
-    static {
-        SET_SERIES_META = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("CT14,CT15,CT16,CT20,CT21,CT22".split(","))));
-    }
+	static {
+		SET_SERIES_META = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList("CT14,CT15,CT16,CT20,CT21,CT22"
+				.split(","))));
+	}
 
-    public static final Set<String> SET_SERIES_META; // 시리즈물인 metaClsfCd Set
-
+	public static final Set<String> SET_SERIES_META; // 시리즈물인 metaClsfCd Set
 
 	// 상품 서비스 그룹 코드
 
@@ -327,6 +327,8 @@ public class DisplayConstants {
 	public static final String DP_SOURCE_TYPE_BANNER = "banner";
 	/** 프로모션이미지. */
 	public static final String DP_SOURCE_TYPE_PROMOTION = "promotion";
+	/** 프로모션 상세이미지. */
+	public static final String DP_SOURCE_TYPE_DETAIL_PROMOTION = "detailPromotion";
 	/** 미리보기. */
 	public static final String DP_SOURCE_TYPE_PREVIEW = "preview";
 
@@ -356,6 +358,8 @@ public class DisplayConstants {
 	public static final String DP_SHOPPING_SPECIAL_BANNER_IMAGE_CD = "DP0001A8";
 
 	public static final String DP_SHOPPING_SPECIAL_PROMOTION_IMAGE_CD = "DP0001A6";
+
+	public static final String DP_SHOPPING_SPECIAL_PROMOTION_DETAIL_IMAGE_CD = "DP0001D7";
 
 	public static final String DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD = "DP0001B9";
 
@@ -553,7 +557,7 @@ public class DisplayConstants {
 	 * 특정 상품 조회 API 파라미터 제한 개수.
 	 */
 	public static final Integer DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT = Integer.valueOf(50);
-	
+
 	/**
 	 * 특정 상품 eBook 조회 API 파라미터 제한 개수.
 	 */
@@ -763,32 +767,32 @@ public class DisplayConstants {
 	 */
 	public static final String DP_NEW_VOD_TRIGGER = "TGR000000002";
 
-    /**
-     * Poing.name.마일리지
-     */
-    public static final String POINT_NM_MILEAGE = "mileage";
+	/**
+	 * Poing.name.마일리지
+	 */
+	public static final String POINT_NM_MILEAGE = "mileage";
 
-    public static final String POINT_TP_MILEAGE_LV1 = "platinum";
-    public static final String POINT_TP_MILEAGE_LV2 = "gold";
-    public static final String POINT_TP_MILEAGE_LV3 = "silver";
-    
+	public static final String POINT_TP_MILEAGE_LV1 = "platinum";
+	public static final String POINT_TP_MILEAGE_LV2 = "gold";
+	public static final String POINT_TP_MILEAGE_LV3 = "silver";
+
 	/** 정액제 상품 타입 코드 */
 	public static final String FIXRATE_PROD_TYPE_VOD_FIXRATE = "OR004301"; // VOD 정액권
 	public static final String FIXRATE_PROD_TYPE_VOD_SERIESPASS = "OR004302"; // VOD 시리즈패스
 	public static final String FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN = "OR004303"; // 이북/코믹 전권소장
 	public static final String FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN = "OR004304"; // 이북/코믹 전권대여
-	
+
 	/** 할인율/적립율 정책 대상 코드 */
-	public static final String POLICY_TARGET_CD_PRODUCT = "DP01160101"; 
+	public static final String POLICY_TARGET_CD_PRODUCT = "DP01160101";
 	public static final String POLICY_TARGET_CD_CATEGORY = "DP01160102";
 
-    /**
-     * DisplayCommonService.getTmembershipDcRateForMenu() 요청시 모든 메뉴
-     */
-    public static final String REQUEST_TMEMBERSHIP_ALL_MENU = "*";
+	/**
+	 * DisplayCommonService.getTmembershipDcRateForMenu() 요청시 모든 메뉴
+	 */
+	public static final String REQUEST_TMEMBERSHIP_ALL_MENU = "*";
 
-    /**
-     * 부가정보 조회시 S2S정보 코드
-     */
-    public static final String EXINFO_S2S_INFO = "DP011701";
+	/**
+	 * 부가정보 조회시 S2S정보 코드
+	 */
+	public static final String EXINFO_S2S_INFO = "DP011701";
 }

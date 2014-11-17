@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -17,8 +19,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-
-import java.util.List;
 
 /**
  * 쇼핑 상품 전용 정보 Generator
@@ -91,6 +91,17 @@ public interface ShoppingInfoGenerator {
 	 * @return List<Source>
 	 */
 	public List<Source> generateSpecialSalesSourceList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 쇼핑 기획전 Source List 생성 V2버전.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Source>
+	 */
+	public List<Source> generateSpecialSalesSourceListV2(MetaInfo metaInfo);
 
 	/**
 	 * <pre>

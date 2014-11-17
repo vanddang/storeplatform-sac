@@ -550,10 +550,16 @@ public class CouponItemServiceImpl implements CouponItemService {
 				int cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_SPECIAL_PRODUCT_INFO", couponCode);
 				CouponRes crinfo = new CouponRes();
 				crinfo.setCouponCode(couponCode);
-				if (cnt > 0)
+				if (cnt > 0) {
 					crinfo.setSpecialYN("Y");
-				else
-					crinfo.setSpecialYN("N");
+				} else {
+					int tingCnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_TING_PRODUCT_INFO", couponCode);
+					if (tingCnt > 0) {
+						crinfo.setSpecialYN("T");
+					} else {
+						crinfo.setSpecialYN("N");
+					}
+				}
 				list.add(crinfo);
 			}
 

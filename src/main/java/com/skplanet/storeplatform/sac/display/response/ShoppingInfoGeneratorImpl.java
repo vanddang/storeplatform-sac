@@ -9,6 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -22,11 +28,6 @@ import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 쇼핑 상품 전용 정보 Generator 구현체
@@ -39,9 +40,8 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator#generateContributor(com.skplanet.storeplatform
-	 * .sac.display.meta.vo.MetaInfo)
+	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generateContributor(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public Contributor generateContributor(MetaInfo metaInfo) {
@@ -59,9 +59,8 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator#generateSalesOption(com.skplanet.storeplatform
-	 * .sac.display.meta.vo.MetaInfo)
+	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generateSalesOption(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public SalesOption generateSalesOption(MetaInfo metaInfo) {
@@ -80,9 +79,8 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator#generateRights(com.skplanet.storeplatform
-	 * .sac.display.meta.vo.MetaInfo)
+	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generateRights(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public Rights generateRights(MetaInfo metaInfo) {
@@ -99,9 +97,8 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator#generateAccrual(com.skplanet.storeplatform
-	 * .sac.display.meta.vo.MetaInfo)
+	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generateAccrual(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
@@ -113,9 +110,8 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator#generatePrice(com.skplanet.storeplatform
-	 * .sac.display.meta.vo.MetaInfo)
+	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generatePrice(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public Price generatePrice(MetaInfo metaInfo) {
@@ -130,9 +126,8 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSpecialSalesSourceList(com.skplanet
-	 * .storeplatform .sac.display.meta.vo.MetaInfo)
+	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator
+	 * #generateSpecialSalesSourceList(com.skplanet .storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public List<Source> generateSpecialSalesSourceList(MetaInfo metaInfo) {
@@ -156,9 +151,39 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator#generateDate(com.skplanet.storeplatform
-	 * .sac.display.meta.vo.MetaInfo)
+	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator
+	 * #generateSpecialSalesSourceList(com.skplanet .storeplatform .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Source> generateSpecialSalesSourceListV2(MetaInfo metaInfo) {
+		List<Source> sourceList = new ArrayList<Source>();
+
+		Source source = new Source();
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getBannerFilePath()));
+		source.setType(DisplayConstants.DP_SOURCE_TYPE_BANNER);
+		source.setUrl(metaInfo.getBannerFilePath());
+		sourceList.add(source);
+
+		source = new Source();
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getFilePath()));
+		source.setType(DisplayConstants.DP_SOURCE_TYPE_PROMOTION);
+		source.setUrl(metaInfo.getFilePath());
+		sourceList.add(source);
+
+		source = new Source();
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getDetailPromotionPath()));
+		source.setType(DisplayConstants.DP_SOURCE_TYPE_DETAIL_PROMOTION);
+		source.setUrl(metaInfo.getDetailPromotionPath());
+		sourceList.add(source);
+
+		return sourceList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generateDate(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public Date generateDate(MetaInfo metaInfo) {
@@ -172,9 +197,8 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator#generateDateList(com.skplanet.storeplatform
-	 * .sac.display.meta.vo.MetaInfo)
+	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generateDateList(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public List<Date> generateDateList(MetaInfo metaInfo) {

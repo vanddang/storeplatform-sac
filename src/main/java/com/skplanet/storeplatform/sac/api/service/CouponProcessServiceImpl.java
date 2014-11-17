@@ -16,6 +16,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpItemInfo;
 import com.skplanet.storeplatform.external.client.shopping.vo.NotificationIprm;
+import com.skplanet.storeplatform.external.client.shopping.vo.ProductTenantPriceVO;
 import com.skplanet.storeplatform.external.client.shopping.vo.ProductVO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
@@ -995,31 +997,83 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
 			this.log.info("■■■■■ setCallSpSettRegProd End ■■■■■");
 
+			this.log.info("■■■■■ MQ 연동 start ■■■■■");
 			/**
 			 * MQ 연동.
 			 */
+
 			NotificationIprm noti = new NotificationIprm();
+			List<ProductTenantPriceVO> productTenantPriceList = new ArrayList<ProductTenantPriceVO>();
+
 			try {
+				for (int i = 0; i < itemInfoList.size(); i++) {
+					DpItemInfo itemInfo = itemInfoList.get(i);
+					noti.setTransactionKey("transactionKey-001"); // 이놈도 문의 필요. 그냥 유니크한 값을 주면 되는지..??
 
-				noti.setTransactionKey("transactionKey-001"); // 이놈도 문의 필요. 그냥 유니크한 값을 주면 되는지..??
+					/**
+					 * 상품정보 세팅.
+					 */
+					ProductVO productVO = new ProductVO();
+					/**
+					 * 상품가격정보 세팅.
+					 */
+					ProductTenantPriceVO productTenantPriceVO = new ProductTenantPriceVO();
 
-				/**
-				 * 상품정보 세팅.
-				 */
-				ProductVO productVO = new ProductVO();
-				productVO.setProdId("S000000001");
-				productVO.setProdNm("쇼핑상품명");
-				/**
-				 * TODO 상품정보 세팅 필요....
-				 */
-				noti.setProduct(productVO);
+					productVO.setSyncDataControlType(itemInfo.getCudType());
+					productVO.setProdId(itemInfo.getProdId());
+					productVO.setProdNm(itemInfo.getItemName()); // 상품명이 단품명 기준인지 , 채널명 기준인지 ??
 
+					productTenantPriceVO.setTenantId(CouponConstants.TENANT_ID);
+					productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());
+					productTenantPriceList.add(productTenantPriceVO);
+
+					if (!String.valueOf(itemInfo.getItemPrice()).equals("0")) { // 유료
+						productVO.setProdFdTypCd("PD000501");
+					} else {
+						productVO.setProdFdTypCd("PD000502");
+					}
+
+					productVO.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);
+
+					// productVO.setSvcGrpTypCd("PD000601"); ?? 상품 구분 코드값이 없음
+
+					productVO.setMbrNo(couponInfo.getMbrNo());
+					productVO.setCid(itemInfo.getItemCode()); // cid가 뭔지 ( 단품 원코드가 맞는지>??)
+					productVO.setCateNo(CouponConstants.TOP_MENU_ID_CUPON_CONTENT);
+					productVO.setSubCateNo(CouponConstants.CATEGORY_ID_CUPON_SERIES_CONTENT);
+					productVO.setCoContentsId(couponInfo.getBpId());
+
+					if (Integer.parseInt(couponInfo.getValidUntil()) > 0) { // 유효일수 값 비교
+						productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_DAY); // PD00312 기간제(일)
+						productVO.setUserTerm(couponInfo.getValidUntil()); // 유효일수로 셋팅
+					} else {
+						productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_SELECT); // PD00319 기간선택
+																							// USE_TERM_UNIT
+						productVO.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
+					}
+					productVO.setCatalogId(couponInfo.getStoreCatalogCode());
+					// productVO.setCatalogNm(catalogNm); ?? 왜 필요한것인지??
+					productVO.setTaxTypCd(couponInfo.getTaxType());
+					Date date = new Date();
+					String modifiedDate = new SimpleDateFormat("YYYYMMDDhhmmss").format(date);
+
+					productVO.setRegDt(modifiedDate);
+					productVO.setRegId(couponInfo.getBpId());
+					productVO.setUpdDt(modifiedDate);
+					productVO.setUpdId(couponInfo.getBpId());
+					/**
+					 * TODO 상품정보 세팅 필요....
+					 */
+					noti.setProduct(productVO);
+					noti.setProductTenantPriceList(productTenantPriceList);
+
+				}
 				this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // async
-				// Object obj = this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // sync
 
+				this.log.info("■■■■■ MQ 연동 End ■■■■■");
 			} catch (AmqpException ae) {
 				this.log.error("MQ 연동중 Error 발생. - error msg:{}, NotificationIprm:{}", ae.getMessage(), noti);
-				ae.printStackTrace();
+				// ae.printStackTrace();
 			}
 
 		} catch (CouponException e) {

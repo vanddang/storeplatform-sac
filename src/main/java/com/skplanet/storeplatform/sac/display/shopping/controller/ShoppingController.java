@@ -1,8 +1,5 @@
 package com.skplanet.storeplatform.sac.display.shopping.controller;
 
-import com.skplanet.storeplatform.sac.client.display.vo.shopping.*;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandAnotherReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingBrandRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingCategoryAnotherReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingCategoryBrandRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingFeatureReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingPlanReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSpcialSaleRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingSubReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeReq;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 
 /**
  * 쇼핑 컨트롤러
@@ -317,6 +332,195 @@ public class ShoppingController {
 		this.logger.debug("getShoppingDetail Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
 		return this.shoppingService.getShoppingDetail(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * [I03000149] 2.7.6. 특가 상품 조회 (V2버전).
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/specialPriceProduct/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public ShoppingRes getSpecialPriceProductListV2(SacRequestHeader header, @RequestBody @Validated ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getSubProductListV2 Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getSpecialPriceProductListV2(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * [I03000150] 2.7.7.3. 기획전 상품 조회 (V2버전).
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/specialSales/specialSalesList/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingSpcialSaleRes getSpecialSalesListV2(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getSpecialSalesListV2 Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getSpecialSalesListV2(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * [I03000151] 2.7.7.4. 특정 기획전에 대한 상품 리스트 (V2버전).
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/specialSales/productList/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingThemeRes getSpecialSalesProductListV2(SacRequestHeader header, @Validated ShoppingPlanReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getSpecialSalesProductListV2 Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getSpecialSalesProductListV2(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * [I03000152] 2.7.8.3. 브랜드샵 – 메인 (V2버전).
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingBrandRes
+	 */
+	@RequestMapping(value = "/brandshop/mainList/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingCategoryBrandRes getBrandshopMainListV2(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getBrandshopMainListV2 Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getBrandshopMainListV2(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * [I03000152] 2.7.8.5. 브랜드샵 – 카테고리별 브랜드샵 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingBrandRes
+	 */
+	@RequestMapping(value = "/brandshop/categoryList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingCategoryBrandRes getBrandshopCategoryList(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getBrandshopCategoryList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getBrandshopCategoryList(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * [I03000153] 2.7.8.4. 특정 브랜드샵 상품 리스트 (V2버전).
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/brandshop/productList/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingBrandRes getBrandshopProductListV2(SacRequestHeader header, @Validated ShoppingBrandReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getBrandshopProductListV2 Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getBrandshopProductListV2(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * [I03000154] 2.7.13. 특정 카테고리의 다른 상품 / GET (V2버전).
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/category/anotherProductList/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getCatagoryAnotherProductListV2(SacRequestHeader header,
+			@Validated ShoppingCategoryAnotherReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getCatagoryAnotherProductListV2 Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getCatagoryAnotherProductListV2(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * [I03000155] 2.7.14. 특정 브랜드의 다른 상품 (V2버전).
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/brandshop/anotherProductList/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getBrandAnotherProductListV2(SacRequestHeader header, @Validated ShoppingBrandAnotherReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getCatagoryAnotherProductListV2 Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getBrandAnotherProductListV2(header, req);
+
+	}
+
+	/**
+	 * [I03000156] 2.7.15. 쇼핑상세 조회 (V2버전).
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+
+	@RequestMapping(value = "/shoppingDetail/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public ShoppingDetailRes getShoppingDetailV2(SacRequestHeader header, @RequestBody @Validated ShoppingDetailReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getShoppingDetailV2 Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getShoppingDetailV2(header, req);
 
 	}
 }

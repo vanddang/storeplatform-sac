@@ -3,179 +3,179 @@
 <mapper namespace="Freepass">
     <!-- 정액제 리스트 조회-->
     <select id="selectFreepassList" parameterType="FreepassListSacReq" resultType="ProductBasicInfo">
-			SELECT /* FreepassMapper.selectFreepassList, 정액제 리스트 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
-				* 
-			FROM
-			(
-				SELECT 
-					IV.*
-			    , ROWNUM AS RNUM
-				FROM 
-				(
-					SELECT
-						COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
-						, TP.TENANT_ID
-						, DC.LANG_CD
-						, PD.PROD_ID
-						, PD.TOP_MENU_ID
-						, (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
-						, PD.META_CLSF_CD
-						, PD.PROD_CHRG_YN
-						, PD.SELLER_MBR_NO
-						, PD.SVC_GRP_CD
-						, PD.SVC_TYPE_CD
-						, PD.PROD_GRD_CD
-						, PD.CID
-						, PD.MALL_CD
-						, PD.FEE_CASE_CD
-						, PD.FEE_UNIT_CD
-						, PD.USE_PERIOD_UNIT_CD
-						, PD.USE_PERIOD
-						, PD.DRM_YN
-						, PD.DRM_SET_CD
-						, PD.DRM_SET_VALUE
-						, PD.CONTENTS_TYPE_CD
-			      		, TP.EXPO_ORD
-					FROM
-						TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
-						TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
-					WHERE PD.PROD_ID = CM.PROD_ID
-					AND PD.PROD_ID = DC.PROD_ID
-					AND PD.PROD_ID = TP.PROD_ID
-					AND PD.PROD_ID = PR.PROD_ID
-					AND DC.LANG_CD = #{langCd}
-					AND TP.TENANT_ID = #{tenantId}
-					AND TP.TENANT_ID = PR.TENANT_ID
-					AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
-					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-			    	AND EXISTS ( SELECT /*+ index(SP PK_DP_SPRT_DEVICE) */ SP.PROD_ID 
-			    	               FROM TB_DP_SPRT_DEVICE SP 
-			    	              WHERE SP.PROD_ID=PD.PROD_ID 
-			    		            AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} )
-			    		        )
-			    	AND EXISTS (
-			          	SELECT 'X' 
-			            FROM TB_CM_DEVICE DV
-			            WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
-			            AND   DV.USE_YN = 'Y'
-                		AND   'Y' = CASE 
-                			WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
-                    		WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
-                    			CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
-                        		     WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
-                        		ELSE 'Y' END
-    		        		ELSE 'Y' END
-			          )
-			    <if test='prodStatusCd != null and prodStatusCd != ""'>
-      		AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
-      		</if>
-			    AND TP.EXPO_YN = 'Y'
-			    <if test='kind != null and kind != ""'>
-      		AND CM.CMPX_PROD_CLSF_CD = #{kind}
-      		</if>
-      		<if test='topMenuId != null and topMenuId != ""'>
-			AND PD.TOP_MENU_ID IN /* DP13:ebook/DP14:코믹/DP17:영화/DP18:TV/방송 */
-            	<foreach collection="arrTopMenuId" item="topMenuId" separator="," open="(" close=")">
+            SELECT /* FreepassMapper.selectFreepassList, 정액제 리스트 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
+                * 
+            FROM
+            (
+                SELECT 
+                    IV.*
+                , ROWNUM AS RNUM
+                FROM 
+                (
+                    SELECT
+                        COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
+                        , TP.TENANT_ID
+                        , DC.LANG_CD
+                        , PD.PROD_ID
+                        , PD.TOP_MENU_ID
+                        , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+                        , PD.META_CLSF_CD
+                        , PD.PROD_CHRG_YN
+                        , PD.SELLER_MBR_NO
+                        , PD.SVC_GRP_CD
+                        , PD.SVC_TYPE_CD
+                        , PD.PROD_GRD_CD
+                        , PD.CID
+                        , PD.MALL_CD
+                        , PD.FEE_CASE_CD
+                        , PD.FEE_UNIT_CD
+                        , PD.USE_PERIOD_UNIT_CD
+                        , PD.USE_PERIOD
+                        , PD.DRM_YN
+                        , PD.DRM_SET_CD
+                        , PD.DRM_SET_VALUE
+                        , PD.CONTENTS_TYPE_CD
+                        , TP.EXPO_ORD
+                    FROM
+                        TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
+                        TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
+                    WHERE PD.PROD_ID = CM.PROD_ID
+                    AND PD.PROD_ID = DC.PROD_ID
+                    AND PD.PROD_ID = TP.PROD_ID
+                    AND PD.PROD_ID = PR.PROD_ID
+                    AND DC.LANG_CD = #{langCd}
+                    AND TP.TENANT_ID = #{tenantId}
+                    AND TP.TENANT_ID = PR.TENANT_ID
+                    AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+                    AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+                    AND EXISTS ( SELECT /*+ index(SP PK_DP_SPRT_DEVICE) */ SP.PROD_ID 
+                                   FROM TB_DP_SPRT_DEVICE SP 
+                                  WHERE SP.PROD_ID=PD.PROD_ID 
+                                    AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} )
+                                )
+                    AND EXISTS (
+                        SELECT 'X' 
+                        FROM TB_CM_DEVICE DV
+                        WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+                        AND   DV.USE_YN = 'Y'
+                        AND   'Y' = CASE 
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
+                                CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
+                                     WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                                ELSE 'Y' END
+                            ELSE 'Y' END
+                      )
+                <if test='prodStatusCd != null and prodStatusCd != ""'>
+            AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
+            </if>
+                AND TP.EXPO_YN = 'Y'
+                <if test='kind != null and kind != ""'>
+            AND CM.CMPX_PROD_CLSF_CD = #{kind}
+            </if>
+            <if test='topMenuId != null and topMenuId != ""'>
+            AND PD.TOP_MENU_ID IN /* DP13:ebook/DP14:코믹/DP17:영화/DP18:TV/방송 */
+                <foreach collection="arrTopMenuId" item="topMenuId" separator="," open="(" close=")">
                 #{topMenuId}
                 </foreach>
             </if>
-			    ORDER BY PD.TOP_MENU_ID DESC, TP.EXPO_ORD, TP.REG_DT /*, PD.REG_DT DESC*/
-			  ) IV
-			) OV
-			WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
-			ORDER BY OV.RNUM
+                ORDER BY PD.TOP_MENU_ID DESC, TP.EXPO_ORD, TP.REG_DT /*, PD.REG_DT DESC*/
+              ) IV
+            ) OV
+            WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+            ORDER BY OV.RNUM
     </select>
     
     <!-- 정액제 상품 상세 조회 -->
     <select id="selectFreepassDetail" parameterType="FreepassDetailSacReq" resultType="metaInfo">
-	SELECT  /* FreepassMapper.selectFreepassDetail, 정액제 상품 상세 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
-		IV.*
-		, NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
-		, NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
-	FROM (
-		SELECT  
-			PD.PROD_ID
-			, PD.TOP_MENU_ID
-			, (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
-			, PD.META_CLSF_CD
-			, PD.PROD_CHRG_YN
-			, PD.SELLER_MBR_NO
-			, PD.SVC_GRP_CD
-			, PD.SVC_TYPE_CD
-			, PD.PROD_GRD_CD
-			, PD.CID
-			, PD.MALL_CD
-			, PD.FEE_CASE_CD
-			, PD.FEE_UNIT_CD
-			, PD.USE_PERIOD_UNIT_CD
-			, PD.USE_PERIOD
-			, PD.DRM_YN
-			, PD.DRM_SET_CD
-			, PD.DRM_SET_VALUE
-			, PD.CONTENTS_TYPE_CD
-			, CM.CMPX_PROD_CLSF_CD
-			, DC.PROD_INTR_DSCR
-			, PR.PROD_AMT
-			, DC.PROD_NM
-			, DC.PROD_ALIAS
-			, DC.PROD_BASE_DESC
-			, DC.PROD_DTL_DESC
-			, DC.PROD_USE_MTD
-			, CM.AUTO_APPR_YN
-			, CM.MAX_SALE_CNT
-			, CM.SALE_POC_CD
-			, CM.DUP_PRCHS_LIMT_YN
-			, TP.PROD_STATUS_CD
-			, TP.EXPO_YN
-			, TP.EXPO_ORD
-			, TO_CHAR(PR.APPLY_START_DT, 'YYYYMMDDHH24MISS') AS APPLY_START_DT
-			, TO_CHAR(PR.APPLY_END_DT, 'YYYYMMDDHH24MISS') AS APPLY_END_DT
-			, PR.CHNL_UNLMT_AMT
-			, PR.CHNL_PERIOD_AMT
-			, PR.PROD_NET_AMT
-			, PR.DC_RATE
-			, PR.DC_AMT
-			, PR.DC_AFT_PROD_AMT
-			, PR.TAX_CLSF
-			, DC.LANG_CD
-			, TP.TENANT_ID
+    SELECT  /* FreepassMapper.selectFreepassDetail, 정액제 상품 상세 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
+        IV.*
+        , NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
+        , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
+    FROM (
+        SELECT  
+            PD.PROD_ID
+            , PD.TOP_MENU_ID
+            , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+            , PD.META_CLSF_CD
+            , PD.PROD_CHRG_YN
+            , PD.SELLER_MBR_NO
+            , PD.SVC_GRP_CD
+            , PD.SVC_TYPE_CD
+            , PD.PROD_GRD_CD
+            , PD.CID
+            , PD.MALL_CD
+            , PD.FEE_CASE_CD
+            , PD.FEE_UNIT_CD
+            , PD.USE_PERIOD_UNIT_CD
+            , PD.USE_PERIOD
+            , PD.DRM_YN
+            , PD.DRM_SET_CD
+            , PD.DRM_SET_VALUE
+            , PD.CONTENTS_TYPE_CD
+            , CM.CMPX_PROD_CLSF_CD
+            , DC.PROD_INTR_DSCR
+            , PR.PROD_AMT
+            , DC.PROD_NM
+            , DC.PROD_ALIAS
+            , DC.PROD_BASE_DESC
+            , DC.PROD_DTL_DESC
+            , DC.PROD_USE_MTD
+            , CM.AUTO_APPR_YN
+            , CM.MAX_SALE_CNT
+            , CM.SALE_POC_CD
+            , CM.DUP_PRCHS_LIMT_YN
+            , TP.PROD_STATUS_CD
+            , TP.EXPO_YN
+            , TP.EXPO_ORD
+            , TO_CHAR(PR.APPLY_START_DT, 'YYYYMMDDHH24MISS') AS APPLY_START_DT
+            , TO_CHAR(PR.APPLY_END_DT, 'YYYYMMDDHH24MISS') AS APPLY_END_DT
+            , PR.CHNL_UNLMT_AMT
+            , PR.CHNL_PERIOD_AMT
+            , PR.PROD_NET_AMT
+            , PR.DC_RATE
+            , PR.DC_AMT
+            , PR.DC_AFT_PROD_AMT
+            , PR.TAX_CLSF
+            , DC.LANG_CD
+            , TP.TENANT_ID
             , CM.CASH_AMT
             , CM.BNS_CASH_AMT_CLSF_CD
             , CM.BNS_CASH_AMT
             , CM.BNS_CASH_RATIO
             , CM.BNS_USE_PERIOD_UNIT_CD
-            , CM.BNS_USE_PERIOD 			
-		FROM 
-			TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC, 
-  			TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
-		WHERE PD.PROD_ID = #{productId}
-		AND PD.PROD_ID = CM.PROD_ID
-		AND PD.PROD_ID = DC.PROD_ID
-		AND PD.PROD_ID = TP.PROD_ID
-		AND PD.PROD_ID = PR.PROD_ID
-		AND DC.LANG_CD = #{langCd}
-		AND TP.TENANT_ID = #{tenantId}
-		AND TP.TENANT_ID = PR.TENANT_ID
-		AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-		AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
-			AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
-		AND EXISTS (
-			SELECT 'X' 
-			FROM TB_CM_DEVICE DV
-			WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
-			AND   DV.USE_YN = 'Y'
+            , CM.BNS_USE_PERIOD             
+        FROM 
+            TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC, 
+            TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
+        WHERE PD.PROD_ID = #{productId}
+        AND PD.PROD_ID = CM.PROD_ID
+        AND PD.PROD_ID = DC.PROD_ID
+        AND PD.PROD_ID = TP.PROD_ID
+        AND PD.PROD_ID = PR.PROD_ID
+        AND DC.LANG_CD = #{langCd}
+        AND TP.TENANT_ID = #{tenantId}
+        AND TP.TENANT_ID = PR.TENANT_ID
+        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+        AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
+            AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
+        AND EXISTS (
+            SELECT 'X' 
+            FROM TB_CM_DEVICE DV
+            WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+            AND   DV.USE_YN = 'Y'
             AND   'Y' = CASE 
                 WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
                 WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
                     CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
                         WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
                     ELSE 'Y' END
-    		    ELSE 'Y' END
-		)
-	) IV LEFT OUTER JOIN TB_DP_PROD_IMG BIG
-	ON BIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = BIG.PROD_ID AND BIG.IMG_CD = #{bannerImageCd}
-	LEFT OUTER JOIN TB_DP_PROD_IMG TIG
-	ON TIG.LANG_CD = IV.LANG_CD  
+                ELSE 'Y' END
+        )
+    ) IV LEFT OUTER JOIN TB_DP_PROD_IMG BIG
+    ON BIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = BIG.PROD_ID AND BIG.IMG_CD = #{bannerImageCd}
+    LEFT OUTER JOIN TB_DP_PROD_IMG TIG
+    ON TIG.LANG_CD = IV.LANG_CD  
      AND IV.PROD_ID = TIG.PROD_ID 
      AND TIG.IMG_CD = (
           CASE WHEN IV.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN  #{thumbnailImageCd}
@@ -186,79 +186,79 @@
     
     <!-- 정액제 매핑상품 조회 -->
     <select id="selectFreepassMapProduct" parameterType="FreepassDetailSacReq" resultType="FreepassMapProduct">
-		SELECT  /* FreepassMapper.selectFreepassMapProduct, 정액제 매핑상품 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
-			*
-		FROM
-		(
-			SELECT
-				ROWNUM AS RNUM
-				, IV.*
-			FROM (
-				SELECT COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT 
-					, FM.PROD_ID
-    		        , FM.PART_PROD_ID
-    		        , FM.CONTENTS_CLSF_CD
-    		        , FM.DRM_SET_CLSF_CD
-    		        , FM.DRM_USE_PERIOD
-    		        , FM.DWLD_DRM_YN
-    		        , FM.EXPO_ORD
+        SELECT  /* FreepassMapper.selectFreepassMapProduct, 정액제 매핑상품 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
+            *
+        FROM
+        (
+            SELECT
+                ROWNUM AS RNUM
+                , IV.*
+            FROM (
+                SELECT COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT 
+                    , FM.PROD_ID
+                    , FM.PART_PROD_ID
+                    , FM.CONTENTS_CLSF_CD
+                    , FM.DRM_SET_CLSF_CD
+                    , FM.DRM_USE_PERIOD
+                    , FM.DWLD_DRM_YN
+                    , FM.EXPO_ORD
                     ,(CASE WHEN FM.ICON_CLSF_CD='DP006701' THEN 'new' 
                            WHEN FM.ICON_CLSF_CD='DP006702' THEN 'closing'  
-                      END) AS ICON_CLSF_CD       		        
-    		        , FM.SETT_RATE
-    		        , FM.STD_PRICE
-    		        , FM.STRM_DRM_YN
-    		        , PD.TOP_MENU_ID
-				FROM
-					TB_DP_FIXRATE_PROD_MAPG FM, TB_DP_PROD PD, TB_DP_TENANT_PROD TP,
-    		    	TB_DP_MENU_CATEGORY_PROD_MAPG MP, TB_DP_MENU_CATEGORY CT
-				WHERE FM.PROD_ID = #{productId}
-    		    AND FM.PART_PROD_ID = PD.PROD_ID
-    		    AND PD.PROD_ID = TP.PROD_ID
-    		    AND TP.TENANT_ID = #{tenantId}
-    		    AND PD.PROD_Id = MP.PROD_ID
-    		    AND MP.MENU_ID = CT.MENU_ID
-    		    AND MP.BASE_YN = 'Y'
-    		    AND CT.USE_YN = 'Y'
-    		    AND TP.PROD_STATUS_CD = 'PD000403'
-    		    AND EXISTS ( 
-    		    	SELECT 'X'
-    		    	FROM TB_DP_PROD_RSHP RS, TB_DP_PROD EP, TB_DP_SUB_CONTENTS SC, TB_DP_TENANT_PROD ET
-    		        WHERE RS.PROD_ID=PD.PROD_ID 
-    		        AND EXISTS (
-    		        	SELECT 'X' FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=RS.PART_PROD_ID
-    		        	AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} )
-    		        	)
-			    	AND EXISTS (
-			          	SELECT 'X' 
-			            FROM TB_CM_DEVICE DV
-			            WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
-						AND   DV.USE_YN = 'Y'
-            			AND   'Y' = CASE 
-                			WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN 
-                				CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' THEN (CASE WHEN EP.DRM_YN ='N' THEN 'Y' ELSE 'N' END)
-                				ELSE 'Y' END
-                			ELSE 'Y' END
-                		AND 'Y' = CASE WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN 
-                    			CASE WHEN DV.HDV_SPRT_YN = 'N' THEN (CASE WHEN SC.DP_PG_QULT_CD ='PD009701' OR SC.DP_PG_QULT_CD ='PD009702' THEN 'Y' ELSE 'N' END)
-                    			ELSE 'Y' END
-                    		ELSE 'Y' END 
-    		            AND 'Y' = CASE WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN DV.VOD_FIXISTT_SPRT_YN
-    		            	WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN 
-    		            	WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
-    		    			ELSE 'Y' END
-    		        	)
-    		        AND RS.PART_PROD_ID = EP.PROD_ID
-    		        AND EP.PROD_ID = SC.PROD_ID
-    		        AND EP.PROD_ID = ET.PROD_ID
-    		        AND ET.TENANT_ID = #{tenantId}
-    		        AND ET.PROD_STATUS_CD = 'PD000403'
-    		        )
-        		ORDER BY FM.EXPO_ORD, PD.LAST_DEPLOY_DT DESC
-			) IV
-		) OV
-		WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
-		ORDER BY OV.RNUM
+                      END) AS ICON_CLSF_CD                      
+                    , FM.SETT_RATE
+                    , FM.STD_PRICE
+                    , FM.STRM_DRM_YN
+                    , PD.TOP_MENU_ID
+                FROM
+                    TB_DP_FIXRATE_PROD_MAPG FM, TB_DP_PROD PD, TB_DP_TENANT_PROD TP,
+                    TB_DP_MENU_CATEGORY_PROD_MAPG MP, TB_DP_MENU_CATEGORY CT
+                WHERE FM.PROD_ID = #{productId}
+                AND FM.PART_PROD_ID = PD.PROD_ID
+                AND PD.PROD_ID = TP.PROD_ID
+                AND TP.TENANT_ID = #{tenantId}
+                AND PD.PROD_Id = MP.PROD_ID
+                AND MP.MENU_ID = CT.MENU_ID
+                AND MP.BASE_YN = 'Y'
+                AND CT.USE_YN = 'Y'
+                AND TP.PROD_STATUS_CD = 'PD000403'
+                AND EXISTS ( 
+                    SELECT 'X'
+                    FROM TB_DP_PROD_RSHP RS, TB_DP_PROD EP, TB_DP_SUB_CONTENTS SC, TB_DP_TENANT_PROD ET
+                    WHERE RS.PROD_ID=PD.PROD_ID 
+                    AND EXISTS (
+                        SELECT 'X' FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=RS.PART_PROD_ID
+                        AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} )
+                        )
+                    AND EXISTS (
+                        SELECT 'X' 
+                        FROM TB_CM_DEVICE DV
+                        WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+                        AND   DV.USE_YN = 'Y'
+                        AND   'Y' = CASE 
+                            WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN 
+                                CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' THEN (CASE WHEN EP.DRM_YN ='N' THEN 'Y' ELSE 'N' END)
+                                ELSE 'Y' END
+                            ELSE 'Y' END
+                        AND 'Y' = CASE WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN 
+                                CASE WHEN DV.HDV_SPRT_YN = 'N' THEN (CASE WHEN SC.DP_PG_QULT_CD ='PD009701' OR SC.DP_PG_QULT_CD ='PD009702' THEN 'Y' ELSE 'N' END)
+                                ELSE 'Y' END
+                            ELSE 'Y' END 
+                        AND 'Y' = CASE WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN DV.VOD_FIXISTT_SPRT_YN
+                            WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN 
+                            WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                            ELSE 'Y' END
+                        )
+                    AND RS.PART_PROD_ID = EP.PROD_ID
+                    AND EP.PROD_ID = SC.PROD_ID
+                    AND EP.PROD_ID = ET.PROD_ID
+                    AND ET.TENANT_ID = #{tenantId}
+                    AND ET.PROD_STATUS_CD = 'PD000403'
+                    )
+                ORDER BY FM.EXPO_ORD, PD.LAST_DEPLOY_DT DESC
+            ) IV
+        ) OV
+        WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+        ORDER BY OV.RNUM
     </select>
     
     <!-- 특정 상품에 적용할 자유 이용권 조회-->
@@ -295,8 +295,8 @@
                         , PD.DRM_SET_CD
                         , PD.DRM_SET_VALUE
                         , PD.CONTENTS_TYPE_CD
-                  		, TP.EXPO_ORD
-                  		, TP.PROD_STATUS_CD
+                        , TP.EXPO_ORD
+                        , TP.PROD_STATUS_CD
                     FROM
                         TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
                         TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
@@ -322,23 +322,23 @@
                     AND EXISTS (
                         SELECT 'X' 
                         FROM TB_CM_DEVICE DV
-						WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
-						AND   DV.USE_YN = 'Y'
-            			AND   'Y' = CASE 
-                			WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
-                			WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
-                    			CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
-                        			WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
-                    			ELSE 'Y' END
-    		    			ELSE 'Y' END
-                    	)
+                        WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+                        AND   DV.USE_YN = 'Y'
+                        AND   'Y' = CASE 
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
+                                CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
+                                    WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                                ELSE 'Y' END
+                            ELSE 'Y' END
+                        )
                 <if test='prodStatusCd != null and prodStatusCd != ""'>
             AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD013202  : 판매중 */
             </if>
             AND TP.EXPO_YN = 'Y'
             <if test='kind != null and kind != ""'>
             AND CM.CMPX_PROD_CLSF_CD IN 
-            	<foreach collection="arrKind" item="kind" separator="," open="(" close=")">
+                <foreach collection="arrKind" item="kind" separator="," open="(" close=")">
                 #{kind}
                 </foreach>
             </if>
@@ -437,92 +437,534 @@
     
     <!-- 정액제 시리즈 리스트 조회-->
     <select id="selectFreepassSeries" parameterType="FreepassSeriesSacReq" resultType="ProductBasicInfo">
-			SELECT /* FreepassMapper.selectFreepassSeries, 정액제 시리즈 리스트 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
-				* 
-			FROM
-			(
-				SELECT 
-					IV.*
-			    , ROWNUM AS RNUM
-				FROM 
-				(
-					SELECT
-						COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
-						, TP.TENANT_ID
-						, DC.LANG_CD
-						, PD.PROD_ID
-						, PD.TOP_MENU_ID
-						, (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
-						, PD.META_CLSF_CD
-						, PD.PROD_CHRG_YN
-						, PD.SELLER_MBR_NO
-						, PD.SVC_GRP_CD
-						, PD.SVC_TYPE_CD
-						, PD.PROD_GRD_CD
-						, PD.CID
-						, PD.MALL_CD
-						, PD.FEE_CASE_CD
-						, PD.FEE_UNIT_CD
-						, PD.USE_PERIOD_UNIT_CD
-						, PD.USE_PERIOD
-						, PD.DRM_YN
-						, PD.DRM_SET_CD
-						, PD.DRM_SET_VALUE
-						, PD.CONTENTS_TYPE_CD
-			      , TP.EXPO_ORD
+            SELECT /* FreepassMapper.selectFreepassSeries, 정액제 시리즈 리스트 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
+                * 
+            FROM
+            (
+                SELECT 
+                    IV.*
+                , ROWNUM AS RNUM
+                FROM 
+                (
+                    SELECT
+                        COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
+                        , TP.TENANT_ID
+                        , DC.LANG_CD
+                        , PD.PROD_ID
+                        , PD.TOP_MENU_ID
+                        , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+                        , PD.META_CLSF_CD
+                        , PD.PROD_CHRG_YN
+                        , PD.SELLER_MBR_NO
+                        , PD.SVC_GRP_CD
+                        , PD.SVC_TYPE_CD
+                        , PD.PROD_GRD_CD
+                        , PD.CID
+                        , PD.MALL_CD
+                        , PD.FEE_CASE_CD
+                        , PD.FEE_UNIT_CD
+                        , PD.USE_PERIOD_UNIT_CD
+                        , PD.USE_PERIOD
+                        , PD.DRM_YN
+                        , PD.DRM_SET_CD
+                        , PD.DRM_SET_VALUE
+                        , PD.CONTENTS_TYPE_CD
+                  , TP.EXPO_ORD
                   , MP.PART_PROD_ID
-					FROM
-						TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
-						TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR, TB_DP_FIXRATE_PROD_MAPG MP, 
-            			TB_DP_PROD CP, TB_DP_TENANT_PROD CT, TB_DP_MENU_CATEGORY_PROD_MAPG TM
-					WHERE PD.PROD_ID = CM.PROD_ID
-					AND PD.PROD_ID = DC.PROD_ID
-					AND PD.PROD_ID = TP.PROD_ID
-					AND PD.PROD_ID = PR.PROD_ID
-          			AND PD.PROD_ID = MP.PROD_ID
-          			AND MP.PART_PROD_ID = CP.PROD_ID
-          			AND CP.PROD_ID = CT.PROD_ID
-					AND DC.LANG_CD = #{langCd}
-					AND TP.TENANT_ID = #{tenantId}
-					AND TP.TENANT_ID = PR.TENANT_ID
-          			AND TP.TENANT_ID = CT.TENANT_ID
-          			AND CP.PROD_ID = TM.PROD_ID
-          			AND TM.USE_YN = 'Y'
-          			AND TM.BASE_YN = 'Y'
-					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-    		    	AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
-			    	AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
-			    		AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
-			    	AND EXISTS (
-			          	SELECT 'X' 
-			            FROM TB_CM_DEVICE DV
-			            WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
-						AND   DV.USE_YN = 'Y'
-            			AND   'Y' = CASE 
-                			WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
-                			WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
-                    			CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
-                        			WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
-                    			ELSE 'Y' END
-    		    			ELSE 'Y' END
-			          )
-			    <if test='prodStatusCd != null and prodStatusCd != ""'>
-      		AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
+                    FROM
+                        TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
+                        TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR, TB_DP_FIXRATE_PROD_MAPG MP, 
+                        TB_DP_PROD CP, TB_DP_TENANT_PROD CT, TB_DP_MENU_CATEGORY_PROD_MAPG TM
+                    WHERE PD.PROD_ID = CM.PROD_ID
+                    AND PD.PROD_ID = DC.PROD_ID
+                    AND PD.PROD_ID = TP.PROD_ID
+                    AND PD.PROD_ID = PR.PROD_ID
+                    AND PD.PROD_ID = MP.PROD_ID
+                    AND MP.PART_PROD_ID = CP.PROD_ID
+                    AND CP.PROD_ID = CT.PROD_ID
+                    AND DC.LANG_CD = #{langCd}
+                    AND TP.TENANT_ID = #{tenantId}
+                    AND TP.TENANT_ID = PR.TENANT_ID
+                    AND TP.TENANT_ID = CT.TENANT_ID
+                    AND CP.PROD_ID = TM.PROD_ID
+                    AND TM.USE_YN = 'Y'
+                    AND TM.BASE_YN = 'Y'
+                    AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+                    AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+                    AND EXISTS ( SELECT SP.PROD_ID FROM TB_DP_SPRT_DEVICE SP WHERE SP.PROD_ID=PD.PROD_ID 
+                        AND ( SP.DEVICE_MODEL_CD = #{standardModelCd} OR SP.DEVICE_MODEL_CD = #{deviceModelCd} ))
+                    AND EXISTS (
+                        SELECT 'X' 
+                        FROM TB_CM_DEVICE DV
+                        WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+                        AND   DV.USE_YN = 'Y'
+                        AND   'Y' = CASE 
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
+                                CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
+                                    WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                                ELSE 'Y' END
+                            ELSE 'Y' END
+                      )
+                <if test='prodStatusCd != null and prodStatusCd != ""'>
+            AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
           </if>
           <if test='chnlStatusCd != null and chnlStatusCd != ""'>
           AND CT.PROD_STATUS_CD = #{chnlStatusCd}    /* PD000403 : 판매중 */
           </if>
-			    AND TP.EXPO_YN = 'Y'
+                AND TP.EXPO_YN = 'Y'
           AND CT.EXPO_YN = 'Y'
-      		AND CM.CMPX_PROD_CLSF_CD = #{kind}
-      		<if test='menuId != null and menuId != ""'>
-					AND TM.MENU_ID = #{menuId}  /* DP13XXX:ebook/DP14XXX:코믹/DP17XXX:영화/DP18XXX:TV/방송 */
+            AND CM.CMPX_PROD_CLSF_CD = #{kind}
+            <if test='menuId != null and menuId != ""'>
+                    AND TM.MENU_ID = #{menuId}  /* DP13XXX:ebook/DP14XXX:코믹/DP17XXX:영화/DP18XXX:TV/방송 */
           </if>
-			    ORDER BY TP.EXPO_ORD, PD.LAST_DEPLOY_DT DESC
-			  ) IV
-			) OV
-			WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
-			ORDER BY OV.RNUM
+                ORDER BY TP.EXPO_ORD, PD.LAST_DEPLOY_DT DESC
+              ) IV
+            ) OV
+            WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+            ORDER BY OV.RNUM
+    </select>    
+ <!-- 정액제 리스트 조회 (V2 버전)-->
+    <select id="selectFreepassListV2" parameterType="FreepassListSacReq" resultType="ProductBasicInfo">
+            SELECT /* FreepassMapper.selectFreepassListV2, 정액제 리스트 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
+                * 
+            FROM
+            (
+                SELECT 
+                    IV.*
+                , ROWNUM AS RNUM
+                FROM 
+                (
+                    SELECT
+                        COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
+                        , TP.TENANT_ID
+                        , DC.LANG_CD
+                        , PD.PROD_ID
+                        , PD.TOP_MENU_ID
+                        , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+                        , PD.META_CLSF_CD
+                        , PD.PROD_CHRG_YN
+                        , PD.SELLER_MBR_NO
+                        , PD.SVC_GRP_CD
+                        , PD.SVC_TYPE_CD
+                        , PD.PROD_GRD_CD
+                        , PD.CID
+                        , PD.MALL_CD
+                        , PD.FEE_CASE_CD
+                        , PD.FEE_UNIT_CD
+                        , PD.USE_PERIOD_UNIT_CD
+                        , PD.USE_PERIOD
+                        , PD.DRM_YN
+                        , PD.DRM_SET_CD
+                        , PD.DRM_SET_VALUE
+                        , PD.CONTENTS_TYPE_CD
+                        , TP.EXPO_ORD
+                    FROM
+                        TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
+                        TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
+                    WHERE PD.PROD_ID = CM.PROD_ID
+                    AND PD.PROD_ID = DC.PROD_ID
+                    AND PD.PROD_ID = TP.PROD_ID
+                    AND PD.PROD_ID = PR.PROD_ID
+                    AND DC.LANG_CD = #{langCd}
+                    AND TP.TENANT_ID = #{tenantId}
+                    AND TP.TENANT_ID = PR.TENANT_ID
+                    AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+                    AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+                    AND EXISTS (
+                        SELECT 'X' 
+                        FROM TB_CM_DEVICE DV
+                        WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+                        AND   DV.USE_YN = 'Y'
+                        AND   'Y' = CASE 
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
+                                CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
+                                     WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                                ELSE 'Y' END
+                            ELSE 'Y' END
+                      )
+                <if test='prodStatusCd != null and prodStatusCd != ""'>
+            AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
+            </if>
+                AND TP.EXPO_YN = 'Y'
+                <if test='kind != null and kind != ""'>
+            AND CM.CMPX_PROD_CLSF_CD = #{kind}
+            </if>
+            <if test='topMenuId != null and topMenuId != ""'>
+            AND PD.TOP_MENU_ID IN /* DP13:ebook/DP14:코믹/DP17:영화/DP18:TV/방송 */
+                <foreach collection="arrTopMenuId" item="topMenuId" separator="," open="(" close=")">
+                #{topMenuId}
+                </foreach>
+            </if>
+                ORDER BY PD.TOP_MENU_ID DESC, TP.EXPO_ORD, TP.REG_DT /*, PD.REG_DT DESC*/
+              ) IV
+            ) OV
+            WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+            ORDER BY OV.RNUM
+    </select>
+    
+    <!-- 정액제 상품 상세 조회 (V2 버전)-->
+    <select id="selectFreepassDetailV2" parameterType="FreepassDetailSacReq" resultType="metaInfo">
+    SELECT  /* FreepassMapper.selectFreepassDetailV2, 정액제 상품 상세 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
+        IV.*
+        , NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
+        , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
+    FROM (
+        SELECT  
+            PD.PROD_ID
+            , PD.TOP_MENU_ID
+            , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+            , PD.META_CLSF_CD
+            , PD.PROD_CHRG_YN
+            , PD.SELLER_MBR_NO
+            , PD.SVC_GRP_CD
+            , PD.SVC_TYPE_CD
+            , PD.PROD_GRD_CD
+            , PD.CID
+            , PD.MALL_CD
+            , PD.FEE_CASE_CD
+            , PD.FEE_UNIT_CD
+            , PD.USE_PERIOD_UNIT_CD
+            , PD.USE_PERIOD
+            , PD.DRM_YN
+            , PD.DRM_SET_CD
+            , PD.DRM_SET_VALUE
+            , PD.CONTENTS_TYPE_CD
+            , CM.CMPX_PROD_CLSF_CD
+            , DC.PROD_INTR_DSCR
+            , PR.PROD_AMT
+            , DC.PROD_NM
+            , DC.PROD_ALIAS
+            , DC.PROD_BASE_DESC
+            , DC.PROD_DTL_DESC
+            , DC.PROD_USE_MTD
+            , CM.AUTO_APPR_YN
+            , CM.MAX_SALE_CNT
+            , CM.SALE_POC_CD
+            , CM.DUP_PRCHS_LIMT_YN
+            , TP.PROD_STATUS_CD
+            , TP.EXPO_YN
+            , TP.EXPO_ORD
+            , TO_CHAR(PR.APPLY_START_DT, 'YYYYMMDDHH24MISS') AS APPLY_START_DT
+            , TO_CHAR(PR.APPLY_END_DT, 'YYYYMMDDHH24MISS') AS APPLY_END_DT
+            , PR.CHNL_UNLMT_AMT
+            , PR.CHNL_PERIOD_AMT
+            , PR.PROD_NET_AMT
+            , PR.DC_RATE
+            , PR.DC_AMT
+            , PR.DC_AFT_PROD_AMT
+            , PR.TAX_CLSF
+            , DC.LANG_CD
+            , TP.TENANT_ID
+            , CM.CASH_AMT
+            , CM.BNS_CASH_AMT_CLSF_CD
+            , CM.BNS_CASH_AMT
+            , CM.BNS_CASH_RATIO
+            , CM.BNS_USE_PERIOD_UNIT_CD
+            , CM.BNS_USE_PERIOD             
+        FROM 
+            TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC, 
+            TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
+        WHERE PD.PROD_ID = #{productId}
+        AND PD.PROD_ID = CM.PROD_ID
+        AND PD.PROD_ID = DC.PROD_ID
+        AND PD.PROD_ID = TP.PROD_ID
+        AND PD.PROD_ID = PR.PROD_ID
+        AND DC.LANG_CD = #{langCd}
+        AND TP.TENANT_ID = #{tenantId}
+        AND TP.TENANT_ID = PR.TENANT_ID
+        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+        AND EXISTS (
+            SELECT 'X' 
+            FROM TB_CM_DEVICE DV
+            WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+            AND   DV.USE_YN = 'Y'
+            AND   'Y' = CASE 
+                WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
+                WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
+                    CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
+                        WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                    ELSE 'Y' END
+                ELSE 'Y' END
+        )
+    ) IV LEFT OUTER JOIN TB_DP_PROD_IMG BIG
+    ON BIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = BIG.PROD_ID AND BIG.IMG_CD = #{bannerImageCd}
+    LEFT OUTER JOIN TB_DP_PROD_IMG TIG
+    ON TIG.LANG_CD = IV.LANG_CD  
+     AND IV.PROD_ID = TIG.PROD_ID 
+     AND TIG.IMG_CD = (
+          CASE WHEN IV.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN  #{thumbnailImageCd}
+               WHEN IV.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN  #{ebookThumbnailImageCd}
+          END
+     )
+    </select>
+    
+    <!-- 정액제 매핑상품 조회(V2 버전) -->
+    <select id="selectFreepassMapProductV2" parameterType="FreepassDetailSacReq" resultType="FreepassMapProduct">
+        SELECT  /* FreepassMapper.selectFreepassMapProductV2, 정액제 매핑상품 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
+            *
+        FROM
+        (
+            SELECT
+                ROWNUM AS RNUM
+                , IV.*
+            FROM (
+                SELECT COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT 
+                    , FM.PROD_ID
+                    , FM.PART_PROD_ID
+                    , FM.CONTENTS_CLSF_CD
+                    , FM.DRM_SET_CLSF_CD
+                    , FM.DRM_USE_PERIOD
+                    , FM.DWLD_DRM_YN
+                    , FM.EXPO_ORD
+                    ,(CASE WHEN FM.ICON_CLSF_CD='DP006701' THEN 'new' 
+                           WHEN FM.ICON_CLSF_CD='DP006702' THEN 'closing'  
+                      END) AS ICON_CLSF_CD                      
+                    , FM.SETT_RATE
+                    , FM.STD_PRICE
+                    , FM.STRM_DRM_YN
+                    , PD.TOP_MENU_ID
+                FROM
+                    TB_DP_FIXRATE_PROD_MAPG FM, TB_DP_PROD PD, TB_DP_TENANT_PROD TP,
+                    TB_DP_MENU_CATEGORY_PROD_MAPG MP, TB_DP_MENU_CATEGORY CT
+                WHERE FM.PROD_ID = #{productId}
+                AND FM.PART_PROD_ID = PD.PROD_ID
+                AND PD.PROD_ID = TP.PROD_ID
+                AND TP.TENANT_ID = #{tenantId}
+                AND PD.PROD_Id = MP.PROD_ID
+                AND MP.MENU_ID = CT.MENU_ID
+                AND MP.BASE_YN = 'Y'
+                AND CT.USE_YN = 'Y'
+                 <if test="arrayProdGradeCd != null">
+                AND PD.PROD_GRD_CD  IN
+                              <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                #{prodGradeCd}
+                              </foreach>                        
+                 </if>                  
+                AND TP.PROD_STATUS_CD = 'PD000403'
+                AND EXISTS ( 
+                    SELECT 'X'
+                    FROM TB_DP_PROD_RSHP RS, TB_DP_PROD EP, TB_DP_SUB_CONTENTS SC, TB_DP_TENANT_PROD ET
+                    WHERE RS.PROD_ID=PD.PROD_ID 
+                    AND EXISTS (
+                        SELECT 'X' 
+                        FROM TB_CM_DEVICE DV
+                        WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+                        AND   DV.USE_YN = 'Y'
+                        AND   'Y' = CASE 
+                            WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN 
+                                CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' THEN (CASE WHEN EP.DRM_YN ='N' THEN 'Y' ELSE 'N' END)
+                                ELSE 'Y' END
+                            ELSE 'Y' END
+                        AND 'Y' = CASE WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN 
+                                CASE WHEN DV.HDV_SPRT_YN = 'N' THEN (CASE WHEN SC.DP_PG_QULT_CD ='PD009701' OR SC.DP_PG_QULT_CD ='PD009702' THEN 'Y' ELSE 'N' END)
+                                ELSE 'Y' END
+                            ELSE 'Y' END 
+                        AND 'Y' = CASE WHEN PD.TOP_MENU_ID='DP17' OR PD.TOP_MENU_ID='DP18' THEN DV.VOD_FIXISTT_SPRT_YN
+                            WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN 
+                            WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                            ELSE 'Y' END
+                        )
+                    AND RS.PART_PROD_ID = EP.PROD_ID
+                    AND EP.PROD_ID = SC.PROD_ID
+                    AND EP.PROD_ID = ET.PROD_ID
+                    AND ET.TENANT_ID = #{tenantId}
+                    AND ET.PROD_STATUS_CD = 'PD000403'
+                    )
+                ORDER BY FM.EXPO_ORD, PD.LAST_DEPLOY_DT DESC
+            ) IV
+        ) OV
+        WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+        ORDER BY OV.RNUM
+    </select>
+    
+   
+    
+    <!-- 특정 상품에 적용할 자유 이용권 조회(V3 버전)-->
+    <select id="searchFreepassListByChannelV3" parameterType="FreepassSpecificSacReq" resultType="ProductBasicInfo">
+            SELECT /* FreepassMapper.searchFreepassListByChannelV3, 특정 상품에 적용할 자유 이용권 조회, SAC전시 김형식/지티소프트, 2014-09-17 */
+                * 
+            FROM
+            (
+                SELECT 
+                    IV.*
+                , ROWNUM AS RNUM
+                FROM 
+                (
+                    SELECT
+                        COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
+                        , TP.TENANT_ID
+                        , DC.LANG_CD
+                        , PD.PROD_ID
+                        , PD.TOP_MENU_ID
+                        , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+                        , PD.META_CLSF_CD
+                        , PD.PROD_CHRG_YN
+                        , PD.SELLER_MBR_NO
+                        , PD.SVC_GRP_CD
+                        , PD.SVC_TYPE_CD
+                        , PD.PROD_GRD_CD
+                        , PD.CID
+                        , PD.MALL_CD
+                        , PD.FEE_CASE_CD
+                        , PD.FEE_UNIT_CD
+                        , PD.USE_PERIOD_UNIT_CD
+                        , PD.USE_PERIOD
+                        , PD.DRM_YN
+                        , PD.DRM_SET_CD
+                        , PD.DRM_SET_VALUE
+                        , PD.CONTENTS_TYPE_CD
+                        , TP.EXPO_ORD
+                        , TP.PROD_STATUS_CD
+                    FROM
+                        TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
+                        TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
+                        ,(SELECT DISTINCT A.PROD_ID 
+                            FROM TB_DP_FIXRATE_PROD_MAPG A
+                                 ,TB_DP_PROD_RSHP B
+                                 ,TB_DP_PROD C
+                           WHERE A.PART_PROD_ID = B.PROD_ID
+                             AND B.PART_PROD_ID = C.PROD_ID
+                             AND B.PROD_RSHP_CD =#{prodRshpCd}
+                             AND (B.PROD_ID =#{productId} OR B.PART_PROD_ID=#{productId})
+                             <if test="arrayProdGradeCd != null">
+                             AND C.PROD_GRD_CD  IN
+                                          <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                            #{prodGradeCd}
+                                          </foreach>                        
+                             </if>                                
+                         )PM                        
+                    WHERE PD.PROD_ID = CM.PROD_ID
+                    AND PD.PROD_ID = DC.PROD_ID
+                    AND PD.PROD_ID = TP.PROD_ID
+                    AND PD.PROD_ID = PR.PROD_ID
+                    AND PD.PROD_ID = PM.PROD_ID
+                    AND DC.LANG_CD = #{langCd}
+                    AND TP.TENANT_ID = #{tenantId}
+                    AND TP.TENANT_ID = PR.TENANT_ID
+                    AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+                    AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+                     AND EXISTS (
+                        SELECT 'X' 
+                        FROM TB_CM_DEVICE DV
+                        WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+                        AND   DV.USE_YN = 'Y'
+                        AND   'Y' = CASE 
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
+                                CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
+                                    WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                                ELSE 'Y' END
+                            ELSE 'Y' END
+                        )
+            AND TP.PROD_STATUS_CD IN ('PD013202','PD013203')   /* PD013202  : 판매중 , PD013203 : 판매중지*/
+            AND TP.EXPO_YN = 'Y'
+            <if test='kind != null and kind != ""'>
+            AND CM.CMPX_PROD_CLSF_CD IN 
+                <foreach collection="arrKind" item="kind" separator="," open="(" close=")">
+                #{kind}
+                </foreach>
+            </if>
+                ORDER BY TP.EXPO_ORD, PD.REG_DT DESC
+              ) IV
+            ) OV
+            WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+            ORDER BY OV.RNUM
+    </select>    
+    
+    <!-- 정액제 시리즈 리스트 조회 (V2 버전)-->
+    <select id="selectFreepassSeriesV2" parameterType="FreepassSeriesSacReq" resultType="ProductBasicInfo">
+            SELECT /* FreepassMapper.selectFreepassSeriesV2, 정액제 시리즈 리스트 조회, SAC전시 서영배/지티소프트, 2014-02-12 */
+                * 
+            FROM
+            (
+                SELECT 
+                    IV.*
+                , ROWNUM AS RNUM
+                FROM 
+                (
+                    SELECT
+                        COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
+                        , TP.TENANT_ID
+                        , DC.LANG_CD
+                        , PD.PROD_ID
+                        , PD.TOP_MENU_ID
+                        , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+                        , PD.META_CLSF_CD
+                        , PD.PROD_CHRG_YN
+                        , PD.SELLER_MBR_NO
+                        , PD.SVC_GRP_CD
+                        , PD.SVC_TYPE_CD
+                        , PD.PROD_GRD_CD
+                        , PD.CID
+                        , PD.MALL_CD
+                        , PD.FEE_CASE_CD
+                        , PD.FEE_UNIT_CD
+                        , PD.USE_PERIOD_UNIT_CD
+                        , PD.USE_PERIOD
+                        , PD.DRM_YN
+                        , PD.DRM_SET_CD
+                        , PD.DRM_SET_VALUE
+                        , PD.CONTENTS_TYPE_CD
+                  , TP.EXPO_ORD
+                  , MP.PART_PROD_ID
+                    FROM
+                        TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
+                        TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR, TB_DP_FIXRATE_PROD_MAPG MP, 
+                        TB_DP_PROD CP, TB_DP_TENANT_PROD CT, TB_DP_MENU_CATEGORY_PROD_MAPG TM
+                    WHERE PD.PROD_ID = CM.PROD_ID
+                    AND PD.PROD_ID = DC.PROD_ID
+                    AND PD.PROD_ID = TP.PROD_ID
+                    AND PD.PROD_ID = PR.PROD_ID
+                    AND PD.PROD_ID = MP.PROD_ID
+                    AND MP.PART_PROD_ID = CP.PROD_ID
+                    AND CP.PROD_ID = CT.PROD_ID
+                    AND DC.LANG_CD = #{langCd}
+                    AND TP.TENANT_ID = #{tenantId}
+                    AND TP.TENANT_ID = PR.TENANT_ID
+                    AND TP.TENANT_ID = CT.TENANT_ID
+                    AND CP.PROD_ID = TM.PROD_ID
+                    AND TM.USE_YN = 'Y'
+                    AND TM.BASE_YN = 'Y'
+                    AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+                    AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
+                    <if test="arrayProdGradeCd != null">
+                    AND CP.PROD_GRD_CD  IN
+                                 <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                   #{prodGradeCd}
+                                 </foreach>                        
+                    </if>                       
+                    AND EXISTS (
+                        SELECT 'X' 
+                        FROM TB_CM_DEVICE DV
+                        WHERE DV.DEVICE_MODEL_CD = #{deviceModelCd}
+                        AND   DV.USE_YN = 'Y'
+                        AND   'Y' = CASE 
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN DV.VOD_FIXISTT_SPRT_YN
+                            WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
+                                CASE WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
+                                    WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                                ELSE 'Y' END
+                            ELSE 'Y' END
+                      )
+                <if test='prodStatusCd != null and prodStatusCd != ""'>
+            AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
+          </if>
+          <if test='chnlStatusCd != null and chnlStatusCd != ""'>
+          AND CT.PROD_STATUS_CD = #{chnlStatusCd}    /* PD000403 : 판매중 */
+          </if>
+                AND TP.EXPO_YN = 'Y'
+          AND CT.EXPO_YN = 'Y'
+            AND CM.CMPX_PROD_CLSF_CD = #{kind}
+            <if test='menuId != null and menuId != ""'>
+                    AND TM.MENU_ID = #{menuId}  /* DP13XXX:ebook/DP14XXX:코믹/DP17XXX:영화/DP18XXX:TV/방송 */
+          </if>
+                ORDER BY TP.EXPO_ORD, PD.LAST_DEPLOY_DT DESC
+              ) IV
+            ) OV
+            WHERE OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+            ORDER BY OV.RNUM
     </select>    
 
  </mapper>

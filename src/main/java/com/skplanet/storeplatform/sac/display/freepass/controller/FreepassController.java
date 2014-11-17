@@ -132,7 +132,7 @@ public class FreepassController {
 
 	/**
 	 * <pre>
-	 * 특정 상품에 적용할 자유 이용권 조회? POST.
+	 * 특정 상품에 적용할 자유 이용권 조회? GET.
 	 * </pre>
 	 * 
 	 * @param req
@@ -152,5 +152,97 @@ public class FreepassController {
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.freepassService.searchFreepassListByChannelV2(req, header);
+	}
+
+	/**
+	 * <pre>
+	 * [I03000142] 2.4.7.6. 자유 이용권 목록 조회 (V2 버전).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return CategoryAppRes
+	 */
+	@RequestMapping(value = "/product/list/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public FreepassListRes searchFreepassListV2(@Validated FreepassListReq req, SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchFreepassListV2 Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.freepassService.searchFreepassListV2(req, header);
+	}
+
+	/**
+	 * <pre>
+	 * [I03000143] 2.4.7.7. 자유 이용권 상품 목록 조회 (V2)버전.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return CategoryAppRes
+	 */
+	@RequestMapping(value = "/detail/list/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public FreepassDetailRes searchFreepassDetailV2(@Validated @RequestBody FreepassDetailReq req,
+			SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchFreepassDetailV2 Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.freepassService.searchFreepassDetailV2(req, header);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * [I03000144] 2.4.7.8. 자유 이용권 목록 조회 (V2버전).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return CategoryAppRes
+	 */
+	@RequestMapping(value = "/series/list/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public SeriespassListRes searchSeriespassListV2(FreepassSeriesReq req, SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchSeriespassListV2 Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.freepassService.searchSeriesPassListV2(req, header);
+	}
+
+	/**
+	 * <pre>
+	 * [I03000145] 2.4.7.9. 특정 상품에 적용할 자유 이용권 조회? GET (V3버전).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return CategoryAppRes
+	 */
+
+	@RequestMapping(value = "/specific/list/v3", method = RequestMethod.POST)
+	@ResponseBody
+	public FreepassListRes searchFreepassListByChannelV3(@RequestBody @Validated FreepassSpecificReq req,
+			SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchFreepassListByChannelV3 Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.freepassService.searchFreepassListByChannelV3(req, header);
 	}
 }

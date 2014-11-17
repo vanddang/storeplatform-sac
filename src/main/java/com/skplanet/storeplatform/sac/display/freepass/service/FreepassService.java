@@ -9,12 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.display.freepass.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.*;
+import java.util.List;
+
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-
-import java.util.List;
 
 /**
  * Freepass Service 인터페이스(CoreStoreBusiness)
@@ -104,4 +110,56 @@ public interface FreepassService {
 	 * @return List<PaymentInfo>
 	 */
 	public List<PaymentInfo> getFreePassforPayment(PaymentInfoSacReq req);
+
+	/**
+	 * <pre>
+	 * 자융이용권 목록 조회 (V2 버전).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            FreepassListReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @return FreepassListRes FreepassListRes
+	 */
+	FreepassListRes searchFreepassListV2(FreepassListReq req, SacRequestHeader header);
+
+	/**
+	 * <pre>
+	 * 자융이용권 상품 목록 조회 (V2 버전).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            FreepassListReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @return FreepassListRes
+	 */
+	FreepassDetailRes searchFreepassDetailV2(FreepassDetailReq req, SacRequestHeader header);
+
+	/**
+	 * <pre>
+	 * 자융이용권 상품 리스트 조회 (V2버전).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            FreepassListReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @return FreepassListRes
+	 */
+	SeriespassListRes searchSeriesPassListV2(FreepassSeriesReq req, SacRequestHeader header);
+
+	/**
+	 * <pre>
+	 * 특정 상품에 적용할 자유 이용권 조회 (V3 버전).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            FreepassListReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @return FreepassListRes
+	 */
+	FreepassListRes searchFreepassListByChannelV3(FreepassSpecificReq req, SacRequestHeader header);
 }

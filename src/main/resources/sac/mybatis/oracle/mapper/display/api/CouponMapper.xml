@@ -644,10 +644,45 @@
                                                AND ROWNUM =1     
                                           )                                   
                                   ELSE #{prodId}
-                                  END         
+                                  END
           AND A.EXPO_YN = 'Y' 
+          AND A.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
     </select>
+    
+    <!--팅요금제 상품 목록 조회-->
+    <select id="GET_TING_PRODUCT_INFO" resultType="int" parameterType="String">
+       /* CouponMapper.xml, GET_TING_PRODUCT_INFO, 팅요금제 상품 목록 조회, 김형식/SK플래닛   , 2014-01-08 */
+        SELECT 
+               COUNT(A.PROD_ID) as CNT
+        FROM   TB_DP_SPRC_PROD A
+              ,TB_DP_SHPG_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND B.SRC_CONTENT_ID =  
+                                 CASE WHEN PROD_CASE_CD = 'DP006303'
+                                  THEN
+                                        (  SELECT 
+                                                SRC_CONTENT_ID 
+                                             FROM TB_DP_SHPG_PROD SP
+                                                 ,TB_DP_SPRC_PROD SP1
+                                            WHERE 1=1
+                                              AND SP.PROD_ID = SP1.PROD_ID
+                                              AND SP.PROD_ID IN (
+                                                    SELECT 
+                                                           B.PART_PROD_ID 
+                                                      FROM TB_DP_SHPG_PROD A 
+                                                          ,TB_DP_PROD_RSHP B
+                                                     WHERE A.PROD_ID = B.PROD_ID 
+                                                      AND A.SRC_CONTENT_ID =#{prodId}       
+                                                   ) 
+                                               AND ROWNUM =1     
+                                          )                                   
+                                  ELSE #{prodId}
+                                  END
+          AND A.EXPO_YN = 'Y' 
+          AND A.SPRC_TYPE_CD IN ('DP007503','DP007504') --DP007503 : 팅요금제 일반 특가 , DP007504 팅요금제 배송 특가
+          AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
+    </select>    
     
     <!--특가 상품 상세 조회-->
     <select id="GET_COUPON_INFO"  resultType="int" parameterType="String">
@@ -675,7 +710,7 @@
                                                AND ROWNUM =1     
                                           )                                   
                                   ELSE #{prodId}
-                                  END         
+                                  END  
     </select>
     
     <!--특가 상품 상세 조회-->
@@ -684,6 +719,9 @@
         SELECT 
                A.PROD_ID as couponCode
               ,B.PROD_NM  as eventName
+              ,(CASE WHEN A.SPRC_TYPE_CD='DP007501' OR A.SPRC_TYPE_CD='DP007502' THEN 'SL' 
+                     WHEN A.SPRC_TYPE_CD='DP007503' OR A.SPRC_TYPE_CD='DP007504' THEN 'TG' 
+                END) AS eventType             
               ,TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  as eventStartDate
               ,TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')    as eventEndDate
               ,A.SPRC_DC_RATE as eventDcRate 
