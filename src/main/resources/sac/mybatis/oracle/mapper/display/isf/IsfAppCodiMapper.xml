@@ -204,8 +204,7 @@
                               WHEN RCD = '903001' THEN MENU_NM || ' 매니아들이 선택한 오늘의 ' || MENU_NM
                               WHEN RCD = '904001' THEN R_PROD_NM || '를 좋아하셨다면, 이 ' || MENU_NM || '도 좋아하실거에요.'
                               WHEN RCD = '904002' THEN '나의 ' || R_MENU_NM || ' MATE들이 추천하는 ' || MENU_NM
-                              WHEN RCD = '909001' THEN '나의 ' || R_MENU_NM || ' MATE들이 추천하는 ' || MENU_NM
-                              WHEN (R_PROD_NM = '' OR R_MENU_NM = '') THEN '요즘 HOT! Power User의 BEST 상품을 소개합니다.'
+                              WHEN RCD = '909001' THEN 'Everyone''s Pick! 모두의 주목을 받은 BEST ' || MENU_NM
                               ELSE '요즘 HOT! Power User의 BEST 상품을 소개합니다.' END
                     END AS RECM_REASON
           FROM (
