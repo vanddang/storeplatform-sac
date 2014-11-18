@@ -2901,7 +2901,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingRes
+	 * @return ShoppingCategoryBrandRes
 	 */
 	@Override
 	public ShoppingCategoryBrandRes getBrandshopMainListV2(SacRequestHeader header, ShoppingReq req) {
@@ -3000,7 +3000,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingRes
+	 * @return ShoppingCategoryBrandRes
 	 */
 	@Override
 	public ShoppingCategoryBrandRes getBrandshopCategoryList(SacRequestHeader header, ShoppingReq req) {
@@ -3043,9 +3043,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (resultList.size() > 0) {
 				groupLayout = new GroupLayout();
 				productList = new ArrayList<Product>();
+
 				groupLayout.setMenuId(resultList.get(0).getMenuId());
 				groupLayout.setMenuName(resultList.get(0).getMenuNm());
 				groupLayout.setCount(resultList.get(0).getTotalCount());
+				MetaInfo categoryBrandImg = new MetaInfo();
+				categoryBrandImg.setFilePath(resultList.get(0).getDlmImagePath());
+				List<Source> categoryBrandsourceList = this.commonGenerator.generateSourceList(categoryBrandImg);
+				groupLayout.setSourceList(categoryBrandsourceList);
+
 				MetaInfo shopping = null;
 				shopping = new MetaInfo();
 				List<Identifier> identifierList = null;
@@ -3092,6 +3098,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 					groupLayout.setMenuId(resultList.get(0).getMenuId());
 					groupLayout.setMenuName(resultList.get(0).getMenuNm());
 					groupLayout.setCount(resultList.get(0).getTotalCount());
+					MetaInfo categoryBrandImg = new MetaInfo();
+					categoryBrandImg.setFilePath(resultList.get(0).getDlmImagePath());
+					List<Source> categoryBrandsourceList = this.commonGenerator.generateSourceList(categoryBrandImg);
+					groupLayout.setSourceList(categoryBrandsourceList);
+
 					MetaInfo shopping = null;
 					shopping = new MetaInfo();
 					List<Identifier> identifierList = null;
@@ -3147,7 +3158,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingRes
+	 * @return ShoppingBrandRes
 	 */
 	@Override
 	public ShoppingBrandRes getBrandshopProductListV2(SacRequestHeader header, ShoppingBrandReq req) {

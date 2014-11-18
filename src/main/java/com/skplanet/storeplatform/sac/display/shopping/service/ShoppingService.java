@@ -233,7 +233,7 @@ public interface ShoppingService {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingBrandRes
+	 * @return ShoppingCategoryBrandRes
 	 */
 	public ShoppingCategoryBrandRes getBrandshopMainListV2(SacRequestHeader header, ShoppingReq req);
 
@@ -244,7 +244,7 @@ public interface ShoppingService {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingBrandRes
+	 * @return ShoppingCategoryBrandRes
 	 */
 	public ShoppingCategoryBrandRes getBrandshopCategoryList(SacRequestHeader header, ShoppingReq req);
 	
@@ -255,7 +255,7 @@ public interface ShoppingService {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingRes
+	 * @return ShoppingBrandRes
 	 */
 	public ShoppingBrandRes getBrandshopProductListV2(SacRequestHeader header, ShoppingBrandReq req);
 

@@ -2690,6 +2690,7 @@
     </select>     
     
  
+    
     <!-- 브랜드샵 – 카테고리별 브랜드샵 조회-->
     <select id="getBrandshopCategoryList" parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getBrandshopCategoryList,브랜드샵 – 카테고리별 브랜드샵 조회, 김형식/SK플래닛  , 2014-01-30 */
@@ -2714,6 +2715,15 @@
                          ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
                             WHERE PROD_ID = BRAND_ID AND IMG_CD =#{imageCd}
                           ) AS FILE_PATH
+                         ,(SELECT IMG_PATH
+						     FROM TB_DP_MENU_LIST_CATEGORY 
+						    WHERE KEY_TYPE='DP01230001'
+							  AND TENANT_ID ='S01'
+							  AND MENU_KEY = MENU_ID
+							  AND EXPO_YN = 'Y'
+							  AND ROWNUM =1   
+                          ) AS dlmImagePath                          
+                          
                  FROM (
                     SELECT *
                     FROM (

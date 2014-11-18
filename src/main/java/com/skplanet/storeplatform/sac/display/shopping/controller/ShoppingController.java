@@ -407,7 +407,7 @@ public class ShoppingController {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingBrandRes
+	 * @return ShoppingCategoryBrandRes
 	 */
 	@RequestMapping(value = "/brandshop/mainList/v2", method = RequestMethod.GET)
 	@ResponseBody
@@ -428,7 +428,7 @@ public class ShoppingController {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingBrandRes
+	 * @return ShoppingCategoryBrandRes
 	 */
 	@RequestMapping(value = "/brandshop/categoryList/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -449,7 +449,7 @@ public class ShoppingController {
 	 *            header
 	 * @param req
 	 *            req
-	 * @return ShoppingRes
+	 * @return ShoppingBrandRes
 	 */
 	@RequestMapping(value = "/brandshop/productList/v2", method = RequestMethod.GET)
 	@ResponseBody
