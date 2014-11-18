@@ -36,6 +36,11 @@ public class AgreementInfo extends CommonInfo {
 	private String mandAgreeYn;
 
 	/**
+	 * 약관동의 URL
+	 */
+	private String extraAgreementURL;
+
+	/**
 	 * @return String : extraAgreementId
 	 */
 	public String getExtraAgreementId() {
@@ -93,6 +98,21 @@ public class AgreementInfo extends CommonInfo {
 	 */
 	public void setMandAgreeYn(String mandAgreeYn) {
 		this.mandAgreeYn = mandAgreeYn;
+	}
+
+	/**
+	 * @return extraAgreementURL
+	 */
+	public String getExtraAgreementURL() {
+		return this.extraAgreementURL;
+	}
+
+	/**
+	 * @param extraAgreementURL
+	 *            String
+	 */
+	public void setExtraAgreementURL(String extraAgreementURL) {
+		this.extraAgreementURL = extraAgreementURL;
 	}
 
 }
