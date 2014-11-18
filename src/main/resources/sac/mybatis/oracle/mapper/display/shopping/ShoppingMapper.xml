@@ -967,54 +967,7 @@
         </if>
     </select>     
   
-    <!-- 브랜드샵 - 상세 조회-->
-    <select id="getBrandshopDetail" parameterType="ShoppingReq" resultType="MetaInfo">
-       /* ShoppingMapper.xml.getBrandshopDetail,브랜드샵 - 상세 조회, 김형식/SK플래닛  , 2014-11-10 */
-       SELECT * FROM (
-           SELECT 
-                     KK.*
-                    ,COUNT(1) OVER() AS TOTALCOUNT
-                    ,ROWNUM AS RNUM         
-             FROM(
-                SELECT 
-                           BRAND_ID 
-                         , BRAND_NM AS catalogNm
-                         , MENU_ID 
-                         , MENU_NM 
-                         , TOP_MENU_ID 
-                         ,(SELECT MENU_NM
-                              FROM TB_DP_MENU_CATEGORY_DESC
-                             WHERE MENU_ID = TOP_MENU_ID
-                               AND LANG_CD = #{langCd}          /* ko : 한국어 */
-                               AND ROWNUM = 1
-                           ) AS TOP_MENU_NM                      
-                         ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
-                            WHERE PROD_ID = BRAND_ID AND IMG_CD =#{imageCd}
-                          ) AS FILE_PATH
-                 FROM (
-                    SELECT *
-                    FROM (
-                        SELECT  
-                              SB.BRAND_ID
-                             ,SB.BRAND_NM
-                             ,MC.MENU_ID
-                             ,MCD.MENU_NM
-                             ,MC.TOP_MENU_ID
-                        FROM  TB_DP_SHPG_BRAND SB
-                             ,TB_DP_MENU_CATEGORY MC
-                             ,TB_DP_MENU_CATEGORY_DESC MCD
-                        WHERE SB.MENU_ID = MC.MENU_ID
-                          AND SB.MENU_ID = MCD.MENU_ID
-                          AND SB.BRAND_ID = #{brandId}
-                          AND MC.USE_YN ='Y'
-                          AND MCD.LANG_CD =#{langCd}
-                     )
-                    ORDER BY
-                    MENU_ID , BRAND_NM
-                )
-            )KK
-        )
-    </select>   
+     
     <!-- 브랜드샵 - 상세 조회-->
     <select id="getBrandshopDetail" parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getBrandshopDetail,브랜드샵 - 상세 조회, 김형식/SK플래닛  , 2014-11-10 */
@@ -2718,7 +2671,7 @@
                          ,(SELECT IMG_PATH
 						     FROM TB_DP_MENU_LIST_CATEGORY 
 						    WHERE KEY_TYPE='DP01230001'
-							  AND TENANT_ID ='S01'
+							  AND TENANT_ID =#{tenantId}
 							  AND MENU_KEY = MENU_ID
 							  AND EXPO_YN = 'Y'
 							  AND ROWNUM =1   
