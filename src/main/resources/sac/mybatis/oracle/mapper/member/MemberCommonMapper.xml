@@ -170,4 +170,24 @@
           AND a.dp_yn='Y'
     </select>
     
+    <select id="getCommonCode" parameterType="String" resultType="CommonCode">
+        SELECT   /* MemberCommonMapper.getCommonCode, 공통코드 정보 조회, 김경복/부르칸, 2014-10-29 */
+              CD_ID AS cdId,
+               LANG_CD AS langCd,
+               GRP_CD_ID AS grpCdId,
+               DTL_CD AS dtlCd,
+               CD_NM AS cdNm,
+               ADD_FIELD_01 AS addField01,
+               ADD_FIELD_02 AS addField02,
+               CD_DESC AS cdDesc,
+               USE_YN AS useYn,
+               REG_ID AS regId,
+               REG_DT AS regDt,
+               UPD_ID AS updId,
+               UPD_DT AS updDt
+          FROM TB_CM_CD
+         WHERE USE_YN = 'Y'
+           AND GRP_CD_ID = #{grpCdId}
+    </select>
+    
 </mapper>

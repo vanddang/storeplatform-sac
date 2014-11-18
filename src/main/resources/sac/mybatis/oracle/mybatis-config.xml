@@ -60,6 +60,7 @@
         <!-- 공통 관련 조회 -->
         <typeAlias alias="DeviceDTO"      type="com.skplanet.storeplatform.sac.member.common.vo.Device" />
         <typeAlias alias="ClauseDTO"      type="com.skplanet.storeplatform.sac.member.common.vo.Clause" />
+        <typeAlias alias="CommonCode"         type="com.skplanet.storeplatform.sac.member.common.vo.CommonCode" />
         
         <!-- 회원-판매자 탈퇴사유목록 조회 -->
         <typeAlias alias="SecedeReson"      type="com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson" />
