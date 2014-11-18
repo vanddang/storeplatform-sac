@@ -1075,7 +1075,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 					productTenantPriceList.add(productTenantPriceVO);
 
 					noti.setProductTenantPriceList(productTenantPriceList);
-					this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // async
+					// this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // async
 				}
 
 				this.log.info("■■■■■ MQ 연동 End ■■■■■");
