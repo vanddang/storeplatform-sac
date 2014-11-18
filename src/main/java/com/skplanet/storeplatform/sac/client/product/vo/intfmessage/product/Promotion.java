@@ -22,7 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 
 /**
  * Interface Message Promotion Value Object.
- * 
+ *
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)

@@ -29,6 +29,7 @@ public class Rights extends CommonInfo implements Serializable {
 	private String allow; // 이용권한 (freepass : 자유이용권 지원, domestic : 국내만 지원, feedback : 사용후기 가능)
 	private String deny; // 이용금지 권한 (multiAccess 여러 개의 단말에서 이용 금지, access : 이 단말에서 사용 금지)
 	private String grade; // 이용등급 (0 : 전체이용가, 1 : 12세 이용가, 2 : 15세 이용가, 4 : 청소년사용불가)
+    private Integer ageAllowedFrom; // 이용 가능 연령
 	private Preview preview; // 미리보기 정보를 정의
 	private Play play; // 스트리밍을 지원할 경우 정의한다.
 	private Store store; // 다운로드를 지원할 경우 정의한다.
@@ -83,7 +84,15 @@ public class Rights extends CommonInfo implements Serializable {
 		this.grade = grade;
 	}
 
-	/**
+    public Integer getAgeAllowedFrom() {
+        return ageAllowedFrom;
+    }
+
+    public void setAgeAllowedFrom(Integer ageAllowedFrom) {
+        this.ageAllowedFrom = ageAllowedFrom;
+    }
+
+    /**
 	 * @return Preview
 	 */
 	public Preview getPreview() {

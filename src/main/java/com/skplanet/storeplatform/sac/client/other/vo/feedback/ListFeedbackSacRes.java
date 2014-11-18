@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * ListFeedbackRes Value Object
  * 
- * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스.
+ * Updated on : 2014. 10. 28. Updated by : 백승현, SP Tek.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class ListFeedbackSacRes extends CommonInfo {
@@ -52,6 +52,11 @@ public class ListFeedbackSacRes extends CommonInfo {
 	 * 사용후기 리스트.
 	 */
 	private List<Feedback> notiList;
+
+	/**
+	 * 회원별 프로파일 이미지
+	 */
+	private String profileImgUrl;
 
 	/**
 	 * @return String
@@ -141,6 +146,21 @@ public class ListFeedbackSacRes extends CommonInfo {
 	 */
 	public void setNotiList(List<Feedback> notiList) {
 		this.notiList = notiList;
+	}
+
+	/**
+	 * @return the profileImgUrl
+	 */
+	public String getProfileImgUrl() {
+		return this.profileImgUrl;
+	}
+
+	/**
+	 * @param profileImgUrl
+	 *            the profileImgUrl to set
+	 */
+	public void setProfileImgUrl(String profileImgUrl) {
+		this.profileImgUrl = profileImgUrl;
 	}
 
 }

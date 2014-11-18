@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * ListFeedbackReq Value Object
  * 
- * Updated on : 2014. 1. 23. Updated by : 김현일, 인크로스.
+ * Updated on : 2014. 10. 27. Updated by : 백승현, SP Tek.
  */
 public class ListFeedbackSacReq extends CommonInfo {
 
@@ -63,6 +63,12 @@ public class ListFeedbackSacReq extends CommonInfo {
 	 */
 	@NotNull
 	private Integer count;
+
+	/**
+	 * 최신 버전 보기
+	 */
+	@Pattern(regexp = "^Y|^N")
+	private String updateVer;
 
 	/**
 	 * @return String
@@ -167,6 +173,21 @@ public class ListFeedbackSacReq extends CommonInfo {
 	 */
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getUpdateVer() {
+		return this.updateVer;
+	}
+
+	/**
+	 * @param updateVer
+	 *            updateVer
+	 */
+	public void setUpdateVer(String updateVer) {
+		this.updateVer = updateVer;
 	}
 
 }

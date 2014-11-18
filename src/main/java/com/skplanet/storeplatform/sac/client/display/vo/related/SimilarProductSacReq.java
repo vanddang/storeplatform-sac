@@ -47,6 +47,10 @@ public class SimilarProductSacReq extends CommonInfo implements Serializable {
 	private String musicSprtYn; // 음악 상품 지원여부
 	private String videoDrmSprtYn; // VOD 상품 DRM 지원 여부
 	private String sdVideoSprtYn; // VOD 상품 SD 지원 여부
+	private String prodGradeCd; // 상품 이용 등급 코드 "PD004401" : 전체이용가, "PD004402" : 12세이용가, "PD004403" : 15세이용가, "PD004404"
+								// : 청소년이용불가
+
+	private String[] prodGradeCdArr;
 
 	/**
 	 * 
@@ -472,6 +476,51 @@ public class SimilarProductSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setSdVideoSprtYn(String sdVideoSprtYn) {
 		this.sdVideoSprtYn = sdVideoSprtYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 이용 등급 코드
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getProdGradeCd() {
+		return this.prodGradeCd;
+	}
+
+	/**
+	 * @param prodGradeCd
+	 *            String
+	 */
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품등급코드 배열.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String[] getProdGradeCdArr() {
+		return this.prodGradeCdArr == null ? null : this.prodGradeCdArr.clone();
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품등급코드 배열.
+	 * </pre>
+	 * 
+	 * @param prodGradeCdArr
+	 *            prodGradeCdArr
+	 */
+	public void setProdGradeCdArr(String[] prodGradeCdArr) {
+		this.prodGradeCdArr = prodGradeCdArr == null ? null : prodGradeCdArr.clone();
 	}
 
 }

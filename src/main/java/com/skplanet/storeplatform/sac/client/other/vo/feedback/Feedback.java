@@ -113,6 +113,11 @@ public class Feedback extends CommonInfo {
 	private String compNm;
 
 	/**
+	 * 회원 이미지 URL.
+	 */
+	private String profileImgUrl;
+
+	/**
 	 * @return String
 	 */
 	public String getNotiSeq() {
@@ -427,4 +432,18 @@ public class Feedback extends CommonInfo {
 		this.compNm = compNm;
 	}
 
+	/**
+	 * @return the profileImgUrl
+	 */
+	public String getProfileImgUrl() {
+		return this.profileImgUrl;
+	}
+
+	/**
+	 * @param profileImgUrl
+	 *            the profileImgUrl to set
+	 */
+	public void setProfileImgUrl(String profileImgUrl) {
+		this.profileImgUrl = profileImgUrl;
+	}
 }

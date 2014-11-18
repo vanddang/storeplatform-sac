@@ -40,6 +40,7 @@ public class Source extends CommonInfo implements Serializable {
     private Integer width;  // 폭
     private Integer height; // 높이
     private String orientation; // 가로 세로 형태
+    private String ratio; // 이미지 비율
 
 	/**
 	 * @return the mediaType
@@ -154,4 +155,14 @@ public class Source extends CommonInfo implements Serializable {
     public void setOrientation(String orientation) {
         this.orientation = orientation;
     }
+
+	public String getRatio() {
+		return ratio;
+	}
+
+	public void setRatio(String ratio) {
+		this.ratio = ratio;
+	}
+
+
 }

@@ -33,7 +33,11 @@ public class Vod extends CommonInfo implements Serializable {
 	private List<VideoInfo> videoInfoList; // 화질별 video 정보 List
 	private VodExplain vodExplain; // vod 정보 (삭제 예정)
 	private Date date; // 날짜 정보
-
+	/**
+	 * 지원 >play >store.
+	 */
+	private List<Support> supportList;
+	
 	/**
 	 * Vod().
 	 */
@@ -186,4 +190,14 @@ public class Vod extends CommonInfo implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+	public List<Support> getSupportList() {
+		return supportList;
+	}
+
+	public void setSupportList(List<Support> supportList) {
+		this.supportList = supportList;
+	}
+	
+	
 }

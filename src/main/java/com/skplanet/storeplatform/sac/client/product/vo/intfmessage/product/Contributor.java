@@ -80,6 +80,11 @@ public class Contributor extends CommonInfo implements Serializable {
 	 * 앨범명 .
 	 */
 	private String album;
+	
+	/**
+	 * 앨범타입 .
+	 */
+	private String albumType;
 
 	/**
 	 * 국가명.
@@ -289,6 +294,14 @@ public class Contributor extends CommonInfo implements Serializable {
 	 */
 	public void setAlbum(String album) {
 		this.album = album;
+	}
+
+	public String getAlbumType() {
+		return albumType;
+	}
+
+	public void setAlbumType(String albumType) {
+		this.albumType = albumType;
 	}
 
 	/**
