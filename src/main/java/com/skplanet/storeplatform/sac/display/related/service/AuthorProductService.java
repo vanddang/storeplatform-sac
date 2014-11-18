@@ -21,8 +21,9 @@ public interface AuthorProductService {
 	 *            AuthorProductSacReq
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @return AuthorProductSacRes
+	 * @param version
+     * @return AuthorProductSacRes
 	 */
-	public AuthorProductSacRes searchAuthorProductList(AuthorProductSacReq requestVO, SacRequestHeader requestHeader);
+	public AuthorProductSacRes searchAuthorProductList(AuthorProductSacReq requestVO, SacRequestHeader requestHeader, int version);
 
 }

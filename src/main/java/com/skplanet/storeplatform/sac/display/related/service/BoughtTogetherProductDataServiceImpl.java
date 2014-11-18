@@ -9,19 +9,22 @@
  */
 package com.skplanet.storeplatform.sac.display.related.service;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
-import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
 
 /**
  * BoughtTogetherProductDataService 클래스
+ * 
  * <pre>
  * Created on 2014. 02. 18. by 서대영, SK 플래닛
+ * Updated on 2014. 10. 24. by 백승현, SP Tek
  * </pre>
  */
 @Service
@@ -37,7 +40,15 @@ public class BoughtTogetherProductDataServiceImpl implements BoughtTogetherProdu
 
 	@Override
 	public List<ProductBasicInfo> selectList(BoughtTogetherProduct product) {
-		List<ProductBasicInfo> list = this.commonDAO.queryForList("BoughtTogetherProduct.selectBoughtTogetherProductList", product, ProductBasicInfo.class);
+		List<ProductBasicInfo> list = this.commonDAO.queryForList(
+				"BoughtTogetherProduct.selectBoughtTogetherProductList", product, ProductBasicInfo.class);
+		return list;
+	}
+
+	@Override
+	public List<ProductBasicInfo> selectListV3(BoughtTogetherProduct product) {
+		List<ProductBasicInfo> list = this.commonDAO.queryForList(
+				"BoughtTogetherProduct.selectBoughtTogetherProductListV3", product, ProductBasicInfo.class);
 		return list;
 	}
 

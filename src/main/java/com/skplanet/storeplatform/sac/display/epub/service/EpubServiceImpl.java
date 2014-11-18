@@ -9,6 +9,19 @@
  */
 package com.skplanet.storeplatform.sac.display.epub.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -19,8 +32,24 @@ import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preference;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -31,19 +60,6 @@ import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail;
 import com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * EPUB Service
@@ -137,6 +153,9 @@ public class EpubServiceImpl implements EpubService {
 
 			this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
 
+			//좋아요 여부
+			product.setLikeYn(epubDetail.getLikeYn());
+			
 			// 단편인 경우 시리즈 정보를 제공
 			if(StringUtils.equals(sMetaClsCd, DisplayConstants.DP_BOOK_META_CLASS_CD)) {
                 param.put("orderedBy", DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
@@ -233,13 +252,7 @@ public class EpubServiceImpl implements EpubService {
 				for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
 					paymentProdIdList.add(existenceRes.getProdId());
 				}
-
-				//#24889 VOD/이북 전권 소장/대여 후 미구매로 정렬 시 대여/소장이 노출되는 문제 수정
-				//episode id 로 filter 하면 전권대여/소장 구매 시 대여소장 상품 모두 Filtering 되지 않기 때문에 content id 로 filter.
-				List<String> paymentContentIdList = getContentIdListByEpisodeIdList(paymentProdIdList);
-				
 				param.put("paymentProdIdList", paymentProdIdList);
-				param.put("paymentContentIdList", paymentContentIdList);
 			}
 
             //코믹 에피소드 이미지 코드
@@ -260,24 +273,6 @@ public class EpubServiceImpl implements EpubService {
 
 		return res;
 	}
-	
-	/**
-	 * Episode id List 로 Content Id 조회
-	 * @param paymentProdIdList
-	 * @return
-	 */
-	private List<String> getContentIdListByEpisodeIdList(List<String> paymentProdIdList) {
-        List<String> contentIdList = null;
-        if(paymentProdIdList.size() == 0) {
-            contentIdList = new ArrayList<String>();
-        } else {
-			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("prodIdList", paymentProdIdList);
-			contentIdList = this.commonDAO.queryForList("EpubDetail.selectContentIdListByEpisodeIdList", param, String.class);
-        }
-		return contentIdList;
-	}
-
 
 	/**
 	 * Mapping Screenshot
@@ -930,13 +925,6 @@ public class EpubServiceImpl implements EpubService {
             date.setType(DisplayConstants.DP_DATE_RELEASE);
             date.setText(mapperVO.getIssueDay());
             dateList.add(date);
-        }
-        
-        if(mapperVO.getLastDeployDt() != null) {
-        	Date date = new Date();
-        	date.setType(DisplayConstants.DP_DATE_SALE_REG);
-        	date.setText(sdf.format(mapperVO.getLastDeployDt()));
-        	dateList.add(date);
         }
 		return dateList;
 	}

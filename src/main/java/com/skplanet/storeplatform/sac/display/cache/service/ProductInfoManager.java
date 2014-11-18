@@ -43,6 +43,8 @@ public interface ProductInfoManager {
     VodMeta getVodMeta(VodMetaParam param);
 
     EbookComicMeta getEbookComicMeta(EbookComicMetaParam param);
+    
+    AlbumMeta getAlbumMeta(AlbumMetaParam param, boolean useCache);
 
     /**
      * 쇼핑상품 조회

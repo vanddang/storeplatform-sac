@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
+import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 import java.util.List;
@@ -91,4 +92,16 @@ public interface MetaInfoService {
 	 * @return MetaInfo
 	 */
 	public MetaInfo getFreepassMetaInfo(Map<String, Object> paramMap);
+	
+	
+	/**
+	 * <pre>
+	 * 앨범 Meta 정보 조회.
+	 * </pre>
+	 * 
+	 * @param paramMap
+	 *            paramMap
+	 * @return AlbumMeta
+	 */
+	public AlbumMeta getAlbumMetaInfo(Map<String, Object> paramMap);
 }

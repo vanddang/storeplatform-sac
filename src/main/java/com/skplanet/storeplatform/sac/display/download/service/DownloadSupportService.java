@@ -39,4 +39,14 @@ public interface DownloadSupportService {
      * @return
      */
     Encryption generateEncryption(MetaInfo metaInfo, String prchProdId);
+
+    /**
+     * Encryption을 생성한다.
+     * (for Vod) Tstore 4.0 FHD 지원 여부 추가
+     * @param metaInfo
+     * @param prchProdId
+     * @param supportFhdVideo
+     * @return
+     */
+    Encryption generateEncryptionForVod(MetaInfo metaInfo, String prchProdId, boolean supportFhdVideo);
 }

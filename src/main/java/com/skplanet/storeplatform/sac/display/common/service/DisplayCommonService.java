@@ -181,4 +181,12 @@ public interface DisplayCommonService {
      */
     GradeInfoSac getUserGrade(String userKey);
 
+    /**
+     * 탑메뉴별 등급코드에 대한 제한 나이 값을 조회한다.
+     * @param topMenuId topMenuId
+     * @param gradeCd 등급코드
+     * @return 나이 값. 요청에 맞는 값이 없는 경우 null 리턴
+     */
+    Integer getAllowedAge(String topMenuId, String gradeCd);
+
 }

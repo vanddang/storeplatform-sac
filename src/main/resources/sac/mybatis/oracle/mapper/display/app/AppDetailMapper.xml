@@ -40,7 +40,10 @@
             PD.SVC_GRP_CD,
             PD.DRM_YN,
             APP.DESC_VIDEO_URL,
-            APP.PART_PARENT_CLSF_CD]]>
+            APP.PART_PARENT_CLSF_CD,
+            PD.TOP_MENU_ID,
+            NVL2(SSML.STATS_KEY, 'Y', 'N') AS LIKE_YN
+            ]]>
         FROM
             TB_DP_PROD PD
             INNER JOIN TB_DP_APP_PROD APP
@@ -59,6 +62,9 @@
                 ON TS.PROD_ID = PD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
             INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
                 ON TPRC.PROD_ID = PD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_SOCIAL_STATS_MBR_LIKE SSML
+                ON SSML.TENANT_ID = TP.TENANT_ID AND SSML.STATS_KEY = PD.PROD_ID
+                   AND SSML.STATS_CLSF = 'DP01210002' AND SSML.USER_KEY = #{userKey, jdbcType=VARCHAR}
         WHERE 1 = 1
               AND PD.PROD_ID = #{channelId}
               AND PDESC.LANG_CD = #{langCd}

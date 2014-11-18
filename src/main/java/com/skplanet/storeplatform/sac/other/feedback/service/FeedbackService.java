@@ -131,6 +131,20 @@ public interface FeedbackService {
 	/**
 	 * 
 	 * <pre>
+	 * [I04000029] 사용후기 전체 조회.
+	 * </pre>
+	 * 
+	 * @param listFeedbackSacReq
+	 *            listFeedbackSacReq
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @return ListFeedbackSacRes
+	 */
+	public ListFeedbackSacRes listV2(ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader);
+
+	/**
+	 * 
+	 * <pre>
 	 * 내 사용후기 조회.
 	 * </pre>
 	 * 
@@ -141,6 +155,21 @@ public interface FeedbackService {
 	 * @return ListMyFeedbackSacRes
 	 */
 	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackSacReq,
+			SacRequestHeader sacRequestHeader);
+
+	/**
+	 * 
+	 * <pre>
+	 * 내 사용후기 조회 V2.
+	 * </pre>
+	 * 
+	 * @param listMyFeedbackSacReq
+	 *            listMyFeedbackSacReq
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @return ListMyFeedbackSacRes
+	 */
+	public ListMyFeedbackSacRes listMyFeedbackV2(ListMyFeedbackSacReq listMyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader);
 
 	/**

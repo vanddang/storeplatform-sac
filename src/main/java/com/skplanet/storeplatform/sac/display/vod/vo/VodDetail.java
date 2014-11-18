@@ -57,8 +57,6 @@ public class VodDetail extends CommonInfo {
 
 	/** 등록일시 */
 	private Date regDt;
-	/** 최종 배포일시 */
-	private Date lastDeployDt;
 
     /** VOD 타이틀명 */
 	private String vodTitlNm;
@@ -261,6 +259,17 @@ public class VodDetail extends CommonInfo {
 	/** HD화질 화면비율. */
 	private String hdDpPicRatio;
 	
+	/** HD화질 (D화질) sub 컨텐츠 Id. */
+	private String hd2SubContsId;
+	/** HD화질 (D화질) 상품버전. */
+	private String hd2ProdVer;
+	/** HD화질 (D화질) 파일용량.  */
+	private String hd2FileSize;
+	/** HD화질 (D화질) 해상도. */
+	private String hd2DpPixel;
+	/** HD화질 (D화질) 화면비율. */
+	private String hd2DpPicRatio;
+	
 	/** FHD화질 sub 컨텐츠 Id. */
 	private String fhdSubContsId;
 	/** FHD화질 상품버전. */
@@ -272,7 +281,9 @@ public class VodDetail extends CommonInfo {
 	/** FHD화질 화면비율. */
 	private String fhdDpPicRatio;
 
-
+	// 좋아요 선택 여부
+	private String likeYn; 
+	
 
     public String getTopMenuId() {
 		return this.topMenuId;
@@ -1363,6 +1374,77 @@ public class VodDetail extends CommonInfo {
 		this.playUsePeriodUnitCdNm = playUsePeriodUnitCdNm;
 	}
 
+	
+	/**
+	 * @return the hd2SubContsId
+	 */
+	public String getHd2SubContsId() {
+		return hd2SubContsId;
+	}
+
+	/**
+	 * @param hd2SubContsId the hd2SubContsId to set
+	 */
+	public void setHd2SubContsId(String hd2SubContsId) {
+		this.hd2SubContsId = hd2SubContsId;
+	}
+
+	/**
+	 * @return the hd2ProdVer
+	 */
+	public String getHd2ProdVer() {
+		return hd2ProdVer;
+	}
+
+	/**
+	 * @param hd2ProdVer the hd2ProdVer to set
+	 */
+	public void setHd2ProdVer(String hd2ProdVer) {
+		this.hd2ProdVer = hd2ProdVer;
+	}
+
+	/**
+	 * @return the hd2FileSize
+	 */
+	public String getHd2FileSize() {
+		return hd2FileSize;
+	}
+
+	/**
+	 * @param hd2FileSize the hd2FileSize to set
+	 */
+	public void setHd2FileSize(String hd2FileSize) {
+		this.hd2FileSize = hd2FileSize;
+	}
+
+	/**
+	 * @return the hd2DpPixel
+	 */
+	public String getHd2DpPixel() {
+		return hd2DpPixel;
+	}
+
+	/**
+	 * @param hd2DpPixel the hd2DpPixel to set
+	 */
+	public void setHd2DpPixel(String hd2DpPixel) {
+		this.hd2DpPixel = hd2DpPixel;
+	}
+
+	/**
+	 * @return the hd2DpPicRatio
+	 */
+	public String getHd2DpPicRatio() {
+		return hd2DpPicRatio;
+	}
+
+	/**
+	 * @param hd2DpPicRatio the hd2DpPicRatio to set
+	 */
+	public void setHd2DpPicRatio(String hd2DpPicRatio) {
+		this.hd2DpPicRatio = hd2DpPicRatio;
+	}
+
 	/**
 	 * @return the fhdSubContsId
 	 */
@@ -1432,20 +1514,15 @@ public class VodDetail extends CommonInfo {
 	public void setFhdDpPicRatio(String fhdDpPicRatio) {
 		this.fhdDpPicRatio = fhdDpPicRatio;
 	}
-
-	/**
-	 * @return the lastDeployDt
-	 */
-	public Date getLastDeployDt() {
-		return lastDeployDt;
+	
+	public String getLikeYn() {
+		return likeYn;
 	}
-
-	/**
-	 * @param lastDeployDt the lastDeployDt to set
-	 */
-	public void setLastDeployDt(Date lastDeployDt) {
-		this.lastDeployDt = lastDeployDt;
+	
+	public void setLikeYn(String likeYn) {
+		this.likeYn = likeYn;
 	}
-
+	
+	
 	
 }

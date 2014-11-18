@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.response;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
@@ -112,4 +113,15 @@ public interface EbookComicGenerator {
 	 * @return List<Support>
 	 */
 	public List<Support> generateSupportList(MetaInfo metaInfo);
+	
+	/**
+	 * <pre>
+	 * Price 객체 생성.
+	 * </pre>
+	 *
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Price
+	 */
+	public Price generateEpubPrice(MetaInfo metaInfo);
 }

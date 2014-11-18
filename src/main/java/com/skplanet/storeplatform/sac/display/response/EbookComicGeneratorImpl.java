@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.response;
 
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
@@ -18,6 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -254,4 +256,16 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		}
 		return identifierList;
 	}
+	
+
+	@Override
+	public Price generateEpubPrice(MetaInfo metaInfo) {
+		Price price = new Price();
+		price.setText(metaInfo.getProdAmt());
+		price.setFixedPrice(metaInfo.getProdNetAmt());
+		price.setUnlmtAmt(metaInfo.getUnlmtAmt());
+		price.setPeriodAmt(metaInfo.getPeriodAmt());
+		return price;
+	}
+
 }

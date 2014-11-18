@@ -95,7 +95,23 @@ public class DownloadController {
 	@ResponseBody
 	public DownloadVodSacRes downloadVod(SacRequestHeader requestheader,
 			@RequestBody @Validated DownloadVodSacReq downloadVodSacReq) {
-		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodSacReq);
+		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodSacReq, false);
+	}
+
+
+	/**
+	 * (V2) Download Vod 정보 조회(for download).
+	 * @param requestheader
+	 *            requestheader
+	 * @param downloadVodSacReq
+	 *            downloadVodSacReq
+	 * @return DownloadVodSacRes
+	 */
+	@RequestMapping(value = "/vod/detail/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public DownloadVodSacRes downloadVodV2(SacRequestHeader requestheader,
+			@RequestBody @Validated DownloadVodSacReq downloadVodSacReq) {
+		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodSacReq, true);
 	}
 
 	/**

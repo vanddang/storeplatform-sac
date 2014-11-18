@@ -415,7 +415,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				// TBL_DP_PROD_IMG 테이블에 INSERT/UPDATE
 				this.brandCatalogService.insertTblDpProdImg(this.brandCatalogProdImgInfo);
 			}
-
+			
 		} catch (CouponException e) {
 			this.log.error("<brandImgResize> brandResize : ", e);
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "브랜드 이미지 Resize 실패", null);

@@ -65,22 +65,26 @@ public class AuthorProductServiceImpl implements AuthorProductService {
 	 *            AuthorProductSacReq
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @return AuthorProductSacRes
+	 * @param version
+     * @return AuthorProductSacRes
 	 */
 	@Override
-	public AuthorProductSacRes searchAuthorProductList(AuthorProductSacReq requestVO, SacRequestHeader requestHeader) {
+	public AuthorProductSacRes searchAuthorProductList(AuthorProductSacReq requestVO, SacRequestHeader requestHeader, int version) {
 
-		// 헤더 값 세팅
-		this.log.debug("헤더 값 세팅");
-		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		requestVO.setLangCd(requestHeader.getTenantHeader().getLangCd());
-		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
-		requestVO.setMmDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
+        requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
+        requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
 
-		// 요청 값 세팅
-		this.log.debug("요청 값 세팅");
-		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
-		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("authorName", requestVO.getAuthorName());
+        req.put("filteredBy", requestVO.getFilteredBy());
+        req.put("offset", requestVO.getOffset());
+        req.put("count", requestVO.getCount());
+
+        req.put("tenantId", requestHeader.getTenantHeader().getTenantId());
+        req.put("langCd", requestHeader.getTenantHeader().getLangCd());
+        req.put("deviceModelCd", requestHeader.getDeviceHeader().getModel());
+        req.put("mmDeviceModelCd", DisplayConstants.DP_ANY_PHONE_4MM);
+        req.put("exceptId", requestVO.getExceptId());
 
 		AuthorProductSacRes authorProductSacRes = new AuthorProductSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -90,8 +94,10 @@ public class AuthorProductServiceImpl implements AuthorProductService {
 
 		// 특정 아티스트 정보 조회
 		this.log.debug("특정 아티스트 정보 조회");
-		MetaInfo authorMetaInfo = this.commonDAO.queryForObject("AuthorProduct.selectAuthorInfo", requestVO,
+		MetaInfo authorMetaInfo = this.commonDAO.queryForObject("AuthorProduct.selectAuthorInfo", req,
 				MetaInfo.class);
+        List<Product> productList = new ArrayList<Product>();
+        Integer cnt = null;
 
 		if (authorMetaInfo != null) {
 			if (authorMetaInfo.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) {
@@ -100,13 +106,17 @@ public class AuthorProductServiceImpl implements AuthorProductService {
 				authorProductSacRes.setContributor(this.ebookComicGenerator.generateComicContributor(authorMetaInfo));
 			}
 
-			requestVO.setTopMenuId(authorMetaInfo.getTopMenuId());
+            req.put("topMenuId", authorMetaInfo.getTopMenuId());
 
 			// 특정 작가별 상품 조회
 			this.log.debug("특정 작가별 상품 조회");
-			List<ProductBasicInfo> authorProductList = this.commonDAO.queryForList(
-					"AuthorProduct.selectAuthorProductList", requestVO, ProductBasicInfo.class);
-			List<Product> productList = new ArrayList<Product>();
+			List<ProductBasicInfo> authorProductList;
+            if(version == 1)
+                authorProductList = this.commonDAO.queryForList("AuthorProduct.selectAuthorProductList", req, ProductBasicInfo.class);
+            else if(version == 2)
+                authorProductList = this.commonDAO.queryForList("AuthorProduct.selectAuthorProductListNP", req, ProductBasicInfo.class);
+            else
+                authorProductList = new ArrayList<ProductBasicInfo>();
 
 			if (!authorProductList.isEmpty()) {
 				reqMap.put("tenantHeader", requestHeader.getTenantHeader());
@@ -119,29 +129,30 @@ public class AuthorProductServiceImpl implements AuthorProductService {
 
 					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 					retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-					if (retMetaInfo != null) {
-						if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) {
-							product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
-							productList.add(product);
-							String tempProductExplain = product.getProductExplain();
-							product.setProductExplain(product.getProductDetailExplain());
-							product.setProductDetailExplain(tempProductExplain);
-						} else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) {
-							product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
-							productList.add(product);
-						}
-					}
+                    if(retMetaInfo == null)
+                        continue;
+
+                    if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_EBOOK_TOP_MENU_ID)) {
+                        product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+                        productList.add(product);
+                        String tempProductExplain = product.getProductExplain();
+                        product.setProductExplain(product.getProductDetailExplain());
+                        product.setProductDetailExplain(tempProductExplain);
+                    } else if (productBasicInfo.getTopMenuId().equals(DisplayConstants.DP_COMIC_TOP_MENU_ID)) {
+                        product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+                        productList.add(product);
+                    }
 				}
-				commonResponse.setTotalCount(authorProductList.get(0).getTotalCount());
+				cnt = authorProductList.get(0).getTotalCount();
 				authorProductSacRes.setProductList(productList);
-			} else {
-				commonResponse.setTotalCount(0);
 			}
-		} else {
-			commonResponse.setTotalCount(0);
 		}
+
 		this.log.debug("특정 작가별 상품 조회 결과 : " + commonResponse.getTotalCount() + "건");
+        commonResponse.setTotalCount(cnt != null ? cnt : 0);
+        authorProductSacRes.setProductList(productList);
 		authorProductSacRes.setCommonResponse(commonResponse);
+
 		return authorProductSacRes;
 	}
 }

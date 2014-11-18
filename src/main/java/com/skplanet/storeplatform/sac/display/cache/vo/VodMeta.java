@@ -61,6 +61,8 @@ public class VodMeta extends CommonInfo {
     private String prodDtlDesc;
     private String prodStatusCd;
     private String brdcCompNm;
+    private Integer chnlUnlmtAmt;
+    private Integer chnlPeriodAmt;
 
     public String getUpMenuId() {
         return upMenuId;
@@ -389,4 +391,21 @@ public class VodMeta extends CommonInfo {
     public void setBrdcCompNm(String brdcCompNm) {
         this.brdcCompNm = brdcCompNm;
     }
+
+	public Integer getChnlUnlmtAmt() {
+		return chnlUnlmtAmt;
+	}
+
+	public void setChnlUnlmtAmt(Integer chnlUnlmtAmt) {
+		this.chnlUnlmtAmt = chnlUnlmtAmt;
+	}
+
+	public Integer getChnlPeriodAmt() {
+		return chnlPeriodAmt;
+	}
+
+	public void setChnlPeriodAmt(Integer chnlPeriodAmt) {
+		this.chnlPeriodAmt = chnlPeriodAmt;
+	}
+    
 }

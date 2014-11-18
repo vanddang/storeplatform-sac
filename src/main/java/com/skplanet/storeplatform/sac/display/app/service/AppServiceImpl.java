@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +37,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.History;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetail;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.display.app.vo.ImageSource;
@@ -101,7 +93,7 @@ public class AppServiceImpl implements AppService {
 	
     @Autowired
     private CommonMetaInfoGenerator metaInfoGenerator;
-	
+
 	@Override
 	public AppDetailRes searchAppDetail(AppDetailParam request) {
         logger.info("channelId={},userKey={},deviceKey={},deviceModel={}",
@@ -151,7 +143,9 @@ public class AppServiceImpl implements AppService {
         product.setProductDetailExplain(appDetail.getProdDtlDesc());
 
         product.setSvcGrpCd(appDetail.getSvcGrpCd());
-        
+
+        product.setLikeYn(appDetail.getLikeYn());
+
         // Menu
         List<MenuItem> menuList = commonService.getMenuItemList(request.getChannelId(), request.getLangCd());
         product.setMenuList(new ArrayList<Menu>());
@@ -213,6 +207,7 @@ public class AppServiceImpl implements AppService {
 
 		Rights rights = new Rights();
 		rights.setGrade(appDetail.getProdGrdCd());
+        rights.setAgeAllowedFrom(commonService.getAllowedAge(appDetail.getTopMenuId(), appDetail.getProdGrdCd()));
 		product.setRights(rights);
 
 		// App

@@ -12,10 +12,12 @@ package com.skplanet.storeplatform.sac.display.response;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,6 +56,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 	@Autowired
 	private DisplayCommonService commonService;
+	
+	@Autowired
+	private AlbumInfoGenerator albumInfoGenerator;
 
 	/*
 	 * (non-Javadoc)
@@ -204,6 +209,37 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 		return product;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateMusicProduct(com.skplanet.
+	 * storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Product generateAlbumProduct(AlbumMeta albumMeta) {
+		Product product = new Product();
+		product.setIdentifierList(albumInfoGenerator.generateIdentifierList(albumMeta));
+		product.setTitle(albumInfoGenerator.generateTitle(albumMeta));
+		product.setMenuList(albumInfoGenerator.generateMenuList(albumMeta));
+		product.setSourceList(albumInfoGenerator.generateSourceList(albumMeta));
+		product.setRights(albumInfoGenerator.generateRights(albumMeta));
+		product.setContributor(albumInfoGenerator.generateContributor(albumMeta));
+		product.setDateList(albumInfoGenerator.generateDateList(albumMeta));
+		product.setProductDetailExplain(albumMeta.getProdBaseDesc());
+		return product;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateAlbumDetailProduct(com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta)
+	 */
+	@Override
+	public Product generateAlbumDetailProduct(AlbumMeta albumMeta) {
+		Product product = generateAlbumProduct(albumMeta);
+		product.setLikeYn(albumMeta.getLikeYn());
+		return product;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -265,7 +301,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
-		Price price = this.commonGenerator.generatePrice(metaInfo);
+		Price price = this.vodGenerator.generateVodPrice(metaInfo);
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
@@ -278,7 +314,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
 		// 영화용 Contributor 설정
 		Contributor contributor = this.vodGenerator.generateMovieContributor(metaInfo);
-
+		// Vod 설정
+		Vod vod = this.vodGenerator.generateVod(metaInfo);
+		
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -295,6 +333,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
+		product.setVod(vod);
 
         // 마일리지
         appendMileageInfo(metaInfo, product);
@@ -317,7 +356,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
-		Price price = this.commonGenerator.generatePrice(metaInfo);
+		Price price = this.vodGenerator.generateVodPrice(metaInfo);
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
@@ -359,7 +398,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
-		Price price = this.commonGenerator.generatePrice(metaInfo);
+		Price price = this.vodGenerator.generateVodPrice(metaInfo);
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
@@ -415,7 +454,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
-		Price price = this.commonGenerator.generatePrice(metaInfo);
+		Price price = this.vodGenerator.generateVodPrice(metaInfo);
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
@@ -457,7 +496,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
-		Price price = this.commonGenerator.generateEpubPrice(metaInfo);
+		Price price = this.ebookComicGenerator.generateEpubPrice(metaInfo);
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
@@ -508,7 +547,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
-		Price price = this.commonGenerator.generatePrice(metaInfo);
+		Price price = this.ebookComicGenerator.generateEpubPrice(metaInfo);
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
@@ -550,7 +589,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
-		Price price = this.commonGenerator.generateEpubPrice(metaInfo);
+		Price price = this.ebookComicGenerator.generateEpubPrice(metaInfo);
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
@@ -601,7 +640,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
-		Price price = this.commonGenerator.generatePrice(metaInfo);
+		Price price = this.ebookComicGenerator.generateEpubPrice(metaInfo);
 		// MenuList 생성
 		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
 		// SourceList 생성
@@ -868,7 +907,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
 		product.setIdentifierList(identifierList);
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
-		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
+		product.setPrice(this.vodGenerator.generateVodPrice(metaInfo));
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
@@ -909,7 +948,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Identifier 설정
 		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
-		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
+		product.setPrice(this.vodGenerator.generateVodPrice(metaInfo));
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
@@ -967,7 +1006,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		String productExplain = metaInfo.getProdBaseDesc();
 		product.setIdentifierList(this.ebookComicGenerator.generateSpecificIdentifierList(metaInfo));
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
-		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
+		product.setPrice(this.ebookComicGenerator.generateEpubPrice(metaInfo));
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
@@ -1002,7 +1041,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
 		product.setIdentifierList(identifierList);
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
-		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
+		product.setPrice(this.ebookComicGenerator.generateEpubPrice(metaInfo));
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));

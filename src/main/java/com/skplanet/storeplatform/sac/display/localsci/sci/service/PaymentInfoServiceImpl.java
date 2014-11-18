@@ -161,6 +161,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV2, mileageInfo.getRateLv2());
             milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV3, mileageInfo.getRateLv3());
             paymentInfo.setMileageRateMap(milMap);
+
+            // 허용 연령 정보
+            paymentInfo.setAgeAllowedFrom(displayCommonService.getAllowedAge(paymentInfo.getTopMenuId(), paymentInfo.getProdGrdCd()));
         }
 
         res.setPaymentInfoList(paymentInfoList);

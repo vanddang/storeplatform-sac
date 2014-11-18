@@ -9,18 +9,31 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import java.util.List;
+import java.util.Map;
+
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * 공통 Meta 정보 Generator.
- * 
+ *
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
 public interface CommonMetaInfoGenerator {
@@ -29,7 +42,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Identifier 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param type
 	 *            type
 	 * @param text
@@ -42,7 +55,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Identifier 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Identifier
@@ -53,7 +66,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Menu List 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return List<Menu>
@@ -64,7 +77,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Source 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Source
@@ -75,7 +88,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Source 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param type
 	 *            type
 	 * @param url
@@ -88,7 +101,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Source 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param type
 	 *            type
 	 * @param url
@@ -102,7 +115,22 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Source 객체 생성.
 	 * </pre>
-	 * 
+	 *
+	 * @param type
+	 *            type
+	 * @param url
+	 *            url
+	 * @param ratio
+	 * 			  ratio
+     * @return Source
+	 */
+	public Source generateSource(String type, String url, String ratio);
+
+	/**
+	 * <pre>
+	 * 공통 Source 객체 생성.
+	 * </pre>
+	 *
 	 * @param path
 	 *            path
 	 * @return Source
@@ -113,7 +141,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Source List 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return List<Source>
@@ -124,7 +152,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 VOD Source List 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return List<Source>
@@ -135,7 +163,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * for download Source List 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return List<Source>
@@ -146,7 +174,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 배너 Source List 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param path
 	 *            path
 	 * @param size
@@ -159,7 +187,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Source List 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param mediaType
 	 *            mediaType
 	 * @param type
@@ -174,7 +202,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Rights 객체 생성(멀티미디어 상품은 별도).
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Rights
@@ -185,7 +213,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Support 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param type
 	 *            type
 	 * @param text
@@ -198,7 +226,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Support Map 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Map<String, Object>
@@ -209,7 +237,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Price 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Price
@@ -220,18 +248,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Price 객체 생성.
 	 * </pre>
-	 * 
-	 * @param metaInfo
-	 *            metaInfo
-	 * @return Price
-	 */
-	public Price generateEpubPrice(MetaInfo metaInfo);
-
-	/**
-	 * <pre>
-	 * 공통 Price 객체 생성.
-	 * </pre>
-	 * 
+	 *
 	 * @param text
 	 *            text
 	 * @param fixedPrice
@@ -244,7 +261,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Accrual 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Accrual
@@ -255,7 +272,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Title 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Title
@@ -266,7 +283,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Identifier List 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return List<Identifier>
@@ -277,7 +294,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Distributor 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Distributor
@@ -288,7 +305,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * Webtoon 상품 전용 Date 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param type
 	 *            type
 	 * @param text
@@ -301,7 +318,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * VOD, 이북, 코믹 상품 Contributor Date객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param type
 	 *            type
 	 * @param text
@@ -314,7 +331,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 소장 상품 Store 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Store
@@ -325,7 +342,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 대여 상품 Play 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Store
@@ -336,7 +353,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 구매 정보 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Purchase
@@ -347,7 +364,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 구매 정보 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param prchId
 	 *            prchId
 	 * @param prodId
@@ -366,7 +383,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 미리보기 Source List 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return List<Source>
@@ -377,7 +394,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Url 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return List<Url>
@@ -388,7 +405,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Url 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param type
 	 *            type
 	 * @param text
@@ -401,7 +418,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Url 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param text
 	 *            text
 	 * @return Url
@@ -412,7 +429,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Url 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 * @return Url
 	 */
@@ -422,7 +439,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 Url 객체 생성.
 	 * </pre>
-	 * 
+	 *
 	 * @param type
 	 *            type
 	 * @param text
@@ -435,7 +452,7 @@ public interface CommonMetaInfoGenerator {
 	 * <pre>
 	 * 공통 tmembership 포인트.
 	 * </pre>
-	 * 
+	 *
 	 * @param metaInfo
 	 *            metaInfo
 	 * @return Point
@@ -448,7 +465,7 @@ public interface CommonMetaInfoGenerator {
      * @return
      */
     public List<Point> generateMileage(MileageInfo mileageInfo);
-    
+
     /**
      * 회원 등급별 마일리지 객체 생성
      * @param mileageInfo

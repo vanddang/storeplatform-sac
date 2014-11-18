@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MenuIntegration">
+
+    <select id="selectMenuIntegrationList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.MenuListCat">
+        SELECT /* MenuIntegrationMapper.xml, selectMenuIntegrationList, SAC 전시 , 2014-05-19 */
+          TENANT_ID,
+          SYSTEM_ID,
+          MENU_KEY,
+          UP_MENU_KEY,
+          EXPO_ORD,
+          IMG_PATH,
+          MENU_NM,
+          INJT_VAR,
+          KEY_TYPE
+        FROM TB_DP_MENU_LIST_CATEGORY
+        WHERE 1=1
+        AND TENANT_ID = #{tenantId, jdbcType=VARCHAR}
+        AND SYSTEM_ID = #{systemId, jdbcType=VARCHAR}
+        AND UP_MENU_KEY = #{upMenuKey, jdbcType=VARCHAR}
+        AND EXPO_YN = 'Y'
+        ORDER BY EXPO_ORD
+    </select>
+
+</mapper>

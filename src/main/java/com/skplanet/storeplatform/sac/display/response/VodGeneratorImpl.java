@@ -9,11 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -79,6 +81,18 @@ public class VodGeneratorImpl implements VodGenerator {
 	 */
 	@Override
 	public Vod generateVod(MetaInfo metaInfo) {
+		return generateVod(metaInfo, false);
+	}
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.skplanet.storeplatform.sac.display.response.VodGenerator#generateVod(com.skplanet.storeplatform.sac.display
+     * .meta.vo.MetaInfo)
+     */
+    @Override
+	public Vod generateVod(MetaInfo metaInfo, boolean supportFhdVideo) {
 		Vod vod = new Vod();
 		Chapter chapter = new Chapter();
 		Time time = new Time();
@@ -92,8 +106,37 @@ public class VodGeneratorImpl implements VodGenerator {
 			vod.setChapter(chapter);
 		}
 		vod.setRunningTime(time);
-		vod.setVideoInfoList(this.generateVideoInfoList(metaInfo));
+		vod.setVideoInfoList(this.generateVideoInfoList(metaInfo, supportFhdVideo));
+		vod.setSupportList(this.generateSupportStorePlay(metaInfo));
 		return vod;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * @param metaInfo
+	 * @return
+	 */
+	private List<Support> generateSupportStorePlay(MetaInfo metaInfo) {
+		List<Support> supportList = new ArrayList<Support>();
+		Support support = null;
+		if ("Y".equals(metaInfo.getSupportPlay())) {
+			support = this.commonGenerator.generateSupport(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM, "Y");
+			supportList.add(support);
+		} else {
+			support = this.commonGenerator.generateSupport(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM, "N");
+			supportList.add(support);
+		}
+
+		if ("Y".equals(metaInfo.getSupportStore())) {
+			support = this.commonGenerator.generateSupport(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM, "Y");
+			supportList.add(support);
+		} else {
+			support = this.commonGenerator.generateSupport(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM, "N");
+			supportList.add(support);
+		}
+		return supportList;
 	}
 
 	/*
@@ -153,21 +196,17 @@ public class VodGeneratorImpl implements VodGenerator {
 
 	@Override
 	public List<VideoInfo> generateVideoInfoList(MetaInfo metaInfo) {
-		VideoInfo videoInfo = new VideoInfo();
+        return generateVideoInfoList(metaInfo, false);
+    }
+	private List<VideoInfo> generateVideoInfoList(MetaInfo metaInfo, boolean supportFhdVideo) {
+		VideoInfo videoInfo = null;
 		List<VideoInfo> videoInfoList = new ArrayList<VideoInfo>();
 
 		/*
 		 * 일반화질 정보
 		 */
 		if (StringUtils.isNotEmpty(metaInfo.getNmSubContsId())) {
-			// videoInfo.setBtvcid(metaInfo.getNmBtvCid());
-			videoInfo.setPictureSize(metaInfo.getNmDpPicRatio());
-			videoInfo.setPixel(metaInfo.getNmDpPixel());
-			videoInfo.setScid(metaInfo.getNmSubContsId());
-			videoInfo.setSize(metaInfo.getNmFileSize());
-			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
-			videoInfo.setVersion(metaInfo.getNmProdVer());
-			videoInfo.setFilePath(metaInfo.getNmFilePath());
+            videoInfo = getNmVideoInfo(metaInfo);
 			videoInfoList.add(videoInfo);
 		}
 
@@ -175,45 +214,104 @@ public class VodGeneratorImpl implements VodGenerator {
 		 * SD 고화질 정보
 		 */
 		if (StringUtils.isNotEmpty(metaInfo.getSdSubContsId())) {
-			videoInfo = new VideoInfo();
-			// videoInfo.setBtvcid(metaInfo.getSdBtvCid());
-			videoInfo.setPictureSize(metaInfo.getSdDpPicRatio());
-			videoInfo.setPixel(metaInfo.getSdDpPixel());
-			videoInfo.setScid(metaInfo.getSdSubContsId());
-			videoInfo.setSize(metaInfo.getSdFileSize());
-			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_SD);
-			videoInfo.setVersion(metaInfo.getSdProdVer());
-			videoInfo.setFilePath(metaInfo.getSdFilePath());
+            videoInfo = getSdVideoInfo(metaInfo);
 			videoInfoList.add(videoInfo);
 		}
 
 		/*
-		 * Full HD 정보 우선, 없으며 HD 정보를 내려줌
 		 * HD 고화질 정보
 		 */
-		if (StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
-			videoInfo = new VideoInfo();
-			videoInfo.setPictureSize(metaInfo.getFhdDpPicRatio());
-			videoInfo.setPixel(metaInfo.getFhdDpPixel());
-			videoInfo.setScid(metaInfo.getFhdSubContsId());
-			videoInfo.setSize(metaInfo.getFhdFileSize());
-			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
-			videoInfo.setVersion(metaInfo.getFhdProdVer());
-			videoInfo.setFilePath(metaInfo.getFhdFilePath());
-			videoInfoList.add(videoInfo);
-		} else if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId())) {
-			videoInfo = new VideoInfo();
-			// videoInfo.setBtvcid(metaInfo.getHdBtvCid());
-			videoInfo.setPictureSize(metaInfo.getHdDpPicRatio());
-			videoInfo.setPixel(metaInfo.getHdDpPixel());
-			videoInfo.setScid(metaInfo.getHdSubContsId());
-			videoInfo.setSize(metaInfo.getHdFileSize());
-			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
-			videoInfo.setVersion(metaInfo.getHdProdVer());
-			videoInfo.setFilePath(metaInfo.getHdFilePath());
-			videoInfoList.add(videoInfo);
-		}
+		if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId()) || StringUtils.isNotEmpty(metaInfo.getHd2SubContsId())) {
+            videoInfo = getHdVideoInfo(metaInfo);
+            videoInfoList.add(videoInfo);
+        }
+		
+        if(supportFhdVideo) {
+            if (StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
+            	videoInfo = getFhdVideoInfo(metaInfo);
+            	videoInfoList.add(videoInfo);
+            }
+        }
 
 		return videoInfoList;
+	}
+
+    @Override
+    public VideoInfo getNmVideoInfo(MetaInfo metaInfo) {
+        VideoInfo videoInfo = new VideoInfo();
+        videoInfo.setPictureSize(metaInfo.getNmDpPicRatio());
+        videoInfo.setPixel(metaInfo.getNmDpPixel());
+        videoInfo.setScid(metaInfo.getNmSubContsId());
+        videoInfo.setSize(metaInfo.getNmFileSize());
+        videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
+        videoInfo.setVersion(metaInfo.getNmProdVer());
+        videoInfo.setFilePath(metaInfo.getNmFilePath());
+        return videoInfo;
+    }
+
+    @Override
+    public VideoInfo getSdVideoInfo(MetaInfo metaInfo) {
+        VideoInfo videoInfo = new VideoInfo();
+        // videoInfo.setBtvcid(metaInfo.getSdBtvCid());
+        videoInfo.setPictureSize(metaInfo.getSdDpPicRatio());
+        videoInfo.setPixel(metaInfo.getSdDpPixel());
+        videoInfo.setScid(metaInfo.getSdSubContsId());
+        videoInfo.setSize(metaInfo.getSdFileSize());
+        videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_SD);
+        videoInfo.setVersion(metaInfo.getSdProdVer());
+        videoInfo.setFilePath(metaInfo.getSdFilePath());
+        return videoInfo;
+    }
+
+	/**
+	 * HD 고화질 정보
+	 * HD2 (D화질) 우선, 없으면 HD 정보 노출
+	 * @param metaInfo
+	 */
+    @Override
+    public VideoInfo getHdVideoInfo(MetaInfo metaInfo) {
+    	VideoInfo videoInfo = new VideoInfo();
+    	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
+    	
+    	if (StringUtils.isNotEmpty(metaInfo.getHd2SubContsId())) {
+    		videoInfo.setPictureSize(metaInfo.getHd2DpPicRatio());
+            videoInfo.setPixel(metaInfo.getHd2DpPixel());
+            videoInfo.setScid(metaInfo.getHd2SubContsId());
+            videoInfo.setSize(metaInfo.getHd2FileSize());
+            videoInfo.setVersion(metaInfo.getHd2ProdVer());
+            videoInfo.setFilePath(metaInfo.getHd2FilePath());
+    	} else {
+            videoInfo.setPictureSize(metaInfo.getHdDpPicRatio());
+            videoInfo.setPixel(metaInfo.getHdDpPixel());
+            videoInfo.setScid(metaInfo.getHdSubContsId());
+            videoInfo.setSize(metaInfo.getHdFileSize());
+            videoInfo.setVersion(metaInfo.getHdProdVer());
+            videoInfo.setFilePath(metaInfo.getHdFilePath());
+    	}
+        
+        return videoInfo;
+    }
+
+    @Override
+    public VideoInfo getFhdVideoInfo(MetaInfo metaInfo) {
+        VideoInfo videoInfo = new VideoInfo();
+        videoInfo.setPictureSize(metaInfo.getFhdDpPicRatio());
+        videoInfo.setPixel(metaInfo.getFhdDpPixel());
+        videoInfo.setScid(metaInfo.getFhdSubContsId());
+        videoInfo.setSize(metaInfo.getFhdFileSize());
+        videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_FHD);
+        videoInfo.setVersion(metaInfo.getFhdProdVer());
+        videoInfo.setFilePath(metaInfo.getFhdFilePath());
+        return videoInfo;
+    }
+    
+	@Override
+	public Price generateVodPrice(MetaInfo metaInfo) {
+		Price price = new Price();
+		price.setText(metaInfo.getProdAmt());
+		price.setFixedPrice(metaInfo.getProdNetAmt());
+		price.setUnlmtAmt(metaInfo.getUnlmtAmt());
+		price.setPeriodAmt(metaInfo.getPeriodAmt());
+		return price;
 	}
 }

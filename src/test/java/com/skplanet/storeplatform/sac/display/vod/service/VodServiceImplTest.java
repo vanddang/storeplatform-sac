@@ -65,7 +65,7 @@ public class VodServiceImplTest {
 		req.setCount(20);
 		req.setDeviceKey("DE201402201711283140002222");
 		req.setUserKey("US201402201711282940003170");
-		VodDetailRes res = vodService.searchVod(req);
+		VodDetailRes res = vodService.searchVod(req, false);
 		this.logger.debug("res={}", res);
 	}
 

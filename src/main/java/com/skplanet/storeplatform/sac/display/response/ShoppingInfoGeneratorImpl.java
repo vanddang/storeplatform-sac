@@ -40,8 +40,10 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
-	 * #generateContributor(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generateContributor(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public Contributor generateContributor(MetaInfo metaInfo) {
@@ -59,8 +61,10 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
-	 * #generateSalesOption(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generateSalesOption(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public SalesOption generateSalesOption(MetaInfo metaInfo) {
@@ -79,7 +83,8 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
 	 * #generateRights(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
@@ -87,8 +92,9 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 		List<Date> dateList = new ArrayList<Date>();
 		Rights rights = new Rights();
 		rights.setGrade(metaInfo.getProdGrdCd());
-		Date date = new Date(DisplayConstants.DP_DATE_SALE_PERIOD_DURATION, DateUtils.parseDate(metaInfo
-				.getApplyStartDt()), DateUtils.parseDate(metaInfo.getApplyEndDt()));
+		Date date = new Date(DisplayConstants.DP_DATE_SALE_PERIOD_DURATION,
+				DateUtils.parseDate(metaInfo.getApplyStartDt()),
+				DateUtils.parseDate(metaInfo.getApplyEndDt()));
 		dateList.add(date);
 		rights.setDateList(dateList);
 		return rights;
@@ -97,8 +103,10 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
-	 * #generateAccrual(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generateAccrual(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
@@ -110,7 +118,8 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
 	 * #generatePrice(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
@@ -126,21 +135,25 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator
-	 * #generateSpecialSalesSourceList(com.skplanet .storeplatform .sac.display.meta.vo.MetaInfo)
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator
+	 * #generateSpecialSalesSourceList(com.skplanet .storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public List<Source> generateSpecialSalesSourceList(MetaInfo metaInfo) {
 		List<Source> sourceList = new ArrayList<Source>();
 
 		Source source = new Source();
-		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getBannerFilePath()));
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo
+				.getBannerFilePath()));
 		source.setType(DisplayConstants.DP_SOURCE_TYPE_BANNER);
 		source.setUrl(metaInfo.getBannerFilePath());
 		sourceList.add(source);
 
 		source = new Source();
-		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getFilePath()));
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo
+				.getFilePath()));
 		source.setType(DisplayConstants.DP_SOURCE_TYPE_PROMOTION);
 		source.setUrl(metaInfo.getFilePath());
 		sourceList.add(source);
@@ -151,27 +164,32 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator
-	 * #generateSpecialSalesSourceList(com.skplanet .storeplatform .sac.display.meta.vo.MetaInfo)
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator
+	 * #generateSpecialSalesSourceList(com.skplanet .storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public List<Source> generateSpecialSalesSourceListV2(MetaInfo metaInfo) {
 		List<Source> sourceList = new ArrayList<Source>();
 
 		Source source = new Source();
-		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getBannerFilePath()));
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo
+				.getBannerFilePath()));
 		source.setType(DisplayConstants.DP_SOURCE_TYPE_BANNER);
 		source.setUrl(metaInfo.getBannerFilePath());
 		sourceList.add(source);
 
 		source = new Source();
-		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getFilePath()));
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo
+				.getFilePath()));
 		source.setType(DisplayConstants.DP_SOURCE_TYPE_PROMOTION);
 		source.setUrl(metaInfo.getFilePath());
 		sourceList.add(source);
 
 		source = new Source();
-		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getDetailPromotionPath()));
+		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo
+				.getDetailPromotionPath()));
 		source.setType(DisplayConstants.DP_SOURCE_TYPE_DETAIL_PROMOTION);
 		source.setUrl(metaInfo.getDetailPromotionPath());
 		sourceList.add(source);
@@ -182,14 +200,16 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
 	 * #generateDate(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public Date generateDate(MetaInfo metaInfo) {
 
-		Date date = new Date(DisplayConstants.DP_DATE_SALE_PERIOD_DURATION, DateUtils.parseDate(metaInfo
-				.getApplyStartDt()), DateUtils.parseDate(metaInfo.getApplyEndDt()));
+		Date date = new Date(DisplayConstants.DP_DATE_SALE_PERIOD_DURATION,
+				DateUtils.parseDate(metaInfo.getApplyStartDt()),
+				DateUtils.parseDate(metaInfo.getApplyEndDt()));
 
 		return date;
 	}
@@ -197,8 +217,10 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
-	 * #generateDateList(com.skplanet.storeplatform .sac.display.meta.vo.MetaInfo)
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ShoppingInfoGenerator
+	 * #generateDateList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
 	public List<Date> generateDateList(MetaInfo metaInfo) {
@@ -208,25 +230,42 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 
 		// 구매일로부터 기간 제한
 		if (StringUtil.nvl(metaInfo.getUsePeriodUnitCd(), "") != "") {
-			String usePeriodUnitNm = (metaInfo.getUsePeriodUnitCd() == null) ? "" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) ? "month" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) ? "year" : (metaInfo.getUsePeriodUnitCd()
-					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) ? "limit/day" : (metaInfo
-					.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) ? "limit/month" : (metaInfo
-					.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year" : (metaInfo
-					.getUsePeriodUnitCd().equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar" : "";
+			String usePeriodUnitNm = (metaInfo.getUsePeriodUnitCd() == null) ? ""
+					: (metaInfo.getUsePeriodUnitCd()
+							.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit"
+							: (metaInfo.getUsePeriodUnitCd()
+									.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_HOUR)) ? "hour"
+									: (metaInfo.getUsePeriodUnitCd()
+											.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_DAY)) ? "day"
+											: (metaInfo.getUsePeriodUnitCd()
+													.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_MONTH)) ? "month"
+													: (metaInfo
+															.getUsePeriodUnitCd()
+															.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_YEAR)) ? "year"
+															: (metaInfo
+																	.getUsePeriodUnitCd()
+																	.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_DAY)) ? "limit/day"
+																	: (metaInfo
+																			.getUsePeriodUnitCd()
+																			.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_MONTH)) ? "limit/month"
+																			: (metaInfo
+																					.getUsePeriodUnitCd()
+																					.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_LIMIT_YEAR)) ? "limit/year"
+																					: (metaInfo
+																							.getUsePeriodUnitCd()
+																							.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar"
+																							: "";
 
 			if (usePeriodUnitNm != "") {
 				if (!usePeriodUnitNm.equals("calendar")) {
-					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, usePeriodUnitNm + "/"
-							+ metaInfo.getUsePeriod());
+					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD,
+							usePeriodUnitNm + "/" + metaInfo.getUsePeriod());
 				} else {
 					Date date1 = new Date();
-					date1.setTextFromDate(DateUtils.parseDate(metaInfo.getUsePeriod()));
-					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD, usePeriodUnitNm + "/" + date1.getText());
+					date1.setTextFromDate(DateUtils.parseDate(metaInfo
+							.getUsePeriod()));
+					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD,
+							usePeriodUnitNm + "/" + date1.getText());
 				}
 				dateList.add(date);
 			}

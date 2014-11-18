@@ -38,6 +38,7 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
     @Value("#{propertiesForSac['skp.common.service.language']}")
     private String SERVICE_LANG;
 
+    // FIXME 서비스에 추가될 테넌트 추가
     private final String[] TENANT_LIST = new String[]{"S01"};
 
     @Override

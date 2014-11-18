@@ -629,71 +629,71 @@
                 <if test="planId != null">
                   AND PLAN_ID = #{planId}
                 </if>                  
-                  AND EXISTS (
-                         SELECT
-                                  'X'
-                           FROM 
-                                    TB_DP_SHPG_BRAND A
-                                   ,TB_DP_SHPG_CATALOG B
-                                   ,TB_DP_SHPG_CATALOG_DESC C
-                                   ,TB_DP_MENU_SHPG_MAPG D
-                                   ,TB_DP_MENU_CATEGORY E
-                                   ,TB_DP_MENU_CATEGORY_DESC F 
-                                   ,TB_DP_PROD_CATALOG_MAPG G 
-                                   ,TB_DP_PROD_RSHP H
-                                   ,TB_DP_SHPG_PROD I
-                                   ,TB_DP_PROD J
-                                   ,TB_DP_TENANT_PROD K
-                                   ,TB_DP_TENANT_PROD K1
-                                   ,TB_DP_TENANT_PROD_PRICE L
-                                   ,TB_DP_PLAN_CATALOG_MANG M
-                          WHERE 1=1
-                          AND A.BRAND_ID = B.BRAND_ID
-                          AND B.CATALOG_ID = C.CATALOG_ID
-                          AND C.CATALOG_ID = D.CATALOG_ID     
-                          AND D.MENU_ID = E.MENU_ID
-                          AND D.MENU_ID = F.MENU_ID
-                          AND B.CATALOG_ID = G.CATALOG_ID
-                          AND G.PROD_ID = H.PROD_ID
-                          AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
-                          AND H.PART_PROD_ID = I.PROD_ID
-                          AND I.PROD_ID = J.PROD_ID
-                          AND I.PROD_ID = K.PROD_ID
-                          AND I.PROD_ID = L.PROD_ID
-                          AND G.PROD_ID = K1.PROD_ID
-                          AND K.TENANT_ID = K1.TENANT_ID
-                          AND K.TENANT_ID = L.TENANT_ID 
-                          AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/ 
-                          AND NVL(B.CHNL_CNT, 0) > 0          
-                          AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
-                          AND F.LANG_CD= #{langCd}         /* ko : 한국어 */
-                          AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                          AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
-                          AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
-                          AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                          AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                          AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
-                          AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
-                          AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
-                          AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
-                          AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                          AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
-                          AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
-                          AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
-                          AND M.PLAN_ID = KK.PLAN_ID 
-                          AND B.CATALOG_ID = M.CATALOG_ID                      
-                          AND  EXISTS (
-                              SELECT 1 
-                                FROM  TB_DP_SPRT_DEVICE DV  
-                               WHERE PROD_ID = I.PROD_ID
-                                 AND DV.DEVICE_MODEL_CD  = #{deviceModelCd} 
-                               UNION ALL
-                              SELECT 1 
-                                FROM  TB_DP_SPRT_DEVICE DV  
-                               WHERE PROD_ID = I.PROD_ID                             
-                                 AND DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo} 
-                               )
-                         )                 
+	              AND EXISTS (
+	                     SELECT
+	                              'X'
+	                       FROM 
+	                                TB_DP_SHPG_BRAND A
+	                               ,TB_DP_SHPG_CATALOG B
+	                               ,TB_DP_SHPG_CATALOG_DESC C
+	                               ,TB_DP_MENU_SHPG_MAPG D
+	                               ,TB_DP_MENU_CATEGORY E
+	                               ,TB_DP_MENU_CATEGORY_DESC F 
+	                               ,TB_DP_PROD_CATALOG_MAPG G 
+	                               ,TB_DP_PROD_RSHP H
+	                               ,TB_DP_SHPG_PROD I
+	                               ,TB_DP_PROD J
+	                               ,TB_DP_TENANT_PROD K
+	                               ,TB_DP_TENANT_PROD K1
+	                               ,TB_DP_TENANT_PROD_PRICE L
+	                               ,TB_DP_PLAN_CATALOG_MANG M
+	                      WHERE 1=1
+	                      AND A.BRAND_ID = B.BRAND_ID
+	                      AND B.CATALOG_ID = C.CATALOG_ID
+	                      AND C.CATALOG_ID = D.CATALOG_ID     
+	                      AND D.MENU_ID = E.MENU_ID
+	                      AND D.MENU_ID = F.MENU_ID
+	                      AND B.CATALOG_ID = G.CATALOG_ID
+	                      AND G.PROD_ID = H.PROD_ID
+	                      AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
+	                      AND H.PART_PROD_ID = I.PROD_ID
+	                      AND I.PROD_ID = J.PROD_ID
+	                      AND I.PROD_ID = K.PROD_ID
+	                      AND I.PROD_ID = L.PROD_ID
+	                      AND G.PROD_ID = K1.PROD_ID
+	                      AND K.TENANT_ID = K1.TENANT_ID
+	                      AND K.TENANT_ID = L.TENANT_ID 
+	                      AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/ 
+	                      AND NVL(B.CHNL_CNT, 0) > 0          
+	                      AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
+	                      AND F.LANG_CD= #{langCd}         /* ko : 한국어 */
+	                      AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+	                      AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+	                      AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+	                      AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+	                      AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+	                      AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+	                      AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+	                      AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
+	                      AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+	                      AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+	                      AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+	                      AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
+	                      AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
+	                      AND M.PLAN_ID = KK.PLAN_ID 
+	                      AND B.CATALOG_ID = M.CATALOG_ID                      
+	                      AND  EXISTS (
+	                          SELECT 1 
+	                            FROM  TB_DP_SPRT_DEVICE DV  
+	                           WHERE PROD_ID = I.PROD_ID
+	                             AND DV.DEVICE_MODEL_CD  = #{deviceModelCd} 
+	                           UNION ALL
+	                          SELECT 1 
+	                            FROM  TB_DP_SPRT_DEVICE DV  
+	                           WHERE PROD_ID = I.PROD_ID                             
+	                             AND DV.DEVICE_MODEL_CD = #{virtualDeviceModelNo} 
+	                           )
+	                     )                 
                 <if test='orderedBy == "recent"'>  
                  order by REG_DT DESC , PLAN_NM
                 </if>
@@ -966,7 +966,55 @@
         WHERE RNUM BETWEEN #{offset} AND #{count}
         </if>
     </select>     
-    
+  
+    <!-- 브랜드샵 - 상세 조회-->
+    <select id="getBrandshopDetail" parameterType="ShoppingReq" resultType="MetaInfo">
+       /* ShoppingMapper.xml.getBrandshopDetail,브랜드샵 - 상세 조회, 김형식/SK플래닛  , 2014-11-10 */
+       SELECT * FROM (
+           SELECT 
+                     KK.*
+                    ,COUNT(1) OVER() AS TOTALCOUNT
+                    ,ROWNUM AS RNUM         
+             FROM(
+                SELECT 
+                           BRAND_ID 
+                         , BRAND_NM AS catalogNm
+                         , MENU_ID 
+                         , MENU_NM 
+                         , TOP_MENU_ID 
+                         ,(SELECT MENU_NM
+                              FROM TB_DP_MENU_CATEGORY_DESC
+                             WHERE MENU_ID = TOP_MENU_ID
+                               AND LANG_CD = #{langCd}          /* ko : 한국어 */
+                               AND ROWNUM = 1
+                           ) AS TOP_MENU_NM                      
+                         ,(SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG
+                            WHERE PROD_ID = BRAND_ID AND IMG_CD =#{imageCd}
+                          ) AS FILE_PATH
+                 FROM (
+                    SELECT *
+                    FROM (
+                        SELECT  
+                              SB.BRAND_ID
+                             ,SB.BRAND_NM
+                             ,MC.MENU_ID
+                             ,MCD.MENU_NM
+                             ,MC.TOP_MENU_ID
+                        FROM  TB_DP_SHPG_BRAND SB
+                             ,TB_DP_MENU_CATEGORY MC
+                             ,TB_DP_MENU_CATEGORY_DESC MCD
+                        WHERE SB.MENU_ID = MC.MENU_ID
+                          AND SB.MENU_ID = MCD.MENU_ID
+                          AND SB.BRAND_ID = #{brandId}
+                          AND MC.USE_YN ='Y'
+                          AND MCD.LANG_CD =#{langCd}
+                     )
+                    ORDER BY
+                    MENU_ID , BRAND_NM
+                )
+            )KK
+        )
+    </select>   
     <!-- 브랜드샵 - 상세 조회-->
     <select id="getBrandshopDetail" parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getBrandshopDetail,브랜드샵 - 상세 조회, 김형식/SK플래닛  , 2014-11-10 */
@@ -1912,12 +1960,12 @@
                                 ,TB_DP_SPRC_PROD B1
                            WHERE 1=1
                              AND A1.PART_PROD_ID = B1.PROD_ID
-                            <if test="req.specialProdId != null and req.specialType=='episode'">
-                            AND B1.PROD_ID  = #{req.specialProdId}
-                            </if>
-                            <if test="req.specialProdId != null and req.specialType=='channel'">
-                            AND A1.PROD_ID = #{req.specialProdId}
-                            </if>                                
+			                <if test="req.specialProdId != null and req.specialType=='episode'">
+			                AND B1.PROD_ID  = #{req.specialProdId}
+			                </if>
+			                <if test="req.specialProdId != null and req.specialType=='channel'">
+			                AND A1.PROD_ID = #{req.specialProdId}
+			                </if>                                
                              AND B1.EXPO_YN ='Y'
                              AND B1.CPN_ID IS NOT NULL
                              AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
@@ -2156,12 +2204,12 @@
                                       WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
                                  END) AS PROD_CASE_CD                                 
                                  </if>
-                                 <if test="specialTypeCd == 'DP007503'">
-                                ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'tingGiftcard' 
-                                       WHEN I.PROD_CASE_CD='DP006302' THEN 'tingExchange' 
-                                       WHEN I.PROD_CASE_CD='DP006303' THEN 'tingDelivery' 
-                                  END) AS PROD_CASE_CD  
-                                  </if>                                 
+		                         <if test="specialTypeCd == 'DP007503'">
+		                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'tingGiftcard' 
+		                               WHEN I.PROD_CASE_CD='DP006302' THEN 'tingExchange' 
+		                               WHEN I.PROD_CASE_CD='DP006303' THEN 'tingDelivery' 
+		                          END) AS PROD_CASE_CD  
+		                          </if>                                 
                                ,E.TOP_MENU_ID
                                ,J.META_CLSF_CD       
                                ,PI.FILE_PATH
@@ -2299,76 +2347,76 @@
                 <if test="planId != null">
                   AND PLAN_ID = #{planId}
                 </if>                  
-                  AND EXISTS (
-                         SELECT
-                                  'X'
-                           FROM 
-                                    TB_DP_SHPG_BRAND A
-                                   ,TB_DP_SHPG_CATALOG B
-                                   ,TB_DP_SHPG_CATALOG_DESC C
-                                   ,TB_DP_MENU_SHPG_MAPG D
-                                   ,TB_DP_MENU_CATEGORY E
-                                   ,TB_DP_MENU_CATEGORY_DESC F 
-                                   ,TB_DP_PROD_CATALOG_MAPG G 
-                                   ,TB_DP_PROD_RSHP H
-                                   ,TB_DP_SHPG_PROD I
-                                   ,TB_DP_PROD J
-                                   ,TB_DP_TENANT_PROD K
-                                   ,TB_DP_TENANT_PROD K1
-                                   ,TB_DP_TENANT_PROD_PRICE L
-                                   ,TB_DP_PLAN_CATALOG_MANG M
-                          WHERE 1=1
-                          AND A.BRAND_ID = B.BRAND_ID
-                          AND B.CATALOG_ID = C.CATALOG_ID
-                          AND C.CATALOG_ID = D.CATALOG_ID     
-                          AND D.MENU_ID = E.MENU_ID
-                          AND D.MENU_ID = F.MENU_ID
-                          AND B.CATALOG_ID = G.CATALOG_ID
-                          AND G.PROD_ID = H.PROD_ID
-                          AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
-                          AND H.PART_PROD_ID = I.PROD_ID
-                          AND I.PROD_ID = J.PROD_ID
-                          AND I.PROD_ID = K.PROD_ID
-                          AND I.PROD_ID = L.PROD_ID
-                          AND G.PROD_ID = K1.PROD_ID
-                          AND K.TENANT_ID = K1.TENANT_ID
-                          AND K.TENANT_ID = L.TENANT_ID 
-                          AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/ 
-                          AND NVL(B.CHNL_CNT, 0) > 0          
-                          AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
-                          AND F.LANG_CD= #{langCd}         /* ko : 한국어 */
-                          AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                          AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
-                          AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
-                          AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                          AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                          AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
-                          AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
-                          AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
-                          AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
-                          AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                          AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
-                          AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
-                          AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
-                          AND M.PLAN_ID = KK.PLAN_ID 
-                          AND B.CATALOG_ID = M.CATALOG_ID  
-                          AND NOT EXISTS (
-                             SELECT 'X'
-                               FROM  TB_DP_PROD_RSHP A2
-                                    ,TB_DP_SPRC_PROD B2
-                                    ,TB_DP_PROD_CATALOG_MAPG C2
-                               WHERE 1=1
-                                 AND A2.PART_PROD_ID = B2.PROD_ID
-                                 AND A2.PROD_ID = C2.PROD_ID
-                                 AND C2.BASE_YN ='Y'
-                                 AND C2.USE_YN ='Y'
-                                 AND B2.EXPO_YN ='Y'
-                                 AND B2.CPN_ID IS NOT NULL
-                                 AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
-                                 AND C2.CATALOG_ID = B.CATALOG_ID
-                                 AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
-                            )                                                 
-                         )                 
+	              AND EXISTS (
+	                     SELECT
+	                              'X'
+	                       FROM 
+	                                TB_DP_SHPG_BRAND A
+	                               ,TB_DP_SHPG_CATALOG B
+	                               ,TB_DP_SHPG_CATALOG_DESC C
+	                               ,TB_DP_MENU_SHPG_MAPG D
+	                               ,TB_DP_MENU_CATEGORY E
+	                               ,TB_DP_MENU_CATEGORY_DESC F 
+	                               ,TB_DP_PROD_CATALOG_MAPG G 
+	                               ,TB_DP_PROD_RSHP H
+	                               ,TB_DP_SHPG_PROD I
+	                               ,TB_DP_PROD J
+	                               ,TB_DP_TENANT_PROD K
+	                               ,TB_DP_TENANT_PROD K1
+	                               ,TB_DP_TENANT_PROD_PRICE L
+	                               ,TB_DP_PLAN_CATALOG_MANG M
+	                      WHERE 1=1
+	                      AND A.BRAND_ID = B.BRAND_ID
+	                      AND B.CATALOG_ID = C.CATALOG_ID
+	                      AND C.CATALOG_ID = D.CATALOG_ID     
+	                      AND D.MENU_ID = E.MENU_ID
+	                      AND D.MENU_ID = F.MENU_ID
+	                      AND B.CATALOG_ID = G.CATALOG_ID
+	                      AND G.PROD_ID = H.PROD_ID
+	                      AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
+	                      AND H.PART_PROD_ID = I.PROD_ID
+	                      AND I.PROD_ID = J.PROD_ID
+	                      AND I.PROD_ID = K.PROD_ID
+	                      AND I.PROD_ID = L.PROD_ID
+	                      AND G.PROD_ID = K1.PROD_ID
+	                      AND K.TENANT_ID = K1.TENANT_ID
+	                      AND K.TENANT_ID = L.TENANT_ID 
+	                      AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/ 
+	                      AND NVL(B.CHNL_CNT, 0) > 0          
+	                      AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
+	                      AND F.LANG_CD= #{langCd}         /* ko : 한국어 */
+	                      AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+	                      AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+	                      AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+	                      AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+	                      AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+	                      AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+	                      AND K1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+	                      AND K1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */                                
+	                      AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+	                      AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+	                      AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+	                      AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
+	                      AND M.EXPO_YN ='Y'            /* Y : 기본(기본여부) */
+	                      AND M.PLAN_ID = KK.PLAN_ID 
+	                      AND B.CATALOG_ID = M.CATALOG_ID  
+			              AND NOT EXISTS (
+			                 SELECT 'X'
+			                   FROM  TB_DP_PROD_RSHP A2
+			                        ,TB_DP_SPRC_PROD B2
+			                        ,TB_DP_PROD_CATALOG_MAPG C2
+			                   WHERE 1=1
+			                     AND A2.PART_PROD_ID = B2.PROD_ID
+			                     AND A2.PROD_ID = C2.PROD_ID
+			                     AND C2.BASE_YN ='Y'
+			                     AND C2.USE_YN ='Y'
+			                     AND B2.EXPO_YN ='Y'
+			                     AND B2.CPN_ID IS NOT NULL
+			                     AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
+			                     AND C2.CATALOG_ID = B.CATALOG_ID
+			                     AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
+			                )   	                                          
+	                     )                 
                 <if test='orderedBy == "recent"'>  
                  order by REG_DT DESC , PLAN_NM
                 </if>
@@ -2437,7 +2485,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
-                                     AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+                                     AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502')	--DP007501 : 일반특가 , DP007502 일반 배송 특가
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -2481,22 +2529,22 @@
                                         #{req.prodGradeCd}
                                       </foreach>                        
                         </if>    
-                        AND NOT EXISTS (
-                             SELECT 'X'
-                               FROM  TB_DP_PROD_RSHP A2
-                                    ,TB_DP_SPRC_PROD B2
-                                    ,TB_DP_PROD_CATALOG_MAPG C2
-                               WHERE 1=1
-                                 AND A2.PART_PROD_ID = B2.PROD_ID
-                                 AND A2.PROD_ID = C2.PROD_ID
-                                 AND C2.BASE_YN ='Y'
-                                 AND C2.USE_YN ='Y'
-                                 AND B2.EXPO_YN ='Y'
-                                 AND B2.CPN_ID IS NOT NULL
-                                 AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
-                                 AND C2.CATALOG_ID = B.CATALOG_ID
-                                 AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
-                          )                             
+			            AND NOT EXISTS (
+			                 SELECT 'X'
+			                   FROM  TB_DP_PROD_RSHP A2
+			                        ,TB_DP_SPRC_PROD B2
+			                        ,TB_DP_PROD_CATALOG_MAPG C2
+			                   WHERE 1=1
+			                     AND A2.PART_PROD_ID = B2.PROD_ID
+			                     AND A2.PROD_ID = C2.PROD_ID
+			                     AND C2.BASE_YN ='Y'
+			                     AND C2.USE_YN ='Y'
+			                     AND B2.EXPO_YN ='Y'
+			                     AND B2.CPN_ID IS NOT NULL
+			                     AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
+			                     AND C2.CATALOG_ID = B.CATALOG_ID
+			                     AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
+			              )                             
                  
                    ) 
                  WHERE NO =1
@@ -2614,22 +2662,22 @@
                                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                                 AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                 AND A.BRAND_ID =SB.BRAND_ID
-                                AND NOT EXISTS (
-                                     SELECT 'X'
-                                       FROM  TB_DP_PROD_RSHP A2
-                                            ,TB_DP_SPRC_PROD B2
-                                            ,TB_DP_PROD_CATALOG_MAPG C2
-                                       WHERE 1=1
-                                         AND A2.PART_PROD_ID = B2.PROD_ID
-                                         AND A2.PROD_ID = C2.PROD_ID
-                                         AND C2.BASE_YN ='Y'
-                                         AND C2.USE_YN ='Y'
-                                         AND B2.EXPO_YN ='Y'
-                                         AND B2.CPN_ID IS NOT NULL
-                                         AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
-                                         AND C2.CATALOG_ID = B.CATALOG_ID
-                                         AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
-                                    )                                   
+					            AND NOT EXISTS (
+					                 SELECT 'X'
+					                   FROM  TB_DP_PROD_RSHP A2
+					                        ,TB_DP_SPRC_PROD B2
+					                        ,TB_DP_PROD_CATALOG_MAPG C2
+					                   WHERE 1=1
+					                     AND A2.PART_PROD_ID = B2.PROD_ID
+					                     AND A2.PROD_ID = C2.PROD_ID
+					                     AND C2.BASE_YN ='Y'
+					                     AND C2.USE_YN ='Y'
+					                     AND B2.EXPO_YN ='Y'
+					                     AND B2.CPN_ID IS NOT NULL
+					                     AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
+					                     AND C2.CATALOG_ID = B.CATALOG_ID
+					                     AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
+					                )                                   
                           )
                      )
                     ORDER BY
@@ -2740,22 +2788,22 @@
                                 AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                                 AND K.TENANT_ID = #{tenantId}        /* INPUT 테넌트ID */
                                 AND A.BRAND_ID =SB.BRAND_ID
-                                AND NOT EXISTS (
-                                     SELECT 'X'
-                                       FROM  TB_DP_PROD_RSHP A2
-                                            ,TB_DP_SPRC_PROD B2
-                                            ,TB_DP_PROD_CATALOG_MAPG C2
-                                       WHERE 1=1
-                                         AND A2.PART_PROD_ID = B2.PROD_ID
-                                         AND A2.PROD_ID = C2.PROD_ID
-                                         AND C2.BASE_YN ='Y'
-                                         AND C2.USE_YN ='Y'
-                                         AND B2.EXPO_YN ='Y'
-                                         AND B2.CPN_ID IS NOT NULL
-                                         AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
-                                         AND C2.CATALOG_ID = B.CATALOG_ID
-                                         AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
-                                    )                                   
+					            AND NOT EXISTS (
+					                 SELECT 'X'
+					                   FROM  TB_DP_PROD_RSHP A2
+					                        ,TB_DP_SPRC_PROD B2
+					                        ,TB_DP_PROD_CATALOG_MAPG C2
+					                   WHERE 1=1
+					                     AND A2.PART_PROD_ID = B2.PROD_ID
+					                     AND A2.PROD_ID = C2.PROD_ID
+					                     AND C2.BASE_YN ='Y'
+					                     AND C2.USE_YN ='Y'
+					                     AND B2.EXPO_YN ='Y'
+					                     AND B2.CPN_ID IS NOT NULL
+					                     AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
+					                     AND C2.CATALOG_ID = B.CATALOG_ID
+					                     AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
+					                )                                   
                           )
                      )
                     ORDER BY
@@ -2844,7 +2892,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
-                                     AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+                                     AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502')	--DP007501 : 일반특가 , DP007502 일반 배송 특가
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -2887,22 +2935,22 @@
                                         #{req.prodGradeCd}
                                       </foreach>                        
                         </if>      
-                        AND NOT EXISTS (
-                             SELECT 'X'
-                               FROM  TB_DP_PROD_RSHP A2
-                                    ,TB_DP_SPRC_PROD B2
-                                    ,TB_DP_PROD_CATALOG_MAPG C2
-                               WHERE 1=1
-                                 AND A2.PART_PROD_ID = B2.PROD_ID
-                                 AND A2.PROD_ID = C2.PROD_ID
-                                 AND C2.BASE_YN ='Y'
-                                 AND C2.USE_YN ='Y'
-                                 AND B2.EXPO_YN ='Y'
-                                 AND B2.CPN_ID IS NOT NULL
-                                 AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
-                                 AND C2.CATALOG_ID = B.CATALOG_ID
-                                 AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
-                            )                         
+			            AND NOT EXISTS (
+			                 SELECT 'X'
+			                   FROM  TB_DP_PROD_RSHP A2
+			                        ,TB_DP_SPRC_PROD B2
+			                        ,TB_DP_PROD_CATALOG_MAPG C2
+			                   WHERE 1=1
+			                     AND A2.PART_PROD_ID = B2.PROD_ID
+			                     AND A2.PROD_ID = C2.PROD_ID
+			                     AND C2.BASE_YN ='Y'
+			                     AND C2.USE_YN ='Y'
+			                     AND B2.EXPO_YN ='Y'
+			                     AND B2.CPN_ID IS NOT NULL
+			                     AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
+			                     AND C2.CATALOG_ID = B.CATALOG_ID
+			                     AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
+			                )                         
                       
                    ) 
                  WHERE NO =1
@@ -2994,7 +3042,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
-                                     AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+                                     AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502')	--DP007501 : 일반특가 , DP007502 일반 배송 특가
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -3040,22 +3088,22 @@
                                         #{req.prodGradeCd}
                                       </foreach>                        
                         </if>     
-                        AND NOT EXISTS (
-                             SELECT 'X'
-                               FROM  TB_DP_PROD_RSHP A2
-                                    ,TB_DP_SPRC_PROD B2
-                                    ,TB_DP_PROD_CATALOG_MAPG C2
-                               WHERE 1=1
-                                 AND A2.PART_PROD_ID = B2.PROD_ID
-                                 AND A2.PROD_ID = C2.PROD_ID
-                                 AND C2.BASE_YN ='Y'
-                                 AND C2.USE_YN ='Y'
-                                 AND B2.EXPO_YN ='Y'
-                                 AND B2.CPN_ID IS NOT NULL
-                                 AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
-                                 AND C2.CATALOG_ID = B.CATALOG_ID
-                                 AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
-                            )                          
+			            AND NOT EXISTS (
+			                 SELECT 'X'
+			                   FROM  TB_DP_PROD_RSHP A2
+			                        ,TB_DP_SPRC_PROD B2
+			                        ,TB_DP_PROD_CATALOG_MAPG C2
+			                   WHERE 1=1
+			                     AND A2.PART_PROD_ID = B2.PROD_ID
+			                     AND A2.PROD_ID = C2.PROD_ID
+			                     AND C2.BASE_YN ='Y'
+			                     AND C2.USE_YN ='Y'
+			                     AND B2.EXPO_YN ='Y'
+			                     AND B2.CPN_ID IS NOT NULL
+			                     AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
+			                     AND C2.CATALOG_ID = B.CATALOG_ID
+			                     AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
+			                )                          
                    ) 
                  WHERE NO =1
 --               ORDER BY 
@@ -3143,7 +3191,7 @@
                                      AND A1.PART_PROD_ID = B1.PROD_ID
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
-                                     AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502') --DP007501 : 일반특가 , DP007502 일반 배송 특가
+                                     AND B1.SPRC_TYPE_CD IN ('DP007501','DP007502')	--DP007501 : 일반특가 , DP007502 일반 배송 특가
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
                                   )N
                         WHERE 1=1
@@ -3295,11 +3343,11 @@
                 AND PI.IMG_CD = #{imageCd}          
                 AND C.CATALOG_ID = M.PROD_ID(+)
                 <if test="req.userKey != null">   
-                AND #{tenantHeader.tenantId} = ML.TENANT_ID(+)
-                AND #{req.userKey} = ML.USER_KEY(+)
-                AND 'DP01210002' = ML.STATS_CLSF(+)
-                AND C.CATALOG_ID = ML.STATS_KEY(+)
-                </if>
+  		        AND #{tenantHeader.tenantId} = ML.TENANT_ID(+)
+			    AND #{req.userKey} = ML.USER_KEY(+)
+			    AND 'DP01210002' = ML.STATS_CLSF(+)
+			    AND C.CATALOG_ID = ML.STATS_KEY(+)
+			    </if>
                 AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                 <if test="req.includeProdStopStatus != null ">
                 AND NVL(B.CHNL_CNT, 0) <![CDATA[> ]]> 0
@@ -3454,12 +3502,12 @@
                                 ,TB_DP_SPRC_PROD B1
                            WHERE 1=1
                              AND A1.PART_PROD_ID = B1.PROD_ID
-                            <if test="req.specialProdId != null and req.specialType=='episode'">
-                             AND B1.PROD_ID  = #{req.specialProdId}
-                            </if>
-                            <if test="req.specialProdId != null and req.specialType=='channel'">
-                             AND A1.PROD_ID = #{req.specialProdId}
-                            </if>                                
+			                <if test="req.specialProdId != null and req.specialType=='episode'">
+			                 AND B1.PROD_ID  = #{req.specialProdId}
+			                </if>
+			                <if test="req.specialProdId != null and req.specialType=='channel'">
+			                 AND A1.PROD_ID = #{req.specialProdId}
+			                </if>                                
                              AND B1.EXPO_YN ='Y'
                              AND B1.CPN_ID IS NOT NULL
                              <if test="req.specialTypeCd != null">
@@ -3589,7 +3637,7 @@
                      ) 
                END
               ) = 'Y'   
-          AND E.PROD_STATUS_CD ='PD000403'                      
+		  AND E.PROD_STATUS_CD ='PD000403'                      
          </if>            
         ORDER BY A.CHNL_PROD_ID
                 ,A.OPT1_NM

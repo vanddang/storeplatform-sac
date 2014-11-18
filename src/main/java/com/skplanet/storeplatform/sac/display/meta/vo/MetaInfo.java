@@ -153,16 +153,22 @@ public class MetaInfo extends CommonInfo {
 	private String sdFileSize;
 	private String sdProdVer;
 	private String hdBtvCid;
+	private String hd2BtvCid;
 	private String fhdBtvCid;
 	private String hdDpPicRatio;
+	private String hd2DpPicRatio;
 	private String fhdDpPicRatio;
 	private String hdDpPixel;
+	private String hd2DpPixel;
 	private String fhdDpPixel;
 	private String hdSubContsId;
+	private String hd2SubContsId;
 	private String fhdSubContsId;
 	private String hdFileSize;
+	private String hd2FileSize;
 	private String fhdFileSize;
 	private String hdProdVer;
+	private String hd2ProdVer;
 	private String fhdProdVer;
 	private String dwldAreaLimtYn;
 	private String strmNetworkCd;
@@ -170,6 +176,7 @@ public class MetaInfo extends CommonInfo {
 	private String nmFilePath;
 	private String sdFilePath;
 	private String hdFilePath;
+	private String hd2FilePath;
 	private String fhdFilePath;
 	private String chnlProdNm;
 	private String genreCd;
@@ -4269,6 +4276,61 @@ public class MetaInfo extends CommonInfo {
 		this.deltaFilePath = deltaFilePath;
 	}
 
+	public String getHd2BtvCid() {
+		return hd2BtvCid;
+	}
+
+	public void setHd2BtvCid(String hd2BtvCid) {
+		this.hd2BtvCid = hd2BtvCid;
+	}
+	
+	public String getHd2DpPicRatio() {
+		return hd2DpPicRatio;
+	}
+
+	public void setHd2DpPicRatio(String hd2DpPicRatio) {
+		this.hd2DpPicRatio = hd2DpPicRatio;
+	}
+
+	public String getHd2DpPixel() {
+		return hd2DpPixel;
+	}
+
+	public void setHd2DpPixel(String hd2DpPixel) {
+		this.hd2DpPixel = hd2DpPixel;
+	}
+
+	public String getHd2SubContsId() {
+		return hd2SubContsId;
+	}
+
+	public void setHd2SubContsId(String hd2SubContsId) {
+		this.hd2SubContsId = hd2SubContsId;
+	}
+
+	public String getHd2FileSize() {
+		return hd2FileSize;
+	}
+
+	public void setHd2FileSize(String hd2FileSize) {
+		this.hd2FileSize = hd2FileSize;
+	}
+
+	public String getHd2ProdVer() {
+		return hd2ProdVer;
+	}
+
+	public void setHd2ProdVer(String hd2ProdVer) {
+		this.hd2ProdVer = hd2ProdVer;
+	}
+
+	public String getHd2FilePath() {
+		return hd2FilePath;
+	}
+
+	public void setHd2FilePath(String hd2FilePath) {
+		this.hd2FilePath = hd2FilePath;
+	}
 	public String getFhdFileSize() {
 		return this.fhdFileSize;
 	}

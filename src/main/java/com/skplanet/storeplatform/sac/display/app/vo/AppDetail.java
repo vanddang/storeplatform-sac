@@ -40,6 +40,8 @@ public class AppDetail extends CommonInfo {
     private String drmYn;
     private String descVideoUrl;
     private String partParentClsfCd;
+    private String topMenuId;
+    private String likeYn;
 
     public String getPartParentClsfCd() {
         return partParentClsfCd;
@@ -271,5 +273,21 @@ public class AppDetail extends CommonInfo {
 
     public void setFixedAmt(Integer fixedAmt) {
         this.fixedAmt = fixedAmt;
+    }
+
+    public String getTopMenuId() {
+        return topMenuId;
+    }
+
+    public void setTopMenuId(String topMenuId) {
+        this.topMenuId = topMenuId;
+    }
+
+    public String getLikeYn() {
+        return likeYn;
+    }
+
+    public void setLikeYn(String likeYn) {
+        this.likeYn = likeYn;
     }
 }

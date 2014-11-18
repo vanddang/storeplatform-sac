@@ -32,8 +32,11 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserExtraInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserInfoSac;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
@@ -87,7 +90,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 	private static final String DEFAULT_MSG2 = "그저 그래요";
 	private static final String DEFAULT_MSG3 = "좋아요";
 	private static final String DEFAULT_MSG4 = "만족해요";
+	private static final String DEFAULT_MSG3_V2 = "만족해요";
+	private static final String DEFAULT_MSG4_V2 = "좋아요";
 	private static final String DEFAULT_MSG5 = "아주 좋아요";
+
+	private final String USER_PROFILE_IMG_PATH_CD = "US010912";
 
 	@Autowired
 	private FeedbackRepository feedbackRepository;
@@ -568,6 +575,158 @@ public class FeedbackServiceImpl implements FeedbackService {
 		return listFeedbackRes;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public ListFeedbackSacRes listV2(ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+
+		// 사용후기 평균평점.
+		TenantProdStats tenantProdStats = new TenantProdStats();
+		tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		tenantProdStats.setProdId(listFeedbackSacReq.getProdId());
+		TenantProdStats getProdEvalInfo = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
+
+		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
+		if (getProdEvalInfo == null) {
+			listFeedbackRes.setAvgEvluScorePcts("0,0,0,0,0");
+			listFeedbackRes.setAvgEvluScore("0");
+			listFeedbackRes.setDwldCnt("0");
+			listFeedbackRes.setPaticpersCnt("0");
+		} else {
+			listFeedbackRes.setAvgEvluScorePcts(ObjectUtils.defaultIfNull(getProdEvalInfo.getAvgEvluScorePcts(),
+					"0,0,0,0,0"));
+			listFeedbackRes.setAvgEvluScore(ObjectUtils.defaultIfNull(getProdEvalInfo.getAvgEvluScore(), "0"));
+			listFeedbackRes.setDwldCnt(ObjectUtils.defaultIfNull(getProdEvalInfo.getDwldCnt(), "0"));
+			listFeedbackRes.setPaticpersCnt(ObjectUtils.defaultIfNull(getProdEvalInfo.getPaticpersCnt(), "0"));
+		}
+
+		// 페이징 처리.
+		int offset = listFeedbackSacReq.getOffset() == 0 ? 1 : listFeedbackSacReq.getOffset();
+		int count = listFeedbackSacReq.getCount() == 0 ? 10 : (offset + listFeedbackSacReq.getCount()) - 1;
+
+		// 최근 업데이트 파라미터 값 확인
+		if (!StringUtils.isNotBlank(listFeedbackSacReq.getUpdateVer())) {
+			listFeedbackSacReq.setUpdateVer("N");
+		}
+
+		ProdNoti prodNoti = new ProdNoti();
+
+		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNoti.setProdId(listFeedbackSacReq.getProdId());
+		prodNoti.setMbrNo(ObjectUtils.defaultIfNull(listFeedbackSacReq.getUserKey(), ""));
+		prodNoti.setOrderedBy(listFeedbackSacReq.getOrderedBy());
+		prodNoti.setChnlId(listFeedbackSacReq.getChnlId());
+		prodNoti.setProdType(listFeedbackSacReq.getProdType());
+		prodNoti.setStartRow(String.valueOf(offset));
+		prodNoti.setEndRow(String.valueOf(count));
+
+		// 최신순이고 최근 업데이트 조회인 경우 최근 업데이트 일자 조회(검증일)
+		if (listFeedbackSacReq.getOrderedBy().equals("recent") && listFeedbackSacReq.getUpdateVer().equals("Y")) {
+			if (!StringUtils.isNotBlank(listFeedbackSacReq.getProdType())) {
+				prodNoti.setRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+
+				// 게임, 앱상품에 대한 LAST_DEPOLY_DT 조회(검증일 기준)
+				ProdNoti resProdNoti = this.feedbackRepository.getAppProdLastDeployDt(prodNoti);
+
+				if (StringUtils.isNotBlank(resProdNoti.getLastDeployDt())) {
+					// 서비스 그룹코드가 앱이 아니라면 최근 업데이트일자를 조회하지 않음
+					if (!resProdNoti.getSvcGrpCd().equals(DisplayConstants.DP_APP_PROD_SVC_GRP_CD)) {
+						prodNoti.setLastDeployDt(null);
+					} else {
+						prodNoti.setLastDeployDt(resProdNoti.getLastDeployDt());
+					}
+				}
+			}
+		}
+
+		// 사용후기 카운트.
+		int totalCount = (Integer) this.feedbackRepository.getProdNotiCountV2(prodNoti);
+		listFeedbackRes.setNotiTot(String.valueOf(totalCount));
+
+		// 사용후기 목록.
+		List<ProdNoti> getProdnotiList = this.feedbackRepository.getProdNotiListV2(prodNoti);
+		if (!CollectionUtils.isEmpty(getProdnotiList)) {
+			List<Feedback> notiList = new ArrayList<Feedback>();
+			List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+			Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
+			List<String> userKeyList = new ArrayList<String>();
+			Set<String> userKeySet = new HashSet<String>();
+			// 회원/ 판매자 요청 리스트.
+			for (ProdNoti res : getProdnotiList) {
+				SellerMbrSac sellerMbrSac = new SellerMbrSac();
+				sellerMbrSac.setSellerKey(res.getSellerMbrNo());
+				sellerMbrSacSet.add(sellerMbrSac);
+				userKeySet.add(res.getMbrNo());
+			}
+			// 판매자 조회 요청.
+			sellerMbrSacList.addAll(sellerMbrSacSet);
+			DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+			detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+			DetailInformationSacRes detailInformationSacRes = null;
+
+			// 판매자 조회.
+			try {
+				detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
+			} catch (Exception e) {
+				detailInformationSacRes = null;
+			}
+
+			// 회원 조회 요청.
+			SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+			userKeyList.addAll(userKeySet);
+			searchUserSacReq.setUserKeyList(userKeyList);
+			SearchUserSacRes searchUserSacRes = null;
+
+			// 회원 조회.
+			try {
+				searchUserSacRes = this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+			} catch (Exception e) {
+				searchUserSacRes = null;
+			}
+
+			// 회원 부가속성 정보 조회 (프로파일 이미지 "US010912")
+			SearchUserExtraInfoSacRes searchUserExtraInfoSacRes = null;
+			SearchUserExtraInfoSacReq searchUserExtraInfoSacReq = new SearchUserExtraInfoSacReq();
+			searchUserExtraInfoSacReq.setUserKeyList(userKeyList);
+
+			List<String> extraProfileList = new ArrayList<String>();
+			extraProfileList.add(this.USER_PROFILE_IMG_PATH_CD);
+			searchUserExtraInfoSacReq.setExtraProfileList(extraProfileList);
+
+			try {
+				searchUserExtraInfoSacRes = this.feedbackRepository.searchUserExtraInfo(searchUserExtraInfoSacReq);
+			} catch (Exception e) {
+				searchUserExtraInfoSacRes = null;
+			}
+
+			// 응답셋팅.
+			for (int i = 0; i < getProdnotiList.size(); i++) {
+				ProdNoti res = getProdnotiList.get(i);
+				res.setInfVersion("v2");
+
+				if (searchUserExtraInfoSacRes != null) {
+					List<UserExtraInfoSac> userExtraList = (List<UserExtraInfoSac>) searchUserExtraInfoSacRes
+							.getSearchUserExtraInfoSacRes().get(res.getMbrNo());
+
+					// 회원 프로필 이미지 세팅
+					if (!CollectionUtils.isEmpty(userExtraList)) {
+						for (UserExtraInfoSac userExtra : userExtraList) {
+							if (this.USER_PROFILE_IMG_PATH_CD.equals(userExtra.getExtraProfile())) {
+								res.setProfileImgUrl(userExtra.getExtraProfileValue());
+							}
+						}
+					}
+				}
+
+				notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType(), detailInformationSacRes,
+						searchUserSacRes));
+			}
+
+			// 응답.
+			listFeedbackRes.setNotiList(notiList);
+		}
+		return listFeedbackRes;
+	}
+
 	@Override
 	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
@@ -655,6 +814,132 @@ public class FeedbackServiceImpl implements FeedbackService {
 			BeanUtils.copyProperties(feedback, feedbackMy);
 			notiMyList.add(feedbackMy);
 		}
+		// 응답
+		listMyFeedbackSacRes.setNotiList(notiMyList);
+		return listMyFeedbackSacRes;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ListMyFeedbackSacRes listMyFeedbackV2(ListMyFeedbackSacReq listMyFeedbackSacReq,
+			SacRequestHeader sacRequestHeader) {
+
+		// 페이징 처리.
+		int offset = listMyFeedbackSacReq.getOffset() == 0 ? 1 : listMyFeedbackSacReq.getOffset();
+		int count = listMyFeedbackSacReq.getCount() == 0 ? 100 : (offset + listMyFeedbackSacReq.getCount()) - 1;
+
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNoti.setProdIds(Arrays.asList((StringUtils.split(listMyFeedbackSacReq.getProdIds(), ","))));
+		prodNoti.setMbrNo(listMyFeedbackSacReq.getUserKey());
+		prodNoti.setChnlId(listMyFeedbackSacReq.getChnlId());
+		prodNoti.setProdType(listMyFeedbackSacReq.getProdType());
+		prodNoti.setDefaultMsg1(DEFAULT_MSG1);
+		prodNoti.setDefaultMsg2(DEFAULT_MSG2);
+		prodNoti.setDefaultMsg3(DEFAULT_MSG3_V2);
+		prodNoti.setDefaultMsg4(DEFAULT_MSG4_V2);
+		prodNoti.setDefaultMsg5(DEFAULT_MSG5);
+		prodNoti.setStartRow(String.valueOf(offset));
+		prodNoti.setEndRow(String.valueOf(count));
+
+		// 사용후기 카운트.
+		int notiTot = (Integer) this.feedbackRepository.getMyProdNotiCount(prodNoti);
+
+		if (notiTot <= 0) {
+			throw new StorePlatformException("SAC_OTH_9001");
+		}
+
+		// 사용후기 목록.
+		ListMyFeedbackSacRes listMyFeedbackSacRes = new ListMyFeedbackSacRes();
+		listMyFeedbackSacRes.setNotiTot(String.valueOf(notiTot));
+
+		List<ProdNoti> getMyProdNotiList = this.feedbackRepository.getMyProdNotiList(prodNoti);
+
+		if (CollectionUtils.isEmpty(getMyProdNotiList)) {
+			throw new StorePlatformException("SAC_OTH_9001");
+		}
+
+		List<FeedbackMy> notiMyList = new ArrayList<FeedbackMy>();
+		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
+		Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
+		List<String> userKeyList = new ArrayList<String>();
+		Set<String> userKeySet = new HashSet<String>();
+
+		// 판매자 요청 리스트.
+		for (ProdNoti res : getMyProdNotiList) {
+			SellerMbrSac sellerMbrSac = new SellerMbrSac();
+			sellerMbrSac.setSellerKey(res.getSellerMbrNo());
+			sellerMbrSacSet.add(sellerMbrSac);
+			userKeySet.add(res.getMbrNo());
+		}
+
+		// 판매자 요청.
+		sellerMbrSacList.addAll(sellerMbrSacSet);
+		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
+		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
+		DetailInformationSacRes detailInformationSacRes = null;
+
+		// 판매자 조회.
+		try {
+			detailInformationSacRes = this.feedbackRepository.detailInformation(detailInformationSacReq);
+		} catch (Exception e) {
+			detailInformationSacRes = null;
+		}
+
+		// 회원 조회 요청.
+		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+		userKeyList.addAll(userKeySet);
+		searchUserSacReq.setUserKeyList(userKeyList);
+		SearchUserSacRes searchUserSacRes = null;
+
+		// 회원 조회.
+		try {
+			searchUserSacRes = this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+		} catch (Exception e) {
+			searchUserSacRes = null;
+		}
+
+		// 회원 부가속성 정보 조회 (프로파일 이미지 "US010912")
+		SearchUserExtraInfoSacRes searchUserExtraInfoSacRes = null;
+		SearchUserExtraInfoSacReq searchUserExtraInfoSacReq = new SearchUserExtraInfoSacReq();
+		searchUserExtraInfoSacReq.setUserKeyList(userKeyList);
+
+		List<String> extraProfileList = new ArrayList<String>();
+		extraProfileList.add(this.USER_PROFILE_IMG_PATH_CD);
+		searchUserExtraInfoSacReq.setExtraProfileList(extraProfileList);
+
+		try {
+			searchUserExtraInfoSacRes = this.feedbackRepository.searchUserExtraInfo(searchUserExtraInfoSacReq);
+		} catch (Exception e) {
+			searchUserExtraInfoSacRes = null;
+		}
+
+		// 응답셋팅.
+		for (int i = 0; i < getMyProdNotiList.size(); i++) {
+			ProdNoti res = getMyProdNotiList.get(i);
+			res.setInfVersion("v2");
+
+			if (searchUserExtraInfoSacRes != null) {
+				List<UserExtraInfoSac> userExtraList = (List<UserExtraInfoSac>) searchUserExtraInfoSacRes
+						.getSearchUserExtraInfoSacRes().get(res.getMbrNo());
+
+				// 회원 프로필 이미지 세팅
+				if (!CollectionUtils.isEmpty(userExtraList)) {
+					for (UserExtraInfoSac userExtra : userExtraList) {
+						if (this.USER_PROFILE_IMG_PATH_CD.equals(userExtra.getExtraProfile())) {
+							res.setProfileImgUrl(userExtra.getExtraProfileValue());
+						}
+					}
+				}
+			}
+
+			Feedback feedback = this.setFeedback(res, listMyFeedbackSacReq.getProdType(), detailInformationSacRes,
+					searchUserSacRes);
+			FeedbackMy feedbackMy = new FeedbackMy();
+			BeanUtils.copyProperties(feedback, feedbackMy);
+			notiMyList.add(feedbackMy);
+		}
+
 		// 응답
 		listMyFeedbackSacRes.setNotiList(notiMyList);
 		return listMyFeedbackSacRes;
@@ -940,6 +1225,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 				}
 			}
 		}
+
+		// V2 버전인 경우에만 프로필 이미지를 내려준다.
+		if (StringUtils.equals("v2", prodNoti.getInfVersion())) {
+			feedback.setProfileImgUrl(StringUtils.stripToEmpty(prodNoti.getProfileImgUrl()));
+		}
+
 		feedback.setRegId(regId);
 		feedback.setRegDt(prodNoti.getRegDt());
 		feedback.setSellerRespTitle(prodNoti.getSellerRespTitle());
@@ -951,6 +1242,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		feedback.setWhose(prodNoti.getWhose());
 		feedback.setSelfRecomYn(prodNoti.getNotiYn());
 		feedback.setAvgScore(prodNoti.getAvgScore());
+
 		// 판매자 정보
 		String nickNm = null;
 		String compNm = "";
@@ -980,11 +1272,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 				}
 			}
 		}
-		// , NVL2( N.SELLER_NOTI_DSCR
-		// , NVL2( N.EXPOSURE_DEV_NM
-		// , N.EXPOSURE_DEV_NM
-		// , DECODE( M.DEV_TP_CD, 'US000401', M.OP_NM, 'US000404', M.FR_COMPANY, M.COMP_NM ) )
-		// , NULL) AS NICK_NAME
+
 		// 사용후기 내용이 있고, 판매자 댓글이 존재하면 nkchNm 세팅
 		if (StringUtils.isNotBlank(prodNoti.getNotiDscr()) && StringUtils.isNotBlank(prodNoti.getSellerRespTitle())
 				&& StringUtils.isNotBlank(prodNoti.getSellerRespOpin())) {
@@ -1005,13 +1293,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 		// 사용후기가 내용이 없으면 NULL
 		feedback.setNickNm(nickNm);
-		// <!-- Shopping 인 경우만 -->
-		// <isEqual property="type" compareValue="shopping">
-		// , DECODE( M.DEV_TP_CD
-		// , 'US000401', M.OP_NM
-		// , 'US000404', M.FR_COMPANY
-		// , DECODE( N.SVC_GRP_CD, 'DP000206', M.REP_COMP_NM, M.COMP_NM ) ) AS COMP_NM
-		// </isEqual>
+
 		// 쇼핑 상품인 경우.
 		if (StringUtils.equals(prodType, "shopping")) {
 			// 쇼핑 상품이면서 개인 판매자이면,

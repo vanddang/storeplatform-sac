@@ -29,6 +29,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
@@ -335,6 +336,10 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
         else if(q.startsWith("DP000203.DP001111")) {
             info.setProductType(ProductType.Music);
         }
+        else if(q.startsWith("DP000208")) {
+            // svcTp='PD002503', metaClsfCd='DP001729'
+            info.setProductType(ProductType.Album);
+        }
         else if(q.startsWith("DP000203.DP001115")) {
             info.setProductType(ProductType.Vod);
             if(DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenu))
@@ -388,4 +393,32 @@ public class DisplayCommonServiceImpl implements DisplayCommonService {
 		}
         return gradeRes != null ? gradeRes.getGradeInfoSac() : null;
 	}
+
+
+    @Override
+    public Integer getAllowedAge(String topMenuId, String gradeCd) {
+        if("PD004401".equals(gradeCd))
+            return 0;
+
+        if(DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+            if("PD004402".equals(gradeCd))
+                return 12;
+            else if("PD004403".equals(gradeCd))
+                return 15;
+            else if ("PD004404".equals(gradeCd))
+                return 18;
+            else
+                return null;
+        }
+        else {
+            if("PD004402".equals(gradeCd))
+                return 12;
+            else if("PD004403".equals(gradeCd))
+                return 15;
+            else if ("PD004404".equals(gradeCd))
+                return 19;
+            else
+                return null;
+        }
+    }
 }

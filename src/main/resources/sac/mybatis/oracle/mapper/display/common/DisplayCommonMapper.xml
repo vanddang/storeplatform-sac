@@ -107,4 +107,18 @@
               AND P.PROD_ID = #{prodId}
     </select>
 
+    <select id="getMenuInfo" resultType="map">
+        select
+            TDMC.MENU_ID AS MENU_ID,
+            TDMCD.LANG_CD AS LANG_CD,
+            MENU_NM,
+            MENU_DESC
+        from TB_DP_MENU_CATEGORY TDMC
+            INNER JOIN TB_DP_MENU_CATEGORY_DESC TDMCD
+              ON TDMCD.MENU_ID = TDMC.MENU_ID
+        WHERE 1=1
+          AND TDMC.USE_YN = 'Y'
+        ORDER BY TDMC.MENU_DEPTH, TDMC.MENU_ID
+    </select>
+
 </mapper>

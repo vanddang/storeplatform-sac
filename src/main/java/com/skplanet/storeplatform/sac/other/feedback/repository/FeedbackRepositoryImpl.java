@@ -23,6 +23,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
@@ -150,6 +152,11 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	}
 
 	@Override
+	public List<ProdNoti> getProdNotiListV2(ProdNoti prodNoti) {
+		return this.commonDAO.queryForList("Feedback.getProdNotiListV2", prodNoti, ProdNoti.class);
+	}
+
+	@Override
 	public ProdNoti getProdNoti(ProdNoti prodNoti) {
 		return this.commonDAO.queryForObject("Feedback.getProdNotiList", prodNoti, ProdNoti.class);
 	}
@@ -157,6 +164,11 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	@Override
 	public Object getProdNotiCount(ProdNoti prodNoti) {
 		return this.commonDAO.queryForInt("Feedback.getProdNotiCount", prodNoti);
+	}
+
+	@Override
+	public Object getProdNotiCountV2(ProdNoti prodNoti) {
+		return this.commonDAO.queryForInt("Feedback.getProdNotiCountV2", prodNoti);
 	}
 
 	@Override
@@ -204,4 +216,13 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 		return this.commonDAO.update("Feedback.insertChannelTenantProdStats", tenantProdStats);
 	}
 
+	@Override
+	public ProdNoti getAppProdLastDeployDt(ProdNoti prodNoti) {
+		return this.commonDAO.queryForObject("Feedback.getAppProdLastDeployDt", prodNoti, ProdNoti.class);
+	}
+
+	@Override
+	public SearchUserExtraInfoSacRes searchUserExtraInfo(SearchUserExtraInfoSacReq searchUserExtraInfoSacReq) {
+		return this.searchUserSCI.searchUserExtraInfo(searchUserExtraInfoSacReq);
+	}
 }

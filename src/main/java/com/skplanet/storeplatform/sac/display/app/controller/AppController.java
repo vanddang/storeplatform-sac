@@ -61,6 +61,29 @@ public class AppController {
             throw new StorePlatformException("SAC_DSP_0009");
         }
 
+        appDetail.getProduct().getRights().setAgeAllowedFrom(null);
+
+        return appDetail;
+    }
+
+    @RequestMapping(value = "/app/detail/v2", method = RequestMethod.POST)
+    @ResponseBody
+    public AppDetailRes getAppDetailV2(SacRequestHeader header, @Validated @RequestBody AppDetailReq req) {
+
+        AppDetailParam request = new AppDetailParam();
+        request.setChannelId(req.getChannelId());
+        request.setLangCd(header.getTenantHeader().getLangCd());
+        request.setTenantId(header.getTenantHeader().getTenantId());
+        request.setDeviceModelCd(header.getDeviceHeader().getModel());
+        request.setOsVersion(header.getDeviceHeader().getOs());
+        request.setUserKey(req.getUserKey());
+        request.setDeviceKey(req.getDeviceKey());
+
+        AppDetailRes appDetail = appService.searchAppDetail(request);
+        if (appDetail == null) {
+            throw new StorePlatformException("SAC_DSP_0009");
+        }
+
         return appDetail;
     }
 

@@ -14,7 +14,11 @@ import java.util.Date;
 public class DateUtilsTest {
     @Test
     public void test1() {
-        assert DateUtils.parseDate("1981-11-22") == null;
+        Date dt = DateUtils.parseDate("1981-11-22");
+        assert dt != null;
+
+        Date dt2 = DateUtils.parseDate("20141122");
+        assert dt2 != null;
     }
 
     @Test

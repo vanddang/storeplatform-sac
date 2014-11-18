@@ -238,7 +238,7 @@ public interface ShoppingService {
 	public ShoppingCategoryBrandRes getBrandshopMainListV2(SacRequestHeader header, ShoppingReq req);
 
 	/**
-	 * 브랜드샵 – 카테고리별 브랜드샵 조회.
+	 *  브랜드샵 – 카테고리별 브랜드샵 조회.
 	 * 
 	 * @param header
 	 *            header
@@ -247,7 +247,7 @@ public interface ShoppingService {
 	 * @return ShoppingBrandRes
 	 */
 	public ShoppingCategoryBrandRes getBrandshopCategoryList(SacRequestHeader header, ShoppingReq req);
-
+	
 	/**
 	 * 특정 브랜드샵 상품 리스트 (V2버전).
 	 * 

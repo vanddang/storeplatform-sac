@@ -946,4 +946,185 @@
        GROUP 
           BY  c.tenant_id, a.prod_id
     </update>
+    
+    <!-- 사용후기 전체 갯수 조회V2-->
+    <select id="getProdNotiCountV2" parameterType="ProdNoti" resultType="int">
+      SELECT  /* FeedbackMapper.xml, getProdNotiCountV2, SAC 기타, 2014-02-04 */
+              COUNT(*) AS total_count      /* 상품 후기 갯수 */
+        FROM  tb_dp_prod_noti              /* 상품 후기 */
+       WHERE  tenant_id = #{tenantId}      /* 테넌트 ID */
+         AND  del_yn = 'N'                 /* 삭제 여부 */
+         AND  bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
+         AND  spam_yn = 'N'                /* 스펨 여부 */
+         AND  noti_type_cd = 'DP000401'    /* 후기 타입 코드 DP000401(댓글) */
+         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
+         AND  noti_seq = #{notiSeq}        /* 후기 SEQ */
+         </if>
+         <!-- Shopping -->
+         <if test="prodType == 'shopping'">
+         AND  catalog_id = #{prodId}       /* 카탈로그 ID */
+         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+         AND  prod_id = #{chnlId}          /* 상품 ID */
+         </if>
+         </if>
+         <!-- Shopping 외 -->
+         <if test="prodType != 'shopping'">
+         AND  prod_id = #{prodId}          /* 상품 ID */
+         
+         <if test="orderedBy == 'recent'">
+         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(lastDeployDt)">
+         AND to_char(reg_dt, 'YYYYMMDDHH24MISS') <![CDATA[>]]> #{lastDeployDt}       /* 최신 버전만 보기 */
+         </if>
+         </if>
+         
+         </if>
+    </select>
+
+    <!-- 사용후기 전체 목록 조회V2 -->
+     <select id="getProdNotiListV2" parameterType="ProdNoti" resultType="ProdNoti">
+      SELECT  /* FeedbackMapper.xml, getProdNotiListV2, SAC 기타, 2014-02-04 */
+              a.noti_seq       /* 후기 SEQ */
+            , a.mbr_no         /* 회원 번호 */
+            , a.seller_mbr_no  /* 판매자 회원 번호 */
+            , DECODE( a.title, NULL, CASE WHEN LENGTH(NVL(a.noti_dscr,0)) <![CDATA[<=]]> 10 THEN a.noti_dscr ELSE (SUBSTR( a.noti_dscr , 0, 10 )||'...') END , a.title ) AS title  /* 제목 */
+            , a.noti_dscr      /* 후기 내용 */
+            , NVL( a.noti_score, 0 ) AS noti_score /* 후기 점수(추천) */
+            , a.mbr_telno      /* 회원 전화번호 */
+            , a.reg_id         /* 등록 ID */
+            , TO_CHAR(a.reg_dt,'YYYYMMDDHH24MISS') AS reg_dt  /* 등록 일시 */
+            , a.seller_resp_title  /* 판매자 응답 제목 */
+            , a.seller_resp_opin   /* 판매자 응답 내용 */
+            , NVL2( a.seller_resp_opin, TO_CHAR( a.seller_resp_reg_dt, 'YYYYMMDDHH24MISS' ), NULL ) AS seller_resp_reg_dt  /* 판매자 응답 일시 */
+            , a.cid                /* CID */
+            , DECODE( a.mbr_no, #{mbrNo}, 'Y', 'N' ) AS self_yn        /* 본인 여부 */
+            , DECODE( a.mbr_no, a.seller_mbr_no, 'Y','N' ) AS sale_yn  /* 판매자 여부 */
+            , DECODE( a.mbr_no, a.seller_mbr_no, 'seller', #{mbrNo}, 'mine', '' ) AS whose  /* 판매자 본인 식별 */
+            , ( CASE WHEN ( 
+                           SELECT  COUNT(*)                   /* 상품 후기 선호 갯수 */
+                             FROM  tb_dp_prod_notigood l      /* 상품 후기 선호 */
+                            WHERE  l.tenant_id = a.tenant_id  /* 테넌트 ID */
+                              AND  l.mbr_no = #{mbrNo}        /* 회원 번호 */
+                              AND  l.noti_seq = a.noti_seq    /* 후기 SEQ */
+                           ) > 0 THEN 'Y'                     /* 선호 갯수가 0보다 큰것 */
+                     ELSE 'N'
+               END ) AS noti_yn  /* 본인 추천여부 ID */
+            , ( 
+              SELECT  avg_score                /* 평균 점수 */
+                FROM  tb_dp_mbr_avg            /* 상품 평점 */
+               WHERE  tenant_id = a.tenant_id  /* 테넌트 ID */
+                 AND  prod_id = a.prod_id      /* 상품 ID */
+                 AND  mbr_no = a.mbr_no        /* 회원 번호 */
+              ) AS avg_score                   /* 평균 점수 */
+            , a.fb_post_yn                     /* 페이스북 POST 여부 */
+            , a.prod_id                        /* 상품 ID */
+            , a.expo_seller_nm                 /* 노출 판매자 명 */
+            , a.svc_grp_cd                     /* 서비스 그룹 코드 */
+       FROM (
+             SELECT  ia.*
+               FROM  (
+                      SELECT  ia.*
+                            , ROWNUM AS rnum
+                        FROM (
+                              SELECT 
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(notiSeq)">
+                                        <if test="prodType == 'shopping'">
+                                            <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                                                <if test="orderedBy == 'recommend'">
+                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_05) */
+                                                </if>
+                                                <if test="orderedBy == 'recent'">
+                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_01) */
+                                                </if>
+                                            </if>
+                                            <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
+                                                <if test="orderedBy == 'recommend'">
+                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_06) */
+                                                </if>
+                                            </if>
+                                        </if>
+                                     </if>
+                                     ia.tenant_id           /* 테넌트 ID */                
+                                   , ia.noti_seq            /* 후기 SEQ */
+                                   , ia.title               /* 제목 */
+                                   , ia.noti_dscr           /* 후기 내용 */
+                                   , ia.reg_dt              /* 등록 일시 */
+                                   , ia.mbr_no              /* 회원 번호 */
+                                   , ia.reg_id              /* 등록 ID */
+                                   , ia.mbr_telno           /* 회원 전화번호 */
+                                   , ia.noti_score          /* 후기 점수(추천) */
+                                   , ia.seller_resp_title   /* 판매자 응답 제목 */
+                                   , ia.seller_resp_opin    /* 판매자 응답 의견 */
+                                   , ia.seller_resp_reg_dt  /* 판매자 응답 일시 */
+                                   , ia.prod_id             /* 상품 ID */
+                                   , ia.fb_post_yn          /* 페이스북 POST 여부 */
+                                   , ib.seller_mbr_no       /* 판매자 회원 번호 */
+                                   , ib.cid                 /* CID */
+                                   , ib.svc_grp_cd          /* 서비스 그룹 코드 */
+                                   , ib.expo_seller_nm      /* 노출 판매자 명 */
+                               FROM  tb_dp_prod_noti ia  /* 상품 후기 */    
+                                   , tb_dp_prod ib       /* 상품 */
+                              WHERE  ia.tenant_id = #{tenantId}  /* 테넌트 ID */
+                                AND  ib.prod_id = ia.prod_id     /* 상품 ID */
+                                <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
+                                AND  ia.noti_seq = #{notiSeq}    /* 후기 SEQ */
+                                </if>
+                                <!-- Shopping -->
+                                <if test="prodType == 'shopping'">
+                                AND  ia.catalog_id = #{prodId}   /* 카탈로그 ID */
+                                <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                                AND  ia.prod_id = #{chnlId}      /* 상품 ID */
+                                </if>
+                                </if>
+                                <!-- Shopping 외 -->
+                                <if test="prodType != 'shopping'">
+                                AND  ia.prod_id = #{prodId}      /* 상품 ID */
+
+				                <if test="orderedBy == 'recent'">
+				                <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(lastDeployDt)">
+				                AND to_char(ia.reg_dt, 'YYYYMMDDHH24MISS') <![CDATA[>]]> #{lastDeployDt}       /* 최신 버전만 보기 */
+				                </if>
+				                </if>
+				                
+                                </if>
+                                AND  ia.noti_type_cd = 'DP000401'  /* 후기 타입 코드 DP000401(댓글) */
+                                AND  ia.del_yn = 'N'               /* 삭제 여부 */
+                                AND  ia.bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
+                                AND  ia.spam_yn = 'N'                /* 스펨 여부 */
+                                <!-- 추천순 -->    
+                              <if test="orderedBy == 'recommend'">
+                              ORDER 
+                                 BY  ia.noti_score DESC
+                                   , ia.reg_dt DESC
+                              </if>
+                              <!-- 최신순 -->    
+                              <if test="orderedBy == 'recent'">
+                              ORDER 
+                                 BY  ia.reg_dt DESC
+                              </if>
+                              ) ia
+                       WHERE  ROWNUM <![CDATA[<=]]> #{endRow}
+                     ) ia
+              WHERE  ia.rnum BETWEEN #{startRow} AND #{endRow}     
+            ) a
+    </select>    
+    
+    <select id="getAppProdLastDeployDt" parameterType="map" resultType="ProdNoti">            
+		SELECT /* FeedbackMapper.xml, getAppProdLastDeployDt, SAC : 백승현, 2014-10-27 */
+            A.PROD_ID, A.SVC_GRP_CD, TO_CHAR(A.LAST_DEPLOY_DT, 'YYYYMMDDHH24MISS') AS LAST_DEPLOY_DT
+		FROM 
+			TB_DP_PROD A
+			,TB_DP_APP_PROD B
+			,TB_DP_PROD_RSHP C
+			,TB_DP_MENU_CATEGORY_PROD_MAPG D
+			,TB_DP_MENU_CATEGORY F
+		WHERE 
+			A.PROD_ID = B.PROD_ID
+			AND A.PROD_ID = C.PROD_ID
+			AND C.PROD_RSHP_CD = #{rshpCd}  /* 채널-에피소드 상품 관계 코드 'DP010802' */
+			AND A.PROD_ID = D.PROD_ID
+			AND D.MENU_ID = F.MENU_ID
+			AND D.USE_YN = 'Y'
+			AND A.PROD_ID = #{prodId}
+    </select>         
+    
 </mapper>

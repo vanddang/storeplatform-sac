@@ -9,10 +9,32 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -20,18 +42,10 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 공통 Meta 정보 Generator 구현체.
- * 
+ *
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스.
  */
 @Component
@@ -43,7 +57,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateIdentifier(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -58,7 +72,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateIdentifier(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -80,7 +94,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateMenuList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -140,7 +154,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSource(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -164,7 +178,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSource(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -186,7 +200,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSource(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -210,9 +224,31 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		return source;
 	}
 
+	@Override
+	public Source generateSource(String type, String url, String ratio) {
+		Source source = new Source();
+
+		if (StringUtils.isNotEmpty(url)) {
+			source.setMediaType(DisplayCommonUtil.getMimeType(url));
+			source.setUrl(url);
+		}
+
+		if (StringUtils.isNotEmpty(type)) {
+			source.setType(type);
+		}
+
+		if (StringUtils.isNotEmpty(ratio)) {
+			source.setRatio(ratio);
+		}
+
+		return source;
+
+
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSource(java.lang.String,
 	 * java.lang.Integer)
 	 */
@@ -231,7 +267,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateBannerSourceList(java.lang.String
 	 * , java.lang.String)
@@ -253,13 +289,13 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			sourceList = new ArrayList<Source>();
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
-			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
+			source.setUrl(commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
 			sourceList.add(source);
 
 			source = new Source();
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
 			source.setType(DisplayConstants.DP_PREVIEW_HQ);
-			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getSamplUrl()));
+			source.setUrl(commonService.makePreviewUrl(metaInfo.getSamplUrl()));
 			sourceList.add(source);
 		}
 
@@ -268,7 +304,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -285,7 +321,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -299,7 +335,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			source = new Source();
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getScSamplUrl()));
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
-			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
+			source.setUrl(commonService.makePreviewUrl(metaInfo.getScSamplUrl()));
 			sourceList.add(source);
 		}
 
@@ -307,7 +343,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			source = new Source();
 			source.setType(DisplayConstants.DP_PREVIEW_HQ);
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
-			source.setUrl(this.commonService.makePreviewUrl(metaInfo.getSamplUrl()));
+			source.setUrl(commonService.makePreviewUrl(metaInfo.getSamplUrl()));
 			sourceList.add(source);
 		}
 
@@ -316,7 +352,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateDownloadSourceList(com.skplanet
 	 * .storeplatform.sac.display.meta.vo.MetaInfo)
@@ -343,7 +379,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -361,7 +397,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateRights(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -394,11 +430,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		// 소장 정보
 		if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {
-			rights.setStore(this.generateStore(metaInfo));
+			rights.setStore(generateStore(metaInfo));
 		}
 		// 대여 정보
 		if (StringUtils.isNotEmpty(metaInfo.getPlayProdId())) {
-			rights.setPlay(this.generatePlay(metaInfo));
+			rights.setPlay(generatePlay(metaInfo));
 		}
 
 		return rights;
@@ -406,7 +442,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSupport(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -437,16 +473,6 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	}
 
 	@Override
-	public Price generateEpubPrice(MetaInfo metaInfo) {
-		Price price = new Price();
-		price.setText(metaInfo.getProdAmt());
-		price.setFixedPrice(metaInfo.getProdNetAmt());
-		price.setUnlmtAmt(metaInfo.getUnlmtAmt());
-		price.setPeriodAmt(metaInfo.getPeriodAmt());
-		return price;
-	}
-
-	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
 
 		Accrual accrual = new Accrual();
@@ -471,14 +497,14 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 						|| DisplayConstants.DP_SERIAL_VOD_LANGUAGE_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
 						|| DisplayConstants.DP_SERIAL_VOD_SKT_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
 					title.setPostfix(metaInfo.getChapter() == null ? null : metaInfo.getChapter()
-							+ this.commonService.getVodChapterUnit());
+							+ commonService.getVodChapterUnit());
 
 				} else if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd()) // 채널상품명 + 회차
 						|| DisplayConstants.DP_SERIAL_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
 						|| DisplayConstants.DP_MAGAZINE_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
 						|| DisplayConstants.DP_WEBTOON_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
 					title.setPostfix(metaInfo.getChapter() == null ? null : metaInfo.getChapter()
-							+ StringUtil.trimToEmpty(this.commonService.getEpubChapterUnit(metaInfo.getBookClsfCd())));
+							+ StringUtil.trimToEmpty(commonService.getEpubChapterUnit(metaInfo.getBookClsfCd())));
 				}
 			}
 		}
@@ -491,9 +517,9 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		Identifier identifier = null;
 		List<Identifier> identifierList = new ArrayList<Identifier>();
 
-		this.log.debug("##### generateSpecificProductIdentifierList contentsTypeCd : {}", contentsTypeCd);
+		log.debug("##### generateSpecificProductIdentifierList contentsTypeCd : {}", contentsTypeCd);
 		if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Episode ID 기준검색일 경우
-			this.log.debug("##### Episode & Channel Identifier setting");
+			log.debug("##### Episode & Channel Identifier setting");
 			identifier = this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId());
 			identifierList.add(identifier);
 
@@ -520,32 +546,32 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd) // Catalog ID 기준 검색일 경우
 				&& DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
-			this.log.debug("##### Catalog & Episode Identifier setting");
+			log.debug("##### Catalog & Episode Identifier setting");
 			identifier = this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId());
 			identifierList.add(identifier);
 			identifier = this.generateIdentifier(DisplayConstants.DP_CATALOG_IDENTIFIER_CD, metaInfo.getCatalogId());
 			identifierList.add(identifier);
 		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)) { // Channel ID 기준 검색일 경우
-			this.log.debug("##### Channel Identifier setting");
+			log.debug("##### Channel Identifier setting");
 			identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
 			identifierList.add(identifier);
 		}
 		// Cid 설정
 		if (StringUtils.isNotEmpty(metaInfo.getCid())) {
-			this.log.debug("##### Cid Identifier setting");
+			log.debug("##### Cid Identifier setting");
 			identifier = this.generateIdentifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, metaInfo.getCid());
 			identifierList.add(identifier);
 		}
 		// OutsdContentsId 설정
 		if (StringUtils.isNotEmpty(metaInfo.getOutsdContentsId())) {
-			this.log.debug("##### Cid Identifier setting");
+			log.debug("##### Cid Identifier setting");
 			identifier = this.generateIdentifier(DisplayConstants.DP_OUTSDCONTENTS_IDENTIFIER_CD,
 					metaInfo.getOutsdContentsId());
 			identifierList.add(identifier);
 		}
 		// oneSeq 설정
 		if (StringUtils.isNotEmpty(metaInfo.getOneSeq())) {
-			this.log.debug("##### Cid Identifier setting");
+			log.debug("##### Cid Identifier setting");
 			identifier = this.generateIdentifier(DisplayConstants.DP_OUTSDCONTENTS_ONE_CD, metaInfo.getOneSeq());
 			identifierList.add(identifier);
 		}
@@ -585,7 +611,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		Store store = new Store();
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
-		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
+		supportList.add(generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
 		store.setSupportList(supportList);
 
 		// 이용기간단위
@@ -595,7 +621,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		metaInfo.setProdAmt(metaInfo.getStoreProdAmt());
 		metaInfo.setProdNetAmt(metaInfo.getStoreProdNetAmt());
 		store.setPrice(this.generatePrice(metaInfo));
-		
+
 		// 코믹일 경우 SQL 에서 PLAY_PROD_ID="play"로 리턴한다.
 		if (!DisplayConstants.DP_RIGHTS_STORE.equals(metaInfo.getStoreProdId())) {
 			List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -603,7 +629,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 					metaInfo.getStoreProdId()));
 			store.setIdentifierList(identifierList);
 		}
-		
+
 		return store;
 	}
 
@@ -612,9 +638,9 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		Play play = new Play();
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
-		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
+		supportList.add(generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
 		play.setSupportList(supportList);
-		
+
 		// 이용기간단위
 		if (StringUtils.isNotEmpty(metaInfo.getPlayUsePeriodUnitCd())) {
 			play.setUsePeriodUnitCd(metaInfo.getPlayUsePeriodUnitCd());
@@ -628,7 +654,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
 		date.setText(metaInfo.getUsePeriodNm());
 		play.setDate(date);
-		
+
 		// 코믹일 경우 SQL 에서 PLAY_PROD_ID="play"로 리턴한다.
 		if (!DisplayConstants.DP_RIGHTS_PLAY.equals(metaInfo.getPlayProdId())) {
 			List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -666,10 +692,10 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			;
 
 			if (StringUtils.isNotEmpty(prchDt)) {
-				dateList.add(this.generateDate(DisplayConstants.DP_DATE_PURCHASE, prchDt));
+				dateList.add(generateDate(DisplayConstants.DP_DATE_PURCHASE, prchDt));
 			}
 			if (StringUtils.isNotEmpty(dwldExprDt)) {
-				dateList.add(this.generateDate(DisplayConstants.DP_DATE_DOWNLOAD_EXPIRED_NM, dwldExprDt));
+				dateList.add(generateDate(DisplayConstants.DP_DATE_DOWNLOAD_EXPIRED_NM, dwldExprDt));
 			}
 
 			if (!dateList.isEmpty()) {
@@ -683,7 +709,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -696,7 +722,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateUrl(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -717,7 +743,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateUrl(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -738,7 +764,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSource(java.lang.String,
 	 * java.lang.Integer)
 	 */
@@ -756,7 +782,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -771,7 +797,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
@@ -788,7 +814,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generatePoint(com.skplanet.storeplatform
 	 * .sac.display.common.vo.TmembershipDcInfo)
@@ -837,7 +863,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
         return res;
     }
-    
+
     /**
      * 회원 등급별 마일리지 객체 생성
      * @param mileageInfo
@@ -846,10 +872,10 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
      */
     @Override
     public List<Point> generateMileage(MileageInfo mileageInfo, String userGrade) {
-    	
+
     	if(mileageInfo == null)
     		return new ArrayList<Point>();
-    	
+
     	List<Point> res = new ArrayList<Point>();
     	if (StringUtil.equals(userGrade, DisplayConstants.POINT_TP_MILEAGE_LV1)) {
     		res.add(new Point(DisplayConstants.POINT_NM_MILEAGE, DisplayConstants.POINT_TP_MILEAGE_LV1, mileageInfo.getRateLv1(), null));
@@ -860,7 +886,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
     	else if (StringUtil.equals(userGrade, DisplayConstants.POINT_TP_MILEAGE_LV3)) {
     		res.add(new Point(DisplayConstants.POINT_NM_MILEAGE, DisplayConstants.POINT_TP_MILEAGE_LV3, mileageInfo.getRateLv3(), null));
     	}
-    	
+
     	return res;
     }
 }

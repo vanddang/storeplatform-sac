@@ -185,6 +185,26 @@ public class FeedbackController {
 	/**
 	 * 
 	 * <pre>
+	 * [I04000029] 사용후기 전체 조회(V2).
+	 * </pre>
+	 * 
+	 * @param listFeedbackSacReq
+	 *            listFeedbackSacReq
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @return ListFeedbackSacRes
+	 */
+	@RequestMapping(value = "/list/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public ListFeedbackSacRes listV2(@Validated ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+		// LOGGER.info("### 사용후기 전체 조회V2. ##");
+		// LOGGER.info("### req : {}", listFeedbackSacReq);
+		return this.feedbackService.listV2(listFeedbackSacReq, sacRequestHeader);
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 내 사용후기 조회.
 	 * </pre>
 	 * 
@@ -201,6 +221,27 @@ public class FeedbackController {
 		// LOGGER.info("### 내 사용후기 조회. ##");
 		// LOGGER.info("### req : {}", listMyFeedbackSacReq);
 		return this.feedbackService.listMyFeedback(listMyFeedbackSacReq, sacRequestHeader);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * [I04000030] 내 사용후기 조회 V2.
+	 * </pre>
+	 * 
+	 * @param listMyFeedbackSacReq
+	 *            listMyFeedbacSackReq
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @return ListMyFeedbackSacRes
+	 */
+	@RequestMapping(value = "/listMyFeedback/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public ListMyFeedbackSacRes listMyFeedbackV2(@Validated ListMyFeedbackSacReq listMyFeedbackSacReq,
+			SacRequestHeader sacRequestHeader) {
+		// LOGGER.info("### 내 사용후기 조회 V2. ##");
+		// LOGGER.info("### req : {}", listMyFeedbackSacReq);
+		return this.feedbackService.listMyFeedbackV2(listMyFeedbackSacReq, sacRequestHeader);
 	}
 
 	/**

@@ -19,13 +19,14 @@ import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
  * Updated by : 임근대, SK플래닛.
  */
 public interface VodService {
-	
+
 	/**
 	 * 채널ID를 조건으로 하여 VOD 상품 상세 정보를 조회한다.
 	 * @param req
 	 * 		요청 정보
+     * @param supportFhdVideo Full HD 화질 지원 여부
 	 * @return
 	 * 		Vod Detail
 	 */
-	public VodDetailRes searchVod(VodDetailReq req);
+	public VodDetailRes searchVod(VodDetailReq req, boolean supportFhdVideo);
 }

@@ -254,6 +254,7 @@
           ,(SELECT FILE_PATH FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = XA.ESPD_PROD_ID AND SUB_CONTENTS_ID = XA.NM_SUB_CONTS_ID  ) AS NM_FILE_PATH
           ,(SELECT FILE_PATH FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = XA.ESPD_PROD_ID AND SUB_CONTENTS_ID = XA.SD_SUB_CONTS_ID  ) AS SD_FILE_PATH
           ,(SELECT FILE_PATH FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = XA.ESPD_PROD_ID AND SUB_CONTENTS_ID = XA.HD_SUB_CONTS_ID  ) AS HD_FILE_PATH
+          ,(SELECT FILE_PATH FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = XA.ESPD_PROD_ID AND SUB_CONTENTS_ID = XA.HD2_SUB_CONTS_ID  ) AS HD2_FILE_PATH
           ,(SELECT FILE_PATH FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = XA.ESPD_PROD_ID AND SUB_CONTENTS_ID = XA.FHD_SUB_CONTS_ID  ) AS FHD_FILE_PATH
       FROM
           (     
@@ -296,26 +297,32 @@
                  , REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,1) AS NM_SUB_CONTS_ID
                  , REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,1) AS SD_SUB_CONTS_ID
                  , REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,1) AS HD_SUB_CONTS_ID
+                 , REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,1) AS HD2_SUB_CONTS_ID
                  , REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,1) AS FHD_SUB_CONTS_ID
                  , REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,5) AS NM_PROD_VER
                  , REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,5) AS SD_PROD_VER
                  , REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,5) AS HD_PROD_VER
+                 , REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,5) AS HD2_PROD_VER
                  , REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,5) AS FHD_PROD_VER
                  , NVL2(REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,2), REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,2), 0) AS NM_FILE_SIZE
                  , NVL2(REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,2), REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,2), 0) AS SD_FILE_SIZE
                  , NVL2(REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,2), REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,2), 0) AS HD_FILE_SIZE
+                 , NVL2(REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,2), REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,2), 0) AS HD2_FILE_SIZE
                  , NVL2(REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,2), REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,2), 0) AS FHD_FILE_SIZE
                  , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,3 ) ) AS NM_DP_PIXEL
                  , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,3 ) ) AS SD_DP_PIXEL
                  , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,3 ) ) AS HD_DP_PIXEL
+                 , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,3 ) ) AS HD2_DP_PIXEL
                  , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,3 ) ) AS FHD_DP_PIXEL
                  , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,4 ) ) AS NM_DP_PIC_RATIO
                  , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,4 ) ) AS SD_DP_PIC_RATIO
                  , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,4 ) ) AS HD_DP_PIC_RATIO
+                 , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,4 ) ) AS HD2_DP_PIC_RATIO
                  , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,4 ) ) AS FHD_DP_PIC_RATIO
                  , REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,6) AS NM_BTV_CID
                  , REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,6) AS SD_BTV_CID
                  , REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,6) AS HD_BTV_CID
+                 , REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,6) AS HD2_BTV_CID
                  , REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,6) AS FHD_BTV_CID
                  , DECODE( DWLD_NETWORK_CD , 'DP004402', 'restrict', NULL ) AS DWLD_NETWORK_CD
                  , DECODE( STRM_NETWORK_CD , 'DP004402', 'restrict', NULL ) AS STRM_NETWORK_CD
@@ -363,6 +370,7 @@
                          , DECODE( DOLBY_YN, 'Y', NVL( NM_SUB_CONTS_DB, NM_SUB_CONTS ), NM_SUB_CONTS ) AS NM_SUB_CONTS
                          , DECODE( DOLBY_YN, 'Y', NVL( SD_SUB_CONTS_DB, SD_SUB_CONTS ), SD_SUB_CONTS ) AS SD_SUB_CONTS
                          , DECODE( DOLBY_YN, 'Y', NVL( HD_SUB_CONTS_DB, HD_SUB_CONTS ), HD_SUB_CONTS ) AS HD_SUB_CONTS
+                         , DECODE( DOLBY_YN, 'Y', NVL( HD2_SUB_CONTS_DB, HD2_SUB_CONTS ), HD2_SUB_CONTS ) AS HD2_SUB_CONTS
                          , DECODE( DOLBY_YN, 'Y', NVL( FHD_SUB_CONTS_DB, FHD_SUB_CONTS ), FHD_SUB_CONTS ) AS FHD_SUB_CONTS
                          , DWLD_NETWORK_CD
                          , STRM_NETWORK_CD
@@ -406,10 +414,12 @@
                                   , MAX( JA.NM_SUB_CONTS ) AS NM_SUB_CONTS
                                   , MAX( JA.SD_SUB_CONTS ) AS SD_SUB_CONTS
                                   , MAX( JA.HD_SUB_CONTS ) AS HD_SUB_CONTS
+                                  , MAX( JA.HD2_SUB_CONTS ) AS HD2_SUB_CONTS
                                   , MAX( JA.FHD_SUB_CONTS ) AS FHD_SUB_CONTS
                                   , MAX( JA.NM_SUB_CONTS_DB ) AS NM_SUB_CONTS_DB
                                   , MAX( JA.SD_SUB_CONTS_DB  ) AS SD_SUB_CONTS_DB
                                   , MAX( JA.HD_SUB_CONTS_DB  ) AS HD_SUB_CONTS_DB
+                                  , MAX( JA.HD2_SUB_CONTS_DB  ) AS HD2_SUB_CONTS_DB
                                   , MAX( JA.FHD_SUB_CONTS_DB  ) AS FHD_SUB_CONTS_DB
                                   , MAX( JA.DWLD_NETWORK_CD ) AS DWLD_NETWORK_CD
                                   , MAX( JA.STRM_NETWORK_CD ) AS STRM_NETWORK_CD
@@ -450,10 +460,12 @@
                                           , IA.NM_SUB_CONTS_DB
                                           , IA.SD_SUB_CONTS_DB
                                           , IA.HD_SUB_CONTS_DB
+                                          , IA.HD2_SUB_CONTS_DB
                                           , IA.FHD_SUB_CONTS_DB
                                           , IA.NM_SUB_CONTS
                                           , IA.SD_SUB_CONTS
                                           , IA.HD_SUB_CONTS
+                                          , IA.HD2_SUB_CONTS
                                           , IA.FHD_SUB_CONTS
                                           , IA.DWLD_NETWORK_CD
                                           , IA.STRM_NETWORK_CD
@@ -504,6 +516,9 @@
                                                       END ) AS HD_SUB_CONTS_DB
                                                  , ( CASE WHEN ( P.HDV_YN = 'Y' AND M.AUDIO_TYPE_CD = 'PD002215' AND M.DP_PG_QULT_CD = 'PD009704' ) THEN
                                                           M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
+                                                      END ) AS HD2_SUB_CONTS_DB
+                                                 , ( CASE WHEN ( P.HDV_YN = 'Y' AND M.AUDIO_TYPE_CD = 'PD002215' AND M.DP_PG_QULT_CD = 'PD009705' ) THEN
+                                                          M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
                                                       END ) AS FHD_SUB_CONTS_DB
                                                  , ( CASE WHEN ( ( M.AUDIO_TYPE_CD IS NULL OR M.AUDIO_TYPE_CD != 'PD002215' ) AND M.DP_PG_QULT_CD = 'PD009701' ) THEN
                                                           M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
@@ -515,6 +530,9 @@
                                                          M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
                                                       END ) AS HD_SUB_CONTS  
                                                  , ( CASE WHEN (  P.HDV_YN = 'Y' AND ( M.AUDIO_TYPE_CD IS NULL OR M.AUDIO_TYPE_CD != 'PD002215' ) AND M.DP_PG_QULT_CD = 'PD009704' ) THEN
+                                                         M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
+                                                      END ) AS HD2_SUB_CONTS  
+                                                 , ( CASE WHEN (  P.HDV_YN = 'Y' AND ( M.AUDIO_TYPE_CD IS NULL OR M.AUDIO_TYPE_CD != 'PD002215' ) AND M.DP_PG_QULT_CD = 'PD009705' ) THEN
                                                          M.SUB_CONTENTS_ID||','||M.FILE_SIZE||','||M.RSLTN_CD||','||M.DP_PG_RATIO_CD||','||M.PROD_VER||','||''
                                                       END ) AS FHD_SUB_CONTS  
                                                  , M.EPSD_PLAY_TM

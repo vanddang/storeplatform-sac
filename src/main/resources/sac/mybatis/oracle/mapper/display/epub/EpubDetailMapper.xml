@@ -10,17 +10,7 @@
       	  AND A.PART_PROD_ID = B.PROD_ID
           AND B.SVC_GRP_CD = 'DP000203'  AND B.CONTENTS_TYPE_CD = 'PD002502' AND B.SVC_TYPE_CD = 'DP001116'
 	</select>    
-	
-    <select id="selectContentIdListByEpisodeIdList" parameterType="map" resultType="string">
-		SELECT /* EpubDetailMapper.xml, selectContentIdListByEpisodeIdList, SAC : 임근대 , 2014-10-23 */
-				DISTINCT CID
-		FROM TB_DP_PROD
-		WHERE PROD_ID IN
-		<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
-			#{item}
-	  	</foreach>
-	</select>
-	
+    
 	<select id="selectEbookSourceList" parameterType="map" resultType="ProductImage">
 		SELECT /* EpubDetailMapper.xml, selectEbookSourceList, SAC : 임근대 , 2014-01-28 */
            FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
@@ -80,7 +70,7 @@
 		          P.TENANT_ID, P.LANG_CD
 		        , P.MENU_ID, P.MENU_NM, P2.TOP_MENU_ID, (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = P2.TOP_MENU_ID AND LANG_CD = P.LANG_CD AND ROWNUM = 1) AS TOP_MENU_NM
 		        , P2.META_CLSF_CD, P2.CID, TP.PROD_STATUS_CD, P2.PROD_GRD_CD
-		        , P2.PROD_ID, P2.REG_DT, P2.LAST_DEPLOY_DT, P2.SVC_GRP_CD
+		        , P2.PROD_ID, P2.REG_DT, P2.SVC_GRP_CD
 		        , PD.PROD_NM, PD.PROD_BASE_DESC, PD.PROD_DTL_DESC, PD.PROD_INTR_DSCR, PD.ARTIST1_NM, PD.ARTIST2_NM, PD.ARTIST3_NM
 		        , MP.ISSUE_DAY
 		        , MP.MGZIN_SUBSCRIP_CD, MP.SVC_START_DT
@@ -103,7 +93,9 @@
             	, TPP.CHNL_PERIOD_AMT AS PLAY_PROD_AMT, TPP.CHNL_UNLMT_AMT AS STORE_PROD_AMT
             	, CASE WHEN (TPP.CHNL_UNLMT_AMT >= 0  AND EPSD_CNT > 0) THEN CHNL_UNLMT_AMT
                     ELSE NVL(TPP.CHNL_PERIOD_AMT, 0) END AS PROD_AMT /* 채널 대표 가격 */
-                , MP.SAMPL_URL
+			  	<if test="userKey != null">  
+			  	, (CASE WHEN ML.STATS_KEY IS NOT NULL THEN 'Y' ELSE 'N' END) AS LIKE_YN
+              	</if> 
 		      FROM
 		         (
 	              SELECT  TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
@@ -176,6 +168,9 @@
 			, TB_DP_PROD_DESC PD
 			, TB_DP_PROD_IMG PI
 			, TB_DP_TENANT_PROD_STATS STAT
+			<if test="userKey != null">
+			,TB_DP_SOCIAL_STATS_MBR_LIKE ML
+			</if>
 		WHERE P2.PROD_ID = P.CHNL_PROD_ID
 	      AND P2.PROD_ID = MP.PROD_ID
 	      AND P2.PROD_ID = TP.PROD_ID AND P.TENANT_ID = TP.TENANT_ID
@@ -184,6 +179,12 @@
 	      AND P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
 	      AND P.CHNL_PROD_ID = PI.PROD_ID(+) AND P.LANG_CD = PI.LANG_CD(+) AND PI.EXPO_ORD(+) = 1 AND PI.IMG_CD(+) = #{representImgCd}
 	      AND P.CHNL_PROD_ID = STAT.PROD_ID(+) AND P.TENANT_ID = STAT.TENANT_ID(+)
+		  <if test="userKey != null">   
+  		  AND ML.TENANT_ID(+) = P.TENANT_ID
+		  AND ML.STATS_KEY(+) = P.CHNL_PROD_ID
+		  AND ML.USER_KEY(+) = #{userKey}
+		  AND ML.STATS_CLSF(+) = 'DP01210002'
+		  </if>
 	      AND ROWNUM = 1
     </select>
     
@@ -222,7 +223,7 @@
 			    , ( CASE WHEN T.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( T.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
 			    , T.SVC_START_DT , NVL( T.BOOK_PAGE_CNT, 0 ) AS BOOK_PAGE_CNT, T.COMPT_YN, T.ISSUE_DAY
 			    , T.SUB_CONTENTS_ID, T.FILE_SIZE, T.PROD_VER
-			    , T.REG_ID, T.REG_DT, T.LAST_DEPLOY_DT
+			    , T.REG_ID, T.REG_DT
           		, ( CASE WHEN STORE_PROD_ID is not null THEN 'Y' ELSE 'N' END ) AS SUPPORT_STORE
           		, ( CASE WHEN PLAY_PROD_ID is not null THEN 'Y' ELSE 'N' END ) AS SUPPORT_PLAY
 			    , STORE_PROD_ID, STORE_PROD_AMT, STORE_PROD_NET_AMT, STORE_DRM_YN, STORE_PROD_STATUS_CD, STORE_USE_PERIOD, STORE_USE_PERIOD_UNIT_CD
@@ -231,12 +232,12 @@
 			    , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = T.PLAY_USE_PERIOD_UNIT_CD AND LANG_CD = T.LANG_CD) AS PLAY_USE_PERIOD_UNIT_CD_NM
 			    , PI.FILE_PATH  AS IMG_PATH, PI.FILE_NM AS IMG_NM, PI.FILE_SIZE AS IMG_SIZE
 			FROM (
-			  SELECT T4.* 
-			  FROM (
-			      SELECT T3.*, COUNT(*) OVER () TOTAL_COUNT, ROWNUM AS RNUM
+			  SELECT T4.* FROM (
+			      SELECT T3.*, ROWNUM AS RNUM
 			      FROM (
 			            SELECT 
-			            	  T2.CID, T2.CHAPTER, T2.SAMPL_URL
+			            	  COUNT(*) OVER () TOTAL_COUNT
+			            	, T2.CID, T2.CHAPTER, T2.SAMPL_URL
 			                , MAX( T2.PROD_ID ) AS PROD_ID
 			                , MAX( T2.TENANT_ID ) AS TENANT_ID
 			                , MAX( T2.CHNL_PROD_ID ) AS CHNL_PROD_ID
@@ -251,7 +252,7 @@
 			                , MAX( T2.FILE_SIZE ) AS FILE_SIZE, MAX( T2.PROD_VER ) AS PROD_VER
 			                , MAX( T2.PROD_BASE_DESC ) AS PROD_BASE_DESC, MAX( T2.PROD_DTL_DESC ) AS PROD_DTL_DESC, MAX( T2.PROD_INTR_DSCR ) AS PROD_INTR_DSCR
 			                , MAX( T2.ARTIST1_NM ) AS ARTIST1_NM, MAX( T2.ARTIST2_NM ) AS ARTIST2_NM, MAX( T2.ARTIST3_NM ) AS ARTIST3_NM
-			                , MAX( T2.REG_DT ) AS REG_DT, MAX( T2.REG_ID ) AS REG_ID, MAX( T2.LAST_DEPLOY_DT ) AS LAST_DEPLOY_DT
+			                , MAX( T2.REG_DT ) AS REG_DT, MAX( T2.REG_ID ) AS REG_ID
 			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.PROD_ID ) ) AS STORE_PROD_ID
 			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.PROD_ID ) ) AS PLAY_PROD_ID
 			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.PROD_AMT ) ) AS STORE_PROD_AMT
@@ -279,7 +280,6 @@
 		                      , PD.PROD_GRD_CD
 		                      , PD.REG_ID
 		                      , PD.REG_DT
-		                      , PD.LAST_DEPLOY_DT
 		                      , PD.USE_PERIOD
 		                      , PD.USE_PERIOD_UNIT_CD
 		                      , PD.DRM_YN
@@ -308,9 +308,9 @@
 		                    WHERE PR.PROD_ID = #{channelId}
 		                      AND PR.PART_PROD_ID = PD.PROD_ID
 		                      <if test="orderedBy == 'nonPayment'">
-							  <if test="paymentContentIdList !=null and paymentContentIdList.size() > 0">
-							  AND PD.CID NOT IN  
-								  <foreach collection="paymentContentIdList" item="item" index="index" open="(" separator="," close=")">
+							  <if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
+							  AND PR.PART_PROD_ID NOT IN  
+								  <foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
 								  #{item}
 								</foreach>
 							  </if>
@@ -338,11 +338,8 @@
 		                      AND PD.SVC_GRP_CD = 'DP000203'   AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD = 'DP001116'
 							  AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
 							  <if test="bookTypeCd != null and bookTypeCd !=''">
-							  AND MP.BOOK_CLSF_CD = #{bookTypeCd}
-		                      </if>
-		                      <if test="baseChapter != null">
-		                      AND NVL(MP.CHAPTER, 999) > #{baseChapter}
-		                      </if>
+			  				  AND MP.BOOK_CLSF_CD = #{bookTypeCd}
+			  				  </if>
 			              ) T1
 			              WHERE RN = 1
 			          ) T2
@@ -354,7 +351,15 @@
 	                  ORDER BY T2.CHAPTER ASC
 	                  </if>
 			    ) T3
-	            WHERE 1=1    
+			 	WHERE 1=1
+              	<if test="baseChapter != null and baseChapter > 0">
+              	<if test="orderedBy == 'recent'"><![CDATA[
+				AND NVL(T3.CHAPTER, 999) < #{baseChapter}]]>
+              	</if>
+	            <if test="orderedBy == 'regDate' or orderedBy == 'nonPayment'">
+                AND NVL(T3.CHAPTER, 999) > #{baseChapter}
+				</if>
+              	</if>
 			  ) T4
 			  WHERE T4.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 			) T

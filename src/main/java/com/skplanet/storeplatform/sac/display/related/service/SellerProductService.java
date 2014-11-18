@@ -21,8 +21,9 @@ public interface SellerProductService {
 	 *            SellerProductSacReq
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @return SellerProductSacRes
+	 * @param version
+     * @return SellerProductSacRes
 	 */
-	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader);
+	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader, int version);
 
 }

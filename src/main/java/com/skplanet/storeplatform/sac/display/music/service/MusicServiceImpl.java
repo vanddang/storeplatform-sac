@@ -108,7 +108,8 @@ public class MusicServiceImpl implements MusicService {
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
         }
-        if(pointList.size() > 0) detailComposite.setPointList(pointList);
+        if(pointList.size() > 0)
+            detailComposite.setPointList(pointList);
         
         
         

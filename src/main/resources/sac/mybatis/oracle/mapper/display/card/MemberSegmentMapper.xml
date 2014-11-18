@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberSegment">
+
+	<select id="selectMemberSegment" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.card.vo.MemberSegment">
+		/* MemberSegmentMapper.xml, selectMemberSegment, SAC/서대영, 2014-11-14 */
+		SELECT         
+			OUTSD_MBR_LEVEL_CD  
+			,INSD_MBR_LEVEL_CD   
+			,SEX                 
+			,AGE_CLSF_CD             
+			,DEVICE_CHG_YN       
+			,NEW_ENTRY_YN        
+			,MNO_CD   
+			,CATEGORY_BEST       
+			,CATEGORY_PREFER            
+		FROM TB_DP_SMART_OFR_MBR
+		WHERE TENANT_ID = #{tenantId}
+		AND USER_KEY = #{userKey}  
+		AND STD_DT = (
+		  SELECT MAX(STD_DT)
+		  FROM TB_DP_BATCH_COMPT
+		  WHERE BATCH_ID = 'SMARTOFRMBR'
+		)
+	</select>
+
+</mapper>

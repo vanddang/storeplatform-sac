@@ -10,6 +10,7 @@ import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitServic
 import com.skplanet.storeplatform.sac.display.meta.util.MetaBeanUtils;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -215,6 +216,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             me.setContentsTypeCd(param.getContentType().getCode());
             if (param.getContentType() == ContentType.Channel) {
                 me.setProdAmt(meta.getChnlProdAmt());
+                me.setUnlmtAmt(meta.getChnlUnlmtAmt());
+                me.setPeriodAmt(meta.getChnlPeriodAmt());
             } else if (param.getContentType() == ContentType.Episode) {
                 me.setProdAmt(meta.getEpsdProdAmt());
             }
@@ -393,8 +396,28 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		    return this.commonDAO.queryForObject("MetaInfo.getFreepassMetaInfo", paramMap, MetaInfo.class);
 	}
 
-    private boolean isUseCache() {
-        return (Boolean) RequestContextHolder.currentRequestAttributes().getAttribute("useCache", RequestAttributes.SCOPE_REQUEST);
-    }
+    
+	/* (non-Javadoc)
+	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getAlbumMetaInfo(java.util.Map)
+	 */
+	@Override
+	public AlbumMeta getAlbumMetaInfo(Map<String, Object> paramMap) {
+		AlbumMetaParam param = new AlbumMetaParam();
+        ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
+        TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
+        param.setProdId(basicInfo.getProdId());
+        param.setLangCd(tenantHeader.getLangCd());
+        AlbumMeta albumMeta;
+        albumMeta = productInfoManager.getAlbumMeta(param, isUseCache());
+		if(albumMeta == null) {
+            logger.warn("메타데이터를 읽을 수 없습니다 - Album#{}", basicInfo.getProdId());
+        }
+		
+        return albumMeta;
+	}
+	
+	 private boolean isUseCache() {
+	        return (Boolean) RequestContextHolder.currentRequestAttributes().getAttribute("useCache", RequestAttributes.SCOPE_REQUEST);
+	    }
 
 }

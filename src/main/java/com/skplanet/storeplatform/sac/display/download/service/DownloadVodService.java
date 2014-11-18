@@ -21,7 +21,9 @@ public interface DownloadVodService {
 	 *            requestheader
 	 * @param downloadVodReq
 	 *            downloadVodReq
+     * @param supportFhdVideo
+     *            FHD 화질 지원여부
 	 * @return DownloadVodRes
 	 */
-	DownloadVodSacRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodSacReq downloadVodReq);
+	DownloadVodSacRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodSacReq downloadVodReq, boolean supportFhdVideo);
 }

@@ -76,6 +76,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         if(!StringUtils.isEmpty(musicDetail.getThmPath())) {
             Source source = new Source();
             source.setUrl(musicDetail.getThmPath());
+            source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
             source.setMediaType(DisplayCommonUtil.getMimeType(musicDetail.getThmPath()));
             product.getSourceList().add(source);
         }
@@ -103,6 +104,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         product.getIdentifierList().add(new Identifier("channel", musicDetail.getChnlId()));
         product.getIdentifierList().add(new Identifier("episode", musicDetail.getEpsdId()));
         product.getIdentifierList().add(new Identifier("song", musicDetail.getOutsdContentsId()));
+        product.getIdentifierList().add(new Identifier("album", musicDetail.getAlbumId()));
         product.setProductExplain(musicDetail.getProdBaseDesc());
 
         Title title = new Title();
@@ -123,7 +125,25 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         product.setSalesStatus(musicDetail.getProdStatusCd());
 
         // Contributor
-        Contributor contributor = new Contributor();
+        product.setContributor(generateContributor(musicDetail));
+
+        // Date
+        product.setDateList(new ArrayList<Date>());
+        if(StringUtils.isNotEmpty(musicDetail.getIssueDay())) {
+            product.getDateList().add(new Date(DisplayConstants.DP_DATE_ISSUE,
+                    DateUtils.parseDate(StringUtils.rightPad(musicDetail.getIssueDay(), 14, "0"))));
+        }
+
+        product.setLikeYn(musicDetail.getLikeYn());
+        
+        // tmembership 할인율
+        if(pointList != null) {
+        	product.setPointList(pointList);
+        }
+    }
+    
+    private Contributor generateContributor(MusicDetail musicDetail) {
+    	Contributor contributor = new Contributor();
         contributor.setIdentifierList(new ArrayList<Identifier>());
         contributor.getIdentifierList().add(new Identifier("artist", musicDetail.getArtist1Id()));
         contributor.setName(musicDetail.getArtist1Nm());
@@ -131,18 +151,22 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         contributor.setAlbum(musicDetail.getArtist3Nm());
         contributor.setPublisher(musicDetail.getChnlCompNm());
         contributor.setAgency(musicDetail.getAgencyNm());
-        product.setContributor(contributor);
-
-        // Date
-        product.setDateList(new ArrayList<Date>());
-        if(StringUtils.isNotEmpty(musicDetail.getIssueDay())) {
-            product.getDateList().add(new Date("date/issue",
-                    DateUtils.parseDate(StringUtils.rightPad(musicDetail.getIssueDay(), 14, "0"))));
-        }
         
-        // tmembership 할인율
-        if(pointList != null) {
-        	product.setPointList(pointList);
+        contributor.setSourceList(new ArrayList<Source>());
+        if(!StringUtils.isEmpty(musicDetail.getArtistThmPath())) {
+            Source source = new Source();
+            source.setUrl(musicDetail.getArtistThmPath());
+            source.setType(DisplayConstants.DP_SOURCE_TYPE_ARTIST_THUMBNAIL);
+            source.setMediaType(DisplayCommonUtil.getMimeType(musicDetail.getArtistThmPath()));
+            contributor.getSourceList().add(source);
         }
+        if(!StringUtils.isEmpty(musicDetail.getAlbumThmPath())) {
+            Source source = new Source();
+            source.setUrl(musicDetail.getAlbumThmPath());
+            source.setType(DisplayConstants.DP_SOURCE_TYPE_ALBUM_THUMBNAIL);
+            source.setMediaType(DisplayCommonUtil.getMimeType(musicDetail.getAlbumThmPath()));
+            contributor.getSourceList().add(source);
+        }
+        return contributor;
     }
 }

@@ -158,6 +158,8 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 
 		}
 
+        execSapPhase1(notification);
+
 		/*
 		 * 전시상품 APP 상품
 		 */

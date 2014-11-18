@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.response;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -55,6 +56,32 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Product
 	 */
 	public Product generateMusicProduct(MetaInfo metaInfo);
+	
+	/**
+	 * <pre>
+	 * Music 상품 Product 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * 
+	 * @return Product
+	 */
+	public Product generateAlbumProduct(AlbumMeta albumMeta);
+	
+	
+	/**
+	 * <pre>
+	 * Music 상품 Product 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * 
+	 * @return Product
+	 */
+	public Product generateAlbumDetailProduct(AlbumMeta albumMeta);
+	
 
 	/**
 	 * <pre>

@@ -62,36 +62,47 @@ public class SellerProductServiceImpl implements SellerProductService {
 	 *            SellerProductSacReq
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @return SellerProductSacRes
+	 * @param version
+     * @return SellerProductSacRes
 	 */
 	@Override
-	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader) {
-
-		// 헤더 값 세팅
-		this.log.debug("헤더 값 세팅");
-		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		requestVO.setLangCd(requestHeader.getTenantHeader().getLangCd());
-		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+	public SellerProductSacRes searchSellerProductList(SellerProductSacReq requestVO, SacRequestHeader requestHeader, int version) {
 
 		// 요청 값 세팅
-		this.log.debug("요청 값 세팅");
 		requestVO.setOffset(requestVO.getOffset() != null ? requestVO.getOffset() : 1);
 		requestVO.setCount(requestVO.getCount() != null ? requestVO.getCount() : 20);
-		if (!StringUtils.isEmpty(requestVO.getExceptId())) {
-			requestVO.setArrayExceptId(StringUtils.split(requestVO.getExceptId(), "+"));
-		}
+
+        // 헤더 값 세팅
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("sellerNo", requestVO.getSellerNo());
+        if (!StringUtils.isEmpty(requestVO.getExceptId())) {
+            req.put("arrayExceptId", StringUtils.split(requestVO.getExceptId(), "+"));
+        }
+        req.put("offset", requestVO.getOffset());
+        req.put("count", requestVO.getCount());
+
+        req.put("tenantId", requestHeader.getTenantHeader().getTenantId());
+        req.put("langCd", requestHeader.getTenantHeader().getLangCd());
+        req.put("deviceModelCd", requestHeader.getDeviceHeader().getModel());
+        req.put("mmDeviceModelCd", DisplayConstants.DP_ANY_PHONE_4MM);
+        req.put("exceptId", requestVO.getExceptId());
 
 		SellerProductSacRes sellerProductSacRes = new SellerProductSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Map<String, Object> reqMap = new HashMap<String, Object>();
-		MetaInfo retMetaInfo = null;
-		Product product = null;
 
 		// 특정 판매자별 상품 조회
 		this.log.debug("특정 판매자별 상품 조회");
-		List<ProductBasicInfo> sellerProductList = this.commonDAO.queryForList("SellerProduct.selectSellerProductList",
-				requestVO, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
+		List<ProductBasicInfo> sellerProductList;
+        if(version == 1)
+            sellerProductList = this.commonDAO.queryForList("SellerProduct.selectSellerProductList", req, ProductBasicInfo.class);
+        else if(version == 2)
+            sellerProductList = this.commonDAO.queryForList("SellerProduct.selectSellerProductListNP", req, ProductBasicInfo.class);
+        else
+            sellerProductList = new ArrayList<ProductBasicInfo>();
+
+        List<Product> productList = new ArrayList<Product>();
+        Integer cnt = null;
 
 		if (!sellerProductList.isEmpty()) {
 			reqMap.put("tenantHeader", requestHeader.getTenantHeader());
@@ -101,21 +112,20 @@ public class SellerProductServiceImpl implements SellerProductService {
 			for (ProductBasicInfo productBasicInfo : sellerProductList) {
 
 				reqMap.put("productBasicInfo", productBasicInfo);
-
 				reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-				retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+                MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 				if (retMetaInfo != null) {
-					product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+                    Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 					productList.add(product);
 				}
 
 			}
-			commonResponse.setTotalCount(sellerProductList.get(0).getTotalCount());
-			sellerProductSacRes.setProductList(productList);
-		} else {
-			commonResponse.setTotalCount(0);
+			cnt = sellerProductList.get(0).getTotalCount();
 		}
+
 		this.log.debug("특정 판매자별 상품 조회 결과 : " + commonResponse.getTotalCount() + "건");
+        sellerProductSacRes.setProductList(productList);
+        commonResponse.setTotalCount(cnt != null ? cnt : 0);
 		sellerProductSacRes.setCommonResponse(commonResponse);
 
 		return sellerProductSacRes;

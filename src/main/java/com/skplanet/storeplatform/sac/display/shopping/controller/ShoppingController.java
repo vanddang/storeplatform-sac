@@ -188,7 +188,7 @@ public class ShoppingController {
 		return this.shoppingService.getBrandshopMainList(header, req);
 
 	}
-
+	
 	/**
 	 * <pre>
 	 * [I03000162] 2.7.16. 브랜드샵 – 상세조회
@@ -208,7 +208,7 @@ public class ShoppingController {
 		this.logger.debug("----------------------------------------------------------------");
 		return this.shoppingService.getBrandshopDetail(header, req);
 
-	}
+	}	
 
 	/**
 	 * <pre>
@@ -418,7 +418,7 @@ public class ShoppingController {
 		return this.shoppingService.getBrandshopMainListV2(header, req);
 
 	}
-
+	
 	/**
 	 * <pre>
 	 * [I03000152] 2.7.8.5. 브랜드샵 – 카테고리별 브랜드샵 조회.
@@ -438,7 +438,7 @@ public class ShoppingController {
 		this.logger.debug("----------------------------------------------------------------");
 		return this.shoppingService.getBrandshopCategoryList(header, req);
 
-	}
+	}	
 
 	/**
 	 * <pre>

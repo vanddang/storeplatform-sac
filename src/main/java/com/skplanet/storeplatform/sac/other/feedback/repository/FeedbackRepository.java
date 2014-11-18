@@ -14,6 +14,8 @@ import java.util.Map;
 
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacRes;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
@@ -249,6 +251,18 @@ public interface FeedbackRepository {
 	/**
 	 * 
 	 * <pre>
+	 * 사용후기 리스트 조회V2.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return List<ProdNoti>
+	 */
+	public List<ProdNoti> getProdNotiListV2(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
 	 * 사용후기 추천후 상품정보 조회.
 	 * </pre>
 	 * 
@@ -269,6 +283,18 @@ public interface FeedbackRepository {
 	 * @return prodNoti
 	 */
 	public Object getProdNotiCount(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 리스트 카운트 조회V2.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return prodNoti
+	 */
+	public Object getProdNotiCountV2(ProdNoti prodNoti);
 
 	/**
 	 * 
@@ -379,4 +405,27 @@ public interface FeedbackRepository {
 	 */
 	public Object insertChannelTenantProdStats(TenantProdStats tenantProdStats);
 
+	/**
+	 * 
+	 * <pre>
+	 * 게임, 앱상품에 대한 최근 업데이트 날짜 조회
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return ProdNoti
+	 */
+	public ProdNoti getAppProdLastDeployDt(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원 부가속성 정보 조회.
+	 * </pre>
+	 * 
+	 * @param searchUserSacReq
+	 *            searchUserSacReq
+	 * @return SearchUserSacRes
+	 */
+	public SearchUserExtraInfoSacRes searchUserExtraInfo(SearchUserExtraInfoSacReq searchUserExtraInfoSacReq);
 }

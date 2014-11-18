@@ -69,7 +69,7 @@ public class PaymentInfoSCITest {
 	public void searchAppPaymentInfo() {
         PaymentInfoSacReq req = new PaymentInfoSacReq();
         List<String> prodIdList = new ArrayList<String>();
-        prodIdList.add("0000060161");
+        prodIdList.add("0000120360");
         // prodIdList.add("0000024009");
         // prodIdList.add("0000023890");
         req.setProdIdList(prodIdList);

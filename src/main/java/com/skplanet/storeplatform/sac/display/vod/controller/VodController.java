@@ -38,6 +38,12 @@ public class VodController {
 	@Autowired
 	private VodService vodService;
 
+    /**
+     * [I03000040] VOD 상품 상세 조회
+     * @param header SAC 헤더
+     * @param req   Parameter
+     * @return
+     */
 	@RequestMapping(value = "/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public VodDetailRes searchVodDetail(SacRequestHeader header, @Validated @RequestBody VodDetailReq req) {
@@ -47,7 +53,26 @@ public class VodController {
         req.setDeviceModel(header.getDeviceHeader().getModel());
 
         logger.debug("req={}", req);
-		return this.vodService.searchVod(req);
+		return this.vodService.searchVod(req, false);
+
+	}
+
+    /**
+     * [I03000159] VOD 상품 상세 조회 (V2)
+     * @param header SAC 헤더
+     * @param req   Parameter
+     * @return
+     */
+	@RequestMapping(value = "/detail/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public VodDetailRes searchVodDetailV2(SacRequestHeader header, @Validated @RequestBody VodDetailReq req) {
+		//logger.debug("header={}, req={}", new String[]{ header.toString(), req.toString() });
+        req.setLangCd(header.getTenantHeader().getLangCd());
+        req.setTenantId(header.getTenantHeader().getTenantId());
+        req.setDeviceModel(header.getDeviceHeader().getModel());
+
+        logger.debug("req={}", req);
+		return this.vodService.searchVod(req, true);
 
 	}
 

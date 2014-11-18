@@ -68,6 +68,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 /**
@@ -1142,5 +1143,18 @@ public class MemberCommonComponent {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * <pre>
+	 * 공통코드 조회.
+	 * </pre>
+	 * 
+	 * @param grpCdId
+	 *            그룹코드
+	 * @return List<CommonCode> 공통코드
+	 */
+	public List<CommonCode> getCommonCode(String grpCdId) {
+		return this.repository.getCommonCode(grpCdId);
 	}
 }

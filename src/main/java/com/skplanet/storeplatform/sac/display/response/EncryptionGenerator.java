@@ -25,7 +25,21 @@ public interface EncryptionGenerator {
 	 * 
 	 * @param metaInfo
 	 *            metaInfo
-	 * @return List<Menu>
+	 * @return EncryptionContents
 	 */
 	public EncryptionContents generateEncryptionContents(MetaInfo metaInfo);
+
+    /**
+     * <pre>
+     * 상품 정보 조회 (for download) 전용 Encryption Contents 생성.
+     * (for Vod) Tstore 4.0 FHD 지원 여부 추가
+     * </pre>
+     *
+     * @param metaInfo
+     *            metaInfo
+     * @param supportFhdVideo
+     *            FHD 화질 지원 여부
+     * @return EncryptionContents
+     */
+	public EncryptionContents generateEncryptionContentsForVod(MetaInfo metaInfo, boolean supportFhdVideo);
 }

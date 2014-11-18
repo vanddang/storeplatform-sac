@@ -62,9 +62,19 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
 
     @Override
     public Encryption generateEncryption(MetaInfo metaInfo, String prchProdId) {
-        EncryptionContents contents = this.encryptionGenerator
-                .generateEncryptionContents(metaInfo);
+        EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+        Encryption encryption = encryption(prchProdId, contents);
+        return encryption;
+    }
 
+    @Override
+    public Encryption generateEncryptionForVod(MetaInfo metaInfo, String prchProdId, boolean supportFhdVideo) {
+        EncryptionContents contents = this.encryptionGenerator.generateEncryptionContentsForVod(metaInfo, supportFhdVideo);
+        Encryption encryption = encryption(prchProdId, contents);
+        return encryption;
+    }
+
+    private Encryption encryption(String prchProdId, EncryptionContents contents) {
         // JSON 파싱
         MarshallingHelper marshaller = new JacksonMarshallingHelper();
         byte[] jsonData = marshaller.marshal(contents);

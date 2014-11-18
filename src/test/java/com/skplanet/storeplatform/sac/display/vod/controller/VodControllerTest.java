@@ -409,4 +409,82 @@ public class VodControllerTest {
 		objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
 		return objectMapper.writeValueAsString(param);
 	}
+
+
+
+    @Test
+    public void searchVodDetailV2_fhd() throws Exception {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("channelId", "H002796736"); // 삼총사2 -D화질
+        param.put("orderedBy", "recent");
+        param.put("includeProdStopStatus", "Y");
+        param.put("offset", 1);
+        param.put("count", 20);
+        String json = this.convertMapToJson(param);
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("searchVodDetailV2_fhd");
+
+        //device-info model="SM-G900S"
+        //device-info model="SHW-M110S"
+        this.mvc.perform(post("/display/vod/detail/v2")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .header("x-sac-device-info", "model=\"SM-G900S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+                        .header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+        )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+        ;
+
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+    }
+    
+    @Test
+    public void searchVodDetailV2_recent_baseChapter() throws Exception {
+    	
+    	/*
+    	{
+    		"channelId" : "H900194984",
+    		"deviceKey" : "DE201402201711283140002222",
+    		"userKey" : "US201402201711282940003170",
+    		"orderedBy" : "recent",
+    		"baseChapter" : "364",
+    		"offset" : "1",
+    		"count" : "5"
+		}
+		*/
+
+    	
+    	Map<String, Object> param = new HashMap<String, Object>();
+    	param.put("channelId", "H900194984"); //무한도전 
+    	param.put("orderedBy", "recent");
+    	param.put("baseChapter", "364");
+    	param.put("offset", 1);
+    	param.put("count", 5);
+    	String json = this.convertMapToJson(param);
+    	
+    	StopWatch stopWatch = new StopWatch();
+    	stopWatch.start("searchVodDetailV2_recent_baseChapter");
+    	
+    	//device-info model="SM-G900S"
+    	//device-info model="SHW-M110S"
+    	this.mvc.perform(post("/display/vod/detail/v2")
+    			.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+    			.header("x-sac-device-info", "model=\"SM-G900S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+    			.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+    			.contentType(MediaType.APPLICATION_JSON)
+    			.content(json)
+    			)
+    			.andDo(print())
+    			.andExpect(status().isOk())
+    			.andExpect(content().contentType("application/json;charset=UTF-8"))
+    			;
+    	
+    	stopWatch.stop();
+    	System.out.println(stopWatch.prettyPrint());
+    }
 }

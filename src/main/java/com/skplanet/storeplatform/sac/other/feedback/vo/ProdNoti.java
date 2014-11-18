@@ -64,6 +64,8 @@ public class ProdNoti extends CommonInfo {
 	private String updDt;
 	private String delDt;
 	private String delYn;
+	private String lastDeployDt; // 상품에 대한 최종 검증일
+	private String rshpCd;
 
 	// 검색 조건 추가.
 	private String chnlId;
@@ -87,6 +89,9 @@ public class ProdNoti extends CommonInfo {
 	private String expoSellerNm; // EXPO_SELLER_NM
 	private String totalCount;
 	private String svcGrpCd; // SVC_GRP_CD
+
+	private String profileImgUrl;
+	private String infVersion;
 
 	// paging
 	private String startRow;
@@ -977,4 +982,63 @@ public class ProdNoti extends CommonInfo {
 		this.endRow = endRow;
 	}
 
+	/**
+	 * @return String
+	 */
+	public String getLastDeployDt() {
+		return this.lastDeployDt;
+	}
+
+	/**
+	 * @param lastDeployDt
+	 *            the lastDeployDt to set
+	 */
+	public void setLastDeployDt(String lastDeployDt) {
+		this.lastDeployDt = lastDeployDt;
+	}
+
+	/**
+	 * @return the rshpCd
+	 */
+	public String getRshpCd() {
+		return this.rshpCd;
+	}
+
+	/**
+	 * @param rshpCd
+	 *            the rshpCd to set
+	 */
+	public void setRshpCd(String rshpCd) {
+		this.rshpCd = rshpCd;
+	}
+
+	/**
+	 * @return the profileImgUrl
+	 */
+	public String getProfileImgUrl() {
+		return this.profileImgUrl;
+	}
+
+	/**
+	 * @param profileImgUrl
+	 *            the profileImgUrl to set
+	 */
+	public void setProfileImgUrl(String profileImgUrl) {
+		this.profileImgUrl = profileImgUrl;
+	}
+
+	/**
+	 * @return the infVersion
+	 */
+	public String getInfVersion() {
+		return this.infVersion;
+	}
+
+	/**
+	 * @param infVersion
+	 *            the infVersion to set
+	 */
+	public void setInfVersion(String infVersion) {
+		this.infVersion = infVersion;
+	}
 }

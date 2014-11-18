@@ -9,19 +9,23 @@
  */
 package com.skplanet.storeplatform.sac.display.related.service;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.related.vo.BoughtTogetherProduct;
 
-import java.util.List;
-
 /**
  * BoughtTogetherProductDataService 인터페이스
+ * 
  * <pre>
  * Created on 2014. 02. 18. by 서대영, SK 플래닛
+ * Updated on 2014. 10. 24. by 백승현, SP Tek
  * </pre>
  */
 public interface BoughtTogetherProductDataService {
 
 	List<ProductBasicInfo> selectList(BoughtTogetherProduct product);
+
+	List<ProductBasicInfo> selectListV3(BoughtTogetherProduct product);
 
 }

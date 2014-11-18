@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
 
 /**
  * 회원 부가 정보 등록/수정/삭제/조회 인터페이스
@@ -198,22 +200,23 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	/* 입력받은 profileCode 정상인지 체크 */
 	@Override
 	public String validProfileCode(UserExtraInfoReq req) {
-		String validProfileCode = "";
+		String validProfileCode = "N";
+		List<CommonCode> codes = this.mcc.getCommonCode(MemberConstants.USER_EXTRA_GROP_CD);
+		int checkCount = 0;
 
-		for (UserExtraInfo info : req.getUserExtraInfoList()) {
-			if (info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKACCESSTOKEN)
-					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKPURCHASE)
-					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKRATING)
-					|| info.getExtraProfile().equals(MemberConstants.USER_EXTRA_FACEBOOKREVIEW)) {
-
-				validProfileCode = "Y";
-
-			} else {
-				validProfileCode = "N";
-				throw new StorePlatformException("SAC_MEM_0002", info.getExtraProfile());
+		for (CommonCode commonCode : codes) {
+			for (UserExtraInfo info : req.getUserExtraInfoList()) {
+				if (StringUtils.equals(info.getExtraProfile(), commonCode.getCdId())) {
+					checkCount += 1;
+				}
 			}
 		}
 
+		if (checkCount == req.getUserExtraInfoList().size()) {
+			validProfileCode = "Y";
+		} else {
+			throw new StorePlatformException("SAC_MEM_0002", "getExtraProfileCode()");
+		}
 		return validProfileCode;
 	}
 

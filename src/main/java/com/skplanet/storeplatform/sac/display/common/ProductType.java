@@ -11,6 +11,7 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 public enum ProductType {
     App("app"),
     Music("music"),
+    Album("album"),
     Shopping("shopping"),
     Freepass("freepass"),
     Vod("vod"),

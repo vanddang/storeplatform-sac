@@ -24,7 +24,7 @@
 			       upd_id,
 			       upd_dt
 			  FROM tb_fw_interface
-			 WHERE interface_id = #{interfaceId}
+			 WHERE interface_id = #{interfaceId, jdbcType=VARCHAR}
     </select>
 
     <select id="selectUsableInterface" parameterType="map" resultType="string">

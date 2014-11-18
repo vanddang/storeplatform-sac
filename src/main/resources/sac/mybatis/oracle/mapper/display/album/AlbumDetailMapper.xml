@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AlbumDetail">    
+    <select id="albumDetail" parameterType="com.skplanet.storeplatform.sac.display.cache.vo.AlbumMetaParam" resultType="com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta">
+    	SELECT
+    		PROD.PROD_ID AS prodId
+    		, PROD.PROD_GRD_CD AS prodGrdCd
+    		, PROD.REG_DT AS regDt
+    		
+    		, PROD_IMG.FILE_PATH AS imgFilePath
+    		, PROD_IMG.FILE_NM AS imgFileNm
+    		
+    		, ALBUM_PROD.ALBUM_TYPE_NM AS albumTypeNm
+    		, ALBUM_PROD.ISSUE_DAY AS issueDay
+    		, ALBUM_PROD.CHNL_COMP_NM AS chnlCompNm
+    		, ALBUM_PROD.AGENCY_NM AS agencyNm
+    		
+    		, PROD_DESC.PROD_NM AS prodNm
+    		, PROD_DESC.PROD_BASE_DESC AS prodBaseDesc
+    		, PROD_DESC.ARTIST1_NM AS artist1Nm
+    		, PROD_DESC.ARTIST1_ID AS artist1Id
+    		
+    		, MENU_DESC_TOP.MENU_ID AS topMenuId
+    		, MENU_DESC_TOP.MENU_NM AS topMenuNm
+    		, MENU_DESC_TOP.MENU_DESC AS topMenuDesc
+    		, MENU_DESC_BOTTOM.MENU_ID AS menuId
+    		, MENU_DESC_BOTTOM.MENU_NM AS menuNm
+    		, MENU_DESC_BOTTOM.MENU_DESC AS menuDesc
+    		
+    		, CASE WHEN SSML.STATS_KEY IS NOT NULL THEN 'Y' ELSE 'N' END AS likeYn
+    		
+    		, ARTIST.IMG_FILE_PATH AS artistImgFilePath
+    	FROM
+    		TB_DP_PROD PROD
+    		INNER JOIN TB_DP_ALBUM_PROD ALBUM_PROD
+    			ON ALBUM_PROD.PROD_ID = PROD.PROD_ID
+    		INNER JOIN TB_DP_PROD_DESC PROD_DESC
+    			ON PROD_DESC.PROD_ID = PROD.PROD_ID AND PROD_DESC.LANG_CD = #{langCd, jdbcType=VARCHAR}
+    		INNER JOIN TB_DP_PROD_IMG PROD_IMG
+    			ON PROD_IMG.PROD_ID = PROD.PROD_ID AND PROD_IMG.EXPO_ORD = 1 AND PROD_IMG.LANG_CD = #{langCd, jdbcType=VARCHAR} AND PROD_IMG.IMG_CD = 'DP000162'
+    		INNER JOIN TB_DP_MENU_CATEGORY_PROD_MAPG MENU_MAPG
+    			ON MENU_MAPG.PROD_ID = PROD.PROD_ID
+    		INNER JOIN TB_DP_MENU_CATEGORY_DESC MENU_DESC_TOP
+    			ON MENU_DESC_TOP.MENU_ID = PROD.TOP_MENU_ID AND MENU_DESC_TOP.LANG_CD = #{langCd, jdbcType=VARCHAR}
+    		INNER JOIN TB_DP_MENU_CATEGORY_DESC MENU_DESC_BOTTOM
+    			ON MENU_DESC_BOTTOM.MENU_ID = MENU_MAPG.MENU_ID AND MENU_DESC_BOTTOM.LANG_CD = #{langCd, jdbcType=VARCHAR}
+    		INNER JOIN TB_DP_ARTIST ARTIST
+    			ON ARTIST.ARTIST_ID = PROD_DESC.ARTIST1_ID
+    		LEFT JOIN TB_DP_SOCIAL_STATS_MBR_LIKE SSML
+                ON SSML.TENANT_ID = #{tenantId, jdbcType=VARCHAR} AND SSML.STATS_KEY = #{prodId, jdbcType=VARCHAR}
+                   AND SSML.STATS_CLSF = 'DP01210002' AND SSML.USER_KEY = #{userKey, jdbcType=VARCHAR}
+ 
+    	WHERE 1=1
+    		AND PROD.PROD_ID = #{prodId, jdbcType=VARCHAR}
+    </select>
+</mapper>

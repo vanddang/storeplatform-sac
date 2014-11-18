@@ -9,24 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.vod.service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
-import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
-import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
-import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
-import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
-import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import com.skplanet.storeplatform.sac.display.vod.vo.VodDetail;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,11 +24,43 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preference;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
+import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.display.vod.vo.VodDetail;
 
 /**
  * VOD Service
@@ -70,13 +89,13 @@ public class VodServiceImpl implements VodService {
 	
     @Autowired
     private CommonMetaInfoGenerator metaInfoGenerator;
-    
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.skplanet.storeplatform.sac.display.vod.service.VodService#searchVod(com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq)
 	 */
 	@Override
-	public VodDetailRes searchVod(VodDetailReq req) {
+	public VodDetailRes searchVod(VodDetailReq req, boolean supportFhdVideo) {
 		//VOC 응대를 위한 로깅
 		logger.info("channelId={},userKey={},deviceKey={},deviceModel={}", req.getChannelId(), req.getUserKey(), req.getDeviceKey(), req.getDeviceModel());
 
@@ -96,8 +115,7 @@ public class VodServiceImpl implements VodService {
 		//요청한 상품의 ID가 예외 처리에 포함된 상품이라면 중지 상태도 조회하도록 한다.
 		String temp = StringUtils.defaultString(sc2xFadeOutDummyProductChannel);
 		if(temp.contains(channelId)) includeProdStopStatus = "Y";
-		
-		
+
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("representImgCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
         param.put("virtualDeviceModelNo", DisplayConstants.DP_ANY_PHONE_4MM);
@@ -107,17 +125,23 @@ public class VodServiceImpl implements VodService {
         param.put("tenantId", req.getTenantId());
         param.put("baseChapter", req.getBaseChapter());
         param.put("orderedBy", orderedBy);
+        param.put("userKey", userKey);
+        param.put("deviceKey", deviceKey);
         param.put("includeProdStopStatus", includeProdStopStatus);
         param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
         param.put("count", req.getCount() == null ? 20 : req.getCount());
+        
 
 		VodDetail vodDetail = getVodChanndel(param);
 
 		if(vodDetail != null) {
 			//Screenshots
 			List<ProductImage> screenshotList = getScreenshotList(req.getChannelId(), req.getLangCd());
-			this.mapProduct(req, product, vodDetail, screenshotList);
+			this.mapProduct(req, product, vodDetail, screenshotList, supportFhdVideo);
 
+			//좋아요 여부
+			product.setLikeYn(vodDetail.getLikeYn());
+			
             ExistenceListRes existenceListRes = null;
 			//orderedBy='nonPayment'
 			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
@@ -128,16 +152,10 @@ public class VodServiceImpl implements VodService {
 				}
 				
 				List<String> paymentProdIdList = new ArrayList<String>();
-				for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
-					paymentProdIdList.add(existenceRes.getProdId());
-				}
-				
-				//#24889 VOD/이북 전권 소장/대여 후 미구매로 정렬 시 대여/소장이 노출되는 문제 수정
-				//episode id 로 filter 하면 전권대여/소장 구매 시 대여소장 상품 모두 Filtering 되지 않기 때문에 content id 로 filter.
-				List<String> paymentContentIdList = getContentIdListByEpisodeIdList(paymentProdIdList);
-				
+					for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
+						paymentProdIdList.add(existenceRes.getProdId());
+					}
 				param.put("paymentProdIdList", paymentProdIdList);
-				param.put("paymentContentIdList", paymentContentIdList);
 			}
 			
 			
@@ -149,7 +167,7 @@ public class VodServiceImpl implements VodService {
             	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
             	existenceListRes = getExistenceScReses(req, subProductList);
             }
-            this.mapSubProductList(req, product, subProductList, existenceListRes);
+            this.mapSubProductList(req, product, subProductList, existenceListRes, supportFhdVideo);
 
 			res.setProduct(product);
 		} else {
@@ -158,24 +176,7 @@ public class VodServiceImpl implements VodService {
 		return res;
 	}
 
-	/**
-	 * Episode id List 로 Content Id 조회
-	 * @param paymentProdIdList
-	 * @return
-	 */
-	private List<String> getContentIdListByEpisodeIdList(List<String> paymentProdIdList) {
-        List<String> contentIdList = null;
-        if(paymentProdIdList.size() == 0) {
-            contentIdList = new ArrayList<String>();
-        } else {
-            Map<String, Object> param = new HashMap<String, Object>();
-            param.put("prodIdList", paymentProdIdList);
-            contentIdList = this.commonDAO.queryForList("VodDetail.selectContentIdListByEpisodeIdList", param, String.class);
-        }
-		return contentIdList;
-	}
-
-	/**
+    /**
 	 * VOD Channel
 	 * @param param
 	 * @return
@@ -262,7 +263,7 @@ public class VodServiceImpl implements VodService {
      * @param mapperVO  Product 에 Mapping 할 데이터
      * @param screenshotList Screenshot 목록
      */
-	private void mapProduct(VodDetailReq req, Product product, VodDetail mapperVO, List<ProductImage> screenshotList) {
+	private void mapProduct(VodDetailReq req, Product product, VodDetail mapperVO, List<ProductImage> screenshotList, boolean supportFhdVideo) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 		
@@ -316,7 +317,7 @@ public class VodServiceImpl implements VodService {
 		Accrual accrual = this.mapAccrual(mapperVO);
 		product.setAccrual(accrual);
         
-		Vod vod = this.mapVod(mapperVO);
+		Vod vod = this.mapVod(mapperVO, supportFhdVideo);
 		product.setVod(vod);
 		
         //tmembership 할인율
@@ -677,13 +678,6 @@ public class VodServiceImpl implements VodService {
             date.setText(mapperVO.getIssueDay());
             dateList.add(date);
         }
-        
-        if(mapperVO.getLastDeployDt() != null) {
-        	Date date = new Date();
-        	date.setType(DisplayConstants.DP_DATE_SALE_REG);
-        	date.setText(sdf.format(mapperVO.getLastDeployDt()));
-        	dateList.add(date);
-        }
 		return dateList;
 	}
 
@@ -764,7 +758,7 @@ public class VodServiceImpl implements VodService {
      * @param vodDetailList VOD Episode List
      * @param existenceListRes 기구매 체크 결과
      */
-	private void mapSubProductList(VodDetailReq req, Product product, List<VodDetail> vodDetailList, ExistenceListRes existenceListRes) {
+	private void mapSubProductList(VodDetailReq req, Product product, List<VodDetail> vodDetailList, ExistenceListRes existenceListRes, boolean supportFhdVideo) {
 
 		List<Product> subProjectList = new ArrayList<Product>();
 
@@ -830,7 +824,7 @@ public class VodServiceImpl implements VodService {
                 subProduct.setRights(rights);
 
 				// VOD
-                subProduct.setVod(mapVod(mapperVO));
+                subProduct.setVod(mapVod(mapperVO, supportFhdVideo));
 
                 //Accrual
 				Accrual accrual = this.mapAccrual(mapperVO);
@@ -846,9 +840,10 @@ public class VodServiceImpl implements VodService {
     /**
      * VOD
      * @param mapperVO
+     * @param supportFhdVideo
      * @return
      */
-    private Vod mapVod(VodDetail mapperVO) {
+    private Vod mapVod(VodDetail mapperVO, boolean supportFhdVideo) {
         Vod vod = new Vod();
         List<VideoInfo> videoInfoList = new ArrayList<VideoInfo>();
         Chapter chapter = new Chapter();
@@ -868,51 +863,97 @@ public class VodServiceImpl implements VodService {
 
         /** 일반화질 정보 */
         if (StringUtils.isNotEmpty(mapperVO.getNmSubContsId())) {
-            videoInfo = new VideoInfo();
-            videoInfo.setPictureSize(mapperVO.getNmDpPicRatio());
-            videoInfo.setPixel(mapperVO.getNmDpPixel());
-            videoInfo.setScid(mapperVO.getNmSubContsId());
-            videoInfo.setSize(mapperVO.getNmFileSize().toString());
-            videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
-            videoInfo.setVersion(mapperVO.getNmProdVer());
+            videoInfo = getNmVideoInfo(mapperVO);
             videoInfoList.add(videoInfo);
         }
         /** SD 고화질 정보 */
         if (StringUtils.isNotEmpty(mapperVO.getSdSubContsId())) {
-            videoInfo = new VideoInfo();
-            videoInfo.setPictureSize(mapperVO.getSdDpPicRatio());
-            videoInfo.setPixel(mapperVO.getSdDpPixel());
-            videoInfo.setScid(mapperVO.getSdSubContsId());
-            videoInfo.setSize(mapperVO.getSdFileSize().toString());
-            videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_SD);
-            videoInfo.setVersion(mapperVO.getSdProdVer());
+            videoInfo = getSdVideoInfo(mapperVO);
+            videoInfoList.add(videoInfo);
+        }
+
+        // HD2 (D화질) 정보 우선, 없으며 HD 정보를 내려줌
+        if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId()) || StringUtils.isNotEmpty(mapperVO.getHd2SubContsId())) {
+            /** HD 화질 정보 */
+            videoInfo = getHdVideoInfo(mapperVO);
             videoInfoList.add(videoInfo);
         }
         
-        // Full HD 정보 우선, 없으며 HD 정보를 내려줌
-        if (StringUtils.isNotEmpty(mapperVO.getFhdSubContsId())) {
+        //FHD 지원 : T store 4.0 에서는 NM, SD, HD, FHD 화질 지원
+        if(supportFhdVideo && StringUtils.isNotEmpty(mapperVO.getFhdSubContsId())) {
         	/** FHD 고화질 정보 */
-        	videoInfo = new VideoInfo();
-        	videoInfo.setPictureSize(mapperVO.getFhdDpPicRatio());
-        	videoInfo.setPixel(mapperVO.getFhdDpPixel());
-        	videoInfo.setScid(mapperVO.getFhdSubContsId());
-        	videoInfo.setSize(mapperVO.getFhdFileSize().toString());
-        	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
-        	videoInfo.setVersion(mapperVO.getFhdProdVer());
+        	videoInfo = getFhdVideoInfo(mapperVO);
         	videoInfoList.add(videoInfo);
-        } else if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId())) {
-        	/** HD 고화질 정보 */
-            videoInfo = new VideoInfo();
+        }
+        if(videoInfoList.size() > 0) vod.setVideoInfoList(videoInfoList);
+        return vod;
+    }
+
+    private VideoInfo getNmVideoInfo(VodDetail mapperVO) {
+        VideoInfo videoInfo = new VideoInfo();
+        videoInfo.setPictureSize(mapperVO.getNmDpPicRatio());
+        videoInfo.setPixel(mapperVO.getNmDpPixel());
+        videoInfo.setScid(mapperVO.getNmSubContsId());
+        videoInfo.setSize(mapperVO.getNmFileSize().toString());
+        videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
+        videoInfo.setVersion(mapperVO.getNmProdVer());
+        return videoInfo;
+    }
+
+    private VideoInfo getSdVideoInfo(VodDetail mapperVO) {
+        VideoInfo videoInfo = new VideoInfo();
+        videoInfo.setPictureSize(mapperVO.getSdDpPicRatio());
+        videoInfo.setPixel(mapperVO.getSdDpPixel());
+        videoInfo.setScid(mapperVO.getSdSubContsId());
+        videoInfo.setSize(mapperVO.getSdFileSize().toString());
+        videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_SD);
+        videoInfo.setVersion(mapperVO.getSdProdVer());
+        return videoInfo;
+    }
+
+
+    /**
+     * HD 
+     * @param mapperVO
+     * @return
+     */
+    private VideoInfo getHdVideoInfo(VodDetail mapperVO) {
+        VideoInfo videoInfo = new VideoInfo();
+        videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
+        
+        if (StringUtils.isNotEmpty(mapperVO.getHd2SubContsId())) {
+        	//HD2 (D화질)
+            videoInfo.setPictureSize(mapperVO.getHd2DpPicRatio());
+            videoInfo.setPixel(mapperVO.getHd2DpPixel());
+            videoInfo.setScid(mapperVO.getHd2SubContsId());
+            videoInfo.setSize(mapperVO.getHd2FileSize().toString());
+            videoInfo.setVersion(mapperVO.getHd2ProdVer());
+        } else {
+        	//HD
             videoInfo.setPictureSize(mapperVO.getHdDpPicRatio());
             videoInfo.setPixel(mapperVO.getHdDpPixel());
             videoInfo.setScid(mapperVO.getHdSubContsId());
             videoInfo.setSize(mapperVO.getHdFileSize().toString());
-            videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
             videoInfo.setVersion(mapperVO.getHdProdVer());
-            videoInfoList.add(videoInfo);
         }
-        if(videoInfoList.size() > 0) vod.setVideoInfoList(videoInfoList);
-        return vod;
+
+        return videoInfo;
+    }
+    
+    /**
+     * Full HD 화질 Video 정보 리턴
+     * @param mapperVO
+     * @return
+     */
+    private VideoInfo getFhdVideoInfo(VodDetail mapperVO) {
+        VideoInfo videoInfo = new VideoInfo();
+        videoInfo.setPictureSize(mapperVO.getFhdDpPicRatio());
+        videoInfo.setPixel(mapperVO.getFhdDpPixel());
+        videoInfo.setScid(mapperVO.getFhdSubContsId());
+        videoInfo.setSize(mapperVO.getFhdFileSize().toString());
+        videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_FHD);
+        videoInfo.setVersion(mapperVO.getFhdProdVer());
+        return videoInfo;
     }
 
     /**

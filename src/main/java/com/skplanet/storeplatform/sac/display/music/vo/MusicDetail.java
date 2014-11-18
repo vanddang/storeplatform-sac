@@ -12,6 +12,7 @@ public class MusicDetail extends CommonInfo {
 
     private String chnlId;
     private String epsdId;
+    private String albumId;
     private int prodAmt;
     private String prodNm;
     private double avgEvluScore;
@@ -34,6 +35,8 @@ public class MusicDetail extends CommonInfo {
     private String chnlCompNm;
     private String outsdContentsId;
     private String thmPath;
+    private String albumThmPath;
+    private String artistThmPath;
     private String prodStatusCd;
     private String issueDay;
     private String prodBaseDesc;
@@ -42,6 +45,7 @@ public class MusicDetail extends CommonInfo {
     private String deviceModelCd;
     private String svcGrpCd;
     private String musicSprtYn;
+    private String likeYn;
 
     public String getMusicSprtYn() {
         return musicSprtYn;
@@ -107,7 +111,23 @@ public class MusicDetail extends CommonInfo {
         this.thmPath = thmPath;
     }
 
-    public String getEpsdId() {
+    public String getAlbumThmPath() {
+		return albumThmPath;
+	}
+
+	public void setAlbumThmPath(String albumThmPath) {
+		this.albumThmPath = albumThmPath;
+	}
+
+	public String getArtistThmPath() {
+		return artistThmPath;
+	}
+
+	public void setArtistThmPath(String artistThmPath) {
+		this.artistThmPath = artistThmPath;
+	}
+
+	public String getEpsdId() {
         return epsdId;
     }
 
@@ -297,5 +317,21 @@ public class MusicDetail extends CommonInfo {
 
     public void setIssueDay(String issueDay) {
         this.issueDay = issueDay;
+    }
+
+	public String getAlbumId() {
+		return albumId;
+	}
+
+	public void setAlbumId(String albumId) {
+		this.albumId = albumId;
+	}
+
+    public String getLikeYn() {
+        return likeYn;
+    }
+
+    public void setLikeYn(String likeYn) {
+        this.likeYn = likeYn;
     }
 }

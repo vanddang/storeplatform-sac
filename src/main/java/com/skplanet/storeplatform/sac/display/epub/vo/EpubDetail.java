@@ -51,8 +51,6 @@ public class EpubDetail extends CommonInfo {
     private String regId;
 	/** 등록일시 */
 	private Date regDt;
-	/** 최종 배포일시 */
-	private Date lastDeployDt;
 
 	/** 상품명 */
 	private String prodNm;
@@ -184,6 +182,9 @@ public class EpubDetail extends CommonInfo {
 	// 미리보기
 	private String samplUrl;
 
+	// 좋아요 선택 여부
+	private String likeYn;
+	
 	public String getTopMenuId() {
 		return this.topMenuId;
 	}
@@ -1046,13 +1047,13 @@ public class EpubDetail extends CommonInfo {
 		this.samplUrl = samplUrl;
 	}
 
-	public Date getLastDeployDt() {
-		return lastDeployDt;
+	public String getLikeYn() {
+		return likeYn;
 	}
 
-	public void setLastDeployDt(Date lastDeployDt) {
-		this.lastDeployDt = lastDeployDt;
+	public void setLikeYn(String likeYn) {
+		this.likeYn = likeYn;
 	}
 
-
+	
 }
