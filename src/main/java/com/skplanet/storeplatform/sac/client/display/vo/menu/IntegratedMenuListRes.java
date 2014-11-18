@@ -20,22 +20,25 @@ import java.util.List;
  * </p>
  * Updated on : 2014. 10. 20 Updated by : 정희원, SK 플래닛.
  */
-public class MenuIntegrationListRes extends CommonInfo {
+public class IntegratedMenuListRes extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
-    public MenuIntegrationListRes() {}
+    public IntegratedMenuListRes() {}
 
-    public MenuIntegrationListRes(List<MenuDetail> menuDetailList) {
-        this.menuDetailList = menuDetailList;
+    public IntegratedMenuListRes(List<MenuDetail> featuredMenuList, List<MenuDetail> categoryMenuList) {
+        this.featuredMenuList = featuredMenuList;
+        this.categoryMenuList = categoryMenuList;
     }
 
-    private List<MenuDetail> menuDetailList;
+    private List<MenuDetail> featuredMenuList;
 
-    public List<MenuDetail> getMenuDetailList() {
-        return menuDetailList;
+    private List<MenuDetail> categoryMenuList;
+
+    public List<MenuDetail> getFeaturedMenuList() {
+        return featuredMenuList;
     }
 
-    public void setMenuDetailList(List<MenuDetail> menuDetailList) {
-        this.menuDetailList = menuDetailList;
+    public List<MenuDetail> getCategoryMenuList() {
+        return categoryMenuList;
     }
 }
