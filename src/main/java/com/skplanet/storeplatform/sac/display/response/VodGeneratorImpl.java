@@ -50,6 +50,12 @@ public class VodGeneratorImpl implements VodGenerator {
 			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE,
 					metaInfo.getIssueDay()));
 		}
+		
+		contributor.setDirector(metaInfo.getArtist2Nm()); 	//감독
+		contributor.setCompany(metaInfo.getChnlCompNm());	//제공업체
+		contributor.setAgency(metaInfo.getAgencyNm());		//기획사
+		contributor.setChannel(metaInfo.getAgencyNm()); 	//방송사
+		
 		return contributor;
 	}
 
@@ -69,6 +75,9 @@ public class VodGeneratorImpl implements VodGenerator {
 			contributor.setDate(this.commonGenerator.generateDateString(DisplayConstants.DP_DATE_RELEASE,
 					metaInfo.getIssueDay()));
 		}
+		contributor.setCompany(metaInfo.getChnlCompNm());	//제공업체
+		contributor.setAgency(metaInfo.getAgencyNm());		//기획사
+		
 		return contributor;
 	}
 
