@@ -112,6 +112,7 @@ public final class MemberConstants {
 	public static final String NM_DEVICE_TELECOM_LGM = "LGM"; // LGM
 
 	/** 사용자 부가속성. */
+	public static final String USER_EXTRA_GROP_CD = "US0109"; // 부가속성 그룹 코드
 	public static final String USER_EXTRA_CERTIFICATION = "US010901"; // 공인인증여부
 	public static final String USER_EXTRA_SKTBILLSEPARATION = "US010902"; // SKT 청구서 분리 여부
 	public static final String USER_EXTRA_FACEBOOKACCESSTOKEN = "US010903"; // Facebook Access Token 정보
