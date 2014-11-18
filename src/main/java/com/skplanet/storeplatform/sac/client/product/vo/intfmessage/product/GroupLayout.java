@@ -15,6 +15,7 @@ import java.util.List;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 
 /**
  * Interface Message Layout Value Object.
@@ -25,59 +26,85 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class GroupLayout extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private int count; 
+	private int count;
 	private String menuId; // 메뉴ID
 	private String menuName; // 메뉴명
+	private List<Source> sourceList; // 이미지 소스
 	private List<Product> productList;
+
 	/**
 	 * @return the count
 	 */
 	public int getCount() {
-		return count;
+		return this.count;
 	}
+
 	/**
-	 * @param count the count to set
+	 * @param count
+	 *            the count to set
 	 */
 	public void setCount(int count) {
 		this.count = count;
 	}
-	
+
 	/**
 	 * @return the menuId
 	 */
 	public String getMenuId() {
-		return menuId;
+		return this.menuId;
 	}
+
 	/**
-	 * @param menuId the menuId to set
+	 * @param menuId
+	 *            the menuId to set
 	 */
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
+
 	/**
 	 * @return the menuName
 	 */
 	public String getMenuName() {
-		return menuName;
+		return this.menuName;
 	}
+
 	/**
-	 * @param menuName the menuName to set
+	 * @param menuName
+	 *            the menuName to set
 	 */
 	public void setMenuName(String menuName) {
 		this.menuName = menuName;
 	}
+
+	/**
+	 * @return the sourceList
+	 */
+	public List<Source> getSourceList() {
+		return this.sourceList;
+	}
+
+	/**
+	 * @param sourceList
+	 *            the sourceList to set
+	 */
+	public void setSourceList(List<Source> sourceList) {
+		this.sourceList = sourceList;
+	}
+
 	/**
 	 * @return the productList
 	 */
 	public List<Product> getProductList() {
-		return productList;
+		return this.productList;
 	}
+
 	/**
-	 * @param productList the productList to set
+	 * @param productList
+	 *            the productList to set
 	 */
 	public void setProductList(List<Product> productList) {
 		this.productList = productList;
 	}
-	
 
 }
