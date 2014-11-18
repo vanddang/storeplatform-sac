@@ -2152,6 +2152,7 @@ public class LoginServiceImpl implements LoginService {
 			MarketPinInfo pinInfo = new MarketPinInfo();
 			pinInfo.setIsPinSet(marketRes.getDeviceInfo().getPinInfo().getIsSet());
 			pinInfo.setIsPinClosed(marketRes.getDeviceInfo().getPinInfo().getIsPinClosed());
+			pinInfo.setSetPinUrl(marketRes.getDeviceInfo().getPinInfo().getSetPinURL());
 			if (StringUtils.isNotBlank(marketRes.getDeviceInfo().getPinInfo().getIsNotShowingAgain())) {
 				// 결제핀 입력여부가 타사와는 반대의 의미이다.
 				if (StringUtils.equals(marketRes.getDeviceInfo().getPinInfo().getIsNotShowingAgain(),
@@ -2382,19 +2383,21 @@ public class LoginServiceImpl implements LoginService {
 
 		if (marketClauseAgreeList != null) {
 			for (MarketClauseExtraInfoEc info : marketClauseAgreeList) {
+				AgreementInfo agreement = new AgreementInfo();
 				String extraAgreementId = "";
-
 				if (StringUtils.equals(info.getExtraProfile(), "US003505")) { // 개인정보 수집 및 이용동의
 					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE;
+					agreement.setExtraAgreementURL(info.getExtraProfileSetURL());
 				} else if (StringUtils.equals(info.getExtraProfile(), "US003509")) { // 통신과금서비스 이용약관
 					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE;
+					agreement.setExtraAgreementURL(info.getExtraProfileSetURL());
 				} else if (StringUtils.equals(info.getExtraProfile(), "US003511")) { // 마켓 서비스 이용약관
 					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE;
+					agreement.setExtraAgreementURL(info.getExtraProfileSetURL());
 				} else { // 규격서에 정의되지 않은 약관코드인 경우
 					throw new StorePlatformException("SAC_MEM_1105", info.getExtraProfile());
 				}
 
-				AgreementInfo agreement = new AgreementInfo();
 				agreement.setExtraAgreementId(extraAgreementId);
 				agreement.setIsExtraAgreement(info.getExtraProfileValue());
 				agreementInfoList.add(agreement);
@@ -2410,6 +2413,7 @@ public class LoginServiceImpl implements LoginService {
 			agreement.setIsExtraAgreement(info.getIsExtraAgreement());
 			agreement.setExtraAgreementVersion(info.getExtraAgreementVersion());
 			agreement.setIsMandatory(info.getMandAgreeYn());
+			agreement.setExtraAgreementURL(info.getExtraAgreementURL());
 			agreementList.add(agreement);
 		}
 
