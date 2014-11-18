@@ -71,7 +71,7 @@ public class PanelCardInfoManagerImpl implements PanelCardInfoManager {
     }
 
     @Override
-//    @LocalCacheable(value = "sac:diaplay:getMenuList", key = "#tenantId + '_' + #systemId + '_' + #langCd + '_' + #upMenuKey")
+    @LocalCacheable(value = "sac:display:getMenuList", key = "#systemId + '_' + #langCd + '_' + #upMenuKey")
     public List<MenuListCat> getMenuList(String tenantId, String systemId, String langCd, String upMenuKey) {
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("tenantId", tenantId);
@@ -79,6 +79,6 @@ public class PanelCardInfoManagerImpl implements PanelCardInfoManager {
         req.put("langCd", langCd);
         req.put("upMenuKey", upMenuKey);
 
-        return commonDAO.queryForList("MenuIntegration.selectMenuIntegrationList", req, MenuListCat.class);
+        return commonDAO.queryForList("PanelCardInfo.getIntegratedMenuList", req, MenuListCat.class);
     }
 }

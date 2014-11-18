@@ -49,6 +49,25 @@
             AND	CARD_ID = #{cardId}
     </select>
 
+    <select id="getIntegratedMenuList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.MenuListCat">
+        SELECT /* PanelCardInfoMapper.xml, getIntegratedMenuList, SAC/정희원 , 2014-05-19 */
+            TENANT_ID,
+            SYSTEM_ID,
+            MENU_KEY,
+            UP_MENU_KEY,
+            EXPO_ORD,
+            IMG_PATH,
+            MENU_NM,
+            INJT_VAR,
+            KEY_TYPE
+        FROM TB_DP_MENU_LIST_CATEGORY
+        WHERE 1=1
+            AND TENANT_ID = #{tenantId, jdbcType=VARCHAR}
+            AND SYSTEM_ID = #{systemId, jdbcType=VARCHAR}
+            AND UP_MENU_KEY = #{upMenuKey, jdbcType=VARCHAR}
+            AND EXPO_YN = 'Y'
+        ORDER BY KEY_TYPE, EXPO_ORD
+    </select>
 
 
 </mapper>

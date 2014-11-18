@@ -9,17 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.display.menu.service;
 
-import com.skplanet.storeplatform.sac.client.product.vo.MenuDetail;
-
-import java.util.List;
+import com.skplanet.storeplatform.sac.display.menu.vo.IntegratedMenuList;
 
 /**
  * <p>
- * MenuIntegrationService
+ * IntegratedMenuService
  * </p>
  * Updated on : 2014. 10. 20 Updated by : 정희원, SK 플래닛.
  */
-public interface MenuIntegrationService {
+public interface IntegratedMenuService {
 
     /**
      * 주어진 조건에 대한 메뉴 목록을 조회한다.
@@ -29,5 +27,5 @@ public interface MenuIntegrationService {
      * @param upMenuKey Optional
      * @return 메뉴 목록
      */
-    List<MenuDetail> selectMenuIntegrationList(String tenantId, String systemId, String langCd, String upMenuKey);
+    IntegratedMenuList getIntegratedMenuList(String tenantId, String systemId, String langCd, String upMenuKey);
 }
