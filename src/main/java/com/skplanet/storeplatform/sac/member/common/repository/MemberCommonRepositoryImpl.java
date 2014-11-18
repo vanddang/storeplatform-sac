@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 /**
@@ -71,4 +72,8 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 		return (Clause) this.commonDAO.queryForObject("MemberCommon.getClauseItemInfo", dto);
 	}
 
+	@Override
+	public List<CommonCode> getCommonCode(String grpCdId) {
+		return (List<CommonCode>) this.commonDAO.queryForList("MemberCommon.getCommonCode", grpCdId);
+	}
 }

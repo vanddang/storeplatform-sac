@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.member.common.repository;
 import java.util.List;
 
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 /**
@@ -88,4 +89,14 @@ public interface MemberCommonRepository {
 	 */
 	public Clause getClauseItemInfo(String tenantId, String clauseId);
 
+	/**
+	 * <pre>
+	 * 공통코드 조회.
+	 * </pre>
+	 * 
+	 * @param grpCdId
+	 *            그룹코드
+	 * @return CommonCode 공통 코드
+	 */
+	public List<CommonCode> getCommonCode(String grpCdId);
 }
