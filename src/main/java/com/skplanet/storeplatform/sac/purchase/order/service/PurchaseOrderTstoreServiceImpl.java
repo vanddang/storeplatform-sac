@@ -131,8 +131,9 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 				if (sbTstoreCoupon.length() > 0) {
 					sbTstoreCoupon.append(";");
 				}
-				sbTstoreCoupon.append(coupon.getCouponId()).append(":").append(coupon.getCouponName()).append(":")
-						.append(coupon.getCouponAmt()).append(":").append(coupon.getMakeHost()).append(":")
+				sbTstoreCoupon.append(coupon.getCouponId()).append(":")
+						.append(StringUtils.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", ""))
+						.append(":").append(coupon.getCouponAmt()).append(":").append(coupon.getMakeHost()).append(":")
 						.append(coupon.getCouponType());
 			}
 
