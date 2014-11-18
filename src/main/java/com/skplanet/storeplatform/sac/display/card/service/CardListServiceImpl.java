@@ -151,6 +151,7 @@ public class CardListServiceImpl implements CardListService {
                     String title = card.getTitle();
                     title = title.replaceAll("#\\{category\\}", menuInfoService.getMenuName(prefMenuId, ctx.getLangCd()));
                     card.setTitle(title);
+                    card.setLndTitle(title);
 
                     card.getDatasetProp().getUrlParam().put("menuId", prefMenuId);
                     card.getDatasetProp().getUrlParam().remove("topMenuId");
