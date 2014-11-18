@@ -35,7 +35,7 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
  * <pre>
  * 쿠폰,아이템 서비스 인터페이스 Imple.
  * </pre>
- *
+ * 
  * Created on : 2014-01-03 Created by : 김형식, SK 플래닛. Last Updated on : 2014-01-03 Last Updated by : 김형식, SK 플래닛
  */
 @Service
@@ -50,7 +50,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 쿠폰ID 생성.
 	 * </pre>
-	 *
+	 * 
 	 * @return String
 	 */
 	@Override
@@ -66,7 +66,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 아이템ID 생성.
 	 * </pre>
-	 *
+	 * 
 	 * @return String
 	 */
 	@Override
@@ -82,7 +82,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 쿠폰ID 가져오기.
 	 * </pre>
-	 *
+	 * 
 	 * @param scrContentId
 	 *            scrContentId
 	 * @return int
@@ -100,7 +100,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 아이템ID 가져오기.
 	 * </pre>
-	 *
+	 * 
 	 * @param scrContentId
 	 *            scrContentId
 	 * @return int
@@ -118,7 +118,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 쿠폰ID 가져오기.
 	 * </pre>
-	 *
+	 * 
 	 * @param scrContentId
 	 *            scrContentId
 	 * @return String
@@ -136,7 +136,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 아이템ID 가져오기.
 	 * </pre>
-	 *
+	 * 
 	 * @param scrContentId
 	 *            scrContentId
 	 * @return String
@@ -154,7 +154,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_PROD 테이블 입력및 수정한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param tblDpProdList
 	 *            tblDpProdList
 	 * @return
@@ -180,7 +180,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_SHPG_PROD 테이블 입력및 수정한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param tbDpShpgProdList
 	 *            tbDpShpgProdList
 	 * @return
@@ -207,7 +207,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_PROD_DESC 테이블 입력및 수정한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param tbDpProdDescList
 	 *            tbDpProdDescList
 	 */
@@ -233,7 +233,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_PROD_RSHP 테이블 입력및 수정한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param tbDpProdRshpList
 	 *            tbDpProdRshpList
 	 */
@@ -257,7 +257,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_TENANT_PROD 테이블 입력및 수정한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param tbDpTenantProdList
 	 *            tbDpTenantProdList
 	 */
@@ -290,7 +290,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_TENANT_PROD_PRICE 테이블 입력및 수정한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param tbDpTenantProdPriceList
 	 *            tbDpTenantProdPriceList
 	 */
@@ -315,7 +315,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_PROD_CATALOG_MAPG 테이블 입력및 수정한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param tbDpProdCatalogMapg
 	 *            tbDpProdCatalogMapg
 	 * @param prodId
@@ -358,7 +358,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_PROD_OPT 테이블 입력및 수정한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param tbDpProdOptList
 	 *            tbDpProdOptList
 	 */
@@ -391,7 +391,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TB_DP_SPRT_DEVICE 테이블 입력한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param tbDpSprtDeviceList
 	 *            tbDpSprtDeviceList
 	 */
@@ -415,7 +415,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * TBL_TAG_INFO 테이블 입력및 수정한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param tagList
 	 *            tagList
 	 */
@@ -442,7 +442,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * SP_REGIST_PROD 프로시저 호출한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param spRegistProdList
 	 *            spRegistProdList
 	 */
@@ -481,7 +481,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 상태값을 변경 한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param couponCode
 	 *            couponCode
 	 * @param dpStatusCode
@@ -534,7 +534,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 특가 상품 목록 조회 한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param couponCodes
 	 *            couponCodes
 	 * @return List<CouponRes>
@@ -553,8 +553,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 				if (cnt > 0) {
 					crinfo.setSpecialYN("Y");
 				} else {
-					int tingCnt = (Integer) this.commonDAO.queryForObject(
-							"Coupon.GET_TING_PRODUCT_INFO", couponCode);
+					int tingCnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_TING_PRODUCT_INFO", couponCode);
 					if (tingCnt > 0) {
 						crinfo.setSpecialYN("T");
 					} else {
@@ -578,7 +577,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * <pre>
 	 * 특가 상품 상세 조회 한다.
 	 * </pre>
-	 *
+	 * 
 	 * @param couponCode
 	 *            couponCode
 	 * @return CouponRes
@@ -614,7 +613,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * 쿠폰(아이템) 판매상태 변경.
-	 *
+	 * 
 	 * @param couponList
 	 *            couponList
 	 * @return ArrayList<String>
@@ -661,6 +660,20 @@ public class CouponItemServiceImpl implements CouponItemService {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * 카탈로그 및 메뉴ID 조회 한다.
+	 * 
+	 * @param catalogId
+	 *            catalogId
+	 * @return CouponRes
+	 */
+	@Override
+	public CouponRes getCatalogNmMenuId(String catalogId) {
+		CouponRes info = null;
+		info = (CouponRes) this.commonDAO.queryForObject("Coupon.selectCatalogNmMenuId", catalogId);
+		return info;
 	}
 
 }

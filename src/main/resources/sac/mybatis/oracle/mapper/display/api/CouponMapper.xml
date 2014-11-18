@@ -483,6 +483,26 @@
         )
     </insert>
 
+    <!--카탈로그 및 메뉴ID 조회-->
+    <select id="selectCatalogNmMenuId" resultType="com.skplanet.storeplatform.external.client.shopping.vo.CouponRes" parameterType="String">
+       /* CouponMapper.xml, selectCatalogNmMenuId, 카탈로그 및 메뉴ID 조회, 김형식/SK플래닛  , 2014-11-18 */
+		SELECT 
+		     A.CATALOG_NM AS catalogName
+		    ,B.MENU_ID AS menuId
+		    ,C.REG_ID as regId
+		    ,TO_CHAR(C.REG_DT,'YYYYMMDDHHMMSS') AS regDt
+		FROM 
+		    TB_DP_SHPG_CATALOG_DESC A 
+		   ,TB_DP_MENU_SHPG_MAPG B
+		   ,TB_DP_PROD_CATALOG_MAPG C
+		WHERE 1=1
+		 AND A.CATALOG_ID = B.CATALOG_ID
+		 AND A.CATALOG_ID = C.CATALOG_ID
+		 AND A.CATALOG_ID = #{catalogId}
+		 AND ROWNUM =1
+    </select>    
+
+
     <parameterMap id="procMap" type="hashmap">
         <parameter property="prodId" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
         <parameter property="settlRt" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -497,6 +517,9 @@
       /* CouponMapper.xml, selectSpSettleRegProd,SP_SETT_REG_PROD 프로시저 호출, 김형식/SK플래닛   , 2014-01-08 */
         {CALL SP_SETT_REG_PROD(?,?,?,?,?,?,?)}
    </select>        
+    
+    
+    
     
     <!-- 전시단 쿠폰상품 상태변경 -->
     <update id="updateDPCouponStatus" parameterType="HashMap">

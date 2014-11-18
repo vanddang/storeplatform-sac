@@ -191,7 +191,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			}
 			// SP_SETT_REG_PROD 프로시저 호출
 			this.log.info("■■■■■ setCallSpSettRegProd 시작 ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
-			if (!this.setCallSpSettRegProd(couponInfo, itemInfoList, spRegistProdList, couponReq.getCudType())) {
+			if (!this.setCallSpSettRegProd(couponInfo, itemInfoList, spRegistProdList, couponReq.getCudType(),
+					couponReq)) {
 				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 			this.log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■", DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
@@ -963,7 +964,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @return boolean
 	 */
 	private boolean setCallSpSettRegProd(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
-			List<SpRegistProd> spRegistProdList, String cudType) {
+			List<SpRegistProd> spRegistProdList, String cudType, CouponReq couponReq) {
 		this.log.info("■■■■■ setCallSpSettRegProd Start ■■■■■");
 		SpRegistProd spRegistProd = new SpRegistProd();
 		try {
@@ -1003,45 +1004,36 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			 */
 
 			NotificationIprm noti = new NotificationIprm();
-			List<ProductTenantPriceVO> productTenantPriceList = new ArrayList<ProductTenantPriceVO>();
+			List<ProductTenantPriceVO> productTenantPriceList = null;
 
 			try {
+				CouponRes couponRes = this.getCatalogNmMenuId(couponInfo.getStoreCatalogCode());
 				for (int i = 0; i < itemInfoList.size(); i++) {
 					DpItemInfo itemInfo = itemInfoList.get(i);
-					noti.setTransactionKey("transactionKey-001"); // 이놈도 문의 필요. 그냥 유니크한 값을 주면 되는지..??
+					noti.setTransactionKey(couponReq.getTxId() + "000" + (i + 1));
 
 					/**
 					 * 상품정보 세팅.
 					 */
 					ProductVO productVO = new ProductVO();
-					/**
-					 * 상품가격정보 세팅.
-					 */
-					ProductTenantPriceVO productTenantPriceVO = new ProductTenantPriceVO();
 
-					productVO.setSyncDataControlType(itemInfo.getCudType());
-					productVO.setProdId(itemInfo.getProdId());
-					productVO.setProdNm(itemInfo.getItemName()); // 상품명이 단품명 기준인지 , 채널명 기준인지 ??
-
-					productTenantPriceVO.setTenantId(CouponConstants.TENANT_ID);
-					productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());
-					productTenantPriceList.add(productTenantPriceVO);
+					productVO.setSyncDataControlType(itemInfo.getCudType()); // 구분
+					productVO.setProdId(itemInfo.getProdId());// 상품ID
+					productVO.setProdNm(itemInfo.getItemName()); // 상품명
 
 					if (!String.valueOf(itemInfo.getItemPrice()).equals("0")) { // 유료
-						productVO.setProdFdTypCd("PD000501");
+						productVO.setProdFdTypCd("PD000501");// 유료
 					} else {
-						productVO.setProdFdTypCd("PD000502");
+						productVO.setProdFdTypCd("PD000502");// 무료
 					}
 
-					productVO.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);
+					productVO.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);// 서비스그룹코드DP000206
 
-					// productVO.setSvcGrpTypCd("PD000601"); ?? 상품 구분 코드값이 없음
-
-					productVO.setMbrNo(couponInfo.getMbrNo());
-					productVO.setCid(itemInfo.getItemCode()); // cid가 뭔지 ( 단품 원코드가 맞는지>??)
-					productVO.setCateNo(CouponConstants.TOP_MENU_ID_CUPON_CONTENT);
-					productVO.setSubCateNo(CouponConstants.CATEGORY_ID_CUPON_SERIES_CONTENT);
-					productVO.setCoContentsId(couponInfo.getBpId());
+					productVO.setMbrNo(couponInfo.getMbrNo());// 판매자mbrNO
+					productVO.setCid(itemInfo.getItemCode()); // cid
+					productVO.setCateNo(CouponConstants.TOP_MENU_ID_CUPON_CONTENT); // 탑카테고리 DP28
+					productVO.setSubCateNo(couponRes.getMenuId());// 서브카테고리
+					productVO.setCoContentsId(itemInfo.getItemCode());// 업체컨텐츠ID == CID랑 같음
 
 					if (Integer.parseInt(couponInfo.getValidUntil()) > 0) { // 유효일수 값 비교
 						productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_DAY); // PD00312 기간제(일)
@@ -1051,24 +1043,40 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 																							// USE_TERM_UNIT
 						productVO.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
 					}
-					productVO.setCatalogId(couponInfo.getStoreCatalogCode());
-					// productVO.setCatalogNm(catalogNm); ?? 왜 필요한것인지??
-					productVO.setTaxTypCd(couponInfo.getTaxType());
+					productVO.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
+					productVO.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
+					productVO.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
+					productVO.setMbrStrte(couponInfo.getAccountingRate()); // 파트너 상품정산율
+
 					Date date = new Date();
 					String modifiedDate = new SimpleDateFormat("YYYYMMDDhhmmss").format(date);
+					if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
+						productVO.setRegId(couponInfo.getBpId()); // 등록ID
+						productVO.setRegDt(modifiedDate); // 등록일시
+						productVO.setUpdId(couponInfo.getBpId()); // 수정ID
+						productVO.setUpdDt(modifiedDate); // 수정일시
 
-					productVO.setRegDt(modifiedDate);
-					productVO.setRegId(couponInfo.getBpId());
-					productVO.setUpdDt(modifiedDate);
-					productVO.setUpdId(couponInfo.getBpId());
-					/**
-					 * TODO 상품정보 세팅 필요....
-					 */
+					} else {
+						productVO.setRegId(couponRes.getRegId()); // 등록ID
+						productVO.setRegDt(couponRes.getRegDt()); // 등록일시
+						productVO.setUpdId(couponInfo.getBpId()); // 수정ID
+						productVO.setUpdDt(modifiedDate); // 수정일시
+					}
 					noti.setProduct(productVO);
-					noti.setProductTenantPriceList(productTenantPriceList);
 
+					/**
+					 * 상품가격정보 세팅.
+					 */
+					productTenantPriceList = new ArrayList<ProductTenantPriceVO>();
+					ProductTenantPriceVO productTenantPriceVO = new ProductTenantPriceVO();
+					productTenantPriceVO.setSyncDataControlType(itemInfo.getCudType());
+					productTenantPriceVO.setTenantId(CouponConstants.TENANT_ID); // tenentId
+					productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());// 상품가격
+					productTenantPriceList.add(productTenantPriceVO);
+
+					noti.setProductTenantPriceList(productTenantPriceList);
+					this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // async
 				}
-				// this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // async
 
 				this.log.info("■■■■■ MQ 연동 End ■■■■■");
 			} catch (AmqpException ae) {
@@ -1568,6 +1576,20 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		osw.close();
 		fos.close();
 		return result;
+	}
+
+	/**
+	 * 카탈로그 및 메뉴ID 조회 한다.
+	 * 
+	 * @param catalogId
+	 *            catalogId
+	 * @return CouponRes
+	 */
+	private CouponRes getCatalogNmMenuId(String catalogId) {
+		this.log.info("<<<<< CouponContentService >>>>> getCatalogNmMenuId...");
+		CouponRes info = null;
+		info = this.couponItemService.getCatalogNmMenuId(catalogId);
+		return info;
 	}
 
 }

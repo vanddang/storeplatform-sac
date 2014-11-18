@@ -249,4 +249,15 @@ public interface CouponItemService {
 	 */
 	public ArrayList<String> updateBatchForCouponStatus(ArrayList<CouponReq> couponList);
 
+	/**
+	 * <pre>
+	 * 카탈로그 및 메뉴ID 조회 한다.
+	 * </pre>
+	 * 
+	 * @param catalogId
+	 *            catalogId
+	 * @return CouponRes
+	 */
+	public CouponRes getCatalogNmMenuId(String catalogId);
+
 }
