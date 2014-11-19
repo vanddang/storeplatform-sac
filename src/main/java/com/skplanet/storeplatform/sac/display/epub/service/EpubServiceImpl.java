@@ -153,6 +153,12 @@ public class EpubServiceImpl implements EpubService {
 
 			this.mapProduct(param, product, epubDetail, mzinSubscription, screenshotList);
 
+			//채널정보에 대표가격 추가
+			Price channelPrice = new Price();
+			channelPrice.setUnlmtAmt(epubDetail.getStoreProdAmt());
+			channelPrice.setPeriodAmt(epubDetail.getPlayProdAmt());
+			product.setPrice(channelPrice);
+			
 			//좋아요 여부
 			product.setLikeYn(epubDetail.getLikeYn());
 			

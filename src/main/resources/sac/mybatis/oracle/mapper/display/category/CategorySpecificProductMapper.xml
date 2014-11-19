@@ -812,14 +812,20 @@
                       , D.PROD_GRD_CD   -- 채널 상품 ID 조회   
                       , D.CID     -- 채널 상품 ID 조회  
                       , E.ISSUE_DAY    
+                      , E.BOOK_TBCTNS
+                      , E.ISBN
+                      , E.SAMPL_URL /* 미리보기 URL */
                       , M.FILE_PATH
                       , M.FILE_NM
-                      , M.FILE_SIZE   
+                      , M.FILE_SIZE
                     </if>
                     <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                       , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
                       , J.CID   -- 에피소드 상품 ID 조회
                       , L.ISSUE_DAY    
+                      , L.BOOK_TBCTNS
+                      , L.ISBN
+                      , L.SAMPL_URL /* 미리보기 URL */
                       , NVL(M1.FILE_PATH, M.FILE_PATH) AS FILE_PATH
                       , NVL(M1.FILE_NM, M.FILE_NM) AS FILE_NM
                       , NVL(M1.FILE_SIZE, M.FILE_SIZE) AS FILE_SIZE                      

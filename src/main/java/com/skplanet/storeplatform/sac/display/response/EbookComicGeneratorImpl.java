@@ -131,7 +131,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 			}
 		}
 		book.setSupportList(this.generateSupportList(metaInfo));
-
+		book.setIsbn(metaInfo.getIsbn());
 		return book;
 	}
 

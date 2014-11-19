@@ -194,6 +194,9 @@ public class MetaInfo extends CommonInfo {
 	private Integer unlmtAmt;
 	private Integer periodAmt;
 
+	/** 도서 목차 */
+	private String bookTbctns;
+
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
 	private Date updDt;
@@ -4463,4 +4466,13 @@ public class MetaInfo extends CommonInfo {
 		this.detailPromotionPath = detailPromotionPath;
 	}
 
+	public String getBookTbctns() {
+		return bookTbctns;
+	}
+
+	public void setBookTbctns(String bookTbctns) {
+		this.bookTbctns = bookTbctns;
+	}
+
+	
 }
