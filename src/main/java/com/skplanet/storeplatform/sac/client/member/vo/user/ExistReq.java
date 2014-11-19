@@ -22,6 +22,8 @@ public class ExistReq extends CommonInfo {
 	private String userKey;
 	/* 기기 Key */
 	private String deviceKey;
+	/* 외부연동 Key */
+	private String mbrNo;
 
 	public String getUserId() {
 		return this.userId;
@@ -37,6 +39,14 @@ public class ExistReq extends CommonInfo {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	public String getMbrNo() {
+		return this.mbrNo;
+	}
+
+	public void setMbrNo(String mbrNo) {
+		this.mbrNo = mbrNo;
 	}
 
 	public String getUserKey() {

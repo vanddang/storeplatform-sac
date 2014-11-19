@@ -32,6 +32,11 @@ public class ListDeviceReq extends CommonInfo {
 	private String deviceKey;
 
 	/**
+	 * 외부 연동 Key.
+	 */
+	private String mbrNo;
+
+	/**
 	 * 대표기기 여부.
 	 */
 	private String isMainDevice;
@@ -109,6 +114,21 @@ public class ListDeviceReq extends CommonInfo {
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return mbrNo
+	 */
+	public String getMbrNo() {
+		return this.mbrNo;
+	}
+
+	/**
+	 * @param mbrNo
+	 *            String
+	 */
+	public void setMbrNo(String mbrNo) {
+		this.mbrNo = mbrNo;
 	}
 
 }
