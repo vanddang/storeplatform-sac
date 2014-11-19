@@ -23,6 +23,8 @@ public class DetailReq extends CommonInfo {
 	private String userKey;
 	/* 기기 키 */
 	private String deviceKey;
+	/* 외부연동 키 */
+	private String mbrNo;
 
 	private SearchExtentReq searchExtent;
 
@@ -68,6 +70,14 @@ public class DetailReq extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getMbrNo() {
+		return this.mbrNo;
+	}
+
+	public void setMbrNo(String mbrNo) {
+		this.mbrNo = mbrNo;
 	}
 
 }
