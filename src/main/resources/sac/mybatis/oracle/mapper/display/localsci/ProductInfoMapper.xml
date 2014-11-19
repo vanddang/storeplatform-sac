@@ -387,9 +387,9 @@
             , P.USE_PERIOD
             , P.USE_PERIOD_UNIT_CD
             , P.CID
-            , PD.ARTIST1_NM  AS  ARTIST_NM
-            , PD.ARTIST2_NM
-            , PD.ARTIST3_NM   AS ALBUM                     
+            , PD1.ARTIST1_NM  AS  ARTIST_NM
+            , PD1.ARTIST2_NM
+            , PD1.ARTIST3_NM   AS ALBUM 
             , MP.CHNL_COMP_NM as PUBLISHER
             , MP.AGENCY_NM    AS AGENCY
             , MP.ISSUE_DAY
