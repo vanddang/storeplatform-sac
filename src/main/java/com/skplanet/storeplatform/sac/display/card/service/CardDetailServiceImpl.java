@@ -79,6 +79,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 		card.setTitle(cardDetail.getCardTitle());
 		card.setDesc(cardDetail.getCardDesc());
 		card.setLayout(StringUtils.defaultString(cardDetail.getCardLayOut()));
+		card.setCardImgType(StringUtils.defaultString(cardDetail.getCardImgType()));
 
 		List<Source> sourceList = new ArrayList<Source>();
 		if (StringUtils.isNotBlank(cardDetail.getCardImgPath())) {

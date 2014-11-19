@@ -39,6 +39,7 @@ public class CardDetail extends CommonInfo {
 	private String segmTypeCd;
 	private String cardImgPath;
 	private String cardImgRatio;
+	private String cardImgType;
 	private String lndImgPath;
 	private String lndImgRatio;
 	private String menuId;
@@ -197,6 +198,14 @@ public class CardDetail extends CommonInfo {
 
 	public void setCardImgRatio(String cardImgRatio) {
 		this.cardImgRatio = cardImgRatio;
+	}
+
+	public String getCardImgType() {
+		return cardImgType;
+	}
+
+	public void setCardImgType(String cardImgType) {
+		this.cardImgType = cardImgType;
 	}
 
 	public String getLndImgPath() {
