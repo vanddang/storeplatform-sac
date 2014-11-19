@@ -1592,7 +1592,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			keyValue = req.getDeviceKey();
 		} else if (StringUtils.isNotBlank(req.getMbrNo())) {
 			keyType = MemberConstants.KEY_TYPE_USERMBR_NO;
-			keyValue = req.getDeviceKey();
+			keyValue = req.getMbrNo();
 		}
 
 		/**
