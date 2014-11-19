@@ -1288,8 +1288,10 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeForInAppSacRes res = new AuthorizeForInAppSacRes();
 
-		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
-		String tenantId = this.commService.getTenantIdByDeviceTelecom(req.getDeviceTelecom()); // 이통사 정보로 TenantID 부여
+		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
+			req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
+		}
+		String tenantId = this.getTenantIdByDeviceTelecom(req.getDeviceTelecom()); // 이통사 정보로 TenantID 부여
 		IapProductInfoRes iapProductInfoRes = this.mcic.getIapProdInfo(tenantId, req.getProdId()); // 마켓배포상품 정보조회
 
 		LOGGER.info("{} tenantId : {}, 마켓배포상품여부 : {}", req.getDeviceId(), tenantId,
@@ -2076,6 +2078,7 @@ public class LoginServiceImpl implements LoginService {
 			SearchExtentReq searchExtent = new SearchExtentReq();
 			searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 			searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+			searchExtent.setAgreementInfoYn(MemberConstants.USE_Y);
 			detailReq.setDeviceId(req.getDeviceId());
 			detailReq.setSearchExtent(searchExtent);
 
@@ -2097,49 +2100,31 @@ public class LoginServiceImpl implements LoginService {
 					// 재가입시킨 회원정보 재조회
 					detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
+				} else if (!StringUtils.equals(detailRes.getDeviceInfoList().get(0).getDeviceId(),
+						marketRes.getDeviceId())) {
+
+					// 번호변경 케이스로 판단하여 deviceId 업데이트
+					LOGGER.info("{} deviceId 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList().get(0)
+							.getDeviceId(), marketRes.getDeviceId());
+					DeviceInfo deviceInfo = new DeviceInfo();
+					deviceInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+					deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+					deviceInfo.setDeviceId(marketRes.getDeviceId());
+					this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
+
+					// 변경된 deviceId로 회원정보 재조회
+					detailReq.setDeviceId(marketRes.getDeviceId());
+					detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
 				}
 
 			} catch (StorePlatformException e) {
-
 				if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-
-					// 타사 회원키로 가입된 회원정보 조회
-					detailReq.setDeviceId(null);
-					detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
-					detailReq.setSearchExtent(searchExtent);
-
-					try {
-
-						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-
-						// 번호변경 케이스로 판단하여 deviceId 업데이트
-						LOGGER.info("{} deviceId 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList()
-								.get(0).getDeviceId(), marketRes.getDeviceId());
-						DeviceInfo deviceInfo = new DeviceInfo();
-						deviceInfo.setUserKey(detailRes.getUserInfo().getUserKey());
-						deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-						deviceInfo.setDeviceId(marketRes.getDeviceId());
-						this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
-
-						// 변경된 deviceId로 회원정보 재조회
-						detailReq.setDeviceId(marketRes.getDeviceId());
-						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-
-					} catch (StorePlatformException ex) {
-
-						if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-							// 회원정보 없으면 Tstore 회원가입
-							LOGGER.info("{} Tstore 회원가입", req.getDeviceId());
-							this.joinMaketUser(requestHeader, req, marketRes);
-
-							// 가입된 deviceId로 회원정보 재조회
-							detailReq.setDeviceId(marketRes.getDeviceId());
-							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-						} else {
-							throw e;
-						}
-					}
-
+					// 회원정보 없으면 Tstore 회원가입
+					LOGGER.info("{} Tstore 회원가입", req.getDeviceId());
+					this.joinMaketUser(requestHeader, req, marketRes);
+					// 가입시킨 회원정보 재조회
+					detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 				} else {
 					throw e;
 				}
@@ -2189,7 +2174,17 @@ public class LoginServiceImpl implements LoginService {
 			res.setMbrAuth(new MbrAuth()); // 타사회원은 존재하지 않음
 			res.setTstoreEtcInfo(new TstoreEtcInfo()); // 타사회원은 존재하지 않음
 
-		} else { // // 비회원 or 이용제한 회원 or IMEI 불일치
+		} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
+
+			res.setUserStatus(marketRes.getUserStatus());
+			res.setUserInfo(new UserInfo());
+			res.setAgreementList(new ArrayList<Agreement>());
+			res.setDeviceInfo(new DeviceInfo());
+			res.setPinInfo(new MarketPinInfo());
+			res.setMbrAuth(new MbrAuth());
+			res.setTstoreEtcInfo(new TstoreEtcInfo());
+
+		} else { // 이용제한 회원 or IMEI 불일치
 
 			res.setUserStatus(marketRes.getUserStatus());
 			res.setUserInfo(new UserInfo());
@@ -2357,8 +2352,8 @@ public class LoginServiceImpl implements LoginService {
 
 		UserMbrDevice userMbrDevice = new UserMbrDevice();
 		userMbrDevice.setChangeCaseCode(MemberConstants.DEVICE_CHANGE_TYPE_USER_SELECT);
-		userMbrDevice.setDeviceID(marketRes.getDeviceId()); // 기기 ID
-		userMbrDevice.setDeviceTelecom(marketRes.getDeviceTelecom()); // 이동 통신사
+		userMbrDevice.setDeviceID(req.getDeviceId()); // 기기 ID
+		userMbrDevice.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
 		userMbrDevice.setDeviceModelNo(MemberConstants.DP_ANY_PHONE_4APP); // 단말 모델
 		userMbrDevice.setNativeID(req.getNativeId()); // 기기고유 ID (imei)
 		userMbrDevice.setIsPrimary(MemberConstants.USE_Y); // 대표기기 유무
@@ -2482,6 +2477,28 @@ public class LoginServiceImpl implements LoginService {
 
 		return isPurchasedFromTstore;
 
+	}
+
+	/**
+	 * <pre>
+	 * 통신사에 따라서 tenantId를 구분한다.
+	 * </pre>
+	 * 
+	 * @param deviceTelecom
+	 *            String
+	 * @return tenantId
+	 */
+	private String getTenantIdByDeviceTelecom(String deviceTelecom) {
+
+		String tenantId = "";
+		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			tenantId = MemberConstants.TENANT_ID_TSTORE;
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
+			tenantId = MemberConstants.TENANT_ID_OLLEH_MARKET;
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
+			tenantId = MemberConstants.TENANT_ID_UPLUS_STORE;
+		}
+		return tenantId;
 	}
 
 	/**
