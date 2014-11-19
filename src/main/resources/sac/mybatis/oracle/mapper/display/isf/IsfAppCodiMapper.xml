@@ -172,7 +172,8 @@
 
     <!-- 선호 카테고리 정보 조회 -->
     <select id="getCategoryInfoList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-         SELECT B.MENU_ID, B.MENU_NM
+         SELECT /* IsfAppCodiMapper.xml, getCategoryInfoList, 선호 카테고리 정보 조회(앱코디), 이태희/부르칸, 2014-11-18 */
+                B.MENU_ID, B.MENU_NM
            FROM (
                  SELECT MENU_ID, MENU_ORD
                    FROM (
@@ -194,9 +195,10 @@
 
     <!-- 추천상품 리스트에 대한 상품 기본정보 조회 -->
     <select id="getProdBasicInfoList" parameterType="java.util.HashMap" resultType="ProductBasicInfo">
-        SELECT PROD_ID,
+        SELECT /* IsfAppCodiMapper.xml, getCategoryInfoList, 선호 카테고리 정보 조회(앱코디), 이태희/부르칸, 2014-11-18 */
+               PROD_ID,
                TOP_MENU_ID,
-               CONTENTS_TYPE_CD,
+               'PD002501' AS CONTENTS_TYPE_CD,
                PROD_ID AS PART_PROD_ID,
                CASE WHEN (RCD != '903001' AND RCD != '909001') AND (R_PROD_NM IS NULL OR R_MENU_NM IS NULL) THEN '요즘 HOT! Power User의 BEST 상품을 소개합니다.'
                     ELSE CASE WHEN RCD = '901001' THEN '따끈따끈 ' || R_PROD_NM || '의 신작이 나왔어요!'
@@ -212,20 +214,20 @@
                        A.RID,
                        A.RCD,
                        B.PROD_ID,
-                       B.TOP_MENU_ID,
-                       B.CONTENTS_TYPE_CD,
-                       C.MENU_NM,
+                       C.TOP_MENU_ID,
+                       D.MENU_NM,
                        (SELECT PROD_NM
                           FROM TB_DP_PROD_DESC
-                         WHERE PROD_ID = RID
+                         WHERE PROD_ID = A.RID
                            AND LANG_CD = #{tenantHeader.langCd}
                            AND ROWNUM = 1) AS R_PROD_NM,
                        (SELECT MENU_NM
                           FROM TB_DP_PROD X, TB_DP_MENU_CATEGORY_DESC Y
-                         WHERE X.PROD_ID = RID
+                         WHERE X.PROD_ID = A.RID
                            AND X.TOP_MENU_ID = Y.MENU_ID
                            AND Y.LANG_CD = #{tenantHeader.langCd}
-                           AND ROWNUM = 1) AS R_MENU_NM
+                           AND ROWNUM = 1) AS R_MENU_NM,
+                       ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY C.REG_DT DESC) AS RNUM
                   FROM (
                         SELECT ID, RK, RID, RCD
                           FROM (
@@ -240,12 +242,16 @@
                                )
                          WHERE ID != 'DUMMY'
                        )                        A,
-                       TB_DP_PROD               B,
-                       TB_DP_MENU_CATEGORY_DESC C
+                       TB_DP_PROD_RSHP          B,
+                       TB_DP_PROD               C,
+                       TB_DP_MENU_CATEGORY_DESC D
                  WHERE A.ID = B.PROD_ID
-                   AND B.TOP_MENU_ID = C.MENU_ID
-                   AND C.LANG_CD = #{tenantHeader.langCd}
+                   AND B.PART_PROD_ID = C.PROD_ID
+                   AND C.TOP_MENU_ID = D.MENU_ID
+                   AND B.PROD_RSHP_CD = 'DP010802'
+                   AND D.LANG_CD = #{tenantHeader.langCd}
                )
+         WHERE RNUM = 1
          ORDER BY RK
     </select>
 </mapper>
