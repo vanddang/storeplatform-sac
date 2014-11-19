@@ -539,20 +539,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Book 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
 
-		// 미리보기
-		if (StringUtils.isNotBlank(metaInfo.getSamplUrl())) {
-			Preview preview = new Preview();
-			List<Source> epubPreviewSourceList = new ArrayList<Source>();
-
-            Source source = new Source();
-			source.setType(DisplayConstants.DP_EPUB_PREVIEW);
-			source.setUrl(this.commonService.makeEpubPreviewUrl(metaInfo.getSamplUrl()));
-			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
-			epubPreviewSourceList.add(source);
-
-			preview.setSourceList(epubPreviewSourceList);
-			rights.setPreview(preview);
-		}
+		generateEpubPreview(metaInfo, rights);
 		
 		product.setTitle(title);
 		product.setPrice(price);
@@ -575,6 +562,30 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		this.appendMileageInfo(metaInfo, product);
 
 		return product;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * @param metaInfo
+	 * @param rights
+	 */
+	private void generateEpubPreview(MetaInfo metaInfo, Rights rights) {
+		// 미리보기
+		if (StringUtils.isNotBlank(metaInfo.getSamplUrl())) {
+			Preview preview = new Preview();
+			List<Source> epubPreviewSourceList = new ArrayList<Source>();
+
+            Source source = new Source();
+			source.setType(DisplayConstants.DP_EPUB_PREVIEW);
+			source.setUrl(this.commonService.makeEpubPreviewUrl(metaInfo.getSamplUrl()));
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
+			epubPreviewSourceList.add(source);
+
+			preview.setSourceList(epubPreviewSourceList);
+			rights.setPreview(preview);
+		}
 	}
 
 	/*
@@ -603,20 +614,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Ebook용 Contributor 설정
 		Contributor contributor = this.ebookComicGenerator.generateEbookContributor(metaInfo);
 
-		// 미리보기
-		if (StringUtils.isNotBlank(metaInfo.getSamplUrl())) {
-			Preview preview = new Preview();
-			List<Source> epubPreviewSourceList = new ArrayList<Source>();
-
-            Source source = new Source();
-			source.setType(DisplayConstants.DP_EPUB_PREVIEW);
-			source.setUrl(this.commonService.makeEpubPreviewUrl(metaInfo.getSamplUrl()));
-			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
-			epubPreviewSourceList.add(source);
-
-			preview.setSourceList(epubPreviewSourceList);
-			rights.setPreview(preview);
-		}
+		generateEpubPreview(metaInfo, rights);
 
 		// 앱코디 전용 Book 생성
 		if ("APPCODI".equals(metaInfo.getSvcGrpNm())) {
@@ -667,20 +665,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// BOOK 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
 
-		// 미리보기
-		if (StringUtils.isNotBlank(metaInfo.getSamplUrl())) {
-			Preview preview = new Preview();
-			List<Source> epubPreviewSourceList = new ArrayList<Source>();
-
-            Source source = new Source();
-			source.setType(DisplayConstants.DP_EPUB_PREVIEW);
-			source.setUrl(this.commonService.makeEpubPreviewUrl(metaInfo.getSamplUrl()));
-			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
-			epubPreviewSourceList.add(source);
-
-			preview.setSourceList(epubPreviewSourceList);
-			rights.setPreview(preview);
-		}
+		generateEpubPreview(metaInfo, rights);
 		
 		product.setTitle(title);
 		product.setPrice(price);
@@ -731,20 +716,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Comic용 Contributor 설정
 		Contributor contributor = this.ebookComicGenerator.generateComicContributor(metaInfo);
 
-		// 미리보기
-		if (StringUtils.isNotBlank(metaInfo.getSamplUrl())) {
-			Preview preview = new Preview();
-			List<Source> epubPreviewSourceList = new ArrayList<Source>();
-
-            Source source = new Source();
-			source.setType(DisplayConstants.DP_EPUB_PREVIEW);
-			source.setUrl(this.commonService.makeEpubPreviewUrl(metaInfo.getSamplUrl()));
-			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
-			epubPreviewSourceList.add(source);
-
-			preview.setSourceList(epubPreviewSourceList);
-			rights.setPreview(preview);
-		}
+		generateEpubPreview(metaInfo, rights);
 		
 		// 앱코디 전용 Book 생성
 		if ("APPCODI".equals(metaInfo.getSvcGrpNm())) {
