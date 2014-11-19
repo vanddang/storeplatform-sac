@@ -98,6 +98,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
+	private final String APP_CODI_SVC_GRP_NM = "APPCODI";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -643,8 +645,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 				ecReq.setAdultYN("N");
 			}
 
-			/* RCM-100 : 개인별 추천 상품 ISF 연동 */
-			/* RCM-101 : 개인별 선호 카테고리 및 추천 상품 ISF 연동 */
+			// App Codi ISF 연동
 			ecRes = this.invoker.invokeV2(ecReq);
 		} catch (StorePlatformException se) {
 			throw se;
@@ -691,11 +692,11 @@ public class AppCodiServiceImpl implements AppCodiService {
 					layout.setMenuList(menuList);
 				}
 			}
-
 			itemList.clear();
 
 			for (IsfV2OfferObjectsEcRes item : ecRes.getData().getOfferObjects()) {
 				HashMap<String, Object> param = new HashMap<String, Object>();
+
 				param.put("itemId", item.getItemId()); // 추천상품ID
 				param.put("itemOrd", item.getRank()); // 추천상품 우선순위
 				param.put("recmItemId", StringUtils.stripToEmpty(item.getRelatedItem())); // 추천근거 상품ID
@@ -778,6 +779,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
 
 			if (metaInfo != null) {
+				metaInfo.setSvcGrpNm(this.APP_CODI_SVC_GRP_NM);
 				product = this.responseInfoGenerateFacade.generateBroadcastProductShort(metaInfo);
 			}
 		}
@@ -787,6 +789,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
 
 			if (metaInfo != null) {
+				metaInfo.setSvcGrpNm(this.APP_CODI_SVC_GRP_NM);
 				product = this.responseInfoGenerateFacade.generateEbookProductShort(metaInfo);
 			}
 		}
@@ -796,6 +799,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
 
 			if (metaInfo != null) {
+				metaInfo.setSvcGrpNm(this.APP_CODI_SVC_GRP_NM);
 				product = this.responseInfoGenerateFacade.generateComicProductShort(metaInfo);
 			}
 		}

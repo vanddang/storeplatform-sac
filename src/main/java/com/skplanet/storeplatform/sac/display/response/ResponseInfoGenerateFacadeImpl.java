@@ -9,21 +9,39 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
-import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
  * Response 객체 Generate Facade 구현체
@@ -56,7 +74,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 	@Autowired
 	private DisplayCommonService commonService;
-	
+
 	@Autowired
 	private AlbumInfoGenerator albumInfoGenerator;
 
@@ -108,8 +126,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -153,8 +171,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setMenuList(menuList);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -204,12 +222,12 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -220,23 +238,27 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	@Override
 	public Product generateAlbumProduct(AlbumMeta albumMeta) {
 		Product product = new Product();
-		product.setIdentifierList(albumInfoGenerator.generateIdentifierList(albumMeta));
-		product.setTitle(albumInfoGenerator.generateTitle(albumMeta));
-		product.setMenuList(albumInfoGenerator.generateMenuList(albumMeta));
-		product.setSourceList(albumInfoGenerator.generateSourceList(albumMeta));
-		product.setRights(albumInfoGenerator.generateRights(albumMeta));
-		product.setContributor(albumInfoGenerator.generateContributor(albumMeta));
-		product.setDateList(albumInfoGenerator.generateDateList(albumMeta));
+		product.setIdentifierList(this.albumInfoGenerator.generateIdentifierList(albumMeta));
+		product.setTitle(this.albumInfoGenerator.generateTitle(albumMeta));
+		product.setMenuList(this.albumInfoGenerator.generateMenuList(albumMeta));
+		product.setSourceList(this.albumInfoGenerator.generateSourceList(albumMeta));
+		product.setRights(this.albumInfoGenerator.generateRights(albumMeta));
+		product.setContributor(this.albumInfoGenerator.generateContributor(albumMeta));
+		product.setDateList(this.albumInfoGenerator.generateDateList(albumMeta));
 		product.setProductDetailExplain(albumMeta.getProdBaseDesc());
 		return product;
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateAlbumDetailProduct(com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateAlbumDetailProduct(com.skplanet
+	 * .storeplatform.sac.display.cache.vo.AlbumMeta)
 	 */
 	@Override
 	public Product generateAlbumDetailProduct(AlbumMeta albumMeta) {
-		Product product = generateAlbumProduct(albumMeta);
+		Product product = this.generateAlbumProduct(albumMeta);
 		product.setLikeYn(albumMeta.getLikeYn());
 		return product;
 	}
@@ -280,8 +302,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setMusic(music);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -316,7 +338,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Contributor contributor = this.vodGenerator.generateMovieContributor(metaInfo);
 		// Vod 설정
 		Vod vod = this.vodGenerator.generateVod(metaInfo);
-		
+
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -335,8 +357,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setProdChrgYn(metaInfo.getProdChrg());
 		product.setVod(vod);
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -378,8 +400,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -434,8 +456,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 방송사명
 		product.setBrdcCompNm(metaInfo.getBrdcCompNm());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -476,8 +498,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 앱코디 전용 방송사명 생성
+		if ("APPCODI".equals(metaInfo.getSvcGrpNm())) {
+			product.setBrdcCompNm(metaInfo.getBrdcCompNm());
+		}
+
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -527,8 +554,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -559,6 +586,11 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Ebook용 Contributor 설정
 		Contributor contributor = this.ebookComicGenerator.generateEbookContributor(metaInfo);
 
+		// 앱코디 전용 Book 생성
+		if ("APPCODI".equals(metaInfo.getSvcGrpNm())) {
+			product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
+		}
+
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -569,8 +601,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 이북 상품은 상세 설명 정보를 내려줌
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -620,8 +652,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -652,6 +684,11 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Comic용 Contributor 설정
 		Contributor contributor = this.ebookComicGenerator.generateComicContributor(metaInfo);
 
+		// 앱코디 전용 Book 생성
+		if ("APPCODI".equals(metaInfo.getSvcGrpNm())) {
+			product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
+		}
+
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -661,8 +698,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -763,10 +800,10 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSalesOption(salesOption);
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
-		
-        // Tstore멤버십 적립율 정보
-        appendMileageInfo(metaInfo, product);
-		
+
+		// Tstore멤버십 적립율 정보
+		this.appendMileageInfo(metaInfo, product);
+
 		return product;
 	}
 
@@ -808,9 +845,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setSalesOption(salesOption);
 
-        // Tstore멤버십 적립율 정보
-        appendMileageInfo(metaInfo, product);
-		
+		// Tstore멤버십 적립율 정보
+		this.appendMileageInfo(metaInfo, product);
+
 		return product;
 	}
 
@@ -856,8 +893,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -886,8 +923,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -928,8 +965,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -987,8 +1024,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 방송사명
 		product.setBrdcCompNm(metaInfo.getBrdcCompNm());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -1021,8 +1058,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -1058,8 +1095,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
 		return product;
 	}
@@ -1176,43 +1213,37 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return coupon;
 	}
 
-    private void appendMileageInfo(MetaInfo metaInfo, Product product) {
-        MileageInfo mileageInfo = metaInfo.getMileageInfo();
-        if(mileageInfo == null || product == null)
-            return;
-        
-        // 예외 상품이면 적립율 그대로 노출
- 		// 예외 상품이 아닌 경우 
-        if (metaInfo.getProdAmt() == null || metaInfo.getProdAmt() == 0
-         		&& StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)
-         		) {
-         	//무료 상품 && 카테고리		
-         	/*
-         	String topMenuId = metaInfo.getTopMenuId();
-     		if (StringUtils.isNotEmpty(metaInfo.getPartParentClsfCd()) // 인앱 지원 여부 참조. AppInfoGeneratorImpl.generateSupportList
-     				&& 
-     				(DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
-     				|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
-     				|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
-     				|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId))
-     				) {
-     			// 앱상품 && 인앱상품이 존재하면 노출
-     		} else
-     			mileageInfo = null;
-     		*/
-        	
-        	// 앱상품 && 인앱상품이 존재하면 노출
-        	// 인앱 지원 여부 참조. AppInfoGeneratorImpl.generateSupportList
-         	if(StringUtils.isEmpty(metaInfo.getPartParentClsfCd())
-         			|| StringUtils.equalsIgnoreCase(metaInfo.getPartParentClsfCd(), "N")) {
-         		mileageInfo = new MileageInfo();
-         	}
-         }
-        
-        
-        List<Point> mileage = commonGenerator.generateMileage(mileageInfo);
-        if (CollectionUtils.isNotEmpty(mileage)) {
-            product.setPointList(mileage);
-        }
-    }
+	private void appendMileageInfo(MetaInfo metaInfo, Product product) {
+		MileageInfo mileageInfo = metaInfo.getMileageInfo();
+		if (mileageInfo == null || product == null)
+			return;
+
+		// 예외 상품이면 적립율 그대로 노출
+		// 예외 상품이 아닌 경우
+		if (metaInfo.getProdAmt() == null || metaInfo.getProdAmt() == 0
+				&& StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)) {
+			// 무료 상품 && 카테고리
+			/*
+			 * String topMenuId = metaInfo.getTopMenuId(); if (StringUtils.isNotEmpty(metaInfo.getPartParentClsfCd()) //
+			 * 인앱 지원 여부 참조. AppInfoGeneratorImpl.generateSupportList &&
+			 * (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId) ||
+			 * DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId) ||
+			 * DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId) ||
+			 * DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) ) { // 앱상품 && 인앱상품이 존재하면 노출 } else
+			 * mileageInfo = null;
+			 */
+
+			// 앱상품 && 인앱상품이 존재하면 노출
+			// 인앱 지원 여부 참조. AppInfoGeneratorImpl.generateSupportList
+			if (StringUtils.isEmpty(metaInfo.getPartParentClsfCd())
+					|| StringUtils.equalsIgnoreCase(metaInfo.getPartParentClsfCd(), "N")) {
+				mileageInfo = new MileageInfo();
+			}
+		}
+
+		List<Point> mileage = this.commonGenerator.generateMileage(mileageInfo);
+		if (CollectionUtils.isNotEmpty(mileage)) {
+			product.setPointList(mileage);
+		}
+	}
 }
