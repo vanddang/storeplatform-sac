@@ -52,6 +52,11 @@ public class Card extends CommonInfo {
      */
     private String layout;
 
+    /**
+     * Card 이미지 타입
+     */
+    private String cardImgType;
+
 	/**
 	 * resource 정보.
 	 */
@@ -152,6 +157,14 @@ public class Card extends CommonInfo {
     public void setLayout(String layout) {
         this.layout = layout;
     }
+
+	public String getCardImgType() {
+		return cardImgType;
+	}
+
+	public void setCardImgType(String cardImgType) {
+		this.cardImgType = cardImgType;
+	}
 
 	public List<Source> getSourceList() {
 		return sourceList;
