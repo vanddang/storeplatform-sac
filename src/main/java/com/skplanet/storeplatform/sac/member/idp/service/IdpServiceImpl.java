@@ -1600,61 +1600,43 @@ public class IdpServiceImpl implements IdpService {
 		SearchUserResponse searchUserResponse = null;
 
 		try {
+
 			searchUserResponse = this.userSCI.searchUser(searchUserRequest);
-			if (searchUserResponse != null) {
-				prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo();
-				userKey = searchUserResponse.getUserKey();
-			}
-		} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
-			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
-			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
-			return imResult;
-		}
+			prevMbrNoForgameCenter = searchUserResponse.getUserMbr().getImMbrNo();
+			userKey = searchUserResponse.getUserKey();
 
-		try {
+			/** MQ 연동을 위해 userId가 가지고 있는 휴대기기 목록 조회 */
+			SacRequestHeader requestHeader = new SacRequestHeader();
+			TenantHeader tenant = new TenantHeader();
+			tenant.setSystemId(map.get("systemID"));
+			tenant.setTenantId(map.get("tenantID"));
+			requestHeader.setTenantHeader(tenant);
+			ListDeviceReq listDeviceReq = new ListDeviceReq();
+			listDeviceReq.setUserId(userId);
+			listDeviceReq.setIsMainDevice("N");
+			ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
 
-			if (searchUserResponse != null) {
-
-				/** MQ 연동을 위해 userId가 가지고 있는 휴대기기 목록 조회 */
-				SacRequestHeader requestHeader = new SacRequestHeader();
-				TenantHeader tenant = new TenantHeader();
-				tenant.setSystemId(map.get("systemID"));
-				tenant.setTenantId(map.get("tenantID"));
-				requestHeader.setTenantHeader(tenant);
-				ListDeviceReq listDeviceReq = new ListDeviceReq();
-				listDeviceReq.setUserId(userId);
-				listDeviceReq.setIsMainDevice("N");
-				ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
-
-				if (listDeviceRes.getDeviceInfoList() != null) {
-					for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두
-																					  // 전달
-						mqDeviceStr += deviceInfo.getDeviceId() + "|";
-					}
-					mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
+			if (listDeviceRes.getDeviceInfoList() != null) {
+				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) { // 휴대기기 정보가 여러건인경우 | 로 구분하여 MQ로 모두
+																				  // 전달
+					mqDeviceStr += deviceInfo.getDeviceId() + "|";
 				}
-
-				RemoveUserRequest removeUserRequest = new RemoveUserRequest();
-				removeUserRequest.setCommonRequest(commonRequest);
-				removeUserRequest.setUserKey(searchUserResponse.getUserKey());
-				removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
-				removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
-				removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
-				this.userSCI.remove(removeUserRequest);
-
-				RemoveMbrOneIDRequest removeMbrOneIDRequest = new RemoveMbrOneIDRequest();
-				removeMbrOneIDRequest.setCommonRequest(commonRequest);
-				removeMbrOneIDRequest.setImSvcNo(imIntSvcNo);
-				this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
+				mqDeviceStr = mqDeviceStr.substring(0, mqDeviceStr.lastIndexOf("|"));
 			}
-		} catch (StorePlatformException spe) {
-			LOGGER.error(spe.getMessage(), spe);
-			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
-			return imResult;
-		}
 
-		try {
+			RemoveUserRequest removeUserRequest = new RemoveUserRequest();
+			removeUserRequest.setCommonRequest(commonRequest);
+			removeUserRequest.setUserKey(searchUserResponse.getUserKey());
+			removeUserRequest.setSecedeReasonCode(MemberConstants.WITHDRAW_REASON_OTHER);
+			removeUserRequest.setSecedeReasonMessage("프로비저닝"); // DB 탈퇴사유설명 칼럼에 프로비저닝으로 입력처리.
+			removeUserRequest.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_PROVISIONING);
+			this.userSCI.remove(removeUserRequest);
+
+			RemoveMbrOneIDRequest removeMbrOneIDRequest = new RemoveMbrOneIDRequest();
+			removeMbrOneIDRequest.setCommonRequest(commonRequest);
+			removeMbrOneIDRequest.setImSvcNo(imIntSvcNo);
+			this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
+
 			/* 게임센터 연동 */
 			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
 			gameCenterSacReq.setUserKey(userKey);
@@ -1686,12 +1668,22 @@ public class IdpServiceImpl implements IdpService {
 			}
 
 		} catch (StorePlatformException spe) {
-			LOGGER.error(spe.getMessage(), spe);
-			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
-			return imResult;
+
+			if (StringUtil.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				// 2014-11-19 vanddang. 회원정보 없는 경우 원아이디 테이블 삭제 처리 추가
+				RemoveMbrOneIDRequest removeMbrOneIDRequest = new RemoveMbrOneIDRequest();
+				removeMbrOneIDRequest.setCommonRequest(commonRequest);
+				removeMbrOneIDRequest.setImSvcNo(imIntSvcNo);
+				try {
+					this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
+				} catch (StorePlatformException ex) {
+					// ignore Exception
+				}
+			}
+
 		}
 
+		// 오류발생 해도 프로비저닝은 성공으로 처리함.
 		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
 		imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
 		return imResult;
