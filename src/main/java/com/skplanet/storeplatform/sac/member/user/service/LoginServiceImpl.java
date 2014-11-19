@@ -1288,7 +1288,9 @@ public class LoginServiceImpl implements LoginService {
 
 		AuthorizeForInAppSacRes res = new AuthorizeForInAppSacRes();
 
-		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
+		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
+			req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
+		}
 		String tenantId = this.getTenantIdByDeviceTelecom(req.getDeviceTelecom()); // 이통사 정보로 TenantID 부여
 		IapProductInfoRes iapProductInfoRes = this.mcic.getIapProdInfo(tenantId, req.getProdId()); // 마켓배포상품 정보조회
 
