@@ -303,6 +303,9 @@ public class DeviceServiceImpl implements DeviceService {
 		} else if (StringUtils.isNotBlank(req.getUserKey())) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
 			key.setKeyString(req.getUserKey());
+		} else if (StringUtils.isNotBlank(req.getMbrNo())) {
+			key.setKeyType(MemberConstants.KEY_TYPE_USERMBR_NO);
+			key.setKeyString(req.getMbrNo());
 		}
 
 		keySearchList.add(key);

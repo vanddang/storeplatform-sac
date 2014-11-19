@@ -175,6 +175,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		String userId = StringUtil.setTrim(req.getUserId());
 		String deviceKey = StringUtil.setTrim(req.getDeviceKey());
 		String deviceId = StringUtil.setTrim(req.getDeviceId());
+		String mbrNo = StringUtil.setTrim(req.getMbrNo());
 
 		if (!"".equals(userKey)) {
 			detailReq.setUserKey(userKey);
@@ -184,6 +185,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 			detailReq.setDeviceId(deviceId);
 		} else if (!"".equals(deviceKey)) {
 			detailReq.setDeviceKey(deviceKey);
+		} else if (!"".equals(mbrNo)) {
+			detailReq.setMbrNo(mbrNo);
 		}
 
 		// 회원정보 세팅
@@ -706,6 +709,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+		String mbrNo = StringUtil.nvl(req.getMbrNo(), "");
 
 		String keyType = "";
 		String keyValue = "";
@@ -721,6 +725,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 		} else if (!deviceId.equals("")) {
 			keyType = "deviceId";
 			keyValue = deviceId;
+		} else if (!mbrNo.equals("")) {
+			keyType = "mbrNo";
+			keyValue = mbrNo;
 		}
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
@@ -728,6 +735,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
 		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
+		keyTypeMap.put("mbrNo", MemberConstants.KEY_TYPE_USERMBR_NO);
 
 		/**
 		 * 검색 조건 setting
@@ -1045,6 +1053,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+		String mbrNo = StringUtil.nvl(req.getMbrNo(), "");
 
 		ExistReq existReq = new ExistReq();
 		ExistRes existRes = new ExistRes();
@@ -1072,6 +1081,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 			listDeviceReq.setUserKey(existRes.getUserKey());
 			listDeviceReq.setDeviceId(req.getDeviceId());
+			listDeviceReq.setIsMainDevice("N");
+		} else if (!mbrNo.equals("")) {
+			existReq.setMbrNo(req.getMbrNo());
+			existRes = this.exist(sacHeader, existReq);
+
+			listDeviceReq.setUserKey(existRes.getUserKey());
+			listDeviceReq.setMbrNo(req.getMbrNo());
 			listDeviceReq.setIsMainDevice("N");
 		}
 
