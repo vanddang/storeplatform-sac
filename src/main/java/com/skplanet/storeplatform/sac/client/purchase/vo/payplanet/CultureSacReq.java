@@ -9,9 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.payplanet;
 
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -23,21 +21,18 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CultureSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
-	@NotNull
-	@NotEmpty
+	@NotBlank
 	private String token;
-	@NotNull
-	@NotEmpty
+	@NotBlank
 	private String timeReq;
-	@NotNull
-	@NotEmpty
+	@NotBlank
 	private String mid;
-	@NotNull
-	@NotEmpty
+	@NotBlank
 	private String cultureId;
-	@NotNull
-	@NotEmpty
+	@NotBlank
 	private String culturePwd;
+	@NotBlank
+	private String ipReq;
 
 	/**
 	 * @return the token
@@ -112,6 +107,21 @@ public class CultureSacReq extends CommonInfo {
 	 */
 	public void setCulturePwd(String culturePwd) {
 		this.culturePwd = culturePwd;
+	}
+
+	/**
+	 * @return the ipReq
+	 */
+	public String getIpReq() {
+		return this.ipReq;
+	}
+
+	/**
+	 * @param ipReq
+	 *            the ipReq to set
+	 */
+	public void setIpReq(String ipReq) {
+		this.ipReq = ipReq;
 	}
 
 }
