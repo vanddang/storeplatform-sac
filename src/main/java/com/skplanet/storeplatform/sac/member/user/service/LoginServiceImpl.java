@@ -1291,12 +1291,14 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
 		String tenantId = this.commService.getTenantIdByDeviceTelecom(req.getDeviceTelecom()); // 이통사 정보로 TenantID 부여
 		IapProductInfoRes iapProductInfoRes = this.mcic.getIapProdInfo(tenantId, req.getProdId()); // 마켓배포상품 정보조회
+		boolean isMarketProd = true; // 마켓배포상품 유무
+		if (iapProductInfoRes == null || StringUtils.isBlank(iapProductInfoRes.getParentProdId())) {
+			isMarketProd = false;
+		}
 
-		LOGGER.info("{} tenantId : {}, 마켓배포상품여부 : {}", req.getDeviceId(), tenantId,
-				StringUtils.isBlank(iapProductInfoRes.getParentProdId()) ? false : true);
+		LOGGER.info("{} tenantId : {}, 마켓배포상품여부 : {}", req.getDeviceId(), tenantId, isMarketProd);
 
-		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, tenantId)
-				|| StringUtils.isBlank(iapProductInfoRes.getParentProdId())) {
+		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, tenantId) || !isMarketProd) {
 
 			// SKT로 인증요청 or 마켓배포상품이 아니면 Tstore 회원인증
 			LOGGER.info("{} Tstore 회원인증", req.getDeviceId());
