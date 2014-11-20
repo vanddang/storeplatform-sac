@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
@@ -14,6 +16,9 @@ import com.skplanet.storeplatform.sac.api.util.StringUtil;
  * Updated on : 2014. 10. 28.
  */
 public class CommonUtils {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
+
 	/**
 	 * 대한민국 주민번호 체계를 이용해 현재 연도에 해당하는 만 나이를 추출해 냅니다.
 	 * 
@@ -82,7 +87,9 @@ public class CommonUtils {
 			yearMultiplication = -1;
 			break;
 		}
-		System.out.println("yearMultiplication : " + yearMultiplication);
+
+		LOGGER.debug("yearMultiplication : {}", yearMultiplication);
+
 		age = targetYear - (1900 + birthYear + (yearMultiplication * 100));
 
 		// 월/일까지 계산하여 나이 계산하도록 수정함.
