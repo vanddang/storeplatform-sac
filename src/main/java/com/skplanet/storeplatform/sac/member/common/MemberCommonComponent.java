@@ -1157,4 +1157,26 @@ public class MemberCommonComponent {
 	public List<CommonCode> getCommonCode(String grpCdId) {
 		return this.repository.getCommonCode(grpCdId);
 	}
+
+	/**
+	 * <pre>
+	 * 통신사에 따라서 tenantId를 구분한다.
+	 * </pre>
+	 * 
+	 * @param deviceTelecom
+	 *            String
+	 * @return tenantId
+	 */
+	public String getTenantIdByDeviceTelecom(String deviceTelecom) {
+
+		String tenantId = "";
+		if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
+			tenantId = MemberConstants.TENANT_ID_TSTORE;
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_KT, deviceTelecom)) {
+			tenantId = MemberConstants.TENANT_ID_OLLEH_MARKET;
+		} else if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_LGT, deviceTelecom)) {
+			tenantId = MemberConstants.TENANT_ID_UPLUS_STORE;
+		}
+		return tenantId;
+	}
 }
