@@ -85,7 +85,7 @@ public class ProductListServiceImpl implements ProductListService{
 			totalCountFromDB += prodListFromDB.size();
 			addListProductIntoResponse(header, response, lpCriteria, prodListFromDB);
 
-			if( prodListFromDB.size()==lpCriteria.getCount() || noMoreProdToGet(prodListFromDB, lpCriteria.getCount()))
+			if( responseGetEnoughProdList(response, requestVO) || noMoreProdToGet(prodListFromDB, lpCriteria.getCount()))
 				break;
 			else {
 				setNextExpoOrdIntoCriteria(lpCriteria, prodListFromDB);
@@ -102,6 +102,10 @@ public class ProductListServiceImpl implements ProductListService{
 		return response;
 	}
 
+	private boolean responseGetEnoughProdList(ProductListSacRes response, ProductListSacReq requestVO) {
+		return response.getProductList().size()>=requestVO.getCount();
+	}
+
 	private void setHasNextIntoResponse(ProductListSacRes response, ProductListSacReq requestVO, int totalCountFromDB) {
 		if(totalCountFromDB>requestVO.getCount())
 			response.setHasNext("Y");
@@ -111,10 +115,6 @@ public class ProductListServiceImpl implements ProductListService{
 
 	private boolean noMoreProdToGet(List<ListProduct> prodListFromDB, int countExpected) {
 		return prodListFromDB.size()<countExpected;
-	}
-
-	private boolean responseGetEnoughProdList(ProductListSacRes response, int countExpected) {
-		return response.getProductList().size()==countExpected;
 	}
 
 	private void setNextExpoOrdIntoCriteria(ListProductCriteria lpCriteria, List<ListProduct> prodListFromDB) {
