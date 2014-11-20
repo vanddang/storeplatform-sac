@@ -80,6 +80,25 @@ public class BestControllerTest {
 	}
 	
 	@Test
+	public void bestDownloadList_RNK000000006_DP13() throws Exception {
+		
+		//RNK000000006 / DP13 | 이북
+		this.mvc.perform(
+				get("/display/feature/best/download/list/v1?listId=RNK000000006&topMenuId=DP13&offset=1&count=100")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(header().string("x-sac-result-code", "SUCC"))
+				;
+	}
+	
+	
+	
+	@Test
 	public void I03000001_2_1_1_BEST앱상품조회_인기신규() throws Exception {
 		
 		this.mvc.perform(

@@ -763,6 +763,7 @@
              , TB.EXPO_SELLER_NM
              , TB.EXPO_SELLER_TELNO
              , TB.EXPO_SELLER_EMAIL
+             , TB.SAMPL_URL
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
