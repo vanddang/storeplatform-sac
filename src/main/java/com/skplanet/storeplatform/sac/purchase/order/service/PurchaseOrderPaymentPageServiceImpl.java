@@ -192,7 +192,10 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	private String makeProductDescription(String tenantProdGrpCd, List<PurchaseProduct> purchaseProductList) {
 		PurchaseProduct purchaseProduct = purchaseProductList.get(0);
 
-		if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)
+		if (purchaseProduct.getFullIapProductInfo() != null) { // IAP 정식판 전환 상품
+			return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_COMMERCIAL;
+
+		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)
 				&& purchaseProductList.size() == 1
 				&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
 						.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))) {
