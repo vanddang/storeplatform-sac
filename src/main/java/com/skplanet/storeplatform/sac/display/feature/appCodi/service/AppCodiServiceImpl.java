@@ -734,6 +734,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 		appCodiListSacRes.setProductList(productList);
 		commonResponse.setTotalCount(productList.size());
+		appCodiListSacRes.setCommonRes(commonResponse);
 
 		return appCodiListSacRes;
 	}
