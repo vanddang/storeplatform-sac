@@ -1397,6 +1397,7 @@ public class LoginServiceImpl implements LoginService {
 			detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 		} catch (StorePlatformException e) {
 			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				LOGGER.info("{} Tstore 비회원", req.getDeviceId());
 				res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NO_MEMBER);
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
