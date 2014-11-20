@@ -25,6 +25,8 @@ import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.feature.list.vo.DisplayListCriteria;
+import com.skplanet.storeplatform.sac.display.feature.list.vo.DisplayListFromDB;
 import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProduct;
 import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProductCriteria;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -98,8 +100,19 @@ public class ProductListServiceImpl implements ProductListService{
 		removeRedundantLastItem(response, requestVO.getCount());
 		response.setCount(response.getProductList().size());
 		setStdDtIntoResponse(response, stdDt);
+		setListIdAndEtcPropIntoResponse(response, requestVO, header);
 
 		return response;
+	}
+
+	private void setListIdAndEtcPropIntoResponse(ProductListSacRes response, ProductListSacReq requestVO, SacRequestHeader header) {
+		String tenantId = header.getTenantHeader().getTenantId();
+		String listId = requestVO.getListId();
+		int count = 1;
+		DisplayListCriteria listCriteria = new DisplayListCriteria(tenantId, listId, count);
+		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class);
+		response.setEtcProp(listsFromDB.get(0).getEtcProp());
+		response.setListId(listsFromDB.get(0).getListId());
 	}
 
 	private boolean responseGetEnoughProdList(ProductListSacRes response, ProductListSacReq requestVO) {

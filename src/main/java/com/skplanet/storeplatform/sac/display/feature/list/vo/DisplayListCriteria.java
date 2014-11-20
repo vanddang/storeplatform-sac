@@ -7,26 +7,36 @@ public class DisplayListCriteria {
 
 	private static final int DEFAULT_LIST_COUNT = 20;
 	private static final int MIN_EXPO_ORD = -99999999;
-	
+
 	private String tenantId;
 	private String listGrpCd;
 	private String listId;
 	private Integer lastExpoOrd;
 	private Integer lastExpoOrdSub;
 	private Integer count;
-	
+
+	public DisplayListCriteria() {}
+
 	public DisplayListCriteria(DisplayListSacReq requestVO, String tenantId) {
 		this.tenantId = tenantId;
 		listGrpCd = requestVO.getListGrpCd();
 		listId = requestVO.getListId();
-		
+
 		setupOrders(requestVO);
 		setCount(requestVO);
 	}
-	
+
+	public DisplayListCriteria(String tenantId, String listId, Integer count) {
+		this.tenantId = tenantId;
+		this.listId = listId;
+		this.count = count;
+		lastExpoOrd    = MIN_EXPO_ORD;
+		lastExpoOrdSub = MIN_EXPO_ORD;
+	}
+
 	private void setupOrders(DisplayListSacReq req) {
 		String startKey = req.getStartKey();
-		
+
 		if(startKey==null || startKey.isEmpty()){
 			lastExpoOrd    = MIN_EXPO_ORD;
 			lastExpoOrdSub = MIN_EXPO_ORD;
@@ -36,7 +46,7 @@ public class DisplayListCriteria {
 			lastExpoOrdSub = Integer.valueOf(keys[1]);
 		}
 	}
-	
+
 	private void setCount(DisplayListSacReq req) {
 		count = req.getCount()==null?DEFAULT_LIST_COUNT:req.getCount();
 		count++; //To set "hasNext"
@@ -46,23 +56,47 @@ public class DisplayListCriteria {
 		return tenantId;
 	}
 
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	public String getListGrpCd() {
 		return listGrpCd;
+	}
+
+	public void setListGrpCd(String listGrpCd) {
+		this.listGrpCd = listGrpCd;
 	}
 
 	public String getListId() {
 		return listId;
 	}
 
+	public void setListId(String listId) {
+		this.listId = listId;
+	}
+
 	public Integer getLastExpoOrd() {
 		return lastExpoOrd;
+	}
+
+	public void setLastExpoOrd(Integer lastExpoOrd) {
+		this.lastExpoOrd = lastExpoOrd;
 	}
 
 	public Integer getLastExpoOrdSub() {
 		return lastExpoOrdSub;
 	}
 
+	public void setLastExpoOrdSub(Integer lastExpoOrdSub) {
+		this.lastExpoOrdSub = lastExpoOrdSub;
+	}
+
 	public Integer getCount() {
 		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 }
