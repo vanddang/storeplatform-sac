@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -11,33 +12,37 @@ public class ProductListSacRes {
 	private Integer count;
 	private Date  date;
 	private List<Product> productList;
-	
+
+	public ProductListSacRes() {
+		this.productList = new ArrayList<Product>();
+	}
+
 	public String getStartKey() {
-		return startKey;
+		return this.startKey;
 	}
 	public void setStartKey(String startKey) {
 		this.startKey = startKey;
 	}
 	public List<Product> getProductList() {
-		return productList;
+		return this.productList;
 	}
 	public void setProductList(List<Product> productList) {
 		this.productList = productList;
 	}
 	public String getHasNext() {
-		return hasNext;
+		return this.hasNext;
 	}
 	public void setHasNext(String hasNext) {
 		this.hasNext = hasNext;
 	}
 	public Integer getCount() {
-		return count;
+		return this.count;
 	}
 	public void setCount(Integer count) {
 		this.count = count;
 	}
 	public Date getDate() {
-		return date;
+		return this.date;
 	}
 	public void setDate(Date date) {
 		this.date = date;
