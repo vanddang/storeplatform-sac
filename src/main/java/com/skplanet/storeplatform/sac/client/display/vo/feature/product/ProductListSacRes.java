@@ -3,48 +3,66 @@ package com.skplanet.storeplatform.sac.client.display.vo.feature.product;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonRawValue;
+
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 public class ProductListSacRes {
+	private String listId;
 	private String startKey;
 	private String hasNext; // Y/N
 	private Integer count;
 	private Date  date;
+	@JsonRawValue
+	private String etcProp;
 	private List<Product> productList;
 
 	public ProductListSacRes() {
-		this.productList = new ArrayList<Product>();
+		productList = new ArrayList<Product>();
 	}
-
+	public String getListId() {
+		return listId;
+	}
+	public void setListId(String listId) {
+		this.listId = listId;
+	}
 	public String getStartKey() {
-		return this.startKey;
+		return startKey;
 	}
 	public void setStartKey(String startKey) {
 		this.startKey = startKey;
 	}
 	public List<Product> getProductList() {
-		return this.productList;
+		return productList;
 	}
 	public void setProductList(List<Product> productList) {
 		this.productList = productList;
 	}
 	public String getHasNext() {
-		return this.hasNext;
+		return hasNext;
 	}
 	public void setHasNext(String hasNext) {
 		this.hasNext = hasNext;
 	}
 	public Integer getCount() {
-		return this.count;
+		return count;
 	}
 	public void setCount(Integer count) {
 		this.count = count;
 	}
 	public Date getDate() {
-		return this.date;
+		return date;
 	}
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public String getEtcProp() {
+		return etcProp;
+	}
+
+	public void setEtcProp(String etcProp) {
+		this.etcProp = etcProp;
 	}
 }
