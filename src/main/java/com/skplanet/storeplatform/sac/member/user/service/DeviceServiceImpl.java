@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
+import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
@@ -53,6 +54,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateGameCenterRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
@@ -117,6 +119,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private DeviceSCI deviceSCI;
+
+	@Autowired
+	private DeviceSetSCI deviceSetSCI;
 
 	@Autowired
 	private IdpSCI idpSCI;
@@ -503,6 +508,21 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 
+		}
+
+		// 휴대기기 PIN 정보 이관 로직 추가 (2014-11-20)
+		String preDeviceKey = createDeviceRes.getPreDeviceKey();
+		String preUserKey = createDeviceRes.getPreUserKey();
+		if (StringUtils.isNotBlank(preDeviceKey) && StringUtils.isNotBlank(preUserKey)) {
+
+			TransferDeviceSetInfoRequest transferDeviceSetInfoRequest = new TransferDeviceSetInfoRequest();
+			transferDeviceSetInfoRequest.setCommonRequest(commonRequest);
+			transferDeviceSetInfoRequest.setUserKey(userKey);
+			transferDeviceSetInfoRequest.setDeviceKey(deviceKey);
+			transferDeviceSetInfoRequest.setPreUserKey(preUserKey);
+			transferDeviceSetInfoRequest.setPreDeviceKey(preDeviceKey);
+
+			this.deviceSetSCI.transferDeviceSetInfo(transferDeviceSetInfoRequest);
 		}
 
 		/* 5. 통합회원에 휴대기기 등록시 무선회원 해지 */
