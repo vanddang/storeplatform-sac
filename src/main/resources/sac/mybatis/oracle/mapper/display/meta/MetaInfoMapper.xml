@@ -465,6 +465,7 @@
              , TB.ARTIST3_NM
              , TB.ISSUE_DAY
              , TB.CHNL_COMP_NM
+             , TB.SAMPL_URL
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( TB.EPSD_CNT + TB.STRM_EPSD_CNT ) ELSE 1 END ) AS BOOK_COUNT
              , ( CASE WHEN TB.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
@@ -571,9 +572,11 @@
                       , O.PROD_AMT
                       <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
                       , H.PROD_NET_AMT 
+                      , E.SAMPL_URL
                       </if>
                       <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                       , O.PROD_NET_AMT 
+                      , L.SAMPL_URL
                       </if>
                       , G.PROD_STATUS_CD
                       , J.CID

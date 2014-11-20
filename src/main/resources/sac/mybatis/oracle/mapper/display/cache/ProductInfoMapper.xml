@@ -495,6 +495,7 @@
             , TB.ARTIST3_NM
             , TB.ISSUE_DAY
             , TB.CHNL_COMP_NM
+            , TB.SAMPL_URL
             , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
             , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( TB.EPSD_CNT + TB.STRM_EPSD_CNT ) ELSE 1 END ) AS BOOK_COUNT
             , ( CASE WHEN TB.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
@@ -594,6 +595,12 @@
                 ETPRC.PROD_NET_AMT AS EPSD_PROD_NET_AMT,
                 CTPROD.PROD_STATUS_CD,
                 CPDESC.LANG_CD,
+                <if test="prodIdType == 'CHANNEL'">
+                CEBOOK.SAMPL_URL,
+                </if>
+                <if test="prodIdType == 'EPISODE'">
+                EEBOOK.SAMPL_URL,
+                </if>
                 EPROD.CID
             FROM TB_DP_PROD_RSHP RSHP
                 INNER JOIN TB_DP_TENANT_PROD CTPROD

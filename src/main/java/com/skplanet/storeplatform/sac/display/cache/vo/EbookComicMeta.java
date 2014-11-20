@@ -61,6 +61,7 @@ public class EbookComicMeta extends CommonInfo {
     private Integer epsdPeriodAmt;
     private Integer chnlUnlmtAmt;
     private Integer chnlPeriodAmt;
+    private String samplUrl; 		//이북/코믹 미리보기 URL
 
     public Integer getChnlUnlmtAmt() {
         return chnlUnlmtAmt;
@@ -389,4 +390,13 @@ public class EbookComicMeta extends CommonInfo {
     public void setProdStatusCd(String prodStatusCd) {
         this.prodStatusCd = prodStatusCd;
     }
+
+	public String getSamplUrl() {
+		return samplUrl;
+	}
+
+	public void setSamplUrl(String samplUrl) {
+		this.samplUrl = samplUrl;
+	}
+    
 }
