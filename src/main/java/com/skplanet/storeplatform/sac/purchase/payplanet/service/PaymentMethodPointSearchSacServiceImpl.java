@@ -169,6 +169,7 @@ public class PaymentMethodPointSearchSacServiceImpl implements PaymentMethodPoin
 		req.setMid(request.getMid());
 		req.setCultureId(request.getCultureId());
 		req.setCulturePwd(request.getCulturePwd());
+		req.setIpReq(request.getIpReq());
 
 		CultureEcRes cultureEcRes = this.paymentMethodPointSearchSCI.postCulture(req);
 
