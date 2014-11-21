@@ -43,7 +43,6 @@ public class SegmentReq extends CommonInfo {
     @Pattern(regexp = "Y|N")
     private String newEntryYn;
 
-    @NotBlank
     private String mnoClsfCd;
 
     private List<String> categoryBest;
