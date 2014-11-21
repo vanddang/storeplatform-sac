@@ -22,5 +22,7 @@ import java.util.Map;
 public interface CategorySpecificProductInfoManager {
 
     public MetaInfo getEbookComicMeta(Map<String, Object> paramMap);
+    
+	public MetaInfo getEbookComicEpisodeCount(Map<String, Object> paramMap);
 	
 }
