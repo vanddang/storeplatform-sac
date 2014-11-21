@@ -65,6 +65,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
@@ -101,8 +102,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 		/**
-		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서
-		 * [통합IDP, 기존IDP] 연동처리 한다.
+		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
 		 */
 		LOGGER.debug("## 사용자 타입  : {}", userInfo.getUserType());
 		LOGGER.debug("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
@@ -226,8 +226,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 		/**
-		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서
-		 * [통합IDP, 기존IDP] 연동처리 한다.
+		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
 		 */
 		LOGGER.debug("## 사용자 타입  : {}", userInfo.getUserType());
 		LOGGER.debug("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
@@ -322,6 +321,10 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 * TODO 정확한 로직 미정의로 수정가능성 있음...... (현재는 사용자 이메일정보만 무조건 업데이트함.)
 		 */
 
+		TenantHeader tenant = sacHeader.getTenantHeader();
+		tenant.setTenantId(req.getTenantId());
+		sacHeader.setTenantHeader(tenant);
+
 		/**
 		 * 사용자 기본정보 setting.
 		 */
@@ -397,8 +400,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 			/**
-			 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서
-			 * [통합IDP, 기존IDP] 연동처리 한다.
+			 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
 			 * 
 			 * 통합회원일경우만 처리한다.
 			 */
@@ -420,7 +422,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 					 */
 					UserInfoIdpSearchServerEcReq userInfoIdpSearchServerEcReq = new UserInfoIdpSearchServerEcReq();
 					userInfoIdpSearchServerEcReq.setKey(userInfo.getImSvcNo()); // 통합서비스 관리번호
-					UserInfoIdpSearchServerEcRes userInfoIdpSearchServerEcRes = this.imIdpSCI.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
+					UserInfoIdpSearchServerEcRes userInfoIdpSearchServerEcRes = this.imIdpSCI
+							.userInfoIdpSearchServer(userInfoIdpSearchServerEcReq);
 
 					/**
 					 * OnedID 조회 정보와 Request 로 받은 정보와 비교 로직 수행.
@@ -444,7 +447,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 						updateUserNameEcReq.setUserBirthday(req.getUserBirthDay()); // 생년월일
 						updateUserNameEcReq.setUserSex(req.getUserSex()); // 성별 (M=남자, F=여자, N:미확인)
 						// 실명인증 수단 코드 1: 휴대폰, 2: 아이핀, 9:기타
-						updateUserNameEcReq.setRnameAuthMnsCode(this.convertRealNameMethod(req.getRealNameMethod(), req.getIsOwn()));
+						updateUserNameEcReq.setRnameAuthMnsCode(this.convertRealNameMethod(req.getRealNameMethod(),
+								req.getIsOwn()));
 						// 실명인증 회원 코드 10 : 내국인, 20 : 외국인
 						updateUserNameEcReq.setRnameAuthMbrCode(this.convertResident(req.getResident()));
 						updateUserNameEcReq.setRnameAuthTypeCd(oneIdRealNameType); // 실명 인증 유형 코드 R=회원 개명 E=CI 기보유
@@ -487,7 +491,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 						updateGuardianEcReq.setParentRnameAuthKey(req.getUserCi()); // 법정대리인 실명인증 값 (CI) [외국인은 null
 																					// 로....]
 						// 법정대리인실명인증수단코드 1:휴대폰 본인인증, , 3:IPIN, 6:이메일 (외국인 법정대리인 인증)
-						updateGuardianEcReq.setParentRnameAuthType(this.convertRealNameMethod(req.getRealNameMethod(), req.getIsOwn()));
+						updateGuardianEcReq.setParentRnameAuthType(this.convertRealNameMethod(req.getRealNameMethod(),
+								req.getIsOwn()));
 						// 법정대리인동의여부 Y=동의, N=미동의 (Y만 가능)
 						updateGuardianEcReq.setIsParentApprove(MemberConstants.USE_Y);
 						updateGuardianEcReq.setParentName(req.getUserName());
@@ -495,7 +500,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 						updateGuardianEcReq.setParentEmail(req.getParentEmail());
 						if (req.getRealNameDate().length() == 14) {
 							// 법정대리인동의일자(YYYYMMDD)
-							updateGuardianEcReq.setParentApproveDate(DateUtil.changeDateStringtoEight(req.getRealNameDate()));
+							updateGuardianEcReq.setParentApproveDate(DateUtil.changeDateStringtoEight(req
+									.getRealNameDate()));
 						} else {
 							updateGuardianEcReq.setParentApproveDate(req.getRealNameDate());
 						}
@@ -508,14 +514,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 					} catch (StorePlatformException spe) {
 
-						if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + "2402X000")) {
+						if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+								+ "2402X000")) {
 
 							/**
-							 * IDP 에러 [[ 2402X000 : 법정대리인 동의된 회원입니다.]] ==> Skip
-							 * 처리 한다.
+							 * IDP 에러 [[ 2402X000 : 법정대리인 동의된 회원입니다.]] ==> Skip 처리 한다.
 							 * 
-							 * 2014.02.21 임재호K 협의. (IDP의 실명인증과 SAC의 실명인증은 별개로
-							 * 본다.)
+							 * 2014.02.21 임재호K 협의. (IDP의 실명인증과 SAC의 실명인증은 별개로 본다.)
 							 */
 							LOGGER.debug("## >> Skip 처리 한다.");
 							LOGGER.debug("## >> Error Code : {}", spe.getErrorInfo().getCode());
@@ -701,7 +706,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 * SC 실명인증정보 수정 연동.
 			 */
 			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-			if (updateRealNameResponse.getUserKey() == null || StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
+			if (updateRealNameResponse.getUserKey() == null
+					|| StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
 				throw new StorePlatformException("SAC_MEM_0002", "userKey");
 			}
 
@@ -754,7 +760,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 * SC 실명인증정보 수정 연동.
 			 */
 			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-			if (updateRealNameResponse.getUserKey() == null || StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
+			if (updateRealNameResponse.getUserKey() == null
+					|| StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
 				throw new StorePlatformException("SAC_MEM_0002", "userKey");
 			}
 
@@ -787,7 +794,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 * SC 실명인증정보 수정 연동.
 			 */
 			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-			if (updateRealNameResponse.getUserKey() == null || StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
+			if (updateRealNameResponse.getUserKey() == null
+					|| StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
 				throw new StorePlatformException("SAC_MEM_0002", "userKey");
 			}
 
@@ -810,7 +818,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 *            (통합IDP 회원 정보 조회 응답 결과)
 	 * @return String 결과 타입
 	 */
-	private String compareRealName(SacRequestHeader sacHeader, CreateRealNameReq req, UserInfoIdpSearchServerEcRes idpResult) {
+	private String compareRealName(SacRequestHeader sacHeader, CreateRealNameReq req,
+			UserInfoIdpSearchServerEcRes idpResult) {
 
 		String oneIdRealNameType = "";
 
@@ -875,13 +884,14 @@ public class UserModifyServiceImpl implements UserModifyService {
 			/**
 			 * 인증 정보가 존재하면....
 			 */
-			if (schUserRes.getMbrAuth().getSequence() != null || StringUtils.equals(schUserRes.getMbrAuth().getSequence(), "")) {
+			if (schUserRes.getMbrAuth().getSequence() != null
+					|| StringUtils.equals(schUserRes.getMbrAuth().getSequence(), "")) {
 				LOGGER.debug("####### DB 실명인증 CI    : {}", schUserRes.getMbrAuth().getCi());
 				LOGGER.debug("####### DB 실명인증 Birth : {}", schUserRes.getMbrAuth().getBirthDay());
 
 				// One ID CI, birthday 비교
 				if (StringUtils.isNotEmpty(schUserRes.getMbrAuth().getCi())) { // 기 등록 된 CI가 존재하는 경우는 CI +
-																				// 생년월일(social_date)
+																			   // 생년월일(social_date)
 					// 비교
 					if (!StringUtils.equals(req.getUserCi(), schUserRes.getMbrAuth().getCi())
 							&& !StringUtils.equals(req.getUserBirthDay(), schUserRes.getMbrAuth().getBirthDay())) {
