@@ -113,6 +113,7 @@ public class ProductListServiceImpl implements ProductListService{
 		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class);
 		response.setEtcProp(listsFromDB.get(0).getEtcProp());
 		response.setListId(listsFromDB.get(0).getListId());
+		response.setListNm(listsFromDB.get(0).getListNm());
 	}
 
 	private boolean responseGetEnoughProdList(ProductListSacRes response, ProductListSacReq requestVO) {
