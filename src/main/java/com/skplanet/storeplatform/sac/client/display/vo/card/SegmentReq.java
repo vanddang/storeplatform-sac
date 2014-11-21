@@ -31,7 +31,7 @@ public class SegmentReq extends CommonInfo {
     @NotBlank
     private String insdMbrGrdCd;
 
-    @Pattern(regexp = "M|F|X", message = "")
+    @Pattern(regexp = "M|F|Z", message = "")
     private String sex;
 
     @NotBlank
