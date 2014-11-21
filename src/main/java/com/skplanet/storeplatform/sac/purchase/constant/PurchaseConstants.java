@@ -19,6 +19,10 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 기본 인코딩 */
 	public static final String DEFAULT_ENCODING = "UTF-8";
 
+	public static final String TENANT_ID_TSTORE = "S01";
+	public static final String TENANT_ID_OLLEH = "S02";
+	public static final String TENANT_ID_UPLUS = "S03";
+
 	/** 서비스 서버 단계 환경변수 */
 	public static final String ENV_SERVER_LEVEL_REAL = "real"; // System 설정 서버 단계 property: 상용
 	public static final String ENV_SERVER_LEVEL_QA = "qa"; // System 설정 서버 단계 property: QA
@@ -122,6 +126,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY = "TC08"; // S2S 자동결제
 
 	/** 결제Page 상품설명 */
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_COMMERCIAL = "정식판 전환 상품";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_DELIVERY = "배송 상품";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_COUPON = "쿠폰 상품";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH = "MP3 : 192kbps";
