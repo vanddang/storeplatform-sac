@@ -453,7 +453,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				throw new StorePlatformException("SAC_PUR_5111");
 			}
 
-			// 상품 지원 여부 체크 : IAP/쇼핑은 프로비저닝 pass
+			// 상품 지원 여부 체크 : IAP/쇼핑은 프로비저닝 skip
 			if ((purchaseOrderInfo.isShopping() == false) && (purchaseOrderInfo.isIap() == false)) {
 				if (StringUtils.equals(purchaseProduct.getProdSprtYn(), PurchaseConstants.USE_Y) == false) {
 					if (StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
@@ -519,12 +519,14 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						.getProdNm() : reqProduct.getPartChrgProdNm()); // 부분_유료_상품_명
 
 				// IAP상품 정보 조회
-				IapProductInfoRes iapInfo = this.purchaseDisplayRepository.searchIapProductInfo(reqProduct.getProdId());
+				IapProductInfoRes iapInfo = this.purchaseDisplayRepository.searchIapProductInfo(reqProduct.getProdId(),
+						purchaseOrderInfo.getTenantId());
 				if (iapInfo == null) {
 					throw new StorePlatformException("SAC_PUR_5101", reqProduct.getProdId());
 				}
 
-				this.buildIapUsePeriodInfo(purchaseProduct, iapInfo); // IAP 상품속성에 따른 이용기간단위/이용기간 세팅
+				// IAP 상품속성에 따른 이용기간/자동결제 정보 세팅
+				this.buildIapUsePeriodInfo(purchaseProduct, iapInfo);
 
 				purchaseProduct.setParentProdId(iapInfo.getParentProdId()); // 부모 상품ID
 				purchaseProduct.setContentsType(iapInfo.getProdKind()); // 상품 유형 (컨텐츠_타입)
@@ -535,7 +537,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				purchaseProduct.setIapProdCase(iapInfo.getProdCase());
 				purchaseProduct.setIapUsePeriod(iapInfo.getUsePeriod());
 
-				if (StringUtils.equals(iapInfo.getProdKind(), "PK0002")) { // 소멸성 건당 상품
+				if (StringUtils.equals(iapInfo.getProdCase(), "PB0001")
+						&& StringUtils.equals(iapInfo.getProdKind(), "PK0002")) { // 건당상품 & 소멸성
 					purchaseOrderInfo.setPossibleDuplication(true); // 중복 구매 가능 여부
 				}
 				purchaseOrderInfo.setTenantProdGrpCd(purchaseOrderInfo.getTenantProdGrpCd().replaceAll("DP00",
@@ -886,13 +889,78 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	private void buildIapUsePeriodInfo(PurchaseProduct purchaseProduct, IapProductInfoRes iapInfo) {
 		String usePeriodUnitCd = null;
 		String usePeriod = null;
+		String autoPrchsYN = null;
+		String autoPrchsLastDt = null;
+		String autoPrchsPeriodUnitCd = null;
+		int autoPrchsPeriodValue = 0;
+		int autoPrchsLastPeriodValue = 0;
 
-		// TAKTODO::IAP이용기간 계산
-		usePeriodUnitCd = purchaseProduct.getUsePeriodUnitCd();
-		usePeriod = purchaseProduct.getUsePeriod();
+		String prodCase = iapInfo.getProdCase();
+		String prodKind = iapInfo.getProdKind();
+
+		if (StringUtils.equals(prodCase, "PB0001")) { // 건당상품
+
+			if (StringUtils.equals(prodKind, "PK0001")) { // 영구
+				usePeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED;
+				usePeriod = "0"; // dummy
+
+			} else if (StringUtils.equals(prodKind, "PK0002")) { // 소멸
+				usePeriodUnitCd = "PRCHS_DT";
+				usePeriod = "0"; // dummy
+			}
+
+		} else if (StringUtils.equals(prodCase, "PB0002")) { // 기간상품
+			if (iapInfo.getUsePeriod() == null || iapInfo.getUsePeriod() <= 0) {
+				throw new StorePlatformException("SAC_PUR_5118", iapInfo.getUsePeriod());
+			}
+
+			if (StringUtils.equals(prodKind, "PK0003")) { // 일간
+				usePeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE;
+				usePeriod = String.valueOf(iapInfo.getUsePeriod());
+
+			} else if (StringUtils.equals(prodKind, "PK0004")) { // 주간
+				usePeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE;
+				usePeriod = String.valueOf(iapInfo.getUsePeriod());
+
+			} else if (StringUtils.equals(prodKind, "PK0005")) { // 월간
+				usePeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE;
+				usePeriod = String.valueOf(iapInfo.getUsePeriod());
+			}
+
+		} else if (StringUtils.equals(prodCase, "PB0005")) { // 정식판전환상품
+
+			if (StringUtils.equals(prodKind, "PK0001")) {
+				usePeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED;
+				usePeriod = "0"; // dummy
+			}
+
+		} else if (StringUtils.equals(prodCase, "PB0006")) { // 자동결제
+
+			if (StringUtils.equals(prodKind, "PK0005")) { // 월별자동결제
+				if (iapInfo.getUsePeriod() == null || iapInfo.getUsePeriod() <= 0) {
+					throw new StorePlatformException("SAC_PUR_5118", iapInfo.getUsePeriod());
+				}
+
+				usePeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE;
+				usePeriod = "30";
+
+				autoPrchsYN = "Y";
+				autoPrchsPeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE;
+				autoPrchsPeriodValue = 30;
+				autoPrchsLastPeriodValue = iapInfo.getUsePeriod();
+			}
+
+		} else {
+			throw new StorePlatformException("SAC_PUR_5117", prodCase, prodKind);
+		}
 
 		purchaseProduct.setUsePeriodUnitCd(usePeriodUnitCd);
 		purchaseProduct.setUsePeriod(usePeriod);
+		purchaseProduct.setAutoPrchsYN(autoPrchsYN);
+		purchaseProduct.setAutoPrchsPeriodUnitCd(autoPrchsPeriodUnitCd);
+		purchaseProduct.setAutoPrchsPeriodValue(autoPrchsPeriodValue);
+		purchaseProduct.setAutoPrchsLastDt(autoPrchsLastDt);
+		purchaseProduct.setAutoPrchsLastPeriodValue(autoPrchsLastPeriodValue);
 	}
 
 	/*

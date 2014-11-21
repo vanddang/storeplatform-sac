@@ -102,6 +102,10 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 			}
 		}
 
+		if (searchUserDeviceSacRes == null || searchUserDeviceSacRes.getUserDeviceInfo() == null) {
+			return null;
+		}
+
 		Map<String, UserDeviceInfoSac> userDeviceInfoMap = searchUserDeviceSacRes.getUserDeviceInfo();
 		if (userDeviceInfoMap == null || (userDeviceInfoMap.containsKey(deviceKey) == false)) {
 			return null;
@@ -120,6 +124,8 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		purchaseUserDevice.setDeviceId(userDeviceInfoSac.getDeviceId());
 		purchaseUserDevice.setDeviceModelCd(userDeviceInfoSac.getDeviceModelNo());
 		purchaseUserDevice.setTelecom(userDeviceInfoSac.getDeviceTelecom());
+		// purchaseUserDevice.setUserEmail(userDeviceInfoSac.getUserEmail());
+
 		// 연령체크 안함: 생년월일도 * 문자 포함으로 확인불가
 		// purchaseUserDevice.setAge(StringUtils.isNotBlank(userDeviceInfoSac.getUserBirthday()) ? this
 		// .getCurrDayAge(userDeviceInfoSac.getUserBirthday()) : 0);
@@ -216,6 +222,8 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	 * 회원의 비과금단말 / 구매차단 정책 조회.
 	 * </pre>
 	 * 
+	 * @param tenantId
+	 *            테넌트 ID
 	 * @param policyKey
 	 *            정책 Key
 	 * @param policyCodeList
@@ -223,7 +231,8 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	 * @return
 	 */
 	@Override
-	public Map<String, IndividualPolicyInfoSac> getPurchaseUserPolicy(String policyKey, List<String> policyCodeList) {
+	public Map<String, IndividualPolicyInfoSac> getPurchaseUserPolicy(String tenantId, String policyKey,
+			List<String> policyCodeList) {
 		List<PolicyCode> policyCodeObjList = new ArrayList<PolicyCode>();
 		PolicyCode policyCodeObj = null;
 		for (String policyCode : policyCodeList) {
@@ -232,6 +241,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 			policyCodeObjList.add(policyCodeObj);
 		}
 		GetIndividualPolicySacReq getIndividualPolicySacReq = new GetIndividualPolicySacReq();
+		getIndividualPolicySacReq.setTenantId(tenantId);
 		getIndividualPolicySacReq.setKey(policyKey);
 		getIndividualPolicySacReq.setPolicyCodeList(policyCodeObjList);
 
@@ -278,8 +288,21 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
 		detailInformationSacReq.setSellerMbrSacList(sellerMbrSacList);
 
-		DetailInformationSacRes detailInformationSacRes = this.sellerSearchSCI
-				.detailInformation(detailInformationSacReq);
+		DetailInformationSacRes detailInformationSacRes = null;
+		try {
+			detailInformationSacRes = this.sellerSearchSCI.detailInformation(detailInformationSacReq);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
+				return null;
+			} else {
+				throw e;
+			}
+		}
+
+		if (detailInformationSacRes == null || detailInformationSacRes.getSellerMbrListMap() == null) {
+			return null;
+		}
+
 		Map<String, List<SellerMbrSac>> sellerMap = detailInformationSacRes.getSellerMbrListMap();
 		List<SellerMbrSac> sellerList = sellerMap.get(sellerKey);
 		if (CollectionUtils.isNotEmpty(sellerList)) {

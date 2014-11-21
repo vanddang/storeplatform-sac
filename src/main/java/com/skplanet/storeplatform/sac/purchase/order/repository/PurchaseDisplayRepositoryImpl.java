@@ -174,7 +174,8 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setAutoPrchsYN(displayInfo.getAutoPrchsYN());
 			if (StringUtils.equals(displayInfo.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
 				purchaseProduct.setAutoPrchsPeriodUnitCd(displayInfo.getAutoPrchsPeriodUnitCd());
-				purchaseProduct.setAutoPrchsPeriodValue(displayInfo.getAutoPrchsPeriodValue());
+				purchaseProduct.setAutoPrchsPeriodValue(displayInfo.getAutoPrchsPeriodValue() == null ? 0 : displayInfo
+						.getAutoPrchsPeriodValue());
 			}
 			purchaseProduct.setAutoPrchsLastDt(displayInfo.getAutoPrchsLastDt());
 			purchaseProduct.setExclusiveFixrateProdExistYn(displayInfo.getExclusiveFixrateProdExistYn());
@@ -183,7 +184,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			// 게임캐쉬
 			purchaseProduct.setBnsCashAmt(displayInfo.getBnsCashAmt());
 			purchaseProduct.setBnsUsePeriodUnitCd(displayInfo.getBnsUsePeriodUnitCd());
-			purchaseProduct.setBnsUsePeriod(displayInfo.getBnsUsePeriod());
+			purchaseProduct.setBnsUsePeriod(displayInfo.getBnsUsePeriod() == null ? 0 : displayInfo.getBnsUsePeriod());
 			// T멤버쉽 적립율
 			purchaseProduct.setMileageRateMap(displayInfo.getMileageRateMap());
 			// S2S
@@ -244,11 +245,13 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	 * 
 	 * @param partProdId
 	 *            IAP 상품ID
+	 * @param tenantId
+	 *            테넌트ID
 	 * @return IAP 상품정보 VO
 	 */
 	@Override
-	public IapProductInfoRes searchIapProductInfo(String partProdId) {
-		return this.iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq(partProdId));
+	public IapProductInfoRes searchIapProductInfo(String partProdId, String tenantId) {
+		return this.iapProductInfoSCI.getIapProductInfo(new IapProductInfoReq(partProdId, tenantId));
 	}
 
 	/**

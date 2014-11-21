@@ -24,10 +24,10 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.DateUtils;
-import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
+import com.skplanet.storeplatform.purchase.client.order.vo.AutoPrchsMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.PurchaseUserInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
@@ -397,41 +397,50 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	 * @param deviceModelCd
 	 *            구매 단말 모델 코드
 	 * 
+	 * @param autoLastPeriod
+	 *            자동결제 지속일 수
+	 * 
 	 * @return 자동구매 생성을 위한 목록
 	 */
 	@Override
-	public List<AutoPrchs> makeAutoPrchsList(PrchsDtlMore prchsDtlMore, String deviceModelCd) {
-		List<AutoPrchs> autoPrchsList = new ArrayList<AutoPrchs>();
+	public List<AutoPrchsMore> makeAutoPrchsMoreList(PrchsDtlMore prchsDtlMore, String deviceModelCd,
+			String autoLastPeriod) {
+		List<AutoPrchsMore> autoPrchsMoreList = new ArrayList<AutoPrchsMore>();
 
-		AutoPrchs autoPrchs = new AutoPrchs();
-		autoPrchs.setTenantId(prchsDtlMore.getTenantId());
-		autoPrchs.setFstPrchsId(prchsDtlMore.getPrchsId());
-		autoPrchs.setFstPrchsDtlId(1);
-		autoPrchs.setInsdUsermbrNo(prchsDtlMore.getInsdUsermbrNo());
-		autoPrchs.setInsdDeviceId(prchsDtlMore.getInsdDeviceId());
-		autoPrchs.setProdId(prchsDtlMore.getProdId());
-		autoPrchs.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
-		autoPrchs.setPaymentStartDt(prchsDtlMore.getPrchsDt());
-		autoPrchs.setPaymentEndDt("99991231235959");
+		AutoPrchsMore autoPrchsMore = new AutoPrchsMore();
+		autoPrchsMore.setTenantId(prchsDtlMore.getTenantId());
+		autoPrchsMore.setFstPrchsId(prchsDtlMore.getPrchsId());
+		autoPrchsMore.setFstPrchsDtlId(1);
+		autoPrchsMore.setInsdUsermbrNo(prchsDtlMore.getInsdUsermbrNo());
+		autoPrchsMore.setInsdDeviceId(prchsDtlMore.getInsdDeviceId());
+		autoPrchsMore.setProdId(prchsDtlMore.getProdId());
+		autoPrchsMore.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
+		autoPrchsMore.setPaymentStartDt(prchsDtlMore.getPrchsDt());
+		if (StringUtils.isBlank(autoLastPeriod) || Integer.parseInt(autoLastPeriod) <= 0) {
+			autoPrchsMore.setPaymentEndDt("99991231235959");
+		} else {
+			autoPrchsMore.setAutoPrchsLastPeriod(Integer.parseInt(autoLastPeriod));
+		}
 		try {
-			autoPrchs.setAfterPaymentDt(DateFormatUtils.format(DateUtils.truncate(
+			autoPrchsMore.setAfterPaymentDt(DateFormatUtils.format(DateUtils.truncate(
 					DateUtils.parseDate(prchsDtlMore.getUseExprDt(), "yyyyMMddHHmmss"), Calendar.DATE),
-					"yyyyMMddHHmmss"));
+					"yyyyMMddHHmmss")); // 00시 00분 00초
 		} catch (ParseException e) {
 			throw new StorePlatformException("SAC_PUR_7217", prchsDtlMore.getUseExprDt());
 		}
-		autoPrchs.setReqPathCd(prchsDtlMore.getPrchsReqPathCd());
-		autoPrchs.setClientIp(prchsDtlMore.getClientIp());
-		autoPrchs.setPrchsTme(0);
-		autoPrchs.setLastPrchsId(prchsDtlMore.getPrchsId());
-		autoPrchs.setLastPrchsDtlId(1);
-		autoPrchs.setRegId(prchsDtlMore.getSystemId());
-		autoPrchs.setUpdId(prchsDtlMore.getSystemId());
-		autoPrchs.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_STATUS_AUTO);
-		autoPrchs.setResvCol01(deviceModelCd); // 구매한 단말 모델 코드
-		autoPrchsList.add(autoPrchs);
+		autoPrchsMore.setReqPathCd(prchsDtlMore.getPrchsReqPathCd());
+		autoPrchsMore.setClientIp(prchsDtlMore.getClientIp());
+		autoPrchsMore.setPrchsTme(0);
+		autoPrchsMore.setLastPrchsId(prchsDtlMore.getPrchsId());
+		autoPrchsMore.setLastPrchsDtlId(1);
+		autoPrchsMore.setRegId(prchsDtlMore.getSystemId());
+		autoPrchsMore.setUpdId(prchsDtlMore.getSystemId());
+		autoPrchsMore.setAutoPaymentStatusCd(PurchaseConstants.AUTO_PRCHS_STATUS_AUTO);
+		autoPrchsMore.setResvCol01(deviceModelCd); // 구매한 단말 모델 코드
 
-		return autoPrchsList;
+		autoPrchsMoreList.add(autoPrchsMore);
+
+		return autoPrchsMoreList;
 	}
 
 	/**
@@ -629,7 +638,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 				.append(StringUtils.equals(purchaseOrderInfo.getPurchaseUser().getUserType(),
 						PurchaseConstants.USER_TYPE_ONEID) ? purchaseOrderInfo.getPurchaseUser().getUserId() : "")
 				.append("&networkTypeCd=").append(purchaseOrderInfo.getNetworkTypeCd()).append("&mediaId=")
-				.append(StringUtils.defaultString(purchaseOrderInfo.getMediaId()));
+				.append(StringUtils.defaultString(purchaseOrderInfo.getMediaId())).append("&dupleYn=")
+				.append(purchaseOrderInfo.isPossibleDuplication() ? "Y" : "N");
 
 		// T멤버쉽 적립율
 		Map<String, Integer> tMileageRateMap = purchaseOrderInfo.getPurchaseProductList().get(0).getMileageRateMap();
@@ -715,13 +725,15 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append("&outsdContentsId=")
 							.append(StringUtils.defaultString(product.getOutsdContentsId()))
 							.append("&autoPrchsYn=")
-							.append(purchaseOrderInfo.isIap() ? "N" : StringUtils.defaultString(product
-									.getAutoPrchsYN())).append("&specialCouponId=")
+							.append(StringUtils.defaultString(product.getAutoPrchsYN()))
+							.append("&autoLastPeriod=")
+							.append(product.getAutoPrchsLastPeriodValue() == null ? 0 : product
+									.getAutoPrchsLastPeriodValue()).append("&specialCouponId=")
 							.append(StringUtils.defaultString(product.getSpecialSaleCouponId()))
 							.append("&specialCouponAmt=").append(product.getSpecialCouponAmt())
-							.append("&cmpxProdClsfCd=").append(product.getCmpxProdClsfCd()).append("&prodCaseCd=")
-							.append(StringUtils.defaultString(product.getProdCaseCd())).append("&s2sAutoYn=")
-							.append(StringUtils.defaultString(product.getS2sAutoPrchsYn()));
+							.append("&cmpxProdClsfCd=").append(StringUtils.defaultString(product.getCmpxProdClsfCd()))
+							.append("&prodCaseCd=").append(StringUtils.defaultString(product.getProdCaseCd()))
+							.append("&s2sAutoYn=").append(StringUtils.defaultString(product.getS2sAutoPrchsYn()));
 
 					// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1

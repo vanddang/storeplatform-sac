@@ -95,7 +95,9 @@ public interface PurchaseOrderService {
 	 * 
 	 * @param req
 	 *            구매/결제 통합 구매이력 생성 요청 VO
+	 * @param tenantId
+	 *            테넌트 ID
 	 * @return 생성된 구매ID
 	 */
-	public String completeIapPurchase(CreateCompletePurchaseSacReq req);
+	public String completeIapPurchase(CreateCompletePurchaseSacReq req, String tenantId);
 }

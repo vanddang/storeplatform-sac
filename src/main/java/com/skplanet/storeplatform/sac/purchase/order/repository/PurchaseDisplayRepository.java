@@ -74,9 +74,11 @@ public interface PurchaseDisplayRepository {
 	 * 
 	 * @param partProdId
 	 *            IAP 상품ID
+	 * @param tenantId
+	 *            테넌트ID
 	 * @return IAP 상품정보 VO
 	 */
-	public IapProductInfoRes searchIapProductInfo(String partProdId);
+	public IapProductInfoRes searchIapProductInfo(String partProdId, String tenantId);
 
 	/**
 	 * 

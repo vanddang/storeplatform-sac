@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 import java.util.List;
 
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 
 /**
  * 
@@ -29,8 +30,8 @@ public interface PurchaseOrderPostService {
 	 * 
 	 * @param prchsDtlMoreList
 	 *            구매정보 목록
-	 * @param bPayPlanet
-	 *            Pay Planet 결제 여부
+	 * @param notifyPaymentReq
+	 *            결제처리결과 Noti 정보
 	 */
-	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList, boolean bPayPlanet);
+	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList, NotifyPaymentSacReq notifyPaymentReq);
 }

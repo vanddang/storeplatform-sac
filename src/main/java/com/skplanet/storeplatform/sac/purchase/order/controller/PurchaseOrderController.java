@@ -240,7 +240,7 @@ public class PurchaseOrderController {
 				ReflectionToStringBuilder.toString(req, ToStringStyle.SHORT_PREFIX_STYLE), sacRequestHeader);
 
 		// IAP 구매/결제 통합 구매이력 생성 처리
-		String prchsId = this.orderService.completeIapPurchase(req);
+		String prchsId = this.orderService.completeIapPurchase(req, sacRequestHeader.getTenantHeader().getTenantId());
 
 		// 응답 세팅
 		CreateCompletePurchaseSacRes res = new CreateCompletePurchaseSacRes();
@@ -343,12 +343,7 @@ public class PurchaseOrderController {
 		// ------------------------------------------------------------------------------
 		// 구매 후 처리 - 씨네21/인터파크, 구매건수 증가 등등
 
-		boolean bPayPlanet = false; // PayPlanet 결제 여부
-		if (StringUtils.startsWith(notifyPaymentReq.getPaymentInfoList().get(0).getTid(),
-				PurchaseConstants.PAYPLANET_TID_PREFIX)) {
-			bPayPlanet = true;
-		}
-		this.orderPostService.postPurchase(prchsDtlMoreList, bPayPlanet);
+		this.orderPostService.postPurchase(prchsDtlMoreList, notifyPaymentReq);
 
 		// ------------------------------------------------------------------------------
 		// 응답
@@ -357,7 +352,14 @@ public class PurchaseOrderController {
 				.getPaymentInfoList().size());
 
 		// 구매완료Noti정보 세팅: PayPlanet 결제건 또는 IAP 은 skip
+		boolean bPayPlanet = false; // PayPlanet 결제 여부
+		if (StringUtils.startsWith(notifyPaymentReq.getPaymentInfoList().get(0).getTid(),
+				PurchaseConstants.PAYPLANET_TID_PREFIX)) {
+			bPayPlanet = true;
+		}
+
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
+
 		if ((bPayPlanet == false)
 				&& (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) == false)) {
@@ -465,7 +467,7 @@ public class PurchaseOrderController {
 			}
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
 			purchaseOrderInfo.setIap(true); // IAP 상품 여부
-			purchaseOrderInfo.setPossibleDuplication(true); // 중복 구매 가능 여부 : IAP은 기구매체크 제외 2014.06.18.
+			// purchaseOrderInfo.setPossibleDuplication(true); // 중복 구매 가능 여부 : IAP은 기구매체크 제외 2014.06.18.
 			// possibleDuplication: 중복 구매 가능 여부 - 상품 정합성 체크 (상품 조회) 시 세팅
 			// iapCommercial: IAP 정식판 전환상품 존재 여부 - 상품 정합성 체크 (상품 조회) 시 세팅
 

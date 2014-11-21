@@ -12,10 +12,10 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
+import com.skplanet.storeplatform.purchase.client.order.vo.AutoPrchsMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
@@ -89,9 +89,13 @@ public interface PurchaseOrderMakeDataService {
 	 * @param deviceModelCd
 	 *            구매 단말 모델 코드
 	 * 
+	 * @param autoLastPeriod
+	 *            자동결제 지속일 수
+	 * 
 	 * @return 자동구매 생성을 위한 목록
 	 */
-	public List<AutoPrchs> makeAutoPrchsList(PrchsDtlMore prchsDtlMore, String deviceModelCd);
+	public List<AutoPrchsMore> makeAutoPrchsMoreList(PrchsDtlMore prchsDtlMore, String deviceModelCd,
+			String autoLastPeriod);
 
 	/**
 	 * 

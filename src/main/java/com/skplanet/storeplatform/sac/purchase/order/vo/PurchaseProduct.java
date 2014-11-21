@@ -51,6 +51,8 @@ public class PurchaseProduct extends PaymentInfo {
 	private String iapProdKind; // 부분유료화 상품 유형
 	private String iapProdCase; // 부분유료화 상품 종류
 	private Integer iapUsePeriod; // 이용기간 값
+	// IAP 자동결제
+	private Integer autoPrchsLastPeriodValue; // 자동결제 지속일
 
 	// Ring & Bell
 	private String rnBillCd; // RN_과금_코드
@@ -445,6 +447,21 @@ public class PurchaseProduct extends PaymentInfo {
 	 */
 	public void setIapPostbackUrl(String iapPostbackUrl) {
 		this.iapPostbackUrl = iapPostbackUrl;
+	}
+
+	
+	/**
+	 * @return the autoPrchsLastPeriodValue
+	 */
+	public Integer getAutoPrchsLastPeriodValue() {
+		return autoPrchsLastPeriodValue;
+	}
+
+	/**
+	 * @param autoPrchsLastPeriodValue the autoPrchsLastPeriodValue to set
+	 */
+	public void setAutoPrchsLastPeriodValue(Integer autoPrchsLastPeriodValue) {
+		this.autoPrchsLastPeriodValue = autoPrchsLastPeriodValue;
 	}
 
 	/**

@@ -158,7 +158,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		// 회원Part 사용자 정책 조회
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-				deviceId, policyCodeList);
+				tenantId, deviceId, policyCodeList);
 
 		if (policyResMap == null) {
 			return false;
@@ -217,7 +217,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		// 회원Part 사용자 정책 조회
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-				deviceId, policyCodeList);
+				tenantId, deviceId, policyCodeList);
 
 		if (policyResMap == null) {
 			return false;
@@ -494,7 +494,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 					policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
 
 					for (PurchaseTenantPolicy policy : policyList) {
-						if (this.isSktTestMdnWhiteList(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
+						if (this.isSktTestMdnWhiteList(policyCheckParam.getTenantId(), policy.getApplyValue(),
+								policyCheckParam.getDeviceId())) {
 							bWhite = true;
 							break;
 						}
@@ -724,7 +725,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		policyCodeList.add(memberPolicyCd);
 
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-				policyCheckParam.getDeviceId(), policyCodeList);
+				policyCheckParam.getTenantId(), policyCheckParam.getDeviceId(), policyCodeList);
 
 		if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
 			this.logger.info("PRCHS,ORDER,SAC,POLICY,ALLOWPURCHASE,END,{}({}),null", policy.getPolicyId(),
@@ -770,7 +771,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		String deviceId = bCheckRecv ? policyCheckParam.getRecvDeviceId() : policyCheckParam.getDeviceId();
 
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-				deviceId, policyCodeList);
+				policyCheckParam.getTenantId(), deviceId, policyCodeList);
 
 		if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
 			this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,END,{}({}),null", policy.getPolicyId(),
@@ -994,11 +995,13 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @param memberPolicyCd 회원Part에서 관리하는 시험폰 정책코드
 	 * 
+	 * @param tenantId 테넌트 ID
+	 * 
 	 * @param deviceId 조회할 MDN
 	 * 
 	 * @return White List 등록 여부: true-White List 등록, false-White List 등록 안됨
 	 */
-	private boolean isSktTestMdnWhiteList(String memberPolicyCd, String deviceId) {
+	private boolean isSktTestMdnWhiteList(String tenantId, String memberPolicyCd, String deviceId) {
 		// return true; // 2014.06.09: SKT시험폰 항상 허용됨
 
 		// 2014.10.15. PASS 코드 적용
@@ -1010,7 +1013,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		policyCodeList.add(memberPolicyCd);
 
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-				deviceId, policyCodeList);
+				tenantId, deviceId, policyCodeList);
 
 		if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
 			return false;

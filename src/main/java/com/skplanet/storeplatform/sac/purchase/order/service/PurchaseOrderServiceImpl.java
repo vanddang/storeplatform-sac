@@ -40,13 +40,13 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
-import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.common.vo.UniqueTid;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
+import com.skplanet.storeplatform.purchase.client.order.vo.AutoPrchsMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.ConfirmPurchaseScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.ConfirmPurchaseScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreateCompletePurchaseScReq;
@@ -353,7 +353,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		int count = makeFreePurchaseScRes.getCount();
 
-		if (CollectionUtils.isNotEmpty(purchaseOrderInfo.getReceiveUserList())) {
+		// Biz 쿠폰 지원으로 분기처리: Biz쿠폰은 수신자가 매우 많아 prchsDtlMoreList를 수신자만큼 생성하지 않음
+		if (purchaseOrderInfo.isBizShopping()) {
 			if (count != purchaseOrderInfo.getReceiveUserList().size()) {
 				throw new StorePlatformException("SAC_PUR_7201");
 			}
@@ -453,11 +454,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			reserveCount = reservePurchaseScRes.getCount();
 
-			if (CollectionUtils.isNotEmpty(purchaseOrderInfo.getReceiveUserList())) {
-				if (reserveCount != purchaseOrderInfo.getReceiveUserList().size()
-						* purchaseOrderInfo.getPurchaseProductList().size()) {
+			// Biz 쿠폰 지원으로 분기처리: Biz쿠폰은 수신자가 매우 많아 prchsDtlMoreList를 수신자만큼 생성하지 않음
+			/*
+			 * if (CollectionUtils.isNotEmpty(purchaseOrderInfo.getReceiveUserList())) { if (reserveCount !=
+			 * (purchaseOrderInfo.getReceiveUserList().size() purchaseOrderInfo.getPurchaseProductList().size() *
+			 * purchaseOrderInfo .getPurchaseProductList().get(0).getProdQty())) { throw new
+			 * StorePlatformException("SAC_PUR_7201"); } } else {
+			 */
+			if (purchaseOrderInfo.isBizShopping()) {
+				if (reserveCount != (purchaseOrderInfo.getReceiveUserList().size())) {
 					throw new StorePlatformException("SAC_PUR_7201");
 				}
+
 			} else {
 				if (reserveCount != prchsDtlMoreList.size()) {
 					throw new StorePlatformException("SAC_PUR_7201");
@@ -912,6 +920,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// {1:N선물구분
 
 			if (apiVer > 1) { // 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (1:N 선물 지원)
+				// TAKTODO:: 복수개 구매 시 useMdnList 에 구매수량만큼 반복
 
 				List<String> useMdnList = this.concatResvDescByList(prchsDtlMoreList, "useDeviceId");
 
@@ -1034,10 +1043,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 자동구매 생성 요청 데이터
 		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,CHECKAUTO,{},{}", prchsDtlMore.getPrchsProdType(),
 				reservedDataMap.get("autoPrchsYn"));
-		List<AutoPrchs> autoPrchsList = null;
+		List<AutoPrchsMore> autoPrchsMoreList = null;
 		if (StringUtils.equals(reservedDataMap.get("autoPrchsYn"), PurchaseConstants.USE_Y)) {
-			autoPrchsList = this.purchaseOrderMakeDataService.makeAutoPrchsList(prchsDtlMore,
-					reservedDataMap.get("deviceModelCd"));
+			autoPrchsMoreList = this.purchaseOrderMakeDataService.makeAutoPrchsMoreList(prchsDtlMore,
+					reservedDataMap.get("deviceModelCd"), reservedDataMap.get("autoLastPeriod"));
 		}
 
 		// 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터
@@ -1187,7 +1196,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		confirmPurchaseScReq.setPrchsProdCntList(prchsProdCntList); // 건수집계
 		confirmPurchaseScReq.setPaymentList(paymentList); // 결제
-		confirmPurchaseScReq.setAutoPrchsList(autoPrchsList); // 자동구매
+		confirmPurchaseScReq.setAutoPrchsMoreList(autoPrchsMoreList); // 자동구매
 		confirmPurchaseScReq.setShoppingCouponList(shoppingCouponList); // 쇼핑발급 목록
 		confirmPurchaseScReq.setEbookComicEpisodeList(ebookComicEpisodeList);
 		confirmPurchaseScReq.setMembershipReserveList(membershipReserveList);
@@ -1314,10 +1323,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param req
 	 *            구매/결제 통합 구매이력 생성 요청 VO
+	 * @param tenantId
+	 *            테넌트 ID
 	 * @return 생성된 구매ID
 	 */
 	@Override
-	public String completeIapPurchase(CreateCompletePurchaseSacReq req) {
+	public String completeIapPurchase(CreateCompletePurchaseSacReq req, String tenantId) {
 		CreateCompletePurchaseInfoSac purchase = req.getPurchase();
 
 		// 상품 존재 여부 체크 및 카테고리 세팅
@@ -1337,7 +1348,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// }
 
 		// IAP상품 정보 조회
-		IapProductInfoRes iapInfo = this.purchaseDisplayRepository.searchIapProductInfo(purchase.getProdId());
+		IapProductInfoRes iapInfo = this.purchaseDisplayRepository.searchIapProductInfo(purchase.getProdId(), tenantId);
 		if (iapInfo == null) {
 			throw new StorePlatformException("SAC_PUR_5101", purchase.getProdId());
 		}

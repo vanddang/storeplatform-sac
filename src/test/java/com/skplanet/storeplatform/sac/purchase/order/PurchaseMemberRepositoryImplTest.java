@@ -61,8 +61,8 @@ public class PurchaseMemberRepositoryImplTest {
 		policyCodeList.add("US011712"); // 비과금 단말
 		policyCodeList.add("OR003101"); // Tstore 구매차단
 		policyCodeList.add("OR003104"); // IAP 구매차단
-		Map<String, IndividualPolicyInfoSac> resMap = this.purchaseMemberRepository.getPurchaseUserPolicy(deviceKey,
-				policyCodeList);
+		Map<String, IndividualPolicyInfoSac> resMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
+				tenantHeader.getTenantId(), deviceKey, policyCodeList);
 		assertThat(resMap.size(), not(0));
 	}
 
