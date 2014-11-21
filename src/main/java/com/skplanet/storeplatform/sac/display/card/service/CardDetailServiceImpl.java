@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.product.vo.Card;
 import com.skplanet.storeplatform.sac.client.product.vo.DatasetProp;
@@ -179,7 +178,8 @@ public class CardDetailServiceImpl implements CardDetailService {
 		try {
 			injtVarObj = mapper.readValue(injtVar, InjtVar.class);
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_DSP_0001", injtVar);
+//			throw new StorePlatformException("SAC_DSP_0001", injtVar);
+			logger.error("주입변수 언마셜링 중 오류가 발생하였습니다.\n", e);
 		}
 		logger.debug("injtVarObj={}",injtVarObj.toString());
 
