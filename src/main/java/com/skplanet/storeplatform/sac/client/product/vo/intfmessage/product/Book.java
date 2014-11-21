@@ -115,6 +115,13 @@ public class Book extends CommonInfo implements Serializable {
 	private Integer magazineCount;
 	private Integer magazineFreeCount;
 	
+	/**
+	 * 최종 챕터 정보
+	 */
+	private Integer bookLastChapter;
+	private Integer serialLastChapter;
+	private Integer magazineLastChapter;
+	
 	
 	/**
 	 * @return the type
@@ -477,5 +484,30 @@ public class Book extends CommonInfo implements Serializable {
 	public void setMagazineFreeCount(Integer magazineFreeCount) {
 		this.magazineFreeCount = magazineFreeCount;
 	}
+
+	public Integer getBookLastChapter() {
+		return bookLastChapter;
+	}
+
+	public void setBookLastChapter(Integer bookLastChapter) {
+		this.bookLastChapter = bookLastChapter;
+	}
+
+	public Integer getSerialLastChapter() {
+		return serialLastChapter;
+	}
+
+	public void setSerialLastChapter(Integer serialLastChapter) {
+		this.serialLastChapter = serialLastChapter;
+	}
+
+	public Integer getMagazineLastChapter() {
+		return magazineLastChapter;
+	}
+
+	public void setMagazineLastChapter(Integer magazineLastChapter) {
+		this.magazineLastChapter = magazineLastChapter;
+	}
+
 	
 }
