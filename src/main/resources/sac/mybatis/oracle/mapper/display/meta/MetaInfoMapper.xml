@@ -529,6 +529,7 @@
              , TB.PROD_CHRG_YN AS PROD_CHRG
              , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
              , TB.PROD_STATUS_CD
+             , TB.SELLER_MBR_NO
           FROM (
                  SELECT 
                         ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
@@ -547,6 +548,7 @@
                       , D.USE_PERIOD_UNIT_CD
                       , D.META_CLSF_CD
                       , D.CONTENTS_TYPE_CD
+                      , D.SELLER_MBR_NO
                       , E.STRM_EPSD_CNT
                       , E.ISSUE_DAY
                       , E.CHNL_COMP_NM

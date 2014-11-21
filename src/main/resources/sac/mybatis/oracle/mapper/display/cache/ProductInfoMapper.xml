@@ -555,6 +555,7 @@
                    AND SB.USE_PERIOD_UNIT_CD != 'PD00310'
             ) AS EPSD_PERIOD_AMT  /* 에피소드 동일 CID 대여 가격 */
             ]]>
+            , TB.SELLER_MBR_NO
         FROM (
             SELECT
                 CMC.UP_MENU_ID,
@@ -568,6 +569,7 @@
                 CPROD.USE_PERIOD_UNIT_CD,
                 CPROD.META_CLSF_CD,
                 CPROD.CONTENTS_TYPE_CD,
+                CPROD.SELLER_MBR_NO,
                 CEBOOK.STRM_EPSD_CNT,
                 CEBOOK.ISSUE_DAY,
                 CEBOOK.CHNL_COMP_NM,

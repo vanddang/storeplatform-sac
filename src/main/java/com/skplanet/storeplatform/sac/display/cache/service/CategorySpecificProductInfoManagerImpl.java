@@ -41,4 +41,14 @@ public class CategorySpecificProductInfoManagerImpl implements CategorySpecificP
         return commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo", paramMap, MetaInfo.class);
     }
 	
+	/**
+	 * 이북/코믹 에피소드 건수/마지막 챕터 (단행/연재/잡지)
+	 * @param paramMap
+	 * @param MetaInfo
+	 */
+	@Override
+	public MetaInfo getEbookComicEpisodeCount(Map<String, Object> paramMap) {
+		return commonDAO.queryForObject("CategorySpecificProduct.getEbookComicEpisodeCount", paramMap, MetaInfo.class);
+	}
+	
 }

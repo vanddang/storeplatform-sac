@@ -24,12 +24,15 @@ import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -108,11 +111,27 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
                 // ebook/코믹 상품의 경우
                 if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
                     if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-                            || DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의
-                        // 경우
+                            || DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { 
+                    	// Ebook / Comic 상품의 경우
 
                         paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
                         metaInfo = this.metaInfoService.getEbookComicMeta(paramMap);
+                        
+                        /*
+                        if(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(productBasicInfo.getContentsTypeCd())) {
+	                        //[CPS] 이북/코믹 메타 추가
+	                        //단행/연재/잡지 전체 건수/최종 회차
+	                        MetaInfo ebookComicEpisodeCount = this.metaInfoService.getEbookComicEpisodeCount(paramMap);
+	                        metaInfo.setBookCount(ebookComicEpisodeCount.getBookCount());
+	                        metaInfo.setSerialCount(ebookComicEpisodeCount.getSerialCount());
+	                        metaInfo.setMagazineCount(ebookComicEpisodeCount.getMagazineCount());
+	                        metaInfo.setBookLastChapter(ebookComicEpisodeCount.getBookLastChapter());
+	                        metaInfo.setSerialLastChapter(ebookComicEpisodeCount.getSerialLastChapter());
+	                        metaInfo.setMagazineLastChapter(ebookComicEpisodeCount.getMagazineLastChapter());
+	                        //try { BeanUtils.copyProperties(ebookComicEpisodeCount, metaInfo); } catch (Exception e) { }
+                        }
+                        */
+                        
                         if (metaInfo != null) {
                             // Tstore멤버십 적립율 정보
                             metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
@@ -124,6 +143,7 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
                                 // product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
                                 product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
                             }
+                            
                             productList.add(product);
                         }
                     }

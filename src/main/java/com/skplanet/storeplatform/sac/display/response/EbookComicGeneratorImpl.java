@@ -9,6 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.response;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -19,12 +25,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Ebook 상품 전용 정보 Generator 구현체
@@ -130,6 +130,15 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 				book.setStatus(DisplayConstants.DP_EBOOK_CONTINUE_NM);
 			}
 		}
+		
+		//이북/코믹 에피소드 건수/마지막 챕터 (단행/연재/잡지)
+		book.setBookCount(metaInfo.getBookCount());
+		book.setSerialCount(metaInfo.getSerialCount());
+		book.setMagazineCount(metaInfo.getMagazineCount());
+		book.setBookLastChapter(metaInfo.getBookLastChapter());
+		book.setSerialLastChapter(metaInfo.getSerialLastChapter());
+		book.setMagazineLastChapter(metaInfo.getMagazineLastChapter());
+		
 		book.setSupportList(this.generateSupportList(metaInfo));
 		book.setIsbn(metaInfo.getIsbn());
 		return book;

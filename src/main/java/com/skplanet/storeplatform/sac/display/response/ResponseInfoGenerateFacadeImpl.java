@@ -557,7 +557,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
-
+		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		// 마일리지
 		this.appendMileageInfo(metaInfo, product);
 
@@ -630,7 +630,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		// 이북 상품은 상세 설명 정보를 내려줌
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
-
+		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
+		
 		// 마일리지
 		this.appendMileageInfo(metaInfo, product);
 
@@ -683,6 +684,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 		// 상품 유/무료 구분
 		product.setProdChrgYn(metaInfo.getProdChrg());
+		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 
 		// 마일리지
 		this.appendMileageInfo(metaInfo, product);
@@ -731,6 +733,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(rights);
 		product.setContributor(contributor);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
+		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 
 		// 마일리지
 		this.appendMileageInfo(metaInfo, product);
@@ -1098,8 +1101,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		
 		product.setAboutWriter(productExplain); //이북 상품은 prodBaseDesc 값을 작가 소개로 사용한다.
 		
-		
-		
 		// BOOK 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
 		book.setBookClsfCd(metaInfo.getBookClsfCd());
@@ -1109,7 +1110,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		
 		//목차
 		product.setAboutWriter(metaInfo.getBookTbctns());
-				
+		
 		// 마일리지
 		this.appendMileageInfo(metaInfo, product);
 

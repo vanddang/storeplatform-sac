@@ -702,7 +702,7 @@
              , TB.TOP_MENU_ID
              , TB.MENU_ID
              , TB.MENU_NM
-             , TB.MENU_DESC
+	             , TB.MENU_DESC
              , TB.META_CLSF_CD
              , TB.PROD_ID
              , TB.PART_PROD_ID
@@ -764,6 +764,7 @@
              , TB.EXPO_SELLER_TELNO
              , TB.EXPO_SELLER_EMAIL
              , TB.SAMPL_URL
+             , TB.REG_DT
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
@@ -812,6 +813,7 @@
                     <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
                       , D.PROD_GRD_CD   -- 채널 상품 ID 조회   
                       , D.CID     -- 채널 상품 ID 조회  
+                      , D.REG_DT
                       , E.ISSUE_DAY    
                       , E.BOOK_TBCTNS
                       , E.ISBN
@@ -823,6 +825,7 @@
                     <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                       , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
                       , J.CID   -- 에피소드 상품 ID 조회
+                      , J.REG_DT
                       , L.ISSUE_DAY    
                       , L.BOOK_TBCTNS
                       , L.ISBN
@@ -1282,5 +1285,47 @@
              AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
         ) 
       WHERE NO =1   
+    </select>
+    
+    <!-- 이북/코믹 에피소드 건수/마지막 챕터 (단행/연재/잡지) -->
+    <select id="getEbookComicEpisodeCount" parameterType="Map" resultType="MetaInfo">
+		SELECT  
+            	SUM( CASE WHEN T1.BOOK_CLSF_CD = 'DP004301' THEN 1 ELSE 0 END ) AS BOOK_COUNT
+		      , SUM( CASE WHEN T1.BOOK_CLSF_CD = 'DP004302' THEN 1 ELSE 0 END ) AS SERIAL_COUNT
+		      , SUM( CASE WHEN T1.BOOK_CLSF_CD = 'DP004303' THEN 1 ELSE 0 END ) AS MAGAZINE_COUNT
+		      , CASE WHEN T1.BOOK_CLSF_CD = 'DP004301' THEN MAX(CHAPTER) ELSE 0 END BOOK_LAST_CHAPTER      -- 단행
+		      , CASE WHEN T1.BOOK_CLSF_CD = 'DP004302' THEN MAX(CHAPTER) ELSE 0 END SERIAL_LAST_CHAPTER    -- 연재
+		      , CASE WHEN T1.BOOK_CLSF_CD = 'DP004303' THEN MAX(CHAPTER) ELSE 0 END MAGAZINE_LAST_CHAPTER  -- 잡지
+		FROM (
+      		SELECT EP.CHAPTER, EP.BOOK_CLSF_CD
+			 FROM  
+	           <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+			  (SELECT SA.PART_PROD_ID
+			    FROM TB_DP_PROD_RSHP SA
+			   WHERE SA.PROD_ID = #{productBasicInfo.prodId}
+			     AND SA.PROD_RSHP_CD = 'DP010802' 
+			   ) RSHP
+			   </if>
+			   <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+			  (SELECT R.PART_PROD_ID
+			    FROM TB_DP_PROD_RSHP SA
+			      JOIN TB_DP_PROD_RSHP R
+			        ON SA.PART_PROD_ID = #{productBasicInfo.partProdId} AND SA.PROD_RSHP_CD = 'DP010802' AND SA.PROD_ID = R.PROD_ID
+			   ) RSHP
+			   </if>
+			   JOIN TB_DP_PROD SB 
+			    ON RSHP.PART_PROD_ID = SB.PROD_ID AND SB.CONTENTS_TYPE_CD = 'PD002502'
+			   JOIN TB_DP_TENANT_PROD_PRICE SC 
+			    ON SB.PROD_ID = SC.PROD_ID AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
+			   JOIN TB_DP_TENANT_PROD SD
+			    ON SC.PROD_ID = SD.PROD_ID AND SD.PROD_STATUS_CD = 'PD000403'
+			   JOIN TB_DP_EBOOK_PROD EP
+			    ON SD.PROD_ID = EP.PROD_ID
+			 WHERE 1=1
+			   AND SC.TENANT_ID = #{tenantHeader.tenantId}
+			   AND SC.TENANT_ID = SD.TENANT_ID 
+			   GROUP BY EP.CHAPTER, EP.BOOK_CLSF_CD
+		) T1
+		GROUP BY T1.BOOK_CLSF_CD
     </select>
 </mapper>

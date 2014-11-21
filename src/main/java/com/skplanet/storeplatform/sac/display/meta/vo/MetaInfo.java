@@ -113,7 +113,14 @@ public class MetaInfo extends CommonInfo {
 	private String supportStore;
 	private String supportPlay;
 	private String bookType;
-	private Integer bookCount;
+	
+	private Integer bookCount;				//[이북/코믹] 단행 전체 건수
+	private Integer bookLastChapter; 		//[이북/코믹] 단행 마지막 챕터
+	private Integer serialCount;			//[이북/코믹] 연재 전체 건수
+	private Integer serialLastChapter; 		//[이북/코믹] 연재 마지막 챕터
+	private Integer magazineCount;			//[이북/코믹] 잡지 전체 건수
+	private Integer magazineLastChapter; 	//[이북/코믹] 잡지 마지막 챕터
+	
 	private String bookStatus;
 	private String bookClsfCd;
 	private String comptYn;
@@ -4472,6 +4479,46 @@ public class MetaInfo extends CommonInfo {
 
 	public void setBookTbctns(String bookTbctns) {
 		this.bookTbctns = bookTbctns;
+	}
+
+	public Integer getBookLastChapter() {
+		return bookLastChapter;
+	}
+
+	public void setBookLastChapter(Integer bookLastChapter) {
+		this.bookLastChapter = bookLastChapter;
+	}
+
+	public Integer getSerialCount() {
+		return serialCount;
+	}
+
+	public void setSerialCount(Integer serialCount) {
+		this.serialCount = serialCount;
+	}
+
+	public Integer getSerialLastChapter() {
+		return serialLastChapter;
+	}
+
+	public void setSerialLastChapter(Integer serialLastChapter) {
+		this.serialLastChapter = serialLastChapter;
+	}
+
+	public Integer getMagazineCount() {
+		return magazineCount;
+	}
+
+	public void setMagazineCount(Integer magazineCount) {
+		this.magazineCount = magazineCount;
+	}
+
+	public Integer getMagazineLastChapter() {
+		return magazineLastChapter;
+	}
+
+	public void setMagazineLastChapter(Integer magazineLastChapter) {
+		this.magazineLastChapter = magazineLastChapter;
 	}
 
 	
