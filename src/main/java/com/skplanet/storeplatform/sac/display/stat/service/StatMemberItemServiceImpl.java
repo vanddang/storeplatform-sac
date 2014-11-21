@@ -64,10 +64,12 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 	private CardDetailSacRes findCard(StatLike like, SacRequestHeader header) {
 		String tenantId = header.getTenantHeader().getTenantId();
 		String cardId = like.getStatsKey();
+		String userKey = like.getUserKey();
 		
 		CardDetailParam param = new CardDetailParam();
 		param.setTenantId(tenantId);
 		param.setCardId(cardId);
+		param.setUserKey(userKey);
 		
 		CardDetail cardDetail = cardDetailService.searchCardDetail(param);
 		CardDetailSacRes res = new CardDetailSacRes();
