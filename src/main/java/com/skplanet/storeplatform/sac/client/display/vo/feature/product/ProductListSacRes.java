@@ -10,6 +10,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 
 public class ProductListSacRes {
 	private String listId;
+	private String listNm;
 	private String startKey;
 	private String hasNext; // Y/N
 	private Integer count;
@@ -26,6 +27,12 @@ public class ProductListSacRes {
 	}
 	public void setListId(String listId) {
 		this.listId = listId;
+	}
+	public String getListNm() {
+		return listNm;
+	}
+	public void setListNm(String listNm) {
+		this.listNm = listNm;
 	}
 	public String getStartKey() {
 		return startKey;
