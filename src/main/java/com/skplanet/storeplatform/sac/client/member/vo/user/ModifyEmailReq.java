@@ -14,6 +14,11 @@ public class ModifyEmailReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 테넌트 ID.
+	 */
+	private String tenantId = "";
+
+	/**
 	 * 사용자 Key.
 	 */
 	@NotEmpty
@@ -94,6 +99,21 @@ public class ModifyEmailReq extends CommonInfo {
 	 */
 	public void setIsEmailAuth(String isEmailAuth) {
 		this.isEmailAuth = isEmailAuth;
+	}
+
+	/**
+	 * @return tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            String
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }
