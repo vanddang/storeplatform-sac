@@ -180,6 +180,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 		} catch (Exception e) {
 //			throw new StorePlatformException("SAC_DSP_0001", injtVar);
 			logger.error("주입변수 언마셜링 중 오류가 발생하였습니다.\n", e);
+			return;
 		}
 		logger.debug("injtVarObj={}",injtVarObj.toString());
 
