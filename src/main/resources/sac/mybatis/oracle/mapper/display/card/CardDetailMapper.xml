@@ -25,17 +25,20 @@
 			,CRD.LND_IMG_RATIO	
 			,CRD.MENU_ID	
 			,CRD.SMART_OFR_LIST_ID
-			<if test='userKey != null'>
-			,(	SELECT DECODE(COUNT(USER_KEY), 0, 'N', 'Y')
-			  	FROM TB_DP_SOCIAL_STATS_MBR_LIKE
-			  	WHERE TENANT_ID = #{tenantId}
-			   	AND USER_KEY    = #{userKey}
-				AND STATS_CLSF  = 'DP01210001'
-				AND STATS_KEY   = #{cardId} )            AS LIKE_YN
-			</if>
+			
+			/* 주의 : Inner Query 를 사용하는 경우 SHARE_URL이 맨 처음에 와야함 - 변수 바인딩하다 에러남 */
 			, (	SELECT REPLACE(NVL(CD_DESC, ''), '\#{cardId}', CRD.CARD_ID) 
 				FROM TB_CM_CD 
-				WHERE CD_ID = 'DP0124' || #{tenantId})  AS SHARE_URL
+				WHERE CD_ID = 'DP0124' || #{tenantId})  AS SHARE_URL				
+			<if test='userKey != null'>
+			,(  SELECT DECODE(COUNT(USER_KEY), 0, 'N', 'Y') 
+                FROM TB_DP_SOCIAL_STATS_MBR_LIKE
+                WHERE 1=1
+                   AND TENANT_ID   = #{tenantId}
+                   AND USER_KEY    = #{userKey}
+                   AND STATS_CLSF  = 'DP01210001' /* 좋아요 - 카드 */
+                   AND STATS_KEY   = #{cardId} )        AS LIKE_YN
+            </if>
 			,NVL(CEA.EXPO_YN_CARD_TITLE, 'N') 			AS EXPO_YN_CARD_TITLE
 			,NVL(CEA.EXPO_YN_CARD_DESC, 'N') 			AS EXPO_YN_CARD_DESC
 			,NVL(CEA.EXPO_YN_CARD_LIKE, 'N') 			AS EXPO_YN_CARD_LIKE
@@ -80,7 +83,7 @@
 		SELECT /* CardDetailMapper.xml, getExpoYnInPanel, SAC : 양해엽 , 2014-11-06 */
 			CASE WHEN COUNT(CARD_ID) > 0 THEN 'Y' ELSE 'N' END AS EXPO_YN_IN_PANEL
 		FROM TB_DP_PANEL_CARD_MAPG
-		WHERE 1       =1
+		WHERE 1=1
 			AND TENANT_ID = #{tenantId}
 			AND CARD_ID   = #{cardId}
 			AND EXPO_YN   = 'Y'
