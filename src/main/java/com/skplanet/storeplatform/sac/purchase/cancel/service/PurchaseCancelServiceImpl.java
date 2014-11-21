@@ -13,12 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
+import com.skplanet.storeplatform.external.client.sap.sci.SapPurchaseSCI;
+import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiEcReq;
 import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishCancelEcReq;
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
@@ -29,9 +33,12 @@ import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
+import com.skplanet.storeplatform.purchase.client.common.vo.SapNoti;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
 import com.skplanet.storeplatform.purchase.client.membership.sci.MembershipReserveSCI;
+import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
+import com.skplanet.storeplatform.purchase.client.order.vo.CreateSapNotiScReq;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
@@ -98,6 +105,12 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	@Autowired
 	private MembershipReserveSCI membershipReserveSCI;
+
+	@Autowired
+	private SapPurchaseSCI sapPurchaseSCI;
+
+	@Autowired
+	private PurchaseOrderSCI purchaseOrderSCI;
 
 	@Override
 	public PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam) {
@@ -424,6 +437,11 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			}
 		} catch (Exception e) {
 			this.logger.error("### 구매 취소 SMS 발송 실패  prchsId : " + purchaseCancelDetailSacParam.getPrchsId());
+		}
+
+		// SAP 관련 구매취소 Noti
+		if (!StringUtils.equals(prchsSacParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
+			this.cancelNoti(prchsSacParam, purchaseCancelDetailSacParam, purchaseCancelSacParam);
 		}
 
 		this.logger.info("### 구매 취소 성공! ###");
@@ -977,6 +995,82 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		return phoneNumber.replaceAll(regEx, "$1-$2-$3");
 
+	}
+
+	private void cancelNoti(PrchsSacParam prchsSacParam, PurchaseCancelDetailSacParam purchaseCancelDetailSacParam,
+			PurchaseCancelSacParam purchaseCancelSacParam) {
+
+		String userEmail = null;
+
+		SendPurchaseNotiEcReq sendPurchaseNotiEcReq = new SendPurchaseNotiEcReq();
+		sendPurchaseNotiEcReq.setTenantId(prchsSacParam.getTenantId());
+		sendPurchaseNotiEcReq.setDeviceId(prchsSacParam.getDeviceId());
+		sendPurchaseNotiEcReq.setUserEmail(userEmail);
+		sendPurchaseNotiEcReq.setPrchsId(prchsSacParam.getPrchsId());
+		sendPurchaseNotiEcReq.setPrchsDt(prchsSacParam.getPrchsDt());
+		sendPurchaseNotiEcReq.setStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+		sendPurchaseNotiEcReq.setTotAmt(prchsSacParam.getTotAmt());
+		sendPurchaseNotiEcReq.setRequestId(purchaseCancelDetailSacParam.getPaymentSacParamList().get(0).getTid());
+
+		// Noti
+		this.logger.info("PRCHS,CANCEL,SAC,POST,NOTI,SAP,REQ,ONLY,{}",
+				ReflectionToStringBuilder.toString(sendPurchaseNotiEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		try {
+			// 정상완료응답이 아닌경우 Exception 발생
+			this.sapPurchaseSCI.sendPurchaseNoti(sendPurchaseNotiEcReq);
+			this.notiDbInsert(prchsSacParam, purchaseCancelDetailSacParam, purchaseCancelSacParam,
+					sendPurchaseNotiEcReq, "");
+		} catch (Exception e) {
+			String errDesc = null;
+			if (e instanceof StorePlatformException) {
+				errDesc = ((StorePlatformException) e).getCode();
+			} else {
+				errDesc = e.getMessage();
+			}
+
+			this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,ERROR,{}", errDesc);
+
+		}
+	}
+
+	private void notiDbInsert(PrchsSacParam prchsSacParam, PurchaseCancelDetailSacParam purchaseCancelDetailSacParam,
+			PurchaseCancelSacParam purchaseCancelSacParam, SendPurchaseNotiEcReq sendPurchaseNotiEcReq, String errDesc) {
+		List<SapNoti> sapNotiList = new ArrayList<SapNoti>();
+		SapNoti sapNoti = new SapNoti();
+
+		sapNoti.setTenantId(sendPurchaseNotiEcReq.getTenantId());
+		sapNoti.setPrchsId(sendPurchaseNotiEcReq.getPrchsId());
+		sapNoti.setPrchsDtlId(1);
+		sapNoti.setInsdUsermbrNo(prchsSacParam.getInsdUsermbrNo());
+		sapNoti.setInsdDeviceId(prchsSacParam.getInsdDeviceId());
+		sapNoti.setDeviceId(sendPurchaseNotiEcReq.getDeviceId());
+		sapNoti.setUserEmail(sendPurchaseNotiEcReq.getUserEmail());
+		sapNoti.setStatusCd(sendPurchaseNotiEcReq.getStatusCd());
+		sapNoti.setPrchsDt(sendPurchaseNotiEcReq.getPrchsDt());
+		sapNoti.setCancelDt(sendPurchaseNotiEcReq.getCancelDt());
+		sapNoti.setTotAmt(sendPurchaseNotiEcReq.getTotAmt());
+		sapNoti.setPpTid(sendPurchaseNotiEcReq.getRequestId());
+
+		sapNoti.setAddParamInfo("");
+
+		if (StringUtils.isBlank(errDesc)) {
+			sapNoti.setProcStatusCd(PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_SUCCESS);
+		} else {
+			sapNoti.setProcStatusCd(PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE);
+		}
+
+		sapNoti.setProcDesc(errDesc);
+		sapNoti.setRegId(purchaseCancelSacParam.getSystemId());
+		sapNoti.setUpdId(purchaseCancelSacParam.getSystemId());
+
+		sapNotiList.add(sapNoti);
+
+		CreateSapNotiScReq createSapNotiScReq = new CreateSapNotiScReq();
+		createSapNotiScReq.setSapNotiList(sapNotiList);
+
+		this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,INS,{}", createSapNotiScReq);
+		this.purchaseOrderSCI.createSapNoti(createSapNotiScReq);
 	}
 
 }
