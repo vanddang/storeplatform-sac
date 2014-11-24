@@ -209,9 +209,8 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 				}
 			}
 
-			// } else { // SAP
-		} else if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_UPLUS)) { // U+ : 1차로 U+만
-																										// 처리
+		} else { // SAP
+
 			// 결제정보
 			List<SendPurchaseNotiPaymentInfoEc> paymentInfoList = new ArrayList<SendPurchaseNotiPaymentInfoEc>();
 			SendPurchaseNotiPaymentInfoEc payment = null;
