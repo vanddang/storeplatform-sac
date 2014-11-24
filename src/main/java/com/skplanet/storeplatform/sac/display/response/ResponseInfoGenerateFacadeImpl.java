@@ -1100,6 +1100,10 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setDateList(dateList);
 		
 		product.setAboutWriter(productExplain); //이북 상품은 prodBaseDesc 값을 작가 소개로 사용한다.
+
+		//목차
+		product.setTableOfContents(metaInfo.getBookTbctns());
+		
 		
 		// BOOK 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
@@ -1108,8 +1112,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 		
-		//목차
-		product.setAboutWriter(metaInfo.getBookTbctns());
 		
 		// 마일리지
 		this.appendMileageInfo(metaInfo, product);
