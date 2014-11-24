@@ -1016,26 +1016,31 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		this.logger.info("PRCHS,CANCEL,SAC,POST,NOTI,SAP,REQ,ONLY,{}",
 				ReflectionToStringBuilder.toString(sendPurchaseNotiEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 
+		String errDesc = null;
+		boolean bSucc = false;
+
 		try {
 			// 정상완료응답이 아닌경우 Exception 발생
 			this.sapPurchaseSCI.sendPurchaseNoti(sendPurchaseNotiEcReq);
-			this.notiDbInsert(prchsSacParam, purchaseCancelDetailSacParam, purchaseCancelSacParam,
-					sendPurchaseNotiEcReq, "");
+			bSucc = true;
+
 		} catch (Exception e) {
-			String errDesc = null;
 			if (e instanceof StorePlatformException) {
 				errDesc = ((StorePlatformException) e).getCode();
 			} else {
 				errDesc = e.getMessage();
 			}
-
-			this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,ERROR,{}", errDesc);
-
 		}
+
+		this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,RESULT,{},{}", bSucc, errDesc);
+
+		String procStatusCd = bSucc ? PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_SUCCESS : PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE;
+
+		this.notiDbInsert(prchsSacParam, purchaseCancelSacParam, sendPurchaseNotiEcReq, procStatusCd, errDesc);
 	}
 
-	private void notiDbInsert(PrchsSacParam prchsSacParam, PurchaseCancelDetailSacParam purchaseCancelDetailSacParam,
-			PurchaseCancelSacParam purchaseCancelSacParam, SendPurchaseNotiEcReq sendPurchaseNotiEcReq, String errDesc) {
+	private void notiDbInsert(PrchsSacParam prchsSacParam, PurchaseCancelSacParam purchaseCancelSacParam,
+			SendPurchaseNotiEcReq sendPurchaseNotiEcReq, String procStatusCd, String errDesc) {
 		List<SapNoti> sapNotiList = new ArrayList<SapNoti>();
 		SapNoti sapNoti = new SapNoti();
 
@@ -1054,11 +1059,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		sapNoti.setAddParamInfo("");
 
-		if (StringUtils.isBlank(errDesc)) {
-			sapNoti.setProcStatusCd(PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_SUCCESS);
-		} else {
-			sapNoti.setProcStatusCd(PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE);
-		}
+		sapNoti.setProcStatusCd(procStatusCd);
 
 		sapNoti.setProcDesc(errDesc);
 		sapNoti.setRegId(purchaseCancelSacParam.getSystemId());
@@ -1066,11 +1067,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		sapNotiList.add(sapNoti);
 
-		CreateSapNotiScReq createSapNotiScReq = new CreateSapNotiScReq();
-		createSapNotiScReq.setSapNotiList(sapNotiList);
-
-		this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,INS,{}", createSapNotiScReq);
-		this.purchaseOrderSCI.createSapNoti(createSapNotiScReq);
+		this.purchaseOrderSCI.createSapNoti(new CreateSapNotiScReq(sapNotiList));
 	}
 
 }
