@@ -106,59 +106,39 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 		/*
 		 * 테넌트 정보
 		 */
-		List<DPTenantProductVO> tenantInfo = notification.getDpProductTotal().getDpTenantProduct(); 
-		if (null != tenantInfo) {
-			log.info("CMS TenantInfo Size = " + tenantInfo.size());
-			
-			if (0 < tenantInfo.size()) {
-				for (DPTenantProductVO vo : tenantInfo) {
-					
-					// 테넌트 정보 등록
-					log.info("Insert CMS Tenant Info");
-					dpTenantProductService.insertDPTenant(vo);
-				}
-			}
+		List<DPTenantProductVO> tenantInfo = notification.getDpProductTotal().getDpTenantProduct();
+        printCountLog("CMS TenantInfo Size = {}", tenantInfo);
+        for (DPTenantProductVO vo : tenantInfo) {
 
-		}
+            // 테넌트 정보 등록
+            log.info("Insert CMS Tenant Info");
+            dpTenantProductService.insertDPTenant(vo);
+        }
 		
 		
 		/*
 		 * 테넌트 상품 가격
 		 */
-		List<DPTenantProductPriceVO> tenantPriceInfo = notification.getDpProductTotal().getDpTenantProductPrice(); 
-		if (null != tenantPriceInfo) {
-			log.info("CMS TenantPriceInfo Size = " + tenantPriceInfo.size());
-			
-			if (0 < tenantPriceInfo.size()) {
-				for (DPTenantProductPriceVO vo : tenantPriceInfo) {
-					
-					// 테넌트 상품 가격 등록
-					log.info("Insert CMS TenantPrice Info");
-					dpTenantProductPriceService.insertDPTenantPrice(vo);
-				}
-			}
+		List<DPTenantProductPriceVO> tenantPriceInfo = notification.getDpProductTotal().getDpTenantProductPrice();
+        printCountLog("CMS TenantPriceInfo Size = {}", tenantPriceInfo);
+        for (DPTenantProductPriceVO vo : tenantPriceInfo) {
 
-		}
+            // 테넌트 상품 가격 등록
+            log.info("Insert CMS TenantPrice Info");
+            dpTenantProductPriceService.insertDPTenantPrice(vo);
+        }
 		
 		/*
 		 * 전시상품 상품상세
 		 */
-		List<DPProductDescVO> dpProdDesc = notification.getDpProductTotal().getDpProductDesc(); 
-		if (null != dpProdDesc) {
-			log.info("CMS DpProdDesc Size = " + dpProdDesc.size());
-			
-			if (0 < dpProdDesc.size()) {
-				for (DPProductDescVO vo : dpProdDesc) {
-					
-					// 전시상품 상품상세 등록
-					log.info("Insert CMS DpProdDesc Info");
-					dpProductDescService.insertDPProductDesc(vo);
-				}
-			}
+		List<DPProductDescVO> dpProdDesc = notification.getDpProductTotal().getDpProductDesc();
+        printCountLog("CMS DpProdDesc Size = {}", dpProdDesc);
+        for (DPProductDescVO vo : dpProdDesc) {
 
-		}
-
-        execSapPhase1(notification);
+            // 전시상품 상품상세 등록
+            log.info("Insert CMS DpProdDesc Info");
+            dpProductDescService.insertDPProductDesc(vo);
+        }
 
 		/*
 		 * 전시상품 APP 상품
@@ -168,31 +148,26 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 			// 전시상품 APP 상품 등록
 			log.info("Insert CMS DpProdApp Info");
 			dpAppProductService.insertDPAppProduct(notification.getDpProductTotal().getDpAppProduct());
-
 		}
 
         /*
          * InApp 상품 처리
          */
-        insertInAppInfo(notification, tenantInfo);
+        insertInAppInfo(notification.getDpProductTotalList());
 
 
-		
 		/*
 		 * 전시상품/부분유료화상품 카테고리정보 
 		 */
 		List<DPProductCatMapVO> displayCategoryList = notification.getDpProductCatMap();
-		if(displayCategoryList != null){
-			log.info("CMS displayCategoryList Size = " + displayCategoryList.size());
-			if(displayCategoryList.size() >0){
-				
-				for (DPProductCatMapVO vo : displayCategoryList) {
+        printCountLog("CMS displayCategoryList Size = {}", displayCategoryList);
+		if(CollectionUtils.isNotEmpty(displayCategoryList)){
+            for (DPProductCatMapVO vo : displayCategoryList) {
 
-					// 전시상품/부분유료화상품 카테고리정보  등록
-					log.info("Insert CMS DisplayCategory Info");
-					dpProductCatMapService.insertDPProductCat(vo);
-				}
-			}
+                // 전시상품/부분유료화상품 카테고리정보  등록
+                log.info("Insert CMS DisplayCategory Info");
+                dpProductCatMapService.insertDPProductCat(vo);
+            }
 		}
 
 		
@@ -200,69 +175,58 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 		 * 전시상품 이미지
 		 */
 		List<DPProductImgVO> displayProductImageList = notification.getDpProductImgList();
-		if(displayProductImageList != null){
-			log.info("CMS displayProductImageList Size = " + displayProductImageList.size());
-			if(displayProductImageList.size() >0){
-				
-				for (DPProductImgVO vo : displayProductImageList) {
+        printCountLog("CMS displayProductImageList Size = {}", displayProductImageList);
+        for (DPProductImgVO vo : displayProductImageList) {
 
-					// 전시상품 이미지 등록
-					log.info("Insert CMS DisplayProductImage Info");
-					dpProductImgService.insertDPProductImg(vo);
-				}
-			}
-		}
+            // 전시상품 이미지 등록
+            log.info("Insert CMS DisplayProductImage Info");
+            dpProductImgService.insertDPProductImg(vo);
+        }
 		
 		/*
 		 * 전시상품 업데이트이력
 		 */
 		List<DPProductUpdVO> displayProductUpdateList = notification.getDpProductUpdList();
-		if(displayProductUpdateList != null){
-			log.info("CMS displayProductUpdateList Size = " + displayProductUpdateList.size());
-			if(displayProductUpdateList.size() >0){
-				
-				for (DPProductUpdVO vo : displayProductUpdateList) {
+        printCountLog("CMS displayProductUpdateList Size = {}", displayProductUpdateList);
+		if(CollectionUtils.isNotEmpty(displayProductUpdateList)) {
+            for (DPProductUpdVO vo : displayProductUpdateList) {
 
-					// 전시상품 업데이트이력 등록
-					log.info("Insert CMS DisplayProductUpdate Info");
-					dpProductUpdService.insertDPProductUpd(vo);
-				}
-			}
+                // 전시상품 업데이트이력 등록
+                log.info("Insert CMS DisplayProductUpdate Info");
+                dpProductUpdService.insertDPProductUpd(vo);
+            }
 		}
 		
 		/*
 		 * 전시상품 단말
 		 */
 		List<DPSprtDeviceVO> displaySupportPhoneList = notification.getDpSprtDeviceList();
-		if(displaySupportPhoneList != null){
-			log.info("CMS displaySupportPhoneList Size = " + displaySupportPhoneList.size());
-			if(displaySupportPhoneList.size() >0) {
+        printCountLog("CMS displaySupportPhoneList Size = {}", displaySupportPhoneList);
+		if(CollectionUtils.isNotEmpty(displaySupportPhoneList)) {
+            for (DPSprtDeviceVO vo : displaySupportPhoneList) {
+                // 전시상품 단말 등록
+                log.info("Insert CMS DisplaySupportPhone Info - DeviceModelCd#{}", vo.getDeviceModelCd());
+                dpSprtDeviceService.insertDPSprtDevice(vo);
+            }
 
-                for (DPSprtDeviceVO vo : displaySupportPhoneList) {
-                    // 전시상품 단말 등록
-                    log.info("Insert CMS DisplaySupportPhone Info - DeviceModelCd#{}", vo.getDeviceModelCd());
-                    dpSprtDeviceService.insertDPSprtDevice(vo);
-                }
+            // 앱 기본 단말(ANY-PHONE-4APP) 추가
+            String anySubContentsId = null;
+            if(displaySupportPhoneList.size() > 0) {
+                anySubContentsId = displaySupportPhoneList.get(0).getSubContentsId();
+            }
+            else {
+                log.warn("ProdId#{}에 대해 anySubContentsId을 지정할 수 없습니다.", prodId);
+            }
 
-                // 앱 기본 단말(ANY-PHONE-4APP) 추가
-                String anySubContentsId = null;
-                if(displaySupportPhoneList.size() > 0) {
-                    anySubContentsId = displaySupportPhoneList.get(0).getSubContentsId();
-                }
-                else {
-                    log.warn("ProdId#{}에 대해 anySubContentsId을 지정할 수 없습니다.", prodId);
-                }
-
-                if(anySubContentsId != null) {
-                    log.info("Insert CMS DisplaySupportPhone Info - DeviceModelCd#{}", DisplayConstants.DP_ANY_PHONE_4APP);
-                    DPSprtDeviceVO anyPhone = new DPSprtDeviceVO();
-                    anyPhone.setDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4APP);
-                    anyPhone.setSubContentsId(anySubContentsId);
-                    anyPhone.setRegId("admin");
-                    anyPhone.setUpdId("admin");
-                    anyPhone.setProdId(prodId);
-                    dpSprtDeviceService.insertDPSprtDevice(anyPhone);
-                }
+            if(anySubContentsId != null) {
+                log.info("Insert CMS DisplaySupportPhone Info - DeviceModelCd#{}", DisplayConstants.DP_ANY_PHONE_4APP);
+                DPSprtDeviceVO anyPhone = new DPSprtDeviceVO();
+                anyPhone.setDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4APP);
+                anyPhone.setSubContentsId(anySubContentsId);
+                anyPhone.setRegId("admin");
+                anyPhone.setUpdId("admin");
+                anyPhone.setProdId(prodId);
+                dpSprtDeviceService.insertDPSprtDevice(anyPhone);
             }
         }
 		
@@ -270,69 +234,55 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 		 * 전시상품 배포파일정보
 		 */
 		List<DPProductSubContsVO> displaySubContentList = notification.getDpProductSubContsList();
-		if(displaySubContentList != null){
-			log.info("CMS displaySubContentList Size = " + displaySubContentList.size());
-			if(displaySubContentList.size() >0){
-				
-				for (DPProductSubContsVO vo : displaySubContentList) {
+        printCountLog("CMS displaySubContentList Size = {}", displaySubContentList);
+        if(CollectionUtils.isNotEmpty(displaySubContentList)) {
+            for (DPProductSubContsVO vo : displaySubContentList) {
 
-					// 전시상품 배포파일정보 등록
-					log.info("Insert CMS DisplaySubContent Info - SubContentsId#{}", vo.getSubContentsId());
-					dpProductSubContsService.insertDPProductSubconts(vo, DisplayCryptUtils.hashPkgNm(vo.getApkPkgNm()));
-				}
-			}
-		}
+                // 전시상품 배포파일정보 등록
+                log.info("Insert CMS DisplaySubContent Info - SubContentsId#{}", vo.getSubContentsId());
+                dpProductSubContsService.insertDPProductSubconts(vo, DisplayCryptUtils.hashPkgNm(vo.getApkPkgNm()));
+            }
+        }
+
 		
 		/*
 		 * 전시상품 Tag정보
 		 */
 		List<DPTagInfoVO> displayTabInfoList = notification.getDpTagInfoList();
-		if(displayTabInfoList != null){
-			log.info("CMS displayTabInfoList Size = " + displayTabInfoList.size());
-			if(displayTabInfoList.size() >0){
-				
-				for (DPTagInfoVO vo : displayTabInfoList) {
+        printCountLog("CMS displayTabInfoList Size = {}", displayTabInfoList);
+        for (DPTagInfoVO vo : displayTabInfoList) {
 
-					// 전시상품 Tag정보 등록
-					log.info("Insert CMS DisplayTabInfo Info");
-					dpTagInfoService.insertDPTagInfo(vo);
-				}
-			}
-		}
-		
+            // 전시상품 Tag정보 등록
+            log.info("Insert CMS DisplayTabInfo Info");
+            dpTagInfoService.insertDPTagInfo(vo);
+        }
+
 		/*
 		 * 전시상품 SeedMapp정보
 		 */
 		List<DPSeedMappVO> displaySeedMappList = notification.getDpSeedMappList();
-		if(displayProductImageList != null){
-			log.info("CMS displaySeedMappList Size = " + displaySeedMappList.size());
-			if(displaySeedMappList.size() >0){
-				
-				for (DPSeedMappVO vo : displaySeedMappList) {
+        printCountLog("CMS displaySeedMappList Size = {}", displaySeedMappList);
+        if(CollectionUtils.isNotEmpty(displaySeedMappList)) {
+            for (DPSeedMappVO vo : displaySeedMappList) {
 
-					// 전시상품 SeedMapp정보
-					log.info("Insert CMS DisplaySeedMapp Info - {}/{}", vo.getProdId(), vo.getCaseRefCd());
-					dpSeedMappService.insertDPSeedMapp(vo);
-				}
-			}
-		}
-		
-		
+                // 전시상품 SeedMapp정보
+                log.info("Insert CMS DisplaySeedMapp Info - {}/{}", vo.getProdId(), vo.getCaseRefCd());
+                dpSeedMappService.insertDPSeedMapp(vo);
+            }
+        }
+
 		/*
 		 * 델타 File 정보
 		 */
-		List<DPAppDeltaDeployFileVO> dPAppDeltaDeployFileList = notification.getDpAppDeltaDeployFileList();
-		if(dPAppDeltaDeployFileList != null){
-			log.info("CMS dPAppDeltaDeployFileList Size = " + dPAppDeltaDeployFileList.size());
-			if(dPAppDeltaDeployFileList.size() >0){
-				
-				for (DPAppDeltaDeployFileVO vo : dPAppDeltaDeployFileList) {
+		List<DPAppDeltaDeployFileVO> dpAppDeltaDeployFileList = notification.getDpAppDeltaDeployFileList();
+        printCountLog("CMS dPAppDeltaDeployFileList Size = {}", dpAppDeltaDeployFileList);
+		if(CollectionUtils.isNotEmpty(dpAppDeltaDeployFileList)) {
+            for (DPAppDeltaDeployFileVO vo : dpAppDeltaDeployFileList) {
 
-					// 델타 File 정보
-					log.info("Insert CMS DpAppDeltaDeployFile Info");
-					dPAppDeltaDeployFileService.insertDPAppDeltaDeployFile(vo);
-				}
-			}
+                // 델타 File 정보
+                log.info("Insert CMS DpAppDeltaDeployFile Info");
+                dPAppDeltaDeployFileService.insertDPAppDeltaDeployFile(vo);
+            }
 		}
 
         /**
@@ -340,7 +290,8 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
          */
         log.info("Insert CMS DpSapProdMapg Info");
         DPSapMappingVO dpSapMapping = notification.getDpSapMapping();
-        dpSapProdMapgService.insertDPSapProdMapg(dpSapMapping);
+        if(dpSapMapping != null)
+            dpSapProdMapgService.insertDPSapProdMapg(dpSapMapping);
 
 
         if (CollectionUtils.isNotEmpty(tenantInfo)) {
@@ -407,139 +358,138 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
         boolean s02 = notification.getDpSapMapping() != null && "Y".equals(notification.getDpSapMapping().getKtCheckYn());
         boolean s03 = notification.getDpSapMapping() != null && "Y".equals(notification.getDpSapMapping().getLgCheckYn());
 
+        ////////// 모상품 처리
         List<DPTenantProductVO> tenantInfo = notification.getDpProductTotal().getDpTenantProduct();
-        if(CollectionUtils.isNotEmpty(tenantInfo) && tenantInfo.size() == 1) {
-            DPTenantProductVO tpS01 = tenantInfo.get(0);
-            if(s02) {
-                DPTenantProductVO tpS02 = new DPTenantProductVO();
-                BeanUtils.copyProperties(tpS01, tpS02);
-                tpS02.setTenantId("S02");
-                tenantInfo.add(tpS02);
-            }
-            if(s03) {
-                DPTenantProductVO tpS03 = new DPTenantProductVO();
-                BeanUtils.copyProperties(tpS01, tpS03);
-                tpS03.setTenantId("S03");
-                tenantInfo.add(tpS03);
-            }
+        List<DPTenantProductPriceVO> tenantPriceInfo = notification.getDpProductTotal().getDpTenantProductPrice();
+        if(s02) {
+            duplicateTenantProd(tenantInfo, "S02");
+            duplicateTenantPriceProd(tenantPriceInfo, "S02");
         }
 
-        List<DPTenantProductPriceVO> tenantPriceInfo = notification.getDpProductTotal().getDpTenantProductPrice();
-        if(CollectionUtils.isNotEmpty(tenantPriceInfo) && tenantPriceInfo.size() == 1) {
-            DPTenantProductPriceVO tppS01 = tenantPriceInfo.get(0);
-            if(s02) {
-                DPTenantProductPriceVO tppS02 = new DPTenantProductPriceVO();
-                BeanUtils.copyProperties(tppS01, tppS02);
-                tppS02.setTenantId("S02");
-                tenantPriceInfo.add(tppS02);
-            }
-            if(s03) {
-                DPTenantProductPriceVO tppS03 = new DPTenantProductPriceVO();
-                BeanUtils.copyProperties(tppS01, tppS03);
-                tppS03.setTenantId("S03");
-                tenantPriceInfo.add(tppS03);
+        if(s03) {
+            duplicateTenantProd(tenantInfo, "S03");
+            duplicateTenantPriceProd(tenantPriceInfo, "S03");
+        }
+
+
+        ////////// 인앱상품 처리
+        List<DPProductTotalVO> iapProductList = notification.getDpProductTotalList();
+        if(CollectionUtils.isNotEmpty(iapProductList)) {
+            for (DPProductTotalVO iapProd : iapProductList) {
+
+                List<DPTenantProductVO> iapTProd = iapProd.getDpTenantProduct();
+                List<DPTenantProductPriceVO> iapTPP = iapProd.getDpTenantProductPrice();
+
+                if(s02) {
+                    duplicateTenantProd(iapTProd, "S02");
+                    duplicateTenantPriceProd(iapTPP, "S02");
+                }
+                if(s03) {
+                    duplicateTenantProd(iapTProd, "S03");
+                    duplicateTenantPriceProd(iapTPP, "S03");
+                }
             }
         }
     }
 
-    private void insertInAppInfo(NotificationRefactoringSac notification, List<DPTenantProductVO> tenantInfo) {
-    /*
-     * IN-APP 정보
-     */
-        List<DPProductTotalVO> displayInAppProductList = notification.getDpProductTotalList();
-        if( displayInAppProductList != null){
+    private void duplicateTenantProd(List<DPTenantProductVO> tpList, String tenantId) {
+        if (CollectionUtils.isNotEmpty(tpList) && tpList.size() == 1) {
+            DPTenantProductVO tpS01 = tpList.get(0);
+            DPTenantProductVO dup = new DPTenantProductVO();
+            BeanUtils.copyProperties(tpS01, dup);
+            dup.setTenantId(tenantId);
+            tpList.add(dup);
+        }
+    }
 
-            for (DPProductTotalVO inAppProduct : displayInAppProductList) {
-                /*
-                 * IN-APP 전시상품 정보
-                 */
-                DPProductVO inAppDpProdInfo = inAppProduct.getDpProduct();
-                if (null != inAppDpProdInfo.getProdId()) {
+    private void duplicateTenantPriceProd(List<DPTenantProductPriceVO> tppList, String tenantId) {
+        if (CollectionUtils.isNotEmpty(tppList) && tppList.size() == 1) {
+            DPTenantProductPriceVO tppS01 = tppList.get(0);
+            DPTenantProductPriceVO dup = new DPTenantProductPriceVO();
+            BeanUtils.copyProperties(tppS01, dup);
+            dup.setTenantId(tenantId);
+            tppList.add(dup);
+        }
+    }
 
-                    // IN-APP 전시상품 정보 등록
-                    log.info("Insert CMS InAppDpProdInfo Info");
-                    dpProductService.insertDPProduct(inAppProduct.getDpProduct());
+    private void insertInAppInfo(List<DPProductTotalVO> displayInAppProductList) {
+
+        for (DPProductTotalVO inAppProduct : displayInAppProductList) {
+            /*
+             * IN-APP 전시상품 정보
+             */
+            DPProductVO inAppDpProdInfo = inAppProduct.getDpProduct();
+            if (null != inAppDpProdInfo.getProdId()) {
+
+                // IN-APP 전시상품 정보 등록
+                log.info("Insert CMS InAppDpProdInfo Info");
+                dpProductService.insertDPProduct(inAppProduct.getDpProduct());
+            }
+
+            /*
+             * IN-APP 상품정보 매핑
+             */
+            DPProductRshpVO inAppDpProdRshpInfo = inAppProduct.getDpProductRshp();
+            if (null != inAppDpProdRshpInfo.getProdId()) {
+
+                // IN-APP 상품정보 매핑 등록
+                log.info("Insert CMS InAppDpProdRshp Info");
+                dpProductRshpService.insertDPProductRshp(inAppProduct.getDpProductRshp());
+            }
+
+            /*
+             * IN-APP 전시상품 상품상세
+             */
+            List<DPProductDescVO> inAppDpProdDesc = inAppProduct.getDpProductDesc();
+            if(CollectionUtils.isNotEmpty(inAppDpProdDesc)) {
+                for (DPProductDescVO vo : inAppDpProdDesc) {
+
+                    // IN-APP 전시상품 상품상세 등록
+                    log.info("Insert CMS InAppDpProdDesc Info");
+                    dpProductDescService.insertDPProductDesc(vo);
                 }
+            }
 
-                /*
-                 * IN-APP 상품정보 매핑
-                 */
-                DPProductRshpVO inAppDpProdRshpInfo = inAppProduct.getDpProductRshp();
-                if (null != inAppDpProdRshpInfo.getProdId()) {
+            /*
+             * IN-APP 전시상품 APP 상품
+             */
+            DPAppProductVO inAppDpProdAppInfo = inAppProduct.getDpAppProduct();
+            if (null != inAppDpProdAppInfo.getProdId()) {
 
-                    // IN-APP 상품정보 매핑 등록
-                    log.info("Insert CMS InAppDpProdRshp Info");
-                    dpProductRshpService.insertDPProductRshp(inAppProduct.getDpProductRshp());
+                // IN-APP 전시상품 APP 상품 등록
+                log.info("Insert CMS inAppDpProdApp Info #{}", inAppDpProdInfo.getProdId());
+                dpAppProductService.insertDPAppProduct(inAppProduct.getDpAppProduct());
+            }
+
+            /*
+             * IN-APP 테넌트 정보
+             */
+            List<DPTenantProductVO> inAppTenantInfo = inAppProduct.getDpTenantProduct();
+            if(CollectionUtils.isNotEmpty(inAppTenantInfo)) {
+                for (DPTenantProductVO vo : inAppTenantInfo) {
+
+                    // IN-APP 테넌트 정보 등록
+                    log.info("Insert CMS InAppTenant Info");
+                    dpTenantProductService.insertDPTenant(vo);
                 }
+            }
 
-                /*
-                 * IN-APP 테넌트 정보
-                 */
+            /*
+             * IN-APP 테넌트 상품 가격
+             */
+            List<DPTenantProductPriceVO> inAppTenantPriceInfo = inAppProduct.getDpTenantProductPrice();
+            if(CollectionUtils.isNotEmpty(inAppTenantPriceInfo)) {
+                for (DPTenantProductPriceVO vo : inAppTenantPriceInfo) {
 
-                List<DPTenantProductVO> inAppTenantInfo = inAppProduct.getDpTenantProduct();
-                if (null != inAppTenantInfo) {
-                    log.info("CMS InAppTenantInfo Size = " + tenantInfo.size());
-
-                    if (0 < inAppTenantInfo.size()) {
-                        for (DPTenantProductVO vo : inAppTenantInfo) {
-
-                            // IN-APP 테넌트 정보 등록
-                            log.info("Insert CMS InAppTenant Info");
-                            dpTenantProductService.insertDPTenant(vo);
-                        }
-                    }
-
+                    // IN-APP 테넌트 상품 가격 등록
+                    log.info("Insert CMS InAppTenantPrice Info");
+                    dpTenantProductPriceService.insertDPTenantPrice(vo);
                 }
-
-
-                /*
-                 * IN-APP 테넌트 상품 가격
-                 */
-                List<DPTenantProductPriceVO> inAppTenantPriceInfo = inAppProduct.getDpTenantProductPrice();
-                if (null != inAppTenantPriceInfo) {
-                    log.info("CMS InAppTenantPriceInfo Size = " + inAppTenantPriceInfo.size());
-
-                    if (0 < inAppTenantPriceInfo.size()) {
-                        for (DPTenantProductPriceVO vo : inAppTenantPriceInfo) {
-
-                            // IN-APP 테넌트 상품 가격 등록
-                            log.info("Insert CMS InAppTenantPrice Info");
-                            dpTenantProductPriceService.insertDPTenantPrice(vo);
-                        }
-                    }
-
-                }
-
-                /*
-                 * IN-APP 전시상품 상품상세
-                 */
-                List<DPProductDescVO> inAppDpProdDesc = inAppProduct.getDpProductDesc();
-                if (null != inAppDpProdDesc) {
-                    log.info("CMS InAppDpProdDesc Size = " + inAppDpProdDesc.size());
-
-                    if (0 < inAppDpProdDesc.size()) {
-                        for (DPProductDescVO vo : inAppDpProdDesc) {
-
-                            // IN-APP 전시상품 상품상세 등록
-                            log.info("Insert CMS InAppDpProdDesc Info");
-                            dpProductDescService.insertDPProductDesc(vo);
-                        }
-                    }
-
-                }
-
-                /*
-                 * IN-APP 전시상품 APP 상품
-                 */
-                DPAppProductVO inAppDpProdAppInfo = inAppProduct.getDpAppProduct();
-                if (null != inAppDpProdAppInfo.getProdId()) {
-
-                    // IN-APP 전시상품 APP 상품 등록
-                    log.info("Insert CMS inAppDpProdApp Info #{}", inAppDpProdInfo.getProdId());
-                    dpAppProductService.insertDPAppProduct(inAppProduct.getDpAppProduct());
-                }
-
             }
         }
+    }
+
+    private void printCountLog(String msg, List list) {
+        log.info(msg, list != null ? list.size() : 0);
     }
 }
