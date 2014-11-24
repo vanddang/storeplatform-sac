@@ -766,6 +766,7 @@
              , TB.SAMPL_URL
              , TB.REG_DT
              , TB.ISBN
+             , TB.BOOK_TBCTNS
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
