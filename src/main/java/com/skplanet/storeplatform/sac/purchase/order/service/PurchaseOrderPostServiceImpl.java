@@ -415,6 +415,16 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			sapNotiList.add(sapNoti);
 		}
 
-		this.purchaseOrderSCI.createSapNoti(new CreateSapNotiScReq(sapNotiList));
+		try {
+			this.purchaseOrderSCI.createSapNoti(new CreateSapNotiScReq(sapNotiList));
+
+		} catch (Exception e) {
+			if (e instanceof StorePlatformException) {
+				errDesc = ((StorePlatformException) e).getCode();
+			} else {
+				errDesc = e.getMessage();
+			}
+			this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,INS,ERROR,{},{}", errDesc);
+		}
 	}
 }
