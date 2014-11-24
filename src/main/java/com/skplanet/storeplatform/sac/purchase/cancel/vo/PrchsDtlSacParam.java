@@ -59,6 +59,8 @@ public class PrchsDtlSacParam extends CommonInfo {
 
 	private String couponCmsPrchsId;
 
+	private String contentsType; // IAP 상품타입
+
 	/**
 	 * @return the couponCmsPrchsId
 	 */
@@ -575,6 +577,21 @@ public class PrchsDtlSacParam extends CommonInfo {
 	 */
 	public void setPrchsResvDesc(String prchsResvDesc) {
 		this.prchsResvDesc = prchsResvDesc;
+	}
+
+	/**
+	 * @return the contentsType
+	 */
+	public String getContentsType() {
+		return this.contentsType;
+	}
+
+	/**
+	 * @param contentsType
+	 *            the contentsType to set
+	 */
+	public void setContentsType(String contentsType) {
+		this.contentsType = contentsType;
 	}
 
 }
