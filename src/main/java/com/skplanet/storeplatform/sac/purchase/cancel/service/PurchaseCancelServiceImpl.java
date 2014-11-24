@@ -1032,7 +1032,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			}
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,RESULT,{},{}", bSucc, errDesc);
+		this.logger.info("PRCHS,CANCEL,SAC,POST,NOTI,SAP,RESULT,{},{}", bSucc, errDesc);
 
 		String procStatusCd = bSucc ? PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_SUCCESS : PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE;
 
