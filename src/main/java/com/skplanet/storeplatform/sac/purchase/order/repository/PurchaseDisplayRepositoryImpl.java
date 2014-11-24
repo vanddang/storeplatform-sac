@@ -79,8 +79,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	public Map<String, PurchaseProduct> searchPurchaseProductList(String tenantId, String langCd, String deviceModelCd,
 			List<String> prodIdList, boolean bFlat) {
 		PaymentInfoSacReq req = new PaymentInfoSacReq();
-		// req.setTenantId(tenantId);
-		req.setTenantId("S01"); // SAP 테스트 지원
+		req.setTenantId(tenantId);
 		req.setLangCd(langCd);
 		req.setDeviceModelCd(deviceModelCd);
 		req.setProdIdList(prodIdList);
