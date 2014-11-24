@@ -47,10 +47,11 @@ public class ProductControllerTest {
 		
 		//RNK050020001 / 영화 | DP17
 		this.mvc.perform(
-				get("/display/feature/product/list/v1?listId=RNK050020001&menuId=DP17")
+				get("/display/product/list/v1?listId=RNK050010003&menuId=DP01&count=6")
 					.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 					.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
 					.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+					.header("x-sac-interface-id", "I03000134")
 		)
 				.andDo(print())
 				.andExpect(status().isOk())

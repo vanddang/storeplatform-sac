@@ -64,6 +64,49 @@ public class CategoryControllerTest {
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
 				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(header().string("x-sac-result-code", "SUCC"))
+				;
+	}
+	
+	/**
+	 * [I03000018] 2.4.1.2 특정 상품 EBOOK 조회
+	 * @throws Exception
+	 */
+	@Test
+	public void searchSpecificEbookList() throws Exception {
+		//2.4.1.4. 특정 상품 music 조회.
+		this.mvc.perform(
+				get("/display/category/specific/epub/list/v1?list=H001251381")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				.header("x-sac-interface-id", "I03000134")
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(header().string("x-sac-result-code", "SUCC"))
+				;
+	}
+	
+	/**
+	 * 일반 카테고리 앱 상품 조회.
+	 * @throws Exception
+	 */
+	@Test
+	public void searchAppList() throws Exception {
+		//2.4.1.4. 특정 상품 music 조회.
+		this.mvc.perform(
+				get("/display/category/specific/app/list/v1?list=0000415172")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				.header("x-sac-interface-id", "I03000134")
 				)
 				.andDo(print())
 				.andExpect(status().isOk())

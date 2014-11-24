@@ -154,6 +154,35 @@ public class DownloadControllerTest {
 		stopWatch.stop();
 		System.out.println(stopWatch.prettyPrint());
 	}
+	
+	@Test
+	public void downloadVodV2_1() throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		/*
+{"idType":"episode","deviceKey":"DE2014110820515778415044799","userKey":"US201408291637570280007123","productId":"H002797749"}^
+		 */
+		param.put("deviceKey", "DE2014110820515778415044799");
+		param.put("userKey", "US201408291637570280007123");
+		param.put("productId", "H002797749");
+		param.put("idType", "episode");
+		String json = this.convertMapToJson(param);
+		
+		StopWatch stopWatch = new StopWatch(); 
+		stopWatch.start("(V2) downloadVod Download Vod 정보 조회(for download)");
+		this.mvc.perform(
+				post("/display/download/vod/detail/v2")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"));
+		
+		stopWatch.stop();
+		System.out.println(stopWatch.prettyPrint());
+	}
 
 	@Test
 	public void downloadVod() throws Exception {
