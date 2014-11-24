@@ -1315,6 +1315,8 @@ public class LoginServiceImpl implements LoginService {
 
 			} else {
 
+				LOGGER.info("{} 타사 마켓 회원인증", req.getDeviceId());
+
 				// 통신사에 따라 tenantId 셋팅
 				tenant.setTenantId(tenantId);
 				requestHeader.setTenantHeader(tenant);
@@ -2060,11 +2062,9 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setUserVerifyReason("InApp");
 
 		if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, tenantId)) {
-			LOGGER.info("{} Olleh Market 회원인증", req.getDeviceId());
 			marketRes = this.marketSCI.authorizeForOllehMarket(marketReq);
 			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(), marketRes);
 		} else if (StringUtils.equals(MemberConstants.TENANT_ID_UPLUS_STORE, tenantId)) {
-			LOGGER.info("{} U+ Store 회원인증", req.getDeviceId());
 			marketRes = this.marketSCI.authorizeForUplusStore(marketReq);
 			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(), marketRes);
 		}
