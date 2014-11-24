@@ -307,23 +307,25 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,REQ,ONLY,{}",
 					ReflectionToStringBuilder.toString(sendPurchaseNotiEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
 
+			String errDesc = null;
+			boolean bSucc = false;
 			try {
 				// 정상완료응답이 아닌경우 Exception 발생
 				this.sapPurchaseSCI.sendPurchaseNoti(sendPurchaseNotiEcReq);
+				bSucc = true;
 			} catch (Exception e) {
-				String errDesc = null;
 				if (e instanceof StorePlatformException) {
 					errDesc = ((StorePlatformException) e).getCode();
 				} else {
 					errDesc = e.getMessage();
 				}
-
-				this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,ERROR,{}", errDesc);
-
-				// 정상완료응답이 아닌경우 - 배치 처리를 위한 테이블 INSERT
-				this.createSapPurchaseNoti(prchsDtlMore, sendPurchaseNotiEcReq, errDesc);
 			}
+			this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,RESULT,{},{}", bSucc, errDesc);
 
+			String procStatusCd = bSucc ? PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_SUCCESS : PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE;
+
+			// 정상완료응답이 아닌경우 - 배치 처리를 위한 테이블 INSERT
+			this.createSapPurchaseNoti(prchsDtlMore, sendPurchaseNotiEcReq, procStatusCd, errDesc);
 		}
 	}
 
@@ -335,10 +337,12 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	 * 
 	 * @param sendPurchaseNotiEcReq 결제완료Noti 요청 정보
 	 * 
+	 * @param procStatusCd 처리상태코드
+	 * 
 	 * @param errDesc Noti실패내용
 	 */
 	private void createSapPurchaseNoti(PrchsDtlMore prchsDtlMore, SendPurchaseNotiEcReq sendPurchaseNotiEcReq,
-			String errDesc) {
+			String procStatusCd, String errDesc) {
 		List<SapNoti> sapNotiList = new ArrayList<SapNoti>();
 
 		SapNoti sapNoti = null;
@@ -404,7 +408,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 
 			sapNoti.setAddParamInfo("");
 
-			sapNoti.setProcStatusCd(PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE);
+			sapNoti.setProcStatusCd(procStatusCd);
 			sapNoti.setProcDesc(errDesc);
 			sapNoti.setRegId(prchsDtlMore.getRegId());
 			sapNoti.setUpdId(prchsDtlMore.getRegId());
@@ -415,8 +419,6 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 		CreateSapNotiScReq createSapNotiScReq = new CreateSapNotiScReq();
 		createSapNotiScReq.setSapNotiList(sapNotiList);
 
-		// TAKTEST:: QA테이블 생성 후 처리
-		this.logger.info("PRCHS,ORDER,SAC,POST,NOTI,SAP,INS,{}", createSapNotiScReq);
-		// this.purchaseOrderSCI.createSapNoti(createSapNotiScReq);
+		this.purchaseOrderSCI.createSapNoti(createSapNotiScReq);
 	}
 }
