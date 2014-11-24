@@ -416,9 +416,6 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			sapNotiList.add(sapNoti);
 		}
 
-		CreateSapNotiScReq createSapNotiScReq = new CreateSapNotiScReq();
-		createSapNotiScReq.setSapNotiList(sapNotiList);
-
-		this.purchaseOrderSCI.createSapNoti(createSapNotiScReq);
+		this.purchaseOrderSCI.createSapNoti(new CreateSapNotiScReq(sapNotiList));
 	}
 }
