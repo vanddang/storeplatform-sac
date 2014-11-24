@@ -393,8 +393,8 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			sapNoti.setProdNm(product.getProdNm());
 			sapNoti.setProdAmt(product.getProdAmt());
 			sapNoti.setAutoPrchsYn(product.getAutoPrchsYn());
-			sapNoti.setAutoPeriodUnitCd(product.getAutoPrchsPeriodUnitCd());
-			sapNoti.setAutoPeriod(product.getAutoPrchsPeriodValue());
+			sapNoti.setAutoPrchsPeriodUnitCd(product.getAutoPrchsPeriodUnitCd());
+			sapNoti.setAutoPrchsPeriod(product.getAutoPrchsPeriodValue());
 
 			seller = product.getSellerInfo();
 			if (seller != null) {
