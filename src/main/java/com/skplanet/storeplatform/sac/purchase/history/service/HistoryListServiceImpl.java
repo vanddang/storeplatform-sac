@@ -589,15 +589,31 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setCount(request.getCount() + 1); // startKey 생성을 위해 +1 처리함
 		scRequest.setNotTenantProdGrpCd(request.getNotTenantProdGrpCd());
 
-		if (StringUtils.isNotBlank(request.getStartKey())) {
-			String str[] = StringUtils.split(request.getStartKey(), ";");
+		// if (StringUtils.isNotBlank(request.getStartKey())) {
+		// String str[] = StringUtils.split(request.getStartKey(), ";");
+		//
+		// if (str == null || str.length != 3) {
+		// throw new StorePlatformException("SAC_PUR_4107");
+		// }
+		// scRequest.setPrchsDt(str[0]); // 구매일시
+		// scRequest.setPrchsId(str[1]); // 구매ID
+		// scRequest.setPrchsDtlId(Integer.parseInt(str[2])); // 구매상세ID
+		// }
 
-			if (str == null || str.length != 3) {
+		// startKey(구매일시:구매ID:구매상세ID) 값 처리 - 구매일시만 필수값
+		if (StringUtils.isNotBlank(request.getStartKey())) {
+			String[] str = StringUtils.split(request.getStartKey(), ";");
+
+			if (str == null || str.length < 1) {
 				throw new StorePlatformException("SAC_PUR_4107");
 			}
+
 			scRequest.setPrchsDt(str[0]); // 구매일시
-			scRequest.setPrchsId(str[1]); // 구매ID
-			scRequest.setPrchsDtlId(Integer.parseInt(str[2])); // 구매상세ID
+
+			if (str.length == 3) { // 구매ID&상세ID 는 세트로..
+				scRequest.setPrchsId(str[1]); // 구매ID
+				scRequest.setPrchsDtlId(Integer.parseInt(str[2])); // 구매상세ID
+			}
 		}
 
 		/**
