@@ -25,8 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- * 
- * 
+ * RecommendOnedayServiceImpl
  * Updated on : 2014. 2. 28. Updated by : 이승훈, nTels.
  */
 @Service
@@ -53,7 +52,6 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 	 */
 	@Override
 	public RecommendOnedaySacRes searchOnedayList(RecommendOnedaySacReq requestVO, SacRequestHeader header) {
-		// TODO Auto-generated method stub
 		// 공통 응답 변수 선언
 		RecommendOnedaySacRes responseVO = new RecommendOnedaySacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -294,17 +292,17 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 								product.setProdRealreAmt(recommendOneday.getProdRealreAmt());
 								product.setProdOffrAmt(recommendOneday.getProdOffrAmt());
 								dateList = new ArrayList<Date>();
+                                date = new Date();
+                                date.setType("date/expo");
+                                date.setText(recommendOneday.getExpoDt());
+                                dateList.add(date);
 								date = new Date();
-								date.setType("date/expo");
+								date.setType("date/expoStart");
 								date.setTextFromDate(DateUtils.parseDate(recommendOneday.getExpoStartDt()));
 								dateList.add(date);
 								date = new Date();
 								date.setType("date/expoEnd");
 								date.setTextFromDate(DateUtils.parseDate(recommendOneday.getExpoEndDt()));
-								dateList.add(date);
-								date = new Date();
-								date.setType("date/expoEnd");
-								date.setText(recommendOneday.getExpoEndDt());
 								dateList.add(date);
 								product.setDateList(dateList);
 								// svcgrpcd추가
@@ -443,7 +441,6 @@ public class RecommendOnedayServiceImpl implements RecommendOnedayService {
 	 */
 	@Override
 	public RecommendOnedaySacRes searchOnedayInform(RecommendOnedaySacReq requestVO, SacRequestHeader header) {
-		// TODO Auto-generated method stub
 		// 공통 응답 변수 선언
 		RecommendOnedaySacRes responseVO = new RecommendOnedaySacRes();
 		CommonResponse commonResponse = new CommonResponse();
