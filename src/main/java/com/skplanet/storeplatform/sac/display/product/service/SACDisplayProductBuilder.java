@@ -393,23 +393,25 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
     }
 
     private void duplicateTenantProd(List<DPTenantProductVO> tpList, String tenantId) {
-        if (CollectionUtils.isNotEmpty(tpList) && tpList.size() == 1) {
-            DPTenantProductVO tpS01 = tpList.get(0);
-            DPTenantProductVO dup = new DPTenantProductVO();
-            BeanUtils.copyProperties(tpS01, dup);
-            dup.setTenantId(tenantId);
-            tpList.add(dup);
-        }
+        if(CollectionUtils.isEmpty(tpList) || tenantId == null)
+            return;
+
+        DPTenantProductVO tpS01 = tpList.get(0);
+        DPTenantProductVO dup = new DPTenantProductVO();
+        BeanUtils.copyProperties(tpS01, dup);
+        dup.setTenantId(tenantId);
+        tpList.add(dup);
     }
 
     private void duplicateTenantPriceProd(List<DPTenantProductPriceVO> tppList, String tenantId) {
-        if (CollectionUtils.isNotEmpty(tppList) && tppList.size() == 1) {
-            DPTenantProductPriceVO tppS01 = tppList.get(0);
-            DPTenantProductPriceVO dup = new DPTenantProductPriceVO();
-            BeanUtils.copyProperties(tppS01, dup);
-            dup.setTenantId(tenantId);
-            tppList.add(dup);
-        }
+        if(CollectionUtils.isEmpty(tppList) || tenantId == null)
+            return;
+
+        DPTenantProductPriceVO tppS01 = tppList.get(0);
+        DPTenantProductPriceVO dup = new DPTenantProductPriceVO();
+        BeanUtils.copyProperties(tppS01, dup);
+        dup.setTenantId(tenantId);
+        tppList.add(dup);
     }
 
     private void insertInAppInfo(List<DPProductTotalVO> displayInAppProductList) {
