@@ -9,6 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -25,15 +35,6 @@ import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 
@@ -58,6 +59,9 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+	
+	@Autowired
+	private FeatureCategoryEpubDataService dataService;
 
 	/*
 	 * (non-Javadoc)
@@ -125,22 +129,19 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			this.logger.debug("만화/이북 > 추천 > Tstore 추천 조회");
 			this.logger.debug("----------------------------------------------------------------");
 
-			productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubRecomList",
-					requestVO, ProductBasicInfo.class);
+			productBasicInfoList = dataService.selectCategoryEpubRecomList(requestVO);
 		} else if (listId.equals("TGR000000001")) {
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("만화 > 최신 조회");
 			this.logger.debug("----------------------------------------------------------------");
 
-			productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubRecomList",
-					requestVO, ProductBasicInfo.class);
+			productBasicInfoList = dataService.selectCategoryEpubRecomList(requestVO);
 		} else if (listId.equals("RNK000000002")) {
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("eBook > 최신 > 일반/장르 조회");
 			this.logger.debug("----------------------------------------------------------------");
 
-			productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubRecomList",
-					requestVO, ProductBasicInfo.class);
+			productBasicInfoList = dataService.selectCategoryEpubRecomList(requestVO);
 		} else {
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("만화/이북 > 추천 > 인기만화/인기도서 조회");

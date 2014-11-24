@@ -592,22 +592,23 @@
                B.TENANT_ID
              , B.MENU_ID
              , B.PROD_ID
-             , B.TOP_MENU_ID
+             , (SELECT TOP_MENU_ID 
+                FROM TB_DP_MENU_CATEGORY
+                WHERE TENANT_ID = B.TENANT_ID
+                AND MENU_ID = B.MENU_ID) AS TOP_MENU_ID             
              , B.META_CLSF_CD
              , 'PD002501' AS CONTENTS_TYPE_CD
              , B.TOTAL_COUNT
           FROM (SELECT A.TENANT_ID
                      , A.MENU_ID
                      , A.PROD_ID
-                     , A.TOP_MENU_ID
                      , A.META_CLSF_CD
                      , COUNT(A.PROD_ID) OVER () AS TOTAL_COUNT
                      , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
                   FROM (SELECT <if test='listId == "TGR000000001"'> /*+ LEADING(A F G C B D E) */ </if>
                                A.TENANT_ID
-                             , E.MENU_ID
+                             , B.MENU_ID
                              , C.PROD_ID
-                             , E.TOP_MENU_ID
                              , F.META_CLSF_CD
                              , B.EXPO_ORD_ALWAYS_YN
                              , B.EXPO_ORD
@@ -616,27 +617,21 @@
                           FROM TB_DP_LIST A
                              , TB_DP_LIST_PROD B
                              , TB_DP_PROD_RSHP C
-                             , TB_DP_MENU_CATEGORY_PROD_MAPG D
-                             , TB_DP_MENU_CATEGORY E
                              , TB_DP_PROD F  /* 에피소드 */
                              , TB_DP_TENANT_PROD G
                          WHERE A.LIST_ID = B.LIST_ID
                            AND A.TENANT_ID = B.TENANT_ID
                            AND A.EXPO_YN = 'Y'
                            AND B.EXPO_YN = 'Y'
+                            AND B.MENU_ID like #{topMenuId}||'%'  
                            AND A.TENANT_ID = #{tenantId}
                            AND A.LIST_ID = #{listId}
                            AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
                            AND B.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
                            AND B.PROD_ID = C.PROD_ID  /* 채널 */
                            AND C.PROD_RSHP_CD = 'DP010802'
-                           AND B.PROD_ID = D.PROD_ID
-                           AND D.USE_YN = 'Y'
-                           AND D.MENU_ID = E.MENU_ID
-                           AND E.USE_YN = 'Y'
-                           AND E.TOP_MENU_ID = #{topMenuId}
                            AND F.TOP_MENU_ID = #{topMenuId}
-                           AND C.PART_PROD_ID = F.PROD_ID
+                           AND C.PART_PROD_ID = G.PROD_ID
                            AND F.CONTENTS_TYPE_CD = 'PD002502'
                            <if test='prodCharge == "Y"'>
                            AND F.PROD_CHRG_YN = 'Y'  /* 유료 */
@@ -653,18 +648,17 @@
                            <if test='topMenuId == "DP13"'>
                            AND F.META_CLSF_CD IN ('CT19', 'CT20')  /* EBOOK */
                                <if test='filteredBy == "ebook+normal"'>  /* 이북 일반 */
-                           AND E.MENU_ID NOT IN (SELECT MENU_ID
+                           AND B.MENU_ID NOT IN (SELECT MENU_ID
                                                    FROM TB_DP_MENU_CATEGORY
                                                   WHERE MENU_ID LIKE 'DP1304%')
                                </if>
                                <if test='filteredBy == "ebook+genre"'>  /* 이북 장르 */
-                           AND E.MENU_ID IN (SELECT MENU_ID
+                           AND B.MENU_ID IN (SELECT MENU_ID
                                                FROM TB_DP_MENU_CATEGORY
                                               WHERE MENU_ID LIKE 'DP1304%')  
                                </if>
                            </if>
                            AND F.PROD_ID = G.PROD_ID
-                           AND B.TENANT_ID = G.TENANT_ID
                            AND G.EXPO_YN = 'Y'
                            AND G.PROD_STATUS_CD = 'PD000403'
                            AND EXISTS
@@ -682,6 +676,15 @@
                                   AND T2.COMIC_SPRT_YN = 'Y'
                                   </if>
                               )
+                        	AND EXISTS
+                              (SELECT /*+ LEADING(D E) USE_NL(D E) NO_QUERY_TRANSFORMATION */ 1
+                                FROM TB_DP_MENU_CATEGORY_PROD_MAPG D,
+                                     TB_DP_MENU_CATEGORY E
+                                WHERE D.MENU_ID = E.MENU_ID
+                                  AND E.TOP_MENU_ID = #{topMenuId}
+                                  AND D.PROD_ID = B.PROD_ID
+                                  AND D.USE_YN = 'Y'
+                                  AND E.USE_YN = 'Y' )   
                       ) A
                  WHERE RN = 1
               ) B
