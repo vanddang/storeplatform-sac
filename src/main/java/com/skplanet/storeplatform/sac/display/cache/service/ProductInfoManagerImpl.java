@@ -140,7 +140,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
-    @Cacheable(value = "sac:display:product:ebookcomic", key = "#param.getCacheKey()", unless = "#result == null")
+    @Cacheable(value = "sac:display:product:ebookcomic:v2", key = "#param.getCacheKey()", unless = "#result == null")
     public EbookComicMeta getEbookComicMeta(EbookComicMetaParam param) {
         Map<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("prodId", param.getProdId());

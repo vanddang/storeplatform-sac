@@ -93,7 +93,7 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = "sac:display:product:ebookcomic", allEntries = true)
+    @CacheEvict(value = {"sac:display:product:ebookcomic", "sac:display:product:ebookcomic:v2"}, allEntries = true)
     public void evictAllEbookComicMeta() {
 
     }

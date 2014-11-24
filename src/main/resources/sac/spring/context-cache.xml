@@ -53,6 +53,7 @@
                 <entry key="sac:display:product:music:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:freepass" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:ebookcomic" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:ebookcomic:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:vod" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:vod:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:shopping" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
