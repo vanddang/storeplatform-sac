@@ -1207,7 +1207,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			int resultMaxPer = (int) (Double.parseDouble(resultPhonePolicyInfo[2]));
 
 			double phoneAvailAmt = resultMaxAmt;
-			double phoneAvailPer = resultMaxPer;
+			int phoneAvailPer = resultMaxPer;
 
 			if (phonePos >= 0) {
 				int sepPos = paymentAdjustInfo.indexOf(";", phonePos);

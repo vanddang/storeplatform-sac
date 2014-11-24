@@ -682,8 +682,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		boolean sktTestOrSkpCorp = (checkPaymentPolicyResult != null ? (checkPaymentPolicyResult.isTelecomTestMdn() || checkPaymentPolicyResult
 				.isSkpCorporation()) : false);
 
-		res.setCdOcbSaveInfo(this.adjustOcbSaveInfo(reservedDataMap.get("telecom"), prchsDtlMore.getTenantProdGrpCd(),
-				sktTestOrSkpCorp));
+		res.setCdOcbSaveInfo(this.adjustOcbSaveInfo(prchsDtlMore.getTenantId(), reservedDataMap.get("telecom"),
+				prchsDtlMore.getTenantProdGrpCd(), sktTestOrSkpCorp));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제Page 템플릿
@@ -1731,6 +1731,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * <pre> 결제수단 별 OCB 적립율 산정. </pre>
 	 * 
+	 * @param tenantId 테넌트 ID
+	 * 
 	 * @param telecom 통신사
 	 * 
 	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
@@ -1739,7 +1741,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @return 결제수단 별 OCB 적립율
 	 */
-	private String adjustOcbSaveInfo(String telecom, String tenantProdGrpCd, boolean sktTestOrSkpCorp) {
+	private String adjustOcbSaveInfo(String tenantId, String telecom, String tenantProdGrpCd, boolean sktTestOrSkpCorp) {
 
 		// 쇼핑상품, VOD정액제 상품, 게임캐쉬 정액 상품 제외
 		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
@@ -1751,13 +1753,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		} else {
 			StringBuffer sbOcbAccum = new StringBuffer(64);
 
-			if (StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT)) {
-				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:0.1;"); // 시험폰, SKP법인폰 결제 제외
-			} else {
-				sbOcbAccum.append("12:0.1;"); // 다날
-			}
+			if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_TSTORE)) {
 
-			sbOcbAccum.append("13:0.1;14:0.1;25:0.1"); // 신용카드, PayPin, T store Cash
+				if (StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT)) {
+					sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:0.1;"); // 시험폰, SKP법인폰 결제 제외
+				} else {
+					sbOcbAccum.append("12:0.1;"); // 다날
+				}
+
+				sbOcbAccum.append("13:0.1;14:0.1;25:0.1"); // 신용카드, PayPin, T store Cash
+
+			} else if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_OLLEH)) {
+				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:0.1;"); // 시험폰, SKP법인폰 결제 제외
+				sbOcbAccum.append("13:0.1"); // 신용카드
+
+			} else if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_UPLUS)) {
+				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:0.1;"); // 시험폰, SKP법인폰 결제 제외
+			}
 
 			return sbOcbAccum.toString();
 		}
@@ -1809,59 +1821,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			} else {
 				throw new StorePlatformException("SAC_PUR_7209", e);
 			}
-		}
-	}
-
-	/*
-	 * 
-	 * <pre> 결제 수단 재정의. </pre>
-	 * 
-	 * @param sktPaymethodInfo SKT결제 재정의 정보
-	 * 
-	 * @param tenantId 테넌트ID
-	 * 
-	 * @param systemId 시스템ID
-	 * 
-	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
-	 * 
-	 * @param prodCaseCd 쇼핑 상품 종류 코드
-	 * 
-	 * @param cmpxProdClsfCd 정액상품 타입 코드
-	 * 
-	 * @param payAmt 결제할 금액
-	 * 
-	 * @return 재정의 된 결제 수단 정보
-	 */
-	private String adjustPaymethod(String sktPaymethodInfo, String tenantId, String systemId, String tenantProdGrpCd,
-			String prodCaseCd, String cmpxProdClsfCd, double payAmt) {
-		// 결제수단 별 가능 거래금액/비율 조정 정보
-		String paymentAdjustInfo = this.purchaseOrderPolicyService.getAvailablePaymethodAdjustInfo(tenantId,
-				tenantProdGrpCd);
-		if (paymentAdjustInfo == null) {
-			throw new StorePlatformException("SAC_PUR_7103");
-		}
-
-		StringBuffer sbPaymethodInfo = new StringBuffer(64);
-
-		if (StringUtils.isNotBlank(sktPaymethodInfo)) {
-			sbPaymethodInfo.append(sktPaymethodInfo).append(";12:0:0;");
-		} else {
-			sbPaymethodInfo.append("11:0:0;");
-		}
-
-		// PP용 : 쇼핑상품권 경우, 신용카드, 페이핀 결제수단 제외
-		if (StringUtils.startsWith(systemId, "S00")
-				&& StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_GIFT)) {
-			sbPaymethodInfo.append("13:0:0;14:0:0;");
-		}
-
-		sbPaymethodInfo.append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
-
-		// 시리즈 패스
-		if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
-			return sbPaymethodInfo.toString().replaceAll("14:0:0;", "");
-		} else {
-			return sbPaymethodInfo.toString();
 		}
 	}
 
