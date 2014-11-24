@@ -346,7 +346,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		if (StringUtils.equals(checkPaymentPolicyParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)
 				&& StringUtils.equals(checkPaymentPolicyParam.getTelecom(), PurchaseConstants.TELECOM_SKT) == false) {
 			checkPaymentPolicyResult = new CheckPaymentPolicyResult();
-			;
+			checkPaymentPolicyResult.setDeferredPaymentType(PurchaseConstants.DEFERRED_PAYMENT_TYPE_NORMAL);
 
 		} else {
 			checkPaymentPolicyResult = this.checkPhonePaymentPolicy(checkPaymentPolicyParam);
@@ -361,6 +361,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				}
 			} else if (checkPaymentPolicyResult.isCorporation() || checkPaymentPolicyResult.isMvno()) {
 				checkPaymentPolicyResult.setDeferredPaymentType(PurchaseConstants.DEFERRED_PAYMENT_TYPE_ETCSERVICE);
+			} else {
+				checkPaymentPolicyResult.setDeferredPaymentType(PurchaseConstants.DEFERRED_PAYMENT_TYPE_NORMAL);
 			}
 
 			// 통신사 후불 재조정
