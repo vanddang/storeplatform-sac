@@ -81,12 +81,12 @@ import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShoppingOrderRepository;
+import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyResult;
 import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
-import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
-import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckResult;
 import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
 
 /**
@@ -565,89 +565,48 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore
 				.getPrchsResvDesc());
 
-		// 회원 - 결제 관련 정보 조회
-		SearchUserPayplanetSacRes userPayRes = null;
-		try {
-			userPayRes = this.purchaseMemberRepository.searchUserPayplanet(payUserKey, payDeviceKey);
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7208", e);
-		}
-		// 통신과금 동의여부
-		res.setFlgTeleBillingAgree(StringUtils.equals(userPayRes.getSkpAgreementYn(), PurchaseConstants.USE_Y) ? "1" : "0");
-		// OCB 이용약관 동의여부
-		res.setFlgOcbUseAgree(StringUtils.equals(userPayRes.getOcbAgreementYn(), PurchaseConstants.USE_Y) ? "1" : "0");
-		// OCB 카드번호
-		res.setNoOcbCard(userPayRes.getOcbCardNumber());
-		// OCB 인증수단 코드
-		res.setOcbAuthMtdCd(userPayRes.getOcbAuthMethodCode());
-
 		// ------------------------------------------------------------------------------------------------
-		// 구매(결제) 차단 체크
+		// 결제수단 재정의 - 통신사 후불 관련 정책 체크: 시험폰, MVNO, 법인폰, 한도금액 조회
 
-		// res.setFlgBlockPayment(this.purchaseOrderPolicyService.isBlockPayment(prchsDtlMore.getTenantId(),
-		// reservedDataMap.get("deviceId"), prchsDtlMore.getTenantProdGrpCd()) ?
-		// PurchaseConstants.VERIFYORDER_BLOCK_PAYMENT : PurchaseConstants.VERIFYORDER_ALLOW_PAYMENT);
+		String deferredPaymentType = PurchaseConstants.DEFERRED_PAYMENT_TYPE_NORMAL;
 
-		// ------------------------------------------------------------------------------------------------
-		// SKT 후불 관련 정책 체크: SKT시험폰, MVNO, 법인폰, 한도금액 조회
+		CheckPaymentPolicyResult checkPaymentPolicyResult = this.checkPaymentPolicy(prchsDtlMore,
+				reservedDataMap.get("telecom"), reservedDataMap.get("deviceId"), reservedDataMap.get("useDeviceId"),
+				reservedDataMap.get("prodCaseCd"), reservedDataMap.get("cmpxProdClsfCd"));
 
-		SktPaymentPolicyCheckResult policyResult = this.checkSktPaymentPolicy(prchsDtlMore,
-				reservedDataMap.get("telecom"), reservedDataMap.get("deviceId"), reservedDataMap.get("useDeviceId"));
+		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)
+				&& StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) == false) {
+			;
+		} else {
+			// 통신사 후불 결제정보 재정의 원인
+			res.setTypeSktLimit(checkPaymentPolicyResult.getPhoneLimitType());
 
-		String testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_NORMAL;
-		String sktPaymethodInfo = null;
-
-		if (policyResult != null) {
-
-			// SKT후불 결제정보 재정의 원인
-			res.setTypeSktLimit(policyResult.getSktLimitType());
-
-			// SKT 결제 가능 금액
-			double sktAvailableAmt = policyResult.getSktRestAmt();
-
-			// SKT 결제 처리 타입
-			if (policyResult.isSktTestMdn()) {
-				if (policyResult.isSktTestMdnWhiteList()) {
-					testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_TESTDEVICE;
-					sktAvailableAmt = prchsDtlMore.getTotAmt().doubleValue();
-				} else {
-					testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE;
-				}
-			} else if (policyResult.isCorporation() || policyResult.isMvno()) {
-				testMdnType = PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE;
-			}
-
-			// SKT 후불 재조정
-			if (StringUtils.equals(testMdnType, PurchaseConstants.SKT_PAYMENT_TYPE_ETCSERVICE)) {
-				sktPaymethodInfo = "11:0:0";
-			} else {
-				if (sktAvailableAmt > 0.0) {
-					sktPaymethodInfo = "11:" + sktAvailableAmt + ":100";
-				} else {
-					sktPaymethodInfo = "11:0:0";
-				}
-			}
+			// 통신사 결제 처리 타입
+			deferredPaymentType = checkPaymentPolicyResult.getDeferredPaymentType();
 
 			// SKT 후불 SYSTEM_DIVISION
-			if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
-					|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-							PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
-				res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_VOD_FIXRATE_APPROVAL);
-				res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_VOD_FIXRATE_CANCEL);
-			} else {
-				res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_NORMAL_APPROVAL);
-				res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_NORMAL_CANCEL);
+			if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
+				if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
+						|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+								PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
+					res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_VOD_FIXRATE_APPROVAL);
+					res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_VOD_FIXRATE_CANCEL);
+				} else {
+					res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_NORMAL_APPROVAL);
+					res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_NORMAL_CANCEL);
+				}
 			}
 		}
 
 		// 법인 및 일반 시험폰 처리 타입 (T01, T02, T03)
-		res.setTypeTestMdn(testMdnType);
+		res.setTypeTestMdn(deferredPaymentType);
 
 		// 결제수단 별 가능 거래금액/비율 조정 정보
-		res.setCdMaxAmtRate(this.adjustPaymethod(sktPaymethodInfo, prchsDtlMore.getTenantId(),
-				verifyOrderInfo.getSystemId(), prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("prodCaseCd"),
-				reservedDataMap.get("cmpxProdClsfCd"), prchsDtlMore.getTotAmt().doubleValue()));
+		res.setCdMaxAmtRate(checkPaymentPolicyResult.getPaymentAdjInfo());
+		// res.setCdMaxAmtRate(this.adjustPaymethod(sktPaymethodInfo, prchsDtlMore.getTenantId(),
+		// verifyOrderInfo.getSystemId(), prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("prodCaseCd"),
+		// reservedDataMap.get("cmpxProdClsfCd"), prchsDtlMore.getTotAmt().doubleValue()));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제수단 정렬 재조정
@@ -720,7 +679,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// OCB 적립율
 
 		// 시험폰, SKP법인폰 여부
-		boolean sktTestOrSkpCorp = (policyResult != null ? (policyResult.isSktTestMdn() || policyResult
+		boolean sktTestOrSkpCorp = (checkPaymentPolicyResult != null ? (checkPaymentPolicyResult.isTelecomTestMdn() || checkPaymentPolicyResult
 				.isSkpCorporation()) : false);
 
 		res.setCdOcbSaveInfo(this.adjustOcbSaveInfo(reservedDataMap.get("telecom"), prchsDtlMore.getTenantProdGrpCd(),
@@ -735,7 +694,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			bIapAutoPrchs = true;
 		}
 
-		res.setCdPaymentTemplate(this.adjustPaymentPageTemplate(prchsDtlMore.getPrchsCaseCd(),
+		res.setCdPaymentTemplate(this.orderPaymentPageService.adjustPaymentPageTemplate(prchsDtlMore.getPrchsCaseCd(),
 				prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("cmpxProdClsfCd"), bIapAutoPrchs,
 				StringUtils.equals(reservedDataMap.get("s2sAutoYn"), "Y"), prchsDtlMoreList.size()));
 
@@ -747,6 +706,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		} else {
 			res.setTypeDanalContent(PurchaseConstants.DANAL_CONTENT_TYPE_DIGITAL);
 		}
+
+		// ------------------------------------------------------------------------------------------------
+		// 회원 - 결제 관련 정보 조회
+		SearchUserPayplanetSacRes userPayRes = null;
+		try {
+			userPayRes = this.purchaseMemberRepository.searchUserPayplanet(payUserKey, payDeviceKey);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7208", e);
+		}
+		// 통신과금 동의여부
+		res.setFlgTeleBillingAgree(StringUtils.equals(userPayRes.getSkpAgreementYn(), PurchaseConstants.USE_Y) ? "1" : "0");
+		// OCB 이용약관 동의여부
+		res.setFlgOcbUseAgree(StringUtils.equals(userPayRes.getOcbAgreementYn(), PurchaseConstants.USE_Y) ? "1" : "0");
+		// OCB 카드번호
+		res.setNoOcbCard(userPayRes.getOcbCardNumber());
+		// OCB 인증수단 코드
+		res.setOcbAuthMtdCd(userPayRes.getOcbAuthMethodCode());
 
 		// ------------------------------------------------------------------------------------------------
 		// 기타 응답 값
@@ -1789,71 +1765,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	/*
 	 * 
-	 * <pre> 결제Page 템플릿 코드 정의. </pre>
-	 * 
-	 * @param prchsCaseCd 구매/선물 구분 코드
-	 * 
-	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
-	 * 
-	 * @param cmpxProdClsfCd 정액상품 구분 코드
-	 * 
-	 * @param bIapAutoPrchs IAP 월자동결제 상품 여부
-	 * 
-	 * @param bS2sAutoPrchs IAP S2S 월자동결제 상품 여부
-	 * 
-	 * @param prchsProdCnt 구매하는 상품 갯수
-	 * 
-	 * @return 결제Page 템플릿 코드
-	 */
-	private String adjustPaymentPageTemplate(String prchsCaseCd, String tenantProdGrpCd, String cmpxProdClsfCd,
-			boolean bIapAutoPrchs, boolean bS2sAutoPrchs, int prchsProdCnt) {
-		if (StringUtils.equals(prchsCaseCd, PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GIFT; // 선물: TC06
-
-		} else {
-			if (bS2sAutoPrchs) { // IAP S2S 월자동결제 상품
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY; // S2S 자동결제: TC08
-
-			} else if (bIapAutoPrchs) { // IAP 월자동결제 상품
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY; // IAP 자동결제: TC07
-
-			} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING; // 쇼핑: TC05
-
-			} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)
-					&& StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)
-					&& (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS) == false)) {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
-
-				// } else if (StringUtils
-				// .startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
-				// || StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
-				// if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS) == false)
-				// {
-				// return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
-				// }
-
-			} else if (prchsProdCnt == 1
-					&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
-							.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
-					&& StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) == false) {
-				// return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN; // 대여/소장: TC03
-				// 대여/소장 TAB 제거 : 2014/08/27 적용
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_NORMAL; // 일반: TC01
-
-			} else if (StringUtils.startsWith(tenantProdGrpCd,
-					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE; // 정액제(게임캐쉬): TC02
-
-			} else {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_NORMAL; // 일반: TC01
-			}
-		}
-	}
-
-	/*
-	 * 
-	 * <pre> SKT 결제 정책 체크. </pre>
+	 * <pre> 결제 정책 체크. </pre>
 	 * 
 	 * @param prchsDtlMore 구매 정보
 	 * 
@@ -1865,18 +1777,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @return 결제 정책 체크 결과
 	 */
-	private SktPaymentPolicyCheckResult checkSktPaymentPolicy(PrchsDtlMore prchsDtlMore, String telecom,
-			String payDeviceId, String useDeviceId) {
-		if (StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT) == false) {
-			return null;
-		}
+	private CheckPaymentPolicyResult checkPaymentPolicy(PrchsDtlMore prchsDtlMore, String telecom, String payDeviceId,
+			String useDeviceId, String prodCaseCd, String cmpxProdClsfCd) {
 
-		SktPaymentPolicyCheckParam policyCheckParam = new SktPaymentPolicyCheckParam();
+		CheckPaymentPolicyParam policyCheckParam = new CheckPaymentPolicyParam();
+		policyCheckParam.setTenantId(prchsDtlMore.getTenantId());
+		policyCheckParam.setSystemId(prchsDtlMore.getSystemId());
 		policyCheckParam.setDeviceId(payDeviceId);
 		policyCheckParam.setPaymentTotAmt(prchsDtlMore.getTotAmt());
 		policyCheckParam.setTenantProdGrpCd(prchsDtlMore.getTenantProdGrpCd());
+		policyCheckParam.setTelecom(telecom);
+		policyCheckParam.setProdCaseCd(prodCaseCd);
+		policyCheckParam.setCmpxProdClsfCd(cmpxProdClsfCd);
 		if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			policyCheckParam.setTenantId(prchsDtlMore.getTenantId());
 			policyCheckParam.setUserKey(prchsDtlMore.getSendInsdUsermbrNo());
 			policyCheckParam.setDeviceKey(prchsDtlMore.getSendInsdDeviceId());
 			policyCheckParam.setRecvTenantId(prchsDtlMore.getUseTenantId());
@@ -1884,13 +1797,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			policyCheckParam.setRecvDeviceKey(prchsDtlMore.getUseInsdDeviceId());
 			policyCheckParam.setRecvDeviceId(useDeviceId);
 		} else {
-			policyCheckParam.setTenantId(prchsDtlMore.getTenantId());
 			policyCheckParam.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
 			policyCheckParam.setDeviceKey(prchsDtlMore.getUseInsdDeviceId());
 		}
 
 		try {
-			return this.purchaseOrderPolicyService.checkSktPaymentPolicy(policyCheckParam);
+			return this.purchaseOrderPolicyService.checkPaymentPolicy(policyCheckParam);
 		} catch (Exception e) {
 			if (e instanceof StorePlatformException) {
 				throw (StorePlatformException) e;

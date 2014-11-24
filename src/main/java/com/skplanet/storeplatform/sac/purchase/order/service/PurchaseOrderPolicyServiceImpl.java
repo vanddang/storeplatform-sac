@@ -37,9 +37,9 @@ import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseIapRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
+import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyResult;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
-import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckResult;
 
 /**
  * 
@@ -285,32 +285,6 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	/**
 	 * 
 	 * <pre>
-	 * 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보 조회
-	 * </pre>
-	 * 
-	 * @param tenantId
-	 *            테넌트 ID
-	 * 
-	 * @param tenantProdGrpCd
-	 *            테넌트상품분류코드
-	 * 
-	 * @return 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보
-	 */
-	@Override
-	public String getAvailablePaymethodAdjustInfo(String tenantId, String tenantProdGrpCd) {
-		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
-				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD, false);
-
-		if (CollectionUtils.isNotEmpty(policyList)) {
-			return StringUtils.defaultString(policyList.get(0).getApplyValue(), "");
-		}
-
-		return null;
-	}
-
-	/**
-	 * 
-	 * <pre>
 	 * 마일리지 적립 가능한 SKT시험폰 여부 체크.
 	 * </pre>
 	 * 
@@ -352,7 +326,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	/**
 	 * 
 	 * <pre>
-	 * SKT 후불 결제 진행 시 관련 정책 체크.
+	 * 결제 정책 체크.
 	 * </pre>
 	 * 
 	 * @param policyCheckParam
@@ -360,33 +334,100 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 정책 체크 결과
 	 */
 	@Override
-	public SktPaymentPolicyCheckResult checkSktPaymentPolicy(SktPaymentPolicyCheckParam policyCheckParam) {
-		/* 정책 처리 -- 처리패턴에 의한 처리에서 특정 처리패턴의 순차 처리로 변경. */
-		/* 추후 정책 구조 변경을 보며, 처리 방법 변경 고려 */
+	public CheckPaymentPolicyResult checkPaymentPolicy(CheckPaymentPolicyParam checkPaymentPolicyParam) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}",
+				ReflectionToStringBuilder.toString(checkPaymentPolicyParam, ToStringStyle.SHORT_PREFIX_STYLE));
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,START,{}",
-				ReflectionToStringBuilder.toString(policyCheckParam, ToStringStyle.SHORT_PREFIX_STYLE));
+		CheckPaymentPolicyResult checkPaymentPolicyResult = null;
 
-		// --------------------------------------------------------------------------------------------------
-		// UAPS Mapping정보 조회
+		// 후불 제한 정책 조회: T store 회원이면서 SKT 통신사가 아닌 경우는 제외
+		String phonePaymethodInfo = null;
 
-		UserEcRes userEcRes = this.uapsRepository.searchUapsMappingInfoByMdn(policyCheckParam.getDeviceId());
+		if (StringUtils.equals(checkPaymentPolicyParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)
+				&& StringUtils.equals(checkPaymentPolicyParam.getTelecom(), PurchaseConstants.TELECOM_SKT) == false) {
+			checkPaymentPolicyResult = new CheckPaymentPolicyResult();
+			;
 
-		// SKT 서비스 관리번호 세팅 : SKT 후불 결제금액 체크
-		policyCheckParam.setSvcMangNo(userEcRes.getSvcMngNum());
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,SVCNUM,{}", userEcRes.getSvcMngNum());
+		} else {
+			checkPaymentPolicyResult = this.checkPhonePaymentPolicy(checkPaymentPolicyParam);
+
+			// 통신사 결제 처리 타입
+			if (checkPaymentPolicyResult.isTelecomTestMdn()) {
+				if (checkPaymentPolicyResult.isTelecomTestMdnWhiteList()) {
+					checkPaymentPolicyResult.setDeferredPaymentType(PurchaseConstants.DEFERRED_PAYMENT_TYPE_TESTDEVICE);
+					checkPaymentPolicyResult.setPhoneRestAmt(checkPaymentPolicyParam.getPaymentTotAmt());
+				} else {
+					checkPaymentPolicyResult.setDeferredPaymentType(PurchaseConstants.DEFERRED_PAYMENT_TYPE_ETCSERVICE);
+				}
+			} else if (checkPaymentPolicyResult.isCorporation() || checkPaymentPolicyResult.isMvno()) {
+				checkPaymentPolicyResult.setDeferredPaymentType(PurchaseConstants.DEFERRED_PAYMENT_TYPE_ETCSERVICE);
+			}
+
+			// 통신사 후불 재조정
+			double phoneRestAmt = checkPaymentPolicyResult.getPhoneRestAmt();
+			if (StringUtils.equals(checkPaymentPolicyResult.getDeferredPaymentType(),
+					PurchaseConstants.DEFERRED_PAYMENT_TYPE_ETCSERVICE)) {
+				phonePaymethodInfo = "11:0:0";
+			} else {
+				if (phoneRestAmt > 0.0) {
+					phonePaymethodInfo = "11:" + phoneRestAmt + ":100";
+				} else {
+					phonePaymethodInfo = "11:0:0";
+				}
+			}
+		}
+
+		// 이용가능 결제수단 재정의
+		String paymentAdjInfo = this.adjustPaymethod(phonePaymethodInfo, checkPaymentPolicyParam.getTenantId(),
+				checkPaymentPolicyParam.getSystemId(), checkPaymentPolicyParam.getTenantProdGrpCd(),
+				checkPaymentPolicyParam.getProdCaseCd(), checkPaymentPolicyParam.getCmpxProdClsfCd(),
+				checkPaymentPolicyParam.getPaymentTotAmt());
+
+		checkPaymentPolicyResult.setPaymentAdjInfo(paymentAdjInfo);
+
+		return checkPaymentPolicyResult;
+	}
+
+	// ========================================================================================================================
+
+	/*
+	 * 
+	 * <pre> 통신사 후불 결제 진행 시 관련 정책 체크. </pre>
+	 * 
+	 * @param checkPaymentPolicyParam 정책 체크 대상 데이터
+	 * 
+	 * @return 정책 체크 결과
+	 */
+	private CheckPaymentPolicyResult checkPhonePaymentPolicy(CheckPaymentPolicyParam checkPaymentPolicyParam) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,PHONE,START,{}",
+				ReflectionToStringBuilder.toString(checkPaymentPolicyParam, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		CheckPaymentPolicyResult checkPaymentPolicyResult = new CheckPaymentPolicyResult();
+		checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_NO_LIMIT);
+
+		boolean bTstore = StringUtils.equals(checkPaymentPolicyParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE);
 
 		// --------------------------------------------------------------------------------------------------
 		// 관련 정책 목록 조회
 
 		Map<String, List<PurchaseTenantPolicy>> policyListMap = this.purchaseTenantPolicyService
-				.searchPurchaseTenantPolicyListByMap(policyCheckParam.getTenantId(),
-						policyCheckParam.getTenantProdGrpCd());
+				.searchPurchaseTenantPolicyListByMap(checkPaymentPolicyParam.getTenantId(),
+						checkPaymentPolicyParam.getTenantProdGrpCd());
+
+		// --------------------------------------------------------------------------------------------------
+		// UAPS Mapping정보 조회
+
+		UserEcRes sktUapsMappingInfo = null;
+
+		if (bTstore) {
+			sktUapsMappingInfo = this.uapsRepository.searchUapsMappingInfoByMdn(checkPaymentPolicyParam.getDeviceId());
+
+			// SKT 서비스 관리번호 세팅 : SKT 후불 결제금액 체크
+			checkPaymentPolicyParam.setSktSvcMangNo(sktUapsMappingInfo.getSvcMngNum());
+			this.logger.info("PRCHS,ORDER,SAC,POLICY,PHONE,SVCNUM,{}", sktUapsMappingInfo.getSvcMngNum());
+		}
 
 		List<PurchaseTenantPolicy> policyList = null;
-
-		SktPaymentPolicyCheckResult policyResult = new SktPaymentPolicyCheckResult();
-		policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_NO_LIMIT);
 
 		// --------------------------------------------------------------------------------------------------
 		// MVNO 체크
@@ -395,11 +436,12 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_MVNO_ALLOW_CD);
 
 			for (PurchaseTenantPolicy policy : policyList) {
-				if (this.isMvno(userEcRes, policy.getApplyValue(), policyCheckParam.getDeviceId())) {
-					policyResult.setMvno(true);
+				if (this.isMvno(checkPaymentPolicyParam.getTenantId(), sktUapsMappingInfo, policy.getApplyValue(),
+						checkPaymentPolicyParam.getDeviceId())) {
+					checkPaymentPolicyResult.setMvno(true);
 
-					policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_MVNO);
-					return policyResult;
+					checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_MVNO);
+					return checkPaymentPolicyResult;
 				}
 			}
 
@@ -409,10 +451,11 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// --------------------------------------------------------------------------------------------------
 		// 법인폰 체크
 
-		// OCB 적립 제한을 위한 SKP법인폰 기본 조회
-
-		if (this.isCorporationMdn(PurchaseConstants.SKP_CORPORATION_NO, policyCheckParam.getDeviceId())) {
-			policyResult.setSkpCorporation(true);
+		if (bTstore) { // Tstore : OCB 적립 제한을 위한 SKP법인폰 기본 조회
+			if (this.isCorporationMdn(checkPaymentPolicyParam.getTenantId(), PurchaseConstants.SKP_CORPORATION_NO,
+					checkPaymentPolicyParam.getDeviceId())) {
+				checkPaymentPolicyResult.setSkpCorporation(true);
+			}
 		}
 
 		boolean bAllowDevice = false; // 시험폰(법인폰) 제한 상품에 대해 구매 허용하는 디바이스 여부
@@ -426,21 +469,15 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			for (PurchaseTenantPolicy policy : policyList) {
 				// SKP법인폰은 위에서 이미 체크
 				if (StringUtils.equals(policy.getApplyValue(), PurchaseConstants.SKP_CORPORATION_NO)) {
-					bLimit = policyResult.isSkpCorporation();
+					bLimit = checkPaymentPolicyResult.isSkpCorporation();
 				} else {
-					bLimit = this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId());
+					bLimit = this.isCorporationMdn(checkPaymentPolicyParam.getTenantId(), policy.getApplyValue(),
+							checkPaymentPolicyParam.getDeviceId());
 				}
 
 				if (bLimit) {
 					break;
 				}
-
-				// if ((policyResult.isSkpCorporation() && StringUtils.equals(policy.getApplyValue(),
-				// PurchaseConstants.SKP_CORPORATION_NO))
-				// || this.isCorporationMdn(policy.getApplyValue(), policyCheckParam.getDeviceId())) {
-				// bLimit = true;
-				// break;
-				// }
 			}
 
 			// 제한 정책에 걸렸을 경우, 허용된 디바이스면 통과
@@ -449,7 +486,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 					policyList = policyListMap.get(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD);
 
 					for (PurchaseTenantPolicy policy : policyList) {
-						if (this.isAllowPurchaseCorpDevice(policy, policyCheckParam)) {
+						if (this.isAllowPurchaseCorpDevice(policy, checkPaymentPolicyParam)) {
 							bAllowDevice = true;
 							break;
 						}
@@ -459,9 +496,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				}
 
 				if (bAllowDevice == false) {
-					policyResult.setCorporation(true);
-					policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_CORP);
-					return policyResult;
+					checkPaymentPolicyResult.setCorporation(true);
+					checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_CORP);
+					return checkPaymentPolicyResult;
 				}
 			}
 
@@ -471,18 +508,16 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// --------------------------------------------------------------------------------------------------
 		// SKT 시험폰 체크 (참고, SKT시험폰이라면 100% 법인폰)
 
-		// 2014.06.09 상용 적용 : SKT 시험폰은 모두 허용으로.
+		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SAP_TEST_DEVICE)) {
+			// 회원측 관리 SAP 시험폰 정책 조회
+			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SAP_TEST_DEVICE);
 
-		// if (this.isSktTestMdn(userEcRes, policyCheckParam.getDeviceId())) {
-		// policyResult.setSktTestMdn(true);
-		// policyResult.setSktTestMdnWhiteList(true);
-		// policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW);
-		//
-		// return policyResult;
-		// }
+			policyListMap.remove(PurchaseConstants.POLICY_ID_SAP_TEST_DEVICE);
+		}
 
-		if (this.isSktTestMdn(userEcRes, policyCheckParam.getDeviceId())) {
-			policyResult.setSktTestMdn(true);
+		if (this.isTelecomTestMdn(checkPaymentPolicyParam.getTenantId(), sktUapsMappingInfo,
+				checkPaymentPolicyParam.getDeviceId(), policyList)) {
+			checkPaymentPolicyResult.setTelecomTestMdn(true);
 			boolean bWhite = false;
 
 			if (bAllowDevice) {
@@ -490,12 +525,12 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 			} else {
 				// CM011604: 서비스 허용 SKT 시험폰
-				if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE)) {
-					policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_TEST_DEVICE);
+				if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_TEST_DEVICE)) {
+					policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_TEST_DEVICE);
 
 					for (PurchaseTenantPolicy policy : policyList) {
-						if (this.isSktTestMdnWhiteList(policyCheckParam.getTenantId(), policy.getApplyValue(),
-								policyCheckParam.getDeviceId())) {
+						if (this.isTelecomTestMdnWhiteList(checkPaymentPolicyParam.getTenantId(),
+								policy.getApplyValue(), checkPaymentPolicyParam.getDeviceId())) {
 							bWhite = true;
 							break;
 						}
@@ -503,80 +538,86 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				}
 			}
 
-			policyResult.setSktTestMdnWhiteList(bWhite);
-			policyResult
-					.setSktLimitType(bWhite ? PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_ALLOW : PurchaseConstants.SKT_ADJUST_REASON_SKTTEST_NOT_ALLOW);
+			checkPaymentPolicyResult.setTelecomTestMdnWhiteList(bWhite);
+			checkPaymentPolicyResult
+					.setPhoneLimitType(bWhite ? PurchaseConstants.PHONE_ADJUST_REASON_SKTTEST_ALLOW : PurchaseConstants.PHONE_ADJUST_REASON_SKTTEST_NOT_ALLOW);
 
-			return policyResult;
+			return checkPaymentPolicyResult;
 		}
 
 		// --------------------------------------------------------------------------------------------------
-		// SKT 후불 쇼핑상품 한도금액 제한
+		// 후불 쇼핑상품 한도금액 제한
 
-		policyResult.setSktRestAmt(policyCheckParam.getPaymentTotAmt());
+		checkPaymentPolicyResult.setPhoneRestAmt(checkPaymentPolicyParam.getPaymentTotAmt());
 
-		Double sktRestAmtObj = null;
+		Double phoneRestAmtObj = null;
 
-		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_SHOPPING_PRCHS_LIMIT)) {
-			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_SHOPPING_PRCHS_LIMIT);
+		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_SHOPPING_PRCHS_LIMIT)) {
+			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_SHOPPING_PRCHS_LIMIT);
 
 			// 회원 측 강제설정 적용
 			for (PurchaseTenantPolicy policy : policyList) {
 				if (StringUtils.equals(policy.getProcPatternCd(),
-						PurchaseConstants.POLICY_PATTERN_SKT_SHOPPING_PRCHS_USER_LIMIT) == false) {
+						PurchaseConstants.POLICY_PATTERN_PHONE_SHOPPING_PRCHS_USER_LIMIT) == false) {
 					continue;
 				}
 
-				sktRestAmtObj = this.checkSktShoppingUserLimitRest(policy, policyCheckParam);
+				phoneRestAmtObj = this.checkPhoneShoppingUserLimitRest(policy, checkPaymentPolicyParam);
 
-				if (sktRestAmtObj != null) {
-					if (sktRestAmtObj.doubleValue() < policyResult.getSktRestAmt()) {
-						policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SHOPPING_PRCHS_USERPART_LIMIT);
-						policyResult.setSktRestAmt(sktRestAmtObj.doubleValue());
+				if (phoneRestAmtObj != null) {
+					if (phoneRestAmtObj.doubleValue() < checkPaymentPolicyResult.getPhoneRestAmt()) {
+						checkPaymentPolicyResult
+								.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SHOPPING_PRCHS_USERPART_LIMIT);
+						checkPaymentPolicyResult.setPhoneRestAmt(phoneRestAmtObj.doubleValue());
 					}
 
-					if (sktRestAmtObj.doubleValue() <= 0.0) {
-						policyResult.setSktRestAmt(0.0);
-						return policyResult;
+					if (phoneRestAmtObj.doubleValue() <= 0.0) {
+						checkPaymentPolicyResult.setPhoneRestAmt(0.0);
+						return checkPaymentPolicyResult;
 					}
 				}
 			}
 
 			// 잔여 한도 조회 적용 : 회원 측 강제적용 값이 없는 경우에만 진행
-			if (sktRestAmtObj == null) {
+			if (phoneRestAmtObj == null) {
 
 				for (PurchaseTenantPolicy policy : policyList) {
-					if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_SKT_PRCHS_LIMIT)) {
 
-						sktRestAmtObj = this.checkSktLimitRest(policy, policyCheckParam, -1); // CM011601:
-																							  // SKT후불 결제
-																							  // 한도제한
+					if (StringUtils.equals(policy.getProcPatternCd(),
+							PurchaseConstants.POLICY_PATTERN_PHONE_PRCHS_LIMIT)) { // CM011601: SKT후불 결제 한도제한
 
-						if (sktRestAmtObj != null && sktRestAmtObj.doubleValue() < policyResult.getSktRestAmt()) {
-							policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SHOPPING_LIMIT);
-							policyResult.setSktRestAmt(sktRestAmtObj.doubleValue());
+						phoneRestAmtObj = this.checkPhoneLimitRest(policy, checkPaymentPolicyParam, -1);
 
-							if (sktRestAmtObj.doubleValue() <= 0.0) {
-								policyResult.setSktRestAmt(0.0);
-								return policyResult;
+						if (phoneRestAmtObj != null
+								&& phoneRestAmtObj.doubleValue() < checkPaymentPolicyResult.getPhoneRestAmt()) {
+							checkPaymentPolicyResult
+									.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SHOPPING_LIMIT);
+							checkPaymentPolicyResult.setPhoneRestAmt(phoneRestAmtObj.doubleValue());
+
+							if (phoneRestAmtObj.doubleValue() <= 0.0) {
+								checkPaymentPolicyResult.setPhoneRestAmt(0.0);
+								return checkPaymentPolicyResult;
 							}
 						}
 
 					} else if (StringUtils.equals(policy.getProcPatternCd(),
-							PurchaseConstants.POLICY_PATTERN_SKT_RECV_LIMIT)) {
-						if (StringUtils.isEmpty(policyCheckParam.getRecvTenantId())) { // CM011602: SKT후불 선물수신 한도제한
+							PurchaseConstants.POLICY_PATTERN_PHONE_RECV_LIMIT)) { // CM011602: SKT후불 선물수신 한도제한
+
+						if (StringUtils.isEmpty(checkPaymentPolicyParam.getRecvTenantId())) {
 							continue;
 						}
 
-						sktRestAmtObj = this.checkSktRecvLimit(policy, policyCheckParam);
+						phoneRestAmtObj = this.checkPhoneRecvLimit(policy, checkPaymentPolicyParam);
 
-						if (sktRestAmtObj != null && sktRestAmtObj.doubleValue() < policyResult.getSktRestAmt()) {
-							policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SHOPPING_RECV_LIMIT);
-							policyResult.setSktRestAmt(sktRestAmtObj.doubleValue());
+						if (phoneRestAmtObj != null
+								&& phoneRestAmtObj.doubleValue() < checkPaymentPolicyResult.getPhoneRestAmt()) {
+							checkPaymentPolicyResult
+									.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SHOPPING_RECV_LIMIT);
+							checkPaymentPolicyResult.setPhoneRestAmt(phoneRestAmtObj.doubleValue());
 
-							if (sktRestAmtObj.doubleValue() <= 0.0) {
-								policyResult.setSktRestAmt(0.0);
-								return policyResult;
+							if (phoneRestAmtObj.doubleValue() <= 0.0) {
+								checkPaymentPolicyResult.setPhoneRestAmt(0.0);
+								return checkPaymentPolicyResult;
 							}
 						}
 
@@ -584,83 +625,88 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				}
 			}
 
-			policyListMap.remove(PurchaseConstants.POLICY_ID_SKT_SHOPPING_PRCHS_LIMIT);
+			policyListMap.remove(PurchaseConstants.POLICY_ID_PHONE_SHOPPING_PRCHS_LIMIT);
 		}
 
 		// --------------------------------------------------------------------------------------------------
-		// IAP SKT 후불 결제금액 조회
+		// IAP 통신사 후불 결제금액 조회
 
 		int iapBillingAmt = -1;
-		try {
-			iapBillingAmt = this.iapRepository.inquiryBillingAmt(policyCheckParam.getDeviceId(),
-					policyCheckParam.getSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
-		} catch (Exception e) {
-			// 예외 발생 시, IAP측 결제금액 무시 처리 : 구매DB 기준으로 IAP포함 조회
-			if (e instanceof StorePlatformException) {
-				this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}",
-						((StorePlatformException) e).getCode());
-			} else {
-				this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}", e.getMessage());
+
+		if (bTstore) {
+
+			try {
+				iapBillingAmt = this.iapRepository.inquiryBillingAmt(checkPaymentPolicyParam.getDeviceId(),
+						checkPaymentPolicyParam.getSktSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
+			} catch (Exception e) {
+				// 예외 발생 시, IAP측 결제금액 무시 처리 : 구매DB 기준으로 IAP포함 조회
+				if (e instanceof StorePlatformException) {
+					this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}",
+							((StorePlatformException) e).getCode());
+				} else {
+					this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}", e.getMessage());
+				}
 			}
 		}
 
 		// --------------------------------------------------------------------------------------------------
-		// SKT 후불 한도금액 제한
+		// 통신사 후불 한도금액 제한
 
-		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_PRCHS_LIMIT)) {
-			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_PRCHS_LIMIT);
+		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_PRCHS_LIMIT)) {
+			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_PRCHS_LIMIT);
 
 			for (PurchaseTenantPolicy policy : policyList) {
-				if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_SKT_PRCHS_LIMIT) == false) {
+				// CM011601: SKT후불 결제 한도제한
+				if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_PHONE_PRCHS_LIMIT) == false) {
 					continue;
 				}
 
-				sktRestAmtObj = this.checkSktLimitRest(policy, policyCheckParam, iapBillingAmt); // CM011601: SKT후불 결제
-																								 // 한도제한
+				phoneRestAmtObj = this.checkPhoneLimitRest(policy, checkPaymentPolicyParam, iapBillingAmt);
 
-				if (sktRestAmtObj != null && sktRestAmtObj.doubleValue() < policyResult.getSktRestAmt()) {
-					policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_LIMIT);
-					policyResult.setSktRestAmt(sktRestAmtObj.doubleValue());
+				if (phoneRestAmtObj != null
+						&& phoneRestAmtObj.doubleValue() < checkPaymentPolicyResult.getPhoneRestAmt()) {
+					checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_LIMIT);
+					checkPaymentPolicyResult.setPhoneRestAmt(phoneRestAmtObj.doubleValue());
 
-					if (sktRestAmtObj.doubleValue() <= 0.0) {
-						policyResult.setSktRestAmt(0.0);
-						return policyResult;
+					if (phoneRestAmtObj.doubleValue() <= 0.0) {
+						checkPaymentPolicyResult.setPhoneRestAmt(0.0);
+						return checkPaymentPolicyResult;
 					}
 				}
 			}
 
-			policyListMap.remove(PurchaseConstants.POLICY_ID_SKT_PRCHS_LIMIT);
+			policyListMap.remove(PurchaseConstants.POLICY_ID_PHONE_PRCHS_LIMIT);
 		}
 
 		// --------------------------------------------------------------------------------------------------
 		// SKT 후불 선물수신 한도금액 제한
 
-		if (StringUtils.isNotBlank(policyCheckParam.getRecvTenantId())) {
+		if (StringUtils.isNotBlank(checkPaymentPolicyParam.getRecvTenantId())) {
 
 			// 쇼핑상품 선물수신 한도 회원별 강제적용
 
-			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_SHOPPING_RECV_LIMIT)) {
-				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_SHOPPING_RECV_LIMIT);
+			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_SHOPPING_RECV_LIMIT)) {
+				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_SHOPPING_RECV_LIMIT);
 
 				// 회원 측 강제설정 적용
 				for (PurchaseTenantPolicy policy : policyList) {
 					if (StringUtils.equals(policy.getProcPatternCd(),
-							PurchaseConstants.POLICY_PATTERN_SKT_SHOPPING_RECV_USER_LIMIT) == false) { // CM011615
+							PurchaseConstants.POLICY_PATTERN_PHONE_SHOPPING_RECV_USER_LIMIT) == false) { // CM011615
 						continue;
 					}
 
-					sktRestAmtObj = this.checkSktShoppingUserLimitRest(policy, policyCheckParam);
+					phoneRestAmtObj = this.checkPhoneShoppingUserLimitRest(policy, checkPaymentPolicyParam);
 
-					if (sktRestAmtObj != null) {
-						if (sktRestAmtObj.doubleValue() < policyResult.getSktRestAmt()) {
-							policyResult
-									.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_SHOPPING_RECV_USERPART_LIMIT);
-							policyResult.setSktRestAmt(sktRestAmtObj.doubleValue());
+					if (phoneRestAmtObj != null) {
+						if (phoneRestAmtObj.doubleValue() < checkPaymentPolicyResult.getPhoneRestAmt()) {
+							checkPaymentPolicyResult
+									.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SHOPPING_RECV_USERPART_LIMIT);
+							checkPaymentPolicyResult.setPhoneRestAmt(phoneRestAmtObj.doubleValue());
 						}
 
-						if (sktRestAmtObj.doubleValue() <= 0.0) {
-							policyResult.setSktRestAmt(0.0);
-							return policyResult;
+						if (phoneRestAmtObj.doubleValue() <= 0.0) {
+							checkPaymentPolicyResult.setPhoneRestAmt(0.0);
+							return checkPaymentPolicyResult;
 						}
 					}
 				}
@@ -668,39 +714,109 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 			// 기본 선물수신 한도금액 제한
 
-			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SKT_RECV_LIMIT)) {
-				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SKT_RECV_LIMIT);
+			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_RECV_LIMIT)) {
+				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_RECV_LIMIT);
 
 				for (PurchaseTenantPolicy policy : policyList) {
-					if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_SKT_RECV_LIMIT) == false) {
+					if (StringUtils
+							.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_PHONE_RECV_LIMIT) == false) {
 						continue;
 					}
 
-					sktRestAmtObj = this.checkSktRecvLimit(policy, policyCheckParam);
+					phoneRestAmtObj = this.checkPhoneRecvLimit(policy, checkPaymentPolicyParam);
 
-					if (sktRestAmtObj != null && sktRestAmtObj.doubleValue() < policyResult.getSktRestAmt()) {
-						policyResult.setSktLimitType(PurchaseConstants.SKT_ADJUST_REASON_RECV_LIMIT);
-						policyResult.setSktRestAmt(sktRestAmtObj.doubleValue());
+					if (phoneRestAmtObj != null
+							&& phoneRestAmtObj.doubleValue() < checkPaymentPolicyResult.getPhoneRestAmt()) {
+						checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_RECV_LIMIT);
+						checkPaymentPolicyResult.setPhoneRestAmt(phoneRestAmtObj.doubleValue());
 
-						if (sktRestAmtObj.doubleValue() <= 0.0) {
-							policyResult.setSktRestAmt(0.0);
-							return policyResult;
+						if (phoneRestAmtObj.doubleValue() <= 0.0) {
+							checkPaymentPolicyResult.setPhoneRestAmt(0.0);
+							return checkPaymentPolicyResult;
 						}
 					}
 				}
 			}
 		}
 
-		if (policyResult.getSktRestAmt() > policyCheckParam.getPaymentTotAmt()) {
-			policyResult.setSktRestAmt(policyCheckParam.getPaymentTotAmt());
+		if (checkPaymentPolicyResult.getPhoneRestAmt() > checkPaymentPolicyParam.getPaymentTotAmt()) {
+			checkPaymentPolicyResult.setPhoneRestAmt(checkPaymentPolicyParam.getPaymentTotAmt());
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKT,END,{},{}", policyCheckParam.getDeviceKey(),
-				ReflectionToStringBuilder.toString(policyResult, ToStringStyle.SHORT_PREFIX_STYLE));
-		return policyResult;
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,PHONE,END,{},{}", checkPaymentPolicyParam.getDeviceKey(),
+				ReflectionToStringBuilder.toString(checkPaymentPolicyResult, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		return checkPaymentPolicyResult;
 	}
 
-	// ========================
+	/*
+	 * 
+	 * <pre> 결제차단 MVNO 회선 여부 조회. </pre>
+	 * 
+	 * @param tenantId 테넌트 ID
+	 * 
+	 * @param sktUapsMappingInfo SKT UAPS Mapping Info
+	 * 
+	 * @param deviceId 결제차단 MVNO 회선 여부 조회할 MDN
+	 * 
+	 * @return 결제차단 MVNO 회선 여부: true-결제 차단, false-결제 허용
+	 */
+	private boolean isMvno(String tenantId, UserEcRes sktUapsMappingInfo, String allowMvnoCode, String deviceId) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,MVNO,START,{},{}", deviceId, allowMvnoCode);
+
+		boolean bMvno = false;
+
+		String userMvnoCd = null;
+
+		if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_TSTORE)) {
+			if (sktUapsMappingInfo == null) {
+				sktUapsMappingInfo = this.uapsRepository.searchUapsMappingInfoByMdn(deviceId);
+			}
+
+			userMvnoCd = sktUapsMappingInfo.getMvnoCD();
+			bMvno = (StringUtils.equals(userMvnoCd, allowMvnoCode) == false);
+		}
+
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,MVNO,END,{},{},{},{}", deviceId, userMvnoCd, allowMvnoCode, bMvno);
+
+		return bMvno;
+	}
+
+	/*
+	 * 
+	 * <pre> 법인폰 여부 조회. </pre>
+	 * 
+	 * @param tenantId 테넌트 ID
+	 * 
+	 * @param corpNum 법인번호
+	 * 
+	 * @param deviceId 법인폰 여부 조회할 MDN
+	 * 
+	 * @return 법인폰 여부: true-법인폰, false-해당 법인폰 아님
+	 */
+	private boolean isCorporationMdn(String tenantId, String corpNum, String deviceId) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,START,{},{}", corpNum, deviceId);
+
+		if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_TSTORE)) {
+
+			try {
+				UserEcRes userEcRes = this.uapsRepository.searchUapsAuthorizeInfoByMdn(corpNum, deviceId);
+				if (userEcRes != null) {
+					this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,END,true");
+					return true;
+				}
+			} catch (StorePlatformException e) {
+				// 2014.02.12. 기준 : EC UAPS 에서 비정상 예외 시 9999 리턴, 그 외에는 조회결과 없음(9997) 또는 명의상태에 따른 코드.
+				if (StringUtils.equals(e.getErrorInfo().getCode(), "EC_UAPS_9999")) {
+					throw e;
+				} // else는 skip처리가 정상
+			}
+		}
+
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,END,false");
+
+		return false;
+	}
 
 	/*
 	 * 
@@ -708,11 +824,12 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @param policy 테넌트 정책 정보
 	 * 
-	 * @param policyCheckParam 정책 체크 대상 데이터
+	 * @param checkPaymentPolicyParam 정책 체크 대상 데이터
 	 * 
 	 * @return 쇼핑상품 구매 허용된 시험폰(법인폰) 여부
 	 */
-	private boolean isAllowPurchaseCorpDevice(PurchaseTenantPolicy policy, SktPaymentPolicyCheckParam policyCheckParam) {
+	private boolean isAllowPurchaseCorpDevice(PurchaseTenantPolicy policy,
+			CheckPaymentPolicyParam checkPaymentPolicyParam) {
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,ALLOWPURCHASE,START,{}({})", policy.getPolicyId(),
 				policy.getPolicySeq());
 
@@ -725,268 +842,71 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		policyCodeList.add(memberPolicyCd);
 
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-				policyCheckParam.getTenantId(), policyCheckParam.getDeviceId(), policyCodeList);
+				checkPaymentPolicyParam.getTenantId(), checkPaymentPolicyParam.getDeviceId(), policyCodeList);
 
-		if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
-			this.logger.info("PRCHS,ORDER,SAC,POLICY,ALLOWPURCHASE,END,{}({}),null", policy.getPolicyId(),
-					policy.getPolicySeq());
-			return false;
+		boolean bApply = false;
+
+		if (policyResMap != null && policyResMap.containsKey(memberPolicyCd)) {
+			bApply = true;
 		}
 
-		IndividualPolicyInfoSac individualPolicyInfoSac = policyResMap.get(memberPolicyCd);
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,ALLOWPURCHASE,END,{}({}),{}", policy.getPolicyId(),
+				policy.getPolicySeq(), bApply);
 
-		this.logger
-				.info("PRCHS,ORDER,SAC,POLICY,ALLOWPURCHASE,END,{}({}),{}", policy.getPolicyId(),
-						policy.getPolicySeq(),
-						StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y));
-		return StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y);
-	}
-
-	/*
-	 * 
-	 * <pre> 회원Part 강제적용 : SKT후불 쇼핑상품 구매결제 한도제한 남은 금액 조회. </pre>
-	 * 
-	 * @param policy 테넌트 정책 정보
-	 * 
-	 * @param policyCheckParam 정책 체크 대상 데이터
-	 * 
-	 * @return 남은 SKT 후불 결제 가능 금액
-	 */
-	private Double checkSktShoppingUserLimitRest(PurchaseTenantPolicy policy,
-			SktPaymentPolicyCheckParam policyCheckParam) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,START,{}({})", policy.getPolicyId(), policy.getPolicySeq());
-
-		// ----------------------------------------------------------------
-		// 회원Part 사용자 정책 조회
-
-		String memberPolicyCd = policy.getApplyValue();
-
-		List<String> policyCodeList = new ArrayList<String>();
-		policyCodeList.add(memberPolicyCd);
-
-		boolean bCheckRecv = StringUtils.equals(policy.getPolicyId(),
-				PurchaseConstants.POLICY_ID_SKT_SHOPPING_RECV_LIMIT);
-
-		// 구매자/수신자 체크
-		String deviceId = bCheckRecv ? policyCheckParam.getRecvDeviceId() : policyCheckParam.getDeviceId();
-
-		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
-				policyCheckParam.getTenantId(), deviceId, policyCodeList);
-
-		if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
-			this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,END,{}({}),null", policy.getPolicyId(),
-					policy.getPolicySeq());
-			return null;
-		}
-
-		IndividualPolicyInfoSac individualPolicyInfoSac = policyResMap.get(memberPolicyCd);
-
-		if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y) == false) {
-			this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,END,{}({}),NotUsed", policy.getPolicyId(),
-					policy.getPolicySeq());
-			return null;
-		}
-
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,MEMBER,{}({}),{}", policy.getPolicyId(),
-				policy.getPolicySeq(), individualPolicyInfoSac.getLimitAmount());
-
-		// ----------------------------------------------------------------
-		// 회원 구매/선물수신 금액 조회
-
-		// 당월 구매(선물수신) 금액
-		SearchSktPaymentScReq sciReq = new SearchSktPaymentScReq();
-		SearchSktPaymentScRes sciRes = null;
-
-		sciReq.setTenantProdGrpCd(policy.getTenantProdGrpCd());
-		sciReq.setApplyUnitCd("CM011301"); // 금액
-		sciReq.setCondUnitCd("CM011408"); // 당월
-		sciReq.setCondValue("1"); // 1
-
-		if (bCheckRecv) {
-			sciReq.setTenantId(policyCheckParam.getRecvTenantId());
-			sciReq.setUserKey(policyCheckParam.getRecvUserKey());
-			sciReq.setDeviceKey(policyCheckParam.getRecvDeviceKey());
-
-			sciRes = this.purchaseOrderSearchSCI.searchSktRecvAmountDetail(sciReq);
-			this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,GIFT,{}", sciRes.getVal());
-
-		} else {
-			sciReq.setTenantId(policyCheckParam.getTenantId());
-			sciReq.setUserKey(policyCheckParam.getUserKey());
-			sciReq.setDeviceKey(policyCheckParam.getDeviceKey());
-			sciReq.setSvcMangNo(policyCheckParam.getSvcMangNo());
-
-			sciRes = this.purchaseOrderSearchSCI.searchSktAmountDetail(sciReq);
-			this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,PRCHS,{}", sciRes.getVal());
-		}
-
-		Double restVal = Double.parseDouble(individualPolicyInfoSac.getLimitAmount())
-				- ((Double) sciRes.getVal()).doubleValue();
-
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,END,{}({}),{}", policy.getPolicyId(), policy.getPolicySeq(),
-				restVal);
-		return restVal;
-	}
-
-	/*
-	 * 
-	 * <pre> SKT후불 구매결제 한도제한 남은 금액 조회. </pre>
-	 * 
-	 * @param policy 테넌트 정책 정보
-	 * 
-	 * @param policyCheckParam 정책 체크 대상 데이터
-	 * 
-	 * @param iapBillingAmt IAP SKT후불 결제금액
-	 * 
-	 * @return 남은 SKT 후불 결제 가능 금액
-	 */
-	private Double checkSktLimitRest(PurchaseTenantPolicy policy, SktPaymentPolicyCheckParam policyCheckParam,
-			int iapBillingAmt) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}({})", policy.getPolicyId(), policy.getPolicySeq());
-
-		double checkVal = 0.0;
-
-		SearchSktPaymentScReq sciReq = new SearchSktPaymentScReq();
-		SearchSktPaymentScRes sciRes = null;
-
-		sciReq.setTenantId(policyCheckParam.getTenantId());
-		sciReq.setUserKey(policyCheckParam.getUserKey());
-		sciReq.setDeviceKey(policyCheckParam.getDeviceKey());
-		sciReq.setTenantProdGrpCd(policy.getTenantProdGrpCd());
-		sciReq.setApplyUnitCd(policy.getApplyUnitCd());
-		sciReq.setCondUnitCd(policy.getCondUnitCd());
-		sciReq.setCondValue(policy.getCondValue());
-		sciReq.setCondClsfUnitCd(policy.getCondClsfUnitCd());
-		sciReq.setCondPeriodUnitCd(policy.getCondPeriodUnitCd());
-		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
-		sciReq.setSvcMangNo(policyCheckParam.getSvcMangNo()); // SKT 서비스 관리번호
-		if (iapBillingAmt >= 0) {
-			sciReq.setExceptTenantProdGrpCd(PurchaseConstants.TENANT_PRODUCT_GROUP_IAP); // IAP 결제금액은 제외하고 조회
-		} else {
-			iapBillingAmt = 0;
-		}
-
-		// (정책 적용조건) 과금조건 조회
-		// 쇼핑상품 구매건수 조회용도 이며, 전월 단위의 건수 조회인 경우만 처리
-		if (StringUtils.isNotBlank(policy.getCondPeriodUnitCd())
-				&& StringUtils.equals(policy.getCondPeriodUnitCd(),
-						PurchaseConstants.POLICY_PRECONDITION_PERIOD_UNIT_CD_PREMONTH)
-				&& StringUtils.equals(policy.getCondClsfUnitCd(),
-						PurchaseConstants.POLICY_PRECONDITION_CLSF_UNIT_CD_COUNT)) {
-			sciRes = this.purchaseOrderSearchSCI.searchSktLimitCondDetail(sciReq); // null 또는 1
-			checkVal = (sciRes.getVal() == null ? 0 : (Double) sciRes.getVal());
-
-			if (Double.parseDouble(policy.getCondClsfValue()) == 0) {
-				if (checkVal != 0) {
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}({}),null", policy.getPolicyId(),
-							policy.getPolicySeq());
-					return null;
-				}
-			} else if (checkVal < Double.parseDouble(policy.getCondClsfValue())) {
-				this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}({}),pass", policy.getPolicyId(), policy.getPolicySeq());
-				return null;
-			}
-		}
-
-		// (정책 체크 값) 정책 요소기준 조회
-		sciRes = this.purchaseOrderSearchSCI.searchSktAmountDetail(sciReq);
-		checkVal = (Double) sciRes.getVal();
-
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}({}),{},{}", policy.getPolicyId(), policy.getPolicySeq(),
-				checkVal, (Double.parseDouble(policy.getApplyValue()) - (checkVal + iapBillingAmt)));
-		return (Double.parseDouble(policy.getApplyValue()) - (checkVal + iapBillingAmt));
-	}
-
-	/*
-	 * 
-	 * <pre> SKT후불 선물수신 한도제한 남은 금액 조회. </pre>
-	 * 
-	 * @param policy 테넌트 정책 정보
-	 * 
-	 * @param policyCheckParam 정책 체크 대상 데이터
-	 * 
-	 * @return 남은 SKT 후불 선물수신 가능 금액
-	 */
-	private Double checkSktRecvLimit(PurchaseTenantPolicy policy, SktPaymentPolicyCheckParam policyCheckParam) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}({})", policy.getPolicyId(), policy.getPolicySeq());
-
-		double checkVal = 0.0;
-
-		SearchSktPaymentScReq sciReq = new SearchSktPaymentScReq();
-		SearchSktPaymentScRes sciRes = null;
-
-		sciReq.setTenantId(policyCheckParam.getRecvTenantId()); // 수신자 기준 조회
-		sciReq.setUserKey(policyCheckParam.getRecvUserKey()); // 수신자 기준 조회
-		sciReq.setDeviceKey(policyCheckParam.getRecvDeviceKey()); // 수신자 기준 조회
-		sciReq.setTenantProdGrpCd(policy.getTenantProdGrpCd());
-		sciReq.setApplyUnitCd(policy.getApplyUnitCd());
-		sciReq.setCondUnitCd(policy.getCondUnitCd());
-		sciReq.setCondValue(policy.getCondValue());
-		sciReq.setCondClsfUnitCd(policy.getCondClsfUnitCd());
-		sciReq.setCondPeriodUnitCd(policy.getCondPeriodUnitCd());
-		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
-
-		// (정책 체크 값) 정책 요소기준 조회
-		sciRes = this.purchaseOrderSearchSCI.searchSktRecvAmountDetail(sciReq);
-		checkVal = (Double) sciRes.getVal();
-
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}({}),{}", policy.getPolicyId(), policy.getPolicySeq(),
-				(Double.parseDouble(policy.getApplyValue()) - checkVal));
-		return (Double.parseDouble(policy.getApplyValue()) - checkVal);
-	}
-
-	/*
-	 * 
-	 * <pre> 법인폰 여부 조회. </pre>
-	 * 
-	 * @param policy 테넌트 정책 정보
-	 * 
-	 * @param corpNum 법인번호
-	 * 
-	 * @param deviceId 법인폰 여부 조회할 MDN
-	 * 
-	 * @return 법인폰 여부: true-법인폰, false-해당 법인폰 아님
-	 */
-	private boolean isCorporationMdn(String corpNum, String deviceId) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,START,{},{}", corpNum, deviceId);
-
-		try {
-			UserEcRes userEcRes = this.uapsRepository.searchUapsAuthorizeInfoByMdn(corpNum, deviceId);
-			if (userEcRes != null) {
-				this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,END,true");
-				return true;
-			}
-		} catch (StorePlatformException e) {
-			// 2014.02.12. 기준 : EC UAPS 에서 비정상 예외 시 9999 리턴, 그 외에는 조회결과 없음(9997) 또는 명의상태에 따른 코드.
-			if (StringUtils.equals(e.getErrorInfo().getCode(), "EC_UAPS_9999")) {
-				throw e;
-			} // else는 skip처리가 정상
-		}
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,CORP,END,false");
-		return false;
+		return bApply;
 	}
 
 	/*
 	 * 
 	 * <pre> SKT 시험폰 여부 조회. </pre>
 	 * 
-	 * @param uapsUserMappingInfo UAPS Mapping Info
+	 * @param tenantId 테넌트 ID
+	 * 
+	 * @param sktUapsMappingInfo SKT UAPS Mapping Info
 	 * 
 	 * @param deviceId SKT 시험폰 여부 조회할 MDN
 	 * 
+	 * @param policyList 회원정책으로 관리하는 SAP 통신사 시험폰 정책 목록
+	 * 
 	 * @return SKT 시험폰 여부: true-SKT 시험폰, false-SKT 시험폰 아님
 	 */
-	private boolean isSktTestMdn(UserEcRes uapsUserMappingInfo, String deviceId) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKTTEST,START,{}", deviceId);
+	private boolean isTelecomTestMdn(String tenantId, UserEcRes sktUapsMappingInfo, String deviceId,
+			List<PurchaseTenantPolicy> policyList) {
+		boolean bTelecomTestMdn = false;
 
-		if (uapsUserMappingInfo == null) {
-			uapsUserMappingInfo = this.uapsRepository.searchUapsMappingInfoByMdn(deviceId);
+		// UAPS 조회
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,TELECOMTEST,START,{}", deviceId);
+
+		if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_TSTORE)) {
+
+			if (sktUapsMappingInfo == null) {
+				sktUapsMappingInfo = this.uapsRepository.searchUapsMappingInfoByMdn(deviceId);
+			}
+
+			bTelecomTestMdn = StringUtils.equals(sktUapsMappingInfo.getSvcTP(), PurchaseConstants.UAPS_SVC_TP_SKTTEST);
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,SKTTEST,END,{},{}", deviceId,
-				(StringUtils.equals(uapsUserMappingInfo.getSvcTP(), PurchaseConstants.UAPS_SVC_TP_SKTTEST)));
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,TELECOMTEST,END,{},{}", deviceId, bTelecomTestMdn);
 
-		return (StringUtils.equals(uapsUserMappingInfo.getSvcTP(), PurchaseConstants.UAPS_SVC_TP_SKTTEST));
+		if (bTelecomTestMdn) {
+			return true;
+		}
+
+		// 회원DB 관리 조회
+		if (CollectionUtils.isNotEmpty(policyList)) {
+			this.logger.info("PRCHS,ORDER,SAC,POLICY,TELECOMTEST,MEMBER,START,{}", deviceId);
+
+			for (PurchaseTenantPolicy policy : policyList) {
+				if (this.isSapTestMdn(tenantId, policy.getApplyValue(), deviceId)) {
+					bTelecomTestMdn = true;
+					break;
+				}
+			}
+
+			this.logger.info("PRCHS,ORDER,SAC,POLICY,TELECOMTEST,MEMBER,END,{},{}", deviceId, bTelecomTestMdn);
+		}
+
+		return bTelecomTestMdn;
 	}
 
 	/*
@@ -1001,8 +921,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @return White List 등록 여부: true-White List 등록, false-White List 등록 안됨
 	 */
-	private boolean isSktTestMdnWhiteList(String tenantId, String memberPolicyCd, String deviceId) {
-		// return true; // 2014.06.09: SKT시험폰 항상 허용됨
+	private boolean isTelecomTestMdnWhiteList(String tenantId, String memberPolicyCd, String deviceId) {
 
 		// 2014.10.15. PASS 코드 적용
 		if (StringUtils.equals(memberPolicyCd, "PASS")) {
@@ -1015,13 +934,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
 				tenantId, deviceId, policyCodeList);
 
-		if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
-			return false;
-		}
-
-		IndividualPolicyInfoSac individualPolicyInfoSac = policyResMap.get(memberPolicyCd);
-
-		if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
+		if (policyResMap != null && policyResMap.containsKey(memberPolicyCd)) {
 			return true;
 		}
 
@@ -1030,24 +943,360 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 	/*
 	 * 
-	 * <pre> 결제차단 MVNO 회선 여부 조회. </pre>
+	 * <pre> SAP지원으로 회원정책에 등록된 시험폰 여부 조회. </pre>
 	 * 
-	 * @param uapsUserMappingInfo UAPS Mapping Info
+	 * @param memberPolicyCd 회원Part에서 관리하는 시험폰 정책코드
 	 * 
-	 * @param deviceId 결제차단 MVNO 회선 여부 조회할 MDN
+	 * @param tenantId 테넌트 ID
 	 * 
-	 * @return 결제차단 MVNO 회선 여부: true-결제 차단, false-결제 허용
+	 * @param deviceId 조회할 MDN
+	 * 
+	 * @return (통신사) 시험폰 여부
 	 */
-	private boolean isMvno(UserEcRes uapsUserMappingInfo, String allowMvnoCode, String deviceId) {
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,MVNO,START,{},{}", deviceId, allowMvnoCode);
+	private boolean isSapTestMdn(String tenantId, String memberPolicyCd, String deviceId) {
 
-		if (uapsUserMappingInfo == null) {
-			uapsUserMappingInfo = this.uapsRepository.searchUapsMappingInfoByMdn(deviceId);
+		List<String> policyCodeList = new ArrayList<String>();
+		policyCodeList.add(memberPolicyCd);
+
+		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
+				tenantId, deviceId, policyCodeList);
+
+		if (policyResMap != null && policyResMap.containsKey(memberPolicyCd)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/*
+	 * 
+	 * <pre> 회원Part 강제적용 : 통신사 후불 쇼핑상품 구매결제 한도제한 남은 금액 조회. </pre>
+	 * 
+	 * @param policy 테넌트 정책 정보
+	 * 
+	 * @param checkPaymentPolicyParam 정책 체크 대상 데이터
+	 * 
+	 * @return 남은 후불 결제 가능 금액
+	 */
+	private Double checkPhoneShoppingUserLimitRest(PurchaseTenantPolicy policy,
+			CheckPaymentPolicyParam checkPaymentPolicyParam) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,START,{}({})", policy.getPolicyId(), policy.getPolicySeq());
+
+		// ----------------------------------------------------------------
+		// 회원Part 사용자 정책 조회
+
+		String memberPolicyCd = policy.getApplyValue();
+
+		List<String> policyCodeList = new ArrayList<String>();
+		policyCodeList.add(memberPolicyCd);
+
+		boolean bCheckRecv = StringUtils.equals(policy.getPolicyId(),
+				PurchaseConstants.POLICY_ID_PHONE_SHOPPING_RECV_LIMIT);
+
+		// 구매자/수신자 체크
+		String deviceId = bCheckRecv ? checkPaymentPolicyParam.getRecvDeviceId() : checkPaymentPolicyParam
+				.getDeviceId();
+
+		Map<String, IndividualPolicyInfoSac> policyResMap = this.purchaseMemberRepository.getPurchaseUserPolicy(
+				checkPaymentPolicyParam.getTenantId(), deviceId, policyCodeList);
+
+		if (policyResMap == null || policyResMap.containsKey(memberPolicyCd) == false) {
+			this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,END,{}({}),null", policy.getPolicyId(),
+					policy.getPolicySeq());
+			return null;
 		}
 
-		this.logger.info("PRCHS,ORDER,SAC,POLICY,MVNO,END,{},{},{},{}", deviceId, uapsUserMappingInfo.getMvnoCD(),
-				allowMvnoCode, (StringUtils.equals(uapsUserMappingInfo.getMvnoCD(), allowMvnoCode) == false));
+		IndividualPolicyInfoSac individualPolicyInfoSac = policyResMap.get(memberPolicyCd);
 
-		return (StringUtils.equals(uapsUserMappingInfo.getMvnoCD(), allowMvnoCode) == false);
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,MEMBER,{}({}),{}", policy.getPolicyId(),
+				policy.getPolicySeq(), individualPolicyInfoSac.getLimitAmount());
+
+		// ----------------------------------------------------------------
+		// 회원 구매/선물수신 금액 조회
+
+		Double restVal = Double.parseDouble(individualPolicyInfoSac.getLimitAmount());
+
+		if (StringUtils.equals(checkPaymentPolicyParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
+
+			// 당월 구매(선물수신) 금액
+			SearchSktPaymentScReq sciReq = new SearchSktPaymentScReq();
+			SearchSktPaymentScRes sciRes = null;
+
+			sciReq.setTenantProdGrpCd(policy.getTenantProdGrpCd());
+			sciReq.setApplyUnitCd("CM011301"); // 금액
+			sciReq.setCondUnitCd("CM011408"); // 당월
+			sciReq.setCondValue("1"); // 1
+
+			if (bCheckRecv) {
+				sciReq.setTenantId(checkPaymentPolicyParam.getRecvTenantId());
+				sciReq.setUserKey(checkPaymentPolicyParam.getRecvUserKey());
+				sciReq.setDeviceKey(checkPaymentPolicyParam.getRecvDeviceKey());
+
+				sciRes = this.purchaseOrderSearchSCI.searchSktRecvAmountDetail(sciReq);
+				this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,GIFT,{}", sciRes.getVal());
+
+			} else {
+				sciReq.setTenantId(checkPaymentPolicyParam.getTenantId());
+				sciReq.setUserKey(checkPaymentPolicyParam.getUserKey());
+				sciReq.setDeviceKey(checkPaymentPolicyParam.getDeviceKey());
+				sciReq.setSvcMangNo(checkPaymentPolicyParam.getSktSvcMangNo());
+
+				sciRes = this.purchaseOrderSearchSCI.searchSktAmountDetail(sciReq);
+				this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,PRCHS,{}", sciRes.getVal());
+			}
+
+			restVal = Double.parseDouble(individualPolicyInfoSac.getLimitAmount())
+					- ((Double) sciRes.getVal()).doubleValue();
+
+			this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,END,{}({}),{}", policy.getPolicyId(),
+					policy.getPolicySeq(), restVal);
+		}
+
+		return restVal;
+	}
+
+	/*
+	 * 
+	 * <pre> 통신사 후불 구매결제 한도제한 남은 금액 조회. </pre>
+	 * 
+	 * @param policy 테넌트 정책 정보
+	 * 
+	 * @param checkPaymentPolicyParam 정책 체크 대상 데이터
+	 * 
+	 * @param iapBillingAmt IAP 후불 결제금액
+	 * 
+	 * @return 남은 후불 결제 가능 금액
+	 */
+	private Double checkPhoneLimitRest(PurchaseTenantPolicy policy, CheckPaymentPolicyParam checkPaymentPolicyParam,
+			int iapBillingAmt) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}({})", policy.getPolicyId(), policy.getPolicySeq());
+
+		double checkVal = 0.0;
+
+		SearchSktPaymentScReq sciReq = new SearchSktPaymentScReq();
+		SearchSktPaymentScRes sciRes = null;
+
+		sciReq.setTenantId(checkPaymentPolicyParam.getTenantId());
+		sciReq.setUserKey(checkPaymentPolicyParam.getUserKey());
+		sciReq.setDeviceKey(checkPaymentPolicyParam.getDeviceKey());
+		sciReq.setTenantProdGrpCd(policy.getTenantProdGrpCd());
+		sciReq.setApplyUnitCd(policy.getApplyUnitCd());
+		sciReq.setCondUnitCd(policy.getCondUnitCd());
+		sciReq.setCondValue(policy.getCondValue());
+		sciReq.setCondClsfUnitCd(policy.getCondClsfUnitCd());
+		sciReq.setCondPeriodUnitCd(policy.getCondPeriodUnitCd());
+		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
+		sciReq.setSvcMangNo(checkPaymentPolicyParam.getSktSvcMangNo()); // SKT 서비스 관리번호
+		if (iapBillingAmt >= 0) {
+			sciReq.setExceptTenantProdGrpCd(PurchaseConstants.TENANT_PRODUCT_GROUP_IAP); // IAP 결제금액은 제외하고 조회
+		} else {
+			iapBillingAmt = 0;
+		}
+
+		// (정책 적용조건) 과금조건 조회
+		// 쇼핑상품 구매건수 조회용도 이며, 전월 단위의 건수 조회인 경우만 처리
+
+		if (StringUtils.equals(checkPaymentPolicyParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
+
+			if (StringUtils.isNotBlank(policy.getCondPeriodUnitCd())
+					&& StringUtils.equals(policy.getCondPeriodUnitCd(),
+							PurchaseConstants.POLICY_PRECONDITION_PERIOD_UNIT_CD_PREMONTH)
+					&& StringUtils.equals(policy.getCondClsfUnitCd(),
+							PurchaseConstants.POLICY_PRECONDITION_CLSF_UNIT_CD_COUNT)) {
+				sciRes = this.purchaseOrderSearchSCI.searchSktLimitCondDetail(sciReq); // null 또는 1
+				checkVal = (sciRes.getVal() == null ? 0 : (Double) sciRes.getVal());
+
+				if (Double.parseDouble(policy.getCondClsfValue()) == 0) {
+					if (checkVal != 0) {
+						this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}({}),null", policy.getPolicyId(),
+								policy.getPolicySeq());
+						return null;
+					}
+				} else if (checkVal < Double.parseDouble(policy.getCondClsfValue())) {
+					this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}({}),pass", policy.getPolicyId(),
+							policy.getPolicySeq());
+					return null;
+				}
+			}
+
+			// (정책 체크 값) 정책 요소기준 조회
+			sciRes = this.purchaseOrderSearchSCI.searchSktAmountDetail(sciReq);
+			checkVal = (Double) sciRes.getVal();
+
+		}
+
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}({}),{},{}", policy.getPolicyId(), policy.getPolicySeq(),
+				checkVal, (Double.parseDouble(policy.getApplyValue()) - (checkVal + iapBillingAmt)));
+		return (Double.parseDouble(policy.getApplyValue()) - (checkVal + iapBillingAmt));
+	}
+
+	/*
+	 * 
+	 * <pre> 통신사 후불 선물수신 한도제한 남은 금액 조회. </pre>
+	 * 
+	 * @param policy 테넌트 정책 정보
+	 * 
+	 * @param checkPaymentPolicyParam 정책 체크 대상 데이터
+	 * 
+	 * @return 남은 후불 선물수신 가능 금액
+	 */
+	private Double checkPhoneRecvLimit(PurchaseTenantPolicy policy, CheckPaymentPolicyParam checkPaymentPolicyParam) {
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}({})", policy.getPolicyId(), policy.getPolicySeq());
+
+		double checkVal = 0.0;
+
+		SearchSktPaymentScReq sciReq = new SearchSktPaymentScReq();
+		SearchSktPaymentScRes sciRes = null;
+
+		sciReq.setTenantId(checkPaymentPolicyParam.getRecvTenantId()); // 수신자 기준 조회
+		sciReq.setUserKey(checkPaymentPolicyParam.getRecvUserKey()); // 수신자 기준 조회
+		sciReq.setDeviceKey(checkPaymentPolicyParam.getRecvDeviceKey()); // 수신자 기준 조회
+		sciReq.setTenantProdGrpCd(policy.getTenantProdGrpCd());
+		sciReq.setApplyUnitCd(policy.getApplyUnitCd());
+		sciReq.setCondUnitCd(policy.getCondUnitCd());
+		sciReq.setCondValue(policy.getCondValue());
+		sciReq.setCondClsfUnitCd(policy.getCondClsfUnitCd());
+		sciReq.setCondPeriodUnitCd(policy.getCondPeriodUnitCd());
+		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
+
+		// 수신 금액 조회
+		if (StringUtils.equals(checkPaymentPolicyParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
+			sciRes = this.purchaseOrderSearchSCI.searchSktRecvAmountDetail(sciReq);
+			checkVal = (Double) sciRes.getVal();
+		}
+
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}({}),{}", policy.getPolicyId(), policy.getPolicySeq(),
+				(Double.parseDouble(policy.getApplyValue()) - checkVal));
+		return (Double.parseDouble(policy.getApplyValue()) - checkVal);
+	}
+
+	/*
+	 * 
+	 * <pre> 결제 수단 재정의. </pre>
+	 * 
+	 * @param phonePaymethodInfo SKT결제 재정의 정보
+	 * 
+	 * @param tenantId 테넌트ID
+	 * 
+	 * @param systemId 시스템ID
+	 * 
+	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
+	 * 
+	 * @param prodCaseCd 쇼핑 상품 종류 코드
+	 * 
+	 * @param cmpxProdClsfCd 정액상품 타입 코드
+	 * 
+	 * @param payAmt 결제할 금액
+	 * 
+	 * @return 재정의 된 결제 수단 정보
+	 */
+	private String adjustPaymethod(String phonePaymethodInfo, String tenantId, String systemId, String tenantProdGrpCd,
+			String prodCaseCd, String cmpxProdClsfCd, double payAmt) {
+		// 결제수단 별 가능 거래금액/비율 조정 정보
+		String paymentAdjustInfo = this.getAvailablePaymethodAdjustInfo(tenantId, tenantProdGrpCd);
+		if (paymentAdjustInfo == null) {
+			throw new StorePlatformException("SAC_PUR_7103");
+		}
+
+		// 후불 처리 비교
+		int phonePos = paymentAdjustInfo.indexOf("11:");
+
+		if (StringUtils.isNotBlank(phonePaymethodInfo)) {
+			String[] resultPhonePolicyInfo = phonePaymethodInfo.split(":");
+			double resultMaxAmt = Double.parseDouble(resultPhonePolicyInfo[1]);
+			int resultMaxPer = (int) (Double.parseDouble(resultPhonePolicyInfo[2]));
+
+			double phoneAvailAmt = resultMaxAmt;
+			double phoneAvailPer = resultMaxPer;
+
+			if (phonePos >= 0) {
+				int sepPos = paymentAdjustInfo.indexOf(";", phonePos);
+				String phonePolicyInfo = paymentAdjustInfo.substring(phonePos, sepPos);
+				String[] arPhonePolicyInfo = phonePolicyInfo.split(":");
+				String maxAmt = arPhonePolicyInfo[1];
+				int maxPer = (int) (Double.parseDouble(arPhonePolicyInfo[2]));
+
+				if (StringUtils.equals(maxAmt, "MAXAMT")) {
+					phoneAvailAmt = resultMaxAmt;
+				} else {
+					if (Double.parseDouble(maxAmt) < resultMaxAmt) {
+						phoneAvailAmt = Double.parseDouble(maxAmt);
+					}
+				}
+
+				if (maxPer < resultMaxPer) {
+					phoneAvailPer = maxPer;
+				}
+
+				this.logger.info("PRCHS,ORDER,SAC,POLICY,PHONE,ADJ,{},{}", phonePaymethodInfo, paymentAdjustInfo);
+
+				if (phonePos == 0) {
+					paymentAdjustInfo = paymentAdjustInfo.substring(sepPos + 1);
+				} else {
+					paymentAdjustInfo = paymentAdjustInfo.substring(0, phonePos)
+							+ paymentAdjustInfo.substring(sepPos + 1);
+				}
+			}
+
+			phonePaymethodInfo = "11:" + phoneAvailAmt + ":" + phoneAvailPer;
+
+		} else {
+			if (phonePos >= 0) {
+				int sepPos = paymentAdjustInfo.indexOf(";", phonePos);
+				phonePaymethodInfo = paymentAdjustInfo.substring(phonePos, sepPos);
+
+				if (phonePos == 0) {
+					paymentAdjustInfo = paymentAdjustInfo.substring(sepPos + 1);
+				} else {
+					paymentAdjustInfo = paymentAdjustInfo.substring(0, phonePos)
+							+ paymentAdjustInfo.substring(sepPos + 1);
+				}
+			}
+		}
+
+		StringBuffer sbPaymethodInfo = new StringBuffer(64);
+
+		if (StringUtils.isNotBlank(phonePaymethodInfo)) { // T store 회원이면서 SKT 가입자가 아닌경우를 제외하고는 값 존재
+			sbPaymethodInfo.append(phonePaymethodInfo).append(";12:0:0;");
+		} else {
+			sbPaymethodInfo.append("11:0:0;");
+		}
+
+		// PP용 : 쇼핑상품권 경우, 신용카드, 페이핀 결제수단 제외
+		if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_GIFT)
+				&& StringUtils.startsWith(systemId, PurchaseConstants.TENANT_ID_TSTORE) == false) {
+			sbPaymethodInfo.append("13:0:0;14:0:0;");
+		}
+
+		sbPaymethodInfo.append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
+
+		// 시리즈 패스
+		if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+			return sbPaymethodInfo.toString().replaceAll("14:0:0;", "");
+		} else {
+			return sbPaymethodInfo.toString();
+		}
+	}
+
+	/*
+	 * 
+	 * <pre> 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보 조회 </pre>
+	 * 
+	 * @param tenantId 테넌트 ID
+	 * 
+	 * @param tenantProdGrpCd 테넌트상품분류코드
+	 * 
+	 * @return 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보
+	 */
+	@Override
+	public String getAvailablePaymethodAdjustInfo(String tenantId, String tenantProdGrpCd) {
+		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
+				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD, false);
+
+		if (CollectionUtils.isNotEmpty(policyList)) {
+			return StringUtils.defaultString(policyList.get(0).getApplyValue(), "");
+		}
+
+		return null;
 	}
 }

@@ -20,8 +20,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
+import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
 
 /**
  * 
@@ -53,14 +53,14 @@ public class PurchaseOrderPolicyServiceImplTest {
 	 */
 	@Test
 	public void checkTenantPolicy() {
-		SktPaymentPolicyCheckParam policyCheckParam = new SktPaymentPolicyCheckParam();
-		policyCheckParam.setTenantId("S01");
-		policyCheckParam.setUserKey("MBR01");
-		policyCheckParam.setDeviceKey("MBR01_1");
-		policyCheckParam.setDeviceId("01046353524");
-		policyCheckParam.setTenantProdGrpCd("OR006221");
-		policyCheckParam.setPaymentTotAmt(10000.0);
+		CheckPaymentPolicyParam checkPaymentPolicyParam = new CheckPaymentPolicyParam();
+		checkPaymentPolicyParam.setTenantId("S01");
+		checkPaymentPolicyParam.setUserKey("MBR01");
+		checkPaymentPolicyParam.setDeviceKey("MBR01_1");
+		checkPaymentPolicyParam.setDeviceId("01046353524");
+		checkPaymentPolicyParam.setTenantProdGrpCd("OR006321DP01OR006311");
+		checkPaymentPolicyParam.setPaymentTotAmt(10000.0);
 
-		this.purchasePolicyService.checkSktPaymentPolicy(policyCheckParam);
+		this.purchasePolicyService.checkPaymentPolicy(checkPaymentPolicyParam);
 	}
 }

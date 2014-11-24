@@ -28,4 +28,33 @@ public interface PurchaseOrderPaymentPageService {
 	 *            구매요청 정보
 	 */
 	public void buildPaymentPageUrlParam(PurchaseOrderInfo purchaseOrderInfo);
+
+	/**
+	 * 
+	 * <pre>
+	 * 결제Page 템플릿 코드 정의.
+	 * </pre>
+	 * 
+	 * @param prchsCaseCd
+	 *            구매/선물 구분 코드
+	 * 
+	 * @param tenantProdGrpCd
+	 *            테넌트 상품 그룹 코드
+	 * 
+	 * @param cmpxProdClsfCd
+	 *            정액상품 구분 코드
+	 * 
+	 * @param bIapAutoPrchs
+	 *            IAP 월자동결제 상품 여부
+	 * 
+	 * @param bS2sAutoPrchs
+	 *            IAP S2S 월자동결제 상품 여부
+	 * 
+	 * @param prchsProdCnt
+	 *            구매하는 상품 갯수
+	 * 
+	 * @return 결제Page 템플릿 코드
+	 */
+	public String adjustPaymentPageTemplate(String prchsCaseCd, String tenantProdGrpCd, String cmpxProdClsfCd,
+			boolean bIapAutoPrchs, boolean bS2sAutoPrchs, int prchsProdCnt);
 }

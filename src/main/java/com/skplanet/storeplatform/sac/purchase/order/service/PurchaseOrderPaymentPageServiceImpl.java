@@ -362,4 +362,77 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 
 		return sbParam.toString();
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 결제Page 템플릿 코드 정의.
+	 * </pre>
+	 * 
+	 * @param prchsCaseCd
+	 *            구매/선물 구분 코드
+	 * 
+	 * @param tenantProdGrpCd
+	 *            테넌트 상품 그룹 코드
+	 * 
+	 * @param cmpxProdClsfCd
+	 *            정액상품 구분 코드
+	 * 
+	 * @param bIapAutoPrchs
+	 *            IAP 월자동결제 상품 여부
+	 * 
+	 * @param bS2sAutoPrchs
+	 *            IAP S2S 월자동결제 상품 여부
+	 * 
+	 * @param prchsProdCnt
+	 *            구매하는 상품 갯수
+	 * 
+	 * @return 결제Page 템플릿 코드
+	 */
+	@Override
+	public String adjustPaymentPageTemplate(String prchsCaseCd, String tenantProdGrpCd, String cmpxProdClsfCd,
+			boolean bIapAutoPrchs, boolean bS2sAutoPrchs, int prchsProdCnt) {
+		if (StringUtils.equals(prchsCaseCd, PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GIFT; // 선물: TC06
+
+		} else {
+			if (bS2sAutoPrchs) { // IAP S2S 월자동결제 상품
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY; // S2S 자동결제: TC08
+
+			} else if (bIapAutoPrchs) { // IAP 월자동결제 상품
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY; // IAP 자동결제: TC07
+
+			} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING; // 쇼핑: TC05
+
+			} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)
+					&& StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)
+					&& (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS) == false)) {
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
+
+				// } else if (StringUtils
+				// .startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
+				// || StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
+				// if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS) == false)
+				// {
+				// return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
+				// }
+
+			} else if (prchsProdCnt == 1
+					&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
+							.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC))
+					&& StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE) == false) {
+				// return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_LOAN_OWN; // 대여/소장: TC03
+				// 대여/소장 TAB 제거 : 2014/08/27 적용
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_NORMAL; // 일반: TC01
+
+			} else if (StringUtils.startsWith(tenantProdGrpCd,
+					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE; // 정액제(게임캐쉬): TC02
+
+			} else {
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_NORMAL; // 일반: TC01
+			}
+		}
+	}
 }

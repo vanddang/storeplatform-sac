@@ -260,6 +260,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 
 		List<IndividualPolicyInfoSac> individualPolicyInfoSacList = getIndividualPolicySacRes.getPolicyList();
 		for (IndividualPolicyInfoSac individualPolicyInfoSac : individualPolicyInfoSacList) {
+			// USE_YN 값이 Y 인 정책만 대상
 			if (StringUtils.equals(individualPolicyInfoSac.getIsUsed(), PurchaseConstants.USE_Y)) {
 				resMap.put(individualPolicyInfoSac.getPolicyCode(), individualPolicyInfoSac);
 			}

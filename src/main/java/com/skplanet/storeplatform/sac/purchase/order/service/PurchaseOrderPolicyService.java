@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
+import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyResult;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckParam;
-import com.skplanet.storeplatform.sac.purchase.order.vo.SktPaymentPolicyCheckResult;
 
 /**
  * 
@@ -147,12 +147,12 @@ public interface PurchaseOrderPolicyService {
 	/**
 	 * 
 	 * <pre>
-	 * SKT 후불 결제 진행 시 관련 정책 체크.
+	 * 결제 정책 체크.
 	 * </pre>
 	 * 
 	 * @param policyCheckParam
 	 *            정책 체크 대상 데이터
 	 * @return 정책 체크 결과
 	 */
-	public SktPaymentPolicyCheckResult checkSktPaymentPolicy(SktPaymentPolicyCheckParam policyCheckParam);
+	public CheckPaymentPolicyResult checkPaymentPolicy(CheckPaymentPolicyParam policyCheckParam);
 }

@@ -905,7 +905,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				usePeriod = "0"; // dummy
 
 			} else if (StringUtils.equals(prodKind, "PK0002")) { // 소멸
-				usePeriodUnitCd = "PRCHS_DT";
+				usePeriodUnitCd = null; // 쿼리에서 구매일시로 세팅
 				usePeriod = "0"; // dummy
 			}
 
@@ -936,17 +936,19 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		} else if (StringUtils.equals(prodCase, "PB0006")) { // 자동결제
 
-			if (StringUtils.equals(prodKind, "PK0005")) { // 월별자동결제
+			if (StringUtils.equals(prodKind, "PK0005")) { // 월별자동결제 : 한달 기준 TAKCHECK
+
 				if (iapInfo.getUsePeriod() == null || iapInfo.getUsePeriod() <= 0) {
 					throw new StorePlatformException("SAC_PUR_5118", iapInfo.getUsePeriod());
 				}
 
-				usePeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE;
-				usePeriod = "30";
+				usePeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH;
+				usePeriod = "1";
 
 				autoPrchsYN = "Y";
-				autoPrchsPeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE;
-				autoPrchsPeriodValue = 30;
+				autoPrchsPeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH;
+				autoPrchsPeriodValue = 1;
+
 				autoPrchsLastPeriodValue = iapInfo.getUsePeriod();
 			}
 

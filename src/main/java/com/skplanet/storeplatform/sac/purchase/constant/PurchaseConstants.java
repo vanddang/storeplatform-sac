@@ -19,6 +19,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 기본 인코딩 */
 	public static final String DEFAULT_ENCODING = "UTF-8";
 
+	public static final String TENANT_ID_ETC = "S00";
 	public static final String TENANT_ID_TSTORE = "S01";
 	public static final String TENANT_ID_OLLEH = "S02";
 	public static final String TENANT_ID_UPLUS = "S03";
@@ -60,18 +61,18 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String SKT_SYSTEM_DIVISION_VOD_FIXRATE_APPROVAL = "033C"; // VOD정액상품 승인용
 	public static final String SKT_SYSTEM_DIVISION_VOD_FIXRATE_CANCEL = "033D"; // VOD정액상품 취소용
 
-	/** SKT후불 결제수단 재정의 원인 타입 */
-	public static final String SKT_ADJUST_REASON_NO_LIMIT = "L00"; // 제한없음 / 타통신사
-	public static final String SKT_ADJUST_REASON_MVNO = "L01"; // MVNO
-	public static final String SKT_ADJUST_REASON_CORP = "L02"; // 법인폰
-	public static final String SKT_ADJUST_REASON_SKTTEST_ALLOW = "L03"; // 허용 SKT시험폰
-	public static final String SKT_ADJUST_REASON_SKTTEST_NOT_ALLOW = "L04"; // 비허용 SKT시험폰
-	public static final String SKT_ADJUST_REASON_SHOPPING_PRCHS_USERPART_LIMIT = "L05"; // SKT후불 쇼핑상품 회원 별 강제적용 한도금액
-	public static final String SKT_ADJUST_REASON_SHOPPING_LIMIT = "L06"; // SKT후불 쇼핑상품 한도금액
-	public static final String SKT_ADJUST_REASON_SHOPPING_RECV_LIMIT = "L07"; // SKT후불 쇼핑상품 선물수신 한도금액
-	public static final String SKT_ADJUST_REASON_LIMIT = "L08"; // SKT후불 한도금액
-	public static final String SKT_ADJUST_REASON_RECV_LIMIT = "L09"; // SKT후불 선물수신 한도금액
-	public static final String SKT_ADJUST_REASON_SHOPPING_RECV_USERPART_LIMIT = "L10"; // SKT후불 쇼핑상품 선물수신 회원 별 강제적용 한도금액
+	/** 후불 결제수단 재정의 원인 타입 */
+	public static final String PHONE_ADJUST_REASON_NO_LIMIT = "L00"; // 제한없음 / 타통신사
+	public static final String PHONE_ADJUST_REASON_MVNO = "L01"; // MVNO
+	public static final String PHONE_ADJUST_REASON_CORP = "L02"; // 법인폰
+	public static final String PHONE_ADJUST_REASON_SKTTEST_ALLOW = "L03"; // 허용 SKT시험폰
+	public static final String PHONE_ADJUST_REASON_SKTTEST_NOT_ALLOW = "L04"; // 비허용 SKT시험폰
+	public static final String PHONE_ADJUST_REASON_SHOPPING_PRCHS_USERPART_LIMIT = "L05"; // 후불 쇼핑상품 회원 별 강제적용 한도금액
+	public static final String PHONE_ADJUST_REASON_SHOPPING_LIMIT = "L06"; // 후불 쇼핑상품 한도금액
+	public static final String PHONE_ADJUST_REASON_SHOPPING_RECV_LIMIT = "L07"; // 후불 쇼핑상품 선물수신 한도금액
+	public static final String PHONE_ADJUST_REASON_LIMIT = "L08"; // 후불 한도금액
+	public static final String PHONE_ADJUST_REASON_RECV_LIMIT = "L09"; // 후불 선물수신 한도금액
+	public static final String PHONE_ADJUST_REASON_SHOPPING_RECV_USERPART_LIMIT = "L10"; // 후불 쇼핑상품 선물수신 회원 별 강제적용 한도금액
 
 	/** 쇼핑 상품 판매자 디폴트 정보 */
 	public static final String SHOPPING_SELLER_DEFAULT_NAME = "Tstore"; // 판매자명
@@ -110,10 +111,10 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String VERIFYORDER_BLOCK_PAYMENT = "0"; // 결제차단
 	public static final String VERIFYORDER_ALLOW_PAYMENT = "1"; // 결제가능
 
-	/** SKT 결제 타입 */
-	public static final String SKT_PAYMENT_TYPE_TESTDEVICE = "T01"; // 시험폰용: 시험폰NUD
-	public static final String SKT_PAYMENT_TYPE_ETCSERVICE = "T02"; // 서비스검증용: SKT 불가
-	public static final String SKT_PAYMENT_TYPE_NORMAL = "T03"; // 일반
+	/** 통신사 후불 결제 타입 */
+	public static final String DEFERRED_PAYMENT_TYPE_TESTDEVICE = "T01"; // 시험폰용: 시험폰NUD
+	public static final String DEFERRED_PAYMENT_TYPE_ETCSERVICE = "T02"; // 서비스검증용: SKT 불가
+	public static final String DEFERRED_PAYMENT_TYPE_NORMAL = "T03"; // 일반
 
 	/** 결제Page Template */
 	public static final String PAYMENT_PAGE_TEMPLATE_NORMAL = "TC01"; // 일반
