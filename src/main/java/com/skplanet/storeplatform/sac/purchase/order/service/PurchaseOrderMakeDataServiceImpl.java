@@ -324,10 +324,11 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		for (PrchsDtlMore prchsDtlMore : prchsDtlMoreList) {
 			prchsProdCnt = new PrchsProdCnt();
 
-			// 1:N 선물 지원 - 중복 구매 가능한 쇼핑상품 / 부분유료화 상품 처리
+			// 1:N 선물 지원 - 중복 구매 가능한 쇼핑상품 / 부분유료화 소멸성 상품 처리
 			tenantProdGrpCd = prchsDtlMore.getTenantProdGrpCd();
-			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
-					|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
+					|| (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) && StringUtils
+							.equals(prchsDtlMore.getContentsType(), "PK0002"))) {
 
 				if (prchsDtlMore.getProdQty() > 1) { // 1개 상품을 복수구매 경우
 					procKey = prchsDtlMore.getProdId() + prchsDtlMore.getUseInsdDeviceId();
