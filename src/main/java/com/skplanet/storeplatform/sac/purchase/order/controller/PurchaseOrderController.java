@@ -215,6 +215,7 @@ public class PurchaseOrderController {
 		// 응답 세팅
 		CreateBizPurchaseSacRes res = new CreateBizPurchaseSacRes();
 		res.setPrchsId(purchaseOrderInfo.getPrchsId());
+		res.setPrchsDt(purchaseOrderInfo.getPrchsDt());
 		res.setCount(count);
 
 		this.logger.info("PRCHS,ORDER,SAC,CREATEBIZ,RES,{}",
