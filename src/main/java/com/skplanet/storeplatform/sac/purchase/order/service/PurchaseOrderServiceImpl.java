@@ -580,8 +580,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			checkProdId = prchsDtlMore.getProdId();
 		}
 		CheckPaymentPolicyResult checkPaymentPolicyResult = this.checkPaymentPolicy(prchsDtlMore,
-				reservedDataMap.get("telecom"), reservedDataMap.get("deviceId"), reservedDataMap.get("useDeviceId"),
-				reservedDataMap.get("prodCaseCd"), reservedDataMap.get("cmpxProdClsfCd"), checkProdId);
+				verifyOrderInfo.getSystemId(), reservedDataMap.get("telecom"), reservedDataMap.get("deviceId"),
+				reservedDataMap.get("useDeviceId"), reservedDataMap.get("prodCaseCd"),
+				reservedDataMap.get("cmpxProdClsfCd"), checkProdId);
 
 		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)
 				&& StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) == false) {
@@ -1750,12 +1751,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @return 결제 정책 체크 결과
 	 */
-	private CheckPaymentPolicyResult checkPaymentPolicy(PrchsDtlMore prchsDtlMore, String telecom, String payDeviceId,
-			String useDeviceId, String prodCaseCd, String cmpxProdClsfCd, String prodId) {
+	private CheckPaymentPolicyResult checkPaymentPolicy(PrchsDtlMore prchsDtlMore, String systemId, String telecom,
+			String payDeviceId, String useDeviceId, String prodCaseCd, String cmpxProdClsfCd, String prodId) {
 
 		CheckPaymentPolicyParam policyCheckParam = new CheckPaymentPolicyParam();
 		policyCheckParam.setTenantId(prchsDtlMore.getTenantId());
-		policyCheckParam.setSystemId(prchsDtlMore.getSystemId());
+		policyCheckParam.setSystemId(systemId); // 구매인증 요청한 시스템ID
 		policyCheckParam.setDeviceId(payDeviceId);
 		policyCheckParam.setPaymentTotAmt(prchsDtlMore.getTotAmt());
 		policyCheckParam.setTenantProdGrpCd(prchsDtlMore.getTenantProdGrpCd());
