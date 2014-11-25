@@ -21,5 +21,5 @@ import com.skplanet.storeplatform.sac.display.cache.vo.SegmentInfo;
  */
 public interface CardListService {
 
-    Panel listInPanel(String tenantId, String langCd, String pannelId, SegmentInfo sgmtKey, PreferredCategoryInfo preferredCategoryInfo, boolean disableCardLimit);
+    Panel listInPanel(String tenantId, String langCd, String pannelId, String userKey, SegmentInfo sgmtKey, PreferredCategoryInfo preferredCategoryInfo, boolean disableCardLimit);
 }

@@ -21,15 +21,17 @@ public class CardListGeneratorContext {
 
     private String tenantId;
     private String langCd;
+    private String userKey;
     private String reqPanelId;
     private SegmentInfo segmentInfo;
     private PreferredCategoryInfo preferredCategoryInfo;
     private boolean disableCardLimit;
 
-    public CardListGeneratorContext(String tenantId, String langCd, String reqPanelId, SegmentInfo segmentInfo, PreferredCategoryInfo preferredCategoryInfo, boolean disableCardLimit) {
+    public CardListGeneratorContext(String tenantId, String langCd, String reqPanelId, String userKey, SegmentInfo segmentInfo, PreferredCategoryInfo preferredCategoryInfo, boolean disableCardLimit) {
         this.tenantId = tenantId;
         this.langCd = langCd;
         this.reqPanelId = reqPanelId;
+        this.userKey = userKey;
         this.segmentInfo = segmentInfo;
         this.preferredCategoryInfo = preferredCategoryInfo;
         this.disableCardLimit = disableCardLimit;
@@ -57,5 +59,9 @@ public class CardListGeneratorContext {
 
     public boolean isDisableCardLimit() {
         return disableCardLimit;
+    }
+
+    public String getUserKey() {
+        return userKey;
     }
 }

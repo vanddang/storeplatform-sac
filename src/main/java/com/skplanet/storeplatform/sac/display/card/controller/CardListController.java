@@ -44,8 +44,7 @@ public class CardListController {
         String langCd = header.getTenantHeader().getLangCd();
         SegmentInfo segmentInfo = new SegmentInfo(req.getSegment());
 
-        return cardListService.listInPanel(tenantId, langCd, req.getPanelId(),
-                segmentInfo, new PreferredCategoryInfo(req.getPreferredCategoryList()),
-                BooleanUtils.toBoolean(req.getDisableCardLimit()));
+        return cardListService.listInPanel(tenantId, langCd, req.getPanelId(), req.getUserKey(), segmentInfo,
+                new PreferredCategoryInfo(req.getPreferredCategoryList()), BooleanUtils.toBoolean(req.getDisableCardLimit()));
     }
 }

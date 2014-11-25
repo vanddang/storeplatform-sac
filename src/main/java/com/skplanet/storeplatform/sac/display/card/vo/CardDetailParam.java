@@ -29,11 +29,6 @@ public class CardDetailParam extends CommonInfo {
 
     public CardDetailParam() {}
 
-    public CardDetailParam(String tenantId, String cardId) {
-        this.tenantId = tenantId;
-        this.cardId = cardId;
-    }
-
     public CardDetailParam(String tenantId, String cardId, String userKey) {
         this.tenantId = tenantId;
         this.cardId = cardId;

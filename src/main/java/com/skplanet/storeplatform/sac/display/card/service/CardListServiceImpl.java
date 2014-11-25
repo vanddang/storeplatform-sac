@@ -62,10 +62,10 @@ public class CardListServiceImpl implements CardListService {
     private static final int CARD_LIMIT_MAX = 50;
 
     @Override
-    public Panel listInPanel(final String tenantId, final String langCd, final String panelId, final SegmentInfo sgmtKey,
+    public Panel listInPanel(final String tenantId, final String langCd, final String panelId, final String userKey, final SegmentInfo sgmtKey,
                              PreferredCategoryInfo preferredCategoryInfo, boolean disableCardLimit) {
 
-        CardListGeneratorContext ctx = new CardListGeneratorContext(tenantId, langCd, panelId, sgmtKey, preferredCategoryInfo, disableCardLimit);
+        CardListGeneratorContext ctx = new CardListGeneratorContext(tenantId, langCd, panelId, userKey, sgmtKey, preferredCategoryInfo, disableCardLimit);
 
         List<PanelItem> panelItems = panelCardInfoManager.getPanelList(ctx.getTenantId(), panelId);
 
@@ -115,7 +115,7 @@ public class CardListServiceImpl implements CardListService {
             if(!panCard.isVisibleForDate(stdDt))
                 continue;
 
-            CardDetail cardDetail = cardDetailService.searchCardDetail(new CardDetailParam(ctx.getTenantId(), panCard.getCardId()));
+            CardDetail cardDetail = cardDetailService.searchCardDetail(new CardDetailParam(ctx.getTenantId(), panCard.getCardId(), ctx.getUserKey()));
             if (cardDetail != null) {
                 // NOTICE 플러그인 형태로 구현 가능하지 않을까?
                 // Segment 프로비저닝 적용
