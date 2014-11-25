@@ -155,4 +155,26 @@ public interface PurchaseOrderPolicyService {
 	 * @return 정책 체크 결과
 	 */
 	public CheckPaymentPolicyResult checkPaymentPolicy(CheckPaymentPolicyParam policyCheckParam);
+
+	/**
+	 * 
+	 * <pre>
+	 * 결제수단 별 OCB 적립율 산정.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트 ID
+	 * 
+	 * @param telecom
+	 *            통신사
+	 * 
+	 * @param tenantProdGrpCd
+	 *            테넌트 상품 그룹 코드
+	 * 
+	 * @param sktTestOrSkpCorp
+	 *            시험폰 또는 SKP법인폰 여부
+	 * 
+	 * @return 결제수단 별 OCB 적립율
+	 */
+	public String adjustOcbSaveInfo(String tenantId, String telecom, String tenantProdGrpCd, boolean sktTestOrSkpCorp);
 }

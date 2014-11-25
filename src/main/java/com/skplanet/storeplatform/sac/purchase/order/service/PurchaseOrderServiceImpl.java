@@ -682,8 +682,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		boolean sktTestOrSkpCorp = (checkPaymentPolicyResult != null ? (checkPaymentPolicyResult.isTelecomTestMdn() || checkPaymentPolicyResult
 				.isSkpCorporation()) : false);
 
-		res.setCdOcbSaveInfo(this.adjustOcbSaveInfo(prchsDtlMore.getTenantId(), reservedDataMap.get("telecom"),
-				prchsDtlMore.getTenantProdGrpCd(), sktTestOrSkpCorp));
+		res.setCdOcbSaveInfo(this.purchaseOrderPolicyService.adjustOcbSaveInfo(prchsDtlMore.getTenantId(),
+				reservedDataMap.get("telecom"), prchsDtlMore.getTenantProdGrpCd(), sktTestOrSkpCorp));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제Page 템플릿
@@ -1725,54 +1725,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		}
 
 		return prchsDtlMoreList;
-	}
-
-	/*
-	 * 
-	 * <pre> 결제수단 별 OCB 적립율 산정. </pre>
-	 * 
-	 * @param tenantId 테넌트 ID
-	 * 
-	 * @param telecom 통신사
-	 * 
-	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
-	 * 
-	 * @param sktTestOrSkpCorp 시험폰 또는 SKP법인폰 여부
-	 * 
-	 * @return 결제수단 별 OCB 적립율
-	 */
-	private String adjustOcbSaveInfo(String tenantId, String telecom, String tenantProdGrpCd, boolean sktTestOrSkpCorp) {
-
-		// 쇼핑상품, VOD정액제 상품, 게임캐쉬 정액 상품 제외
-		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
-				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
-				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)
-				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-			return "";
-
-		} else {
-			StringBuffer sbOcbAccum = new StringBuffer(64);
-
-			if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_TSTORE)) {
-
-				if (StringUtils.equals(telecom, PurchaseConstants.TELECOM_SKT)) {
-					sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:0.1;"); // 시험폰, SKP법인폰 결제 제외
-				} else {
-					sbOcbAccum.append("12:0.1;"); // 다날
-				}
-
-				sbOcbAccum.append("13:0.1;14:0.1;25:0.1"); // 신용카드, PayPin, T store Cash
-
-			} else if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_OLLEH)) {
-				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:0.1;"); // 시험폰, SKP법인폰 결제 제외
-				sbOcbAccum.append("13:0.1"); // 신용카드
-
-			} else if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_UPLUS)) {
-				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:0.1;"); // 시험폰, SKP법인폰 결제 제외
-			}
-
-			return sbOcbAccum.toString();
-		}
 	}
 
 	/*
