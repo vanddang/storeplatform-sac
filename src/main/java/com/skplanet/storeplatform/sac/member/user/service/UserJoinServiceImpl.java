@@ -20,8 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
-import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcRes;
+import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcRes;
+import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.CheckDupIdEcReq;

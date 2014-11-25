@@ -24,13 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.external.client.csp.sci.CspSCI;
-import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerCardEcReq;
-import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerCardEcRes;
-import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcReq;
-import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
-import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcReq;
-import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcRes;
+import com.skplanet.storeplatform.external.client.icas.sci.IcasSCI;
+import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerCardEcReq;
+import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerCardEcRes;
+import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcReq;
+import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcRes;
+import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcReq;
+import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
@@ -91,7 +91,7 @@ public class MemberCommonComponent {
 	private UserSCI userSCI;
 
 	@Autowired
-	private CspSCI cspSCI;
+	private IcasSCI icasSCI;
 
 	@Autowired
 	private SellerSCI sellerSCI;
@@ -683,7 +683,7 @@ public class MemberCommonComponent {
 	public GetCustomerEcRes getCustomer(String msisdn) {
 		GetCustomerEcReq req = new GetCustomerEcReq();
 		req.setDeviceId(msisdn);
-		return this.cspSCI.getCustomer(req);
+		return this.icasSCI.getCustomer(req);
 	}
 
 	/**
@@ -700,7 +700,7 @@ public class MemberCommonComponent {
 	public GetCustomerCardEcRes getCustomerCard(String msisdn) {
 		GetCustomerCardEcReq req = new GetCustomerCardEcReq();
 		req.setDeviceId(msisdn);
-		return this.cspSCI.getCustomerCard(req);
+		return this.icasSCI.getCustomerCard(req);
 	}
 
 	/**
@@ -717,7 +717,7 @@ public class MemberCommonComponent {
 	public GetMvnoEcRes getMvService(String msisdn) {
 		GetMvnoEcReq req = new GetMvnoEcReq();
 		req.setDeviceId(msisdn);
-		return this.cspSCI.getMvService(req);
+		return this.icasSCI.getMvService(req);
 	}
 
 	/**
