@@ -24,10 +24,8 @@
 			,CRD.LND_IMG_PATH
 			,CRD.LND_IMG_RATIO	
 			,CRD.MENU_ID	
-			,CRD.SMART_OFR_LIST_ID
-			
-			/* 주의 : Inner Query 를 사용하는 경우 SHARE_URL이 맨 처음에 와야함 - 변수 바인딩하다 에러남 */
-			, (	SELECT REPLACE(NVL(CD_DESC, ''), '\#{cardId}', CRD.CARD_ID) 
+			,CRD.SMART_OFR_LIST_ID			
+			, (	SELECT NVL(CD_DESC, '') 
 				FROM TB_CM_CD 
 				WHERE CD_ID = 'DP0124' || #{tenantId})  AS SHARE_URL				
 			<if test='userKey != null'>
