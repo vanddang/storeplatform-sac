@@ -48,6 +48,7 @@
         WHERE   1=1
                 AND TENANT_ID = #{tenantId}
                 AND POLICY_ID = #{policyId}
+                AND TENANT_PROD_GRP_CD LIKE 'OR0062%' -- InApp 설정 제외
             <if test="menuId != null">
                 AND SUBSTR(TENANT_PROD_GRP_CD,9,4) = #{menuId}
             </if>
