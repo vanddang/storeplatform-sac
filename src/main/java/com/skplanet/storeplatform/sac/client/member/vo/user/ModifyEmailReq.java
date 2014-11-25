@@ -16,6 +16,7 @@ public class ModifyEmailReq extends CommonInfo {
 	/**
 	 * 테넌트 ID.
 	 */
+	@NotEmpty
 	private String tenantId = "";
 
 	/**
