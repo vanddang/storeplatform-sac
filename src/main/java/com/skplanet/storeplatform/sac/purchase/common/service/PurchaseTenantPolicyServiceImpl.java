@@ -137,7 +137,6 @@ public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyServ
 		qryParam.setTenantId(tenantId);
 		qryParam.setTenantProdGrpCd(tenantProdGrpCd + StringUtils.defaultString(prodKindCd)); // 쇼핑/정액권 경우, 상품타입까지.
 		qryParam.setProcPatternCd(PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD);
-		qryParam.setProcPatternCd("CM011694");
 		qryParam.setProdId(prodId);
 
 		return this.commonDao.queryForObject("PurchaseSacCommon.searchPaymentPolicy", qryParam,
