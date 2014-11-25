@@ -292,6 +292,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			SendPurchaseNotiEcReq sendPurchaseNotiEcReq = new SendPurchaseNotiEcReq();
 			sendPurchaseNotiEcReq.setTenantId(prchsDtlMore.getTenantId());
 			sendPurchaseNotiEcReq.setDeviceId(reservedDataMap.get("deviceId"));
+			sendPurchaseNotiEcReq.setDeviceKey(reservedDataMap.get("marketDeviceKey"));
 			sendPurchaseNotiEcReq.setUserEmail(userEmail);
 			sendPurchaseNotiEcReq.setPrchsId(prchsDtlMore.getPrchsId());
 			sendPurchaseNotiEcReq.setPrchsDt(prchsDtlMore.getPrchsDt());
@@ -379,6 +380,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			sapNoti.setPrchsDtlId(prchsDtlId++);
 			sapNoti.setInsdUsermbrNo(payUserKey);
 			sapNoti.setInsdDeviceId(payDeviceKey);
+			sapNoti.setMarketDeviceKey(sendPurchaseNotiEcReq.getDeviceKey());
 			sapNoti.setDeviceId(sendPurchaseNotiEcReq.getDeviceId());
 			sapNoti.setUserEmail(sendPurchaseNotiEcReq.getUserEmail());
 			sapNoti.setStatusCd(sendPurchaseNotiEcReq.getStatusCd());
