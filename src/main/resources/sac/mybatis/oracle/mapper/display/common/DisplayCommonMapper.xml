@@ -46,9 +46,13 @@
             ,NVL(SUBSTR(REGEXP_SUBSTR(APPLY_VALUE , '21:MAXAMT:[0-9][0-9]') , 11) , 0) DC_RATE
         FROM    TB_CM_TENANT_SALE_POLICY
         WHERE   1=1
+            <![CDATA[ 
                 AND TENANT_ID = #{tenantId}
                 AND POLICY_ID = #{policyId}
-                AND TENANT_PROD_GRP_CD LIKE 'OR0062%' -- InApp 설정 제외
+                AND TENANT_PROD_GRP_CD LIKE 'OR0062%'   -- InApp 설정 제외
+                AND START_DT <= SYSDATE                 -- 현재 유효한 설정 필터링
+                AND EXPR_DT > SYSDATE                   -- 현재 유효한 설정 필터링
+            ]]>
             <if test="menuId != null">
                 AND SUBSTR(TENANT_PROD_GRP_CD,9,4) = #{menuId}
             </if>
