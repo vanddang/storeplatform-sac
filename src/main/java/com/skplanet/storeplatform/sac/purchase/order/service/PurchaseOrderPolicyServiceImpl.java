@@ -383,7 +383,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		String paymentAdjInfo = this.adjustPaymethod(phonePaymethodInfo, checkPaymentPolicyParam.getTenantId(),
 				checkPaymentPolicyParam.getSystemId(), checkPaymentPolicyParam.getTenantProdGrpCd(),
 				checkPaymentPolicyParam.getProdCaseCd(), checkPaymentPolicyParam.getCmpxProdClsfCd(),
-				checkPaymentPolicyParam.getPaymentTotAmt());
+				checkPaymentPolicyParam.getPaymentTotAmt(), checkPaymentPolicyParam.getProdId());
 
 		checkPaymentPolicyResult.setPaymentAdjInfo(paymentAdjInfo);
 
@@ -1193,9 +1193,16 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 재정의 된 결제 수단 정보
 	 */
 	private String adjustPaymethod(String phonePaymethodInfo, String tenantId, String systemId, String tenantProdGrpCd,
-			String prodCaseCd, String cmpxProdClsfCd, double payAmt) {
+			String prodCaseCd, String cmpxProdClsfCd, double payAmt, String prodId) {
 		// 결제수단 별 가능 거래금액/비율 조정 정보
-		String paymentAdjustInfo = this.getAvailablePaymethodAdjustInfo(tenantId, tenantProdGrpCd);
+		String prodKindCd = null;
+		if (StringUtils.isNotBlank(prodCaseCd)) {
+			prodKindCd = prodCaseCd;
+		} else if (StringUtils.isNotBlank(cmpxProdClsfCd)) {
+			prodKindCd = cmpxProdClsfCd;
+		}
+
+		String paymentAdjustInfo = this.getAvailablePaymethodAdjustInfo(tenantId, tenantProdGrpCd, prodKindCd, prodId);
 		if (paymentAdjustInfo == null) {
 			throw new StorePlatformException("SAC_PUR_7103");
 		}
@@ -1288,15 +1295,27 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @param tenantProdGrpCd 테넌트상품분류코드
 	 * 
+	 * @param prodKindCd 상품종류코드
+	 * 
+	 * @param prodId 상품별 정책 조회할 상품ID
+	 * 
 	 * @return 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보
 	 */
 	@Override
-	public String getAvailablePaymethodAdjustInfo(String tenantId, String tenantProdGrpCd) {
-		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
-				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD, false);
+	public String getAvailablePaymethodAdjustInfo(String tenantId, String tenantProdGrpCd, String prodKindCd,
+			String prodId) {
+		// List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
+		// tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD, false);
+		//
+		// if (CollectionUtils.isNotEmpty(policyList)) {
+		// return StringUtils.defaultString(policyList.get(0).getApplyValue(), "");
+		// }
 
-		if (CollectionUtils.isNotEmpty(policyList)) {
-			return StringUtils.defaultString(policyList.get(0).getApplyValue(), "");
+		PurchaseTenantPolicy policy = this.purchaseTenantPolicyService.searchPaymentPolicy(tenantId, tenantProdGrpCd,
+				prodKindCd, prodId);
+
+		if (policy != null) {
+			return StringUtils.defaultString(policy.getApplyValue(), "");
 		}
 
 		return null;

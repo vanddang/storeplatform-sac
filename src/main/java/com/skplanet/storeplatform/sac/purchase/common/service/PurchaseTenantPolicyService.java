@@ -70,4 +70,23 @@ public interface PurchaseTenantPolicyService {
 	 */
 	public List<PurchaseTenantPolicy> searchPurchaseTenantPolicyList(String tenantId, String tenantProdGrpCd,
 			String procPatternCd, boolean ignoreTenantProdGrpCd);
+
+	/**
+	 * 
+	 * <pre>
+	 * 해당 테넌트의 결제 정책 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            정책을 조회할 대상 테넌트 ID
+	 * @param tenantProdGrpCd
+	 *            정책 기준이 되는 테넌트 상품 그룹 코드
+	 * @param prodKindCd
+	 *            상품종류코드
+	 * @param prodId
+	 *            상품별 정책 조회할 상품ID
+	 * @return 해당 테넌트의 구매Part 정책 목록
+	 */
+	public PurchaseTenantPolicy searchPaymentPolicy(String tenantId, String tenantProdGrpCd, String prodKindCd,
+			String prodId);
 }

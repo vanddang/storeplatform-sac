@@ -63,4 +63,17 @@ public class PurchaseOrderPolicyServiceImplTest {
 
 		this.purchasePolicyService.checkPaymentPolicy(checkPaymentPolicyParam);
 	}
+
+	@Test
+	public void getAvailablePaymethodAdjustInfo() {
+		String tenantId = "S01";
+		String tenantProdGrpCd = "OR006212DP18OR006311";
+		String prodKindCd = "DP006303";
+		String prodId = "OR006211DP01OR006311";
+		String val = this.purchasePolicyService.getAvailablePaymethodAdjustInfo(tenantId, tenantProdGrpCd, prodKindCd,
+				prodId);
+
+		System.out.println(val);
+
+	}
 }

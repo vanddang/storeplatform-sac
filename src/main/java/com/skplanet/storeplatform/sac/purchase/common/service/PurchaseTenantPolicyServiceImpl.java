@@ -14,12 +14,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * 
@@ -109,6 +111,36 @@ public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyServ
 		qryParam.setIgnoreTenantProdGrpCd(ignoreTenantProdGrpCd);
 
 		return this.commonDao.queryForList("PurchaseSacCommon.searchPurchaseTenantPolicyList", qryParam,
+				PurchaseTenantPolicy.class);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 해당 테넌트의 결제 정책 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            정책을 조회할 대상 테넌트 ID
+	 * @param tenantProdGrpCd
+	 *            정책 기준이 되는 테넌트 상품 그룹 코드
+	 * @param prodKindCd
+	 *            상품종류코드
+	 * @param prodId
+	 *            상품별 정책 조회할 상품ID
+	 * @return 해당 테넌트의 구매Part 정책 목록
+	 */
+	@Override
+	public PurchaseTenantPolicy searchPaymentPolicy(String tenantId, String tenantProdGrpCd, String prodKindCd,
+			String prodId) {
+		PurchaseTenantPolicy qryParam = new PurchaseTenantPolicy();
+		qryParam.setTenantId(tenantId);
+		qryParam.setTenantProdGrpCd(tenantProdGrpCd + StringUtils.defaultString(prodKindCd)); // 쇼핑/정액권 경우, 상품타입까지.
+		qryParam.setProcPatternCd(PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD);
+		qryParam.setProcPatternCd("CM011694");
+		qryParam.setProdId(prodId);
+
+		return this.commonDao.queryForObject("PurchaseSacCommon.searchPaymentPolicy", qryParam,
 				PurchaseTenantPolicy.class);
 	}
 

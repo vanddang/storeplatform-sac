@@ -128,7 +128,9 @@ public class PurchaseTenantPolicy extends CommonInfo {
 	 */
 	private long policyPrior;
 
-	private boolean ignoreTenantProdGrpCd; // 정책 조회 조건으로 사용. 정책 기준 테넌트상품그룹코드 무시여부 (Y/N)
+	private boolean ignoreTenantProdGrpCd; // 정책 조회 조건으로 사용: 정책 기준 테넌트상품그룹코드 무시여부 (Y/N)
+
+	private String prodId; // 정책 조회 조건으로 사용: 상품ID
 
 	/**
 	 * @return the tenantId
@@ -368,6 +370,21 @@ public class PurchaseTenantPolicy extends CommonInfo {
 	 */
 	public void setIgnoreTenantProdGrpCd(boolean ignoreTenantProdGrpCd) {
 		this.ignoreTenantProdGrpCd = ignoreTenantProdGrpCd;
+	}
+
+	/**
+	 * @return the prodId
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            the prodId to set
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
 }

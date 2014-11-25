@@ -35,6 +35,7 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	private String sktSvcMangNo; // SKT 서비스 관리번호
 	private String telecom; // 통신사 코드
 
+	private String prodId;
 	private String prodCaseCd;
 	private String cmpxProdClsfCd;
 
@@ -231,6 +232,21 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	 */
 	public void setTelecom(String telecom) {
 		this.telecom = telecom;
+	}
+
+	/**
+	 * @return the prodId
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            the prodId to set
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
 	/**
