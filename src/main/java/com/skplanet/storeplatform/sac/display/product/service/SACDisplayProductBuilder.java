@@ -355,8 +355,8 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 	}
 
     private void execSapPhase1(NotificationRefactoringSac notification) {
-        boolean s02 = notification.getDpSapMapping() != null && "Y".equals(notification.getDpSapMapping().getKtCheckYn());
-        boolean s03 = notification.getDpSapMapping() != null && "Y".equals(notification.getDpSapMapping().getLgCheckYn());
+        boolean s02 = notification.getDpSapMapping() != null && StringUtils.isNotEmpty(notification.getDpSapMapping().getKtProdId()) && "Y".equals(notification.getDpSapMapping().getKtCheckYn());
+        boolean s03 = notification.getDpSapMapping() != null && StringUtils.isNotEmpty(notification.getDpSapMapping().getLgProdId()) && "Y".equals(notification.getDpSapMapping().getLgCheckYn());
 
         ////////// 모상품 처리
         List<DPTenantProductVO> tenantInfo = notification.getDpProductTotal().getDpTenantProduct();
