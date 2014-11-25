@@ -21,6 +21,7 @@ public class CreateBizPurchaseSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String prchsId; // 구매 ID
+	private String prchsDt; // 구매일시
 	private int count; // 생성된 구매이력 건수
 
 	/**
@@ -36,6 +37,21 @@ public class CreateBizPurchaseSacRes extends CommonInfo {
 	 */
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the prchsDt
+	 */
+	public String getPrchsDt() {
+		return this.prchsDt;
+	}
+
+	/**
+	 * @param prchsDt
+	 *            the prchsDt to set
+	 */
+	public void setPrchsDt(String prchsDt) {
+		this.prchsDt = prchsDt;
 	}
 
 	/**
