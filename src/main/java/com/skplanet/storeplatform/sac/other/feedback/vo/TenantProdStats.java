@@ -44,6 +44,7 @@ public class TenantProdStats extends CommonInfo {
 
 	private String avgEvluScorePct;
 	private String avgEvluScorePcts;
+	private String svcGrpCd; // 상품 서비스 그룹 코드( 앱 상품일때에만 LastDeployDt에 대한 값을 조회하도록 하기위해 추가) TB_DP_TEANNT_STATS 테이블과는 무관
 
 	/**
 	 * @return String
@@ -299,4 +300,20 @@ public class TenantProdStats extends CommonInfo {
 	public void setAvgEvluScorePcts(String avgEvluScorePcts) {
 		this.avgEvluScorePcts = avgEvluScorePcts;
 	}
+
+	/**
+	 * @return the svcGrpCd
+	 */
+	public String getSvcGrpCd() {
+		return this.svcGrpCd;
+	}
+
+	/**
+	 * @param svcGrpCd
+	 *            the svcGrpCd to set
+	 */
+	public void setSvcGrpCd(String svcGrpCd) {
+		this.svcGrpCd = svcGrpCd;
+	}
+
 }
