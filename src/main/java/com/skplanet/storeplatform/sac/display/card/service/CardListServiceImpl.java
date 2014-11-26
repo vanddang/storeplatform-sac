@@ -182,6 +182,7 @@ public class CardListServiceImpl implements CardListService {
         pn.setName(panelItem.getPanelDesc());
     }
 
+    @SuppressWarnings("unchecked")
     private boolean isPassSegmentProvision(String tenantId, String cardId, SegmentInfo segmentInfo) {
         CardSegment cardSegment = panelCardInfoManager.getCardSegmentInfo(tenantId, cardId);
         if(cardSegment == null) {
@@ -189,15 +190,22 @@ public class CardListServiceImpl implements CardListService {
             return false;
         }
 
+        Set<String> sgmtMbrLvl = new HashSet<String>(2);
+        sgmtMbrLvl.add(segmentInfo.getInsdMbrGrdCd());
+        sgmtMbrLvl.add(segmentInfo.getOutsdMbrGrdCd());
+
         Set outsdMbrLevel = parseToSet(cardSegment.getOutsdMbrLevelCd());
         Set insdMbrLevel = parseToSet(cardSegment.getInsdMbrLevelCd());
+        Set<String> cardMbrLvl = new HashSet<String>(outsdMbrLevel.size() + insdMbrLevel.size());
+        cardMbrLvl.addAll(outsdMbrLevel);
+        cardMbrLvl.addAll(insdMbrLevel);
+
         Set ageClsf = parseToSet(cardSegment.getAgeClsfCd());
         Set categoryBest = parseToSet(cardSegment.getCategoryBest());
         Set mnoCd = parseToSet(cardSegment.getMnoCd());
         Set sex = parseToSet(cardSegment.getSex());
 
-        return outsdMbrLevel.contains(segmentInfo.getOutsdMbrGrdCd()) &&
-                insdMbrLevel.contains(segmentInfo.getInsdMbrGrdCd()) &&
+        return cardMbrLvl.containsAll(sgmtMbrLvl) &&
                 ageClsf.contains(segmentInfo.getAgeClsfCd()) &&
                 CollectionUtils.containsAny(categoryBest, segmentInfo.getCategoryBest()) &&
                 mnoCd.contains(segmentInfo.getMnoClsfCd()) &&
