@@ -197,6 +197,11 @@ public class Product extends CommonInfo implements Serializable {
 	private List<SelectOption> selectOptionList;
 
 	/**
+	 * 쇼핑 쿠폰 발송 타입.
+	 */
+	private String couponSendType;
+
+	/**
 	 * Restrict 유형 > ota : 네트워크 제한 > sales : 판매 중지.
 	 */
 	private String restrictType;
@@ -954,6 +959,21 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setSelectOption(SelectOption selectOption) {
 		this.selectOption = selectOption;
+	}
+
+	/**
+	 * @return the couponSendType
+	 */
+	public String getCouponSendType() {
+		return this.couponSendType;
+	}
+
+	/**
+	 * @param couponSendType
+	 *            the couponSendType to set
+	 */
+	public void setCouponSendType(String couponSendType) {
+		this.couponSendType = couponSendType;
 	}
 
 	/**
