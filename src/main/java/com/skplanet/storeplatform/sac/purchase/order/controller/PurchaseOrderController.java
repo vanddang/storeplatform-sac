@@ -51,6 +51,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacReq
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderMakeDataService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPaymentPageService;
@@ -71,6 +72,9 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
 @RequestMapping("/purchase/order")
 public class PurchaseOrderController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private PayPlanetShopService payPlanetShopService;
 
 	@Autowired
 	private PurchaseOrderService orderService;
@@ -353,11 +357,8 @@ public class PurchaseOrderController {
 				.getPaymentInfoList().size());
 
 		// 구매완료Noti정보 세팅: PayPlanet 결제건 또는 IAP 은 skip
-		boolean bPayPlanet = false; // PayPlanet 결제 여부
-		if (StringUtils.startsWith(notifyPaymentReq.getPaymentInfoList().get(0).getTid(),
-				PurchaseConstants.PAYPLANET_TID_PREFIX)) {
-			bPayPlanet = true;
-		}
+		boolean bPayPlanet = this.payPlanetShopService.startsWithPayPlanetMID(notifyPaymentReq.getPaymentInfoList()
+				.get(0).getTid()); // PayPlanet 결제 여부
 
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 

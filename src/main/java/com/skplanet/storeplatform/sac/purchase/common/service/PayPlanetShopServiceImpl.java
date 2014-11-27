@@ -79,4 +79,23 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 		shopInfo.setTenantId(tenantId);
 		return shopInfo;
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * P/P 가맹점 ID 여부 확인.
+	 * </pre>
+	 * 
+	 * @param mid
+	 * @return
+	 */
+	@Override
+	public boolean startsWithPayPlanetMID(String mid) {
+		for (String prefix : PurchaseConstants.PAYPLANET_TID_PREFIX_LIST) {
+			if (StringUtils.startsWith(mid, prefix)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

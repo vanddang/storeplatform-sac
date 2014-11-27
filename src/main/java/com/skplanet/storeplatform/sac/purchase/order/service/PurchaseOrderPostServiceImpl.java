@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
+import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.service.InterworkingSacService;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
@@ -59,6 +60,8 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	@Autowired
 	private SapPurchaseSCI sapPurchaseSCI;
 
+	@Autowired
+	private PayPlanetShopService payPlanetShopService;
 	@Autowired
 	private PurchaseOrderTstoreService purchaseOrderTstoreService;
 	@Autowired
@@ -160,21 +163,9 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) { // T store
 			// Tstore 측으로 구매완료 알림: 이메일 발송, SMS / MMS 등등 처리
 			// 구매완료Noti처리 변경 : 결제처리결과 알림 API 응답 항목에 추가
-			/*
-			 * // IAP 은 skip if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-			 * PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) == false) { Map<String, String> reservedDataMap =
-			 * this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore .getPrchsResvDesc());
-			 * 
-			 * this.purchaseOrderTstoreService.postTstoreNoti(prchsDtlMore.getPrchsId(), prchsDtlMore.getPrchsDt(),
-			 * prchsDtlMore.getUseInsdUsermbrNo(), prchsDtlMore.getUseInsdDeviceId(),
-			 * reservedDataMap.get("tstoreNotiPublishType")); }
-			 */
 
-			boolean bPayPlanet = false; // PayPlanet 결제 여부
-			if (StringUtils.startsWith(notifyPaymentReq.getPaymentInfoList().get(0).getTid(),
-					PurchaseConstants.PAYPLANET_TID_PREFIX)) {
-				bPayPlanet = true;
-			}
+			boolean bPayPlanet = this.payPlanetShopService.startsWithPayPlanetMID(notifyPaymentReq.getPaymentInfoList()
+					.get(0).getTid()); // PayPlanet 결제 여부
 
 			// PayPlanet 결제 건은 Tstore 측으로 구매완료 Noti
 			if (bPayPlanet) {

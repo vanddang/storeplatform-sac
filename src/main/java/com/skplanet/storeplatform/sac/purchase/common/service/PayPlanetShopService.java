@@ -30,4 +30,15 @@ public interface PayPlanetShopService {
 	 * @return Pay Planet 가맹점 정보
 	 */
 	public PayPlanetShop getPayPlanetShopInfo(String tenantId);
+
+	/**
+	 * 
+	 * <pre>
+	 * Pay Planet 가맹점 ID 여부 확인.
+	 * </pre>
+	 * 
+	 * @param mid
+	 * @return
+	 */
+	public boolean startsWithPayPlanetMID(String mid);
 }

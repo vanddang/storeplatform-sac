@@ -387,6 +387,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		checkPaymentPolicyResult.setPaymentAdjInfo(paymentAdjInfo);
 
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}",
+				ReflectionToStringBuilder.toString(checkPaymentPolicyResult, ToStringStyle.SHORT_PREFIX_STYLE));
+
 		return checkPaymentPolicyResult;
 	}
 
@@ -437,14 +440,21 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_MVNO_ALLOW_CD)) {
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_MVNO_ALLOW_CD);
 
+			boolean bMvno = false;
 			for (PurchaseTenantPolicy policy : policyList) {
-				if (this.isMvno(checkPaymentPolicyParam.getTenantId(), sktUapsMappingInfo, policy.getApplyValue(),
-						checkPaymentPolicyParam.getDeviceId())) {
-					checkPaymentPolicyResult.setMvno(true);
+				bMvno = this.isMvno(checkPaymentPolicyParam.getTenantId(), sktUapsMappingInfo, policy.getApplyValue(),
+						checkPaymentPolicyParam.getDeviceId());
 
-					checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_MVNO);
-					return checkPaymentPolicyResult;
+				if (bMvno == false) {
+					break;
 				}
+			}
+
+			checkPaymentPolicyResult.setMvno(bMvno);
+
+			if (bMvno) {
+				checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_MVNO);
+				return checkPaymentPolicyResult;
 			}
 
 			policyListMap.remove(PurchaseConstants.POLICY_ID_MVNO_ALLOW_CD);

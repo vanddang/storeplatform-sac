@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.constant;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 구매 관련 상수
  * 
@@ -209,6 +212,8 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** Pay Planet TID prefix */
 	public static final String PAYPLANET_TID_PREFIX = "SKTstore"; // Pay Planet TID prefix
 	public static final String PAYPLANET_TID_PREFIX_SEC = "TSTORE"; // Pay Planet TID prefix
+	public static final List<String> PAYPLANET_TID_PREFIX_LIST = Arrays.asList(PAYPLANET_TID_PREFIX,
+			PAYPLANET_TID_PREFIX_SEC);
 
 	/** Pay Planet 결제 방법 코드 */
 	public static final String PAYPLANET_PAYMENT_METHOD_SKT_CARRIER = "11"; // SKT 후불
