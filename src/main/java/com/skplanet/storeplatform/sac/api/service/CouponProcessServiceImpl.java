@@ -1537,7 +1537,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			for (int i = 0; i < itemInfoList.size(); i++) {
 				DpItemInfo itemInfo = itemInfoList.get(i);
 				noti.setTransactionKey(couponReq.getTxId() + "000" + (i + 1));
-				this.log.info("LOG1");
 				/**
 				 * 상품정보 세팅.
 				 */
@@ -1552,7 +1551,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				} else {
 					productVO.setProdFdTypCd("PD000502");// 무료
 				}
-				this.log.info("LOG2");
 				productVO.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);// 서비스그룹코드DP000206
 
 				productVO.setMbrNo(couponInfo.getMbrNo());// 판매자mbrNO
@@ -1569,15 +1567,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 					// USE_TERM_UNIT
 					productVO.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
 				}
-				this.log.info("LOG3");
 				productVO.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
 				productVO.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
 				productVO.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
 				productVO.setMbrStrte(couponInfo.getAccountingRate()); // 파트너 상품정산율
-				this.log.info("LOG4");
 				Date date = new Date();
 				String modifiedDate = new SimpleDateFormat("yyyyMMddHHmmss").format(date);
-				this.log.info("LOG5");
 				if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
 					productVO.setRegId(couponInfo.getBpId()); // 등록ID
 					productVO.setRegDt(modifiedDate); // 등록일시
@@ -1591,7 +1586,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 					productVO.setUpdDt(modifiedDate); // 수정일시
 				}
 				noti.setProduct(productVO);
-				this.log.info("LOG6");
 				/**
 				 * 상품가격정보 세팅.
 				 */
