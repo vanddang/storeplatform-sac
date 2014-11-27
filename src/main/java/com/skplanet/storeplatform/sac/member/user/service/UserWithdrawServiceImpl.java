@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
@@ -152,6 +153,15 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			mqInfo.setUserId(userInfo.getUserId());
 			mqInfo.setUserKey(userInfo.getUserKey());
 			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+
+			List<UserExtraInfo> list = userInfo.getUserExtraInfoList();
+			for (int i = 0; i < list.size(); i++) {
+				UserExtraInfo extraInfo = list.get(i);
+				if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
+					mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+				}
+			}
+
 			if (StringUtils.isNotBlank(mqDeviceStr)) {
 				mqInfo.setDeviceId(mqDeviceStr);
 			}
@@ -187,14 +197,15 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				 * OneId ID 회원 Case.
 				 **********************************************/
 
-				DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(),
-						userInfo.getUserKey());
+				DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+						req.getDeviceId(), userInfo.getUserKey());
 
 				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE;
 
 				LOGGER.info("[OneId ID 회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
 				this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId());
-				this.userService.modAdditionalInfoForNonLogin(requestHeader, userInfo.getUserKey(), userInfo.getImSvcNo());
+				this.userService.modAdditionalInfoForNonLogin(requestHeader, userInfo.getUserKey(),
+						userInfo.getImSvcNo());
 
 				/** MQ 연동(휴대기기 삭제) */
 				RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
@@ -237,6 +248,14 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 						mqInfo.setUserKey(userInfo.getUserKey());
 						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 						mqInfo.setDeviceId(req.getDeviceId());
+						List<UserExtraInfo> list = userInfo.getUserExtraInfoList();
+						for (int i = 0; i < list.size(); i++) {
+							UserExtraInfo extraInfo = list.get(i);
+							if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH,
+									extraInfo.getExtraProfile())) {
+								mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+							}
+						}
 						this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 					} catch (AmqpException ex) {
@@ -248,8 +267,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					/**********************************************
 					 * IDP ID 회원 Case.
 					 **********************************************/
-					DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(),
-							userInfo.getUserKey());
+					DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader,
+							MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userInfo.getUserKey());
 
 					gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE;
 
@@ -398,7 +417,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		/**
 		 * SC 휴대기기 단건 조회.
 		 */
-		DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, userKey);
+		DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
+				deviceId, userKey);
 
 		/**
 		 * SC 휴대기기 삭제요청.

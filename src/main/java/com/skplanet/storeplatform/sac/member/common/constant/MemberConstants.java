@@ -120,6 +120,7 @@ public final class MemberConstants {
 	public static final String USER_EXTRA_FACEBOOKRATING = "US010905"; // Facebook 평점 연동 여부
 	public static final String USER_EXTRA_FACEBOOKREVIEW = "US010906"; // Facebook 후기 연동 여부
 	public static final String USER_EXTRA_MEMBERPOINTJOIN = "US010907"; // 통합포인트 가입 여부
+	public static final String USER_EXTRA_PROFILEIMGPATH = "US010912"; // 통합포인트 가입 여부
 
 	/** 휴대기기 부가속성. */
 	public static final String DEVICE_EXTRA_OMPDOWNLOADER_YN = "US011401"; // OMP DOWNLOADER 설치 여부
