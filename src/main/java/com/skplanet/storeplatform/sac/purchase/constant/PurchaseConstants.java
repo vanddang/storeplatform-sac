@@ -208,6 +208,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 
 	/** Pay Planet TID prefix */
 	public static final String PAYPLANET_TID_PREFIX = "SKTstore"; // Pay Planet TID prefix
+	public static final String PAYPLANET_TID_PREFIX_SEC = "TSTORE"; // Pay Planet TID prefix
 
 	/** Pay Planet 결제 방법 코드 */
 	public static final String PAYPLANET_PAYMENT_METHOD_SKT_CARRIER = "11"; // SKT 후불
