@@ -576,7 +576,12 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 		for (SearchUserDeviceSac schUserDevice : request.getSearchUserDeviceReqList()) {
 			UserDeviceKey userDeviceKey = new UserDeviceKey();
-			userDeviceKey.setTenantId(schUserDevice.getTenantId());
+			if (StringUtils.isBlank(schUserDevice.getTenantId())) {
+				userDeviceKey.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+			} else {
+				userDeviceKey.setTenantId(schUserDevice.getTenantId());
+			}
+
 			userDeviceKey.setDeviceKey(schUserDevice.getDeviceKey());
 			userDeviceKey.setUserKey(schUserDevice.getUserKey());
 			userDeviceKeyList.add(userDeviceKey);
