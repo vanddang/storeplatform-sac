@@ -698,14 +698,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// 결제Page 템플릿
 
-		boolean bIapAutoPrchs = false;
-		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
-				&& StringUtils.equals(reservedDataMap.get("autoPrchsYn"), "Y")) {
-			bIapAutoPrchs = true;
-		}
-
 		res.setCdPaymentTemplate(this.orderPaymentPageService.adjustPaymentPageTemplate(prchsDtlMore.getPrchsCaseCd(),
-				prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("cmpxProdClsfCd"), bIapAutoPrchs,
+				prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("cmpxProdClsfCd"),
+				StringUtils.equals(reservedDataMap.get("autoPrchsYn"), "Y"),
 				StringUtils.equals(reservedDataMap.get("s2sAutoYn"), "Y"), prchsDtlMoreList.size()));
 
 		// ------------------------------------------------------------------------------------------------

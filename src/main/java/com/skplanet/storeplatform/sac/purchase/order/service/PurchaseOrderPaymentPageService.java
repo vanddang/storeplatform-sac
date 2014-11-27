@@ -44,8 +44,8 @@ public interface PurchaseOrderPaymentPageService {
 	 * @param cmpxProdClsfCd
 	 *            정액상품 구분 코드
 	 * 
-	 * @param bIapAutoPrchs
-	 *            IAP 월자동결제 상품 여부
+	 * @param bAutoPrchs
+	 *            자동결제 상품 여부
 	 * 
 	 * @param bS2sAutoPrchs
 	 *            IAP S2S 월자동결제 상품 여부
@@ -56,5 +56,5 @@ public interface PurchaseOrderPaymentPageService {
 	 * @return 결제Page 템플릿 코드
 	 */
 	public String adjustPaymentPageTemplate(String prchsCaseCd, String tenantProdGrpCd, String cmpxProdClsfCd,
-			boolean bIapAutoPrchs, boolean bS2sAutoPrchs, int prchsProdCnt);
+			boolean bAutoPrchs, boolean bS2sAutoPrchs, int prchsProdCnt);
 }
