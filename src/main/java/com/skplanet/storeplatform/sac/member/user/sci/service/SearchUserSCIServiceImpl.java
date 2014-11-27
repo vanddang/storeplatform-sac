@@ -576,6 +576,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 		for (SearchUserDeviceSac schUserDevice : request.getSearchUserDeviceReqList()) {
 			UserDeviceKey userDeviceKey = new UserDeviceKey();
+			userDeviceKey.setTenantId(schUserDevice.getTenantId());
 			userDeviceKey.setDeviceKey(schUserDevice.getDeviceKey());
 			userDeviceKey.setUserKey(schUserDevice.getUserKey());
 			userDeviceKeyList.add(userDeviceKey);
@@ -605,6 +606,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 				if (deviceMbrStatus != null) {
 					userDeviceInfoSac = new UserDeviceInfoSac();
+					userDeviceInfoSac.setTenantId(deviceMbrStatus.getTenantID());
 					userDeviceInfoSac.setDeviceId(deviceMbrStatus.getDeviceID());
 					userDeviceInfoSac.setDeviceModelNo(deviceMbrStatus.getDeviceModelNo());
 					userDeviceInfoSac.setDeviceTelecom(deviceMbrStatus.getDeviceTelecom());
@@ -631,6 +633,10 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 					}
 
+					if (StringUtils.equals(deviceMbrStatus.getTenantID(), MemberConstants.TENANT_ID_OLLEH_MARKET)
+							|| StringUtils.equals(deviceMbrStatus.getTenantID(), MemberConstants.TENANT_ID_UPLUS_STORE)) {
+						userDeviceInfoSac.setMarketDeviceKey(deviceMbrStatus.getImMbrNo());
+					}
 					resMap.put(deviceMbrStatus.getDeviceKey(), userDeviceInfoSac);
 				}
 			}
