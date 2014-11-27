@@ -82,6 +82,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	public PurchaseUserDevice searchUserDeviceByKey(String tenantId, String userKey, String deviceKey) {
 
 		SearchUserDeviceSac searchUserDeviceSac = new SearchUserDeviceSac();
+		searchUserDeviceSac.setTenantId(tenantId);
 		searchUserDeviceSac.setUserKey(userKey);
 		searchUserDeviceSac.setDeviceKey(deviceKey);
 
@@ -124,6 +125,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		purchaseUserDevice.setDeviceId(userDeviceInfoSac.getDeviceId());
 		purchaseUserDevice.setDeviceModelCd(userDeviceInfoSac.getDeviceModelNo());
 		purchaseUserDevice.setTelecom(userDeviceInfoSac.getDeviceTelecom());
+		purchaseUserDevice.setMarketDeviceKey(userDeviceInfoSac.getMarketDeviceKey());
 		// purchaseUserDevice.setUserEmail(userDeviceInfoSac.getUserEmail());
 
 		// 연령체크 안함: 생년월일도 * 문자 포함으로 확인불가

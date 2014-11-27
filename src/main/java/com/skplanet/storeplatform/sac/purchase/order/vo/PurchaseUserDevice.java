@@ -93,6 +93,11 @@ public class PurchaseUserDevice extends CommonInfo {
 	private String telecom;
 
 	/**
+	 * 통신사 마켓 디바이스 키
+	 */
+	private String marketDeviceKey;
+
+	/**
 	 * 선물 메시지
 	 */
 	private String giftMsg;
@@ -305,6 +310,21 @@ public class PurchaseUserDevice extends CommonInfo {
 	 */
 	public void setTelecom(String telecom) {
 		this.telecom = telecom;
+	}
+
+	/**
+	 * @return the marketDeviceKey
+	 */
+	public String getMarketDeviceKey() {
+		return this.marketDeviceKey;
+	}
+
+	/**
+	 * @param marketDeviceKey
+	 *            the marketDeviceKey to set
+	 */
+	public void setMarketDeviceKey(String marketDeviceKey) {
+		this.marketDeviceKey = marketDeviceKey;
 	}
 
 	/**

@@ -612,8 +612,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		}
 
 		/*
-		 * 구매예약 시 저장할 데이터 (공통) - systemId, networkTypeCd - 결제자: userId, deviceId, deviceModelCd, telecom, imei, oneId -
-		 * 보유자: useDeviceId, useDeviceModelCd
+		 * 구매예약 시 저장할 데이터 (공통) - systemId, networkTypeCd - 결제자: userId, deviceId, marketDeviceKey, deviceModelCd,
+		 * telecom, imei, oneId - 보유자: useDeviceId, useDeviceModelCd
 		 */
 		// PurchaseUserDevice useUser = purchaseOrderInfo.isGift() ? purchaseOrderInfo.getReceiveUser() :
 		// purchaseOrderInfo
@@ -629,6 +629,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 				.append(purchaseOrderInfo.getPurchaseUser().getUserId())
 				.append("&deviceId=")
 				.append(purchaseOrderInfo.getPurchaseUser().getDeviceId())
+				.append("&marketDeviceKey=")
+				.append(StringUtils.defaultString(purchaseOrderInfo.getPurchaseUser().getMarketDeviceKey()))
 				.append("&deviceModelCd=")
 				.append(purchaseOrderInfo.getPurchaseUser().getDeviceModelCd())
 				.append("&telecom=")
