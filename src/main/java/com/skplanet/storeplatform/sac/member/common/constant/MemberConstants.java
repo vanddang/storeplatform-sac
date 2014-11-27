@@ -161,6 +161,7 @@ public final class MemberConstants {
 	 * 가상 프로비저닝 모델명 (앱).
 	 */
 	public static final String DP_ANY_PHONE_4APP = "ANY-PHONE-4APP";
+	public static final String DP_ANY_PHONE_4APP_NM = "애니폰APP";
 
 	/**
 	 * 가상 프로비저닝 모델명 (멀티미디어).

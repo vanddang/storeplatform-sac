@@ -2363,6 +2363,7 @@ public class LoginServiceImpl implements LoginService {
 		userMbrDevice.setDeviceID(marketRes.getDeviceId()); // 기기 ID
 		userMbrDevice.setDeviceTelecom(marketRes.getDeviceTelecom()); // 이동 통신사
 		userMbrDevice.setDeviceModelNo(MemberConstants.DP_ANY_PHONE_4APP); // 단말 모델
+		userMbrDevice.setDeviceNickName(MemberConstants.DP_ANY_PHONE_4APP_NM); // 단말닉네임
 		userMbrDevice.setNativeID(req.getNativeId()); // 기기고유 ID (imei)
 		userMbrDevice.setIsPrimary(MemberConstants.USE_Y); // 대표기기 유무
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
