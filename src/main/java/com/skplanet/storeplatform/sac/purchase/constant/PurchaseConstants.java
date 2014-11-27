@@ -119,41 +119,6 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String DEFERRED_PAYMENT_TYPE_ETCSERVICE = "T02"; // 서비스검증용: SKT 불가
 	public static final String DEFERRED_PAYMENT_TYPE_NORMAL = "T03"; // 일반
 
-	/** 결제Page Template */
-	public static final String PAYMENT_PAGE_TEMPLATE_NORMAL = "TC01"; // 일반
-	public static final String PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE = "TC02"; // 정액제 (게임캐쉬)
-	public static final String PAYMENT_PAGE_TEMPLATE_LOAN_OWN = "TC03"; // 대여/소장
-	public static final String PAYMENT_PAGE_TEMPLATE_AUTOPAY = "TC04"; // 자동결제
-	public static final String PAYMENT_PAGE_TEMPLATE_SHOPPING = "TC05"; // 쇼핑
-	public static final String PAYMENT_PAGE_TEMPLATE_GIFT = "TC06"; // 선물
-	public static final String PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY = "TC07"; // IAP 자동결제
-	public static final String PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY = "TC08"; // S2S 자동결제
-
-	/** 결제Page 상품설명 */
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_COMMERCIAL = "정식판 전환 상품";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_DELIVERY = "배송 상품";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_COUPON = "쿠폰 상품";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH = "MP3 : 192kbps";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_NORMAL = "MP3 : 128kbps";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_BELL_HIGH = "벨소리 : 고음질";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_BELL_BASIC = "벨소리 : 일반음질";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_HIGH = "컬러링 : 롱(60초)";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC = "컬러링 : 일반(40초)";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_AUTO = "자동결제";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_SERIES = "전회차 구매";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_OWN = "전권 소장";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_LOAN = "전권 대여";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_OWN = "소장";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_LOAN = "대여";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_DATE_SUFFIX = "일 이용권";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_HOUR_SUFFIX = "시간 이용권";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_MONTH_SUFFIX = "개월 이용권";
-
-	/** 결제Page 가맹점 서비스 구분 */
-	public static final String PAYMENT_PAGE_SERVICE_ID_SHOPCLIENT = "TS001"; // Tstore 샵클라이언트
-	public static final String PAYMENT_PAGE_SERVICE_ID_EBOOK = "TS002"; // Tstore ebook
-	public static final String PAYMENT_PAGE_SERVICE_ID_IAP = "TS003"; // Tstore IAP
-
 	/** T Store Cash */
 	/* 서비스 타입 */
 	public static final String TSTORE_CASH_CLASS_POINT = "01";
@@ -212,8 +177,30 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** Pay Planet TID prefix */
 	public static final String PAYPLANET_TID_PREFIX = "SKTstore"; // Pay Planet TID prefix
 	public static final String PAYPLANET_TID_PREFIX_SEC = "TSTORE"; // Pay Planet TID prefix
-	public static final List<String> PAYPLANET_TID_PREFIX_LIST = Arrays.asList(PAYPLANET_TID_PREFIX,
-			PAYPLANET_TID_PREFIX_SEC);
+
+	/** Pay Planet MID : Ebook Store 오픈을 먼저 해서, T store MID가 이상하게 됐음 */
+	public static final String PAYPLANET_MID_TSTORE = "TSTORE0003"; // T store S/C Default
+	public static final String PAYPLANET_MID_TSTORE_IAP = "TSTORE0004"; // T store IAP
+	public static final String PAYPLANET_MID_TSTORE_EBOOKSTORE = "SKTstore01"; // T store Ebook Store
+	// public static final String PAYPLANET_MID_OLLEH = "SKTstore02"; // Olleh Market
+	// public static final String PAYPLANET_MID_UPLUS = "SKTstore03"; // U+ Store
+
+	/** Pay Planet MID prefix */
+	public static final List<String> PAYPLANET_MID_PREFIX_LIST = Arrays.asList("TSTORE", "SKTstore");
+
+	/** Pay Planet 네트워크 타입 */
+	public static final String PAYPLANET_NETWORK_TYPE_3GLTE = "1"; // 3G, LTE
+	public static final String PAYPLANET_NETWORK_TYPE_WIFI = "2"; // WIFI
+	public static final String PAYPLANET_NETWORK_TYPE_UNKNOWN = "3"; // Unknown
+
+	/** Pay Planet 통신사 */
+	public static final String PAYPLANET_TELECOM_SKT = "S"; // SKT
+	public static final String PAYPLANET_TELECOM_KT = "K"; // KT
+	public static final String PAYPLANET_TELECOM_LGT = "L"; // LG U+
+	public static final String PAYPLANET_TELECOM_UNKNOWN = "X"; // Unknown
+
+	/** Pay Planet 결제 취소 사유 */
+	public static final String PAYPLANET_PAYMENT_CANCEL_REASON_VOC = "E01"; // VOC 운영 취소.
 
 	/** Pay Planet 결제 방법 코드 */
 	public static final String PAYPLANET_PAYMENT_METHOD_SKT_CARRIER = "11"; // SKT 후불
@@ -232,19 +219,40 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYPLANET_PAYMENT_METHOD_TSTORE_POINT = "29"; // T store 포인트
 	public static final String PAYPLANET_PAYMENT_METHOD_TGAMEPASS_POINT = "30"; // T game pass 포인트
 
-	/** Pay Planet 네트워크 타입 */
-	public static final String PAYPLANET_NETWORK_TYPE_3GLTE = "1"; // 3G, LTE
-	public static final String PAYPLANET_NETWORK_TYPE_WIFI = "2"; // WIFI
-	public static final String PAYPLANET_NETWORK_TYPE_UNKNOWN = "3"; // Unknown
+	/** 결제Page Template */
+	public static final String PAYMENT_PAGE_TEMPLATE_NORMAL = "TC01"; // 일반
+	public static final String PAYMENT_PAGE_TEMPLATE_GAMECASH_FIXRATE = "TC02"; // 정액제 (게임캐쉬)
+	public static final String PAYMENT_PAGE_TEMPLATE_LOAN_OWN = "TC03"; // 대여/소장
+	public static final String PAYMENT_PAGE_TEMPLATE_AUTOPAY = "TC04"; // 자동결제
+	public static final String PAYMENT_PAGE_TEMPLATE_SHOPPING = "TC05"; // 쇼핑
+	public static final String PAYMENT_PAGE_TEMPLATE_GIFT = "TC06"; // 선물
+	public static final String PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY = "TC07"; // IAP 자동결제
+	public static final String PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY = "TC08"; // S2S 자동결제
 
-	/** Pay Planet 통신사 */
-	public static final String PAYPLANET_TELECOM_SKT = "S"; // SKT
-	public static final String PAYPLANET_TELECOM_KT = "K"; // KT
-	public static final String PAYPLANET_TELECOM_LGT = "L"; // LG U+
-	public static final String PAYPLANET_TELECOM_UNKNOWN = "X"; // Unknown
+	/** 결제Page 상품설명 */
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_COMMERCIAL = "정식판 전환 상품";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_DELIVERY = "배송 상품";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_COUPON = "쿠폰 상품";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH = "MP3 : 192kbps";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_NORMAL = "MP3 : 128kbps";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_BELL_HIGH = "벨소리 : 고음질";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_BELL_BASIC = "벨소리 : 일반음질";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_HIGH = "컬러링 : 롱(60초)";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC = "컬러링 : 일반(40초)";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_AUTO = "자동결제";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_SERIES = "전회차 구매";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_OWN = "전권 소장";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_LOAN = "전권 대여";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_OWN = "소장";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_LOAN = "대여";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_DATE_SUFFIX = "일 이용권";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_HOUR_SUFFIX = "시간 이용권";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_MONTH_SUFFIX = "개월 이용권";
 
-	/** Pay Planet 결제 취소 사유 */
-	public static final String PAYPLANET_PAYMENT_CANCEL_REASON_VOC = "E01"; // VOC 운영 취소.
+	/** 결제Page 가맹점 서비스 구분 */
+	public static final String PAYMENT_PAGE_SERVICE_ID_SHOPCLIENT = "TS001"; // Tstore 샵클라이언트
+	public static final String PAYMENT_PAGE_SERVICE_ID_EBOOKSTORE = "TS002"; // Tstore Ebook Store
+	public static final String PAYMENT_PAGE_SERVICE_ID_IAP = "TS003"; // Tstore IAP
 
 	/** T Store 결제 성공 코드 */
 	public static final String TSTORE_PAYMENT_CANCEL_SUCCESS = "0000";

@@ -55,7 +55,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 
 		PaymentPageParam paymentPageParam = new PaymentPageParam();
 		paymentPageParam.setTenantId(purchaseOrderInfo.getTenantId());
-		paymentPageParam.setMid(purchaseOrderInfo.getMid());
+		paymentPageParam.setMid(purchaseOrderInfo.getMid()); // MID 세팅
 		paymentPageParam.setAuthKey(purchaseOrderInfo.getAuthKey());
 		paymentPageParam.setOrderId(purchaseOrderInfo.getPrchsId());
 		paymentPageParam.setMctTrDate(purchaseOrderInfo.getPrchsDt());
@@ -95,13 +95,25 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		}
 		paymentPageParam.setNoSim(purchaseOrderInfo.getSimNo());
 		// paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
+
+		// T store 는 IAP/EBOOK스토어/SC 에 따라 MID 변형 필요
+		// : PP에서 EBOOK 스토어가 먼저 오픈되서 T store Ebook Store MID가 기본형이 되었음.
 		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_IAP)) {
 			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_IAP);
+			if (StringUtils.equals(purchaseOrderInfo.getMid(), PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE)) {
+				paymentPageParam.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE_IAP); // MID 변형 세팅
+			}
 		} else if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
 				PurchaseConstants.PRCHS_REQ_PATH_EBOOK_STORAGE)) {
-			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_EBOOK);
+			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_EBOOKSTORE);
+			if (StringUtils.equals(purchaseOrderInfo.getMid(), PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE)) {
+				paymentPageParam.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE); // MID 변형 세팅
+			}
 		} else {
 			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_SHOPCLIENT);
+			if (StringUtils.equals(purchaseOrderInfo.getMid(), PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE)) {
+				paymentPageParam.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE); // MID 변형 세팅
+			}
 		}
 		paymentPageParam.setOPMDLineNo(purchaseOrderInfo.getOpmdNo());
 		paymentPageParam.setUserKey(purchaseOrderInfo.getUserKey());

@@ -91,7 +91,7 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 	 */
 	@Override
 	public boolean startsWithPayPlanetMID(String mid) {
-		for (String prefix : PurchaseConstants.PAYPLANET_TID_PREFIX_LIST) {
+		for (String prefix : PurchaseConstants.PAYPLANET_MID_PREFIX_LIST) {
 			if (StringUtils.startsWith(mid, prefix)) {
 				return true;
 			}
