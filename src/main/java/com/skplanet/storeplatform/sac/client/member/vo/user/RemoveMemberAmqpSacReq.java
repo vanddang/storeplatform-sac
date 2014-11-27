@@ -12,14 +12,17 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/* 작업일시 : YYYYMMDDHH24MISS */
+	/** 작업일시 : YYYYMMDDHH24MISS. */
 	private String workDt;
 
-	/* 회원 내부사용자키 */
+	/** 회원 내부사용자키. */
 	private String userKey;
 
-	/* 회원ID */
+	/** 회원ID. */
 	private String userId;
+
+	/** 프로파일 이미지 경로. */
+	private String profileImgPath;
 
 	/**
 	 * 탈퇴 회원의 deviceId(다수의 휴대기기를 보유한 회원 탈퇴 시 파이프(|) 로 구분)
@@ -84,6 +87,21 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return the profileImgPath
+	 */
+	public String getProfileImgPath() {
+		return this.profileImgPath;
+	}
+
+	/**
+	 * @param profileImgPath
+	 *            the profileImgPath to set
+	 */
+	public void setProfileImgPath(String profileImgPath) {
+		this.profileImgPath = profileImgPath;
 	}
 
 }
