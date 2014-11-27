@@ -606,7 +606,8 @@
                         ,K.PROD_STATUS_CD
                         ,OPT.OPT1_NM
                         ,OPT.OPT2_NM   
-                        ,I.B2B_PROD_YN                                                                                                                          
+                        ,I.B2B_PROD_YN          
+                        ,I.COUPON_SEND_TYPE                                                                                                                
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B

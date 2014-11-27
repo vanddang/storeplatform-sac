@@ -47,6 +47,7 @@ public class TbDpShpgProdInfo extends CommonInfo {
 	private String updId; // 수정_ID
 	private String updDt; // 수정_일시
 	private String cudType; // CUD
+	private String couponSendType; // 쿠폰 발송 타입
 
 	/**
 	 * @return the prodId
@@ -451,6 +452,21 @@ public class TbDpShpgProdInfo extends CommonInfo {
 	 */
 	public void setCudType(String cudType) {
 		this.cudType = cudType;
+	}
+
+	/**
+	 * @return the couponSendType
+	 */
+	public String getCouponSendType() {
+		return this.couponSendType;
+	}
+
+	/**
+	 * @param couponSendType
+	 *            the couponSendType to set
+	 */
+	public void setCouponSendType(String couponSendType) {
+		this.couponSendType = couponSendType;
 	}
 
 }

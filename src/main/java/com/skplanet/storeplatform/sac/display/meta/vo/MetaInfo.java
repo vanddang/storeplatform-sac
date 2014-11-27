@@ -113,14 +113,14 @@ public class MetaInfo extends CommonInfo {
 	private String supportStore;
 	private String supportPlay;
 	private String bookType;
-	
-	private Integer bookCount;				//[이북/코믹] 단행 전체 건수
-	private Integer bookLastChapter; 		//[이북/코믹] 단행 마지막 챕터
-	private Integer serialCount;			//[이북/코믹] 연재 전체 건수
-	private Integer serialLastChapter; 		//[이북/코믹] 연재 마지막 챕터
-	private Integer magazineCount;			//[이북/코믹] 잡지 전체 건수
-	private Integer magazineLastChapter; 	//[이북/코믹] 잡지 마지막 챕터
-	
+
+	private Integer bookCount; // [이북/코믹] 단행 전체 건수
+	private Integer bookLastChapter; // [이북/코믹] 단행 마지막 챕터
+	private Integer serialCount; // [이북/코믹] 연재 전체 건수
+	private Integer serialLastChapter; // [이북/코믹] 연재 마지막 챕터
+	private Integer magazineCount; // [이북/코믹] 잡지 전체 건수
+	private Integer magazineLastChapter; // [이북/코믹] 잡지 마지막 챕터
+
 	private String bookStatus;
 	private String bookClsfCd;
 	private String comptYn;
@@ -278,6 +278,8 @@ public class MetaInfo extends CommonInfo {
 	private String itemCode; // 아이템코드
 	private String specialCouponId; // 특가 쿠폰 ID
 	private String detailPromotionPath; // 기획전 상세 이미지
+	private String couponSendType;
+
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
 	private String tagNm;
@@ -4287,15 +4289,15 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getHd2BtvCid() {
-		return hd2BtvCid;
+		return this.hd2BtvCid;
 	}
 
 	public void setHd2BtvCid(String hd2BtvCid) {
 		this.hd2BtvCid = hd2BtvCid;
 	}
-	
+
 	public String getHd2DpPicRatio() {
-		return hd2DpPicRatio;
+		return this.hd2DpPicRatio;
 	}
 
 	public void setHd2DpPicRatio(String hd2DpPicRatio) {
@@ -4303,7 +4305,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getHd2DpPixel() {
-		return hd2DpPixel;
+		return this.hd2DpPixel;
 	}
 
 	public void setHd2DpPixel(String hd2DpPixel) {
@@ -4311,7 +4313,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getHd2SubContsId() {
-		return hd2SubContsId;
+		return this.hd2SubContsId;
 	}
 
 	public void setHd2SubContsId(String hd2SubContsId) {
@@ -4319,7 +4321,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getHd2FileSize() {
-		return hd2FileSize;
+		return this.hd2FileSize;
 	}
 
 	public void setHd2FileSize(String hd2FileSize) {
@@ -4327,7 +4329,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getHd2ProdVer() {
-		return hd2ProdVer;
+		return this.hd2ProdVer;
 	}
 
 	public void setHd2ProdVer(String hd2ProdVer) {
@@ -4335,12 +4337,13 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getHd2FilePath() {
-		return hd2FilePath;
+		return this.hd2FilePath;
 	}
 
 	public void setHd2FilePath(String hd2FilePath) {
 		this.hd2FilePath = hd2FilePath;
 	}
+
 	public String getFhdFileSize() {
 		return this.fhdFileSize;
 	}
@@ -4473,8 +4476,23 @@ public class MetaInfo extends CommonInfo {
 		this.detailPromotionPath = detailPromotionPath;
 	}
 
+	/**
+	 * @return the couponSendType
+	 */
+	public String getCouponSendType() {
+		return this.couponSendType;
+	}
+
+	/**
+	 * @param couponSendType
+	 *            the couponSendType to set
+	 */
+	public void setCouponSendType(String couponSendType) {
+		this.couponSendType = couponSendType;
+	}
+
 	public String getBookTbctns() {
-		return bookTbctns;
+		return this.bookTbctns;
 	}
 
 	public void setBookTbctns(String bookTbctns) {
@@ -4482,7 +4500,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public Integer getBookLastChapter() {
-		return bookLastChapter;
+		return this.bookLastChapter;
 	}
 
 	public void setBookLastChapter(Integer bookLastChapter) {
@@ -4490,7 +4508,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public Integer getSerialCount() {
-		return serialCount;
+		return this.serialCount;
 	}
 
 	public void setSerialCount(Integer serialCount) {
@@ -4498,7 +4516,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public Integer getSerialLastChapter() {
-		return serialLastChapter;
+		return this.serialLastChapter;
 	}
 
 	public void setSerialLastChapter(Integer serialLastChapter) {
@@ -4506,7 +4524,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public Integer getMagazineCount() {
-		return magazineCount;
+		return this.magazineCount;
 	}
 
 	public void setMagazineCount(Integer magazineCount) {
@@ -4514,12 +4532,11 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public Integer getMagazineLastChapter() {
-		return magazineLastChapter;
+		return this.magazineLastChapter;
 	}
 
 	public void setMagazineLastChapter(Integer magazineLastChapter) {
 		this.magazineLastChapter = magazineLastChapter;
 	}
 
-	
 }

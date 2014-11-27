@@ -150,6 +150,7 @@
             ,DLV_PROD_YN                  /* 배송_상품_여부 */
             ,MANG_BP_ID                   /* 관리_BP_ID */
             ,SRC_CONTENT_ID               /* 소스_컨텐트_ID */
+            ,COUPON_SEND_TYPE             /* 쿠폰_발송_타입 */
             ,REG_ID                       /* 등록_ID */
             ,REG_DT                       /* 등록_일시 */
             ,UPD_ID                       /* 수정_ID */
@@ -175,6 +176,7 @@
             ,#{dlvProdYn}
             ,#{mangBpId}
             ,#{srcContentId}
+            ,#{couponSendType}
             ,#{regId}
             ,sysdate
             ,#{updId}
@@ -204,6 +206,7 @@
             ,B2B_PROD_YN             = NVL(#{b2bProdYn},B2B_PROD_YN)                            /* B2B_상품_여부 */
             ,DLV_PROD_YN             = NVL(#{dlvProdYn},DLV_PROD_YN)                            /* 배송_상품_여부 */
             ,MANG_BP_ID              = #{mangBpId}                                              /* 관리_BP_ID */
+            ,COUPON_SEND_TYPE        = NVL(#{couponSendType},COUPON_SEND_TYPE)                  /* 쿠폰_발송_타입 */
             ,UPD_ID                  = NVL(#{updId},UPD_ID)                                     /* 수정_ID */
             ,UPD_DT                  = sysdate                                                  /* 수정_일시 */
         where 1=1

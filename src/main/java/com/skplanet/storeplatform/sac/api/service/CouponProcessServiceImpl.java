@@ -16,6 +16,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,9 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpItemInfo;
+import com.skplanet.storeplatform.external.client.shopping.vo.NotificationIprm;
+import com.skplanet.storeplatform.external.client.shopping.vo.ProductTenantPriceVO;
+import com.skplanet.storeplatform.external.client.shopping.vo.ProductVO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
@@ -404,6 +409,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dsp.setB2bProdYn(couponInfo.getStoreb2bFlag());
 			dsp.setMangBpId("");
 			dsp.setSrcContentId(couponInfo.getCouponCode());
+			dsp.setCouponSendType(couponInfo.getSendMsgType());
 			dsp.setRegId(couponInfo.getBpId());
 			dsp.setUpdId(couponInfo.getBpId());
 			dsp.setCudType(cudType);
@@ -457,6 +463,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dsp.setB2bProdYn(couponInfo.getStoreb2bFlag());
 				dsp.setMangBpId(itemInfo.getBpManageId());
 				dsp.setSrcContentId(itemInfo.getItemCode());
+				dsp.setCouponSendType(couponInfo.getSendMsgType());
 				dsp.setRegId(couponInfo.getBpId());
 				dsp.setUpdId(couponInfo.getBpId());
 				dsp.setCudType(itemInfo.getCudType());
@@ -956,6 +963,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 *            spRegistProdList
 	 * @param cudType
 	 *            cudType
+	 * @param couponReq
+	 *            couponReq
 	 * @return boolean
 	 */
 	private boolean setCallSpSettRegProd(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
@@ -993,98 +1002,14 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			this.couponItemService.insertCallSpSettRegProd(spRegistProdList);
 			this.log.info("■■■■■ setCallSpSettRegProd End ■■■■■");
 
-			// this.log.info("■■■■■ MQ 연동 start ■■■■■");
-			// /**
-			// * MQ 연동.
-			// */
-			// //
-			// NotificationIprm noti = new NotificationIprm();
-			// this.log.info("LOG1");
-			// // List<ProductTenantPriceVO> productTenantPriceList = null;
-			//
-			// try {
-			// // CouponRes couponRes = this.getCatalogNmMenuId(couponInfo.getStoreCatalogCode());
-			// // for (int i = 0; i < itemInfoList.size(); i++) {
-			// // DpItemInfo itemInfo = itemInfoList.get(i);
-			// // noti.setTransactionKey(couponReq.getTxId() + "000" + (i + 1));
-			// //
-			// // /**
-			// // * 상품정보 세팅.
-			// // */
-			// // ProductVO productVO = new ProductVO();
-			// //
-			// // productVO.setSyncDataControlType(itemInfo.getCudType()); // 구분
-			// // productVO.setProdId(itemInfo.getProdId());// 상품ID
-			// // productVO.setProdNm(itemInfo.getItemName()); // 상품명
-			// //
-			// // if (!String.valueOf(itemInfo.getItemPrice()).equals("0")) { // 유료
-			// // productVO.setProdFdTypCd("PD000501");// 유료
-			// // } else {
-			// // productVO.setProdFdTypCd("PD000502");// 무료
-			// // }
-			// //
-			// // productVO.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);// 서비스그룹코드DP000206
-			// //
-			// // productVO.setMbrNo(couponInfo.getMbrNo());// 판매자mbrNO
-			// // productVO.setCid(itemInfo.getItemCode()); // cid
-			// // productVO.setCateNo(CouponConstants.TOP_MENU_ID_CUPON_CONTENT); // 탑카테고리 DP28
-			// // productVO.setSubCateNo(couponRes.getMenuId());// 서브카테고리
-			// // productVO.setCoContentsId(itemInfo.getItemCode());// 업체컨텐츠ID == CID랑 같음
-			// //
-			// // if (Integer.parseInt(couponInfo.getValidUntil()) > 0) { // 유효일수 값 비교
-			// // productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_DAY); // PD00312 기간제(일)
-			// // productVO.setUserTerm(couponInfo.getValidUntil()); // 유효일수로 셋팅
-			// // } else {
-			// // productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_SELECT); // PD00319 기간선택
-			// // // USE_TERM_UNIT
-			// // productVO.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
-			// // }
-			// // productVO.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
-			// // productVO.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
-			// // productVO.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
-			// // productVO.setMbrStrte(couponInfo.getAccountingRate()); // 파트너 상품정산율
-			// //
-			// // Date date = new Date();
-			// // String modifiedDate = new SimpleDateFormat("YYYYMMDDhhmmss").format(date);
-			// // if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
-			// // productVO.setRegId(couponInfo.getBpId()); // 등록ID
-			// // productVO.setRegDt(modifiedDate); // 등록일시
-			// // productVO.setUpdId(couponInfo.getBpId()); // 수정ID
-			// // productVO.setUpdDt(modifiedDate); // 수정일시
-			// //
-			// // } else {
-			// // productVO.setRegId(couponRes.getRegId()); // 등록ID
-			// // productVO.setRegDt(couponRes.getRegDt()); // 등록일시
-			// // productVO.setUpdId(couponInfo.getBpId()); // 수정ID
-			// // productVO.setUpdDt(modifiedDate); // 수정일시
-			// // }
-			// // noti.setProduct(productVO);
-			// //
-			// // /**
-			// // * 상품가격정보 세팅.
-			// // */
-			// // productTenantPriceList = new ArrayList<ProductTenantPriceVO>();
-			// // ProductTenantPriceVO productTenantPriceVO = new ProductTenantPriceVO();
-			// // productTenantPriceVO.setSyncDataControlType(itemInfo.getCudType());
-			// // productTenantPriceVO.setTenantId(CouponConstants.TENANT_ID); // tenentId
-			// // productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());// 상품가격
-			// // productTenantPriceList.add(productTenantPriceVO);
-			// //
-			// // noti.setProductTenantPriceList(productTenantPriceList);
-			// // // this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // async
-			// // }
-			//
-			// this.log.info("■■■■■ MQ 연동 End ■■■■■");
-			// } catch (AmqpException ae) {
-			// this.log.error("MQ 연동중 Error 발생. - error msg:{}, NotificationIprm:{}", ae.getMessage(), noti);
-			// // ae.printStackTrace();
-			// }
-
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), e.getMessage(), null);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "정산율 배포 실패!!", null);
 		}
+
+		this.getConnectMq(couponInfo, itemInfoList, couponReq);
+
 		return true;
 	} // End setTbDpProdDesc
 
@@ -1586,6 +1511,113 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		CouponRes info = null;
 		info = this.couponItemService.getCatalogNmMenuId(catalogId);
 		return info;
+	}
+
+	/**
+	 * getConnectMq MQ 연동
+	 * 
+	 * @param couponInfo
+	 *            couponInfo
+	 * @param itemInfoList
+	 *            itemInfoList
+	 * @param couponReq
+	 *            couponReq
+	 * @return boolean
+	 */
+
+	private boolean getConnectMq(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, CouponReq couponReq) {
+		boolean result = true;
+		this.log.info("■■■■■ MQ 연동 start ■■■■■");
+
+		NotificationIprm noti = new NotificationIprm();
+		this.log.info("LOG1");
+		List<ProductTenantPriceVO> productTenantPriceList = null;
+
+		try {
+			CouponRes couponRes = this.getCatalogNmMenuId(couponInfo.getStoreCatalogCode());
+			this.log.info("LOG2");
+			for (int i = 0; i < itemInfoList.size(); i++) {
+				DpItemInfo itemInfo = itemInfoList.get(i);
+				noti.setTransactionKey(couponReq.getTxId() + "000" + (i + 1));
+				this.log.info("LOG3");
+				/**
+				 * 상품정보 세팅.
+				 */
+				ProductVO productVO = new ProductVO();
+
+				productVO.setSyncDataControlType(itemInfo.getCudType()); // 구분
+				productVO.setProdId(itemInfo.getProdId());// 상품ID
+				productVO.setProdNm(itemInfo.getItemName()); // 상품명
+
+				if (!String.valueOf(itemInfo.getItemPrice()).equals("0")) { // 유료
+					productVO.setProdFdTypCd("PD000501");// 유료
+				} else {
+					productVO.setProdFdTypCd("PD000502");// 무료
+				}
+				this.log.info("LOG4");
+				productVO.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);// 서비스그룹코드DP000206
+
+				productVO.setMbrNo(couponInfo.getMbrNo());// 판매자mbrNO
+				productVO.setCid(itemInfo.getItemCode()); // cid
+				productVO.setCateNo(CouponConstants.TOP_MENU_ID_CUPON_CONTENT); // 탑카테고리 DP28
+				productVO.setSubCateNo(couponRes.getMenuId());// 서브카테고리
+				productVO.setCoContentsId(itemInfo.getItemCode());// 업체컨텐츠ID == CID랑 같음
+
+				if (Integer.parseInt(couponInfo.getValidUntil()) > 0) { // 유효일수 값 비교
+					productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_DAY); // PD00312 기간제(일)
+					productVO.setUserTerm(couponInfo.getValidUntil()); // 유효일수로 셋팅
+				} else {
+					productVO.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_SELECT); // PD00319 기간선택
+					// USE_TERM_UNIT
+					productVO.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
+				}
+				this.log.info("LOG5");
+				productVO.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
+				productVO.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
+				productVO.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
+				productVO.setMbrStrte(couponInfo.getAccountingRate()); // 파트너 상품정산율
+				this.log.info("LOG6");
+				Date date = new Date();
+				String modifiedDate = new SimpleDateFormat("YYYYMMDDhhmmss").format(date);
+				if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
+					productVO.setRegId(couponInfo.getBpId()); // 등록ID
+					productVO.setRegDt(modifiedDate); // 등록일시
+					productVO.setUpdId(couponInfo.getBpId()); // 수정ID
+					productVO.setUpdDt(modifiedDate); // 수정일시
+
+				} else {
+					productVO.setRegId(couponRes.getRegId()); // 등록ID
+					productVO.setRegDt(couponRes.getRegDt()); // 등록일시
+					productVO.setUpdId(couponInfo.getBpId()); // 수정ID
+					productVO.setUpdDt(modifiedDate); // 수정일시
+				}
+				noti.setProduct(productVO);
+				this.log.info("LOG7");
+				/**
+				 * 상품가격정보 세팅.
+				 */
+				productTenantPriceList = new ArrayList<ProductTenantPriceVO>();
+				ProductTenantPriceVO productTenantPriceVO = new ProductTenantPriceVO();
+				productTenantPriceVO.setSyncDataControlType(itemInfo.getCudType());
+				productTenantPriceVO.setTenantId(CouponConstants.TENANT_ID); // tenentId
+				productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());// 상품가격
+				productTenantPriceList.add(productTenantPriceVO);
+				noti.setProductTenantPriceList(productTenantPriceList);
+				this.log.info("LOG8");
+				this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // async
+				this.log.info("LOG9");
+			}
+
+			this.log.info("■■■■■ MQ 연동 End ■■■■■");
+		} catch (AmqpException ae) {
+			result = false;
+			this.log.info("MQ 연동중 Error 발생. - error msg:{}, NotificationIprm:{}", ae.getMessage(), noti);
+		} catch (Exception e) {
+			result = false;
+			this.log.info("MQ 연동중 Error 발생. - error msg:{}, Exception:{}", e.getMessage());
+		}
+
+		return result;
 	}
 
 }

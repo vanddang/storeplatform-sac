@@ -883,6 +883,16 @@ public class ShoppingCouponSacController {
 				message = "유효성 검사 실패 [taxType : 세금구분유형] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
+
+			if (!couponInfo.getSendMsgType().equals("LMS") && !couponInfo.getSendMsgType().equals("MMS")) {
+				message = "유효성 검사 실패 [sendMsgType : 문자발송유형:" + couponInfo.getSendMsgType() + "]";
+				result = false;
+			}
+			if (couponInfo.getSendMsgType().equals("")) {
+				message = "유효성 검사 실패 [sendMsgType : 문자발송유형] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
+
 			if (couponInfo.getBpId().equals("")) {
 				message = "유효성 검사 실패 [bpId : 업체아이디] 이 XML에 존재하지 않습니다.";
 				result = false;

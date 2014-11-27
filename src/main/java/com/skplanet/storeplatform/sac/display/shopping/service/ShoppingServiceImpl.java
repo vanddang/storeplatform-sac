@@ -2163,6 +2163,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 									episodeRights.setAllow(episodeShopping.getAllow());
 								}
 							}
+
+							// 2014.11.27 Jade 추가 (쿠폰 발송 타입)
+							episodeProduct.setCouponSendType(episodeShopping.getCouponSendType());
+
 							// // 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
 							// if (purchseCount > 0) {
 							// episodeRights.setAllow(episodeShopping.getAllow());
@@ -3980,6 +3984,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 									episodeRights.setAllow(episodeShopping.getAllow());
 								}
 							}
+
+							// 2014.11.27 Jade 추가 (쿠폰 발송 타입)
+							episodeProduct.setCouponSendType(episodeShopping.getCouponSendType());
+
 							// // 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
 							// if (purchseCount > 0) {
 							// episodeRights.setAllow(episodeShopping.getAllow());
