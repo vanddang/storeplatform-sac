@@ -107,7 +107,7 @@ public class MemberCommonInternalComponent {
 			userInfoSacInReq.setDeviceKey(previousDeviceKey);
 			userInfoSacInReq.setUserKey(previousUserKey);
 			userInfoSacInReq.setNewUserKey(userKey);
-			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
+			// this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
 
 			/* 3. tenant Cash, 쿠폰 이관요청 */
 			TStoreTransferOwnerEcReq tStoreTransferOwnerEcReq = new TStoreTransferOwnerEcReq();
@@ -168,15 +168,21 @@ public class MemberCommonInternalComponent {
 	 * 
 	 * @param tenantId
 	 *            String
+	 * @param deviceId
+	 *            String
 	 * @param prodId
 	 *            String
 	 * @return IapProductInfoRes
 	 */
-	public IapProductInfoRes getIapProdInfo(String tenantId, String prodId) {
+	public IapProductInfoRes getIapProdInfo(String tenantId, String deviceId, String prodId) {
 		IapProductInfoReq req = new IapProductInfoReq();
 		req.setTenantId(tenantId);
 		req.setPartProdId(prodId);
 
-		return this.iapProductInfoSCI.getIapProductInfo(req);
+		LOGGER.info("{} getIapProductInfo req : {}", deviceId, req);
+		IapProductInfoRes res = this.iapProductInfoSCI.getIapProductInfo(req);
+		LOGGER.info("{} getIapProductInfo res : {}", deviceId, res);
+
+		return res;
 	}
 }

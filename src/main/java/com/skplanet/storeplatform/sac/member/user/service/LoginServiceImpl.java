@@ -1290,7 +1290,8 @@ public class LoginServiceImpl implements LoginService {
 
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
 		String tenantId = this.commService.getTenantIdByDeviceTelecom(req.getDeviceTelecom()); // 이통사 정보로 TenantID 부여
-		IapProductInfoRes iapProductInfoRes = this.mcic.getIapProdInfo(tenantId, req.getProdId()); // 마켓배포상품 정보조회
+		IapProductInfoRes iapProductInfoRes = this.mcic.getIapProdInfo(tenantId, req.getDeviceId(), req.getProdId()); // 마켓배포상품
+																													  // 정보조회
 		boolean isMarketProd = true; // 마켓배포상품 유무
 		if (iapProductInfoRes == null || StringUtils.isBlank(iapProductInfoRes.getParentProdId())) {
 			isMarketProd = false;
