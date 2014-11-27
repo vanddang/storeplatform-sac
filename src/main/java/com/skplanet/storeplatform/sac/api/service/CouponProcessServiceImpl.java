@@ -1530,16 +1530,14 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		this.log.info("■■■■■ MQ 연동 start ■■■■■");
 
 		NotificationIprm noti = new NotificationIprm();
-		this.log.info("LOG1");
 		List<ProductTenantPriceVO> productTenantPriceList = null;
 
 		try {
 			CouponRes couponRes = this.getCatalogNmMenuId(couponInfo.getStoreCatalogCode());
-			this.log.info("LOG2");
 			for (int i = 0; i < itemInfoList.size(); i++) {
 				DpItemInfo itemInfo = itemInfoList.get(i);
 				noti.setTransactionKey(couponReq.getTxId() + "000" + (i + 1));
-				this.log.info("LOG3");
+				this.log.info("LOG1");
 				/**
 				 * 상품정보 세팅.
 				 */
@@ -1554,7 +1552,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				} else {
 					productVO.setProdFdTypCd("PD000502");// 무료
 				}
-				this.log.info("LOG4");
+				this.log.info("LOG2");
 				productVO.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);// 서비스그룹코드DP000206
 
 				productVO.setMbrNo(couponInfo.getMbrNo());// 판매자mbrNO
@@ -1571,14 +1569,15 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 					// USE_TERM_UNIT
 					productVO.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
 				}
-				this.log.info("LOG5");
+				this.log.info("LOG3");
 				productVO.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
 				productVO.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
 				productVO.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
 				productVO.setMbrStrte(couponInfo.getAccountingRate()); // 파트너 상품정산율
-				this.log.info("LOG6");
+				this.log.info("LOG4");
 				Date date = new Date();
-				String modifiedDate = new SimpleDateFormat("YYYYMMDDhhmmss").format(date);
+				String modifiedDate = new SimpleDateFormat("yyyyMMddHHmmss").format(date);
+				this.log.info("LOG5");
 				if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
 					productVO.setRegId(couponInfo.getBpId()); // 등록ID
 					productVO.setRegDt(modifiedDate); // 등록일시
@@ -1592,7 +1591,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 					productVO.setUpdDt(modifiedDate); // 수정일시
 				}
 				noti.setProduct(productVO);
-				this.log.info("LOG7");
+				this.log.info("LOG6");
 				/**
 				 * 상품가격정보 세팅.
 				 */
@@ -1603,9 +1602,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());// 상품가격
 				productTenantPriceList.add(productTenantPriceVO);
 				noti.setProductTenantPriceList(productTenantPriceList);
-				this.log.info("LOG8");
+				this.log.info("LOG7");
 				this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // async
-				this.log.info("LOG9");
+				this.log.info("LOG8");
 			}
 
 			this.log.info("■■■■■ MQ 연동 End ■■■■■");
