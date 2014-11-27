@@ -193,7 +193,9 @@ public interface PurchaseOrderTstoreService {
 	 *            알림 타입
 	 * @param bGift
 	 *            선물여부
+	 * @param prodIdInfo
+	 *            구매한 상품ID 정보 (;로 연결)
 	 */
 	public void postTstoreNotiV2(String prchsId, String prchsDt, String userKey, String deviceKey, String notiType,
-			boolean bGift);
+			boolean bGift, String prodIdInfo);
 }

@@ -572,10 +572,12 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 *            알림 타입
 	 * @param bGift
 	 *            선물여부
+	 * @param prodIdInfo
+	 *            구매한 상품ID 정보 (;로 연결)
 	 */
 	@Override
 	public void postTstoreNotiV2(String prchsId, String prchsDt, String userKey, String deviceKey, String notiType,
-			boolean bGift) {
+			boolean bGift, String prodIdInfo) {
 		TStoreNotiV2EcReq tStoreNotiV2EcReq = new TStoreNotiV2EcReq();
 		tStoreNotiV2EcReq.setPrchsId(prchsId);
 		tStoreNotiV2EcReq.setPrchsDt(prchsDt);
@@ -584,6 +586,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 		tStoreNotiV2EcReq.setPublishType(notiType);
 		tStoreNotiV2EcReq.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
 		tStoreNotiV2EcReq.setGiftYn(bGift ? "Y" : "N");
+		tStoreNotiV2EcReq.setProdId(prodIdInfo);
 
 		try {
 			this.logger.info("PRCHS,ORDER,SAC,POST,TSTORE,NOTI,REQ,{}",

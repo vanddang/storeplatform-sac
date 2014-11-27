@@ -161,43 +161,54 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
 		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) { // T store
-			// Tstore 측으로 구매완료 알림: 이메일 발송, SMS / MMS 등등 처리
-			// 구매완료Noti처리 변경 : 결제처리결과 알림 API 응답 항목에 추가
 
-			boolean bPayPlanet = this.payPlanetShopService.startsWithPayPlanetMID(notifyPaymentReq.getPaymentInfoList()
-					.get(0).getTid()); // PayPlanet 결제 여부
+			// PayPlanet 결제 건은 T store 측으로 구매완료 Noti: 이메일 발송, SMS / MMS 등등 처리
+			// T store 결제 건은 결제처리결과 알림 API 응답 항목에 추가
+			if (this.payPlanetShopService.startsWithPayPlanetMID(notifyPaymentReq.getPaymentInfoList().get(0).getTid())) {
 
-			// PayPlanet 결제 건은 Tstore 측으로 구매완료 Noti
-			if (bPayPlanet) {
-				reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore.getPrchsResvDesc());
+				String notiType = null;
+				String prchsResvData = prchsDtlMore.getPrchsResvDesc();
+				int pos = StringUtils.indexOf(prchsResvData, "tstoreNotiPublishType=");
+				if (pos >= 0) {
+					notiType = StringUtils.substring(prchsResvData, pos,
+							StringUtils.indexOf(prchsResvData, ";", pos + 22));
+				}
 
-				// 구매요청 API 버전
-				int apiVer = Integer.parseInt(StringUtils.defaultString(reservedDataMap.get("apiVer"), "1"));
+				String userKey = null;
+				String deviceKey = null;
 
-				// 구매요청 버전 V2 부터는 신규 구매완료Noti 규격 이용 (구매/선물 구분)
-				if (apiVer > 1) {
-					String userKey = null;
-					String deviceKey = null;
+				boolean bGift = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD);
+				if (bGift) {
+					userKey = prchsDtlMore.getSendInsdUsermbrNo();
+					deviceKey = prchsDtlMore.getSendInsdDeviceId();
+				} else {
+					userKey = prchsDtlMore.getUseInsdUsermbrNo();
+					deviceKey = prchsDtlMore.getUseInsdDeviceId();
+				}
 
-					boolean bGift = StringUtils.equals(prchsDtlMore.getPrchsCaseCd(),
-							PurchaseConstants.PRCHS_CASE_GIFT_CD);
-					if (bGift) {
-						userKey = prchsDtlMore.getSendInsdUsermbrNo();
-						deviceKey = prchsDtlMore.getSendInsdDeviceId();
-					} else {
-						userKey = prchsDtlMore.getUseInsdUsermbrNo();
-						deviceKey = prchsDtlMore.getUseInsdDeviceId();
+				StringBuffer sbProdIdInfo = new StringBuffer();
+				List<String> prodIdList = new ArrayList<String>();
+				for (PrchsDtlMore prchsInfo : prchsDtlMoreList) {
+					if (prchsInfo.getPrchsDtlId() > 1
+							&& StringUtils.isNotBlank(prchsInfo.getUseFixrateProdId())
+							&& StringUtils.startsWith(prchsInfo.getTenantProdGrpCd(),
+									PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
+						break; // 이북 전권/소장 상품 구매 경우는 에피소드들 skip
+					}
+					if (prodIdList.contains(prchsInfo.getProdId())) {
+						continue; // 상품ID 중복 방지
 					}
 
-					this.purchaseOrderTstoreService.postTstoreNotiV2(prchsDtlMore.getPrchsId(),
-							prchsDtlMore.getPrchsDt(), userKey, deviceKey,
-							reservedDataMap.get("tstoreNotiPublishType"), bGift);
+					if (sbProdIdInfo.length() > 0) {
+						sbProdIdInfo.append(";");
+					}
+					sbProdIdInfo.append(prchsInfo.getProdId());
 
-				} else {
-					this.purchaseOrderTstoreService.postTstoreNoti(prchsDtlMore.getPrchsId(),
-							prchsDtlMore.getPrchsDt(), prchsDtlMore.getUseInsdUsermbrNo(),
-							prchsDtlMore.getUseInsdDeviceId(), reservedDataMap.get("tstoreNotiPublishType"));
+					prodIdList.add(prchsInfo.getProdId());
 				}
+
+				this.purchaseOrderTstoreService.postTstoreNotiV2(prchsDtlMore.getPrchsId(), prchsDtlMore.getPrchsDt(),
+						userKey, deviceKey, notiType, bGift, sbProdIdInfo.toString());
 			}
 
 		} else { // SAP
