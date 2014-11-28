@@ -44,8 +44,13 @@ public class IapProductInfoServiceImpl implements IapProductInfoService {
     public String getTenantProdId(String tenantId, String prodId) {
 
         Map map = commonDAO.queryForObject("IapProductInfo.getSapProdMapg", prodId, Map.class);
-        if (map == null || TENANT_TSTORE.equals(tenantId))
-            return prodId;
+
+        if (map == null) {
+            if(TENANT_TSTORE.equals(tenantId))
+                return prodId;
+            else
+                return null;
+        }
 
         return (String)map.get(tenantId + "_PROD_ID");
     }
