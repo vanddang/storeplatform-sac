@@ -170,8 +170,13 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 				String prchsResvData = prchsDtlMore.getPrchsResvDesc();
 				int pos = StringUtils.indexOf(prchsResvData, "tstoreNotiPublishType=");
 				if (pos >= 0) {
-					notiType = StringUtils.substring(prchsResvData, pos,
-							StringUtils.indexOf(prchsResvData, ";", pos + 22));
+					int endPos = StringUtils.indexOf(prchsResvData, ";", pos + 22);
+
+					if (endPos >= 0) {
+						notiType = StringUtils.substring(prchsResvData, pos, endPos);
+					} else {
+						notiType = StringUtils.substring(prchsResvData, pos);
+					}
 				}
 
 				String userKey = null;
