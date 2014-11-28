@@ -48,12 +48,14 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 	@Override
 	public Object findItem(StatLike like, SacRequestHeader header) {
 		String statsClsf = like.getStatsClsf();
+		String statsKey = like.getStatsKey();
+		String userKey = like.getUserKey();
 		
 		Object item;
 		if (CLSF_CARD.equals(statsClsf)) {
-			item = findCard(like, header);
+			item = findCard(statsKey, userKey, header);
 		} else if (CLSF_PROD.equals(statsClsf)) {
-			item = findProd(like, header);
+			item = findProd(statsKey, header);
 		} else {
 			item = new Object();
 		}
@@ -61,10 +63,9 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 		return item;
 	}
 	
-	private CardDetailSacRes findCard(StatLike like, SacRequestHeader header) {
+	@Override
+	public CardDetailSacRes findCard(String cardId, String userKey, SacRequestHeader header) {
 		String tenantId = header.getTenantHeader().getTenantId();
-		String cardId = like.getStatsKey();
-		String userKey = like.getUserKey();
 		
 		CardDetailParam param = new CardDetailParam();
 		param.setTenantId(tenantId);
@@ -79,9 +80,8 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 		return res;
 	}
 	
-	private Object findProd(StatLike like, SacRequestHeader header) {
-		String prodId= like.getStatsKey();
-		
+	@Override
+	public Product findProd(String prodId, SacRequestHeader header) {
 		ListProduct listProd;
 		/* 쇼핑 상품일 경우, prodId만 있어 메타 조회 가능하나, 
 		   일반 상품일 경우 TB_DP_PROD 테이블을 조회하여 TopMeuId와 SvcGrpCd를 추가로 획득해야함 */

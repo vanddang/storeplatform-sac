@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.stat.service;
 
+import com.skplanet.storeplatform.sac.client.display.vo.card.CardDetailSacRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.stat.vo.StatLike;
 
@@ -21,5 +23,9 @@ import com.skplanet.storeplatform.sac.display.stat.vo.StatLike;
 public interface StatMemberItemService {
 
 	Object findItem(StatLike like, SacRequestHeader header);
+
+	CardDetailSacRes findCard(String cardId, String userKey, SacRequestHeader header);
+
+	Product findProd(String prodId, SacRequestHeader header);
 
 }
