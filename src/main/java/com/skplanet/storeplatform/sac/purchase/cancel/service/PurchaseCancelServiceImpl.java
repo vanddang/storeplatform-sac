@@ -872,7 +872,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 					|| StringUtils.startsWith(paymentSacParam.getTid(), PurchaseConstants.PAYPLANET_TID_PREFIX_SEC)) {
 				this.logger.info("[##PurchaseCancel] PayPlanet 결제처리");
 				paymentSacParam.setAuthKey(payPlanetShop.getAuthKey());
-				paymentSacParam.setMid(payPlanetShop.getMid());
+				paymentSacParam.setMid(StringUtils.substringBefore(paymentSacParam.getTid(), "_"));
 			}
 		}
 
