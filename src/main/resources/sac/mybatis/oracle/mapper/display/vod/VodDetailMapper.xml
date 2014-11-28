@@ -253,9 +253,9 @@
 		     FROM
 		          (
 				SELECT * FROM (
-		        SELECT T3.* 
+		        SELECT T3.*, ROWNUM AS RNUM
 		        FROM (
-		            SELECT T2.*, COUNT(*) OVER () AS TOTAL_COUNT, ROWNUM AS RNUM
+		            SELECT T2.*, COUNT(*) OVER () AS TOTAL_COUNT
 		            FROM (
 		                SELECT T1.CID, T1.CHAPTER
 		                  , MAX( T1.TENANT_ID ) AS TENANT_ID
