@@ -63,7 +63,7 @@
 			       AND CD.DEVICE_MODEL_CD = #{req.deviceModelNo}
 			       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
 			       AND CD.USE_YN = 'Y'
-			       AND TP.PROD_STATUS_CD = #{prodStatusCd}
+			       AND TP.PROD_STATUS_CD IN (#{prodStatusCd}, #{passProdStatusCd})
 			       AND TP.TENANT_ID = #{tenantHeader.tenantId}
 			       AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
 			        <if test = "list !=null">

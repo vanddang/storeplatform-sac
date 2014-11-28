@@ -72,6 +72,7 @@ public class DeviceProductProvisioningServiceImpl implements DeviceProductProvis
 		paramMap.put("req", req);
 		paramMap.put("tenantHeader", tenantHeader);
 		paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		paramMap.put("passProdStatusCd", DisplayConstants.DP_PASS_SALE_STAT_ING); //정액제 상품 판매중 상태
 		paramMap.put("rshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("supportDevice", supportDevice);
 
