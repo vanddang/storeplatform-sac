@@ -33,7 +33,10 @@ public class ListProductReq extends CommonInfo {
     @Pattern(regexp = "Y|N")
     private String adultYn;
 
+    @NotBlank
     private String menuId;
+    
+    private Integer count;
 
 	public String getUserKey() {
 		return userKey;
@@ -58,5 +61,13 @@ public class ListProductReq extends CommonInfo {
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
-    
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+	
 }
