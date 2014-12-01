@@ -1595,6 +1595,20 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				productTenantPriceVO.setSyncDataControlType(itemInfo.getCudType());
 				productTenantPriceVO.setTenantId(CouponConstants.TENANT_ID); // tenentId
 				productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());// 상품가격
+
+				if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
+					productTenantPriceVO.setRegId(couponInfo.getBpId()); // 등록ID
+					productTenantPriceVO.setRegDt(modifiedDate); // 등록일시
+					productTenantPriceVO.setUpdId(couponInfo.getBpId()); // 수정ID
+					productTenantPriceVO.setUpdDt(modifiedDate); // 수정일시
+
+				} else {
+					productTenantPriceVO.setRegId(couponRes.getRegId()); // 등록ID
+					productTenantPriceVO.setRegDt(couponRes.getRegDt()); // 등록일시
+					productTenantPriceVO.setUpdId(couponInfo.getBpId()); // 수정ID
+					productTenantPriceVO.setUpdDt(modifiedDate); // 수정일시
+				}
+
 				productTenantPriceList.add(productTenantPriceVO);
 				noti.setProductTenantPriceList(productTenantPriceList);
 				this.log.info("LOG7");
