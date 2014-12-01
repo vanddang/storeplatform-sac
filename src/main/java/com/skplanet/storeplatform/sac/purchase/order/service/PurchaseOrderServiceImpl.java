@@ -1893,13 +1893,29 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		VerifyOrderPromotionInfoSac promotion = new VerifyOrderPromotionInfoSac();
 		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD);
-		promotion.setTitle("신용카드 2014년 11월 1차 TEST 프로모션");
+		promotion.setTitle("후불 2014년 12월 1차 TEST 프로모션");
+		promotion.setDescription("결제수단 프로모션 문구 테스트1입니다.결제수단 프로모션 문구 테스트1입니다.결제수");
+		promotion.setLinkUrl("m.nate.com");
+
+		promotionList.add(promotion);
+		promotion = new VerifyOrderPromotionInfoSac();
+		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD);
+		promotion.setTitle("신용카드 2014년 12월 1차 TEST 프로모션");
+		promotion.setDescription("결제수단 프로모션 문구 테스트2입니다.결제수단 프로모션 문구 테스트2입니다.결제수");
+		promotion.setLinkUrl("m.nate.com");
+
+		promotionList.add(promotion);
+		promotion = new VerifyOrderPromotionInfoSac();
+		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD);
+		promotion.setTitle("PayPin 2014년 12월 1차 TEST 프로모션");
+		promotion.setDescription("결제수단 프로모션 문구 테스트3입니다.결제수단 프로모션 문구 테스트3입니다.결제수");
 		promotion.setLinkUrl("m.nate.com");
 		promotionList.add(promotion);
 
 		promotion = new VerifyOrderPromotionInfoSac();
 		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP);
-		promotion.setTitle("T멤버쉽 2014년 11월 1차 TEST 프로모션");
+		promotion.setTitle("T멤버쉽 2014년 12월 1차 TEST 프로모션");
+		promotion.setDescription("할인수단 프로모션 문구 테스트입니다.할인");
 		promotion.setLinkUrl("m.google.com");
 		promotionList.add(promotion);
 
