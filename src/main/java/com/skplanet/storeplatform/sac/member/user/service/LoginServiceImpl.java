@@ -519,7 +519,8 @@ public class LoginServiceImpl implements LoginService {
 		} else {
 
 			/* 변동성 여부 조회 */
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
+			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId(),
+					req.getDeviceTelecom());
 			isSaveAndSyncTarget = saveAndSync.getIsSaveAndSyncTarget();
 
 			if (!StringUtils.equals(isSaveAndSyncTarget, "Y")) {
@@ -1019,7 +1020,8 @@ public class LoginServiceImpl implements LoginService {
 
 		} else { // 회원이 아닌경우 변동성 대상체크
 
-			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId());
+			SaveAndSync saveAndSync = this.saveAndSyncService.checkSaveAndSync(requestHeader, req.getDeviceId(),
+					MemberConstants.DEVICE_TELECOM_SKT);
 
 			if (StringUtils.equals(saveAndSync.getIsSaveAndSyncTarget(), "Y")) { // 변동성 대상인 경우
 

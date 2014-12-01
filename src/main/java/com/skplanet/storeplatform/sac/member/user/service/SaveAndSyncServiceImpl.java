@@ -80,7 +80,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	private AmqpTemplate memberAddDeviceAmqpTemplate;
 
 	@Override
-	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId) {
+	public SaveAndSync checkSaveAndSync(SacRequestHeader sacHeader, String deviceId, String deviceTelecom) {
 
 		LOGGER.debug("===================================");
 		LOGGER.debug("===== 변동성 대상 체크 공통 모듈 =====");
@@ -109,8 +109,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
 			LOGGER.info("{} 변동성 대상({})", deviceId, StringUtils.equals(isActive, "Y") ? "번호변경" : "번호이동");
-			LOGGER.info("{} CheckSaveNSyncResponse : isActive={},isSaveNSync={},deviceKey={},userKey={},preDeviceId={},nowDeviceId={}", deviceId,
-					isActive, isSaveNSync, deviceKey, userKey, preDeviceId, nowDeviceId);
+			LOGGER.info(
+					"{} CheckSaveNSyncResponse : isActive={},isSaveNSync={},deviceKey={},userKey={},preDeviceId={},nowDeviceId={}",
+					deviceId, isActive, isSaveNSync, deviceKey, userKey, preDeviceId, nowDeviceId);
 
 			/**
 			 * 변동성 대상 회원의 상태를 확인한다.
@@ -122,7 +123,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * IDP 무선회원 가입
 				 */
-				newMbrNo = this.joinForWap(deviceId);
+				newMbrNo = this.joinForWap(deviceId, deviceTelecom);
 
 				/**
 				 * 기존 IDP 모바일 회원 탈퇴.
@@ -132,7 +133,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * 회원 MBR_NO 업데이트
 				 */
-				this.modMbrNo(sacHeader, userKey, deviceKey, deviceId, newMbrNo);
+				this.modMbrNo(sacHeader, userKey, deviceKey, deviceId, deviceTelecom, newMbrNo);
 
 				/** MQ 연동(번호변경) */
 				ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
@@ -163,7 +164,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
 				 */
-				newMbrNo = this.reviveUser(sacHeader, userKey, deviceId, deviceKey);
+				newMbrNo = this.reviveUser(sacHeader, userKey, deviceId, deviceTelecom, deviceKey);
 				/** MQ 연동(MDN 등록) */
 				CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
 				try {
@@ -220,9 +221,11 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 * 
 	 * @param deviceId
 	 *            기기 ID
+	 * @param deviceTelecom
+	 *            통신사
 	 * @return IDP (MBR_NO)
 	 */
-	private String joinForWap(String deviceId) {
+	private String joinForWap(String deviceId, String deviceTelecom) {
 
 		String mbrNo = "";
 
@@ -234,16 +237,17 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			LOGGER.info("{} IDP 모바일 회원 가입", deviceId);
 			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 			joinForWapEcReq.setUserMdn(deviceId);
-			joinForWapEcReq.setMdnCorp(MemberConstants.NM_DEVICE_TELECOM_SKT); // 이동 통신사
+			joinForWapEcReq.setMdnCorp(this.mcc.convertDeviceTelecom(deviceTelecom)); // 이동 통신사
 			mbrNo = this.idpSCI.joinForWap(joinForWapEcReq).getUserKey();
 
 		} catch (StorePlatformException spe) {
 
 			/**
-			 * 가가입일 경우 처리. (이경우에 걸리게 되면 테넌트에서 모바일전용회원가입을 시킨다. [** 신규 가입처리 되므로
-			 * 회원정보가 복구 되지 않는다. 이때 회원이 클레임을 걸경우 수동으로 처리하기로함.])
+			 * 가가입일 경우 처리. (이경우에 걸리게 되면 테넌트에서 모바일전용회원가입을 시킨다. [** 신규 가입처리 되므로 회원정보가 복구 되지 않는다. 이때 회원이 클레임을 걸경우 수동으로
+			 * 처리하기로함.])
 			 */
-			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
+			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+					+ IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 				throw new StorePlatformException("SAC_MEM_0002", "회원(Save&Sync)");
 
@@ -300,16 +304,19 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 *            사용자 Key
 	 * @param deviceId
 	 *            기기 ID
+	 * @param deviceTelecom
+	 *            통신사
 	 * @param deviceKey
 	 *            기기 Key
 	 * @return newMbrNo 신규가입된 IDP Key
 	 */
-	private String reviveUser(SacRequestHeader sacHeader, String userKey, String deviceId, String deviceKey) {
+	private String reviveUser(SacRequestHeader sacHeader, String userKey, String deviceId, String deviceTelecom,
+			String deviceKey) {
 
 		/**
 		 * IDP 모바일 회원 가입.
 		 */
-		String newMbrNo = this.joinForWap(deviceId);
+		String newMbrNo = this.joinForWap(deviceId, deviceTelecom);
 
 		/**
 		 * SC 회원 복구 요청.
@@ -320,6 +327,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		reviveUserRequest.setImMbrNo(newMbrNo);
 		reviveUserRequest.setUserKey(userKey);
 		reviveUserRequest.setDeviceID(deviceId);
+		reviveUserRequest.setDeviceTelecom(deviceTelecom);
 		reviveUserRequest.setDeviceKey(deviceKey);
 		this.deviceSCI.reviveUser(reviveUserRequest);
 
@@ -340,10 +348,13 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 *            휴대기기 Key
 	 * @param deviceId
 	 *            휴대기기 mdn
+	 * @param deviceTelecom
+	 *            통신사
 	 * @param mbrNo
 	 *            IDP Key
 	 */
-	private void modMbrNo(SacRequestHeader sacHeader, String userKey, String deviceKey, String deviceId, String mbrNo) {
+	private void modMbrNo(SacRequestHeader sacHeader, String userKey, String deviceKey, String deviceId,
+			String deviceTelecom, String mbrNo) {
 
 		/**
 		 * SC 단말 Device 업데이트.
@@ -356,6 +367,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		userMbrDevice.setUserKey(userKey);
 		userMbrDevice.setDeviceKey(deviceKey);
 		userMbrDevice.setDeviceID(deviceId); // 수정할 DeviceId
+		userMbrDevice.setDeviceTelecom(deviceTelecom);
 		createDeviceRequest.setUserMbrDevice(userMbrDevice);
 
 		this.deviceSCI.createDevice(createDeviceRequest);
