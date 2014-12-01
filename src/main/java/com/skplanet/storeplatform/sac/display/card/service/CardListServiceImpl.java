@@ -9,37 +9,31 @@
  */
 package com.skplanet.storeplatform.sac.display.card.service;
 
-import static com.skplanet.storeplatform.sac.display.common.DisplayJsonUtils.parseToSet;
-import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.SGMT_TP_SEGMENT;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.Card;
 import com.skplanet.storeplatform.sac.client.product.vo.Panel;
 import com.skplanet.storeplatform.sac.display.cache.service.PanelCardInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.CardInfo;
 import com.skplanet.storeplatform.sac.display.cache.vo.PanelCardMapping;
 import com.skplanet.storeplatform.sac.display.cache.vo.PanelItem;
 import com.skplanet.storeplatform.sac.display.cache.vo.SegmentInfo;
-import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
-import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
-import com.skplanet.storeplatform.sac.display.card.vo.CardListGeneratorContext;
-import com.skplanet.storeplatform.sac.display.card.vo.CardSegment;
-import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
+import com.skplanet.storeplatform.sac.display.card.util.CardDynamicInfoProcessor;
+import com.skplanet.storeplatform.sac.display.card.vo.*;
 import com.skplanet.storeplatform.sac.display.common.service.menu.MenuInfoService;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.skplanet.storeplatform.sac.display.common.DisplayJsonUtils.parseToSet;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.SGMT_TP_SEGMENT;
 
 /**
  * <p>
@@ -85,21 +79,25 @@ public class CardListServiceImpl implements CardListService {
         rootPn.setSubGroup(new ArrayList<Panel>());
         rootPn.setCardList(new ArrayList<Card>());
 
+        CardDynamicInfoProcessor processor = new CardDynamicInfoProcessor(tenantId, cardDetailService);
+
         for (PanelItem panelItem : panelItems) {
             if(panelItem.getPanelLevel() == PN_LEVEL_LV2) {
                 mapPanel(rootPn, panelItem);
-                attachCardList(ctx, rootPn, panelItem.getPanelId());
+                attachCardList(ctx, rootPn, panelItem.getPanelId(), processor);
             }
             else if (panelItem.getPanelLevel() == PN_LEVEL_LV3) {
                 Panel subPn = new Panel();
                 subPn.setCardList(new ArrayList<Card>());
 
                 mapPanel(subPn, panelItem);
-                attachCardList(ctx, subPn, panelItem.getPanelId());
+                attachCardList(ctx, subPn, panelItem.getPanelId(), processor);
 
                 rootPn.getSubGroup().add(subPn);
             }
         }
+
+        processor.execute(userKey);
 
         return rootPn;
     }
@@ -109,8 +107,9 @@ public class CardListServiceImpl implements CardListService {
      * @param ctx
      * @param pn
      * @param panelId
+     * @param processor
      */
-    private void attachCardList(CardListGeneratorContext ctx, Panel pn, String panelId) {
+    private void attachCardList(CardListGeneratorContext ctx, Panel pn, String panelId, CardDynamicInfoProcessor processor) {
         List<PanelCardMapping> cardList = getPanelCardMaping(ctx, panelId);
         int maxCardCnt = ctx.isDisableCardLimit() ? CARD_LIMIT_MAX :
                             (pn.getMaxDpCardCnt() != null ? pn.getMaxDpCardCnt() : CARD_LIMIT_MAX);
@@ -124,51 +123,56 @@ public class CardListServiceImpl implements CardListService {
             if(!panCard.isVisibleForDate(stdDt))
                 continue;
 
-            CardDetail cardDetail = cardDetailService.searchCardDetail(new CardDetailParam(ctx.getTenantId(), panCard.getCardId(), ctx.getUserKey()));
-            if (cardDetail != null) {
-                // NOTICE 플러그인 형태로 구현 가능하지 않을까?
-                // Segment 프로비저닝 적용
-                if (cardDetail.getSegmTypeCd().equals(SGMT_TP_SEGMENT)) {
-                    if(!this.isPassSegmentProvision(ctx.getTenantId(), cardDetail.getCardId(), ctx.getSegmentInfo()))
-                        continue;
-                }
+            CardInfo cardInfo = panelCardInfoManager.getCardInfo(ctx.getTenantId(), panCard.getCardId());
+            if (cardInfo == null)
+                continue;
 
-                // ===== Action Before =====
-                Card card = cardDetailService.makeCard(cardDetail);
-                // ===== Action After  =====
+            CardDetail cardDetail = new CardDetail();
+            BeanUtils.copyProperties(cardInfo, cardDetail);
 
-                // FCx 카드 처리 CD05000030
-                if (cardDetail.getCardTypeCd().equals(CARDTP_FC)) {
-                    String reqMenuId = card.getDatasetProp().getUrlParam().get("topMenuId");
-
-                    String prefMenuId;
-                    Matcher m = RX_DT_FC.matcher(cardDetail.getDatasetId());
-                    if (m.matches()) {
-                        int idx = Integer.parseInt(m.group(1));
-                        if(idx < 1)
-                            continue;
-
-                        prefMenuId = ctx.getPreferredCategoryInfo().getPreferMenu(reqMenuId, idx - 1);
-                    }
-                    else
-                        continue;
-
-                    if(prefMenuId == null)
-                        continue;
-
-                    // String processor #{title} 형태의 문자열을 원하는 것으로 치환
-                    String title = card.getTitle();
-                    title = title.replaceAll("#\\{category\\}", menuInfoService.getMenuName(prefMenuId, ctx.getLangCd()));
-                    card.setTitle(title);
-                    card.setLndTitle(title);
-
-                    card.getDatasetProp().getUrlParam().put("menuId", prefMenuId);
-                    card.getDatasetProp().getUrlParam().remove("topMenuId");
-                }
-
-                pn.getCardList().add(card);
-                ++cardCnt;
+            // NOTICE 플러그인 형태로 구현 가능하지 않을까?
+            // Segment 프로비저닝 적용
+            if (cardDetail.getSegmTypeCd().equals(SGMT_TP_SEGMENT)) {
+                if(!this.isPassSegmentProvision(ctx.getTenantId(), cardDetail.getCardId(), ctx.getSegmentInfo()))
+                    continue;
             }
+
+            // ===== Action Before =====
+            Card card = cardDetailService.makeCard(cardDetail);
+            processor.addCard(card);
+            // ===== Action After  =====
+
+            // FCx 카드 처리 CD05000030
+            if (cardDetail.getCardTypeCd().equals(CARDTP_FC)) {
+                String reqMenuId = card.getDatasetProp().getUrlParam().get("topMenuId");
+
+                String prefMenuId;
+                Matcher m = RX_DT_FC.matcher(cardDetail.getDatasetId());
+                if (m.matches()) {
+                    int idx = Integer.parseInt(m.group(1));
+                    if(idx < 1)
+                        continue;
+
+                    prefMenuId = ctx.getPreferredCategoryInfo().getPreferMenu(reqMenuId, idx - 1);
+                }
+                else
+                    continue;
+
+                if(prefMenuId == null)
+                    continue;
+
+                // String processor #{title} 형태의 문자열을 원하는 것으로 치환
+                String title = card.getTitle();
+                title = title.replaceAll("#\\{category\\}", menuInfoService.getMenuName(prefMenuId, ctx.getLangCd()));
+                card.setTitle(title);
+                card.setLndTitle(title);
+
+                card.getDatasetProp().getUrlParam().put("menuId", prefMenuId);
+                card.getDatasetProp().getUrlParam().remove("topMenuId");
+            }
+
+            pn.getCardList().add(card);
+            ++cardCnt;
         }
     }
 

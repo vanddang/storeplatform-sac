@@ -72,7 +72,7 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 		param.setCardId(cardId);
 		param.setUserKey(userKey);
 
-		CardDetail cardDetail = cardDetailService.searchCardDetail(param);
+		CardDetail cardDetail = cardDetailService.searchCardDetail(param);  // FIXME Card의 경우 동적 데이터를 일괄 처리하도록 수정 필요
 		CardDetailSacRes res = new CardDetailSacRes();
 		Card card = cardDetailService.makeCard(cardDetail);
 
