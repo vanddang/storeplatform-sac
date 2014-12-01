@@ -82,7 +82,14 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     public MusicMeta getMusicMeta(MusicMetaParam param) {
 
         Map<String, Object> reqMap = new HashMap<String, Object>();
-        reqMap.put("channelId", param.getChannelId());
+
+        if(param.getContentType() == ContentType.Channel)
+            reqMap.put("channelId", param.getProdId());
+        else if(param.getContentType() == ContentType.Episode)
+            reqMap.put("episodeId", param.getProdId());
+        else
+            throw new IllegalArgumentException("contentType cannot be null.");
+
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("tenantId", param.getTenantId());
         reqMap.put("imageCd", MUSIC_IMG_CD);

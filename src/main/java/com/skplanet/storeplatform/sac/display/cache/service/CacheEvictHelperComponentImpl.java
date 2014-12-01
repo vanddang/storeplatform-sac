@@ -73,7 +73,7 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
                         }
                     }
                     else if(prodType == Music) {
-                        this.cacheEvictManager.evictMusicMeta(new MusicMetaParam(_prodId, langCd, tenant));
+                        this.cacheEvictManager.evictMusicMeta(new MusicMetaParam(tenant, langCd, _prodId));
                     }
                     else if(prodType == Shopping) {
                         this.cacheEvictManager.evictShoppingMeta(new ShoppingMetaParam(_prodId, langCd, tenant));

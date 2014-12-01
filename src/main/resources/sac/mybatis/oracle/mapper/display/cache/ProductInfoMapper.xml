@@ -203,6 +203,8 @@
               AND CPD.CONTENTS_TYPE_CD = 'PD002501'
               AND EPD.CONTENTS_TYPE_CD = 'PD002502'
               AND RS.PROD_RSHP_CD = 'DP010802'
+              <if test="channelId != null">AND RS.PROD_ID = #{channelId}</if>
+              <if test="episodeId != null">AND RS.PART_PROD_ID = #{episodeId}</if>
               AND CPD.SVC_TYPE_CD = #{svcTypeCd}
               AND EPD.SVC_TYPE_CD = CPD.SVC_TYPE_CD
               AND CPD.SVC_GRP_CD = 'DP000203'
@@ -212,7 +214,6 @@
               AND TP.EXPO_YN = 'Y'
               AND TP.TENANT_ID = #{tenantId}
               AND PDESC.LANG_CD = MD.LANG_CD
-              AND CPD.PROD_ID = #{channelId}
               AND ROWNUM = 1
     </select>
 

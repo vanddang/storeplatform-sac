@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.display.common.ContentType;
 
 /**
  * <p>
@@ -20,17 +21,18 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class MusicMetaParam extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
-    private String langCd;
-    private String channelId;
     private String tenantId;
+    private String langCd;
+    private String prodId;
+    private ContentType contentType;
 
     private String chartClsfCd;
     private String rankStartDay;
 
     public MusicMetaParam() {}
 
-    public MusicMetaParam(String channelId, String langCd, String tenantId) {
-        this.channelId = channelId;
+    public MusicMetaParam(String prodId, String langCd, String tenantId) {
+        this.prodId = prodId;
         this.langCd = langCd;
         this.tenantId = tenantId;
     }
@@ -59,12 +61,12 @@ public class MusicMetaParam extends CommonInfo {
         this.langCd = langCd;
     }
 
-    public String getChannelId() {
-        return channelId;
+    public String getProdId() {
+        return prodId;
     }
 
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
+    public void setProdId(String prodId) {
+        this.prodId = prodId;
     }
 
     public String getTenantId() {
@@ -75,7 +77,15 @@ public class MusicMetaParam extends CommonInfo {
         this.tenantId = tenantId;
     }
 
+    public ContentType getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(ContentType contentType) {
+        this.contentType = contentType;
+    }
+
     public String getCacheKey() {
-        return channelId + "_" + langCd + "_" + tenantId;
+        return prodId + "_" + langCd + "_" + tenantId;
     }
 }

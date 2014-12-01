@@ -6,11 +6,13 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.ContentType;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.meta.util.MetaBeanUtils;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,9 +154,12 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             MusicMetaParam param = new MusicMetaParam();
             ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
 
-            param.setChannelId(basicInfo.getProdId());
+            param.setProdId(basicInfo.getProdId());
             param.setLangCd(tenantHeader.getLangCd());
             param.setTenantId(tenantHeader.getTenantId());
+            param.setContentType(
+                    StringUtils.defaultString(basicInfo.getContentsTypeCd(), DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD).equals(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD)
+                    ? ContentType.Episode : ContentType.Channel);
 
             if(paramMap.containsKey("chartClsfCd") && paramMap.containsKey("stdDt")) {
                 param.setChartClsfCd((String)paramMap.get("chartClsfCd"));
