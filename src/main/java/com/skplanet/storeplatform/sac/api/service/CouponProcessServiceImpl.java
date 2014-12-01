@@ -1591,6 +1591,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				 */
 				productTenantPriceList = new ArrayList<ProductTenantPrice>();
 				ProductTenantPrice productTenantPriceVO = new ProductTenantPrice();
+				productTenantPriceVO.setProdId(itemInfo.getProdId());
 				productTenantPriceVO.setSyncDataControlType(itemInfo.getCudType());
 				productTenantPriceVO.setTenantId(CouponConstants.TENANT_ID); // tenentId
 				productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());// 상품가격
