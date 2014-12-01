@@ -36,7 +36,6 @@ public class AuthorizeForInAppSacReq extends CommonInfo {
 	/**
 	 * 가입자 식별 모듈 ID (USIM 일련번호).
 	 */
-	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String simSerialNo;
 	/**
 	 * InApp 상품 ID.
