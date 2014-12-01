@@ -82,7 +82,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 	@Override
 	public CardDetail searchCardDetail(CardDetailParam cardDetailParam) {
 
-		CardInfo cardInfo = getCardInfo(cardDetailParam);
+		CardInfo cardInfo = panelCardInfoManager.getCardInfo(cardDetailParam.getTenantId(), cardDetailParam.getCardId());
 
 		if (cardInfo == null) return null;
 
@@ -98,18 +98,6 @@ public class CardDetailServiceImpl implements CardDetailService {
         }
 
         return cardDetail;
-	}
-
-	@Override
-	public CardInfo getCardInfo(CardDetailParam cardDetailParam) {
-
-		return panelCardInfoManager.getCardInfo(cardDetailParam.getTenantId(), cardDetailParam.getCardId());
-	}
-
-	@Override
-	public CardInfo getCardInfo(final String tenantId, final String cardId) {
-
-		return panelCardInfoManager.getCardInfo(tenantId, cardId);
 	}
 
     @Override
@@ -140,7 +128,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 
     	HashMap<String, Object> req = new HashMap<String, Object>();
         req.put("tenantId", tenantId);
-        req.put("cardId", tenantId);
+        req.put("cardId", cardId);
 
 		return commonDAO.queryForObject("CardDetail.getExpoYnInPanel", req, String.class);
 	}
