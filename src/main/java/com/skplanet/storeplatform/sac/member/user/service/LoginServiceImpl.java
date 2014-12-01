@@ -2050,10 +2050,7 @@ public class LoginServiceImpl implements LoginService {
 		AuthorizeForInAppSacRes res = new AuthorizeForInAppSacRes();
 		MarketAuthorizeEcRes marketRes = null;
 
-		res.setTrxNo(req.getTrxNo());
 		res.setTenantId(tenantId);
-		res.setDeviceId(req.getDeviceId());
-		res.setDeviceTelecom(req.getDeviceTelecom());
 
 		// 타사 마켓회원 인증 요청
 		MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
@@ -2064,6 +2061,8 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setSimSerialNo(req.getSimSerialNo());
 		marketReq.setUserVerifyReason("InApp");
 
+		LOGGER.info("{} authorizeMarket Request : {}", req.getDeviceId(), marketReq);
+
 		if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, tenantId)) {
 			marketRes = this.marketSCI.authorizeForOllehMarket(marketReq);
 			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(), marketRes);
@@ -2071,6 +2070,10 @@ public class LoginServiceImpl implements LoginService {
 			marketRes = this.marketSCI.authorizeForUplusStore(marketReq);
 			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(), marketRes);
 		}
+
+		res.setTrxNo(marketRes.getTrxNo());
+		res.setDeviceId(marketRes.getDeviceId());
+		res.setDeviceTelecom(marketRes.getDeviceTelecom());
 
 		if (marketRes != null
 				&& StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상인증
