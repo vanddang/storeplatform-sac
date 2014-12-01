@@ -96,7 +96,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 		card.setLndLayout(StringUtils.defaultString(cardDetail.getLndLayOut()));
 		card.setMenuId(StringUtils.defaultString(cardDetail.getMenuId()));
 		card.setLikeYn(cardDetail.getLikeYn());
-		card.setShareUrl(cardDetail.getShareUrl().replaceAll("#\\{cardId\\}",cardDetail.getCardId()));
+		card.setShareUrl(StringUtils.defaultString(cardDetail.getShareUrl()).replaceAll("#\\{cardId\\}",cardDetail.getCardId()));
 
 		card.setEtcProp(makeEtcProp(cardDetail));
 		card.setDatasetProp(makeDatasetProp(cardDetail));
