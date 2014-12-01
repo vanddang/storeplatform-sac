@@ -14,6 +14,7 @@ import javax.validation.constraints.Pattern;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSacReq;
 
@@ -31,6 +32,7 @@ public class CouponStockSacReq extends PurchaseCommonSacReq {
 	private String couponCode;
 	@NotBlank
 	private String itemCode;
+	@NotEmpty
 	@Min(1)
 	private Integer itemCount;
 	@NotBlank
