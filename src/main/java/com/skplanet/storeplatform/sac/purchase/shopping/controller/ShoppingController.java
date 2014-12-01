@@ -190,8 +190,10 @@ public class ShoppingController {
 
 		couponStockSacParam.setCouponCode(couponStockSacReq.getCouponCode());
 		couponStockSacParam.setItemCode(couponStockSacReq.getItemCode());
+		couponStockSacParam.setItemCount(couponStockSacReq.getItemCount());
 		couponStockSacParam.setMdn(couponStockSacReq.getMdn());
 		couponStockSacParam.setProdId(couponStockSacReq.getProdId());
+		couponStockSacParam.setGiftFlag(couponStockSacReq.getGiftFlag());
 
 		return couponStockSacParam;
 
