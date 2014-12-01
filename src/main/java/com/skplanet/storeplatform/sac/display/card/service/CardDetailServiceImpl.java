@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -39,7 +41,9 @@ import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDynamicInfo;
 import com.skplanet.storeplatform.sac.display.card.vo.InjtVar;
+import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.menu.MenuInfoService;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 
 
@@ -65,6 +69,15 @@ public class CardDetailServiceImpl implements CardDetailService {
 
     @Autowired
     private PanelCardInfoManager panelCardInfoManager;
+
+    @Autowired
+    private MenuInfoService menuInfoService;
+
+
+    private static final String CARDTP_FC = "CD05000030";
+
+    private static final Pattern RX_DT_FC = Pattern.compile("DT200003(\\d\\d)");
+
 
 	@Override
 	public CardDetail searchCardDetail(CardDetailParam cardDetailParam) {
@@ -93,8 +106,14 @@ public class CardDetailServiceImpl implements CardDetailService {
 		return panelCardInfoManager.getCardInfo(cardDetailParam.getTenantId(), cardDetailParam.getCardId());
 	}
 
+	@Override
+	public CardInfo getCardInfo(final String tenantId, final String cardId) {
+
+		return panelCardInfoManager.getCardInfo(tenantId, cardId);
+	}
+
     @Override
-    public List<CardDynamicInfo> getCardDynamicInfo(final String tenantId, final String userKey, List<String> cardList) {
+    public List<CardDynamicInfo> getCardDynamicInfo(final String tenantId, final String userKey, final List<String> cardList) {
         final ArrayList<CardDynamicInfo> rtn = new ArrayList<CardDynamicInfo>(cardList.size());
 
         PartialProcessor.process(cardList, new PartialProcessorHandler<String>() {
@@ -117,13 +136,17 @@ public class CardDetailServiceImpl implements CardDetailService {
     }
 
     @Override
-	public String getExpoYnInPanel(CardDetailParam cardDetailParam) {
+	public String getExpoYnInPanel(final String tenantId, final String cardId) {
 
-		return commonDAO.queryForObject("CardDetail.getExpoYnInPanel", cardDetailParam, String.class);
+    	HashMap<String, Object> req = new HashMap<String, Object>();
+        req.put("tenantId", tenantId);
+        req.put("cardId", tenantId);
+
+		return commonDAO.queryForObject("CardDetail.getExpoYnInPanel", req, String.class);
 	}
 
 	@Override
-	public Card makeCard(CardDetail cardDetail) {
+	public Card makeCard(final CardDetail cardDetail) {
 
 		if (cardDetail == null) return null;
 
@@ -161,7 +184,64 @@ public class CardDetailServiceImpl implements CardDetailService {
 		return card;
 	}
 
-	private EtcProp makeEtcProp(CardDetail cardDetail) {
+	@Override
+	public Card makeCard(final CardDetail cardDetail, final PreferredCategoryInfo preferredCategoryInfo, final String langCd) {
+
+		if (cardDetail == null) return null;
+
+		Card card = makeCard(cardDetail);
+
+		makeTitleParam(card, preferredCategoryInfo, langCd);
+
+		return card;
+	}
+
+	private void makeTitleParam(Card card, final PreferredCategoryInfo preferredCategoryInfo, final String langCd) {
+
+		card.setTitleParam(new HashMap<String, String>());
+
+		if (preferredCategoryInfo == null ) return;
+
+		// FCx 카드 처리 CD05000030
+		if (!StringUtils.equals(card.getTypeCd(), CARDTP_FC)) return;
+
+
+        String reqMenuId = card.getDatasetProp().getUrlParam().get("topMenuId");
+
+        String prefMenuId;
+        Matcher m = RX_DT_FC.matcher(card.getDatasetProp().getId());
+        if (m.matches()) {
+            int idx = Integer.parseInt(m.group(1));
+            if(idx < 1)
+                return;
+
+            prefMenuId = preferredCategoryInfo.getPreferMenu(reqMenuId, idx - 1);
+        }
+        else
+            return;
+
+        if(prefMenuId == null)
+            return;
+
+        /**
+         * FC1, FC2, FC3 card_title에 #{category}만 현재는 존재
+         */
+        String title = card.getTitle();
+        if ( title.contains("#{category}") ) {
+            Map<String, String> titleParam = new HashMap<String, String>();
+            titleParam.put("category", menuInfoService.getMenuName(prefMenuId, langCd));
+
+            card.setTitleParam(titleParam);
+
+            card.getDatasetProp().getUrlParam().put("menuId", prefMenuId);
+            card.getDatasetProp().getUrlParam().remove("topMenuId");
+        }
+
+        return;
+	}
+
+
+	private EtcProp makeEtcProp(final CardDetail cardDetail) {
 		EtcProp etcProp = new EtcProp();
 
 		etcProp.setExpoYnCardTitle(cardDetail.getExpoYnCardTitle());
@@ -186,7 +266,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 		return etcProp;
 	}
 
-	private DatasetProp makeDatasetProp(CardDetail cardDetail) {
+	private DatasetProp makeDatasetProp(final CardDetail cardDetail) {
 		DatasetProp datasetProp = new DatasetProp();
 
 		datasetProp.setId(StringUtils.defaultString(cardDetail.getDatasetId()));
@@ -201,7 +281,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 		return datasetProp;
 	}
 
-	private Stats makeStats(CardDetail cardDetail) {
+	private Stats makeStats(final CardDetail cardDetail) {
 		Stats stats = new Stats();
 
 		stats.setCntLike(cardDetail.getCntLike());
@@ -210,7 +290,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 		return stats;
 	}
 
-	private Map<String, String> makeUrlParam(CardDetail cardDetail) {
+	private Map<String, String> makeUrlParam(final CardDetail cardDetail) {
 		Map<String, String> urlParam = new HashMap<String, String>();
 
 		/**
@@ -222,7 +302,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 		return urlParam;
 	}
 
-	private void makeUrlParamFromInjtVar(Map<String, String> urlParam, String injtVar) {
+	private void makeUrlParamFromInjtVar(Map<String, String> urlParam, final String injtVar) {
 
 		ObjectMapper mapper = new ObjectMapper();
 

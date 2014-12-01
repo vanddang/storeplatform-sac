@@ -75,9 +75,7 @@
 			AND	CRD.CARD_ID = #{cardId}
 	</select>	
 	
-	<select id="getCardDynamicInfo"
-	        parameterType="map"
-	        resultType="com.skplanet.storeplatform.sac.display.card.vo.CardDynamicInfo">
+	<select id="getCardDynamicInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.card.vo.CardDynamicInfo">
 	   SELECT /* CardDetailMapper.xml, getCardDynamicInfo, SAC : 양해엽 , 2014-11-06 */
 		    CRD.CARD_ID
 		    ,CASE WHEN NVL(SST.CNT_LIKE, 0) <![CDATA[<]]> 0 THEN 0 ELSE NVL(SST.CNT_LIKE, 0) END AS CNT_LIKE
@@ -93,9 +91,7 @@
 		    AND CRD.CARD_ID IN <foreach collection="cardList" item="v" open="(" separator="," close=")">#{v}</foreach>
 	</select>
 	       
-	<select id="getExpoYnInPanel" 
-			parameterType="com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam"	
-			resultType="java.lang.String">		
+	<select id="getExpoYnInPanel" parameterType="map" resultType="java.lang.String">		
 		SELECT /* CardDetailMapper.xml, getExpoYnInPanel, SAC : 양해엽 , 2014-11-06 */
 			CASE WHEN COUNT(CARD_ID) > 0 THEN 'Y' ELSE 'N' END AS EXPO_YN_IN_PANEL
 		FROM TB_DP_PANEL_CARD_MAPG

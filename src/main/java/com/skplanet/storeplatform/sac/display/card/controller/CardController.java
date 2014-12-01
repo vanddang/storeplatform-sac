@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.card.service.CardDetailService;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
+import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
 
 /**
  * Class 설명
@@ -44,20 +45,20 @@ public class CardController {
 	@ResponseBody
 	public CardDetailSacRes getCardDetail(@RequestBody @Validated CardDetailSacReq req,	SacRequestHeader header) {
 
-		CardDetailParam param = new CardDetailParam();
-		param.setTenantId(header.getTenantHeader().getTenantId());
-		param.setCardId(req.getId());
-		param.setUserKey(req.getUserKey());
+		String tenantId = header.getTenantHeader().getTenantId();
+        String langCd = header.getTenantHeader().getLangCd();
+        String cardId = req.getId();
+        String userKey = req.getUserKey();
 
-		CardDetail cardDetail = this.cardDetailService.searchCardDetail(param);
+		CardDetail cardDetail = this.cardDetailService.searchCardDetail(new CardDetailParam(tenantId, cardId, userKey));
 		if (cardDetail == null) {
 			throw new StorePlatformException("SAC_DSP_0009");
 		}
 
-		Card card = this.cardDetailService.makeCard(cardDetail);
+		Card card = this.cardDetailService.makeCard(cardDetail, new PreferredCategoryInfo(req.getPreferredCategoryList()), langCd);
 
-		/* expoYnInPanel : Controller를 통한 직접 카드 조회시만 사용 */
-		card.setExpoYnInPanel(this.cardDetailService.getExpoYnInPanel(param));
+		/* expoYnInPanel : Controller 를 통한 직접 카드 조회시만 사용 */
+		card.setExpoYnInPanel(this.cardDetailService.getExpoYnInPanel(header.getTenantHeader().getTenantId(), req.getId()));
 
 		CardDetailSacRes res = new CardDetailSacRes();
 		BeanUtils.copyProperties(card, res);
