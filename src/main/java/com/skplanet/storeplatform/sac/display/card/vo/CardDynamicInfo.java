@@ -20,11 +20,21 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CardDynamicInfo extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
+    private String cardId;
     private String likeYn = "N";
     private Integer cntLike;
     private Integer cntShar;
 
-    public String getLikeYn() {
+
+    public String getCardId() {
+		return cardId;
+	}
+
+	public void setCardId(String cardId) {
+		this.cardId = cardId;
+	}
+
+	public String getLikeYn() {
         return likeYn;
     }
 

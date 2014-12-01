@@ -9,29 +9,37 @@
  */
 package com.skplanet.storeplatform.sac.display.card.service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
-import com.skplanet.storeplatform.sac.client.product.vo.Card;
-import com.skplanet.storeplatform.sac.client.product.vo.Panel;
-import com.skplanet.storeplatform.sac.display.cache.service.PanelCardInfoManager;
-import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
-import com.skplanet.storeplatform.sac.display.cache.vo.PanelCardMapping;
-import com.skplanet.storeplatform.sac.display.cache.vo.PanelItem;
-import com.skplanet.storeplatform.sac.display.cache.vo.SegmentInfo;
-import com.skplanet.storeplatform.sac.display.card.vo.*;
-import com.skplanet.storeplatform.sac.display.common.service.menu.MenuInfoService;
+import static com.skplanet.storeplatform.sac.display.common.DisplayJsonUtils.parseToSet;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.SGMT_TP_SEGMENT;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static com.skplanet.storeplatform.sac.display.common.DisplayJsonUtils.parseToSet;
-import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.SGMT_TP_SEGMENT;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.product.vo.Card;
+import com.skplanet.storeplatform.sac.client.product.vo.Panel;
+import com.skplanet.storeplatform.sac.display.cache.service.PanelCardInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.PanelCardMapping;
+import com.skplanet.storeplatform.sac.display.cache.vo.PanelItem;
+import com.skplanet.storeplatform.sac.display.cache.vo.SegmentInfo;
+import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
+import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
+import com.skplanet.storeplatform.sac.display.card.vo.CardListGeneratorContext;
+import com.skplanet.storeplatform.sac.display.card.vo.CardSegment;
+import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
+import com.skplanet.storeplatform.sac.display.common.service.menu.MenuInfoService;
 
 /**
  * <p>

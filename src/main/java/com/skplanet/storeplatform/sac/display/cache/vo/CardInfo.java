@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 10. 8.
  * Updated by : 양해엽, SK 플래닛.
  */
-public class CardDetail extends CommonInfo {
+public class CardInfo extends CommonInfo {
 
 	private static final long serialVersionUID = -4099047932090965173L;
 
@@ -44,8 +44,6 @@ public class CardDetail extends CommonInfo {
 	private String lndImgRatio;
 	private String menuId;
 	private String smartOfrListId;
-	private String expoYnInPanel;
-	private String likeYn = "N";    // FIXME remove
 	private String shareUrl;
 
 	/**
@@ -81,12 +79,6 @@ public class CardDetail extends CommonInfo {
 	private String datasetInjtVar;
 	private String injtVarKeyAdmin;
 	private String itemLndUrl;
-
-	/**
-	 * SOCIAL_STAT
-	 */
-	private Integer cntLike;    // FIXME remove
-	private Integer cntShar;    // FIXME remove
 
 	public String getTenantId() {
 		return tenantId;
@@ -239,22 +231,6 @@ public class CardDetail extends CommonInfo {
 
 	public void setSmartOfrListId(String smartOfrListId) {
 		this.smartOfrListId = smartOfrListId;
-	}
-
-	public String getExpoYnInPanel() {
-		return expoYnInPanel;
-	}
-
-	public void setExpoYnInPanel(String expoYnInPanel) {
-		this.expoYnInPanel = expoYnInPanel;
-	}
-
-	public String getLikeYn() {
-		return likeYn;
-	}
-
-	public void setLikeYn(String likeYn) {
-		this.likeYn = likeYn;
 	}
 
 	public String getShareUrl() {
@@ -473,19 +449,4 @@ public class CardDetail extends CommonInfo {
 		this.itemLndUrl = itemLndUrl;
 	}
 
-	public Integer getCntLike() {
-		return cntLike;
-	}
-
-	public void setCntLike(Integer cntLike) {
-		this.cntLike = cntLike;
-	}
-
-	public Integer getCntShar() {
-		return cntShar;
-	}
-
-	public void setCntShar(Integer cntShar) {
-		this.cntShar = cntShar;
-	}
 }

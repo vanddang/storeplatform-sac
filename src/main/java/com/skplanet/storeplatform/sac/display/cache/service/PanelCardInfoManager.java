@@ -9,13 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
-import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
-import com.skplanet.storeplatform.sac.display.card.vo.CardSegment;
+import java.util.List;
+
+import com.skplanet.storeplatform.sac.display.cache.vo.CardInfo;
+import com.skplanet.storeplatform.sac.display.cache.vo.MenuListCat;
 import com.skplanet.storeplatform.sac.display.cache.vo.PanelCardMapping;
 import com.skplanet.storeplatform.sac.display.cache.vo.PanelItem;
-import com.skplanet.storeplatform.sac.display.cache.vo.MenuListCat;
-
-import java.util.List;
+import com.skplanet.storeplatform.sac.display.card.vo.CardSegment;
 
 /**
  * <p>
@@ -25,7 +25,13 @@ import java.util.List;
  */
 public interface PanelCardInfoManager {
 
-    CardDetail getCardDetail(String tenantId, String cardId);
+	/**
+     * static한 카드 상세 정보를 조회한다.
+     * @param tenantId
+     * @param cardlId
+     * @return
+     */
+    CardInfo getCardInfo(String tenantId, String cardId);
 
     /**
      * 패널에 속한 카드 목록을 조회한다.

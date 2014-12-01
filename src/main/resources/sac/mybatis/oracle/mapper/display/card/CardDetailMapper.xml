@@ -4,7 +4,7 @@
 
 	<select id="getCard" 
 			parameterType="com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam" 
-			resultType="com.skplanet.storeplatform.sac.display.cache.vo.CardDetail">
+			resultType="com.skplanet.storeplatform.sac.display.card.vo.CardDetail">
 		SELECT /* CardDetailMapper.xml, getCard, SAC : 양해엽 , 2014-10-10 */
 			CRD.TENANT_ID
 			,CRD.CARD_ID
@@ -75,6 +75,24 @@
 			AND	CRD.CARD_ID = #{cardId}
 	</select>	
 	
+	<select id="getCardDynamicInfo"
+	        parameterType="map"
+	        resultType="com.skplanet.storeplatform.sac.display.card.vo.CardDynamicInfo">
+	   SELECT /* CardDetailMapper.xml, getCardDynamicInfo, SAC : 양해엽 , 2014-11-06 */
+		    CRD.CARD_ID
+		    ,CASE WHEN NVL(SST.CNT_LIKE, 0) <![CDATA[<]]> 0 THEN 0 ELSE NVL(SST.CNT_LIKE, 0) END AS CNT_LIKE
+		    ,CASE WHEN NVL(SST.CNT_SHAR, 0) <![CDATA[<]]> 0 THEN 0 ELSE NVL(SST.CNT_SHAR, 0) END AS CNT_SHAR    
+		    ,NVL2(SSML.STATS_KEY, 'Y', 'N') AS LIKE_YN
+		FROM    TB_DP_CARD CRD 
+		    LEFT OUTER JOIN TB_DP_SOCIAL_STATS SST
+		        ON CRD.TENANT_ID = SST.TENANT_ID AND CRD.CARD_ID = SST.STATS_KEY AND SST.STATS_CLSF = 'DP01210001' /* 좋아요 - 카드 */
+		    LEFT OUTER JOIN TB_DP_SOCIAL_STATS_MBR_LIKE SSML
+		        ON CRD.TENANT_ID = SSML.TENANT_ID AND CRD.CARD_ID = SSML.STATS_KEY AND SSML.STATS_CLSF = 'DP01210001' AND SSML.USER_KEY = #{userKey, jdbcType=VARCHAR}
+		WHERE 1=1
+		    AND CRD.TENANT_ID   = #{tenantId}        
+		    AND CRD.CARD_ID IN <foreach collection="cardList" item="v" open="(" separator="," close=")">#{v}</foreach>
+	</select>
+	       
 	<select id="getExpoYnInPanel" 
 			parameterType="com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam"	
 			resultType="java.lang.String">		

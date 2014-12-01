@@ -10,16 +10,17 @@
 
 package com.skplanet.storeplatform.sac.display.card.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.skplanet.storeplatform.sac.common.util.PartialProcessor;
-import com.skplanet.storeplatform.sac.common.util.PartialProcessorHandler;
-import com.skplanet.storeplatform.sac.display.cache.service.PanelCardInfoManager;
-import com.skplanet.storeplatform.sac.display.card.vo.CardDynamicInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,13 @@ import com.skplanet.storeplatform.sac.client.product.vo.DatasetProp;
 import com.skplanet.storeplatform.sac.client.product.vo.EtcProp;
 import com.skplanet.storeplatform.sac.client.product.vo.Stats;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
+import com.skplanet.storeplatform.sac.common.util.PartialProcessor;
+import com.skplanet.storeplatform.sac.common.util.PartialProcessorHandler;
+import com.skplanet.storeplatform.sac.display.cache.service.PanelCardInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.CardInfo;
+import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
+import com.skplanet.storeplatform.sac.display.card.vo.CardDynamicInfo;
 import com.skplanet.storeplatform.sac.display.card.vo.InjtVar;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
@@ -62,25 +68,33 @@ public class CardDetailServiceImpl implements CardDetailService {
 
 	@Override
 	public CardDetail searchCardDetail(CardDetailParam cardDetailParam) {
-        /*
-        // FIXME 응답을 cache VO와 다른 것으로
-        CardDetail cardDetail = panelCardInfoManager.getCardDetail(cardDetailParam.getTenantId(), cardDetailParam.getCardId());
-        if(!Strings.isNullOrEmpty(cardDetailParam.getUserKey())) {
-            List<CardDynamicInfo> dynamicInfoList = getLikeYnList(cardDetailParam.getTenantId(), Arrays.asList(cardDetailParam.getCardId()));
-            if (dynamicInfoList.size() > 0) {
-                CardDynamicInfo dynamicInfo = dynamicInfoList.get(0);
-                cardDetail.setLikeYn(dynamicInfo.getLikeYn());
-                cardDetail.setCntShar(dynamicInfo.getCntShar());
-                cardDetail.setCntLike(dynamicInfo.getCntLike());
-            }
+
+		CardInfo cardInfo = getCardInfo(cardDetailParam);
+
+		if (cardInfo == null) return null;
+
+		CardDetail cardDetail = new CardDetail();
+		BeanUtils.copyProperties(cardInfo, cardDetail);
+
+		List<CardDynamicInfo> dynamicInfoList = getCardDynamicInfo(cardDetailParam.getTenantId(), cardDetailParam.getUserKey(), Arrays.asList(cardDetailParam.getCardId()));
+        if (dynamicInfoList.size() > 0) {
+            CardDynamicInfo dynamicInfo = dynamicInfoList.get(0);
+            cardDetail.setLikeYn(dynamicInfo.getLikeYn());
+            cardDetail.setCntShar(dynamicInfo.getCntShar());
+            cardDetail.setCntLike(dynamicInfo.getCntLike());
         }
+
         return cardDetail;
-        */
-		return commonDAO.queryForObject("CardDetail.getCard", cardDetailParam, CardDetail.class);
+	}
+
+	@Override
+	public CardInfo getCardInfo(CardDetailParam cardDetailParam) {
+
+		return panelCardInfoManager.getCardInfo(cardDetailParam.getTenantId(), cardDetailParam.getCardId());
 	}
 
     @Override
-    public List<CardDynamicInfo> getCardDynamicInfo(final String tenantId, List<String> cardList) {
+    public List<CardDynamicInfo> getCardDynamicInfo(final String tenantId, final String userKey, List<String> cardList) {
         final ArrayList<CardDynamicInfo> rtn = new ArrayList<CardDynamicInfo>(cardList.size());
 
         PartialProcessor.process(cardList, new PartialProcessorHandler<String>() {
@@ -91,12 +105,11 @@ public class CardDetailServiceImpl implements CardDetailService {
 
             @Override
             public void processPartial(List<String> partialList) {
-                // TODO dynamicCardInfo 조회 쿼리를 수행하여 결과를 rtn에 추가합니다.
-                // HashMap<String, Object> req = new HashMap<String, Object>();
-                // req.put("tenantId", tenantId);
-                // req.put("cardList", partialList);
-                // commonDAO.queryForList("", req, ... )
-                // rtn.addAll(sqlResult);
+                HashMap<String, Object> req = new HashMap<String, Object>();
+                req.put("tenantId", tenantId);
+                req.put("userKey", userKey);
+                req.put("cardList", partialList);
+                rtn.addAll(commonDAO.queryForList("CardDetail.getCardDynamicInfo", req, CardDynamicInfo.class));
             }
         }, CARD_WND_SIZE);
 
@@ -221,7 +234,6 @@ public class CardDetailServiceImpl implements CardDetailService {
 		try {
 			injtVarObj = mapper.readValue(injtVar, InjtVar.class);
 		} catch (Exception e) {
-//			throw new StorePlatformException("SAC_DSP_0001", injtVar);
 			logger.error("주입변수 언마셜링 중 오류가 발생하였습니다.\n", e);
 			return;
 		}

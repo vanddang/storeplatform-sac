@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.Card;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.card.service.CardDetailService;
-import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
+import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
 import com.skplanet.storeplatform.sac.display.feature.product.service.ProductListService;
 import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProduct;
@@ -35,22 +35,22 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 
 	private static final String CLSF_CARD = "DP01210001";
 	private static final String CLSF_PROD = "DP01210002";
-	
+
 	@Autowired
 	private CardDetailService cardDetailService;
-	
+
 	@Autowired
 	private ProductListService productListService;
-	
+
 	@Autowired
 	private StatMemberDataService dataServcie;
-	
+
 	@Override
 	public Object findItem(StatLike like, SacRequestHeader header) {
 		String statsClsf = like.getStatsClsf();
 		String statsKey = like.getStatsKey();
 		String userKey = like.getUserKey();
-		
+
 		Object item;
 		if (CLSF_CARD.equals(statsClsf)) {
 			item = findCard(statsKey, userKey, header);
@@ -59,19 +59,19 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 		} else {
 			item = new Object();
 		}
-		
+
 		return item;
 	}
-	
+
 	@Override
 	public CardDetailSacRes findCard(String cardId, String userKey, SacRequestHeader header) {
 		String tenantId = header.getTenantHeader().getTenantId();
-		
+
 		CardDetailParam param = new CardDetailParam();
 		param.setTenantId(tenantId);
 		param.setCardId(cardId);
 		param.setUserKey(userKey);
-		
+
 		CardDetail cardDetail = cardDetailService.searchCardDetail(param);
 		CardDetailSacRes res = new CardDetailSacRes();
 		Card card = cardDetailService.makeCard(cardDetail);
@@ -79,11 +79,11 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 		BeanUtils.copyProperties(card, res);
 		return res;
 	}
-	
+
 	@Override
 	public Product findProd(String prodId, SacRequestHeader header) {
 		ListProduct listProd;
-		/* 쇼핑 상품일 경우, prodId만 있어 메타 조회 가능하나, 
+		/* 쇼핑 상품일 경우, prodId만 있어 메타 조회 가능하나,
 		   일반 상품일 경우 TB_DP_PROD 테이블을 조회하여 TopMeuId와 SvcGrpCd를 추가로 획득해야함 */
 		if (prodId.startsWith("CL")) {
 			listProd = new ListProduct();
