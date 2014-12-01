@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.shopping.vo;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -28,8 +31,13 @@ public class CouponStockSacReq extends PurchaseCommonSacReq {
 	private String couponCode;
 	@NotBlank
 	private String itemCode;
+	@Min(1)
+	private Integer itemCount;
 	@NotBlank
 	private String mdn;
+	@NotBlank
+	@Pattern(regexp = "^Y|^N")
+	private String giftFlag;
 
 	private String prodId;
 
@@ -91,6 +99,36 @@ public class CouponStockSacReq extends PurchaseCommonSacReq {
 	 */
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
+	}
+
+	/**
+	 * @return the itemCount
+	 */
+	public Integer getItemCount() {
+		return this.itemCount;
+	}
+
+	/**
+	 * @param itemCount
+	 *            the itemCount to set
+	 */
+	public void setItemCount(Integer itemCount) {
+		this.itemCount = itemCount;
+	}
+
+	/**
+	 * @return the giftFlag
+	 */
+	public String getGiftFlag() {
+		return this.giftFlag;
+	}
+
+	/**
+	 * @param giftFlag
+	 *            the giftFlag to set
+	 */
+	public void setGiftFlag(String giftFlag) {
+		this.giftFlag = giftFlag;
 	}
 
 }
