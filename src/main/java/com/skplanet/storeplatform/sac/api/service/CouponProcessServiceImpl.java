@@ -34,9 +34,9 @@ import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpItemInfo;
-import com.skplanet.storeplatform.external.client.shopping.vo.NotificationIprm;
-import com.skplanet.storeplatform.external.client.shopping.vo.ProductTenantPriceVO;
-import com.skplanet.storeplatform.external.client.shopping.vo.ProductVO;
+import com.skplanet.storeplatform.iprm.mq.client.common.vo.NotificationIprm;
+import com.skplanet.storeplatform.iprm.mq.client.product.vo.Product;
+import com.skplanet.storeplatform.iprm.mq.client.product.vo.ProductTenantPrice;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
@@ -1530,7 +1530,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		this.log.info("■■■■■ MQ 연동 start ■■■■■");
 
 		NotificationIprm noti = new NotificationIprm();
-		List<ProductTenantPriceVO> productTenantPriceList = null;
+		List<ProductTenantPrice> productTenantPriceList = null;
 
 		try {
 			CouponRes couponRes = this.getCatalogNmMenuId(couponInfo.getStoreCatalogCode());
@@ -1540,7 +1540,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				/**
 				 * 상품정보 세팅.
 				 */
-				ProductVO productVO = new ProductVO();
+				Product productVO = new Product();
 
 				productVO.setSyncDataControlType(itemInfo.getCudType()); // 구분
 				productVO.setProdId(itemInfo.getProdId());// 상품ID
@@ -1589,8 +1589,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				/**
 				 * 상품가격정보 세팅.
 				 */
-				productTenantPriceList = new ArrayList<ProductTenantPriceVO>();
-				ProductTenantPriceVO productTenantPriceVO = new ProductTenantPriceVO();
+				productTenantPriceList = new ArrayList<ProductTenantPrice>();
+				ProductTenantPrice productTenantPriceVO = new ProductTenantPrice();
 				productTenantPriceVO.setSyncDataControlType(itemInfo.getCudType());
 				productTenantPriceVO.setTenantId(CouponConstants.TENANT_ID); // tenentId
 				productTenantPriceVO.setProdAmt(itemInfo.getItemPrice());// 상품가격
