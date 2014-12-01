@@ -56,7 +56,7 @@
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
     </rabbit:queue>
 
-    <rabbit:queue name="sac.iprm.prod-info.async" >
+    <rabbit:queue name="sac-shopping.iprm.deploy.async" >
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
     </rabbit:queue>
     
@@ -148,7 +148,7 @@
 	    <bean id="shoppingIprmAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
 	        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
 	        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
-	        <property name="routingKey" value="sac.iprm.prod-info.async" />
+	        <property name="routingKey" value="sac-shopping.iprm.deploy.async" />
 	    </bean>
     </beans>
     
