@@ -8,7 +8,7 @@
  * you entered into with SK planet.
  */
 
-package com.skplanet.storeplatform.sac.display.card.vo;
+package com.skplanet.storeplatform.sac.display.cache.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -45,7 +45,7 @@ public class CardDetail extends CommonInfo {
 	private String menuId;
 	private String smartOfrListId;
 	private String expoYnInPanel;
-	private String likeYn = "N";
+	private String likeYn = "N";    // FIXME remove
 	private String shareUrl;
 
 	/**
@@ -85,8 +85,8 @@ public class CardDetail extends CommonInfo {
 	/**
 	 * SOCIAL_STAT
 	 */
-	private Integer cntLike;
-	private Integer cntShar;
+	private Integer cntLike;    // FIXME remove
+	private Integer cntShar;    // FIXME remove
 
 	public String getTenantId() {
 		return tenantId;

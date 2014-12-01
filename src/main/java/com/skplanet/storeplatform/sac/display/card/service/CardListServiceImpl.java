@@ -14,6 +14,7 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.Card;
 import com.skplanet.storeplatform.sac.client.product.vo.Panel;
 import com.skplanet.storeplatform.sac.display.cache.service.PanelCardInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.cache.vo.PanelCardMapping;
 import com.skplanet.storeplatform.sac.display.cache.vo.PanelItem;
 import com.skplanet.storeplatform.sac.display.cache.vo.SegmentInfo;

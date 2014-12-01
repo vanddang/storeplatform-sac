@@ -4,7 +4,7 @@
 
 	<select id="getCard" 
 			parameterType="com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam" 
-			resultType="com.skplanet.storeplatform.sac.display.card.vo.CardDetail">		
+			resultType="com.skplanet.storeplatform.sac.display.cache.vo.CardDetail">
 		SELECT /* CardDetailMapper.xml, getCard, SAC : 양해엽 , 2014-10-10 */
 			CRD.TENANT_ID
 			,CRD.CARD_ID

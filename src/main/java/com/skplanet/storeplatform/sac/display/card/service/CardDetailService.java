@@ -11,8 +11,11 @@
 package com.skplanet.storeplatform.sac.display.card.service;
 
 import com.skplanet.storeplatform.sac.client.product.vo.Card;
-import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
+import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
+import com.skplanet.storeplatform.sac.display.card.vo.CardDynamicInfo;
+
+import java.util.List;
 
 /**
  * Class 설명
@@ -27,4 +30,6 @@ public interface CardDetailService {
 	public String getExpoYnInPanel(CardDetailParam param);
 
 	public Card makeCard(CardDetail cardDetail);
+
+    public List<CardDynamicInfo> getCardDynamicInfo(String tenant, List<String> cardList);
 }

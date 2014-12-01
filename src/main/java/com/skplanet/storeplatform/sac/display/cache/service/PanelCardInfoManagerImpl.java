@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.skplanet.storeplatform.framework.core.cache.LocalCacheable;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardSegment;
 import com.skplanet.storeplatform.sac.display.cache.vo.PanelCardMapping;
 import com.skplanet.storeplatform.sac.display.cache.vo.PanelItem;
@@ -37,8 +38,10 @@ public class PanelCardInfoManagerImpl implements PanelCardInfoManager {
     private CommonDAO commonDAO;
 
     @Override
-//    @LocalCacheable(value = "sac:display:getCardDetail", key = "#tenantId + '_' + #cardId")
-    public Object getCardDetail(String tenantId, String cardId) {
+    @LocalCacheable(value = "sac:display:getCardDetail", key = "#tenantId + '_' + #cardId")
+    public CardDetail getCardDetail(String tenantId, String cardId) {
+        // TODO 리턴 객체에서 좋아요 여부를 제외하고 응답하는건 어떨까요?
+        // TODO 관리 차원에서 캐쉬VO는 cache/vo 패키지 안에 위치시키고 있습니다. 구현 되시면 CardDetail을 옮겨주세요~
         throw new UnsupportedOperationException();
     }
 

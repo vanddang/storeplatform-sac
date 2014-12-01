@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.card.CardDetailSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.Card;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.card.service.CardDetailService;
-import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
+import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
 
 /**

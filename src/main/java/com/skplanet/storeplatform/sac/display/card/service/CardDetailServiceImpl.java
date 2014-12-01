@@ -10,11 +10,12 @@
 
 package com.skplanet.storeplatform.sac.display.card.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.skplanet.storeplatform.sac.common.util.PartialProcessor;
+import com.skplanet.storeplatform.sac.common.util.PartialProcessorHandler;
+import com.skplanet.storeplatform.sac.display.cache.service.PanelCardInfoManager;
+import com.skplanet.storeplatform.sac.display.card.vo.CardDynamicInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.DatasetProp;
 import com.skplanet.storeplatform.sac.client.product.vo.EtcProp;
 import com.skplanet.storeplatform.sac.client.product.vo.Stats;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
+import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
 import com.skplanet.storeplatform.sac.display.card.vo.InjtVar;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -45,7 +46,9 @@ import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 @Service
 public class CardDetailServiceImpl implements CardDetailService {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    public static final int CARD_WND_SIZE = 20;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -54,13 +57,53 @@ public class CardDetailServiceImpl implements CardDetailService {
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 
+    @Autowired
+    private PanelCardInfoManager panelCardInfoManager;
+
 	@Override
 	public CardDetail searchCardDetail(CardDetailParam cardDetailParam) {
-
+        /*
+        // FIXME 응답을 cache VO와 다른 것으로
+        CardDetail cardDetail = panelCardInfoManager.getCardDetail(cardDetailParam.getTenantId(), cardDetailParam.getCardId());
+        if(!Strings.isNullOrEmpty(cardDetailParam.getUserKey())) {
+            List<CardDynamicInfo> dynamicInfoList = getLikeYnList(cardDetailParam.getTenantId(), Arrays.asList(cardDetailParam.getCardId()));
+            if (dynamicInfoList.size() > 0) {
+                CardDynamicInfo dynamicInfo = dynamicInfoList.get(0);
+                cardDetail.setLikeYn(dynamicInfo.getLikeYn());
+                cardDetail.setCntShar(dynamicInfo.getCntShar());
+                cardDetail.setCntLike(dynamicInfo.getCntLike());
+            }
+        }
+        return cardDetail;
+        */
 		return commonDAO.queryForObject("CardDetail.getCard", cardDetailParam, CardDetail.class);
 	}
 
-	@Override
+    @Override
+    public List<CardDynamicInfo> getCardDynamicInfo(final String tenantId, List<String> cardList) {
+        final ArrayList<CardDynamicInfo> rtn = new ArrayList<CardDynamicInfo>(cardList.size());
+
+        PartialProcessor.process(cardList, new PartialProcessorHandler<String>() {
+            @Override
+            public String processPaddingItem() {
+                return StringUtils.EMPTY;
+            }
+
+            @Override
+            public void processPartial(List<String> partialList) {
+                // TODO dynamicCardInfo 조회 쿼리를 수행하여 결과를 rtn에 추가합니다.
+                // HashMap<String, Object> req = new HashMap<String, Object>();
+                // req.put("tenantId", tenantId);
+                // req.put("cardList", partialList);
+                // commonDAO.queryForList("", req, ... )
+                // rtn.addAll(sqlResult);
+            }
+        }, CARD_WND_SIZE);
+
+        return rtn;
+    }
+
+    @Override
 	public String getExpoYnInPanel(CardDetailParam cardDetailParam) {
 
 		return commonDAO.queryForObject("CardDetail.getExpoYnInPanel", cardDetailParam, String.class);

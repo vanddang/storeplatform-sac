@@ -57,6 +57,16 @@
         memoryStoreEvictionPolicy="LRU" />
 
     <cache
+            name="sac:display:getCardDetail"
+            eternal="false"
+            maxElementsInMemory="300"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToIdleSeconds="0"
+            timeToLiveSeconds="60"
+            memoryStoreEvictionPolicy="LRU" />
+
+    <cache
         name="sac:display:getMenuList"
         eternal="false"
         maxElementsInMemory="100"

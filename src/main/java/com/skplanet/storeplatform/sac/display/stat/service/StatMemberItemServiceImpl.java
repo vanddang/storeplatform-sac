@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.Card;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.card.service.CardDetailService;
-import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
+import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
 import com.skplanet.storeplatform.sac.display.feature.product.service.ProductListService;
 import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProduct;

@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
+import com.skplanet.storeplatform.sac.display.cache.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardSegment;
 import com.skplanet.storeplatform.sac.display.cache.vo.PanelCardMapping;
 import com.skplanet.storeplatform.sac.display.cache.vo.PanelItem;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public interface PanelCardInfoManager {
 
-    Object getCardDetail(String tenantId, String cardId);
+    CardDetail getCardDetail(String tenantId, String cardId);
 
     /**
      * 패널에 속한 카드 목록을 조회한다.
