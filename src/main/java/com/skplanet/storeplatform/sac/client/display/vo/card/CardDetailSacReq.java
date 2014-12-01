@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.card;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -21,6 +23,8 @@ public class CardDetailSacReq extends CommonInfo {
 	private String id;
 
 	private String userKey;
+
+	private List<PreferredCategoryReq> preferredCategoryList;
 
 	public String getId() {
 		return id;
@@ -37,5 +41,15 @@ public class CardDetailSacReq extends CommonInfo {
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
 	}
+
+	public List<PreferredCategoryReq> getPreferredCategoryList() {
+		return preferredCategoryList;
+	}
+
+	public void setPreferredCategoryList(List<PreferredCategoryReq> preferredCategoryList) {
+		this.preferredCategoryList = preferredCategoryList;
+	}
+
+
 
 }

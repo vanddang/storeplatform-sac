@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo;
 
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -41,6 +42,11 @@ public class Card extends CommonInfo {
      * 카드 제목
      */
     private String title;
+
+    /**
+     * FC1,FC2, FC3 title param
+     */
+    private Map<String, String> titleParam;
 
     /**
      * 카드 설명
@@ -142,7 +148,15 @@ public class Card extends CommonInfo {
         this.title = title;
     }
 
-    public String getDesc() {
+    public Map<String, String> getTitleParam() {
+		return titleParam;
+	}
+
+	public void setTitleParam(Map<String, String> titleParam) {
+		this.titleParam = titleParam;
+	}
+
+	public String getDesc() {
         return desc;
     }
 
