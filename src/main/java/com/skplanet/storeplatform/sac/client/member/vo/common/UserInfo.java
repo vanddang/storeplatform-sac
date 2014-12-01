@@ -211,6 +211,9 @@ public class UserInfo extends CommonInfo {
 	/** 회원의 만나이. */
 	private String realAge;
 
+	/** 원아이디 가입상태코드. */
+	private String entryStatusCode;
+
 	/* 사용자 부가정보 */
 	private List<UserExtraInfo> userExtraInfoList;
 
@@ -814,4 +817,18 @@ public class UserInfo extends CommonInfo {
 		this.userExtraInfoList = userExtraInfoList;
 	}
 
+	/**
+	 * @return entryStatusCode
+	 */
+	public String getEntryStatusCode() {
+		return this.entryStatusCode;
+	}
+
+	/**
+	 * @param entryStatusCode
+	 *            String
+	 */
+	public void setEntryStatusCode(String entryStatusCode) {
+		this.entryStatusCode = entryStatusCode;
+	}
 }
