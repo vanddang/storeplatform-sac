@@ -1882,8 +1882,7 @@
                           ELSE 'PD000404' END
                           ) PROD_STATUS_CD
                         ,O.PROD_NM as catalogNm
-                        ,'' couponSendType
-                       -- ,I.COUPON_SEND_TYPE
+                        ,I.COUPON_SEND_TYPE
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -3435,8 +3434,7 @@
                           ELSE 'PD000404' END
                           ) PROD_STATUS_CD
                         ,O.PROD_NM as catalogNm
-                        ,'' couponSendType
-                       -- ,I.COUPON_SEND_TYPE
+                        ,I.COUPON_SEND_TYPE  
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
