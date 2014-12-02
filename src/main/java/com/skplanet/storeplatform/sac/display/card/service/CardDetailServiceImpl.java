@@ -80,7 +80,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 
 
 	@Override
-	public CardDetail searchCardDetail(CardDetailParam cardDetailParam) {
+	public CardDetail searchCardDetail(final CardDetailParam cardDetailParam) {
 
 		CardInfo cardInfo = panelCardInfoManager.getCardInfo(cardDetailParam.getTenantId(), cardDetailParam.getCardId());
 

@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
  */
 public interface CardDetailService {
 
-	public CardDetail searchCardDetail(CardDetailParam param);
+	public CardDetail searchCardDetail(final CardDetailParam param);
 
 	public String getExpoYnInPanel(final String tenantId, final String cardId);
 

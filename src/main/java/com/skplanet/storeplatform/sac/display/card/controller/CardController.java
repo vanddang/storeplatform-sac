@@ -58,7 +58,7 @@ public class CardController {
 		Card card = this.cardDetailService.makeCard(cardDetail, new PreferredCategoryInfo(req.getPreferredCategoryList()), langCd);
 
 		/* expoYnInPanel : Controller 를 통한 직접 카드 조회시만 사용 */
-		card.setExpoYnInPanel(this.cardDetailService.getExpoYnInPanel(header.getTenantHeader().getTenantId(), req.getId()));
+		card.setExpoYnInPanel(this.cardDetailService.getExpoYnInPanel(tenantId, cardId));
 
 		CardDetailSacRes res = new CardDetailSacRes();
 		BeanUtils.copyProperties(card, res);

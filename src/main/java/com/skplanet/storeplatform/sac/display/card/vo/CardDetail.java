@@ -45,7 +45,7 @@ public class CardDetail extends CommonInfo {
 	private String menuId;
 	private String smartOfrListId;
 	private String expoYnInPanel;
-	private String likeYn = "N";    // FIXME remove
+	private String likeYn = "N";
 	private String shareUrl;
 
 	/**
@@ -85,8 +85,8 @@ public class CardDetail extends CommonInfo {
 	/**
 	 * SOCIAL_STAT
 	 */
-	private Integer cntLike;    // FIXME remove
-	private Integer cntShar;    // FIXME remove
+	private Integer cntLike;
+	private Integer cntShar;
 
 	public String getTenantId() {
 		return tenantId;
