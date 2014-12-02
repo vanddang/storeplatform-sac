@@ -229,9 +229,15 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYMENT_PAGE_TEMPLATE_GIFT = "TC06"; // 선물
 	public static final String PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY = "TC07"; // IAP 자동결제
 	public static final String PAYMENT_PAGE_TEMPLATE_IAP_S2S_AUTOPAY = "TC08"; // S2S 자동결제
+	public static final String PAYMENT_PAGE_TEMPLATE_IAP_S2S_UNIT = "TC09"; // S2S 단품
 
 	/** 결제Page 상품설명 */
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_COMMERCIAL = "정식판 전환 상품";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_IAP_UNIT_UNLIMITED = "아이템 영구성 건당상품";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_IAP_UNIT_VOLATILE = "아이템 소멸성 건당상품";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_IAP_PERIOD_PREFIX = "기간 상품 (";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_IAP_PERIOD_SUFFIX = "일)";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_IAP_COMMERCIAL = "정식판 전환";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_IAP_AUTOMONTH = "월별 자동결제";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_DELIVERY = "배송 상품";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_COUPON = "쿠폰 상품";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH = "MP3 : 192kbps";

@@ -204,9 +204,49 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	private String makeProductDescription(String tenantProdGrpCd, List<PurchaseProduct> purchaseProductList) {
 		PurchaseProduct purchaseProduct = purchaseProductList.get(0);
 
-		if (purchaseProduct.getFullIapProductInfo() != null) { // IAP 정식판 전환 상품
-			return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_COMMERCIAL;
+		// IAP
+		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
 
+			String prodCase = purchaseProduct.getIapProdCase();
+			String prodKind = purchaseProduct.getIapProdKind();
+
+			if (StringUtils.equals(prodCase, "PB0001")) { // 건당상품
+				if (StringUtils.equals(prodKind, "PK0001")) { // 영구
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_UNIT_UNLIMITED;
+
+				} else if (StringUtils.equals(prodKind, "PK0002")) { // 소멸
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_UNIT_VOLATILE;
+				}
+
+			} else if (StringUtils.equals(prodCase, "PB0002")) { // 기간상품
+				if (StringUtils.equals(prodKind, "PK0003")) { // 일간
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_PERIOD_PREFIX
+							+ purchaseProduct.getUsePeriod()
+							+ PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_PERIOD_SUFFIX;
+
+				} else if (StringUtils.equals(prodKind, "PK0004")) { // 주간
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_PERIOD_PREFIX
+							+ purchaseProduct.getUsePeriod()
+							+ PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_PERIOD_SUFFIX;
+
+				} else if (StringUtils.equals(prodKind, "PK0005")) { // 월간
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_PERIOD_PREFIX
+							+ purchaseProduct.getUsePeriod()
+							+ PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_PERIOD_SUFFIX;
+				}
+
+			} else if (StringUtils.equals(prodCase, "PB0005")) { // 정식판전환상품
+				if (StringUtils.equals(prodKind, "PK0001")) {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_COMMERCIAL;
+				}
+
+			} else if (StringUtils.equals(prodCase, "PB0006")) { // 자동결제
+				if (StringUtils.equals(prodKind, "PK0005")) { // 월별자동결제
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_AUTOMONTH;
+				}
+			}
+
+			// 소장/대여
 		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)
 				&& purchaseProductList.size() == 1
 				&& (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD) || StringUtils
@@ -220,6 +260,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN;
 			}
 
+			// 쇼핑
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 			if (StringUtils.equals(purchaseProduct.getProdCaseCd(), PurchaseConstants.SHOPPING_TYPE_DELIVERY)) {
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_DELIVERY;
@@ -227,6 +268,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_COUPON;
 			}
 
+			// MP3
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
 			if (StringUtils.equals(purchaseProduct.getResvCol03(), "128")) {
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_NORMAL;
@@ -234,6 +276,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH;
 			}
 
+			// 벨소리&컬러링
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
 			if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_HIGH)) {
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_BELL_HIGH;
@@ -244,9 +287,12 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_RING_BASIC)) {
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC;
 			}
+
+			// 게임캐쉬 정액제
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
 			return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_AUTO;
 
+			// VOD정액권, 이북/코믹 전권
 		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
 			if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
@@ -396,6 +442,9 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	 * @param bS2sAutoPrchs
 	 *            IAP S2S 월자동결제 상품 여부
 	 * 
+	 * @param bS2s
+	 *            IAP S2S 상품 여부
+	 * 
 	 * @param prchsProdCnt
 	 *            구매하는 상품 갯수
 	 * 
@@ -403,7 +452,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	 */
 	@Override
 	public String adjustPaymentPageTemplate(String prchsCaseCd, String tenantProdGrpCd, String cmpxProdClsfCd,
-			boolean bAutoPrchs, boolean bS2sAutoPrchs, int prchsProdCnt) {
+			boolean bAutoPrchs, boolean bS2sAutoPrchs, boolean bS2s, int prchsProdCnt) {
 
 		if (StringUtils.equals(prchsCaseCd, PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GIFT; // 선물: TC06
@@ -415,6 +464,9 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			} else if (bAutoPrchs
 					&& StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
 				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_AUTOPAY; // IAP 자동결제: TC07
+
+			} else if (bS2s) {
+				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_IAP_S2S_UNIT; // S2S 단품: TC09
 
 			} else if (bAutoPrchs
 					&& StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)

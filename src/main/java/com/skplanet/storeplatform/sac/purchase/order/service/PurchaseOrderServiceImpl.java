@@ -701,7 +701,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setCdPaymentTemplate(this.orderPaymentPageService.adjustPaymentPageTemplate(prchsDtlMore.getPrchsCaseCd(),
 				prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("cmpxProdClsfCd"),
 				StringUtils.equals(reservedDataMap.get("autoPrchsYn"), "Y"),
-				StringUtils.equals(reservedDataMap.get("s2sAutoYn"), "Y"), prchsDtlMoreList.size()));
+				StringUtils.equals(reservedDataMap.get("s2sAutoYn"), "Y"),
+				StringUtils.equals(reservedDataMap.get("s2sYn"), "Y"), prchsDtlMoreList.size()));
 
 		// ------------------------------------------------------------------------------------------------
 		// (다날) 컨텐츠 종류: 실물 / 디지털 : 쇼핑상품만 실물로 처리

@@ -50,11 +50,14 @@ public interface PurchaseOrderPaymentPageService {
 	 * @param bS2sAutoPrchs
 	 *            IAP S2S 월자동결제 상품 여부
 	 * 
+	 * @param bS2s
+	 *            IAP S2S 상품 여부
+	 * 
 	 * @param prchsProdCnt
 	 *            구매하는 상품 갯수
 	 * 
 	 * @return 결제Page 템플릿 코드
 	 */
 	public String adjustPaymentPageTemplate(String prchsCaseCd, String tenantProdGrpCd, String cmpxProdClsfCd,
-			boolean bAutoPrchs, boolean bS2sAutoPrchs, int prchsProdCnt);
+			boolean bAutoPrchs, boolean bS2sAutoPrchs, boolean bS2s, int prchsProdCnt);
 }

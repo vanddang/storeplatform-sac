@@ -736,7 +736,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append("&specialCouponAmt=").append(product.getSpecialCouponAmt())
 							.append("&cmpxProdClsfCd=").append(StringUtils.defaultString(product.getCmpxProdClsfCd()))
 							.append("&prodCaseCd=").append(StringUtils.defaultString(product.getProdCaseCd()))
-							.append("&s2sAutoYn=").append(StringUtils.defaultString(product.getS2sAutoPrchsYn()));
+							.append("&s2sAutoYn=").append(StringUtils.defaultString(product.getS2sAutoPrchsYn()))
+							.append("&s2sYn=").append(StringUtils.isNotBlank(product.getSearchPriceUrl()) ? "Y" : "N");
 
 					// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1
