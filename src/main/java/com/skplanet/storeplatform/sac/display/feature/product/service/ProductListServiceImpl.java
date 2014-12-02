@@ -34,14 +34,15 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import org.springframework.stereotype.Service;
 
 /**
- * Class 설명
+ * ProductListServiceImpl
  *
  * Updated on : 2014. 10. 6.
  * Updated by : 문동선
  */
-@org.springframework.stereotype.Service
+@Service
 public class ProductListServiceImpl implements ProductListService{
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -53,14 +54,10 @@ public class ProductListServiceImpl implements ProductListService{
 	private CommonMetaInfoGenerator commonGenerator;
 
 	@Autowired
-    private ProductInfoManager productInfoManager;
-
-	@Autowired
 	private DisplayCommonService displayCommonService;
 
-
 	@Autowired
-	MetaInfoService metaInfoService;
+	private MetaInfoService metaInfoService;
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
@@ -69,7 +66,7 @@ public class ProductListServiceImpl implements ProductListService{
 	 * <pre>
 	 * TB_DP_LISTPROD 테이블에서 listId를 기준으로 상품목록을 만들어주는 함수
 	 * </pre>
-	 * @param 상품 목록 조회 조건
+	 * @param requestVO 상품 목록 조회 조건
 	 * @param header
 	 * @return 상품 목록
 	 */
@@ -250,6 +247,7 @@ public class ProductListServiceImpl implements ProductListService{
 			paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 			//뮤직
 			if(svcGrpCd.equals("DP000203")) {
+                paramMap.put("forceByEpisode", "Y");
 				metaInfo = metaInfoService.getMusicMetaInfo(paramMap);
 				if(metaInfo!=null)
 					product = responseInfoGenerateFacade.generateMusicProduct(metaInfo);

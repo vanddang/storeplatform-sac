@@ -158,7 +158,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             param.setLangCd(tenantHeader.getLangCd());
             param.setTenantId(tenantHeader.getTenantId());
             param.setContentType(
-                    StringUtils.defaultString(basicInfo.getContentsTypeCd(), DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD).equals(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD)
+                    StringUtils.defaultString((String)paramMap.get("forceByEpisode"), "N").equals("Y")
                     ? ContentType.Episode : ContentType.Channel);
 
             if(paramMap.containsKey("chartClsfCd") && paramMap.containsKey("stdDt")) {
