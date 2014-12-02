@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponPublishAvailableSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponPublishAvailableSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponPublishAvailableSacV2Req;
+import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponPublishAvailableSacV2Res;
 import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponStockSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponStockSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.shopping.vo.CouponUseStatusDetailSacRes;
@@ -33,6 +35,8 @@ import com.skplanet.storeplatform.sac.purchase.common.util.ConvertVO;
 import com.skplanet.storeplatform.sac.purchase.shopping.service.ShoppingService;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Param;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Result;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacResult;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusDetailSacResult;
@@ -111,6 +115,34 @@ public class ShoppingController {
 	/**
 	 * 
 	 * <pre>
+	 * 쇼핑쿠폰 발급가능여부 조회.
+	 * </pre>
+	 * 
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @param couponPublishAvailableSacReq
+	 *            couponPublishAvailableSacReq
+	 * @param bindingResult
+	 *            bindingResult
+	 * @return CouponPublishAvailableSacRes
+	 */
+	@RequestMapping(value = "/getCouponPublishAvailable/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public CouponPublishAvailableSacV2Res getCouponPublishAvailableV2(SacRequestHeader sacRequestHeader,
+			@RequestBody @Validated CouponPublishAvailableSacV2Req couponPublishAvailableSacReq) {
+
+		CouponPublishAvailableSacV2Param couponPublishAvailableSacParam = this
+				.convertReqForGetCouponPublishAvailableV2(sacRequestHeader, couponPublishAvailableSacReq);
+
+		CouponPublishAvailableSacV2Result couponUseStatusSacResult = this.shoppingService
+				.getCouponPublishAvailableV2(couponPublishAvailableSacParam);
+
+		return this.convertResForGetCouponPublishAvailableV2(couponUseStatusSacResult);
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 쇼핑쿠폰 재고 조회.
 	 * </pre>
 	 * 
@@ -127,11 +159,11 @@ public class ShoppingController {
 	public CouponStockSacRes getCouponStock(SacRequestHeader sacRequestHeader,
 			@RequestBody @Validated CouponStockSacReq couponStockSacReq) {
 
-		CouponStockSacParam couponStockSacParam = this.convertReqForGetCouponStock(sacRequestHeader, couponStockSacReq);
-
-		CouponStockSacResult couponUseStatusSacResult = this.shoppingService.getCouponStock(couponStockSacParam);
-
-		return this.convertResForGetCouponStock(couponUseStatusSacResult);
+		// CouponStockSacParam couponStockSacParam = this.convertReqForGetCouponStock(sacRequestHeader,
+		// couponStockSacReq);
+		// CouponStockSacResult couponUseStatusSacResult = this.shoppingService.getCouponStock(couponStockSacParam);
+		// return this.convertResForGetCouponStock(couponUseStatusSacResult);
+		return new CouponStockSacRes();
 
 	}
 
@@ -162,6 +194,39 @@ public class ShoppingController {
 		couponPublishAvailableSacParam.setItemCount(couponPublishAvailableSacReq.getItemCount());
 		couponPublishAvailableSacParam.setMdn(couponPublishAvailableSacReq.getMdn());
 		couponPublishAvailableSacParam.setProdId(couponPublishAvailableSacReq.getProdId());
+
+		return couponPublishAvailableSacParam;
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * convertReqForGetCouponPublishAvailable.
+	 * </pre>
+	 * 
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 * @param couponPublishAvailableSacReq
+	 *            couponPublishAvailableSacReq
+	 * @return CouponPublishAvailableSacParam
+	 */
+	private CouponPublishAvailableSacV2Param convertReqForGetCouponPublishAvailableV2(
+			SacRequestHeader sacRequestHeader, CouponPublishAvailableSacV2Req couponPublishAvailableSacReq) {
+
+		CouponPublishAvailableSacV2Param couponPublishAvailableSacParam = new CouponPublishAvailableSacV2Param();
+
+		if (!ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, couponPublishAvailableSacReq,
+				couponPublishAvailableSacParam)) {
+			throw new StorePlatformException("SAC_PUR_9901");
+		}
+
+		couponPublishAvailableSacParam.setCouponCode(couponPublishAvailableSacReq.getCouponCode());
+		couponPublishAvailableSacParam.setItemCode(couponPublishAvailableSacReq.getItemCode());
+		couponPublishAvailableSacParam.setItemCount(couponPublishAvailableSacReq.getItemCount());
+		couponPublishAvailableSacParam.setMdn(couponPublishAvailableSacReq.getMdn());
+		couponPublishAvailableSacParam.setProdId(couponPublishAvailableSacReq.getProdId());
+		couponPublishAvailableSacParam.setGiftFlag(couponPublishAvailableSacReq.getGiftFlag());
 
 		return couponPublishAvailableSacParam;
 
@@ -215,6 +280,31 @@ public class ShoppingController {
 		CouponPublishAvailableSacRes couponPublishAvailableSacRes = new CouponPublishAvailableSacRes();
 		couponPublishAvailableSacRes.setStatusCd(couponUseStatusSacResult.getStatusCd());
 		couponPublishAvailableSacRes.setStatusMsg(couponUseStatusSacResult.getStatusMsg());
+
+		return couponPublishAvailableSacRes;
+
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * convertResForGetCouponPublishAvailable.
+	 * </pre>
+	 * 
+	 * @param couponUseStatusSacResult
+	 *            couponUseStatusSacResult
+	 * @return CouponPublishAvailableSacRes
+	 */
+	private CouponPublishAvailableSacV2Res convertResForGetCouponPublishAvailableV2(
+			CouponPublishAvailableSacV2Result couponUseStatusSacResult) {
+
+		CouponPublishAvailableSacV2Res couponPublishAvailableSacRes = new CouponPublishAvailableSacV2Res();
+
+		couponPublishAvailableSacRes.setSaleDayLimit(couponUseStatusSacResult.getMaxDay());
+		couponPublishAvailableSacRes.setSaleDayLimitPerson(couponUseStatusSacResult.getMaxDayMdn());
+		couponPublishAvailableSacRes.setSaleMonthLimit(couponUseStatusSacResult.getMaxMonth());
+		couponPublishAvailableSacRes.setSaleMonthLimitPerson(couponUseStatusSacResult.getMaxMonthMdn());
+		couponPublishAvailableSacRes.setSaleOnceLimit(couponUseStatusSacResult.getBuyMaxLimit());
 
 		return couponPublishAvailableSacRes;
 

@@ -12,8 +12,8 @@ package com.skplanet.storeplatform.sac.purchase.shopping.repository;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Param;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Result;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
 
@@ -52,6 +52,19 @@ public interface ShoppingRepository {
 	/**
 	 * 
 	 * <pre>
+	 * 쇼핑쿠폰 발급가능여부 조회.
+	 * </pre>
+	 * 
+	 * @param couponPublishAvailableSacParam
+	 *            couponPublishAvailableSacParam
+	 * @return CouponPublishAvailableSacResult
+	 */
+	public CouponPublishAvailableSacV2Result getCouponPublishAvailableV2(
+			CouponPublishAvailableSacV2Param couponPublishAvailableSacParam);
+
+	/**
+	 * 
+	 * <pre>
 	 * 쇼핑쿠폰 재고 조회.
 	 * </pre>
 	 * 
@@ -59,7 +72,7 @@ public interface ShoppingRepository {
 	 *            couponPublishAvailableSacParam
 	 * @return CouponPublishAvailableSacResult
 	 */
-	public CouponStockSacResult getCouponStock(CouponStockSacParam couponStockSacParam);
+	// public CouponStockSacResult getCouponStock(CouponStockSacParam couponStockSacParam);
 
 	/**
 	 * 

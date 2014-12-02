@@ -25,8 +25,8 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Paymen
 import com.skplanet.storeplatform.sac.purchase.shopping.repository.ShoppingRepository;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponStockSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Param;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Result;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
 
@@ -108,21 +108,21 @@ public class ShoppingServiceImpl implements ShoppingService {
 	}
 
 	@Override
-	public CouponStockSacResult getCouponStock(CouponStockSacParam couponStockSacParam) {
+	public CouponPublishAvailableSacV2Result getCouponPublishAvailableV2(
+			CouponPublishAvailableSacV2Param couponPublishAvailableSacV2Param) {
 
-		CouponStockSacResult couponStockSacResult = new CouponStockSacResult();
-
+		CouponPublishAvailableSacV2Result couponPublishAvailableSacResult = new CouponPublishAvailableSacV2Result();
 		CouponPublishAvailableSacParam couponPublishAvailableSacParam = new CouponPublishAvailableSacParam();
 
 		boolean isSpecialCoupon = false;
 
 		// 특가상품 조회를 위한 처리
-		if (StringUtils.isNotBlank(couponStockSacParam.getProdId())) {
+		if (StringUtils.isNotBlank(couponPublishAvailableSacV2Param.getProdId())) {
 
-			couponPublishAvailableSacParam.setTenantId(couponStockSacParam.getTenantId());
-			couponPublishAvailableSacParam.setLangCd(couponStockSacParam.getLangCd());
-			couponPublishAvailableSacParam.setModel(couponStockSacParam.getModel());
-			couponPublishAvailableSacParam.setProdId(couponStockSacParam.getProdId());
+			couponPublishAvailableSacParam.setTenantId(couponPublishAvailableSacV2Param.getTenantId());
+			couponPublishAvailableSacParam.setLangCd(couponPublishAvailableSacV2Param.getLangCd());
+			couponPublishAvailableSacParam.setModel(couponPublishAvailableSacV2Param.getModel());
+			couponPublishAvailableSacParam.setProdId(couponPublishAvailableSacV2Param.getProdId());
 
 			// 상품정보조회
 			PaymentInfoSacRes response = this.shoppingRepository.searchPaymentInfo(couponPublishAvailableSacParam);
@@ -130,20 +130,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (response != null && response.getPaymentInfoList().size() > 0) {
 				PaymentInfo product = response.getPaymentInfoList().get(0);
 
-				couponStockSacResult = new CouponStockSacResult();
-				couponStockSacResult.setMaxMonth(product.getSpecialSaleMonthLimit());
-				couponStockSacResult.setMaxMonthMdn(product.getSpecialSaleMonthLimitPerson());
-				couponStockSacResult.setMaxDay(product.getSpecialSaleDayLimit());
-				couponStockSacResult.setMaxDayMdn(product.getSpecialSaleDayLimitPerson());
-				couponStockSacResult.setBuyMaxLimit(0);
+				couponPublishAvailableSacResult = new CouponPublishAvailableSacV2Result();
+				couponPublishAvailableSacResult.setMaxMonth(product.getSpecialSaleMonthLimit());
+				couponPublishAvailableSacResult.setMaxMonthMdn(product.getSpecialSaleMonthLimitPerson());
+				couponPublishAvailableSacResult.setMaxDay(product.getSpecialSaleDayLimit());
+				couponPublishAvailableSacResult.setMaxDayMdn(product.getSpecialSaleDayLimitPerson());
+				couponPublishAvailableSacResult.setBuyMaxLimit(0);
 
 				// 특가상품 구매가능 건수 체크
 				if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
 					isSpecialCoupon = true;
 					SearchShoppingSpecialCountScReq specialReq = new SearchShoppingSpecialCountScReq();
-					specialReq.setTenantId(couponStockSacParam.getTenantId());
-					specialReq.setUserKey(couponStockSacParam.getUserKey());
-					specialReq.setDeviceKey(couponStockSacParam.getDeviceKey());
+					specialReq.setTenantId(couponPublishAvailableSacV2Param.getTenantId());
+					specialReq.setUserKey(couponPublishAvailableSacV2Param.getUserKey());
+					specialReq.setDeviceKey(couponPublishAvailableSacV2Param.getDeviceKey());
 					specialReq.setSpecialCouponId(product.getSpecialSaleCouponId());
 					specialReq.setSpecialCouponAmt(product.getProdAmt() - product.getSpecialSaleAmt());
 				}
@@ -154,11 +154,66 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		// 쿠폰 재고조회
 		if (!isSpecialCoupon) {
-			couponStockSacResult = this.shoppingRepository.getCouponStock(couponStockSacParam);
+			couponPublishAvailableSacResult = this.shoppingRepository
+					.getCouponPublishAvailableV2(couponPublishAvailableSacV2Param);
 		}
 
-		return couponStockSacResult;
+		return couponPublishAvailableSacResult;
 
 	}
+
+	// @Override
+	// public CouponStockSacResult getCouponStock(CouponStockSacParam couponStockSacParam) {
+	//
+	// CouponStockSacResult couponStockSacResult = new CouponStockSacResult();
+	//
+	// CouponPublishAvailableSacParam couponPublishAvailableSacParam = new CouponPublishAvailableSacParam();
+	//
+	// boolean isSpecialCoupon = false;
+	//
+	// // 특가상품 조회를 위한 처리
+	// if (StringUtils.isNotBlank(couponStockSacParam.getProdId())) {
+	//
+	// couponPublishAvailableSacParam.setTenantId(couponStockSacParam.getTenantId());
+	// couponPublishAvailableSacParam.setLangCd(couponStockSacParam.getLangCd());
+	// couponPublishAvailableSacParam.setModel(couponStockSacParam.getModel());
+	// couponPublishAvailableSacParam.setProdId(couponStockSacParam.getProdId());
+	//
+	// // 상품정보조회
+	// PaymentInfoSacRes response = this.shoppingRepository.searchPaymentInfo(couponPublishAvailableSacParam);
+	//
+	// if (response != null && response.getPaymentInfoList().size() > 0) {
+	// PaymentInfo product = response.getPaymentInfoList().get(0);
+	//
+	// couponStockSacResult = new CouponStockSacResult();
+	// couponStockSacResult.setMaxMonth(product.getSpecialSaleMonthLimit());
+	// couponStockSacResult.setMaxMonthMdn(product.getSpecialSaleMonthLimitPerson());
+	// couponStockSacResult.setMaxDay(product.getSpecialSaleDayLimit());
+	// couponStockSacResult.setMaxDayMdn(product.getSpecialSaleDayLimitPerson());
+	// couponStockSacResult.setBuyMaxLimit(0);
+	//
+	// // 특가상품 구매가능 건수 체크
+	// if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
+	// isSpecialCoupon = true;
+	// SearchShoppingSpecialCountScReq specialReq = new SearchShoppingSpecialCountScReq();
+	// specialReq.setTenantId(couponStockSacParam.getTenantId());
+	// specialReq.setUserKey(couponStockSacParam.getUserKey());
+	// specialReq.setDeviceKey(couponStockSacParam.getDeviceKey());
+	// specialReq.setSpecialCouponId(product.getSpecialSaleCouponId());
+	// specialReq.setSpecialCouponAmt(product.getProdAmt() - product.getSpecialSaleAmt());
+	// }
+	// } else {
+	// throw new StorePlatformException("SAC_PUR_5101");
+	// }
+	// }
+	//
+	// // 쿠폰 재고조회
+	// if (!isSpecialCoupon) {
+	// couponStockSacResult = this.shoppingRepository.getCouponStock(couponStockSacParam);
+	// }
+	//
+	// return couponStockSacResult;
+	//
+	// }
 
 }
