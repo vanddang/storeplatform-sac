@@ -34,6 +34,7 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 	private static final String SERVER_LEVEL_DEV = "DV"; // 조회대상 서버 단계: 개발기
 	private static final String SERVER_LEVEL_QA = "QA"; // 조회대상 서버 단계: QA
 	private static final String SERVER_LEVEL_REAL = "LV"; // 조회대상 서버 단계: 상용
+	private static final String SERVER_LEVEL_STAGING = "ST"; // 조회대상 서버 단계: 상용 스테이징
 
 	@Autowired
 	@Qualifier("sac")
@@ -48,6 +49,8 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 	public void initServerLevel() {
 		if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
 			this.serverLevel = SERVER_LEVEL_REAL;
+		} else if (StringUtils.equals(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_STAGING)) {
+			this.serverLevel = SERVER_LEVEL_STAGING;
 		} else if (StringUtils.equals(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_QA)) {
 			this.serverLevel = SERVER_LEVEL_QA;
 		} else {

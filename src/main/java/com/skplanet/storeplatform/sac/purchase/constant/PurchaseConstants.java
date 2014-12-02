@@ -28,6 +28,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String TENANT_ID_UPLUS = "S03";
 
 	/** 서비스 서버 단계 환경변수 */
+	public static final String ENV_SERVER_LEVEL_STAGING = "stg"; // System 설정 서버 단계 property: 상용 스테이징
 	public static final String ENV_SERVER_LEVEL_REAL = "real"; // System 설정 서버 단계 property: 상용
 	public static final String ENV_SERVER_LEVEL_QA = "qa"; // System 설정 서버 단계 property: QA
 	public static final String ENV_SERVER_LEVEL_DEV = "dev"; // System 설정 서버 단계 property: 개발기
