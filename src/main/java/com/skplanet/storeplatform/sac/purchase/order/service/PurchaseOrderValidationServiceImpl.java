@@ -474,8 +474,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			if (StringUtils.isNotBlank(purchaseProduct.getSearchPriceUrl())) {
 				String reqTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 				double price = this.purchaseIapRepository.searchIapS2SPrice(purchaseProduct.getSearchPriceUrl(),
-						reqTime, purchaseProduct.getAid(), purchaseProduct.getProdId(), purchaseOrderInfo
-								.getPurchaseProductList().get(0).getTid());
+						reqTime, purchaseProduct.getAid(), purchaseProduct.getProdId(), reqProdList.get(0).getTid());
 				purchaseProduct.setProdAmt(price);
 			}
 
