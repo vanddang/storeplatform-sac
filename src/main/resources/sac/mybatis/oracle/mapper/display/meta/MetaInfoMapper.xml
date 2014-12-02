@@ -165,12 +165,12 @@
 		     , CASE WHEN (A1.CHNL_PERIOD_AMT >= 0  AND A1.STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
 		            ELSE NVL(A1.CHNL_UNLMT_AMT, 0) 
 		        END AS PROD_AMT  /* 채널 대표 가격 */
-			, CASE WHEN A1.CHNL_UNLMT_AMT >= 0 THEN A1.CHNL_UNLMT_AMT END AS UNLMT_AMT  /* 채널 소장 가격 */
-        	, CASE WHEN A1.CHNL_PERIOD_AMT >= 0 THEN A1.CHNL_PERIOD_AMT END AS PERIOD_AMT  /* 채널 대여 가격 */
 		     </if>
 		     <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
 		     , NVL(A1.PROD_AMT, 0) AS PROD_AMT  /* 에피소드 가격 */
 		     </if>
+			 , CASE WHEN A1.CHNL_UNLMT_AMT >= 0 THEN A1.CHNL_UNLMT_AMT END AS UNLMT_AMT  /* 채널 소장 가격 */
+        	 , CASE WHEN A1.CHNL_PERIOD_AMT >= 0 THEN A1.CHNL_PERIOD_AMT END AS PERIOD_AMT  /* 채널 대여 가격 */
 		     , A1.PROD_NET_AMT
 		     , A1.PROD_CHRG_YN AS PROD_CHRG
 		     , NVL(A1.PATICPERS_CNT, 0) AS PATICPERS_CNT
