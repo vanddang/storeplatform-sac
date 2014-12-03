@@ -107,7 +107,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
@@ -1209,15 +1208,16 @@ public class LoginServiceImpl implements LoginService {
 			updateUserRequest.setUserMbr(userMbr);
 			this.userSCI.updateUser(updateUserRequest);
 
-			/* 게임센터 연동 */
-			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(joinForWapEcRes.getUserKey());
-			gameCenterSacReq.setMbrNo(joinForWapEcRes.getUserKey());
-			gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
-			gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-			this.deviceService.regGameCenterIF(gameCenterSacReq);
+			// #27289 게임센터 연동 제거
+			// /* 게임센터 연동 */
+			// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			// gameCenterSacReq.setUserKey(joinForWapEcRes.getUserKey());
+			// gameCenterSacReq.setMbrNo(joinForWapEcRes.getUserKey());
+			// gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
+			// gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+			// gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+			// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+			// this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 			/* MQ 연동 */
 			CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();

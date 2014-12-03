@@ -54,7 +54,6 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Change
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
@@ -1637,16 +1636,17 @@ public class IdpServiceImpl implements IdpService {
 			removeMbrOneIDRequest.setImSvcNo(imIntSvcNo);
 			this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
 
+			// #27289 게임센터 연동 제거
 			/* 게임센터 연동 */
-			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(userKey);
-			gameCenterSacReq.setPreUserKey(userKey);
-			gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
-			gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
-			gameCenterSacReq.setSystemId(map.get("systemID"));
-			gameCenterSacReq.setTenantId(map.get("tenantID"));
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE); // 회원 탈퇴
-			this.deviceService.regGameCenterIF(gameCenterSacReq);
+			// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			// gameCenterSacReq.setUserKey(userKey);
+			// gameCenterSacReq.setPreUserKey(userKey);
+			// gameCenterSacReq.setMbrNo(currentMbrNoForgameCenter);
+			// gameCenterSacReq.setPreMbrNo(prevMbrNoForgameCenter);
+			// gameCenterSacReq.setSystemId(map.get("systemID"));
+			// gameCenterSacReq.setTenantId(map.get("tenantID"));
+			// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE); // 회원 탈퇴
+			// this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 			// 회원 탈퇴 정보를 전달 하는 mq 호출.
 			if (searchUserResponse != null) {
@@ -1940,7 +1940,8 @@ public class IdpServiceImpl implements IdpService {
 		String imIntSvcNo = map.get("im_int_svc_no"); // 통합 서비스 번호
 		String userId = map.get("user_id"); // 회원 ID
 		String joinSiteTotalList = StringUtils.isBlank(map.get("join_sst_list")) ? "" : map.get("join_sst_list");
-		String modifySstCode = map.get("modify_sst_code");
+		// #27289 게임센터 연동 제거
+		// String modifySstCode = map.get("modify_sst_code");
 		SearchUserResponse searchUserResponse = null;
 		String tenantId = map.get("tenantID");
 		String systemId = map.get("systemID");
@@ -2011,18 +2012,19 @@ public class IdpServiceImpl implements IdpService {
 					this.userSCI.remove(removeUserRequest);
 
 					// as is src 이용동의 해지시 tstore에서 이용동의 해지면서 변경서비스사이트코드가 티스토어가 아닌경우 게임센터 연동을 함
-					if (StringUtils.isNotBlank(modifySstCode)
-							&& !MemberConstants.SSO_SST_CD_TSTORE.equals(modifySstCode)) {
-						GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-						gameCenterSacReq.setUserKey(searchUserResponse.getUserKey());
-						gameCenterSacReq.setPreUserKey(searchUserResponse.getUserKey());
-						gameCenterSacReq.setMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
-						gameCenterSacReq.setPreMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
-						gameCenterSacReq.setSystemId(systemId);
-						gameCenterSacReq.setTenantId(tenantId);
-						gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
-						this.deviceService.regGameCenterIF(gameCenterSacReq);
-					}
+					// #27289 게임센터 연동 제거
+					// if (StringUtils.isNotBlank(modifySstCode)
+					// && !MemberConstants.SSO_SST_CD_TSTORE.equals(modifySstCode)) {
+					// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+					// gameCenterSacReq.setUserKey(searchUserResponse.getUserKey());
+					// gameCenterSacReq.setPreUserKey(searchUserResponse.getUserKey());
+					// gameCenterSacReq.setMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
+					// gameCenterSacReq.setPreMbrNo(searchUserResponse.getUserMbr().getImMbrNo());
+					// gameCenterSacReq.setSystemId(systemId);
+					// gameCenterSacReq.setTenantId(tenantId);
+					// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
+					// this.deviceService.regGameCenterIF(gameCenterSacReq);
+					// }
 
 					RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
 					mqInfo.setUserId(userId);

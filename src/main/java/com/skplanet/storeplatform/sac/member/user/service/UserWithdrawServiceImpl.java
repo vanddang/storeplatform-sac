@@ -35,7 +35,6 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
@@ -92,8 +91,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		 * 회원 정보 조회 Value Object.
 		 */
 		UserInfo userInfo = null;
-
-		String gcWorkCd = null;
+		// #27289 게임센터 연동 제거
+		// String gcWorkCd = null;
 
 		/**
 		 * 요청 파라미터에 따라서 분기 처리한다.
@@ -107,8 +106,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			LOGGER.debug("########################################");
 			LOGGER.info("userId, userAuthKey 둘다 존재 or 모두 존재 Case.");
 			LOGGER.debug("########################################");
-
-			gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
+			// #27289 게임센터 연동 제거
+			// gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
 
 			/**
 			 * userId로 회원 정보 조회.
@@ -199,8 +198,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 				DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID,
 						req.getDeviceId(), userInfo.getUserKey());
-
-				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE;
+				// #27289 게임센터 연동 제거
+				// gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE;
 
 				LOGGER.info("[OneId ID 회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
 				this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId());
@@ -230,8 +229,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					/**********************************************
 					 * 무선 회원 Case.
 					 **********************************************/
-
-					gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
+					// #27289 게임센터 연동 제거
+					// gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
 
 					LOGGER.info("[무선회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
 					this.secedeForWap(req.getDeviceId());
@@ -269,8 +268,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					 **********************************************/
 					DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader,
 							MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userInfo.getUserKey());
-
-					gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE;
+					// #27289 게임센터 연동 제거
+					// gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE;
 
 					LOGGER.info("[IDP ID 회원 Case] deviceId:{}, type:{}", req.getDeviceId(), userInfo.getUserType());
 					this.secedeForWap(req.getDeviceId());
@@ -300,18 +299,19 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 		LOGGER.info("IDP 탈퇴처리, DB 탈퇴처리 모두 완료.");
 
-		/**
-		 * 게임센터 연동.
-		 */
-		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-		gameCenterSacReq.setUserKey(userInfo.getUserKey());
-		if (StringUtils.isNotBlank(req.getDeviceId())) {
-			gameCenterSacReq.setDeviceId(req.getDeviceId());
-		}
-		gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-		gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		gameCenterSacReq.setWorkCd(gcWorkCd);
-		this.deviceService.regGameCenterIF(gameCenterSacReq);
+		// #27289 게임센터 연동 제거
+		// /**
+		// * 게임센터 연동.
+		// */
+		// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+		// gameCenterSacReq.setUserKey(userInfo.getUserKey());
+		// if (StringUtils.isNotBlank(req.getDeviceId())) {
+		// gameCenterSacReq.setDeviceId(req.getDeviceId());
+		// }
+		// gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+		// gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		// gameCenterSacReq.setWorkCd(gcWorkCd);
+		// this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 		/**
 		 * 결과 세팅

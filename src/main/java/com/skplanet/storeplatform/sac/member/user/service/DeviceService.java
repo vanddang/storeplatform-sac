@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import javax.validation.Valid;
-
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -12,8 +10,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
@@ -178,7 +174,8 @@ public interface DeviceService {
 	 *            GameCenterSac
 	 * @return GameCenterSacRes
 	 */
-	public GameCenterSacRes regGameCenterIF(@Valid @RequestBody GameCenterSacReq gameCenterSac);
+	// #27289 게임센터 연동 제거
+	// public GameCenterSacRes regGameCenterIF(@Valid @RequestBody GameCenterSacReq gameCenterSac);
 
 	/**
 	 * <pre>

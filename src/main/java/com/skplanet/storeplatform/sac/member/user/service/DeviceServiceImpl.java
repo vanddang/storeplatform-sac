@@ -10,11 +10,9 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -23,7 +21,6 @@ import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.skplanet.storeplatform.external.client.csp.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.csp.vo.GetMvnoEcRes;
@@ -39,7 +36,6 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.GameCenter;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
@@ -55,7 +51,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateGameCenterRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
@@ -77,8 +72,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
@@ -445,7 +438,8 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 2. 기등록된 회원이 존재하는지 확인(모바일 회원에 대해서만 previous* 값들이 리턴됨) */
 		String previousUserKey = createDeviceRes.getPreviousUserKey();
 		String previousDeviceKey = createDeviceRes.getPreviousDeviceKey();
-		String previousMbrNo = createDeviceRes.getPreMbrNo();
+		// #27289 게임센터 연동 제거
+		// String previousMbrNo = createDeviceRes.getPreMbrNo();
 		String deviceKey = createDeviceRes.getDeviceKey();
 
 		if (StringUtils.isNotBlank(previousUserKey) && StringUtils.isNotBlank(previousDeviceKey)) {
@@ -548,21 +542,22 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		/* 6. 게임센터 연동 */
-		GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-		gameCenterSacReq.setUserKey(userKey);
-		gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
-		gameCenterSacReq.setSystemId(systemId);
-		gameCenterSacReq.setTenantId(tenantId);
-		if (StringUtils.isNotBlank(previousUserKey) && StringUtils.isNotBlank(previousDeviceKey)) {
-			gameCenterSacReq.setPreUserKey(previousUserKey);
-			gameCenterSacReq.setPreMbrNo(previousMbrNo);
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
-
-		} else {
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-		}
-		this.regGameCenterIF(gameCenterSacReq);
+		// #27289 게임센터 연동 제거
+		// /* 6. 게임센터 연동 */
+		// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+		// gameCenterSacReq.setUserKey(userKey);
+		// gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
+		// gameCenterSacReq.setSystemId(systemId);
+		// gameCenterSacReq.setTenantId(tenantId);
+		// if (StringUtils.isNotBlank(previousUserKey) && StringUtils.isNotBlank(previousDeviceKey)) {
+		// gameCenterSacReq.setPreUserKey(previousUserKey);
+		// gameCenterSacReq.setPreMbrNo(previousMbrNo);
+		// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
+		//
+		// } else {
+		// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
+		// }
+		// this.regGameCenterIF(gameCenterSacReq);
 
 		/* 7. MQ 연동 */
 		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
@@ -1408,17 +1403,18 @@ public class DeviceServiceImpl implements DeviceService {
 
 		RemoveDeviceResponse removeDeviceResponse = this.deviceSCI.removeDevice(removeDeviceRequest);
 
-		/* 게임센터 연동 */
-		for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
-			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(req.getUserKey());
-			gameCenterSacReq.setDeviceId(id.getDeviceId());
-			gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-			gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-			gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
-
-			this.regGameCenterIF(gameCenterSacReq);
-		}
+		// #27289 게임센터 연동 제거
+		// /* 게임센터 연동 */
+		// for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
+		// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+		// gameCenterSacReq.setUserKey(req.getUserKey());
+		// gameCenterSacReq.setDeviceId(id.getDeviceId());
+		// gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
+		// gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
+		//
+		// this.regGameCenterIF(gameCenterSacReq);
+		// }
 
 		RemoveDeviceRes removeDeviceRes = new RemoveDeviceRes();
 		List<RemoveDeviceListSacRes> resDeviceKeyList = new ArrayList<RemoveDeviceListSacRes>();
@@ -1511,36 +1507,37 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService# insertGameCenterIF
 	 * (com.skplanet.storeplatform.sac.client.member.vo.common.GameCenter)
 	 */
-	@Override
-	public GameCenterSacRes regGameCenterIF(@Valid @RequestBody GameCenterSacReq gameCenterSacReq) {
-
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(gameCenterSacReq.getSystemId());
-		commonRequest.setTenantID(gameCenterSacReq.getTenantId());
-
-		UpdateGameCenterRequest updGameCenterReq = new UpdateGameCenterRequest();
-		updGameCenterReq.setCommonRequest(commonRequest);
-
-		GameCenter gameCenterSc = new GameCenter();
-		gameCenterSc.setDeviceID(gameCenterSacReq.getDeviceId());
-		gameCenterSc.setPreDeviceID(gameCenterSacReq.getPreDeviceId());
-		gameCenterSc.setUserKey(gameCenterSacReq.getUserKey());
-		gameCenterSc.setPreUserKey(gameCenterSacReq.getPreUserKey());
-		gameCenterSc.setRequestDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-		gameCenterSc.setWorkCode(gameCenterSacReq.getWorkCd());
-		gameCenterSc.setRequestType(gameCenterSacReq.getSystemId());
-		gameCenterSc.setPreMbrNo(gameCenterSacReq.getPreMbrNo());
-		gameCenterSc.setMbrNo(gameCenterSacReq.getMbrNo());
-		// gameCenterSc.setFileDate(fileDate);
-		updGameCenterReq.setGameCenter(gameCenterSc);
-		this.userSCI.updateGameCenter(updGameCenterReq);
-
-		GameCenterSacRes gameCenterSacRes = new GameCenterSacRes();
-		gameCenterSacRes.setUserKey(gameCenterSacReq.getUserKey());
-
-		return gameCenterSacRes;
-
-	}
+	// #27289 게임센터 연동 제거
+	// @Override
+	// public GameCenterSacRes regGameCenterIF(@Valid @RequestBody GameCenterSacReq gameCenterSacReq) {
+	//
+	// CommonRequest commonRequest = new CommonRequest();
+	// commonRequest.setSystemID(gameCenterSacReq.getSystemId());
+	// commonRequest.setTenantID(gameCenterSacReq.getTenantId());
+	//
+	// UpdateGameCenterRequest updGameCenterReq = new UpdateGameCenterRequest();
+	// updGameCenterReq.setCommonRequest(commonRequest);
+	//
+	// GameCenter gameCenterSc = new GameCenter();
+	// gameCenterSc.setDeviceID(gameCenterSacReq.getDeviceId());
+	// gameCenterSc.setPreDeviceID(gameCenterSacReq.getPreDeviceId());
+	// gameCenterSc.setUserKey(gameCenterSacReq.getUserKey());
+	// gameCenterSc.setPreUserKey(gameCenterSacReq.getPreUserKey());
+	// gameCenterSc.setRequestDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
+	// gameCenterSc.setWorkCode(gameCenterSacReq.getWorkCd());
+	// gameCenterSc.setRequestType(gameCenterSacReq.getSystemId());
+	// gameCenterSc.setPreMbrNo(gameCenterSacReq.getPreMbrNo());
+	// gameCenterSc.setMbrNo(gameCenterSacReq.getMbrNo());
+	// // gameCenterSc.setFileDate(fileDate);
+	// updGameCenterReq.setGameCenter(gameCenterSc);
+	// this.userSCI.updateGameCenter(updGameCenterReq);
+	//
+	// GameCenterSacRes gameCenterSacRes = new GameCenterSacRes();
+	// gameCenterSacRes.setUserKey(gameCenterSacReq.getUserKey());
+	//
+	// return gameCenterSacRes;
+	//
+	// }
 
 	/**
 	 * <pre>

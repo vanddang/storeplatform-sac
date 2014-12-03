@@ -34,7 +34,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceAmqpSacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GameCenterSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -183,20 +182,21 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 			}
 
-			/**
-			 * 게임센터 연동.
-			 */
-			GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			gameCenterSacReq.setUserKey(userKey);
-			gameCenterSacReq.setMbrNo(newMbrNo);
-			gameCenterSacReq.setDeviceId(deviceId);
-			gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
-			gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
-			gameCenterSacReq.setPreDeviceId(nowDeviceId);
-			gameCenterSacReq.setPreUserKey(userKey);
-			gameCenterSacReq.setPreMbrNo(preMbrNo);
-			gameCenterSacReq.setWorkCd(gcWorkCd);
-			this.deviceService.regGameCenterIF(gameCenterSacReq);
+			// #27289 게임센터 연동 제거
+			// /**
+			// * 게임센터 연동.
+			// */
+			// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
+			// gameCenterSacReq.setUserKey(userKey);
+			// gameCenterSacReq.setMbrNo(newMbrNo);
+			// gameCenterSacReq.setDeviceId(deviceId);
+			// gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
+			// gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
+			// gameCenterSacReq.setPreDeviceId(nowDeviceId);
+			// gameCenterSacReq.setPreUserKey(userKey);
+			// gameCenterSacReq.setPreMbrNo(preMbrNo);
+			// gameCenterSacReq.setWorkCd(gcWorkCd);
+			// this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 			saveAndSync.setUserKey(userKey);
 			saveAndSync.setDeviceKey(deviceKey); // 휴대기기 Key
