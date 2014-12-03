@@ -37,6 +37,9 @@ public class PreferenceController {
     @RequestMapping(value = "/listProduct/v1", method = RequestMethod.POST)
     @ResponseBody
     public ListProductRes listProduct(@RequestBody @Validated ListProductReq req, SacRequestHeader header) {
+    	if (req.getCount() == null) {
+    		req.setCount(5);
+    	}
         return service.listProduct(req, header);
     }
     
