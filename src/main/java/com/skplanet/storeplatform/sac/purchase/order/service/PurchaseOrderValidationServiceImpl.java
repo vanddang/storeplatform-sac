@@ -175,8 +175,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 		} else if (StringUtils.startsWith(reqGroup, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
-			// 뮤직(MP3) : 통합뮤직, 뮤직
-			if (StringUtils.equals(reqMenuId, "DP16") == false && StringUtils.equals(reqMenuId, "DP05") == false) {
+			// 통합뮤직 : MP3, 컬러링&벨소리
+			if (StringUtils.equals(reqMenuId, "DP16") == false && StringUtils.equals(reqMenuId, "DP02") == false
+					&& StringUtils.equals(reqMenuId, "DP05") == false) {
 				throw new StorePlatformException("SAC_PUR_5100", "잘못된 상품 분류 코드");
 			}
 

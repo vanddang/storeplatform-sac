@@ -268,12 +268,30 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_COUPON;
 			}
 
-			// MP3
+			// MP3, 벨소리&컬러링
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
-			if (StringUtils.equals(purchaseProduct.getResvCol03(), "128")) {
-				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_NORMAL;
+
+			// 벨소리&컬러링
+			if (StringUtils.startsWith(tenantProdGrpCd.substring(8), PurchaseConstants.DISPLAY_TOP_MENU_ID_PHONEDECO)) {
+				if (StringUtils.equals(purchaseProduct.getTimbreClsf(), PurchaseConstants.RINGBELL_CLASS_BELL_HIGH)) {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_BELL_HIGH;
+				} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(),
+						PurchaseConstants.RINGBELL_CLASS_BELL_BASIC)) {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_BELL_BASIC;
+				} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(),
+						PurchaseConstants.RINGBELL_CLASS_RING_LONG)) {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_HIGH;
+				} else if (StringUtils.equals(purchaseProduct.getTimbreClsf(),
+						PurchaseConstants.RINGBELL_CLASS_RING_BASIC)) {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC;
+				}
+
 			} else {
-				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH;
+				if (StringUtils.equals(purchaseProduct.getResvCol03(), "128")) {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_NORMAL;
+				} else {
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_MP3_HIGH;
+				}
 			}
 
 			// 벨소리&컬러링

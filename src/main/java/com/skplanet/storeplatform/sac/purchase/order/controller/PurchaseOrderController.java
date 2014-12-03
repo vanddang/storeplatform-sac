@@ -476,6 +476,11 @@ public class PurchaseOrderController {
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
 			purchaseOrderInfo.setRingbell(true); // 컬러링&벨소리 상품 여부
 
+		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_MUSIC)) {
+			if (StringUtils.startsWith(tenantProdGrpCd.substring(8), PurchaseConstants.DISPLAY_TOP_MENU_ID_PHONEDECO)) {
+				purchaseOrderInfo.setRingbell(true); // 컬러링&벨소리 상품 여부
+			}
+
 		} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
 			purchaseOrderInfo.setGamecash(true); // 게임캐쉬 상품 여부
 		}
