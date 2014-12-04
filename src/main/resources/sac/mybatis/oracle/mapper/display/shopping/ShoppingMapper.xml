@@ -462,8 +462,12 @@
                    ,CONCAT(FILE_PATH,FILE_NM) AS FILE_PATH
                    ,'Y' AS specialSale
                    ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
-                                     ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY ) ) THEN 'Y' ELSE 'N'
-                       END ) AS soldOut     
+                                 ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY )
+                                  OR 
+                                 ( SOLD_OUT_YN ='Y' ) 
+                                ) 
+                     THEN 'Y' ELSE 'N'
+                     END ) AS soldOut     
                    ,CONTENTS_TYPE_CD  
                    ,EXPO_ORD            
              FROM (
@@ -515,8 +519,9 @@
                                ,N.SPRC_APPLY_START_DT
                                ,N.SPRC_APPLY_END_DT
                                ,N.EXPO_ORD   
+                               ,N.SOLD_OUT_YN
                                ,O.PROD_NM 
-                               ,J.CONTENTS_TYPE_CD                            
+                               ,J.CONTENTS_TYPE_CD 
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -1802,8 +1807,13 @@
                 KK.*
                ,(CASE WHEN KK.SPECIAL_SALE_YN ='Y' THEN 
                          ( CASE WHEN ( ( KK.MTH_PRCHS_CNT >= KK.MTH_MAX_CNT ) OR
-                                       ( KK.DLY_PRCHS_CNT >= KK.DLY_MAX_CNT ) ) THEN 'Y'
-                            ELSE  'N' END )
+                                       ( KK.DLY_PRCHS_CNT >= KK.DLY_MAX_CNT )
+	                                   OR 
+	                                   ( KK.SOLD_OUT_YN ='Y' )                                         
+                                     ) 
+                            THEN 'Y'
+                            ELSE  'N' END 
+                          )
                 ELSE 'N'
                 END ) AS soldOut        
                ,KK.SPECIAL_SALE_YN AS specialSale
@@ -1883,6 +1893,7 @@
                           ) PROD_STATUS_CD
                         ,O.PROD_NM as catalogNm
                         ,I.COUPON_SEND_TYPE
+                        ,N.SOLD_OUT_YN
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -1909,7 +1920,8 @@
                                , B1.PERMAN_MM_MAX_PRCHS_QTY
                                , B1.PERMAN_DAY_MAX_PRCHS_QTY
                                , B1.ONCE_MAX_PRCHS_POSB_CNT  
-                               , B1.CPN_ID                                   
+                               , B1.CPN_ID 
+                               , B1.SOLD_OUT_YN                                  
                            FROM  TB_DP_PROD_RSHP A1
                                 ,TB_DP_SPRC_PROD B1
                            WHERE 1=1
@@ -2123,8 +2135,12 @@
                    ,CONCAT(FILE_PATH,FILE_NM) AS FILE_PATH
                    ,'Y' AS specialSale
                    ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
-                                     ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY ) ) THEN 'Y' ELSE 'N'
-                       END ) AS soldOut     
+                                 ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY )
+                                  OR 
+                                 ( SOLD_OUT_YN ='Y' ) 
+                                ) 
+                     THEN 'Y' ELSE 'N'
+                     END ) AS soldOut   
                    ,CONTENTS_TYPE_CD  
                    ,EXPO_ORD            
              FROM (
@@ -2184,6 +2200,7 @@
                                ,N.SPRC_APPLY_START_DT
                                ,N.SPRC_APPLY_END_DT
                                ,N.EXPO_ORD   
+                               ,N.SOLD_OUT_YN
                                ,O.PROD_NM 
                                ,J.CONTENTS_TYPE_CD                            
                           FROM 
@@ -3346,10 +3363,15 @@
                 KK.*
                ,(CASE WHEN KK.SPECIAL_SALE_YN ='Y' THEN 
                          ( CASE WHEN ( ( KK.MTH_PRCHS_CNT >= KK.MTH_MAX_CNT ) OR
-                                       ( KK.DLY_PRCHS_CNT >= KK.DLY_MAX_CNT ) ) THEN 'Y'
-                            ELSE  'N' END )
+                                       ( KK.DLY_PRCHS_CNT >= KK.DLY_MAX_CNT )
+                                       OR 
+                                       ( KK.SOLD_OUT_YN ='Y' )                                         
+                                     ) 
+                            THEN 'Y'
+                            ELSE  'N' END 
+                          )
                 ELSE 'N'
-                END ) AS soldOut        
+                END ) AS soldOut         
                ,KK.SPECIAL_SALE_YN AS specialSale
                ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
            FROM (
@@ -3434,7 +3456,8 @@
                           ELSE 'PD000404' END
                           ) PROD_STATUS_CD
                         ,O.PROD_NM as catalogNm
-                        ,I.COUPON_SEND_TYPE  
+                        ,I.COUPON_SEND_TYPE 
+                        ,N.SOLD_OUT_YN 
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -3462,7 +3485,8 @@
                                , B1.PERMAN_DAY_MAX_PRCHS_QTY
                                , B1.ONCE_MAX_PRCHS_POSB_CNT  
                                , B1.CPN_ID   
-                               , B1.SPRC_TYPE_CD                                
+                               , B1.SPRC_TYPE_CD 
+                               , B1.SOLD_OUT_YN                               
                            FROM  TB_DP_PROD_RSHP A1
                                 ,TB_DP_SPRC_PROD B1
                            WHERE 1=1
