@@ -50,6 +50,7 @@ public class ProdNoti extends CommonInfo {
 	private String sellerRespOpin; // SELLER_RESP_OPIN
 	private String recomYn;
 	private String fbPostYn; // FB_POST_YN
+	private String avgFbPostYn;
 	private String oprpersRespYn;
 	private String respOprpersId;
 	private String respOprpersNm;
@@ -455,6 +456,21 @@ public class ProdNoti extends CommonInfo {
 	 */
 	public void setFbPostYn(String fbPostYn) {
 		this.fbPostYn = fbPostYn;
+	}
+
+	/**
+	 * @return the avgFbPostYn
+	 */
+	public String getAvgFbPostYn() {
+		return this.avgFbPostYn;
+	}
+
+	/**
+	 * @param avgFbPostYn
+	 *            the avgFbPostYn to set
+	 */
+	public void setAvgFbPostYn(String avgFbPostYn) {
+		this.avgFbPostYn = avgFbPostYn;
 	}
 
 	/**

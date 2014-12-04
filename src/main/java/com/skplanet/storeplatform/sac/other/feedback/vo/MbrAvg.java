@@ -29,6 +29,7 @@ public class MbrAvg extends CommonInfo {
 	private String avgScore;
 	private String regId;
 	private String regDt;
+	private String fbPostYn;
 
 	/**
 	 * @return String
@@ -120,4 +121,18 @@ public class MbrAvg extends CommonInfo {
 		this.regDt = regDt;
 	}
 
+	/**
+	 * @return the fbPostYn
+	 */
+	public String getFbPostYn() {
+		return this.fbPostYn;
+	}
+
+	/**
+	 * @param fbPostYn
+	 *            the fbPostYn to set
+	 */
+	public void setFbPostYn(String fbPostYn) {
+		this.fbPostYn = fbPostYn;
+	}
 }

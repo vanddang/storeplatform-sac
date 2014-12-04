@@ -1129,6 +1129,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		String userKey = (String) beanWrapperImpl.getPropertyValue("userKey");
 		String prodId = (String) beanWrapperImpl.getPropertyValue("prodId");
 		String userId = (String) beanWrapperImpl.getPropertyValue("userId");
+		String fbPostYn = (String) beanWrapperImpl.getPropertyValue("fbPostYn");
 
 		if (StringUtils.isNotBlank(score) && StringUtils.isBlank(chnlId)) {
 			String avgScore = score;
@@ -1143,6 +1144,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			mbrAvg.setProdId(prodId);
 			mbrAvg.setAvgScore(avgScore);
 			mbrAvg.setRegId(userId);
+			mbrAvg.setFbPostYn(fbPostYn);
 
 			MbrAvg getRegMbrAvg = this.feedbackRepository.getRegMbrAvg(mbrAvg);
 			this.feedbackRepository.mergeMbrAvg(mbrAvg);
@@ -1152,7 +1154,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			updateTenantProdStats.setProdId(prodId);
 			updateTenantProdStats.setRegId(userId);
 			updateTenantProdStats.setUpdId(userId);
-			HashMap<String, String> param = new HashMap<String, String>();
+
 			if (getRegMbrAvg != null) {
 				updateTenantProdStats.setAvgEvluScore(avgScore);
 				updateTenantProdStats.setPreAvgScore(getRegMbrAvg.getAvgScore());
@@ -1197,15 +1199,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 기본 등록ID.
 		String regId = this.getMaskRegId(prodNoti.getRegId());
+
 		// 사용자 조회후.
 		if (searchUserSacRes != null) {
 			if (!CollectionUtils.isEmpty(searchUserSacRes.getUserInfo())) {
 				UserInfoSac userInfoSac = searchUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
 				if (userInfoSac != null) {
 					// 사용자가 기기사용자이면.
-					if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)
-							&& StringUtils.isNotBlank(prodNoti.getMbrTelno())) {
-
+					if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 						// 사용후기 이면
 						if (prodNoti.getNotiSeq() != null) {
 							// 사용후기 테이블의 정보 셋팅 후 마스킹 처리.
@@ -1232,6 +1233,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// V2 버전인 경우에만 프로필 이미지를 내려준다.
 		if (StringUtils.equals("v2", prodNoti.getInfVersion())) {
 			feedback.setProfileImgUrl(StringUtils.stripToEmpty(prodNoti.getProfileImgUrl()));
+			feedback.setAvgFbPostYn(prodNoti.getAvgFbPostYn());
 		}
 
 		feedback.setRegId(regId);
@@ -1384,9 +1386,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 				stringBuffer.append(StringUtils.substring(telNo, 0, 3));
 				// mdn 마스킹 처리.
 				if (telNo.length() < 11) {
-					stringBuffer.append("***");
+					stringBuffer.append("-***-");
 				} else {
-					stringBuffer.append("****");
+					stringBuffer.append("-****-");
 				}
 				return stringBuffer.append(StringUtils.substring(telNo, telNo.length() - 4, telNo.length())).toString();
 			} catch (Exception e) {
@@ -1412,12 +1414,25 @@ public class FeedbackServiceImpl implements FeedbackService {
 	 */
 	private String getMaskRegId(String regId) {
 		if (StringUtils.isNotBlank(regId)) {
-			if (regId.length() > 3) {
-				return new StringBuffer().append(regId.substring(0, 3)).append("*****").toString();
+			int idx = 0;
+
+			if (regId.indexOf("@") != -1 && regId.indexOf(".") != -1) {
+				idx = regId.indexOf('@') < 3 ? regId.indexOf('@') - 1 : regId.indexOf('@') - 2;
+				return this.RPAD(regId.substring(0, idx), regId.indexOf('@'), '*')
+						+ regId.substring(regId.indexOf('@'));
 			} else {
-				return StringUtils.rightPad(regId, 8, "*");
+				idx = regId.length() < 3 ? regId.length() - 1 : regId.length() - 2;
+				return this.RPAD(regId.substring(0, idx), regId.length(), '*');
 			}
 		}
 		return StringUtils.EMPTY;
+	}
+
+	private String RPAD(String str, int iLen, char cPad) {
+		int iTempLen = iLen - str.length();
+		for (int i = 0; i < iTempLen; i++) {
+			str = str + cPad;
+		}
+		return str;
 	}
 }

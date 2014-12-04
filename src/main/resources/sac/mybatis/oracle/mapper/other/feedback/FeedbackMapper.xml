@@ -197,6 +197,7 @@
              , avg_score                   /* 평균 점수 */
              , reg_id                      /* 등록 ID */
              , reg_dt                      /* 등록 일시 */
+             , fb_post_yn                  /* 페이스북 공유 여부 */
              )
              VALUES 
              ( 
@@ -206,6 +207,7 @@
              , #{avgScore}                 /* 평균 점수 */
              , #{regId}                    /* 등록 ID */
              , SYSDATE                     /* 등록 일시 */
+             , #{fbPostYn}                 /* 페이스북 공유 여부 */
              )
        WHEN  MATCHED 
        THEN
@@ -531,7 +533,8 @@
                      ELSE 'N'
               END ) AS noti_yn  /* 본인 추천 여부 */
             , a.avg_score       /* 평균 점수 */
-            , a.fb_post_yn      /* 페이스북 POST 여부 */
+            , NVL(a.fb_post_yn, 'N') AS fb_post_yn            /* 페이스북 POST 여부 */
+            , NVL(a.avg_fb_post_yn, 'N') AS avg_fb_post_yn    /* 평점 페이스북 POST 여부 */
             , a.prod_id         /* 상품 ID */
             , a.expo_seller_nm  /* 노출 판매자 명 */
             , a.svc_grp_cd      /* 서비스 그룹 코드 */
@@ -567,6 +570,7 @@
                                    , MAX( seller_resp_opin ) AS seller_resp_opin      /* 판매자 응답 의견 */
                                    , MAX( seller_resp_reg_dt ) AS seller_resp_reg_dt  /* 판매자 응답 일시 */
                                    , MAX( fb_post_yn ) AS fb_post_yn                  /* 페이스북 POST 여부 */
+                                   , MAX( avg_fb_post_yn ) AS avg_fb_post_yn          /* 평점 페이스북 POST 여부 */
                                    , MAX( prod_id ) AS prod_id                        /* 상품 ID */
                                    , MAX( seller_mbr_no ) AS seller_mbr_no            /* 판매자 회원 번호 */
                                    , MAX( cid ) AS cid                                /* CID */
@@ -591,6 +595,7 @@
                                                  , ia.seller_resp_opin    /* 판매자 응답 의견 */
                                                  , ia.seller_resp_reg_dt  /* 판매자 응답 일시 */
                                                  , ia.fb_post_yn          /* 페이스북 POST 여부 */
+                                                 , NULL AS avg_fb_post_yn /* 평점 페이스북 POST 여부 */
                                                  , ia.prod_id             /* 상품 ID */
                                                  , ib.seller_mbr_no       /* 판매자 회원 번호 */
                                                  , ib.cid                 /* CID */
@@ -647,6 +652,7 @@
                                          , NULL AS seller_resp_opin 
                                          , NULL AS seller_resp_reg_dt 
                                          , NULL AS fb_post_yn
+                                         , ic.fb_post_yn AS avg_fb_post_yn
                                          , ic.prod_id                  /* 상품 ID */ 
                                          , NULL AS seller_mbr_no
                                          , NULL AS cid
