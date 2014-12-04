@@ -4,7 +4,7 @@
  
     <!-- 특가 상품 여부 조회 -->
     <select id="getSpecialPriceSoldOut" parameterType="HashMap" resultType="Integer">
-        SELECT /* SpecialPriceSoldOut.getSpecialPriceSoldOut, 특가 상품 여부 조회 , 김형식/SK플래닛, 2014-12-04 */
+        SELECT /* SpecialPriceSoldOutMapper.xml.getSpecialPriceSoldOut, 특가 상품 여부 조회 , 김형식/SK플래닛, 2014-12-04 */
                COUNT(1) 
           FROM TB_DP_SPRC_PROD
 		 WHERE 1=1 
@@ -16,7 +16,7 @@
    
     <!-- 특가 상품 SOLD OUT 필드 업데이트 -->
     <update id="updateSpecialPriceSoldOut" parameterType="HashMap">
-        /* SpecialPriceSoldOut.updateSpecialPriceSoldOut,특가 상품 SOLD OUT 필드 업데이트 , 김형식/SK플래닛, 2014-12-04 */
+        /* SpecialPriceSoldOutMapper.xml.updateSpecialPriceSoldOut,특가 상품 SOLD OUT 필드 업데이트 , 김형식/SK플래닛, 2014-12-04 */
 		UPDATE TB_DP_SPRC_PROD 
 		   SET SOLD_OUT_YN='Y'
 		 WHERE 1=1 
