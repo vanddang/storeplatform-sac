@@ -81,7 +81,7 @@ public class CategoryControllerTest {
 	public void searchSpecificEbookList() throws Exception {
 		//2.4.1.4. 특정 상품 music 조회.
 		this.mvc.perform(
-				get("/display/category/specific/epub/list/v1?list=H001251381")
+				get("/display/category/specific/epub/list/v1?list=H900167694")
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
 				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
@@ -107,6 +107,25 @@ public class CategoryControllerTest {
 				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
 				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
 				.header("x-sac-interface-id", "I03000134")
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(header().string("x-sac-result-code", "SUCC"))
+				;
+	}
+	/**
+	 * 특정 상품 Vod 조회.
+	 * @throws Exception
+	 */
+	@Test
+	public void searchSpecificVodList() throws Exception {
+		//2.4.1.4. 특정 상품 music 조회.
+		this.mvc.perform(
+				get("/display/category/specific/vod/list/v1?list=H001609400")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
 				)
 				.andDo(print())
 				.andExpect(status().isOk())

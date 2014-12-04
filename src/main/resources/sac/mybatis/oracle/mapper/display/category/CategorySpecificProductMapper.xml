@@ -430,12 +430,6 @@
                            , I.PART_PROD_ID
                            , C.MENU_NM
                            , C.MENU_DESC
-                         <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
-                           , D.PROD_GRD_CD   -- 채널 상품 ID 조회       
-                         </if>
-                         <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-                           , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
-                         </if>            
                            , J.USE_PERIOD_UNIT_CD
                            , D.META_CLSF_CD
                            , D.CONTENTS_TYPE_CD
@@ -447,7 +441,6 @@
                            , E.VOD_TITL_NM
                            , E.STRM_EPSD_CNT
                            , E.EPSD_CNT
-                           , E.ISSUE_DAY
                            , E.CHNL_COMP_NM
                            , E.AGENCY_NM
                            , E.HDV_YN
@@ -472,9 +465,13 @@
                            , D.SELLER_MBR_NO 
                          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
                            , D.CID     -- 채널 상품 ID 조회       
+                           , D.PROD_GRD_CD   -- 채널 상품 ID 조회      
+                           , E.ISSUE_DAY
                          </if>
                          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                            , J.CID   -- 에피소드 상품 ID 조회
+                           , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
+                           , L.ISSUE_DAY
                          </if>                           
                            , D.SVC_GRP_CD                    
                            , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM   
