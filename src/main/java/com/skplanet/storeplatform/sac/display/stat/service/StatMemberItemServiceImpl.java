@@ -9,11 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.stat.service;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.card.CardDetailSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.Card;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -64,7 +62,7 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 	}
 
 	@Override
-	public CardDetailSacRes findCard(String cardId, String userKey, SacRequestHeader header) {
+	public Card findCard(String cardId, String userKey, SacRequestHeader header) {
 		String tenantId = header.getTenantHeader().getTenantId();
 
 		CardDetailParam param = new CardDetailParam();
@@ -73,11 +71,8 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 		param.setUserKey(userKey);
 
 		CardDetail cardDetail = cardDetailService.searchCardDetail(param);  // FIXME Card의 경우 동적 데이터를 일괄 처리하도록 수정 필요
-		CardDetailSacRes res = new CardDetailSacRes();
 		Card card = cardDetailService.makeCard(cardDetail);
-
-		BeanUtils.copyProperties(card, res);
-		return res;
+		return card;
 	}
 
 	@Override
