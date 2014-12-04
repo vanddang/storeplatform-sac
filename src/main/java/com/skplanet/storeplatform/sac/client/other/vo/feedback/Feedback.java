@@ -103,6 +103,11 @@ public class Feedback extends CommonInfo {
 	 * 페이스북 전송 여부.
 	 */
 	private String fbPostYn;
+
+	/**
+	 * 평점 페이스북 전송 여부.
+	 */
+	private String avgFbPostYn;
 	/**
 	 * 상품ID.
 	 */
@@ -400,6 +405,21 @@ public class Feedback extends CommonInfo {
 	 */
 	public void setFbPostYn(String fbPostYn) {
 		this.fbPostYn = fbPostYn;
+	}
+
+	/**
+	 * @return the avgFbPostYn
+	 */
+	public String getAvgFbPostYn() {
+		return this.avgFbPostYn;
+	}
+
+	/**
+	 * @param avgFbPostYn
+	 *            the avgFbPostYn to set
+	 */
+	public void setAvgFbPostYn(String avgFbPostYn) {
+		this.avgFbPostYn = avgFbPostYn;
 	}
 
 	/**
