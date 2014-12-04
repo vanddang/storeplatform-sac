@@ -35,7 +35,9 @@ import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
+import com.skplanet.storeplatform.sac.purchase.common.service.CommonCodeService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonCode;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.service.InterworkingSacService;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
@@ -60,6 +62,8 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	@Autowired
 	private SapPurchaseSCI sapPurchaseSCI;
 
+	@Autowired
+	private CommonCodeService commonCodeService;
 	@Autowired
 	private PayPlanetShopService payPlanetShopService;
 	@Autowired
@@ -218,12 +222,24 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 
 		} else { // SAP
 
+			List<String> paymentMtdCdList = new ArrayList<String>();
+			for (PaymentInfo paymentNotiReq : notifyPaymentReq.getPaymentInfoList()) {
+				paymentMtdCdList.add(PaymethodUtil.convert2StoreCode(paymentNotiReq.getPaymentMtdCd()));
+			}
+			Map<String, PurchaseCommonCode> commonCodeMap = this.commonCodeService.searchCommonCodeMap(
+					paymentMtdCdList, prchsDtlMore.getCurrencyCd());
+			PurchaseCommonCode commonCode = null;
+
 			// 결제정보
 			List<SendPurchaseNotiPaymentInfoEc> paymentInfoList = new ArrayList<SendPurchaseNotiPaymentInfoEc>();
 			SendPurchaseNotiPaymentInfoEc payment = null;
 			for (PaymentInfo paymentNotiReq : notifyPaymentReq.getPaymentInfoList()) {
 				payment = new SendPurchaseNotiPaymentInfoEc();
 				payment.setPaymentMtdCd(PaymethodUtil.convert2StoreCode(paymentNotiReq.getPaymentMtdCd()));
+				commonCode = commonCodeMap.get(payment.getPaymentMtdCd());
+				if (commonCode != null) {
+					payment.setPaymentMtdNm(commonCode.getCdNm());
+				}
 				payment.setPaymentAmt(paymentNotiReq.getPaymentAmt());
 				paymentInfoList.add(payment);
 			}

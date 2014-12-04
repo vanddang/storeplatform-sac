@@ -82,6 +82,9 @@
         
         <!-- Pay Planet 가맹점 정보 조회 -->
         <typeAlias alias="PayPlanetShop" type="com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop" />
+
+        <!-- 공통 코드 조회 -->
+        <typeAlias alias="PurchaseCommonCode" type="com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonCode" />
         
         
         <!-- ################################################# -->

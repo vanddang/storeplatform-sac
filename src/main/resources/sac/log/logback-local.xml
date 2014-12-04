@@ -95,7 +95,7 @@
     
     <!-- SERVICE LOGGER -->
     <logger name="com.skplanet.storeplatform.sac" additivity="false">
-        <level value="INFO" />
+        <level value="DEBUG" />
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
         <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
@@ -152,7 +152,7 @@
     </logger>
     
     <root>
-        <level value="INFO" />
+        <level value="DEBUG" />
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
         <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
