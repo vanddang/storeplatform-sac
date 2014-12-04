@@ -179,7 +179,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 					if (endPos >= 0) {
 						notiType = StringUtils.substring(prchsResvData, pos, endPos);
 					} else {
-						notiType = StringUtils.substring(prchsResvData, pos);
+						notiType = StringUtils.substring(prchsResvData, pos + 22);
 					}
 				}
 
