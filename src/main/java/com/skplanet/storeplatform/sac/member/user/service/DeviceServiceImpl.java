@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
+import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSetSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -81,6 +82,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacR
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
@@ -441,6 +443,7 @@ public class DeviceServiceImpl implements DeviceService {
 		// #27289 게임센터 연동 제거
 		// String previousMbrNo = createDeviceRes.getPreMbrNo();
 		String deviceKey = createDeviceRes.getDeviceKey();
+		String previousUserId = createDeviceRes.getPreviousUserID();
 
 		if (StringUtils.isNotBlank(previousUserKey) && StringUtils.isNotBlank(previousDeviceKey)) {
 
@@ -500,6 +503,30 @@ public class DeviceServiceImpl implements DeviceService {
 						this.userSCI.updateRealName(updRealNameReq);
 					}
 				}
+			}
+
+			/**
+			 * MQ 연동(회원 탈퇴) - 무선회원.
+			 */
+			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+
+			try {
+
+				mqInfo.setUserId(previousUserId);
+				mqInfo.setUserKey(previousUserKey);
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+				mqInfo.setDeviceId(deviceInfo.getDeviceId());
+				List<MbrMangItemPtcr> list = createDeviceRes.getMbrMangItemPtcrList();
+				for (int i = 0; i < list.size(); i++) {
+					MbrMangItemPtcr extraInfo = list.get(i);
+					if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
+						mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+					}
+				}
+				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+
+			} catch (AmqpException ex) {
+				LOGGER.error("MQ process fail {}", mqInfo);
 			}
 
 		}

@@ -28,6 +28,7 @@ import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
+import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
@@ -1658,7 +1659,14 @@ public class IdpServiceImpl implements IdpService {
 					mqInfo.setDeviceId(mqDeviceStr);
 				}
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-
+				// MQ 회원 프로필이미지 추가
+				List<MbrMangItemPtcr> list = searchUserResponse.getMbrMangItemPtcrList();
+				for (int i = 0; i < list.size(); i++) {
+					MbrMangItemPtcr extraInfo = list.get(i);
+					if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
+						mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+					}
+				}
 				try {
 					this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 				} catch (Exception e) {
@@ -2030,6 +2038,14 @@ public class IdpServiceImpl implements IdpService {
 					mqInfo.setUserId(userId);
 					mqInfo.setUserKey(searchUserResponse.getUserKey());
 					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					// MQ 회원 프로필이미지 추가
+					List<MbrMangItemPtcr> list = searchUserResponse.getMbrMangItemPtcrList();
+					for (int i = 0; i < list.size(); i++) {
+						MbrMangItemPtcr extraInfo = list.get(i);
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
+							mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+						}
+					}
 					try {
 						this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 					} catch (Exception e) {
