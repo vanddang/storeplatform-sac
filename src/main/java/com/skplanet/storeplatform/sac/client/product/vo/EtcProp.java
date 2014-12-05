@@ -44,6 +44,11 @@ public class EtcProp extends CommonInfo {
     private String expoYnCardShar;
 
     /**
+     * 카드 랜딩 노출 여부
+     */
+    private String expoYnCardLnd;
+
+    /**
      * 카드 할인전 가격 노출여부
      */
     private String expoYnCardDcPrvPrice;
@@ -146,7 +151,15 @@ public class EtcProp extends CommonInfo {
         this.expoYnCardShar = expoYnCardShar;
     }
 
-    public String getExpoYnCardDcPrvPrice() {
+    public String getExpoYnCardLnd() {
+		return expoYnCardLnd;
+	}
+
+	public void setExpoYnCardLnd(String expoYnCardLnd) {
+		this.expoYnCardLnd = expoYnCardLnd;
+	}
+
+	public String getExpoYnCardDcPrvPrice() {
         return expoYnCardDcPrvPrice;
     }
 
