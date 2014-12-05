@@ -65,6 +65,11 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 	private String pkgVer;
 
 	/**
+	 * 페이스북 전송 여부.
+	 */
+	private String fbPostYn;
+
+	/**
 	 * @return String
 	 */
 	public String getProdId() {
@@ -199,4 +204,18 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 		this.pkgVer = pkgVer;
 	}
 
+	/**
+	 * @return the fbPostYn
+	 */
+	public String getFbPostYn() {
+		return this.fbPostYn;
+	}
+
+	/**
+	 * @param fbPostYn
+	 *            the fbPostYn to set
+	 */
+	public void setFbPostYn(String fbPostYn) {
+		this.fbPostYn = fbPostYn;
+	}
 }
