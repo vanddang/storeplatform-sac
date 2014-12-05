@@ -292,6 +292,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 		etcProp.setExpoYnCardDesc(cardDetail.getExpoYnCardDesc());
 		etcProp.setExpoYnCardLike(cardDetail.getExpoYnCardLike());
 		etcProp.setExpoYnCardShar(cardDetail.getExpoYnCardShar());
+		etcProp.setExpoYnCardLnd(cardDetail.getExpoYnCardLnd());
 		etcProp.setExpoYnCardDcPrvPrice(cardDetail.getExpoYnCardDcPrvPrice());
 		etcProp.setExpoYnCardDcRate(cardDetail.getExpoYnCardDcRate());
 		etcProp.setExpoYnCardImg(cardDetail.getExpoYnCardImg());
