@@ -145,6 +145,9 @@ public class CardListServiceImpl implements CardListService {
             }
 
             Card card = cardDetailService.makeCard(cardDetail, ctx.getPreferredCategoryInfo(), ctx.getLangCd());
+            if (card == null)
+                continue;
+
             processor.addCard(card);
 
             pn.getCardList().add(card);

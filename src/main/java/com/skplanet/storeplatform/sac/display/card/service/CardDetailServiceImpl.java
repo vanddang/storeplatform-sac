@@ -179,9 +179,65 @@ public class CardDetailServiceImpl implements CardDetailService {
 
 		Card card = makeCard(cardDetail);
 
-		makeTitleParam(card, preferredCategoryInfo, langCd);
+//		makeTitleParam(card, preferredCategoryInfo, langCd);
+
+		card.setTitleParam(new HashMap<String, String>());
+		if (isPersonalCard(card)) {
+			String prefMenuId = getPrefMenuIdInFCxCard(card, preferredCategoryInfo);
+			if (prefMenuId == null) {
+				/* 개인화 카드에 선호 카테고리 목록이 없는 경우 카드를 노출 하면 안됨 */
+				return null;
+			}
+
+			makeTitleParam(card, prefMenuId, langCd);
+		}
 
 		return card;
+	}
+
+	private boolean isPersonalCard(final Card card) {
+
+		// FCx 카드 처리 CD05000030
+		if (StringUtils.equals(card.getTypeCd(), CARDTP_FC)) return true;
+		else return false;
+	}
+
+	private String getPrefMenuIdInFCxCard(final Card card, final PreferredCategoryInfo preferredCategoryInfo) {
+
+		if (preferredCategoryInfo == null ) return null;
+
+        String reqMenuId = card.getDatasetProp().getUrlParam().get("topMenuId");
+
+        String prefMenuId = null;
+        Matcher m = RX_DT_FC.matcher(card.getDatasetProp().getId());
+        if (m.matches()) {
+            int idx = Integer.parseInt(m.group(1));
+            if(idx < 1)
+                return null;
+
+            prefMenuId = preferredCategoryInfo.getPreferMenu(reqMenuId, idx - 1);
+        }
+        else
+            return null;
+
+		return prefMenuId;
+	}
+
+	private void makeTitleParam(Card card, final String prefMenuId, final String langCd) {
+
+		/**
+         * FC1, FC2, FC3 card_title에 #{category}만 현재는 존재
+         */
+        String title = card.getTitle();
+        if ( title.contains("#{category}") ) {
+            Map<String, String> titleParam = new HashMap<String, String>();
+            titleParam.put("category", menuInfoService.getMenuName(prefMenuId, langCd));
+
+            card.setTitleParam(titleParam);
+
+            card.getDatasetProp().getUrlParam().put("menuId", prefMenuId);
+            card.getDatasetProp().getUrlParam().remove("topMenuId");
+        }
 	}
 
 	private void makeTitleParam(Card card, final PreferredCategoryInfo preferredCategoryInfo, final String langCd) {
