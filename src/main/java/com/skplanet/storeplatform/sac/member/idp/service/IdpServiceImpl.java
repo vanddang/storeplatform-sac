@@ -1661,10 +1661,12 @@ public class IdpServiceImpl implements IdpService {
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 				// MQ 회원 프로필이미지 추가
 				List<MbrMangItemPtcr> list = searchUserResponse.getMbrMangItemPtcrList();
-				for (int i = 0; i < list.size(); i++) {
-					MbrMangItemPtcr extraInfo = list.get(i);
-					if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
-						mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+				if (list != null) {
+					for (int i = 0; i < list.size(); i++) {
+						MbrMangItemPtcr extraInfo = list.get(i);
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
+							mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+						}
 					}
 				}
 				try {
@@ -2040,10 +2042,13 @@ public class IdpServiceImpl implements IdpService {
 					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 					// MQ 회원 프로필이미지 추가
 					List<MbrMangItemPtcr> list = searchUserResponse.getMbrMangItemPtcrList();
-					for (int i = 0; i < list.size(); i++) {
-						MbrMangItemPtcr extraInfo = list.get(i);
-						if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
-							mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+					if (list != null) {
+						for (int i = 0; i < list.size(); i++) {
+							MbrMangItemPtcr extraInfo = list.get(i);
+							if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH,
+									extraInfo.getExtraProfile())) {
+								mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+							}
 						}
 					}
 					try {

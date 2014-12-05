@@ -154,10 +154,12 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 
 			List<UserExtraInfo> list = userInfo.getUserExtraInfoList();
-			for (int i = 0; i < list.size(); i++) {
-				UserExtraInfo extraInfo = list.get(i);
-				if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
-					mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+			if (list != null) {
+				for (int i = 0; i < list.size(); i++) {
+					UserExtraInfo extraInfo = list.get(i);
+					if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
+						mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+					}
 				}
 			}
 
@@ -248,11 +250,13 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 						mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 						mqInfo.setDeviceId(req.getDeviceId());
 						List<UserExtraInfo> list = userInfo.getUserExtraInfoList();
-						for (int i = 0; i < list.size(); i++) {
-							UserExtraInfo extraInfo = list.get(i);
-							if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH,
-									extraInfo.getExtraProfile())) {
-								mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+						if (list != null) {
+							for (int i = 0; i < list.size(); i++) {
+								UserExtraInfo extraInfo = list.get(i);
+								if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH,
+										extraInfo.getExtraProfile())) {
+									mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+								}
 							}
 						}
 						this.memberRetireAmqpTemplate.convertAndSend(mqInfo);

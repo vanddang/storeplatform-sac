@@ -133,6 +133,10 @@ public class DeviceServiceImpl implements DeviceService {
 	private AmqpTemplate memberDelDeviceAmqpTemplate;
 
 	@Autowired
+	@Resource(name = "memberRetireAmqpTemplate")
+	private AmqpTemplate memberRetireAmqpTemplate;
+
+	@Autowired
 	private MemberCommonInternalComponent mcic;
 
 	/*
@@ -517,13 +521,15 @@ public class DeviceServiceImpl implements DeviceService {
 				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
 				mqInfo.setDeviceId(deviceInfo.getDeviceId());
 				List<MbrMangItemPtcr> list = createDeviceRes.getMbrMangItemPtcrList();
-				for (int i = 0; i < list.size(); i++) {
-					MbrMangItemPtcr extraInfo = list.get(i);
-					if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
-						mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+				if (list != null) {
+					for (int i = 0; i < list.size(); i++) {
+						MbrMangItemPtcr extraInfo = list.get(i);
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
+							mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+						}
 					}
 				}
-				this.memberAddDeviceAmqpTemplate.convertAndSend(mqInfo);
+				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 			} catch (AmqpException ex) {
 				LOGGER.error("MQ process fail {}", mqInfo);
