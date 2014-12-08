@@ -27,10 +27,10 @@
 			,#{aid, jdbcType=VARCHAR}
 			,#{ktProdId, jdbcType=VARCHAR}
 			,#{ktCheckYn, jdbcType=VARCHAR}
-			,#{ktApkPgkNm, jdbcType=VARCHAR}
+			,#{ktApkPkgNm, jdbcType=VARCHAR}
             ,#{lgProdId, jdbcType=VARCHAR}
             ,#{lgCheckYn, jdbcType=VARCHAR}
-            ,#{lgApkPgkNm, jdbcType=VARCHAR}
+            ,#{lgApkPkgNm, jdbcType=VARCHAR}
             ,#{regId, jdbcType=VARCHAR}
 			,SYSDATE
 			,#{updId, jdbcType=VARCHAR}
