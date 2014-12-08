@@ -399,7 +399,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			// 발급된 쿠폰 정보 세팅
 			if (CollectionUtils.isNotEmpty(shoppingCouponList)) {
-				int dtlId = 1;
+				int dtlId = 0;
 				for (ShoppingCouponPublishInfo couponInfo : shoppingCouponList) {
 					PrchsDtlMore couponPrchsDtlMore = prchsDtlMoreList.get(dtlId++);
 
@@ -1085,10 +1085,24 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 				List<String> useMdnList = this.concatResvDescByList(prchsDtlMoreList, "useDeviceId");
 
-				CouponPublishV2EcRes couponPublishV2EcRes = this.purchaseShoppingOrderRepository.createCouponPublishV2(
-						prchsDtlMore.getPrchsId(), reservedDataMap.get("couponCode"), reservedDataMap.get("itemCode"),
-						reservedDataMap.get("deviceId"), useMdnList,
-						StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD));
+				CouponPublishV2EcRes couponPublishV2EcRes = null;
+				try {
+					couponPublishV2EcRes = this.purchaseShoppingOrderRepository.createCouponPublishV2(
+							prchsDtlMore.getPrchsId(), reservedDataMap.get("couponCode"),
+							reservedDataMap.get("itemCode"), reservedDataMap.get("deviceId"), useMdnList,
+							StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD));
+
+				} catch (StorePlatformException e) {
+					// 쇼핑 특가 상품 품절 경우, 품절 처리
+					if (StringUtils.equals(e.getCode(), PurchaseConstants.COUPON_CMS_RESULT_SOLDOUT)) {
+						if (StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"))) {
+							this.purchaseDisplayRepository.updateSpecialPriceSoldOut(prchsDtlMore.getTenantId(),
+									prchsDtlMore.getProdId());
+						}
+					}
+
+					throw e;
+				}
 
 				String availStartDt = couponPublishV2EcRes.getAvailStartdate();
 				String availEndDt = couponPublishV2EcRes.getAvailEnddate();
@@ -1111,9 +1125,24 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			} else {
 
-				CouponPublishEcRes couponPublishEcRes = this.purchaseShoppingOrderRepository.createCouponPublish(
-						prchsDtlMore.getPrchsId(), reservedDataMap.get("useDeviceId"), reservedDataMap.get("deviceId"),
-						reservedDataMap.get("couponCode"), reservedDataMap.get("itemCode"), prchsDtlMore.getProdQty());
+				CouponPublishEcRes couponPublishEcRes = null;
+				try {
+					couponPublishEcRes = this.purchaseShoppingOrderRepository.createCouponPublish(
+							prchsDtlMore.getPrchsId(), reservedDataMap.get("useDeviceId"),
+							reservedDataMap.get("deviceId"), reservedDataMap.get("couponCode"),
+							reservedDataMap.get("itemCode"), prchsDtlMore.getProdQty());
+
+				} catch (StorePlatformException e) {
+					// 쇼핑 특가 상품 품절 경우, 품절 처리
+					if (StringUtils.equals(e.getCode(), PurchaseConstants.COUPON_CMS_RESULT_SOLDOUT)) {
+						if (StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"))) {
+							this.purchaseDisplayRepository.updateSpecialPriceSoldOut(prchsDtlMore.getTenantId(),
+									prchsDtlMore.getProdId());
+						}
+					}
+
+					throw e;
+				}
 
 				if (StringUtils.equals(couponPublishEcRes.getPublishType(),
 						PurchaseConstants.SHOPPING_COUPON_PUBLISH_ASYNC) == false

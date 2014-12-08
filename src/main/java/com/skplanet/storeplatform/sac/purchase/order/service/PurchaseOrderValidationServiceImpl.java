@@ -1021,6 +1021,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
 		} catch (StorePlatformException e) {
 			this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,ERROR,{},{},", e.getCode(), e.getMessage());
+
+			// 쇼핑 특가 상품 품절 경우, 품절 처리
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.COUPON_CMS_RESULT_SOLDOUT)) {
+				if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
+					this.purchaseDisplayRepository.updateSpecialPriceSoldOut(purchaseUser.getTenantId(),
+							product.getProdId());
+				}
+			}
+
 			throw e;
 		}
 	}

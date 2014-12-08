@@ -118,4 +118,17 @@ public interface PurchaseDisplayRepository {
 	 */
 	public List<EpisodeInfoRes> searchEbookComicEpisodeList(String tenantId, String langCd, String deviceModelCd,
 			String prodId, String cmpxProdClsfCd);
+
+	/**
+	 * 
+	 * <pre>
+	 * 쇼핑 특가 상품에 대해 품절 등록.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param prodId
+	 *            품절상태로 등록할 쇼핑특가상품ID
+	 */
+	public void updateSpecialPriceSoldOut(String tenantId, String prodId);
 }

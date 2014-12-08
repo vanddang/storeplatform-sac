@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +27,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreeP
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.IapProductInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PossLendProductInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdateSpecialPriceSoldOutSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
@@ -36,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Paymen
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.SpecialPriceSoldOutReq;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 
@@ -47,6 +53,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
  */
 @Component
 public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private PaymentInfoSCI purchaseProductSCI;
@@ -56,6 +63,8 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	private IapProductInfoSCI iapProductInfoSCI;
 	@Autowired
 	private FreePassInfoSCI freepassInfoSCI;
+	@Autowired
+	private UpdateSpecialPriceSoldOutSCI updateSpecialPriceSoldOutSCI;
 
 	/**
 	 * 
@@ -320,5 +329,32 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 		}
 
 		return episodeList;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 쇼핑 특가 상품에 대해 품절 등록.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param prodId
+	 *            품절상태로 등록할 쇼핑특가상품ID
+	 */
+	@Override
+	public void updateSpecialPriceSoldOut(String tenantId, String prodId) {
+		SpecialPriceSoldOutReq specialPriceSoldOutReq = new SpecialPriceSoldOutReq();
+		specialPriceSoldOutReq.setTenantId(tenantId);
+		specialPriceSoldOutReq.setProductId(prodId);
+
+		this.logger.info("PRCHS,ORDER,SAC,DISP,SOLDOUT,REQ,ONLY,{}",
+				ReflectionToStringBuilder.toString(specialPriceSoldOutReq, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		try {
+			this.updateSpecialPriceSoldOutSCI.updateSpecialPriceSoldOut(specialPriceSoldOutReq);
+		} catch (Exception e) {
+			this.logger.info("PRCHS,ORDER,SAC,DISP,SOLDOUT,RES,ERROR,{}", e); // throw 는 하지 않음
+		}
 	}
 }
