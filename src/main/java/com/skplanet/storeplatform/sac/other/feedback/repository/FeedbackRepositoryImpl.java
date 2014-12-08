@@ -196,6 +196,7 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 		return this.commonDAO.queryForList("Feedback.getScoreList", mbrAvgScore, MbrAvgScore.class);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> getChannelEpisodeRelation(String partProdId) {
 		return this.commonDAO.queryForObject("Feedback.getChannelEpisodeRelation", partProdId, Map.class);
@@ -224,5 +225,10 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	@Override
 	public SearchUserExtraInfoSacRes searchUserExtraInfo(SearchUserExtraInfoSacReq searchUserExtraInfoSacReq) {
 		return this.searchUserSCI.searchUserExtraInfo(searchUserExtraInfoSacReq);
+	}
+
+	@Override
+	public String getProdSvcGrpCd(String prodId) {
+		return this.commonDAO.queryForObject("Feedback.getProdSvcGrpCd", prodId, String.class);
 	}
 }

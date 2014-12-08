@@ -428,4 +428,16 @@ public interface FeedbackRepository {
 	 * @return SearchUserSacRes
 	 */
 	public SearchUserExtraInfoSacRes searchUserExtraInfo(SearchUserExtraInfoSacReq searchUserExtraInfoSacReq);
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 서비스그룹 조회.
+	 * </pre>
+	 * 
+	 * @param prodId
+	 *            prodId
+	 * @return String
+	 */
+	public String getProdSvcGrpCd(String prodId);
 }

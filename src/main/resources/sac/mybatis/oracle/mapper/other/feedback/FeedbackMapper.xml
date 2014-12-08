@@ -807,7 +807,6 @@
               END), 0) AS avg_evlu_score                 /* 평균 평점 */
             , NVL (paticpers_cnt, 0) AS paticpers_cnt    /* 참여자 수 */
             , TRIM ( NVL ( TO_CHAR ( (tot_evlu_score / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) / 5.0 * 100, '99900.00'), '0')) AS avg_evlu_score_pct  /* 평균 평점 페센트 */
-            , (SELECT svc_grp_cd FROM TB_DP_PROD WHERE PROD_ID = #{prodId}) AS svc_grp_cd   /* 서비스 그룹 코드 */
         FROM  tb_dp_tenant_prod_stats  /* 테넌트 상품 통계 */
        WHERE  tenant_id = #{tenantId}  /* 테넌트 ID */
          AND  prod_id = #{prodId}      /* 상품 ID */      
@@ -1134,4 +1133,8 @@
 			AND A.PROD_ID = #{prodId}
     </select>         
     
+    <!-- 상품 서비스그룹 조회 -->
+    <select id="getProdSvcGrpCd" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT svc_grp_cd FROM TB_DP_PROD WHERE prod_id = #{prodId}
+    </select>
 </mapper>

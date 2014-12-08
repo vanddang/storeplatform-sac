@@ -619,24 +619,18 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setStartRow(String.valueOf(offset));
 		prodNoti.setEndRow(String.valueOf(count));
 
-		// 앱상품일 때만 2014.11.26 update by 이석희 , 아이에스플러스
-		if (getProdEvalInfo.getSvcGrpCd().equals(DisplayConstants.DP_APP_PROD_SVC_GRP_CD)) {
-			// 최신순이고 최근 업데이트 조회인 경우 최근 업데이트 일자 조회(검증일)
-			if (listFeedbackSacReq.getOrderedBy().equals("recent") && listFeedbackSacReq.getUpdateVer().equals("Y")) {
-				if (!StringUtils.isNotBlank(listFeedbackSacReq.getProdType())) {
-					prodNoti.setRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		// 정렬순서가 최신순이고, 최신 버전만 보기일 경우
+		if (listFeedbackSacReq.getOrderedBy().equals("recent") && listFeedbackSacReq.getUpdateVer().equals("Y")) {
+			// 상품 서비스그룹 조회
+			String svcGrpCd = this.feedbackRepository.getProdSvcGrpCd(listFeedbackSacReq.getProdId());
 
-					// 게임, 앱상품에 대한 LAST_DEPOLY_DT 조회(검증일 기준)
-					ProdNoti resProdNoti = this.feedbackRepository.getAppProdLastDeployDt(prodNoti);
+			if (StringUtils.isNotBlank(svcGrpCd) && DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+				// 게임, 앱상품에 대한 LAST_DEPOLY_DT 조회(검증일 기준)
+				prodNoti.setRshpCd(DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+				ProdNoti resProdNoti = this.feedbackRepository.getAppProdLastDeployDt(prodNoti);
 
-					if (StringUtils.isNotBlank(resProdNoti.getLastDeployDt())) {
-						// 서비스 그룹코드가 앱이 아니라면 최근 업데이트일자를 조회하지 않음
-						if (!resProdNoti.getSvcGrpCd().equals(DisplayConstants.DP_APP_PROD_SVC_GRP_CD)) {
-							prodNoti.setLastDeployDt(null);
-						} else {
-							prodNoti.setLastDeployDt(resProdNoti.getLastDeployDt());
-						}
-					}
+				if (resProdNoti != null && StringUtils.isNotBlank(resProdNoti.getLastDeployDt())) {
+					prodNoti.setLastDeployDt(resProdNoti.getLastDeployDt());
 				}
 			}
 		}
