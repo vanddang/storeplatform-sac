@@ -297,6 +297,15 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		if (StringUtils.isNotBlank(metaInfo.getParentBunchId())) {
 			extra.append("parentBunchId=").append(metaInfo.getParentBunchId()).append(";");
 		}
+		
+		if (StringUtils.isNotBlank(metaInfo.getVisitPathNm())) {
+			extra.append("visitPathNm=").append(metaInfo.getVisitPathNm()).append(";");
+		}
+
+		if (StringUtils.isNotBlank(metaInfo.getDwldTypeCd())) {
+			extra.append("dwldTypeCd=").append(metaInfo.getDwldTypeCd()).append(";");
+		}
+
 
 		return extra.toString();
 	}
