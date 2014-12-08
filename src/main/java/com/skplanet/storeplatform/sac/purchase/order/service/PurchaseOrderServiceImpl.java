@@ -2027,7 +2027,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		List<VerifyOrderPromotionInfoSac> promotionList = new ArrayList<VerifyOrderPromotionInfoSac>();
 
 		VerifyOrderPromotionInfoSac promotion = new VerifyOrderPromotionInfoSac();
-		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD);
+		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER);
 		promotion.setTitle("후불 2014년 12월 1차 TEST 프로모션");
 		promotion.setDescription("결제수단 프로모션 문구 테스트1입니다.결제수단 프로모션 문구 테스트1입니다.결제수");
 		promotion.setLinkUrl("m.nate.com");
@@ -2041,7 +2041,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		promotionList.add(promotion);
 		promotion = new VerifyOrderPromotionInfoSac();
-		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD);
+		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_PAYPIN);
 		promotion.setTitle("PayPin 2014년 12월 1차 TEST 프로모션");
 		promotion.setDescription("결제수단 프로모션 문구 테스트3입니다.결제수단 프로모션 문구 테스트3입니다.결제수");
 		promotion.setLinkUrl("m.nate.com");
