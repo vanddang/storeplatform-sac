@@ -10,6 +10,15 @@
       	  AND A.PART_PROD_ID = B.PROD_ID
           AND B.SVC_GRP_CD = 'DP000203'  AND B.CONTENTS_TYPE_CD = 'PD002502' AND B.SVC_TYPE_CD IN ('DP001112', 'DP001115')
 	</select>    
+    <select id="selectContentIdListByEpisodeIdList" parameterType="map" resultType="string">
+		SELECT /* VodDetailMapper.xml, selectContentIdListByEpisodeIdList, SAC : 임근대 , 2014-10-23 */
+				DISTINCT CID
+		FROM TB_DP_PROD
+		WHERE PROD_ID IN
+		<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+	  	</foreach>
+	</select>
     
     <select id="selectVodChannel" parameterType="map" resultType="VodDetail">
         SELECT /* VodDetailMapper.xml, selectVodChannel, SAC : 임근대 , 2014-03-22 */
@@ -29,6 +38,7 @@
 		      , P2.EXPO_SELLER_NM 
 		      , P2.EXPO_SELLER_TELNO 
 		      , P2.EXPO_SELLER_EMAIL
+		      , P2.LAST_DEPLOY_DT
 		      , PD.PROD_NM 
 		      , PD.PROD_BASE_DESC 
 		      , PD.PROD_DTL_DESC
@@ -171,7 +181,7 @@
 		      T.TENANT_ID, T.LANG_CD, TOTAL_COUNT
 		    , T.MENU_ID, MENU_NM, T.TOP_MENU_ID, (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = T.TOP_MENU_ID AND LANG_CD = T.LANG_CD AND ROWNUM = 1) AS TOP_MENU_NM
 		    , T.META_CLSF_CD
-		    , T.CID, T.CHNL_PROD_ID, T.PROD_ID, T.REG_DT
+		    , T.CID, T.CHNL_PROD_ID, T.PROD_ID, T.REG_DT, T.LAST_DEPLOY_DT
 		    , PROD_NM, T.PROD_BASE_DESC, T.PROD_DTL_DESC, T.PROD_INTR_DSCR, T.ARTIST1_NM, T.ARTIST2_NM, T.VOD_TITL_NM
 		    , GENRE_CD, (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM FROM TB_CM_CD WHERE CD_ID = T.GENRE_CD AND LANG_CD = T.LANG_CD) AS GENRE_CD_NM
 		    , ISSUE_DAY, SVC_START_DT, CHNL_COMP_NM
@@ -231,7 +241,7 @@
 		         TENANT_ID, LANG_CD, CID, TOTAL_COUNT
 		       , CHAPTER
 		       , TOP_MENU_ID, MENU_ID, META_CLSF_CD
-		       , CHNL_PROD_ID, PROD_ID, REG_DT
+		       , CHNL_PROD_ID, PROD_ID, REG_DT, LAST_DEPLOY_DT
 		       , PROD_NM, PROD_BASE_DESC, PROD_DTL_DESC, PROD_INTR_DSCR, ARTIST1_NM, ARTIST2_NM, VOD_TITL_NM
 		       , GENRE_CD, ISSUE_DAY, BRDC_COMP_CD, SVC_START_DT, CHNL_COMP_NM
 		       , HDCP_YN, HDV_YN 
@@ -266,7 +276,7 @@
 		                  , MAX( T1.CHNL_PROD_ID ) AS CHNL_PROD_ID
 		                  , MAX( T1.PROD_ID ) AS PROD_ID
 		                  , MAX( T1.REG_DT ) AS REG_DT
-		                  , MAX( T1.LAST_DEPLOY_DT ) AS UPD_DT
+		                  , MAX( T1.LAST_DEPLOY_DT ) AS LAST_DEPLOY_DT
 		                  , MAX( T1.VOD_TITL_NM ) AS VOD_TITL_NM
 		                  , MAX( T1.PROD_NM ) AS PROD_NM
 		                  , MAX( T1.PROD_BASE_DESC ) AS PROD_BASE_DESC
@@ -385,9 +395,9 @@
 		                  WHERE PR.PROD_ID = #{channelId}
 		                    AND PR.PART_PROD_ID = PD.PROD_ID
 	                    	<if test="orderedBy == 'nonPayment'">
-						   	<if test="paymentProdIdList !=null and paymentProdIdList.size() > 0">
-						   	AND PR.PART_PROD_ID NOT IN  
-							  <foreach collection="paymentProdIdList" item="item" index="index" open="(" separator="," close=")">
+						   	<if test="paymentContentIdList !=null and paymentContentIdList.size() > 0">
+						   	AND PD.CID NOT IN  
+							  <foreach collection="paymentContentIdList" item="item" index="index" open="(" separator="," close=")">
 							  #{item}
 							  </foreach>
 						   	</if>
@@ -419,10 +429,10 @@
 		                ) T1
 		                GROUP BY T1.CID, T1.CHAPTER
 						<if test="orderedBy == 'recent'">
-					    ORDER BY T1.CHAPTER DESC, UPD_DT DESC
+					    ORDER BY T1.CHAPTER DESC, LAST_DEPLOY_DT DESC
 					  	</if>
 					  	<if test="orderedBy == 'regDate' or orderedBy == 'nonPayment'">
-					    ORDER BY T1.CHAPTER ASC, UPD_DT DESC
+					    ORDER BY T1.CHAPTER ASC, LAST_DEPLOY_DT DESC
 					  	</if>
 		            ) T2
 		            WHERE 1=1    

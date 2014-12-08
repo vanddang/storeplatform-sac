@@ -512,7 +512,7 @@ public class EpubControllerTest {
     	param.put("userKey", "US201402201711282940003170");
     	param.put("orderedBy", "nonPayment");
     	param.put("offset", "1");
-    	param.put("count", "10");
+    	param.put("count", "2");
     	String json = this.convertMapToJson(param);
     	
     	StopWatch stopWatch = new StopWatch(); 

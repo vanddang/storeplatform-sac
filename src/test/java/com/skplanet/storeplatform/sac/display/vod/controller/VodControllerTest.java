@@ -382,12 +382,12 @@ public class VodControllerTest {
 	@Test
 	public void searchVodDetail_nonPayment() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("channelId", "H001956623");
+		param.put("channelId", "H001220250");
 		param.put("orderedBy", "nonPayment");
 		param.put("deviceKey", "DE20140401092685575");
 		param.put("userKey", "IM142100006081081201303221214");
 		param.put("offset", 1);
-		param.put("count", 20);
+		param.put("count", 2);
 		String json = this.convertMapToJson(param);
 
 

@@ -45,7 +45,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preference;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
@@ -268,7 +267,13 @@ public class EpubServiceImpl implements EpubService {
 				for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
 					paymentProdIdList.add(existenceRes.getProdId());
 				}
+
+				//#24889 VOD/이북 전권 소장/대여 후 미구매로 정렬 시 대여/소장이 노출되는 문제 수정
+				//episode id 로 filter 하면 전권대여/소장 구매 시 대여소장 상품 모두 Filtering 되지 않기 때문에 content id 로 filter.
+				List<String> paymentContentIdList = getContentIdListByEpisodeIdList(paymentProdIdList);
+				
 				param.put("paymentProdIdList", paymentProdIdList);
+				param.put("paymentContentIdList", paymentContentIdList);
 			}
 
             //코믹 에피소드 이미지 코드
@@ -288,6 +293,23 @@ public class EpubServiceImpl implements EpubService {
 
 
 		return res;
+	}
+	
+	/**
+	 * Episode id List 로 Content Id 조회
+	 * @param paymentProdIdList
+	 * @return
+	 */
+	private List<String> getContentIdListByEpisodeIdList(List<String> paymentProdIdList) {
+        List<String> contentIdList = null;
+        if(paymentProdIdList.size() == 0) {
+            contentIdList = new ArrayList<String>();
+        } else {
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("prodIdList", paymentProdIdList);
+			contentIdList = this.commonDAO.queryForList("EpubDetail.selectContentIdListByEpisodeIdList", param, String.class);
+        }
+		return contentIdList;
 	}
 
 	/**
@@ -660,6 +682,7 @@ public class EpubServiceImpl implements EpubService {
         } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_SERIAL)) {
         	book.setType(DisplayConstants.DP_BOOK_TYPE_SERIAL);
         } else if(StringUtils.equals(mapperVO.getBookClsfCd(), DisplayConstants.DP_BOOK_MAGAZINE)) {
+        	book.setType(DisplayConstants.DP_BOOK_TYPE_MAGAZINE);
         	book.setMagazineFreeCount(magazineFreeCnt);
         }
 
