@@ -3,6 +3,7 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.product.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -21,7 +23,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -34,7 +35,6 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
-import org.springframework.stereotype.Service;
 
 /**
  * ProductListServiceImpl
@@ -108,9 +108,14 @@ public class ProductListServiceImpl implements ProductListService{
 		int count = 1;
 		DisplayListCriteria listCriteria = new DisplayListCriteria(tenantId, listId, count);
 		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class);
-		response.setEtcProp(listsFromDB.get(0).getEtcProp());
-		response.setListId(listsFromDB.get(0).getListId());
-		response.setListNm(listsFromDB.get(0).getListNm());
+		if(!listsFromDB.isEmpty()){
+    		response.setEtcProp(listsFromDB.get(0).getEtcProp());
+    		response.setListId(listsFromDB.get(0).getListId());
+    		response.setListNm(listsFromDB.get(0).getListNm());
+		} else {
+			response.setCount(0);
+			response.setProductList(new ArrayList<Product>());
+		}
 	}
 
 	private boolean responseGetEnoughProdList(ProductListSacRes response, ProductListSacReq requestVO) {
