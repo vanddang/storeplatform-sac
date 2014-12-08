@@ -322,7 +322,11 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 */
 
 		TenantHeader tenant = sacHeader.getTenantHeader();
-		tenant.setTenantId(req.getTenantId());
+		if (StringUtils.isBlank(req.getTenantId())) {
+			tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+		} else {
+			tenant.setTenantId(req.getTenantId());
+		}
 		sacHeader.setTenantHeader(tenant);
 
 		/**
