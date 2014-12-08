@@ -308,6 +308,7 @@ public class DisplayConstants {
     /** 이북/코믹 book.type */
     public static final String DP_BOOK_TYPE_BOOK = "book";
     public static final String DP_BOOK_TYPE_SERIAL = "serial";
+    public static final String DP_BOOK_TYPE_MAGAZINE = "magazine";
 
     // //////////////////////////////////// Source Type //////////////////////////////////////////
     /** 상품. */
