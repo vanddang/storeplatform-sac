@@ -12,8 +12,10 @@
 			,AID
 			,KT_PROD_ID
 			,KT_CHECK_YN
+            ,KT_APK_PKG_NM
             ,LG_PROD_ID
             ,LG_CHECK_YN
+            ,LG_APK_PKG_NM
 			,REG_ID
 			,REG_DT
 			,UPD_ID
@@ -25,9 +27,11 @@
 			,#{aid, jdbcType=VARCHAR}
 			,#{ktProdId, jdbcType=VARCHAR}
 			,#{ktCheckYn, jdbcType=VARCHAR}
+			,#{ktApkPgkNm, jdbcType=VARCHAR}
             ,#{lgProdId, jdbcType=VARCHAR}
             ,#{lgCheckYn, jdbcType=VARCHAR}
-			,#{regId, jdbcType=VARCHAR}
+            ,#{lgApkPgkNm, jdbcType=VARCHAR}
+            ,#{regId, jdbcType=VARCHAR}
 			,SYSDATE
 			,#{updId, jdbcType=VARCHAR}
 			,SYSDATE			
