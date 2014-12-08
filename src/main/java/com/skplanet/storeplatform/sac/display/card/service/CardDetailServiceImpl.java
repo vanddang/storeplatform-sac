@@ -234,10 +234,9 @@ public class CardDetailServiceImpl implements CardDetailService {
             titleParam.put("category", menuInfoService.getMenuName(prefMenuId, langCd));
 
             card.setTitleParam(titleParam);
-
-            card.getDatasetProp().getUrlParam().put("menuId", prefMenuId);
-            card.getDatasetProp().getUrlParam().remove("topMenuId");
         }
+        card.getDatasetProp().getUrlParam().put("menuId", prefMenuId);
+        card.getDatasetProp().getUrlParam().remove("topMenuId");
 	}
 
 	private void makeTitleParam(Card card, final PreferredCategoryInfo preferredCategoryInfo, final String langCd) {
