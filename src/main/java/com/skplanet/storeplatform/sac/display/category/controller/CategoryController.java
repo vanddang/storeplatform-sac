@@ -9,11 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.category.controller;
 
-import com.skplanet.storeplatform.sac.client.display.vo.category.*;
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.category.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +17,37 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryShoppingSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryShoppingSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryAppService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryEbookComicService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryMusicContentsService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificAppService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificEbookService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificMusicService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificShoppingService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificSongService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificVodService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificWebtoonService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryVodBoxService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonSeriesService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
 
 /**
  * 일반 카테고리 Controller
@@ -68,6 +94,9 @@ public class CategoryController {
 
 	@Autowired
 	private CategorySpecificSongService categorySpecificSongService;
+	
+	@Autowired
+	private CategorySpecificShoppingService categorySpecificShoppingService;
 
 	/**
 	 * <pre>
@@ -329,6 +358,27 @@ public class CategoryController {
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.categorySpecificSongService.getSpecificSongList(req, header);
+
+	}
+	
+	/**
+	 * <pre>
+	 * [I03000055] 2.4.1.7 특정 상품 Shopping 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/specific/shopping/detail/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public CategoryShoppingSacRes searchSpecificShoppingDetail(SacRequestHeader header, @Validated CategoryShoppingSacReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchSpecificShoppingDetail Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.categorySpecificShoppingService.searchSpecificShoppingDetail(header, req);
 
 	}
 }
