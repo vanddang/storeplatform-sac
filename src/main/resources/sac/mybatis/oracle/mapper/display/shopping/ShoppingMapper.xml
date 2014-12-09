@@ -3750,7 +3750,8 @@
                                   WHERE MENU_ID = J.TOP_MENU_ID
                                     AND LANG_CD = #{lang}
                                     AND ROWNUM = 1
-                                ) AS TOP_MENU_NM                                   
+                                ) AS TOP_MENU_NM  
+                                ,J.META_CLSF_CD                                   
                                 ,H.PROD_ID                         
                                 ,H.PART_PROD_ID 
                                 ,J.CONTENTS_TYPE_CD   
