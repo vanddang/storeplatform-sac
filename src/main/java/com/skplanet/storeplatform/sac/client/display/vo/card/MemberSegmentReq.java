@@ -28,6 +28,9 @@ public class MemberSegmentReq extends CommonInfo {
     @NotEmpty
     private String userKey;
 
+    @NotEmpty
+    private String deviceKey;
+    
 	public String getUserKey() {
 		return userKey;
 	}
@@ -36,4 +39,12 @@ public class MemberSegmentReq extends CommonInfo {
 		this.userKey = userKey;
 	}
 
+	public String getDeviceKey() {
+		return deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+	
 }
