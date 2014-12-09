@@ -103,7 +103,6 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 		SaveAndSync saveAndSync = new SaveAndSync();
 		String newMbrNo = null;
-		String gcWorkCd = null;
 
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
@@ -153,9 +152,6 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				} catch (AmqpException ex) {
 					LOGGER.info("MQ process fail {}", mqInfo);
 				}
-
-				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE;
-
 			} else {
 
 				// 번호 이동만.....
@@ -177,27 +173,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				} catch (AmqpException ex) {
 					LOGGER.info("MQ process fail {}", mqInfo);
 				}
-
-				gcWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT;
-
 			}
-
-			// #27289 게임센터 연동 제거
-			// /**
-			// * 게임센터 연동.
-			// */
-			// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			// gameCenterSacReq.setUserKey(userKey);
-			// gameCenterSacReq.setMbrNo(newMbrNo);
-			// gameCenterSacReq.setDeviceId(deviceId);
-			// gameCenterSacReq.setSystemId(sacHeader.getTenantHeader().getSystemId());
-			// gameCenterSacReq.setTenantId(sacHeader.getTenantHeader().getTenantId());
-			// gameCenterSacReq.setPreDeviceId(nowDeviceId);
-			// gameCenterSacReq.setPreUserKey(userKey);
-			// gameCenterSacReq.setPreMbrNo(preMbrNo);
-			// gameCenterSacReq.setWorkCd(gcWorkCd);
-			// this.deviceService.regGameCenterIF(gameCenterSacReq);
-
 			saveAndSync.setUserKey(userKey);
 			saveAndSync.setDeviceKey(deviceKey); // 휴대기기 Key
 

@@ -444,8 +444,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 2. 기등록된 회원이 존재하는지 확인(모바일 회원에 대해서만 previous* 값들이 리턴됨) */
 		String previousUserKey = createDeviceRes.getPreviousUserKey();
 		String previousDeviceKey = createDeviceRes.getPreviousDeviceKey();
-		// #27289 게임센터 연동 제거
-		// String previousMbrNo = createDeviceRes.getPreMbrNo();
 		String deviceKey = createDeviceRes.getDeviceKey();
 		String previousUserId = createDeviceRes.getPreviousUserID();
 
@@ -574,23 +572,6 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 		}
-
-		// #27289 게임센터 연동 제거
-		// /* 6. 게임센터 연동 */
-		// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-		// gameCenterSacReq.setUserKey(userKey);
-		// gameCenterSacReq.setDeviceId(deviceInfo.getDeviceId());
-		// gameCenterSacReq.setSystemId(systemId);
-		// gameCenterSacReq.setTenantId(tenantId);
-		// if (StringUtils.isNotBlank(previousUserKey) && StringUtils.isNotBlank(previousDeviceKey)) {
-		// gameCenterSacReq.setPreUserKey(previousUserKey);
-		// gameCenterSacReq.setPreMbrNo(previousMbrNo);
-		// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_CHANGE);
-		//
-		// } else {
-		// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-		// }
-		// this.regGameCenterIF(gameCenterSacReq);
 
 		/* 7. MQ 연동 */
 		CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
@@ -1436,19 +1417,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		RemoveDeviceResponse removeDeviceResponse = this.deviceSCI.removeDevice(removeDeviceRequest);
 
-		// #27289 게임센터 연동 제거
-		// /* 게임센터 연동 */
-		// for (RemoveDeviceListSacReq id : req.getDeviceIdList()) {
-		// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-		// gameCenterSacReq.setUserKey(req.getUserKey());
-		// gameCenterSacReq.setDeviceId(id.getDeviceId());
-		// gameCenterSacReq.setSystemId(requestHeader.getTenantHeader().getSystemId());
-		// gameCenterSacReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
-		//
-		// this.regGameCenterIF(gameCenterSacReq);
-		// }
-
 		RemoveDeviceRes removeDeviceRes = new RemoveDeviceRes();
 		List<RemoveDeviceListSacRes> resDeviceKeyList = new ArrayList<RemoveDeviceListSacRes>();
 		for (String str : removeKeyList) {
@@ -1533,44 +1501,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		return res;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService# insertGameCenterIF
-	 * (com.skplanet.storeplatform.sac.client.member.vo.common.GameCenter)
-	 */
-	// #27289 게임센터 연동 제거
-	// @Override
-	// public GameCenterSacRes regGameCenterIF(@Valid @RequestBody GameCenterSacReq gameCenterSacReq) {
-	//
-	// CommonRequest commonRequest = new CommonRequest();
-	// commonRequest.setSystemID(gameCenterSacReq.getSystemId());
-	// commonRequest.setTenantID(gameCenterSacReq.getTenantId());
-	//
-	// UpdateGameCenterRequest updGameCenterReq = new UpdateGameCenterRequest();
-	// updGameCenterReq.setCommonRequest(commonRequest);
-	//
-	// GameCenter gameCenterSc = new GameCenter();
-	// gameCenterSc.setDeviceID(gameCenterSacReq.getDeviceId());
-	// gameCenterSc.setPreDeviceID(gameCenterSacReq.getPreDeviceId());
-	// gameCenterSc.setUserKey(gameCenterSacReq.getUserKey());
-	// gameCenterSc.setPreUserKey(gameCenterSacReq.getPreUserKey());
-	// gameCenterSc.setRequestDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-	// gameCenterSc.setWorkCode(gameCenterSacReq.getWorkCd());
-	// gameCenterSc.setRequestType(gameCenterSacReq.getSystemId());
-	// gameCenterSc.setPreMbrNo(gameCenterSacReq.getPreMbrNo());
-	// gameCenterSc.setMbrNo(gameCenterSacReq.getMbrNo());
-	// // gameCenterSc.setFileDate(fileDate);
-	// updGameCenterReq.setGameCenter(gameCenterSc);
-	// this.userSCI.updateGameCenter(updGameCenterReq);
-	//
-	// GameCenterSacRes gameCenterSacRes = new GameCenterSacRes();
-	// gameCenterSacRes.setUserKey(gameCenterSacReq.getUserKey());
-	//
-	// return gameCenterSacRes;
-	//
-	// }
 
 	/**
 	 * <pre>

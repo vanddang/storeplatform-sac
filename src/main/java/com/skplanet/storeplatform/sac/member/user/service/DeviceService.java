@@ -168,16 +168,6 @@ public interface DeviceService {
 	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req);
 
 	/**
-	 * 게임센터 연동.
-	 * 
-	 * @param gameCenterSac
-	 *            GameCenterSac
-	 * @return GameCenterSacRes
-	 */
-	// #27289 게임센터 연동 제거
-	// public GameCenterSacRes regGameCenterIF(@Valid @RequestBody GameCenterSacReq gameCenterSac);
-
-	/**
 	 * <pre>
 	 * 기기변경 이력 조회.
 	 * </pre>
