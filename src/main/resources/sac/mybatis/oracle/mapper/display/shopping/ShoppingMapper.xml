@@ -421,7 +421,7 @@
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>            
     
-    <!-- 특가 상품 리스트 조회-->
+   <!-- 특가 상품 리스트 조회-->
     <select id="getSpecialPriceProductList"  parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getSpecialPriceProductList,특가 상품 리스트 조회, 김형식/SK플래닛  , 2014-02-04 */
        SELECT *
@@ -602,7 +602,7 @@
                )
                 ORDER BY EXPO_ORD , PROD_NM 
         ) WHERE RNUM BETWEEN #{offset} AND #{count}
-    </select>            
+    </select>                 
     
     <!-- 기획전 상품 조회-->
     <select id="getSpecialSalesList" parameterType="ShoppingReq" resultType="MetaInfo">
@@ -1800,7 +1800,7 @@
            ) 
            WHERE NO =1
     </select>    
-   <!-- 쇼핑상세(에피소드) 조회-->
+  <!-- 쇼핑상세(에피소드) 조회-->
     <select id="getShoppingEpisodeDetail" parameterType="Map" resultType="MetaInfo">
      /* ShoppingMapper.xml.getShoppingEpisodeDetail,쇼핑상세(에피소드) 조회, 김형식/SK플래닛  , 2014-02-04 */
           SELECT  
@@ -2062,7 +2062,7 @@
         ORDER BY A.CHNL_PROD_ID
                 ,A.OPT1_NM
                 ,A.EXPO_ORD
-    </select>        
+    </select>    
     
   <!-- 쇼핑상세(이미지) 조회-->
     <select id="getShoppingImgDetailList" parameterType="Map" resultType="MetaInfo">
@@ -2097,190 +2097,197 @@
      <!-- 특가 상품 리스트 조회-->
     <select id="getSpecialPriceProductListV2"  parameterType="ShoppingReq" resultType="MetaInfo">
        /* ShoppingMapper.xml.getSpecialPriceProductListV2,특가 상품 리스트 조회, 김형식/SK플래닛  , 2014-02-04 */
-       SELECT *
-         FROM ( 
-             SELECT 
-                    ROW_NUMBER()OVER(ORDER BY REG_DT DESC, CATALOG_NM ) AS RNUM        
-                   ,COUNT(CATALOG_ID) OVER() AS TOTALCOUNT      
-                   ,CATALOG_ID 
-                   ,PROD_NET_AMT
-                   ,PROD_AMT 
-                   ,DC_RATE 
-                   ,DC_AMT 
-                   ,DLV_PROD_YN
-                   ,BRAND_ID 
-                   ,BRAND_NM 
-                   ,MENU_ID 
-                   ,MENU_NM 
-                   ,TOP_MENU_ID 
-                   ,META_CLSF_CD
-                   ,(SELECT MENU_NM
-                        FROM TB_DP_MENU_CATEGORY_DESC
-                       WHERE MENU_ID = TOP_MENU_ID
-                         AND LANG_CD = #{langCd}          /* ko : 한국어 */
-                         AND ROWNUM = 1
-                     ) AS TOP_MENU_NM                        
-                   ,NO AS no
-                   ,NEW_YN 
-                   ,REG_DT 
-                   ,TENANT_ID
-                   ,PROD_ID 
-                   ,PART_PROD_ID 
-                   ,PROD_NM AS catalogNm
-                   ,PRCHS_CNT 
-                   ,PROD_GRD_CD as prodGrdCd
-                   ,TO_CHAR(SPRC_APPLY_START_DT,'YYYYMMDDHH24MISS') as applyStartDt   
-                   ,TO_CHAR(SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS') as applyEndDt 
-                   ,PROD_CASE_CD  
-                   ,CONCAT(FILE_PATH,FILE_NM) AS FILE_PATH
-                   ,'Y' AS specialSale
-                   ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
-                                 ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY )
-                                  OR 
-                                 ( SOLD_OUT_YN ='Y' ) 
-                                ) 
-                     THEN 'Y' ELSE 'N'
-                     END ) AS soldOut   
-                   ,CONTENTS_TYPE_CD  
-                   ,EXPO_ORD            
-             FROM (
-                  SELECT  * 
-                   FROM (
-                          SELECT 
-                                B.CATALOG_ID 
-                               ,C.CATALOG_NM 
-                               ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
-                               ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT 
-                               ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
-                               ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT
-                               ,A.BRAND_ID  
-                               ,A.BRAND_NM  
-                               ,D.MENU_ID  
-                               ,F.MENU_NM   
-                               ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
-                               ,CASE WHEN (SYSDATE - 7)    <![CDATA[ <= ]]>  I.REG_DT THEN 'Y' ELSE 'N' END AS NEW_YN  
-                               ,I.REG_DT 
-                               ,K.TENANT_ID 
-                               ,H.PROD_ID 
-                               ,H.PART_PROD_ID  
-                               ,I.DLV_PROD_YN
-                               ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT 
-                               ,J.PROD_GRD_CD   
-                               ,L.APPLY_START_DT     
-                               ,L.APPLY_END_DT    
-                                <if test="specialTypeCd == 'DP007501+DP007502'">
-                               ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
-                                      WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
-                                      WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
-                                 END) AS PROD_CASE_CD                                 
-                                 </if>
-		                         <if test="specialTypeCd == 'DP007503'">
-		                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'tingGiftcard' 
-		                               WHEN I.PROD_CASE_CD='DP006302' THEN 'tingExchange' 
-		                               WHEN I.PROD_CASE_CD='DP006303' THEN 'tingDelivery' 
-		                          END) AS PROD_CASE_CD  
-		                          </if>                                 
-                               ,E.TOP_MENU_ID
-                               ,J.META_CLSF_CD       
-                               ,PI.FILE_PATH
-                               ,PI.FILE_NM
-                               , NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
-                                         FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                        WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') BETWEEN CONCAT( TO_CHAR( SYSDATE, 'YYYYMM' ), '01' )
-                                                                AND TO_CHAR( LAST_DAY( SYSDATE ),'YYYYMMDD')
-                                          AND TSPP.PROD_ID = H.PART_PROD_ID )
-                                   , 0 ) AS MTH_PRCHS_CNT
-                               , NVL( ( SELECT TSPP.PRCHS_CNT
-                                         FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                        WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
-                                          AND TSPP.PROD_ID = H.PART_PROD_ID )
-                                   , 0 ) AS DLY_PRCHS_CNT 
-                               ,N.MM_PROD_MAX_SALE_QTY
-                               ,N.DLY_PROD_MAX_SALE_QTY
-                               ,N.SPRC_APPLY_START_DT
-                               ,N.SPRC_APPLY_END_DT
-                               ,N.EXPO_ORD   
-                               ,N.SOLD_OUT_YN
-                               ,O.PROD_NM 
-                               ,J.CONTENTS_TYPE_CD                            
-                          FROM 
-                                  TB_DP_SHPG_BRAND A
-                                 ,TB_DP_SHPG_CATALOG B
-                                 ,TB_DP_SHPG_CATALOG_DESC C
-                                 ,TB_DP_MENU_SHPG_MAPG D
-                                 ,TB_DP_MENU_CATEGORY E
-                                 ,TB_DP_MENU_CATEGORY_DESC F 
-                                 ,TB_DP_PROD_CATALOG_MAPG G 
-                                 ,TB_DP_PROD_RSHP H
-                                 ,TB_DP_SHPG_PROD I
-                                 ,TB_DP_PROD J
-                                 ,TB_DP_TENANT_PROD K
-                                 ,TB_DP_TENANT_PROD_PRICE L
-                                 ,TB_DP_PROD_IMG          PI
-                                 ,(SELECT  PROD_ID
-                                          ,PRCHS_CNT
-                                     FROM TB_DP_TENANT_PROD_STATS 
-                                    WHERE TENANT_ID = #{tenantId}    /* INPUT 테넌트ID */
-                                   ) M
-                                 ,TB_DP_SPRC_PROD N
-                                 ,TB_DP_PROD_DESC O
-                        WHERE 1=1
-                        AND A.BRAND_ID = B.BRAND_ID
-                        AND B.CATALOG_ID = C.CATALOG_ID
-                        AND C.CATALOG_ID = D.CATALOG_ID     
-                        AND D.MENU_ID = E.MENU_ID
-                        AND D.MENU_ID = F.MENU_ID
-                        AND B.CATALOG_ID = G.CATALOG_ID
-                        AND G.PROD_ID = H.PROD_ID
-                        AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
-                        AND H.PART_PROD_ID = I.PROD_ID
-                        AND I.PROD_ID = J.PROD_ID
-                        AND I.PROD_ID = K.PROD_ID
-                        AND I.PROD_ID = L.PROD_ID
-                        AND C.CATALOG_ID = M.PROD_ID(+)                           
-                        AND I.PROD_ID = N.PROD_ID
-                        AND I.PROD_ID = O.PROD_ID
-                        AND K.TENANT_ID = L.TENANT_ID 
-                        AND N.EXPO_YN ='Y'
-                        AND N.CPN_ID IS NOT NULL
-                        <if test="arraySpecialTypeCd != null">
-                        AND N.SPRC_TYPE_CD  IN
-                                      <foreach collection="arraySpecialTypeCd" item="specialTypeCd" separator="," open="(" close=")">
-                                        #{specialTypeCd}
-                                      </foreach>                        
-                        </if>                           
-                        AND PI.IMG_CD(+) = #{imageCd}
-                        AND B.CATALOG_ID = PI.PROD_ID       
-                        AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/
-                        AND NVL(B.CHNL_CNT, 0) > 0          
-                        AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
-                        AND O.LANG_CD= #{langCd}          /* ko : 한국어 */
-                        AND F.LANG_CD= #{langCd}          /* ko : 한국어 */
-                        AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                        AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
-                        AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
-                        AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                        AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
-                        AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
-                        AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        AND SYSDATE BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT 
-                        AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
-                        AND K.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
-                        <if test="prodCharge != null">
-                        AND J.PROD_CHRG_YN =#{prodCharge}
-                        </if>
-                        <if test="arrayProdGradeCd != null">
-                        AND J.PROD_GRD_CD  IN
-                                      <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
-                                        #{prodGradeCd}
-                                      </foreach>                        
-                        </if>   
-                      
-                   ) 
-                 WHERE NO =1
-               )
-                ORDER BY EXPO_ORD , PROD_NM 
+       SELECT * FROM (
+		       SELECT 
+                        ROW_NUMBER()OVER(ORDER BY REG_DT DESC, catalogNm ) AS RNUM        
+                       ,COUNT(CATALOG_ID) OVER() AS TOTALCOUNT   
+                       ,PP.*     		       
+		         FROM ( 
+		             SELECT 
+		                    CATALOG_ID 
+		                   ,PROD_NET_AMT
+		                   ,PROD_AMT 
+		                   ,DC_RATE 
+		                   ,DC_AMT 
+		                   ,DLV_PROD_YN
+		                   ,BRAND_ID 
+		                   ,BRAND_NM 
+		                   ,MENU_ID 
+		                   ,MENU_NM 
+		                   ,TOP_MENU_ID 
+		                   ,META_CLSF_CD
+		                   ,(SELECT MENU_NM
+		                        FROM TB_DP_MENU_CATEGORY_DESC
+		                       WHERE MENU_ID = TOP_MENU_ID
+		                         AND LANG_CD = #{langCd}          /* ko : 한국어 */
+		                         AND ROWNUM = 1
+		                     ) AS TOP_MENU_NM                        
+		                   ,NEW_YN 
+		                   ,REG_DT 
+		                   ,TENANT_ID
+		                   ,PROD_ID 
+		                   ,PART_PROD_ID 
+		                   ,PROD_NM AS catalogNm
+		                   ,PRCHS_CNT 
+		                   ,PROD_GRD_CD as prodGrdCd
+		                   ,TO_CHAR(SPRC_APPLY_START_DT,'YYYYMMDDHH24MISS') as applyStartDt   
+		                   ,TO_CHAR(SPRC_APPLY_END_DT,'YYYYMMDDHH24MISS') as applyEndDt 
+		                   ,PROD_CASE_CD  
+		                   ,CONCAT(FILE_PATH,FILE_NM) AS FILE_PATH
+		                   ,'Y' AS specialSale
+                           ,SOLDOUT AS soldOut
+                           ,NO AS no
+                           ,ROW_NUMBER() OVER(PARTITION BY CATALOG_ID ORDER BY SOLDOUT ASC) AS NO1 
+		                   ,CONTENTS_TYPE_CD  
+		                   ,EXPO_ORD            
+		             FROM (
+		                  SELECT  
+                               KK.*
+                               ,(CASE WHEN ( ( MTH_PRCHS_CNT >= MM_PROD_MAX_SALE_QTY ) OR
+                                             ( DLY_PRCHS_CNT >= DLY_PROD_MAX_SALE_QTY )
+                                              OR 
+                                             ( SOLD_OUT_YN ='Y' ) 
+                                            )       
+                                 THEN 'Y' ELSE 'N'
+                                 END ) AS SOLDOUT   		                          
+		                   FROM (
+		                          SELECT 
+		                                B.CATALOG_ID 
+		                               ,C.CATALOG_NM 
+		                               ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
+		                               ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT 
+		                               ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
+		                               ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT
+		                               ,A.BRAND_ID  
+		                               ,A.BRAND_NM  
+		                               ,D.MENU_ID  
+		                               ,F.MENU_NM   
+		                               ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
+		                               ,CASE WHEN (SYSDATE - 7)    <![CDATA[ <= ]]>  I.REG_DT THEN 'Y' ELSE 'N' END AS NEW_YN  
+		                               ,N.REG_DT 
+		                               ,K.TENANT_ID 
+		                               ,H.PROD_ID 
+		                               ,H.PART_PROD_ID  
+		                               ,I.DLV_PROD_YN
+		                               ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT 
+		                               ,J.PROD_GRD_CD   
+		                               ,L.APPLY_START_DT     
+		                               ,L.APPLY_END_DT    
+		                                <if test="specialTypeCd == 'DP007501+DP007502'">
+		                               ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
+		                                      WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
+		                                      WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+		                                 END) AS PROD_CASE_CD                                 
+		                                 </if>
+				                         <if test="specialTypeCd == 'DP007503'">
+				                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'tingGiftcard' 
+				                               WHEN I.PROD_CASE_CD='DP006302' THEN 'tingExchange' 
+				                               WHEN I.PROD_CASE_CD='DP006303' THEN 'tingDelivery' 
+				                          END) AS PROD_CASE_CD  
+				                          </if>                                 
+		                               ,E.TOP_MENU_ID
+		                               ,J.META_CLSF_CD       
+		                               ,PI.FILE_PATH
+		                               ,PI.FILE_NM
+		                               , NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
+		                                         FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
+		                                        WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') BETWEEN CONCAT( TO_CHAR( SYSDATE, 'YYYYMM' ), '01' )
+		                                                                AND TO_CHAR( LAST_DAY( SYSDATE ),'YYYYMMDD')
+		                                          AND TSPP.PROD_ID = H.PART_PROD_ID )
+		                                   , 0 ) AS MTH_PRCHS_CNT
+		                               , NVL( ( SELECT TSPP.PRCHS_CNT
+		                                         FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
+		                                        WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+		                                          AND TSPP.PROD_ID = H.PART_PROD_ID )
+		                                   , 0 ) AS DLY_PRCHS_CNT 
+		                               ,N.MM_PROD_MAX_SALE_QTY
+		                               ,N.DLY_PROD_MAX_SALE_QTY
+		                               ,N.SPRC_APPLY_START_DT
+		                               ,N.SPRC_APPLY_END_DT
+		                               ,N.EXPO_ORD   
+		                               ,N.SOLD_OUT_YN
+		                               ,O.PROD_NM 
+		                               ,J.CONTENTS_TYPE_CD                            
+		                          FROM 
+		                                  TB_DP_SHPG_BRAND A
+		                                 ,TB_DP_SHPG_CATALOG B
+		                                 ,TB_DP_SHPG_CATALOG_DESC C
+		                                 ,TB_DP_MENU_SHPG_MAPG D
+		                                 ,TB_DP_MENU_CATEGORY E
+		                                 ,TB_DP_MENU_CATEGORY_DESC F 
+		                                 ,TB_DP_PROD_CATALOG_MAPG G 
+		                                 ,TB_DP_PROD_RSHP H
+		                                 ,TB_DP_SHPG_PROD I
+		                                 ,TB_DP_PROD J
+		                                 ,TB_DP_TENANT_PROD K
+		                                 ,TB_DP_TENANT_PROD_PRICE L
+		                                 ,TB_DP_PROD_IMG          PI
+		                                 ,(SELECT  PROD_ID
+		                                          ,PRCHS_CNT
+		                                     FROM TB_DP_TENANT_PROD_STATS 
+		                                    WHERE TENANT_ID = #{tenantId}    /* INPUT 테넌트ID */
+		                                   ) M
+		                                 ,TB_DP_SPRC_PROD N
+		                                 ,TB_DP_PROD_DESC O
+		                        WHERE 1=1
+		                        AND A.BRAND_ID = B.BRAND_ID
+		                        AND B.CATALOG_ID = C.CATALOG_ID
+		                        AND C.CATALOG_ID = D.CATALOG_ID     
+		                        AND D.MENU_ID = E.MENU_ID
+		                        AND D.MENU_ID = F.MENU_ID
+		                        AND B.CATALOG_ID = G.CATALOG_ID
+		                        AND G.PROD_ID = H.PROD_ID
+		                        AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
+		                        AND H.PART_PROD_ID = I.PROD_ID
+		                        AND I.PROD_ID = J.PROD_ID
+		                        AND I.PROD_ID = K.PROD_ID
+		                        AND I.PROD_ID = L.PROD_ID
+		                        AND C.CATALOG_ID = M.PROD_ID(+)                           
+		                        AND I.PROD_ID = N.PROD_ID
+		                        AND I.PROD_ID = O.PROD_ID
+		                        AND K.TENANT_ID = L.TENANT_ID 
+		                        AND N.EXPO_YN ='Y'
+		                        AND N.CPN_ID IS NOT NULL
+		                        <if test="arraySpecialTypeCd != null">
+		                        AND N.SPRC_TYPE_CD  IN
+		                                      <foreach collection="arraySpecialTypeCd" item="specialTypeCd" separator="," open="(" close=")">
+		                                        #{specialTypeCd}
+		                                      </foreach>                        
+		                        </if>                           
+		                        AND PI.IMG_CD(+) = #{imageCd}
+		                        AND B.CATALOG_ID = PI.PROD_ID       
+		                        AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/
+		                        AND NVL(B.CHNL_CNT, 0) > 0          
+		                        AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
+		                        AND O.LANG_CD= #{langCd}          /* ko : 한국어 */
+		                        AND F.LANG_CD= #{langCd}          /* ko : 한국어 */
+		                        AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+		                        AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+		                        AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+		                        AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+		                        AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+		                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]> 'Y'
+		                        AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+		                        AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+		                        AND SYSDATE BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT 
+		                        AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+		                        AND K.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
+		                        <if test="prodCharge != null">
+		                        AND J.PROD_CHRG_YN =#{prodCharge}
+		                        </if>
+		                        <if test="arrayProdGradeCd != null">
+		                        AND J.PROD_GRD_CD  IN
+		                                      <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+		                                        #{prodGradeCd}
+		                                      </foreach>                        
+		                        </if>   
+		                   )  KK
+		               )  
+		                ORDER BY EXPO_ORD , PROD_NM 
+		        ) PP
+		        WHERE 1=1
+		          AND (CASE WHEN PROD_CASE_CD ='delivery' or  PROD_CASE_CD ='tingDelivery' THEN NO1 ELSE NO END) =1
+		          ORDER BY EXPO_ORD,CATALOGNM        
         ) WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>            
     
@@ -3359,7 +3366,210 @@
    <!-- 쇼핑상세(에피소드) 조회-->
     <select id="getShoppingEpisodeDetailV2" parameterType="Map" resultType="MetaInfo">
      /* ShoppingMapper.xml.getShoppingEpisodeDetailV2,쇼핑상세(에피소드) 조회, 김형식/SK플래닛  , 2014-02-04 */
-          SELECT  
+     SELECT * FROM (
+         SELECT 
+                PP.* 
+                ,ROW_NUMBER() OVER(PARTITION BY PROD_ID ORDER BY SOLDOUT ASC) AS NO1
+          FROM (     
+		          SELECT  
+		                KK.*
+		               ,(CASE WHEN KK.SPECIAL_SALE_YN ='Y' THEN 
+		                         ( CASE WHEN ( ( KK.MTH_PRCHS_CNT >= KK.MTH_MAX_CNT ) OR
+		                                       ( KK.DLY_PRCHS_CNT >= KK.DLY_MAX_CNT )
+		                                       OR 
+		                                       ( KK.SOLD_OUT_YN ='Y' )                                         
+		                                     ) 
+		                            THEN 'Y'
+		                            ELSE  'N' END 
+		                          )
+		                ELSE 'N'
+		                END ) AS soldOut         
+		               ,KK.SPECIAL_SALE_YN AS specialSale
+		               ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
+		           FROM (
+		                  SELECT 
+		                         D.MENU_ID
+		                        ,J.TOP_MENU_ID 
+		                        ,H.PROD_ID                         
+		                        ,H.PART_PROD_ID 
+		                        ,J.SELLER_MBR_NO 
+		                        ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
+		                        ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT
+		                        ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
+		                        ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT                        
+		                        ,J.PROD_GRD_CD
+		                        ,J.USE_PERIOD_UNIT_CD
+		                        ,J.USE_PERIOD
+		                         <if test="req.specialTypeCd == 'DP007501' or req.specialTypeCd == 'DP007502'">
+		                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
+		                               WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
+		                               WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
+		                          END) AS PROD_CASE_CD  
+		                          </if>
+		                         <if test="req.specialTypeCd == 'DP007503' or req.specialTypeCd == 'DP007504'">
+		                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'tingGiftcard' 
+		                               WHEN I.PROD_CASE_CD='DP006302' THEN 'tingExchange' 
+		                               WHEN I.PROD_CASE_CD='DP006303' THEN 'tingDelivery' 
+		                          END) AS PROD_CASE_CD  
+		                          </if>
+		                        ,TO_CHAR(NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT),'YYYYMMDDHH24MISS') AS APPLY_START_DT
+		                        ,TO_CHAR(NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ),'YYYYMMDDHH24MISS') AS APPLY_END_DT      
+		                        ,I.SALE_CNT 
+		                        ,NVL(N.MM_PROD_MAX_SALE_QTY, I.MM_MAX_SALE_QTY ) AS MTH_MAX_CNT     /* 월_최대_판매_수량 */
+		                        ,NVL(N.DLY_PROD_MAX_SALE_QTY, I.DAY_MAX_SALE_QTY ) AS DLY_MAX_CNT   /* 일_최대_판매_수량 */
+		                        ,NVL(N.PERMAN_MM_MAX_PRCHS_QTY, I.MM_MBR_MAX_PRCHS_QTY ) AS MTH_USR_MAX_CNT /* 월_회원_최대_구매_수량 */
+		                        ,NVL(N.PERMAN_DAY_MAX_PRCHS_QTY, I.DAY_MBR_MAX_PRCHS_QTY ) AS DLY_USR_MAX_CNT /* 일_회원_최대_구매_수량 */
+		                        ,NVL(N.ONCE_MAX_PRCHS_POSB_CNT, I.FIRST_MAX_PRCHS_QTY ) AS EACH_MAX_CNT  /* 1차_최대_구매_수량 */                                        
+		                        ,I.USE_PLAC                     /* 사용_장소 */
+		                        ,I.USE_LIMT_DESC                /* 사용_제한_설명 */
+		                        ,I.NOTICE_MATT                  /* 공지_사항 */
+		                        ,I.PRCHS_CANCEL_DRBK_REASON     /* 구매_취소_환불_사유 */
+		                        ,I.B2B_PROD_YN                  /* B2B_상품_여부 */
+		                        ,I.DLV_PROD_YN                  /* 배송_상품_여부 */
+		                        ,CASE WHEN N.PROD_ID IS NOT NULL AND N.SPRC_TYPE_CD IN ('DP007501','DP007502') THEN 'Y' ELSE 'N'END AS SPECIAL_SALE_YN
+		                        ,CASE WHEN N.PROD_ID IS NOT NULL THEN N.CPN_ID ELSE '' END AS SPECIAL_COUPON_ID
+		                        <if test="req.userKey != null">                        
+		                        ,(SELECT ( CASE WHEN COUNT( PD.NOTI_SEQ )=0 THEN 'feedback' END )
+		                            FROM TB_DP_PROD_NOTI PD
+		                           WHERE PD.PROD_ID = H.PART_PROD_ID
+		                         
+		                             AND PD.MBR_NO = #{req.userKey}
+		                         
+		                             AND PD.NOTI_TYPE_CD = 'DP000401'
+		                             AND PD.DEL_YN = 'N'                            
+		                             AND PD.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+		                         )AS ALLOW
+		                         </if>
+		                        ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
+		                                 FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
+		                                WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') BETWEEN CONCAT( TO_CHAR( SYSDATE, 'YYYYMM' ), '01' )
+		                                                        AND TO_CHAR( LAST_DAY( SYSDATE ),'YYYYMMDD')
+		                                  AND TSPP.PROD_ID = H.PART_PROD_ID )
+		                           , 0 ) AS MTH_PRCHS_CNT
+		                        ,NVL( ( SELECT TSPP.PRCHS_CNT
+		                                 FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
+		                                WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+		                                  AND TSPP.PROD_ID = H.PART_PROD_ID )
+		                           , 0 ) AS DLY_PRCHS_CNT           
+		                        ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID 
+		                                           ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC 
+		                                          ,DECODE(I.PROD_CASE_CD ,'DP006303'
+		                                                    ,(SELECT 1 FROM TB_DP_TENANT_PROD WHERE TENANT_ID =#{tenantHeader.tenantId} AND PROD_ID = H.PART_PROD_ID AND PROD_STATUS_CD='PD000403')
+		                                                    ,ROUND(DBMS_RANDOM.VALUE(1, 100), 0)
+		                                                  )
+		                                           ) as NO 
+		                        ,(SELECT SRC_CONTENT_ID 
+		                            FROM TB_DP_SHPG_PROD 
+		                           WHERE prod_id=H.PROD_ID 
+		                         ) AS couponCode                        
+		                        ,I.SRC_CONTENT_ID AS itemCode
+		                        ,(CASE WHEN (SELECT EPSD_CNT FROM TB_DP_SHPG_PROD WHERE PROD_ID = H.PROD_ID)>0 
+		                                THEN (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE TENANT_ID=#{tenantHeader.tenantId} AND PROD_ID=H.PROD_ID) 
+		                          ELSE 'PD000404' END
+		                          ) PROD_STATUS_CD
+		                        ,O.PROD_NM as catalogNm
+		                        ,I.COUPON_SEND_TYPE 
+		                        ,N.SOLD_OUT_YN 
+		                  FROM 
+		                          TB_DP_SHPG_BRAND A
+		                         ,TB_DP_SHPG_CATALOG B
+		                         ,TB_DP_SHPG_CATALOG_DESC C
+		                         ,TB_DP_MENU_SHPG_MAPG D
+		                         ,TB_DP_MENU_CATEGORY E
+		                         ,TB_DP_MENU_CATEGORY_DESC F 
+		                         ,TB_DP_PROD_CATALOG_MAPG G 
+		                         ,TB_DP_PROD_RSHP H
+		                         ,TB_DP_SHPG_PROD I
+		                         ,TB_DP_PROD J
+		                         ,TB_DP_TENANT_PROD K
+		                         ,TB_DP_TENANT_PROD_PRICE L
+		                         ,TB_DP_PROD_DESC O
+		                         ,(SELECT /*+ ORDERED */
+		                                 B1.PROD_ID
+		                               , B1.SPRC_DC_RATE
+		                               , B1.SPRC_PRICE
+		                               , B1.SPRC_DC_PRICE
+		                               , B1.SPRC_APPLY_START_DT
+		                               , B1.SPRC_APPLY_END_DT
+		                               , B1.MM_PROD_MAX_SALE_QTY
+		                               , B1.DLY_PROD_MAX_SALE_QTY   
+		                               , B1.PERMAN_MM_MAX_PRCHS_QTY
+		                               , B1.PERMAN_DAY_MAX_PRCHS_QTY
+		                               , B1.ONCE_MAX_PRCHS_POSB_CNT  
+		                               , B1.CPN_ID   
+		                               , B1.SPRC_TYPE_CD 
+		                               , B1.SOLD_OUT_YN                               
+		                           FROM  TB_DP_PROD_RSHP A1
+		                                ,TB_DP_SPRC_PROD B1
+		                           WHERE 1=1
+		                             AND A1.PART_PROD_ID = B1.PROD_ID
+					                <if test="req.specialProdId != null and req.specialType=='episode'">
+					                 AND B1.PROD_ID  = #{req.specialProdId}
+					                </if>
+					                <if test="req.specialProdId != null and req.specialType=='channel'">
+					                 AND A1.PROD_ID = #{req.specialProdId}
+					                </if>                                
+		                             AND B1.EXPO_YN ='Y'
+		                             AND B1.CPN_ID IS NOT NULL
+		                             <if test="req.specialTypeCd != null">
+		                             AND B1.SPRC_TYPE_CD = #{req.specialTypeCd}
+		                             </if>
+		                             AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
+		                          )N
+		                WHERE 1=1
+		                AND A.BRAND_ID = B.BRAND_ID
+		                AND B.CATALOG_ID = C.CATALOG_ID
+		                AND C.CATALOG_ID = D.CATALOG_ID     
+		                AND D.MENU_ID = E.MENU_ID
+		                AND D.MENU_ID = F.MENU_ID
+		                AND B.CATALOG_ID = G.CATALOG_ID
+		                AND G.PROD_ID = H.PROD_ID
+		                AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
+		                AND H.PART_PROD_ID = I.PROD_ID
+		                AND I.PROD_ID = J.PROD_ID
+		                AND I.PROD_ID = K.PROD_ID
+		                AND I.PROD_ID = L.PROD_ID
+		                AND I.PROD_ID = O.PROD_ID
+		                AND K.TENANT_ID = L.TENANT_ID
+		                AND I.PROD_ID = N.PROD_ID(+)
+		                AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
+		                <if test="req.includeProdStopStatus != null ">
+		                AND NVL(B.CHNL_CNT, 0) <![CDATA[> ]]> 0
+		                AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */       
+		                </if>                         
+		                AND C.LANG_CD= #{lang}          /* ko : 한국어 */
+		                AND F.LANG_CD= #{lang}          /* ko : 한국어 */
+		                AND O.LANG_CD= #{lang}          /* ko : 한국어 */
+		                AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+		                AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+		                AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+		                AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+		                AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+		                AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+		                <if test="req.saleDtUseYn == null">
+		                AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+		                </if>
+		                AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+		                AND B.CATALOG_ID = #{req.productId}
+		                <if test="req.specialProdId != null and req.specialType=='episode'">
+		                AND I.PROD_ID = #{req.specialProdId}
+		                </if>
+		                <if test="req.specialProdId != null and req.specialType=='channel'">
+		                AND H.PROD_ID = #{req.specialProdId}
+		                </if>   
+		                     
+                   ) KK
+                )PP
+           )
+           <if test="endRow != null">
+           WHERE DECODE(SPECIALSALE,'Y',NO1,NO) <![CDATA[ <= ]]> #{endRow}   <!-- 배송상품 단품건으로 처리 -->
+           </if>
+    </select>   
+    
+   <!-- 쇼핑상세(옵션) 조회-->
+    <select id="getShoppingOptionV2" parameterType="Map" resultType="MetaInfo">
+     /* ShoppingMapper.xml.getShoppingOptionV2,쇼핑상세(옵션) 조회, 김형식/SK플래닛  , 2014-02-04 */
+        SELECT 
                 KK.*
                ,(CASE WHEN KK.SPECIAL_SALE_YN ='Y' THEN 
                          ( CASE WHEN ( ( KK.MTH_PRCHS_CNT >= KK.MTH_MAX_CNT ) OR
@@ -3368,269 +3578,91 @@
                                        ( KK.SOLD_OUT_YN ='Y' )                                         
                                      ) 
                             THEN 'Y'
-                            ELSE  'N' END 
+                            ELSE 'N' END 
                           )
                 ELSE 'N'
-                END ) AS soldOut         
-               ,KK.SPECIAL_SALE_YN AS specialSale
-               ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
-           FROM (
-                  SELECT 
-                         D.MENU_ID
-                        ,J.TOP_MENU_ID 
-                        ,H.PROD_ID                         
-                        ,H.PART_PROD_ID 
-                        ,J.SELLER_MBR_NO 
-                        ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
-                        ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT
-                        ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
-                        ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT                        
-                        ,J.PROD_GRD_CD
-                        ,J.USE_PERIOD_UNIT_CD
-                        ,J.USE_PERIOD
-                         <if test="req.specialTypeCd == 'DP007501' or req.specialTypeCd == 'DP007502'">
-                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'giftcard' 
-                               WHEN I.PROD_CASE_CD='DP006302' THEN 'exchange' 
-                               WHEN I.PROD_CASE_CD='DP006303' THEN 'delivery' 
-                          END) AS PROD_CASE_CD  
-                          </if>
-                         <if test="req.specialTypeCd == 'DP007503' or req.specialTypeCd == 'DP007504'">
-                        ,(CASE WHEN I.PROD_CASE_CD='DP006301' THEN 'tingGiftcard' 
-                               WHEN I.PROD_CASE_CD='DP006302' THEN 'tingExchange' 
-                               WHEN I.PROD_CASE_CD='DP006303' THEN 'tingDelivery' 
-                          END) AS PROD_CASE_CD  
-                          </if>
-                        ,TO_CHAR(NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT),'YYYYMMDDHH24MISS') AS APPLY_START_DT
-                        ,TO_CHAR(NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ),'YYYYMMDDHH24MISS') AS APPLY_END_DT      
-                        ,I.SALE_CNT 
-                        ,NVL(N.MM_PROD_MAX_SALE_QTY, I.MM_MAX_SALE_QTY ) AS MTH_MAX_CNT     /* 월_최대_판매_수량 */
-                        ,NVL(N.DLY_PROD_MAX_SALE_QTY, I.DAY_MAX_SALE_QTY ) AS DLY_MAX_CNT   /* 일_최대_판매_수량 */
-                        ,NVL(N.PERMAN_MM_MAX_PRCHS_QTY, I.MM_MBR_MAX_PRCHS_QTY ) AS MTH_USR_MAX_CNT /* 월_회원_최대_구매_수량 */
-                        ,NVL(N.PERMAN_DAY_MAX_PRCHS_QTY, I.DAY_MBR_MAX_PRCHS_QTY ) AS DLY_USR_MAX_CNT /* 일_회원_최대_구매_수량 */
-                        ,NVL(N.ONCE_MAX_PRCHS_POSB_CNT, I.FIRST_MAX_PRCHS_QTY ) AS EACH_MAX_CNT  /* 1차_최대_구매_수량 */                                        
-                        ,I.USE_PLAC                     /* 사용_장소 */
-                        ,I.USE_LIMT_DESC                /* 사용_제한_설명 */
-                        ,I.NOTICE_MATT                  /* 공지_사항 */
-                        ,I.PRCHS_CANCEL_DRBK_REASON     /* 구매_취소_환불_사유 */
-                        ,I.B2B_PROD_YN                  /* B2B_상품_여부 */
-                        ,I.DLV_PROD_YN                  /* 배송_상품_여부 */
-                        ,CASE WHEN N.PROD_ID IS NOT NULL AND N.SPRC_TYPE_CD IN ('DP007501','DP007502') THEN 'Y' ELSE 'N'END AS SPECIAL_SALE_YN
-                        ,CASE WHEN N.PROD_ID IS NOT NULL THEN N.CPN_ID ELSE '' END AS SPECIAL_COUPON_ID
-                        <if test="req.userKey != null">                        
-                        ,(SELECT ( CASE WHEN COUNT( PD.NOTI_SEQ )=0 THEN 'feedback' END )
-                            FROM TB_DP_PROD_NOTI PD
-                           WHERE PD.PROD_ID = H.PART_PROD_ID
-                         
-                             AND PD.MBR_NO = #{req.userKey}
-                         
-                             AND PD.NOTI_TYPE_CD = 'DP000401'
-                             AND PD.DEL_YN = 'N'                            
-                             AND PD.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
-                         )AS ALLOW
-                         </if>
-                        ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
-                                 FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') BETWEEN CONCAT( TO_CHAR( SYSDATE, 'YYYYMM' ), '01' )
-                                                        AND TO_CHAR( LAST_DAY( SYSDATE ),'YYYYMMDD')
-                                  AND TSPP.PROD_ID = H.PART_PROD_ID )
-                           , 0 ) AS MTH_PRCHS_CNT
-                        ,NVL( ( SELECT TSPP.PRCHS_CNT
-                                 FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
-                                  AND TSPP.PROD_ID = H.PART_PROD_ID )
-                           , 0 ) AS DLY_PRCHS_CNT           
-                        ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID 
-                                           ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC 
-                                          ,DECODE(I.PROD_CASE_CD ,'DP006303'
-                                                    ,(SELECT 1 FROM TB_DP_TENANT_PROD WHERE TENANT_ID =#{tenantHeader.tenantId} AND PROD_ID = H.PART_PROD_ID AND PROD_STATUS_CD='PD000403')
-                                                    ,ROUND(DBMS_RANDOM.VALUE(1, 100), 0)
-                                                  )
-                                           ) as NO 
-                        ,(SELECT SRC_CONTENT_ID 
-                            FROM TB_DP_SHPG_PROD 
-                           WHERE prod_id=H.PROD_ID 
-                         ) AS couponCode                        
-                        ,I.SRC_CONTENT_ID AS itemCode
-                        ,(CASE WHEN (SELECT EPSD_CNT FROM TB_DP_SHPG_PROD WHERE PROD_ID = H.PROD_ID)>0 
-                                THEN (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE TENANT_ID=#{tenantHeader.tenantId} AND PROD_ID=H.PROD_ID) 
-                          ELSE 'PD000404' END
-                          ) PROD_STATUS_CD
-                        ,O.PROD_NM as catalogNm
-                        ,I.COUPON_SEND_TYPE 
-                        ,N.SOLD_OUT_YN 
-                  FROM 
-                          TB_DP_SHPG_BRAND A
-                         ,TB_DP_SHPG_CATALOG B
-                         ,TB_DP_SHPG_CATALOG_DESC C
-                         ,TB_DP_MENU_SHPG_MAPG D
-                         ,TB_DP_MENU_CATEGORY E
-                         ,TB_DP_MENU_CATEGORY_DESC F 
-                         ,TB_DP_PROD_CATALOG_MAPG G 
-                         ,TB_DP_PROD_RSHP H
-                         ,TB_DP_SHPG_PROD I
-                         ,TB_DP_PROD J
-                         ,TB_DP_TENANT_PROD K
-                         ,TB_DP_TENANT_PROD_PRICE L
-                         ,TB_DP_PROD_DESC O
-                         ,(SELECT /*+ ORDERED */
-                                 B1.PROD_ID
-                               , B1.SPRC_DC_RATE
-                               , B1.SPRC_PRICE
-                               , B1.SPRC_DC_PRICE
-                               , B1.SPRC_APPLY_START_DT
-                               , B1.SPRC_APPLY_END_DT
-                               , B1.MM_PROD_MAX_SALE_QTY
-                               , B1.DLY_PROD_MAX_SALE_QTY   
-                               , B1.PERMAN_MM_MAX_PRCHS_QTY
-                               , B1.PERMAN_DAY_MAX_PRCHS_QTY
-                               , B1.ONCE_MAX_PRCHS_POSB_CNT  
-                               , B1.CPN_ID   
-                               , B1.SPRC_TYPE_CD 
-                               , B1.SOLD_OUT_YN                               
-                           FROM  TB_DP_PROD_RSHP A1
-                                ,TB_DP_SPRC_PROD B1
-                           WHERE 1=1
-                             AND A1.PART_PROD_ID = B1.PROD_ID
-			                <if test="req.specialProdId != null and req.specialType=='episode'">
-			                 AND B1.PROD_ID  = #{req.specialProdId}
-			                </if>
-			                <if test="req.specialProdId != null and req.specialType=='channel'">
-			                 AND A1.PROD_ID = #{req.specialProdId}
-			                </if>                                
-                             AND B1.EXPO_YN ='Y'
-                             AND B1.CPN_ID IS NOT NULL
-                             <if test="req.specialTypeCd != null">
-                             AND B1.SPRC_TYPE_CD = #{req.specialTypeCd}
-                             </if>
-                             AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
-                          )N
-                WHERE 1=1
-                AND A.BRAND_ID = B.BRAND_ID
-                AND B.CATALOG_ID = C.CATALOG_ID
-                AND C.CATALOG_ID = D.CATALOG_ID     
-                AND D.MENU_ID = E.MENU_ID
-                AND D.MENU_ID = F.MENU_ID
-                AND B.CATALOG_ID = G.CATALOG_ID
-                AND G.PROD_ID = H.PROD_ID
-                AND H.PROD_ID <![CDATA[ <> ]]> H.PART_PROD_ID
-                AND H.PART_PROD_ID = I.PROD_ID
-                AND I.PROD_ID = J.PROD_ID
-                AND I.PROD_ID = K.PROD_ID
-                AND I.PROD_ID = L.PROD_ID
-                AND I.PROD_ID = O.PROD_ID
-                AND K.TENANT_ID = L.TENANT_ID
-                AND I.PROD_ID = N.PROD_ID(+)
-                AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
-                <if test="req.includeProdStopStatus != null ">
-                AND NVL(B.CHNL_CNT, 0) <![CDATA[> ]]> 0
-                AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */       
-                </if>                         
-                AND C.LANG_CD= #{lang}          /* ko : 한국어 */
-                AND F.LANG_CD= #{lang}          /* ko : 한국어 */
-                AND O.LANG_CD= #{lang}          /* ko : 한국어 */
-                AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
-                AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
-                AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                <if test="req.saleDtUseYn == null">
-                AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
-                </if>
-                AND K.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
-                AND B.CATALOG_ID = #{req.productId}
-                <if test="req.specialProdId != null and req.specialType=='episode'">
-                AND I.PROD_ID = #{req.specialProdId}
-                </if>
-                <if test="req.specialProdId != null and req.specialType=='channel'">
-                AND H.PROD_ID = #{req.specialProdId}
-                </if>   
-                     
-           ) KK
-           <if test="endRow != null">
-           WHERE NO <![CDATA[ <= ]]> #{endRow}   <!-- 배송상품 단품건으로 처리 -->
-           </if>
-    </select>   
-    
-   <!-- 쇼핑상세(옵션) 조회-->
-    <select id="getShoppingOptionV2" parameterType="Map" resultType="MetaInfo">
-     /* ShoppingMapper.xml.getShoppingOptionV2,쇼핑상세(옵션) 조회, 김형식/SK플래닛  , 2014-02-04 */
-         SELECT 
-                A.CHNL_PROD_ID AS prodId
-               ,A.EPSD_PROD_ID AS partProdId
-               ,A.OPT1_NM as prodNm
-               ,A.EXPO_ORD as expoOrd
-               ,(CASE WHEN  A.EXPO_ORD = 1 THEN A.OPT1_NM ELSE A.OPT2_NM END) AS optPdNm
-               ,(CASE WHEN  A.EXPO_ORD = 1 THEN 'Y' ELSE 'N' END) AS subYn
-               ,C.CONTENTS_TYPE_CD AS contentTypeCd  
-               ,NVL((SELECT SP.SPRC_DC_RATE
-                      FROM TB_DP_SPRC_PROD SP
-                     WHERE SP.EXPO_YN = 'Y'
-                       AND SP.CPN_ID IS NOT NULL
-                       AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
-                       AND SP.PROD_ID = B.PROD_ID
-                       <if test="req.specialTypeCd != null">
-                       AND SP.SPRC_TYPE_CD = #{req.specialTypeCd}
-                       </if>                       
-                    ), NVL(D.DC_RATE,0)) AS DC_RATE
-               ,NVL((SELECT SP.SPRC_PRICE
-                      FROM TB_DP_SPRC_PROD SP
-                     WHERE SP.EXPO_YN = 'Y'
-                       AND SP.CPN_ID IS NOT NULL
-                       AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
-                       AND SP.PROD_ID = B.PROD_ID
-                       <if test="req.specialTypeCd != null">
-                       AND SP.SPRC_TYPE_CD = #{req.specialTypeCd}
-                       </if>                                              
-                    ), NVL(D.PROD_AMT,0)) AS PROD_AMT    
-               ,NVL((SELECT SP.SPRC_DC_PRICE
-                      FROM TB_DP_SPRC_PROD SP
-                     WHERE SP.EXPO_YN = 'Y'
-                       AND SP.CPN_ID IS NOT NULL
-                       AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT
-                       AND SP.PROD_ID = B.PROD_ID
-                       <if test="req.specialTypeCd != null">
-                       AND SP.SPRC_TYPE_CD = #{req.specialTypeCd}
-                       </if>                                              
-                    ), NVL(D.DC_AMT,0)) AS DC_AMT                       
-               ,D.PROD_NET_AMT
-               ,D.DC_AFT_PROD_AMT
-               ,B.FIRST_MAX_PRCHS_QTY 
-               ,(CASE WHEN  C.CONTENTS_TYPE_CD = 'PD002502' THEN E.PROD_STATUS_CD ELSE '' END) AS PROD_STATUS_CD
-               ,(CASE WHEN  C.CONTENTS_TYPE_CD = 'PD002502' THEN B.SRC_CONTENT_ID ELSE '' END) AS itemCode
-        FROM  TB_DP_PROD_OPT A
-             ,TB_DP_SHPG_PROD B 
-             ,TB_DP_PROD C
-             ,TB_DP_TENANT_PROD_PRICE D
-             ,TB_DP_TENANT_PROD E
-        WHERE 1=1
-          AND A.EPSD_PROD_ID = B.PROD_ID
-          AND A.EPSD_PROD_ID = C.PROD_ID
-          AND A.EPSD_PROD_ID = D.PROD_ID
-          AND A.EPSD_PROD_ID = E.PROD_ID
-          AND A.CHNL_PROD_ID =#{chnlProdId}
-          AND E.EXPO_YN ='Y'                                /* Y : 기본(기본여부) */
-          AND E.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
-          AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
-          <if test="req.saleDtUseYn == null">
-          AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
-          </if>
-         <if test="req.includeProdStopStatus != null">
-          AND (CASE WHEN A.EXPO_ORD=1 THEN NVL( A.EXPO_YN, 'N' ) 
-               ELSE ( SELECT TPO2.EXPO_YN
-                        FROM TB_DP_PROD_OPT TPO2
-                       WHERE TPO2.CHNL_PROD_ID = A.CHNL_PROD_ID
-                         AND TPO2.OPT1_NM = A.OPT1_NM
-                         AND TPO2.EXPO_ORD = 1 
-                         AND ROWNUM =1
-                     ) 
-               END
-              ) = 'Y'   
-		  AND E.PROD_STATUS_CD ='PD000403'                      
-         </if>            
-        ORDER BY A.CHNL_PROD_ID
-                ,A.OPT1_NM
-                ,A.EXPO_ORD
+                END ) AS soldOut               
+        FROM (     
+		         SELECT 
+		                A.CHNL_PROD_ID AS prodId
+		               ,A.EPSD_PROD_ID AS partProdId
+		               ,A.OPT1_NM as prodNm
+		               ,A.EXPO_ORD as expoOrd
+		               ,(CASE WHEN  A.EXPO_ORD = 1 THEN A.OPT1_NM ELSE A.OPT2_NM END) AS optPdNm
+		               ,(CASE WHEN  A.EXPO_ORD = 1 THEN 'Y' ELSE 'N' END) AS subYn
+		               ,C.CONTENTS_TYPE_CD AS contentTypeCd  
+				       ,NVL(N.SPRC_DC_RATE, NVL(D.DC_RATE,0)) AS DC_RATE
+					   ,NVL(N.SPRC_PRICE, NVL(D.PROD_AMT, 0)) AS PROD_AMT 
+					   ,NVL(N.SPRC_DC_PRICE, NVL(D.DC_AMT, 0)) AS DC_AMT                        
+		               ,D.PROD_NET_AMT
+		               ,D.DC_AFT_PROD_AMT
+		               ,B.FIRST_MAX_PRCHS_QTY 
+		               ,(CASE WHEN  C.CONTENTS_TYPE_CD = 'PD002502' THEN E.PROD_STATUS_CD ELSE '' END) AS PROD_STATUS_CD
+		               ,(CASE WHEN  C.CONTENTS_TYPE_CD = 'PD002502' THEN B.SRC_CONTENT_ID ELSE '' END) AS itemCode
+		               ,B.SALE_CNT 
+		               ,NVL(N.MM_PROD_MAX_SALE_QTY, B.MM_MAX_SALE_QTY ) AS MTH_MAX_CNT     /* 월_최대_판매_수량 */
+		               ,NVL(N.DLY_PROD_MAX_SALE_QTY, B.DAY_MAX_SALE_QTY ) AS DLY_MAX_CNT   /* 일_최대_판매_수량 */
+		               ,NVL(N.PERMAN_MM_MAX_PRCHS_QTY, B.MM_MBR_MAX_PRCHS_QTY ) AS MTH_USR_MAX_CNT /* 월_회원_최대_구매_수량 */
+		               ,NVL(N.PERMAN_DAY_MAX_PRCHS_QTY, B.DAY_MBR_MAX_PRCHS_QTY ) AS DLY_USR_MAX_CNT /* 일_회원_최대_구매_수량 */
+		               ,NVL(N.ONCE_MAX_PRCHS_POSB_CNT, B.FIRST_MAX_PRCHS_QTY ) AS EACH_MAX_CNT  /* 1차_최대_구매_수량 */
+		               ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
+		                        FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
+		                        WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') BETWEEN CONCAT( TO_CHAR( SYSDATE, 'YYYYMM' ), '01' )
+		                                                AND TO_CHAR( LAST_DAY( SYSDATE ),'YYYYMMDD')
+		                          AND TSPP.PROD_ID = A.EPSD_PROD_ID )
+		                   , 0 ) AS MTH_PRCHS_CNT
+		               ,NVL( ( SELECT TSPP.PRCHS_CNT
+		                         FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
+		                        WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+		                          AND TSPP.PROD_ID = A.EPSD_PROD_ID )
+		                  , 0 ) AS DLY_PRCHS_CNT         
+		               ,N.SOLD_OUT_YN
+		               ,CASE WHEN N.PROD_ID IS NOT NULL THEN N.CPN_ID ELSE '' END AS SPECIAL_COUPON_ID                                         
+		               ,CASE WHEN N.PROD_ID IS NOT NULL THEN 'Y' ELSE '' END AS SPECIAL_SALE_YN                    
+		        FROM  TB_DP_PROD_OPT A
+		             ,TB_DP_SHPG_PROD B 
+		             ,TB_DP_PROD C
+		             ,TB_DP_TENANT_PROD_PRICE D
+		             ,TB_DP_TENANT_PROD E
+					 ,(SELECT * 
+					     FROM TB_DP_SPRC_PROD
+					    WHERE EXPO_YN = 'Y'
+					      AND CPN_ID IS NOT NULL
+					      AND SYSDATE BETWEEN SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT    
+		                <if test="req.specialTypeCd != null">
+		                  AND SPRC_TYPE_CD = #{req.specialTypeCd}
+		                </if> 			               
+		              ) N
+		        WHERE 1=1
+		          AND A.EPSD_PROD_ID = B.PROD_ID
+		          AND A.EPSD_PROD_ID = C.PROD_ID
+		          AND A.EPSD_PROD_ID = D.PROD_ID
+		          AND A.EPSD_PROD_ID = E.PROD_ID
+		          AND A.EPSD_PROD_ID = N.PROD_ID(+)
+		          AND A.CHNL_PROD_ID =#{chnlProdId}
+		          AND E.EXPO_YN ='Y'                                /* Y : 기본(기본여부) */
+		          AND E.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+		          AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+		          <if test="req.saleDtUseYn == null">
+		          AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
+		          </if>
+		         <if test="req.includeProdStopStatus != null">
+		          AND (CASE WHEN A.EXPO_ORD=1 THEN NVL( A.EXPO_YN, 'N' ) 
+		               ELSE ( SELECT TPO2.EXPO_YN
+		                        FROM TB_DP_PROD_OPT TPO2
+		                       WHERE TPO2.CHNL_PROD_ID = A.CHNL_PROD_ID
+		                         AND TPO2.OPT1_NM = A.OPT1_NM
+		                         AND TPO2.EXPO_ORD = 1 
+		                         AND ROWNUM =1
+		                     ) 
+		               END
+		              ) = 'Y'   
+				  AND E.PROD_STATUS_CD ='PD000403'                      
+		         </if>            
+		        ORDER BY A.CHNL_PROD_ID
+		                ,A.OPT1_NM
+		                ,A.EXPO_ORD
+		)KK
     </select>        
     
   <!-- 쇼핑상세(이미지) 조회-->

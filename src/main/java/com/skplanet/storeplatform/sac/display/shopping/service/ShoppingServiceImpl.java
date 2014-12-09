@@ -581,8 +581,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setRights(rights);
 				product.setContributor(contributor);
 				product.setSalesOption(salesOption);
-				product.setSpecialProdYn(shopping.getSpecialSale()); // 특가 상품 일
-				// 경우
+				product.setSpecialProdYn(shopping.getSpecialSale()); // 특가 상품 일 경우
 				product.setPointList(pointList); // Tstore멤버십 적립율
 				totalCount = shopping.getTotalCount();
 				productList.add(i, product);
@@ -2599,8 +2598,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setRights(rights);
 				product.setContributor(contributor);
 				product.setSalesOption(salesOption);
-				product.setSpecialProdYn(shopping.getSpecialSale()); // 특가 상품 일
-				// 경우
+				product.setSpecialProdYn(shopping.getSpecialSale()); // 특가 상품 일 경우
 				product.setPointList(pointList); // Tstore멤버십 적립율
 				totalCount = shopping.getTotalCount();
 				productList.add(i, product);
@@ -3813,8 +3811,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 										resultImgDetailList.get(pp).getFilePath());
 							} else {
 								source = this.commonGenerator.generateSource(
-										DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT, resultImgDetailList.get(pp)
-												.getFilePath());
+										DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT, 
+										resultImgDetailList.get(pp).getFilePath());
 							}
 							sourceList.add(source);
 						}
@@ -3847,11 +3845,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 							// 쿠폰코드 입력
 							episodeProduct.setCouponCode(episodeShopping.getCouponCode());
 
-							if (!deliveryValue.equals("delivery")) {
-								// 아이템코드 입력
-								episodeProduct.setItemCode(episodeShopping.getItemCode());
-							}
-
 							// 채널, 에피소드 상품 판매 상태 코드
 							if (req.getSaleDtUseYn() != null) {
 								// 만약 판매중이면 판매중지로 바꿔야함
@@ -3871,8 +3864,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							// 특가 상품일 경우
 							episodeProduct.setSpecialProdYn(episodeShopping.getSpecialSale());
 
-							// 특가 상품 쿠폰 ID 경우
-							episodeProduct.setSpecialCouponId(episodeShopping.getSpecialCouponId());
+
 							// Title 생성
 							Title episodeTitle = this.commonGenerator.generateTitle(episodeShopping);
 							episodeProduct.setTitle(episodeTitle);
@@ -3973,9 +3965,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 							// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
 							// 구매 여부 조회
-							if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가
-								// 있을
-								// 경우만
+							if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
 								boolean purchaseYn = this.displayCommonService.checkPurchase(
 										tenantHeader.getTenantId(), req.getUserKey(), req.getDeviceKey(),
 										episodeShopping.getPartProdId());
@@ -4007,12 +3997,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 							} else {
 								episodeSaleOption.setStatus(DisplayConstants.DP_CONTINUE);
 							}
-							episodeSaleOption.setMaxCount(Integer.parseInt(episodeShopping.getSaleCnt()));
-							episodeSaleOption.setMaxMonthlySale(Integer.parseInt(episodeShopping.getMthMaxCnt())); // 월_최대_판매_수량
-							episodeSaleOption.setMaxDailySale(Integer.parseInt(episodeShopping.getDlyMaxCnt())); // 일_최대_판매_수량
-							episodeSaleOption.setMaxMonthlyBuy(Integer.parseInt(episodeShopping.getMthUsrMaxCnt())); // 월_회원_최대_구매_수량
-							episodeSaleOption.setMaxDailyBuy(Integer.parseInt(episodeShopping.getDlyUsrMaxCnt())); // 일_회원_최대_구매_수량
-							episodeSaleOption.setMaxOnceBuy(Integer.parseInt(episodeShopping.getEachMaxCnt())); // 1차_최대_구매_수량
+
+							if (!deliveryValue.equals("delivery")) {
+								// 아이템코드 입력
+								episodeProduct.setItemCode(episodeShopping.getItemCode());
+								// 특가 상품 쿠폰 ID 경우
+								episodeProduct.setSpecialCouponId(episodeShopping.getSpecialCouponId());
+								episodeSaleOption.setMaxCount(Integer.parseInt(episodeShopping.getSaleCnt()));
+								episodeSaleOption.setMaxMonthlySale(Integer.parseInt(episodeShopping.getMthMaxCnt())); // 월_최대_판매_수량
+								episodeSaleOption.setMaxDailySale(Integer.parseInt(episodeShopping.getDlyMaxCnt())); // 일_최대_판매_수량
+								episodeSaleOption.setMaxMonthlyBuy(Integer.parseInt(episodeShopping.getMthUsrMaxCnt())); // 월_회원_최대_구매_수량
+								episodeSaleOption.setMaxDailyBuy(Integer.parseInt(episodeShopping.getDlyUsrMaxCnt())); // 일_회원_최대_구매_수량
+								episodeSaleOption.setMaxOnceBuy(Integer.parseInt(episodeShopping.getEachMaxCnt())); // 1차_최대_구매_수량
+							}
+
 							episodeSaleOption.setPlaceUsage(episodeShopping.getUsePlac()); // 사용_장소
 							episodeSaleOption.setRestrictUsage(episodeShopping.getUseLimtDesc()); // 사용_제한_설명
 							episodeSaleOption.setPrincipleUsage(episodeShopping.getNoticeMatt()); // 공지_사항
@@ -4049,8 +4047,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 											if (req.getSaleDtUseYn() != null) {
 												// 만약 판매중이면 판매중지로 바꿔야함
 												if (optionShopping.getProdStatusCd() != null) {
-													if (optionShopping.getProdStatusCd().equals(
-															DisplayConstants.DP_SALE_STAT_ING)) {
+													if (optionShopping.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
 														selectOption.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
 													} else {
 														selectOption.setSalesStatus(episodeShopping.getProdStatusCd());
@@ -4060,6 +4057,22 @@ public class ShoppingServiceImpl implements ShoppingService {
 												}
 											} else {
 												selectOption.setSalesStatus(optionShopping.getProdStatusCd());
+											}
+											// 2014.12.04 Jade 배송 특가 관련 추가
+											if (StringUtils.isNotEmpty(selectOption.getItemCode())) {
+												if (optionShopping.getSoldOut().equals("Y")) {
+													selectOption.setStatus(DisplayConstants.DP_SOLDOUT);
+												} else {
+													selectOption.setStatus(DisplayConstants.DP_CONTINUE);
+												}
+
+												selectOption.setSpecialCouponId(optionShopping.getSpecialCouponId());
+												selectOption.setMaxCount(Integer.parseInt(optionShopping.getSaleCnt()));
+												selectOption.setMaxMonthlySale(Integer.parseInt(optionShopping.getMthMaxCnt())); // 월_최대_판매_수량
+												selectOption.setMaxDailySale(Integer.parseInt(optionShopping.getDlyMaxCnt())); // 일_최대_판매_수량
+												selectOption.setMaxMonthlyBuy(Integer.parseInt(optionShopping.getMthUsrMaxCnt())); // 월_회원_최대_구매_수량
+												selectOption.setMaxDailyBuy(Integer.parseInt(optionShopping.getDlyUsrMaxCnt())); // 일_회원_최대_구매_수량
+												selectOption.setMaxOnceBuy(Integer.parseInt(optionShopping.getEachMaxCnt())); // 1차_최대_구매_수량    											
 											}
 
 											selectOption.setSubYn("N");
@@ -4078,16 +4091,28 @@ public class ShoppingServiceImpl implements ShoppingService {
 											subSelectOption.setPrice(option2Price);
 											subSelectOption.setItemCode(optionShopping.getItemCode());
 
+											// 2014.12.04 Jade 배송 특가 관련 추가
+											if (optionShopping.getSoldOut().equals("Y")) {
+												subSelectOption.setStatus(DisplayConstants.DP_SOLDOUT);
+											} else {
+												subSelectOption.setStatus(DisplayConstants.DP_CONTINUE);
+											}
+											subSelectOption.setSpecialCouponId(optionShopping.getSpecialCouponId());
+											subSelectOption.setMaxCount(Integer.parseInt(optionShopping.getSaleCnt()));
+											subSelectOption.setMaxMonthlySale(Integer.parseInt(optionShopping.getMthMaxCnt())); // 월_최대_판매_수량
+											subSelectOption.setMaxDailySale(Integer.parseInt(optionShopping.getDlyMaxCnt())); // 일_최대_판매_수량
+											subSelectOption.setMaxMonthlyBuy(Integer.parseInt(optionShopping.getMthUsrMaxCnt())); // 월_회원_최대_구매_수량
+											subSelectOption.setMaxDailyBuy(Integer.parseInt(optionShopping.getDlyUsrMaxCnt())); // 일_회원_최대_구매_수량
+											subSelectOption.setMaxOnceBuy(Integer.parseInt(optionShopping.getEachMaxCnt())); // 1차_최대_구매_수량
+
+
 											if (req.getSaleDtUseYn() != null) {
 												// 만약 판매중이면 판매중지로 바꿔야함
 												if (optionShopping.getProdStatusCd() != null) {
-													if (optionShopping.getProdStatusCd().equals(
-															DisplayConstants.DP_SALE_STAT_ING)) {
-														subSelectOption
-																.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
+													if (optionShopping.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
+														subSelectOption.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
 													} else {
-														subSelectOption
-																.setSalesStatus(optionShopping.getProdStatusCd());
+														subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
 													}
 												} else {
 													subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
@@ -4099,11 +4124,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 											subSelectOptionList.add(subSelectOption);
 										}
 										if (mm < resultOptionList.size() - 1) {
-											if (resultOptionList.get(mm + 1).getSubYn().equals("Y")) { // 다음건이
-												// Y
-												// 이면
-												// 값을
-
+											if (resultOptionList.get(mm + 1).getSubYn().equals("Y")) { // 다음건이 Y 이면 값을
 												nextFlag = true;
 											} else {
 												nextFlag = false;
