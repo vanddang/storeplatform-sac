@@ -2186,7 +2186,7 @@ public class LoginServiceImpl implements LoginService {
 			res.setMbrAuth(new MbrAuth()); // 타사회원은 존재하지 않음
 			res.setTstoreEtcInfo(new TstoreEtcInfo()); // 타사회원은 존재하지 않음
 
-		} else { // // 비회원 or 이용제한 회원 or IMEI 불일치
+		} else {
 
 			res.setUserStatus(marketRes.getUserStatus());
 			res.setUserInfo(new UserInfo());
@@ -2465,8 +2465,9 @@ public class LoginServiceImpl implements LoginService {
 			existenceReq.setUserKey(detailRes.getUserInfo().getUserKey());
 			existenceReq.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 			existenceReq.setExistenceItem(existenceItemList);
+			LOGGER.info("{} 기구매체크 Request : {}", deviceId, existenceReq);
 			ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
-
+			LOGGER.info("{} 기구매체크 Response : {}", deviceId, existenceListRes);
 			if (existenceListRes != null && existenceListRes.getExistenceListRes() != null
 					&& existenceListRes.getExistenceListRes().size() > 0) { // 구매내역 존재
 				isPurchasedFromTstore = true;
