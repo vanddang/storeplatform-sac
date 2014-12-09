@@ -252,7 +252,7 @@ public class ProductListServiceImpl implements ProductListService{
 			paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 			//뮤직
 			if(svcGrpCd.equals("DP000203")) {
-                paramMap.put("forceByEpisode", "Y");
+                paramMap.put(DisplayConstants.META_MUSIC_USE_CONTENT_TP, "Y");
 				metaInfo = metaInfoService.getMusicMetaInfo(paramMap);
 				if(metaInfo!=null)
 					product = responseInfoGenerateFacade.generateMusicProduct(metaInfo);
