@@ -341,17 +341,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 				this.deviceSCI.createDevice(createDeviceReq);
 
-				// #27289 게임센터 연동 제거
-				// /* 게임센터 연동 */
-				// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-				// gameCenterSacReq.setUserKey(userKey);
-				// gameCenterSacReq.setDeviceId(mdn);
-				// gameCenterSacReq.setPreDeviceId(beMdn);
-				// gameCenterSacReq.setSystemId(systemId);
-				// gameCenterSacReq.setTenantId(tenantId);
-				// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE);
-				// this.deviceService.regGameCenterIF(gameCenterSacReq);
-
 				/* MQ 연동 */
 				ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
 				try {
@@ -784,15 +773,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
-			/* 게임센터 연동 */
-			// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			// gameCenterSacReq.setUserKey(userKey);
-			// gameCenterSacReq.setDeviceId(mdn);
-			// gameCenterSacReq.setSystemId(systemId);
-			// gameCenterSacReq.setTenantId(tenantId);
-			// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_INSERT);
-			// this.deviceService.regGameCenterIF(gameCenterSacReq);
-
 			/* DCD 연동 */
 			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
 
@@ -916,7 +896,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String deviceKey = null;
 		String result = null;
 		String changeCaseCode = null;
-		String gameCenterWorkCd = null;
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(tenantId);
@@ -956,10 +935,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 				if (StringUtil.equals(svcRsnCd, "M1NC")) { // 명의변경
 					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NAME_CHANGE;
-					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_NAME_CHANGE;
 				} else {
 					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE;
-					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
 				}
 
 				/********************************
@@ -968,7 +945,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				if (StringUtil.equals(svcRsnCd, "Z222") || StringUtil.equals(svcRsnCd, "Z261")) {
 
 					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_MOVE;
-					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE;
 
 					/* 휴대기기 수정 요청 */
 					CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
@@ -1049,10 +1025,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				 *************************/
 				if (StringUtil.equals(svcRsnCd, "M1NC")) { // 명의변경
 					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NAME_CHANGE;
-					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_NAME_CHANGE;
 				} else {
 					changeCaseCode = MemberConstants.DEVICE_CHANGE_TYPE_NUMBER_SECEDE;
-					gameCenterWorkCd = MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE;
 				}
 
 				/* 휴대기기 삭제 요청 */
@@ -1085,19 +1059,8 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 			}
 
-			LOGGER.info("{},결과:{},Type:{},svcRsnCd:{},changeCaseCode:{},gameCenterWorkCd:{}", mdn, resultLogStr,
-					schUserRes.getUserMbr().getUserType(), svcRsnCd, changeCaseCode, gameCenterWorkCd);
-
-			// #27289 게임센터 연동 제거
-			// /* 게임센터 연동 */
-			// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			// gameCenterSacReq.setUserKey(userKey);
-			// gameCenterSacReq.setDeviceId(mdn);
-			// gameCenterSacReq.setSystemId(systemId);
-			// gameCenterSacReq.setTenantId(tenantId);
-			// gameCenterSacReq.setWorkCd(gameCenterWorkCd);
-			// this.deviceService.regGameCenterIF(gameCenterSacReq);
-
+			LOGGER.info("{},결과:{},Type:{},svcRsnCd:{},changeCaseCode:{}", mdn, resultLogStr, schUserRes.getUserMbr()
+					.getUserType(), svcRsnCd, changeCaseCode);
 			result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 
 		} catch (StorePlatformException ex) {
@@ -1183,15 +1146,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 			userKey = schUserRes.getUserKey();
-
-			// #27289 게임센터 연동 제거
-			// /* 게임센터 연동 */
-			// GameCenterSacReq gameCenterSacReq = new GameCenterSacReq();
-			// gameCenterSacReq.setUserKey(userKey);
-			// gameCenterSacReq.setSystemId(systemId);
-			// gameCenterSacReq.setTenantId(tenantId);
-			// gameCenterSacReq.setWorkCd(MemberConstants.GAMECENTER_WORK_CD_USER_SECEDE);
-			// this.deviceService.regGameCenterIF(gameCenterSacReq);
 
 			/* 회원 탈퇴 처리 */
 			RemoveUserRequest removeUserReq = new RemoveUserRequest();
