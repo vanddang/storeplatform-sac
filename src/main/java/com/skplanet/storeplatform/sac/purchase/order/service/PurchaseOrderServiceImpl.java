@@ -934,6 +934,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setNoMdnDelivery(this.concatResvDesc(prchsDtlMoreList, "useDeviceId", ";")); // 선물수신자 MDN
 		}
 
+		// 예약필드1 (오퍼링ID)
+		res.setResvCol01(prchsDtlMore.getResvCol01());
+
 		return res;
 	}
 
