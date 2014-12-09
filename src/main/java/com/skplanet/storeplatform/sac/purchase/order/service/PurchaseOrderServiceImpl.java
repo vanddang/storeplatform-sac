@@ -2048,11 +2048,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private List<VerifyOrderPromotionInfoSac> searchPromotionList(PrchsDtlMore prchsDtlMore) {
 		// TAKTODO:: 프로모션 관리 이전까지 하드코딩
 
-		// 쇼핑 상품 경우는 프로모션 없는 테스트
-		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-			return null;
-		}
-
 		List<VerifyOrderPromotionInfoSac> promotionList = new ArrayList<VerifyOrderPromotionInfoSac>();
 
 		VerifyOrderPromotionInfoSac promotion = new VerifyOrderPromotionInfoSac();
@@ -2060,15 +2055,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		promotion.setTitle("후불 2014년 12월 1차 TEST 프로모션");
 		promotion.setDescription("결제수단 프로모션 문구 테스트1입니다.결제수단 프로모션 문구 테스트1입니다.결제수");
 		promotion.setLinkUrl("m.nate.com");
-
 		promotionList.add(promotion);
+
 		promotion = new VerifyOrderPromotionInfoSac();
 		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD);
 		promotion.setTitle("신용카드 2014년 12월 1차 TEST 프로모션");
 		promotion.setDescription("결제수단 프로모션 문구 테스트2입니다.결제수단 프로모션 문구 테스트2입니다.결제수");
 		promotion.setLinkUrl("m.nate.com");
-
 		promotionList.add(promotion);
+
 		promotion = new VerifyOrderPromotionInfoSac();
 		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_PAYPIN);
 		promotion.setTitle("PayPin 2014년 12월 1차 TEST 프로모션");
@@ -2079,7 +2074,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		promotion = new VerifyOrderPromotionInfoSac();
 		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP);
 		promotion.setTitle("T멤버쉽 2014년 12월 1차 TEST 프로모션");
-		promotion.setDescription("할인수단 프로모션 문구 테스트입니다.할인");
+		promotion.setDescription("할인수단 프로모션 문구 테스트1입니다.할1");
+		promotion.setLinkUrl("m.google.com");
+		promotionList.add(promotion);
+
+		promotion = new VerifyOrderPromotionInfoSac();
+		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CULTURE);
+		promotion.setTitle("컬쳐랜드 2014년 12월 1차 TEST 프로모션");
+		promotion.setDescription("할인수단 프로모션 문구 테스트2입니다.할2");
 		promotion.setLinkUrl("m.google.com");
 		promotionList.add(promotion);
 
