@@ -173,7 +173,8 @@
     <!-- 선호 카테고리 정보 조회 -->
     <select id="getCategoryInfoList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
          SELECT /* IsfAppCodiMapper.xml, getCategoryInfoList, 선호 카테고리 정보 조회(앱코디), 이태희/부르칸, 2014-11-18 */
-                B.MENU_ID, B.MENU_NM
+                A.MENU_ID,
+                CASE WHEN A.MENU_ID = 'DP30' AND B.MENU_NM IS NULL THEN '앱' ELSE B.MENU_NM END MENU_NM
            FROM (
                  SELECT MENU_ID, MENU_ORD
                    FROM (
@@ -188,8 +189,8 @@
                   WHERE MENU_ID != 'DUMMY'
                 ) A,
                 TB_DP_MENU_CATEGORY_DESC B
-         WHERE A.MENU_ID = B.MENU_ID
-           AND B.LANG_CD = #{tenantHeader.langCd}
+         WHERE A.MENU_ID = B.MENU_ID(+)
+           AND B.LANG_CD(+) = #{tenantHeader.langCd}
          ORDER BY A.MENU_ORD
     </select>
 
@@ -203,10 +204,10 @@
                CASE WHEN (RCD != '903001' AND RCD != '909001') AND (R_PROD_NM IS NULL OR R_MENU_NM IS NULL) THEN '요즘 HOT! Power User의 BEST 상품을 소개합니다.'
                     ELSE CASE WHEN RCD = '901001' THEN '따끈따끈 ' || R_PROD_NM || '의 신작이 나왔어요!'
                               WHEN RCD = '901002' THEN R_PROD_NM || '의 다음 이야기가 궁금하시다면? 지금 확인하세요!'
-                              WHEN RCD = '903001' THEN MENU_NM || ' 매니아들이 선택한 오늘의 ' || MENU_NM
-                              WHEN RCD = '904001' THEN R_PROD_NM || '를 좋아하셨다면, 이 ' || MENU_NM || '도 좋아하실거에요.'
-                              WHEN RCD = '904002' THEN '나의 ' || R_MENU_NM || ' MATE들이 추천하는 ' || MENU_NM
-                              WHEN RCD = '909001' THEN 'Everyone''s Pick! 모두의 주목을 받은 BEST ' || MENU_NM
+                              WHEN RCD = '903001' THEN DECODE(APP_YN, 'Y', '앱', MENU_NM) || ' 매니아들이 선택한 오늘의 ' || DECODE(APP_YN, 'Y', '앱', MENU_NM)
+                              WHEN RCD = '904001' THEN R_PROD_NM || '를 좋아하셨다면, 이 ' || DECODE(APP_YN, 'Y', '앱', MENU_NM) || '도 좋아하실거에요.'
+                              WHEN RCD = '904002' THEN '나의 ' || DECODE(R_APP_YN, 'Y', '앱', R_MENU_NM) || ' MATE들이 추천하는 ' || DECODE(APP_YN, 'Y', '앱', MENU_NM)
+                              WHEN RCD = '909001' THEN 'Everyone''s Pick! 모두의 주목을 받은 BEST ' || DECODE(APP_YN, 'Y', '앱', MENU_NM)
                               ELSE '요즘 HOT! Power User의 BEST 상품을 소개합니다.' END
                     END AS RECM_REASON
           FROM (
@@ -227,6 +228,10 @@
                            AND X.TOP_MENU_ID = Y.MENU_ID
                            AND Y.LANG_CD = #{tenantHeader.langCd}
                            AND ROWNUM = 1) AS R_MENU_NM,
+                       CASE WHEN C.TOP_MENU_ID IN ('DP03', 'DP04', 'DP08') THEN 'Y' ELSE 'N' END AS APP_YN,
+                       (SELECT CASE WHEN C.TOP_MENU_ID IN ('DP03', 'DP04', 'DP08') THEN 'Y' ELSE 'N' END
+                          FROM TB_DP_PROD Z
+                         WHERE Z.PROD_ID = A.RID) AS R_APP_YN,
                        ROW_NUMBER() OVER(PARTITION BY B.PROD_ID ORDER BY C.REG_DT DESC) AS RNUM
                   FROM (
                         SELECT ID, RK, RID, RCD
