@@ -216,6 +216,11 @@ public class PurchaseCancelController {
 			throw new StorePlatformException("SAC_PUR_9901");
 		}
 
+		// 2014.12.08 tenantId 받도록 처리함(Default:HeaderValue)
+		if (StringUtils.isNotBlank(purchaseCancelByUserSacReq.getTenantId())) {
+			purchaseCancelSacParam.setTenantId(purchaseCancelByUserSacReq.getTenantId());
+		}
+
 		purchaseCancelSacParam.setReqUserId(purchaseCancelByUserSacReq.getReqUserId());
 		purchaseCancelSacParam.setCancelReqPathCd(purchaseCancelByUserSacReq.getCancelReqPathCd());
 		purchaseCancelSacParam.setShoppingForceCancelYn("N");
@@ -316,6 +321,11 @@ public class PurchaseCancelController {
 		if (!ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelByAdminSacReq,
 				purchaseCancelSacParam)) {
 			throw new StorePlatformException("SAC_PUR_9901");
+		}
+
+		// 2014.12.08 tenantId 받도록 처리함(Default:HeaderValue)
+		if (StringUtils.isNotBlank(purchaseCancelByAdminSacReq.getTenantId())) {
+			purchaseCancelSacParam.setTenantId(purchaseCancelByAdminSacReq.getTenantId());
 		}
 
 		purchaseCancelSacParam.setReqUserId(purchaseCancelByAdminSacReq.getReqUserId());
@@ -420,6 +430,11 @@ public class PurchaseCancelController {
 		if (!ConvertVO.convertPurchaseCommonSacReq(sacRequestHeader, purchaseCancelForPaymentErrorSacReq,
 				purchaseCancelSacParam)) {
 			throw new StorePlatformException("SAC_PUR_9901");
+		}
+
+		// 2014.12.08 tenantId 받도록 처리함(Default:HeaderValue)
+		if (StringUtils.isNotBlank(purchaseCancelForPaymentErrorSacReq.getTenantId())) {
+			purchaseCancelSacParam.setTenantId(purchaseCancelForPaymentErrorSacReq.getTenantId());
 		}
 
 		purchaseCancelSacParam.setReqUserId(purchaseCancelForPaymentErrorSacReq.getReqUserId());
