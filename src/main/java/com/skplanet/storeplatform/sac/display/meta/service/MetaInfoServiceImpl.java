@@ -157,11 +157,11 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             param.setProdId(basicInfo.getProdId());
             param.setLangCd(tenantHeader.getLangCd());
             param.setTenantId(tenantHeader.getTenantId());
-            if(StringUtils.defaultString((String)paramMap.get(DisplayConstants.META_MUSIC_USE_CONTENT_TP), "Y").equals("Y")) {
+            if(StringUtils.defaultString((String)paramMap.get(DisplayConstants.META_MUSIC_USE_CONTENT_TP), "N").equals("Y")) {
                 param.setContentType(ContentType.forCode(basicInfo.getContentsTypeCd()));
             }
             else {
-                param.setContentType(ContentType.Episode);
+                param.setContentType(ContentType.Channel);
             }
 
             if(paramMap.containsKey("chartClsfCd") && paramMap.containsKey("stdDt")) {

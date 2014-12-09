@@ -48,7 +48,7 @@ public class PaymentInfoSCITest {
         PaymentInfoSacReq req = new PaymentInfoSacReq();
         List<String> prodIdList = new ArrayList<String>();
 //        prodIdList.add("0900062560");
-        prodIdList.add("0901218513");
+        prodIdList.add("0000653862");
         req.setProdIdList(prodIdList);
         req.setTenantId("S01");
         req.setLangCd("ko");
