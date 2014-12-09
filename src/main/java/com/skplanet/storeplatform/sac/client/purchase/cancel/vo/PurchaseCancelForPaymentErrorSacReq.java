@@ -24,6 +24,7 @@ public class PurchaseCancelForPaymentErrorSacReq extends PurchaseCommonSacReq {
 
 	private static final long serialVersionUID = 1L;
 
+	private String tenantId;
 	private String reqUserId;
 
 	@NotBlank
@@ -62,6 +63,21 @@ public class PurchaseCancelForPaymentErrorSacReq extends PurchaseCommonSacReq {
 
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }
