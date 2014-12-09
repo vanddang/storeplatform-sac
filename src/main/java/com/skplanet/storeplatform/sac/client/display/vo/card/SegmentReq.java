@@ -28,19 +28,19 @@ public class SegmentReq extends CommonInfo {
     @NotBlank
     private String outsdMbrGrdCd;
 
-    @NotBlank
+    //@NotBlank
     private String insdMbrGrdCd;
 
-    @Pattern(regexp = "M|F|Z", message = "")
+    //@Pattern(regexp = "M|F|Z", message = "")
     private String sex;
 
-    @NotBlank
+    //@NotBlank
     private String ageClsfCd;
 
-    @Pattern(regexp = "Y|N")
+    //@Pattern(regexp = "Y|N")
     private String deviceChgYn;
 
-    @Pattern(regexp = "Y|N")
+    //@Pattern(regexp = "Y|N")
     private String newEntryYn;
 
     private String mnoClsfCd;
