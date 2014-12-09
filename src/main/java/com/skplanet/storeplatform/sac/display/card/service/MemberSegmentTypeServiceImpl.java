@@ -9,17 +9,23 @@
  */
 package com.skplanet.storeplatform.sac.display.card.service;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.card.PreferredCategoryRes;
 import com.skplanet.storeplatform.sac.client.display.vo.card.SegmentRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
 import com.skplanet.storeplatform.sac.display.card.vo.MemberSegment;
 
 /**
@@ -37,29 +43,45 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 		mapper = new ObjectMapper();
 		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 	}
-	
+
 	@Override
-	public SegmentRes fromMemberSegmentToSegmetRes(MemberSegment vo) {
-		String outsdMbrGrdCd = vo.getOutsdMbrLevelCd();
-		String insdMbrGrdCd = vo.getInsdMbrLevelCd();
-		String sex = vo.getSex();
-		String ageClsfCd = vo.getAgeClsfCd();
-		String deviceChgYn = vo.getDeviceChgYn();
-		String newEntryYn = vo.getNewEntryYn();
-		String mnoClsfCd = vo.getMnoCd();
-		List<String> categoryBest = Arrays.asList(vo.getCategoryBest());
+	public void bindFromSci(SegmentRes segmentRes, SearchUserSegmentSacRes segmentFromSci) {
+		String userGradeCd = segmentFromSci.getUserGradeCd();
+		String sex = segmentFromSci.getUserSex();
+		String deviceChgYn = segmentFromSci.getIsChanged();
+		String newEntryDay = segmentFromSci.getEntryDay();
+		String mnoClsfCd = segmentFromSci.getUserTelecom();
 		
-		SegmentRes res = new SegmentRes();
-		res.setOutsdMbrGrdCd(outsdMbrGrdCd);
-		res.setInsdMbrGrdCd(insdMbrGrdCd);
-		res.setSex(sex);
-		res.setAgeClsfCd(ageClsfCd);
-		res.setDeviceChgYn(deviceChgYn);
-		res.setNewEntryYn(newEntryYn);
-		res.setMnoClsfCd(mnoClsfCd);
-		res.setCategoryBest(categoryBest);
-		return res;
+		String outsdMbrGrdCd = numberOutsdMbrGrdCd(userGradeCd);
+		segmentRes.setOutsdMbrGrdCd(outsdMbrGrdCd);
+		segmentRes.setSex(sex);
+		segmentRes.setDeviceChgYn(deviceChgYn);
+		String newEntryYn = isRecentlyRegistered(newEntryDay) ? "Y" : "N";
+		segmentRes.setNewEntryYn(newEntryYn);
+		segmentRes.setMnoClsfCd(mnoClsfCd);
 	}
+
+	@Override
+	public void bindFromDb(SegmentRes segmentRes, MemberSegment segmentFromDb) {
+		String outsdMbrGrdCd = segmentFromDb.getOutsdMbrLevelCd();
+		String insdMbrGrdCd = segmentFromDb.getInsdMbrLevelCd();
+		String sex = segmentFromDb.getSex();
+		String ageClsfCd = segmentFromDb.getAgeClsfCd();
+		String deviceChgYn = segmentFromDb.getDeviceChgYn();
+		String newEntryYn = segmentFromDb.getNewEntryYn();
+		String mnoClsfCd = segmentFromDb.getMnoCd();
+		List<String> categoryBest = Arrays.asList(segmentFromDb.getCategoryBest());
+		
+		segmentRes.setOutsdMbrGrdCd(outsdMbrGrdCd);
+		segmentRes.setInsdMbrGrdCd(insdMbrGrdCd);
+		segmentRes.setSex(sex);
+		segmentRes.setAgeClsfCd(ageClsfCd);
+		segmentRes.setDeviceChgYn(deviceChgYn);
+		segmentRes.setNewEntryYn(newEntryYn);
+		segmentRes.setMnoClsfCd(mnoClsfCd);
+		segmentRes.setCategoryBest(categoryBest);
+	}
+	
 
 	@Override
 	public List<PreferredCategoryRes> fromMemberSegmentToPreferredCategoryRes(MemberSegment memberSegment) {
@@ -71,6 +93,31 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 			return Collections.emptyList();
 		}
 		return list;
+	}
+	
+	public static boolean isRecentlyRegistered(String dateStr) {
+		Date date; 
+		try {
+			date = DateUtils.parseDate(dateStr, "yyyyMMdd");
+		} catch (ParseException e) {
+			return false;
+		}
+		LocalDate givenDate = new LocalDate(date);
+		LocalDate currentDate = new LocalDate();
+		
+		int daysBetween = Days.daysBetween(givenDate, currentDate).getDays();
+		if (daysBetween >= 0 && daysBetween <= 7) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static String numberOutsdMbrGrdCd(String userGradeCd) {
+		if ("platinum".equals(userGradeCd)) return "1";
+		if ("gold".equals(userGradeCd))     return "2";
+		if ("silver".equals(userGradeCd))   return "3";
+		else                                return "4";
 	}
 	
 }

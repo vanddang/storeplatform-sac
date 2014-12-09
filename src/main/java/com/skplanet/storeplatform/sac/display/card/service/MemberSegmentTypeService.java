@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.skplanet.storeplatform.sac.client.display.vo.card.PreferredCategoryRes;
 import com.skplanet.storeplatform.sac.client.display.vo.card.SegmentRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
 import com.skplanet.storeplatform.sac.display.card.vo.MemberSegment;
 
 /**
@@ -23,8 +24,10 @@ import com.skplanet.storeplatform.sac.display.card.vo.MemberSegment;
  */
 public interface MemberSegmentTypeService {
 
-	SegmentRes fromMemberSegmentToSegmetRes(MemberSegment vo);
+	void bindFromSci(SegmentRes segmentRes, SearchUserSegmentSacRes segmentFromSci);
 
-	List<PreferredCategoryRes> fromMemberSegmentToPreferredCategoryRes(MemberSegment memberSegment);
+	void bindFromDb(SegmentRes segmentRes, MemberSegment segmentFromDb);
+
+	List<PreferredCategoryRes> fromMemberSegmentToPreferredCategoryRes(MemberSegment memberSegment);	
 	
 }

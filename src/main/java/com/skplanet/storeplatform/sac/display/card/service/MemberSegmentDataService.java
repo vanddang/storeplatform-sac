@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.card.service;
 
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
 import com.skplanet.storeplatform.sac.display.card.vo.MemberSegment;
 
 /**
@@ -18,6 +19,8 @@ import com.skplanet.storeplatform.sac.display.card.vo.MemberSegment;
  * Updated on : 2014. 11. 13 Updated by : 서대영, SK 플래닛.
  */
 public interface MemberSegmentDataService {
+	
+	SearchUserSegmentSacRes searchUserSegment(String userKey, String deviceKey);
 
 	MemberSegment selectMemberSegment(String tenantId, String userKey);
 	

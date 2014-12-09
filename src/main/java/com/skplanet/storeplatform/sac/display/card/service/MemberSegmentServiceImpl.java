@@ -18,6 +18,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.card.MemberSegmentReq;
 import com.skplanet.storeplatform.sac.client.display.vo.card.MemberSegmentRes;
 import com.skplanet.storeplatform.sac.client.display.vo.card.PreferredCategoryRes;
 import com.skplanet.storeplatform.sac.client.display.vo.card.SegmentRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSegmentSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.card.vo.MemberSegment;
 
@@ -32,7 +33,6 @@ public class MemberSegmentServiceImpl implements MemberSegmentService {
 
 	@Autowired
 	private MemberSegmentDataService dataService;
-	
 	@Autowired
 	private MemberSegmentTypeService typeService;
 	
@@ -40,19 +40,22 @@ public class MemberSegmentServiceImpl implements MemberSegmentService {
 	public MemberSegmentRes findMemberSegment(MemberSegmentReq req, SacRequestHeader header) {
 		String tenantId = header.getTenantHeader().getTenantId();
 		String userKey = req.getUserKey();
+		String deviceKey = req.getDeviceKey();
 		
 		MemberSegmentRes res = new MemberSegmentRes();
-		MemberSegment memberSegment = dataService.selectMemberSegment(tenantId, userKey);
-		if (memberSegment == null) {
-			return res;
+		
+		SegmentRes segmentRes = new SegmentRes();
+		SearchUserSegmentSacRes segmentFromSci = dataService.searchUserSegment(userKey, deviceKey);
+		typeService.bindFromSci(segmentRes, segmentFromSci);
+		
+		MemberSegment segmentFromDb = dataService.selectMemberSegment(tenantId, userKey);
+		if (segmentFromDb != null) {
+			typeService.bindFromDb(segmentRes, segmentFromDb);
+			List<PreferredCategoryRes> preferredCategoryList = typeService.fromMemberSegmentToPreferredCategoryRes(segmentFromDb);	
+			res.setPreferredCategoryList(preferredCategoryList);
 		}
 		
-		SegmentRes segmentRes = typeService.fromMemberSegmentToSegmetRes(memberSegment);
-		List<PreferredCategoryRes> preferredCategoryList = typeService.fromMemberSegmentToPreferredCategoryRes(memberSegment);
-		
 		res.setSegment(segmentRes);
-		res.setPreferredCategoryList(preferredCategoryList);
-
 		return res;
 	}
 
