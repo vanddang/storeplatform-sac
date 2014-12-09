@@ -179,8 +179,6 @@ public class CardDetailServiceImpl implements CardDetailService {
 
 		Card card = makeCard(cardDetail);
 
-//		makeTitleParam(card, preferredCategoryInfo, langCd);
-
 		card.setTitleParam(new HashMap<String, String>());
 		if (isPersonalCard(card)) {
 			String prefMenuId = getPrefMenuIdInFCxCard(card, preferredCategoryInfo);
@@ -238,51 +236,6 @@ public class CardDetailServiceImpl implements CardDetailService {
         card.getDatasetProp().getUrlParam().put("menuId", prefMenuId);
         card.getDatasetProp().getUrlParam().remove("topMenuId");
 	}
-
-	private void makeTitleParam(Card card, final PreferredCategoryInfo preferredCategoryInfo, final String langCd) {
-
-		card.setTitleParam(new HashMap<String, String>());
-
-		if (preferredCategoryInfo == null ) return;
-
-		// FCx 카드 처리 CD05000030
-		if (!StringUtils.equals(card.getTypeCd(), CARDTP_FC)) return;
-
-
-        String reqMenuId = card.getDatasetProp().getUrlParam().get("topMenuId");
-
-        String prefMenuId;
-        Matcher m = RX_DT_FC.matcher(card.getDatasetProp().getId());
-        if (m.matches()) {
-            int idx = Integer.parseInt(m.group(1));
-            if(idx < 1)
-                return;
-
-            prefMenuId = preferredCategoryInfo.getPreferMenu(reqMenuId, idx - 1);
-        }
-        else
-            return;
-
-        if(prefMenuId == null)
-            return;
-
-        /**
-         * FC1, FC2, FC3 card_title에 #{category}만 현재는 존재
-         */
-        String title = card.getTitle();
-        if ( title.contains("#{category}") ) {
-            Map<String, String> titleParam = new HashMap<String, String>();
-            titleParam.put("category", menuInfoService.getMenuName(prefMenuId, langCd));
-
-            card.setTitleParam(titleParam);
-
-            card.getDatasetProp().getUrlParam().put("menuId", prefMenuId);
-            card.getDatasetProp().getUrlParam().remove("topMenuId");
-        }
-
-        return;
-	}
-
 
 	private EtcProp makeEtcProp(final CardDetail cardDetail) {
 		EtcProp etcProp = new EtcProp();
