@@ -820,4 +820,6 @@ public class DisplayConstants {
      */
     public static final String SGMT_TP_PERSONAL = "DP01200003";
 
+    public static final String META_MUSIC_USE_CONTENT_TP = "useContentType";
+
 }
