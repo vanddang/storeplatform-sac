@@ -93,6 +93,8 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String simYn; // SIM 조회 가능 여부
 	@Null(groups = { GroupCreateBizPurchase.class })
 	private String mediaId; // CPS CPID
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String offeringId; // 오퍼링 ID
 
 	@Null(groups = { GroupCreateBizPurchase.class })
 	@NotEmpty(groups = { GroupCreatePurchase.class, GroupCreateFreePurchase.class, GroupCreatePurchaseV2.class })
@@ -391,6 +393,21 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	 */
 	public void setSimYn(String simYn) {
 		this.simYn = simYn;
+	}
+
+	/**
+	 * @return the offeringId
+	 */
+	public String getOfferingId() {
+		return this.offeringId;
+	}
+
+	/**
+	 * @param offeringId
+	 *            the offeringId to set
+	 */
+	public void setOfferingId(String offeringId) {
+		this.offeringId = offeringId;
 	}
 
 	/**
