@@ -540,7 +540,12 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		if (preApkVer == null || preApkVer == 0) return;
 
-		if ( !isActiveAppDeltaUpdate() ) return;
+		/**
+		 *  상용 서버 적용시 주석 풀어야 함.
+		 *  상용 스테이징에 service On/Off가 정상 동작하지 않음.
+		 */
+
+//		if ( !isActiveAppDeltaUpdate() ) return;
 
 		AppDeltaUpdateParam param = new AppDeltaUpdateParam();
 		param.setProdId(metaInfo.getProdId());
