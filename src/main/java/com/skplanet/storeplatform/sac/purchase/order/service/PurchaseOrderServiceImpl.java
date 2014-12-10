@@ -74,8 +74,10 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderPromot
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.common.service.MembershipReserveService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
+import com.skplanet.storeplatform.sac.purchase.common.service.PaymentPromotionService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PaymentPromotion;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
@@ -112,6 +114,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private PurchaseOrderSCI purchaseOrderSCI;
 	@Autowired
 	private PurchaseOrderSearchSCI purchaseOrderSearchSCI;
+
 	@Autowired
 	private PurchaseOrderAssistService purchaseOrderAssistService;
 	@Autowired
@@ -129,7 +132,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	@Autowired
 	private PayPlanetShopService payPlanetShopService;
 	@Autowired
+	private PaymentPromotionService paymentPromotionService;
+	@Autowired
 	private MembershipReserveService membershipReserveService;
+
 	@Autowired
 	private PurchaseMemberRepository purchaseMemberRepository;
 	@Autowired
@@ -873,8 +879,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.equals(reservedDataMap.get("autoPrchsYn"), PurchaseConstants.USE_Y)) {
 			String afterAutoPayDt = this.purchaseOrderAssistService.calculateUseDate(prchsDtlMore.getUseStartDt(),
 					reservedDataMap.get("autoPrchsPeriodUnitCd"),
-					StringUtils.defaultString(reservedDataMap.get("autoPrchsPeriodValue"), "0"));
-			res.setAfterAutoPayDt(afterAutoPayDt.substring(0, 8) + "000000"); // 다음 자동 결제일
+					StringUtils.defaultString(reservedDataMap.get("autoPrchsPeriodValue"), "0"), true);
+			res.setAfterAutoPayDt(afterAutoPayDt.substring(0, 8) + "100000"); // 다음 자동 결제일
 		}
 		// VOD 정액제 이용권 (ex, 30일 이용권) - 만료예정일
 		if (StringUtils.equals(reservedDataMap.get("cmpxProdClsfCd"), PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)
@@ -2049,44 +2055,21 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return
 	 */
 	private List<VerifyOrderPromotionInfoSac> searchPromotionList(PrchsDtlMore prchsDtlMore) {
-		// TAKTODO:: 프로모션 관리 이전까지 하드코딩
-
 		List<VerifyOrderPromotionInfoSac> promotionList = new ArrayList<VerifyOrderPromotionInfoSac>();
 
-		VerifyOrderPromotionInfoSac promotion = new VerifyOrderPromotionInfoSac();
-		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_SKT_CARRIER);
-		promotion.setTitle("후불 2014년 12월 1차 TEST 프로모션");
-		promotion.setDescription("결제수단 프로모션 문구 테스트1입니다.결제수단 프로모션 문구 테스트1입니다.결제수");
-		promotion.setLinkUrl("m.nate.com");
-		promotionList.add(promotion);
+		List<PaymentPromotion> paymentPromotionList = this.paymentPromotionService
+				.searchPaymentPromotionList(prchsDtlMore.getTenantId());
+		VerifyOrderPromotionInfoSac promotion = null;
 
-		promotion = new VerifyOrderPromotionInfoSac();
-		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CREDIT_CARD);
-		promotion.setTitle("신용카드 2014년 12월 1차 TEST 프로모션");
-		promotion.setDescription("결제수단 프로모션 문구 테스트2입니다.결제수단 프로모션 문구 테스트2입니다.결제수");
-		promotion.setLinkUrl("m.nate.com");
-		promotionList.add(promotion);
-
-		promotion = new VerifyOrderPromotionInfoSac();
-		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_PAYPIN);
-		promotion.setTitle("PayPin 2014년 12월 1차 TEST 프로모션");
-		promotion.setDescription("결제수단 프로모션 문구 테스트3입니다.결제수단 프로모션 문구 테스트3입니다.결제수");
-		promotion.setLinkUrl("m.nate.com");
-		promotionList.add(promotion);
-
-		promotion = new VerifyOrderPromotionInfoSac();
-		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_TMEMBERSHIP);
-		promotion.setTitle("T멤버쉽 2014년 12월 1차 TEST 프로모션");
-		promotion.setDescription("할인수단 프로모션 문구 테스트1입니다.할1");
-		promotion.setLinkUrl("m.google.com");
-		promotionList.add(promotion);
-
-		promotion = new VerifyOrderPromotionInfoSac();
-		promotion.setPaymentMtdCd(PurchaseConstants.PAYPLANET_PAYMENT_METHOD_CULTURE);
-		promotion.setTitle("컬쳐랜드 2014년 12월 1차 TEST 프로모션");
-		promotion.setDescription("할인수단 프로모션 문구 테스트2입니다.할2");
-		promotion.setLinkUrl("m.google.com");
-		promotionList.add(promotion);
+		for (PaymentPromotion paymentPromotion : paymentPromotionList) {
+			promotion = new VerifyOrderPromotionInfoSac();
+			promotion.setPaymentMtdCd(PaymethodUtil.convert2PayPlanetCodeWithoutPointCode(paymentPromotion
+					.getPaymentMtdCd()));
+			promotion.setTitle(paymentPromotion.getPromNm());
+			promotion.setDescription(paymentPromotion.getPromDesc());
+			promotion.setLinkUrl(paymentPromotion.getPromUrl());
+			promotionList.add(promotion);
+		}
 
 		return promotionList;
 	}

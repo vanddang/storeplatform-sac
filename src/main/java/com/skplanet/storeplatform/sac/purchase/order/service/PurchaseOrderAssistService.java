@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-
 /**
  * 
  * 구매 보조 서비스
@@ -35,16 +34,33 @@ public interface PurchaseOrderAssistService {
 	 * 
 	 * @param startDt
 	 *            기준일(시작일)
-	 * 
 	 * @param periodUnitCd
 	 *            이용기간 단위 코드
-	 * 
 	 * @param periodVal
 	 *            이용기간 값
 	 * 
 	 * @return 계산된 이용 일자
 	 */
 	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal);
+
+	/**
+	 * 
+	 * <pre>
+	 * 기준일로부터 이용 일자 계산.
+	 * </pre>
+	 * 
+	 * @param startDt
+	 *            기준일(시작일)
+	 * @param periodUnitCd
+	 *            이용기간 단위 코드
+	 * @param periodVal
+	 *            이용기간 값
+	 * @param bAutoPrchs
+	 *            자동결제상품 여부
+	 * 
+	 * @return 계산된 이용 일자
+	 */
+	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs);
 
 	/**
 	 * 

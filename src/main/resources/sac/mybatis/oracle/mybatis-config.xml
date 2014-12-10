@@ -85,6 +85,9 @@
 
         <!-- 공통 코드 조회 -->
         <typeAlias alias="PurchaseCommonCode" type="com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonCode" />
+
+        <!-- 결제수단 프로모션 조회 -->
+        <typeAlias alias="PaymentPromotion" type="com.skplanet.storeplatform.sac.purchase.common.vo.PaymentPromotion" />
         
         
         <!-- ################################################# -->

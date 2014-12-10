@@ -99,10 +99,8 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 	 * 
 	 * @param startDt
 	 *            기준일(시작일)
-	 * 
 	 * @param periodUnitCd
 	 *            이용기간 단위 코드
-	 * 
 	 * @param periodVal
 	 *            이용기간 값
 	 * 
@@ -110,6 +108,28 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 	 */
 	@Override
 	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal) {
+		return this.calculateUseDate(startDt, periodUnitCd, periodVal, false);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 기준일로부터 이용 일자 계산.
+	 * </pre>
+	 * 
+	 * @param startDt
+	 *            기준일(시작일)
+	 * @param periodUnitCd
+	 *            이용기간 단위 코드
+	 * @param periodVal
+	 *            이용기간 값
+	 * @param bAutoPrchs
+	 *            자동결제상품 여부
+	 * 
+	 * @return 계산된 이용 일자
+	 */
+	@Override
+	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs) {
 
 		if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) { // 무제한
 			return "99991231235959";
@@ -128,17 +148,21 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 			}
 
 			if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_DATE)) { // 일
-				checkDate = DateUtils.addSeconds(DateUtils.addDays(checkDate, Integer.parseInt(periodVal)), -1);
+				checkDate = DateUtils.addDays(checkDate, Integer.parseInt(periodVal));
 			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_HOUR)) { // 시간
-				checkDate = DateUtils.addSeconds(DateUtils.addHours(checkDate, Integer.parseInt(periodVal)), -1);
+				checkDate = DateUtils.addHours(checkDate, Integer.parseInt(periodVal));
 			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MONTH)) { // 월
-				checkDate = DateUtils.addSeconds(DateUtils.addMonths(checkDate, Integer.parseInt(periodVal)), -1);
+				checkDate = DateUtils.addMonths(checkDate, Integer.parseInt(periodVal));
 			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_YEAR)) { // 년
-				checkDate = DateUtils.addSeconds(DateUtils.addYears(checkDate, Integer.parseInt(periodVal)), -1);
+				checkDate = DateUtils.addYears(checkDate, Integer.parseInt(periodVal));
 			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_MONTH)) { // 당월
-				checkDate = DateUtils.addSeconds(DateUtils.ceiling(checkDate, Calendar.MONTH), -1);
+				checkDate = DateUtils.ceiling(checkDate, Calendar.MONTH);
 			} else {
 				throw new StorePlatformException("SAC_PUR_7215", periodUnitCd);
+			}
+
+			if (bAutoPrchs) {
+				checkDate = DateUtils.addHours(DateUtils.truncate(checkDate, Calendar.DATE), 10);
 			}
 
 			return DateFormatUtils.format(checkDate, "yyyyMMddHHmmss");

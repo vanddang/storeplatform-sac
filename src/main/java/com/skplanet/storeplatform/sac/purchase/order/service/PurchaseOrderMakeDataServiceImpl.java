@@ -211,6 +211,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 					prchsDtlMore.setGiftMsg(useUser.getGiftMsg());
 
+					prchsDtlMore.setAutoPrchsYn(product.getAutoPrchsYN());
+
 					prchsDtlMoreList.add(prchsDtlMore);
 				}
 			}
@@ -423,9 +425,10 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			autoPrchsMore.setAutoPrchsLastPeriod(Integer.parseInt(autoLastPeriod));
 		}
 		try {
-			autoPrchsMore.setAfterPaymentDt(DateFormatUtils.format(DateUtils.truncate(
+			String afterPaymentDt = DateFormatUtils.format(DateUtils.truncate(
 					DateUtils.parseDate(prchsDtlMore.getUseExprDt(), "yyyyMMddHHmmss"), Calendar.DATE),
-					"yyyyMMddHHmmss")); // 00시 00분 00초
+					"yyyyMMddHHmmss");
+			autoPrchsMore.setAfterPaymentDt(afterPaymentDt.substring(0, 8) + "100000"); // 10시 00분 00초
 		} catch (ParseException e) {
 			throw new StorePlatformException("SAC_PUR_7217", prchsDtlMore.getUseExprDt());
 		}

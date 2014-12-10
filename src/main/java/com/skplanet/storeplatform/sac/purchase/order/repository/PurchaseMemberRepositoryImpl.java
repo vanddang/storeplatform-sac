@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,9 +130,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		purchaseUserDevice.setMarketDeviceKey(userDeviceInfoSac.getMarketDeviceKey());
 		// purchaseUserDevice.setUserEmail(userDeviceInfoSac.getUserEmail());
 
-		// 연령체크 안함: 생년월일도 * 문자 포함으로 확인불가
-		// purchaseUserDevice.setAge(StringUtils.isNotBlank(userDeviceInfoSac.getUserBirthday()) ? this
-		// .getCurrDayAge(userDeviceInfoSac.getUserBirthday()) : 0);
+		purchaseUserDevice.setAge(this.getCurrDayAge(userDeviceInfoSac.getUserBirthday()));
 
 		return purchaseUserDevice;
 	}
@@ -317,15 +317,21 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 
 	/*
 	 * 
-	 * <pre> 생일 일자 기준으로 나이 계산. </pre>
+	 * <pre> 생일 일자 기준으로 만 나이 계산. </pre>
 	 * 
 	 * @param birthday 생일
 	 * 
 	 * @return 나이
 	 */
-	// private int getCurrDayAge(String birthday) {
-	// String currday = DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyyyMMdd");
-	// int baseAge = Integer.parseInt(currday.substring(0, 4)) - Integer.parseInt(birthday.substring(0, 4)) + 1;
-	// return (currday.substring(4, 8).compareTo(birthday.substring(4, 8)) > 0 ? baseAge - 1 : baseAge);
-	// }
+	private int getCurrDayAge(String birthday) {
+		if (StringUtils.isBlank(birthday) || birthday.length() < 8) {
+			return 0;
+		}
+
+		String currday = DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyyyMMdd");
+
+		int baseAge = Integer.parseInt(currday.substring(0, 4)) - Integer.parseInt(birthday.substring(0, 4));
+
+		return (birthday.substring(4, 8).compareTo(currday.substring(4, 8)) > 0 ? baseAge - 1 : baseAge);
+	}
 }
