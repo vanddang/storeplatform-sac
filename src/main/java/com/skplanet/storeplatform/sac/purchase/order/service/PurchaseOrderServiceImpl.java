@@ -705,19 +705,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		String deferredPaymentType = PurchaseConstants.DEFERRED_PAYMENT_TYPE_NORMAL;
 
-		String checkProdId = null;
-		// TAKTODO:: 상품별 정책은 상품 1개일 경우에만 적용. IAP/쇼핑 상품은 하나의 상품만 구매 가능하다는 전제.
-		if (prchsDtlMoreList.size() == 1
-				|| StringUtils
-						.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
-				|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-			checkProdId = prchsDtlMore.getProdId();
-		}
-		CheckPaymentPolicyResult checkPaymentPolicyResult = this.checkPaymentPolicy(prchsDtlMore,
-				verifyOrderInfo.getSystemId(), reservedDataMap.get("telecom"), reservedDataMap.get("deviceId"),
-				reservedDataMap.get("useDeviceId"), reservedDataMap.get("prodCaseCd"),
-				reservedDataMap.get("cmpxProdClsfCd"), checkProdId);
+		CheckPaymentPolicyResult checkPaymentPolicyResult = this.checkPaymentPolicy(prchsDtlMoreList,
+				verifyOrderInfo.getSystemId(), reservedDataMap);
 
 		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)
 				&& StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) == false) {
@@ -1916,26 +1905,43 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @return 결제 정책 체크 결과
 	 */
-	private CheckPaymentPolicyResult checkPaymentPolicy(PrchsDtlMore prchsDtlMore, String systemId, String telecom,
-			String payDeviceId, String useDeviceId, String prodCaseCd, String cmpxProdClsfCd, String prodId) {
+	private CheckPaymentPolicyResult checkPaymentPolicy(List<PrchsDtlMore> prchsDtlMoreList, String checkSystemId,
+			Map<String, String> reservedDataMap) {
+		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
+
+		// TAKTODO:: 상품별 정책은 상품 1개일 경우에만 적용. IAP/쇼핑 상품은 하나의 상품만 구매 가능하다는 전제.
+		String checkProdId = null;
+		if (prchsDtlMoreList.size() == 1
+				|| StringUtils
+						.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
+				|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			checkProdId = prchsDtlMore.getProdId();
+		}
+
+		String checkParentProdId = null;
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+			checkParentProdId = reservedDataMap.get("aid");
+		}
 
 		CheckPaymentPolicyParam policyCheckParam = new CheckPaymentPolicyParam();
 		policyCheckParam.setTenantId(prchsDtlMore.getTenantId());
-		policyCheckParam.setSystemId(systemId); // 구매인증 요청한 시스템ID
-		policyCheckParam.setDeviceId(payDeviceId);
+		policyCheckParam.setSystemId(checkSystemId); // 구매인증 요청한 시스템ID
+		policyCheckParam.setDeviceId(reservedDataMap.get("deviceId"));
 		policyCheckParam.setPaymentTotAmt(prchsDtlMore.getTotAmt());
 		policyCheckParam.setTenantProdGrpCd(prchsDtlMore.getTenantProdGrpCd());
-		policyCheckParam.setTelecom(telecom);
-		policyCheckParam.setProdId(prodId);
-		policyCheckParam.setProdCaseCd(prodCaseCd);
-		policyCheckParam.setCmpxProdClsfCd(cmpxProdClsfCd);
+		policyCheckParam.setTelecom(reservedDataMap.get("telecom"));
+		policyCheckParam.setProdId(checkProdId);
+		policyCheckParam.setParentProdId(checkParentProdId);
+		policyCheckParam.setProdCaseCd(reservedDataMap.get("prodCaseCd"));
+		policyCheckParam.setCmpxProdClsfCd(reservedDataMap.get("cmpxProdClsfCd"));
 		if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			policyCheckParam.setUserKey(prchsDtlMore.getSendInsdUsermbrNo());
 			policyCheckParam.setDeviceKey(prchsDtlMore.getSendInsdDeviceId());
 			policyCheckParam.setRecvTenantId(prchsDtlMore.getUseTenantId());
 			policyCheckParam.setRecvUserKey(prchsDtlMore.getUseInsdUsermbrNo());
 			policyCheckParam.setRecvDeviceKey(prchsDtlMore.getUseInsdDeviceId());
-			policyCheckParam.setRecvDeviceId(useDeviceId);
+			policyCheckParam.setRecvDeviceId(reservedDataMap.get("useDeviceId"));
 		} else {
 			policyCheckParam.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
 			policyCheckParam.setDeviceKey(prchsDtlMore.getUseInsdDeviceId());

@@ -128,16 +128,19 @@ public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyServ
 	 *            상품종류코드
 	 * @param prodId
 	 *            상품별 정책 조회할 상품ID
+	 * @param parentProdId
+	 *            정책 조회할 모상품ID (인앱 경우 AID)
 	 * @return 해당 테넌트의 구매Part 정책 목록
 	 */
 	@Override
 	public PurchaseTenantPolicy searchPaymentPolicy(String tenantId, String tenantProdGrpCd, String prodKindCd,
-			String prodId) {
+			String prodId, String parentProdId) {
 		PurchaseTenantPolicy qryParam = new PurchaseTenantPolicy();
 		qryParam.setTenantId(tenantId);
 		qryParam.setTenantProdGrpCd(tenantProdGrpCd + StringUtils.defaultString(prodKindCd)); // 쇼핑/정액권 경우, 상품타입까지.
 		qryParam.setProcPatternCd(PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD);
 		qryParam.setProdId(prodId);
+		qryParam.setParentProdId(parentProdId);
 
 		return this.commonDao.queryForObject("PurchaseSacCommon.searchPaymentPolicy", qryParam,
 				PurchaseTenantPolicy.class);

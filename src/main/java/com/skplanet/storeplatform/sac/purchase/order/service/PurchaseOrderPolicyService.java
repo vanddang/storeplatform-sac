@@ -120,20 +120,19 @@ public interface PurchaseOrderPolicyService {
 	 * 
 	 * @param tenantId
 	 *            테넌트 ID
-	 * 
 	 * @param tenantProdGrpCd
 	 *            테넌트상품분류코드
-	 * 
 	 * @param prodKindCd
 	 *            상품종류코드
-	 * 
 	 * @param prodId
 	 *            상품별 정책 조회할 상품ID
+	 * @param parentProdId
+	 *            상품별 정책 조회할 모상품ID (인앱 경우 AID)
 	 * 
 	 * @return 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보
 	 */
 	public String getAvailablePaymethodAdjustInfo(String tenantId, String tenantProdGrpCd, String prodKindCd,
-			String prodId);
+			String prodId, String parentProdId);
 
 	/**
 	 * 

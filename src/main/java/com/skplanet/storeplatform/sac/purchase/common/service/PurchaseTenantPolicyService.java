@@ -85,8 +85,10 @@ public interface PurchaseTenantPolicyService {
 	 *            상품종류코드
 	 * @param prodId
 	 *            상품별 정책 조회할 상품ID
+	 * @param parentProdId
+	 *            정책 조회할 모상품ID
 	 * @return 해당 테넌트의 구매Part 정책 목록
 	 */
 	public PurchaseTenantPolicy searchPaymentPolicy(String tenantId, String tenantProdGrpCd, String prodKindCd,
-			String prodId);
+			String prodId, String parentProdId);
 }

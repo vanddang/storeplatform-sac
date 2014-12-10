@@ -38,6 +38,7 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	private String prodId;
 	private String prodCaseCd;
 	private String cmpxProdClsfCd;
+	private String parentProdId; // 인앱 경우에만 사용 : AID
 
 	/**
 	 * @return the tenantId
@@ -277,6 +278,21 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	 */
 	public void setCmpxProdClsfCd(String cmpxProdClsfCd) {
 		this.cmpxProdClsfCd = cmpxProdClsfCd;
+	}
+
+	/**
+	 * @return the parentProdId
+	 */
+	public String getParentProdId() {
+		return this.parentProdId;
+	}
+
+	/**
+	 * @param parentProdId
+	 *            the parentProdId to set
+	 */
+	public void setParentProdId(String parentProdId) {
+		this.parentProdId = parentProdId;
 	}
 
 }

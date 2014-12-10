@@ -329,7 +329,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 결제 정책 체크.
 	 * </pre>
 	 * 
-	 * @param policyCheckParam
+	 * @param checkPaymentPolicyParam
 	 *            정책 체크 대상 데이터
 	 * @return 정책 체크 결과
 	 */
@@ -380,10 +380,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		// 이용가능 결제수단 재정의
-		String paymentAdjInfo = this.adjustPaymethod(phonePaymethodInfo, checkPaymentPolicyParam.getTenantId(),
-				checkPaymentPolicyParam.getSystemId(), checkPaymentPolicyParam.getTenantProdGrpCd(),
-				checkPaymentPolicyParam.getProdCaseCd(), checkPaymentPolicyParam.getCmpxProdClsfCd(),
-				checkPaymentPolicyParam.getPaymentTotAmt(), checkPaymentPolicyParam.getProdId());
+		String paymentAdjInfo = this.adjustPaymethod(phonePaymethodInfo, checkPaymentPolicyParam);
 
 		checkPaymentPolicyResult.setPaymentAdjInfo(paymentAdjInfo);
 
@@ -1188,22 +1185,20 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @param phonePaymethodInfo SKT결제 재정의 정보
 	 * 
-	 * @param tenantId 테넌트ID
-	 * 
-	 * @param systemId 시스템ID
-	 * 
-	 * @param tenantProdGrpCd 테넌트 상품 그룹 코드
-	 * 
-	 * @param prodCaseCd 쇼핑 상품 종류 코드
-	 * 
-	 * @param cmpxProdClsfCd 정액상품 타입 코드
-	 * 
-	 * @param payAmt 결제할 금액
+	 * @param checkPaymentPolicyParam 정책 체크 대상 데이터
 	 * 
 	 * @return 재정의 된 결제 수단 정보
 	 */
-	private String adjustPaymethod(String phonePaymethodInfo, String tenantId, String systemId, String tenantProdGrpCd,
-			String prodCaseCd, String cmpxProdClsfCd, double payAmt, String prodId) {
+	private String adjustPaymethod(String phonePaymethodInfo, CheckPaymentPolicyParam checkPaymentPolicyParam) {
+		String tenantId = checkPaymentPolicyParam.getTenantId();
+		String systemId = checkPaymentPolicyParam.getSystemId();
+		String tenantProdGrpCd = checkPaymentPolicyParam.getTenantProdGrpCd();
+		String prodCaseCd = checkPaymentPolicyParam.getProdCaseCd();
+		String cmpxProdClsfCd = checkPaymentPolicyParam.getCmpxProdClsfCd();
+		double payAmt = checkPaymentPolicyParam.getPaymentTotAmt();
+		String prodId = checkPaymentPolicyParam.getProdId();
+		String parentProdId = checkPaymentPolicyParam.getParentProdId();
+
 		// 결제수단 별 가능 거래금액/비율 조정 정보
 		String prodKindCd = null;
 		if (StringUtils.isNotBlank(prodCaseCd)) {
@@ -1212,7 +1207,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			prodKindCd = cmpxProdClsfCd;
 		}
 
-		String paymentAdjustInfo = this.getAvailablePaymethodAdjustInfo(tenantId, tenantProdGrpCd, prodKindCd, prodId);
+		String paymentAdjustInfo = this.getAvailablePaymethodAdjustInfo(tenantId, tenantProdGrpCd, prodKindCd, prodId,
+				parentProdId);
 		if (paymentAdjustInfo == null) {
 			throw new StorePlatformException("SAC_PUR_7103");
 		}
@@ -1297,32 +1293,30 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 	}
 
-	/*
+	/**
 	 * 
-	 * <pre> 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보 조회 </pre>
+	 * <pre>
+	 * 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보 조회
+	 * </pre>
 	 * 
-	 * @param tenantId 테넌트 ID
-	 * 
-	 * @param tenantProdGrpCd 테넌트상품분류코드
-	 * 
-	 * @param prodKindCd 상품종류코드
-	 * 
-	 * @param prodId 상품별 정책 조회할 상품ID
+	 * @param tenantId
+	 *            테넌트 ID
+	 * @param tenantProdGrpCd
+	 *            테넌트상품분류코드
+	 * @param prodKindCd
+	 *            상품종류코드
+	 * @param prodId
+	 *            상품별 정책 조회할 상품ID
+	 * @param parentProdId
+	 *            상품별 정책 조회할 모상품ID (인앱 경우 AID)
 	 * 
 	 * @return 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보
 	 */
 	@Override
 	public String getAvailablePaymethodAdjustInfo(String tenantId, String tenantProdGrpCd, String prodKindCd,
-			String prodId) {
-		// List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
-		// tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD, false);
-		//
-		// if (CollectionUtils.isNotEmpty(policyList)) {
-		// return StringUtils.defaultString(policyList.get(0).getApplyValue(), "");
-		// }
-
+			String prodId, String parentProdId) {
 		PurchaseTenantPolicy policy = this.purchaseTenantPolicyService.searchPaymentPolicy(tenantId, tenantProdGrpCd,
-				prodKindCd, prodId);
+				prodKindCd, prodId, parentProdId);
 
 		if (policy != null) {
 			return StringUtils.defaultString(policy.getApplyValue(), "");
