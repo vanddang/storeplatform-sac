@@ -50,6 +50,7 @@ public class HistorySacV2 extends CommonInfo implements Serializable {
 	private String cpnAddinfo;
 	private String cpnBizProdSeq;
 	private String cpnBizOrderNo;
+	private String cpnUseStatusCd;
 	private String useFixrateProdId;
 	private String drmYn;
 	private String alarmYn;
@@ -1136,6 +1137,21 @@ public class HistorySacV2 extends CommonInfo implements Serializable {
 	 */
 	public void setGiftMsg(String giftMsg) {
 		this.giftMsg = giftMsg;
+	}
+
+	/**
+	 * @return the cpnUseStatusCd
+	 */
+	public String getCpnUseStatusCd() {
+		return this.cpnUseStatusCd;
+	}
+
+	/**
+	 * @param cpnUseStatusCd
+	 *            the cpnUseStatusCd to set
+	 */
+	public void setCpnUseStatusCd(String cpnUseStatusCd) {
+		this.cpnUseStatusCd = cpnUseStatusCd;
 	}
 
 }
