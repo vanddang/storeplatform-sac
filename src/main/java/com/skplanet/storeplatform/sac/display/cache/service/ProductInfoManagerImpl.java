@@ -90,6 +90,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         else
             throw new IllegalArgumentException("contentType cannot be null.");
 
+        reqMap.put("episodeSvcGrpCd", param.getEpisodeSvcGrpCd());
         reqMap.put("langCd", param.getLangCd());
         reqMap.put("tenantId", param.getTenantId());
         reqMap.put("imageCd", MUSIC_IMG_CD);
@@ -163,7 +164,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 
         return commonDAO.queryForObject("ProductInfo.getEbookComicMeta", reqMap, EbookComicMeta.class);
     }
-    
+
     @Override
     public AlbumMeta getAlbumMeta(AlbumMetaParam param, boolean useCache) {
     	if (useCache) {
@@ -173,12 +174,12 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     		return getAlbumMetaWithoutCache(param);
     	}
     }
-    
+
     @Cacheable(value = "sac:display:product:album", key = "#param.getCacheKey()", unless = "#result == null")
     private AlbumMeta getAlbumMetaWithCache(AlbumMetaParam param) {
     	return getAlbumMetaWithoutCache(param);
     }
-    
+
     private AlbumMeta getAlbumMetaWithoutCache(AlbumMetaParam param) {
 		return this.commonDAO.queryForObject("AlbumDetail.albumDetail", param, AlbumMeta.class);
     }

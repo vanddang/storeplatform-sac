@@ -25,6 +25,7 @@ public class MusicMetaParam extends CommonInfo {
     private String langCd;
     private String prodId;
     private ContentType contentType;
+    private String episodeSvcGrpCd;
 
     private String chartClsfCd;
     private String rankStartDay;
@@ -85,7 +86,15 @@ public class MusicMetaParam extends CommonInfo {
         this.contentType = contentType;
     }
 
-    public String getCacheKey() {
+    public String getEpisodeSvcGrpCd() {
+		return episodeSvcGrpCd;
+	}
+
+	public void setEpisodeSvcGrpCd(String episodeSvcGrpCd) {
+		this.episodeSvcGrpCd = episodeSvcGrpCd;
+	}
+
+	public String getCacheKey() {
         return prodId + "_" + langCd + "_" + tenantId;
     }
 }

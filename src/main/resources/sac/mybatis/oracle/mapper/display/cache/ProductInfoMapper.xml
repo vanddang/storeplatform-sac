@@ -208,7 +208,7 @@
               AND CPD.SVC_TYPE_CD = #{svcTypeCd}
               AND EPD.SVC_TYPE_CD = CPD.SVC_TYPE_CD
               AND CPD.SVC_GRP_CD = 'DP000203'
-              AND EPD.SVC_GRP_CD = 'DP000203'
+              AND EPD.SVC_GRP_CD = #{episodeSvcGrpCd}
               AND MD.LANG_CD = #{langCd}
               AND TMD.LANG_CD = MD.LANG_CD
               AND TP.EXPO_YN = 'Y'

@@ -199,6 +199,7 @@ public class ProductListServiceImpl implements ProductListService{
 		productInfo.setCatalogId(prodId);
 		productInfo.setTopMenuId(topMenuId);
 		productInfo.setContentsTypeCd(listProd.getContentsTypeCd());
+		productInfo.setSvcGrpCd(svcGrpCd);
 		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		paramMap.put("tenantHeader", header.getTenantHeader());
 		paramMap.put("deviceHeader", header.getDeviceHeader());
@@ -247,18 +248,18 @@ public class ProductListServiceImpl implements ProductListService{
 			if(metaInfo!=null)
 				product = responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
 		}
-		// 통합뮤직
-		else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
+		// 통합뮤직||폰꾸미기
+		else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)||
+				DisplayConstants.DP_DISPLAY_PHONE_TOP_MENU_ID.equals(topMenuId)) {
 			paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-			//뮤직
-			if(svcGrpCd.equals("DP000203")) {
+			//멀티미디어(뮤직)||폰꾸미기(링,벨)
+			if(svcGrpCd.equals("DP000203")|| svcGrpCd.equals("DP000204")) {
                 paramMap.put(DisplayConstants.META_MUSIC_USE_CONTENT_TP, "Y");
 				metaInfo = metaInfoService.getMusicMetaInfo(paramMap);
 				if(metaInfo!=null)
 					product = responseInfoGenerateFacade.generateMusicProduct(metaInfo);
-	        }
-			//앨범
-			if(svcGrpCd.equals("DP000208")) {
+	        } //앨범
+			else if(svcGrpCd.equals("DP000208")) {
 	        	albumMeta = metaInfoService.getAlbumMetaInfo(paramMap);
 				if(albumMeta!=null)
 					product = responseInfoGenerateFacade.generateAlbumProduct(albumMeta);
@@ -272,13 +273,6 @@ public class ProductListServiceImpl implements ProductListService{
 				product = responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
 		}
 
-		// 디버깅(오픈전 삭제 요망)
-//		if(product==null){
-//			product = new Product();
-//			product.setId(prodId);
-//			product.setProductExplain("---------더미 데이터-----------------");
-//			product.setProductDetailExplain(topMenuId);
-//		}
 		if(product==null)
 			return null;
 

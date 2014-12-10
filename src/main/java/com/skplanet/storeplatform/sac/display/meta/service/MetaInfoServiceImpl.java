@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * Meta 정보 조회 Service 구현체
- * 
+ *
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
 @Service
@@ -157,6 +157,12 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             param.setProdId(basicInfo.getProdId());
             param.setLangCd(tenantHeader.getLangCd());
             param.setTenantId(tenantHeader.getTenantId());
+
+            if(basicInfo.getContentsTypeCd().equals(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD))
+            	param.setEpisodeSvcGrpCd(basicInfo.getSvcGrpCd()); // FOR BELL, COLORING
+            else
+            	param.setEpisodeSvcGrpCd(DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD); //DEFAULT
+
             if(StringUtils.defaultString((String)paramMap.get(DisplayConstants.META_MUSIC_USE_CONTENT_TP), "N").equals("Y")) {
                 param.setContentType(ContentType.forCode(basicInfo.getContentsTypeCd()));
             }
@@ -188,7 +194,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getVODMetaInfo(java.util.Map)
 	 */
 	@Override
@@ -242,7 +248,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getEbookComicMetaInfo(java.util.Map)
 	 */
 	@Override
@@ -297,7 +303,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getWebtoonMetaInfo(java.util.Map)
 	 */
 	@Override
@@ -341,14 +347,14 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getShoppingMetaInfo(java.util.Map)
 	 */
 	@Override
 	public MetaInfo getShoppingMetaInfo(Map<String, Object> paramMap) {
 		MetaInfo me;
 		TenantHeader tenantHeader = (TenantHeader) paramMap.get("tenantHeader");
-		
+
         if (isUseCache()) {
             ProductBasicInfo basicInfo = (ProductBasicInfo) paramMap.get("productBasicInfo");
 
@@ -371,13 +377,13 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
         	me = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
         me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
-        
+
         return me;
     }
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getFreepassMetaInfo(java.util.Map)
 	 */
 	@Override
@@ -406,7 +412,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		    return this.commonDAO.queryForObject("MetaInfo.getFreepassMetaInfo", paramMap, MetaInfo.class);
 	}
 
-    
+
 	/* (non-Javadoc)
 	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getAlbumMetaInfo(java.util.Map)
 	 */
@@ -422,10 +428,10 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		if(albumMeta == null) {
             logger.warn("메타데이터를 읽을 수 없습니다 - Album#{}", basicInfo.getProdId());
         }
-		
+
         return albumMeta;
 	}
-	
+
 	 private boolean isUseCache() {
 	        return (Boolean) RequestContextHolder.currentRequestAttributes().getAttribute("useCache", RequestAttributes.SCOPE_REQUEST);
 	    }
