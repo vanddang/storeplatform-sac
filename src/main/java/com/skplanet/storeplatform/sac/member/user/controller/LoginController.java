@@ -214,6 +214,10 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+		if (StringUtils.equals(req.getDeviceId(), "null")) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+		}
+
 		if (!StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
 				&& !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
 				&& !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
@@ -247,6 +251,10 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+		if (StringUtils.equals(req.getDeviceId(), "null")) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+		}
+
 		if (!StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
 				&& !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
 				&& !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
@@ -278,6 +286,10 @@ public class LoginController {
 	public AuthorizeSacRes authorize(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSacReq req) {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if (StringUtils.equals(req.getDeviceId(), "null")) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+		}
 
 		AuthorizeSacRes res = this.loginService.authorize(requestHeader, req);
 
