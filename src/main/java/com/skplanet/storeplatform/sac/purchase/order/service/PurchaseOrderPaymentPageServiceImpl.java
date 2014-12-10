@@ -172,13 +172,13 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
 			// 전권 소장
 			return "'" + purchaseProduct.getProdNm() + "' 전"
-					+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권") + " 소장";
+					+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권");
 
 		} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 				PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
 			// 전권 대여
 			return "'" + purchaseProduct.getProdNm() + "' 전"
-					+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권") + " 대여";
+					+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권");
 
 		} else {
 			// 상품명은 전시에서 회차 정보까지 구성해서 넘겨주는 값 그대로 사용. 2014.09.02 반영
@@ -338,12 +338,10 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				}
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
-				// return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_OWN;
-				return "전" + StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권") + " 소장";
+				return "소장";
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
-				// return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_LOAN;
-				return "전" + StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권") + " 대여";
+				return "대여";
 			}
 		}
 
