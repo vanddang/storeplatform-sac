@@ -15,9 +15,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 
+ *
  * SAC 전시 상수 클래스 전시 파트 내에서 사용되는 상수는 여기에 정의한다.
- * 
+ *
  * Updated on : 2014. 1. 30. Updated by : 서대영, SK 플래닛.
  */
 public class DisplayConstants {
@@ -822,4 +822,10 @@ public class DisplayConstants {
 
     public static final String META_MUSIC_USE_CONTENT_TP = "useContentType";
 
+    /** 음원 차트 구분코드 */
+    public static final String TOP_MUSIC	="DP004901";	// TOP 뮤직
+    public static final String COLORING		="DP004902";	// 컬러링
+    public static final String BELL			="DP004903";	// 벨소리
+    public static final String RECENT_MUSIC	="DP004904";	// 최신음악
+    public static final String GENRE_MUSIC	="DP004905";	// 장르별 차트
 }
