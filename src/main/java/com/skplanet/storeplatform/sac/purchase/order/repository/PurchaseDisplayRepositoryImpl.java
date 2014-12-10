@@ -120,6 +120,10 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setProdGrdCd(displayInfo.getProdGrdCd());
 			// 허용 연령 (상품등급이 청소년이용불가 등급일 경우에 18/19 판별을 위해 사용)
 			purchaseProduct.setAgeAllowedFrom(displayInfo.getAgeAllowedFrom());
+			if (StringUtils.equals(displayInfo.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19)
+					&& (displayInfo.getAgeAllowedFrom() == null || displayInfo.getAgeAllowedFrom() < 18)) {
+				throw new StorePlatformException("SAC_PUR_5119", displayInfo.getAgeAllowedFrom());
+			}
 			purchaseProduct.setProdSprtYn(displayInfo.getProdSprtYn());
 			purchaseProduct.setDrmYn(StringUtils.defaultString(displayInfo.getDrmYn(), PurchaseConstants.USE_N));
 			if (StringUtils.equals(displayInfo.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {

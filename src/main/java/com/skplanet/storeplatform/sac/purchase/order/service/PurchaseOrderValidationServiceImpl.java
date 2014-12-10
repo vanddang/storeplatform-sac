@@ -675,6 +675,15 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// CLINK 예외처리용
 		boolean bClink = purchaseOrderInfo.isClink();
 
+		// 연령체크 용
+		int purchaserAge = purchaseOrderInfo.getPurchaseUser().getAge();
+		boolean bPurchaserAgeLimited = false;
+		boolean bReceiverAgeLimited = false;
+		boolean bPurchaserAgeNotExist = false;
+		boolean bReceiverAgeNotExist = false;
+		boolean bPurchaserNotRealName = false;
+		boolean bReceiverNotRealName = false;
+
 		for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
 			// 연령체크 안함: 모바일 회원은 생년월일 저장X, 생년월일도 * 문자 포함으로 확인불가
 			// if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19) && useUser.getAge() <
@@ -682,21 +691,131 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// throw new StorePlatformException("SAC_PUR_5110");
 			// }
 
-			// 실명인증 체크
-			if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19)
-					&& purchaseOrderInfo.getPurchaseUser().isRealName() == false) {
+			// 연령체크
+			bPurchaserAgeLimited = false;
+			bReceiverAgeLimited = false;
+			bPurchaserAgeNotExist = false;
+			bReceiverAgeNotExist = false;
+			bPurchaserNotRealName = false;
+			bReceiverNotRealName = false;
+
+			if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_12)) {
+				if (purchaserAge > 0 && purchaserAge < 12) {
+					bPurchaserAgeLimited = true;
+				}
+
+				if (purchaseOrderInfo.isGift()) {
+					if (bPurchaserAgeLimited == false) {
+						for (PurchaseUserDevice receiver : purchaseOrderInfo.getReceiveUserList()) {
+							if (receiver.getAge() > 0 && receiver.getAge() < 12) {
+								bReceiverAgeLimited = true;
+								break;
+							}
+						}
+					}
+				}
+
+			} else if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_15)) {
+				if (purchaserAge > 0 && purchaserAge < 15) {
+					bPurchaserAgeLimited = true;
+				}
+
+				if (purchaseOrderInfo.isGift()) {
+					if (bPurchaserAgeLimited == false) {
+						for (PurchaseUserDevice receiver : purchaseOrderInfo.getReceiveUserList()) {
+							if (receiver.getAge() > 0 && receiver.getAge() < 15) {
+								bReceiverAgeLimited = true;
+								break;
+							}
+						}
+					}
+				}
+
+			} else if (StringUtils.equals(product.getProdGrdCd(), PurchaseConstants.PRODUCT_GRADE_19)) {
+				int allowAge = product.getAgeAllowedFrom();
+
+				if (purchaseOrderInfo.getPurchaseUser().isRealName() == false) {
+					bPurchaserNotRealName = true;
+				} else if (purchaserAge <= 0) {
+					bPurchaserAgeNotExist = true;
+				} else if (purchaserAge < allowAge) {
+					bPurchaserAgeLimited = true;
+				}
+
+				if (purchaseOrderInfo.isGift()) {
+					if (bPurchaserNotRealName == false && bPurchaserAgeNotExist == false
+							&& bPurchaserAgeLimited == false) {
+						for (PurchaseUserDevice receiver : purchaseOrderInfo.getReceiveUserList()) {
+							if (receiver.isRealName() == false) {
+								bReceiverNotRealName = true;
+								break;
+							} else if (receiver.getAge() <= 0) {
+								bReceiverAgeNotExist = true;
+								break;
+							} else if (receiver.getAge() < allowAge) {
+								bReceiverAgeLimited = true;
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			// if (bClink) { // CLINK 예외 처리
+			// product.setResultCd("4105");
+			// continue;
+			// } else {
+			// // T-Freemium 19금 상품에 대한 실명(성인)인증 없이 처리 : 2014.06.25 반영
+			// // T-Freemium 은 OR000420, OR000413 2개의 요청경로로 유입됨.
+			// if ((StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
+			// PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
+			// && (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
+			// PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false)) {
+			// throw new StorePlatformException("SAC_PUR_4105");
+			// }
+			// }
+
+			if (bPurchaserNotRealName) { // 실명 인증 회원이 아닙니다.
 				if (bClink) { // CLINK 예외 처리
 					product.setResultCd("4105");
 					continue;
 				} else {
-					// T-Freemium 19금 상품에 대한 실명(성인)인증 없이 처리 : 2014.06.25 반영
-					// T-Freemium 은 OR000420, OR000413 2개의 요청경로로 유입됨.
-					if ((StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
-							PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
-							&& (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
-									PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false)) {
-						throw new StorePlatformException("SAC_PUR_4105");
-					}
+					throw new StorePlatformException("SAC_PUR_4105");
+				}
+			} else if (bPurchaserAgeNotExist) { // 연령 정보가 없습니다.
+				if (bClink) {
+					product.setResultCd("4109");
+					continue;
+				} else {
+					throw new StorePlatformException("SAC_PUR_4109");
+				}
+			} else if (bPurchaserAgeLimited) { // 연령제한으로 이용할 수 없는 상품입니다.
+				if (bClink) {
+					product.setResultCd("5110");
+					continue;
+				} else {
+					throw new StorePlatformException("SAC_PUR_5110");
+				}
+			} else if (bReceiverNotRealName) { // 선물 수신자가 실명 인증 회원이 아닙니다.
+				if (bClink) {
+					product.setResultCd("4108");
+					continue;
+				} else {
+					throw new StorePlatformException("SAC_PUR_4108");
+				}
+			} else if (bReceiverAgeNotExist) { // 선물 수신자 연령 정보가 없습니다.
+				if (bClink) {
+					product.setResultCd("4110");
+					continue;
+				} else {
+					throw new StorePlatformException("SAC_PUR_4110");
+				}
+			} else if (bReceiverAgeLimited) { // 선물 수신자의 연령제한으로 이용할 수 없는 상품입니다.
+				if (bClink) {
+					product.setResultCd("5120");
+					continue;
+				} else {
+					throw new StorePlatformException("SAC_PUR_5120");
 				}
 			}
 
