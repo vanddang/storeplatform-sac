@@ -538,7 +538,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 	private void genenateMetaForAppDeltaUpdate(MetaInfo metaInfo, Integer preApkVer) {
 
-		if (preApkVer == null || preApkVer == 0) return;
+		if (preApkVer == null || preApkVer <= 0) return;
 
 		/**
 		 *  상용 서버 적용시 주석 풀어야 함.
