@@ -197,7 +197,9 @@
              , avg_score                   /* 평균 점수 */
              , reg_id                      /* 등록 ID */
              , reg_dt                      /* 등록 일시 */
+             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
              , fb_post_yn                  /* 페이스북 공유 여부 */
+             </if>
              )
              VALUES 
              ( 
@@ -207,7 +209,9 @@
              , #{avgScore}                 /* 평균 점수 */
              , #{regId}                    /* 등록 ID */
              , SYSDATE                     /* 등록 일시 */
+             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
              , #{fbPostYn}                 /* 페이스북 공유 여부 */
+             </if>
              )
        WHEN  MATCHED 
        THEN
