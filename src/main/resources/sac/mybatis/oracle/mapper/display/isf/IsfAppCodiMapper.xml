@@ -203,7 +203,7 @@
                PROD_ID AS PART_PROD_ID,
                CASE WHEN (RCD != '903001' AND RCD != '909001') AND (R_PROD_NM IS NULL OR R_MENU_NM IS NULL) THEN '요즘 HOT! Power User의 BEST 상품을 소개합니다.'
                     ELSE CASE WHEN RCD = '901001' THEN '따끈따끈 ' || R_PROD_NM || '의 신작이 나왔어요!'
-                              WHEN RCD = '901002' THEN R_PROD_NM || '의 다음 이야기가 궁금하시다면? 지금 확인하세요!'
+                              WHEN RCD = '901002' THEN R_PROD_NM || '의 다음 이야기가 궁금하시다면?'
                               WHEN RCD = '903001' THEN DECODE(APP_YN, 'Y', '앱', MENU_NM) || ' 매니아들이 선택한 오늘의 ' || DECODE(APP_YN, 'Y', '앱', MENU_NM)
                               WHEN RCD = '904001' THEN R_PROD_NM || '를 좋아하셨다면, 이 ' || DECODE(APP_YN, 'Y', '앱', MENU_NM) || '도 좋아하실거에요.'
                               WHEN RCD = '904002' THEN '나의 ' || DECODE(R_APP_YN, 'Y', '앱', R_MENU_NM) || ' MATE들이 추천하는 ' || DECODE(APP_YN, 'Y', '앱', MENU_NM)
