@@ -439,6 +439,8 @@ public class PurchaseOrderController {
 		purchaseOrderInfo.setSimYn(createPurchaseSacReq.getSimYn()); // SIM 조회 가능 여부
 		purchaseOrderInfo.setMediaId(createPurchaseSacReq.getMediaId()); // CPS CPID
 
+		purchaseOrderInfo.setOfferingId(createPurchaseSacReq.getOfferingId()); // 오퍼링 ID
+
 		purchaseOrderInfo.setTotAmt(createPurchaseSacReq.getTotAmt()); // 총 결제 금액
 		purchaseOrderInfo.setRealTotAmt(createPurchaseSacReq.getTotAmt()); // 최종 결제 총 금액
 

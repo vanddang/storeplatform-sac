@@ -102,6 +102,10 @@ public class PurchaseOrderInfo extends CommonInfo {
 	// CLINK 예외 처리용
 	private boolean clink; // CLINK 여부
 
+	// ------------------------------------------------------------------------
+	// 테넌트 - P/P ByPass 정보
+	private String offeringId; // 오퍼링ID
+
 	// ================================================================================================
 
 	public PurchaseOrderInfo() {
@@ -933,6 +937,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setClink(boolean clink) {
 		this.clink = clink;
+	}
+
+	/**
+	 * @return the offeringId
+	 */
+	public String getOfferingId() {
+		return this.offeringId;
+	}
+
+	/**
+	 * @param offeringId
+	 *            the offeringId to set
+	 */
+	public void setOfferingId(String offeringId) {
+		this.offeringId = offeringId;
 	}
 
 }

@@ -53,6 +53,7 @@ public class PaymentPageParam extends CommonInfo {
 	private String serviceId; // 가맹점 내 서비스 구분 (TS001: Tstore 샵클라이언트, TS002: Tstore ebook, TS003: Tstore IAP)
 	private String OPMDLineNo; // OPMD 번호
 	private String userKey; // 결제자 UserKey
+	private String offeringId; // 오퍼링 ID
 
 	// ==========================================================================================
 
@@ -489,6 +490,21 @@ public class PaymentPageParam extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	/**
+	 * @return the offeringId
+	 */
+	public String getOfferingId() {
+		return this.offeringId;
+	}
+
+	/**
+	 * @param offeringId
+	 *            the offeringId to set
+	 */
+	public void setOfferingId(String offeringId) {
+		this.offeringId = offeringId;
 	}
 
 }
