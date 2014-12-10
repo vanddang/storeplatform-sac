@@ -762,6 +762,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 						&& !StringUtils.isEmpty(historySac.getUseDeviceKey())
 						&& !PurchaseConstants.NON_MEMBER.equals(historySac.getUseUserKey())) {
 					deviceInfo = new SearchUserDeviceSac();
+					deviceInfo.setTenantId(historySac.getTenantId());
 					deviceInfo.setUserKey(historySac.getUseUserKey());
 					deviceInfo.setDeviceKey(historySac.getUseDeviceKey());
 					deviceList.add(deviceInfo);
@@ -776,6 +777,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 						&& !StringUtils.isEmpty(historySac.getSendDeviceKey())
 						&& !PurchaseConstants.NON_MEMBER.equals(historySac.getSendUserKey())) {
 					sendDeviceInfo = new SearchUserDeviceSac();
+					sendDeviceInfo.setTenantId(historySac.getTenantId());
 					sendDeviceInfo.setUserKey(historySac.getSendUserKey());
 					sendDeviceInfo.setDeviceKey(historySac.getSendDeviceKey());
 					sendDeviceList.add(sendDeviceInfo);
