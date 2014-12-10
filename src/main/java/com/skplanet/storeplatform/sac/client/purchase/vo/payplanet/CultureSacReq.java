@@ -33,6 +33,8 @@ public class CultureSacReq extends CommonInfo {
 	private String culturePwd;
 	@NotBlank
 	private String ipReq;
+	@NotBlank
+	private String mdn;
 
 	/**
 	 * @return the token
@@ -122,6 +124,21 @@ public class CultureSacReq extends CommonInfo {
 	 */
 	public void setIpReq(String ipReq) {
 		this.ipReq = ipReq;
+	}
+
+	/**
+	 * @return the mdn
+	 */
+	public String getMdn() {
+		return this.mdn;
+	}
+
+	/**
+	 * @param mdn
+	 *            the mdn to set
+	 */
+	public void setMdn(String mdn) {
+		this.mdn = mdn;
 	}
 
 }
