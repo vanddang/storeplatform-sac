@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.purchase.shopping.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,8 @@ import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScReq;
 import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.purchase.client.shopping.sci.ShoppingScSCI;
+import com.skplanet.storeplatform.purchase.client.shopping.vo.ShoppingScReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
@@ -53,11 +57,16 @@ import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacRes
 @Component
 public class ShoppingRepositoryImpl implements ShoppingRepository {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private PurchaseCancelSCI purchaseCancelSCI;
 
 	@Autowired
 	private ShoppingSCI shoppingSCI;
+
+	@Autowired
+	private ShoppingScSCI shoppingScSCI;
 
 	@Autowired
 	private PaymentInfoSCI paymentInfoSCI;
@@ -68,6 +77,21 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 		CouponUseStatusEcReq couponUseStatusEcReq = this.convertReqForGetCouponUseStatus(couponUseStatusSacParam);
 
 		CouponUseStatusEcRes couponUseStatusEcRes = this.shoppingSCI.getCouponUseStatus(couponUseStatusEcReq);
+
+		ShoppingScReq shoppingScReq = new ShoppingScReq();
+		shoppingScReq.setTenantId(couponUseStatusSacParam.getTenantId());
+		shoppingScReq.setPrchsId(couponUseStatusSacParam.getPrchsId());
+		shoppingScReq.setSystemId(couponUseStatusSacParam.getSystemId());
+
+		for (CouponUseStatusDetailEcRes couponUseStatusDetailEcRes : couponUseStatusEcRes.getCouponUseStatusList()) {
+			shoppingScReq.setCpnPublishCd(couponUseStatusDetailEcRes.getCouponPublishCode());
+			shoppingScReq.setCpnUseStatusCd(couponUseStatusDetailEcRes.getCouponStatus());
+			try {
+				this.shoppingScSCI.updatePrchsDtl(shoppingScReq);
+			} catch (Exception e) {
+				this.logger.info("### ShoppingRepositoryImpl.getCouponUseStatus PrchsDtl DB Update Fail");
+			}
+		}
 
 		return this.convertResForGetCouponUseStatus(couponUseStatusEcRes);
 
