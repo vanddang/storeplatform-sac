@@ -272,7 +272,7 @@
                                                         A.EXPO_ORD_SUB2, 
                                                         A.REG_DT DESC ) AS RNUM
                 FROM   (
-                        SELECT A.LIST_ID THEME_ID ,
+                        SELECT /*+ LEADING(A AP PR) USE_NL(PR) USE_NL(C) */ A.LIST_ID THEME_ID ,
                                A.LIST_NM THEME_NM ,
                                DECODE(A.IMG_PATH, NULL, 2, 1) THEME_TYPE ,
                                A.IMG_PATH ,
@@ -337,7 +337,7 @@
                         AND    P2.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
                         AND    P.TOP_MENU_ID <![CDATA[<>]]> 'DP02'
                         AND    EXISTS (
-                                    SELECT 'X' 
+                                    SELECT /*+ UNNEST NL_SJ INDEX(SH (DEVICE_MODEL_CD, PROD_ID)) */ 'X'  
                                       FROM TB_DP_SPRT_DEVICE SH 
                                      WHERE SH.PROD_ID = P.PROD_ID
                                        AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
