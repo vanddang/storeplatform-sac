@@ -9,15 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.display.stat.service;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.client.product.vo.Card;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.cache.service.PanelCardInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.CardInfo;
 import com.skplanet.storeplatform.sac.display.card.service.CardDetailService;
+import com.skplanet.storeplatform.sac.display.card.util.CardDynamicInfoProcessor;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
-import com.skplanet.storeplatform.sac.display.card.vo.CardDetailParam;
 import com.skplanet.storeplatform.sac.display.feature.product.service.ProductListService;
 import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProduct;
 import com.skplanet.storeplatform.sac.display.stat.vo.StatLike;
@@ -36,6 +39,9 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 
 	@Autowired
 	private CardDetailService cardDetailService;
+	
+    @Autowired
+    private PanelCardInfoManager panelCardInfoManager;
 
 	@Autowired
 	private ProductListService productListService;
@@ -65,14 +71,17 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 	public Card findCard(String cardId, String userKey, SacRequestHeader header) {
 		String tenantId = header.getTenantHeader().getTenantId();
 
-		CardDetailParam param = new CardDetailParam();
-		param.setTenantId(tenantId);
-		param.setCardId(cardId);
-		param.setUserKey(userKey);
-
-		CardDetail cardDetail = cardDetailService.searchCardDetail(param);  // FIXME Card의 경우 동적 데이터를 일괄 처리하도록 수정 필요
-		Card card = cardDetailService.makeCard(cardDetail);
-		return card;
+		// 정적 처리 (Cache)
+        CardInfo cardInfo = panelCardInfoManager.getCardInfo(tenantId, cardId);
+        CardDetail cardDetail = new CardDetail();
+        BeanUtils.copyProperties(cardInfo, cardDetail);
+        Card card = cardDetailService.makeCard(cardDetail);
+		
+        // 동적 처리
+        CardDynamicInfoProcessor processor = new CardDynamicInfoProcessor(tenantId, cardDetailService);
+        processor.addCard(card);
+        processor.execute(userKey);
+        return card;
 	}
 
 	@Override
