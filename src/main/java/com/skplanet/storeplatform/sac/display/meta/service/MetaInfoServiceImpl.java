@@ -158,7 +158,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
             param.setLangCd(tenantHeader.getLangCd());
             param.setTenantId(tenantHeader.getTenantId());
 
-            if(basicInfo.getContentsTypeCd().equals(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD))
+            if(basicInfo.getSvcGrpCd()!=null && basicInfo.getContentsTypeCd().equals(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD))
             	param.setEpisodeSvcGrpCd(basicInfo.getSvcGrpCd()); // FOR BELL, COLORING
             else
             	param.setEpisodeSvcGrpCd(DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD); //DEFAULT
