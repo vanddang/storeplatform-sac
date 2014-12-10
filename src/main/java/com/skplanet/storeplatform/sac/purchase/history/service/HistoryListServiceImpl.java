@@ -710,6 +710,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				historySac.setCpnAddinfo(obj.getCpnAddinfo()); // 쇼핑쿠폰_추가정보
 				historySac.setCpnBizProdSeq(obj.getCpnBizProdSeq()); // 쇼핑쿠폰_biz상품_순번
 				historySac.setCpnBizOrderNo(obj.getCpnBizOrderNo()); // 쇼핑쿠폰_biz상품_주문번호
+				historySac.setCpnUseStatusCd(obj.getCpnUseStatusCd()); // 쇼핑쿠폰_사용여부상태코드
 
 				historySac.setResvCol01(obj.getResvCol01());
 				historySac.setResvCol02(obj.getResvCol02());
