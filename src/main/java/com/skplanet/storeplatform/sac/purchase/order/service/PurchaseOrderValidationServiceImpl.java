@@ -51,6 +51,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.shopping.repository.ShoppingRepository;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacV2Param;
 
 /**
  * 
@@ -825,7 +826,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						* product.getProdQty() : product.getProdQty();
 
 				this.checkAvailableCouponPublish(purchaseOrderInfo.getPurchaseUser(), product, publishQty,
-						purchaseOrderInfo.isGift());
+						purchaseOrderInfo.isGift(), purchaseOrderInfo.getApiVer());
 			}
 
 			// ---------------------- 구매자 혹은 수신자 수 만큼 반복 체크
@@ -1096,7 +1097,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 * @param bGift 선물여부
 	 */
 	private void checkAvailableCouponPublish(PurchaseUserDevice purchaseUser, PurchaseProduct product, int publishQty,
-			boolean bGift) {
+			boolean bGift, int apiVer) {
 
 		// 특가상품 구매가능 건수 체크
 		if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
@@ -1125,31 +1126,61 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 		}
 
-		// CMS 발급 가능 여부 확인
-		CouponPublishAvailableSacParam shoppingReq = new CouponPublishAvailableSacParam();
-		shoppingReq.setCouponCode(product.getCouponCode());
-		shoppingReq.setItemCode(product.getItemCode());
-		shoppingReq.setItemCount(publishQty);
-		shoppingReq.setMdn(purchaseUser.getDeviceId());
-		shoppingReq.setGiftFlag(bGift ? "Y" : "N");
+		// CMS 발급 가능 여부 확인: 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (N개, 1:N 선물 지원)
+		if (apiVer > 1) {
+			CouponPublishAvailableSacV2Param shoppingReq = new CouponPublishAvailableSacV2Param();
+			shoppingReq.setCouponCode(product.getCouponCode());
+			shoppingReq.setItemCode(product.getItemCode());
+			shoppingReq.setItemCount(publishQty);
+			shoppingReq.setMdn(purchaseUser.getDeviceId());
+			shoppingReq.setGiftFlag(bGift ? "Y" : "N");
 
-		this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,REQ,{},",
-				ReflectionToStringBuilder.toString(shoppingReq, ToStringStyle.SHORT_PREFIX_STYLE));
-		try {
-			// 정상 응답이 아니면 Exception 발생됨
-			this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
-		} catch (StorePlatformException e) {
-			this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,ERROR,{},{},", e.getCode(), e.getMessage());
+			this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,REQ,{},",
+					ReflectionToStringBuilder.toString(shoppingReq, ToStringStyle.SHORT_PREFIX_STYLE));
 
-			// 쇼핑 특가 상품 품절 경우, 품절 처리
-			if (StringUtils.equals(e.getCode(), PurchaseConstants.COUPON_CMS_RESULT_SOLDOUT)) {
-				if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
-					this.purchaseDisplayRepository.updateSpecialPriceSoldOut(purchaseUser.getTenantId(),
-							product.getProdId());
+			try {
+				// 정상 응답이 아니면 Exception 발생됨
+				this.shoppingRepository.getCouponPublishAvailableV2(shoppingReq);
+			} catch (StorePlatformException e) {
+				this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,ERROR,{},{},", e.getCode(), e.getMessage());
+
+				// 쇼핑 특가 상품 품절 경우, 품절 처리
+				if (StringUtils.equals(e.getCode(), PurchaseConstants.COUPON_CMS_RESULT_SOLDOUT)) {
+					if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
+						this.purchaseDisplayRepository.updateSpecialPriceSoldOut(purchaseUser.getTenantId(),
+								product.getProdId());
+					}
 				}
+
+				throw e;
 			}
 
-			throw e;
+		} else {
+			CouponPublishAvailableSacParam shoppingReq = new CouponPublishAvailableSacParam();
+			shoppingReq.setCouponCode(product.getCouponCode());
+			shoppingReq.setItemCode(product.getItemCode());
+			shoppingReq.setItemCount(publishQty);
+			shoppingReq.setMdn(purchaseUser.getDeviceId());
+			shoppingReq.setGiftFlag(bGift ? "Y" : "N");
+
+			this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,REQ,{},",
+					ReflectionToStringBuilder.toString(shoppingReq, ToStringStyle.SHORT_PREFIX_STYLE));
+			try {
+				// 정상 응답이 아니면 Exception 발생됨
+				this.shoppingRepository.getCouponPublishAvailable(shoppingReq);
+			} catch (StorePlatformException e) {
+				this.logger.info("PRCHS,SAC,ORDER,VALID,SHOPPING,ERROR,{},{},", e.getCode(), e.getMessage());
+
+				// 쇼핑 특가 상품 품절 경우, 품절 처리
+				if (StringUtils.equals(e.getCode(), PurchaseConstants.COUPON_CMS_RESULT_SOLDOUT)) {
+					if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
+						this.purchaseDisplayRepository.updateSpecialPriceSoldOut(purchaseUser.getTenantId(),
+								product.getProdId());
+					}
+				}
+
+				throw e;
+			}
 		}
 	}
 

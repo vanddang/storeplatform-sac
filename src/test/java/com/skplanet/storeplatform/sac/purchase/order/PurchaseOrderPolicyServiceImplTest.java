@@ -70,7 +70,9 @@ public class PurchaseOrderPolicyServiceImplTest {
 		String tenantProdGrpCd = "OR006212DP18OR006311";
 		String prodKindCd = "DP006303";
 		String prodId = "OR006211DP01OR006311";
-		this.purchasePolicyService.getAvailablePaymethodAdjustInfo(tenantId, tenantProdGrpCd, prodKindCd, prodId);
+		String parentProdId = null;
+		this.purchasePolicyService.getAvailablePaymethodAdjustInfo(tenantId, tenantProdGrpCd, prodKindCd, prodId,
+				parentProdId);
 
 	}
 }
