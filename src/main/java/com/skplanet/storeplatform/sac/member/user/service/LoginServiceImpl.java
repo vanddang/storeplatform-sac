@@ -1298,7 +1298,7 @@ public class LoginServiceImpl implements LoginService {
 
 		} else { // 타사 && 마켓배포상품인 경우
 
-			if (this.isPurchasedFromTstore(requestHeader, req.getDeviceId(), iapProductInfoRes.getParentProdId())) {
+			if (this.isPurchasedFromTstore(requestHeader, req.getDeviceId(), req.getProdId())) {
 
 				// 타사 폰에서 Tstore 샵클을 이용하여 상품을 구매한 회원이므로 Tstore 회원인증
 				LOGGER.info("{} 타사폰에서 Tstore 구매내역 존재", req.getDeviceId());
@@ -2434,11 +2434,11 @@ public class LoginServiceImpl implements LoginService {
 	 *            SacRequestHeader
 	 * @param deviceId
 	 *            String
-	 * @param parentProdId
+	 * @param prodId
 	 *            String
 	 * @return boolean 구매내역 존재유무
 	 */
-	private boolean isPurchasedFromTstore(SacRequestHeader requestHeader, String deviceId, String parentProdId) {
+	private boolean isPurchasedFromTstore(SacRequestHeader requestHeader, String deviceId, String prodId) {
 
 		boolean isPurchasedFromTstore = false;
 
@@ -2454,23 +2454,29 @@ public class LoginServiceImpl implements LoginService {
 
 			DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-			List<ExistenceItem> existenceItemList = new ArrayList<ExistenceItem>();
-			ExistenceItem existenceItem = new ExistenceItem();
-			existenceItem.setProdId(parentProdId);
-			existenceItemList.add(existenceItem);
+			// Tstore 모상품 ID 조회
+			IapProductInfoRes iapProductInfoRes = this.mcic.getIapProdInfo(MemberConstants.TENANT_ID_TSTORE, deviceId,
+					prodId);
 
-			// 기구매체크
-			ExistenceReq existenceReq = new ExistenceReq();
-			existenceReq.setTenantId(MemberConstants.TENANT_ID_TSTORE);
-			existenceReq.setUserKey(detailRes.getUserInfo().getUserKey());
-			existenceReq.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-			existenceReq.setExistenceItem(existenceItemList);
-			LOGGER.info("{} 기구매체크 Request : {}", deviceId, existenceReq);
-			ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
-			LOGGER.info("{} 기구매체크 Response : {}", deviceId, existenceListRes);
-			if (existenceListRes != null && existenceListRes.getExistenceListRes() != null
-					&& existenceListRes.getExistenceListRes().size() > 0) { // 구매내역 존재
-				isPurchasedFromTstore = true;
+			if (iapProductInfoRes != null && StringUtils.isNotBlank(iapProductInfoRes.getParentProdId())) {
+				List<ExistenceItem> existenceItemList = new ArrayList<ExistenceItem>();
+				ExistenceItem existenceItem = new ExistenceItem();
+				existenceItem.setProdId(iapProductInfoRes.getParentProdId());
+				existenceItemList.add(existenceItem);
+
+				// 기구매체크
+				ExistenceReq existenceReq = new ExistenceReq();
+				existenceReq.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+				existenceReq.setUserKey(detailRes.getUserInfo().getUserKey());
+				existenceReq.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+				existenceReq.setExistenceItem(existenceItemList);
+				LOGGER.info("{} 기구매체크 Request : {}", deviceId, existenceReq);
+				ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
+				LOGGER.info("{} 기구매체크 Response : {}", deviceId, existenceListRes);
+				if (existenceListRes != null && existenceListRes.getExistenceListRes() != null
+						&& existenceListRes.getExistenceListRes().size() > 0) { // 구매내역 존재
+					isPurchasedFromTstore = true;
+				}
 			}
 
 		} catch (StorePlatformException e) {
