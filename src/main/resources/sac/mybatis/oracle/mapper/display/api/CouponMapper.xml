@@ -751,6 +751,8 @@
               ,TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  as eventStartDate
               ,TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')    as eventEndDate
               ,A.SPRC_DC_RATE as eventDcRate 
+              ,A.SPRC_PRICE as eventPrice
+              ,A.SPRC_DC_PRICE as eventDcPrice  
         FROM   TB_DP_SPRC_PROD A
               ,TB_DP_PROD_DESC B
               ,TB_DP_SHPG_PROD C
