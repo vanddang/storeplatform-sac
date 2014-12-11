@@ -182,9 +182,10 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	}
 
 	@Override
-	public String searchOrderDeviceId(String userKey, String deviceKey) {
+	public String searchOrderDeviceId(String tenantId, String userKey, String deviceKey) {
 
 		SearchOrderDeviceIdSacReq searchOrderDeviceIdSacReq = new SearchOrderDeviceIdSacReq();
+		searchOrderDeviceIdSacReq.setTenantId(tenantId);
 		searchOrderDeviceIdSacReq.setUserKey(userKey);
 		searchOrderDeviceIdSacReq.setDeviceKey(deviceKey);
 		SearchOrderDeviceIdSacRes searchOrderDeviceIdSacRes = this.deviceSCI

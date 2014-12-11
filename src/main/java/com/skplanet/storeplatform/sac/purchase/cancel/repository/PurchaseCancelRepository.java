@@ -70,7 +70,7 @@ public interface PurchaseCancelRepository {
 	 *            deviceKey
 	 * @return deviceId
 	 */
-	String searchOrderDeviceId(String userKey, String deviceKey);
+	String searchOrderDeviceId(String tenantId, String userKey, String deviceKey);
 
 	/**
 	 * <pre>
