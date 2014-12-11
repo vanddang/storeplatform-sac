@@ -357,6 +357,7 @@
         , R.PROD_DTL_DESC
         , R.PROD_STATUS_CD
         , FC_GET_CM_CD_NM(R.BRDC_COMP_CD, 'ko') AS BRDC_COMP_NM
+        , R.PLAY_TM as EPSD_PLAY_TM
         FROM
         (
             SELECT
@@ -399,6 +400,7 @@
             , EVOD.SAMPL_URL
             , EVOD.SC_SAMPL_URL
             , EVOD.ISSUE_DAY
+            , EVOD.PLAY_TM
             , ETPRC.PROD_AMT
             , ETPRC.PROD_NET_AMT
             , EMCPM.MENU_ID

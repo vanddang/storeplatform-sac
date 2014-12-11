@@ -56,7 +56,7 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = {"sac:display:product:vod","sac:display:product:vod:v2"}, key = "#param.getCacheKey()")
+    @CacheEvict(value = {"sac:display:product:vod","sac:display:product:vod:v2","sac:display:product:vod:v3"}, key = "#param.getCacheKey()")
     public void evictVodMeta(VodMetaParam param) {
 
     }
@@ -96,7 +96,7 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = {"sac:display:product:vod","sac:display:product:vod:v2"}, allEntries = true)
+    @CacheEvict(value = {"sac:display:product:vod","sac:display:product:vod:v2","sac:display:product:vod:v3"}, allEntries = true)
     public void evictAllVodMeta() {
 
     }
