@@ -2147,7 +2147,14 @@ public class LoginServiceImpl implements LoginService {
 			userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
 			userInfo.setUserId(detailRes.getUserInfo().getUserId());
 			userInfo.setUserType(detailRes.getUserInfo().getUserType());
+			userInfo.setImSvcNo(detailRes.getUserInfo().getImSvcNo());
 			userInfo.setImMbrNo(detailRes.getUserInfo().getImMbrNo());
+			userInfo.setUserPhoneCountry(detailRes.getUserInfo().getUserPhoneCountry());
+			userInfo.setUserEmail(detailRes.getUserInfo().getUserEmail());
+			userInfo.setIsRecvEmail(detailRes.getUserInfo().getIsRecvEmail());
+			userInfo.setIsRealName(detailRes.getUserInfo().getIsRealName());
+			userInfo.setUserCountry(detailRes.getUserInfo().getUserCountry());
+			userInfo.setUserLanguage(detailRes.getUserInfo().getUserLanguage());
 			userInfo.setProdExpoLevl(marketRes.getDeviceInfo().getProdExpoLevl());
 
 			// 약관 정보
