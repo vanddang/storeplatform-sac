@@ -57,6 +57,7 @@
               , TO_CHAR(end_dt, 'YYYYMMDDHH24MISS') AS end_dt
           FROM  tb_cm_payment_prom
          WHERE  SYSDATE BETWEEN start_dt AND end_dt
+           AND  use_yn = 'Y'
       ORDER BY  payment_mtd_cd
     </select>
     
