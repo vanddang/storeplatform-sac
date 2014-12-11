@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.SacRequestHeaderHolder;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
@@ -56,6 +57,14 @@ public class DeviceSCIController implements DeviceSCI {
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		if (StringUtils.isBlank(request.getTenantId())) { // tenantId 없는경우 default S01 셋팅
+			tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+		} else {
+			tenant.setTenantId(request.getTenantId());
+		}
+		requestHeader.setTenantHeader(tenant);
 
 		DeviceInfo deviceInfo = this.deviceService.srhDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID,
 				request.getDeviceKey(), request.getUserKey());
