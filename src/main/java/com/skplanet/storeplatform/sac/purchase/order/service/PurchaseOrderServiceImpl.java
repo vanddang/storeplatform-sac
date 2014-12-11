@@ -318,20 +318,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					episodeList, purchaseOrderInfo.getPurchaseProductList().get(0).getCmpxProdClsfCd());
 		}
 
-		// -----------------------------------------------------------------------------
-		// Biz 쿠폰 발급 요청
-
-		if (purchaseOrderInfo.isBizShopping()) {
-			try {
-				this.purchaseShoppingOrderRepository.createBizCouponPublish(purchaseOrderInfo.getPrchsId(),
-						purchaseOrderInfo.getPurchaseUser().getUserId(), purchaseOrderInfo.getPurchaseUser()
-								.getDeviceId(), purchaseOrderInfo.getPurchaseProductList().get(0).getCouponCode(),
-						purchaseOrderInfo.getReceiveUserList());
-			} catch (Exception e) {
-				throw new StorePlatformException("SAC_PUR_7212", e);
-			}
-		}
-
 		// -------------------------------------------------------------------------------------------
 		// 쇼핑상품 쿠폰 발급요청
 
@@ -339,56 +325,41 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 
-			PurchaseProduct purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
-
-			String useDeviceId = useUser.getDeviceId();
-
-			if (purchaseOrderInfo.getApiVer() > 1) { // 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (1:N 선물 지원)
-				// TAKTODO:: 복수개 구매 시 useMdnList 에 구매수량만큼 반복
-
-				List<String> useMdnList = new ArrayList<String>();
-				useMdnList.add(useDeviceId);
-
-				CouponPublishV2EcRes couponPublishV2EcRes = this.purchaseShoppingOrderRepository.createCouponPublishV2(
-						purchaseOrderInfo.getPrchsId(), purchaseProduct.getCouponCode(), purchaseProduct.getItemCode(),
-						purchaseOrderInfo.getPurchaseUser().getDeviceId(), useMdnList,
-						StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD));
-
-				String availStartDt = couponPublishV2EcRes.getAvailStartdate();
-				String availEndDt = couponPublishV2EcRes.getAvailEnddate();
-
-				shoppingCouponList = new ArrayList<ShoppingCouponPublishInfo>();
-				ShoppingCouponPublishInfo shoppingCouponPublishInfo = null;
-				int prchsDtlId = 1;
-				for (CouponPublishV2ItemDetailEcRes couponInfo : couponPublishV2EcRes.getItems()) {
-					shoppingCouponPublishInfo = new ShoppingCouponPublishInfo();
-
-					shoppingCouponPublishInfo.setPrchsDtlId(prchsDtlId++); // 구매상세ID 처리
-					shoppingCouponPublishInfo.setAvailStartDt(availStartDt);
-					shoppingCouponPublishInfo.setAvailEndDt(availEndDt);
-					shoppingCouponPublishInfo.setPublishCode(couponInfo.getPublishCode());
-					shoppingCouponPublishInfo.setShippingUrl(couponInfo.getShippingUrl());
-					shoppingCouponPublishInfo.setAddInfo(couponInfo.getExtraData());
-
-					shoppingCouponList.add(shoppingCouponPublishInfo);
+			if (purchaseOrderInfo.isBizShopping()) { // Biz 쿠폰
+				try {
+					this.purchaseShoppingOrderRepository.createBizCouponPublish(purchaseOrderInfo.getPrchsId(),
+							purchaseOrderInfo.getPurchaseUser().getUserId(), purchaseOrderInfo.getPurchaseUser()
+									.getDeviceId(), purchaseOrderInfo.getPurchaseProductList().get(0).getCouponCode(),
+							purchaseOrderInfo.getReceiveUserList());
+				} catch (Exception e) {
+					throw new StorePlatformException("SAC_PUR_7212", e);
 				}
 
-			} else {
+			} else { // 쇼핑상품 무료상품
 
-				CouponPublishEcRes couponPublishEcRes = this.purchaseShoppingOrderRepository.createCouponPublish(
-						purchaseOrderInfo.getPrchsId(), useDeviceId, purchaseOrderInfo.getPurchaseUser().getDeviceId(),
-						purchaseProduct.getCouponCode(), purchaseProduct.getItemCode(), purchaseProduct.getProdQty());
+				PurchaseProduct purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
 
-				if (StringUtils.equals(couponPublishEcRes.getPublishType(),
-						PurchaseConstants.SHOPPING_COUPON_PUBLISH_ASYNC) == false
-						&& CollectionUtils.isNotEmpty(couponPublishEcRes.getItems())) { // 0-즉시발급
-					String availStartDt = couponPublishEcRes.getAvailStartdate();
-					String availEndDt = couponPublishEcRes.getAvailEnddate();
+				String useDeviceId = useUser.getDeviceId();
+
+				if (purchaseOrderInfo.getApiVer() > 1) { // 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (1:N 선물 지원)
+					// TAKTODO:: 복수개 구매 시 useMdnList 에 구매수량만큼 반복
+
+					List<String> useMdnList = new ArrayList<String>();
+					useMdnList.add(useDeviceId);
+
+					CouponPublishV2EcRes couponPublishV2EcRes = this.purchaseShoppingOrderRepository
+							.createCouponPublishV2(purchaseOrderInfo.getPrchsId(), purchaseProduct.getCouponCode(),
+									purchaseProduct.getItemCode(), purchaseOrderInfo.getPurchaseUser().getDeviceId(),
+									useMdnList, StringUtils.equals(purchaseOrderInfo.getPrchsCaseCd(),
+											PurchaseConstants.PRCHS_CASE_GIFT_CD));
+
+					String availStartDt = couponPublishV2EcRes.getAvailStartdate();
+					String availEndDt = couponPublishV2EcRes.getAvailEnddate();
 
 					shoppingCouponList = new ArrayList<ShoppingCouponPublishInfo>();
 					ShoppingCouponPublishInfo shoppingCouponPublishInfo = null;
 					int prchsDtlId = 1;
-					for (CouponPublishItemDetailEcRes couponInfo : couponPublishEcRes.getItems()) {
+					for (CouponPublishV2ItemDetailEcRes couponInfo : couponPublishV2EcRes.getItems()) {
 						shoppingCouponPublishInfo = new ShoppingCouponPublishInfo();
 
 						shoppingCouponPublishInfo.setPrchsDtlId(prchsDtlId++); // 구매상세ID 처리
@@ -400,27 +371,57 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 						shoppingCouponList.add(shoppingCouponPublishInfo);
 					}
+
+				} else {
+
+					CouponPublishEcRes couponPublishEcRes = this.purchaseShoppingOrderRepository.createCouponPublish(
+							purchaseOrderInfo.getPrchsId(), useDeviceId, purchaseOrderInfo.getPurchaseUser()
+									.getDeviceId(), purchaseProduct.getCouponCode(), purchaseProduct.getItemCode(),
+							purchaseProduct.getProdQty());
+
+					if (StringUtils.equals(couponPublishEcRes.getPublishType(),
+							PurchaseConstants.SHOPPING_COUPON_PUBLISH_ASYNC) == false
+							&& CollectionUtils.isNotEmpty(couponPublishEcRes.getItems())) { // 0-즉시발급
+						String availStartDt = couponPublishEcRes.getAvailStartdate();
+						String availEndDt = couponPublishEcRes.getAvailEnddate();
+
+						shoppingCouponList = new ArrayList<ShoppingCouponPublishInfo>();
+						ShoppingCouponPublishInfo shoppingCouponPublishInfo = null;
+						int prchsDtlId = 1;
+						for (CouponPublishItemDetailEcRes couponInfo : couponPublishEcRes.getItems()) {
+							shoppingCouponPublishInfo = new ShoppingCouponPublishInfo();
+
+							shoppingCouponPublishInfo.setPrchsDtlId(prchsDtlId++); // 구매상세ID 처리
+							shoppingCouponPublishInfo.setAvailStartDt(availStartDt);
+							shoppingCouponPublishInfo.setAvailEndDt(availEndDt);
+							shoppingCouponPublishInfo.setPublishCode(couponInfo.getPublishCode());
+							shoppingCouponPublishInfo.setShippingUrl(couponInfo.getShippingUrl());
+							shoppingCouponPublishInfo.setAddInfo(couponInfo.getExtraData());
+
+							shoppingCouponList.add(shoppingCouponPublishInfo);
+						}
+					}
 				}
-			}
 
-			// 발급된 쿠폰 정보 세팅
-			if (CollectionUtils.isNotEmpty(shoppingCouponList)) {
-				int dtlId = 0;
-				for (ShoppingCouponPublishInfo couponInfo : shoppingCouponList) {
-					PrchsDtlMore couponPrchsDtlMore = prchsDtlMoreList.get(dtlId++);
+				// 발급된 쿠폰 정보 세팅
+				if (CollectionUtils.isNotEmpty(shoppingCouponList)) {
+					int dtlId = 0;
+					for (ShoppingCouponPublishInfo couponInfo : shoppingCouponList) {
+						PrchsDtlMore couponPrchsDtlMore = prchsDtlMoreList.get(dtlId++);
 
-					couponPrchsDtlMore.setPrchsDtlId(couponInfo.getPrchsDtlId());
+						couponPrchsDtlMore.setPrchsDtlId(couponInfo.getPrchsDtlId());
 
-					couponPrchsDtlMore.setUseStartDt(couponInfo.getAvailStartDt());
-					couponPrchsDtlMore.setUseExprDt(couponInfo.getAvailEndDt());
-					couponPrchsDtlMore.setDwldStartDt(couponInfo.getAvailStartDt());
-					couponPrchsDtlMore.setDwldExprDt(couponInfo.getAvailEndDt());
+						couponPrchsDtlMore.setUseStartDt(couponInfo.getAvailStartDt());
+						couponPrchsDtlMore.setUseExprDt(couponInfo.getAvailEndDt());
+						couponPrchsDtlMore.setDwldStartDt(couponInfo.getAvailStartDt());
+						couponPrchsDtlMore.setDwldExprDt(couponInfo.getAvailEndDt());
 
-					couponPrchsDtlMore.setCpnPublishCd(couponInfo.getPublishCode());
-					couponPrchsDtlMore.setCpnDlvUrl(couponInfo.getShippingUrl());
-					couponPrchsDtlMore.setCpnAddInfo(couponInfo.getAddInfo());
-					couponPrchsDtlMore.setCpnBizOrderNo(couponInfo.getBizOrderNo());
-					couponPrchsDtlMore.setCpnBizProdSeq(couponInfo.getBizSeq());
+						couponPrchsDtlMore.setCpnPublishCd(couponInfo.getPublishCode());
+						couponPrchsDtlMore.setCpnDlvUrl(couponInfo.getShippingUrl());
+						couponPrchsDtlMore.setCpnAddInfo(couponInfo.getAddInfo());
+						couponPrchsDtlMore.setCpnBizOrderNo(couponInfo.getBizOrderNo());
+						couponPrchsDtlMore.setCpnBizProdSeq(couponInfo.getBizSeq());
+					}
 				}
 			}
 		}
