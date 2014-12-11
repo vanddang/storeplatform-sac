@@ -129,6 +129,7 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 		price.setDiscountRate(metaInfo.getDcRate());
 		price.setDiscountPrice(Integer.parseInt(metaInfo.getDcAmt()));
 		price.setText(metaInfo.getProdAmt());
+		price.setOrgDiscountPrice(metaInfo.getOrgDiscountPrice());
 		return price;
 	}
 
