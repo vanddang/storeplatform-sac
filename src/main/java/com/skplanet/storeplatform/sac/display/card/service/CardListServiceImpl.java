@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -40,7 +39,6 @@ import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
 import com.skplanet.storeplatform.sac.display.card.vo.CardListGeneratorContext;
 import com.skplanet.storeplatform.sac.display.card.vo.CardSegment;
 import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
-import com.skplanet.storeplatform.sac.display.common.service.menu.MenuInfoService;
 
 /**
  * <p>
@@ -57,17 +55,10 @@ public class CardListServiceImpl implements CardListService {
     private CardDetailService cardDetailService;
 
     @Autowired
-    private MenuInfoService menuInfoService;
-
-    @Autowired
     private PanelCardInfoManager panelCardInfoManager;
 
     private static final int PN_LEVEL_LV2 = 2;
     private static final int PN_LEVEL_LV3 = 3;
-
-    private static final String CARDTP_FC = "CD05000030";
-
-    private static final Pattern RX_DT_FC = Pattern.compile("DT200003(\\d\\d)");
 
     private static final int CARD_LIMIT_MAX = 50;
 
@@ -90,10 +81,12 @@ public class CardListServiceImpl implements CardListService {
 
         for (PanelItem panelItem : panelItems) {
             if(panelItem.getPanelLevel() == PN_LEVEL_LV2) {
+                ctx.setCurPanelLevel(PN_LEVEL_LV2);
                 mapPanel(rootPn, panelItem);
                 attachCardList(ctx, rootPn, panelItem.getPanelId(), processor);
             }
             else if (panelItem.getPanelLevel() == PN_LEVEL_LV3) {
+                ctx.setCurPanelLevel(PN_LEVEL_LV3);
                 Panel subPn = new Panel();
                 subPn.setCardList(new ArrayList<Card>());
 
@@ -112,16 +105,34 @@ public class CardListServiceImpl implements CardListService {
     /**
      * 패널에 카드목록을 붙인다.
      * @param ctx
-     * @param pn
+     * @param parentPanel
      * @param panelId
      * @param processor
      */
-    private void attachCardList(CardListGeneratorContext ctx, Panel pn, String panelId, CardDynamicInfoProcessor processor) {
+    private void attachCardList(CardListGeneratorContext ctx, Panel parentPanel, String panelId, CardDynamicInfoProcessor processor) {
         List<PanelCardMapping> cardList = getPanelCardMaping(ctx, panelId);
+        if(CollectionUtils.isEmpty(cardList))
+            return;
+
         int maxCardCnt = ctx.isDisableCardLimit() ? CARD_LIMIT_MAX :
-                            (pn.getMaxDpCardCnt() != null ? pn.getMaxDpCardCnt() : CARD_LIMIT_MAX);
-        int cardCnt = 0;
+                            (parentPanel.getMaxDpCardCnt() != null ? parentPanel.getMaxDpCardCnt() : CARD_LIMIT_MAX), // 최대 표시 카드 수량
+            cardCnt = 0;    // 노출중인 카드 수량
+
         Date stdDt = new Date();
+
+        /**
+         * # moreYn 처리용 로직
+         * maxCardCnt = maxCardCnt + 1
+         * [Process loop]
+         * if(cardCnt == maxCardCnt)
+         *   moreYn := "Y"
+         *   cardList.removeLast()
+         * else
+         *   moreYn := "N"
+         */
+        if(!ctx.isDisableCardLimit()) {
+            ++maxCardCnt;
+        }
 
         for (PanelCardMapping panCard : cardList) {
             if(cardCnt >= maxCardCnt)
@@ -150,8 +161,17 @@ public class CardListServiceImpl implements CardListService {
 
             processor.addCard(card);
 
-            pn.getCardList().add(card);
+            parentPanel.getCardList().add(card);
             ++cardCnt;
+        }
+
+        if(!ctx.isDisableCardLimit()) {
+            if(cardCnt == maxCardCnt) {
+                parentPanel.setMoreYn("Y");
+                parentPanel.getCardList().remove(cardCnt - 1);
+            }
+            else
+                parentPanel.setMoreYn("N");
         }
     }
 

@@ -26,6 +26,7 @@ public class CardListGeneratorContext {
     private SegmentInfo segmentInfo;
     private PreferredCategoryInfo preferredCategoryInfo;
     private boolean disableCardLimit;
+    private int curPanelLevel;  // 현재 처리중인 패널 레벨
 
     public CardListGeneratorContext(String tenantId, String langCd, String reqPanelId, String userKey, SegmentInfo segmentInfo, PreferredCategoryInfo preferredCategoryInfo, boolean disableCardLimit) {
         this.tenantId = tenantId;
@@ -63,5 +64,13 @@ public class CardListGeneratorContext {
 
     public String getUserKey() {
         return userKey;
+    }
+
+    public int getCurPanelLevel() {
+        return curPanelLevel;
+    }
+
+    public void setCurPanelLevel(int curPanelLevel) {
+        this.curPanelLevel = curPanelLevel;
     }
 }
