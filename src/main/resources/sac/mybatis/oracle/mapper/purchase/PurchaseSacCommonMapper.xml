@@ -48,17 +48,22 @@
     <!-- 결제수단 프로모션 조회 -->
     <select id="searchPaymentPromotionList" parameterType="java.lang.String" resultType="PaymentPromotion">
         SELECT /* PurchaseSacCommonMapper.searchPaymentPromotionList, 결제수단 프로모션 조회, 이승택/nTels, 2014-12-09 */
-                prom_seq
-              , payment_mtd_cd
-              , prom_nm
-              , prom_desc
-              , prom_url
-              , TO_CHAR(start_dt, 'YYYYMMDDHH24MISS') AS start_dt
-              , TO_CHAR(end_dt, 'YYYYMMDDHH24MISS') AS end_dt
-          FROM  tb_cm_payment_prom
-         WHERE  SYSDATE BETWEEN start_dt AND end_dt
-           AND  use_yn = 'Y'
-      ORDER BY  payment_mtd_cd
+                a.tenant_id
+              , b.prom_seq
+              , b.payment_mtd_cd
+              , b.prom_nm
+              , b.prom_desc
+              , b.prom_url
+              , TO_CHAR(b.start_dt, 'YYYYMMDDHH24MISS') AS start_dt
+              , TO_CHAR(b.end_dt, 'YYYYMMDDHH24MISS') AS end_dt
+          FROM  tb_cm_tenant_payment_prom a,
+                tb_cm_payment_prom b
+         WHERE  a.prom_seq = b.prom_seq
+           AND  a.tenant_id = #{tenantId}
+           AND  SYSDATE BETWEEN b.start_dt AND b.end_dt
+           AND  a.expo_yn = 'Y'
+           AND  b.use_yn = 'Y'
+      ORDER BY  b.payment_mtd_cd
     </select>
     
     <!-- 구매Part 테넌트 정책 목록 조회 -->
