@@ -199,6 +199,7 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 		res.setDeviceId(searchOrderDeviceResponse.getDeviceId());
 		res.setDeviceTelecom(searchOrderDeviceResponse.getDeviceTelecom());
 		res.setTableName(searchOrderDeviceResponse.getTableName());
+		res.setTenantId(searchOrderDeviceResponse.getTenantID());
 
 		return res;
 	}

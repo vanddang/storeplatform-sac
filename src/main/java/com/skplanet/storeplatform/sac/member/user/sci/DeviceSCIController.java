@@ -131,6 +131,14 @@ public class DeviceSCIController implements DeviceSCI {
 		// 공통 파라미터 셋팅
 		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
 
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		if (StringUtils.isBlank(req.getTenantId())) { // tenantId 없는경우 default S01 셋팅
+			tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+		} else {
+			tenant.setTenantId(req.getTenantId());
+		}
+		requestHeader.setTenantHeader(tenant);
+
 		SearchOrderDeviceIdSacRes res = this.deviceService.searchOrderDeviceId(requestHeader, req);
 
 		LOGGER.info("Response : {}", res.getDeviceId());
