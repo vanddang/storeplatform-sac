@@ -54,6 +54,11 @@ public class Panel extends CommonInfo {
      */
     private List<Card> cardList;
 
+    /**
+     * 서브패널 더 존재여부
+     */
+    private String moreYn;
+
     public String getId() {
         return id;
     }
@@ -100,5 +105,13 @@ public class Panel extends CommonInfo {
 
     public void setCardList(List<Card> cardList) {
         this.cardList = cardList;
+    }
+
+    public String getMoreYn() {
+        return moreYn;
+    }
+
+    public void setMoreYn(String moreYn) {
+        this.moreYn = moreYn;
     }
 }
