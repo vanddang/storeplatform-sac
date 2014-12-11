@@ -328,6 +328,10 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 			return 0;
 		}
 
+		if (birthday.matches("^[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]$") == false) {
+			return 0;
+		}
+
 		String currday = DateFormatUtils.format(Calendar.getInstance().getTimeInMillis(), "yyyyMMdd");
 
 		int baseAge = Integer.parseInt(currday.substring(0, 4)) - Integer.parseInt(birthday.substring(0, 4));
