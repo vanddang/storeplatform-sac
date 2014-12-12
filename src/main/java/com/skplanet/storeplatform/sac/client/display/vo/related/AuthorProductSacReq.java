@@ -44,7 +44,7 @@ public class AuthorProductSacReq extends CommonInfo implements Serializable {
 	private String langCd; // 언어코드
 	private String mmDeviceModelCd; // 가상 프로비저닝 모델명 (멀티미디어).
 	private String topMenuId; // 탑메뉴ID
-
+	private String prodGradeCd; // 상품 이용 등급 코드 "PD004401" : 전체이용가, "PD004402" : 12세이용가, "PD004403" : 15세이용가, "PD004404" : 청소년이용불가
 	/**
 	 * 
 	 * <pre>
@@ -323,4 +323,21 @@ public class AuthorProductSacReq extends CommonInfo implements Serializable {
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
 	}
+	
+	/**
+	 * 상품 이용 등급 코드
+	 * @return String
+	 */
+	public String getProdGradeCd() {
+		return prodGradeCd;
+	}
+
+	/**
+	 * 상품 이용 등급 코드
+	 * @param prodGradeCd 상품 이용 등급 코드
+	 */
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
+	}
+
 }

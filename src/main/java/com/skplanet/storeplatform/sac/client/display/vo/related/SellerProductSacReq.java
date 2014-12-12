@@ -37,7 +37,8 @@ public class SellerProductSacReq extends CommonInfo implements Serializable {
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
-
+	private String prodGradeCd; // 상품 이용 등급 코드 "PD004401" : 전체이용가, "PD004402" : 12세이용가, "PD004403" : 15세이용가, "PD004404" : 청소년이용불가
+	
 	/**
 	 * 
 	 * <pre>
@@ -264,4 +265,22 @@ public class SellerProductSacReq extends CommonInfo implements Serializable {
 		this.arrayExceptId = arrayExceptId == null ? null : arrayExceptId.clone();
 	}
 
+	/**
+	 * 상품 이용 등급 코드
+	 * @return String
+	 */
+	public String getProdGradeCd() {
+		return prodGradeCd;
+	}
+
+	/**
+	 * 상품 이용 등급 코드
+	 * @param prodGradeCd 상품 이용 등급 코드
+	 */
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
+	}
+
+	
+	
 }
