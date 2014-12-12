@@ -43,6 +43,12 @@
         
             AND A.CONTENTS_TYPE_CD = 'PD002502'
             AND A.META_CLSF_CD = 'CT25'
+			<if test="prodGradeCds != null">
+			AND A.PROD_GRD_CD IN
+				<foreach collection="prodGradeCds" item="prodGradeCd" separator="," open="(" close=")">
+					#{prodGradeCd}
+				</foreach>
+			</if>
             AND B.USE_YN = 'Y'
             AND C.USE_YN = 'Y'
             AND G.USE_YN = 'Y'

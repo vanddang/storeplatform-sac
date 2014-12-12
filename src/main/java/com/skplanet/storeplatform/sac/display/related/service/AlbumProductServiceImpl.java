@@ -74,7 +74,7 @@ public class AlbumProductServiceImpl implements AlbumProductService {
 	 */
 	@Override
 	public AlbumProductSacRes searchAlbumProductList(
-			String tenantId, String langCd, String deviceModelCd, String prodId) {
+			String tenantId, String langCd, String deviceModelCd, String prodId, String[] prodGradeCds) {
 		
 		AlbumProductSacRes albumProductSacRes = new AlbumProductSacRes();
 		
@@ -84,6 +84,7 @@ public class AlbumProductServiceImpl implements AlbumProductService {
 		reqMap.put("deviceModelCd", deviceModelCd);
 		reqMap.put("mmDeviceModelCd", DisplayConstants.DP_ANY_PHONE_4MM);
 		reqMap.put("prodId", prodId);
+		reqMap.put("prodGradeCds", prodGradeCds);
 		
 		this.log.debug("특정 앨범별 상품(곡) 조회");
 		
