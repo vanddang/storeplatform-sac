@@ -66,6 +66,7 @@
             AND SYSTEM_ID = #{systemId, jdbcType=VARCHAR}
             AND UP_MENU_KEY = #{upMenuKey, jdbcType=VARCHAR}
             AND EXPO_YN = 'Y'
+            AND KEY_TYPE IN ('DP01230001','DP01230002')
         ORDER BY KEY_TYPE, EXPO_ORD
     </select>
 
