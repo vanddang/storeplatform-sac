@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +88,12 @@ public class SellerProductServiceImpl implements SellerProductService {
         req.put("mmDeviceModelCd", DisplayConstants.DP_ANY_PHONE_4MM);
         req.put("exceptId", requestVO.getExceptId());
 
+		// prodGradeCd 배열로 변경
+		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
+			String[] prodGradeCdArr = StringUtils.split(requestVO.getProdGradeCd(), "+");
+			req.put("prodGradeCdArr", prodGradeCdArr);
+		}
+        
 		SellerProductSacRes sellerProductSacRes = new SellerProductSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Map<String, Object> reqMap = new HashMap<String, Object>();

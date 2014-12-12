@@ -48,7 +48,13 @@
                 <foreach collection="arrayExceptId" item="exceptId" separator="," open="(" close=")">
                     #{exceptId}
                 </foreach>
-            </if> 
+            </if>
+            <if test='prodGradeCdArr != null'>
+            	AND A.PROD_GRD_CD IN
+                <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                #{prodGradeCd}  
+                </foreach> /* 상품등급코드 */
+            </if>
         ) A
         WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
         ORDER BY A.RNK
@@ -96,6 +102,12 @@
                         #{exceptId}
                     </foreach>
                 </if>
+	            <if test='prodGradeCdArr != null'>
+	            AND A.PROD_GRD_CD IN
+	                <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+	                #{prodGradeCd}
+	                </foreach> /* 상품등급코드 */
+	            </if>
         ) A
         WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
         ORDER BY A.RNK

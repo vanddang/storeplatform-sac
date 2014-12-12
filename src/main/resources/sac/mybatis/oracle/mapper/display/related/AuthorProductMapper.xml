@@ -97,7 +97,12 @@
                 <if test="filteredBy == 'translator'"> /* 번역가 */
                 AND A.ARTIST3_NM = #{authorName}
                 </if>
-                
+            	<if test='prodGradeCdArr != null'>
+            	AND E.PROD_GRD_CD IN
+	                <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                	#{prodGradeCd}  
+                	</foreach> /* 상품등급코드 */
+            	</if>
                 AND A.PROD_ID != #{exceptId} /* 제외 상품 ID : H001541415 */
                 AND D.TOP_MENU_ID = #{topMenuId}
                 AND F.TENANT_ID = #{tenantId}
@@ -182,7 +187,12 @@
                     <if test="filteredBy == 'translator'"> /* 번역가 */
                         AND A.ARTIST3_NM = #{authorName}
                     </if>
-
+					<if test='prodGradeCdArr != null'>
+            			AND E.PROD_GRD_CD IN
+	                	<foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+                		#{prodGradeCd}  
+                		</foreach> /* 상품등급코드 */
+            		</if>
                     AND A.PROD_ID != #{exceptId} /* 제외 상품 ID : H001541415 */
                     AND D.TOP_MENU_ID = #{topMenuId}
                     AND F.TENANT_ID = #{tenantId}

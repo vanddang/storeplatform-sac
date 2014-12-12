@@ -21,6 +21,8 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +88,12 @@ public class AuthorProductServiceImpl implements AuthorProductService {
         req.put("mmDeviceModelCd", DisplayConstants.DP_ANY_PHONE_4MM);
         req.put("exceptId", requestVO.getExceptId());
 
+		// prodGradeCd 배열로 변경
+		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
+			String[] prodGradeCdArr = StringUtils.split(requestVO.getProdGradeCd(), "+");
+			req.put("prodGradeCdArr", prodGradeCdArr);
+		}
+        
 		AuthorProductSacRes authorProductSacRes = new AuthorProductSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Map<String, Object> reqMap = new HashMap<String, Object>();
