@@ -21,6 +21,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacR
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
@@ -270,4 +272,17 @@ public interface UserSearchService {
 	 * @return DetailV2Res
 	 */
 	public DetailV2Res detailV2(SacRequestHeader sacHeader, DetailReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.50. 회원 가입 여부 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ExistListSacReq
+	 * @return ExistListSacRes
+	 */
+	public ExistListSacRes existList(SacRequestHeader sacHeader, ExistListSacReq req);
 }

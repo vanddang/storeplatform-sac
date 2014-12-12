@@ -26,6 +26,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacR
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
@@ -281,6 +283,41 @@ public class UserSearchController {
 		DetailV2Res res = this.svc.detailV2(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.getUserKey());
+
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.50. 회원 가입 여부 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ExistListSacReq
+	 * @return ExistListSacRes
+	 */
+	@RequestMapping(value = "/member/user/existList/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ExistListSacRes existList(SacRequestHeader header, @RequestBody @Validated ExistListSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if (req.getDeviceIdList() == null) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceIdList");
+		}
+
+		if (req.getDeviceIdList().size() <= 0) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceIdList");
+		}
+
+		if (req.getDeviceIdList().size() > 10) {
+			throw new StorePlatformException("SAC_MEM_1303", req.getDeviceIdList().size());
+		}
+
+		ExistListSacRes res = this.svc.existList(header, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 	}

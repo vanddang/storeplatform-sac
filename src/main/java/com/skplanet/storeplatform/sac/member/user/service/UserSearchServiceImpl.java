@@ -46,6 +46,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceMbrStatus;
 import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceSystemStats;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.GameCenter;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
@@ -71,6 +73,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserDeviceKey;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrStatus;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
@@ -95,6 +98,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacR
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistListSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
@@ -1920,4 +1925,42 @@ public class UserSearchServiceImpl implements UserSearchService {
 		gradeInfo.setUserGradeCd(StringUtil.setTrim(schUserRes.getGrade().getUserGradeCd()));
 		return gradeInfo;
 	}
+
+	/**
+	 * <pre>
+	 * 2.1.50. 회원 가입 여부 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ExistListSacReq
+	 * @return ExistListSacRes
+	 */
+	@Override
+	public ExistListSacRes existList(SacRequestHeader sacHeader, ExistListSacReq req) {
+
+		ExistListRequest existListRequest = new ExistListRequest();
+		existListRequest.setDeviceIdList(req.getDeviceIdList());
+		existListRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+		LOGGER.debug("SAC Request deviceIdSize : {}", req.getDeviceIdList().size());
+
+		ExistListResponse existListResponse = this.userSCI.existList(existListRequest);
+
+		List<DeviceInfo> list = new ArrayList<DeviceInfo>();
+		for (UserMbrDevice userMbrDevice : existListResponse.getDeviceIdList()) {
+			DeviceInfo deviceInfo = new DeviceInfo();
+			deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
+			deviceInfo.setUserKey(userMbrDevice.getUserKey());
+			list.add(deviceInfo);
+		}
+
+		ExistListSacRes res = new ExistListSacRes();
+		res.setDeviceIdList(list);
+
+		return res;
+
+	}
+
 }
