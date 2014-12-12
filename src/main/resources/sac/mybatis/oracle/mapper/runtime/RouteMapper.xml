@@ -25,7 +25,7 @@
         USING (bypass_id)
         <choose>
 	        <when test="@com.skplanet.storeplatform.sac.common.environment.ActvieProfileProvider@getActiveProfile() == 'stg'">
-	        JOIN tb_fw_component_stg
+	        JOIN tb_fw_component_stg$
 	        </when>
 	        <otherwise>
 	        JOIN tb_fw_component
