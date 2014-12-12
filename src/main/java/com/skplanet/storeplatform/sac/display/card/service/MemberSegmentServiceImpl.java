@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.card.service;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +54,10 @@ public class MemberSegmentServiceImpl implements MemberSegmentService {
 			typeService.bindFromDb(segmentRes, segmentFromDb);
 			List<PreferredCategoryRes> preferredCategoryList = typeService.fromMemberSegmentToPreferredCategoryRes(segmentFromDb);	
 			res.setPreferredCategoryList(preferredCategoryList);
+		}
+		
+		if (StringUtils.isBlank(segmentRes.getOutsdMbrGrdCd())) {
+			segmentRes.setOutsdMbrGrdCd("2"); // Default 외부회원레벨 = "gold"
 		}
 		
 		res.setSegment(segmentRes);

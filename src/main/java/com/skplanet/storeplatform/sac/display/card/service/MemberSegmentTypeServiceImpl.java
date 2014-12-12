@@ -46,14 +46,11 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 
 	@Override
 	public void bindFromSci(SegmentRes segmentRes, SearchUserSegmentSacRes segmentFromSci) {
-		String userGradeCd = segmentFromSci.getUserGradeCd();
 		String sex = segmentFromSci.getUserSex();
 		String deviceChgYn = segmentFromSci.getIsChanged();
 		String newEntryDay = segmentFromSci.getEntryDay();
 		String mnoClsfCd = segmentFromSci.getUserTelecom();
 		
-		String outsdMbrGrdCd = numberOutsdMbrGrdCd(userGradeCd);
-		segmentRes.setOutsdMbrGrdCd(outsdMbrGrdCd);
 		segmentRes.setSex(sex);
 		segmentRes.setDeviceChgYn(deviceChgYn);
 		String newEntryYn = isRecentlyRegistered(newEntryDay) ? "Y" : "N";
@@ -71,7 +68,7 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 		String newEntryYn = segmentFromDb.getNewEntryYn();
 		String mnoClsfCd = segmentFromDb.getMnoCd();
 		List<String> categoryBest = Arrays.asList(segmentFromDb.getCategoryBest());
-		
+
 		segmentRes.setOutsdMbrGrdCd(outsdMbrGrdCd);
 		segmentRes.setInsdMbrGrdCd(insdMbrGrdCd);
 		segmentRes.setSex(sex);
@@ -111,13 +108,6 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 		} else {
 			return false;
 		}
-	}
-	
-	public static String numberOutsdMbrGrdCd(String userGradeCd) {
-		if ("platinum".equals(userGradeCd)) return "1";
-		if ("gold".equals(userGradeCd))     return "2";
-		if ("silver".equals(userGradeCd))   return "3";
-		else                                return "4";
 	}
 	
 }
