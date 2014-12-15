@@ -11,11 +11,14 @@ package com.skplanet.storeplatform.sac.display.common.service;
 
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.other.common.constant.OtherConstants;
 import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceService;
 import com.skplanet.storeplatform.sac.other.sacservice.service.SacServiceTypeService;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -81,4 +84,22 @@ public class MemberBenefitServiceImpl implements MemberBenefitService {
         else
             return new MileageInfo();
     }
+
+	/* (non-Javadoc)
+	 * @see com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService#checkFreeProduct(com.skplanet.storeplatform.sac.display.common.vo.MileageInfo)
+	 */
+	@Override
+	public MileageInfo checkFreeProduct(MileageInfo mileageInfo, Integer prodAmt) {
+		if(mileageInfo != null) {
+	        //Tstore멤버십 적립율 정보
+	        //예외 상품이 아닌 경우 무료 상품은 적립율을 노출하지 않는다.
+	        //무료 상품 && 카테고리 => 마일리지 비노출
+	        if (prodAmt == null || prodAmt == 0
+	        		&& StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)
+	        		) {
+	        	mileageInfo = null;
+	        }
+        }
+		return mileageInfo;
+	}
 }

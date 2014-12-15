@@ -1970,6 +1970,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							String userGrade = userGradeInfo.getUserGradeCd();
 							MileageInfo mileageInfo = this.benefitService.getMileageInfo(tenantHeader.getTenantId(),
 									shopping.getTopMenuId(), shopping.getProdId(), shopping.getProdAmt());
+							mileageInfo = benefitService.checkFreeProduct(mileageInfo, shopping.getProdAmt());
 							pointList.addAll(this.commonGenerator.generateMileage(mileageInfo, userGrade));
 						}
 					}
@@ -3784,6 +3785,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							String userGrade = userGradeInfo.getUserGradeCd();
 							MileageInfo mileageInfo = this.benefitService.getMileageInfo(tenantHeader.getTenantId(),
 									shopping.getTopMenuId(), shopping.getProdId(), shopping.getProdAmt());
+							mileageInfo = benefitService.checkFreeProduct(mileageInfo, shopping.getProdAmt());
 							pointList.addAll(this.commonGenerator.generateMileage(mileageInfo, userGrade));
 						}
 					}

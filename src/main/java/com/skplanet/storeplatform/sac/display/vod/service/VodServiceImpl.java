@@ -359,6 +359,7 @@ public class VodServiceImpl implements VodService {
  				else if(mapperVO.getPlayProdAmt() != null && mapperVO.getPlayProdAmt() > 0)
  					 prodAmt = mapperVO.getPlayProdAmt();
 	        	MileageInfo mileageInfo = benefitService.getMileageInfo(req.getTenantId(), mapperVO.getTopMenuId(), req.getChannelId(), prodAmt);
+	        	mileageInfo = benefitService.checkFreeProduct(mileageInfo, prodAmt);
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
         }

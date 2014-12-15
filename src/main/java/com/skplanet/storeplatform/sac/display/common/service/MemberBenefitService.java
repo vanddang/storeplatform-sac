@@ -30,4 +30,10 @@ public interface MemberBenefitService {
      */
     MileageInfo getMileageInfo(String tenantId, String topMenuId, String chnlId, Integer prodAmt);
 
+	/**
+	 * 마일리지 적립율 무료 상품 여부 체크
+	 * @param mileageInfo
+	 */
+    MileageInfo checkFreeProduct(MileageInfo mileageInfo, Integer prodAmt);
+
 }
