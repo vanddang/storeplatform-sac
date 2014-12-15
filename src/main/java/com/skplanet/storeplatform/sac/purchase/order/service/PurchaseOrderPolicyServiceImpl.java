@@ -1285,12 +1285,51 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		sbPaymethodInfo.append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
 
+		String paymethodInfo = sbPaymethodInfo.toString();
+
 		// 시리즈 패스
 		if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
-			return sbPaymethodInfo.toString().replaceAll("14:0:0;", "");
-		} else {
-			return sbPaymethodInfo.toString();
+			paymethodInfo = paymethodInfo.replaceAll("14:0:0;", "").replaceAll(";14:0:0", "");
 		}
+
+		// 인앱 자동결제 상품의 경우(서버2서버 자동결제 포함), 휴대폰결제/신용카드만 노출되며 T멤버십은 호핀 앱에서만 노출한다.
+		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+			if (checkPaymentPolicyParam.isAutoPrchs() || checkPaymentPolicyParam.isS2sAutoPrchs()) {
+				StringBuffer sbPaymethodAdjInfo = new StringBuffer(128);
+				int pos = paymethodInfo.indexOf("11:");
+				if (pos >= 0) {
+					sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+							.append(";");
+				}
+				pos = paymethodInfo.indexOf("12:");
+				if (pos >= 0) {
+					sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+							.append(";");
+				}
+				pos = paymethodInfo.indexOf("13:");
+				if (pos >= 0) {
+					sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+							.append(";");
+				}
+
+				if (PurchaseConstants.HOPPIN_AID_LIST.contains(checkPaymentPolicyParam.getParentProdId())) {
+					pos = paymethodInfo.indexOf("21:");
+					if (pos >= 0) {
+						sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+								.append(";");
+					}
+				} else {
+					sbPaymethodAdjInfo.append("21:0:0;");
+				}
+
+				sbPaymethodAdjInfo.append("14:0:0;20:0:0;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0;27:0:0;30:0:0");
+
+				paymethodInfo = sbPaymethodAdjInfo.toString();
+			}
+
+		}
+
+		return paymethodInfo;
 	}
 
 	/**

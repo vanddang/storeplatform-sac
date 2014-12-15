@@ -40,6 +40,9 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String TLOG_ID_PURCHASE_ORDER_RESULT = "TL_SAC_PUR_0005"; // 구매 결과
 	public static final String TLOG_ID_PURCHASE_ORDER_RESERVE = "TL_SAC_PUR_0007"; // 구매 예약
 
+	/** 호핀 AID */
+	public static final List<String> HOPPIN_AID_LIST = Arrays.asList("OA00252337"); // 호핀 AID
+
 	/** 쇼핑쿠폰CMS 조회 결과 에러 코드 */
 	public static final String COUPON_CMS_RESULT_SOLDOUT = "EC_SCPNCMS_3105"; // 품절
 

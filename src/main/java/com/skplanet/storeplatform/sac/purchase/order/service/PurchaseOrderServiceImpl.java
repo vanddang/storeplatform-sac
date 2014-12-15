@@ -1947,6 +1947,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			policyCheckParam.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
 			policyCheckParam.setDeviceKey(prchsDtlMore.getUseInsdDeviceId());
 		}
+		policyCheckParam.setAutoPrchs(StringUtils.equals(reservedDataMap.get("autoPrchsYn"), "Y"));
+		policyCheckParam.setS2sAutoPrchs(StringUtils.equals(reservedDataMap.get("s2sAutoYn"), "Y"));
+		policyCheckParam.setS2s(StringUtils.equals(reservedDataMap.get("s2sYn"), "Y"));
 
 		try {
 			return this.purchaseOrderPolicyService.checkPaymentPolicy(policyCheckParam);

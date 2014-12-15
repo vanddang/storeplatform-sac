@@ -40,6 +40,10 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	private String cmpxProdClsfCd;
 	private String parentProdId; // 인앱 경우에만 사용 : AID
 
+	private boolean autoPrchs; // 자동결제 상품여부
+	private boolean s2sAutoPrchs; // IAP S2S 자동결제 상품여부
+	private boolean s2s; // IAP S2S 상품여부
+
 	/**
 	 * @return the tenantId
 	 */
@@ -293,6 +297,51 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	 */
 	public void setParentProdId(String parentProdId) {
 		this.parentProdId = parentProdId;
+	}
+
+	/**
+	 * @return the autoPrchs
+	 */
+	public boolean isAutoPrchs() {
+		return this.autoPrchs;
+	}
+
+	/**
+	 * @param autoPrchs
+	 *            the autoPrchs to set
+	 */
+	public void setAutoPrchs(boolean autoPrchs) {
+		this.autoPrchs = autoPrchs;
+	}
+
+	/**
+	 * @return the s2sAutoPrchs
+	 */
+	public boolean isS2sAutoPrchs() {
+		return this.s2sAutoPrchs;
+	}
+
+	/**
+	 * @param s2sAutoPrchs
+	 *            the s2sAutoPrchs to set
+	 */
+	public void setS2sAutoPrchs(boolean s2sAutoPrchs) {
+		this.s2sAutoPrchs = s2sAutoPrchs;
+	}
+
+	/**
+	 * @return the s2s
+	 */
+	public boolean isS2s() {
+		return this.s2s;
+	}
+
+	/**
+	 * @param s2s
+	 *            the s2s to set
+	 */
+	public void setS2s(boolean s2s) {
+		this.s2s = s2s;
 	}
 
 }
