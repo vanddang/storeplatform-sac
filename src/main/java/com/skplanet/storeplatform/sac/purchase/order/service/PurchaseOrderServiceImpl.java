@@ -924,12 +924,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
 		res.setNoTelSeller(sellerInfo.getRepPhone()); // 대표전화번호
 
-		// 선물 수신자 정보
-		if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
-			res.setNmDelivery(this.concatResvDesc(prchsDtlMoreList, "receiveName", ";")); // 선물수신자 성명
-			res.setNoMdnDelivery(this.concatResvDesc(prchsDtlMoreList, "useDeviceId", ";")); // 선물수신자 MDN
-		}
-
 		return res;
 	}
 
@@ -2078,7 +2072,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			promotionList.add(promotion);
 		}
 
-		return promotionList;
+		if (CollectionUtils.isEmpty(promotionList)) {
+			return null;
+		} else {
+			return promotionList;
+		}
 	}
 
 	/*
@@ -2090,20 +2088,19 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private List<VerifyOrderBannerInfoSac> searchBannerList(PrchsDtlMore prchsDtlMore) {
 		// TAKTODO:: 배너 관리 이전까지 하드코딩
 
-		// 쇼핑 상품 경우는 배너 없는 테스트
-		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-			return null;
-		}
-
 		List<VerifyOrderBannerInfoSac> bannerList = new ArrayList<VerifyOrderBannerInfoSac>();
 
-		VerifyOrderBannerInfoSac banner = new VerifyOrderBannerInfoSac();
-		banner.setTitle("테스트 배너");
-		banner.setImagePath("/data/img/banner/sc/shopping/B_20141106103300066.jpg");
-		banner.setLinkUrl("m.nate.com");
-		banner.setBackColorCd("#D5C8EB");
-		bannerList.add(banner);
+		// VerifyOrderBannerInfoSac banner = new VerifyOrderBannerInfoSac();
+		// banner.setTitle("테스트 배너");
+		// banner.setImagePath("/data/img/banner/sc/shopping/B_20141106103300066.jpg");
+		// banner.setLinkUrl("m.nate.com");
+		// banner.setBackColorCd("#D5C8EB");
+		// bannerList.add(banner);
 
-		return bannerList;
+		if (CollectionUtils.isEmpty(bannerList)) {
+			return null;
+		} else {
+			return bannerList;
+		}
 	}
 }

@@ -487,6 +487,10 @@ public class PurchaseOrderController {
 			purchaseOrderInfo.setGamecash(true); // 게임캐쉬 상품 여부
 		}
 
+		// 선물 수신자 정보
+		purchaseOrderInfo.setNmDelivery(createPurchaseSacReq.getNmDelivery());
+		purchaseOrderInfo.setNoMdnDelivery(createPurchaseSacReq.getNoMdnDelivery());
+
 		// CLINK 예외 처리용
 		if (StringUtils.equals(createPurchaseSacReq.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_CLINK)) {
 			purchaseOrderInfo.setClink(true);

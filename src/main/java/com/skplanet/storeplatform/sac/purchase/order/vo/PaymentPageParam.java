@@ -54,6 +54,8 @@ public class PaymentPageParam extends CommonInfo {
 	private String OPMDLineNo; // OPMD 번호
 	private String userKey; // 결제자 UserKey
 	private String offeringId; // 오퍼링 ID
+	private String nmDelivery; // 선물수신자명
+	private String noMdnDelivery; // 선물수신자 MDN
 
 	// ==========================================================================================
 
@@ -505,6 +507,36 @@ public class PaymentPageParam extends CommonInfo {
 	 */
 	public void setOfferingId(String offeringId) {
 		this.offeringId = offeringId;
+	}
+
+	/**
+	 * @return the nmDelivery
+	 */
+	public String getNmDelivery() {
+		return this.nmDelivery;
+	}
+
+	/**
+	 * @param nmDelivery
+	 *            the nmDelivery to set
+	 */
+	public void setNmDelivery(String nmDelivery) {
+		this.nmDelivery = nmDelivery;
+	}
+
+	/**
+	 * @return the noMdnDelivery
+	 */
+	public String getNoMdnDelivery() {
+		return this.noMdnDelivery;
+	}
+
+	/**
+	 * @param noMdnDelivery
+	 *            the noMdnDelivery to set
+	 */
+	public void setNoMdnDelivery(String noMdnDelivery) {
+		this.noMdnDelivery = noMdnDelivery;
 	}
 
 }

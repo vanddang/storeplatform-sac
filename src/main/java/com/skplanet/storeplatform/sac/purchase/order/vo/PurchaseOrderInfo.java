@@ -106,6 +106,10 @@ public class PurchaseOrderInfo extends CommonInfo {
 	// 테넌트 - P/P ByPass 정보
 	private String offeringId; // 오퍼링ID
 
+	// 선물 수신자 명 & MDN
+	private String nmDelivery; // 선물수신자명
+	private String noMdnDelivery; // 선물수신자 MDN
+
 	// ================================================================================================
 
 	public PurchaseOrderInfo() {
@@ -952,6 +956,36 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setOfferingId(String offeringId) {
 		this.offeringId = offeringId;
+	}
+
+	/**
+	 * @return the nmDelivery
+	 */
+	public String getNmDelivery() {
+		return this.nmDelivery;
+	}
+
+	/**
+	 * @param nmDelivery
+	 *            the nmDelivery to set
+	 */
+	public void setNmDelivery(String nmDelivery) {
+		this.nmDelivery = nmDelivery;
+	}
+
+	/**
+	 * @return the noMdnDelivery
+	 */
+	public String getNoMdnDelivery() {
+		return this.noMdnDelivery;
+	}
+
+	/**
+	 * @param noMdnDelivery
+	 *            the noMdnDelivery to set
+	 */
+	public void setNoMdnDelivery(String noMdnDelivery) {
+		this.noMdnDelivery = noMdnDelivery;
 	}
 
 }

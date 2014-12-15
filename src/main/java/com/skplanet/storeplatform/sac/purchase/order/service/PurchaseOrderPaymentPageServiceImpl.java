@@ -118,6 +118,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		paymentPageParam.setOPMDLineNo(purchaseOrderInfo.getOpmdNo());
 		paymentPageParam.setUserKey(purchaseOrderInfo.getUserKey());
 		paymentPageParam.setOfferingId(purchaseOrderInfo.getOfferingId());
+		paymentPageParam.setNmDelivery(purchaseOrderInfo.getNmDelivery());
+		paymentPageParam.setNoMdnDelivery(purchaseOrderInfo.getNoMdnDelivery());
 
 		// pDescription
 		paymentPageParam.setpDescription(this.makeProductDescription(purchaseOrderInfo.getTenantProdGrpCd(),
@@ -379,7 +381,9 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				.append(StringUtils.defaultString(paymentPageParam.getServiceId())).append("&OPMDLineNo=")
 				.append(StringUtils.defaultString(paymentPageParam.getOPMDLineNo())).append("&userKey=")
 				.append(paymentPageParam.getUserKey()).append("&offeringId=")
-				.append(StringUtils.defaultString(paymentPageParam.getOfferingId()));
+				.append(StringUtils.defaultString(paymentPageParam.getOfferingId())).append("&nmDelivery=")
+				.append(StringUtils.defaultString(paymentPageParam.getNmDelivery())).append("&noMdnDelivery=")
+				.append(StringUtils.defaultString(paymentPageParam.getNoMdnDelivery()));
 
 		String plainData = sb.toString();
 		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", plainData);
