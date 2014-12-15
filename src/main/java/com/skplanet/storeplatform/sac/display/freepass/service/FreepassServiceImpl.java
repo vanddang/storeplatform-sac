@@ -264,6 +264,7 @@ public class FreepassServiceImpl implements FreepassService {
 				String userGrade = userGradeInfo.getUserGradeCd();
 				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
 						retMetaInfo.getTopMenuId(), req.getChannelId(), retMetaInfo.getProdAmt());
+				mileageInfo = benefitService.checkFreeProduct(mileageInfo, retMetaInfo.getProdAmt());
 				pointList.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
 			}
 		}
@@ -909,6 +910,7 @@ public class FreepassServiceImpl implements FreepassService {
 				String userGrade = userGradeInfo.getUserGradeCd();
 				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
 						retMetaInfo.getTopMenuId(), req.getChannelId(), retMetaInfo.getProdAmt());
+				mileageInfo = benefitService.checkFreeProduct(mileageInfo, retMetaInfo.getProdAmt());
 				pointList.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
 			}
 		}
