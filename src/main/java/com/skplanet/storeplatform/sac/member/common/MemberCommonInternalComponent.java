@@ -29,6 +29,7 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserIn
 import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 
 /**
  * 내부 메서드 호출 기능을 공통 정의해서 사용한다.
@@ -179,9 +180,9 @@ public class MemberCommonInternalComponent {
 		req.setTenantId(tenantId);
 		req.setPartProdId(prodId);
 
-		LOGGER.info("{} getIapProductInfo req : {}", deviceId, req);
+		LOGGER.info("{} getIapProductInfo Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(req));
 		IapProductInfoRes res = this.iapProductInfoSCI.getIapProductInfo(req);
-		LOGGER.info("{} getIapProductInfo res : {}", deviceId, res);
+		LOGGER.info("{} getIapProductInfo Response : {}", deviceId, ConvertMapperUtils.convertObjectToJson(res));
 
 		return res;
 	}

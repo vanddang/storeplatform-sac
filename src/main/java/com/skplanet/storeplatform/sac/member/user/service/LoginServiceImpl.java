@@ -119,6 +119,7 @@ import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponen
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
@@ -2053,14 +2054,17 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setSimSerialNo(req.getSimSerialNo());
 		marketReq.setUserVerifyReason("InApp");
 
-		LOGGER.info("{} authorizeMarket Request : {}", req.getDeviceId(), marketReq);
+		LOGGER.info("{} authorizeMarket Request : {}", req.getDeviceId(),
+				ConvertMapperUtils.convertObjectToJson(marketReq));
 
 		if (StringUtils.equals(MemberConstants.TENANT_ID_OLLEH_MARKET, tenantId)) {
 			marketRes = this.marketSCI.authorizeForOllehMarket(marketReq);
-			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(), marketRes);
+			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(),
+					ConvertMapperUtils.convertObjectToJson(marketRes));
 		} else if (StringUtils.equals(MemberConstants.TENANT_ID_UPLUS_STORE, tenantId)) {
 			marketRes = this.marketSCI.authorizeForUplusStore(marketReq);
-			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(), marketRes);
+			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(),
+					ConvertMapperUtils.convertObjectToJson(marketRes));
 		}
 
 		if (marketRes != null
@@ -2477,9 +2481,10 @@ public class LoginServiceImpl implements LoginService {
 				existenceReq.setUserKey(detailRes.getUserInfo().getUserKey());
 				existenceReq.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 				existenceReq.setExistenceItem(existenceItemList);
-				LOGGER.info("{} 기구매체크 Request : {}", deviceId, existenceReq);
+				LOGGER.info("{} 기구매체크 Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(existenceReq));
 				ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
-				LOGGER.info("{} 기구매체크 Response : {}", deviceId, existenceListRes);
+				LOGGER.info("{} 기구매체크 Response : {}", deviceId,
+						ConvertMapperUtils.convertObjectToJson(existenceListRes));
 				if (existenceListRes != null && existenceListRes.getExistenceListRes() != null
 						&& existenceListRes.getExistenceListRes().size() > 0) { // 구매내역 존재
 					isPurchasedFromTstore = true;
