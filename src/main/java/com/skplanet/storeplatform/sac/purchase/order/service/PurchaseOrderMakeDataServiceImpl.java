@@ -694,11 +694,6 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 					sbReserveData.setLength(commonReserveDataLen);
 
-					if (purchaseOrderInfo.isGift()) {
-						// 선물수신자 성명
-						sbReserveData.append("&receiveName=").append(StringUtils.defaultString(useUser.getUserName()));
-					}
-
 					sbReserveData
 							.append("&useDeviceId=")
 							.append(useUser.getDeviceId())
