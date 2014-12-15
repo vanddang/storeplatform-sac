@@ -110,6 +110,11 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	@Valid
 	private List<PurchaseUserInfo> receiverList; // biz상품 수신자 목록
 
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String nmDelivery; // 선물수신자명
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String noMdnDelivery; // 선물수신자 MDN
+
 	/**
 	 * @return the userKey
 	 */
@@ -468,6 +473,36 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	 */
 	public void setMediaId(String mediaId) {
 		this.mediaId = mediaId;
+	}
+
+	/**
+	 * @return the nmDelivery
+	 */
+	public String getNmDelivery() {
+		return this.nmDelivery;
+	}
+
+	/**
+	 * @param nmDelivery
+	 *            the nmDelivery to set
+	 */
+	public void setNmDelivery(String nmDelivery) {
+		this.nmDelivery = nmDelivery;
+	}
+
+	/**
+	 * @return the noMdnDelivery
+	 */
+	public String getNoMdnDelivery() {
+		return this.noMdnDelivery;
+	}
+
+	/**
+	 * @param noMdnDelivery
+	 *            the noMdnDelivery to set
+	 */
+	public void setNoMdnDelivery(String noMdnDelivery) {
+		this.noMdnDelivery = noMdnDelivery;
 	}
 
 }
