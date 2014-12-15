@@ -499,7 +499,7 @@
 	             , E.OUTSD_CONTENTS_ID
 	             , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) OR E.BOOK_CLSF_CD = 'DP004302' THEN 'serial' END ) AS BOOK_TYPE
 			     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( E.EPSD_CNT + E.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
-			     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( E.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
+			     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( CE.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
 	             ,  (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
 	                    FROM TB_DP_SPRT_DEVICE A
 	                   WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
@@ -530,11 +530,13 @@
 	             , TB_DP_PROD_RSHP               I
 	             , TB_DP_TENANT_PROD             TENANT
 	             , TB_DP_SUB_CONTENTS            SUBCONTENTS 
+	             , TB_DP_EBOOK_PROD              CE
 	        WHERE A.MENU_ID = B.MENU_ID
 	          AND A.MENU_ID = C.MENU_ID
 	          AND B.PROD_ID = D.PROD_ID
 	          AND B.PROD_ID = E.PROD_ID
 	          AND B.PROD_ID = F.PROD_ID
+	          AND I.PROD_ID = CE.PROD_ID
 	          AND B.PROD_ID = TENANT.PROD_ID
 	          AND B.PROD_ID = SUBCONTENTS.PROD_ID
 	          AND TENANT.TENANT_ID = #{tenantId}
