@@ -22,8 +22,10 @@
 				<if test="listGrpCd != null">    
 				AND LIST_GRP_CD_EXTD = #{listGrpCd} 
 				</if>
+				<if test='filterYn != null and filterYn=="Y"'>
 				AND EXPO_YN='Y'
-				AND (SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT OR EXPO_START_DT IS NULL OR EXPO_END_DT IS NULL) 
+				AND (SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT OR EXPO_START_DT IS NULL OR EXPO_END_DT IS NULL)
+				</if> 
 				AND EXPO_ORD     &gt;= #{lastExpoOrd,javaType=Integer,jdbcType=NUMERIC}
 				AND EXPO_ORD_SUB &gt;  #{lastExpoOrdSub,javaType=Integer,jdbcType=NUMERIC}
 			ORDER BY EXPO_ORD, EXPO_ORD_SUB

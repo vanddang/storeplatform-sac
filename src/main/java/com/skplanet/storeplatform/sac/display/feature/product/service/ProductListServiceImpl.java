@@ -106,7 +106,7 @@ public class ProductListServiceImpl implements ProductListService{
 		String tenantId = header.getTenantHeader().getTenantId();
 		String listId = requestVO.getListId();
 		int count = 1;
-		DisplayListCriteria listCriteria = new DisplayListCriteria(tenantId, listId, count);
+		DisplayListCriteria listCriteria = new DisplayListCriteria(tenantId, listId, "N", count);
 		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class);
 		if(!listsFromDB.isEmpty()){
     		response.setEtcProp(listsFromDB.get(0).getEtcProp());

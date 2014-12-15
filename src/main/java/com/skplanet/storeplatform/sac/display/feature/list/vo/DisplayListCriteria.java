@@ -11,6 +11,7 @@ public class DisplayListCriteria {
 	private String tenantId;
 	private String listGrpCd;
 	private String listId;
+	private String filterYn;
 	private Integer lastExpoOrd;
 	private Integer lastExpoOrdSub;
 	private Integer count;
@@ -21,14 +22,16 @@ public class DisplayListCriteria {
 		this.tenantId = tenantId;
 		listGrpCd = requestVO.getListGrpCd();
 		listId = requestVO.getListId();
+		filterYn = "Y";
 
 		setupOrders(requestVO);
 		setCount(requestVO);
 	}
 
-	public DisplayListCriteria(String tenantId, String listId, Integer count) {
+	public DisplayListCriteria(String tenantId, String listId, String filterYn, Integer count) {
 		this.tenantId = tenantId;
 		this.listId = listId;
+		this.filterYn = filterYn;
 		this.count = count;
 		lastExpoOrd    = MIN_EXPO_ORD;
 		lastExpoOrdSub = MIN_EXPO_ORD;
@@ -74,6 +77,14 @@ public class DisplayListCriteria {
 
 	public void setListId(String listId) {
 		this.listId = listId;
+	}
+
+	public String getFilterYn() {
+		return filterYn;
+	}
+
+	public void setFilterYn(String filterYn) {
+		this.filterYn = filterYn;
 	}
 
 	public Integer getLastExpoOrd() {
