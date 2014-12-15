@@ -371,6 +371,7 @@
               , FC_GET_CM_CD_NM(LA.BRDC_COMP_CD, #{tenantHeader.langCd}) AS BRDC_COMP_NM         
               , LA.GENRE_CD
               , TO_CHAR(LA.REG_DT,'YYYYMMDDHH24MISS') REG_DT
+              , LA.DWLD_AREA_LIMT_YN
           FROM (          
                 SELECT 
                     JA.TENANT_ID
@@ -422,6 +423,7 @@
                     , JA.BRDC_COMP_CD          
                     , JA.GENRE_CD
                     , JA.REG_DT
+                    , JA.DWLD_AREA_LIMT_YN
                 FROM (SELECT G.TENANT_ID
                            , A.MENU_ID
                            , A.UP_MENU_ID
@@ -467,11 +469,13 @@
                            , D.CID     -- 채널 상품 ID 조회       
                            , D.PROD_GRD_CD   -- 채널 상품 ID 조회      
                            , E.ISSUE_DAY
+                           , E.DWLD_AREA_LIMT_YN
                          </if>
                          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                            , J.CID   -- 에피소드 상품 ID 조회
                            , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
                            , L.ISSUE_DAY
+                           , L.DWLD_AREA_LIMT_YN
                          </if>                           
                            , D.SVC_GRP_CD                    
                            , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM   

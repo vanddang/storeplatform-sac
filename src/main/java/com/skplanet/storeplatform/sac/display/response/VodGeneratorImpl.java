@@ -181,6 +181,11 @@ public class VodGeneratorImpl implements VodGenerator {
 		Play play = new Play();
 		Store store = new Store();
 		Support support = new Support();
+		
+		// 영화,TV방송에 대한 allow 설정
+		if (StringUtils.equals(metaInfo.getDwldAreaLimtYn(), "Y")) {
+			rights.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_DOMESTIC);
+		}
 
 		if ("Y".equals(metaInfo.getSupportPlay())) {
 			support = this.commonGenerator.generateSupport(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM, "Y");
