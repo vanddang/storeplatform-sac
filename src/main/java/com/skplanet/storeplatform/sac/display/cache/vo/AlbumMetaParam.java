@@ -6,7 +6,7 @@ package com.skplanet.storeplatform.sac.display.cache.vo;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * Calss 설명
+ * Clsss 설명
  * 
  * Updated on : 2014. 10. 23.
  * Updated by : 1002177

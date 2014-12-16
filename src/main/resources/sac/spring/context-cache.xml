@@ -45,10 +45,12 @@
         class="com.skplanet.spring.data.plandasj.PlandasjCacheManager" 
         p:template-ref="plandasjTemplate" >
         <property name="usePrefix" value="true" />
+        <!--<property name="defaultExpiration" value="1800"/>-->
         <property name="expires">
             <map>
                 <entry key="sac:display:product:app" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:app:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:album" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:music" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:music:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:freepass" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
@@ -56,6 +58,7 @@
                 <entry key="sac:display:product:ebookcomic:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:vod" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:vod:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:vod:v3" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:shopping" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:webtoon" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:subcontent" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
