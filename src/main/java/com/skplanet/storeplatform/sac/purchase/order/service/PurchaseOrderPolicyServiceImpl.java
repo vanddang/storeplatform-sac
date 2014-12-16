@@ -1277,12 +1277,6 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			sbPaymethodInfo.append(phonePaymethodInfo).append(";12:0:0;");
 		}
 
-		// PP용 : 쇼핑상품권 경우, 신용카드, 페이핀 결제수단 제외
-		if (StringUtils.equals(prodCaseCd, PurchaseConstants.SHOPPING_TYPE_GIFT)
-				&& StringUtils.startsWith(systemId, PurchaseConstants.TENANT_ID_TSTORE) == false) {
-			sbPaymethodInfo.append("13:0:0;14:0:0;");
-		}
-
 		sbPaymethodInfo.append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
 
 		String paymethodInfo = sbPaymethodInfo.toString();
