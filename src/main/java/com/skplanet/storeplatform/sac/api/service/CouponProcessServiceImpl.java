@@ -1612,7 +1612,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				productTenantPriceList.add(productTenantPriceVO);
 				noti.setProductTenantPriceList(productTenantPriceList);
 				this.log.info("LOG7");
-				this.shoppingIprmAmqpTemplate.convertSendAndReceive(noti); // async
+				this.shoppingIprmAmqpTemplate.convertAndSend(noti); // async
 				this.log.info("LOG8");
 			}
 
