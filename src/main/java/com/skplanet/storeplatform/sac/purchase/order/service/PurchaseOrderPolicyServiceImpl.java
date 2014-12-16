@@ -1191,7 +1191,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	private String adjustPaymethod(String phonePaymethodInfo, CheckPaymentPolicyParam checkPaymentPolicyParam) {
 		String tenantId = checkPaymentPolicyParam.getTenantId();
-		String systemId = checkPaymentPolicyParam.getSystemId();
+		// String systemId = checkPaymentPolicyParam.getSystemId();
 		String tenantProdGrpCd = checkPaymentPolicyParam.getTenantProdGrpCd();
 		String prodCaseCd = checkPaymentPolicyParam.getProdCaseCd();
 		String cmpxProdClsfCd = checkPaymentPolicyParam.getCmpxProdClsfCd();
