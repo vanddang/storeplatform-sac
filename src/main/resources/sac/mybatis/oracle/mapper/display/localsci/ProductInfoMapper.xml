@@ -521,6 +521,9 @@
 	             , TENANT.PROD_STATUS_CD
 	             , SUBCONTENTS.PROD_VER AS BOOK_VERSION
 	             , SUBCONTENTS.SUB_CONTENTS_ID AS SCID
+				 , CE.BOOK_CONTENTS_CNT
+               	 , CE.SERIES_CONTENTS_CNT
+               	 , CE.MGZIN_CONTENTS_CNT
 	         FROM  TB_DP_MENU_CATEGORY           A
 	             , TB_DP_MENU_CATEGORY_PROD_MAPG B
 	             , TB_DP_MENU_CATEGORY_DESC      C
