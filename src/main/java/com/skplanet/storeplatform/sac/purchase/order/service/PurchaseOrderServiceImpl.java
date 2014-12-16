@@ -2085,14 +2085,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private List<VerifyOrderBannerInfoSac> searchBannerList(PrchsDtlMore prchsDtlMore) {
 		// TAKTODO:: 배너 관리 이전까지 하드코딩
 
+		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE) == false) {
+			return null;
+		}
+
 		List<VerifyOrderBannerInfoSac> bannerList = new ArrayList<VerifyOrderBannerInfoSac>();
 
-		// VerifyOrderBannerInfoSac banner = new VerifyOrderBannerInfoSac();
-		// banner.setTitle("테스트 배너");
-		// banner.setImagePath("/data/img/banner/sc/shopping/B_20141106103300066.jpg");
-		// banner.setLinkUrl("m.nate.com");
-		// banner.setBackColorCd("#D5C8EB");
-		// bannerList.add(banner);
+		VerifyOrderBannerInfoSac banner = new VerifyOrderBannerInfoSac();
+		banner.setTitle("");
+		banner.setImagePath("/data/img/banner/sc/shopping/B_20141216164243296.png");
+		banner.setLinkUrl("https://tstore.co.kr/images/event/EVENT_141023180120/preview/main.html");
+		banner.setBackColorCd("#379877");
+		bannerList.add(banner);
 
 		if (CollectionUtils.isEmpty(bannerList)) {
 			return null;
