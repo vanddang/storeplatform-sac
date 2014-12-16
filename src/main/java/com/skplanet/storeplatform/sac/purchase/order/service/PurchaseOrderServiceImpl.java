@@ -909,11 +909,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 프로모션/배너 정보
 		if (StringUtils.startsWith(verifyOrderInfo.getSystemId(), "S00")) {
-			// 상용은 세팅X
-			if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL) == false) {
-				res.setPromotionList(this.searchPromotionList(prchsDtlMore));
-				res.setBannerList(this.searchBannerList(prchsDtlMore));
-			}
+			res.setPromotionList(this.searchPromotionList(prchsDtlMore));
+			res.setBannerList(this.searchBannerList(prchsDtlMore));
 		}
 
 		// 판매자 정보 세팅
