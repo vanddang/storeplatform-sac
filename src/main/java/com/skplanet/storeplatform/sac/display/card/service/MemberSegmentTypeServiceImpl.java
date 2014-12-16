@@ -15,12 +15,16 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.type.TypeFactory;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.joda.time.Years;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.card.PreferredCategoryRes;
@@ -50,12 +54,15 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 		String deviceChgYn = segmentFromSci.getIsChanged();
 		String newEntryDay = segmentFromSci.getEntryDay();
 		String mnoClsfCd = segmentFromSci.getUserTelecom();
+		String userBirthDay = segmentFromSci.getUserBirthDay();
 		
 		segmentRes.setSex(sex);
 		segmentRes.setDeviceChgYn(deviceChgYn);
 		String newEntryYn = isRecentlyRegistered(newEntryDay) ? "Y" : "N";
 		segmentRes.setNewEntryYn(newEntryYn);
 		segmentRes.setMnoClsfCd(mnoClsfCd);
+		String ageClsfCd = getAgeClsfCd(userBirthDay);
+		segmentRes.setAgeClsfCd(ageClsfCd);
 	}
 
 	@Override
@@ -108,6 +115,54 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 		} else {
 			return false;
 		}
+	}
+	
+	/*	
+		유형
+		코드
+		만 14세 미만
+		14
+		만 14세 ~ 18세
+		18
+		만 19세 ~ 24세
+		24
+		만 25세 ~ 29세
+		29
+		만 30세 ~ 39세
+		39
+		만 40세 ~ 49세
+		49
+		만 50세 이상
+		50
+	 */
+	public String getAgeClsfCd(String userBirthDay) {
+		if (StringUtils.isBlank(userBirthDay)) {
+			return null;
+		}
+		
+		int age = getAge(userBirthDay);
+		if (age < 14)				return "14";
+		if (age >= 14 && age <= 18)	return "18";
+		if (age >= 19 && age <= 24) return "24";
+		if (age >= 25 && age <= 29) return "29";
+		if (age >= 30 && age <= 39)	return "39";
+		if (age >= 40 && age <= 49) return "49";
+		if (age > 50)				return "50";
+		return null;
+	}
+	
+	public static int getAge(String yyyyMMdd) {
+		LocalDate birthDay;
+		try {
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
+			birthDay = LocalDate.parse(yyyyMMdd, formatter);
+		} catch (IllegalArgumentException e) {
+			return -1;
+		}
+		
+		LocalDate today = LocalDate.now();
+		Years years = Years.yearsBetween(birthDay, today);
+		return years.getYears();
 	}
 	
 }
