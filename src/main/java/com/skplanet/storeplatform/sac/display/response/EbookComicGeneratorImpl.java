@@ -118,6 +118,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		book.setTotalCount(metaInfo.getBookCount());
 
 		//이북 type
+		/*
         if(StringUtils.equals(metaInfo.getBookClsfCd(), DisplayConstants.DP_BOOK_BOOK)) {
         	book.setType(DisplayConstants.DP_BOOK_TYPE_BOOK);
         } else if(StringUtils.equals(metaInfo.getBookClsfCd(), DisplayConstants.DP_BOOK_SERIAL)) {
@@ -125,6 +126,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
         } else if(StringUtils.equals(metaInfo.getBookClsfCd(), DisplayConstants.DP_BOOK_MAGAZINE)) {
         	book.setType(DisplayConstants.DP_BOOK_TYPE_MAGAZINE);
         }
+        */
 		
 		if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
 				|| DisplayConstants.DP_INTERACTIVE_WEBTOON_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
@@ -132,7 +134,7 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 				|| DisplayConstants.DP_MAGAZINE_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())
 				|| DisplayConstants.DP_WEBTOON_COMIC_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
 			// eBook 연재물인 경우에만 Type과 status를 적용한다.
-			//book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
+			book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
 			if ("Y".equals(metaInfo.getComptYn())) {
 				book.setStatus(DisplayConstants.DP_EBOOK_COMPLETED_NM);
 			} else {
