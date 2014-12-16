@@ -17,11 +17,6 @@
 		FROM TB_DP_SMART_OFR_MBR
 		WHERE TENANT_ID = #{tenantId}
 		AND USER_KEY = #{userKey}  
-		AND STD_DT = (
-		  SELECT MAX(STD_DT)
-		  FROM TB_DP_BATCH_COMPT
-		  WHERE BATCH_ID = 'SMARTOFRMBR'
-		)
 	</select>
 
 </mapper>
