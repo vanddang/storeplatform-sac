@@ -1999,28 +1999,28 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @return 연결된 값
 	 */
-	private String concatResvDesc(List<PrchsDtlMore> prchsDtlMoreList, String fieldName, String separator) {
-		StringBuffer sbConcat = new StringBuffer();
-		String resvDesc = null;
-		int tmpIdx = 0;
-		int cnt = 0;
-
-		for (PrchsDtlMore resvPrchsDtlMore : prchsDtlMoreList) {
-
-			if (cnt > 0) {
-				sbConcat.append(separator);
-			}
-			cnt++;
-
-			resvDesc = resvPrchsDtlMore.getPrchsResvDesc();
-
-			tmpIdx = resvDesc.indexOf(fieldName + "=");
-			sbConcat.append(resvDesc.substring(tmpIdx + fieldName.length() + 1,
-					resvDesc.indexOf("&", tmpIdx + fieldName.length() + 1)));
-		}
-
-		return sbConcat.toString();
-	}
+	// private String concatResvDesc(List<PrchsDtlMore> prchsDtlMoreList, String fieldName, String separator) {
+	// StringBuffer sbConcat = new StringBuffer();
+	// String resvDesc = null;
+	// int tmpIdx = 0;
+	// int cnt = 0;
+	//
+	// for (PrchsDtlMore resvPrchsDtlMore : prchsDtlMoreList) {
+	//
+	// if (cnt > 0) {
+	// sbConcat.append(separator);
+	// }
+	// cnt++;
+	//
+	// resvDesc = resvPrchsDtlMore.getPrchsResvDesc();
+	//
+	// tmpIdx = resvDesc.indexOf(fieldName + "=");
+	// sbConcat.append(resvDesc.substring(tmpIdx + fieldName.length() + 1,
+	// resvDesc.indexOf("&", tmpIdx + fieldName.length() + 1)));
+	// }
+	//
+	// return sbConcat.toString();
+	// }
 
 	/*
 	 * 
@@ -2066,9 +2066,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			promotion = new VerifyOrderPromotionInfoSac();
 			promotion.setPaymentMtdCd(PaymethodUtil.convert2PayPlanetCodeWithoutPointCode(paymentPromotion
 					.getPaymentMtdCd()));
-			promotion.setTitle(paymentPromotion.getPromNm());
-			promotion.setDescription(paymentPromotion.getPromDesc());
-			promotion.setLinkUrl(paymentPromotion.getPromUrl());
+			promotion.setTitle(StringUtils.defaultString(paymentPromotion.getPromNm()));
+			promotion.setDescription(StringUtils.defaultString(paymentPromotion.getPromDesc()));
+			promotion.setLinkUrl(StringUtils.defaultString(paymentPromotion.getPromUrl()));
 			promotionList.add(promotion);
 		}
 
