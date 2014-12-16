@@ -2094,7 +2094,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		VerifyOrderBannerInfoSac banner = new VerifyOrderBannerInfoSac();
 		banner.setTitle("");
 		banner.setImagePath("/data/img/banner/sc/shopping/B_20141216164243296.png");
-		banner.setLinkUrl("https://tstore.co.kr/images/event/EVENT_141023180120/preview/main.html");
+		banner.setLinkUrl("");
 		banner.setBackColorCd("#379877");
 		bannerList.add(banner);
 
