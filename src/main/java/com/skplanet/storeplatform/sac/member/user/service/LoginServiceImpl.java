@@ -2317,7 +2317,7 @@ public class LoginServiceImpl implements LoginService {
 		scReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 		scReq.setUserKey(userKey);
 		scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
-		scReq.setSecedeReasonMessage("");
+		scReq.setSecedeReasonMessage("SAP 회원탈퇴");
 		this.userSCI.remove(scReq);
 	}
 
@@ -2483,8 +2483,13 @@ public class LoginServiceImpl implements LoginService {
 				existenceReq.setExistenceItem(existenceItemList);
 				LOGGER.info("{} 기구매체크 Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(existenceReq));
 				ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
-				LOGGER.info("{} 기구매체크 Response : {}", deviceId,
-						ConvertMapperUtils.convertObjectToJson(existenceListRes));
+				if (existenceListRes == null) {
+					LOGGER.info("{} 기구매체크 Response : {}", deviceId, existenceListRes);
+				} else {
+					LOGGER.info("{} 기구매체크 Response : {}", deviceId,
+							ConvertMapperUtils.convertObjectToJson(existenceListRes));
+				}
+
 				if (existenceListRes != null && existenceListRes.getExistenceListRes() != null
 						&& existenceListRes.getExistenceListRes().size() > 0) { // 구매내역 존재
 					isPurchasedFromTstore = true;

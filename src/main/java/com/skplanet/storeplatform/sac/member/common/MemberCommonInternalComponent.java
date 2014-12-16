@@ -182,7 +182,11 @@ public class MemberCommonInternalComponent {
 
 		LOGGER.info("{} getIapProductInfo Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(req));
 		IapProductInfoRes res = this.iapProductInfoSCI.getIapProductInfo(req);
-		LOGGER.info("{} getIapProductInfo Response : {}", deviceId, ConvertMapperUtils.convertObjectToJson(res));
+		if (res == null) {
+			LOGGER.info("{} getIapProductInfo Response : {}", deviceId, res);
+		} else {
+			LOGGER.info("{} getIapProductInfo Response : {}", deviceId, ConvertMapperUtils.convertObjectToJson(res));
+		}
 
 		return res;
 	}
