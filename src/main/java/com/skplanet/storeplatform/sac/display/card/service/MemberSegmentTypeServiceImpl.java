@@ -139,7 +139,7 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 		}
 		
 		int age = getAge(userBirthDay);
-		if (age < 14)				return "14";
+		if (age < 14)				return "13";
 		if (age >= 14 && age <= 18)	return "18";
 		if (age >= 19 && age <= 24) return "24";
 		if (age >= 25 && age <= 29) return "29";
