@@ -217,7 +217,7 @@ public class CardListServiceImpl implements CardListService {
         Set mnoCd = parseToSet(cardSegment.getMnoCd());
         Set sex = parseToSet(cardSegment.getSex());
 
-        return cardMbrLvl.containsAll(sgmtMbrLvl) &&
+        return CollectionUtils.containsAny(cardMbrLvl, sgmtMbrLvl) &&
                 ageClsf.contains(segmentInfo.getAgeClsfCd()) &&
                 CollectionUtils.containsAny(categoryBest, segmentInfo.getCategoryBest()) &&
                 mnoCd.contains(segmentInfo.getMnoClsfCd()) &&
