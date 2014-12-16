@@ -70,7 +70,6 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 		String outsdMbrGrdCd = segmentFromDb.getOutsdMbrLevelCd();
 		String insdMbrGrdCd = segmentFromDb.getInsdMbrLevelCd();
 		String sex = segmentFromDb.getSex();
-		String ageClsfCd = segmentFromDb.getAgeClsfCd();
 		String deviceChgYn = segmentFromDb.getDeviceChgYn();
 		String newEntryYn = segmentFromDb.getNewEntryYn();
 		String mnoClsfCd = segmentFromDb.getMnoCd();
@@ -79,7 +78,6 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 		segmentRes.setOutsdMbrGrdCd(outsdMbrGrdCd);
 		segmentRes.setInsdMbrGrdCd(insdMbrGrdCd);
 		segmentRes.setSex(sex);
-		segmentRes.setAgeClsfCd(ageClsfCd);
 		segmentRes.setDeviceChgYn(deviceChgYn);
 		segmentRes.setNewEntryYn(newEntryYn);
 		segmentRes.setMnoClsfCd(mnoClsfCd);
