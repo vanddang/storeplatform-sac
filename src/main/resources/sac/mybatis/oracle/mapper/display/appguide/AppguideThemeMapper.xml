@@ -272,7 +272,8 @@
                                                         A.EXPO_ORD_SUB2, 
                                                         A.REG_DT DESC ) AS RNUM
                 FROM   (
-                        SELECT /*+ LEADING(A AP PR) USE_NL(PR) USE_NL(C) */ A.LIST_ID THEME_ID ,
+                        SELECT /*+ LEADING(A AP PR CP) USE_NL(PR CP C) */
+                               A.LIST_ID THEME_ID ,
                                A.LIST_NM THEME_NM ,
                                DECODE(A.IMG_PATH, NULL, 2, 1) THEME_TYPE ,
                                A.IMG_PATH ,
