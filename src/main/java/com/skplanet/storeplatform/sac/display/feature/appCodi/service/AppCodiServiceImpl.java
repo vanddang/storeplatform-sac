@@ -771,6 +771,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
 
 			if (metaInfo != null) {
+				metaInfo.setSvcGrpNm(this.APP_CODI_SVC_GRP_NM);
 				product = this.responseInfoGenerateFacade.generateMovieProductShort(metaInfo);
 			}
 		}

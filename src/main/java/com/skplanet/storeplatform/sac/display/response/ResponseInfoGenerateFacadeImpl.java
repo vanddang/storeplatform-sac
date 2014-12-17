@@ -391,6 +391,11 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
 		// 영화용 Contributor 설정
 		Contributor contributor = this.vodGenerator.generateMovieContributor(metaInfo);
+		// 앱코디 전용 Vod 생성
+		if ("APPCODI".equals(metaInfo.getSvcGrpNm())) {
+			Vod vod = this.vodGenerator.generateVod(metaInfo);
+			product.setVod(vod);
+		}
 
 		product.setTitle(title);
 		product.setPrice(price);
@@ -489,6 +494,12 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
 		// 방송용 Contributor 설정
 		Contributor contributor = this.vodGenerator.generateBroadcastContributor(metaInfo);
+		// 앱코디 전용 Vod 및 방송사명 생성
+		if ("APPCODI".equals(metaInfo.getSvcGrpNm())) {
+			Vod vod = this.vodGenerator.generateVod(metaInfo);
+			product.setVod(vod);
+			product.setBrdcCompNm(metaInfo.getBrdcCompNm());
+		}
 
 		product.setTitle(title);
 		product.setPrice(price);
@@ -499,11 +510,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setSupportList(this.vodGenerator.generateSupportList(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
-
-		// 앱코디 전용 방송사명 생성
-		if ("APPCODI".equals(metaInfo.getSvcGrpNm())) {
-			product.setBrdcCompNm(metaInfo.getBrdcCompNm());
-		}
 
 		// 마일리지
 		this.appendMileageInfo(metaInfo, product);
@@ -539,8 +545,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Book 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
 
-		generateEpubPreview(metaInfo, rights);
-		
+		this.generateEpubPreview(metaInfo, rights);
+
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -568,6 +574,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	 * <pre>
 	 * method 설명.
 	 * </pre>
+	 * 
 	 * @param metaInfo
 	 * @param rights
 	 */
@@ -577,7 +584,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 			Preview preview = new Preview();
 			List<Source> epubPreviewSourceList = new ArrayList<Source>();
 
-            Source source = new Source();
+			Source source = new Source();
 			source.setType(DisplayConstants.DP_EPUB_PREVIEW);
 			source.setUrl(this.commonService.makeEpubPreviewUrl(metaInfo.getSamplUrl()));
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getSamplUrl()));
@@ -614,13 +621,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Ebook용 Contributor 설정
 		Contributor contributor = this.ebookComicGenerator.generateEbookContributor(metaInfo);
 
-		generateEpubPreview(metaInfo, rights);
+		this.generateEpubPreview(metaInfo, rights);
 
 		// 앱코디 전용 Book 생성
 		if ("APPCODI".equals(metaInfo.getSvcGrpNm())) {
 			product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
 		}
-		
+
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -631,7 +638,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 이북 상품은 상세 설명 정보를 내려줌
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
-		
+
 		// 마일리지
 		this.appendMileageInfo(metaInfo, product);
 
@@ -666,8 +673,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// BOOK 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
 
-		generateEpubPreview(metaInfo, rights);
-		
+		this.generateEpubPreview(metaInfo, rights);
+
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -718,8 +725,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Comic용 Contributor 설정
 		Contributor contributor = this.ebookComicGenerator.generateComicContributor(metaInfo);
 
-		generateEpubPreview(metaInfo, rights);
-		
+		this.generateEpubPreview(metaInfo, rights);
+
 		// 앱코디 전용 Book 생성
 		if ("APPCODI".equals(metaInfo.getSvcGrpNm())) {
 			product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
@@ -1085,34 +1092,32 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
-		
+
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
-		//이북/코믹 미리보기 URL 추가
-		generateEpubPreview(metaInfo, rights);
+		// 이북/코믹 미리보기 URL 추가
+		this.generateEpubPreview(metaInfo, rights);
 		product.setRights(rights);
 		product.setContributor(this.ebookComicGenerator.generateEbookContributor(metaInfo));
 		product.setProductExplain(productExplain);
 		product.setProductDetailExplain(productDetailExplain);
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
-		
+
 		List<Date> dateList = new ArrayList<Date>();
 		dateList.add(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, metaInfo.getRegDt()));
 		product.setDateList(dateList);
-		
-		product.setAboutWriter(productExplain); //이북 상품은 prodBaseDesc 값을 작가 소개로 사용한다.
 
-		//목차
+		product.setAboutWriter(productExplain); // 이북 상품은 prodBaseDesc 값을 작가 소개로 사용한다.
+
+		// 목차
 		product.setTableOfContents(metaInfo.getBookTbctns());
-		
-		
+
 		// BOOK 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
 		book.setBookClsfCd(metaInfo.getBookClsfCd());
 		product.setBook(book);
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
-		
-		
+
 		// 마일리지
 		this.appendMileageInfo(metaInfo, product);
 
@@ -1138,18 +1143,18 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
-		//이북/코믹 미리보기 URL 추가
-		generateEpubPreview(metaInfo, rights);
+		// 이북/코믹 미리보기 URL 추가
+		this.generateEpubPreview(metaInfo, rights);
 		product.setRights(rights);
 		product.setContributor(this.ebookComicGenerator.generateComicContributor(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		// product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
-		
+
 		List<Date> dateList = new ArrayList<Date>();
 		dateList.add(this.commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, metaInfo.getRegDt()));
 		product.setDateList(dateList);
-		
+
 		// BOOK 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
 		book.setBookClsfCd(metaInfo.getBookClsfCd());
@@ -1158,12 +1163,12 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
 
-		//목차
+		// 목차
 		product.setAboutWriter(metaInfo.getBookTbctns());
-		
-        // 마일리지
-        appendMileageInfo(metaInfo, product);
-        
+
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
+
 		return product;
 	}
 
