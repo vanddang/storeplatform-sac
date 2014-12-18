@@ -77,6 +77,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
+import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
@@ -2513,18 +2514,18 @@ public class LoginServiceImpl implements LoginService {
 				existenceReq.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 				existenceReq.setExistenceItem(existenceItemList);
 				LOGGER.info("{} 기구매체크 Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(existenceReq));
-				// ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
-				// if (existenceListRes == null) {
-				// LOGGER.info("{} 기구매체크 Response : {}", deviceId, existenceListRes);
-				// } else {
-				// LOGGER.info("{} 기구매체크 Response : {}", deviceId,
-				// ConvertMapperUtils.convertObjectToJson(existenceListRes));
-				// }
-				//
-				// if (existenceListRes != null && existenceListRes.getExistenceListRes() != null
-				// && existenceListRes.getExistenceListRes().size() > 0) { // 구매내역 존재
-				// isPurchasedFromTstore = true;
-				// }
+				ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
+				if (existenceListRes == null) {
+					LOGGER.info("{} 기구매체크 Response : {}", deviceId, existenceListRes);
+				} else {
+					LOGGER.info("{} 기구매체크 Response : {}", deviceId,
+							ConvertMapperUtils.convertObjectToJson(existenceListRes));
+				}
+
+				if (existenceListRes != null && existenceListRes.getExistenceListRes() != null
+						&& existenceListRes.getExistenceListRes().size() > 0) { // 구매내역 존재
+					isPurchasedFromTstore = true;
+				}
 			}
 
 		} catch (StorePlatformException e) {
