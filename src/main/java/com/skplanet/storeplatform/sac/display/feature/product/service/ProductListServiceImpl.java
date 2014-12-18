@@ -73,15 +73,12 @@ public class ProductListServiceImpl implements ProductListService{
 	@Override
 	public ProductListSacRes searchProductList(ProductListSacReq requestVO, SacRequestHeader header) {
 		ProductListSacRes response = new ProductListSacRes();
-		List<ListProduct> prodListFromDB;
 
 		String stdDt = getBatchStdDateStringFromDB(requestVO, header);
 		ListProductCriteria lpCriteria = new ListProductCriteria(requestVO, stdDt);
-		int totalCountFromDB = 0;
 
 		while(true) {
-			prodListFromDB = commonDAO.queryForList( "ProductList.selectListProdList", lpCriteria, ListProduct.class);
-			totalCountFromDB += prodListFromDB.size();
+			List<ListProduct> prodListFromDB = commonDAO.queryForList( "ProductList.selectListProdList", lpCriteria, ListProduct.class);
 			addListProductIntoResponse(header, response, prodListFromDB);
 
 			if( responseGetEnoughProdList(response, requestVO) || noMoreProdToGet(prodListFromDB, lpCriteria.getCount()))
@@ -92,7 +89,7 @@ public class ProductListServiceImpl implements ProductListService{
 			}
 		}
 
-		setHasNextIntoResponse(response, requestVO, totalCountFromDB);
+		setHasNextIntoResponse(response, requestVO);
 		removeRedundantLastItem(response, requestVO.getCount());
 		setStartKeyIntoResponse(response);
 		response.setCount(response.getProductList().size());
@@ -122,8 +119,8 @@ public class ProductListServiceImpl implements ProductListService{
 		return response.getProductList().size()>=requestVO.getCount();
 	}
 
-	private void setHasNextIntoResponse(ProductListSacRes response, ProductListSacReq requestVO, int totalCountFromDB) {
-		if(totalCountFromDB>requestVO.getCount())
+	private void setHasNextIntoResponse(ProductListSacRes response, ProductListSacReq requestVO) {
+		if(response.getProductList().size()>requestVO.getCount())
 			response.setHasNext("Y");
 		else
 			response.setHasNext("N");
