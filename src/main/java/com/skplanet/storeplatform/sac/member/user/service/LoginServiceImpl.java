@@ -2067,180 +2067,148 @@ public class LoginServiceImpl implements LoginService {
 					ConvertMapperUtils.convertObjectToJson(marketRes));
 		}
 
-		if (marketRes != null) {
+		if (marketRes != null
+				&& StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상인증
 
-			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상인증
+			this.validChkMarketUserInfo(marketRes); // 타사 회원정보 유효성 체크
 
-				this.validChkMarketUserInfo(marketRes); // 타사 회원정보 유효성 체크
+			// Tstore 회원가입여부 조회
+			DetailReq detailReq = new DetailReq();
+			SearchExtentReq searchExtent = new SearchExtentReq();
+			searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+			searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+			detailReq.setDeviceId(req.getDeviceId());
+			detailReq.setSearchExtent(searchExtent);
 
-				// Tstore 회원가입여부 조회
-				DetailReq detailReq = new DetailReq();
-				SearchExtentReq searchExtent = new SearchExtentReq();
-				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
-				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
-				detailReq.setDeviceId(req.getDeviceId());
-				detailReq.setSearchExtent(searchExtent);
+			DetailV2Res detailRes = null;
 
-				DetailV2Res detailRes = null;
+			try {
 
-				try {
+				detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+				LOGGER.info("{} Tstore 회원", req.getDeviceId());
 
+				if (!StringUtils.equals(detailRes.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey())) {
+
+					// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
+					LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes.getUserInfo()
+							.getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
+					this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
+					this.joinMaketUser(requestHeader, req, marketRes);
+
+					// 재가입시킨 회원정보 재조회
 					detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-					LOGGER.info("{} Tstore 회원", req.getDeviceId());
 
-					if (!StringUtils.equals(detailRes.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo()
-							.getDeviceKey())) {
+				}
 
-						// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
-						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
-								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
-						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
-						this.joinMaketUser(requestHeader, req, marketRes);
+			} catch (StorePlatformException e) {
 
-						// 재가입시킨 회원정보 재조회
+				if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+
+					// 타사 회원키로 가입된 회원정보 조회
+					detailReq.setDeviceId(null);
+					detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
+					detailReq.setSearchExtent(searchExtent);
+
+					try {
+
 						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-					}
+						// 번호변경 케이스로 판단하여 deviceId 업데이트
+						LOGGER.info("{} deviceId 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList()
+								.get(0).getDeviceId(), marketRes.getDeviceId());
+						DeviceInfo deviceInfo = new DeviceInfo();
+						deviceInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+						deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+						deviceInfo.setDeviceId(marketRes.getDeviceId());
+						this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
 
-				} catch (StorePlatformException e) {
+						// 변경된 deviceId로 회원정보 재조회
+						detailReq.setDeviceId(marketRes.getDeviceId());
+						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-					if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+					} catch (StorePlatformException ex) {
 
-						// 타사 회원키로 가입된 회원정보 조회
-						detailReq.setDeviceId(null);
-						detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
-						detailReq.setSearchExtent(searchExtent);
+						if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+							// 회원정보 없으면 Tstore 회원가입
+							LOGGER.info("{} Tstore 회원가입", req.getDeviceId());
+							this.joinMaketUser(requestHeader, req, marketRes);
 
-						try {
-
-							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-
-							// 번호변경 케이스로 판단하여 deviceId 업데이트
-							LOGGER.info("{} deviceId 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList()
-									.get(0).getDeviceId(), marketRes.getDeviceId());
-							DeviceInfo deviceInfo = new DeviceInfo();
-							deviceInfo.setUserKey(detailRes.getUserInfo().getUserKey());
-							deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-							deviceInfo.setDeviceId(marketRes.getDeviceId());
-							this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
-
-							// 변경된 deviceId로 회원정보 재조회
+							// 가입된 deviceId로 회원정보 재조회
 							detailReq.setDeviceId(marketRes.getDeviceId());
 							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-
-						} catch (StorePlatformException ex) {
-
-							if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-								// 회원정보 없으면 Tstore 회원가입
-								LOGGER.info("{} Tstore 회원가입", req.getDeviceId());
-								this.joinMaketUser(requestHeader, req, marketRes);
-
-								// 가입된 deviceId로 회원정보 재조회
-								detailReq.setDeviceId(marketRes.getDeviceId());
-								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-							} else {
-								throw e;
-							}
+						} else {
+							throw e;
 						}
-
-					} else {
-						throw e;
 					}
+
+				} else {
+					throw e;
 				}
-
-				// 사용자 기본정보
-				UserInfo userInfo = new UserInfo();
-				userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
-				userInfo.setUserId(detailRes.getUserInfo().getUserId());
-				userInfo.setUserType(detailRes.getUserInfo().getUserType());
-				userInfo.setImSvcNo(detailRes.getUserInfo().getImSvcNo());
-				userInfo.setImMbrNo(detailRes.getUserInfo().getImMbrNo());
-				userInfo.setUserPhoneCountry(detailRes.getUserInfo().getUserPhoneCountry());
-				userInfo.setUserEmail(detailRes.getUserInfo().getUserEmail());
-				userInfo.setIsRecvEmail(detailRes.getUserInfo().getIsRecvEmail());
-				userInfo.setIsRealName(detailRes.getUserInfo().getIsRealName());
-				userInfo.setUserCountry(detailRes.getUserInfo().getUserCountry());
-				userInfo.setUserLanguage(detailRes.getUserInfo().getUserLanguage());
-				userInfo.setProdExpoLevl(marketRes.getDeviceInfo().getProdExpoLevl());
-
-				// 약관 정보
-				List<Agreement> agreementList = this.getMarketClauseAgreeMappingInfo(marketRes.getDeviceInfo()
-						.getClauseExtraInfoList());
-
-				// 휴대기기 정보
-				DeviceInfo deviceInfo = new DeviceInfo();
-				deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-				deviceInfo.setMarketDeviceKey(detailRes.getUserInfo().getImMbrNo()); // 타사 회선의 고유 Key
-				deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
-				deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
-				deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
-
-				// Pin 정보
-				MarketPinInfo pinInfo = new MarketPinInfo();
-				pinInfo.setIsPinSet(marketRes.getDeviceInfo().getPinInfo().getIsSet());
-				pinInfo.setIsPinClosed(marketRes.getDeviceInfo().getPinInfo().getIsPinClosed());
-				pinInfo.setSetPinUrl(marketRes.getDeviceInfo().getPinInfo().getSetPinURL());
-				if (StringUtils.isNotBlank(marketRes.getDeviceInfo().getPinInfo().getIsNotShowingAgain())) {
-					// 결제핀 입력여부가 타사와는 반대의 의미이다.
-					if (StringUtils.equals(marketRes.getDeviceInfo().getPinInfo().getIsNotShowingAgain(),
-							MemberConstants.USE_N)) {
-						pinInfo.setIsPinRetry(MemberConstants.USE_Y);
-					} else {
-						pinInfo.setIsPinRetry(MemberConstants.USE_N);
-					}
-				}
-
-				res.setUserStatus(marketRes.getUserStatus());
-				res.setUserAuthKey(this.tempUserAuthKey);
-				res.setUserInfo(userInfo);
-				res.setAgreementList(agreementList);
-				res.setDeviceInfo(deviceInfo);
-				res.setPinInfo(pinInfo);
-				res.setMbrAuth(new MbrAuth()); // 타사회원은 존재하지 않음
-				res.setTstoreEtcInfo(new TstoreEtcInfo()); // 타사회원은 존재하지 않음
-
-			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
-
-				// Tstore에 가입된 회원인경우 탈퇴 처리
-				DetailReq detailReq = new DetailReq();
-				SearchExtentReq searchExtent = new SearchExtentReq();
-				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
-				detailReq.setDeviceId(req.getDeviceId());
-				detailReq.setSearchExtent(searchExtent);
-
-				try {
-
-					DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
-					LOGGER.info("{} 타사마켓 비회원으로 Tstore 탈퇴", req.getDeviceId());
-					this.removeMarketUser(requestHeader, detailRes.getDeviceInfoList().get(0).getUserKey());
-
-				} catch (StorePlatformException e) {
-
-					if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-						throw e;
-					}
-				}
-
-				res.setUserStatus(marketRes.getUserStatus());
-				res.setUserInfo(new UserInfo());
-				res.setAgreementList(new ArrayList<Agreement>());
-				res.setDeviceInfo(new DeviceInfo());
-				res.setPinInfo(new MarketPinInfo());
-				res.setMbrAuth(new MbrAuth());
-				res.setTstoreEtcInfo(new TstoreEtcInfo());
-
-			} else {
-
-				res.setUserStatus(marketRes.getUserStatus());
-				res.setUserInfo(new UserInfo());
-				res.setAgreementList(new ArrayList<Agreement>());
-				res.setDeviceInfo(new DeviceInfo());
-				res.setPinInfo(new MarketPinInfo());
-				res.setMbrAuth(new MbrAuth());
-				res.setTstoreEtcInfo(new TstoreEtcInfo());
-
 			}
+
+			// 사용자 기본정보
+			UserInfo userInfo = new UserInfo();
+			userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+			userInfo.setUserId(detailRes.getUserInfo().getUserId());
+			userInfo.setUserType(detailRes.getUserInfo().getUserType());
+			userInfo.setImSvcNo(detailRes.getUserInfo().getImSvcNo());
+			userInfo.setImMbrNo(detailRes.getUserInfo().getImMbrNo());
+			userInfo.setUserPhoneCountry(detailRes.getUserInfo().getUserPhoneCountry());
+			userInfo.setUserEmail(detailRes.getUserInfo().getUserEmail());
+			userInfo.setIsRecvEmail(detailRes.getUserInfo().getIsRecvEmail());
+			userInfo.setIsRealName(detailRes.getUserInfo().getIsRealName());
+			userInfo.setUserCountry(detailRes.getUserInfo().getUserCountry());
+			userInfo.setUserLanguage(detailRes.getUserInfo().getUserLanguage());
+			userInfo.setProdExpoLevl(marketRes.getDeviceInfo().getProdExpoLevl());
+
+			// 약관 정보
+			List<Agreement> agreementList = this.getMarketClauseAgreeMappingInfo(marketRes.getDeviceInfo()
+					.getClauseExtraInfoList());
+
+			// 휴대기기 정보
+			DeviceInfo deviceInfo = new DeviceInfo();
+			deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+			deviceInfo.setMarketDeviceKey(detailRes.getUserInfo().getImMbrNo()); // 타사 회선의 고유 Key
+			deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+			deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
+			deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
+
+			// Pin 정보
+			MarketPinInfo pinInfo = new MarketPinInfo();
+			pinInfo.setIsPinSet(marketRes.getDeviceInfo().getPinInfo().getIsSet());
+			pinInfo.setIsPinClosed(marketRes.getDeviceInfo().getPinInfo().getIsPinClosed());
+			pinInfo.setSetPinUrl(marketRes.getDeviceInfo().getPinInfo().getSetPinURL());
+			if (StringUtils.isNotBlank(marketRes.getDeviceInfo().getPinInfo().getIsNotShowingAgain())) {
+				// 결제핀 입력여부가 타사와는 반대의 의미이다.
+				if (StringUtils.equals(marketRes.getDeviceInfo().getPinInfo().getIsNotShowingAgain(),
+						MemberConstants.USE_N)) {
+					pinInfo.setIsPinRetry(MemberConstants.USE_Y);
+				} else {
+					pinInfo.setIsPinRetry(MemberConstants.USE_N);
+				}
+			}
+
+			res.setUserStatus(marketRes.getUserStatus());
+			res.setUserAuthKey(this.tempUserAuthKey);
+			res.setUserInfo(userInfo);
+			res.setAgreementList(agreementList);
+			res.setDeviceInfo(deviceInfo);
+			res.setPinInfo(pinInfo);
+			res.setMbrAuth(new MbrAuth()); // 타사회원은 존재하지 않음
+			res.setTstoreEtcInfo(new TstoreEtcInfo()); // 타사회원은 존재하지 않음
+
+		} else {
+
+			res.setUserStatus(marketRes.getUserStatus());
+			res.setUserInfo(new UserInfo());
+			res.setAgreementList(new ArrayList<Agreement>());
+			res.setDeviceInfo(new DeviceInfo());
+			res.setPinInfo(new MarketPinInfo());
+			res.setMbrAuth(new MbrAuth());
+			res.setTstoreEtcInfo(new TstoreEtcInfo());
+
 		}
+
 		return res;
 
 	}
