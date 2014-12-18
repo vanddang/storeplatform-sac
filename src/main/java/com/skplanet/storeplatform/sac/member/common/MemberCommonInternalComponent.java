@@ -108,7 +108,7 @@ public class MemberCommonInternalComponent {
 			userInfoSacInReq.setDeviceKey(previousDeviceKey);
 			userInfoSacInReq.setUserKey(previousUserKey);
 			userInfoSacInReq.setNewUserKey(userKey);
-			// this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
+			this.purchaseUserInfoInternalSCI.updateUserDevice(userInfoSacInReq);
 
 			/* 3. tenant Cash, 쿠폰 이관요청 */
 			TStoreTransferOwnerEcReq tStoreTransferOwnerEcReq = new TStoreTransferOwnerEcReq();
