@@ -82,7 +82,7 @@ public class ProductListServiceImpl implements ProductListService{
 		while(true) {
 			prodListFromDB = commonDAO.queryForList( "ProductList.selectListProdList", lpCriteria, ListProduct.class);
 			totalCountFromDB += prodListFromDB.size();
-			addListProductIntoResponse(header, response, lpCriteria, prodListFromDB);
+			addListProductIntoResponse(header, response, prodListFromDB);
 
 			if( responseGetEnoughProdList(response, requestVO) || noMoreProdToGet(prodListFromDB, lpCriteria.getCount()))
 				break;
@@ -92,9 +92,9 @@ public class ProductListServiceImpl implements ProductListService{
 			}
 		}
 
-		setStartKeyIntoResponse(response, prodListFromDB);
 		setHasNextIntoResponse(response, requestVO, totalCountFromDB);
 		removeRedundantLastItem(response, requestVO.getCount());
+		setStartKeyIntoResponse(response);
 		response.setCount(response.getProductList().size());
 		setStdDtIntoResponse(response, stdDt);
 		setListIdAndEtcPropIntoResponse(response, requestVO, header);
@@ -164,7 +164,7 @@ public class ProductListServiceImpl implements ProductListService{
 		return stdDt;
 	}
 
-	private void addListProductIntoResponse(SacRequestHeader header, ProductListSacRes response, ListProductCriteria lpCriteria, List<ListProduct> listProds) {
+	private void addListProductIntoResponse(SacRequestHeader header, ProductListSacRes response, List<ListProduct> listProds) {
 		List<Product> productList = response.getProductList();
 		for(ListProduct listProd: listProds){
 			Product p = getProduct(header, listProd);
@@ -173,7 +173,8 @@ public class ProductListServiceImpl implements ProductListService{
 		}
 	}
 
-	private void setStartKeyIntoResponse(ProductListSacRes response, List<ListProduct> prodList) {
+	private void setStartKeyIntoResponse(ProductListSacRes response) {
+		List<Product> prodList = response.getProductList();
 		if(prodList.size()==0)
 			return;
 		String startKey = prodList.get(prodList.size()-1).getExpoOrd() + "/";
@@ -278,6 +279,8 @@ public class ProductListServiceImpl implements ProductListService{
 
 		product.setRecommendedReason(listProd.getRecomReason());
 		product.setEtcProp(listProd.getEtcProp());
+		product.setExpoOrd(listProd.getExpoOrd());
+		product.setExpoOrdSub(listProd.getExpoOrdSub());
 
 		return product;
 	}
