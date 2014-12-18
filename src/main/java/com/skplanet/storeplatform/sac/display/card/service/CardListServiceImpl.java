@@ -219,7 +219,7 @@ public class CardListServiceImpl implements CardListService {
 
         return CollectionUtils.containsAny(cardMbrLvl, sgmtMbrLvl) &&
                 ageClsf.contains(segmentInfo.getAgeClsfCd()) &&
-                CollectionUtils.containsAny(categoryBest, segmentInfo.getCategoryBest()) &&
+                segmentInfo.getCategoryBest() != null && CollectionUtils.containsAny(categoryBest, segmentInfo.getCategoryBest()) &&
                 mnoCd.contains(segmentInfo.getMnoClsfCd()) &&
                 sex.contains(segmentInfo.getSex()) &&
                 (cardSegment.getDeviceChgYn() == null || StringUtils.equals(segmentInfo.getDeviceChgYn(), cardSegment.getDeviceChgYn())) &&
