@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonRawValue;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -26,7 +27,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 
 /**
  * Interface Message Product Value Object.
- * 
+ *
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -369,6 +370,9 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	@JsonRawValue
 	private String etcProp;
+
+	private String expoOrd;
+	private String expoOrdSub;
 
 	public String getProdCase() {
 		return this.prodCase;
@@ -1405,4 +1409,23 @@ public class Product extends CommonInfo implements Serializable {
 	public void setUsePeriod(Integer usePeriod) {
 		this.usePeriod = usePeriod;
 	}
+
+	@JsonIgnore
+	public String getExpoOrd() {
+		return expoOrd;
+	}
+
+	public void setExpoOrd(String expoOrd) {
+		this.expoOrd = expoOrd;
+	}
+
+	@JsonIgnore
+	public String getExpoOrdSub() {
+		return expoOrdSub;
+	}
+
+	public void setExpoOrdSub(String expoOrdSub) {
+		this.expoOrdSub = expoOrdSub;
+	}
+
 }
