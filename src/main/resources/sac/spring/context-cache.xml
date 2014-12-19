@@ -19,7 +19,7 @@
     <!-- PlanDas : Global Cache -->
     <bean id="globalCacheProcessor" class="com.skplanet.storeplatform.framework.core.cache.process.GlobalCacheProcessor" />
     <bean id="globalAnnotationCacheOperationSource" class="org.springframework.cache.annotation.AnnotationCacheOperationSource" />
-    <bean id="globalCacheInterceptor" class="com.skplanet.storeplatform.framework.core.cache.interceptor.GlobalCacheInterceptor"> 
+    <bean id="globalCacheInterceptor" class="com.skplanet.storeplatform.framework.core.cache.interceptor.GlobalCacheInterceptor">
         <property name="cacheOperationSources" ref="globalAnnotationCacheOperationSource"/>
         <property name="cacheManager" ref="plandasjCacheManager" />
     </bean>
@@ -27,23 +27,23 @@
         <property name="cacheOperationSource" ref="globalAnnotationCacheOperationSource" />
         <property name="advice" ref="globalCacheInterceptor" />
     </bean>
-    <aop:config> 
-        <aop:advisor advice-ref="globalCacheAdvisor" pointcut="execution(* com.skplanet.storeplatform.*.*(..))" order="0" /> 
+    <aop:config>
+        <aop:advisor advice-ref="globalCacheAdvisor" pointcut="execution(* com.skplanet.storeplatform.*.*(..))" order="0" />
     </aop:config>
-    
-    <bean id="plandasjConnectionFactory" 
-        class="com.skplanet.spring.data.plandasj.PlandasjConnectionFactory"
-        p:domainName="#{propertiesForSac['plandasj.domainName']}" 
-        p:serviceCode="#{propertiesForSac['plandasj.serviceCode']}" 
-        p:authCode="#{propertiesForSac['plandasj.authCode']}" /> 
 
-    <bean id="plandasjTemplate" 
-        class="com.skplanet.spring.data.plandasj.PlandasjTemplate" 
-        p:connection-factory-ref="plandasjConnectionFactory" /> 
+    <bean id="plandasjConnectionFactory"
+          class="com.skplanet.spring.data.plandasj.PlandasjConnectionFactory"
+          p:domainName="#{propertiesForSac['plandasj.domainName']}"
+          p:serviceCode="#{propertiesForSac['plandasj.serviceCode']}"
+          p:authCode="#{propertiesForSac['plandasj.authCode']}" />
 
-    <bean id="plandasjCacheManager" 
-        class="com.skplanet.spring.data.plandasj.PlandasjCacheManager" 
-        p:template-ref="plandasjTemplate" >
+    <bean id="plandasjTemplate"
+          class="com.skplanet.spring.data.plandasj.PlandasjTemplate"
+          p:connection-factory-ref="plandasjConnectionFactory" />
+
+    <bean id="plandasjCacheManager"
+          class="com.skplanet.spring.data.plandasj.PlandasjCacheManager"
+          p:template-ref="plandasjTemplate" >
         <property name="usePrefix" value="true" />
         <!--<property name="defaultExpiration" value="1800"/>-->
         <property name="expires">
@@ -56,6 +56,7 @@
                 <entry key="sac:display:product:freepass" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:ebookcomic" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:ebookcomic:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+                <entry key="sac:display:product:ebookcomic:v3" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:vod" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:vod:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:vod:v3" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
@@ -73,12 +74,12 @@
             </map>
         </property>
     </bean>
-      
+
     <bean name="plandasjpool" class="com.skplanet.plandasj.PlandasjPool" destroy-method="release">
         <constructor-arg type="java.lang.String" name="domainName" value="#{propertiesForSac['plandasj.domainName']}" />
         <constructor-arg type="java.lang.String" name="serviceCode" value="#{propertiesForSac['plandasj.serviceCode']}" />
         <constructor-arg type="java.lang.String" name="authCode" value="#{propertiesForSac['plandasj.authCode']}" />
-    </bean> 
+    </bean>
     <!-- pool client 방식 -->
     <!-- PlanDas : Global Cache -->
 
@@ -103,6 +104,5 @@
     <bean id="ehCacheManagerFactoryBean"
           class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
           p:configLocation="classpath:sac/spring/ehcache.xml" />
-
 
 </beans>

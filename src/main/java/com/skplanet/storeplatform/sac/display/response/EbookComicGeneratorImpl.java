@@ -115,14 +115,16 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 			chapter.setText(Integer.parseInt(metaInfo.getChapter()));
 			book.setChapter(chapter);
 		}
-		book.setTotalCount(metaInfo.getBookCount());
 
 		//이북 type
         if(StringUtils.equals(metaInfo.getBookClsfCd(), DisplayConstants.DP_BOOK_BOOK)) {
+            book.setTotalCount(metaInfo.getBookCount());
         	book.setBookType(DisplayConstants.DP_BOOK_TYPE_BOOK);
         } else if(StringUtils.equals(metaInfo.getBookClsfCd(), DisplayConstants.DP_BOOK_SERIAL)) {
+            book.setTotalCount(metaInfo.getSerialCount());
         	book.setBookType(DisplayConstants.DP_BOOK_TYPE_SERIAL);
         } else if(StringUtils.equals(metaInfo.getBookClsfCd(), DisplayConstants.DP_BOOK_MAGAZINE)) {
+            book.setTotalCount(metaInfo.getMagazineCount());
         	book.setBookType(DisplayConstants.DP_BOOK_TYPE_MAGAZINE);
         }
 

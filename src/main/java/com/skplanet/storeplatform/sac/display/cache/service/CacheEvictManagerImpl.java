@@ -62,7 +62,7 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = "sac:display:product:ebookcomic", key = "#param.getCacheKey()")
+    @CacheEvict(value = {"sac:display:product:ebookcomic","sac:display:product:ebookcomic:v2","sac:display:product:ebookcomic:v3"}, key = "#param.getCacheKey()")
     public void evictEbookComicMeta(EbookComicMetaParam param) {
 
     }
@@ -102,7 +102,7 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     }
 
     @Override
-    @CacheEvict(value = {"sac:display:product:ebookcomic", "sac:display:product:ebookcomic:v2"}, allEntries = true)
+    @CacheEvict(value = {"sac:display:product:ebookcomic", "sac:display:product:ebookcomic:v2","sac:display:product:ebookcomic:v3"}, allEntries = true)
     public void evictAllEbookComicMeta() {
 
     }

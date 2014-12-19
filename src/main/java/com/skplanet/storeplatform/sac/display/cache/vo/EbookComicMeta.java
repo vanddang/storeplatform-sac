@@ -14,6 +14,9 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * <p>
  * EbookComicMeta
+ *
+ * Changes on v3:
+ * - serialCount, magazineCount 추가
  * </p>
  * Updated on : 2014. 04. 17 Updated by : 정희원, SK 플래닛.
  */
@@ -63,6 +66,8 @@ public class EbookComicMeta extends CommonInfo {
     private Integer chnlPeriodAmt;
     private String samplUrl; 		//이북/코믹 미리보기 URL
     private String sellerMbrNo; 	//판매자 회원 번호
+    private Integer serialCount;
+    private Integer magazineCount;
 
     public Integer getChnlUnlmtAmt() {
         return chnlUnlmtAmt;
@@ -407,5 +412,20 @@ public class EbookComicMeta extends CommonInfo {
 	public void setSellerMbrNo(String sellerMbrNo) {
 		this.sellerMbrNo = sellerMbrNo;
 	}
-	
+
+    public Integer getSerialCount() {
+        return serialCount;
+    }
+
+    public void setSerialCount(Integer serialCount) {
+        this.serialCount = serialCount;
+    }
+
+    public Integer getMagazineCount() {
+        return magazineCount;
+    }
+
+    public void setMagazineCount(Integer magazineCount) {
+        this.magazineCount = magazineCount;
+    }
 }
