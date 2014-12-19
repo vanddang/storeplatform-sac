@@ -60,6 +60,10 @@ public class MemberSegmentServiceImpl implements MemberSegmentService {
 			segmentRes.setOutsdMbrGrdCd("2"); // Default 외부회원레벨 = "gold"
 		}
 		
+		if (StringUtils.isBlank(segmentRes.getSex())) {
+			segmentRes.setSex("Z"); // Default sex = "Z"
+		}
+		
 		res.setSegment(segmentRes);
 		return res;
 	}
