@@ -44,6 +44,8 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.Payme
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UserDeviceInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryCountSacInRes;
@@ -998,12 +1000,20 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		String userEmail = null;
 
+		// userKey, deviceKey 를 이용한 회원정보조회
+		SearchUserDeviceSacRes searchUserDeviceSacRes = this.purchaseCancelRepository.searchUserByDeviceKey(
+				prchsSacParam.getTenantId(), prchsSacParam.getInsdUsermbrNo(), prchsSacParam.getInsdDeviceId());
+		UserDeviceInfoSac userDeviceInfoSac = searchUserDeviceSacRes.getUserDeviceInfo().get(
+				prchsSacParam.getInsdDeviceId());
+
 		SendPurchaseNotiEcReq sendPurchaseNotiEcReq = new SendPurchaseNotiEcReq();
 		sendPurchaseNotiEcReq.setTenantId(prchsSacParam.getTenantId());
-		sendPurchaseNotiEcReq.setDeviceId(prchsSacParam.getDeviceId());
+		sendPurchaseNotiEcReq.setDeviceId(userDeviceInfoSac.getDeviceId());
+		sendPurchaseNotiEcReq.setDeviceKey(userDeviceInfoSac.getMarketDeviceKey());
 		sendPurchaseNotiEcReq.setUserEmail(userEmail);
 		sendPurchaseNotiEcReq.setPrchsId(prchsSacParam.getPrchsId());
 		sendPurchaseNotiEcReq.setPrchsDt(prchsSacParam.getPrchsDt());
+		sendPurchaseNotiEcReq.setCancelDt(DateUtil.getToday() + DateUtil.getTime());
 		sendPurchaseNotiEcReq.setStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
 		sendPurchaseNotiEcReq.setTotAmt(prchsSacParam.getTotAmt());
 		sendPurchaseNotiEcReq.setRequestId(purchaseCancelDetailSacParam.getPaymentSacParamList().get(0).getTid());
@@ -1032,11 +1042,13 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 		String procStatusCd = bSucc ? PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_SUCCESS : PurchaseConstants.SAP_PURCHASE_NOTI_PROC_STATUS_RESERVE;
 
-		this.notiDbInsert(prchsSacParam, purchaseCancelSacParam, sendPurchaseNotiEcReq, procStatusCd, errDesc);
+		this.notiDbInsert(prchsSacParam, purchaseCancelDetailSacParam, purchaseCancelSacParam, sendPurchaseNotiEcReq,
+				procStatusCd, errDesc);
 	}
 
-	private void notiDbInsert(PrchsSacParam prchsSacParam, PurchaseCancelSacParam purchaseCancelSacParam,
-			SendPurchaseNotiEcReq sendPurchaseNotiEcReq, String procStatusCd, String errDesc) {
+	private void notiDbInsert(PrchsSacParam prchsSacParam, PurchaseCancelDetailSacParam purchaseCancelDetailSacParam,
+			PurchaseCancelSacParam purchaseCancelSacParam, SendPurchaseNotiEcReq sendPurchaseNotiEcReq,
+			String procStatusCd, String errDesc) {
 		List<SapNoti> sapNotiList = new ArrayList<SapNoti>();
 		SapNoti sapNoti = new SapNoti();
 
@@ -1045,6 +1057,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		sapNoti.setPrchsDtlId(1);
 		sapNoti.setInsdUsermbrNo(prchsSacParam.getInsdUsermbrNo());
 		sapNoti.setInsdDeviceId(prchsSacParam.getInsdDeviceId());
+		sapNoti.setMarketDeviceKey(sendPurchaseNotiEcReq.getDeviceKey());
 		sapNoti.setDeviceId(sendPurchaseNotiEcReq.getDeviceId());
 		sapNoti.setUserEmail(sendPurchaseNotiEcReq.getUserEmail());
 		sapNoti.setStatusCd(sendPurchaseNotiEcReq.getStatusCd());
@@ -1052,14 +1065,15 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		sapNoti.setCancelDt(sendPurchaseNotiEcReq.getCancelDt());
 		sapNoti.setTotAmt(sendPurchaseNotiEcReq.getTotAmt());
 		sapNoti.setPpTid(sendPurchaseNotiEcReq.getRequestId());
-
+		sapNoti.setPrchsCaseCd(purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0).getPrchsCaseCd()); // 2014.12.19
 		sapNoti.setAddParamInfo("");
-
 		sapNoti.setProcStatusCd(procStatusCd);
-
 		sapNoti.setProcDesc(errDesc);
 		sapNoti.setRegId(purchaseCancelSacParam.getSystemId());
 		sapNoti.setUpdId(purchaseCancelSacParam.getSystemId());
+
+		this.logger.info("PRCHS,CANCEL,SAC,POST,NOTI,SAP,REQ,INSERT,{}",
+				ReflectionToStringBuilder.toString(sapNoti, ToStringStyle.SHORT_PREFIX_STYLE));
 
 		sapNotiList.add(sapNoti);
 
@@ -1075,5 +1089,4 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			this.logger.info("PRCHS,CANCEL,SAC,POST,NOTI,SAP,INS,ERROR,{},{}", errDesc);
 		}
 	}
-
 }

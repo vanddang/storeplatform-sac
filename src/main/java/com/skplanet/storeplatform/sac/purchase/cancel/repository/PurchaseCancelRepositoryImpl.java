@@ -70,6 +70,9 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrder
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
@@ -206,6 +209,24 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		searchOrderUserByDeviceIdSacReq.setOrderDt(orderDt);
 
 		return this.searchUserSCI.searchOrderUserByDeviceId(searchOrderUserByDeviceIdSacReq);
+
+	}
+
+	@Override
+	public SearchUserDeviceSacRes searchUserByDeviceKey(String tenantId, String userKey, String deviceKey) {
+
+		SearchUserDeviceSac searchUserDeviceSac = new SearchUserDeviceSac();
+		searchUserDeviceSac.setTenantId(tenantId);
+		searchUserDeviceSac.setUserKey(userKey);
+		searchUserDeviceSac.setDeviceKey(deviceKey);
+
+		List<SearchUserDeviceSac> deviceList = new ArrayList<SearchUserDeviceSac>();
+		deviceList.add(searchUserDeviceSac);
+
+		SearchUserDeviceSacReq searchUserDeviceSacReq = new SearchUserDeviceSacReq();
+		searchUserDeviceSacReq.setSearchUserDeviceReqList(deviceList);
+
+		return this.searchUserSCI.searchUserByDeviceKey(searchUserDeviceSacReq);
 
 	}
 
