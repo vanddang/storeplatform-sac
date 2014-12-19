@@ -311,7 +311,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 		try {
 			injtVarObj = mapper.readValue(injtVar, InjtVar.class);
 		} catch (Exception e) {
-			logger.error("주입변수 언마셜링 중 오류가 발생하였습니다.\n", e);
+			logger.error("주입변수 언마셜링 중 오류가 발생하였습니다. injtVar={}", injtVar);
 			return;
 		}
 		logger.debug("injtVarObj={}",injtVarObj.toString());
