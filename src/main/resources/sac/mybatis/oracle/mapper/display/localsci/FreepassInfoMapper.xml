@@ -8,6 +8,7 @@
     FROM (
         SELECT  
               PD.PROD_ID
+            , DC.PROD_NM AS cmpxProdNm
             , PM.PART_PROD_ID AS episodeProdId
             ,(CASE WHEN CM.CMPX_PROD_CLSF_CD NOT IN ('OR004305') THEN 
                    (
