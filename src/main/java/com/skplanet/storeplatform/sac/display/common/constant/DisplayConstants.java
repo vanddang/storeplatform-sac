@@ -194,6 +194,10 @@ public class DisplayConstants {
      * 에피소드 타입.
      */
     public static final String DP_EPISODE_CONTENT_TYPE_CD = "PD002502";
+    /**
+     * 앨범 타입.
+     */
+    public static final String DP_ALBUM_CONTENT_TYPE_CD = "PD002503";
 
     /**
      * 구독상품

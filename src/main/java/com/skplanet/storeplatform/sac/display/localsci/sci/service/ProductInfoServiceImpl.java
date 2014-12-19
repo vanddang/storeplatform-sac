@@ -153,10 +153,10 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 							}
 						}
 					}
-
 				}
 
                 if (product != null) {
+                    product.setContentsTypeCd(productBasicInfo.getContentsTypeCd());
                     product.setSeriesYn(typeInfo.isSeries() ? "Y" : "N");
                     productList.add(product);
                 }

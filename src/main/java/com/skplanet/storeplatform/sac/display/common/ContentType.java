@@ -9,7 +9,10 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
  * Time: PM 7:10
  */
 public enum ContentType {
-    Channel(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD), Episode(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+    Channel(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD),
+    Episode(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD),
+    Album(DisplayConstants.DP_ALBUM_CONTENT_TYPE_CD)
+    ;
 
     private String code;
     private ContentType(String code) {
