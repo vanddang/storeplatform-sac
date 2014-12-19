@@ -14,11 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.related.AlbumProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.AlbumProductSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -73,44 +72,32 @@ public class AlbumProductServiceImpl implements AlbumProductService {
 	 * @return AlbumProductSacRes
 	 */
 	@Override
-	public AlbumProductSacRes searchAlbumProductList(
-			String tenantId, String langCd, String deviceModelCd, String prodId, String[] prodGradeCds) {
+	public AlbumProductSacRes searchAlbumProductList(AlbumProductSacReq requestVO, SacRequestHeader requestHeader) {
+		log.debug("특정 앨범별 상품(곡) 조회");
 		
-		AlbumProductSacRes albumProductSacRes = new AlbumProductSacRes();
-		
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("tenantId", tenantId);
-		reqMap.put("langCd", langCd);
-		reqMap.put("deviceModelCd", deviceModelCd);
-		reqMap.put("mmDeviceModelCd", DisplayConstants.DP_ANY_PHONE_4MM);
-		reqMap.put("prodId", prodId);
-		reqMap.put("prodGradeCds", prodGradeCds);
-		
-		this.log.debug("특정 앨범별 상품(곡) 조회");
-		
+		Map<String, Object> reqMap = getRequestMap(requestVO, requestHeader);
 		List<ProductBasicInfo> albumProductList = this.commonDAO.queryForList(
 				"AlbumProduct.selectAlbumProductList", reqMap, ProductBasicInfo.class);
 		
 		List<Product> productList = new ArrayList<Product>();
-		MetaInfo retMetaInfo = null;
-		Product product = null;
-		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantHeader", reqMap);
 		param.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 		
 		for (ProductBasicInfo productBasicInfo : albumProductList) {
 			param.put("productBasicInfo", productBasicInfo);	
-			retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", param,
+			MetaInfo retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", param,
 					MetaInfo.class);
 			if (retMetaInfo != null) {
-				retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(tenantId, retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
-				product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+				retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
+				Product product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
 				product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
 				product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
 				productList.add(product);
 			}
 		}
+		
+		AlbumProductSacRes albumProductSacRes = new AlbumProductSacRes();
 		albumProductSacRes.setProductList(productList);
 		
 		CommonResponse commonResponse = new CommonResponse();
@@ -119,6 +106,43 @@ public class AlbumProductServiceImpl implements AlbumProductService {
 		albumProductSacRes.setCommonResponse(commonResponse);
 		
 		return albumProductSacRes;
+	}
+	
+	private Map<String, Object> getRequestMap(AlbumProductSacReq requestVO, SacRequestHeader requestHeader) {
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		reqMap.put("tenantId", requestHeader.getTenantHeader().getTenantId());
+		reqMap.put("langCd", requestHeader.getTenantHeader().getLangCd());
+		reqMap.put("deviceModelCd", requestHeader.getDeviceHeader().getModel());
+		reqMap.put("mmDeviceModelCd", DisplayConstants.DP_ANY_PHONE_4MM);
+		reqMap.put("prodId", requestVO.getAlbumId());
+		reqMap.put("prodGradeCds", parseProdGradeCd(requestVO.getProdGradeCd()));
+		reqMap.put("offset", requestVO.getOffset() == null ? 1 : requestVO.getOffset());
+		reqMap.put("count", requestVO.getCount() == null ? 20 : requestVO.getCount());
+		return reqMap;
+	}
+	
+	
+	private String[] parseProdGradeCd(String prodGradeCd) {
+		if (prodGradeCd == null) {
+			return null;
+		}
+		String[] prodGradeCds = prodGradeCd.split("\\+");
+		validateProdGradeCd(prodGradeCds);
+		return prodGradeCds;
+	}
+	
+	private void validateProdGradeCd(String[] prodGradeCds) {
+		for (int i = 0; i < prodGradeCds.length; i++) {
+			if (!"PD004401".equals(prodGradeCds[i]) && !"PD004402".equals(prodGradeCds[i])
+					&& !"PD004403".equals(prodGradeCds[i])) {
+				log.debug("----------------------------------------------------------------");
+				log.debug("유효하지않은 상품 등급 코드 : " + prodGradeCds[i]);
+				log.debug("----------------------------------------------------------------");
+
+				throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+						prodGradeCds[i]);
+			}
+		}
 	}
 
 }

@@ -14,5 +14,5 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  * Updated by : 1002177
  */
 public interface AlbumProductService {
-	public AlbumProductSacRes searchAlbumProductList(String tenantId, String langCd, String deviceModelCd, String prodId, String[] prodGradeCds);
+	public AlbumProductSacRes searchAlbumProductList(AlbumProductSacReq requestVO, SacRequestHeader requestHeader);
 }

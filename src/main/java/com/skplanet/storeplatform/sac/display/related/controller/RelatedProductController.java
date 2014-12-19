@@ -288,40 +288,11 @@ public class RelatedProductController {
 	@ResponseBody
 	public AlbumProductSacRes searchAlbumProductList(@Validated AlbumProductSacReq requestVO,
 			SacRequestHeader requestHeader) {
-
-		String tenantId = requestHeader.getTenantHeader().getTenantId();
-		String langCd = requestHeader.getTenantHeader().getLangCd();
-		String deviceModelCd = requestHeader.getDeviceHeader().getModel();
-		String prodId = requestVO.getAlbumId();
-		String prodGradeCd = requestVO.getProdGradeCd();
-
-		this.logger.debug("tenantId={},langCd={},prodId={},prodGradeCd={}", tenantId, langCd, prodId, prodGradeCd);
-
-		String[] prodGradeCds = parseProdGradeCd(prodGradeCd);
-		return this.albumProductService.searchAlbumProductList(tenantId, langCd, deviceModelCd, prodId, prodGradeCds);
+		
+		this.logger.debug("RelatedProductController.searchAlbumProductList start !!");
+		return this.albumProductService.searchAlbumProductList(requestVO, requestHeader);
 	}
 	
-	private String[] parseProdGradeCd(String prodGradeCd) {
-		if (prodGradeCd == null) {
-			return null;
-		}
-		String[] prodGradeCds = prodGradeCd.split("\\+");
-		validateProdGradeCd(prodGradeCds);
-		return prodGradeCds;
-	}
 	
-	private void validateProdGradeCd(String[] prodGradeCds) {
-		for (int i = 0; i < prodGradeCds.length; i++) {
-			if (!"PD004401".equals(prodGradeCds[i]) && !"PD004402".equals(prodGradeCds[i])
-					&& !"PD004403".equals(prodGradeCds[i])) {
-				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("유효하지않은 상품 등급 코드 : " + prodGradeCds[i]);
-				this.logger.debug("----------------------------------------------------------------");
-
-				throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
-						prodGradeCds[i]);
-			}
-		}
-	}
 
 }

@@ -18,6 +18,7 @@
                 , C.MENU_ID
                 , A.PROD_ID
                 , A.CONTENTS_TYPE_CD
+                , ROW_NUMBER() OVER(ORDER BY I.CHAPTER) RNK
             FROM 
                 TB_DP_PROD A /* 에피소드 */
                 , TB_DP_MENU_CATEGORY_PROD_MAPG B
@@ -66,5 +67,7 @@
             AND D.LANG_CD = #{langCd}
             ORDER BY I.CHAPTER
         ) A
+	    WHERE A.RNK BETWEEN #{offset} AND #{count} + #{offset} - 1
+	    ORDER BY A.RNK
     </select>
 </mapper>
