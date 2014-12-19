@@ -83,6 +83,11 @@ public class Book extends CommonInfo implements Serializable {
 	 */
 	private String bookClsfCd;
 
+    /**
+     * 도서 구분명
+     */
+    private String bookType;
+
 	/**
 	 * 물리파일경로.
 	 */
@@ -509,5 +514,11 @@ public class Book extends CommonInfo implements Serializable {
 		this.magazineLastChapter = magazineLastChapter;
 	}
 
-	
+    public String getBookType() {
+        return bookType;
+    }
+
+    public void setBookType(String bookType) {
+        this.bookType = bookType;
+    }
 }
