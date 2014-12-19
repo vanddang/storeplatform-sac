@@ -2942,11 +2942,8 @@
                       
                    ) 
                  WHERE NO =1
---               ORDER BY 
---                      EXPO_ORD_ALWAYS_YN DESC
---                    , EXPO_ORD   
---                    , EXPO_ORD_SUB 
---                    , CATALOG_NM ASC               
+                 ORDER BY EXPO_ORD   
+               
                ) 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>     
@@ -3094,11 +3091,7 @@
                             )                          
                    ) 
                  WHERE NO =1
---               ORDER BY 
---                      EXPO_ORD_ALWAYS_YN DESC
---                    , EXPO_ORD   
---                    , EXPO_ORD_SUB 
---                    , CATALOG_NM ASC  
+                 ORDER BY EXPO_ORD   
              )                 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>        
@@ -3227,11 +3220,7 @@
                         </if>      
                    ) 
                  WHERE NO =1
---               ORDER BY 
---                      EXPO_ORD_ALWAYS_YN DESC
---                    , EXPO_ORD   
---                    , EXPO_ORD_SUB 
---                    , CATALOG_NM ASC                 
+                 ORDER BY EXPO_ORD   
                )
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>         
