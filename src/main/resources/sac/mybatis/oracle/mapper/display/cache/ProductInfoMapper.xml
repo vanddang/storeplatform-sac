@@ -344,6 +344,42 @@
         , CASE WHEN R.CHNL_PERIOD_AMT >= 0 THEN R.CHNL_PERIOD_AMT END AS CHNL_PERIOD_AMT  /* 채널 대여 가격 */
         , NVL(R.PROD_AMT, 0) AS EPSD_PROD_AMT  /* 에피소드 가격 */
         , R.PROD_NET_AMT
+        , (SELECT MAX(SC.PROD_AMT)
+             FROM TB_DP_PROD_RSHP SA
+               , TB_DP_PROD SB
+               , TB_DP_TENANT_PROD_PRICE SC
+               , TB_DP_TENANT_PROD SD
+             WHERE SA.PROD_ID = R.PROD_ID
+                   AND SA.PROD_RSHP_CD = 'DP010802'
+                   AND SA.PART_PROD_ID = SB.PROD_ID
+                   AND SB.CID = R.CID
+                   AND SB.PROD_ID = SC.PROD_ID
+                   AND SB.CONTENTS_TYPE_CD = 'PD002502'
+                   AND SC.TENANT_ID = #{tenantId}
+                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
+                   AND SC.PROD_ID = SD.PROD_ID
+                   AND SD.TENANT_ID = SC.TENANT_ID
+                   AND SD.PROD_STATUS_CD = 'PD000403'
+                   AND SB.USE_PERIOD_UNIT_CD = 'PD00310'
+            ) AS EPSD_UNLMT_AMT  /* 에피소드 동일 CID 소장 가격 */
+          , (SELECT MAX(SC.PROD_AMT)
+             FROM TB_DP_PROD_RSHP SA
+               , TB_DP_PROD SB
+               , TB_DP_TENANT_PROD_PRICE SC
+               , TB_DP_TENANT_PROD SD
+             WHERE SA.PROD_ID = R.PROD_ID
+                   AND SA.PROD_RSHP_CD = 'DP010802'
+                   AND SA.PART_PROD_ID = SB.PROD_ID
+                   AND SB.CID = R.CID
+                   AND SB.PROD_ID = SC.PROD_ID
+                   AND SB.CONTENTS_TYPE_CD = 'PD002502'
+                   AND SC.TENANT_ID = #{tenantId}
+                   AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
+                   AND SC.PROD_ID = SD.PROD_ID
+                   AND SD.TENANT_ID = SC.TENANT_ID
+                   AND SD.PROD_STATUS_CD = 'PD000403'
+                   AND SB.USE_PERIOD_UNIT_CD != 'PD00310'
+            ) AS EPSD_PERIOD_AMT  /* 에피소드 동일 CID 대여 가격 */
         , R.PROD_CHRG_YN AS PROD_CHRG
         , NVL(R.PATICPERS_CNT, 0) AS PATICPERS_CNT
         , NVL(R.PRCHS_CNT, 0) AS PRCHS_CNT
@@ -409,6 +445,7 @@
             , EMCD.MENU_NM
             , EMCD.MENU_DESC
             , TMCD.MENU_NM AS TOP_MENU_NM
+            , EPROD.CID
         FROM TB_DP_PROD_RSHP RSHP
           INNER JOIN TB_DP_TENANT_PROD CTPROD
             ON CTPROD.PROD_ID = RSHP.PROD_ID
@@ -534,10 +571,10 @@
                    AND SB.CID = TB.CID
                    AND SB.PROD_ID = SC.PROD_ID
                    AND SB.CONTENTS_TYPE_CD = 'PD002502'
-                   AND SC.TENANT_ID = 'S01'
+                   AND SC.TENANT_ID = #{tenantId}
                    AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
                    AND SC.PROD_ID = SD.PROD_ID
-                   AND SD.TENANT_ID = 'S01'
+                   AND SD.TENANT_ID = SC.TENANT_ID
                    AND SD.PROD_STATUS_CD = 'PD000403'
                    AND SB.USE_PERIOD_UNIT_CD = 'PD00310'
             ) AS EPSD_UNLMT_AMT  /* 에피소드 동일 CID 소장 가격 */
@@ -552,10 +589,10 @@
                    AND SB.CID = TB.CID
                    AND SB.PROD_ID = SC.PROD_ID
                    AND SB.CONTENTS_TYPE_CD = 'PD002502'
-                   AND SC.TENANT_ID = 'S01'
+                   AND SC.TENANT_ID = #{tenantId}
                    AND SYSDATE BETWEEN SC.APPLY_START_DT AND SC.APPLY_END_DT
                    AND SC.PROD_ID = SD.PROD_ID
-                   AND SD.TENANT_ID = 'S01'
+                   AND SD.TENANT_ID = SC.TENANT_ID
                    AND SD.PROD_STATUS_CD = 'PD000403'
                    AND SB.USE_PERIOD_UNIT_CD != 'PD00310'
             ) AS EPSD_PERIOD_AMT  /* 에피소드 동일 CID 대여 가격 */

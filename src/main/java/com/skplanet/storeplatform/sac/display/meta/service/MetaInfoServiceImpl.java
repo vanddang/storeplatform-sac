@@ -234,8 +234,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
                 me.setPeriodAmt(meta.getChnlPeriodAmt());
             } else if (param.getContentType() == ContentType.Episode) {
                 me.setProdAmt(meta.getEpsdProdAmt());
-                me.setUnlmtAmt(meta.getChnlUnlmtAmt());
-                me.setPeriodAmt(meta.getChnlPeriodAmt());
+                me.setUnlmtAmt(meta.getEpsdUnlmtAmt());
+                me.setPeriodAmt(meta.getEpsdPeriodAmt());
             }
         }
         else

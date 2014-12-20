@@ -19,6 +19,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  *  - fileSize를 Long형으로 변경
  * Changes on v3:
  *  - add epsdPlayTm (재생시간)
+ * Changes on v4:
+ *  - add epsdUnlmtAmt, epsdPeriodAmt
  * </p>
  * Updated on : 2014. 04. 15 Updated by : 정희원, SK 플래닛.
  */
@@ -68,6 +70,8 @@ public class VodMeta extends CommonInfo {
     private String brdcCompNm;
     private Integer chnlUnlmtAmt;
     private Integer chnlPeriodAmt;
+    private Integer epsdUnlmtAmt;
+    private Integer epsdPeriodAmt;
     private String epsdPlayTm;
 
     public String getUpMenuId() {
@@ -420,5 +424,21 @@ public class VodMeta extends CommonInfo {
 
     public void setEpsdPlayTm(String epsdPlayTm) {
         this.epsdPlayTm = epsdPlayTm;
+    }
+
+    public Integer getEpsdUnlmtAmt() {
+        return epsdUnlmtAmt;
+    }
+
+    public void setEpsdUnlmtAmt(Integer epsdUnlmtAmt) {
+        this.epsdUnlmtAmt = epsdUnlmtAmt;
+    }
+
+    public Integer getEpsdPeriodAmt() {
+        return epsdPeriodAmt;
+    }
+
+    public void setEpsdPeriodAmt(Integer epsdPeriodAmt) {
+        this.epsdPeriodAmt = epsdPeriodAmt;
     }
 }
