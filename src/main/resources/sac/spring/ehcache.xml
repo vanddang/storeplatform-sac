@@ -33,7 +33,7 @@
 		overflowToDisk="false" 
 		diskPersistent="false" 
 		timeToIdleSeconds="0"
-		timeToLiveSeconds="60"
+		timeToLiveSeconds="300"
 		memoryStoreEvictionPolicy="LRU" />
 
     <cache
@@ -43,7 +43,7 @@
         overflowToDisk="false"
         diskPersistent="false"
         timeToIdleSeconds="0"
-        timeToLiveSeconds="60"
+        timeToLiveSeconds="300"
         memoryStoreEvictionPolicy="LRU" />
 
     <cache
@@ -53,7 +53,7 @@
         overflowToDisk="false"
         diskPersistent="false"
         timeToIdleSeconds="0"
-        timeToLiveSeconds="60"
+        timeToLiveSeconds="300"
         memoryStoreEvictionPolicy="LRU" />
 
     <cache
@@ -63,7 +63,7 @@
         overflowToDisk="false"
         diskPersistent="false"
         timeToIdleSeconds="0"
-        timeToLiveSeconds="60"
+        timeToLiveSeconds="300"
         memoryStoreEvictionPolicy="LRU" />
 
     <cache
@@ -73,7 +73,7 @@
         overflowToDisk="false"
         diskPersistent="false"
         timeToIdleSeconds="0"
-        timeToLiveSeconds="60"
+        timeToLiveSeconds="300"
         memoryStoreEvictionPolicy="LRU" />
 
 </ehcache>
