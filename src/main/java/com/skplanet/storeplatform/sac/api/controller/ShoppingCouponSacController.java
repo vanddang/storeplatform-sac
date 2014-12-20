@@ -875,7 +875,8 @@ public class ShoppingCouponSacController {
 				}
 			}
 
-			if (!couponInfo.getTaxType().equals("01") && !couponInfo.getTaxType().equals("02")) {
+			if (!couponInfo.getTaxType().equals("01") && !couponInfo.getTaxType().equals("02")
+					&& !couponInfo.getTaxType().equals("03")) {
 				message = "유효성 검사 실패 [taxType : 세금구분유형:" + couponInfo.getTaxType() + "]";
 				result = false;
 			}
