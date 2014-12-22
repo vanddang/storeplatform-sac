@@ -4,35 +4,47 @@
 <mapper namespace="StatLike">    
 	<!-- 회원별 LIKE 목록 조회 -->
     <select id="selectList" parameterType="StatLike" resultType="StatLike">
-        /* StatLikeMapper.xml, Stat.LikeselectList, SAC 전시 , 2014-11-05 */
-		SELECT
-		  TENANT_ID,
-		  USER_KEY,
-		  STATS_CLSF, 
-		  STATS_KEY,
-		  CNT_LIKE,
-		  CNT_BRWS,
-		  CNT_SHAR,
-		  SEQ,
-		  TOTAL_COUNT
-		FROM (  
-		  SELECT
-		    TENANT_ID,
-		    USER_KEY,
-		    STATS_CLSF, 
-		    STATS_KEY,
-		    CNT_LIKE,
-		    CNT_BRWS,
-		    CNT_SHAR,
-		    SEQ,
-		    COUNT(*) OVER () AS TOTAL_COUNT
-		  FROM TB_DP_SOCIAL_STATS_MBR_LIKE A
-		  LEFT OUTER JOIN TB_DP_SOCIAL_STATS B
-		  USING (TENANT_ID, STATS_CLSF, STATS_KEY)
-		  WHERE TENANT_ID = #{tenantId}
-		  AND USER_KEY = #{userKey}
-		  AND A.seq &lt;= TO_NUMBER(#{startKey})
-		  ORDER BY A.SEQ DESC
+        /* StatLikeMapper.xml, StatLike.selectList, SAC 전시 , 2014-11-05 */
+        SELECT
+			TENANT_ID,
+			USER_KEY,
+			STATS_CLSF, 
+			STATS_KEY,
+			CNT_LIKE,
+			CNT_BRWS,
+			CNT_SHAR,
+			SEQ,
+			TOTAL_COUNT
+		FROM (
+			SELECT
+			  TENANT_ID,
+			  USER_KEY,
+			  STATS_CLSF, 
+			  STATS_KEY,
+			  CNT_LIKE,
+			  CNT_BRWS,
+			  CNT_SHAR,
+			  SEQ,
+			  TOTAL_COUNT
+			FROM (  
+			  SELECT
+			    TENANT_ID,
+			    USER_KEY,
+			    STATS_CLSF, 
+			    STATS_KEY,
+			    CNT_LIKE,
+			    CNT_BRWS,
+			    CNT_SHAR,
+			    SEQ,
+			    COUNT(*) OVER () AS TOTAL_COUNT
+			  FROM TB_DP_SOCIAL_STATS_MBR_LIKE A
+			  LEFT OUTER JOIN TB_DP_SOCIAL_STATS B
+			  USING (TENANT_ID, STATS_CLSF, STATS_KEY)
+			  WHERE TENANT_ID = #{tenantId}
+			  AND USER_KEY = #{userKey}
+			)
+			WHERE SEQ &lt;= TO_NUMBER(#{startKey})
+			ORDER BY SEQ DESC
 		)
 		WHERE rownum &lt;= #{count} + 1 /* select 1 more for hasNext.*/
     </select>
