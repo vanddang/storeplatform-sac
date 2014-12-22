@@ -187,6 +187,12 @@ public class CardDetailServiceImpl implements CardDetailService {
 				return null;
 			}
 
+			if (StringUtils.isBlank(menuInfoService.getMenuName(prefMenuId, langCd))) {
+				/* 선호 카테고리 정보가 서버에 없는 경우 카드를 노출 하면 안됨 */
+				logger.info("preferred category is not exist. cardId={}, prefMenuId={}", card.getId(), prefMenuId);
+				return null;
+			}
+
 			makeTitleParam(card, prefMenuId, langCd);
 		}
 
