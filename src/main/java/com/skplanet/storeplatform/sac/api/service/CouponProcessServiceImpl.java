@@ -1008,7 +1008,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "정산율 배포 실패!!", null);
 		}
 
-		this.getConnectMq(couponInfo, itemInfoList, couponReq);
+		this.getConnectMq(couponInfo, itemInfoList, couponReq , cudType);
 
 		return true;
 	} // End setTbDpProdDesc
@@ -1353,7 +1353,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				if (flag) {
 					info.setCouponCode(nextLine[1].toString()); // 쿠폰 코드
 					info.setCoupnStatus(this.getDPStatusCode(nextLine[3].toString())); // 2:판매대기 , 3:판매중 , 4:판매중지
-																					   // ,5:판매금지
+					// ,5:판매금지
 					info.setNewCouponId(newCouponId);
 					info.setItemCode(nextLine[2].toString()); // 아이템 코드
 					info.setNewItemId(newItemId);
@@ -1525,7 +1525,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @return boolean
 	 */
 
-	private boolean getConnectMq(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, CouponReq couponReq) {
+	private boolean getConnectMq(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, CouponReq couponReq,String cudType) {
 		boolean result = true;
 		this.log.info("■■■■■ MQ 연동 start ■■■■■");
 
@@ -1534,6 +1534,86 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 		try {
 			CouponRes couponRes = this.getCatalogNmMenuId(couponInfo.getStoreCatalogCode());
+
+			////////////////////////////////////채널 MQ 연동 //////////////////////////////////////////////////////
+			noti.setTransactionKey(couponReq.getTxId() + "0000");
+			/**
+			 * 상품정보 세팅.
+			 */
+			Product product = new Product();
+
+			product.setSyncDataControlType(cudType); // 구분
+			product.setProdId(couponInfo.getProdId());// 상품ID
+			product.setProdNm(couponInfo.getCouponName()); // 상품명
+
+			product.setProdFdTypCd("PD000502");// 무료
+			product.setSvcGrpTypCd(CouponConstants.CUPON_SVC_GRP_CD);// 서비스그룹코드DP000206
+
+			product.setMbrNo(couponInfo.getMbrNo());// 판매자mbrNO
+			product.setCid(couponInfo.getCouponCode()); // cid
+			product.setCateNo(CouponConstants.TOP_MENU_ID_CUPON_CONTENT); // 탑카테고리 DP28
+			product.setSubCateNo(couponRes.getMenuId());// 서브카테고리
+			product.setCoContentsId(couponInfo.getCouponCode());// 업체컨텐츠ID == CID랑 같음
+
+			if (Integer.parseInt(couponInfo.getValidUntil()) > 0) { // 유효일수 값 비교
+				product.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_DAY); // PD00312 기간제(일)
+				product.setUserTerm(couponInfo.getValidUntil()); // 유효일수로 셋팅
+			} else {
+				product.setUseTermUnitCd(CouponConstants.USE_PERIOD_UNIT_SELECT); // PD00319 기간선택
+				// USE_TERM_UNIT
+				product.setUserTerm(couponInfo.getValidEDate()); // 유효종료일시로 셋팅
+			}
+			product.setCatalogId(couponInfo.getStoreCatalogCode());// 카테고리ID
+			product.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
+			product.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
+			product.setMbrStrte(couponInfo.getAccountingRate()); // 파트너 상품정산율
+			Date date = new Date();
+			String modifiedDate = new SimpleDateFormat("yyyyMMddHHmmss").format(date);
+			if ("C".equalsIgnoreCase(cudType)) {
+				product.setRegId(couponInfo.getBpId()); // 등록ID
+				product.setRegDt(modifiedDate); // 등록일시
+				product.setUpdId(couponInfo.getBpId()); // 수정ID
+				product.setUpdDt(modifiedDate); // 수정일시
+
+			} else {
+				product.setRegId(couponRes.getRegId()); // 등록ID
+				product.setRegDt(couponRes.getRegDt()); // 등록일시
+				product.setUpdId(couponInfo.getBpId()); // 수정ID
+				product.setUpdDt(modifiedDate); // 수정일시
+			}
+			noti.setProduct(product);
+			/**
+			 * 상품가격정보 세팅.
+			 */
+			productTenantPriceList = new ArrayList<ProductTenantPrice>();
+			ProductTenantPrice productTenantPrice = new ProductTenantPrice();
+			productTenantPrice.setProdId(couponInfo.getProdId());
+			productTenantPrice.setSyncDataControlType(cudType);
+			productTenantPrice.setTenantId(CouponConstants.TENANT_ID); // tenentId
+			productTenantPrice.setProdAmt("0");// 상품가격
+
+			if ("C".equalsIgnoreCase(cudType)) {
+				productTenantPrice.setRegId(couponInfo.getBpId()); // 등록ID
+				productTenantPrice.setRegDt(modifiedDate); // 등록일시
+				productTenantPrice.setUpdId(couponInfo.getBpId()); // 수정ID
+				productTenantPrice.setUpdDt(modifiedDate); // 수정일시
+
+			} else {
+				productTenantPrice.setRegId(couponRes.getRegId()); // 등록ID
+				productTenantPrice.setRegDt(couponRes.getRegDt()); // 등록일시
+				productTenantPrice.setUpdId(couponInfo.getBpId()); // 수정ID
+				productTenantPrice.setUpdDt(modifiedDate); // 수정일시
+			}
+
+			productTenantPriceList.add(productTenantPrice);
+			noti.setProductTenantPriceList(productTenantPriceList);
+			this.log.info("channel_prod_id S:::"+couponInfo.getProdId());
+			this.shoppingIprmAmqpTemplate.convertAndSend(noti); // async
+			this.log.info("channel_prod_id E:::"+couponInfo.getProdId());
+
+
+
+			////////////////////////////////////에피소드 MQ 연동 //////////////////////////////////////////////////////
 			for (int i = 0; i < itemInfoList.size(); i++) {
 				DpItemInfo itemInfo = itemInfoList.get(i);
 				noti.setTransactionKey(couponReq.getTxId() + "000" + (i + 1));
@@ -1571,8 +1651,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				productVO.setCatalogNm(couponRes.getCatalogName()); // 카테고리명
 				productVO.setTaxTypCd(couponInfo.getTaxType()); // 세금구분코드
 				productVO.setMbrStrte(couponInfo.getAccountingRate()); // 파트너 상품정산율
-				Date date = new Date();
-				String modifiedDate = new SimpleDateFormat("yyyyMMddHHmmss").format(date);
+
+
 				if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
 					productVO.setRegId(couponInfo.getBpId()); // 등록ID
 					productVO.setRegDt(modifiedDate); // 등록일시
@@ -1611,9 +1691,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 				productTenantPriceList.add(productTenantPriceVO);
 				noti.setProductTenantPriceList(productTenantPriceList);
-				this.log.info("LOG7");
+				this.log.info("episode_prod_id S:::"+itemInfo.getProdId());
 				this.shoppingIprmAmqpTemplate.convertAndSend(noti); // async
-				this.log.info("LOG8");
+				this.log.info("episode_prod_id E:::"+itemInfo.getProdId());
 			}
 
 			this.log.info("■■■■■ MQ 연동 End ■■■■■");
