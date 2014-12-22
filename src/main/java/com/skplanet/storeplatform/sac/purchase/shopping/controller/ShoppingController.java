@@ -300,10 +300,14 @@ public class ShoppingController {
 
 		CouponPublishAvailableSacV2Res couponPublishAvailableSacRes = new CouponPublishAvailableSacV2Res();
 
-		couponPublishAvailableSacRes.setSaleDayLimit(couponUseStatusSacResult.getMaxDay());
-		couponPublishAvailableSacRes.setSaleDayLimitPerson(couponUseStatusSacResult.getMaxDayMdn());
-		couponPublishAvailableSacRes.setSaleMonthLimit(couponUseStatusSacResult.getMaxMonth());
-		couponPublishAvailableSacRes.setSaleMonthLimitPerson(couponUseStatusSacResult.getMaxMonthMdn());
+		couponPublishAvailableSacRes.setSaleDayLimit(couponUseStatusSacResult.getMaxDay()
+				- couponUseStatusSacResult.getCurDay());
+		couponPublishAvailableSacRes.setSaleDayLimitPerson(couponUseStatusSacResult.getMaxDayMdn()
+				- couponUseStatusSacResult.getCurDayMdn());
+		couponPublishAvailableSacRes.setSaleMonthLimit(couponUseStatusSacResult.getMaxMonth()
+				- couponUseStatusSacResult.getCurMonth());
+		couponPublishAvailableSacRes.setSaleMonthLimitPerson(couponUseStatusSacResult.getMaxMonthMdn()
+				- couponUseStatusSacResult.getCurMonthMdn());
 		couponPublishAvailableSacRes.setSaleOnceLimit(couponUseStatusSacResult.getBuyMaxLimit());
 
 		return couponPublishAvailableSacRes;
