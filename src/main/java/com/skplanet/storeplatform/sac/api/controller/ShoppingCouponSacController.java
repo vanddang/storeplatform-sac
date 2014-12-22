@@ -563,7 +563,7 @@ public class ShoppingCouponSacController {
 			if (catalogInfo.getIntroText().equals("") || catalogInfo.getIntroText() == null) {
 				result = false;
 				sb.append("카탈로그 한줄소개는 null을가질수 없습니다.");
-			} else if (catalogInfo.getCatalogNm().length() > 150) {
+			} else if (catalogInfo.getIntroText().length() > 150) {
 				result = false;
 				sb.append("카탈로그 한줄소개는 length 150을 가질수 없습니다.");
 			}
