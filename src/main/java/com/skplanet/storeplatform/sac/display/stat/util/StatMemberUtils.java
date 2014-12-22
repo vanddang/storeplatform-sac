@@ -28,14 +28,6 @@ public class StatMemberUtils {
 		
 		return dbListSize - 1; // for hasNext
 	}
-
-	public static Integer getResStartKey(int dbListSize, int reqCount, int reqStartKey) {
-		if (!hasResNext(dbListSize, reqCount)) {
-			return null;
-		}
-		
-		return reqStartKey + reqCount;
-	}
 	
 	public static boolean hasResNext(int dbListSize, int reqCount) {
 		return dbListSize > reqCount;

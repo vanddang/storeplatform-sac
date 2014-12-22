@@ -28,6 +28,7 @@ public class StatLike extends CommonInfo {
 	private Integer cntLike;
 	private Integer cntBrws;
 	private Integer cntShar;
+	private Integer seq;
 	
 	private Integer startKey;
 	private Integer count;
@@ -82,6 +83,12 @@ public class StatLike extends CommonInfo {
 	}
 	public void setCntShar(Integer cntShar) {
 		this.cntShar = cntShar;
+	}
+	public Integer getSeq() {
+		return seq;
+	}
+	public void setSeq(Integer seq) {
+		this.seq = seq;
 	}
 	public Integer getStartKey() {
 		return startKey;

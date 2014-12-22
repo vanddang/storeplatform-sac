@@ -38,10 +38,10 @@ public class StatMemberDataServiceImplTest {
 		StatLike like = new StatLike();
 		like.setTenantId("S01");
 		like.setUserKey("IM120000055187820140428114155");
-		like.setStartKey(1);
+		like.setStartKey(99);
 		like.setCount(5);
 		List<StatLike> list = service.selectStatLikeList(like);
-		System.out.println(list);
+		System.out.println("testSelectList()\n" +list);
 	}
 	
 	@Test

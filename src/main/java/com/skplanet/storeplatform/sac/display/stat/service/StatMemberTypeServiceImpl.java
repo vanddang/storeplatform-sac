@@ -57,7 +57,7 @@ public class StatMemberTypeServiceImpl implements StatMemberTypeService {
 		mapStartKey(res, voList, req);
 		return res;
 	}
-	
+
 	private void mapLikeList(ListByMemberRes res, List<StatLike> voList, ListByMemberReq req, SacRequestHeader header) {
 		List<LikeRes> resList = new ArrayList<LikeRes>();
 		int count = StatMemberUtils.getResCount(voList.size(), req.getCount()); // for hasNext
@@ -89,10 +89,10 @@ public class StatMemberTypeServiceImpl implements StatMemberTypeService {
 		
 		res.setLikeList(resList);
 	}
-	
+		
 	private void mapTotalCount(ListByMemberRes res, List<StatLike> voList) {
 		if (voList.size() == 0) {
-			res.setCount(0);
+			res.setTotalCount(0);
 			return;
 		}
 		
@@ -114,8 +114,13 @@ public class StatMemberTypeServiceImpl implements StatMemberTypeService {
 	}
 	
 	private void mapStartKey(ListByMemberRes res, List<StatLike> voList, ListByMemberReq req) {
-		Integer startKey = StatMemberUtils.getResStartKey(voList.size(), req.getCount(), req.getStartKey());
-		res.setStartKey(startKey);
+		if (!StatMemberUtils.hasResNext(voList.size(), req.getCount())) {
+			return;
+		}
+		
+		StatLike startVo = voList.get(voList.size() - 1);
+		Integer startSeq = startVo.getSeq();
+		res.setStartKey(startSeq);
 	}
 
 }

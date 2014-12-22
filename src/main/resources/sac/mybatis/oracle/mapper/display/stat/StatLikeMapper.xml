@@ -13,6 +13,7 @@
 		  CNT_LIKE,
 		  CNT_BRWS,
 		  CNT_SHAR,
+		  SEQ,
 		  TOTAL_COUNT
 		FROM (  
 		  SELECT
@@ -23,16 +24,17 @@
 		    CNT_LIKE,
 		    CNT_BRWS,
 		    CNT_SHAR,
-		    COUNT(*) OVER () AS TOTAL_COUNT,
-		    ROW_NUMBER() OVER(ORDER BY A.REG_DT DESC) AS RNUM
+		    SEQ,
+		    COUNT(*) OVER () AS TOTAL_COUNT
 		  FROM TB_DP_SOCIAL_STATS_MBR_LIKE A
 		  LEFT OUTER JOIN TB_DP_SOCIAL_STATS B
 		  USING (TENANT_ID, STATS_CLSF, STATS_KEY)
 		  WHERE TENANT_ID = #{tenantId}
 		  AND USER_KEY = #{userKey}
+		  AND A.seq &lt;= TO_NUMBER(#{startKey})
+		  ORDER BY A.SEQ DESC
 		)
-		WHERE RNUM BETWEEN #{startKey} AND (#{startKey} + #{count}) /* select 1 more for hasNext.*/
-		ORDER BY RNUM
+		WHERE rownum &lt;= #{count} + 1 /* select 1 more for hasNext.*/
     </select>
 
 	<insert id="insert" parameterType="java.util.HashMap">
