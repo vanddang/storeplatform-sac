@@ -4,7 +4,7 @@
 <mapper namespace="StatLike">    
 	<!-- 회원별 LIKE 목록 조회 -->
     <select id="selectList" parameterType="StatLike" resultType="StatLike">
-        /* StatLike.xml, selectList, SAC 전시 , 2014-11-05 */
+        /* StatLikeMapper.xml, Stat.LikeselectList, SAC 전시 , 2014-11-05 */
 		SELECT
 		  TENANT_ID,
 		  USER_KEY,
@@ -36,7 +36,7 @@
     </select>
 
 	<insert id="insert" parameterType="java.util.HashMap">
-		INSERT INTO 
+		INSERT INTO /* StatLikeMapper.xml, Stat.insert, SAC 전시 , 2014-12-22 */
 			TB_DP_SOCIAL_STATS_MBR_LIKE 
 		(
 			TENANT_ID
@@ -47,6 +47,7 @@
 			, REG_ID
 			, UPD_DT
 			, UPD_ID
+			, SEQ
 		)
 		VALUES(
 			#{tenantId, jdbcType=VARCHAR}
@@ -57,12 +58,12 @@
 			, 'SAC'
 			, SYSDATE
 			, 'SAC'
-			
+			, (SELECT COALESCE(MAX(SEQ), 0) + 1 FROM TB_DP_SOCIAL_STATS_MBR_LIKE WHERE TENANT_ID = #{tenantId} AND USER_KEY = #{userKey})
 		)
 	</insert>
 	
 	<delete id="delete" parameterType="java.util.HashMap">
-		DELETE FROM 
+		DELETE FROM /* StatLikeMapper.xml, Stat.delete, SAC 전시 , 2014-12-22 */
 			TB_DP_SOCIAL_STATS_MBR_LIKE
 		WHERE 1=1
 			AND TENANT_ID = #{tenantId, jdbcType=VARCHAR}
