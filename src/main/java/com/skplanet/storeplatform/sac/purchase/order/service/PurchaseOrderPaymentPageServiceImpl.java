@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -361,14 +363,35 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	 * @return 암호화된 데이터
 	 */
 	private String encryptPaymentData(PaymentPageParam paymentPageParam, String encKey) {
+		String pNameWithUrlEncoding = paymentPageParam.getpName();
+		String pDescriptionWithUrlEncoding = paymentPageParam.getpDescription();
+		String nmDeliveryWithUrlEncoding = paymentPageParam.getNmDelivery();
+
+		try {
+			if (StringUtils.isNotBlank(paymentPageParam.getpName())) {
+				pNameWithUrlEncoding = URLEncoder.encode(paymentPageParam.getpName(), "UTF-8");
+			}
+			if (StringUtils.isNotBlank(paymentPageParam.getpDescription())) {
+				pDescriptionWithUrlEncoding = URLEncoder.encode(paymentPageParam.getpDescription(), "UTF-8");
+			}
+			if (StringUtils.isNotBlank(paymentPageParam.getNmDelivery())) {
+				nmDeliveryWithUrlEncoding = URLEncoder.encode(paymentPageParam.getNmDelivery(), "UTF-8");
+			}
+		} catch (UnsupportedEncodingException e) {
+			throw new StorePlatformException("SAC_PUR_7201", e);
+		}
+
+		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,KOR,pName={},pDescription={},nmDelivery={}",
+				paymentPageParam.getpName(), paymentPageParam.getpDescription(), paymentPageParam.getNmDelivery());
+
 		// 암호화 데이터 구성
 		StringBuffer sb = new StringBuffer(1024);
 		sb.append("tenantId=").append(paymentPageParam.getTenantId()).append("&mid=").append(paymentPageParam.getMid())
 				.append("&orderId=").append(paymentPageParam.getOrderId()).append("&mctTrDate=")
 				.append(paymentPageParam.getMctTrDate()).append("&amtPurchase=")
 				.append(paymentPageParam.getAmtPurchase()).append("&pid=").append(paymentPageParam.getPid())
-				.append("&pName=").append(paymentPageParam.getpName()).append("&pDescription=")
-				.append(paymentPageParam.getpDescription()).append("&aid=")
+				.append("&pName=").append(pNameWithUrlEncoding).append("&pDescription=")
+				.append(pDescriptionWithUrlEncoding).append("&aid=")
 				.append(StringUtils.defaultString(paymentPageParam.getAid())).append("&returnFormat=")
 				.append(paymentPageParam.getReturnFormat()).append("&flgMchtAuth=")
 				.append(paymentPageParam.getFlgMchtAuth()).append("&mctSpareParam=")
@@ -382,7 +405,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				.append(StringUtils.defaultString(paymentPageParam.getOPMDLineNo())).append("&userKey=")
 				.append(paymentPageParam.getUserKey()).append("&offeringId=")
 				.append(StringUtils.defaultString(paymentPageParam.getOfferingId())).append("&nmDelivery=")
-				.append(StringUtils.defaultString(paymentPageParam.getNmDelivery())).append("&noMdnDelivery=")
+				.append(StringUtils.defaultString(nmDeliveryWithUrlEncoding)).append("&noMdnDelivery=")
 				.append(StringUtils.defaultString(paymentPageParam.getNoMdnDelivery()));
 
 		String plainData = sb.toString();
