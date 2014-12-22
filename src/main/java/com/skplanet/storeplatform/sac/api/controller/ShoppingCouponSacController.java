@@ -946,7 +946,7 @@ public class ShoppingCouponSacController {
 				message = "유효성 검사 실패 [itemName : 단품명 :이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getItemName().length() > 100) {
+			if (itemInfo.getItemName().length() > 250) {
 				message = "유효성 검사 실패 [itemName : 단품명 :" + itemInfo.getItemName() + "]";
 				result = false;
 			}
