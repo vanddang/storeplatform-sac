@@ -684,6 +684,7 @@
                 AND CPDESC.LANG_CD = #{langCd}
         <if test="prodIdType == 'CHANNEL'">
                 AND RSHP.PROD_ID = #{prodId}
+                AND ETPROD.PROD_STATUS_CD = 'PD000403'
         </if>
         <if test="prodIdType == 'EPISODE'">
                 AND RSHP.PART_PROD_ID = #{prodId}
