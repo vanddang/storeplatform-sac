@@ -13,7 +13,6 @@
         FROM (
             SELECT
                 COUNT(A.PROD_ID) OVER() TOTAL_COUNT
-                , I.CHAPTER AS RNK
                 , C.TOP_MENU_ID
                 , C.MENU_ID
                 , A.PROD_ID
