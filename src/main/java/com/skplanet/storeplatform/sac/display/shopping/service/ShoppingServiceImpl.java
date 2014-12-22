@@ -3188,6 +3188,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
 		}
 
+		if( !req.getListId().equals(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR) 
+				&&!req.getListId().equals("RNK050090001") 
+				&&!req.getListId().equals("RNK050090002")
+				&&!req.getListId().equals("RNK050090003")
+				){
+			throw new StorePlatformException("SAC_DSP_0003", "listId", req.getListId());
+		}
+		
+		if(req.getListId().equals("RNK050090001")){
+			req.setListId(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR);
+		}
+
+		
+
 		// 배치완료 기준일시 조회
 		String stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 				req.getListId());
@@ -3396,6 +3410,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
 		}
 
+		if( !req.getListId().equals(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR) 
+				&&!req.getListId().equals("RNK050090001") 
+				&&!req.getListId().equals("RNK050090002")
+				&&!req.getListId().equals("RNK050090003")
+				){
+			throw new StorePlatformException("SAC_DSP_0003", "listId", req.getListId());
+		}
+		
+		if(req.getListId().equals("RNK050090001")){
+			req.setListId(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR);
+		}
+		
 		// 배치완료 기준일시 조회
 		String stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 				req.getListId());
@@ -3534,7 +3560,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getListId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
 		}
+		
+		if( !req.getListId().equals(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR) 
+				&&!req.getListId().equals("RNK050090001") 
+				&&!req.getListId().equals("RNK050090002")
+				&&!req.getListId().equals("RNK050090003")
+				){
+			throw new StorePlatformException("SAC_DSP_0003", "listId", req.getListId());
+		}
+		
+		if(req.getListId().equals("RNK050090001")){
+			req.setListId(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR);
+		}
 
+		
 		// 배치완료 기준일시 조회
 		String stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
 				req.getListId());

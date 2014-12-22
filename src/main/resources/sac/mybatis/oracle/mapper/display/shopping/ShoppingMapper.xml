@@ -2897,7 +2897,12 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID 
-                        AND B.CATALOG_ID = M.PROD_ID                             
+                        <if test="req.listId=='RNK050090002' or req.listId=='RNK050090003'">
+                        AND B.CATALOG_ID = M.PROD_ID            
+                        </if>                 
+                        <if test="req.listId=='RNK000000101'">
+                         AND B.CATALOG_ID = M.PROD_ID(+)  
+                        </if>
                         AND I.PROD_ID = N.PROD_ID(+)  
                         AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                         AND NVL(B.CHNL_CNT, 0) > 0          
@@ -2942,8 +2947,16 @@
                       
                    ) 
                  WHERE NO =1
+                 <if test="req.listId=='RNK050090002' or req.listId=='RNK050090003'">
                  ORDER BY EXPO_ORD   
-               
+                 </if>
+                 <if test="req.listId=='RNK000000101'">
+	               ORDER BY 
+	                      EXPO_ORD_ALWAYS_YN DESC
+	                    , EXPO_ORD   
+	                    , EXPO_ORD_SUB 
+	                    , CATALOG_NM ASC                     
+                 </if>
                ) 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>     
@@ -3048,7 +3061,13 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID
-                        AND B.CATALOG_ID = M.PROD_ID                             
+                       <if test="req.listId=='RNK050090002' or req.listId=='RNK050090003'">
+                        AND B.CATALOG_ID = M.PROD_ID            
+                        </if>                 
+                        <if test="req.listId=='RNK000000101'">
+                         AND B.CATALOG_ID = M.PROD_ID(+)  
+                        </if>                        
+                                                     
                         AND I.PROD_ID = N.PROD_ID(+)       
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/   
                         AND NVL(B.CHNL_CNT, 0) > 0        
@@ -3091,7 +3110,16 @@
                             )                          
                    ) 
                  WHERE NO =1
+                 <if test="req.listId=='RNK050090002' or req.listId=='RNK050090003'">
                  ORDER BY EXPO_ORD   
+                 </if>
+                 <if test="req.listId=='RNK000000101'">
+                   ORDER BY 
+                          EXPO_ORD_ALWAYS_YN DESC
+                        , EXPO_ORD   
+                        , EXPO_ORD_SUB 
+                        , CATALOG_NM ASC                     
+                 </if>
              )                 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>        
@@ -3193,7 +3221,12 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID
-                        AND B.CATALOG_ID = M.PROD_ID                             
+                       <if test="req.listId=='RNK050090002' or req.listId=='RNK050090003'">
+                        AND B.CATALOG_ID = M.PROD_ID            
+                        </if>                 
+                        <if test="req.listId=='RNK000000101'">
+                         AND B.CATALOG_ID = M.PROD_ID(+)  
+                        </if>                                                    
                         AND I.PROD_ID = N.PROD_ID(+)       
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/   
                         AND NVL(B.CHNL_CNT, 0) > 0        
@@ -3220,7 +3253,16 @@
                         </if>      
                    ) 
                  WHERE NO =1
+                 <if test="req.listId =='RNK050090002' or req.listId=='RNK050090003'">
                  ORDER BY EXPO_ORD   
+                 </if>
+                 <if test="req.listId =='RNK000000101'">
+                   ORDER BY 
+                          EXPO_ORD_ALWAYS_YN DESC
+                        , EXPO_ORD   
+                        , EXPO_ORD_SUB 
+                        , CATALOG_NM ASC                     
+                 </if>
                )
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>         
