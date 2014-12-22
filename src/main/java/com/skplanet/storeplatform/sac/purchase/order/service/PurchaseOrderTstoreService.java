@@ -35,9 +35,12 @@ public interface PurchaseOrderTstoreService {
 	 * @param prodIdList
 	 *            구매상품ID 목록
 	 * 
+	 * @param purchaseQty
+	 *            구매 갯수
+	 * 
 	 * @return T Store 쿠폰 목록
 	 */
-	public String searchTstoreCouponList(String userKey, String deviceId, List<String> prodIdList);
+	public String searchTstoreCouponList(String userKey, String deviceId, List<String> prodIdList, int purchaseQty);
 
 	/**
 	 * 

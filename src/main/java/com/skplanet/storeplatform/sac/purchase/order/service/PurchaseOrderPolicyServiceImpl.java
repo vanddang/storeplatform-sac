@@ -522,6 +522,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SAP_TEST_DEVICE);
 
 			policyListMap.remove(PurchaseConstants.POLICY_ID_SAP_TEST_DEVICE);
+		} else {
+			policyList = null;
 		}
 
 		if (this.isTelecomTestMdn(checkPaymentPolicyParam.getTenantId(), sktUapsMappingInfo,

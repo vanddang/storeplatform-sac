@@ -755,8 +755,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		for (PrchsDtlMore productInfo : prchsDtlMoreList) {
 			prodIdList.add(productInfo.getProdId());
 		}
+		int purchaseQty = 1;
+		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
+				&& StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"))) {
+			purchaseQty = prchsDtlMoreList.size();
+		}
 		res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreCouponList(payUserKey,
-				reservedDataMap.get("deviceId"), prodIdList));
+				reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
 
 		// ------------------------------------------------------------------------------------------------
 		// 캐쉬/포인트 잔액 통합 정보 : 게임 경우 통합조회 규격, 그 외는 T store Cash 단일 조회

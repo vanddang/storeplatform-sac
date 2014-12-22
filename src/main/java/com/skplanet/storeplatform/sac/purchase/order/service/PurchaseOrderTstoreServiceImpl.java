@@ -85,10 +85,13 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 	 * @param prodIdList
 	 *            구매상품ID 목록
 	 * 
+	 * @param purchaseQty
+	 *            구매 갯수
+	 * 
 	 * @return T Store 쿠폰 목록
 	 */
 	@Override
-	public String searchTstoreCouponList(String userKey, String deviceId, List<String> prodIdList) {
+	public String searchTstoreCouponList(String userKey, String deviceId, List<String> prodIdList, int purchaseQty) {
 		// TAKTEST:: 상용 -> BMS 연동 불가로 Skip
 		// if (StringUtils.equalsIgnoreCase(this.envServerLevel, PurchaseConstants.ENV_SERVER_LEVEL_REAL)) {
 		// return "NULL";
@@ -133,8 +136,8 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 				}
 				sbTstoreCoupon.append(coupon.getCouponId()).append(":")
 						.append(StringUtils.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", ""))
-						.append(":").append(coupon.getCouponAmt()).append(":").append(coupon.getMakeHost()).append(":")
-						.append(coupon.getCouponType());
+						.append(":").append(coupon.getCouponAmt() * purchaseQty).append(":")
+						.append(coupon.getMakeHost()).append(":").append(coupon.getCouponType());
 			}
 
 			return sbTstoreCoupon.toString();
