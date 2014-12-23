@@ -1332,13 +1332,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				}
 			}
 			confirmPurchaseScReq.setMediaId(reservedDataMap.get("mediaId")); // CPS 매체ID 세팅
-			// P/P IAP 경우, 결제TID -> 구매상세 TX_ID
-			String paymentTid = notifyPaymentReq.getPaymentInfoList().get(0).getTid();
-			if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)
-					&& this.payPlanetShopService.startsWithPayPlanetMID(notifyPaymentReq.getPaymentInfoList().get(0)
-							.getTid())) {
-				confirmPurchaseScReq.setPaymentTid(paymentTid);
-			}
 
 			confirmPurchaseScReq.setPrchsProdCntList(prchsProdCntList); // 건수집계
 			confirmPurchaseScReq.setPaymentList(paymentList); // 결제
