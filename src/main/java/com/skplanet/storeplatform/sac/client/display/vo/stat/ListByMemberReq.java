@@ -13,7 +13,7 @@ public class ListByMemberReq extends CommonInfo {
 	@NotBlank
 	private String userKey;
 	
-	private int startKey = 1;
+	private int startKey = 999999;
 	
 	private int count = 20;
 
