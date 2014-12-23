@@ -2850,7 +2850,7 @@
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB   
                                </if>                   
-                               ,L.PROD_AMT                 
+                               ,NVL(N.SPRC_PRICE, L.PROD_AMT) PROD_AMT                 
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -3033,7 +3033,7 @@
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB    
                                </if>             
-                               ,L.PROD_AMT                                                                                                                                        
+                               ,NVL(N.SPRC_PRICE, L.PROD_AMT) PROD_AMT                                                                                                                                        
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -3217,7 +3217,7 @@
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB     
                                </if>              
-                   ,L.PROD_AMT                                                                                                                                    
+                               ,NVL(N.SPRC_PRICE, L.PROD_AMT) PROD_AMT                                                                                                                                
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
