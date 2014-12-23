@@ -435,6 +435,8 @@ public class DisplayConstants {
     public static final String DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION = "recent";
 
     public static final String DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION = "popular";
+    
+    public static final String DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION = "lowPrice";
 
     public static final String DP_SHOPPING_CLOSINGTIME_DEFAULT_ORDERED_OPTION = "closingTime";
 

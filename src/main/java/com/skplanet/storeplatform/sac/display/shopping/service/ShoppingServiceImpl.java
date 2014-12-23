@@ -3184,32 +3184,33 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
 		}
-		if (StringUtils.isEmpty(req.getListId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
-		}
-
-		if( !req.getListId().equals(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR) 
-				&&!req.getListId().equals("RNK050090001") 
-				&&!req.getListId().equals("RNK050090002")
-				&&!req.getListId().equals("RNK050090003")
-				){
-			throw new StorePlatformException("SAC_DSP_0003", "listId", req.getListId());
-		}
 		
-		if(req.getListId().equals("RNK050090001")){
+		
+		if (StringUtils.isEmpty(req.getOrderedBy())) {
+			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
+		}
+		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				) {
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+		}
+		String stdDt = "";
+		if (req.getOrderedBy().equals(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION)) {
+
 			req.setListId(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR);
+
+			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
+					req.getListId());
+
+			// 기준일시 체크
+			if (StringUtils.isEmpty(stdDt)) {
+				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+			}
+			req.setStdDt(stdDt);
 		}
 
 		
-
-		// 배치완료 기준일시 조회
-		String stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
-				req.getListId());
-
-		// 기준일시 체크
-		if (StringUtils.isEmpty(stdDt)) {
-			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
-		}
 
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
@@ -3406,30 +3407,30 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
 
-		if (StringUtils.isEmpty(req.getListId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
+		if (StringUtils.isEmpty(req.getOrderedBy())) {
+			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
 		}
+		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				) {
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
+		}
+		String stdDt = "";
+		if (req.getOrderedBy().equals(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION)) {
 
-		if( !req.getListId().equals(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR) 
-				&&!req.getListId().equals("RNK050090001") 
-				&&!req.getListId().equals("RNK050090002")
-				&&!req.getListId().equals("RNK050090003")
-				){
-			throw new StorePlatformException("SAC_DSP_0003", "listId", req.getListId());
-		}
-		
-		if(req.getListId().equals("RNK050090001")){
 			req.setListId(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR);
+
+			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
+					req.getListId());
+
+			// 기준일시 체크
+			if (StringUtils.isEmpty(stdDt)) {
+				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+			}
+			req.setStdDt(stdDt);
 		}
 		
-		// 배치완료 기준일시 조회
-		String stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
-				req.getListId());
-
-		// 기준일시 체크
-		if (StringUtils.isEmpty(stdDt)) {
-			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
-		}
 
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -3557,30 +3558,28 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
 
-		if (StringUtils.isEmpty(req.getListId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
+		if (StringUtils.isEmpty(req.getOrderedBy())) {
+			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
 		}
-		
-		if( !req.getListId().equals(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR) 
-				&&!req.getListId().equals("RNK050090001") 
-				&&!req.getListId().equals("RNK050090002")
-				&&!req.getListId().equals("RNK050090003")
-				){
-			throw new StorePlatformException("SAC_DSP_0003", "listId", req.getListId());
+		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				) {
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
 		}
-		
-		if(req.getListId().equals("RNK050090001")){
+		String stdDt = "";
+		if (req.getOrderedBy().equals(DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION)) {
+
 			req.setListId(DisplayConstants.DP_LIST_CATEGORY_SHOPPING_POPULAR);
-		}
 
-		
-		// 배치완료 기준일시 조회
-		String stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
-				req.getListId());
+			stdDt = this.displayCommonService.getBatchStandardDateString(header.getTenantHeader().getTenantId(),
+					req.getListId());
 
-		// 기준일시 체크
-		if (StringUtils.isEmpty(stdDt)) {
-			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+			// 기준일시 체크
+			if (StringUtils.isEmpty(stdDt)) {
+				throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
+			}
+			req.setStdDt(stdDt);
 		}
 
 		// DB 조회 파라미터 생성

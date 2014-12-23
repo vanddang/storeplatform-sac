@@ -2806,7 +2806,7 @@
         
     <!-- 특정 브랜드샵 상품 리스트 조회-->
     <select id="getBrandshopProductListV2" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getBrandshopProductListV2,특정 브랜드샵 상품 리스트 조회, 김형식/SK플래닛  , 2014-02-04 */
+    /* ShoppingMapper.xml.getBrandshopProductListV2,특정 브랜드샵 상품 리스트 조회, 김형식/SK플래닛  , 2014-12-04 */
         SELECT *
          FROM ( 
              SELECT 
@@ -2831,9 +2831,26 @@
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID
+                               <if test='req.orderedBy == "recent"'>   
+                               ,NVL((
+                                    SELECT 
+                                         MAX(SP.REG_DT)
+                                    FROM 
+                                         TB_DP_PROD_CATALOG_MAPG CM
+                                        ,TB_DP_SHPG_PROD SP
+                                    WHERE CM.CATALOG_ID =B.CATALOG_ID
+                                      AND CM.PROD_ID = SP.PROD_ID
+                                      AND CM.USE_YN ='Y'
+                                      AND CM.BASE_YN ='Y'
+                               ),I.REG_DT) AS REG_DT                                  
+                               ,'1' EXPO_ORD
+                               </if>
+                               <if test='req.orderedBy == "popular"'>                 
                                ,NVL(M.EXPO_ORD_ALWAYS_YN,'A') AS EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB   
+                               </if>                   
+                               ,L.PROD_AMT                 
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -2847,6 +2864,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
+                                 <if test='req.orderedBy == "popular"'>
                                 ,(
                                     SELECT  TDLP.TENANT_ID
                                           , TDLP.LIST_ID
@@ -2870,6 +2888,7 @@
                                        AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
+                                 </if>                                 
                                  ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
@@ -2897,12 +2916,9 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID 
-                        <if test="req.listId=='RNK050090002' or req.listId=='RNK050090003'">
-                        AND B.CATALOG_ID = M.PROD_ID            
-                        </if>                 
-                        <if test="req.listId=='RNK000000101'">
-                         AND B.CATALOG_ID = M.PROD_ID(+)  
-                        </if>
+                        <if test='req.orderedBy == "popular"'>
+                        AND B.CATALOG_ID = M.PROD_ID(+)                             
+                        </if>                        
                         AND I.PROD_ID = N.PROD_ID(+)  
                         AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                         AND NVL(B.CHNL_CNT, 0) > 0          
@@ -2947,16 +2963,24 @@
                       
                    ) 
                  WHERE NO =1
-                 <if test="req.listId=='RNK050090002' or req.listId=='RNK050090003'">
-                 ORDER BY EXPO_ORD   
-                 </if>
-                 <if test="req.listId=='RNK000000101'">
-	               ORDER BY 
-	                      EXPO_ORD_ALWAYS_YN DESC
-	                    , EXPO_ORD   
-	                    , EXPO_ORD_SUB 
-	                    , CATALOG_NM ASC                     
-                 </if>
+               <if test='req.orderedBy == "recent"'>                 
+               ORDER BY 
+                      REG_DT DESC
+                    , CATALOG_NM ASC
+               </if>
+               <if test='req.orderedBy == "lowPrice"'>                 
+               ORDER BY 
+                      PROD_AMT ASC
+                    , CATALOG_NM ASC
+               </if>
+               
+               <if test='req.orderedBy == "popular"'>                 
+               ORDER BY 
+                      EXPO_ORD_ALWAYS_YN DESC
+                    , EXPO_ORD   
+                    , EXPO_ORD_SUB 
+                    , CATALOG_NM ASC               
+               </if>                     
                ) 
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>     
@@ -2965,7 +2989,7 @@
     
     <!-- 특정 카탈로그에 대한 다른 상품 리스트 조회-->
     <select id="getCatagoryAnotherProductListV2" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getCatagoryAnotherProductListV2,특정 카탈로그에 대한 다른 상품 리스트 조회, 김형식/SK플래닛  , 2014-02-04 */
+      /* ShoppingMapper.xml.getCatagoryAnotherProductListV2,특정 카탈로그에 대한 다른 상품 리스트 조회, 김형식/SK플래닛  , 2014-12-04 */
         SELECT *
          FROM ( 
              SELECT 
@@ -2990,9 +3014,26 @@
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID
+                               <if test='req.orderedBy == "recent"'>  
+                               ,NVL((
+                                    SELECT 
+                                         MAX(SP.REG_DT)
+                                    FROM 
+                                         TB_DP_PROD_CATALOG_MAPG CM
+                                        ,TB_DP_SHPG_PROD SP
+                                    WHERE CM.CATALOG_ID =B.CATALOG_ID
+                                      AND CM.PROD_ID = SP.PROD_ID
+                                      AND CM.USE_YN ='Y'
+                                      AND CM.BASE_YN ='Y'
+                               ),I.REG_DT) AS REG_DT                                  
+                               ,'1' EXPO_ORD
+                               </if>
+                               <if test='req.orderedBy == "popular"'>                 
                                ,NVL(M.EXPO_ORD_ALWAYS_YN,'A') AS EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB    
+                               </if>             
+                               ,L.PROD_AMT                                                                                                                                        
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -3006,6 +3047,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
+                                 <if test='req.orderedBy == "popular"'>
                                 ,(
                                     SELECT  /*+ NO_MERGE */ --ADDED BY 2014.10.14
                                             TDLP.TENANT_ID
@@ -3030,6 +3072,7 @@
                                        AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
+                                 </if>
                                  ,(SELECT /*+ NO_MEGRE */ --ADDED BY 2014.10.14
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
@@ -3061,13 +3104,9 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID
-                       <if test="req.listId=='RNK050090002' or req.listId=='RNK050090003'">
-                        AND B.CATALOG_ID = M.PROD_ID            
-                        </if>                 
-                        <if test="req.listId=='RNK000000101'">
-                         AND B.CATALOG_ID = M.PROD_ID(+)  
-                        </if>                        
-                                                     
+                        <if test='req.orderedBy == "popular"'>
+                        AND B.CATALOG_ID = M.PROD_ID(+)                             
+                        </if>                   
                         AND I.PROD_ID = N.PROD_ID(+)       
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/   
                         AND NVL(B.CHNL_CNT, 0) > 0        
@@ -3091,7 +3130,7 @@
                                       <foreach collection="req.arrayProdGradeCd" item="req.prodGradeCd" separator="," open="(" close=")">
                                         #{req.prodGradeCd}
                                       </foreach>                        
-                        </if>     
+                        </if>      
                         AND NOT EXISTS (
                              SELECT 'X'
                                FROM  TB_DP_PROD_RSHP A2
@@ -3107,26 +3146,34 @@
                                  AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
                                  AND C2.CATALOG_ID = B.CATALOG_ID
                                  AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
-                            )                          
+                            )                         
+                      
                    ) 
                  WHERE NO =1
-                 <if test="req.listId=='RNK050090002' or req.listId=='RNK050090003'">
-                 ORDER BY EXPO_ORD   
-                 </if>
-                 <if test="req.listId=='RNK000000101'">
-                   ORDER BY 
-                          EXPO_ORD_ALWAYS_YN DESC
-                        , EXPO_ORD   
-                        , EXPO_ORD_SUB 
-                        , CATALOG_NM ASC                     
-                 </if>
-             )                 
+               <if test='req.orderedBy == "recent"'>                 
+               ORDER BY 
+                      REG_DT DESC
+                    , CATALOG_NM ASC
+               </if>
+               <if test='req.orderedBy == "lowPrice"'>                 
+               ORDER BY 
+                      PROD_AMT ASC
+                    , CATALOG_NM ASC
+               </if>               
+               <if test='req.orderedBy == "popular"'>                 
+               ORDER BY 
+                      EXPO_ORD_ALWAYS_YN DESC
+                    , EXPO_ORD   
+                    , EXPO_ORD_SUB 
+                    , CATALOG_NM ASC                   
+               </if>                   
+               )
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
     </select>        
      
    <!-- 특정 브랜드에 대한 다른 상품 리스트 조회-->
     <select id="getBrandAnotherProductListV2" parameterType="Map" resultType="ProductBasicInfo">
-       /* ShoppingMapper.xml.getBrandAnotherProductListV2,특정 브랜드에 대한 다른 상품 리스트, 김형식/SK플래닛  , 2014-02-04 */
+       /* ShoppingMapper.xml.getBrandAnotherProductListV2,특정 브랜드에 대한 다른 상품 리스트, 김형식/SK플래닛  , 2014-12-04 */
         SELECT *
          FROM ( 
              SELECT 
@@ -3151,9 +3198,26 @@
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
+                               <if test='req.orderedBy == "recent"'>    
+                               ,NVL((
+                                    SELECT 
+                                         MAX(SP.REG_DT)
+                                    FROM 
+                                         TB_DP_PROD_CATALOG_MAPG CM
+                                        ,TB_DP_SHPG_PROD SP
+                                    WHERE CM.CATALOG_ID =B.CATALOG_ID
+                                      AND CM.PROD_ID = SP.PROD_ID
+                                      AND CM.USE_YN ='Y'
+                                      AND CM.BASE_YN ='Y'
+                               ),I.REG_DT) AS REG_DT                                  
+                               ,'1' EXPO_ORD
+                               </if>
+                               <if test='req.orderedBy == "popular"'>                 
                                ,NVL(M.EXPO_ORD_ALWAYS_YN,'A') AS EXPO_ORD_ALWAYS_YN
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB     
+                               </if>              
+                   ,L.PROD_AMT                                                                                                                                    
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -3167,6 +3231,8 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
+
+                                 <if test='req.orderedBy == "popular"'>
                                 ,(
                                     SELECT  TDLP.TENANT_ID
                                           , TDLP.LIST_ID
@@ -3190,6 +3256,7 @@
                                        AND  TDLP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') 
                                        AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
                                   ) M                                  
+                                 </if>
                                  ,(SELECT /*+ ORDERED */
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
@@ -3221,12 +3288,9 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = L.TENANT_ID
-                       <if test="req.listId=='RNK050090002' or req.listId=='RNK050090003'">
-                        AND B.CATALOG_ID = M.PROD_ID            
-                        </if>                 
-                        <if test="req.listId=='RNK000000101'">
-                         AND B.CATALOG_ID = M.PROD_ID(+)  
-                        </if>                                                    
+                        <if test='req.orderedBy == "popular"'>
+                        AND B.CATALOG_ID = M.PROD_ID(+)                             
+                        </if>                   
                         AND I.PROD_ID = N.PROD_ID(+)       
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/   
                         AND NVL(B.CHNL_CNT, 0) > 0        
@@ -3251,20 +3315,45 @@
                                         #{req.prodGradeCd}
                                       </foreach>                        
                         </if>      
+                        AND NOT EXISTS (
+                             SELECT 'X'
+                               FROM  TB_DP_PROD_RSHP A2
+                                    ,TB_DP_SPRC_PROD B2
+                                    ,TB_DP_PROD_CATALOG_MAPG C2
+                               WHERE 1=1
+                                 AND A2.PART_PROD_ID = B2.PROD_ID
+                                 AND A2.PROD_ID = C2.PROD_ID
+                                 AND C2.BASE_YN ='Y'
+                                 AND C2.USE_YN ='Y'
+                                 AND B2.EXPO_YN ='Y'
+                                 AND B2.CPN_ID IS NOT NULL
+                                 AND B2.SPRC_TYPE_CD IN ('DP007503','DP007504')
+                                 AND C2.CATALOG_ID = B.CATALOG_ID
+                                 AND SYSDATE BETWEEN  B2.SPRC_APPLY_START_DT AND B2.SPRC_APPLY_END_DT                 
+                            )                         
+                      
                    ) 
                  WHERE NO =1
-                 <if test="req.listId =='RNK050090002' or req.listId=='RNK050090003'">
-                 ORDER BY EXPO_ORD   
-                 </if>
-                 <if test="req.listId =='RNK000000101'">
-                   ORDER BY 
-                          EXPO_ORD_ALWAYS_YN DESC
-                        , EXPO_ORD   
-                        , EXPO_ORD_SUB 
-                        , CATALOG_NM ASC                     
-                 </if>
+               <if test='req.orderedBy == "recent"'>                 
+               ORDER BY 
+                      REG_DT DESC
+                    , CATALOG_NM ASC
+               </if>
+               <if test='req.orderedBy == "lowPrice"'>                 
+               ORDER BY 
+                      PROD_AMT ASC
+                    , CATALOG_NM ASC
+               </if>               
+               <if test='req.orderedBy == "popular"'>                 
+               ORDER BY 
+                      EXPO_ORD_ALWAYS_YN DESC
+                    , EXPO_ORD   
+                    , EXPO_ORD_SUB 
+                    , CATALOG_NM ASC                 
+               </if>                   
                )
         ) WHERE RNUM BETWEEN #{req.offset} AND #{req.count}
+
     </select>         
 
     <!-- 쇼핑상세(채널) 조회-->
