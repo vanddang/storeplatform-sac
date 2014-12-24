@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.order.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,9 @@ import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.Ge
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.GetIndividualPolicySacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSearchSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
@@ -313,6 +317,43 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 2.2.2.상품상세의 판매자 정보 목록 조회.
+	 * </pre>
+	 * 
+	 * @param sellerKey
+	 *            판매자 내부 회원 번호
+	 * @return 판매자 정보
+	 */
+	@Override
+	public SellerMbrInfoSac detailInformationListForProduct(String sellerKey) {
+		DetailInformationListForProductSacReq detailInformationListForProductSacReq = new DetailInformationListForProductSacReq();
+		detailInformationListForProductSacReq.setSellerKeyList(Arrays.asList(sellerKey));
+
+		DetailInformationListForProductSacRes detailInformationListForProductSacRes = null;
+		try {
+			detailInformationListForProductSacRes = this.sellerSearchSCI
+					.detailInformationListForProduct(detailInformationListForProductSacReq);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
+				return null;
+			} else {
+				throw e;
+			}
+		}
+
+		if (detailInformationListForProductSacRes == null
+				|| detailInformationListForProductSacRes.getSellerMbrMap() == null) {
+			return null;
+		}
+
+		Map<String, SellerMbrInfoSac> sellerMap = detailInformationListForProductSacRes.getSellerMbrMap();
+
+		return sellerMap.get(sellerKey);
 	}
 
 	/*
