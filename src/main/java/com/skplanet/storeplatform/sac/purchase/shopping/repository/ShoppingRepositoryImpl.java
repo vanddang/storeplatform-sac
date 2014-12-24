@@ -354,6 +354,7 @@ public class ShoppingRepositoryImpl implements ShoppingRepository {
 		couponPublishAvailableSacResult.setMaxDay(couponPublishAvailableEcRes.getMaxDay());
 		couponPublishAvailableSacResult.setMaxDayMdn(couponPublishAvailableEcRes.getMaxDayMdn());
 		couponPublishAvailableSacResult.setBuyMaxLimit(couponPublishAvailableEcRes.getBuyMaxLimit());
+		couponPublishAvailableSacResult.setBuyMaxLimitForGift(couponPublishAvailableEcRes.getBuyMaxLimitForGift());
 		couponPublishAvailableSacResult.setCurCount(couponPublishAvailableEcRes.getCurCount());
 		couponPublishAvailableSacResult.setCurMonth(couponPublishAvailableEcRes.getCurMonth());
 		couponPublishAvailableSacResult.setCurMonthMdn(couponPublishAvailableEcRes.getCurMonthMdn());
