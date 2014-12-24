@@ -36,7 +36,6 @@ public class CategorySpecificProductInfoManagerImpl implements CategorySpecificP
 	}
 
 	@Override
-    // @Cacheable(value = "sac:display:category:product:ebookcomic", unless = "#result == null")
     public MetaInfo getEbookComicMeta(Map<String, Object> paramMap) {
         return commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo", paramMap, MetaInfo.class);
     }

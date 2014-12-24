@@ -726,7 +726,9 @@
              , TB.ISSUE_DAY
              , TB.CHNL_COMP_NM
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
-             , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( TB.EPSD_CNT + TB.STRM_EPSD_CNT ) ELSE 1 END ) AS BOOK_COUNT
+			 , NVL(SERIES_CONTENTS_CNT, 0) AS SERIAL_COUNT
+             , NVL(BOOK_CONTENTS_CNT, 0) AS BOOK_COUNT
+             , NVL(MGZIN_CONTENTS_CNT, 0) AS MAGAZINE_COUNT
               <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
              , ( CASE WHEN TB.EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_STORE
              , ( CASE WHEN TB.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
@@ -738,8 +740,9 @@
              , TB.COMPT_YN
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS                          
            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-             , CASE WHEN (TB.CHNL_PERIOD_AMT >= 0  AND STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
-                    ELSE NVL(CHNL_UNLMT_AMT, 0) END AS PROD_AMT -- 채널 대표 가격
+             , CASE WHEN (CHNL_UNLMT_AMT >= 0  AND EPSD_CNT > 0) THEN CHNL_UNLMT_AMT
+                    ELSE NVL(CHNL_PERIOD_AMT, 0) END AS PROD_AMT -- 채널 대표 가격
+                    
            </if>
            <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
              , NVL(TB.PROD_AMT, 0) AS PROD_AMT -- 에피소드 가격
@@ -812,7 +815,10 @@
                       , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM  
                       , D.EXPO_SELLER_NM
                       , D.EXPO_SELLER_TELNO
-                      , D.EXPO_SELLER_EMAIL  
+                      , D.EXPO_SELLER_EMAIL
+					  , E.SERIES_CONTENTS_CNT
+            		  , E.BOOK_CONTENTS_CNT
+            		  , E.MGZIN_CONTENTS_CNT
                     <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
                       , D.PROD_GRD_CD   -- 채널 상품 ID 조회   
                       , D.CID     -- 채널 상품 ID 조회  
