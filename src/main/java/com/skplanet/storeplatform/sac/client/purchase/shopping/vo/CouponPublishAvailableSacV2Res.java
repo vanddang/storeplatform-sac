@@ -20,85 +20,199 @@ public class CouponPublishAvailableSacV2Res extends PurchaseCommonSacRes {
 
 	private static final long serialVersionUID = 1L;
 
-	private int saleMonthLimit = 0; // 월 판매 가능 쿠폰 개수
-	private int saleDayLimit = 0; // 일 판매 가능 쿠폰 개수
-	private int saleMonthLimitPerson = 0; // Mdn별 월 판매 가능 쿠폰 개수
-	private int saleDayLimitPerson = 0; // Mdn별 일 판매 가능 쿠폰 개수
-	private int saleOnceLimit = 0; // 한번에 구매 가능한 쿠폰 개수
+	private int maxCount;
+	private int maxMonth;
+	private int maxMonthMdn;
+	private int maxDay;
+	private int maxDayMdn;
+
+	private int curCount;
+	private int curMonth;
+	private int curMonthMdn;
+	private int curDay;
+	private int curDayMdn;
+
+	private int buyMaxLimit;
+	private int buyMaxLimitForGift;
 
 	/**
-	 * @return the saleMonthLimit
+	 * @return the maxCount
 	 */
-	public int getSaleMonthLimit() {
-		return this.saleMonthLimit;
+	public int getMaxCount() {
+		return this.maxCount;
 	}
 
 	/**
-	 * @param saleMonthLimit
-	 *            the saleMonthLimit to set
+	 * @param maxCount
+	 *            the maxCount to set
 	 */
-	public void setSaleMonthLimit(int saleMonthLimit) {
-		this.saleMonthLimit = saleMonthLimit;
+	public void setMaxCount(int maxCount) {
+		this.maxCount = maxCount;
 	}
 
 	/**
-	 * @return the saleDayLimit
+	 * @return the maxMonth
 	 */
-	public int getSaleDayLimit() {
-		return this.saleDayLimit;
+	public int getMaxMonth() {
+		return this.maxMonth;
 	}
 
 	/**
-	 * @param saleDayLimit
-	 *            the saleDayLimit to set
+	 * @param maxMonth
+	 *            the maxMonth to set
 	 */
-	public void setSaleDayLimit(int saleDayLimit) {
-		this.saleDayLimit = saleDayLimit;
+	public void setMaxMonth(int maxMonth) {
+		this.maxMonth = maxMonth;
 	}
 
 	/**
-	 * @return the saleMonthLimitPerson
+	 * @return the maxMonthMdn
 	 */
-	public int getSaleMonthLimitPerson() {
-		return this.saleMonthLimitPerson;
+	public int getMaxMonthMdn() {
+		return this.maxMonthMdn;
 	}
 
 	/**
-	 * @param saleMonthLimitPerson
-	 *            the saleMonthLimitPerson to set
+	 * @param maxMonthMdn
+	 *            the maxMonthMdn to set
 	 */
-	public void setSaleMonthLimitPerson(int saleMonthLimitPerson) {
-		this.saleMonthLimitPerson = saleMonthLimitPerson;
+	public void setMaxMonthMdn(int maxMonthMdn) {
+		this.maxMonthMdn = maxMonthMdn;
 	}
 
 	/**
-	 * @return the saleDayLimitPerson
+	 * @return the maxDay
 	 */
-	public int getSaleDayLimitPerson() {
-		return this.saleDayLimitPerson;
+	public int getMaxDay() {
+		return this.maxDay;
 	}
 
 	/**
-	 * @param saleDayLimitPerson
-	 *            the saleDayLimitPerson to set
+	 * @param maxDay
+	 *            the maxDay to set
 	 */
-	public void setSaleDayLimitPerson(int saleDayLimitPerson) {
-		this.saleDayLimitPerson = saleDayLimitPerson;
+	public void setMaxDay(int maxDay) {
+		this.maxDay = maxDay;
 	}
 
 	/**
-	 * @return the saleOnceLimit
+	 * @return the maxDayMdn
 	 */
-	public int getSaleOnceLimit() {
-		return this.saleOnceLimit;
+	public int getMaxDayMdn() {
+		return this.maxDayMdn;
 	}
 
 	/**
-	 * @param saleOnceLimit
-	 *            the saleOnceLimit to set
+	 * @param maxDayMdn
+	 *            the maxDayMdn to set
 	 */
-	public void setSaleOnceLimit(int saleOnceLimit) {
-		this.saleOnceLimit = saleOnceLimit;
+	public void setMaxDayMdn(int maxDayMdn) {
+		this.maxDayMdn = maxDayMdn;
+	}
+
+	/**
+	 * @return the buyMaxLimit
+	 */
+	public int getBuyMaxLimit() {
+		return this.buyMaxLimit;
+	}
+
+	/**
+	 * @param buyMaxLimit
+	 *            the buyMaxLimit to set
+	 */
+	public void setBuyMaxLimit(int buyMaxLimit) {
+		this.buyMaxLimit = buyMaxLimit;
+	}
+
+	/**
+	 * @return the buyMaxLimitForGift
+	 */
+	public int getBuyMaxLimitForGift() {
+		return this.buyMaxLimitForGift;
+	}
+
+	/**
+	 * @param buyMaxLimitForGift
+	 *            the buyMaxLimitForGift to set
+	 */
+	public void setBuyMaxLimitForGift(int buyMaxLimitForGift) {
+		this.buyMaxLimitForGift = buyMaxLimitForGift;
+	}
+
+	/**
+	 * @return the curCount
+	 */
+	public int getCurCount() {
+		return this.curCount;
+	}
+
+	/**
+	 * @param curCount
+	 *            the curCount to set
+	 */
+	public void setCurCount(int curCount) {
+		this.curCount = curCount;
+	}
+
+	/**
+	 * @return the curMonth
+	 */
+	public int getCurMonth() {
+		return this.curMonth;
+	}
+
+	/**
+	 * @param curMonth
+	 *            the curMonth to set
+	 */
+	public void setCurMonth(int curMonth) {
+		this.curMonth = curMonth;
+	}
+
+	/**
+	 * @return the curMonthMdn
+	 */
+	public int getCurMonthMdn() {
+		return this.curMonthMdn;
+	}
+
+	/**
+	 * @param curMonthMdn
+	 *            the curMonthMdn to set
+	 */
+	public void setCurMonthMdn(int curMonthMdn) {
+		this.curMonthMdn = curMonthMdn;
+	}
+
+	/**
+	 * @return the curDay
+	 */
+	public int getCurDay() {
+		return this.curDay;
+	}
+
+	/**
+	 * @param curDay
+	 *            the curDay to set
+	 */
+	public void setCurDay(int curDay) {
+		this.curDay = curDay;
+	}
+
+	/**
+	 * @return the curDayMdn
+	 */
+	public int getCurDayMdn() {
+		return this.curDayMdn;
+	}
+
+	/**
+	 * @param curDayMdn
+	 *            the curDayMdn to set
+	 */
+	public void setCurDayMdn(int curDayMdn) {
+		this.curDayMdn = curDayMdn;
 	}
 
 }
