@@ -2968,7 +2968,7 @@
                       REG_DT DESC
                     , CATALOG_NM ASC
                </if>
-               <if test='req.orderedBy == "lowPrice"'>                 
+               <if test='req.orderedBy == "lowprice"'>                 
                ORDER BY 
                       PROD_AMT ASC
                     , CATALOG_NM ASC
@@ -3155,7 +3155,7 @@
                       REG_DT DESC
                     , CATALOG_NM ASC
                </if>
-               <if test='req.orderedBy == "lowPrice"'>                 
+               <if test='req.orderedBy == "lowprice"'>                 
                ORDER BY 
                       PROD_AMT ASC
                     , CATALOG_NM ASC
@@ -3339,7 +3339,7 @@
                       REG_DT DESC
                     , CATALOG_NM ASC
                </if>
-               <if test='req.orderedBy == "lowPrice"'>                 
+               <if test='req.orderedBy == "lowprice"'>                 
                ORDER BY 
                       PROD_AMT ASC
                     , CATALOG_NM ASC
