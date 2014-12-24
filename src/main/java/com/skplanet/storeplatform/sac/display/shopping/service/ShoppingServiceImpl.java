@@ -3191,7 +3191,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
-				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(StringUtils.lowerCase(req.getOrderedBy()))
 				) {
 			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
 		}
@@ -3412,7 +3412,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
-				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(StringUtils.lowerCase(req.getOrderedBy()))
 				) {
 			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
 		}
@@ -3563,7 +3563,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
-				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
+				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(StringUtils.lowerCase(req.getOrderedBy()))
 				) {
 			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", req.getOrderedBy());
 		}
