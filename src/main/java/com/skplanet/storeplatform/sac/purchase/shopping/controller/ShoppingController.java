@@ -300,15 +300,20 @@ public class ShoppingController {
 
 		CouponPublishAvailableSacV2Res couponPublishAvailableSacRes = new CouponPublishAvailableSacV2Res();
 
-		couponPublishAvailableSacRes.setSaleDayLimit(couponUseStatusSacResult.getMaxDay()
-				- couponUseStatusSacResult.getCurDay());
-		couponPublishAvailableSacRes.setSaleDayLimitPerson(couponUseStatusSacResult.getMaxDayMdn()
-				- couponUseStatusSacResult.getCurDayMdn());
-		couponPublishAvailableSacRes.setSaleMonthLimit(couponUseStatusSacResult.getMaxMonth()
-				- couponUseStatusSacResult.getCurMonth());
-		couponPublishAvailableSacRes.setSaleMonthLimitPerson(couponUseStatusSacResult.getMaxMonthMdn()
-				- couponUseStatusSacResult.getCurMonthMdn());
-		couponPublishAvailableSacRes.setSaleOnceLimit(couponUseStatusSacResult.getBuyMaxLimit());
+		couponPublishAvailableSacRes.setMaxCount(couponUseStatusSacResult.getMaxCount());
+		couponPublishAvailableSacRes.setMaxMonth(couponUseStatusSacResult.getMaxMonth());
+		couponPublishAvailableSacRes.setMaxMonthMdn(couponUseStatusSacResult.getMaxMonthMdn());
+		couponPublishAvailableSacRes.setMaxDay(couponUseStatusSacResult.getMaxDay());
+		couponPublishAvailableSacRes.setMaxDayMdn(couponUseStatusSacResult.getMaxDayMdn());
+
+		couponPublishAvailableSacRes.setCurCount(couponUseStatusSacResult.getCurCount());
+		couponPublishAvailableSacRes.setCurMonth(couponUseStatusSacResult.getCurMonth());
+		couponPublishAvailableSacRes.setCurMonthMdn(couponUseStatusSacResult.getCurMonthMdn());
+		couponPublishAvailableSacRes.setCurDay(couponUseStatusSacResult.getCurDay());
+		couponPublishAvailableSacRes.setCurDayMdn(couponUseStatusSacResult.getCurDayMdn());
+
+		couponPublishAvailableSacRes.setBuyMaxLimit(couponUseStatusSacResult.getBuyMaxLimit());
+		couponPublishAvailableSacRes.setBuyMaxLimitForGift(couponUseStatusSacResult.getBuyMaxLimitForGift());
 
 		return couponPublishAvailableSacRes;
 

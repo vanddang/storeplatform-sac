@@ -25,7 +25,10 @@ public class CouponPublishAvailableSacV2Result extends PurchaseCommonSacResult {
 	private int maxMonthMdn;
 	private int maxDay;
 	private int maxDayMdn;
+
 	private int buyMaxLimit;
+	private int buyMaxLimitForGift;
+
 	private int curCount;
 	private int curMonth;
 	private int curMonthMdn;
@@ -195,6 +198,21 @@ public class CouponPublishAvailableSacV2Result extends PurchaseCommonSacResult {
 	 */
 	public void setCurDayMdn(int curDayMdn) {
 		this.curDayMdn = curDayMdn;
+	}
+
+	/**
+	 * @return the buyMaxLimitForGift
+	 */
+	public int getBuyMaxLimitForGift() {
+		return this.buyMaxLimitForGift;
+	}
+
+	/**
+	 * @param buyMaxLimitForGift
+	 *            the buyMaxLimitForGift to set
+	 */
+	public void setBuyMaxLimitForGift(int buyMaxLimitForGift) {
+		this.buyMaxLimitForGift = buyMaxLimitForGift;
 	}
 
 }
