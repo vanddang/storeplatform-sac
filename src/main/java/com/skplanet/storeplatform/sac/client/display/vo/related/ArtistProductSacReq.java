@@ -30,9 +30,8 @@ public class ArtistProductSacReq extends CommonInfo implements Serializable {
 	private String artistId; // 아티스트ID
 	@Pattern(regexp = "|issueDate|popular")
 	private String orderedBy; // 상품 정렬 순서
-	@Valid
+	private String prodGradeCd;
 	private Integer offset; // 시작점 ROW
-	@Valid
 	private Integer count; // 페이지당 노출 ROW 수
 	private String tenantId; // 테넌트 ID
 	private String systemId; // 시스템Id
@@ -89,6 +88,32 @@ public class ArtistProductSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setOrderedBy(String orderedBy) {
 		this.orderedBy = orderedBy;
+	}
+	
+	
+	/**
+	 * 
+	 * <pre>
+	 * 상품 등급 코드.
+	 * </pre>
+	 * 
+	 * @param prodGradeCd
+	 *            String
+	 */
+	public String getProdGradeCd() {
+		return prodGradeCd;
+	}
+	/**
+	 * 
+	 * <pre>
+	 * 상품 등급 코드.
+	 * </pre>
+	 * 
+	 * @param prodGradeCd
+	 *            String
+	 */
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
 	}
 
 	/**
