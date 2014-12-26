@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -2009,14 +2008,27 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return 판매자 정보
 	 */
 	private SellerMbrAppSac detailInformationListForProduct(String sellerKey, String tenantProdGrpCd) {
+		SellerMbrAppSac sellerMbrAppSac = null;
 		SellerMbrInfoSac sellerMbrInfoSac = null;
 
 		if (StringUtils.isNotBlank(sellerKey)) {
 			sellerMbrInfoSac = this.purchaseMemberRepository.detailInformationListForProduct(sellerKey);
 		}
 
-		if (sellerMbrInfoSac == null) {
-			SellerMbrAppSac sellerMbrAppSac = new SellerMbrAppSac();
+		if (sellerMbrInfoSac != null) {
+
+			for (SellerMbrAppSac seller : sellerMbrInfoSac.getSellerMbrList()) {
+				if (StringUtils.equals(seller.appStat, "Lower")) {
+					sellerMbrAppSac = seller;
+					break;
+				}
+			}
+
+		}
+
+		if (sellerMbrAppSac == null) {
+			sellerMbrAppSac = new SellerMbrAppSac();
+
 			// 쇼핑상품 경우, 디폴트 값 정의
 			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
 				sellerMbrAppSac.setSellerCompany(PurchaseConstants.SHOPPING_SELLER_DEFAULT_NAME); // 판매자명
@@ -2024,13 +2036,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				sellerMbrAppSac.setSellerEmail(PurchaseConstants.SHOPPING_SELLER_DEFAULT_EMAIL); // 판매자 이메일 주소
 				sellerMbrAppSac.setSellerPhone(PurchaseConstants.SHOPPING_SELLER_DEFAULT_TEL); // 판매자 전화번호
 			}
-
-			sellerMbrInfoSac = new SellerMbrInfoSac();
-			sellerMbrInfoSac.setSellerMbrList(Arrays.asList(sellerMbrAppSac));
-
 		}
 
-		return sellerMbrInfoSac.getSellerMbrList().get(0);
+		return sellerMbrAppSac;
 	}
 
 	/*
