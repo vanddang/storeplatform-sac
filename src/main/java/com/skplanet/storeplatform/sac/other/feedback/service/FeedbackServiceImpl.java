@@ -1412,8 +1412,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 			if (regId.indexOf("@") != -1 && regId.indexOf(".") != -1) {
 				idx = regId.indexOf('@') < 3 ? regId.indexOf('@') - 1 : regId.indexOf('@') - 2;
-				return this.RPAD(regId.substring(0, idx), regId.indexOf('@'), '*')
-						+ regId.substring(regId.indexOf('@'));
+				if (idx < 0) {
+					return regId;
+				} else {
+					return this.RPAD(regId.substring(0, idx), regId.indexOf('@'), '*')
+							+ regId.substring(regId.indexOf('@'));
+				}
 			} else {
 				idx = regId.length() < 3 ? regId.length() - 1 : regId.length() - 2;
 				return this.RPAD(regId.substring(0, idx), regId.length(), '*');
