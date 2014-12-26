@@ -134,7 +134,7 @@ public class AlbumProductServiceImpl implements AlbumProductService {
 	private void validateProdGradeCd(String[] prodGradeCds) {
 		for (int i = 0; i < prodGradeCds.length; i++) {
 			if (!"PD004401".equals(prodGradeCds[i]) && !"PD004402".equals(prodGradeCds[i])
-					&& !"PD004403".equals(prodGradeCds[i])) {
+					&& !"PD004403".equals(prodGradeCds[i]) && !"PD004404".equals(prodGradeCds[i])) {
 				log.debug("----------------------------------------------------------------");
 				log.debug("유효하지않은 상품 등급 코드 : " + prodGradeCds[i]);
 				log.debug("----------------------------------------------------------------");

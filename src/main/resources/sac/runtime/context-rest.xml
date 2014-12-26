@@ -27,7 +27,7 @@
         
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
     
-    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" conversion-service="conversionService"    >  
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" conversion-service="conversionService">  
         <mvc:argument-resolvers>
             <bean class="com.skplanet.storeplatform.framework.web.bind.LocaleHandlerWebArgumentResolver">
                 <constructor-arg ref="localeResolver" />
