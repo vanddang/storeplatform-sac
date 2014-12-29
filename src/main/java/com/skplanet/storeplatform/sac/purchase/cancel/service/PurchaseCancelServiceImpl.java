@@ -1013,7 +1013,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		sendPurchaseNotiEcReq.setUserEmail(userEmail);
 		sendPurchaseNotiEcReq.setPrchsId(prchsSacParam.getPrchsId());
 		sendPurchaseNotiEcReq.setPrchsDt(prchsSacParam.getPrchsDt());
-		sendPurchaseNotiEcReq.setCancelDt(DateUtil.getToday() + DateUtil.getTime());
+		sendPurchaseNotiEcReq.setCancelDt(purchaseCancelDetailSacParam.getCancelDt());
 		sendPurchaseNotiEcReq.setStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
 		sendPurchaseNotiEcReq.setTotAmt(prchsSacParam.getTotAmt());
 		sendPurchaseNotiEcReq.setRequestId(purchaseCancelDetailSacParam.getPaymentSacParamList().get(0).getTid());

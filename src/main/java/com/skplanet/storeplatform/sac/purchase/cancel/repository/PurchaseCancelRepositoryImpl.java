@@ -664,6 +664,10 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelScReq.setPurchaseCancelPaymentDetailScReqList(purchaseCancelPaymentDetailScReqList);
 		purchaseCancelScReq.setInsertPurchaseProductCountScReq(insertPurchaseProductCountScReq);
 
+		// 취소일자 셋팅을 위해 DB Sysdate 조회
+		String cancelDt = this.purchaseCancelSCI.getNowDate();
+		purchaseCancelScReq.setCancelDt(cancelDt);
+
 		PurchaseCancelScRes purchaseCancelScRes = this.purchaseCancelSCI.updatePurchaseCancel(purchaseCancelScReq);
 
 		purchaseCancelDetailSacParam.setPaymentCancelCnt(purchaseCancelScRes.getPaymentCancelCnt());
@@ -671,6 +675,8 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelDetailSacParam.setPrchsCancelCnt(purchaseCancelScRes.getPrchsCancelCnt());
 		purchaseCancelDetailSacParam.setPrchsProdCntCnt(purchaseCancelScRes.getPrchsProdCntCnt());
 		purchaseCancelDetailSacParam.setAutoPrchsCancelCnt(purchaseCancelScRes.getAutoPrchsCancelCnt());
+
+		purchaseCancelDetailSacParam.setCancelDt(cancelDt);
 
 		return purchaseCancelDetailSacParam;
 

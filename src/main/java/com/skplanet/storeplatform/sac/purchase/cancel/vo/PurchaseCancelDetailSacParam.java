@@ -49,6 +49,8 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	private Integer autoPrchsCancelCnt;
 	private Integer prchsProdCntCnt;
 
+	private String cancelDt;
+
 	/**
 	 * @return the autoPrchsCancelCnt
 	 */
@@ -227,6 +229,21 @@ public class PurchaseCancelDetailSacParam extends CommonInfo {
 	 */
 	public void setCancelMdn(String cancelMdn) {
 		this.cancelMdn = cancelMdn;
+	}
+
+	/**
+	 * @return the cancelDt
+	 */
+	public String getCancelDt() {
+		return this.cancelDt;
+	}
+
+	/**
+	 * @param cancelDt
+	 *            the cancelDt to set
+	 */
+	public void setCancelDt(String cancelDt) {
+		this.cancelDt = cancelDt;
 	}
 
 }
