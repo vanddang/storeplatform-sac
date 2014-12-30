@@ -1273,8 +1273,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 
 		// 사용후기 내용이 있고, 판매자 댓글이 존재하면 nkchNm 세팅
-		if (StringUtils.isNotBlank(prodNoti.getNotiDscr()) && StringUtils.isNotBlank(prodNoti.getSellerRespTitle())
-				&& StringUtils.isNotBlank(prodNoti.getSellerRespOpin())) {
+		if (StringUtils.isNotBlank(prodNoti.getNotiDscr()) && StringUtils.isNotBlank(prodNoti.getSellerRespOpin())) {
 			// 상품테이블 판매자명이 있으면
 			if (StringUtils.isNotBlank(prodNoti.getExpoSellerNm())) {
 				nickNm = prodNoti.getExpoSellerNm();
