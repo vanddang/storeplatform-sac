@@ -667,6 +667,7 @@
                                                      WHERE A.PROD_ID = B.PROD_ID 
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
                                                    ) 
+                                               AND SP1.EXPO_YN = 'Y'                                                    
                                                AND ROWNUM =1     
                                           )                                   
                                   ELSE #{prodId}
@@ -701,6 +702,7 @@
                                                      WHERE A.PROD_ID = B.PROD_ID 
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
                                                    ) 
+                                               AND SP1.EXPO_YN = 'Y'                                                    
                                                AND ROWNUM =1     
                                           )                                   
                                   ELSE #{prodId}
@@ -733,6 +735,7 @@
                                                      WHERE A.PROD_ID = B.PROD_ID 
                                                       AND A.SRC_CONTENT_ID =#{prodId}       
                                                    ) 
+                                               AND SP1.EXPO_YN = 'Y'                                                    
                                                AND ROWNUM =1     
                                           )                                   
                                   ELSE #{prodId}
