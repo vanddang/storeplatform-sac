@@ -1433,10 +1433,16 @@ public class LoginServiceImpl implements LoginService {
 		SearchDeviceSetInfoRequest searchDeviceSetInfoRequest = new SearchDeviceSetInfoRequest();
 		searchDeviceSetInfoRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySearch = new KeySearch();
+		KeySearch keySearch = null;
+		keySearch = new KeySearch();
 		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 		keySearch.setKeyString(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 		keySearchList.add(keySearch);
+		keySearch = new KeySearch();
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySearch.setKeyString(detailRes.getUserKey());
+		keySearchList.add(keySearch);
+
 		searchDeviceSetInfoRequest.setKeySearchList(keySearchList);
 
 		SearchDeviceSetInfoResponse searchDeviceSetInfoResponse = this.deviceSetSCI
