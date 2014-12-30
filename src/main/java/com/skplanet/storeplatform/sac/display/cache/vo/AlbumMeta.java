@@ -3,8 +3,6 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
-import java.util.Date;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -33,7 +31,7 @@ public class AlbumMeta extends CommonInfo{
 	
 	// From TB_DP_PROD_DESC
 	private String prodNm;
-	private String prodBaseDesc;
+	private String prodDtlDesc;
 	private String artist1Nm;
 	private String artist1Id;
 	
@@ -130,12 +128,12 @@ public class AlbumMeta extends CommonInfo{
 		this.prodNm = prodNm;
 	}
 
-	public String getProdBaseDesc() {
-		return prodBaseDesc;
+	public String getProdDtlDesc() {
+		return prodDtlDesc;
 	}
 
-	public void setProdBaseDesc(String prodBaseDesc) {
-		this.prodBaseDesc = prodBaseDesc;
+	public void setProdDtlDesc(String prodDtlDesc) {
+		this.prodDtlDesc = prodDtlDesc;
 	}
 
 	public String getArtist1Nm() {

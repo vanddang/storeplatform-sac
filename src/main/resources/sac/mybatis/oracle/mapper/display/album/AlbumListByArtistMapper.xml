@@ -17,7 +17,7 @@
     		, ALBUM_PROD.AGENCY_NM AS agencyNm
     		
     		, PROD_DESC.PROD_NM AS prodNm
-    		, PROD_DESC.PROD_BASE_DESC AS prodBaseDesc
+    		, PROD_DESC.PROD_DTL_DESC AS prodDtlDesc
     		, PROD_DESC.ARTIST1_NM AS artist1Nm
     		, PROD_DESC.ARTIST1_ID AS artist1Id
     		

@@ -247,7 +247,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(this.albumInfoGenerator.generateRights(albumMeta));
 		product.setContributor(this.albumInfoGenerator.generateContributor(albumMeta));
 		product.setDateList(this.albumInfoGenerator.generateDateList(albumMeta));
-		product.setProductDetailExplain(albumMeta.getProdBaseDesc());
+		product.setProductDetailExplain(albumMeta.getProdDtlDesc());
 		return product;
 	}
 
