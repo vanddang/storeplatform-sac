@@ -1009,7 +1009,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		SmsSendEcReq smsSendEcReq = new SmsSendEcReq();
 
-		smsSendEcReq.setSendMdn("15990011");
+		smsSendEcReq.setSendMdn(PurchaseConstants.TSTORE_CALL_CENTER_MDN);
 		smsSendEcReq.setRecvMdn(recvMdn);
 		smsSendEcReq.setMsg(msg);
 
