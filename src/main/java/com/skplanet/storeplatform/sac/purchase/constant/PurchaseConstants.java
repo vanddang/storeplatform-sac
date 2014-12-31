@@ -286,4 +286,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 에러레벨 로그 시간 */
 	public static final String ERROR_LOG_MS_TIME = "3000";
 
+	/** TSTORE 고객센터 전화번호 */
+	public static final String TSTORE_CALL_CENTER_MDN = "16006573";
+
 }
