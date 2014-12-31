@@ -82,6 +82,7 @@
                 , ( SELECT CASE WHEN MENU_DEPTH = 1 THEN 0 ELSE EXPO_ORD END EXPO_ORD
                     FROM TB_DP_TENANT_MENU
                     WHERE TENANT_MENU_ID = SUBSTR(A.TENANT_MENU_ID, 0, 7 )
+                    AND AND TENANT_ID = #{tenantId} /* 테넌트ID */
                     AND SYSTEM_ID = A.SYSTEM_ID) AS RNK1
                 , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( A.TENANT_MENU_ID, 0, 7 )
                                              ORDER BY A.MENU_DEPTH
