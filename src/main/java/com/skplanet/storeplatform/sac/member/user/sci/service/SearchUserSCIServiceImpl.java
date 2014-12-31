@@ -1027,7 +1027,7 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 
 		SearchUserSegmentSacRes res = new SearchUserSegmentSacRes();
 		// 기변여부
-		res.setIsChanged(searchUserSegmentResponse.getIsChanged());
+		res.setIsChanged(StringUtils.defaultString(searchUserSegmentResponse.getIsChanged(), null));
 		// 가입일
 		res.setEntryDay(searchUserSegmentResponse.getEntryDay());
 		// 등급
@@ -1038,8 +1038,6 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		res.setUserKey(searchUserSegmentResponse.getUserKey());
 		// 성별
 		res.setUserSex(searchUserSegmentResponse.getUserSex());
-		// 통신사
-		res.setUserTelecom(searchUserSegmentResponse.getUserTelecom());
 
 		return res;
 	}
