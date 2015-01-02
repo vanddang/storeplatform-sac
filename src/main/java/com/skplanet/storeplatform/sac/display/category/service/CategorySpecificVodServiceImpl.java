@@ -17,6 +17,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecifi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.meta.service.ProductSubInfoManager;
+import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -48,6 +50,9 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 
 	@Autowired
     private MemberBenefitService memberBenefitService;
+
+    @Autowired
+    private ProductSubInfoManager productSubInfoManager;
 	
 	/*
 	 * (non-Javadoc)
@@ -58,7 +63,7 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
 	 */
 	@Override
 	public CategorySpecificSacRes getSpecificVodList(CategorySpecificSacReq req, SacRequestHeader header) {
-
+        String tenantId = header.getTenantHeader().getTenantId();
 		CategorySpecificSacRes res = new CategorySpecificSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Product product = null;
@@ -105,20 +110,26 @@ public class CategorySpecificVodServiceImpl implements CategorySpecificVodServic
                         this.log.debug("##### Search for Vod specific product");
                         metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getVODMetaInfo",
                                 paramMap, MetaInfo.class);
-
                         // metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
-                        if (metaInfo != null) {
-                            // Tstore멤버십 적립율 정보
-                            metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
 
-                            if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-                                product = this.responseInfoGenerateFacade.generateSpecificMovieProduct(metaInfo);
-                            } else {
-                                product = this.responseInfoGenerateFacade
-                                        .generateSpecificBroadcastProduct(metaInfo);
-                            }
-                            productList.add(product);
+                        if(metaInfo == null)
+                            continue;
+
+                        CidPrice cidPrice = productSubInfoManager.getCidPrice(tenantId, metaInfo.getCid());
+                        if (cidPrice != null) {
+                            metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
+                            metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());
                         }
+
+                        // Tstore멤버십 적립율 정보
+                        metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+
+                        if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+                            product = this.responseInfoGenerateFacade.generateSpecificMovieProduct(metaInfo);
+                        } else {
+                            product = this.responseInfoGenerateFacade.generateSpecificBroadcastProduct(metaInfo);
+                        }
+                        productList.add(product);
                     }
                 }
             }

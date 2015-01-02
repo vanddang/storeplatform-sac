@@ -18,21 +18,20 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.CategorySpecificProductInfoManager;
+import com.skplanet.storeplatform.sac.display.meta.service.ProductSubInfoManager;
+import com.skplanet.storeplatform.sac.display.meta.vo.CidPrice;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
-
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -55,6 +54,9 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 	@Autowired
 	private DisplayCommonService displayCommonService;
 
+    @Autowired
+    private ProductSubInfoManager productSubInfoManager;
+
 	@Autowired
 	private CategorySpecificProductInfoManager metaInfoService;
 
@@ -70,12 +72,12 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 	 */
 	@Override
 	public CategorySpecificSacRes getSpecificEbookList(CategorySpecificSacReq req, SacRequestHeader header) {
-
-		CategorySpecificSacRes res = new CategorySpecificSacRes();
-		CommonResponse commonResponse = new CommonResponse();
-		Product product = null;
-		MetaInfo metaInfo = null;
-		List<Product> productList = new ArrayList<Product>();
+        String tenantId = header.getTenantHeader().getTenantId();
+        CategorySpecificSacRes res = new CategorySpecificSacRes();
+        CommonResponse commonResponse = new CommonResponse();
+        Product product = null;
+        MetaInfo metaInfo = null;
+        List<Product> productList = new ArrayList<Product>();
 
         List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
         if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_EBOOK_PARAMETER_LIMIT) {
@@ -111,11 +113,19 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
                 // ebook/코믹 상품의 경우
                 if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
                     if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-                            || DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { 
-                    	// Ebook / Comic 상품의 경우
+                            || DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
+                        // Ebook / Comic 상품의 경우
 
                         paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
                         metaInfo = this.metaInfoService.getEbookComicMeta(paramMap);
+                        if(metaInfo == null)
+                            continue;
+
+                        CidPrice cidPrice = productSubInfoManager.getCidPrice(tenantId, metaInfo.getCid());
+                        if (cidPrice != null) {
+                            metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
+                            metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());
+                        }
                         
                         /*
                         if(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(productBasicInfo.getContentsTypeCd())) {
@@ -131,21 +141,17 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
 	                        //try { BeanUtils.copyProperties(ebookComicEpisodeCount, metaInfo); } catch (Exception e) { }
                         }
                         */
-                        
-                        if (metaInfo != null) {
-                            // Tstore멤버십 적립율 정보
-                            metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
 
-                            if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-                                // product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
-                                product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
-                            } else {
-                                // product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
-                                product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
-                            }
-                            
-                            productList.add(product);
+                        // Tstore멤버십 적립율 정보
+                        metaInfo.setMileageInfo(memberBenefitService.getMileageInfo(header.getTenantHeader().getTenantId(), metaInfo.getTopMenuId(), metaInfo.getProdId(), metaInfo.getProdAmt()));
+
+                        if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+                            product = this.responseInfoGenerateFacade.generateSpecificEbookProduct(metaInfo);
+                        } else {
+                            product = this.responseInfoGenerateFacade.generateSpecificComicProduct(metaInfo);
                         }
+
+                        productList.add(product);
                     }
                 }
             }
@@ -154,6 +160,6 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
         res.setCommonResponse(commonResponse);
         res.setProductList(productList);
         return res;
-	}
+    }
 
 }
