@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
+import com.google.common.base.Strings;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -212,8 +213,13 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
             paymentInfo.setSeriesYn(SET_SERIES_META.contains(paymentInfo.getMetaClsfCd()) ? "Y" : "N");
 
             if (paymentInfo.getSeriesYn().equals("Y")) {
-                String prodNm = paymentInfo.getChnlProdNm() + " " + paymentInfo.getChapterText() + paymentInfo.getChapterUnit();
-                paymentInfo.setProdNm(prodNm);
+                StringBuilder sb = new StringBuilder(paymentInfo.getChnlProdNm());
+                if (!Strings.isNullOrEmpty(paymentInfo.getChapterText())) {
+                    sb.append(" ")
+                      .append(paymentInfo.getChapterText())
+                      .append(paymentInfo.getChapterUnit());
+                }
+                paymentInfo.setProdNm(sb.toString());
             }
 
             // 이용가능한 정액권목록 제공
