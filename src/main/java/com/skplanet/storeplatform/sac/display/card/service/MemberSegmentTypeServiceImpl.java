@@ -51,16 +51,14 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 	@Override
 	public void bindFromSci(SegmentRes segmentRes, SearchUserSegmentSacRes segmentFromSci) {
 		String sex = segmentFromSci.getUserSex();
-		String deviceChgYn = segmentFromSci.getIsChanged();
+		String deviceChgYn = segmentFromSci.getIsChanged(); // deviceKey가 들어왔을 때만 내려줌 
 		String newEntryDay = segmentFromSci.getEntryDay();
-		String mnoClsfCd = segmentFromSci.getUserTelecom();
 		String userBirthDay = segmentFromSci.getUserBirthDay();
 		
 		segmentRes.setSex(sex);
 		segmentRes.setDeviceChgYn(deviceChgYn);
 		String newEntryYn = isRecentlyRegistered(newEntryDay) ? "Y" : "N";
 		segmentRes.setNewEntryYn(newEntryYn);
-		segmentRes.setMnoClsfCd(mnoClsfCd);
 		String ageClsfCd = getAgeClsfCd(userBirthDay);
 		segmentRes.setAgeClsfCd(ageClsfCd);
 	}
@@ -69,11 +67,18 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 	public void bindFromDb(SegmentRes segmentRes, MemberSegment segmentFromDb) {
 		String outsdMbrGrdCd = segmentFromDb.getOutsdMbrLevelCd();
 		String insdMbrGrdCd = segmentFromDb.getInsdMbrLevelCd();
+		String mnoClsfCd = segmentFromDb.getMnoCd();
 		List<String> categoryBest = Arrays.asList(segmentFromDb.getCategoryBest());
 
 		segmentRes.setOutsdMbrGrdCd(outsdMbrGrdCd);
 		segmentRes.setInsdMbrGrdCd(insdMbrGrdCd);
+		segmentRes.setMnoClsfCd(mnoClsfCd); 
 		segmentRes.setCategoryBest(categoryBest);
+		
+		// SCI에서 안 줬을 경우, DB에서 가져오기 시도
+		if (StringUtils.isBlank(segmentRes.getDeviceChgYn())) {
+			segmentRes.setDeviceChgYn(segmentFromDb.getDeviceChgYn());
+		}
 	}
 	
 
