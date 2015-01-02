@@ -194,9 +194,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 구매 정합성 체크
 		this.validatePurchaseOrder(purchaseOrderInfo);
 
-		// 구매 진행 체크
+		// CLINK 예외처리 - 구매 진행 체크: 무료 구매 건에 대해서만.
 		if (purchaseOrderInfo.getRealTotAmt() <= 0) {
-			// CLINK 예외 처리: 무료 구매 건에 대해서만.
 			boolean bAtLeastOne = false;
 			for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
 				if (StringUtils.isBlank(product.getResultCd())) {
@@ -213,12 +212,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				return 0;
 			}
 
-		} else {
-			// 구매(결제)차단 여부 체크
-			if (this.purchaseOrderPolicyService.isBlockPayment(purchaseOrderInfo.getTenantId(), purchaseOrderInfo
-					.getPurchaseUser().getDeviceId(), purchaseOrderInfo.getTenantProdGrpCd())) {
-				throw new StorePlatformException("SAC_PUR_6103");
-			}
 		}
 
 		// 구매ID, 구매일시 세팅

@@ -996,6 +996,16 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		if (bRemovePossLend) {
 			purchaseOrderInfo.getPurchaseProductList().get(0).setPossLendProductInfo(null);
 		}
+
+		// ------------------------------------------------------------------------------------------------------
+		// 구매(결제)차단 여부 체크
+
+		if (purchaseOrderInfo.getRealTotAmt() > 0) {
+			if (this.purchaseOrderPolicyService.isBlockPayment(purchaseOrderInfo.getTenantId(), purchaseOrderInfo
+					.getPurchaseUser().getDeviceId(), purchaseOrderInfo.getTenantProdGrpCd())) {
+				throw new StorePlatformException("SAC_PUR_6103");
+			}
+		}
 	}
 
 	/*

@@ -9,9 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -644,21 +642,21 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		int iapBillingAmt = -1;
 
-		if (bTstore) {
-
-			try {
-				iapBillingAmt = this.iapRepository.inquiryBillingAmt(checkPaymentPolicyParam.getDeviceId(),
-						checkPaymentPolicyParam.getSktSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
-			} catch (Exception e) {
-				// 예외 발생 시, IAP측 결제금액 무시 처리 : 구매DB 기준으로 IAP포함 조회
-				if (e instanceof StorePlatformException) {
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}",
-							((StorePlatformException) e).getCode());
-				} else {
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}", e.getMessage());
-				}
-			}
-		}
+		// if (bTstore) {
+		//
+		// try {
+		// iapBillingAmt = this.iapRepository.inquiryBillingAmt(checkPaymentPolicyParam.getDeviceId(),
+		// checkPaymentPolicyParam.getSktSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
+		// } catch (Exception e) {
+		// // 예외 발생 시, IAP측 결제금액 무시 처리 : 구매DB 기준으로 IAP포함 조회
+		// if (e instanceof StorePlatformException) {
+		// this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}",
+		// ((StorePlatformException) e).getCode());
+		// } else {
+		// this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}", e.getMessage());
+		// }
+		// }
+		// }
 
 		// --------------------------------------------------------------------------------------------------
 		// 통신사 후불 한도금액 제한
