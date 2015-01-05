@@ -291,7 +291,44 @@
                 AND TP.TENANT_ID = PR.TENANT_ID
                 AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
             ) IV 
-    </select>       
+    </select>     
+    
+ <select id="getAvailableFixrateInfoList " parameterType="Map" resultType="FreePassInfo">
+          /* PaymentInfoMapper.xml, getAvailableFixrateInfoList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-12-27 */
+            SELECT  
+                IV.*
+            FROM (
+                SELECT  
+                      PD.PROD_ID
+                     ,NVL(CM.POSS_LEND_CLSF_CD,'DP010603') AS POSS_LEND_CLSF_CD
+                 FROM 
+                      TB_DP_PROD PD
+                    , TB_DP_CMPX_PROD CM
+                    , TB_DP_PROD_DESC DC
+                    , TB_DP_TENANT_PROD TP
+                    , TB_DP_TENANT_PROD_PRICE PR
+                    ,(SELECT   A.PROD_ID 
+                             , B.PART_PROD_ID
+                        FROM TB_DP_FIXRATE_PROD_MAPG A
+                             ,TB_DP_PROD_RSHP B
+                             ,TB_DP_EBOOK_PROD C
+                       WHERE A.PART_PROD_ID = B.PROD_ID
+                         AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
+                         AND B.PART_PROD_ID= #{prodId}
+                         AND B.PART_PROD_ID = C.PROD_ID(+)
+                         AND (C.PROD_ID IS NULL OR C.BOOK_CLSF_CD = 'DP004301') /*이북,단행만 전권구매 가능하도록(연재제외)*/
+                     )PM                    
+                WHERE  PD.PROD_ID = CM.PROD_ID
+                AND PD.PROD_ID = DC.PROD_ID
+                AND PD.PROD_ID = TP.PROD_ID
+                AND PD.PROD_ID = PR.PROD_ID
+                AND PD.PROD_ID = PM.PROD_ID
+                AND DC.LANG_CD = #{lang}
+                AND TP.TENANT_ID = #{tenantId} 
+                AND TP.TENANT_ID = PR.TENANT_ID
+                AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+            ) IV 
+    </select>        
     
     <select id="getFreePassMetaInfo" parameterType="Map" resultType="PaymentInfo">
          /* PaymentInfoMapper.xml, getFreePassMetaInfo,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
