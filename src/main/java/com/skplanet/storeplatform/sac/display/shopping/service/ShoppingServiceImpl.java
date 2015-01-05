@@ -1999,7 +1999,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							} else {
 								source = this.commonGenerator.generateSource(
 										DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT, resultImgDetailList.get(pp)
-												.getFilePath());
+										.getFilePath());
 							}
 							sourceList.add(source);
 						}
@@ -2070,64 +2070,113 @@ public class ShoppingServiceImpl implements ShoppingService {
 							Price episodePrice = this.shoppingGenerator.generatePrice(episodeShopping);
 							episodeProduct.setPrice(episodePrice);
 
-							// 에피소드 구매내역 정보
+							//////////////////////////// 에피소드 구매내역 정보 S ////////////////////////////////////////////////////////
 							boolean purchaseFlag = true;
+							String prchsProdId = null;
 							String prchsId = null;
 							String prchsDt = null;
 							String prchsState = null;
 							String permitDeviceYn = null;
+							episodeRights = new Rights();
+
 							try {
-								this.log.info("################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : "
-										+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
-								// 구매내역 조회를 위한 생성자
-								ProductListSacIn productListSacIn = new ProductListSacIn();
-								List<ProductListSacIn> productEpisodeList = new ArrayList<ProductListSacIn>();
-
-								productListSacIn.setProdId(episodeShopping.getPartProdId());
-								productEpisodeList.add(productListSacIn);
-
-								HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
-								historyListSacReq.setTenantId(tenantHeader.getTenantId());
-								historyListSacReq.setUserKey(req.getUserKey());
-								historyListSacReq.setDeviceKey(req.getDeviceKey());
-								historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-								historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-								historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-								historyListSacReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
-								historyListSacReq.setEndDt(episodeShopping.getSysDate());
-								historyListSacReq.setOffset(1);
-								historyListSacReq.setCount(1);
-								historyListSacReq.setProductList(productEpisodeList);
+								this.log.info("################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : " + DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 
 								// 구매내역 조회 실행
-								if (StringUtils.isNotEmpty(req.getUserKey())) {
-									HistoryListSacInRes historyListSacRes = this.historyInternalSCI
-											.searchHistoryList(historyListSacReq);
-									this.log.debug("----------------------------------------------------------------");
-									this.log.debug("[getShoppingInfo] purchase count : {}",
-											historyListSacRes.getTotalCnt());
-									this.log.debug("----------------------------------------------------------------");
+								if (StringUtils.isNotEmpty(req.getUserKey())) {								
+
+									// 구매내역 조회를 위한 생성자
+									ProductListSacIn productListSacIn = new ProductListSacIn();
+									List<ProductListSacIn> productEpisodeList = new ArrayList<ProductListSacIn>();
+
+									if (!deliveryValue.equals("delivery")) {  
+										productListSacIn.setProdId(episodeShopping.getPartProdId());
+										productEpisodeList.add(productListSacIn);
+									}else{		// 배송상품인 경우 에피소드 별로 조회
+										reqMap.put("chnlProdId", episodeShopping.getProdId());
+										// 에피소드 list 조회
+										List<MetaInfo> purchaseEpisodeList = this.commonDAO.queryForList("Shopping.getShoppingEpisode", reqMap, MetaInfo.class);
+
+										for(MetaInfo purchasePartProdId : purchaseEpisodeList){
+											productListSacIn = new ProductListSacIn();
+											productListSacIn.setProdId(purchasePartProdId.getPartProdId());
+											productEpisodeList.add(productListSacIn);
+										}
+									}
+
+									HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
+									historyListSacReq.setTenantId(tenantHeader.getTenantId());
+									historyListSacReq.setUserKey(req.getUserKey());
+									historyListSacReq.setDeviceKey(req.getDeviceKey());
+									historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+									historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+									historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+									historyListSacReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
+									historyListSacReq.setEndDt(episodeShopping.getSysDate());
+									historyListSacReq.setOffset(1);
+									historyListSacReq.setCount(1000);
+									historyListSacReq.setProductList(productEpisodeList);
+
+
+									HistoryListSacInRes historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
+									this.log.info("----------------------------------------------------------------");
+									this.log.info("[getShoppingInfo] purchase count : {}", historyListSacRes.getTotalCnt());
+									this.log.info("----------------------------------------------------------------");
+									String comparePrchsDt = "";
+									int compareInt =0;
 									if (historyListSacRes.getTotalCnt() > 0) {
-										prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
-										prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
-										prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
-										permitDeviceYn = historyListSacRes.getHistoryList().get(0).getPermitDeviceYn();
+										for (int aa=0 ; aa > historyListSacRes.getHistoryList().size(); aa++){
+											prchsDt = historyListSacRes.getHistoryList().get(aa).getPrchsDt();
+
+											if(aa==0){
+												comparePrchsDt =prchsDt;
+											}
+
+											// 비교해서 최신놈으로 확인 가능
+											if(Integer.parseInt(comparePrchsDt) <= Integer.parseInt(prchsDt)){
+												comparePrchsDt = prchsDt;
+												compareInt = aa;
+											}
+										}
+										this.log.info("----------------------------------------------------------------");
+										this.log.info("[getShoppingInfo] compareInt  : {}", compareInt);
+										this.log.info("----------------------------------------------------------------");
+
+
+										prchsProdId = historyListSacRes.getHistoryList().get(compareInt).getProdId();
+										prchsId = historyListSacRes.getHistoryList().get(compareInt).getPrchsId();
+										prchsDt = historyListSacRes.getHistoryList().get(compareInt).getPrchsDt();
+										prchsState = historyListSacRes.getHistoryList().get(compareInt).getPrchsCaseCd();
+										permitDeviceYn = historyListSacRes.getHistoryList().get(compareInt).getPermitDeviceYn();
 										if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 											prchsState = "payment";
 										} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
 											prchsState = "gift";
 										}
-
 										this.log.debug("----------------------------------------------------------------");
 										this.log.debug("[getShoppingInfo] prchsId : {}", prchsId);
 										this.log.debug("[getShoppingInfo] prchsDt : {}", prchsDt);
 										this.log.debug("[getShoppingInfo] prchsState : {}", prchsState);
 										this.log.debug("----------------------------------------------------------------");
+
 									}
+
+
+
+									boolean purchaseYn = false;
+									// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함 구매 여부 조회
+									if (StringUtils.isNotEmpty(prchsProdId)) {
+										purchaseYn = this.displayCommonService.checkPurchase(tenantHeader.getTenantId(), req.getUserKey(), req.getDeviceKey(), prchsProdId);
+									}
+
+									this.log.info("구매 여부::{}", purchaseYn);
+									if (purchaseYn) {
+										episodeRights.setAllow(episodeShopping.getAllow());
+									}
+
 								}
 
-								this.log.info("################ [SAC DP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList : "
-										+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
+								this.log.info("################ [SAC DP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList : "+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 							} catch (Exception ex) {
 								purchaseFlag = false;
 								this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
@@ -2135,42 +2184,24 @@ public class ShoppingServiceImpl implements ShoppingService {
 								// StorePlatformException("SAC_DSP_2001",
 								// "구매내역 조회 ", ex);
 							}
+
+
 							if (purchaseFlag) {
 								if (StringUtils.isNotEmpty(prchsId) && "Y".equals(permitDeviceYn)) {
 									episodeShopping.setPurchaseId(prchsId);
-									episodeShopping.setPurchaseProdId(episodeShopping.getPartProdId());
+									episodeShopping.setPurchaseProdId(prchsProdId);
 									episodeShopping.setPurchaseDt(prchsDt);
 									episodeShopping.setPurchaseState(prchsState);
 									// 구매 정보
 									episodeProduct.setPurchase(this.commonGenerator.generatePurchase(episodeShopping));
 								}
 							}
+							//////////////////////////// 에피소드 구매내역 정보 E ////////////////////////////////////////////////////////
 
-							// 에피소드 날짜 권한 정보
-							// episodeProduct.setDateList(this.shoppingGenerator.generateDateList(episodeShopping));
-							episodeRights = new Rights();
 
-							// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
-							// 구매 여부 조회
-							if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가
-								// 있을
-								// 경우만
-								boolean purchaseYn = this.displayCommonService.checkPurchase(
-										tenantHeader.getTenantId(), req.getUserKey(), req.getDeviceKey(),
-										episodeShopping.getPartProdId());
-								this.log.info("구매 여부::{}", purchaseYn);
-								if (purchaseYn) {
-									episodeRights.setAllow(episodeShopping.getAllow());
-								}
-							}
 
 							// 2014.11.27 Jade 추가 (쿠폰 발송 타입)
 							episodeProduct.setCouponSendType(episodeShopping.getCouponSendType());
-
-							// // 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
-							// if (purchseCount > 0) {
-							// episodeRights.setAllow(episodeShopping.getAllow());
-							// }
 
 							episodeRights.setGrade(episodeShopping.getProdGrdCd());
 							episodeRights.setDateList(this.shoppingGenerator.generateDateList(episodeShopping));
@@ -2263,10 +2294,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 													if (optionShopping.getProdStatusCd().equals(
 															DisplayConstants.DP_SALE_STAT_ING)) {
 														subSelectOption
-																.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
+														.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
 													} else {
 														subSelectOption
-																.setSalesStatus(optionShopping.getProdStatusCd());
+														.setSalesStatus(optionShopping.getProdStatusCd());
 													}
 												} else {
 													subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
@@ -3184,8 +3215,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
 		}
-		
-		
+
+
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
 			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
 		}
@@ -3193,7 +3224,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		{
 			req.setOrderedBy(StringUtils.lowerCase(req.getOrderedBy()));
 		}
-		
+
 		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
@@ -3215,7 +3246,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setStdDt(stdDt);
 		}
 
-		
+
 
 		// 파라미터 유효값 체크
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
@@ -3419,7 +3450,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		{
 			req.setOrderedBy(StringUtils.lowerCase(req.getOrderedBy()));
 		}
-		
+
 		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
@@ -3440,7 +3471,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			req.setStdDt(stdDt);
 		}
-		
+
 
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -3575,7 +3606,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		{
 			req.setOrderedBy(StringUtils.lowerCase(req.getOrderedBy()));
 		}
-		
+
 		if (!DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
 				&& !DisplayConstants.DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION.equals(req.getOrderedBy())
@@ -3938,64 +3969,108 @@ public class ShoppingServiceImpl implements ShoppingService {
 							Price episodePrice = this.shoppingGenerator.generatePrice(episodeShopping);
 							episodeProduct.setPrice(episodePrice);
 
-							// 에피소드 구매내역 정보
+
+							//////////////////////////// 에피소드 구매내역 정보 S ////////////////////////////////////////////////////////
 							boolean purchaseFlag = true;
+							String prchsProdId = null;
 							String prchsId = null;
 							String prchsDt = null;
 							String prchsState = null;
 							String permitDeviceYn = null;
+							episodeRights = new Rights();
 							try {
-								this.log.info("################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : "
-										+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
-								// 구매내역 조회를 위한 생성자
-								ProductListSacIn productListSacIn = new ProductListSacIn();
-								List<ProductListSacIn> productEpisodeList = new ArrayList<ProductListSacIn>();
-
-								productListSacIn.setProdId(episodeShopping.getPartProdId());
-								productEpisodeList.add(productListSacIn);
-
-								HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
-								historyListSacReq.setTenantId(tenantHeader.getTenantId());
-								historyListSacReq.setUserKey(req.getUserKey());
-								historyListSacReq.setDeviceKey(req.getDeviceKey());
-								historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
-								historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
-								historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
-								historyListSacReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
-								historyListSacReq.setEndDt(episodeShopping.getSysDate());
-								historyListSacReq.setOffset(1);
-								historyListSacReq.setCount(1);
-								historyListSacReq.setProductList(productEpisodeList);
+								this.log.info("################ [SAC DP LocalSCI] SAC Purchase Stat : historyInternalSCI.searchHistoryList : " + DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 
 								// 구매내역 조회 실행
-								if (StringUtils.isNotEmpty(req.getUserKey())) {
-									HistoryListSacInRes historyListSacRes = this.historyInternalSCI
-											.searchHistoryList(historyListSacReq);
-									this.log.debug("----------------------------------------------------------------");
-									this.log.debug("[getShoppingInfo] purchase count : {}",
-											historyListSacRes.getTotalCnt());
-									this.log.debug("----------------------------------------------------------------");
+								if (StringUtils.isNotEmpty(req.getUserKey())) {								
+
+									// 구매내역 조회를 위한 생성자
+									ProductListSacIn productListSacIn = new ProductListSacIn();
+									List<ProductListSacIn> productEpisodeList = new ArrayList<ProductListSacIn>();
+
+									if (!deliveryValue.equals("delivery")) {  
+										productListSacIn.setProdId(episodeShopping.getPartProdId());
+										productEpisodeList.add(productListSacIn);
+									}else{		// 배송상품인 경우 에피소드 별로 조회
+										reqMap.put("chnlProdId", episodeShopping.getProdId());
+										// 에피소드 list 조회
+										List<MetaInfo> purchaseEpisodeList = this.commonDAO.queryForList("Shopping.getShoppingEpisodeV2", reqMap, MetaInfo.class);
+
+										for(MetaInfo purchasePartProdId : purchaseEpisodeList){
+											productListSacIn = new ProductListSacIn();
+											productListSacIn.setProdId(purchasePartProdId.getPartProdId());
+											productEpisodeList.add(productListSacIn);
+										}
+									}
+
+									HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
+									historyListSacReq.setTenantId(tenantHeader.getTenantId());
+									historyListSacReq.setUserKey(req.getUserKey());
+									historyListSacReq.setDeviceKey(req.getDeviceKey());
+									historyListSacReq.setPrchsProdHaveYn(DisplayConstants.PRCHS_PROD_HAVE_YES);
+									historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_UNIT);
+									historyListSacReq.setStartDt(DisplayConstants.PRCHS_START_DATE);
+									historyListSacReq.setPrchsStatusCd(DisplayConstants.PRCHS_STSTUS_COMPLETE_CD);
+									historyListSacReq.setEndDt(episodeShopping.getSysDate());
+									historyListSacReq.setOffset(1);
+									historyListSacReq.setCount(1000);
+									historyListSacReq.setProductList(productEpisodeList);
+
+
+									HistoryListSacInRes historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
+									this.log.info("----------------------------------------------------------------");
+									this.log.info("[getShoppingInfo] purchase count : {}", historyListSacRes.getTotalCnt());
+									this.log.info("----------------------------------------------------------------");
+									String comparePrchsDt = "";
+									int compareInt =0;
 									if (historyListSacRes.getTotalCnt() > 0) {
-										prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
-										prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
-										prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
-										permitDeviceYn = historyListSacRes.getHistoryList().get(0).getPermitDeviceYn();
+										for (int aa=0 ; aa > historyListSacRes.getHistoryList().size(); aa++){
+											prchsDt = historyListSacRes.getHistoryList().get(aa).getPrchsDt();
+
+											if(aa==0){
+												comparePrchsDt =prchsDt;
+											}
+
+											// 비교해서 최신놈으로 확인 가능
+											if(Integer.parseInt(comparePrchsDt) <= Integer.parseInt(prchsDt)){
+												comparePrchsDt = prchsDt;
+												compareInt = aa;
+											}
+										}
+
+										prchsProdId = historyListSacRes.getHistoryList().get(compareInt).getProdId();
+										prchsId = historyListSacRes.getHistoryList().get(compareInt).getPrchsId();
+										prchsDt = historyListSacRes.getHistoryList().get(compareInt).getPrchsDt();
+										prchsState = historyListSacRes.getHistoryList().get(compareInt).getPrchsCaseCd();
+										permitDeviceYn = historyListSacRes.getHistoryList().get(compareInt).getPermitDeviceYn();
 										if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 											prchsState = "payment";
 										} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
 											prchsState = "gift";
 										}
-
 										this.log.debug("----------------------------------------------------------------");
 										this.log.debug("[getShoppingInfo] prchsId : {}", prchsId);
 										this.log.debug("[getShoppingInfo] prchsDt : {}", prchsDt);
 										this.log.debug("[getShoppingInfo] prchsState : {}", prchsState);
 										this.log.debug("----------------------------------------------------------------");
+
 									}
+
+									boolean purchaseYn = false;
+									// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함 구매 여부 조회
+									if (StringUtils.isNotEmpty(prchsProdId)) {
+										purchaseYn = this.displayCommonService.checkPurchase(tenantHeader.getTenantId(), req.getUserKey(), req.getDeviceKey(), prchsProdId);
+									}
+
+									this.log.info("구매 여부::{}", purchaseYn);
+									// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
+									if (purchaseYn) {
+										episodeRights.setAllow(episodeShopping.getAllow());
+									}
+
 								}
 
-								this.log.info("################ [SAC DP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList : "
-										+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
+								this.log.info("################ [SAC DP LocalSCI] SAC Purchase End : historyInternalSCI.searchHistoryList : "+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 							} catch (Exception ex) {
 								purchaseFlag = false;
 								this.log.error("구매내역 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
@@ -4003,40 +4078,23 @@ public class ShoppingServiceImpl implements ShoppingService {
 								// StorePlatformException("SAC_DSP_2001",
 								// "구매내역 조회 ", ex);
 							}
+
+
 							if (purchaseFlag) {
 								if (StringUtils.isNotEmpty(prchsId) && "Y".equals(permitDeviceYn)) {
 									episodeShopping.setPurchaseId(prchsId);
-									episodeShopping.setPurchaseProdId(episodeShopping.getPartProdId());
+									episodeShopping.setPurchaseProdId(prchsProdId);
 									episodeShopping.setPurchaseDt(prchsDt);
 									episodeShopping.setPurchaseState(prchsState);
 									// 구매 정보
 									episodeProduct.setPurchase(this.commonGenerator.generatePurchase(episodeShopping));
 								}
 							}
+							//////////////////////////// 에피소드 구매내역 정보 E ////////////////////////////////////////////////////////
 
-							// 에피소드 날짜 권한 정보
-							// episodeProduct.setDateList(this.shoppingGenerator.generateDateList(episodeShopping));
-							episodeRights = new Rights();
-
-							// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
-							// 구매 여부 조회
-							if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
-								boolean purchaseYn = this.displayCommonService.checkPurchase(
-										tenantHeader.getTenantId(), req.getUserKey(), req.getDeviceKey(),
-										episodeShopping.getPartProdId());
-								this.log.info("구매 여부::{}", purchaseYn);
-								if (purchaseYn) {
-									episodeRights.setAllow(episodeShopping.getAllow());
-								}
-							}
 
 							// 2014.11.27 Jade 추가 (쿠폰 발송 타입)
 							episodeProduct.setCouponSendType(episodeShopping.getCouponSendType());
-
-							// // 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
-							// if (purchseCount > 0) {
-							// episodeRights.setAllow(episodeShopping.getAllow());
-							// }
 
 							episodeRights.setGrade(episodeShopping.getProdGrdCd());
 							episodeRights.setDateList(this.shoppingGenerator.generateDateList(episodeShopping));
