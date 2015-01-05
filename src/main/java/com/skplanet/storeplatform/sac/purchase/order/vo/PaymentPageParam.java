@@ -57,6 +57,11 @@ public class PaymentPageParam extends CommonInfo {
 	private String nmDelivery; // 선물수신자명
 	private String noMdnDelivery; // 선물수신자 MDN
 
+	private String nmSellerCompany; // 회사명
+	private String nmSeller; // 판매자명
+	private String emailSeller; // 판매자 이메일 주소
+	private String noTelSeller; // 판매자 전화번호
+
 	// ==========================================================================================
 
 	/**
@@ -537,6 +542,66 @@ public class PaymentPageParam extends CommonInfo {
 	 */
 	public void setNoMdnDelivery(String noMdnDelivery) {
 		this.noMdnDelivery = noMdnDelivery;
+	}
+
+	/**
+	 * @return the nmSellerCompany
+	 */
+	public String getNmSellerCompany() {
+		return this.nmSellerCompany;
+	}
+
+	/**
+	 * @param nmSellerCompany
+	 *            the nmSellerCompany to set
+	 */
+	public void setNmSellerCompany(String nmSellerCompany) {
+		this.nmSellerCompany = nmSellerCompany;
+	}
+
+	/**
+	 * @return the nmSeller
+	 */
+	public String getNmSeller() {
+		return this.nmSeller;
+	}
+
+	/**
+	 * @param nmSeller
+	 *            the nmSeller to set
+	 */
+	public void setNmSeller(String nmSeller) {
+		this.nmSeller = nmSeller;
+	}
+
+	/**
+	 * @return the emailSeller
+	 */
+	public String getEmailSeller() {
+		return this.emailSeller;
+	}
+
+	/**
+	 * @param emailSeller
+	 *            the emailSeller to set
+	 */
+	public void setEmailSeller(String emailSeller) {
+		this.emailSeller = emailSeller;
+	}
+
+	/**
+	 * @return the noTelSeller
+	 */
+	public String getNoTelSeller() {
+		return this.noTelSeller;
+	}
+
+	/**
+	 * @param noTelSeller
+	 *            the noTelSeller to set
+	 */
+	public void setNoTelSeller(String noTelSeller) {
+		this.noTelSeller = noTelSeller;
 	}
 
 }

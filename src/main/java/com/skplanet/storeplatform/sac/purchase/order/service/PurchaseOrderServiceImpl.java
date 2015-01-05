@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,6 @@ import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseSequenc
 import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac.SellerMbrAppSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
@@ -912,6 +912,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			res.setBannerList(this.searchBannerList(prchsDtlMore));
 		}
 
+		// TAKTODO:: 판매자 정보 - P/P 결제Page 요청 파라미터로 추가하면서 제거될 것임. (P/P 작업 수정 이후 제거)
 		// 판매자 정보 세팅
 		// SellerMbrSac sellerInfo = this.searchSellerInfo(reservedDataMap.get("sellerMbrNo"),
 		// prchsDtlMore.getTenantProdGrpCd());
@@ -920,12 +921,61 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
 		// res.setNoTelSeller(sellerInfo.getRepPhone()); // 대표전화번호
 
-		SellerMbrAppSac sellerInfo = this.detailInformationListForProduct(reservedDataMap.get("sellerMbrNo"),
-				prchsDtlMore.getTenantProdGrpCd());
-		res.setNmSellerCompany(sellerInfo.getSellerCompany()); // 회사명
-		res.setNmSeller(sellerInfo.getSellerName()); // 쇼핑 노출명
-		res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
-		res.setNoTelSeller(sellerInfo.getSellerPhone()); // 대표전화번호
+		// SellerMbrAppSac sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
+		// reservedDataMap.get("sellerMbrNo"), prchsDtlMore.getTenantProdGrpCd());
+		// res.setNmSellerCompany(sellerInfo.getSellerCompany()); // 회사명
+		// res.setNmSeller(sellerInfo.getSellerName()); // 쇼핑 노출명
+		// res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
+		// res.setNoTelSeller(sellerInfo.getSellerPhone()); // 대표전화번호
+
+		String tenantProdGrpCd = prchsDtlMore.getTenantProdGrpCd();
+		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_APP)
+				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+
+			boolean bFlat = false;
+			if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)
+					|| StringUtils.startsWith(tenantProdGrpCd,
+							PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
+				bFlat = true;
+			}
+
+			Map<String, PurchaseProduct> purchaseProductMap = this.purchaseDisplayRepository.searchPurchaseProductList(
+					prchsDtlMore.getTenantId(), prchsDtlMore.getCurrencyCd(), reservedDataMap.get("useDeviceModelCd"),
+					Arrays.asList(prchsDtlMore.getProdId()), bFlat);
+			PurchaseProduct purchaseProduct = purchaseProductMap.get(prchsDtlMore.getProdId());
+
+			// 상품 정보의 판매자명은 회사명에만 세팅: 2015.01.05.염동환M
+			res.setNmSellerCompany(purchaseProduct.getSellerNm());
+			res.setNmSeller(null);
+			res.setEmailSeller(purchaseProduct.getSellerEmail());
+			res.setNoTelSeller(purchaseProduct.getSellerTelno());
+
+			if (StringUtils.isBlank(res.getNmSellerCompany()) || StringUtils.isBlank(res.getEmailSeller())
+					|| StringUtils.isBlank(res.getNoTelSeller())) {
+				SellerMbrAppSac sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
+						purchaseProduct.getSellerMbrNo(), tenantProdGrpCd);
+
+				if (StringUtils.isBlank(res.getNmSellerCompany())) {
+					res.setNmSellerCompany(sellerInfo.getSellerCompany());
+				}
+				// paymentPageParam.setNmSeller(sellerInfo.getSellerName());
+				if (StringUtils.isBlank(res.getEmailSeller())) {
+					res.setEmailSeller(sellerInfo.getSellerEmail());
+				}
+				if (StringUtils.isBlank(res.getNoTelSeller())) {
+					res.setNoTelSeller(sellerInfo.getSellerPhone());
+				}
+			}
+
+		} else {
+			SellerMbrAppSac sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
+					reservedDataMap.get("sellerMbrNo"), tenantProdGrpCd);
+
+			res.setNmSellerCompany(sellerInfo.getSellerCompany()); // 회사명
+			res.setNmSeller(sellerInfo.getSellerName()); // 쇼핑 노출명
+			res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
+			res.setNoTelSeller(sellerInfo.getSellerPhone()); // 대표전화번호
+		}
 
 		return res;
 	}
@@ -1957,81 +2007,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				throw new StorePlatformException("SAC_PUR_7209", e);
 			}
 		}
-	}
-
-	/*
-	 * 
-	 * <pre> 판매자 회원 정보 조회 - 쇼핑 상품인 경우에만 조회. </pre>
-	 * 
-	 * @param sellerKey 판매자 내부 회원 번호
-	 * 
-	 * @param tenantProdGrpCd 테넌트 상품 분류 코드
-	 * 
-	 * @return 판매자 정보
-	 */
-	// private SellerMbrSac searchSellerInfo(String sellerKey, String tenantProdGrpCd) {
-	// SellerMbrSac sellerMbrSac = null;
-	//
-	// if (StringUtils.isNotBlank(sellerKey)) {
-	// sellerMbrSac = this.purchaseMemberRepository.searchSellerInfo(sellerKey);
-	// }
-	//
-	// if (sellerMbrSac == null) {
-	// sellerMbrSac = new SellerMbrSac();
-	//
-	// // 쇼핑상품 경우, 디폴트 값 정의
-	// if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-	// sellerMbrSac.setSellerNickName(PurchaseConstants.SHOPPING_SELLER_DEFAULT_NAME); // 판매자명
-	// sellerMbrSac.setSellerEmail(PurchaseConstants.SHOPPING_SELLER_DEFAULT_EMAIL); // 판매자 이메일 주소
-	// sellerMbrSac.setRepPhone(PurchaseConstants.SHOPPING_SELLER_DEFAULT_TEL); // 판매자 전화번호
-	// }
-	// }
-	//
-	// return sellerMbrSac;
-	// }
-
-	/*
-	 * 
-	 * <pre> 판매자 회원 정보 조회 - 쇼핑 상품인 경우에만 조회. </pre>
-	 * 
-	 * @param sellerKey 판매자 내부 회원 번호
-	 * 
-	 * @param tenantProdGrpCd 테넌트 상품 분류 코드
-	 * 
-	 * @return 판매자 정보
-	 */
-	private SellerMbrAppSac detailInformationListForProduct(String sellerKey, String tenantProdGrpCd) {
-		SellerMbrAppSac sellerMbrAppSac = null;
-		SellerMbrInfoSac sellerMbrInfoSac = null;
-
-		if (StringUtils.isNotBlank(sellerKey)) {
-			sellerMbrInfoSac = this.purchaseMemberRepository.detailInformationListForProduct(sellerKey);
-		}
-
-		if (sellerMbrInfoSac != null) {
-
-			for (SellerMbrAppSac seller : sellerMbrInfoSac.getSellerMbrList()) {
-				if (StringUtils.equals(seller.appStat, "Lower")) {
-					sellerMbrAppSac = seller;
-					break;
-				}
-			}
-
-		}
-
-		if (sellerMbrAppSac == null) {
-			sellerMbrAppSac = new SellerMbrAppSac();
-
-			// 쇼핑상품 경우, 디폴트 값 정의
-			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				sellerMbrAppSac.setSellerCompany(PurchaseConstants.SHOPPING_SELLER_DEFAULT_NAME); // 판매자명
-				sellerMbrAppSac.setSellerName(PurchaseConstants.SHOPPING_SELLER_DEFAULT_NAME); // 판매자명
-				sellerMbrAppSac.setSellerEmail(PurchaseConstants.SHOPPING_SELLER_DEFAULT_EMAIL); // 판매자 이메일 주소
-				sellerMbrAppSac.setSellerPhone(PurchaseConstants.SHOPPING_SELLER_DEFAULT_TEL); // 판매자 전화번호
-			}
-		}
-
-		return sellerMbrAppSac;
 	}
 
 	/*

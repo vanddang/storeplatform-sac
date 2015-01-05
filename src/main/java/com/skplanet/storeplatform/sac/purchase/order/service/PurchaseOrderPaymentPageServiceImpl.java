@@ -16,12 +16,15 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac.SellerMbrAppSac;
 import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
@@ -38,6 +41,9 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 
 	public static final String PAYMENT_PAGE_PARAM_VER = "1.0";
 	public static final String PP_RETURN_FORMAT_JSON = "1";
+
+	@Autowired
+	private PurchaseMemberRepository purchaseMemberRepository;
 
 	/**
 	 * 
@@ -122,6 +128,45 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		paymentPageParam.setOfferingId(purchaseOrderInfo.getOfferingId());
 		paymentPageParam.setNmDelivery(purchaseOrderInfo.getNmDelivery());
 		paymentPageParam.setNoMdnDelivery(purchaseOrderInfo.getNoMdnDelivery());
+
+		// 회원정보 세팅
+		PurchaseProduct purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
+		if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_APP)
+				|| StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+			// 상품 정보의 판매자명은 회사명에만 세팅: 2015.01.05.염동환M
+			paymentPageParam.setNmSellerCompany(purchaseProduct.getSellerNm());
+			paymentPageParam.setNmSeller(null);
+			paymentPageParam.setEmailSeller(purchaseProduct.getSellerEmail());
+			paymentPageParam.setNoTelSeller(purchaseProduct.getSellerTelno());
+
+			if (StringUtils.isBlank(paymentPageParam.getNmSellerCompany())
+					|| StringUtils.isBlank(paymentPageParam.getEmailSeller())
+					|| StringUtils.isBlank(paymentPageParam.getNoTelSeller())) {
+				SellerMbrAppSac sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
+						purchaseProduct.getSellerMbrNo(), purchaseOrderInfo.getTenantProdGrpCd());
+
+				if (StringUtils.isBlank(paymentPageParam.getNmSellerCompany())) {
+					paymentPageParam.setNmSellerCompany(sellerInfo.getSellerCompany());
+				}
+				// paymentPageParam.setNmSeller(sellerInfo.getSellerName());
+				if (StringUtils.isBlank(paymentPageParam.getEmailSeller())) {
+					paymentPageParam.setEmailSeller(sellerInfo.getSellerEmail());
+				}
+				if (StringUtils.isBlank(paymentPageParam.getNoTelSeller())) {
+					paymentPageParam.setNoTelSeller(sellerInfo.getSellerPhone());
+				}
+			}
+
+		} else {
+			SellerMbrAppSac sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
+					purchaseProduct.getSellerMbrNo(), purchaseOrderInfo.getTenantProdGrpCd());
+
+			paymentPageParam.setNmSellerCompany(sellerInfo.getSellerCompany());
+			paymentPageParam.setNmSeller(sellerInfo.getSellerName());
+			paymentPageParam.setEmailSeller(sellerInfo.getSellerEmail());
+			paymentPageParam.setNoTelSeller(sellerInfo.getSellerPhone());
+		}
 
 		// pDescription
 		paymentPageParam.setpDescription(this.makeProductDescription(purchaseOrderInfo.getTenantProdGrpCd(),
@@ -367,6 +412,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		String pNameWithUrlEncoding = paymentPageParam.getpName();
 		String pDescriptionWithUrlEncoding = paymentPageParam.getpDescription();
 		String nmDeliveryWithUrlEncoding = paymentPageParam.getNmDelivery();
+		String nmSellerCompanyWithUrlEncoding = paymentPageParam.getNmSellerCompany();
+		String nmSellerWithUrlEncoding = paymentPageParam.getNmSeller();
 
 		// P/P 적용 이후 반영
 		try {
@@ -379,11 +426,20 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			if (StringUtils.isNotBlank(paymentPageParam.getNmDelivery())) {
 				nmDeliveryWithUrlEncoding = URLEncoder.encode(paymentPageParam.getNmDelivery(), "UTF-8");
 			}
+			if (StringUtils.isNotBlank(paymentPageParam.getNmSellerCompany())) {
+				nmSellerCompanyWithUrlEncoding = URLEncoder.encode(paymentPageParam.getNmSellerCompany(), "UTF-8");
+			}
+			if (StringUtils.isNotBlank(paymentPageParam.getNmSeller())) {
+				nmSellerWithUrlEncoding = URLEncoder.encode(paymentPageParam.getNmSeller(), "UTF-8");
+			}
 		} catch (UnsupportedEncodingException e) {
 			throw new StorePlatformException("SAC_PUR_7201", e);
 		}
-		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,KOR,pName={},pDescription={},nmDelivery={}",
-				paymentPageParam.getpName(), paymentPageParam.getpDescription(), paymentPageParam.getNmDelivery());
+		this.logger
+				.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,KOR,pName={},pDescription={},nmDelivery={},nmSellerCompany={},nmSeller={}",
+						paymentPageParam.getpName(), paymentPageParam.getpDescription(),
+						paymentPageParam.getNmDelivery(), paymentPageParam.getNmSellerCompany(),
+						paymentPageParam.getNmSeller());
 
 		// 암호화 데이터 구성
 		StringBuffer sb = new StringBuffer(1024);
@@ -407,7 +463,11 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				.append(paymentPageParam.getUserKey()).append("&offeringId=")
 				.append(StringUtils.defaultString(paymentPageParam.getOfferingId())).append("&nmDelivery=")
 				.append(StringUtils.defaultString(nmDeliveryWithUrlEncoding)).append("&noMdnDelivery=")
-				.append(StringUtils.defaultString(paymentPageParam.getNoMdnDelivery()));
+				.append(StringUtils.defaultString(paymentPageParam.getNoMdnDelivery())).append("&nmSellerCompany=")
+				.append(StringUtils.defaultString(nmSellerCompanyWithUrlEncoding)).append("&nmSeller=")
+				.append(StringUtils.defaultString(nmSellerWithUrlEncoding)).append("&emailSeller=")
+				.append(StringUtils.defaultString(paymentPageParam.getEmailSeller())).append("&noTelSeller=")
+				.append(StringUtils.defaultString(paymentPageParam.getNoTelSeller()));
 
 		String plainData = sb.toString();
 		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", plainData);

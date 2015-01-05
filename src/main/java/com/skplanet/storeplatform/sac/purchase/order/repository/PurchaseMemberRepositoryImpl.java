@@ -36,6 +36,7 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac.SellerMbrAppSac;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
@@ -327,10 +328,12 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 	 * 
 	 * @param sellerKey
 	 *            판매자 내부 회원 번호
+	 * @param tenantProdGrpCd
+	 *            테넌트 상품 분류 코드
 	 * @return 판매자 정보
 	 */
 	@Override
-	public SellerMbrInfoSac detailInformationListForProduct(String sellerKey) {
+	public SellerMbrAppSac detailInformationListForProduct(String sellerKey, String tenantProdGrpCd) {
 		DetailInformationListForProductSacReq detailInformationListForProductSacReq = new DetailInformationListForProductSacReq();
 		detailInformationListForProductSacReq.setSellerKeyList(Arrays.asList(sellerKey));
 
@@ -351,9 +354,37 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 			return null;
 		}
 
-		Map<String, SellerMbrInfoSac> sellerMap = detailInformationListForProductSacRes.getSellerMbrMap();
+		//
 
-		return sellerMap.get(sellerKey);
+		Map<String, SellerMbrInfoSac> sellerMap = detailInformationListForProductSacRes.getSellerMbrMap();
+		SellerMbrInfoSac sellerMbrInfoSac = sellerMap.get(sellerKey);
+
+		SellerMbrAppSac sellerMbrAppSac = null;
+
+		if (sellerMbrInfoSac != null) {
+
+			for (SellerMbrAppSac seller : sellerMbrInfoSac.getSellerMbrList()) {
+				if (StringUtils.equals(seller.appStat, "Lower")) {
+					sellerMbrAppSac = seller;
+					break;
+				}
+			}
+
+		}
+
+		if (sellerMbrAppSac == null) {
+			sellerMbrAppSac = new SellerMbrAppSac();
+
+			// 쇼핑상품 경우, 디폴트 값 정의
+			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+				sellerMbrAppSac.setSellerCompany(PurchaseConstants.SHOPPING_SELLER_DEFAULT_NAME); // 판매자명
+				sellerMbrAppSac.setSellerName(PurchaseConstants.SHOPPING_SELLER_DEFAULT_NAME); // 판매자명
+				sellerMbrAppSac.setSellerEmail(PurchaseConstants.SHOPPING_SELLER_DEFAULT_EMAIL); // 판매자 이메일 주소
+				sellerMbrAppSac.setSellerPhone(PurchaseConstants.SHOPPING_SELLER_DEFAULT_TEL); // 판매자 전화번호
+			}
+		}
+
+		return sellerMbrAppSac;
 	}
 
 	/*
