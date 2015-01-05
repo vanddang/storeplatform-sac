@@ -366,6 +366,7 @@
               , LA.PROD_STATUS_CD
               , LA.SELLER_MBR_NO
               , LA.CID
+              , LA.EPSD_CID
               , LA.SVC_GRP_CD
               , LA.SVC_GRP_NM
               , FC_GET_CM_CD_NM(LA.BRDC_COMP_CD, #{tenantHeader.langCd}) AS BRDC_COMP_NM         
@@ -424,6 +425,7 @@
                     , JA.GENRE_CD
                     , JA.REG_DT
                     , JA.DWLD_AREA_LIMT_YN
+                    , JA.EPSD_CID
                 FROM (SELECT G.TENANT_ID
                            , A.MENU_ID
                            , A.UP_MENU_ID
@@ -464,19 +466,21 @@
                            , O.PROD_AMT
                            , O.PROD_NET_AMT
                            , G.PROD_STATUS_CD
-                           , D.SELLER_MBR_NO 
+                           , D.SELLER_MBR_NO
+                           , J.CID AS EPSD_CID
                          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+                           , D.CID
                            , D.PROD_GRD_CD   -- 채널 상품 ID 조회
                            , E.ISSUE_DAY
                            , E.DWLD_AREA_LIMT_YN
                          </if>
                          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                           , J.CID   -- 에피소드 상품 ID 조회
                            , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
                            , L.ISSUE_DAY
                            , L.DWLD_AREA_LIMT_YN
                          </if>
-                           , J.CID   -- 에피소드 상품 ID 조회
-                           , D.SVC_GRP_CD                    
+                           , D.SVC_GRP_CD
                            , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM   
                            , E.BRDC_COMP_CD          
                            , E.GENRE_CD
@@ -770,6 +774,7 @@
              , TB.REG_DT
              , TB.ISBN
              , TB.BOOK_TBCTNS
+             , TB.EPSD_CID
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
@@ -818,9 +823,10 @@
 					  , E.SERIES_CONTENTS_CNT
             		  , E.BOOK_CONTENTS_CNT
             		  , E.MGZIN_CONTENTS_CNT
-                      , J.CID   -- 에피소드 상품 ID 조회
-                    <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
-                      , D.PROD_GRD_CD   -- 채널 상품 ID 조회   
+                      , J.CID AS EPSD_CID
+                    <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+                      , D.CID
+                      , D.PROD_GRD_CD   -- 채널 상품 ID 조회
                       , D.REG_DT
                       , E.ISSUE_DAY    
                       , E.BOOK_TBCTNS
@@ -831,6 +837,7 @@
                       , M.FILE_SIZE
                     </if>
                     <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                      , J.CID   -- 에피소드 상품 ID 조회
                       , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
                       , J.REG_DT
                       , L.ISSUE_DAY    

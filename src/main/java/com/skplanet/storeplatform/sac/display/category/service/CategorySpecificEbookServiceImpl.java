@@ -121,7 +121,7 @@ public class CategorySpecificEbookServiceImpl implements CategorySpecificEbookSe
                         if(metaInfo == null)
                             continue;
 
-                        CidPrice cidPrice = productSubInfoManager.getCidPrice(tenantId, metaInfo.getCid());
+                        CidPrice cidPrice = productSubInfoManager.getCidPrice(tenantId, metaInfo.getEpsdCid());
                         if (cidPrice != null) {
                             metaInfo.setUnlmtAmt(cidPrice.getProdAmt());
                             metaInfo.setPeriodAmt(cidPrice.getRentProdAmt());

@@ -75,6 +75,7 @@ public class MetaInfo extends CommonInfo {
 	private String userKey;
 	private String company;
 	private String cid;
+	private String epsdCid;
 	private Integer curCount;
 	private String svcGrpCd;
 	private String svcGrpNm;
@@ -4555,4 +4556,11 @@ public class MetaInfo extends CommonInfo {
 		this.magazineLastChapter = magazineLastChapter;
 	}
 
+	public String getEpsdCid() {
+		return epsdCid;
+	}
+
+	public void setEpsdCid(String epsdCid) {
+		this.epsdCid = epsdCid;
+	}
 }
