@@ -538,8 +538,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				purchaseProduct.setIapProdCase(iapInfo.getProdCase());
 				purchaseProduct.setIapUsePeriod(iapInfo.getUsePeriod());
 
-				if (StringUtils.equals(iapInfo.getProdCase(), "PB0001")
-						&& StringUtils.equals(iapInfo.getProdKind(), "PK0002")) { // 건당상품 & 소멸성
+				if (StringUtils.equals(iapInfo.getProdKind(), "PK0002")
+						&& (StringUtils.equals(iapInfo.getProdCase(), "PB0001") || StringUtils.equals(
+								iapInfo.getProdCase(), "PB0003"))) { // 건당상품 & 소멸성
 					purchaseOrderInfo.setPossibleDuplication(true); // 중복 구매 가능 여부
 				}
 				purchaseOrderInfo.setTenantProdGrpCd(purchaseOrderInfo.getTenantProdGrpCd().replaceAll("DP00",
@@ -1028,7 +1029,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String prodCase = iapInfo.getProdCase();
 		String prodKind = iapInfo.getProdKind();
 
-		if (StringUtils.equals(prodCase, "PB0001")) { // 건당상품
+		if (StringUtils.equals(prodCase, "PB0001") || StringUtils.equals(prodCase, "PB0003")) { // 건당상품 / 건당스트리밍상품
 
 			if (StringUtils.equals(prodKind, "PK0001")) { // 영구
 				usePeriodUnitCd = PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED;
@@ -1039,7 +1040,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				usePeriod = "0"; // dummy
 			}
 
-		} else if (StringUtils.equals(prodCase, "PB0002")) { // 기간상품
+		} else if (StringUtils.equals(prodCase, "PB0002") || StringUtils.equals(prodCase, "PB0004")) { // 기간상품 /
+																									   // 기간스트리밍상품
 			if (iapInfo.getUsePeriod() == null || iapInfo.getUsePeriod() <= 0) {
 				throw new StorePlatformException("SAC_PUR_5118", iapInfo.getUsePeriod());
 			}

@@ -213,7 +213,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			String prodCase = purchaseProduct.getIapProdCase();
 			String prodKind = purchaseProduct.getIapProdKind();
 
-			if (StringUtils.equals(prodCase, "PB0001")) { // 건당상품
+			if (StringUtils.equals(prodCase, "PB0001") || StringUtils.equals(prodCase, "PB0003")) { // 건당상품 / 건당스트리밍상품
 				if (StringUtils.equals(prodKind, "PK0001")) { // 영구
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_UNIT_UNLIMITED;
 
@@ -221,7 +221,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_UNIT_VOLATILE;
 				}
 
-			} else if (StringUtils.equals(prodCase, "PB0002")) { // 기간상품
+			} else if (StringUtils.equals(prodCase, "PB0002") || StringUtils.equals(prodCase, "PB0004")) { // 기간상품 /
+																										   // 기간스트리밍상품
 				if (StringUtils.equals(prodKind, "PK0003")) { // 일간
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_IAP_PERIOD_PREFIX
 							+ purchaseProduct.getUsePeriod()
