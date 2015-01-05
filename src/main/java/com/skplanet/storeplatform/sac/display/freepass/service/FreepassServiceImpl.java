@@ -30,7 +30,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePass;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
@@ -680,8 +680,8 @@ public class FreepassServiceImpl implements FreepassService {
 	 * @return List<String>
 	 */
 	@Override
-	public List<FreePassInfo> getAvailableFixrateInfoList (PaymentInfoSacReq req) {
-		List<FreePassInfo> availableFixrateInfoList = new ArrayList<FreePassInfo>();
+	public List<FreePass> getAvailableFixrateInfoList (PaymentInfoSacReq req) {
+		List<FreePass> availableFixrateInfoList = new ArrayList<FreePass>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("lang", req.getLangCd());
 		paramMap.put("tenantId", req.getTenantId());
@@ -690,7 +690,7 @@ public class FreepassServiceImpl implements FreepassService {
 		paramMap.put("prodId", req.getProdId());
 		paramMap.put("deviceModelNo", "");
 		availableFixrateInfoList = this.commonDAO.queryForList("PaymentInfo.getAvailableFixrateInfoList ", paramMap,
-				FreePassInfo.class);
+				FreePass.class);
 
 		return availableFixrateInfoList;
 	}	

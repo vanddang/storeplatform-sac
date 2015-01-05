@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePass;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -110,7 +110,7 @@ public interface FreepassService {
 	 *            req
 	 * @return List<String>
 	 */
-	public List<FreePassInfo> getAvailableFixrateInfoList (PaymentInfoSacReq req);	
+	public List<FreePass> getAvailableFixrateInfoList (PaymentInfoSacReq req);	
 
 	/**
 	 * 구매내역 필요한 정보.
