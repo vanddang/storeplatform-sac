@@ -466,17 +466,16 @@
                            , G.PROD_STATUS_CD
                            , D.SELLER_MBR_NO 
                          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-                           , D.CID     -- 채널 상품 ID 조회       
-                           , D.PROD_GRD_CD   -- 채널 상품 ID 조회      
+                           , D.PROD_GRD_CD   -- 채널 상품 ID 조회
                            , E.ISSUE_DAY
                            , E.DWLD_AREA_LIMT_YN
                          </if>
                          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-                           , J.CID   -- 에피소드 상품 ID 조회
                            , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
                            , L.ISSUE_DAY
                            , L.DWLD_AREA_LIMT_YN
-                         </if>                           
+                         </if>
+                           , J.CID   -- 에피소드 상품 ID 조회
                            , D.SVC_GRP_CD                    
                            , FC_GET_CM_CD_NM(D.SVC_GRP_CD,#{tenantHeader.langCd}) AS SVC_GRP_NM   
                            , E.BRDC_COMP_CD          
@@ -819,9 +818,9 @@
 					  , E.SERIES_CONTENTS_CNT
             		  , E.BOOK_CONTENTS_CNT
             		  , E.MGZIN_CONTENTS_CNT
+                      , J.CID   -- 에피소드 상품 ID 조회
                     <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
                       , D.PROD_GRD_CD   -- 채널 상품 ID 조회   
-                      , J.CID     -- 채널 상품 ID 조회
                       , D.REG_DT
                       , E.ISSUE_DAY    
                       , E.BOOK_TBCTNS
@@ -833,7 +832,6 @@
                     </if>
                     <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                       , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
-                      , J.CID   -- 에피소드 상품 ID 조회
                       , J.REG_DT
                       , L.ISSUE_DAY    
                       , L.BOOK_TBCTNS
