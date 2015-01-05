@@ -3514,7 +3514,9 @@
      SELECT * FROM (
          SELECT 
                 PP.* 
+                <if test="endRow != null">
                 ,ROW_NUMBER() OVER(PARTITION BY PROD_ID ORDER BY SOLDOUT ASC) AS NO1
+                </if>
           FROM (     
                   SELECT  
                         KK.*
