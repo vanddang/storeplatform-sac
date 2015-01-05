@@ -821,7 +821,7 @@
             		  , E.MGZIN_CONTENTS_CNT
                     <if test='productBasicInfo.contentsTypeCd == "PD002501"'>                           
                       , D.PROD_GRD_CD   -- 채널 상품 ID 조회   
-                      , D.CID     -- 채널 상품 ID 조회  
+                      , J.CID     -- 채널 상품 ID 조회
                       , D.REG_DT
                       , E.ISSUE_DAY    
                       , E.BOOK_TBCTNS
