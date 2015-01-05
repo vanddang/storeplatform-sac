@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -367,15 +369,19 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		String nmDeliveryWithUrlEncoding = paymentPageParam.getNmDelivery();
 
 		// P/P 적용 이후 반영
-		/*
-		 * try { if (StringUtils.isNotBlank(paymentPageParam.getpName())) { pNameWithUrlEncoding =
-		 * URLEncoder.encode(paymentPageParam.getpName(), "UTF-8"); } if
-		 * (StringUtils.isNotBlank(paymentPageParam.getpDescription())) { pDescriptionWithUrlEncoding =
-		 * URLEncoder.encode(paymentPageParam.getpDescription(), "UTF-8"); } if
-		 * (StringUtils.isNotBlank(paymentPageParam.getNmDelivery())) { nmDeliveryWithUrlEncoding =
-		 * URLEncoder.encode(paymentPageParam.getNmDelivery(), "UTF-8"); } } catch (UnsupportedEncodingException e) {
-		 * throw new StorePlatformException("SAC_PUR_7201", e); }
-		 */
+		try {
+			if (StringUtils.isNotBlank(paymentPageParam.getpName())) {
+				pNameWithUrlEncoding = URLEncoder.encode(paymentPageParam.getpName(), "UTF-8");
+			}
+			if (StringUtils.isNotBlank(paymentPageParam.getpDescription())) {
+				pDescriptionWithUrlEncoding = URLEncoder.encode(paymentPageParam.getpDescription(), "UTF-8");
+			}
+			if (StringUtils.isNotBlank(paymentPageParam.getNmDelivery())) {
+				nmDeliveryWithUrlEncoding = URLEncoder.encode(paymentPageParam.getNmDelivery(), "UTF-8");
+			}
+		} catch (UnsupportedEncodingException e) {
+			throw new StorePlatformException("SAC_PUR_7201", e);
+		}
 		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,KOR,pName={},pDescription={},nmDelivery={}",
 				paymentPageParam.getpName(), paymentPageParam.getpDescription(), paymentPageParam.getNmDelivery());
 
