@@ -293,7 +293,7 @@
             ) IV 
     </select>     
     
- <select id="getAvailableFixrateInfoList " parameterType="Map" resultType="FreePassInfo">
+ <select id="getAvailableFixrateInfoList " parameterType="Map" resultType="FreePass">
           /* PaymentInfoMapper.xml, getAvailableFixrateInfoList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-12-27 */
             SELECT  
                 IV.*

@@ -337,6 +337,7 @@
         <!-- 정액제 상품 DRM 메타 정보 조회(LocalSCI)-->
         <typeAlias alias="FreePassInfoSacReq"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq" />
         <typeAlias alias="FreePassInfo"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo" />
+        <typeAlias alias="FreePass"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePass" />
         <typeAlias alias="EpisodeInfoRes"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes" />
         <typeAlias alias="FreePassBasicInfo"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfo" />
 
