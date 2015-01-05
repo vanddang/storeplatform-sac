@@ -224,7 +224,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
             // 이용가능한 정액권목록 제공
             paymentInfo.setAvailableFixrateProdIdList(this.freepassService.getAvailableFixrateProdIdList(req));
-            paymentInfo.setAvailableFixrateInfoList(this.freepassService.getAvailableFixrateInfoList(req));
+            //paymentInfo.setAvailableFixrateInfoList(this.freepassService.getAvailableFixrateInfoList(req));
             res.add(paymentInfo);
         }
 
