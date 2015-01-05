@@ -37,120 +37,12 @@ public class PaymentInfoSCITest {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	/**
-	 * <pre>
-	 * 결제 시 필요한 In-App 상품 메타 정보 조회.
-	 * </pre>
-	 * 
-	 */
-	@Test
-	public void searchInAppPaymentInfo() {
-        PaymentInfoSacReq req = new PaymentInfoSacReq();
-        List<String> prodIdList = new ArrayList<String>();
-//        prodIdList.add("0900062560");
-        prodIdList.add("0000653862");
-        req.setProdIdList(prodIdList);
-        req.setTenantId("S01");
-        req.setLangCd("ko");
-        req.setDeviceModelCd("SHW-M100S");
 
-        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
-        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
-        printResult(paymentInfoList);
-	}
 
-	/**
-	 * <pre>
-	 * 결제 시 필요한 APP 상품 메타 정보 조회.
-	 * </pre>
-	 * 
-	 */
-	@Test
-	public void searchAppPaymentInfo() {
-        PaymentInfoSacReq req = new PaymentInfoSacReq();
-        List<String> prodIdList = new ArrayList<String>();
-        prodIdList.add("0000120360");
-        // prodIdList.add("0000024009");
-        // prodIdList.add("0000023890");
-        req.setProdIdList(prodIdList);
-        req.setTenantId("S01");
-        req.setLangCd("ko");
-        // req.setDeviceModelCd("SHW-M100S");
-
-        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
-        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
-        printResult(paymentInfoList);
-	}
-
-	/**
-	 * <pre>
-	 * 결제 시 필요한 eBook 상품 메타 정보 조회.
-	 * </pre>
-	 * 
-	 */
-	@Test
-	public void searchEbookPaymentInfo() {
-        PaymentInfoSacReq req = new PaymentInfoSacReq();
-        List<String> prodIdList = new ArrayList<String>();
-        prodIdList.add("H001493615"); // 이북
-        req.setProdIdList(prodIdList);
-        req.setTenantId("S01");
-        req.setLangCd("ko");
-        // req.setDeviceModelCd("SHW-M100S");
-
-        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
-        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
-        printResult(paymentInfoList);
-	}
-
-	/**
-	 * <pre>
-	 * 결제 시 필요한 쇼핑 상품 메타 정보 조회.
-	 * </pre>
-	 * 
-	 */
-	@Test
-	public void searchShoppingPaymentInfo() {
-        PaymentInfoSacReq req = new PaymentInfoSacReq();
-        List<String> prodIdList = new ArrayList<String>();
-        prodIdList.add("S930000331");
-        // prodIdList.add("S900000579");
-        req.setProdIdList(prodIdList);
-        req.setTenantId("S01");
-        req.setLangCd("ko");
-        req.setDeviceModelCd("SHW-M100S");
-
-        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
-        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
-        printResult(paymentInfoList);
-	}
-
-	/**
-	 * <pre>
-	 * 결제 시 필요한 정액권 상품 메타 정보 조회.
-	 * </pre>
-	 * 
-	 */
-	@Test
-	public void searchFreePassPaymentInfo() {
-        PaymentInfoSacReq req = new PaymentInfoSacReq();
-        List<String> prodIdList = new ArrayList<String>();
-        prodIdList.add("F901000639");
-        // prodIdList.add("H000043062");
-        // prodIdList.add("H000043063");
-        req.setProdIdList(prodIdList);
-        req.setTenantId("S01");
-        req.setLangCd("ko");
-        req.setDeviceModelCd("SHW-M100S");
-
-        PaymentInfoSacRes res = this.paymentInfoSCI.searchPaymentInfo(req);
-        List<PaymentInfo> paymentInfoList = res.getPaymentInfoList();
-        printResult(paymentInfoList);
-    }
 
     @Test
     public void integratedTest() {
-        String[] prodIds = new String[]{"0000657169", "0900000141", "H000400088","H000043059","H000043062","H001727890","H002725517","H001929394","S900027675", "H002643572"};
+        String[] prodIds = new String[]{"H000044182"};
         for (String prodId : prodIds) {
             invokeApi(prodId);
         }
