@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
@@ -670,6 +671,29 @@ public class FreepassServiceImpl implements FreepassService {
 
 		return availableFixrateProdIdList;
 	}
+	
+	/**
+	 * 이용가능한 정액권목록 구매 연동.
+	 * 
+	 * @param req
+	 *            req
+	 * @return List<String>
+	 */
+	@Override
+	public List<FreePassInfo> getAvailableFixrateInfoList (PaymentInfoSacReq req) {
+		List<FreePassInfo> availableFixrateInfoList = new ArrayList<FreePassInfo>();
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("lang", req.getLangCd());
+		paramMap.put("tenantId", req.getTenantId());
+		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+		paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		paramMap.put("prodId", req.getProdId());
+		paramMap.put("deviceModelNo", "");
+		availableFixrateInfoList = this.commonDAO.queryForList("PaymentInfo.getAvailableFixrateInfoList ", paramMap,
+				FreePassInfo.class);
+
+		return availableFixrateInfoList;
+	}	
 
 	/**
 	 * 정액권 구매 연동.
