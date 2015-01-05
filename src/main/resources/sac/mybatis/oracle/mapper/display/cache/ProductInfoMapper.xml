@@ -844,7 +844,7 @@
                 SCD.CATALOG_NM,
                 SCD.CATALOG_DESC,
                 NVL(TPRC.PROD_NET_AMT, 0)                                                      AS PROD_NET_AMT,
-                NVL(SPP.SPRC_PRICE, NVL(TPRC.PROD_AMT, 0))                                     AS PROD_AMT,
+                NVL(SPP.SPRC_PRICE, NVL(TPRC.DC_AFT_PROD_AMT, 0))                              AS PROD_AMT,
                 NVL(SPP.SPRC_DC_RATE, NVL(TPRC.DC_RATE, 0))                                    AS DC_RATE,
                 NVL(SPP.SPRC_DC_PRICE, NVL(TPRC.DC_AMT, 0))                                    AS DC_AMT,
                 CASE WHEN SPP.SPRC_DC_RATE IS NOT NULL THEN 'Y'

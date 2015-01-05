@@ -1826,7 +1826,7 @@
                         ,H.PART_PROD_ID 
                         ,J.SELLER_MBR_NO 
                         ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
-                        ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT
+                        ,NVL(N.SPRC_PRICE, NVL(L.DC_AFT_PROD_AMT, 0)) AS PROD_AMT
                         ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
                         ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT                        
                         ,J.PROD_GRD_CD
@@ -2062,7 +2062,32 @@
         ORDER BY A.CHNL_PROD_ID
                 ,A.OPT1_NM
                 ,A.EXPO_ORD
-    </select>    
+    </select>   
+
+   <!-- 쇼핑상세(배송 상품 조회시 에피소드) 조회-->
+    <select id="getShoppingEpisode" parameterType="Map" resultType="MetaInfo">
+     /* ShoppingMapper.xml.getShoppingEpisode,쇼핑상세(배송 상품 조회시 에피소드) 조회, 김형식/SK플래닛  , 2014-12-31 */
+         SELECT 
+                A.CHNL_PROD_ID AS prodId
+               ,A.EPSD_PROD_ID AS partProdId
+        FROM  TB_DP_PROD_OPT A
+             ,TB_DP_SHPG_PROD B 
+             ,TB_DP_PROD C
+             ,TB_DP_TENANT_PROD_PRICE D
+             ,TB_DP_TENANT_PROD E
+        WHERE 1=1
+          AND A.EPSD_PROD_ID = B.PROD_ID
+          AND A.EPSD_PROD_ID = C.PROD_ID
+          AND A.EPSD_PROD_ID = D.PROD_ID
+          AND A.EPSD_PROD_ID = E.PROD_ID
+          AND A.CHNL_PROD_ID =#{chnlProdId}
+          AND E.EXPO_YN ='Y'                                /* Y : 기본(기본여부) */
+          AND E.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+          AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+        ORDER BY A.CHNL_PROD_ID
+                ,A.OPT1_NM
+                ,A.EXPO_ORD
+    </select>   
     
   <!-- 쇼핑상세(이미지) 조회-->
     <select id="getShoppingImgDetailList" parameterType="Map" resultType="MetaInfo">
@@ -2850,7 +2875,7 @@
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB   
                                </if>                   
-                               ,NVL(N.SPRC_PRICE, L.PROD_AMT) PROD_AMT                 
+                               ,NVL(N.SPRC_PRICE, L.DC_AFT_PROD_AMT) PROD_AMT                 
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -3033,7 +3058,7 @@
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB    
                                </if>             
-                               ,NVL(N.SPRC_PRICE, L.PROD_AMT) PROD_AMT                                                                                                                                        
+                               ,NVL(N.SPRC_PRICE, L.DC_AFT_PROD_AMT) PROD_AMT                                                                                                                                        
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -3217,7 +3242,7 @@
                                ,M.EXPO_ORD
                                ,M.EXPO_ORD_SUB     
                                </if>              
-                               ,NVL(N.SPRC_PRICE, L.PROD_AMT) PROD_AMT                                                                                                                                
+                               ,NVL(N.SPRC_PRICE, L.DC_AFT_PROD_AMT) PROD_AMT                                                                                                                                
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -3514,7 +3539,7 @@
                                 ,H.PART_PROD_ID 
                                 ,J.SELLER_MBR_NO 
                                 ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
-                                ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT
+                                ,NVL(N.SPRC_PRICE, NVL(L.DC_AFT_PROD_AMT, 0)) AS PROD_AMT
                                 ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
                                 ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT
                                 ,NVL(L.PROD_AMT, 0) AS orgDiscountPrice                        
@@ -3787,6 +3812,31 @@
         )KK
     </select>        
     
+   <!-- 쇼핑상세(배송 상품 조회시 에피소드) 조회-->
+    <select id="getShoppingEpisodeV2" parameterType="Map" resultType="MetaInfo">
+     /* ShoppingMapper.xml.getShoppingEpisodeV2,쇼핑상세(배송 상품 조회시 에피소드) 조회, 김형식/SK플래닛  , 2014-12-31 */
+         SELECT 
+                A.CHNL_PROD_ID AS prodId
+               ,A.EPSD_PROD_ID AS partProdId
+        FROM  TB_DP_PROD_OPT A
+             ,TB_DP_SHPG_PROD B 
+             ,TB_DP_PROD C
+             ,TB_DP_TENANT_PROD_PRICE D
+             ,TB_DP_TENANT_PROD E
+        WHERE 1=1
+          AND A.EPSD_PROD_ID = B.PROD_ID
+          AND A.EPSD_PROD_ID = C.PROD_ID
+          AND A.EPSD_PROD_ID = D.PROD_ID
+          AND A.EPSD_PROD_ID = E.PROD_ID
+          AND A.CHNL_PROD_ID =#{chnlProdId}
+          AND E.EXPO_YN ='Y'                                /* Y : 기본(기본여부) */
+          AND E.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+          AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+        ORDER BY A.CHNL_PROD_ID
+                ,A.OPT1_NM
+                ,A.EXPO_ORD
+    </select>    
+    
   <!-- 쇼핑상세(이미지) 조회-->
     <select id="getShoppingImgDetailListV2" parameterType="Map" resultType="MetaInfo">
      /* ShoppingMapper.xml.getShoppingImgDetailListV2,쇼핑상세(이미지) 조회, 김형식/SK플래닛  , 2014-02-04 */
@@ -3878,7 +3928,7 @@
                                 ,H.PART_PROD_ID 
                                 ,J.CONTENTS_TYPE_CD   
                                 ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
-                                ,NVL(N.SPRC_PRICE, NVL(L.PROD_AMT, 0)) AS PROD_AMT
+                                ,NVL(N.SPRC_PRICE, NVL(L.DC_AFT_PROD_AMT, 0)) AS PROD_AMT
                                 ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
                                 ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT                        
                                 ,J.PROD_GRD_CD
