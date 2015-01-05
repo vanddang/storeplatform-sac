@@ -22,7 +22,7 @@ public class MemberSegment extends CommonInfo {
 	private final static long serialVersionUID = 1L;
 
     private String outsdMbrLevelCd;
-    private String insdMbrLevelCd;    private String sex;    private String ageClsfCd;    private String deviceChgYn;    private String newEntryYn;    private String mnoCd;    private String categoryBest;
+    private String insdMbrLevelCd;    private String categoryBest;
     private String categoryPrefer;
     
 	public String getOutsdMbrLevelCd() {
@@ -36,36 +36,6 @@ public class MemberSegment extends CommonInfo {
 	}
 	public void setInsdMbrLevelCd(String insdMbrLevelCd) {
 		this.insdMbrLevelCd = insdMbrLevelCd;
-	}
-	public String getSex() {
-		return sex;
-	}
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-	public String getAgeClsfCd() {
-		return ageClsfCd;
-	}
-	public void setAgeClsfCd(String ageClsfCd) {
-		this.ageClsfCd = ageClsfCd;
-	}
-	public String getDeviceChgYn() {
-		return deviceChgYn;
-	}
-	public void setDeviceChgYn(String deviceChgYn) {
-		this.deviceChgYn = deviceChgYn;
-	}
-	public String getNewEntryYn() {
-		return newEntryYn;
-	}
-	public void setNewEntryYn(String newEntryYn) {
-		this.newEntryYn = newEntryYn;
-	}
-	public String getMnoCd() {
-		return mnoCd;
-	}
-	public void setMnoCd(String mnoCd) {
-		this.mnoCd = mnoCd;
 	}
 	public String getCategoryBest() {
 		return categoryBest;

@@ -67,18 +67,11 @@ public class MemberSegmentTypeServiceImpl implements MemberSegmentTypeService {
 	public void bindFromDb(SegmentRes segmentRes, MemberSegment segmentFromDb) {
 		String outsdMbrGrdCd = segmentFromDb.getOutsdMbrLevelCd();
 		String insdMbrGrdCd = segmentFromDb.getInsdMbrLevelCd();
-		String mnoClsfCd = segmentFromDb.getMnoCd();
 		List<String> categoryBest = Arrays.asList(segmentFromDb.getCategoryBest());
 
 		segmentRes.setOutsdMbrGrdCd(outsdMbrGrdCd);
 		segmentRes.setInsdMbrGrdCd(insdMbrGrdCd);
-		segmentRes.setMnoClsfCd(mnoClsfCd); 
 		segmentRes.setCategoryBest(categoryBest);
-		
-		// SCI에서 안 줬을 경우, DB에서 가져오기 시도
-		if (StringUtils.isBlank(segmentRes.getDeviceChgYn())) {
-			segmentRes.setDeviceChgYn(segmentFromDb.getDeviceChgYn());
-		}
 	}
 	
 

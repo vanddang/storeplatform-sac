@@ -32,7 +32,8 @@ public class MemberSegmentDataServiceImplTest {
 	@Test
 	public void testSelectList() {
 		String tenantId = "S01";
-		String userKey = "IM142100006038855201402131159";
+		// String userKey = "US201410291719337860008012"; // 13.12.07
+		String userKey = "IM142100005188591201302221635"; // 13.12.25
 		MemberSegment memberSegment = service.selectMemberSegment(tenantId, userKey);
 		System.out.println(memberSegment);
 	}
