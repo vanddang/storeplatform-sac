@@ -30,26 +30,17 @@ public class SegmentRes extends CommonInfo {
 
     private static final long serialVersionUID = 1L;
 
-    @NotBlank
     private String outsdMbrGrdCd;
 
-    @NotBlank
     private String insdMbrGrdCd;
 
-    @Pattern(regexp = "M|F|X", message = "")
     private String sex;
 
-    @NotBlank
     private String ageClsfCd;
 
-    @Pattern(regexp = "Y|N")
     private String deviceChgYn;
 
-    @Pattern(regexp = "Y|N")
     private String newEntryYn;
-
-    @NotBlank
-    private String mnoClsfCd;
 
     private List<String> categoryBest;
 
@@ -99,14 +90,6 @@ public class SegmentRes extends CommonInfo {
 
     public void setNewEntryYn(String newEntryYn) {
         this.newEntryYn = newEntryYn;
-    }
-
-    public String getMnoClsfCd() {
-        return mnoClsfCd;
-    }
-
-    public void setMnoClsfCd(String mnoClsfCd) {
-        this.mnoClsfCd = mnoClsfCd;
     }
 
     public List<String> getCategoryBest() {
