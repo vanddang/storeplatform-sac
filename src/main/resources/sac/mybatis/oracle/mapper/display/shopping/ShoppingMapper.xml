@@ -3968,7 +3968,11 @@
                                 ,CONCAT(PI.FILE_PATH,PI.FILE_NM) FILE_PATH 
                                 ,PI.FILE_NM
                                 ,PI.FILE_SIZE   
-                                ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT                                  
+                                ,CASE WHEN NVL(M.PRCHS_CNT, 0) <![CDATA[ < ]]> 0 THEN 0 ELSE NVL(M.PRCHS_CNT, 0) END AS PRCHS_CNT
+                                ,(CASE WHEN (SELECT EPSD_CNT FROM TB_DP_SHPG_PROD WHERE PROD_ID = H.PROD_ID)>0 
+                                        THEN (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD WHERE TENANT_ID=#{tenantHeader.tenantId} AND PROD_ID=H.PROD_ID) 
+                                  ELSE 'PD000404' END
+                                  ) PROD_STATUS_CD                                                                  
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
