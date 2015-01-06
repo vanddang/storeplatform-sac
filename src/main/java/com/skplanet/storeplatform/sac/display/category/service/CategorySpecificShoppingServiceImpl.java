@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryShoppingSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryShoppingSacRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -76,6 +77,7 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 	public CategoryShoppingSacRes searchSpecificShoppingDetail(SacRequestHeader header, CategoryShoppingSacReq req) {
 		// 공통 응답 변수 선언
 		CategoryShoppingSacRes res = new CategoryShoppingSacRes();
+		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 
@@ -130,6 +132,8 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 			// 조회 결과 없음
 			Product product = new Product();
 			res.setProduct(product);
+			commonResponse.setTotalCount(0);
+			res.setCommonResponse(commonResponse);
 			return res;
 		}
 
@@ -146,10 +150,14 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 				product.setSpecialProdYn(retMetaInfo.getSpecialSale());
 			}
 			res.setProduct(product);
+			commonResponse.setTotalCount(1);
+			res.setCommonResponse(commonResponse);
 		}else{
 			// 조회 결과 없음
 			Product product = new Product();
 			res.setProduct(product);
+			commonResponse.setTotalCount(0);
+		    res.setCommonResponse(commonResponse);
 			return res;			
 		}
 		return res;
