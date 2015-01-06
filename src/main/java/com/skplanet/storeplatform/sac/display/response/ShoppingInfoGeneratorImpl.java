@@ -230,7 +230,7 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 		dateList.add(date);
 
 		// 구매일로부터 기간 제한
-		if (StringUtil.nvl(metaInfo.getUsePeriodUnitCd(), "") != "") {
+		if (!StringUtil.nvl(metaInfo.getUsePeriodUnitCd(), "").equals("")) {
 			String usePeriodUnitNm = (metaInfo.getUsePeriodUnitCd() == null) ? ""
 					: (metaInfo.getUsePeriodUnitCd()
 							.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE)) ? "unlimit"
@@ -257,7 +257,7 @@ public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 																							.equals(DisplayConstants.DP_USE_PERIOD_UNIT_CD_CALENDAR)) ? "calendar"
 																							: "";
 
-			if (usePeriodUnitNm != "") {
+			if (!usePeriodUnitNm.equals("")) {
 				if (!usePeriodUnitNm.equals("calendar")) {
 					date = new Date(DisplayConstants.DP_DATE_TYPE_USE_PERIOD,
 							usePeriodUnitNm + "/" + metaInfo.getUsePeriod());
