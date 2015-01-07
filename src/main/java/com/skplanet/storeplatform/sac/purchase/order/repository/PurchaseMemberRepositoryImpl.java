@@ -339,7 +339,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 
 		DetailInformationListForProductSacRes detailInformationListForProductSacRes = null;
 
-		if (sellerKey != null) {
+		if (StringUtils.isNotBlank(sellerKey)) {
 			try {
 				detailInformationListForProductSacRes = this.sellerSearchSCI
 						.detailInformationListForProduct(detailInformationListForProductSacReq);
