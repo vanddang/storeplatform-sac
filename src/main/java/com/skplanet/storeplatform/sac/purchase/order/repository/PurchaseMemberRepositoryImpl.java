@@ -344,9 +344,7 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 				detailInformationListForProductSacRes = this.sellerSearchSCI
 						.detailInformationListForProduct(detailInformationListForProductSacReq);
 			} catch (StorePlatformException e) {
-				if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
-					return null;
-				} else {
+				if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND) == false) {
 					throw e;
 				}
 			}
