@@ -352,11 +352,6 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 			}
 		}
 
-		if (detailInformationListForProductSacRes == null
-				|| detailInformationListForProductSacRes.getSellerMbrMap() == null) {
-			return null;
-		}
-
 		//
 
 		Map<String, SellerMbrInfoSac> sellerMap = null;
