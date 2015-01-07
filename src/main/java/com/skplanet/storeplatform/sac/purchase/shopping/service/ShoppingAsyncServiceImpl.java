@@ -122,7 +122,7 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 								link_system_result_code.put("SCPCMS", request.getPublishStatus());
 								final Map<String, String> link_system_result_message = new HashMap<String, String>();
 								link_system_result_message.put("SCPCMS",
-										request.getPublishStatus() == "1" ? "publish" : "fail");
+										"1".equals(request.getPublishStatus()) ? "publish" : "fail");
 
 								new TLogUtil().log(new ShuttleSetter() {
 									@Override
@@ -162,7 +162,7 @@ public class ShoppingAsyncServiceImpl implements ShoppingAsyncService {
 								link_system_result_code.put("SCPCMS", request.getPublishStatus());
 								final Map<String, String> link_system_result_message = new HashMap<String, String>();
 								link_system_result_message.put("SCPCMS",
-										request.getPublishStatus() == "1" ? "publish" : "fail");
+										"1".equals(request.getPublishStatus()) ? "publish" : "fail");
 								final String result_message = e.getMessage();
 
 								new TLogUtil().log(new ShuttleSetter() {
