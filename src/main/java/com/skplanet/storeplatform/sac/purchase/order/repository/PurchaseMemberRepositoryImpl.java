@@ -338,14 +338,17 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 		detailInformationListForProductSacReq.setSellerKeyList(Arrays.asList(sellerKey));
 
 		DetailInformationListForProductSacRes detailInformationListForProductSacRes = null;
-		try {
-			detailInformationListForProductSacRes = this.sellerSearchSCI
-					.detailInformationListForProduct(detailInformationListForProductSacReq);
-		} catch (StorePlatformException e) {
-			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
-				return null;
-			} else {
-				throw e;
+
+		if (sellerKey != null) {
+			try {
+				detailInformationListForProductSacRes = this.sellerSearchSCI
+						.detailInformationListForProduct(detailInformationListForProductSacReq);
+			} catch (StorePlatformException e) {
+				if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_MEMBER_RESULT_NOTFOUND)) {
+					return null;
+				} else {
+					throw e;
+				}
 			}
 		}
 
@@ -356,8 +359,14 @@ public class PurchaseMemberRepositoryImpl implements PurchaseMemberRepository {
 
 		//
 
-		Map<String, SellerMbrInfoSac> sellerMap = detailInformationListForProductSacRes.getSellerMbrMap();
-		SellerMbrInfoSac sellerMbrInfoSac = sellerMap.get(sellerKey);
+		Map<String, SellerMbrInfoSac> sellerMap = null;
+		SellerMbrInfoSac sellerMbrInfoSac = null;
+
+		if (detailInformationListForProductSacRes != null
+				&& detailInformationListForProductSacRes.getSellerMbrMap() != null) {
+			sellerMap = detailInformationListForProductSacRes.getSellerMbrMap();
+			sellerMbrInfoSac = sellerMap.get(sellerKey);
+		}
 
 		SellerMbrAppSac sellerMbrAppSac = null;
 
