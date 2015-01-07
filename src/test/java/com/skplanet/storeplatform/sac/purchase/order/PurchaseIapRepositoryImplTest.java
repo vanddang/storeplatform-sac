@@ -58,7 +58,6 @@ public class PurchaseIapRepositoryImplTest {
 		String tid = "dkfjeijfiej_232323_dkfjkefkej";
 
 		Double price = this.purchaseIapRepository.searchIapS2SPrice(url, reqTime, aid, prodId, tid);
-		System.out.println("PRICE: " + price);
 
 		assertThat(price.intValue(), is(1000));
 	}
