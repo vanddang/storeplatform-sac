@@ -9,9 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -597,7 +595,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 					if (StringUtils.equals(policy.getProcPatternCd(),
 							PurchaseConstants.POLICY_PATTERN_PHONE_PRCHS_LIMIT)) { // CM011601: SKT후불 결제 한도제한
 
-						phoneRestAmtObj = this.checkPhoneLimitRest(policy, checkPaymentPolicyParam, -1);
+						phoneRestAmtObj = this.checkPhoneLimitRest(policy, checkPaymentPolicyParam);
 
 						if (phoneRestAmtObj != null
 								&& phoneRestAmtObj.doubleValue() < checkPaymentPolicyResult.getPhoneRestAmt()) {
@@ -640,27 +638,6 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		// --------------------------------------------------------------------------------------------------
-		// IAP 통신사 후불 결제금액 조회
-
-		int iapBillingAmt = -1;
-
-		if (bTstore) {
-
-			try {
-				iapBillingAmt = this.iapRepository.inquiryBillingAmt(checkPaymentPolicyParam.getDeviceId(),
-						checkPaymentPolicyParam.getSktSvcMangNo(), new SimpleDateFormat("yyyyMM").format(new Date()));
-			} catch (Exception e) {
-				// 예외 발생 시, IAP측 결제금액 무시 처리 : 구매DB 기준으로 IAP포함 조회
-				if (e instanceof StorePlatformException) {
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}",
-							((StorePlatformException) e).getCode());
-				} else {
-					this.logger.info("PRCHS,ORDER,SAC,POLICY,IAP,INQUIRY,EXCEPTION,{}", e.getMessage());
-				}
-			}
-		}
-
-		// --------------------------------------------------------------------------------------------------
 		// 통신사 후불 한도금액 제한
 
 		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_PRCHS_LIMIT)) {
@@ -672,7 +649,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 					continue;
 				}
 
-				phoneRestAmtObj = this.checkPhoneLimitRest(policy, checkPaymentPolicyParam, iapBillingAmt);
+				phoneRestAmtObj = this.checkPhoneLimitRest(policy, checkPaymentPolicyParam);
 
 				if (phoneRestAmtObj != null
 						&& phoneRestAmtObj.doubleValue() < checkPaymentPolicyResult.getPhoneRestAmt()) {
@@ -1074,12 +1051,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @param checkPaymentPolicyParam 정책 체크 대상 데이터
 	 * 
-	 * @param iapBillingAmt IAP 후불 결제금액
-	 * 
 	 * @return 남은 후불 결제 가능 금액
 	 */
-	private Double checkPhoneLimitRest(PurchaseTenantPolicy policy, CheckPaymentPolicyParam checkPaymentPolicyParam,
-			int iapBillingAmt) {
+	private Double checkPhoneLimitRest(PurchaseTenantPolicy policy, CheckPaymentPolicyParam checkPaymentPolicyParam) {
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}({})", policy.getPolicyId(), policy.getPolicySeq());
 
 		double checkVal = 0.0;
@@ -1098,11 +1072,6 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		sciReq.setCondPeriodUnitCd(policy.getCondPeriodUnitCd());
 		sciReq.setCondPeriodValue(policy.getCondPeriodValue());
 		sciReq.setSvcMangNo(checkPaymentPolicyParam.getSktSvcMangNo()); // SKT 서비스 관리번호
-		if (iapBillingAmt >= 0) {
-			sciReq.setExceptTenantProdGrpCd(PurchaseConstants.TENANT_PRODUCT_GROUP_IAP); // IAP 결제금액은 제외하고 조회
-		} else {
-			iapBillingAmt = 0;
-		}
 
 		// (정책 적용조건) 과금조건 조회
 		// 쇼핑상품 구매건수 조회용도 이며, 전월 단위의 건수 조회인 경우만 처리
@@ -1137,8 +1106,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}({}),{},{}", policy.getPolicyId(), policy.getPolicySeq(),
-				checkVal, (Double.parseDouble(policy.getApplyValue()) - (checkVal + iapBillingAmt)));
-		return (Double.parseDouble(policy.getApplyValue()) - (checkVal + iapBillingAmt));
+				checkVal, (Double.parseDouble(policy.getApplyValue()) - checkVal));
+		return (Double.parseDouble(policy.getApplyValue()) - checkVal);
 	}
 
 	/*
