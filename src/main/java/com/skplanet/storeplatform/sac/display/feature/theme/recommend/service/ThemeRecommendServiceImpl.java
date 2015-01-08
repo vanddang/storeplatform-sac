@@ -99,11 +99,6 @@ public class ThemeRecommendServiceImpl implements ThemeRecommendService {
 		// 추천 사유
 		String reason = "";
 		if (null != response && null != response.getProps()) {
-			/*
-			 * try { JAXBContext jc = JAXBContext.newInstance(ISFRes.class); Marshaller m1 = jc.createMarshaller();
-			 * m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); m1.marshal(response, System.out); } catch
-			 * (Exception e) {}
-			 */
 
 			List<Map<String, Object>> listProd = new ArrayList<Map<String, Object>>();
 			int multiCount = response.getProps().getMultiValues().getCount();

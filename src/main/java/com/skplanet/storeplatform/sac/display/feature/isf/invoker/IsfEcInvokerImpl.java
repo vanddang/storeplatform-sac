@@ -73,11 +73,6 @@ public class IsfEcInvokerImpl implements IsfEcInvoker {
 				throw new StorePlatformException("SAC_DSP_0010");
 			}
 
-			/*
-			 * if (this.log.isDebugEnabled()) { JAXBContext jc = JAXBContext.newInstance(ISFRes.class); Marshaller m1 =
-			 * jc.createMarshaller(); m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true); m1.marshal(isfRes,
-			 * System.out); }
-			 */
 		} catch (RestClientException re) {
 			re.printStackTrace();
 
