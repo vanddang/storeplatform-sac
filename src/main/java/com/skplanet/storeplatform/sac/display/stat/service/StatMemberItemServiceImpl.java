@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.sac.display.cache.vo.CardInfo;
 import com.skplanet.storeplatform.sac.display.card.service.CardDetailService;
 import com.skplanet.storeplatform.sac.display.card.util.CardDynamicInfoProcessor;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
+import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
 import com.skplanet.storeplatform.sac.display.feature.product.service.ProductListService;
 import com.skplanet.storeplatform.sac.display.feature.product.vo.ListProduct;
 import com.skplanet.storeplatform.sac.display.stat.vo.StatLike;
@@ -50,14 +51,14 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 	private StatMemberDataService dataServcie;
 
 	@Override
-	public Object findItem(StatLike like, SacRequestHeader header) {
+	public Object findItem(StatLike like, SacRequestHeader header, PreferredCategoryInfo preferredCategoryInfo) {
 		String statsClsf = like.getStatsClsf();
 		String statsKey = like.getStatsKey();
 		String userKey = like.getUserKey();
 
 		Object item;
 		if (CLSF_CARD.equals(statsClsf)) {
-			item = findCard(statsKey, userKey, header);
+			item = findCard(statsKey, userKey, header, preferredCategoryInfo);
 		} else if (CLSF_PROD.equals(statsClsf)) {
 			item = findProd(statsKey, header);
 		} else {
@@ -68,15 +69,16 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 	}
 
 	@Override
-	public Card findCard(String cardId, String userKey, SacRequestHeader header) {
+	public Card findCard(String cardId, String userKey, SacRequestHeader header, PreferredCategoryInfo preferredCategoryInfo) {
 		String tenantId = header.getTenantHeader().getTenantId();
-
+		String langCd = header.getTenantHeader().getLangCd();
+		
 		// 정적 처리 (Cache)
         CardInfo cardInfo = panelCardInfoManager.getCardInfo(tenantId, cardId);
         CardDetail cardDetail = new CardDetail();
         BeanUtils.copyProperties(cardInfo, cardDetail);
-        Card card = cardDetailService.makeCard(cardDetail);
-		
+        Card card = cardDetailService.makeCard(cardDetail, preferredCategoryInfo, langCd);
+        
         // 동적 처리
         CardDynamicInfoProcessor processor = new CardDynamicInfoProcessor(tenantId, cardDetailService);
         processor.addCard(card);

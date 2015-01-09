@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.stat.LikeRes;
 import com.skplanet.storeplatform.sac.client.display.vo.stat.ListByMemberReq;
 import com.skplanet.storeplatform.sac.client.display.vo.stat.ListByMemberRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
 import com.skplanet.storeplatform.sac.display.stat.util.StatMemberUtils;
 import com.skplanet.storeplatform.sac.display.stat.vo.StatLike;
 
@@ -61,6 +62,9 @@ public class StatMemberTypeServiceImpl implements StatMemberTypeService {
 	private void mapLikeList(ListByMemberRes res, List<StatLike> voList, ListByMemberReq req, SacRequestHeader header) {
 		List<LikeRes> resList = new ArrayList<LikeRes>();
 		int count = StatMemberUtils.getResCount(voList.size(), req.getCount()); // for hasNext
+		PreferredCategoryInfo preferredCategoryInfo = new PreferredCategoryInfo(req.getPreferredCategoryList());
+		req.getPreferredCategoryList();
+		
 		for (int i = 0; i < count; i++) {
 			StatLike each = voList.get(i);
 			String statsClsf = each.getStatsClsf();
@@ -75,7 +79,7 @@ public class StatMemberTypeServiceImpl implements StatMemberTypeService {
 				cntShar = 0;
 			}
 			
-			Object item = itemService.findItem(each, header);
+			Object item = itemService.findItem(each, header, preferredCategoryInfo);
 			
 			LikeRes likeRes = new LikeRes();
 			likeRes.setStatsClsf(statsClsf);
