@@ -2031,21 +2031,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 								episodeProduct.setItemCode(episodeShopping.getItemCode());
 							}
 
+
 							// 채널, 에피소드 상품 판매 상태 코드
-							if (req.getSaleDtUseYn() != null) {
-								// 만약 판매중이면 판매중지로 바꿔야함
-								if (episodeShopping.getProdStatusCd() != null) {
-									if (episodeShopping.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
-										episodeProduct.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
-									} else {
-										episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
-									}
-								} else {
-									episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
-								}
-							} else {
-								episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
-							}
+							episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
 
 							// 특가 상품일 경우
 							episodeProduct.setSpecialProdYn(episodeShopping.getSpecialSale());
@@ -2255,22 +2243,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 											Price option1Price = this.shoppingGenerator.generatePrice(optionShopping);
 											selectOption.setPrice(option1Price);
 											selectOption.setItemCode(optionShopping.getItemCode());
-
-											if (req.getSaleDtUseYn() != null) {
-												// 만약 판매중이면 판매중지로 바꿔야함
-												if (optionShopping.getProdStatusCd() != null) {
-													if (optionShopping.getProdStatusCd().equals(
-															DisplayConstants.DP_SALE_STAT_ING)) {
-														selectOption.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
-													} else {
-														selectOption.setSalesStatus(episodeShopping.getProdStatusCd());
-													}
-												} else {
-													selectOption.setSalesStatus(optionShopping.getProdStatusCd());
-												}
-											} else {
-												selectOption.setSalesStatus(optionShopping.getProdStatusCd());
-											}
+											selectOption.setSalesStatus(optionShopping.getProdStatusCd());
 
 											selectOption.setSubYn("N");
 										}
@@ -2287,24 +2260,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 											Price option2Price = this.shoppingGenerator.generatePrice(optionShopping);
 											subSelectOption.setPrice(option2Price);
 											subSelectOption.setItemCode(optionShopping.getItemCode());
-
-											if (req.getSaleDtUseYn() != null) {
-												// 만약 판매중이면 판매중지로 바꿔야함
-												if (optionShopping.getProdStatusCd() != null) {
-													if (optionShopping.getProdStatusCd().equals(
-															DisplayConstants.DP_SALE_STAT_ING)) {
-														subSelectOption
-														.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
-													} else {
-														subSelectOption
-														.setSalesStatus(optionShopping.getProdStatusCd());
-													}
-												} else {
-													subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
-												}
-											} else {
-												subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
-											}
+											subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
 
 											subSelectOptionList.add(subSelectOption);
 										}
@@ -3932,20 +3888,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setCouponCode(episodeShopping.getCouponCode());
 
 							// 채널, 에피소드 상품 판매 상태 코드
-							if (req.getSaleDtUseYn() != null) {
-								// 만약 판매중이면 판매중지로 바꿔야함
-								if (episodeShopping.getProdStatusCd() != null) {
-									if (episodeShopping.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
-										episodeProduct.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
-									} else {
-										episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
-									}
-								} else {
-									episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
-								}
-							} else {
-								episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
-							}
+							episodeProduct.setSalesStatus(episodeShopping.getProdStatusCd());
 
 							// 특가 상품일 경우
 							episodeProduct.setSpecialProdYn(episodeShopping.getSpecialSale());
@@ -4156,21 +4099,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 											Price option1Price = this.shoppingGenerator.generatePrice(optionShopping);
 											selectOption.setPrice(option1Price);
 											selectOption.setItemCode(optionShopping.getItemCode());
-
-											if (req.getSaleDtUseYn() != null) {
-												// 만약 판매중이면 판매중지로 바꿔야함
-												if (optionShopping.getProdStatusCd() != null) {
-													if (optionShopping.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
-														selectOption.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
-													} else {
-														selectOption.setSalesStatus(episodeShopping.getProdStatusCd());
-													}
-												} else {
-													selectOption.setSalesStatus(optionShopping.getProdStatusCd());
-												}
-											} else {
-												selectOption.setSalesStatus(optionShopping.getProdStatusCd());
-											}
+											selectOption.setSalesStatus(optionShopping.getProdStatusCd());
+											
+											
 											// 2014.12.04 Jade 배송 특가 관련 추가
 											if (StringUtils.isNotEmpty(selectOption.getItemCode())) {
 												if (optionShopping.getSoldOut().equals("Y")) {
@@ -4217,22 +4148,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 											subSelectOption.setMaxMonthlyBuy(Integer.parseInt(optionShopping.getMthUsrMaxCnt())); // 월_회원_최대_구매_수량
 											subSelectOption.setMaxDailyBuy(Integer.parseInt(optionShopping.getDlyUsrMaxCnt())); // 일_회원_최대_구매_수량
 											subSelectOption.setMaxOnceBuy(Integer.parseInt(optionShopping.getEachMaxCnt())); // 1차_최대_구매_수량
-
-
-											if (req.getSaleDtUseYn() != null) {
-												// 만약 판매중이면 판매중지로 바꿔야함
-												if (optionShopping.getProdStatusCd() != null) {
-													if (optionShopping.getProdStatusCd().equals(DisplayConstants.DP_SALE_STAT_ING)) {
-														subSelectOption.setSalesStatus(DisplayConstants.DP_SALE_STAT_STOP);
-													} else {
-														subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
-													}
-												} else {
-													subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
-												}
-											} else {
-												subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
-											}
+											subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
 
 											subSelectOptionList.add(subSelectOption);
 										}
