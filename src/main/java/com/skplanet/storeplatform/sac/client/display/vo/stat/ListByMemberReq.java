@@ -1,9 +1,12 @@
 package com.skplanet.storeplatform.sac.client.display.vo.stat;
 
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.display.vo.card.PreferredCategoryReq;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ListByMemberReq extends CommonInfo {
@@ -16,6 +19,8 @@ public class ListByMemberReq extends CommonInfo {
 	private int startKey = 999999;
 	
 	private int count = 20;
+	
+	private List<PreferredCategoryReq> preferredCategoryList;
 
 	public String getUserKey() {
 		return userKey;
@@ -39,6 +44,14 @@ public class ListByMemberReq extends CommonInfo {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+	
+	public List<PreferredCategoryReq> getPreferredCategoryList() {
+		return preferredCategoryList;
+	}
+
+	public void setPreferredCategoryList(List<PreferredCategoryReq> preferredCategoryList) {
+		this.preferredCategoryList = preferredCategoryList;
 	}
 
 }
