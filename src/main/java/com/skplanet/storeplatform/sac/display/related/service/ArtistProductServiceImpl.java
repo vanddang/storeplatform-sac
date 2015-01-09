@@ -47,6 +47,7 @@ import java.util.Map;
 public class ArtistProductServiceImpl implements ArtistProductService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final String VARIOUS_ARTISTS_ID = "2727"; //알수없는 아티스트 ID
 
 	@Autowired
 	@Qualifier("sac")
@@ -84,60 +85,63 @@ public class ArtistProductServiceImpl implements ArtistProductService {
 
 		ArtistProductSacRes artistProductSacRes = new ArtistProductSacRes();
 		CommonResponse commonResponse = new CommonResponse();
-
+		commonResponse.setTotalCount(0);
+		artistProductSacRes.setCommonResponse(commonResponse);
+		
 		// 특정 아티스트 정보 조회
 		this.log.debug("특정 아티스트 정보 조회");
 		Map<String, Object> reqMapForArtist = getRequestMapForArtist(requestVO, requestHeader);
 		MetaInfo artistMetaInfo = this.commonDAO.queryForObject("ArtistProduct.selectArtistInfo", reqMapForArtist,
 				MetaInfo.class);
+		
+		if (artistMetaInfo == null) {
+			this.log.debug("해당 아티스트 존재하지 않음. artistId: " + requestVO.getArtistId());
+			return artistProductSacRes;
+		}
+		
+		artistProductSacRes.setContributor(this.musicGenerator.generateArtistDetailContributor(artistMetaInfo));
+		
+		// 알수없는 아티스트의 경우 관련 곡을 추출하지 않음.
+		//  알수없는 아티스트의 경우 관련 곡이 의미가 없음.
+		//  관련곡의 갯수가 너무 많아서 쿼리 속도가 느림.
+		if (VARIOUS_ARTISTS_ID.equals(requestVO.getArtistId())) {
+			return artistProductSacRes;
+		}
 
-		if (artistMetaInfo != null) {
-			artistProductSacRes.setContributor(this.musicGenerator.generateArtistDetailContributor(artistMetaInfo));
+		// 특정 작가별 상품 조회
+		this.log.debug("특정 아티스트별 상품(곡) 조회");
+		Map<String, Object> reqMapForMusicList = getRequestMapForMusicList(requestVO, requestHeader);
+		List<ProductBasicInfo> artistProductList = this.commonDAO.queryForList(
+				"ArtistProduct.selectArtistProductList", reqMapForMusicList, ProductBasicInfo.class);
+		List<Product> productList = new ArrayList<Product>();
 
-			// 특정 작가별 상품 조회
-			this.log.debug("특정 아티스트별 상품(곡) 조회");
-			Map<String, Object> reqMapForMusicList = getRequestMapForMusicList(requestVO, requestHeader);
-			List<ProductBasicInfo> artistProductList = this.commonDAO.queryForList(
-					"ArtistProduct.selectArtistProductList", reqMapForMusicList, ProductBasicInfo.class);
-			List<Product> productList = new ArrayList<Product>();
+		if (!artistProductList.isEmpty()) {
+			Map<String, Object> reqMap = new HashMap<String, Object>();
+			reqMap.put("tenantHeader", requestHeader.getTenantHeader());
+			reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
+			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-			if (!artistProductList.isEmpty()) {
-				Map<String, Object> reqMap = new HashMap<String, Object>();
-				reqMap.put("tenantHeader", requestHeader.getTenantHeader());
-				reqMap.put("deviceHeader", requestHeader.getDeviceHeader());
-				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-
-				for (ProductBasicInfo productBasicInfo : artistProductList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
-					reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
-					MetaInfo retMetaInfo = null;
-					retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,
-							MetaInfo.class); // 뮤직 메타
-					if (retMetaInfo != null) {
-						// Tstore멤버십 적립율 정보
-						retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
-						
-						Product product = null;
-						product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
-						product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
-						product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
-						productList.add(product);
-					}
-
-					// product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
-					// productList.add(product);
-
+			for (ProductBasicInfo productBasicInfo : artistProductList) {
+				reqMap.put("productBasicInfo", productBasicInfo);
+				reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+				MetaInfo retMetaInfo = null;
+				retMetaInfo = this.commonDAO.queryForObject("RelatedProduct.selectMusicMetaInfo", reqMap,
+						MetaInfo.class); // 뮤직 메타
+				if (retMetaInfo != null) {
+					// Tstore멤버십 적립율 정보
+					retMetaInfo.setMileageInfo(memberBenefitService.getMileageInfo(requestHeader.getTenantHeader().getTenantId(), retMetaInfo.getTopMenuId(), retMetaInfo.getProdId(), retMetaInfo.getProdAmt()));
+					
+					Product product = null;
+					product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+					product.setAccrual(this.commonGenerator.generateAccrual(retMetaInfo)); // 통계 건수 재정의
+					product.setProductExplain(retMetaInfo.getProdBaseDesc()); // 상품 설명
+					productList.add(product);
 				}
-				commonResponse.setTotalCount(artistProductList.get(0).getTotalCount());
-				artistProductSacRes.setProductList(productList);
-			} else {
-				commonResponse.setTotalCount(0);
 			}
-		} else {
-			commonResponse.setTotalCount(0);
+			commonResponse.setTotalCount(artistProductList.get(0).getTotalCount());
+			artistProductSacRes.setProductList(productList);
 		}
 		this.log.debug("특정 아티스트별 상품(곡) 결과 : " + commonResponse.getTotalCount() + "건");
-		artistProductSacRes.setCommonResponse(commonResponse);
 		return artistProductSacRes;
 	}
 	
