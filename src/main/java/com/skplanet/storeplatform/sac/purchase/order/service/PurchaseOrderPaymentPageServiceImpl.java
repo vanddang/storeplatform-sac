@@ -562,7 +562,10 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	public String adjustPaymentPageTemplate(String prchsCaseCd, String tenantProdGrpCd, String cmpxProdClsfCd,
 			boolean bAutoPrchs, boolean bS2sAutoPrchs, boolean bS2s, int prchsProdCnt) {
 
-		if (StringUtils.equals(prchsCaseCd, PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
+		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
+			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING; // 쇼핑: TC05
+
+		} else if (StringUtils.equals(prchsCaseCd, PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_GIFT; // 선물: TC06
 
 		} else {
@@ -580,9 +583,6 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 					&& StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)
 					&& StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
 				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_AUTOPAY; // 자동결제: TC04
-
-			} else if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)) {
-				return PurchaseConstants.PAYMENT_PAGE_TEMPLATE_SHOPPING; // 쇼핑: TC05
 
 			} else if (StringUtils.startsWith(tenantProdGrpCd,
 					PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
