@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<accessLoggingConfiguration>
+    <activation>true</activation> 
+    <loggerName>com.skplanet.storeplatform.sac</loggerName>
+    <loggingLevel>INFO</loggingLevel>
+    <requestBodyLength>50</requestBodyLength>
+    <responseBodyLength>50</responseBodyLength>
+    <requestLoggingActivation>true</requestLoggingActivation> 
+    <responseLoggingActivation>false</responseLoggingActivation>
+    <requestHeaderList>
+        <requestHeader>*</requestHeader>
+    </requestHeaderList>
+    <responseHeaderList>
+        <responseHeader>*</responseHeader>  
+    </responseHeaderList> 
+    <loggingTiming>true</loggingTiming>
+</accessLoggingConfiguration>

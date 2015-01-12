@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Isf.ThemeRecommend">
+    <!-- 테마추천 목록 -->
+    <select id="getRecomendPkgList" parameterType="Map" resultType="ThemeRecommend">
+    SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgList, 테마추천 목록 조회 , 윤주영/SK플래닛, 2014-02-11 */
+           PKG.*
+      FROM
+         (
+         SELECT
+                ROWNUM AS RNN
+              , PKG_ID
+              , PKG_NM
+	     <choose>
+	        <!-- New 테마추천 -->
+	        <when test="ver == 'v2'">
+	          , SET_IMG1
+	          , SET_IMG2
+	          , SET_IMG3
+            </when>
+	        <otherwise>
+              , IMG2 AS PKG_IMG_POS
+	        </otherwise>
+	     </choose>
+              , COUNT(*) OVER () AS TOTAL_COUNT
+           FROM TB_DP_RECOM_PKG UP
+      <if test="multiValueId  != null">
+             , (
+              <foreach collection="multiValueId" item="multiValueId" separator="UNION ALL">
+                SELECT #{multiValueId.id} ISF_ID, #{multiValueId.order} ISF_ORDER FROM DUAL
+              </foreach>
+               ) ISF
+      </if>
+          WHERE EXPO_YN = 'Y'
+            AND ( SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT OR ALWAYS_EXPO_YN = 'Y' )
+     <choose>
+         <when test="recommendId != null">
+            AND PKG_ID = #{recommendId}
+         </when>
+         <when test="multiValueId != null">
+            AND PKG_ID = ISF_ID
+          ORDER BY ISF_ORDER
+         </when>
+         <otherwise>
+          ORDER BY ATTR_PRTY_EXPO_YN DESC, EXPO_ORD, REG_DT
+         </otherwise>
+     </choose>
+         )
+         PKG
+      <if test="recommendId  == null">
+     WHERE RNN BETWEEN #{START_ROW} AND #{END_ROW}
+      </if>
+    </select>
+
+    <!-- 테마추천 v2 노출갯수 -->
+    <select id="getRecommendViewCount" resultType="java.lang.Integer">
+    SELECT /* IsfThemeRecommendMapper.xml, getRecommendViewCount, 테마추천 맞춤테마 노출갯수, 윤주영/SK플래닛, 2014-03-17 */
+           DECODE( SET_CD, 'US004701', 2, 'US004702', 3 ) AS VIEW_COUNT
+      FROM TB_DP_RECOM_PKG_SET
+     WHERE ROWNUM = 1
+    </select>
+   
+    <!-- 테마추천 메인 -->
+    <select id="getRecomendPkgMainList" parameterType="Map" resultType="ThemeRecommend">
+    SELECT /* IsfThemeRecommendMapper.xml, getRecomendPkgMainList, 테마추천 메인 조회 , 윤주영/SK플래닛, 2014-02-13 */
+           TOTAL_COUNT
+         , PKG_ID
+         , PKG_NM
+     <choose>
+         <!-- New 테마추천 -->
+         <when test="ver == 'v2'">
+         , SET_IMG1
+         , SET_IMG2
+         , SET_IMG3
+	     </when>
+         <otherwise>
+         , PKG_IMG_POS
+         </otherwise>
+     </choose>
+         , REGEXP_SUBSTR( PROD_INF1, '[^^]+', 1, 1 ) AS TOP_MENU_ID1
+         , REGEXP_SUBSTR( PROD_INF1, '[^^]+', 1, 2 ) AS MENU_ID1
+         , REGEXP_SUBSTR( PROD_INF1, '[^^]+', 1, 3 ) AS PROD_ID1
+         , REGEXP_SUBSTR( PROD_INF1, '[^^]+', 1, 4 ) AS PROD_NM1
+         , REGEXP_SUBSTR( PROD_INF1, '[^^]+', 1, 5 ) AS PROD_IMG_POS1
+         , REGEXP_SUBSTR( PROD_INF1, '[^^]+', 1, 6 ) AS META_CLSF_CD1
+         , REGEXP_SUBSTR( PROD_INF2, '[^^]+', 1, 1 ) AS TOP_MENU_ID2
+         , REGEXP_SUBSTR( PROD_INF2, '[^^]+', 1, 2 ) AS MENU_ID2
+         , REGEXP_SUBSTR( PROD_INF2, '[^^]+', 1, 3 ) AS PROD_ID2
+         , REGEXP_SUBSTR( PROD_INF2, '[^^]+', 1, 4 ) AS PROD_NM2
+         , REGEXP_SUBSTR( PROD_INF2, '[^^]+', 1, 5 ) AS PROD_IMG_POS2
+         , REGEXP_SUBSTR( PROD_INF2, '[^^]+', 1, 6 ) AS META_CLSF_CD2
+      FROM
+         (
+         SELECT COUNT(*) OVER () AS TOTAL_COUNT
+              , PKG_ID
+              , PKG_NM
+              , PKG_IMG_POS
+              , SET_IMG1
+              , SET_IMG2
+              , SET_IMG3
+              , REGEXP_SUBSTR( PROD_INF, '[^|]+', 1, 1 ) AS PROD_INF1
+              , REGEXP_SUBSTR( PROD_INF, '[^|]+', 1, 2 ) AS PROD_INF2
+           FROM
+              (
+              SELECT A.PKG_ID
+                   , MAX( A.PKG_NM ) AS PKG_NM
+                   , MAX( A.IMG2 ) AS PKG_IMG_POS
+                   , MAX( SET_IMG1 ) AS SET_IMG1
+                   , MAX( SET_IMG2 ) AS SET_IMG2
+                   , MAX( SET_IMG3 ) AS SET_IMG3
+                   , MAX( A.ATTR_PRTY_EXPO_YN ) AS ATTR_PRTY_EXPO_YN
+                   , MAX( A.EXPO_ORD ) AS EXPO_ORD
+                   , MAX( A.REG_DT ) AS REG_DT
+               <if test="multiValueId  != null">
+                   , MAX( ISF_ORDER ) AS ISF_ORDER
+               </if>
+                   , RTRIM( XMLAGG( XMLELEMENT( A
+                                              , CONCAT( A.TOP_MENU_ID||'^'||
+                                                        A.MENU_ID||'^'||
+                                                        A.PROD_ID||'^'||
+                                                        A.PROD_NM||'^'||
+                                                        DECODE( A.SVC_GRP_CD
+                                                              , 'DP000201'
+                                                              , PI.FILE_PATH
+                                                              , CONCAT( PI.FILE_PATH, PI.FILE_NM ) )||'^'||
+                                                        A.META_CLSF_CD, '|' ) ).EXTRACT( '//text()' )), '|' ) AS PROD_INF
+                FROM
+                   (
+                   SELECT /*+ leading(UP UPD) use_nl(UPD) */
+                          UP.PKG_ID
+                        , UP.PKG_NM
+                        , UP.IMG2
+                        , UP.SET_IMG1
+                        , UP.SET_IMG2
+                        , UP.SET_IMG3
+                        , UP.ATTR_PRTY_EXPO_YN
+                        , UP.EXPO_ORD
+                        , UP.REG_DT
+                        , P.PROD_ID
+                        , PD.PROD_NM
+                        , P.TOP_MENU_ID
+                        , P.META_CLSF_CD
+                        , P.SVC_GRP_CD
+                        , MP.MENU_ID
+                  <if test="multiValueId  != null">
+                        , ISF.ISF_ORDER
+                  </if>
+                        , ROW_NUMBER() OVER ( PARTITION BY UPD.PKG_ID
+                                                  ORDER BY PP.PRCHS_CNT DESC ) AS RNUM
+                     FROM TB_DP_RECOM_PKG UP
+                        , TB_DP_RECOM_PKG_DTL UPD
+                        , TB_DP_TENANT_PROD_STATS PP                        
+                        , TB_DP_PROD P
+                        , TB_DP_MENU_CATEGORY_PROD_MAPG MP                        
+                        , TB_DP_PROD_DESC PD
+			      <if test="multiValueId  != null">
+			            , (
+			              <foreach collection="multiValueId" item="multiValueId" separator="UNION ALL">
+			              SELECT #{multiValueId.id} ISF_ID, #{multiValueId.order} ISF_ORDER FROM DUAL
+			              </foreach>
+			              ) ISF
+			      </if>
+                    WHERE UPD.TENANT_ID = UP.TENANT_ID
+                      AND UPD.PKG_ID = UP.PKG_ID                      
+                      AND PP.TENANT_ID(+) = UPD.TENANT_ID
+                      AND PP.PROD_ID(+) = UPD.PROD_ID
+                      AND P.PROD_ID = UPD.PROD_ID
+                      AND MP.PROD_ID = P.PROD_ID
+                      AND PD.PROD_ID = P.PROD_ID
+                      AND PD.LANG_CD = #{tenantHeader.langCd}
+                      AND (SYSDATE BETWEEN UP.EXPO_START_DT AND UP.EXPO_END_DT OR UP.ALWAYS_EXPO_YN = 'Y')
+			    <if test="multiValueId != null">
+			          AND UP.PKG_ID = ISF.ISF_ID
+			    </if>
+                <if test="excludePkgId != null">
+                      AND UP.PKG_ID <![CDATA[<>]]> #{excludePkgId}
+                </if>
+                      AND UP.TENANT_ID = #{tenantHeader.tenantId}
+                      AND UP.EXPO_YN = 'Y'
+                      AND UPD.EXPO_YN = 'Y'                      
+                      AND MP.BASE_YN = 'Y'
+                      AND MP.USE_YN = 'Y'
+                      AND EXISTS (
+                               SELECT 1
+                                 FROM TB_DP_PROD_RSHP CP
+                                    , TB_DP_TENANT_PROD TP
+                                    , TB_DP_PROD P2
+                                    , TB_DP_TENANT_PROD TP2
+                                WHERE UPD.PROD_ID = CP.PROD_ID  -- channel id
+                                  AND CP.PROD_RSHP_CD = 'DP010802'
+                                  AND TP.TENANT_ID = UP.TENANT_ID
+                                  AND TP.PROD_ID = P.PROD_ID
+                                  AND P2.PROD_ID = CP.PART_PROD_ID  -- episode id
+                                  AND TP2.TENANT_ID = TP.TENANT_ID
+                                  AND TP2.PROD_ID = P2.PROD_ID
+                                  AND TP.PROD_STATUS_CD = 'PD000403'
+                                  AND TP2.PROD_STATUS_CD = 'PD000403'
+                                  AND TP.TENANT_ID = #{tenantHeader.tenantId}
+			                      AND EXISTS (
+					            			SELECT 'X' 
+					            			  FROM TB_DP_SPRT_DEVICE SH 
+					            			 WHERE SH.PROD_ID = P2.PROD_ID
+					              			   AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
+			                                 )
+			                      AND (CASE WHEN P.TOP_MENU_ID = 'DP13' THEN
+			                                     CASE WHEN #{ebookSprtYn} = 'Y' THEN 1
+			                                          ELSE 0
+			                                     END
+			                                WHEN P.TOP_MENU_ID = 'DP14' THEN
+			                                     CASE WHEN #{comicSprtYn} = 'Y' THEN 1 
+			                                          ELSE 0 
+			                                     END
+			                                WHEN P.TOP_MENU_ID = 'DP15' THEN
+			                                     CASE WHEN #{sclShpgSprtYn} = 'Y' THEN 1 
+			                                          ELSE 0 
+			                                     END
+			                                WHEN P.TOP_MENU_ID = 'DP16' THEN
+			                                     CASE WHEN P2.META_CLSF_CD = 'CT25' THEN 
+			                                          CASE WHEN #{musicSprtYn} = 'Y' THEN 1 
+			                                               ELSE 0
+			                                          END
+			                                          ELSE 1
+			                                     END
+			                                WHEN P.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+			                                     CASE WHEN #{videoDrmSprtYn} = 'N' THEN
+			                                               CASE WHEN P2.DRM_YN ='N' THEN 1
+			                                                    ELSE 0
+			                                               END
+			                                          ELSE 1
+			                                     END
+			                                ELSE 1
+			                          END) = 1
+			                 )
+                     ) A
+                   , TB_DP_PROD_IMG PI
+               WHERE PI.PROD_ID = A.PROD_ID
+                 AND PI.IMG_CD IN (<foreach collection="imageCdList" item="imgCd" separator=",">#{imgCd}</foreach>)
+                 AND RNUM <![CDATA[<=]]> 2
+               GROUP BY A.PKG_ID
+               )
+        <choose>
+            <when test="multiValueId != null">
+               ORDER BY ISF_ORDER
+            </when>
+            <otherwise>
+		       ORDER BY ATTR_PRTY_EXPO_YN DESC
+		              , EXPO_ORD
+		              , REG_DT
+            </otherwise>
+        </choose>
+         )
+     <choose>
+        <!-- NEW 테마추천 -->
+         <when test="ver == 'v2'">
+     WHERE ROWNUM <![CDATA[<=]]> #{END_ROW}
+        </when>
+        <!-- 구 테마추천 -->
+        <otherwise>
+     WHERE ROWNUM <![CDATA[<=]]> 4
+        </otherwise>
+     </choose>
+    </select>
+
+    <!-- 테마추천 상품 리스트 -->
+    <select id="getBasicRecommendPkgProdList" parameterType="Map" resultType="ProductBasicInfo">
+    SELECT  /* IsfThemeRecommendMapper.xml, getBasicRecommendPkgProdList, 테마추천 운영자 추천 상품 목록 조회 , 윤주영/SK플래닛, 2014-02-25 */
+	        B.*
+	  FROM
+	        (
+		    SELECT 
+					COUNT(A.PROD_ID) OVER() AS TOTAL_COUNT ,
+					ROWNUM AS RNN ,
+					A.*
+		      FROM  (
+					SELECT
+					        S.*
+					  FROM  
+							(
+							SELECT 
+		                           P2.PROD_ID
+	                             , (
+	                               SELECT PROD_NM
+	                                 FROM TB_DP_PROD_DESC
+	                                WHERE PROD_ID = P2.PROD_ID
+	                                  AND LANG_CD = #{tenantHeader.langCd}
+	                               ) PROD_NM
+							     , P2.SVC_GRP_CD
+							     , P2.SVC_TYPE_CD
+							     , P2.CONTENTS_TYPE_CD
+							     , P2.META_CLSF_CD
+							     , P2.TOP_MENU_ID
+							     , C.MENU_ID
+							     , P.PROD_ID AS PART_PROD_ID
+							     , ROW_NUMBER( ) OVER ( PARTITION BY CP.PROD_ID
+							                                ORDER BY P2.REG_DT DESC ) AS RN
+							     , DP.EXPO_ORD
+							  FROM TB_DP_RECOM_PKG_DTL DP
+							     , TB_DP_PROD_RSHP CP
+							     , TB_DP_MENU_CATEGORY_PROD_MAPG C
+							     , TB_DP_PROD P
+							     , TB_DP_TENANT_PROD TP
+							     , TB_DP_PROD P2
+							     , TB_DP_TENANT_PROD TP2
+							 WHERE CP.PROD_ID = DP.PROD_ID  -- CHANNEL ID
+							   AND CP.PROD_ID = C.PROD_ID
+							   AND P.PROD_ID = CP.PART_PROD_ID
+							   AND TP.TENANT_ID = #{tenantHeader.tenantId}
+							   AND TP.PROD_ID = P.PROD_ID
+							   AND P2.PROD_ID = CP.PROD_ID
+							   AND TP2.TENANT_ID = #{tenantHeader.tenantId}
+							   AND TP2.PROD_ID = P2.PROD_ID
+							   AND DP.TENANT_ID = #{tenantHeader.tenantId}
+							   AND DP.PKG_ID = #{recommendId}
+							   AND DP.EXPO_YN = 'Y'
+							   AND C.USE_YN = 'Y'
+							   AND C.BASE_YN = 'Y'
+							   AND TP.PROD_STATUS_CD = 'PD000403'
+							   AND TP.EXPO_YN = 'Y'
+							   AND TP2.PROD_STATUS_CD = 'PD000403'
+							   AND TP2.EXPO_YN = 'Y'
+							   AND CP.PROD_RSHP_CD = 'DP010802'
+							   AND EXISTS (
+										SELECT 'X' 
+										  FROM TB_DP_SPRT_DEVICE SH 
+										 WHERE SH.PROD_ID = CP.PART_PROD_ID
+										   AND (SH.DEVICE_MODEL_CD = #{deviceHeader.model} OR SH.DEVICE_MODEL_CD = #{virtualDeviceModel})
+								   )
+							   AND (CASE WHEN P2.TOP_MENU_ID = 'DP13' THEN
+								              CASE WHEN #{ebookSprtYn} = 'Y' THEN 1
+								                   ELSE 0
+								              END
+								         WHEN P2.TOP_MENU_ID = 'DP14' THEN
+								              CASE WHEN #{comicSprtYn} = 'Y' THEN 1 
+								                   ELSE 0 
+								              END
+								         WHEN P2.TOP_MENU_ID = 'DP15' THEN
+								              CASE WHEN #{sclShpgSprtYn} = 'Y' THEN 1 
+		                                           ELSE 0 
+		                                      END
+								         WHEN P2.TOP_MENU_ID = 'DP16' THEN
+								              CASE WHEN P.META_CLSF_CD = 'CT25' THEN 
+								                   CASE WHEN #{musicSprtYn} = 'Y' THEN 1 
+								                        ELSE 0
+								                   END
+								                   ELSE 1
+								              END
+								         WHEN P2.TOP_MENU_ID IN ('DP17', 'DP18') THEN
+								              CASE WHEN #{videoDrmSprtYn} = 'N' THEN
+								                        CASE WHEN P.DRM_YN ='N' THEN 1
+								                             ELSE 0
+								                        END
+								                   ELSE 1
+								              END
+								         ELSE 1
+								   END) = 1
+				           ) S
+				        WHERE S.RN = 1
+				        ORDER BY  S.EXPO_ORD, S.PROD_NM
+				    ) A
+            ) B
+     WHERE  B.RNN BETWEEN #{START_ROW} AND #{END_ROW}
+     ORDER  BY B.EXPO_ORD, B.PROD_NM
+    </select>    
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SpecialPriceSoldOut">
+ 
+    <!-- 특가 상품 여부 조회 -->
+    <select id="getSpecialPriceSoldOut" parameterType="HashMap" resultType="Integer">
+        SELECT /* SpecialPriceSoldOutMapper.xml.getSpecialPriceSoldOut, 특가 상품 여부 조회 , 김형식/SK플래닛, 2014-12-04 */
+               COUNT(1) 
+          FROM TB_DP_SPRC_PROD
+		 WHERE 1=1 
+		   AND EXPO_YN='Y'
+		   AND CPN_ID IS NOT NULL
+		   AND PROD_ID =#{productId}
+		   AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT 
+    </select>    
+   
+    <!-- 특가 상품 SOLD OUT 필드 업데이트 -->
+    <update id="updateSpecialPriceSoldOut" parameterType="HashMap">
+        /* SpecialPriceSoldOutMapper.xml.updateSpecialPriceSoldOut,특가 상품 SOLD OUT 필드 업데이트 , 김형식/SK플래닛, 2014-12-04 */
+		UPDATE TB_DP_SPRC_PROD 
+		   SET SOLD_OUT_YN='Y'
+		 WHERE 1=1 
+		   AND EXPO_YN='Y'
+		   AND CPN_ID IS NOT NULL
+		   AND PROD_ID =#{productId}
+		   AND SYSDATE BETWEEN  SPRC_APPLY_START_DT AND SPRC_APPLY_END_DT 
+    </update>
+   
+</mapper>

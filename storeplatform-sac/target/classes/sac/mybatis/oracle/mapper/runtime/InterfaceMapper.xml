@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Interface">
+
+    <resultMap id="InterfaceResultMap" type="Interface" autoMapping="true">
+        <id property="status" column="status_cd"/>
+    </resultMap>
+
+	<!-- 1. SELECT SQL-->
+	<select id="detail" parameterType="String" resultMap="InterfaceResultMap">
+			SELECT /* InterfaceMapper.searchDetail, 인터페이스 상세 조회, 서대영/SK플래닛, 2014-02-17 */
+			       interface_id,
+			       category_cd,
+			       (SELECT cd_nm FROM tb_cm_cd where cd_id = category_cd) as interface_type_nm,
+			       url,
+			       version,
+			       interface_nm,
+			       interface_desc,
+			       bypass_yn,
+			       status_cd,
+			       (SELECT cd_nm FROM tb_cm_cd where cd_id = status_cd) as status_cd_nm,
+			       reg_id,
+			       reg_dt,
+			       upd_id,
+			       upd_dt
+			  FROM tb_fw_interface
+			 WHERE interface_id = #{interfaceId, jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectUsableInterface" parameterType="map" resultType="string">
+        SELECT
+            INF.INTERFACE_ID
+        FROM TB_FW_INTERFACE INF
+            INNER JOIN TB_FW_INTERFACE_AUTH IA
+                ON IA.INTERFACE_ID = INF.INTERFACE_ID
+            INNER JOIN TB_FW_AUTH_KEY AK
+                ON AK.TENANT_ID = IA.TENANT_ID
+        WHERE
+            INF.INTERFACE_ID = #{interfaceId}
+            AND AK.AUTH_KEY = #{authKey}
+    </select>
+
+</mapper>

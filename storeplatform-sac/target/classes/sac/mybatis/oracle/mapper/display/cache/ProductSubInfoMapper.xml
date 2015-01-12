@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductSubInfo">
+
+    <select id="getCidPrice" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.meta.vo.CidPrice$CidPriceRaw">
+        SELECT /* ProductSubInfoMapper.xml, getCidPrice, 정희원, 2015-01-02 */ *
+        FROM (
+            SELECT
+                EDP.PROD_ID,
+                EDP.USE_PERIOD,
+                EDP.USE_PERIOD_UNIT_CD,
+                NVL(ETPRC.PROD_AMT, 0) AS PROD_AMT,
+                ROW_NUMBER() OVER (PARTITION BY EDP.USE_PERIOD_UNIT_CD, EDP.USE_PERIOD ORDER BY ETPRC.PROD_AMT DESC) RN
+            FROM TB_DP_PROD EDP
+                INNER JOIN TB_DP_TENANT_PROD ETPP
+                    ON ETPP.PROD_ID = EDP.PROD_ID
+                INNER JOIN TB_DP_TENANT_PROD_PRICE ETPRC
+                    ON ETPRC.PROD_ID = EDP.PROD_ID AND ETPRC.TENANT_ID = ETPP.TENANT_ID
+            WHERE 1=1
+                  AND ETPP.TENANT_ID = #{tenantId, jdbcType=VARCHAR}
+                  AND ETPP.PROD_STATUS_CD = 'PD000403'
+                  AND sysdate between ETPRC.APPLY_START_DT AND ETPRC.APPLY_END_DT
+                  AND EDP.CID = #{cid, jdbcType=VARCHAR}
+                  AND EDP.CONTENTS_TYPE_CD = 'PD002502'
+        )
+        WHERE RN=1
+    </select>
+
+
+</mapper>

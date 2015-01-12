@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SacService">
+
+	<select id="selectOne" parameterType="string" resultType="SacService">
+   		/* SacServiceMapper.xml, detail, SAC : 서대영, 2014-08-11 */
+        SELECT *		
+        FROM TB_CM_SERVICE
+		WHERE service_cd = #{serviceCd}
+	</select>
+	
+	<select id="selectSimOperatorList" parameterType="string" resultType="string">
+   		/* SacServiceMapper.xml, detail, SAC : 서대영, 2014-08-11 */
+        SELECT SIM_OPERATOR	
+        FROM TB_CM_SERVICE_SIM_OPERATOR
+		WHERE service_cd = #{serviceCd}
+	</select> 
+
+	<select id="selectModelList" parameterType="string" resultType="string">
+   		/* SacServiceMapper.xml, detail, SAC : 서대영, 2014-08-11 */
+        SELECT MODEL	
+        FROM TB_CM_SERVICE_MODEL
+		WHERE service_cd = #{serviceCd}
+		ORDER BY service_cd
+	</select>
+    
+</mapper>

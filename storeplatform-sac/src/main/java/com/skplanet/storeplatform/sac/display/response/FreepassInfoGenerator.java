@@ -1,0 +1,114 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
+package com.skplanet.storeplatform.sac.display.response;
+
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AutoPay;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cash;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+
+import java.util.List;
+
+/**
+ * 
+ * 
+ * Updated on : 2014. 2. 11. Updated by : 서영배, GTSOFT.
+ */
+public interface FreepassInfoGenerator {
+
+	/**
+	 * <pre>
+	 * 정액제 Identifier List 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Identifier>
+	 */
+	public List<Identifier> generateIdentifierList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 정액제 AutoPay 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return AutoPay
+	 */
+	public AutoPay generateAutoPay(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 정액제 Title 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Title
+	 */
+	public Title generateTitle(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 정액제 Source List 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Source>
+	 */
+	public List<Source> generateSourceList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 정액제 Date 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Date
+	 */
+	public Date generateDate(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 정액제 Date 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List
+	 */
+	public List<Date> generateDateList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 정액제 Menu 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List
+	 */
+	public List<Menu> generateMenuList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 정액제 Cash 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List
+	 */
+	public List<Cash> generateCashList(MetaInfo metaInfo);
+
+}

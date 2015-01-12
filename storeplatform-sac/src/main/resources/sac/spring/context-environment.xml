@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-3.2.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <context:property-placeholder properties-ref="propertiesForSac" /> 
+    
+    <beans profile="local"> 
+	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+	        <property name="logbackPath">
+	            <list>
+	               <value>sac/log/logback-local.xml</value>
+		           <value>member/log/logback-local.xml</value>
+		           <value>purchase/log/logback-local.xml</value>               
+	            </list>
+	        </property>
+	    </bean>    
+    </beans>    
+        
+    <beans profile="dev"> 
+	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+	        <property name="logbackPath">
+	            <list>
+	               <value>sac/log/logback-dev.xml</value>
+		           <value>member/log/logback-dev.xml</value>
+		           <value>purchase/log/logback-dev.xml</value>               
+	            </list>
+	        </property>
+	    </bean>    
+    </beans>    
+        
+    <beans profile="qa"> 
+	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+	        <property name="logbackPath">
+	            <list>
+	               <value>sac/log/logback-qa.xml</value>
+		           <value>member/log/logback-qa.xml</value>
+		           <value>purchase/log/logback-qa.xml</value>
+	            </list>
+	        </property>
+	    </bean>
+    </beans>
+
+    <beans profile="stg"> 
+        <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+            <property name="logbackPath">
+                <list>
+                   <value>sac/log/logback-stg.xml</value>
+                   <value>member/log/logback-stg.xml</value>
+                   <value>purchase/log/logback-stg.xml</value>
+                </list>
+            </property>
+        </bean>
+    </beans>
+            
+    <beans profile="real"> 
+	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+	        <property name="logbackPath">
+	            <list>
+	               <value>sac/log/logback-real.xml</value>
+		           <value>member/log/logback-real.xml</value>
+		           <value>purchase/log/logback-real.xml</value>
+	            </list>
+	        </property>
+	    </bean>    
+    </beans>    
+        
+    <beans profile="local"> 
+        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.local.properties" /> 
+        <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="fileEncoding" value="UTF-8" />
+            <property name="locations" >
+                <list merge="true"><value>classpath:sac/conf/external.local.properties</value></list>
+            </property>
+        </bean>
+    </beans>
+
+    <beans profile="dev">
+       <util:properties id="propertiesForSac" location="classpath:sac/properties/app.dev.properties" /> 
+       <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="fileEncoding" value="UTF-8" />
+            <property name="locations" >
+                <list merge="true"><value>classpath:sac/conf/external.dev.properties</value></list>
+            </property>
+        </bean>
+    </beans>
+
+    <beans profile="qa">   
+        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.qa.properties" /> 
+        <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="fileEncoding" value="UTF-8" />
+            <property name="locations" >
+                <list merge="true"><value>classpath:sac/conf/external.qa.properties</value></list>
+            </property>
+        </bean>
+    </beans>
+
+    <beans profile="stg">   
+        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.stg.properties" /> 
+        <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="fileEncoding" value="UTF-8" />
+            <property name="locations" >
+                <list merge="true"><value>classpath:sac/conf/external.stg.properties</value></list>
+            </property>
+        </bean>
+    </beans>
+    
+    <beans profile="real">
+       <util:properties id="propertiesForSac" location="classpath:sac/properties/app.real.properties" /> 
+       <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="fileEncoding" value="UTF-8" />
+            <property name="locations" >
+                <list merge="true"><value>classpath:sac/conf/external.real.properties</value></list>
+            </property>
+        </bean>
+    </beans> 
+</beans>

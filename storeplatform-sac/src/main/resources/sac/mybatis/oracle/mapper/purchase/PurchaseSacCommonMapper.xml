@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="PurchaseSacCommon">
+
+    <!-- 공통 코드 정보 조회 -->
+    <select id="searchCommonCodeList" parameterType="java.util.Map" resultType="PurchaseCommonCode">
+        SELECT /* PurchaseSacCommonMapper.searchCommonCodeList, 공통 코드 조회, 이승택/nTels, 2014-12-03 */
+                cd_id
+              , cd_nm
+              , add_field_01
+              , add_field_02
+              , cd_desc
+              , indc_rank
+          FROM  tb_cm_cd
+         WHERE  cd_id IN <foreach collection="cdIdList" separator="," item="cdId" open="(" close=")">#{cdId}</foreach>
+           AND  lang_cd = #{langCd}
+           AND  use_yn = 'Y'
+    </select>
+    
+     <!-- 공통 코드 정보 조회 -->
+    <select id="searchCommonCodeListByGrpCdId" parameterType="PurchaseCommonCode" resultType="PurchaseCommonCode">
+        SELECT /* PurchaseSacCommonMapper.searchCommonCodeListByGrpCdId, 공통 코드 조회, 이승택/nTels, 2014-12-03 */
+                cd_id
+              , cd_nm
+              , add_field_01
+              , add_field_02
+              , cd_desc
+              , indc_rank
+          FROM  tb_cm_cd
+         WHERE  grp_cd_id = #{grpCdId}
+           AND  lang_cd = #{langCd}
+           AND  use_yn = 'Y'
+    </select>
+
+    <!-- Pay Planet 가맹점 정보 조회 -->
+    <select id="searchPayPlanetShopInfoDetail" parameterType="java.lang.String" resultType="PayPlanetShop">
+        SELECT /* PurchaseSacCommonMapper.searchPayPlanetShopInfoDetail, Pay Planet 가맹점 정보 조회, 이승택/nTels, 2014-03-25 */
+                cd_nm AS mid
+              , add_field_01 AS authKey
+              , add_field_02 AS encKey
+              , cd_desc AS paymentUrl
+          FROM  tb_cm_cd
+         WHERE  cd_id = #{cdId}
+           AND  lang_cd = 'ko' /* 언어에 무관 */
+           AND  use_yn = 'Y'
+    </select>
+
+    <!-- 결제수단 프로모션 조회 -->
+    <select id="searchPaymentPromotionList" parameterType="java.lang.String" resultType="PaymentPromotion">
+        SELECT /* PurchaseSacCommonMapper.searchPaymentPromotionList, 결제수단 프로모션 조회, 이승택/nTels, 2014-12-09 */
+                a.tenant_id
+              , b.prom_seq
+              , b.payment_mtd_cd
+              , b.prom_nm
+              , b.prom_desc
+              , b.prom_url
+              , TO_CHAR(b.start_dt, 'YYYYMMDDHH24MISS') AS start_dt
+              , TO_CHAR(b.end_dt, 'YYYYMMDDHH24MISS') AS end_dt
+          FROM  tb_cm_tenant_payment_prom a,
+                tb_cm_payment_prom b
+         WHERE  a.prom_seq = b.prom_seq
+           AND  a.tenant_id = #{tenantId}
+           AND  SYSDATE BETWEEN b.start_dt AND b.end_dt
+           AND  a.expo_yn = 'Y'
+           AND  b.use_yn = 'Y'
+      ORDER BY  b.payment_mtd_cd
+    </select>
+    
+    <!-- 구매Part 테넌트 정책 목록 조회 -->
+    <select id="searchPurchaseTenantPolicyList" parameterType="PurchaseTenantPolicy" resultType="PurchaseTenantPolicy">
+        SELECT /* PurchaseSacCommonMapper.searchPurchaseTenantPolicyList, 구매Part 테넌트 정책 목록 조회, 이승택/nTels, 2014-01-22 */
+                tenant_id
+              , policy_id
+              , policy_seq
+              , policy_nm
+              , proc_pattern_cd
+              , tenant_prod_grp_cd
+              , apply_unit_cd
+              , apply_value
+              , cond_unit_cd
+              , cond_value
+              , cond_period_unit_cd
+              , cond_period_value
+              , cond_clsf_unit_cd
+              , cond_clsf_value
+              , policy_prior
+          FROM  tb_cm_tenant_sale_policy 
+         WHERE  tenant_id = #{tenantId}
+         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(procPatternCd)">
+           AND  proc_pattern_cd = #{procPatternCd}
+         </if>
+         <if test="ignoreTenantProdGrpCd == null or ignoreTenantProdGrpCd != true">
+           AND  (tenant_prod_grp_cd IS NULL OR #{tenantProdGrpCd, jdbcType=VARCHAR} LIKE CONCAT(tenant_prod_grp_cd, '%'))
+         </if>
+           AND  SYSDATE BETWEEN start_dt AND expr_dt
+      ORDER BY  policy_id, policy_prior, policy_seq
+    </select>
+    
+    <!-- 결제수단 정책 조회 : 별도로 분리 -->
+    <select id="searchPaymentPolicy" parameterType="PurchaseTenantPolicy" resultType="PurchaseTenantPolicy">
+      SELECT  /* PurchaseSacCommonMapper.searchPaymentPolicy, 결제수단 정책 조회, 이승택/nTels, 2014-11-24 */
+              *
+        FROM  (
+            <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(prodId)">
+               SELECT  
+		               tenant_id
+		             , policy_id
+		             , policy_seq
+		             , policy_nm
+		             , proc_pattern_cd
+		             , tenant_prod_grp_cd
+		             , apply_unit_cd
+		             , apply_value
+		             , cond_unit_cd
+		             , cond_value
+		             , cond_period_unit_cd
+		             , cond_period_value
+		             , cond_clsf_unit_cd
+		             , cond_clsf_value
+		             , policy_prior
+		         FROM  tb_cm_tenant_sale_policy 
+		        WHERE  tenant_id = #{tenantId}
+		          AND  proc_pattern_cd = #{procPatternCd}
+		          AND  tenant_prod_grp_cd = #{prodId, jdbcType=VARCHAR}
+		          AND  SYSDATE BETWEEN start_dt AND expr_dt
+            UNION ALL
+            </if>
+            <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(parentProdId)">
+               SELECT  
+		               tenant_id
+		             , policy_id
+		             , policy_seq
+		             , policy_nm
+		             , proc_pattern_cd
+		             , tenant_prod_grp_cd
+		             , apply_unit_cd
+		             , apply_value
+		             , cond_unit_cd
+		             , cond_value
+		             , cond_period_unit_cd
+		             , cond_period_value
+		             , cond_clsf_unit_cd
+		             , cond_clsf_value
+		             , policy_prior
+		         FROM  tb_cm_tenant_sale_policy 
+		        WHERE  tenant_id = #{tenantId}
+		          AND  proc_pattern_cd = #{procPatternCd}
+		          AND  tenant_prod_grp_cd = #{parentProdId, jdbcType=VARCHAR}
+		          AND  SYSDATE BETWEEN start_dt AND expr_dt
+            UNION ALL
+            </if>
+               SELECT
+                       *
+                 FROM  (SELECT
+                                tenant_id
+                              , policy_id
+                              , policy_seq
+                              , policy_nm
+                              , proc_pattern_cd
+                              , tenant_prod_grp_cd
+                              , apply_unit_cd
+                              , apply_value
+                              , cond_unit_cd
+                              , cond_value
+                              , cond_period_unit_cd
+                              , cond_period_value
+                              , cond_clsf_unit_cd
+                              , cond_clsf_value
+                              , policy_prior
+                          FROM  tb_cm_tenant_sale_policy 
+                         WHERE  tenant_id = #{tenantId}
+                           AND  proc_pattern_cd = #{procPatternCd}
+                           AND  (tenant_prod_grp_cd IS NULL OR #{tenantProdGrpCd, jdbcType=VARCHAR} LIKE CONCAT(tenant_prod_grp_cd, '%'))
+                           AND  SYSDATE BETWEEN start_dt AND expr_dt
+                      ORDER BY  NVL(LENGTH(TENANT_PROD_GRP_CD), 0) DESC, POLICY_PRIOR
+                       )
+              )
+       WHERE ROWNUM = 1
+    </select>
+    
+</mapper>

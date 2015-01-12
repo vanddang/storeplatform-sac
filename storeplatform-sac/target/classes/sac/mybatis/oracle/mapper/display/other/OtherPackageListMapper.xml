@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OtherPackageList">
+	<!-- package 정보로 상품 ID 조회-->
+	<select id="searchProdListByPackageNm" parameterType="Map" resultType="MetaInfo">
+		SELECT 
+		  LA.* 
+		FROM (
+			SELECT /* OtherPackageListMapper.searchProdListByPackageNm, Package 정보로 상품ID 조회, 오승민/인크로스,2014-03-15 */
+				        PROD.PROD_ID,
+				        PROD.PROD_GRD_CD,
+				        RSHP.PART_PROD_ID,
+				        CONTENTS.APK_PKG_NM,
+				        CONTENTS.VM_VER AS SUPPORTED_OS,       
+				        PROD.CONTENTS_TYPE_CD,
+				        TENANTPRICE.PROD_AMT,
+				        CATEGORY.TOP_MENU_ID,
+	                    (SELECT MENU_NM
+	                       FROM TB_DP_MENU_CATEGORY_DESC
+	                      WHERE MENU_ID = CATEGORY.TOP_MENU_ID
+	                        AND LANG_CD = #{tenantHeader.langCd}
+	                        AND ROWNUM = 1) AS TOP_MENU_NM,
+	                    CATEGORY.MENU_ID,
+	                    CATEGORYDESC.MENU_NM,
+	                    (ROW_NUMBER() OVER (PARTITION BY CONTENTS.APK_PKG_NM ORDER BY PROD.REG_DT DESC )) AS RNUM
+	          FROM      TB_DP_PROD PROD
+				       ,TB_DP_PROD_RSHP RSHP
+				       ,TB_DP_SPRT_DEVICE DEVICE
+				       ,TB_DP_SUB_CONTENTS CONTENTS
+				       ,TB_DP_TENANT_PROD TENANTPROD
+				       ,TB_DP_TENANT_PROD_PRICE TENANTPRICE
+				       ,TB_DP_MENU_CATEGORY           CATEGORY
+				       ,TB_DP_MENU_CATEGORY_PROD_MAPG PRODMAPG
+				       ,TB_DP_MENU_CATEGORY_DESC      CATEGORYDESC
+				       ,TB_DP_APP_PROD     APPPROD
+			 WHERE     PROD.PROD_ID = DEVICE.PROD_ID
+			       AND PROD.PROD_ID = RSHP.PROD_ID
+			       AND PROD.PROD_ID = TENANTPROD.PROD_ID
+			       AND PROD.PROD_ID = APPPROD.PROD_ID
+			       AND TENANTPROD.TENANT_ID = #{tenantHeader.tenantId}
+			       AND TENANTPROD.EXPO_YN = 'Y'
+			       AND TENANTPROD.PROD_STATUS_CD = #{prodStatusCd}
+			       AND TENANTPROD.PROD_ID = TENANTPRICE.PROD_ID
+			       AND TENANTPROD.TENANT_ID = TENANTPRICE.TENANT_ID
+			       AND SYSDATE BETWEEN TENANTPRICE.APPLY_START_DT AND TENANTPRICE.APPLY_END_DT
+			       AND CATEGORY.MENU_ID = PRODMAPG.MENU_ID
+			       AND CATEGORYDESC.MENU_ID = CATEGORY.MENU_ID
+			       AND PROD.PROD_ID = PRODMAPG.PROD_ID
+			       AND CATEGORY.USE_YN = 'Y'
+			       AND PRODMAPG.USE_YN = 'Y'
+			       AND CATEGORYDESC.LANG_CD = #{tenantHeader.langCd}
+			       AND DEVICE.DEVICE_MODEL_CD = #{deviceHeader.model}
+			       AND DEVICE.PROD_ID = CONTENTS.PROD_ID
+			       AND DEVICE.SUB_CONTENTS_ID = CONTENTS.SUB_CONTENTS_ID
+			       AND CONTENTS.APK_PKG_NM IN
+			       <foreach collection="PKG_LIST" item="item" index="index" open="(" separator="," close=")"> 
+	                #{item}
+	               </foreach>
+			       AND CONTENTS.VM_VER LIKE '%'||#{osVersion}||'%' /* Provisioning OS VERSION 체크 */
+	               AND RSHP.PROD_RSHP_CD = #{rshpCd}
+	               AND (APPPROD.PART_PARENT_CLSF_CD <![CDATA[<>]]> #{partParentClsfCd} OR APPPROD.PART_PARENT_CLSF_CD IS NULL )
+	       ) LA
+	       WHERE RNUM = 1
+ 	</select>
+ 	
+ 	<!-- 상품 ID 리스트 (BY AID)-->
+    <select id="searchProdListByAid" parameterType="Map" resultType="MetaInfo">    
+        SELECT /* OtherPackageListMapper.searchProdListByAid, AID로 상품ID 조회, 백승현/인크로스, 2014-03-15 */
+               C.PROD_ID AS PROD_ID
+              ,C.PART_PROD_ID AS PART_PROD_ID
+              ,DAP.AID AS AID
+              ,DTP.PROD_STATUS_CD AS PROD_STATUS_CD
+              ,NVL((SELECT 'Y'
+                    FROM TB_DP_SPRT_DEVICE DSD
+                    WHERE DSD.DEVICE_MODEL_CD = #{deviceModelNo}
+                    AND DSD.PROD_ID = P.PROD_ID
+                    AND ROWNUM = 1
+                  ), 'N') AS DEVICE_SUPPORT
+              ,P.CONTENTS_TYPE_CD
+        FROM   TB_DP_PROD P
+              ,TB_DP_APP_PROD DAP
+              ,TB_DP_TENANT_PROD_STATS PA
+              ,TB_DP_TENANT_PROD DTP
+              ,TB_DP_SPRT_DEVICE SH              
+              ,TB_DP_MENU_CATEGORY_PROD_MAPG CP
+              ,TB_DP_MENU_CATEGORY DMC
+              ,TB_DP_MENU_CATEGORY_DESC DMCD
+              ,TB_DP_PROD_RSHP C
+        WHERE P.PROD_ID = C.PART_PROD_ID
+        AND P.PROD_ID = DAP.PROD_ID
+        AND C.PROD_ID = CP.PROD_ID
+        AND CP.MENU_ID = DMC.MENU_ID
+        AND CP.MENU_ID = DMCD.MENU_ID
+        AND P.PROD_ID = DTP.PROD_ID
+        AND C.PROD_RSHP_CD = #{rshpCd}
+        AND PA.TENANT_ID(+) = #{tenantId}
+        AND DTP.TENANT_ID = #{tenantId}
+        AND PA.PROD_ID(+) = P.PROD_ID
+        AND SH.PROD_ID(+) = P.PROD_ID        
+        AND SH.DEVICE_MODEL_CD(+) = #{deviceModelNo}
+        AND CP.USE_YN = 'Y'
+        AND DMCD.LANG_CD = #{langCd}
+        <if test="arrayAId != null">
+        AND DAP.AID IN
+           <foreach collection="arrayAId" item="aId" index="index" separator="," open="(" close=")">
+              #{aId}
+           </foreach>
+        </if> 
+        AND (DAP.PART_PARENT_CLSF_CD <![CDATA[<>]]> #{partParentClsfCd} OR DAP.PART_PARENT_CLSF_CD IS NULL )
+    </select> 
+</mapper>

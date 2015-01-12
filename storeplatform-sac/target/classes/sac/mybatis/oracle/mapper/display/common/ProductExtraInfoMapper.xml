@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductExtraInfoService">
+
+    <select id="getInfo" parameterType="map" resultType="String">
+        SELECT
+          CONTENT
+        FROM TB_DP_PROD_EXTRA_INFO
+        WHERE 1=1
+          AND PROD_ID = #{prodId, jdbcType=VARCHAR}
+          AND INFO_CLSF_CD = #{infoClsfCd, jdbcType=VARCHAR}
+          AND USE_YN = 'Y'
+    </select>
+
+</mapper>

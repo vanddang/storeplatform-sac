@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="VodDetail">
+    
+    <select id="selectProdRshp" parameterType="map" resultType="string">
+		SELECT /* VodDetailMapper.xml, selectProdRshp, SAC : 임근대 , 2014-01-28 */
+			A.PART_PROD_ID
+	  	FROM TB_DP_PROD_RSHP A, TB_DP_PROD B
+		WHERE A.PROD_ID = #{channelId}
+      	  AND A.PART_PROD_ID = B.PROD_ID
+          AND B.SVC_GRP_CD = 'DP000203'  AND B.CONTENTS_TYPE_CD = 'PD002502' AND B.SVC_TYPE_CD IN ('DP001112', 'DP001115')
+	</select>    
+    <select id="selectContentIdListByEpisodeIdList" parameterType="map" resultType="string">
+		SELECT /* VodDetailMapper.xml, selectContentIdListByEpisodeIdList, SAC : 임근대 , 2014-10-23 */
+				DISTINCT CID
+		FROM TB_DP_PROD
+		WHERE PROD_ID IN
+		<foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+	  	</foreach>
+	</select>
+    
+    <select id="selectVodChannel" parameterType="map" resultType="VodDetail">
+        SELECT /* VodDetailMapper.xml, selectVodChannel, SAC : 임근대 , 2014-03-22 */
+		        P.TENANT_ID
+		      , P.LANG_CD
+		      , P.MENU_ID
+		      , P.MENU_NM 
+		      , MP.PLAY_TM AS EPSD_PLAY_TM
+		      , P2.TOP_MENU_ID, (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = P2.TOP_MENU_ID AND LANG_CD = P.LANG_CD AND ROWNUM = 1) AS TOP_MENU_NM 
+		      , P2.CID
+		      , P2.PROD_ID 
+		      , P2.META_CLSF_CD
+		      , P2.PROD_GRD_CD 
+		      , P2.REG_DT 
+		      , P2.SVC_GRP_CD
+			  , P2.SELLER_MBR_NO
+		      , P2.EXPO_SELLER_NM 
+		      , P2.EXPO_SELLER_TELNO 
+		      , P2.EXPO_SELLER_EMAIL
+		      , P2.LAST_DEPLOY_DT
+		      , PD.PROD_NM 
+		      , PD.PROD_BASE_DESC 
+		      , PD.PROD_DTL_DESC
+		      , PD.PROD_INTR_DSCR 
+		      , PD.ARTIST1_NM 
+		      , PD.ARTIST2_NM 
+		      , TP.PROD_STATUS_CD
+		      , TPP.CHNL_PERIOD_AMT AS PLAY_PROD_AMT
+		      , TPP.CHNL_UNLMT_AMT AS STORE_PROD_AMT
+		      , MP.GENRE_CD, (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM FROM TB_CM_CD WHERE CD_ID = MP.GENRE_CD AND LANG_CD = P.LANG_CD) AS GENRE_CD_NM
+			  , MP.VOD_TITL_NM
+		      , MP.DWLD_AREA_LIMT_YN 
+		      , MP.SVC_START_DT
+		      , MP.CHNL_COMP_NM 
+		      , MP.AGENCY_NM 
+		      , MP.BRDC_COMP_CD 
+		      , MP.HDV_YN
+		      , MP.HDCP_YN 
+		      , MP.DOLBY_SPRT_YN 
+		      , MP.SAMPL_URL
+		      , MP.SC_SAMPL_URL
+		      , (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM FROM TB_CM_CD WHERE CD_ID = MP.BRDC_COMP_CD AND LANG_CD = P.LANG_CD) AS BRDC_COMP_CD_NM
+		      , PI.FILE_PATH AS IMG_PATH 
+		      , PI.FILE_NM AS IMG_NM
+		      , PI.FILE_SIZE AS IMG_SIZE
+		      , NVL(STAT.PATICPERS_CNT, 0) AS PATICPERS_CNT 
+		      , NVL(STAT.PRCHS_CNT, 0) AS PRCHS_CNT
+			  , STORE_PROD_ID , PLAY_PROD_ID
+			  , PLAY_USE_PERIOD, PLAY_USE_PERIOD_UNIT_CD
+			  , (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM FROM TB_CM_CD WHERE CD_ID = PLAY_USE_PERIOD_UNIT_CD AND LANG_CD = P.LANG_CD) AS PLAY_USE_PERIOD_UNIT_CD_NM
+		      <![CDATA[
+		      , CASE WHEN MP.STRM_NETWORK_CD = 'DP004402' THEN 'restrict' END AS STORE_DWLD_NET 
+		      , CASE WHEN MP.DWLD_NETWORK_CD = 'DP004402' THEN 'restrict' END AS PLAY_DWLD_NET 
+		      , CASE WHEN NVL(P.STORE_DRM, 0) > 0 THEN 'Y' ELSE 'N' END AS STORE_DRM_YN 
+		      , CASE WHEN NVL(P.PLAY_DRM, 0) > 0 THEN 'Y' ELSE 'N' END AS PLAY_DRM_YN
+		      , NVL(CASE WHEN STAT.AVG_EVLU_SCORE > 0 AND STAT.AVG_EVLU_SCORE < 1 THEN 1 WHEN STAT.AVG_EVLU_SCORE > 5 THEN 5 
+		            ELSE ROUND(STAT.AVG_EVLU_SCORE, 1) END, 0) AS AVG_EVLU_SCORE 
+		      ]]>
+			  <if test="userKey != null">  
+			  , (CASE WHEN ML.STATS_KEY IS NOT NULL THEN 'Y' ELSE 'N' END) AS LIKE_YN
+              </if> 
+		  FROM (SELECT RSHP.PROD_ID AS CHNL_PROD_ID, 
+		              G.TENANT_ID, 
+		              C.LANG_CD, 
+		              MAX(RSHP.PART_PROD_ID) AS PROD_ID, 
+		              MAX(A.MENU_ID) AS MENU_ID, 
+		              MAX(C.MENU_NM) AS MENU_NM, 
+		              SUM(DECODE(NVL(CASE WHEN D.USE_PERIOD_UNIT_CD = 'PD00310' THEN D.DRM_YN END, 'N'), 'Y', 1, 0)) AS STORE_DRM, 
+		              SUM(DECODE(NVL(CASE WHEN D.USE_PERIOD_UNIT_CD != 'PD00310' THEN D.DRM_YN END, 'N'), 'Y', 1, 0)) AS PLAY_DRM, 
+		              MAX(DECODE(D.USE_PERIOD_UNIT_CD, 'PD00310', D.PROD_ID)) AS STORE_PROD_ID, 
+		              MAX(DECODE(D.USE_PERIOD_UNIT_CD, 'PD00310', NULL, D.PROD_ID)) AS PLAY_PROD_ID, 
+		              MAX(DECODE(D.USE_PERIOD_UNIT_CD, 'PD00310', NULL, D.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD,
+					  MAX(DECODE(D.USE_PERIOD_UNIT_CD, 'PD00310', NULL, D.USE_PERIOD)) AS PLAY_USE_PERIOD 
+		          FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
+		              , TB_DP_MENU_CATEGORY B
+		              , TB_DP_MENU_CATEGORY_DESC C 
+		              , TB_DP_PROD_RSHP RSHP 
+		              , TB_DP_PROD D
+		              , TB_DP_TENANT_PROD G
+		              , TB_DP_SUB_CONTENTS SC 
+		              , TB_DP_SPRT_DEVICE K 
+		              , TB_CM_DEVICE L 
+		          WHERE A.MENU_ID = B.MENU_ID AND A.BASE_YN = 'Y'AND B.USE_YN = 'Y'
+		            AND A.MENU_ID = C.MENU_ID AND C.LANG_CD = #{langCd}
+		            AND A.PROD_ID = RSHP.PROD_ID
+		            AND RSHP.PROD_ID = #{channelId}
+		            AND RSHP.PART_PROD_ID = D.PROD_ID
+		            AND D.SVC_GRP_CD = 'DP000203'  AND D.CONTENTS_TYPE_CD = 'PD002502' AND D.SVC_TYPE_CD IN ('DP001112', 'DP001115') 
+		            AND D.PROD_ID = G.PROD_ID AND G.TENANT_ID = #{tenantId}
+					<choose>
+	                <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
+	                AND G.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
+	                </when>
+	                <otherwise>
+	                AND G.PROD_STATUS_CD = 'PD000403'
+	                </otherwise>
+	                </choose>
+		            AND G.EXPO_YN = 'Y'
+		            AND D.PROD_ID = SC.PROD_ID AND SC.SALE_YN = 'Y'
+		            AND D.PROD_ID = K.PROD_ID AND (K.DEVICE_MODEL_CD = #{deviceModel} OR K.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+				   	AND L.DEVICE_MODEL_CD = #{deviceModel} AND L.USE_YN = 'Y'
+		          GROUP BY RSHP.PROD_ID, G.TENANT_ID, C.LANG_CD) P 
+		       , TB_DP_PROD P2 
+		       , TB_DP_VOD_PROD MP 
+		       , TB_DP_TENANT_PROD TP 
+		       , TB_DP_TENANT_PROD_PRICE TPP 
+		       , TB_DP_PROD_DESC PD 
+		       , TB_DP_PROD_IMG PI 
+		       , TB_DP_TENANT_PROD_STATS STAT
+				<if test="userKey != null">
+			   , TB_DP_SOCIAL_STATS_MBR_LIKE ML
+               	</if>
+		WHERE P.CHNL_PROD_ID = P2.PROD_ID
+			AND P2.PROD_ID = MP.PROD_ID
+			AND P2.PROD_ID = TP.PROD_ID AND P.TENANT_ID = TP.TENANT_ID
+			AND P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
+			AND P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
+			AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT  
+			AND P.CHNL_PROD_ID = PI.PROD_ID(+) AND P.LANG_CD = PI.LANG_CD(+) AND PI.EXPO_ORD(+) = 1 AND PI.IMG_CD(+) = #{representImgCd}
+			AND P.CHNL_PROD_ID = STAT.PROD_ID(+) AND P.TENANT_ID = STAT.TENANT_ID(+)
+			<if test="userKey != null">   
+  		    AND ML.TENANT_ID(+) = P.TENANT_ID
+			AND ML.STATS_KEY(+) = P.CHNL_PROD_ID
+			AND ML.USER_KEY(+) = #{userKey}
+			AND ML.STATS_CLSF(+) = 'DP01210002'
+			</if>
+			AND ROWNUM = 1
+    </select>
+    
+    <select id="selectSourceList" parameterType="map" resultType="ProductImage">
+		
+		SELECT /* VodDetailMapper.xml, selectSourceList, SAC : 임근대 , 2014-01-28 */
+           FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+      	FROM (  
+		      SELECT A.*
+		          , ROW_NUMBER() OVER ( PARTITION BY IMG_CD_SEQ ORDER BY EXPO_ORD  )  AS RN
+		        FROM (
+					SELECT
+						FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+                   		, DECODE( IMG_CD, 'DP000137', 1, 'DP000138', 2, 'DP000139', 3, 'DP000140', 4 ) AS IMG_CD_SEQ
+					FROM TB_DP_PROD_IMG
+					WHERE PROD_ID = #{channelId}
+					  AND LANG_CD = #{langCd}
+					  AND IMG_CD IN ( 'DP000137', 'DP000138', 'DP000139', 'DP000140' )
+					UNION ALL
+					SELECT 
+						FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+						, DECODE( IMG_CD, 'DP000128', 1, 'DP000129', 2, 'DP000130', 3, 'DP000131', 4 ) AS IMG_CD_SEQ
+					FROM TB_DP_PROD_IMG
+					WHERE PROD_ID = #{channelId}
+			          AND LANG_CD = #{langCd}
+					  AND IMG_CD IN ( 'DP000128', 'DP000129', 'DP000130', 'DP000131' )
+		      	) A
+		    )
+		  WHERE RN = 1
+    </select>
+    
+    <select id="selectVodSeries" parameterType="map" resultType="VodDetail">
+		SELECT /* VodDetailMapper.xml, selectVodSeries, SAC : 임근대 , 2014-03-22 */
+		      T.TENANT_ID, T.LANG_CD, TOTAL_COUNT
+		    , T.MENU_ID, MENU_NM, T.TOP_MENU_ID, (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = T.TOP_MENU_ID AND LANG_CD = T.LANG_CD AND ROWNUM = 1) AS TOP_MENU_NM
+		    , T.META_CLSF_CD
+		    , T.CID, T.CHNL_PROD_ID, T.PROD_ID, T.REG_DT, T.LAST_DEPLOY_DT
+		    , PROD_NM, T.PROD_BASE_DESC, T.PROD_DTL_DESC, T.PROD_INTR_DSCR, T.ARTIST1_NM, T.ARTIST2_NM, T.VOD_TITL_NM
+		    , GENRE_CD, (SELECT /*+ INDEX_JOIN(TB_CM_CD) */ CD_NM FROM TB_CM_CD WHERE CD_ID = T.GENRE_CD AND LANG_CD = T.LANG_CD) AS GENRE_CD_NM
+		    , ISSUE_DAY, SVC_START_DT, CHNL_COMP_NM
+		    , BRDC_COMP_CD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = T.BRDC_COMP_CD AND LANG_CD = T.LANG_CD) AS BRDC_COMP_CD_NM
+		    , DECODE( HDCP_YN, 'Y', HDCP_YN, 'N' ) AS HDCP_YN, DECODE( HDV_YN, 'Y', HDV_YN, 'N' ) AS HDV_YN
+		    , CHAPTER
+            , USE_PERIOD
+            , USE_PERIOD_UNIT_CD_NM
+            , USE_PERIOD_UNIT_CD
+		    , DWLD_AREA_LIMT_YN
+		    , EPSD_PLAY_TM, PROD_GRD_CD
+		    , DECODE( DOLBY_YN , 'Y' , DECODE( DOLBY_SPRT_YN, 'Y', DOLBY_SPRT_YN, 'N' ), 'N' ) AS DOLBY_SPRT_YN
+		    , SELLER_MBR_NO, EXPO_SELLER_NM, EXPO_SELLER_TELNO, EXPO_SELLER_EMAIL
+		    , REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,1) AS NM_SUB_CONTS_ID
+		    , REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,1) AS SD_SUB_CONTS_ID
+		    , REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,1) AS HD_SUB_CONTS_ID
+		    , REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,1) AS HD2_SUB_CONTS_ID
+		    , REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,1) AS FHD_SUB_CONTS_ID
+		    , REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,5) AS NM_PROD_VER
+		    , REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,5) AS SD_PROD_VER
+		    , REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,5) AS HD_PROD_VER
+		    , REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,5) AS HD2_PROD_VER
+		    , REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,5) AS FHD_PROD_VER
+		    , NVL2(REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,2), REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,2), 0) AS NM_FILE_SIZE
+		    , NVL2(REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,2), REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,2), 0) AS SD_FILE_SIZE
+		    , NVL2(REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,2), REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,2), 0) AS HD_FILE_SIZE
+		    , NVL2(REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,2), REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,2), 0) AS HD2_FILE_SIZE
+		    , NVL2(REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,2), REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,2), 0) AS FHD_FILE_SIZE
+		    , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,3 ) AND LANG_CD = T.LANG_CD ) AS NM_DP_PIXEL
+		    , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,3 ) AND LANG_CD = T.LANG_CD ) AS SD_DP_PIXEL
+		    , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,3 ) AND LANG_CD = T.LANG_CD ) AS HD_DP_PIXEL
+		    , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,3 ) AND LANG_CD = T.LANG_CD ) AS HD2_DP_PIXEL
+		    , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,3 ) AND LANG_CD = T.LANG_CD ) AS FHD_DP_PIXEL
+		    , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(SD_SUB_CONTS,'[^,]+',1,4 ) AND LANG_CD = T.LANG_CD ) AS NM_DP_PIC_RATIO
+		    , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(NM_SUB_CONTS,'[^,]+',1,4 ) AND LANG_CD = T.LANG_CD ) AS SD_DP_PIC_RATIO
+		    , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,4 ) AND LANG_CD = T.LANG_CD ) AS HD_DP_PIC_RATIO
+		    , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(HD2_SUB_CONTS,'[^,]+',1,4 ) AND LANG_CD = T.LANG_CD ) AS HD2_DP_PIC_RATIO
+		    , ( SELECT CD_NM FROM TB_CM_CD WHERE CD_ID =  REGEXP_SUBSTR(FHD_SUB_CONTS,'[^,]+',1,4 ) AND LANG_CD = T.LANG_CD ) AS FHD_DP_PIC_RATIO
+		    , DECODE( DWLD_NETWORK_CD , 'DP004402', 'restrict', NULL ) AS DWLD_NETWORK_CD
+		    , DECODE( STRM_NETWORK_CD , 'DP004402', 'restrict', NULL ) AS STRM_NETWORK_CD
+		    , TB.FILE_PATH  AS IMG_PATH, TB.FILE_NM AS IMG_NM, TB.FILE_SIZE AS IMG_SIZE
+		    , T.FILE_PATH
+		    , NVL(STAT.PATICPERS_CNT, 0) AS PATICPERS_CNT
+		    , SAMPL_URL, SC_SAMPL_URL
+		    , NVL(STAT.PRCHS_CNT, 0) AS PRCHS_CNT
+		    <![CDATA[
+		    , NVL((CASE WHEN (STAT.AVG_EVLU_SCORE > 0 AND STAT.AVG_EVLU_SCORE < 1) THEN 1
+		       WHEN STAT.AVG_EVLU_SCORE > 5 THEN 5
+		          ELSE ROUND(STAT.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
+		    ]]>
+		    , STORE_PROD_ID, STORE_PROD_AMT, STORE_PROD_NET_AMT, STORE_DRM_YN, STORE_PROD_STATUS_CD, STORE_USE_PERIOD, STORE_USE_PERIOD_UNIT_CD
+		    , PLAY_PROD_ID, PLAY_PROD_AMT, PLAY_PROD_NET_AMT, PLAY_DRM_YN, PLAY_PROD_STATUS_CD, PLAY_USE_PERIOD, PLAY_USE_PERIOD_UNIT_CD
+		    , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = PLAY_USE_PERIOD_UNIT_CD AND LANG_CD = T.LANG_CD) AS PLAY_USE_PERIOD_UNIT_CD_NM
+		FROM
+		(
+		    SELECT  
+		         TENANT_ID, LANG_CD, CID, TOTAL_COUNT
+		       , CHAPTER
+		       , TOP_MENU_ID, MENU_ID, META_CLSF_CD
+		       , CHNL_PROD_ID, PROD_ID, REG_DT, LAST_DEPLOY_DT
+		       , PROD_NM, PROD_BASE_DESC, PROD_DTL_DESC, PROD_INTR_DSCR, ARTIST1_NM, ARTIST2_NM, VOD_TITL_NM
+		       , GENRE_CD, ISSUE_DAY, BRDC_COMP_CD, SVC_START_DT, CHNL_COMP_NM
+		       , HDCP_YN, HDV_YN 
+		       , USE_PERIOD, USE_PERIOD_UNIT_CD
+		       , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = USE_PERIOD_UNIT_CD AND LANG_CD = T4.LANG_CD) AS USE_PERIOD_UNIT_CD_NM
+		       , EPSD_PLAY_TM, PROD_GRD_CD
+		       , DOLBY_SPRT_YN, DOLBY_YN
+		       , DWLD_AREA_LIMT_YN, DWLD_NETWORK_CD, STRM_NETWORK_CD
+		       , FILE_PATH
+		       , SELLER_MBR_NO, EXPO_SELLER_NM, EXPO_SELLER_TELNO, EXPO_SELLER_EMAIL
+		       , DECODE( DOLBY_YN, 'Y', NVL( NM_SUB_CONTS_DB, NM_SUB_CONTS ), NM_SUB_CONTS ) AS NM_SUB_CONTS
+		       , DECODE( DOLBY_YN, 'Y', NVL( SD_SUB_CONTS_DB, SD_SUB_CONTS ), SD_SUB_CONTS ) AS SD_SUB_CONTS
+		       , DECODE( DOLBY_YN, 'Y', NVL( HD_SUB_CONTS_DB, HD_SUB_CONTS ), HD_SUB_CONTS ) AS HD_SUB_CONTS
+		       , DECODE( DOLBY_YN, 'Y', NVL( HD2_SUB_CONTS_DB, HD2_SUB_CONTS ), HD2_SUB_CONTS ) AS HD2_SUB_CONTS
+		       , DECODE( DOLBY_YN, 'Y', NVL( FHD_SUB_CONTS_DB, FHD_SUB_CONTS ), FHD_SUB_CONTS ) AS FHD_SUB_CONTS
+		       , SAMPL_URL, SC_SAMPL_URL
+		       , STORE_PROD_ID, STORE_PROD_AMT, STORE_PROD_NET_AMT, STORE_DRM_YN, STORE_PROD_STATUS_CD, STORE_USE_PERIOD, STORE_USE_PERIOD_UNIT_CD
+		       , PLAY_PROD_ID, PLAY_PROD_AMT, PLAY_PROD_NET_AMT, PLAY_DRM_YN, PLAY_PROD_STATUS_CD, PLAY_USE_PERIOD, PLAY_USE_PERIOD_UNIT_CD
+		     FROM
+		          (
+				SELECT * FROM (
+		        SELECT T3.*, ROWNUM AS RNUM
+		        FROM (
+		            SELECT T2.*, COUNT(*) OVER () AS TOTAL_COUNT
+		            FROM (
+		                SELECT T1.CID, T1.CHAPTER
+		                  , MAX( T1.TENANT_ID ) AS TENANT_ID
+		                  , MAX( T1.LANG_CD ) AS LANG_CD
+		                  , MAX( T1.MENU_ID ) AS MENU_ID
+		                  , MAX( T1.TOP_MENU_ID ) AS TOP_MENU_ID
+		                  , MAX( T1.META_CLSF_CD ) AS META_CLSF_CD
+		                  , MAX( T1.CHNL_PROD_ID ) AS CHNL_PROD_ID
+		                  , MAX( T1.PROD_ID ) AS PROD_ID
+		                  , MAX( T1.REG_DT ) AS REG_DT
+		                  , MAX( T1.LAST_DEPLOY_DT ) AS LAST_DEPLOY_DT
+		                  , MAX( T1.VOD_TITL_NM ) AS VOD_TITL_NM
+		                  , MAX( T1.PROD_NM ) AS PROD_NM
+		                  , MAX( T1.PROD_BASE_DESC ) AS PROD_BASE_DESC
+		                  , MAX( T1.PROD_DTL_DESC ) AS PROD_DTL_DESC
+		                  , MAX( T1.PROD_INTR_DSCR ) AS PROD_INTR_DSCR
+		                  , MAX( T1.ARTIST1_NM ) AS ARTIST1_NM
+		                  , MAX( T1.ARTIST2_NM ) AS ARTIST2_NM
+		                  , MAX( T1.ARTIST3_NM ) AS ARTIST3_NM
+		                  , MAX( T1.GENRE_CD ) AS GENRE_CD
+		                  , MAX( T1.ISSUE_DAY ) AS ISSUE_DAY
+		                  , MAX( T1.BRDC_COMP_CD ) AS BRDC_COMP_CD
+		                  , MAX( T1.SVC_START_DT ) AS SVC_START_DT
+		                  , MAX( T1.CHNL_COMP_NM ) AS CHNL_COMP_NM
+		                  , MAX( T1.HDCP_YN ) AS HDCP_YN
+		                  , MAX( T1.HDV_YN ) AS HDV_YN
+		                  , MAX( T1.USE_PERIOD ) AS USE_PERIOD
+		                  , MAX( T1.USE_PERIOD_UNIT_CD ) AS USE_PERIOD_UNIT_CD
+		                  , MAX( T1.DWLD_AREA_LIMT_YN ) AS DWLD_AREA_LIMT_YN
+		                  , MAX( T1.PLAY_TM ) AS EPSD_PLAY_TM
+		                  , MAX( T1.PROD_GRD_CD ) AS PROD_GRD_CD
+		                  , MAX( T1.DOLBY_SPRT_YN ) AS DOLBY_SPRT_YN
+		                  , MAX( T1.DOLBY_YN ) AS DOLBY_YN
+		                  , MAX( T1.DWLD_NETWORK_CD ) AS DWLD_NETWORK_CD
+		                  , MAX( T1.STRM_NETWORK_CD ) AS STRM_NETWORK_CD
+		                  , MAX( T1.FILE_PATH ) AS FILE_PATH
+		                  , MAX( T1.SELLER_MBR_NO ) AS SELLER_MBR_NO
+		                  , MAX( T1.EXPO_SELLER_NM ) AS EXPO_SELLER_NM
+		                  , MAX( T1.EXPO_SELLER_TELNO ) AS EXPO_SELLER_TELNO
+		                  , MAX( T1.EXPO_SELLER_EMAIL ) AS EXPO_SELLER_EMAIL
+		                  , MAX( T1.NM_SUB_CONTS ) AS NM_SUB_CONTS
+		                  , MAX( T1.SD_SUB_CONTS ) AS SD_SUB_CONTS
+		                  , MAX( T1.HD_SUB_CONTS ) AS HD_SUB_CONTS
+		                  , MAX( T1.HD2_SUB_CONTS ) AS HD2_SUB_CONTS
+		                  , MAX( T1.FHD_SUB_CONTS ) AS FHD_SUB_CONTS
+		                  , MAX( T1.NM_SUB_CONTS_DB ) AS NM_SUB_CONTS_DB
+		                  , MAX( T1.SD_SUB_CONTS_DB  ) AS SD_SUB_CONTS_DB
+		                  , MAX( T1.HD_SUB_CONTS_DB  ) AS HD_SUB_CONTS_DB
+		                  , MAX( T1.HD2_SUB_CONTS_DB  ) AS HD2_SUB_CONTS_DB
+		                  , MAX( T1.FHD_SUB_CONTS_DB  ) AS FHD_SUB_CONTS_DB
+		                  , MAX( T1.SAMPL_URL ) AS SAMPL_URL
+		                  , MAX( T1.SC_SAMPL_URL ) AS SC_SAMPL_URL
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', T1.PROD_ID ) ) AS STORE_PROD_ID
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T1.PROD_ID ) ) AS PLAY_PROD_ID
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', T1.PROD_AMT ) ) AS STORE_PROD_AMT
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T1.PROD_AMT ) ) AS PLAY_PROD_AMT
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', T1.PROD_NET_AMT ) ) AS STORE_PROD_NET_AMT
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T1.PROD_NET_AMT ) ) AS PLAY_PROD_NET_AMT
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', T1.DRM_YN ) ) AS STORE_DRM_YN
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T1.DRM_YN ) ) AS PLAY_DRM_YN
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', T1.PROD_STATUS_CD ) ) AS STORE_PROD_STATUS_CD
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T1.PROD_STATUS_CD ) ) AS PLAY_PROD_STATUS_CD
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', T1.USE_PERIOD ) ) AS STORE_USE_PERIOD
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T1.USE_PERIOD ) ) AS PLAY_USE_PERIOD
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', T1.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
+		                  , MAX( DECODE( T1.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T1.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD
+		                FROM
+		                   (
+		                    SELECT
+		                          TP.TENANT_ID, DSC.LANG_CD
+		                        , MC.MENU_ID, MC.TOP_MENU_ID
+		                        , PD.CID , PD.PROD_ID, PR.PROD_ID AS CHNL_PROD_ID
+		                        , PD.META_CLSF_CD
+		                        , MP.CHAPTER
+		                        , PD.REG_DT, PD.LAST_DEPLOY_DT, PD.USE_PERIOD, PD.USE_PERIOD_UNIT_CD
+		                        , DSC.PROD_NM, DSC.PROD_BASE_DESC, DSC.PROD_DTL_DESC, DSC.PROD_INTR_DSCR, DSC.ARTIST1_NM, DSC.ARTIST2_NM, DSC.ARTIST3_NM, MP.VOD_TITL_NM
+		                        , MP.GENRE_CD, MP.ISSUE_DAY, MP.BRDC_COMP_CD, MP.SVC_START_DT, MP.CHNL_COMP_NM
+		                        , MP.HDCP_YN, MP.HDV_YN, MP.DOLBY_SPRT_YN, DV.DOLBY_SPRT_YN AS DOLBY_YN
+		                        , MP.PLAY_TM, PD.PROD_GRD_CD
+		                        , MP.DWLD_AREA_LIMT_YN, MP.DWLD_NETWORK_CD, MP.STRM_NETWORK_CD
+		                        , MP.SAMPL_URL, MP.SC_SAMPL_URL
+		                        , SC.FILE_PATH
+		                        , PD.SELLER_MBR_NO, PD.EXPO_SELLER_NM, PD.EXPO_SELLER_TELNO, PD.EXPO_SELLER_EMAIL
+		                        , PRC.PROD_AMT, PRC.PROD_NET_AMT, PD.DRM_YN
+		                        , TP.PROD_STATUS_CD
+		                        , ( CASE WHEN ( SC.AUDIO_TYPE_CD = 'PD002215' AND SC.DP_PG_QULT_CD = 'PD009701' ) THEN
+		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
+		                            END ) AS NM_SUB_CONTS_DB
+		                        , ( CASE WHEN ( SC.AUDIO_TYPE_CD = 'PD002215' AND SC.DP_PG_QULT_CD = 'PD009702' ) THEN
+		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
+		                            END ) AS SD_SUB_CONTS_DB
+		                        , ( CASE WHEN ( MP.HDV_YN = 'Y' AND SC.AUDIO_TYPE_CD = 'PD002215' AND SC.DP_PG_QULT_CD = 'PD009703' ) THEN
+		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
+		                            END ) AS HD_SUB_CONTS_DB
+		                        , ( CASE WHEN ( MP.HDV_YN = 'Y' AND SC.AUDIO_TYPE_CD = 'PD002215' AND SC.DP_PG_QULT_CD = 'PD009704' ) THEN
+		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
+		                            END ) AS HD2_SUB_CONTS_DB
+		                        , ( CASE WHEN ( MP.HDV_YN = 'Y' AND SC.AUDIO_TYPE_CD = 'PD002215' AND SC.DP_PG_QULT_CD = 'PD009705' ) THEN
+		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
+		                            END ) AS FHD_SUB_CONTS_DB
+		                        , ( CASE WHEN ( ( SC.AUDIO_TYPE_CD IS NULL OR SC.AUDIO_TYPE_CD != 'PD002215' ) AND SC.DP_PG_QULT_CD = 'PD009701' ) THEN
+		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
+		                            END ) AS NM_SUB_CONTS
+		                        , ( CASE WHEN ( ( SC.AUDIO_TYPE_CD IS NULL OR SC.AUDIO_TYPE_CD != 'PD002215' ) AND SC.DP_PG_QULT_CD = 'PD009702' ) THEN
+		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
+		                            END ) AS SD_SUB_CONTS
+		                        , ( CASE WHEN (  MP.HDV_YN = 'Y' AND ( SC.AUDIO_TYPE_CD IS NULL OR SC.AUDIO_TYPE_CD != 'PD002215' ) AND SC.DP_PG_QULT_CD = 'PD009703' ) THEN
+		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
+		                            END ) AS HD_SUB_CONTS
+		                        , ( CASE WHEN (  MP.HDV_YN = 'Y' AND ( SC.AUDIO_TYPE_CD IS NULL OR SC.AUDIO_TYPE_CD != 'PD002215' ) AND SC.DP_PG_QULT_CD = 'PD009704' ) THEN
+		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
+		                            END ) AS HD2_SUB_CONTS
+		                        , ( CASE WHEN (  MP.HDV_YN = 'Y' AND ( SC.AUDIO_TYPE_CD IS NULL OR SC.AUDIO_TYPE_CD != 'PD002215' ) AND SC.DP_PG_QULT_CD = 'PD009705' ) THEN
+		                            SC.SUB_CONTENTS_ID||','||SC.FILE_SIZE||','||SC.RSLTN_CD||','||SC.DP_PG_RATIO_CD||','||SC.PROD_VER
+		                            END ) AS FHD_SUB_CONTS
+		                  FROM TB_DP_PROD_RSHP PR
+		                    , TB_DP_PROD PD
+		                    , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
+		                    , TB_DP_MENU_CATEGORY MC
+		                    , TB_DP_PROD_DESC DSC
+		                    , TB_DP_SUB_CONTENTS SC
+		                    , TB_DP_TENANT_PROD TP
+		                    , TB_DP_TENANT_PROD_PRICE PRC
+		                    , TB_DP_VOD_PROD MP
+		                    , TB_DP_SPRT_DEVICE SD
+		                    , TB_CM_DEVICE DV
+		                  WHERE PR.PROD_ID = #{channelId}
+		                    AND PR.PART_PROD_ID = PD.PROD_ID
+	                    	<if test="orderedBy == 'nonPayment'">
+						   	<if test="paymentContentIdList !=null and paymentContentIdList.size() > 0">
+						   	AND PD.CID NOT IN  
+							  <foreach collection="paymentContentIdList" item="item" index="index" open="(" separator="," close=")">
+							  #{item}
+							  </foreach>
+						   	</if>
+						   	</if>
+		                    AND TP.PROD_ID = PD.PROD_ID
+		                    AND PRC.PROD_ID  = PD.PROD_ID AND PRC.TENANT_ID = TP.TENANT_ID
+		                    AND MP.PROD_ID = PD.PROD_ID
+		                    AND TP.TENANT_ID = #{tenantId} AND TP.EXPO_YN = 'Y'
+		                    <choose>
+			                <when test='includeProdStopStatus != null and includeProdStopStatus == "Y"'>
+			                AND TP.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
+			                </when>
+			                <otherwise>
+			                AND TP.PROD_STATUS_CD = 'PD000403'
+			                </otherwise>
+			                </choose>
+		                    AND DSC.PROD_ID = PD.PROD_ID AND DSC.LANG_CD = #{langCd}
+		                    AND PD.PROD_ID = CPM.PROD_ID
+		                    AND CPM.MENU_ID = MC.MENU_ID AND MC.USE_YN = 'Y'
+		                    AND PD.PROD_ID = SD.PROD_ID
+		                    AND (SD.DEVICE_MODEL_CD = #{deviceModel} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+		                    AND DV.DEVICE_MODEL_CD = #{deviceModel} AND DV.USE_YN = 'Y'
+		                    AND SC.PROD_ID = PD.PROD_ID AND SC.SALE_YN ='Y'
+		                    AND (CASE WHEN DV.VIDEO_DRM_SPRT_YN = 'N' AND NVL(PD.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT' ELSE 'SUPPORT' END) = 'SUPPORT'
+		                    AND DECODE( DV.SD_VIDEO_SPRT_YN , 'Y' , DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( DV.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( SC.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1
+		                    AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT
+		                    AND PD.SVC_GRP_CD = 'DP000203' AND PD.CONTENTS_TYPE_CD = 'PD002502' AND PD.SVC_TYPE_CD IN ('DP001112', 'DP001115')
+
+		                ) T1
+		                GROUP BY T1.CID, T1.CHAPTER
+						<if test="orderedBy == 'recent'">
+					    ORDER BY T1.CHAPTER DESC, LAST_DEPLOY_DT DESC
+					  	</if>
+					  	<if test="orderedBy == 'regDate' or orderedBy == 'nonPayment'">
+					    ORDER BY T1.CHAPTER ASC, LAST_DEPLOY_DT DESC
+					  	</if>
+		            ) T2
+		            WHERE 1=1    
+		        ) T3
+		        wHERE 1=1
+				<if test="baseChapter != null and baseChapter > 0">
+                	<if test="orderedBy == 'recent'">
+				<![CDATA[AND NVL(T3.CHAPTER, 999) < #{baseChapter}]]>
+					</if>
+					<if test="orderedBy == 'regDate' or orderedBy == 'nonPayment'">
+				  AND NVL(T3.CHAPTER, 999) > #{baseChapter}
+					</if>
+                </if>
+                ) WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+		    ) T4
+		) T
+		, TB_DP_MENU_CATEGORY_DESC MCD
+		, TB_DP_PROD_IMG TB
+		, TB_DP_TENANT_PROD_STATS STAT
+		WHERE 1=1 
+		AND T.MENU_ID = MCD.MENU_ID AND MCD.LANG_CD = T.LANG_CD
+		AND T.CHNL_PROD_ID = TB.PROD_ID(+) AND T.LANG_CD = TB.LANG_CD(+) AND TB.EXPO_ORD(+) = 1 AND TB.IMG_CD(+) = #{representImgCd}
+		AND T.CHNL_PROD_ID = STAT.PROD_ID(+) AND T.TENANT_ID = STAT.TENANT_ID(+)
+    </select>
+    
+</mapper>

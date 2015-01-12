@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FreePassInfo">
+   <select id="searchFreePassDrmInfo" parameterType="FreePassInfoSacReq" resultType="FreePassInfo">
+   /* FreePassInfoMapper.xml, searchFreePassDrmInfo,정액제 상품  DRM 정보 조회 , 김형식/SK플래닛, 2014-03-03 */
+    SELECT  
+        IV.*
+    FROM (
+        SELECT  
+              PD.PROD_ID
+            , DC.PROD_NM AS cmpxProdNm
+            , PM.PART_PROD_ID AS episodeProdId
+            ,(CASE WHEN CM.CMPX_PROD_CLSF_CD NOT IN ('OR004305') THEN 
+                   (
+                    SELECT 
+                          NVL(
+                               (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_YN
+                                     WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_YN
+                                END),'N') AS DRM_YN
+                     FROM  TB_DP_FIXRATE_PROD_MAPG A
+                          ,TB_DP_PROD_RSHP B
+                          ,TB_DP_PROD C
+                    WHERE A.PART_PROD_ID = B.PROD_ID
+                      AND B.PART_PROD_ID = C.PROD_ID
+                      AND B.PROD_RSHP_CD = 'DP010802'
+                      AND B.PART_PROD_ID = PM.PART_PROD_ID
+                      AND A.PROD_ID = PD.PROD_ID                  
+                   )
+                ELSE
+                  PD.DRM_YN
+              END)  AS DRM_YN            
+            , PM.DRM_USE_PERIOD_UNIT_CD AS USE_PERIOD_UNIT_CD
+            , PM.DRM_USE_PERIOD AS USE_PERIOD            
+            , CM.CMPX_PROD_CLSF_CD
+            , PD.TOP_MENU_ID      
+            , TP.PROD_STATUS_CD      
+        FROM 
+              TB_DP_PROD PD
+            , TB_DP_CMPX_PROD CM
+            , TB_DP_PROD_DESC DC
+            , TB_DP_TENANT_PROD TP
+            , TB_DP_TENANT_PROD_PRICE PR
+            ,(SELECT  A.PROD_ID 
+                     ,B.PART_PROD_ID
+                     ,A.DRM_USE_PERIOD
+                     ,A.DRM_USE_PERIOD_UNIT_CD
+                FROM  TB_DP_FIXRATE_PROD_MAPG A
+                     ,TB_DP_PROD_RSHP B
+               WHERE A.PART_PROD_ID = B.PROD_ID
+                 AND B.PROD_RSHP_CD ='DP010802'
+                 AND B.PART_PROD_ID=#{episodeProdId}
+             )PM             
+        WHERE PD.PROD_ID = #{prodId}
+        AND PD.PROD_ID = CM.PROD_ID
+        AND PD.PROD_ID = DC.PROD_ID
+        AND PD.PROD_ID = TP.PROD_ID
+        AND PD.PROD_ID = PR.PROD_ID
+        AND PD.PROD_ID = PM.PROD_ID
+        AND DC.LANG_CD = #{langCd} 
+        AND TP.TENANT_ID = #{tenantId}
+        AND TP.TENANT_ID = PR.TENANT_ID
+        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+    ) IV 
+    </select>    
+    
+  <select id="searchEpisodeList" parameterType="Map" resultType="EpisodeInfoRes">
+   /* FreePassInfoMapper.xml, searchEpisodeList,정액권의 에피소드 상품 목록 조회 , 김형식/SK플래닛, 2014-04-22 */
+    SELECT  
+        IV.*
+    FROM (
+        SELECT  
+              PD.PROD_ID
+            , DC.PROD_NM
+            , PR.PROD_AMT
+            , TP.PROD_STATUS_CD 
+            , PD.PROD_GRD_CD
+            ,  (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
+                   FROM TB_DP_SPRT_DEVICE A
+                  WHERE (A.DEVICE_MODEL_CD = #{deviceModelCd} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
+                     AND A.PROD_ID = PD.PROD_ID 
+                     AND (
+                       CASE WHEN PM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN 
+								CASE WHEN NVL(PD.DRM_YN, 'N') = 'Y' AND #{supportDevice.videoDrmSprtYn} = 'N' THEN 0
+								     ELSE 
+		                            CASE WHEN #{supportDevice.sdVideoSprtYn} = 'Y' THEN 1 
+		                            ELSE 0
+		                            END
+		                         END
+		                    WHEN PM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN    
+                             CASE WHEN PD.TOP_MENU_ID = 'DP13' THEN
+                                  CASE WHEN #{supportDevice.ebookSprtYn} = 'Y' THEN 1 
+                                  ELSE 0 
+                                  END
+                                  WHEN PD.TOP_MENU_ID = 'DP14' THEN
+                                  CASE WHEN #{supportDevice.comicSprtYn} = 'Y' THEN 1 
+                                  ELSE 0 
+                                  END
+                             ELSE 1
+                             END
+                        END		                    
+                     ) = 1
+               ) AS PHONE_SPRT_YN            
+            ,(CASE WHEN PM.CMPX_PROD_CLSF_CD NOT IN ('OR004305') THEN 
+                   (
+                    SELECT 
+                          NVL(
+                               (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_YN
+                                     WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_YN
+                                END),'N') AS DRM_YN
+                     FROM  TB_DP_FIXRATE_PROD_MAPG A
+                          ,TB_DP_PROD_RSHP B
+                          ,TB_DP_PROD C
+                    WHERE A.PART_PROD_ID = B.PROD_ID
+                      AND B.PART_PROD_ID = C.PROD_ID
+                      AND B.PROD_RSHP_CD = #{prodRshpCd}
+                      AND B.PART_PROD_ID = PM.PART_PROD_ID
+                      AND A.PROD_ID = PM.PROD_ID                  
+                   )
+                ELSE
+                  PD.DRM_YN
+              END)  AS DRM_YN               
+            , PD.USE_PERIOD_UNIT_CD
+            , PD.USE_PERIOD    
+            , PD.CID        
+        FROM 
+              TB_DP_PROD PD
+            , TB_DP_PROD_DESC DC
+            , TB_DP_TENANT_PROD TP
+            , TB_DP_TENANT_PROD_PRICE PR
+            ,(SELECT  A.PROD_ID 
+                    , B.PART_PROD_ID
+                    , C.CMPX_PROD_CLSF_CD
+                FROM  TB_DP_FIXRATE_PROD_MAPG A
+                     ,TB_DP_PROD_RSHP B
+                     ,TB_DP_CMPX_PROD C
+                     ,TB_DP_PROD_DESC D
+                     ,TB_DP_TENANT_PROD E
+                     ,TB_DP_TENANT_PROD_PRICE F
+               WHERE A.PART_PROD_ID = B.PROD_ID
+                 AND A.PROD_ID = C.PROD_ID
+                 AND A.PROD_ID = D.PROD_ID
+                 AND A.PROD_ID = E.PROD_ID
+                 AND A.PROD_ID = F.PROD_ID
+		         AND D.LANG_CD = #{langCd} 
+		         AND E.TENANT_ID = #{tenantId}
+		         AND E.TENANT_ID = F.TENANT_ID 
+		         AND SYSDATE BETWEEN F.APPLY_START_DT AND F.APPLY_END_DT              
+                 AND B.PROD_RSHP_CD =#{prodRshpCd}
+                 AND A.PROD_ID =#{prodId}
+                 AND C.CMPX_PROD_CLSF_CD =#{cmpxProdClsfCd}
+             )PM             
+        WHERE PD.PROD_ID = PM.PART_PROD_ID
+        AND PD.PROD_ID = DC.PROD_ID
+        AND PD.PROD_ID = TP.PROD_ID
+        AND PD.PROD_ID = PR.PROD_ID
+        AND DC.LANG_CD = #{langCd} 
+        AND TP.TENANT_ID = #{tenantId}
+        AND TP.TENANT_ID = PR.TENANT_ID 
+        <if test="cmpxProdClsfCd == 'OR004303' or  cmpxProdClsfCd == 'OR004304'">
+        AND 'DP004301' = (SELECT BOOK_CLSF_CD  FROM TB_DP_EBOOK_PROD WHERE PROD_ID =PD.PROD_ID AND ROWNUM=1) /* 전권 일때는 단행만 */
+        </if>                   
+        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+    ) IV 
+    </select>    
+    
+    <select id="searchFreepassBasicList" parameterType="Map" resultType="FreePassBasicInfo">
+      /* FreePassInfoMapper.xml, searchFreepassBasicList,정액권 기본 정보 조회 , 김형식/SK플래닛, 2014-06-09 */
+         SELECT  
+	             PD.PROD_ID
+	           , DC.PROD_NM
+	           , CM.CMPX_PROD_CLSF_CD AS PLAN_TYPE     
+           FROM 
+                 TB_DP_PROD PD
+               , TB_DP_CMPX_PROD CM
+               , TB_DP_PROD_DESC DC
+               , TB_DP_TENANT_PROD TP
+           WHERE PD.PROD_ID = #{prodId}
+           AND PD.PROD_ID = CM.PROD_ID
+           AND PD.PROD_ID = DC.PROD_ID
+           AND PD.PROD_ID = TP.PROD_ID
+           AND DC.LANG_CD = #{lang}
+           AND TP.TENANT_ID = #{tenantId}
+    </select>     
+</mapper>

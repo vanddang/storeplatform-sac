@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LocalSci">
+    <!-- Aid로 Seller Key 조회 -->
+    <select id="getSellerKey" parameterType="HashMap" resultType="String">
+		SELECT /* LocalSciMapper.getSellerKey, AID로 SELLER KEY 조회 , 이석희/아이에스플러스, 2014-02-13 */
+		       SELLER_MBR_NO
+		  FROM 
+		       (
+		        SELECT A.SELLER_MBR_NO
+		          FROM TB_DP_PROD        A
+		             , TB_DP_APP_PROD    B
+		         WHERE 1=1
+		           AND A.PROD_ID = B.PROD_ID
+		           AND A.SVC_GRP_CD = 'DP000201'
+		           AND A.TOP_MENU_ID != 'DP02'   
+		           AND B.AID = #{aid}
+		          ORDER BY A.REG_DT DESC
+		        )
+		  WHERE ROWNUM =1
+    </select>
+    
+    <!-- 상품 존재 유무 조회 -->
+    <select id="selectTenantProdStats" parameterType="HashMap" resultType="Integer">
+        SELECT /* LocalSciMapper.selectTenantProdStats, 상품 존재 유무 조회 , 이석희/아이에스플러스, 2014-03-24 */
+               NVL(COUNT(*),0) AS COUNT
+          FROM TB_DP_TENANT_PROD_STATS
+         WHERE 1=1
+           AND TENANT_ID = #{tenantId}
+           AND PROD_ID = #{productId}
+    </select>    
+    
+    <!-- 상품 기본 정보(상품군) 조회 -->
+    <select id="selectProductInfo" parameterType="HashMap" resultType="ProductBasicInfo">
+		SELECT /* LocalSciMapper.selectProductInfo, 상품 기본정보(서비스 그룹) 조회 , 이석희/아이에스플러스, 2014-03-24 */
+		        A.PROD_ID AS PART_PROD_ID
+		      , B.PROD_ID
+		      , A.SVC_GRP_CD
+		      , A.SVC_TYPE_CD
+		      , A.CONTENTS_TYPE_CD
+		      , A.META_CLSF_CD
+		      , A.TOP_MENU_ID       
+		      , C.CATALOG_ID       
+		  FROM TB_DP_PROD A
+		      ,TB_DP_PROD_RSHP B
+		      ,TB_DP_PROD_CATALOG_MAPG C
+		      ,TB_DP_TENANT_PROD D
+		 WHERE 1=1 
+		   AND A.PROD_ID = B.PART_PROD_ID
+		   AND B.PROD_ID = C.PROD_ID(+)
+		   AND A.PROD_ID = D.PROD_ID
+		   AND A.PROD_ID = #{productId}
+		   AND C.BASE_YN(+) ='Y'
+		   AND C.USE_YN(+) ='Y'
+		   AND D.TENANT_ID =#{tenantId}    
+    </select>    
+    
+    <!-- 상품 구매수 조회 -->
+    <select id="getPurchaseCount" parameterType="HashMap" resultType="Integer">
+        SELECT /* LocalSciMapper.getPurchaseCount, 상품 구매수 조회 , 이석희/아이에스플러스, 2014-02-13 */
+               NVL(PRCHS_CNT, 0) AS PRCHS_CNT
+          FROM TB_DP_TENANT_PROD_STATS
+         WHERE 1=1
+           AND TENANT_ID = #{tenantId}
+           AND PROD_ID = #{productId}
+    </select>    
+        
+    <!-- 상품 구매건수 업데이트 상품이 없을시 Insert-->
+    <insert id="createPurchaseProd" parameterType="HashMap">
+       /* LocalSciMapper.createPurchaseProd, 상품 구매수 조회시 조회대상 상품이 없을때 상품 Insert , 이석희/아이에스플러스, 2014-02-13 */
+        INSERT INTO TB_DP_TENANT_PROD_STATS(
+             TENANT_ID
+           , PROD_ID
+           , PRCHS_CNT
+           , REG_DT
+           , UPD_DT
+        )VALUES(
+            #{tenantId}
+           ,#{productId}
+           ,#{purchaseCount,jdbcType=NUMERIC}
+           , SYSDATE
+           , SYSDATE
+        )
+    </insert>
+    
+    <!-- 상품 구매건수 업데이트 -->
+    <update id="updatePurchaseCount" parameterType="HashMap">
+        /* LocalSciMapper.updatePurchaseCount,상품 구매건수 UPDATE , 이석희/아이에스플러스, 2014-02-14 */
+		UPDATE TB_DP_TENANT_PROD_STATS
+		   SET PRCHS_CNT =  ( SELECT NVL(PRCHS_CNT, 0) + #{purchaseCount,jdbcType=NUMERIC} 
+                                  FROM TB_DP_TENANT_PROD_STATS
+                                 WHERE TENANT_ID =#{tenantId}
+                                   AND PROD_ID = #{productId}
+                              )			   
+		 WHERE TENANT_ID = #{tenantId} 
+		   AND PROD_ID= #{productId}
+    </update>
+    
+    <!-- 회원 평점 테이블 회원별 중복 상품 조회 -->
+    <select id="getMbrAvgProdId" parameterType="ChangeDisplayUser" resultType="Map">
+        SELECT /* LocalSciMapper.xml, getMbrAvgProdId, SAC : 남궁석호, 2014-06-16 */
+               PROD_ID
+          FROM TB_DP_MBR_AVG
+         WHERE TENANT_ID = #{tenantId}
+           AND MBR_NO = #{newUserKey}
+           AND PROD_ID IN ( SELECT PROD_ID
+                              FROM TB_DP_MBR_AVG
+                             WHERE TENANT_ID = #{tenantId}
+                               AND MBR_NO = #{oldUserKey}
+                           )
+    </select>
+
+    <!-- 회원 평점 테이블 회원별 중복 상품 삭제 -->  
+    <delete id="deleteMbrAvg" parameterType="ChangeDisplayUser">
+        DELETE /* LocalSciMapper.xml, deleteMbrAvg, SAC : 남궁석호, 2014-06-16 */
+          FROM TB_DP_MBR_AVG
+         WHERE TENANT_ID = #{tenantId}
+           AND PROD_ID = #{prodId}
+           AND MBR_NO = #{newUserKey}
+    </delete>
+
+    <!-- 평점 테이블 회원 ID, KEY 변경 -->
+    <update id="changeMbrAvg" parameterType="ChangeDisplayUser">
+	    UPDATE /* LocalSciMapper.xml, changeMbrAvg, SAC : 김현일 , 2014-02-17 */
+	           TB_DP_MBR_AVG
+	      <set>
+	           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">MBR_NO = #{newUserKey} </if>
+	           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserId)">REG_ID = #{newUserId} </if>
+	      </set>
+	      <where>
+	           TENANT_ID = #{tenantId}
+	           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND MBR_NO = #{oldUserKey}</if>
+	      </where>
+    </update>    
+    
+    <!-- 사용후기 테이블 회원 ID, KEY 변경 -->
+    <update id="changeProdNoti" parameterType="ChangeDisplayUser">
+        UPDATE /* LocalSciMapper.xml, changeProdNoti, SAC : 김현일 , 2014-02-17 */
+               TB_DP_PROD_NOTI
+          <set>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">MBR_NO = #{newUserKey} </if>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserId)">REG_ID = #{newUserId} </if>
+          </set>
+          <where>
+               TENANT_ID = #{tenantId}
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND MBR_NO = #{oldUserKey}</if>
+          </where>    
+    </update>
+    
+        <!-- 사용후기 신고 테이블 회원 ID, KEY 변경 -->
+    <update id="changeBadNoti" parameterType="ChangeDisplayUser">
+        UPDATE /* LocalSciMapper.xml, changeProdNoti, SAC : 김현일 , 2014-02-17 */
+               TB_DP_BAD_NOTI
+          <set>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">MBR_NO = #{newUserKey} </if>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserId)">REG_ID = #{newUserId} </if>
+          </set>
+          <where>
+               TENANT_ID = #{tenantId}
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND MBR_NO = #{oldUserKey}</if>
+          </where>    
+    </update>
+    
+    <!-- 사용후기 추천 테이블 회원 ID, KEY 변경 -->
+    <update id="changeProdNotiGood" parameterType="ChangeDisplayUser">
+        UPDATE /* LocalSciMapper.xml, changeProdNotiGood, SAC : 김현일 , 2014-02-17 */
+               TB_DP_PROD_NOTIGOOD
+          <set>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">MBR_NO = #{newUserKey} </if>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserId)">REG_ID = #{newUserId} </if>
+          </set>
+          <where>
+               TENANT_ID = #{tenantId}
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND MBR_NO = #{oldUserKey}</if>
+          </where>    
+    </update>
+    
+    <!-- 메시지 회원 맵핑 테이블 회원ID, KEY 변경 -->
+    <update id="changeMsgMbrMapg" parameterType="ChangeDisplayUser">
+        UPDATE /* LocalSciMapper.xml, changeMsgMbrMapg, SAC : 김현일 , 2014-02-17 */
+               TB_DP_MSG_MBR_MAPG
+          <set>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserKey)">MBR_NO = #{newUserKey} </if>
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(newUserId)">REG_ID = #{newUserId} </if>
+          </set>
+          <where>
+               TENANT_ID = #{tenantId}
+               <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(oldUserKey)">AND MBR_NO = #{oldUserKey}</if>
+          </where>        
+    </update>
+    
+    <!-- DCD 상품 조회 -->
+    <select id="getDcdSupportProduct" resultType="Map">
+		SELECT /* LocalSciMapper.getDcdSupportProduct, DCD 상품 조회 , 이석희/아이에스플러스, 2014-02-17 */
+		       PROD_ID
+		      ,DCD_SPRT_CD
+		  FROM TB_DP_DCD_APP_PROD
+		 WHERE (DCD_SPRT_CD ='PD005201' OR  DCD_SPRT_CD ='Y')    
+    </select>
+    
+    <!-- 특가 상품 존재 유무 조회 -->
+    <select id="selectSpecialProdCount" parameterType="HashMap" resultType="Integer">
+        SELECT /* LocalSciMapper.selectSpecialProdCount, 특가 상품 존재 유무 조회 , 김형식/지티소프트, 2014-03-24 */
+               NVL(COUNT(*),0) AS COUNT
+          FROM TB_DP_SPRC_PROD_PRCHS_MANG
+         WHERE 1=1
+           AND PROD_ID = #{productId}
+           AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
+    </select>      
+
+    <!--특가 상품 구매수 조회 -->
+    <select id="getSpecialPurchaseCount" parameterType="HashMap" resultType="Integer">
+        SELECT /* LocalSciMapper.getSpecialPurchaseCount, 특가 상품 구매수 조회 , 김형식/지티소프트, 2014-02-13 */
+               NVL(PRCHS_CNT, 0) AS PRCHS_CNT
+          FROM TB_DP_SPRC_PROD_PRCHS_MANG
+         WHERE 1=1
+           AND PROD_ID = #{productId}
+           AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
+    </select>        
+    <!--특가 상품 구매건수 업데이트 상품이 없을시 Insert-->
+    <insert id="createSpecialPurchaseProd" parameterType="HashMap">
+       /* LocalSciMapper.createSpecialPurchaseProd,특가 상품 구매수 조회시 조회대상 상품이 없을때 상품 Insert , 김형식/지티소프트, 2014-02-13 */
+        INSERT INTO TB_DP_SPRC_PROD_PRCHS_MANG(
+             PRCHS_DT
+           , PROD_ID
+           , PRCHS_CNT
+           , REG_DT
+           , UPD_DT
+        )VALUES(
+            #{purchaseDate}
+           ,#{productId}
+           ,#{purchaseCount,jdbcType=NUMERIC}
+           , SYSDATE
+           , SYSDATE
+        )
+    </insert>    
+    
+    <!-- 특가 상품 구매건수 업데이트 -->
+    <update id="updateSpecialPurchaseCount" parameterType="HashMap">
+        /* LocalSciMapper.updateSpecialPurchaseCount,특가 상품 구매건수 UPDATE ,  김형식/지티소프트, 2014-02-14 */
+        UPDATE TB_DP_SPRC_PROD_PRCHS_MANG
+           SET PRCHS_CNT =  ( SELECT NVL(PRCHS_CNT, 0) + #{purchaseCount,jdbcType=NUMERIC} 
+                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG
+                                 WHERE 1=1
+                                   AND PROD_ID = #{productId}
+                                   AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
+                              )
+                ,UPD_DT = SYSDATE            
+         WHERE 1=1 
+           AND PROD_ID= #{productId}
+           AND TO_CHAR(PRCHS_DT,'YYYYMMDD') =#{purchaseDate}
+    </update>    
+    
+</mapper>

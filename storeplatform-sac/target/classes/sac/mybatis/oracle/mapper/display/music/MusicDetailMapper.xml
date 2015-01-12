@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MusicDetail">
+
+    <!-- Music Main -->
+    <select id="getMusicDetail" parameterType="com.skplanet.storeplatform.sac.display.music.vo.MusicDetailParam" resultType="com.skplanet.storeplatform.sac.display.music.vo.MusicDetail">
+        SELECT <![CDATA[/* MusicDetailMapper.xml, getMusicDetail, SAC : 정희원 , 2014-01-24 */
+            CPD.PROD_ID AS CHNL_ID,
+            EPD.PROD_ID AS EPSD_ID,
+            AL_RS.PROD_ID AS ALBUM_ID,
+            TPRC.PROD_AMT,
+            PDESC.PROD_NM,
+            NVL(CASE WHEN TS.AVG_EVLU_SCORE > 0 AND TS.AVG_EVLU_SCORE < 1 THEN 1 WHEN TS.AVG_EVLU_SCORE > 5 THEN 5
+            ELSE ROUND(TS.AVG_EVLU_SCORE, 1) END, 0) as AVG_EVLU_SCORE,
+            NVL(TS.PRCHS_CNT, 0) AS DWLD_CNT,
+            NVL(TS.PATICPERS_CNT, 0) AS PATICPERS_CNT,
+            PDESC.ARTIST1_ID,
+            PDESC.ARTIST1_NM,
+            PDESC.ARTIST2_ID,
+            PDESC.ARTIST2_NM,
+            PDESC.ARTIST3_ID,
+            PDESC.ARTIST3_NM,
+            DECODE(MM.BELL_SPRT_YN, 'Y', 1, 0) AS BELL_SPRT_YN,
+            DECODE(MM.COLORRING_SPRT_YN, 'Y', 1, 0) AS COLORRING_SPRT_YN,
+            EPD.PROD_GRD_CD,
+            MM.AGENCY_NM,
+            MM.CHNL_COMP_NM,
+            MM.OUTSD_CONTENTS_ID,
+            MM.ISSUE_DAY,
+            PI.FILE_PATH || PI.FILE_NM AS THM_PATH,
+            PI.FILE_PATH || PI.FILE_NM AS ALBUM_THM_PATH,
+            ARTIST.IMG_FILE_PATH AS ARTIST_THM_PATH,
+            TP.PROD_STATUS_CD,
+            PDESC.PROD_BASE_DESC,
+            EPD.CID,
+            MM.ALBUM_TYPE_NM,
+            SD.DEVICE_MODEL_CD,
+            CPD.SVC_GRP_CD,
+            NVL((SELECT MUSIC_SPRT_YN FROM TB_CM_DEVICE CM2 WHERE CM2.DEVICE_MODEL_CD = #{deviceModelCd}), 'N') AS MUSIC_SPRT_YN,
+            NVL2(SSML.STATS_KEY, 'Y', 'N') AS LIKE_YN
+            ]]>
+        FROM TB_DP_PROD CPD
+            INNER JOIN TB_DP_PROD_RSHP RS
+                ON RS.PROD_ID = CPD.PROD_ID
+            INNER JOIN TB_DP_PROD EPD
+                ON EPD.PROD_ID = RS.PART_PROD_ID
+            LEFT OUTER JOIN TB_DP_SPRT_DEVICE SD
+                ON SD.PROD_ID = EPD.PROD_ID AND SD.DEVICE_MODEL_CD IN (
+                    SELECT ISD.DEVICE_MODEL_CD
+                    FROM TB_CM_DEVICE CM
+                        INNER JOIN TB_DP_SPRT_DEVICE ISD
+                            ON ISD.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
+                    WHERE ISD.DEVICE_MODEL_CD IN <foreach collection="deviceModelCds" separator="," item="v" open="(" close=")">#{v}</foreach>
+                          AND ISD.PROD_ID = EPD.PROD_ID
+                          AND USE_YN = 'Y'
+                          AND MUSIC_SPRT_YN = 'Y'
+                          AND ROWNUM = 1
+                )
+            INNER JOIN TB_DP_MUSIC_PROD MM
+                ON EPD.PROD_ID = MM.PROD_ID
+            INNER JOIN TB_DP_PROD_DESC PDESC
+                ON PDESC.PROD_ID = EPD.PROD_ID
+            LEFT OUTER JOIN TB_DP_PROD_IMG PI
+                ON PI.PROD_ID = CPD.PROD_ID AND PI.EXPO_ORD = 1 AND PI.LANG_CD = PDESC.LANG_CD AND PI.IMG_CD = 'DP000162' -- 곡 이미지
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID = EPD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD CTP
+                ON CTP.PROD_ID = CPD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+                ON TPRC.PROD_ID = EPD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
+                ON TS.PROD_ID = CPD.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_PROD_RSHP AL_RS
+            	ON AL_RS.PART_PROD_ID = CPD.PROD_ID AND AL_RS.PROD_RSHP_CD = 'DP010804'
+            LEFT OUTER JOIN TB_DP_ARTIST ARTIST
+            	ON PDESC.ARTIST1_ID = ARTIST.ARTIST_ID
+            LEFT OUTER JOIN TB_DP_SOCIAL_STATS_MBR_LIKE SSML
+                ON SSML.TENANT_ID = TP.TENANT_ID AND SSML.STATS_KEY = CPD.PROD_ID
+                  AND SSML.STATS_CLSF = 'DP01210002' AND SSML.USER_KEY = #{userKey, jdbcType=VARCHAR}
+        WHERE CPD.META_CLSF_CD = 'CT25'
+              AND CPD.CONTENTS_TYPE_CD = 'PD002501'
+              AND EPD.CONTENTS_TYPE_CD = 'PD002502'
+              AND RS.PROD_RSHP_CD = 'DP010802'
+              --AND AL_RS.PROD_RSHP_CD = 'DP010804'
+              AND EPD.META_CLSF_CD = 'CT25'
+              AND TP.TENANT_ID = #{tenantId}
+              AND PDESC.LANG_CD = #{langCd}
+              AND CPD.PROD_ID = #{channelId}
+              AND TP.EXPO_YN = 'Y'
+              AND TP.PROD_STATUS_CD IN ( 'PD000403', 'PD000404', 'PD000409' )
+              AND CTP.PROD_STATUS_CD IN ( 'PD000402', 'PD000403', 'PD000404' )
+              AND ROWNUM = 1
+    </select>
+
+    <select id="getSubContentList" parameterType="String" resultType="com.skplanet.storeplatform.sac.display.music.vo.SubContent">
+        /* MusicDetailMapper.xml, getSubContentList, SAC : 정희원 , 2014-01-24 */
+        select
+            SC.DP_PG_QULT_CD,
+            SC.FILE_PATH,
+            SC.FILE_SIZE
+        from TB_DP_SUB_CONTENTS SC
+        where
+            SC.PROD_ID = #{value}
+    </select>
+
+    <select id="getRelatedProductList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.music.vo.RelatedProduct">
+        SELECT
+            RPROD.PROD_ID,
+            RPROD.META_CLSF_CD
+        FROM
+            TB_DP_PROD CPROD
+            INNER JOIN TB_DP_PROD_RSHP RSHP
+                ON RSHP.PROD_ID = CPROD.PROD_ID AND PROD_RSHP_CD = 'DP010802' -- CHNL - EPSD
+            INNER JOIN TB_DP_PROD RPROD
+                ON RPROD.PROD_ID = RSHP.PART_PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID = RSHP.PART_PROD_ID
+        WHERE 1=1
+              AND CPROD.PROD_ID = #{channelId}
+              AND TP.TENANT_ID = #{tenantId}
+              AND TP.PROD_STATUS_CD = 'PD000403'
+              AND RPROD.META_CLSF_CD IN
+        <foreach collection="metaCodes" separator="," item="v" open="(" close=")">#{v}</foreach>
+    </select>
+    
+</mapper>

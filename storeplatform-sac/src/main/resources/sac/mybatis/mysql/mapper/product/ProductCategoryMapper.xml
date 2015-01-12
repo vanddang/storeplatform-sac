@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductCategory">
+	<!-- 일반 카테고리 상품 리스트 조회-->
+    <select id="searchNormalList" parameterType="productCategoryReqVO" resultType="ProductCategoryVO">
+		/* 일반 카테고리 상품 리스트 조회 : 이태희/SK플래닛 */
+		SELECT A.PROD_ID,
+		       B.PROD_NM,
+		       #{reqTopCategoryNo} AS TOP_CATEGORY_NO,
+		       '영화' AS TOP_CATEGORY_NM,
+		       #{reqCategoryNo} AS CATEGORY_NO,
+		       '드라마' AS CATEGORY_NM
+		  FROM TB_DP_PROD A
+		 INNER JOIN TB_DP_PROD_DESC B ON A.PROD_ID = B.PROD_ID
+		 LIMIT 0, 10;
+ 	</select>
+ 	
+	<!-- 일반 카테고리 상품 리스트 조회-->
+    <select id="searchTargetList" resultType="ProductCategoryVO">
+		/* 특정 카테고리 상품 리스트 조회 : 이태희/SK플래닛 */
+		SELECT A.PROD_ID,
+		       B.PROD_NM
+		  FROM TB_DP_PROD A
+		 INNER JOIN TB_DP_PROD_DESC B ON A.PROD_ID = B.PROD_ID
+		 LIMIT 10, 10;
+ 	</select>
+</mapper>
