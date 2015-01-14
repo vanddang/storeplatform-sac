@@ -2178,8 +2178,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
 			deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
 			deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
-			if (StringUtils.equals(MemberConstants.TENANT_ID_UPLUS_STORE, tenantId)
-					&& StringUtils.isNotBlank(marketRes.getDeviceInfo().getDeviceKeyAuth())) {
+			if (StringUtils.isNotBlank(marketRes.getDeviceInfo().getDeviceKeyAuth())) {
 				deviceInfo.setDeviceKeyAuth(marketRes.getDeviceInfo().getDeviceKeyAuth()); // U+ Store 필드
 			}
 
