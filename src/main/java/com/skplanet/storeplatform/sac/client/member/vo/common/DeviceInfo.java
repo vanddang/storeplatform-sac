@@ -153,6 +153,16 @@ public class DeviceInfo extends CommonInfo {
 	private String marketDeviceKey;
 
 	/**
+	 * 타사 deviceKey에 대한 hash값(U+ Store).
+	 */
+	private String deviceKeyAuth;
+
+	/**
+	 * 샵클 업데이트 필요 여부(SAP 간편회원인증 API 필드).
+	 */
+	private String isSCUpdate;
+
+	/**
 	 * @return deviceKey
 	 */
 	public String getDeviceKey() {
@@ -550,4 +560,33 @@ public class DeviceInfo extends CommonInfo {
 		this.marketDeviceKey = marketDeviceKey;
 	}
 
+	/**
+	 * @return deviceKeyAuth
+	 */
+	public String getDeviceKeyAuth() {
+		return this.deviceKeyAuth;
+	}
+
+	/**
+	 * @param deviceKeyAuth
+	 *            String
+	 */
+	public void setDeviceKeyAuth(String deviceKeyAuth) {
+		this.deviceKeyAuth = deviceKeyAuth;
+	}
+
+	/**
+	 * @return isSCUpdate
+	 */
+	public String getIsSCUpdate() {
+		return this.isSCUpdate;
+	}
+
+	/**
+	 * @param isSCUpdate
+	 *            String
+	 */
+	public void setIsSCUpdate(String isSCUpdate) {
+		this.isSCUpdate = isSCUpdate;
+	}
 }
