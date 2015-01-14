@@ -14,6 +14,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
+import com.skplanet.storeplatform.sac.other.sacservice.vo.SacServiceSchedule;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,9 +47,21 @@ public class SacServiceDataServiceImplTest {
 	}
 	
 	@Test
-	public void testSelectModel() {
+	public void testSelectModelList() {
 		List<String> list = svc.selectModelList("tstore.test");
-		System.out.println("<<< testSelectModel >>>\n" + list);
+		System.out.println("<<< testSelectModelList >>>\n" + list);
+	}
+	
+	@Test
+	public void testSelectTenantList() {
+		List<String> list = svc.selectTenantList("tstore.gamecash.flatrate");
+		System.out.println("<<< testSelectTenantList >>>\n" + list);
+	}
+	
+	@Test
+	public void testSelectScheduleList() {
+		List<SacServiceSchedule> list = svc.selectScheduleList("tstore.test");
+		System.out.println("<<< testSelectScheduleList >>>\n" + list);
 	}
 
 }
