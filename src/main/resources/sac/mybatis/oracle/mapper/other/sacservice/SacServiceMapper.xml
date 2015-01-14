@@ -3,25 +3,38 @@
 <mapper namespace="SacService">
 
 	<select id="selectOne" parameterType="string" resultType="SacService">
-   		/* SacServiceMapper.xml, detail, SAC : 서대영, 2014-08-11 */
+   		/* SacServiceMapper.xml, selectOne, SAC : 서대영, 2014-08-11 */
         SELECT *		
         FROM TB_CM_SERVICE
 		WHERE service_cd = #{serviceCd}
 	</select>
 	
 	<select id="selectSimOperatorList" parameterType="string" resultType="string">
-   		/* SacServiceMapper.xml, detail, SAC : 서대영, 2014-08-11 */
+   		/* SacServiceMapper.xml, selectSimOperatorList, SAC : 서대영, 2014-08-11 */
         SELECT SIM_OPERATOR	
         FROM TB_CM_SERVICE_SIM_OPERATOR
 		WHERE service_cd = #{serviceCd}
 	</select> 
 
 	<select id="selectModelList" parameterType="string" resultType="string">
-   		/* SacServiceMapper.xml, detail, SAC : 서대영, 2014-08-11 */
+   		/* SacServiceMapper.xml, selectModelList, SAC : 서대영, 2014-08-11 */
         SELECT MODEL	
         FROM TB_CM_SERVICE_MODEL
 		WHERE service_cd = #{serviceCd}
-		ORDER BY service_cd
+	</select>
+	
+	<select id="selectTenantList" parameterType="string" resultType="string">
+   		/* SacServiceMapper.xml, selectTenantList, SAC : 서대영, 2015-01-09 */
+        SELECT TENANT_ID
+        FROM TB_CM_SERVICE_TENANT
+		WHERE service_cd = #{serviceCd}
+	</select> 
+
+	<select id="selectScheduleList" parameterType="string" resultType="com.skplanet.storeplatform.sac.other.sacservice.vo.SacServiceSchedule">
+   		/* SacServiceMapper.xml, selectScheduleList, SAC : 서대영, 2015-01-09 */
+        SELECT SCHEDULE_NO, START_DT, END_DT
+        FROM TB_CM_SERVICE_SCHEDULE
+		WHERE service_cd = #{serviceCd}
 	</select>
     
 </mapper>
