@@ -12,20 +12,27 @@ package com.skplanet.storeplatform.sac.other.sacservice.service;
 import java.util.List;
 
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
+import com.skplanet.storeplatform.sac.other.sacservice.vo.SacServiceSchedule;
 
 /**
  * SacServiceDataService 인터페이스
  *
  * Created on 2014. 08. 26. by 서대영, SK플래닛
+ * Updated on 2015. 01. 09. by 서대영, SK플래닛 : selectTenantList(), selectScheduleList() 추가 
  */
 public interface SacServiceDataService {
 
-	public SacService selectService(String serviceCd);
+	SacService selectService(String serviceCd);
 
-	public List<String> selectSimOperatorList(String serviceCd);
+	List<String> selectSimOperatorList(String serviceCd);
 	
-	public List<String> selectModelList(String serviceCd);
+	List<String> selectModelList(String serviceCd);
+	
+	List<String> selectTenantList(String serviceCd);
+
+	List<SacServiceSchedule> selectScheduleList(String serviceCd);
 	
 	void flushCache();
+
 	
 }

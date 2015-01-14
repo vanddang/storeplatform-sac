@@ -15,6 +15,7 @@ import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveReq;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveRes;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.SetActiveReq;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.SetActiveRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
 /**
@@ -24,19 +25,19 @@ import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
  */
 public interface SacServiceTypeService {
 
-	SacService fromGetReq(GetActiveReq req);
+	SacService fromGetReq(GetActiveReq req, SacRequestHeader header);
 
 	GetActiveRes toGetRes(SacService vo);
 
-	SacService fromSetReq(SetActiveReq req);
+	SacService fromSetReq(SetActiveReq req, SacRequestHeader header);
 
 	SetActiveRes toSetRes(SacService vo);
 
-	List<SacService> fromGetReqList(List<GetActiveReq> reqList);
+	List<SacService> fromGetReqList(List<GetActiveReq> reqList, SacRequestHeader header);
 
 	List<GetActiveRes> toGetResList(List<SacService> voList);
 
-	List<SacService> fromSetReqList(List<SetActiveReq> reqList);
+	List<SacService> fromSetReqList(List<SetActiveReq> reqList, SacRequestHeader header);
 
 	List<SetActiveRes> toSetResList(List<SacService> voList);
 }

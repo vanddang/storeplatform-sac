@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
+import com.skplanet.storeplatform.sac.other.sacservice.vo.SacServiceSchedule;
 
 /**
  * SacServiceDataService 클래스
@@ -27,6 +28,7 @@ import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
  * Created on 2014. 06. 02. by 서대영, SK플래닛 : DB 셋업이 될 때 까지 임시 메모리 Map으로 구현
  * Updated on 2014. 07. 16. by 서대영, SK플래닛 : 마일리지 지원 여부 추가
  * Updated on 2014. 08. 27. by 서대영, SK플래닛 : 임시 Map에서 DB 조회 방식으로 변경 + 캐시 적용
+ * Updated on 2015. 01. 09. by 서대영, SK플래닛 : selectTenantList(), selectScheduleList() 추가 
  */
 @Service
 public class SacServiceDataServiceImpl implements SacServiceDataService {
@@ -64,12 +66,34 @@ public class SacServiceDataServiceImpl implements SacServiceDataService {
 		}
 		return list;
 	}
+	
+	@Cacheable(value = "sac:other:sacservice:selectTenantList")
+	@Override
+	public List<String> selectTenantList(String serviceCd) {
+		List<String> list = commonDAO.queryForList("SacService.selectTenantList", serviceCd, String.class);
+		if (list == null) {
+			list = Collections.emptyList();
+		}
+		return list;
+	}
+
+	@Cacheable(value = "sac:other:sacservice:selectScheduleList")
+	@Override
+	public List<SacServiceSchedule> selectScheduleList(String serviceCd) {
+		List<SacServiceSchedule> list = commonDAO.queryForList("SacService.selectScheduleList", serviceCd, SacServiceSchedule.class);
+		if (list == null) {
+			list = Collections.emptyList();
+		}
+		return list;
+	}
 
     @CacheEvict(value = {
     		"sac:other:sacservice:selectService",
     		"sac:other:sacservice:selectSimOperatorList",
-    		"sac:other:sacservice:selectModelList"},
-    		allEntries = true)
+    		"sac:other:sacservice:selectModelList",
+    		"sac:other:sacservice:selectTenantList",
+    		"sac:other:sacservice:selectScheduleList"
+    }, allEntries = true)
 	@Override
 	public void flushCache() {
 	}

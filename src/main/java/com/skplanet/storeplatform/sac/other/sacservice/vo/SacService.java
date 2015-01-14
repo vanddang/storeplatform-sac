@@ -10,19 +10,19 @@ public class SacService extends CommonInfo {
 	
 	private String simOperator;
 	private String model;
+	private String tenantId;
 	
 	private SacServiceStatus status;
 	private SacServiceAuthType simOperatorAuthType;
 	private SacServiceAuthType modelAuthType;
+	private SacServiceAuthType tenantAuthType;
+	private SacServiceAuthType scheduleAuthType;
 	
 	private boolean active;
 	private boolean applied;
 	
 	private String name;
 	private String description;
-	
-	private String[] simOperators;
-	private String[] models;
 	
 	public SacService() {
 	}
@@ -55,6 +55,18 @@ public class SacService extends CommonInfo {
 	public void setModelAuthType(SacServiceAuthType modelAuthType) {
 		this.modelAuthType = modelAuthType;
 	}
+	public SacServiceAuthType getTenantAuthType() {
+		return tenantAuthType;
+	}
+	public void setTenantAuthType(SacServiceAuthType tenantAuthType) {
+		this.tenantAuthType = tenantAuthType;
+	}
+	public SacServiceAuthType getScheduleAuthType() {
+		return scheduleAuthType;
+	}
+	public void setScheduleAuthType(SacServiceAuthType scheduleAuthType) {
+		this.scheduleAuthType = scheduleAuthType;
+	}
 	public Boolean isApplied() {
 		return applied;
 	}
@@ -72,18 +84,6 @@ public class SacService extends CommonInfo {
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public String[] getSimOperators() {
-		return simOperators;
-	}
-	public void setSimOperators(String[] simOperators) {
-		this.simOperators = simOperators;
-	}
-	public String[] getModels() {
-		return models;
-	}
-	public void setModels(String[] models) {
-		this.models = models;
 	}
 
 	public boolean isActive() {
@@ -108,6 +108,14 @@ public class SacService extends CommonInfo {
 
 	public void setModel(String model) {
 		this.model = model;
+	}
+
+	public String getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }

@@ -13,12 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveReq;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveRes;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.SetActiveReq;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.SetActiveRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
 /**
@@ -30,12 +32,27 @@ import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 public class SacServiceTypeServiceImpl implements SacServiceTypeService {
 
 	@Override
-	public SacService fromGetReq(GetActiveReq req) {
+	public SacService fromGetReq(GetActiveReq req, SacRequestHeader header) {
+		String serviceCd = req.getServiceCd();
+		String tenantId = chooseValueFromBodyOrHeader(req.getServiceCd(), header.getTenantHeader().getTenantId());
+		String simOperator = chooseValueFromBodyOrHeader(req.getSimOperator(), header.getNetworkHeader().getSimOperator());
+		String model = chooseValueFromBodyOrHeader(req.getModel(), header.getDeviceHeader().getModel());
+		
 		SacService vo = new SacService();
-		vo.setServiceCd(req.getServiceCd());
-		vo.setSimOperator(req.getSimOperator());
-		vo.setModel(req.getModel());
+		vo.setServiceCd(serviceCd);
+		vo.setTenantId(tenantId);
+		vo.setSimOperator(simOperator);
+		vo.setModel(model);
+		
 		return vo;
+	}
+	
+	public static String chooseValueFromBodyOrHeader(String valueFromBody, String valueFromHeader) {
+		if (StringUtils.isNotBlank(valueFromBody)) {
+			return valueFromBody;
+		} else {
+			return valueFromHeader;
+		}
 	}
 
 	@Override
@@ -49,12 +66,18 @@ public class SacServiceTypeServiceImpl implements SacServiceTypeService {
 	}
 
 	@Override
-	public SacService fromSetReq(SetActiveReq req) {
+	public SacService fromSetReq(SetActiveReq req, SacRequestHeader header) {
+		String serviceCd = req.getServiceCd();
+		String tenantId = chooseValueFromBodyOrHeader(req.getServiceCd(), header.getTenantHeader().getTenantId());
+		String simOperator = chooseValueFromBodyOrHeader(req.getSimOperator(), header.getNetworkHeader().getSimOperator());
+		String model = chooseValueFromBodyOrHeader(req.getModel(), header.getDeviceHeader().getModel());
+		
 		SacService vo = new SacService();
-		vo.setServiceCd(req.getServiceCd());
-		vo.setSimOperator(req.getSimOperator());
-		vo.setModel(req.getModel());
-		vo.setActive(req.isActive());
+		vo.setServiceCd(serviceCd);
+		vo.setTenantId(tenantId);
+		vo.setSimOperator(simOperator);
+		vo.setModel(model);
+
 		return vo;
 	}
 
@@ -69,12 +92,12 @@ public class SacServiceTypeServiceImpl implements SacServiceTypeService {
 	}
 
 	@Override
-	public List<SacService> fromGetReqList(List<GetActiveReq> reqList) {
+	public List<SacService> fromGetReqList(List<GetActiveReq> reqList, SacRequestHeader header) {
 		List<SacService> voList = new ArrayList<SacService>();
 
 		if (CollectionUtils.isNotEmpty(reqList)) {
 			for (GetActiveReq req : reqList) {
-				SacService vo = this.fromGetReq(req);
+				SacService vo = this.fromGetReq(req, header);
 				voList.add(vo);
 			}
 		}
@@ -97,12 +120,12 @@ public class SacServiceTypeServiceImpl implements SacServiceTypeService {
 	}
 
 	@Override
-	public List<SacService> fromSetReqList(List<SetActiveReq> reqList) {
+	public List<SacService> fromSetReqList(List<SetActiveReq> reqList, SacRequestHeader header) {
 		List<SacService> voList = new ArrayList<SacService>();
 
 		if (CollectionUtils.isNotEmpty(reqList)) {
 			for (SetActiveReq req : reqList) {
-				SacService vo = this.fromSetReq(req);
+				SacService vo = this.fromSetReq(req, header);
 				voList.add(vo);
 			}
 		}
