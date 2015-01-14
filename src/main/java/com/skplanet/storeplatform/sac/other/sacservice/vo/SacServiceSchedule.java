@@ -12,6 +12,9 @@ public class SacServiceSchedule extends CommonInfo {
 	private Date startDt;
 	private Date endDt;
 	
+	public SacServiceSchedule() {
+	}
+	
 	public SacServiceSchedule(int scheduleNo, Date startDt, Date endDt) {
 		this.scheduleNo = scheduleNo;
 		this.startDt = startDt;
