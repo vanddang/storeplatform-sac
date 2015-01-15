@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,12 +26,15 @@ import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckSaveNSyncResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ReviveUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
@@ -97,9 +103,10 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		String isSaveNSync = checkSaveNSyncResponse.getIsSaveNSync(); // 변동성대상여부.
 		String deviceKey = checkSaveNSyncResponse.getDeviceKey(); // 휴대기기 Key.
 		String userKey = checkSaveNSyncResponse.getUserKey(); // 사용자 Key.
-		String preMbrNo = checkSaveNSyncResponse.getImMbrNo(); // 사용자 IDP Key
+		// String preMbrNo = checkSaveNSyncResponse.getImMbrNo(); // 사용자 IDP Key
 		String preDeviceId = checkSaveNSyncResponse.getPreDeviceID(); // 이전 MSISDN.
-		String nowDeviceId = checkSaveNSyncResponse.getDeviceID(); // 현재 MSISDN.
+		String nowDeviceId = null; // 현재 MSISDN.
+		String svcMangNo = checkSaveNSyncResponse.getSvcMangNo(); // SKT 서비스 관리번호
 
 		SaveAndSync saveAndSync = new SaveAndSync();
 		String newMbrNo = null;
@@ -107,6 +114,11 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
 			LOGGER.info("{} 변동성 대상({})", deviceId, StringUtils.equals(isActive, "Y") ? "번호변경" : "번호이동");
+
+			if (StringUtils.equals(isActive, "Y")) { // 번호변경인 경우 현재 deviceId를 조회한다.
+				nowDeviceId = this.schDeviceIdBySvcMangNo(sacHeader, svcMangNo);
+			}
+
 			LOGGER.info(
 					"{} CheckSaveNSyncResponse : isActive={},isSaveNSync={},deviceKey={},userKey={},preDeviceId={},nowDeviceId={}",
 					deviceId, isActive, isSaveNSync, deviceKey, userKey, preDeviceId, nowDeviceId);
@@ -152,6 +164,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				} catch (AmqpException ex) {
 					LOGGER.info("MQ process fail {}", mqInfo);
 				}
+
 			} else {
 
 				// 번호 이동만.....
@@ -188,6 +201,40 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 		return saveAndSync;
 
+	}
+
+	/**
+	 * <pre>
+	 * 번호변경된 현재 deviceId를 조회한다.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param svcMangNo
+	 *            String
+	 * @return nowDeviceId String
+	 */
+	private String schDeviceIdBySvcMangNo(SacRequestHeader sacHeader, String svcMangNo) {
+
+		String nowDeviceId = null;
+
+		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(MemberConstants.KEY_TYPE_SVC_MANG_NO);
+		key.setKeyString(svcMangNo);
+		keySearchList.add(key);
+
+		searchDeviceRequest.setKeySearchList(keySearchList);
+		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
+		if (schDeviceRes != null && schDeviceRes.getUserMbrDevice() != null) {
+			nowDeviceId = schDeviceRes.getUserMbrDevice().getDeviceID();
+		}
+
+		return nowDeviceId;
 	}
 
 	/**
