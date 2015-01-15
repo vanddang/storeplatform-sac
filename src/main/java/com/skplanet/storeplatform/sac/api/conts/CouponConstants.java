@@ -48,6 +48,7 @@ public class CouponConstants {
 
 	public static final String COUPON_IF_ERROR_CODE_COUPONCODE = "3001"; // 잘못된 쿠폰ID
 	public static final String COUPON_IF_ERROR_CODE_POIID = "3002"; // 잘못된 POI ID
+	public static final String COUPON_IF_ERROR_CODE_ITEMCODE = "3003"; // 잘못된 쿠폰ID
 
 	public static final String COUPON_IF_ERROR_CODE_DUP_TXID = "4000"; // 중복 TX_ID [xxxx]
 	public static final String COUPON_IF_ERROR_CODE_NOT_CATID = "4001"; // 미존재 카테고리 ID [xxxx]
@@ -192,26 +193,34 @@ public class CouponConstants {
 	 * @return @String
 	 */
 	public static String getCouponErrorMsg(String code, String errorMsg) {
-		return (code == null) ? "null" : (code.equals(COUPON_IF_ERROR_CODE_OK)) ? "정상" : (code
-				.equals(COUPON_IF_ERROR_CODE_DUP_TXID)) ? "중복 TX_ID" : (code.equals(COUPON_IF_ERROR_CODE_MISS)) ? "필수정보 누락" : (code
-				.equals(COUPON_IF_ERROR_CODE_TYPE)) ? "Parameter 타입 오류" : (code
-				.equals(COUPON_IF_ERROR_CODE_SERVICE_STOP)) ? "Tstore 전시처리 오류(관리자 문의요망)" : (code
-				.equals(COUPON_IF_ERROR_CODE_QUESTION)) ? "알수없는 오류" : (code.equals(COUPON_IF_ERROR_CODE_COUPONCODE)) ? "잘못된 쿠폰ID" : (code
-				.equals(COUPON_IF_ERROR_CODE_POIID)) ? "잘못된 POI ID" : (code.equals(COUPON_IF_ERROR_CODE_NOT_CATID)) ? "미존재 카테고리 ID" : (code
-				.equals(COUPON_IF_ERROR_CODE_NOT_BRID)) ? "미존재 브랜드 ID" : (code
-				.equals(COUPON_IF_ERROR_CODE_NOT_COUPONID)) ? "미존재 쿠폰 ID" : (code
-				.equals(COUPON_IF_ERROR_CODE_NOT_ITEMID)) ? "미존재 Item ID" : (code.equals(COUPON_IF_ERROR_CODE_NOT_BPID)) ? "미등록 BP ID" : (code
-				.equals(COUPON_IF_ERROR_CODE_DUP_BRID)) ? "중복 브랜드 ID" : (code.equals(COUPON_IF_ERROR_CODE_DUP_COUPONID)) ? "중복 쿠폰 ID" : (code
-				.equals(COUPON_IF_ERROR_CODE_DUP_ITEMID)) ? "중복 Item ID" : (code
-				.equals(COUPON_IF_ERROR_CODE_NOT_CATALOGID)) ? "미등록 카탈로그 ID" : (code
-				.equals(COUPON_IF_ERROR_CODE_DUP_CATALOGID)) ? "중복 카탈로그 ID" : (code
-				.equals(COUPON_IF_ERROR_CODE_FILEACESS_ERR)) ? "파일 Access 오류" : (code
-				.equals(COUPON_IF_ERROR_CODE_IMGTYPE_ERR)) ? "이미지 타입 오류" : (code
-				.equals(COUPON_IF_ERROR_CODE_IMGCRE_ERR)) ? "이미지 생성 오류" : (code
-				.equals(COUPON_IF_ERROR_CODE_IMGSIZE_ERR)) ? "이미지 사이즈 오류" : (code.equals(COUPON_IF_ERROR_CODE_DATA_ERR)) ? "Data 오류" : (code
-				.equals(COUPON_IF_ERROR_CODE_DB_ERR)) ? "DB 장애 오류" : (code.equals(COUPON_IF_ERROR_CODE_NOT_SPECIAL)) ? "특가상품 없음" : (code
-				.equals(COUPON_IF_ERROR_CODE_CATALOG_DIFFERENT_PROD)) ? "기존 등록된 상품과 CATALOG_ID가 다릅니다" : (code
-				.equals(COUPON_IF_ERROR_CODE_DB_ETC)) ? errorMsg : code;
+		return (code == null) ? "null" : (code.equals(COUPON_IF_ERROR_CODE_OK)) ? "정상" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_DUP_TXID)) ? "중복 TX_ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_MISS)) ? "필수정보 누락" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_TYPE)) ? "Parameter 타입 오류" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_SERVICE_STOP)) ? "Tstore 전시처리 오류(관리자 문의요망)" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_QUESTION)) ? "알수없는 오류" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_COUPONCODE)) ? "잘못된 쿠폰ID"
+									   : (code.equals(COUPON_IF_ERROR_CODE_ITEMCODE)) ? "잘못된 아이템ID"											   
+									   : (code.equals(COUPON_IF_ERROR_CODE_POIID)) ? "잘못된 POI ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_NOT_CATID)) ? "미존재 카테고리 ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_NOT_BRID)) ? "미존재 브랜드 ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_NOT_COUPONID)) ? "미존재 쿠폰 ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_NOT_ITEMID)) ? "미존재 Item ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_NOT_BPID)) ? "미등록 BP ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_DUP_BRID)) ? "중복 브랜드 ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_DUP_COUPONID)) ? "중복 쿠폰 ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_DUP_ITEMID)) ? "중복 Item ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_NOT_CATALOGID)) ? "미등록 카탈로그 ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_DUP_CATALOGID)) ? "중복 카탈로그 ID" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_FILEACESS_ERR)) ? "파일 Access 오류" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_IMGTYPE_ERR)) ? "이미지 타입 오류" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_IMGCRE_ERR)) ? "이미지 생성 오류" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_IMGSIZE_ERR)) ? "이미지 사이즈 오류" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_DATA_ERR)) ? "Data 오류" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_DB_ERR)) ? "DB 장애 오류" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_NOT_SPECIAL)) ? "특가상품 없음" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_CATALOG_DIFFERENT_PROD)) ? "기존 등록된 상품과 CATALOG_ID가 다릅니다" 
+									   : (code.equals(COUPON_IF_ERROR_CODE_DB_ETC)) ? errorMsg : code;
 	}
 
 	/**

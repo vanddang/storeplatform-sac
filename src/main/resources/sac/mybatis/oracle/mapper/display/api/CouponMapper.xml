@@ -713,7 +713,7 @@
     </select>    
     
     <!--특가 상품 상세 조회-->
-    <select id="GET_COUPON_INFO"  resultType="int" parameterType="HashMap">
+    <select id="GET_COUPON_INFO"  resultType="int" parameterType="String">
        /* CouponMapper.xml, GET_COUPON_INFO, 특가 상품 상세 조회, 김형식/SK플래닛  , 2014-01-08 */
         SELECT 
             COUNT(PROD_ID) as CNT

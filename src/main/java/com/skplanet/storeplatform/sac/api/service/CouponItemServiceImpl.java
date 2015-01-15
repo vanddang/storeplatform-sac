@@ -593,21 +593,29 @@ public class CouponItemServiceImpl implements CouponItemService {
 		List<EventInfo> eventInfoList =  new ArrayList<EventInfo>();  
 		
 		boolean specialFlag = false;		// 특가 상품인지 확인 flag
-		boolean couponFlag = false; 		// 정상적인 쿠폰인지 확인 flag
+		boolean itemFlag = false; 			// 정상적인 아이템인지 확인 flag
+
+
+		
+		int cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_COUPON_INFO", couponCode);
+		if (cnt <=0) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_COUPONCODE, "잘못된 쿠폰ID", null);
+		}		
+		
 		for (String strItem : itemsCodes) {
 			try {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("couponCode", couponCode);
 				map.put("itemCode", strItem);
 				EventInfo eventInfo = new EventInfo();
-				int cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_COUPON_INFO", map);
+				cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_COUPON_INFO", strItem);
 				if (cnt > 0) {
 					eventInfo = (EventInfo) this.commonDAO.queryForObject("Coupon.GET_SPECIAL_PRODUCT_DETAIL", map);
 					if (eventInfo != null) {
 						eventInfoList.add(eventInfo);
 						specialFlag = true;
 					}
-					couponFlag =true;
+					itemFlag =true;
 				} 
 				
 			} catch (CouponException e) {
@@ -618,8 +626,8 @@ public class CouponItemServiceImpl implements CouponItemService {
 			}
 		}
 		
-		if(!couponFlag){
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_COUPONCODE, "잘못된 쿠폰ID", null);
+		if(!itemFlag){
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_ITEMCODE, "잘못된 아이템ID", null);
 		}				
 
 		if(!specialFlag){
