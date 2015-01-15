@@ -63,6 +63,51 @@
     ) IV 
     </select>    
     
+   <select id="searchFreePassDrmInfoV2" parameterType="FreePassInfoSacReq" resultType="FreePassDrmInfoVo">
+   /* FreePassInfoMapper.xml, searchFreePassDrmInfoV2,정액제 상품  DRM 정보 조회(V2) , 김형식/SK플래닛, 2014-03-03 */
+    SELECT  
+        IV.*
+    FROM (
+        SELECT  
+              PD.PROD_ID
+            , DC.PROD_NM AS cmpxProdNm
+            , PM.EPISODE_PROD_ID AS episodeProdId
+			, PM.DWLD_DRM_YN
+			, PM.STRM_DRM_YN
+			, PM.DWLD_DRM_USE_PERIOD_UNIT_CD
+			, PM.DWLD_DRM_USE_PERIOD
+			, PM.STRM_DRM_USE_PERIOD_UNIT_CD
+			, PM.STRM_DRM_USE_PERIOD            
+            , CM.CMPX_PROD_CLSF_CD
+            , PD.TOP_MENU_ID      
+            , TP.PROD_STATUS_CD      
+        FROM 
+              TB_DP_PROD PD
+            , TB_DP_CMPX_PROD CM
+            , TB_DP_PROD_DESC DC
+            , TB_DP_TENANT_PROD TP
+            , TB_DP_TENANT_PROD_PRICE PR
+            ,(SELECT  A.* 
+                     ,B.PART_PROD_ID AS EPISODE_PROD_ID
+                FROM  TB_DP_FIXRATE_PROD_MAPG A
+                     ,TB_DP_PROD_RSHP B
+               WHERE A.PART_PROD_ID = B.PROD_ID
+                 AND B.PROD_RSHP_CD ='DP010802'
+                 AND B.PART_PROD_ID=#{episodeProdId}
+             )PM             
+        WHERE PD.PROD_ID = #{prodId}
+        AND PD.PROD_ID = CM.PROD_ID
+        AND PD.PROD_ID = DC.PROD_ID
+        AND PD.PROD_ID = TP.PROD_ID
+        AND PD.PROD_ID = PR.PROD_ID
+        AND PD.PROD_ID = PM.PROD_ID
+        AND DC.LANG_CD = #{langCd} 
+        AND TP.TENANT_ID = #{tenantId}
+        AND TP.TENANT_ID = PR.TENANT_ID
+        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+    ) IV 
+    </select>        
+    
   <select id="searchEpisodeList" parameterType="Map" resultType="EpisodeInfoRes">
    /* FreePassInfoMapper.xml, searchEpisodeList,정액권의 에피소드 상품 목록 조회 , 김형식/SK플래닛, 2014-04-22 */
     SELECT  

@@ -17,9 +17,20 @@ public interface FreePassInfoService {
 	 * 
 	 * @param req
 	 *            파라미터
-	 * @return FreepassDrmInfo 정액제 상품 DRM 정보
+	 * @return FreePassInfo 정액제 상품 DRM 정보
 	 */
 	FreePassInfo searchFreePassDrmInfo(FreePassInfoSacReq req);
+	
+	/**
+	 * <pre>
+	 * 정액제 상품 DRM 정보 조회 V2.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            파라미터
+	 * @return FreepassDrmInfo 정액제 상품 DRM 정보
+	 */
+	FreePassDrmInfo searchFreePassDrmInfoV2(FreePassInfoSacReq req);	
 
 	/**
 	 * <pre>

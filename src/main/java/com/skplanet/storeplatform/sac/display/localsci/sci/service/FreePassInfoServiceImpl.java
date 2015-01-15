@@ -1,21 +1,33 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.DwldDrmInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassDrmInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassDrmInfoVo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.StrmDrmInfo;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 
 /**
  * 
@@ -41,7 +53,7 @@ public class FreePassInfoServiceImpl implements FreePassInfoService {
 	 * 
 	 * @param req
 	 *            파라미터
-	 * @return FreepassDrmInfo 정액제 상품 DRM 정보
+	 * @return FreePassInfo 정액제 상품 DRM 정보
 	 */
 	@Override
 	public FreePassInfo searchFreePassDrmInfo(FreePassInfoSacReq req) {
@@ -49,6 +61,45 @@ public class FreePassInfoServiceImpl implements FreePassInfoService {
 				FreePassInfo.class);
 		return freepassDrmInfo;
 	}
+	
+	
+	/**
+	 * <pre>
+	 * 정액제 상품 DRM 정보 조회 V2.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            파라미터
+	 * @return FreepassDrmInfo 정액제 상품 DRM 정보
+	 */
+	@Override
+	public FreePassDrmInfo searchFreePassDrmInfoV2(FreePassInfoSacReq req) {
+		FreePassDrmInfoVo freepassDrmInfoVo = this.commonDAO.queryForObject("FreePassInfo.searchFreePassDrmInfoV2", req,
+				FreePassDrmInfoVo.class);
+		
+		FreePassDrmInfo freePassDrmInfo = new FreePassDrmInfo();
+		
+		freePassDrmInfo.setProdId(freepassDrmInfoVo.getProdId());
+		freePassDrmInfo.setCmpxProdNm(freepassDrmInfoVo.getCmpxProdNm());
+		freePassDrmInfo.setEpisodeProdId(freepassDrmInfoVo.getEpisodeProdId());
+		freePassDrmInfo.setCmpxProdClsfCd(freepassDrmInfoVo.getCmpxProdClsfCd());
+		freePassDrmInfo.setTopMenuId(freepassDrmInfoVo.getTopMenuId());
+		freePassDrmInfo.setProdStatusCd(freepassDrmInfoVo.getProdStatusCd());
+		
+		DwldDrmInfo dwldDrmInfo = new DwldDrmInfo();
+		StrmDrmInfo strmDrmInfo = new StrmDrmInfo();
+		
+		dwldDrmInfo.setDwldDrmYn(freepassDrmInfoVo.getDwldDrmYn());
+		dwldDrmInfo.setDwldDrmUsePeriod(freepassDrmInfoVo.getDwldDrmUsePeriod());
+		dwldDrmInfo.setDwldDrmUsePeriodUnitCd(freepassDrmInfoVo.getDwldDrmUsePeriod());
+		
+		strmDrmInfo.setStrmDrmYn(freepassDrmInfoVo.getStrmDrmYn());
+		strmDrmInfo.setStrmDrmUsePeriod(freepassDrmInfoVo.getStrmDrmUsePeriod());
+		strmDrmInfo.setStrmDrmUsePeriodUnitCd(freepassDrmInfoVo.getStrmDrmUsePeriodUnitCd());
+		freePassDrmInfo.setDwldDrmInfo(dwldDrmInfo);
+		freePassDrmInfo.setStrmDrmInfo(strmDrmInfo);
+		return freePassDrmInfo;
+	}	
 
 	/**
 	 * <pre>

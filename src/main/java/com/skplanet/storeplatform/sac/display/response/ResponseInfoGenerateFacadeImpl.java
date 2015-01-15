@@ -1272,6 +1272,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 		coupon.setKind(metaInfo.getCmpxProdClsfCd());
 		coupon.setCouponExplain(metaInfo.getProdIntrDscr());
+		
+		//정액권 이용안내
+		coupon.setFreepassGuide(metaInfo.getProdDtlDesc());
 
 		coupon.setTitle(title);
 		coupon.setPrice(price);

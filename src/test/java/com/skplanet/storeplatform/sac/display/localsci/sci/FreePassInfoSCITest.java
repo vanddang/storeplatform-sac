@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Episod
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassDrmInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
 
@@ -72,13 +73,42 @@ public class FreePassInfoSCITest {
 			this.log.debug("##### FreePassInfo getTopMenuId[{}] : {}", res.getTopMenuId());
 			this.log.debug("##### FreePassInfo getUsePeriod[{}] : {}", res.getUsePeriod());
 			this.log.debug("##### FreePassInfo getUsePeriodUnitCd[{}] : {}", res.getUsePeriodUnitCd());
+			this.log.debug("##### FreePass FreePassInfo VO : {}",
+					ReflectionToStringBuilder.toString(res, ToStringStyle.MULTI_LINE_STYLE));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	/**
+	 * <pre>
+	 * 정액제 상품 DRM 메타 정보 조회.
+	 * </pre>
+	 * 
+	 */
+	 @Test
+	public void searchFreePassDrmInfoV2() {
+		try {
+			FreePassInfoSacReq req = new FreePassInfoSacReq();
+
+			req.setProdId("F901000639");
+			req.setEpisodeProdId("H000044137");
+			req.setTenantId("S01");
+			req.setLangCd("ko");
+
+			FreePassDrmInfo res = this.freePassInfoSCI.searchFreePassDrmInfoV2(req);
+			this.log.debug("##### FreePassInfo getProdId[{}] : {}", res.getProdId());
+			this.log.debug("##### FreePassInfo getEpisodeProdId[{}] : {}", res.getEpisodeProdId());
+			this.log.debug("##### FreePassInfo getProdStatusCd[{}] : {}", res.getProdStatusCd());
+			this.log.debug("##### FreePass FreePassInfo VO : {}",
+					ReflectionToStringBuilder.toString(res, ToStringStyle.MULTI_LINE_STYLE));
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
-
 	/**
 	 * <pre>
 	 * 정액권의 에피소드 상품 목록 조회.
@@ -124,7 +154,7 @@ public class FreePassInfoSCITest {
 	 * @throws JsonGenerationException
 	 * 
 	 */
-	@Test
+	//@Test
 	public void searchFreepassBasicList() throws JsonGenerationException, JsonMappingException, IOException {
 		FreePassBasicInfoSacReq req = new FreePassBasicInfoSacReq();
 		List<String> list = new ArrayList<String>();
