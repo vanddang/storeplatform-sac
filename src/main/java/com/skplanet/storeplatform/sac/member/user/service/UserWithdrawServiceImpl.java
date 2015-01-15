@@ -274,6 +274,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					this.secedeForWap(req.getDeviceId());
 					this.deviceIdInvalid(requestHeader, userInfo.getUserKey(), req.getDeviceId());
 
+					// 휴대기기 삭제시 IDP 연동 추가 2015-01-15. vanddang
+					this.userService.modProfileIdp(requestHeader, userInfo.getUserKey(), req.getUserAuthKey());
+
 					/** MQ 연동(휴대기기 삭제) */
 					RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
 					try {
