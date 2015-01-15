@@ -21,4 +21,18 @@ public interface UserWithdrawService {
 	 */
 	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req);
 
+	/**
+	 * <pre>
+	 * deviceId 삭제처리
+	 * - 모바일 전용회원 인증 시에 SC는 회원이고, IDP는 미회원인 경우 deviceId를 삭제처리 하기 위해 호출한다.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param deviceId
+	 *            String
+	 * @param userAuthKey
+	 *            String
+	 */
+	public void removeDevice(SacRequestHeader requestHeader, String deviceId, String userAuthKey);
 }

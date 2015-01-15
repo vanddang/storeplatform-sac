@@ -35,10 +35,13 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -83,6 +86,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private UserSearchService userSearchService;
 
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) {
@@ -303,6 +309,91 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 	/**
 	 * <pre>
+	 * deviceId 삭제처리
+	 * - 모바일 전용회원 인증 시에 SC는 회원이고, IDP는 미회원인 경우 deviceId를 삭제처리 하기 위해 호출한다.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param deviceId
+	 *            String
+	 * @param userAuthKey
+	 *            String
+	 */
+	@Override
+	public void removeDevice(SacRequestHeader requestHeader, String deviceId, String userAuthKey) {
+
+		/**
+		 * deviceId로 회원 정보 조회.
+		 */
+		DetailReq detailReq = new DetailReq();
+		detailReq.setDeviceId(deviceId);
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+		DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+
+			this.rem(requestHeader, detailRes.getUserInfo().getUserKey());
+
+			/**
+			 * MQ 연동(회원 탈퇴).
+			 */
+			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+
+			try {
+
+				mqInfo.setUserId(detailRes.getUserInfo().getUserId());
+				mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+				mqInfo.setDeviceId(deviceId);
+				List<UserExtraInfo> list = detailRes.getUserInfo().getUserExtraInfoList();
+				if (list != null) {
+					for (int i = 0; i < list.size(); i++) {
+						UserExtraInfo extraInfo = list.get(i);
+						if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
+							mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+						}
+					}
+				}
+				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+
+			} catch (AmqpException ex) {
+				LOGGER.error("MQ process fail {}", mqInfo);
+			}
+
+			LOGGER.info("{} 모바일회원 탈퇴처리", deviceId);
+
+		} else if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_IDPID)
+				|| StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
+
+			this.deviceIdInvalidByDeviceKey(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes
+					.getDeviceInfoList().get(0).getDeviceKey());
+
+			/** MQ 연동(휴대기기 삭제) */
+			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
+			try {
+				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+				mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+				mqInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+				mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+				mqInfo.setSvcMangNo(detailRes.getDeviceInfoList().get(0).getSvcMangNum());
+				mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
+
+				this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
+			} catch (AmqpException ex) {
+				LOGGER.info("MQ process fail {}", mqInfo);
+			}
+
+			LOGGER.info("{} 휴대기기 삭제처리", deviceId);
+		}
+
+	}
+
+	/**
+	 * <pre>
 	 * 통합회원 해지 연동.
 	 * </pre>
 	 * 
@@ -415,4 +506,17 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 	}
 
+	public void deviceIdInvalidByDeviceKey(SacRequestHeader requestHeader, String userKey, String deviceKey) {
+
+		List<String> removeKeyList = new ArrayList<String>();
+		removeKeyList.add(deviceKey);
+
+		RemoveDeviceRequest removeDeviceRequest = new RemoveDeviceRequest();
+		removeDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(requestHeader));
+		removeDeviceRequest.setUserKey(userKey);
+		removeDeviceRequest.setDeviceKey(removeKeyList);
+
+		this.deviceSCI.removeDevice(removeDeviceRequest);
+
+	}
 }
