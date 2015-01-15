@@ -67,6 +67,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
+import com.skplanet.storeplatform.sac.member.common.util.ValidationCheckUtils;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
@@ -114,7 +115,8 @@ public class MemberCommonComponent {
 
 		String resMsisdn = msisdn;
 		// 1. OPMD번호(989)여부 검사
-		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
+		// 989로 시작하는 uuid가 존재하여 MDN인 경우만 모번호 조회하도록 휴대폰번호 유효성체크 추가. 2015.01.15. vanddang
+		if (ValidationCheckUtils.isMdn(msisdn) && StringUtils.substring(msisdn, 0, 3).equals("989")) {
 			UapsEcReq uapsReq = new UapsEcReq();
 			uapsReq.setDeviceId(msisdn);
 			OpmdEcRes opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
