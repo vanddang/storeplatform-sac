@@ -2961,8 +2961,15 @@ public class IdpServiceImpl implements IdpService {
 							searchUserRequestByMdnInfo.setCommonRequest(commonRequest);
 							searchUserRequestByMdnInfo.setKeySearchList(keySearchListByMdnInfo);
 							SearchUserResponse searchUserResponseByMdnInfo = null;
-
-							searchUserResponseByMdnInfo = this.userSCI.searchUser(searchUserRequestByMdnInfo);
+							
+							try{
+								searchUserResponseByMdnInfo = this.userSCI.searchUser(searchUserRequestByMdnInfo);	
+							}catch(StorePlatformException e){
+								if (!StringUtil.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+									throw e;
+								}
+							}
+							
 
 							if (searchUserResponseByMdnInfo != null) {
 								insdUserKeyByMdnInfo = searchUserResponseByMdnInfo.getUserKey();
