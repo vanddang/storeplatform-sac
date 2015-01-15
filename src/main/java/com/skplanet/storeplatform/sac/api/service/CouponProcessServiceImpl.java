@@ -1250,11 +1250,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @return CouponRes
 	 */
 	@Override
-	public CouponRes getSpecialProductDetail(String couponCode) {
+	public CouponRes getSpecialProductDetail(String couponCode,String[] itemsCodes) {
 		this.log.info("<<<<< CouponContentService >>>>> getSpecialProductDetail...");
 		CouponRes info = null;
 		try {
-			info = this.couponItemService.getSpecialProductDetail(couponCode);
+			info = this.couponItemService.getSpecialProductDetail(couponCode, itemsCodes);
 		} catch (CouponException e) {
 			throw e;
 

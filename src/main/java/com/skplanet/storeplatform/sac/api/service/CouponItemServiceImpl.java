@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.EventInfo;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
+import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.SpRegistProd;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
@@ -584,30 +586,47 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public CouponRes getSpecialProductDetail(String couponCode) {
+	public CouponRes getSpecialProductDetail(String couponCode, String[] itemsCodes) {
 
-		CouponRes info = null;
-
-		try {
-			int cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_COUPON_INFO", couponCode);
-			if (cnt > 0) {
-				info = (CouponRes) this.commonDAO.queryForObject("Coupon.GET_SPECIAL_PRODUCT_DETAIL", couponCode);
-				if (info == null) {
-					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_SPECIAL, "특가상품 없음", null);
-				} else
-					info.setRCode("");
-			} else {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_COUPONCODE, "잘못된 쿠폰ID", null);
-
+		CouponRes info = new CouponRes();
+		
+		List<EventInfo> eventInfoList =  new ArrayList<EventInfo>();  
+		
+		boolean specialFlag = false;		// 특가 상품인지 확인 flag
+		boolean couponFlag = false; 		// 정상적인 쿠폰인지 확인 flag
+		for (String strItem : itemsCodes) {
+			try {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("couponCode", couponCode);
+				map.put("itemCode", strItem);
+				EventInfo eventInfo = new EventInfo();
+				int cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_COUPON_INFO", map);
+				if (cnt > 0) {
+					eventInfo = (EventInfo) this.commonDAO.queryForObject("Coupon.GET_SPECIAL_PRODUCT_DETAIL", map);
+					if (eventInfo != null) {
+						eventInfoList.add(eventInfo);
+						specialFlag = true;
+					}
+					couponFlag =true;
+				} 
+				
+			} catch (CouponException e) {
+				throw e;
+			} catch (Exception e) {
+				this.log.error("COUPON.GET_SPECIAL_PRODUCT_DETAIL", e);
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
 			}
+		}
+		
+		if(!couponFlag){
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_COUPONCODE, "잘못된 쿠폰ID", null);
+		}				
 
-		} catch (CouponException e) {
-			throw e;
-		} catch (Exception e) {
-			this.log.error("COUPON.GET_SPECIAL_PRODUCT_DETAIL", e);
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
+		if(!specialFlag){
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_SPECIAL, "특가상품 없음", null);
 		}
 
+		info.setEventInfoList(eventInfoList);
 		return info;
 	}
 

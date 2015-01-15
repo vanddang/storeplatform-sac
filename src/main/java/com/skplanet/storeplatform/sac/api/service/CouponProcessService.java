@@ -56,7 +56,7 @@ public interface CouponProcessService {
 	 *            couponCode
 	 * @return CouponRes
 	 */
-	public CouponRes getSpecialProductDetail(String couponCode);
+	public CouponRes getSpecialProductDetail(String couponCode, String[] itemsCodes);
 
 	/**
 	 * <pre>

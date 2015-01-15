@@ -713,40 +713,21 @@
     </select>    
     
     <!--특가 상품 상세 조회-->
-    <select id="GET_COUPON_INFO"  resultType="int" parameterType="String">
+    <select id="GET_COUPON_INFO"  resultType="int" parameterType="HashMap">
        /* CouponMapper.xml, GET_COUPON_INFO, 특가 상품 상세 조회, 김형식/SK플래닛  , 2014-01-08 */
         SELECT 
             COUNT(PROD_ID) as CNT
         FROM TB_DP_SHPG_PROD
-        WHERE SRC_CONTENT_ID = 
-                                 CASE WHEN PROD_CASE_CD = 'DP006303'
-                                  THEN
-                                        (  SELECT 
-                                                SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD SP
-                                                 ,TB_DP_SPRC_PROD SP1
-                                            WHERE 1=1
-                                              AND SP.PROD_ID = SP1.PROD_ID
-                                              AND SP.PROD_ID IN (
-                                                    SELECT 
-                                                           B.PART_PROD_ID 
-                                                      FROM TB_DP_SHPG_PROD A 
-                                                          ,TB_DP_PROD_RSHP B
-                                                     WHERE A.PROD_ID = B.PROD_ID 
-                                                      AND A.SRC_CONTENT_ID =#{prodId}       
-                                                   ) 
-                                               AND SP1.EXPO_YN = 'Y'                                                    
-                                               AND ROWNUM =1     
-                                          )                                   
-                                  ELSE #{prodId}
-                                  END  
+        WHERE SRC_CONTENT_ID =  #{itemCode}
+  
     </select>
     
     <!--특가 상품 상세 조회-->
-    <select id="GET_SPECIAL_PRODUCT_DETAIL" resultType="com.skplanet.storeplatform.external.client.shopping.vo.CouponRes" parameterType="String">
+    <select id="GET_SPECIAL_PRODUCT_DETAIL" resultType="com.skplanet.storeplatform.external.client.shopping.vo.EventInfo" parameterType="HashMap">
        /* CouponMapper.xml, GET_SPECIAL_PRODUCT_DETAIL, 특가 상품 상세 조회, 김형식/SK플래닛  , 2014-01-08 */
         SELECT 
-               A.PROD_ID as couponCode
+		  	   #{couponCode} as couponCode
+              ,C.SRC_CONTENT_ID as itemCode
               ,B.PROD_NM  as eventName
               ,(CASE WHEN A.SPRC_TYPE_CD='DP007501' OR A.SPRC_TYPE_CD='DP007502' THEN 'SL' 
                      WHEN A.SPRC_TYPE_CD='DP007503' OR A.SPRC_TYPE_CD='DP007504' THEN 'TG' 
@@ -761,28 +742,7 @@
               ,TB_DP_SHPG_PROD C
         WHERE A.PROD_ID = B.PROD_ID
           AND A.PROD_ID = C.PROD_ID
-          AND C.SRC_CONTENT_ID =  
-                                 CASE WHEN PROD_CASE_CD = 'DP006303'
-                                  THEN
-                                        (  SELECT 
-                                                SRC_CONTENT_ID 
-                                             FROM TB_DP_SHPG_PROD SP
-                                                 ,TB_DP_SPRC_PROD SP1
-                                            WHERE 1=1
-                                              AND SP.PROD_ID = SP1.PROD_ID
-                                              AND SP.PROD_ID IN (
-                                                    SELECT 
-                                                           B.PART_PROD_ID 
-                                                      FROM TB_DP_SHPG_PROD A 
-                                                          ,TB_DP_PROD_RSHP B
-                                                     WHERE A.PROD_ID = B.PROD_ID 
-                                                      AND A.SRC_CONTENT_ID =#{prodId}       
-                                                   ) 
-                                               AND SP1.EXPO_YN = 'Y'                                                   
-                                               AND ROWNUM =1     
-                                          )                                   
-                                  ELSE #{prodId}
-                                  END     
+          AND C.SRC_CONTENT_ID =  #{itemCode}
           AND A.EXPO_YN = 'Y' 
           AND SYSDATE BETWEEN A.SPRC_APPLY_START_DT AND A.SPRC_APPLY_END_DT
           AND ROWNUM =1

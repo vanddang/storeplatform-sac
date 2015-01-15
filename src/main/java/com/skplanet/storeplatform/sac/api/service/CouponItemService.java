@@ -238,7 +238,7 @@ public interface CouponItemService {
 	 *            couponCode
 	 * @return CouponRes
 	 */
-	public CouponRes getSpecialProductDetail(String couponCode);
+	public CouponRes getSpecialProductDetail(String couponCode ,String[] itemsCodes);
 
 	/**
 	 * 쿠폰(아이템) 판매상태 변경.
