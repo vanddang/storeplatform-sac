@@ -120,6 +120,13 @@ public class Coupon extends CommonInfo implements Serializable {
 	private List<Point> pointList;
 
 	/**
+	 * 정액권 이용안내 (freepassGuide).
+	 */
+	
+	private String freepassGuide;
+	
+	
+	/**
 	 * @return Identifier
 	 */
 	public Identifier getIdentifier() {
@@ -417,6 +424,20 @@ public class Coupon extends CommonInfo implements Serializable {
 	 */
 	public void setPointList(List<Point> pointList) {
 		this.pointList = pointList;
+	}
+
+	/**
+	 * @return the freepassGuide
+	 */
+	public String getFreepassGuide() {
+		return freepassGuide;
+	}
+
+	/**
+	 * @param freepassGuide the freepassGuide to set
+	 */
+	public void setFreepassGuide(String freepassGuide) {
+		this.freepassGuide = freepassGuide;
 	}
 
 }
