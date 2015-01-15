@@ -257,7 +257,8 @@ public class ShoppingCouponSacController {
 					break;
 				case DT:
 					// 특가 상품 상세 조회 작업을 호출한다.
-					couponRes = this.getSpecialProductDetail(couponReq.getCouponCode());
+					String[] itemsCodes = couponReq.getItemCodes().split(",");
+					couponRes = this.getSpecialProductDetail(couponReq.getCouponCode(),itemsCodes);
 					if (couponRes.getRCode().equals("")) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -383,8 +384,8 @@ public class ShoppingCouponSacController {
 	 *            couponCode
 	 * @return CouponRes
 	 */
-	private CouponRes getSpecialProductDetail(String couponCode) {
-		CouponRes result = this.couponProcessService.getSpecialProductDetail(couponCode);
+	private CouponRes getSpecialProductDetail(String couponCode ,String[] itemsCodes) {
+		CouponRes result = this.couponProcessService.getSpecialProductDetail(couponCode ,itemsCodes);
 		return result;
 
 	}
