@@ -258,8 +258,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		AgreeUserEcReq agreeUserEcReq = new AgreeUserEcReq();
 		agreeUserEcReq.setKey(req.getUserId());
 		agreeUserEcReq.setKeyType("2"); // 1=IM통합서비스번호, 2=IM통합ID
-		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005,"
-				+ DateUtil.getToday() + "," + DateUtil.getTime());
+		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ","
+				+ this.mcc.getClauseMappingForOneId(req.getAgreementList()) + "," + DateUtil.getToday() + ","
+				+ DateUtil.getTime());
 		agreeUserEcReq.setOcbJoinCode(MemberConstants.USE_N); // 통합포인트 가입 여부 Y=가입, N=미가입
 		agreeUserEcReq.setModifyReqDate(DateUtil.getToday("yyyyMMdd"));
 		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
@@ -371,8 +372,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		agreeUserEcReq.setKey(req.getUserId());
 		agreeUserEcReq.setKeyType("2"); // 1=IM통합서비스번호, 2=IM통합ID
 		agreeUserEcReq.setUserMdn(sbUserPhone.toString());
-		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005,"
-				+ DateUtil.getToday() + "," + DateUtil.getTime());
+		agreeUserEcReq.setJoinSstList(MemberConstants.SSO_SST_CD_TSTORE + ","
+				+ this.mcc.getClauseMappingForOneId(req.getAgreementList()) + "," + DateUtil.getToday() + ","
+				+ DateUtil.getTime());
 		agreeUserEcReq.setOcbJoinCode(MemberConstants.USE_N); // 통합포인트 가입 여부 Y=가입, N=미가입
 		agreeUserEcReq.setModifyReqDate(DateUtil.getToday("yyyyMMdd"));
 		agreeUserEcReq.setModifyReqTime(DateUtil.getToday("hhmmss"));
