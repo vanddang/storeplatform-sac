@@ -228,13 +228,21 @@ public final class MemberConstants {
 	public static final String POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID = "US010602"; // ONEID개인정보취급방침
 	public static final String POLICY_AGREEMENT_CLAUSE_TSTORE = "US010603"; // TSTORE이용약관(TAC001)
 	public static final String POLICY_AGREEMENT_CLAUSE_CASH = "US010604"; // TSTORE캐쉬이용약관(TAC003)
-	public static final String POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_TSTORE = "US010605"; // TSTORE개인정보취급방침(TAC004)
+	public static final String POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_TSTORE = "US010605"; // TSTORE개인정보취급방침
 	public static final String POLICY_AGREEMENT_CLAUSE_PROTECT_YOUTH = "US010606"; // TSTORE청소년보호정책
 	public static final String POLICY_AGREEMENT_CLAUSE_APP_STATS_INFO_USE = "US010607"; // TSTORE앱이용통계정보활용
 	public static final String POLICY_AGREEMENT_CLAUSE_MARKETING = "US010608"; // TSTORE정보광고활용(TAC006)
 	public static final String POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE = "US010609"; // TSTORE통신과금서비스(TAC002)
 	public static final String POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS = "US010611"; // 개인정보의3자제공(TAC005)
-	public static final String POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE = "US010612"; // 개인정보 수집 및 이용안내
+	public static final String POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE = "US010612"; // 개인정보 수집 및 이용안내(TAC004)
+
+	/** OneId 약관 코드 */
+	public static final String ONEID_AGREEMENT_CLAUSE_TAC001 = "TAC001"; // TSTORE이용약관
+	public static final String ONEID_AGREEMENT_CLAUSE_TAC002 = "TAC002"; // TSTORE통신과금서비스
+	public static final String ONEID_AGREEMENT_CLAUSE_TAC003 = "TAC003"; // TSTORE캐쉬이용약관
+	public static final String ONEID_AGREEMENT_CLAUSE_TAC004 = "TAC004"; // 개인정보 수집 및 이용안내
+	public static final String ONEID_AGREEMENT_CLAUSE_TAC005 = "TAC005"; // 개인정보의3자제공
+	public static final String ONEID_AGREEMENT_CLAUSE_TAC006 = "TAC006"; // TSTORE정보광고활용
 
 	/**
 	 * 사용자 제한 정책 코드.

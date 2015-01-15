@@ -39,8 +39,11 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
@@ -2601,22 +2604,24 @@ public class IdpServiceImpl implements IdpService {
 		if (StringUtils.isNotBlank(map.get("TELECOM"))) { // 통신사유형
 			String telecomType = map.get("TELECOM");
 
-			if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_SKT)) {
-				telecomCode = MemberConstants.DEVICE_TELECOM_SKT;
-			} else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_KT)) {
-				telecomCode = MemberConstants.DEVICE_TELECOM_KT;
-			} else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_LGT)) {
-				telecomCode = MemberConstants.DEVICE_TELECOM_LGT;
-			} else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_OMD)) {
-				telecomCode = MemberConstants.DEVICE_TELECOM_OMD;
-			} else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_NSH)) {
-				telecomCode = MemberConstants.DEVICE_TELECOM_NSH;
-			} else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_NON)) {
-				telecomCode = MemberConstants.DEVICE_TELECOM_NON;
-			} else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_IOS)) {
-				telecomCode = MemberConstants.DEVICE_TELECOM_IOS;
-			}
-			map.put("telecomCode", telecomCode); // 통신사유형 코드 셋팅
+			// if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_SKT)) {
+			// telecomCode = MemberConstants.DEVICE_TELECOM_SKT;
+			// } else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_KT)) {
+			// telecomCode = MemberConstants.DEVICE_TELECOM_KT;
+			// } else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_LGT)) {
+			// telecomCode = MemberConstants.DEVICE_TELECOM_LGT;
+			// } else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_OMD)) {
+			// telecomCode = MemberConstants.DEVICE_TELECOM_OMD;
+			// } else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_NSH)) {
+			// telecomCode = MemberConstants.DEVICE_TELECOM_NSH;
+			// } else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_NON)) {
+			// telecomCode = MemberConstants.DEVICE_TELECOM_NON;
+			// } else if (telecomType.equals(MemberConstants.NM_DEVICE_TELECOM_IOS)) {
+			// telecomCode = MemberConstants.DEVICE_TELECOM_IOS;
+			// }
+			// map.put("telecomCode", telecomCode); // 통신사유형 코드 셋팅
+			// 2014.01.09 통신사코드 변환 수정. vanddang
+			map.put("telecomCode", this.mcc.convertDeviceTelecomCode(telecomType));
 		}
 
 		if (StringUtils.isNotBlank(map.get("emailYn"))) { // 이메일수신여부
@@ -3045,6 +3050,31 @@ public class IdpServiceImpl implements IdpService {
 									// this.deviceService.updateDeviceInfo(requestHeader, getDeviceInfo, false);
 
 								}
+
+								// MDN 합치기시에는 약관정보가 내려오지 않으므로, 모바일 회원인 MDN의 이용약관을 통합회원으로 이관처리. 2015-01-07. vanddang
+								// 모바일 회원 약관정보 조회
+								SearchAgreementListRequest searchAgreementListRequest = new SearchAgreementListRequest();
+								searchAgreementListRequest.setCommonRequest(commonRequest);
+								searchAgreementListRequest.setUserKey(searchUserResponseByMdnInfo.getUserKey());
+								SearchAgreementListResponse searchAgreementListResponse = null;
+
+								try {
+									searchAgreementListResponse = this.userSCI
+											.searchAgreementList(searchAgreementListRequest);
+								} catch (StorePlatformException e) {
+									// ignore exception
+								}
+
+								if (searchAgreementListResponse != null
+										&& searchAgreementListResponse.getMbrClauseAgreeList().size() > 0) {
+									// 약관이 존재하면 통합아이디로 이관처리
+									UpdateAgreementRequest updateAgreementRequest = new UpdateAgreementRequest();
+									updateAgreementRequest.setCommonRequest(commonRequest);
+									updateAgreementRequest.setUserKey(userKey);
+									updateAgreementRequest.setMbrClauseAgreeList(searchAgreementListResponse
+											.getMbrClauseAgreeList());
+									this.userSCI.updateAgreement(updateAgreementRequest);
+								}
 							}
 						} catch (StorePlatformException spe) {
 							LOGGER.error(spe.getMessage(), spe);
@@ -3288,13 +3318,13 @@ public class IdpServiceImpl implements IdpService {
 			setAgreementInfo.setIsExtraAgreement("Y");
 			agreementList.add(setAgreementInfo);
 
-			// TAC004 TSTORE개인정보취급방침
+			// TAC004 개인정보 수집 및 이용안내
 			setAgreementInfo = new AgreementInfo();
-			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_TSTORE);
+			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE);
 			setAgreementInfo.setIsExtraAgreement("Y");
 			agreementList.add(setAgreementInfo);
 
-			// TAC005 3자정보제공동의 11번
+			// TAC005 3자정보제공동의
 			setAgreementInfo = new AgreementInfo();
 			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS);
 			setAgreementInfo.setIsExtraAgreement("Y");
@@ -3302,7 +3332,7 @@ public class IdpServiceImpl implements IdpService {
 			agreementList.add(setAgreementInfo);
 
 			for (String mbrClauseAgree : mbrClauseAgreeArray) {
-				if (mbrClauseAgree.equals("TAC006")) {// 선택약관
+				if (mbrClauseAgree.equals(MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC006)) {// 선택약관
 					isSelectedClauseAgree = true;
 					break;
 				} else {
