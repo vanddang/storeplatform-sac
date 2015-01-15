@@ -121,6 +121,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 /**
  * 회원 조회 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -1348,11 +1349,14 @@ public class UserSearchServiceImpl implements UserSearchService {
 		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
 		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
 		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
-		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo())
-				.getGiftSprtYn());
+		Device cmDevice = this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
+		if (cmDevice != null) {
+			response.setGiftYn(cmDevice.getGiftSprtYn());
+		} else {
+			response.setGiftYn(MemberConstants.USE_N);
+		}
 
 		return response;
-
 	}
 
 	/**
