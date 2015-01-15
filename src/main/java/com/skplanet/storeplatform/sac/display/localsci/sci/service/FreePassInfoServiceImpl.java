@@ -91,7 +91,7 @@ public class FreePassInfoServiceImpl implements FreePassInfoService {
 		
 		dwldDrmInfo.setDwldDrmYn(freepassDrmInfoVo.getDwldDrmYn());
 		dwldDrmInfo.setDwldDrmUsePeriod(freepassDrmInfoVo.getDwldDrmUsePeriod());
-		dwldDrmInfo.setDwldDrmUsePeriodUnitCd(freepassDrmInfoVo.getDwldDrmUsePeriod());
+		dwldDrmInfo.setDwldDrmUsePeriodUnitCd(freepassDrmInfoVo.getDwldDrmUsePeriodUnitCd());
 		
 		strmDrmInfo.setStrmDrmYn(freepassDrmInfoVo.getStrmDrmYn());
 		strmDrmInfo.setStrmDrmUsePeriod(freepassDrmInfoVo.getStrmDrmUsePeriod());
