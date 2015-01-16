@@ -36,6 +36,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePass;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
@@ -855,15 +856,49 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				}
 
 				// 이용 가능한 정액권 기구매 확인 처리 : T프리미엄 요청 경로에 대해서는 정액권 이용 제외
-				if (CollectionUtils.isNotEmpty(product.getAvailableFixrateProdIdList())
+
+				// if (CollectionUtils.isNotEmpty(product.getAvailableFixrateProdIdList())
+				// && (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
+				// PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
+				// && (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
+				// PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false)) {
+				//
+				// tempExistenceProdIdList = new ArrayList<String>();
+				// for (String fixrateProdId : product.getAvailableFixrateProdIdList()) {
+				// tempExistenceProdIdList.add(fixrateProdId);
+				// }
+
+				if (CollectionUtils.isNotEmpty(product.getAvailableFixrateInfoList())
 						&& (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
 								PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
 						&& (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
 								PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false)) {
 
 					tempExistenceProdIdList = new ArrayList<String>();
-					for (String fixrateProdId : product.getAvailableFixrateProdIdList()) {
-						tempExistenceProdIdList.add(fixrateProdId);
+
+					for (FreePass freepass : product.getAvailableFixrateInfoList()) {
+						if (StringUtils.equals(PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_ALL,
+								freepass.getPossLendClsfCd())) {
+							tempExistenceProdIdList.add(freepass.getProdId());
+						} else if (StringUtils.equals(PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION,
+								freepass.getPossLendClsfCd())) {
+							if (StringUtils.equals(PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION,
+									product.getPossLendClsfCd())) {
+								tempExistenceProdIdList.add(freepass.getProdId());
+							}
+						} else if (StringUtils.equals(PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL,
+								freepass.getPossLendClsfCd())) {
+							if (StringUtils.equals(PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL,
+									product.getPossLendClsfCd())) {
+								tempExistenceProdIdList.add(freepass.getProdId());
+							}
+						} else {
+							throw new StorePlatformException("SAC_PUR_5121", freepass.getPossLendClsfCd());
+						}
+					}
+
+					if (CollectionUtils.isEmpty(tempExistenceProdIdList)) {
+						continue;
 					}
 
 					List<ExistenceScRes> checkPurchaseResultList = this.searchExistence(useUser.getTenantId(),
@@ -1113,6 +1148,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		// 특가상품 구매가능 건수 체크
 		if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
+
+			// 1회 구매 가능 수량 체크
+			// if (publishQty > product.getSpecialSaleOncePrchsLimit()) {
+			// throw new StorePlatformException("SAC_PUR_6113");
+			// }
+
+			// 구매 건수 체크
 			SearchShoppingSpecialCountScReq specialReq = new SearchShoppingSpecialCountScReq();
 			specialReq.setTenantId(purchaseUser.getTenantId());
 			specialReq.setUserKey(purchaseUser.getUserKey());
