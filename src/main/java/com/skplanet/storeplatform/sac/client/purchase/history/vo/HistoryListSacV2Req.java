@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 import java.util.List;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -42,6 +43,8 @@ public class HistoryListSacV2Req extends PurchaseHeaderSacReq {
 	private String giftRecvConfYn; // 선물수신확인여부
 
 	private String startKey;
+	@Pattern(regexp = "^Y")
+	private String deviceHistoryYn;
 
 	/**
 	 * @return the prchsReqPathCd
@@ -266,6 +269,21 @@ public class HistoryListSacV2Req extends PurchaseHeaderSacReq {
 	 */
 	public void setNotTenantProdGrpCd(String notTenantProdGrpCd) {
 		this.notTenantProdGrpCd = notTenantProdGrpCd;
+	}
+
+	/**
+	 * @return the deviceHistoryYn
+	 */
+	public String getDeviceHistoryYn() {
+		return this.deviceHistoryYn;
+	}
+
+	/**
+	 * @param deviceHistoryYn
+	 *            the deviceHistoryYn to set
+	 */
+	public void setDeviceHistoryYn(String deviceHistoryYn) {
+		this.deviceHistoryYn = deviceHistoryYn;
 	}
 
 }
