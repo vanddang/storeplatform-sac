@@ -639,6 +639,12 @@ public class HistoryListServiceImpl implements HistoryListService {
 				selectDeviceYn = "Y"; // 디바이스정책 카테고리 조회일 경우 조회 조건으로 DeviceKey를 넣는다.
 			}
 		}
+
+		// 요청값중 deviceHistoryYn이 Y로 들어올 경우 무조건 DEVICE기반으로 구매내역을 조회하도록 처리함.
+		if (StringUtils.equals("Y", request.getDeviceHistoryYn())) {
+			selectDeviceYn = "Y";
+		}
+
 		this.logger.info("### Device Policy Category ### selectDeviceYn = " + selectDeviceYn);
 		scRequest.setMdnCategoryList(mdnCategoryList);
 		scRequest.setSelectDeviceYn(selectDeviceYn);

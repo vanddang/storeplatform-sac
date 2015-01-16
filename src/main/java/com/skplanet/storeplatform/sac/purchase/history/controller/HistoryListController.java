@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
@@ -78,6 +80,12 @@ public class HistoryListController {
 	@ResponseBody
 	public HistoryListSacV2Res searchHistoryListV2(@RequestBody @Validated HistoryListSacV2Req request,
 			SacRequestHeader sacRequestHeader) {
+
+		if (StringUtils.equals("Y", request.getDeviceHistoryYn())) {
+			if (StringUtils.isBlank(request.getDeviceKey())) {
+				throw new StorePlatformException("SAC_PUR_0006", "deviceHistoryYn", "deviceKey");
+			}
+		}
 
 		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
