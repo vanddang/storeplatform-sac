@@ -77,25 +77,30 @@ public class ShoppingServiceImpl implements ShoppingService {
 					specialReq.setSpecialCouponId(product.getSpecialSaleCouponId());
 					specialReq.setSpecialCouponAmt(product.getProdAmt() - product.getSpecialSaleAmt());
 
+					// 1회 구매 가능 수량 체크
+					if (couponPublishAvailableSacParam.getItemCount() > product.getSpecialSaleOncePrchsLimit()) {
+						throw new StorePlatformException("SAC_PUR_6113");
+					}
+
 					SearchShoppingSpecialCountScRes specialRes = this.purchaseOrderSearchSCI
 							.searchShoppingSpecialCount(specialReq);
-
-					if (specialRes.getDayCount() + couponPublishAvailableSacParam.getItemCount() > product
-							.getSpecialSaleDayLimit()) {
-						throw new StorePlatformException("SAC_PUR_6104");
-					}
-					if (specialRes.getDayUserCount() + couponPublishAvailableSacParam.getItemCount() > product
-							.getSpecialSaleDayLimitPerson()) {
-						throw new StorePlatformException("SAC_PUR_6106");
+					if (specialRes.getMonthUserCount() + couponPublishAvailableSacParam.getItemCount() > product
+							.getSpecialSaleMonthLimitPerson()) {
+						throw new StorePlatformException("SAC_PUR_6107");
 					}
 					if (specialRes.getMonthCount() + couponPublishAvailableSacParam.getItemCount() > product
 							.getSpecialSaleMonthLimit()) {
 						throw new StorePlatformException("SAC_PUR_6105");
 					}
-					if (specialRes.getMonthUserCount() + couponPublishAvailableSacParam.getItemCount() > product
-							.getSpecialSaleMonthLimitPerson()) {
-						throw new StorePlatformException("SAC_PUR_6107");
+					if (specialRes.getDayUserCount() + couponPublishAvailableSacParam.getItemCount() > product
+							.getSpecialSaleDayLimitPerson()) {
+						throw new StorePlatformException("SAC_PUR_6106");
 					}
+					if (specialRes.getDayCount() + couponPublishAvailableSacParam.getItemCount() > product
+							.getSpecialSaleDayLimit()) {
+						throw new StorePlatformException("SAC_PUR_6104");
+					}
+
 				}
 
 			} else {
@@ -134,12 +139,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				specialCouponResult = new CouponPublishAvailableSacV2Result();
 
-				// 쿠폰 구매 가능건수
-				specialCouponResult.setMaxMonth(product.getSpecialSaleMonthLimit());
-				specialCouponResult.setMaxMonthMdn(product.getSpecialSaleMonthLimitPerson());
-				specialCouponResult.setMaxDay(product.getSpecialSaleDayLimit());
-				specialCouponResult.setMaxDayMdn(product.getSpecialSaleDayLimitPerson());
-
 				// 특가상품 구매가능 건수 체크
 				if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
 					isSpecialCoupon = true;
@@ -150,26 +149,40 @@ public class ShoppingServiceImpl implements ShoppingService {
 					specialReq.setSpecialCouponId(product.getSpecialSaleCouponId());
 					specialReq.setSpecialCouponAmt(product.getProdAmt() - product.getSpecialSaleAmt());
 
+					// 1회 구매 가능 수량 체크
+					if (couponPublishAvailableSacParam.getItemCount() > product.getSpecialSaleOncePrchsLimit()) {
+						throw new StorePlatformException("SAC_PUR_6113");
+					}
+
 					// 구매정보조회
 					SearchShoppingSpecialCountScRes specialRes = this.purchaseOrderSearchSCI
 							.searchShoppingSpecialCount(specialReq);
 
-					if (specialRes.getDayCount() + couponPublishAvailableSacV2Param.getItemCount() > product
-							.getSpecialSaleDayLimit()) {
-						throw new StorePlatformException("SAC_PUR_6104");
-					}
-					if (specialRes.getDayUserCount() + couponPublishAvailableSacV2Param.getItemCount() > product
-							.getSpecialSaleDayLimitPerson()) {
-						throw new StorePlatformException("SAC_PUR_6106");
-					}
-					if (specialRes.getMonthCount() + couponPublishAvailableSacV2Param.getItemCount() > product
-							.getSpecialSaleMonthLimit()) {
-						throw new StorePlatformException("SAC_PUR_6105");
-					}
-					if (specialRes.getMonthUserCount() + couponPublishAvailableSacV2Param.getItemCount() > product
+					if (specialRes.getMonthUserCount() + couponPublishAvailableSacParam.getItemCount() > product
 							.getSpecialSaleMonthLimitPerson()) {
 						throw new StorePlatformException("SAC_PUR_6107");
 					}
+					if (specialRes.getMonthCount() + couponPublishAvailableSacParam.getItemCount() > product
+							.getSpecialSaleMonthLimit()) {
+						throw new StorePlatformException("SAC_PUR_6105");
+					}
+					if (specialRes.getDayUserCount() + couponPublishAvailableSacParam.getItemCount() > product
+							.getSpecialSaleDayLimitPerson()) {
+						throw new StorePlatformException("SAC_PUR_6106");
+					}
+					if (specialRes.getDayCount() + couponPublishAvailableSacParam.getItemCount() > product
+							.getSpecialSaleDayLimit()) {
+						throw new StorePlatformException("SAC_PUR_6104");
+					}
+
+					// 쿠폰 구매 가능건수
+					specialCouponResult.setMaxMonth(product.getSpecialSaleMonthLimit());
+					specialCouponResult.setMaxMonthMdn(product.getSpecialSaleMonthLimitPerson());
+					specialCouponResult.setMaxDay(product.getSpecialSaleDayLimit());
+					specialCouponResult.setMaxDayMdn(product.getSpecialSaleDayLimitPerson());
+
+					specialCouponResult.setBuyMaxLimit(product.getSpecialSaleOncePrchsLimit());
+					specialCouponResult.setBuyMaxLimitForGift(product.getSpecialSaleOncePrchsLimit());
 
 					// 쿠폰 구매한 건수
 					specialCouponResult.setCurMonth(specialRes.getMonthCount());
@@ -203,6 +216,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (couponResult.getMaxDayMdn() > specialCouponResult.getMaxDayMdn()) {
 				couponResult.setMaxDayMdn(specialCouponResult.getMaxDayMdn());
 			}
+
+			couponResult.setBuyMaxLimit(specialCouponResult.getBuyMaxLimit());
 
 			couponResult.setCurMonth(specialCouponResult.getCurMonth());
 			couponResult.setCurMonthMdn(specialCouponResult.getCurMonthMdn());
