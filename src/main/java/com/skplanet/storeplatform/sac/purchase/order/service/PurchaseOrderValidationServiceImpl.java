@@ -1150,9 +1150,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
 
 			// 1회 구매 가능 수량 체크
-			// if (publishQty > product.getSpecialSaleOncePrchsLimit()) {
-			// throw new StorePlatformException("SAC_PUR_6113");
-			// }
+			if (publishQty > product.getSpecialSaleOncePrchsLimit()) {
+				throw new StorePlatformException("SAC_PUR_6113");
+			}
 
 			// 구매 건수 체크
 			SearchShoppingSpecialCountScReq specialReq = new SearchShoppingSpecialCountScReq();
@@ -1166,17 +1166,17 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			SearchShoppingSpecialCountScRes specialRes = this.purchaseOrderSearchSCI
 					.searchShoppingSpecialCount(specialReq);
 
-			if (specialRes.getDayCount() + publishQty > product.getSpecialSaleDayLimit()) {
-				throw new StorePlatformException("SAC_PUR_6104");
-			}
-			if (specialRes.getDayUserCount() + publishQty > product.getSpecialSaleDayLimitPerson()) {
-				throw new StorePlatformException("SAC_PUR_6106");
+			if (specialRes.getMonthUserCount() + publishQty > product.getSpecialSaleMonthLimitPerson()) {
+				throw new StorePlatformException("SAC_PUR_6107");
 			}
 			if (specialRes.getMonthCount() + publishQty > product.getSpecialSaleMonthLimit()) {
 				throw new StorePlatformException("SAC_PUR_6105");
 			}
-			if (specialRes.getMonthUserCount() + publishQty > product.getSpecialSaleMonthLimitPerson()) {
-				throw new StorePlatformException("SAC_PUR_6107");
+			if (specialRes.getDayUserCount() + publishQty > product.getSpecialSaleDayLimitPerson()) {
+				throw new StorePlatformException("SAC_PUR_6106");
+			}
+			if (specialRes.getDayCount() + publishQty > product.getSpecialSaleDayLimit()) {
+				throw new StorePlatformException("SAC_PUR_6104");
 			}
 		}
 

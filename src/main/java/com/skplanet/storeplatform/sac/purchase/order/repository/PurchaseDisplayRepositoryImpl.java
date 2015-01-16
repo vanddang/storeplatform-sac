@@ -171,7 +171,7 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			purchaseProduct.setSpecialSaleDayLimit(displayInfo.getSpecialSaleDayLimit());
 			purchaseProduct.setSpecialSaleMonthLimitPerson(displayInfo.getSpecialSaleMonthLimitPerson());
 			purchaseProduct.setSpecialSaleDayLimitPerson(displayInfo.getSpecialSaleDayLimitPerson());
-			// purchaseProduct.setSpecialSaleOncePrchsLimit(displayInfo.getSpecialSaleOncePrchsLimit());
+			purchaseProduct.setSpecialSaleOncePrchsLimit(displayInfo.getSpecialSaleOncePrchsLimit());
 			// ////////////////////////// 정액제 상품 변수 ////////////////////////////
 			purchaseProduct.setAvailableFixrateProdIdList(displayInfo.getAvailableFixrateProdIdList());
 			purchaseProduct.setAvailableFixrateInfoList(displayInfo.getAvailableFixrateInfoList());
