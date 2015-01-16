@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BannerInfo">
+    <select id="getBannerInfoList" parameterType="Map" resultType="com.skplanet.storeplatform.sac.display.localsci.sci.vo.BannerInfo">
+        SELECT
+            *
+        FROM
+        (
+            SELECT
+                (BE.BNR_MENU_ID || '.' || BE.BNR_EXPO_MENU_ID || '.' || BE.BNR_SEQ) AS BNR_ID,
+                B.BNR_INFO_TYPE_CD,
+                B.BNR_INFO,
+                BE.BNR_NM,
+                BE.BG_COLOR_CD,
+                BI.IMG_SIZE_CD,
+                BI.IMG_PATH
+            FROM TB_DP_BNR B
+                JOIN TB_DP_BNR_EXPO BE
+                    ON B.TENANT_ID = BE.TENANT_ID AND B.BNR_MENU_ID = BE.BNR_MENU_ID
+                JOIN TB_DP_BNR_IMG BI
+                    ON B.TENANT_ID = BI.TENANT_ID AND B.BNR_MENU_ID = BI.BNR_MENU_ID
+            WHERE 1 = 1
+                  AND B.TENANT_ID = #{tenantId}
+                  AND B.BNR_MENU_ID = #{bnrMenuId}
+                  AND BI.IMG_SIZE_CD = #{imgSizeCd}
+                  AND BE.BNR_EXPO_MENU_ID = #{bnrExpoMenuId}
+                  AND BE.EXPO_YN = 'Y'
+                  AND BE.USE_YN = 'Y'
+                  AND BE.EXPO_STATUS_CD IN ('DP010201', 'DP010202')
+                  AND SYSDATE BETWEEN DECODE(BE.EXPO_STATUS_CD, 'DP010202', SYSDATE, BE.EXPO_START_DT)
+                            AND DECODE(BE.EXPO_STATUS_CD,'DP010202',SYSDATE, NVL(BE.EXPO_END_DT, SYSDATE))
+            ORDER BY BE.EXPO_ORD, BE.EXPO_ORD_SUB
+        ) WHERE ROWNUM &lt;= #{count}
+    </select>
+</mapper>
