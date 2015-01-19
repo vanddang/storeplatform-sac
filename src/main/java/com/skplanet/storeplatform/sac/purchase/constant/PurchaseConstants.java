@@ -22,8 +22,7 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 기본 인코딩 */
 	public static final String DEFAULT_ENCODING = "UTF-8";
 
-	public static final String UNLIMITED_DATE = "99991231235959";
-
+	/** 테넌트 ID */
 	public static final String TENANT_ID_ETC = "S00";
 	public static final String TENANT_ID_TSTORE = "S01";
 	public static final String TENANT_ID_OLLEH = "S02";
@@ -48,12 +47,18 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 쇼핑쿠폰CMS 조회 결과 에러 코드 */
 	public static final String COUPON_CMS_RESULT_SOLDOUT = "EC_SCPNCMS_3105"; // 품절
 
-	/** 비회원 처리용 UserKey */
-	public static final String NONMEMBER_COMMON_USERKEY = "NONMEMBER";
-
 	/** 회원Part 조회 결과 에러 코드 */
 	public static final String SACINNER_MEMBER_RESULT_NOTFOUND = "SC_MEM_9982";
 	public static final String SACINNER_MEMBER_RESULT_NOTEXIST_KEY = "SC_MEM_9995"; // 회원키 없음
+
+	/** 전시Part 배너 조회 결과 에러 코드 */
+	public static final String SACINNER_DISPLAY_RESULT_NOTFOUND_BANNER = "SAC_DSP_0009";
+
+	/** 무제한 일시 */
+	public static final String UNLIMITED_DATE = "99991231235959";
+
+	/** 비회원 처리용 UserKey */
+	public static final String NONMEMBER_COMMON_USERKEY = "NONMEMBER";
 
 	/** 회원등급 */
 	public static final String USER_GRADE_PLATINUM = "platinum";

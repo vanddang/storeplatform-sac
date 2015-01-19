@@ -60,6 +60,10 @@ import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseListByS
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseListByStatusScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseSequenceAndDateRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.BannerInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Banner;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.BannerInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.BannerInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac.SellerMbrAppSac;
@@ -115,6 +119,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private PurchaseOrderSCI purchaseOrderSCI;
 	@Autowired
 	private PurchaseOrderSearchSCI purchaseOrderSearchSCI;
+	@Autowired
+	private BannerInfoSCI bannerInfoSCI;
 
 	@Autowired
 	private PurchaseOrderAssistService purchaseOrderAssistService;
@@ -2108,25 +2114,40 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * @return
 	 */
 	private List<VerifyOrderBannerInfoSac> searchBannerList(PrchsDtlMore prchsDtlMore) {
-		// TAKTODO:: 배너 관리 이전까지 하드코딩
 
-		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE) == false) {
+		BannerInfoSacReq bannerInfoSacReq = new BannerInfoSacReq();
+		bannerInfoSacReq.setTenantId(prchsDtlMore.getTenantId());
+		// 이하 요청값은 P/P 결제Page 배너 설정값
+		bannerInfoSacReq.setBnrMenuId("DP010929");
+		bannerInfoSacReq.setBnrExpoMenuId("DP011100");
+		bannerInfoSacReq.setImgSizeCd("DP011033");
+		bannerInfoSacReq.setCount(1);
+
+		BannerInfoSacRes bannerInfoSacRes = null;
+		try {
+			bannerInfoSacRes = this.bannerInfoSCI.getBannerInfoList(bannerInfoSacReq);
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_DISPLAY_RESULT_NOTFOUND_BANNER) == false) {
+				throw e;
+			}
+		}
+
+		if (bannerInfoSacRes == null || CollectionUtils.isEmpty(bannerInfoSacRes.getBannerList())) {
 			return null;
 		}
 
 		List<VerifyOrderBannerInfoSac> bannerList = new ArrayList<VerifyOrderBannerInfoSac>();
+		VerifyOrderBannerInfoSac banner = null;
 
-		VerifyOrderBannerInfoSac banner = new VerifyOrderBannerInfoSac();
-		banner.setTitle("");
-		banner.setImagePath("/data/img/banner/sc/shopping/B_20141216164243296.png");
-		banner.setLinkUrl("");
-		banner.setBackColorCd("#379877");
-		bannerList.add(banner);
-
-		if (CollectionUtils.isEmpty(bannerList)) {
-			return null;
-		} else {
-			return bannerList;
+		for (Banner bannerInfo : bannerInfoSacRes.getBannerList()) {
+			banner = new VerifyOrderBannerInfoSac();
+			banner.setTitle(StringUtils.defaultString(bannerInfo.getTitle()));
+			banner.setImagePath(StringUtils.defaultString(bannerInfo.getImagePath()));
+			banner.setLinkUrl(StringUtils.defaultString(bannerInfo.getLinkUrl()));
+			banner.setBackColorCd(StringUtils.defaultString(bannerInfo.getBackColorCd()));
+			bannerList.add(banner);
 		}
+
+		return bannerList;
 	}
 }
