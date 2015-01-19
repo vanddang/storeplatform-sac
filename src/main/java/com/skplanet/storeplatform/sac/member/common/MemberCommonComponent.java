@@ -1093,7 +1093,8 @@ public class MemberCommonComponent {
 		String clauseStr = "";
 
 		if (agreementList != null && agreementList.size() > 0) {
-			for (AgreementInfo info : agreementList) {
+			for (int i = 0; i < agreementList.size(); i++) {
+				AgreementInfo info = agreementList.get(i);
 				if (StringUtils.isBlank(info.getExtraAgreementId()) || StringUtils.isBlank(info.getIsExtraAgreement())) {
 					throw new StorePlatformException("SAC_MEM_0001",
 							StringUtils.isBlank(info.getExtraAgreementId()) ? "extraAgreementId" : "isExtraAgreement");
@@ -1101,31 +1102,31 @@ public class MemberCommonComponent {
 
 				if (StringUtils.equals(info.getExtraAgreementId(), MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE)
 						&& StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // Tstore이용약관동의
-					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC001 + "^";
+					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC001;
 				} else if (StringUtils.equals(info.getExtraAgreementId(),
 						MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE)
 						&& StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // 통신과금서비스 이용약관
-					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC002 + "^";
+					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC002;
 				} else if (StringUtils.equals(info.getExtraAgreementId(), MemberConstants.POLICY_AGREEMENT_CLAUSE_CASH)
 						&& StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // TSTORE캐쉬이용약관
-					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC003 + "^";
+					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC003;
 				} else if (StringUtils.equals(info.getExtraAgreementId(),
 						MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE)
 						&& StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // 개인정보 수집 및 이용안내
-					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC004 + "^";
+					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC004;
 				} else if (StringUtils.equals(info.getExtraAgreementId(),
 						MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS)
 						&& StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // 3자정보제공동의
-					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC005 + "^";
+					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC005;
 				} else if (StringUtils.equals(info.getExtraAgreementId(),
 						MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING)
 						&& StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // TSTORE정보광고활용
-					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC006 + "^";
+					clauseStr += MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC006;
 				}
-			}
 
-			if (StringUtils.isNotBlank(clauseStr)) {
-				clauseStr.substring(0, clauseStr.lastIndexOf("^"));
+				if (i + 1 < agreementList.size()) {
+					clauseStr += "^";
+				}
 			}
 		}
 
