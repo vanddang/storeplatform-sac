@@ -308,6 +308,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
 		userMbr.setIsMemberPoint(this.ocbJoinCodeYn(agreeUserEcRes)); // 통합포인트 사용 여부
+		userMbr.setImSiteCode(agreeUserEcRes.getJoinSstList()); // 이용동의 사이트 정보
 		createUserRequest.setUserMbr(userMbr);
 
 		/**
@@ -422,6 +423,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
 		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
 		userMbr.setIsMemberPoint(this.ocbJoinCodeYn(agreeUserEcRes)); // 통합포인트 사용 여부
+		userMbr.setImSiteCode(agreeUserEcRes.getJoinSstList()); // 이용동의 사이트 정보
 		createUserRequest.setUserMbr(userMbr);
 
 		/**
