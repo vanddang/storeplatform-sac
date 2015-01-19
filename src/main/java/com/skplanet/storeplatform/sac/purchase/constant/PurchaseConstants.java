@@ -22,6 +22,8 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** 기본 인코딩 */
 	public static final String DEFAULT_ENCODING = "UTF-8";
 
+	public static final String UNLIMITED_DATE = "99991231235959";
+
 	public static final String TENANT_ID_ETC = "S00";
 	public static final String TENANT_ID_TSTORE = "S01";
 	public static final String TENANT_ID_OLLEH = "S02";

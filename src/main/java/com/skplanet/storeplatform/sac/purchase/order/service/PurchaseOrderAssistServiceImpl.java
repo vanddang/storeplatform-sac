@@ -132,7 +132,7 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 	public String calculateUseDate(String startDt, String periodUnitCd, String periodVal, boolean bAutoPrchs) {
 
 		if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) { // 무제한
-			return "99991231235959";
+			return PurchaseConstants.UNLIMITED_DATE;
 		} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_SELECT)) { // 기간선택
 			return periodVal;
 		} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_DATE)) { // 당일

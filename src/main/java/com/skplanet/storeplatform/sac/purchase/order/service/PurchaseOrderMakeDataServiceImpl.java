@@ -78,10 +78,12 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 		int prchsDtlCnt = 1, i = 0;
 
+		boolean bGift = purchaseOrderInfo.isGift();
+
 		// 수신자 만큼 - 상품 갯수 만큼 반복 : Biz쿠폰은 예외 (효율을 위해 ReceiverList만 저장)
 
 		List<PurchaseUserDevice> useUserList = new ArrayList<PurchaseUserDevice>();
-		if (purchaseOrderInfo.isGift()) {
+		if (bGift) {
 			if (purchaseOrderInfo.isBizShopping()) {
 				useUserList.add(purchaseOrderInfo.getPurchaseUser());
 			} else {
@@ -172,17 +174,21 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					prchsDtlMore.setResvCol05(product.getResvCol05());
 					prchsDtlMore.setUsePeriodUnitCd(product.getUsePeriodUnitCd());
 					prchsDtlMore.setUsePeriod(product.getUsePeriod() == null ? "0" : product.getUsePeriod());
-					// 비과금 구매요청 시, 이용종료일시 세팅
-					if (purchaseOrderInfo.isFreeChargeReq() && StringUtils.isNotBlank(product.getUseExprDt())) {
-						prchsDtlMore
-								.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
-										.getUseExprDt() + "235959");
-						prchsDtlMore.setDwldExprDt(prchsDtlMore.getUseExprDt());
+					// 선물 시, 초기 재다운로드 종료일시는 무제한
+					if (bGift) {
+						prchsDtlMore.setDwldExprDt(PurchaseConstants.UNLIMITED_DATE);
 					}
 					// 정액권으로 에피소드 이용시, 다운로드 종료 일시
 					if (StringUtils.isNotBlank(product.getUseFixrateProdId())
 							&& StringUtils.isNotBlank(product.getDwldExprDt())) {
 						prchsDtlMore.setDwldExprDt(product.getDwldExprDt());
+					}
+					// 비과금 구매요청 시, 이용종료일시&재다운로드종료일시 세팅
+					if (purchaseOrderInfo.isFreeChargeReq() && StringUtils.isNotBlank(product.getUseExprDt())) {
+						prchsDtlMore
+								.setUseExprDt(product.getUseExprDt().length() == 14 ? product.getUseExprDt() : product
+										.getUseExprDt() + "235959");
+						prchsDtlMore.setDwldExprDt(prchsDtlMore.getUseExprDt());
 					}
 
 					prchsDtlMore.setUseFixrateProdId(product.getUseFixrateProdId());
@@ -420,7 +426,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		autoPrchsMore.setStatusCd(PurchaseConstants.PRCHS_STATUS_COMPT);
 		autoPrchsMore.setPaymentStartDt(prchsDtlMore.getPrchsDt());
 		if (StringUtils.isBlank(autoLastPeriod) || Integer.parseInt(autoLastPeriod) <= 0) {
-			autoPrchsMore.setPaymentEndDt("99991231235959");
+			autoPrchsMore.setPaymentEndDt(PurchaseConstants.UNLIMITED_DATE);
 		} else {
 			autoPrchsMore.setAutoPrchsLastPeriod(Integer.parseInt(autoLastPeriod));
 		}
@@ -584,6 +590,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			prchsDtlMore.setUseExprDt(ebookflatInfo.getUseExprDt());
 			prchsDtlMore.setDwldStartDt(ebookflatInfo.getDwldStartDt());
 			prchsDtlMore.setDwldExprDt(ebookflatInfo.getDwldExprDt());
+			prchsDtlMore.setUsePeriodUnitCd(ebookflatInfo.getUsePeriodUnitCd());
+			prchsDtlMore.setUsePeriod(ebookflatInfo.getUsePeriod());
 			prchsDtlMore.setUseFixrateProdId(ebookflatInfo.getProdId());
 			prchsDtlMore.setDrmYn(ebookflatInfo.getDrmYn());
 			prchsDtlMore.setAlarmYn(PurchaseConstants.USE_Y);
