@@ -214,6 +214,11 @@ public class UserInfo extends CommonInfo {
 	/** 원아이디 가입상태코드. */
 	private String entryStatusCode;
 
+	/**
+	 * 샵클 업데이트 여부(sap 회원용).
+	 */
+	private String isSCUpdate;
+
 	/* 사용자 부가정보 */
 	private List<UserExtraInfo> userExtraInfoList;
 
@@ -831,4 +836,20 @@ public class UserInfo extends CommonInfo {
 	public void setEntryStatusCode(String entryStatusCode) {
 		this.entryStatusCode = entryStatusCode;
 	}
+
+	/**
+	 * @return isSCUpdate
+	 */
+	public String getIsSCUpdate() {
+		return this.isSCUpdate;
+	}
+
+	/**
+	 * @param isSCUpdate
+	 *            String
+	 */
+	public void setIsSCUpdate(String isSCUpdate) {
+		this.isSCUpdate = isSCUpdate;
+	}
+
 }
