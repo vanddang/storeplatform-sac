@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeUserEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.DiscardUserEcReq;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
@@ -335,64 +336,71 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 		detailReq.setSearchExtent(searchExtent);
-		DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-		if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+		try {
 
-			this.rem(requestHeader, detailRes.getUserInfo().getUserKey());
+			DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-			/**
-			 * MQ 연동(회원 탈퇴).
-			 */
-			RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+			if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-			try {
+				this.rem(requestHeader, detailRes.getUserInfo().getUserKey());
 
-				mqInfo.setUserId(detailRes.getUserInfo().getUserId());
-				mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
-				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-				mqInfo.setDeviceId(deviceId);
-				List<UserExtraInfo> list = detailRes.getUserInfo().getUserExtraInfoList();
-				if (list != null) {
-					for (int i = 0; i < list.size(); i++) {
-						UserExtraInfo extraInfo = list.get(i);
-						if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH, extraInfo.getExtraProfile())) {
-							mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+				/**
+				 * MQ 연동(회원 탈퇴).
+				 */
+				RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+
+				try {
+
+					mqInfo.setUserId(detailRes.getUserInfo().getUserId());
+					mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					mqInfo.setDeviceId(deviceId);
+					List<UserExtraInfo> list = detailRes.getUserInfo().getUserExtraInfoList();
+					if (list != null) {
+						for (int i = 0; i < list.size(); i++) {
+							UserExtraInfo extraInfo = list.get(i);
+							if (StringUtils.equals(MemberConstants.USER_EXTRA_PROFILEIMGPATH,
+									extraInfo.getExtraProfile())) {
+								mqInfo.setProfileImgPath(extraInfo.getExtraProfileValue());
+							}
 						}
 					}
+					this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+
+				} catch (AmqpException ex) {
+					LOGGER.error("MQ process fail {}", mqInfo);
 				}
-				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
-			} catch (AmqpException ex) {
-				LOGGER.error("MQ process fail {}", mqInfo);
+				LOGGER.info("{} 모바일회원 탈퇴처리", deviceId);
+
+			} else if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_IDPID)
+					|| StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
+
+				this.deviceIdInvalidByDeviceKey(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes
+						.getDeviceInfoList().get(0).getDeviceKey());
+
+				/** MQ 연동(휴대기기 삭제) */
+				RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
+				try {
+					mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+					mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+					mqInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+					mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+					mqInfo.setSvcMangNo(detailRes.getDeviceInfoList().get(0).getSvcMangNum());
+					mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
+
+					this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
+				} catch (AmqpException ex) {
+					LOGGER.info("MQ process fail {}", mqInfo);
+				}
+
+				LOGGER.info("{} 휴대기기 삭제처리", deviceId);
 			}
 
-			LOGGER.info("{} 모바일회원 탈퇴처리", deviceId);
-
-		} else if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_IDPID)
-				|| StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
-
-			this.deviceIdInvalidByDeviceKey(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes
-					.getDeviceInfoList().get(0).getDeviceKey());
-
-			/** MQ 연동(휴대기기 삭제) */
-			RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
-			try {
-				mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
-				mqInfo.setUserKey(detailRes.getUserInfo().getUserKey());
-				mqInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
-				mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
-				mqInfo.setSvcMangNo(detailRes.getDeviceInfoList().get(0).getSvcMangNum());
-				mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
-
-				this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
-			} catch (AmqpException ex) {
-				LOGGER.info("MQ process fail {}", mqInfo);
-			}
-
-			LOGGER.info("{} 휴대기기 삭제처리", deviceId);
+		} catch (StorePlatformException e) {
+			// ignore Exception
 		}
-
 	}
 
 	/**
