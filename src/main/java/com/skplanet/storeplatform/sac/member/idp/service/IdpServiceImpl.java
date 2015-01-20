@@ -2961,15 +2961,14 @@ public class IdpServiceImpl implements IdpService {
 							searchUserRequestByMdnInfo.setCommonRequest(commonRequest);
 							searchUserRequestByMdnInfo.setKeySearchList(keySearchListByMdnInfo);
 							SearchUserResponse searchUserResponseByMdnInfo = null;
-							
-							try{
-								searchUserResponseByMdnInfo = this.userSCI.searchUser(searchUserRequestByMdnInfo);	
-							}catch(StorePlatformException e){
+
+							try {
+								searchUserResponseByMdnInfo = this.userSCI.searchUser(searchUserRequestByMdnInfo);
+							} catch (StorePlatformException e) {
 								if (!StringUtil.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 									throw e;
 								}
 							}
-							
 
 							if (searchUserResponseByMdnInfo != null) {
 								insdUserKeyByMdnInfo = searchUserResponseByMdnInfo.getUserKey();
@@ -3068,12 +3067,7 @@ public class IdpServiceImpl implements IdpService {
 								try {
 									searchAgreementListResponse = this.userSCI
 											.searchAgreementList(searchAgreementListRequest);
-								} catch (StorePlatformException e) {
-									// ignore exception
-								}
 
-								if (searchAgreementListResponse != null
-										&& searchAgreementListResponse.getMbrClauseAgreeList().size() > 0) {
 									// 약관이 존재하면 통합아이디로 이관처리
 									UpdateAgreementRequest updateAgreementRequest = new UpdateAgreementRequest();
 									updateAgreementRequest.setCommonRequest(commonRequest);
@@ -3081,6 +3075,9 @@ public class IdpServiceImpl implements IdpService {
 									updateAgreementRequest.setMbrClauseAgreeList(searchAgreementListResponse
 											.getMbrClauseAgreeList());
 									this.userSCI.updateAgreement(updateAgreementRequest);
+
+								} catch (StorePlatformException e) {
+									// ignore exception
 								}
 							}
 						} catch (StorePlatformException spe) {
