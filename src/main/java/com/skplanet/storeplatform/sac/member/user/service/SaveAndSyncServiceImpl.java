@@ -117,6 +117,12 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 			if (StringUtils.equals(isActive, "Y")) { // 번호변경인 경우 현재 deviceId를 조회한다.
 				nowDeviceId = this.schDeviceIdBySvcMangNo(sacHeader, svcMangNo);
+
+				if (StringUtils.isBlank(nowDeviceId)) {
+					LOGGER.info("{} 현재 deviceId 미존재", deviceId);
+					saveAndSync.setIsSaveAndSyncTarget(MemberConstants.USE_N);
+					return saveAndSync;
+				}
 			}
 
 			LOGGER.info(
@@ -228,10 +234,14 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		keySearchList.add(key);
 
 		searchDeviceRequest.setKeySearchList(keySearchList);
-		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
-		if (schDeviceRes != null && schDeviceRes.getUserMbrDevice() != null) {
+		try {
+			SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 			nowDeviceId = schDeviceRes.getUserMbrDevice().getDeviceID();
+		} catch (StorePlatformException ex) {
+			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+				throw ex;
+			}
 		}
 
 		return nowDeviceId;
