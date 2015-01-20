@@ -55,6 +55,9 @@ public class OtherController {
 	@Autowired
 	private OtherAIDListService otherAIDListService;
 
+    @Autowired
+    private OtherTenantProductMappingService otherTenantProductMappingService;
+
 	/**
 	 * <pre>
 	 * [I03000119] T Membership 할인율 조회
@@ -196,5 +199,16 @@ public class OtherController {
 
 		return this.otherTMembershipService.searchTMembershipUseStatus(header);
 	}
+
+    @RequestMapping(value = "/tenantProdMapg/get/v1", method = RequestMethod.GET)
+    @ResponseBody
+    public OtherTenantProductMappingRes getTenantProductMapping(@Validated OtherTenantProductMappingReq req) {
+        OtherTenantProductMappingService.TenantProductMapping productMapping = otherTenantProductMappingService.getTenantProductMapping(req.getProdId());
+        if(productMapping == null)
+            throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
+
+        return new OtherTenantProductMappingRes(productMapping.getTenantId(), productMapping.getTstoreProdId());
+
+    }
 
 }
