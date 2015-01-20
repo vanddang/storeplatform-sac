@@ -10,6 +10,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
@@ -139,4 +143,31 @@ public interface LoginService {
 	 */
 	public AuthorizeSacRes authorize(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSacReq req);
 
+	/**
+	 * <pre>
+	 * Olleh Market 회원의 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForOllehMarketSacReq
+	 * @return AuthorizeForOllehMarketSacRes
+	 */
+	public AuthorizeForOllehMarketSacRes authorizeForOllehMarket(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForOllehMarketSacReq req);
+
+	/**
+	 * <pre>
+	 * Uplus Store 회원의 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForUplusStoreSacReq
+	 * @return AuthorizeForUplusStoreSacRes
+	 */
+	public AuthorizeForUplusStoreSacRes authorizeForUplusStore(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForUplusStoreSacReq req);
 }

@@ -95,6 +95,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
@@ -2103,7 +2107,7 @@ public class LoginServiceImpl implements LoginService {
 						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
 								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
 						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
-						this.joinMaketUser(requestHeader, req, marketRes);
+						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
 
 						// 재가입시킨 회원정보 재조회
 						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
@@ -2141,7 +2145,7 @@ public class LoginServiceImpl implements LoginService {
 							if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
 								// 회원정보 없으면 Tstore 회원가입
 								LOGGER.info("{} Tstore 회원가입", req.getDeviceId());
-								this.joinMaketUser(requestHeader, req, marketRes);
+								this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
 
 								// 가입된 deviceId로 회원정보 재조회
 								detailReq.setDeviceId(marketRes.getDeviceId());
@@ -2372,13 +2376,15 @@ public class LoginServiceImpl implements LoginService {
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
-	 * @param req
-	 *            AuthorizeForInAppSacReq
+	 * @param deviceId
+	 *            String
+	 * @param nativeId
+	 *            String
 	 * @param marketRes
 	 *            MarketAuthorizeEcRes
 	 * @return userKey String
 	 */
-	private String joinMaketUser(SacRequestHeader requestHeader, AuthorizeForInAppSacReq req,
+	private String joinMaketUser(SacRequestHeader requestHeader, String deviceId, String nativeId,
 			MarketAuthorizeEcRes marketRes) {
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
@@ -2391,7 +2397,7 @@ public class LoginServiceImpl implements LoginService {
 		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
-		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
+		userMbr.setUserID(deviceId); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
 		createUserRequest.setUserMbr(userMbr);
 
@@ -2413,7 +2419,7 @@ public class LoginServiceImpl implements LoginService {
 		userMbrDevice.setDeviceTelecom(marketRes.getDeviceTelecom()); // 이동 통신사
 		userMbrDevice.setDeviceModelNo(MemberConstants.DP_ANY_PHONE_4APP); // 단말 모델
 		userMbrDevice.setDeviceNickName(MemberConstants.DP_ANY_PHONE_4APP_NM); // 단말닉네임
-		userMbrDevice.setNativeID(req.getNativeId()); // 기기고유 ID (imei)
+		userMbrDevice.setNativeID(nativeId); // 기기고유 ID (imei)
 		userMbrDevice.setIsPrimary(MemberConstants.USE_Y); // 대표기기 유무
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
 
@@ -2646,6 +2652,352 @@ public class LoginServiceImpl implements LoginService {
 		res.setMbrAuth(detailRes.getMbrAuth()); // 실명인증정보
 		res.setTstoreEtcInfo(this.getTstoreEtcInfo(requestHeader, deviceInfo.getDeviceId(),
 				deviceInfo.getDeviceTelecom(), userInfo)); // 기타정보
+
+		return res;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeForOllehMarket(com.skplanet.storeplatform
+	 * .sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacReq)
+	 */
+	@Override
+	public AuthorizeForOllehMarketSacRes authorizeForOllehMarket(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForOllehMarketSacReq req) {
+
+		MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+		marketReq.setTrxNo(req.getTrxNo());
+		marketReq.setDeviceId(req.getDeviceId());
+		marketReq.setDeviceTelecom(req.getDeviceTelecom());
+		marketReq.setNativeId(req.getNativeId());
+		marketReq.setSimSerialNo(req.getSimSerialNo());
+		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
+
+		AuthorizeForOllehMarketSacRes res = new AuthorizeForOllehMarketSacRes();
+
+		if (marketRes != null) {
+
+			res.setTrxNo(req.getTrxNo());
+			res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S02
+			res.setDeviceTelecom(req.getDeviceTelecom());
+
+			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(),
+					ConvertMapperUtils.convertObjectToJson(marketRes));
+
+			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상회원
+
+				// Tstore 회원가입여부 조회
+				DetailReq detailReq = new DetailReq();
+				SearchExtentReq searchExtent = new SearchExtentReq();
+				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+				detailReq.setDeviceId(req.getDeviceId());
+				detailReq.setSearchExtent(searchExtent);
+
+				DetailV2Res detailRes = null;
+
+				try {
+
+					detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+					LOGGER.info("{} Tstore 회원", req.getDeviceId());
+
+					if (!StringUtils.equals(detailRes.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo()
+							.getDeviceKey())) {
+
+						// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
+						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
+								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
+						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
+						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+
+						// 재가입시킨 회원정보 재조회
+						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+					}
+
+				} catch (StorePlatformException e) {
+
+					if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+
+						// 타사 회원키로 가입된 회원정보 조회
+						detailReq.setDeviceId(null);
+						detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
+						detailReq.setSearchExtent(searchExtent);
+
+						try {
+
+							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+							// 번호변경 케이스로 판단하여 deviceId 업데이트
+							LOGGER.info("{} deviceId 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList()
+									.get(0).getDeviceId(), marketRes.getDeviceId());
+							DeviceInfo deviceInfo = new DeviceInfo();
+							deviceInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+							deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+							deviceInfo.setDeviceId(marketRes.getDeviceId());
+							this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
+
+							// 변경된 deviceId로 회원정보 재조회
+							detailReq.setDeviceId(marketRes.getDeviceId());
+							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+						} catch (StorePlatformException ex) {
+
+							if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+								// 회원정보 없으면 Tstore 회원가입
+								LOGGER.info("{} Tstore 회원가입", req.getDeviceId());
+								this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+
+								// 가입된 deviceId로 회원정보 재조회
+								detailReq.setDeviceId(marketRes.getDeviceId());
+								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+							} else {
+								throw e;
+							}
+						}
+
+					} else {
+						throw e;
+					}
+				}
+
+				// 사용자 기본정보
+				UserInfo userInfo = new UserInfo();
+				userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+				userInfo.setIsSCUpdate(marketRes.getDeviceInfo().getIsSCUpdate());
+				userInfo.setProdExpoLevl(marketRes.getDeviceInfo().getProdExpoLevl());
+
+				// 약관 정보
+				List<Agreement> agreementList = this.getMarketClauseAgreeMappingInfo(marketRes.getDeviceInfo()
+						.getClauseExtraInfoList());
+
+				// 휴대기기 정보
+				DeviceInfo deviceInfo = new DeviceInfo();
+				deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+				deviceInfo.setMarketDeviceKey(detailRes.getUserInfo().getImMbrNo()); // 타사 회선의 고유 Key
+				deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+				deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
+				deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
+
+				res.setUserStatus(marketRes.getUserStatus());
+				res.setUserAuthKey(this.tempUserAuthKey);
+				res.setUserInfo(userInfo);
+				res.setAgreementList(agreementList);
+				res.setDeviceInfo(deviceInfo);
+
+			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
+
+				// Tstore에 가입된 회원인경우 탈퇴 처리
+				DetailReq detailReq = new DetailReq();
+				SearchExtentReq searchExtent = new SearchExtentReq();
+				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+				detailReq.setDeviceId(req.getDeviceId());
+				detailReq.setSearchExtent(searchExtent);
+
+				try {
+
+					DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+					LOGGER.info("{} 타사마켓 비회원으로 Tstore 탈퇴처리", req.getDeviceId());
+					this.removeMarketUser(requestHeader, detailRes.getDeviceInfoList().get(0).getUserKey());
+
+				} catch (StorePlatformException e) {
+
+					if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+						throw e;
+					}
+				}
+
+				res.setUserStatus(marketRes.getUserStatus());
+				res.setUserInfo(new UserInfo());
+				res.setAgreementList(new ArrayList<Agreement>());
+				res.setDeviceInfo(new DeviceInfo());
+
+			} else {
+
+				res.setUserStatus(marketRes.getUserStatus());
+				res.setUserInfo(new UserInfo());
+				res.setAgreementList(new ArrayList<Agreement>());
+				res.setDeviceInfo(new DeviceInfo());
+
+			}
+
+		}
+
+		return res;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeForUplusStore(com.skplanet.storeplatform
+	 * .sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacReq)
+	 */
+	@Override
+	public AuthorizeForUplusStoreSacRes authorizeForUplusStore(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForUplusStoreSacReq req) {
+
+		MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
+		marketReq.setTrxNo(req.getTrxNo());
+		marketReq.setDeviceId(req.getDeviceId());
+		marketReq.setDeviceTelecom(req.getDeviceTelecom());
+		marketReq.setNativeId(req.getNativeId());
+		marketReq.setSimSerialNo(req.getSimSerialNo());
+		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
+
+		AuthorizeForUplusStoreSacRes res = new AuthorizeForUplusStoreSacRes();
+
+		if (marketRes != null) {
+
+			res.setTrxNo(req.getTrxNo());
+			res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S03
+			res.setDeviceTelecom(req.getDeviceTelecom());
+
+			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(),
+					ConvertMapperUtils.convertObjectToJson(marketRes));
+
+			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상회원
+
+				// Tstore 회원가입여부 조회
+				DetailReq detailReq = new DetailReq();
+				SearchExtentReq searchExtent = new SearchExtentReq();
+				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+				detailReq.setDeviceId(req.getDeviceId());
+				detailReq.setSearchExtent(searchExtent);
+
+				DetailV2Res detailRes = null;
+
+				try {
+
+					detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+					LOGGER.info("{} Tstore 회원", req.getDeviceId());
+
+					if (!StringUtils.equals(detailRes.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo()
+							.getDeviceKey())) {
+
+						// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
+						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
+								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
+						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
+						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+
+						// 재가입시킨 회원정보 재조회
+						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+					}
+
+				} catch (StorePlatformException e) {
+
+					if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+
+						// 타사 회원키로 가입된 회원정보 조회
+						detailReq.setDeviceId(null);
+						detailReq.setMbrNo(marketRes.getDeviceInfo().getDeviceKey());
+						detailReq.setSearchExtent(searchExtent);
+
+						try {
+
+							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+							// 번호변경 케이스로 판단하여 deviceId 업데이트
+							LOGGER.info("{} deviceId 변경 : {} -> {}", req.getDeviceId(), detailRes.getDeviceInfoList()
+									.get(0).getDeviceId(), marketRes.getDeviceId());
+							DeviceInfo deviceInfo = new DeviceInfo();
+							deviceInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+							deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+							deviceInfo.setDeviceId(marketRes.getDeviceId());
+							this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
+
+							// 변경된 deviceId로 회원정보 재조회
+							detailReq.setDeviceId(marketRes.getDeviceId());
+							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+						} catch (StorePlatformException ex) {
+
+							if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+								// 회원정보 없으면 Tstore 회원가입
+								LOGGER.info("{} Tstore 회원가입", req.getDeviceId());
+								this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+
+								// 가입된 deviceId로 회원정보 재조회
+								detailReq.setDeviceId(marketRes.getDeviceId());
+								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+							} else {
+								throw e;
+							}
+						}
+
+					} else {
+						throw e;
+					}
+				}
+
+				// 사용자 기본정보
+				UserInfo userInfo = new UserInfo();
+				userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
+				userInfo.setIsSCUpdate(marketRes.getDeviceInfo().getIsSCUpdate());
+				userInfo.setProdExpoLevl(marketRes.getDeviceInfo().getProdExpoLevl());
+
+				// 약관 정보
+				List<Agreement> agreementList = this.getMarketClauseAgreeMappingInfo(marketRes.getDeviceInfo()
+						.getClauseExtraInfoList());
+
+				// 휴대기기 정보
+				DeviceInfo deviceInfo = new DeviceInfo();
+				deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
+				deviceInfo.setMarketDeviceKey(detailRes.getUserInfo().getImMbrNo()); // 타사 회선의 고유 Key
+				deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+				deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
+				deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
+
+				res.setUserStatus(marketRes.getUserStatus());
+				res.setUserAuthKey(this.tempUserAuthKey);
+				res.setUserInfo(userInfo);
+				res.setAgreementList(agreementList);
+				res.setDeviceInfo(deviceInfo);
+
+			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
+
+				// Tstore에 가입된 회원인경우 탈퇴 처리
+				DetailReq detailReq = new DetailReq();
+				SearchExtentReq searchExtent = new SearchExtentReq();
+				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+				detailReq.setDeviceId(req.getDeviceId());
+				detailReq.setSearchExtent(searchExtent);
+
+				try {
+
+					DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+					LOGGER.info("{} 타사마켓 비회원으로 Tstore 탈퇴처리", req.getDeviceId());
+					this.removeMarketUser(requestHeader, detailRes.getDeviceInfoList().get(0).getUserKey());
+
+				} catch (StorePlatformException e) {
+
+					if (!StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+						throw e;
+					}
+				}
+
+				res.setUserStatus(marketRes.getUserStatus());
+				res.setUserInfo(new UserInfo());
+				res.setAgreementList(new ArrayList<Agreement>());
+				res.setDeviceInfo(new DeviceInfo());
+
+			} else {
+
+				res.setUserStatus(marketRes.getUserStatus());
+				res.setUserInfo(new UserInfo());
+				res.setAgreementList(new ArrayList<Agreement>());
+				res.setDeviceInfo(new DeviceInfo());
+
+			}
+
+		}
 
 		return res;
 	}

@@ -28,6 +28,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForOllehMarketSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForUplusStoreSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacReq;
@@ -295,6 +299,60 @@ public class LoginController {
 
 		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
 				res.getUserMainStatus());
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * Olleh Market 회원의 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForOllehMarketSacReq
+	 * @return AuthorizeForOllehMarketSacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeForOllehMarket/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeForOllehMarketSacRes authorizeForOllehMarket(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForOllehMarketSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		AuthorizeForOllehMarketSacRes res = this.loginService.authorizeForOllehMarket(requestHeader, req);
+
+		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
+				res.getUserStatus());
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * Uplus Store 회원의 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForUplusStoreSacReq
+	 * @return AuthorizeForUplusStoreSacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeForUplusStore/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeForUplusStoreSacRes authorizeForUplusStore(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForUplusStoreSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		AuthorizeForUplusStoreSacRes res = this.loginService.authorizeForUplusStore(requestHeader, req);
+
+		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
+				res.getUserStatus());
 
 		return res;
 
