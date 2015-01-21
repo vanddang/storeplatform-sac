@@ -2674,6 +2674,8 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setDeviceTelecom(req.getDeviceTelecom());
 		marketReq.setNativeId(req.getNativeId());
 		marketReq.setSimSerialNo(req.getSimSerialNo());
+		marketReq.setDeviceType(req.getDeviceType());
+		marketReq.setExtraInfo(req.getExtraInfo());
 		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
 
 		AuthorizeForOllehMarketSacRes res = new AuthorizeForOllehMarketSacRes();
@@ -2787,6 +2789,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(userInfo);
 				res.setAgreementList(agreementList);
 				res.setDeviceInfo(deviceInfo);
+				res.setExtraInfo(marketRes.getExtraInfo());
 
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
@@ -2814,6 +2817,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
 				res.setDeviceInfo(new DeviceInfo());
+				res.setExtraInfo(new Object());
 
 			} else {
 
@@ -2821,6 +2825,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
 				res.setDeviceInfo(new DeviceInfo());
+				res.setExtraInfo(new Object());
 
 			}
 
@@ -2847,6 +2852,8 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setDeviceTelecom(req.getDeviceTelecom());
 		marketReq.setNativeId(req.getNativeId());
 		marketReq.setSimSerialNo(req.getSimSerialNo());
+		marketReq.setDeviceType(req.getDeviceType());
+		marketReq.setExtraInfo(req.getExtraInfo());
 		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
 
 		AuthorizeForUplusStoreSacRes res = new AuthorizeForUplusStoreSacRes();
@@ -2960,6 +2967,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(userInfo);
 				res.setAgreementList(agreementList);
 				res.setDeviceInfo(deviceInfo);
+				res.setExtraInfo(marketRes.getExtraInfo());
 
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
@@ -2987,6 +2995,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
 				res.setDeviceInfo(new DeviceInfo());
+				res.setExtraInfo(new Object());
 
 			} else {
 
@@ -2994,6 +3003,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
 				res.setDeviceInfo(new DeviceInfo());
+				res.setExtraInfo(new Object());
 
 			}
 
