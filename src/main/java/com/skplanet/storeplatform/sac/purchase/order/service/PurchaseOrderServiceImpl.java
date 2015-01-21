@@ -751,17 +751,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// T store 쿠폰 조회
 
-		List<String> prodIdList = new ArrayList<String>();
-		for (PrchsDtlMore productInfo : prchsDtlMoreList) {
-			prodIdList.add(productInfo.getProdId());
+		if (StringUtils.contains(res.getCdMaxAmtRate(), "26:0:0") == false) {
+			List<String> prodIdList = new ArrayList<String>();
+			for (PrchsDtlMore productInfo : prchsDtlMoreList) {
+				prodIdList.add(productInfo.getProdId());
+			}
+			int purchaseQty = 1;
+			if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
+					&& StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"))) {
+				purchaseQty = prchsDtlMoreList.size();
+			}
+			res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreCouponList(payUserKey,
+					reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
+
+		} else {
+			res.setNoCouponList("NULL");
 		}
-		int purchaseQty = 1;
-		if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
-				&& StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"))) {
-			purchaseQty = prchsDtlMoreList.size();
-		}
-		res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreCouponList(payUserKey,
-				reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
 
 		// ------------------------------------------------------------------------------------------------
 		// 캐쉬/포인트 잔액 통합 정보 : 게임 경우 통합조회 규격, 그 외는 T store Cash 단일 조회
@@ -771,11 +777,21 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.equals(prchsDtlMore.getTenantProdGrpCd().substring(8, 12), "DP01")
 				&& StringUtils.endsWith(prchsDtlMore.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT)) {
-			cashIntgAmtInf = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(payUserKey);
+			if (StringUtils.contains(res.getCdMaxAmtRate(), "25:0:0")
+					&& StringUtils.contains(res.getCdMaxAmtRate(), "27:0:0")
+					&& StringUtils.contains(res.getCdMaxAmtRate(), "30:0:0")) {
+				cashIntgAmtInf = "25:0;27:0;30:0";
+			} else {
+				cashIntgAmtInf = this.purchaseOrderTstoreService.searchTstoreCashIntegrationAmt(payUserKey);
+			}
 
 		} else {
 			// T store Cash 조회
-			double tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(payUserKey);
+			double tstoreCashAmt = 0;
+
+			if (StringUtils.contains(res.getCdMaxAmtRate(), "25:0:0") == false) {
+				tstoreCashAmt = this.purchaseOrderTstoreService.searchTstoreCashAmt(payUserKey);
+			}
 
 			// 캐쉬/포인트 잔액 통합 정보
 			StringBuffer sbCashPoint = new StringBuffer();
@@ -1381,9 +1397,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			confirmPurchaseScReq.setOfferingId(offeringId);
 			if (CollectionUtils.isNotEmpty(cashReserveResList)) {
 				for (TStoreCashChargeReserveDetailEcRes chargeInfo : cashReserveResList) {
-					if (StringUtils.equals(chargeInfo.getCashCls(), "02")) { // T store Cash 충전형 - 01 : Point, 02 : Cash
+					// T store Cash 충전형 - 01 : Point, 02 : Cash
+					if (StringUtils.equals(chargeInfo.getCashCls(), PurchaseConstants.TSTORE_CASH_CLASS_CASH)) {
 						confirmPurchaseScReq.setGameCashCashId(chargeInfo.getIdentifier());
-					} else if (StringUtils.equals(chargeInfo.getCashCls(), "01")) {
+					} else if (StringUtils.equals(chargeInfo.getCashCls(), PurchaseConstants.TSTORE_CASH_CLASS_POINT)) {
 						confirmPurchaseScReq.setGameCashPointId(chargeInfo.getIdentifier());
 					}
 				}
@@ -2086,8 +2103,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private List<VerifyOrderPromotionInfoSac> searchPromotionList(PrchsDtlMore prchsDtlMore) {
 		List<VerifyOrderPromotionInfoSac> promotionList = new ArrayList<VerifyOrderPromotionInfoSac>();
 
-		List<PaymentPromotion> paymentPromotionList = this.paymentPromotionService
-				.searchPaymentPromotionList(prchsDtlMore.getTenantId());
+		List<PaymentPromotion> paymentPromotionList = null;
+
+		try {
+			paymentPromotionList = this.paymentPromotionService.searchPaymentPromotionList(prchsDtlMore.getTenantId());
+		} catch (Exception e) {
+			// 이 때 발생하는 예외는 로깅만.
+			this.logger.info("PRCHS,ORDER,SAC,VERIFY,PROMOTION,ERROR,{}",
+					e instanceof StorePlatformException ? ((StorePlatformException) e).getCode() : e.getMessage());
+
+			return null;
+		}
+
 		VerifyOrderPromotionInfoSac promotion = null;
 
 		for (PaymentPromotion paymentPromotion : paymentPromotionList) {
@@ -2126,10 +2153,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		BannerInfoSacRes bannerInfoSacRes = null;
 		try {
 			bannerInfoSacRes = this.bannerInfoSCI.getBannerInfoList(bannerInfoSacReq);
-		} catch (StorePlatformException e) {
-			if (StringUtils.equals(e.getCode(), PurchaseConstants.SACINNER_DISPLAY_RESULT_NOTFOUND_BANNER) == false) {
-				throw e;
-			}
+		} catch (Exception e) {
+			// 이 때 발생하는 예외는 로깅만.
+			this.logger.info("PRCHS,ORDER,SAC,VERIFY,BANNER,ERROR,{}",
+					e instanceof StorePlatformException ? ((StorePlatformException) e).getCode() : e.getMessage());
+
+			return null;
 		}
 
 		if (bannerInfoSacRes == null || CollectionUtils.isEmpty(bannerInfoSacRes.getBannerList())) {

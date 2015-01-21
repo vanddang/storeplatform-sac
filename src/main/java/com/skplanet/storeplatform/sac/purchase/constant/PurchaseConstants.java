@@ -51,9 +51,6 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String SACINNER_MEMBER_RESULT_NOTFOUND = "SC_MEM_9982";
 	public static final String SACINNER_MEMBER_RESULT_NOTEXIST_KEY = "SC_MEM_9995"; // 회원키 없음
 
-	/** 전시Part 배너 조회 결과 에러 코드 */
-	public static final String SACINNER_DISPLAY_RESULT_NOTFOUND_BANNER = "SAC_DSP_0009";
-
 	/** 무제한 일시 */
 	public static final String UNLIMITED_DATE = "99991231235959";
 
