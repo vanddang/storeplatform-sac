@@ -3292,68 +3292,46 @@ public class IdpServiceImpl implements IdpService {
 	 */
 	private List<MbrClauseAgree> getMbrClauseAgreeList(String tenantID, String[] mbrClauseAgreeArray) {
 
-		boolean isSelectedClauseAgree = false; // 선택사항 TAC006 US010608값의 선택판단 여부 없을경우 false
+		List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>(); // SAC 약관 리스트
+		List<MbrClauseAgree> setMbrClauseAgreeList = new ArrayList<MbrClauseAgree>(); // SC 약관 리스트
+		AgreementInfo setAgreementInfo = null; // SAC 약관정보
+		MbrClauseAgree mca = null; // SC 약관정보
 
-		List<MbrClauseAgree> setMbrClauseAgreeList = new ArrayList<MbrClauseAgree>(); // return 시켜줄 약관정보 목록
-		MbrClauseAgree mca = null; // arrayList에 담을 약관정보 초기화
-
-		// 신규가입인경우만 이용약관이 들어옴.
-		List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>(); // 공통약관정보의 필수약관여부, 약관정보를 조회하기 위해 셋팅하는 list
-
-		AgreementInfo setAgreementInfo = null; // 약관동의정보 초기화
-
-		if (mbrClauseAgreeArray != null) {
-
-			// TAC001 Tstore 이용약관동의
-			setAgreementInfo = new AgreementInfo();
-			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE);
-			setAgreementInfo.setIsExtraAgreement("Y");
-			agreementList.add(setAgreementInfo);
-
-			// TAC002 통신과금서비스 이용약관
-			setAgreementInfo = new AgreementInfo();
-			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE);
-			setAgreementInfo.setIsExtraAgreement("Y");
-			agreementList.add(setAgreementInfo);
-
-			// TAC003 TSTORE캐쉬이용약관
-			setAgreementInfo = new AgreementInfo();
-			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_CASH);
-			setAgreementInfo.setIsExtraAgreement("Y");
-			agreementList.add(setAgreementInfo);
-
-			// TAC004 개인정보 수집 및 이용안내
-			setAgreementInfo = new AgreementInfo();
-			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE);
-			setAgreementInfo.setIsExtraAgreement("Y");
-			agreementList.add(setAgreementInfo);
-
-			// TAC005 3자정보제공동의
-			setAgreementInfo = new AgreementInfo();
-			setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS);
-			setAgreementInfo.setIsExtraAgreement("Y");
-			agreementList.add(setAgreementInfo);
-			agreementList.add(setAgreementInfo);
-
+		if (mbrClauseAgreeArray != null && mbrClauseAgreeArray.length > 0) {
 			for (String mbrClauseAgree : mbrClauseAgreeArray) {
-				if (mbrClauseAgree.equals(MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC006)) {// 선택약관
-					isSelectedClauseAgree = true;
-					break;
-				} else {
-					isSelectedClauseAgree = false;
+				if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC001)) {
+					// TAC001 Tstore 이용약관동의
+					setAgreementInfo = new AgreementInfo();
+					setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE);
+					setAgreementInfo.setIsExtraAgreement("Y");
+				} else if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC002)) {
+					// TAC002 통신과금서비스 이용약관
+					setAgreementInfo = new AgreementInfo();
+					setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE);
+					setAgreementInfo.setIsExtraAgreement("Y");
+				} else if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC003)) {
+					// TAC003 TSTORE캐쉬이용약관
+					setAgreementInfo = new AgreementInfo();
+					setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_CASH);
+					setAgreementInfo.setIsExtraAgreement("Y");
+				} else if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC004)) {
+					// TAC004 개인정보 수집 및 이용안내
+					setAgreementInfo = new AgreementInfo();
+					setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE);
+					setAgreementInfo.setIsExtraAgreement("Y");
+				} else if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC005)) {
+					// TAC005 3자정보제공동의
+					setAgreementInfo = new AgreementInfo();
+					setAgreementInfo
+							.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS);
+					setAgreementInfo.setIsExtraAgreement("Y");
+				} else if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC006)) {
+					// TAC006 TSTORE정보광고활용
+					setAgreementInfo = new AgreementInfo();
+					setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
+					setAgreementInfo.setIsExtraAgreement("Y");
 				}
-			}
 
-			if (!isSelectedClauseAgree) { // mbrClauseAgreeArray 배열에 선택사항 항목인 TAC006이 약관항목에 없는경우 N으로 셋팅
-				// TAC006 TSTORE정보광고활용
-				setAgreementInfo = new AgreementInfo();
-				setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
-				setAgreementInfo.setIsExtraAgreement("N");
-				agreementList.add(setAgreementInfo);
-			} else {
-				setAgreementInfo = new AgreementInfo();
-				setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
-				setAgreementInfo.setIsExtraAgreement("Y");
 				agreementList.add(setAgreementInfo);
 			}
 		}
