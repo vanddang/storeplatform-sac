@@ -38,11 +38,7 @@
                 , A.CONTENTS_TYPE_CD
             FROM (
                 SELECT 
-                    /*+ leading(H A B C)  
-                    <if test="filteredBy == 'painter'">
-                    index_ss(A IDX_DP_PROD_DESC_02)
-                    </if>
-                    */
+                    /*+ leading(H A B C) */
                     ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY E.ROWID) RNUM
                     , D.TOP_MENU_ID
                     , D.MENU_ID
