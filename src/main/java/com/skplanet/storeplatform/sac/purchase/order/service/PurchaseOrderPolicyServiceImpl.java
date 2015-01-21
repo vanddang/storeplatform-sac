@@ -1344,16 +1344,22 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @param tenantProdGrpCd
 	 *            테넌트 상품 그룹 코드
 	 * 
+	 * @param iapProdCase
+	 *            IAP 상품 유형
+	 * 
 	 * @param sktTestOrSkpCorp
 	 *            시험폰 또는 SKP법인폰 여부
 	 * 
 	 * @return 결제수단 별 OCB 적립율
 	 */
 	@Override
-	public String adjustOcbSaveInfo(String tenantId, String telecom, String tenantProdGrpCd, boolean sktTestOrSkpCorp) {
+	public String adjustOcbSaveInfo(String tenantId, String telecom, String tenantProdGrpCd, String iapProdCase,
+			boolean sktTestOrSkpCorp) {
 
-		// 쇼핑상품, VOD정액제 상품, 게임캐쉬 정액 상품 제외
-		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
+		// IAP자동결제상품, 쇼핑상품, VOD정액제 상품, 게임캐쉬 정액 상품 제외
+		if ((StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) && StringUtils.equals(
+				iapProdCase, "PB0006"))
+				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
 				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
 				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)
 				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {

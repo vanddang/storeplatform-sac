@@ -177,10 +177,14 @@ public interface PurchaseOrderPolicyService {
 	 * @param tenantProdGrpCd
 	 *            테넌트 상품 그룹 코드
 	 * 
+	 * @param iapProdCase
+	 *            IAP 상품 유형
+	 * 
 	 * @param sktTestOrSkpCorp
 	 *            시험폰 또는 SKP법인폰 여부
 	 * 
 	 * @return 결제수단 별 OCB 적립율
 	 */
-	public String adjustOcbSaveInfo(String tenantId, String telecom, String tenantProdGrpCd, boolean sktTestOrSkpCorp);
+	public String adjustOcbSaveInfo(String tenantId, String telecom, String tenantProdGrpCd, String iapProdCase,
+			boolean sktTestOrSkpCorp);
 }

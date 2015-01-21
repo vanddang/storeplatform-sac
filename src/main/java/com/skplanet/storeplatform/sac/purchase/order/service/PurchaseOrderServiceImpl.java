@@ -839,7 +839,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				.isSkpCorporation()) : false);
 
 		res.setCdOcbSaveInfo(this.purchaseOrderPolicyService.adjustOcbSaveInfo(prchsDtlMore.getTenantId(),
-				reservedDataMap.get("telecom"), prchsDtlMore.getTenantProdGrpCd(), sktTestOrSkpCorp));
+				reservedDataMap.get("telecom"), prchsDtlMore.getTenantProdGrpCd(), reservedDataMap.get("iapProdCase"),
+				sktTestOrSkpCorp));
 
 		// ------------------------------------------------------------------------------------------------
 		// 결제Page 템플릿
