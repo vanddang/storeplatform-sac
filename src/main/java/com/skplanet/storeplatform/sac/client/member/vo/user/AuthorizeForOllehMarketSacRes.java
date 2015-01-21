@@ -64,6 +64,11 @@ public class AuthorizeForOllehMarketSacRes extends CommonInfo {
 	private DeviceInfo deviceInfo;
 
 	/**
+	 * 기타 정보.
+	 */
+	private Object extraInfo;
+
+	/**
 	 * @return trxNo
 	 */
 	public String getTrxNo() {
@@ -198,4 +203,18 @@ public class AuthorizeForOllehMarketSacRes extends CommonInfo {
 		this.deviceInfo = deviceInfo;
 	}
 
+	/**
+	 * @return extraInfo
+	 */
+	public Object getExtraInfo() {
+		return this.extraInfo;
+	}
+
+	/**
+	 * @param extraInfo
+	 *            Object
+	 */
+	public void setExtraInfo(Object extraInfo) {
+		this.extraInfo = extraInfo;
+	}
 }
