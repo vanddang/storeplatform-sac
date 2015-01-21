@@ -16,9 +16,9 @@
                 BI.IMG_PATH
             FROM TB_DP_BNR B
                 JOIN TB_DP_BNR_EXPO BE
-                    ON B.TENANT_ID = BE.TENANT_ID AND B.BNR_MENU_ID = BE.BNR_MENU_ID
+                    ON B.TENANT_ID = BE.TENANT_ID AND B.BNR_MENU_ID = BE.BNR_MENU_ID AND B.BNR_SEQ = BE.BNR_SEQ
                 JOIN TB_DP_BNR_IMG BI
-                    ON B.TENANT_ID = BI.TENANT_ID AND B.BNR_MENU_ID = BI.BNR_MENU_ID
+                    ON B.TENANT_ID = BI.TENANT_ID AND B.BNR_MENU_ID = BI.BNR_MENU_ID AND B.BNR_SEQ = BI.BNR_SEQ
             WHERE 1 = 1
                   AND B.TENANT_ID = #{tenantId}
                   AND B.BNR_MENU_ID = #{bnrMenuId}
