@@ -117,7 +117,7 @@ public class AppServiceImpl implements AppService {
                     return null;
                 }
                 else
-                    res.getProduct().setSalesStatus(DisplayConstants.DP_PURSTAT_RESTRICTED);
+                    res.getProduct().setUserPurStatus(DisplayConstants.DP_PURSTAT_RESTRICTED);
             }
             else
                 res.getProduct().setUserPurStatus(DisplayConstants.DP_PURSTAT_RESTRICTED);
