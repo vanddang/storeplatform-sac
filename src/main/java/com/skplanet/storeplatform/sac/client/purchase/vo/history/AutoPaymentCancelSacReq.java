@@ -48,6 +48,8 @@ public class AutoPaymentCancelSacReq extends CommonInfo implements Serializable 
 	@NotEmpty
 	private String closedReqPathCd; // 해지요청경로 코드
 
+	private String adminId;
+
 	/**
 	 * @return the tenantId
 	 */
@@ -166,6 +168,21 @@ public class AutoPaymentCancelSacReq extends CommonInfo implements Serializable 
 	 */
 	public void setClosedReqPathCd(String closedReqPathCd) {
 		this.closedReqPathCd = closedReqPathCd;
+	}
+
+	/**
+	 * @return the adminId
+	 */
+	public String getAdminId() {
+		return this.adminId;
+	}
+
+	/**
+	 * @param adminId
+	 *            the adminId to set
+	 */
+	public void setAdminId(String adminId) {
+		this.adminId = adminId;
 	}
 
 }

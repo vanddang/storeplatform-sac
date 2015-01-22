@@ -44,6 +44,8 @@ public class HidingSacReq extends CommonInfo implements Serializable {
 	@Valid
 	private List<HidingListSac> hidingList; // 구매내역 숨김 리스트
 
+	private String adminId;
+
 	/**
 	 * @return the tenantId
 	 */
@@ -132,6 +134,21 @@ public class HidingSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setHidingList(List<HidingListSac> hidingList) {
 		this.hidingList = hidingList;
+	}
+
+	/**
+	 * @return the adminId
+	 */
+	public String getAdminId() {
+		return this.adminId;
+	}
+
+	/**
+	 * @param adminId
+	 *            the adminId to set
+	 */
+	public void setAdminId(String adminId) {
+		this.adminId = adminId;
 	}
 
 }
