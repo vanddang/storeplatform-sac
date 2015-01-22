@@ -39,7 +39,7 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
     private String SERVICE_LANG;
 
     // FIXME 서비스에 추가될 테넌트 추가
-    private final String[] TENANT_LIST = new String[]{"S01"};
+    private final String[] TENANT_LIST = new String[]{"S01","S02","S03"};
 
     @Override
     public void evictProductMeta(ProductType prodType, List<String> prodIdList) {
