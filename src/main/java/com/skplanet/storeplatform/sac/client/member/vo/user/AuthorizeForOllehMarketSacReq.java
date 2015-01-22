@@ -49,11 +49,6 @@ public class AuthorizeForOllehMarketSacReq extends CommonInfo {
 	private String simSerialNo;
 
 	/**
-	 * 접속 단말 구분코드.
-	 */
-	private String deviceType;
-
-	/**
 	 * 기타 정보.
 	 */
 	private Object extraInfo;
@@ -131,21 +126,6 @@ public class AuthorizeForOllehMarketSacReq extends CommonInfo {
 	 */
 	public void setSimSerialNo(String simSerialNo) {
 		this.simSerialNo = simSerialNo;
-	}
-
-	/**
-	 * @return deviceType
-	 */
-	public String getDeviceType() {
-		return this.deviceType;
-	}
-
-	/**
-	 * @param deviceType
-	 *            String
-	 */
-	public void setDeviceType(String deviceType) {
-		this.deviceType = deviceType;
 	}
 
 	/**
