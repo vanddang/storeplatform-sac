@@ -2674,7 +2674,6 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setDeviceTelecom(req.getDeviceTelecom());
 		marketReq.setNativeId(req.getNativeId());
 		marketReq.setSimSerialNo(req.getSimSerialNo());
-		marketReq.setDeviceType(req.getDeviceType());
 		marketReq.setExtraInfo(req.getExtraInfo());
 		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
 
@@ -2769,12 +2768,21 @@ public class LoginServiceImpl implements LoginService {
 				// 사용자 기본정보
 				UserInfo userInfo = new UserInfo();
 				userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
-				userInfo.setIsSCUpdate(marketRes.getDeviceInfo().getIsSCUpdate());
 				userInfo.setProdExpoLevl(marketRes.getDeviceInfo().getProdExpoLevl());
 
 				// 약관 정보
-				List<Agreement> agreementList = this.getMarketClauseAgreeMappingInfo(marketRes.getDeviceInfo()
-						.getClauseExtraInfoList());
+				List<Agreement> agreementList = new ArrayList<Agreement>();
+				if (marketRes.getDeviceInfo().getClauseExtraInfoList() != null
+						&& marketRes.getDeviceInfo().getClauseExtraInfoList().size() > 0) {
+					Agreement agreement = null;
+					for (MarketClauseExtraInfoEc clauseInfo : marketRes.getDeviceInfo().getClauseExtraInfoList()) {
+						agreement = new Agreement();
+						agreement.setExtraAgreementId(clauseInfo.getExtraProfile());
+						agreement.setIsExtraAgreement(clauseInfo.getExtraProfileValue());
+						agreement.setExtraAgreementURL(clauseInfo.getExtraProfileSetURL());
+						agreementList.add(agreement);
+					}
+				}
 
 				// 휴대기기 정보
 				DeviceInfo deviceInfo = new DeviceInfo();
@@ -2782,10 +2790,8 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setMarketDeviceKey(detailRes.getUserInfo().getImMbrNo()); // 타사 회선의 고유 Key
 				deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
 				deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
-				deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
 
 				res.setUserStatus(marketRes.getUserStatus());
-				res.setUserAuthKey(this.tempUserAuthKey);
 				res.setUserInfo(userInfo);
 				res.setAgreementList(agreementList);
 				res.setDeviceInfo(deviceInfo);
@@ -2947,12 +2953,21 @@ public class LoginServiceImpl implements LoginService {
 				// 사용자 기본정보
 				UserInfo userInfo = new UserInfo();
 				userInfo.setUserKey(detailRes.getUserInfo().getUserKey());
-				userInfo.setIsSCUpdate(marketRes.getDeviceInfo().getIsSCUpdate());
 				userInfo.setProdExpoLevl(marketRes.getDeviceInfo().getProdExpoLevl());
 
 				// 약관 정보
-				List<Agreement> agreementList = this.getMarketClauseAgreeMappingInfo(marketRes.getDeviceInfo()
-						.getClauseExtraInfoList());
+				List<Agreement> agreementList = new ArrayList<Agreement>();
+				if (marketRes.getDeviceInfo().getClauseExtraInfoList() != null
+						&& marketRes.getDeviceInfo().getClauseExtraInfoList().size() > 0) {
+					Agreement agreement = null;
+					for (MarketClauseExtraInfoEc clauseInfo : marketRes.getDeviceInfo().getClauseExtraInfoList()) {
+						agreement = new Agreement();
+						agreement.setExtraAgreementId(clauseInfo.getExtraProfile());
+						agreement.setIsExtraAgreement(clauseInfo.getExtraProfileValue());
+						agreement.setExtraAgreementURL(clauseInfo.getExtraProfileSetURL());
+						agreementList.add(agreement);
+					}
+				}
 
 				// 휴대기기 정보
 				DeviceInfo deviceInfo = new DeviceInfo();
@@ -2960,10 +2975,8 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setMarketDeviceKey(detailRes.getUserInfo().getImMbrNo()); // 타사 회선의 고유 Key
 				deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
 				deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
-				deviceInfo.setDeviceModelNo(detailRes.getDeviceInfoList().get(0).getDeviceModelNo());
 
 				res.setUserStatus(marketRes.getUserStatus());
-				res.setUserAuthKey(this.tempUserAuthKey);
 				res.setUserInfo(userInfo);
 				res.setAgreementList(agreementList);
 				res.setDeviceInfo(deviceInfo);
