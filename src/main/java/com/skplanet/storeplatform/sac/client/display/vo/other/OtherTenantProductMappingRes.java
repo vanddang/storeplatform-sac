@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.client.display.vo.other;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+import java.util.List;
+
 /**
  * <p>
  * OtherTenantProductMappingRes
@@ -20,29 +22,52 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class OtherTenantProductMappingRes extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
-    public OtherTenantProductMappingRes() {}
+    private List<TenantProductMapping> tenantProductMappingList;
 
-    public OtherTenantProductMappingRes(String tenantId, String tstoreProdId) {
-        this.tenantId = tenantId;
-        this.tstoreProdId = tstoreProdId;
+    public List<TenantProductMapping> getTenantProductMappingList() {
+        return tenantProductMappingList;
     }
 
-    private String tenantId;
-    private String tstoreProdId;
-
-    public String getTenantId() {
-        return tenantId;
+    public void setTenantProductMappingList(List<TenantProductMapping> tenantProductMappingList) {
+        this.tenantProductMappingList = tenantProductMappingList;
     }
 
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
+    public static class TenantProductMapping extends CommonInfo {
+        private static final long serialVersionUID = 1L;
 
-    public String getTstoreProdId() {
-        return tstoreProdId;
-    }
+        private String tenantId;
+        private String salesStatusCd;
+        private String prodId;
 
-    public void setTstoreProdId(String tstoreProdId) {
-        this.tstoreProdId = tstoreProdId;
+        public TenantProductMapping() {}
+        public TenantProductMapping(String tenantId, String salesStatusCd, String prodId) {
+            this.tenantId = tenantId;
+            this.salesStatusCd = salesStatusCd;
+            this.prodId = prodId;
+        }
+
+        public String getTenantId() {
+            return tenantId;
+        }
+
+        public void setTenantId(String tenantId) {
+            this.tenantId = tenantId;
+        }
+
+        public String getSalesStatusCd() {
+            return salesStatusCd;
+        }
+
+        public void setSalesStatusCd(String salesStatusCd) {
+            this.salesStatusCd = salesStatusCd;
+        }
+
+        public String getProdId() {
+            return prodId;
+        }
+
+        public void setProdId(String prodId) {
+            this.prodId = prodId;
+        }
     }
 }
