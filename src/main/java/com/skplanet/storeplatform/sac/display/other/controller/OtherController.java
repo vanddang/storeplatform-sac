@@ -203,12 +203,7 @@ public class OtherController {
     @RequestMapping(value = "/tenantProdMapg/get/v1", method = RequestMethod.GET)
     @ResponseBody
     public OtherTenantProductMappingRes getTenantProductMapping(@Validated OtherTenantProductMappingReq req) {
-        OtherTenantProductMappingService.TenantProductMapping productMapping = otherTenantProductMappingService.getTenantProductMapping(req.getProdId());
-        if(productMapping == null)
-            throw new StorePlatformException("SAC_DSP_0005", req.getProdId());
-
-        return new OtherTenantProductMappingRes(productMapping.getTenantId(), productMapping.getTstoreProdId());
-
+        return otherTenantProductMappingService.getTenantProductMapping(req.getProdId());
     }
 
 }

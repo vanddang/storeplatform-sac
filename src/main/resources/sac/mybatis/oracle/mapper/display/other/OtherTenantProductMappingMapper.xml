@@ -4,15 +4,22 @@
     
     <select id="getTenantProductMapping" parameterType="String" resultType="com.skplanet.storeplatform.sac.display.other.service.OtherTenantProductMappingServiceImpl$SapProductMapping">
         select /* OtherTenantProductMapping.getTenantProductMapping, 테넌트 상품 매핑 조회, 정희원/SK플래닛 , 2015-01-19 */
-            PROD_ID,
+            PROD_ID AS PROD_ID_S01,
             CASE WHEN KT_CHECK_YN = 'Y'
             THEN KT_PROD_ID
-            ELSE NULL END AS KT_PROD_ID,
+            ELSE NULL END AS PROD_ID_S02,
             CASE WHEN LG_CHECK_YN = 'Y'
             THEN LG_PROD_ID
-            ELSE NULL END AS LG_PROD_ID
+            ELSE NULL END AS PROD_ID_S03
         from TB_DP_SAP_PROD_MAPG
-        WHERE PROD_ID = #{id} OR KT_PROD_ID = #{id} OR LG_PROD_ID = #{id}
+        WHERE PROD_ID = #{id}
+    </select>
+
+    <select id="getTenantSalesStatus" parameterType="String" resultType="com.skplanet.storeplatform.sac.display.other.service.OtherTenantProductMappingServiceImpl$TenantSalesStatus">
+        SELECT /* OtherTenantProductMapping.getTenantSalesStatus, 테넌트별 판매상태 조회, 정희원/SK플래닛 , 2015-01-22 */
+            TENANT_ID, PROD_STATUS_CD
+        FROM TB_DP_TENANT_PROD
+        WHERE PROD_ID = #{prodId}
     </select>
 
 </mapper>

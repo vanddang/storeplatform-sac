@@ -9,12 +9,19 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTenantProductMappingRes;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.skplanet.storeplatform.sac.client.display.vo.other.OtherTenantProductMappingRes.TenantProductMapping;
 
 /**
  * <p>
@@ -25,67 +32,102 @@ import java.util.List;
 @Service
 public class OtherTenantProductMappingServiceImpl implements OtherTenantProductMappingService {
 
-    public static final String TENID_TSTORE = "S01";
-    public static final String TENID_KT = "S02";
-    public static final String TENID_LG = "S03";
-
     @Autowired
     @Qualifier("sac")
     private CommonDAO commonDAO;
 
     @Override
-    public TenantProductMapping getTenantProductMapping(String prodId) {
+    public OtherTenantProductMappingRes getTenantProductMapping(String prodId) {
 
-        List<SapProductMapping> list = commonDAO.queryForList("OtherTenantProductMapping.getTenantProductMapping", prodId, SapProductMapping.class);
-        if(list.size() == 0)
+        SapProductMapping mapg = commonDAO.queryForObject("OtherTenantProductMapping.getTenantProductMapping", prodId, SapProductMapping.class);
+        if(mapg == null)
+            throw new StorePlatformException("SAC_DSP_0009");
+
+        OtherTenantProductMappingRes res = new OtherTenantProductMappingRes();
+        res.setTenantProductMappingList(new ArrayList<TenantProductMapping>());
+
+        List<TenantSalesStatus> tenantSalesStatusList = commonDAO.queryForList("OtherTenantProductMapping.getTenantSalesStatus", prodId, TenantSalesStatus.class);
+        for (TenantSalesStatus tenantSalesStatus : tenantSalesStatusList) {
+            String tProdId = getProperty(mapg, "prodId" + tenantSalesStatus.getTenantId(), String.class);
+            if(tProdId == null)
+                continue;
+
+            res.getTenantProductMappingList().add(new TenantProductMapping(tenantSalesStatus.getTenantId(), tenantSalesStatus.getProdStatusCd(), tProdId));
+        }
+
+        return res;
+    }
+
+    private <T> T getProperty(Object obj, String fieldName, Class<T> fieldType) {
+        if(obj == null || StringUtils.isEmpty(fieldName) || fieldType == null)
+            throw new IllegalArgumentException();
+
+        String getterName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+        try {
+            return (T)obj.getClass().getMethod(getterName).invoke(obj);
+        }
+        catch (NoSuchMethodException e) {
             return null;
-        if(list.size() > 1)
-            throw new IllegalStateException("조회된 매핑정보가 유효하지 않습니다.");
-
-        SapProductMapping sapMapg = list.get(0);
-        if(sapMapg.getProdId().equals(prodId)) {
-            return new TenantProductMapping(TENID_TSTORE, sapMapg.getProdId());
         }
-        else if(sapMapg.getKtProdId().equals(prodId)) {
-            return new TenantProductMapping(TENID_KT, sapMapg.getProdId());
+        catch(InvocationTargetException e) {
+            return null;
         }
-        else if(sapMapg.getLgProdId().equals(prodId)) {
-            return new TenantProductMapping(TENID_LG, sapMapg.getProdId());
+        catch(IllegalAccessException e) {
+            return null;
         }
-        else
-            throw new IllegalStateException();
     }
 
     /**
      * getTenantProductMapping VO
      */
     static class SapProductMapping {
-        private String prodId;
-        private String ktProdId;
-        private String lgProdId;
+        private String prodIdS01;
+        private String prodIdS02;
+        private String prodIdS03;
 
-        public String getProdId() {
-            return prodId;
+        public String getProdIdS01() {
+            return prodIdS01;
         }
 
-        public void setProdId(String prodId) {
-            this.prodId = prodId;
+        public void setProdIdS01(String prodIdS01) {
+            this.prodIdS01 = prodIdS01;
         }
 
-        public String getKtProdId() {
-            return ktProdId;
+        public String getProdIdS02() {
+            return prodIdS02;
         }
 
-        public void setKtProdId(String ktProdId) {
-            this.ktProdId = ktProdId;
+        public void setProdIdS02(String prodIdS02) {
+            this.prodIdS02 = prodIdS02;
         }
 
-        public String getLgProdId() {
-            return lgProdId;
+        public String getProdIdS03() {
+            return prodIdS03;
         }
 
-        public void setLgProdId(String lgProdId) {
-            this.lgProdId = lgProdId;
+        public void setProdIdS03(String prodIdS03) {
+            this.prodIdS03 = prodIdS03;
+        }
+    }
+
+    static class TenantSalesStatus {
+        private String tenantId;
+        private String prodStatusCd;
+
+        public String getTenantId() {
+            return tenantId;
+        }
+
+        public void setTenantId(String tenantId) {
+            this.tenantId = tenantId;
+        }
+
+        public String getProdStatusCd() {
+            return prodStatusCd;
+        }
+
+        public void setProdStatusCd(String prodStatusCd) {
+            this.prodStatusCd = prodStatusCd;
         }
     }
 }
