@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingListSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRes;
@@ -87,7 +88,8 @@ public class HidingController {
 		List<HidingListSc> list = new ArrayList<HidingListSc>();
 
 		req.setTenantId(header.getTenantId());
-		req.setSystemId(header.getSystemId());
+		req.setSystemId(!StringUtils.isBlank(hidingSacReq.getAdminId()) ? hidingSacReq.getAdminId() : header
+				.getSystemId());
 		req.setUserKey(hidingSacReq.getUserKey());
 		req.setDeviceKey(hidingSacReq.getDeviceKey());
 		req.setSendYn(hidingSacReq.getSendYn());

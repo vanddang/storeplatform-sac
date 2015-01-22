@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelSacReq;
@@ -76,7 +77,8 @@ public class AutoPaymentCancelController {
 		AutoPaymentCancelScReq req = new AutoPaymentCancelScReq();
 
 		req.setTenantId(header.getTenantId());
-		req.setSystemId(header.getSystemId());
+		req.setSystemId(!StringUtils.isBlank(autoPaymentCancelSacReq.getAdminId()) ? autoPaymentCancelSacReq
+				.getAdminId() : header.getSystemId());
 		req.setUserKey(autoPaymentCancelSacReq.getUserKey());
 		req.setDeviceKey(autoPaymentCancelSacReq.getDeviceKey());
 		req.setPrchsId(autoPaymentCancelSacReq.getPrchsId());
