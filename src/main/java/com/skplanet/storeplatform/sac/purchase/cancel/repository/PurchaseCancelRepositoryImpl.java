@@ -517,7 +517,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 					PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
 					purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
-					purchaseCancelPaymentDetailScReq.setSystemId(purchaseCancelSacParam.getSystemId());
+					purchaseCancelPaymentDetailScReq.setSystemId(StringUtils.isEmpty(purchaseCancelSacParam
+							.getReqUserId()) ? purchaseCancelSacParam.getSystemId() : purchaseCancelSacParam
+							.getReqUserId());
 					purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 					purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
 					purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
