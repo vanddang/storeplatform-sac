@@ -12,12 +12,11 @@ package com.skplanet.storeplatform.sac.display.other.service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTenantProductMappingRes;
-import org.apache.commons.lang.StringUtils;
+import com.skplanet.storeplatform.sac.common.util.SacBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class OtherTenantProductMappingServiceImpl implements OtherTenantProductM
 
         List<TenantSalesStatus> tenantSalesStatusList = commonDAO.queryForList("OtherTenantProductMapping.getTenantSalesStatus", prodId, TenantSalesStatus.class);
         for (TenantSalesStatus tenantSalesStatus : tenantSalesStatusList) {
-            String tProdId = getProperty(mapg, "prodId" + tenantSalesStatus.getTenantId(), String.class);
+            String tProdId = SacBeanUtils.getProperty(mapg, "prodId" + tenantSalesStatus.getTenantId());
             if(tProdId == null)
                 continue;
 
@@ -58,29 +57,10 @@ public class OtherTenantProductMappingServiceImpl implements OtherTenantProductM
         return res;
     }
 
-    private <T> T getProperty(Object obj, String fieldName, Class<T> fieldType) {
-        if(obj == null || StringUtils.isEmpty(fieldName) || fieldType == null)
-            throw new IllegalArgumentException();
-
-        String getterName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-        try {
-            return (T)obj.getClass().getMethod(getterName).invoke(obj);
-        }
-        catch (NoSuchMethodException e) {
-            return null;
-        }
-        catch(InvocationTargetException e) {
-            return null;
-        }
-        catch(IllegalAccessException e) {
-            return null;
-        }
-    }
-
     /**
      * getTenantProductMapping VO
      */
-    static class SapProductMapping {
+    public static class SapProductMapping {
         private String prodIdS01;
         private String prodIdS02;
         private String prodIdS03;
