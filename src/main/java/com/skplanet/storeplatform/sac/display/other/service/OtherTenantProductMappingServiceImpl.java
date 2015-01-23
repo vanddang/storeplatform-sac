@@ -40,7 +40,7 @@ public class OtherTenantProductMappingServiceImpl implements OtherTenantProductM
 
         SapProductMapping mapg = commonDAO.queryForObject("OtherTenantProductMapping.getTenantProductMapping", prodId, SapProductMapping.class);
         if(mapg == null)
-            throw new StorePlatformException("SAC_DSP_0009");
+            throw new StorePlatformException("SAC_DSP_0005", prodId);
 
         OtherTenantProductMappingRes res = new OtherTenantProductMappingRes();
         res.setTenantProductMappingList(new ArrayList<TenantProductMapping>());
