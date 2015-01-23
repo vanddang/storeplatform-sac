@@ -3064,21 +3064,16 @@ public class IdpServiceImpl implements IdpService {
 								searchAgreementListRequest.setUserKey(searchUserResponseByMdnInfo.getUserKey());
 								SearchAgreementListResponse searchAgreementListResponse = null;
 
-								try {
-									searchAgreementListResponse = this.userSCI
-											.searchAgreementList(searchAgreementListRequest);
+								searchAgreementListResponse = this.userSCI
+										.searchAgreementList(searchAgreementListRequest);
 
-									// 약관이 존재하면 통합아이디로 이관처리
-									UpdateAgreementRequest updateAgreementRequest = new UpdateAgreementRequest();
-									updateAgreementRequest.setCommonRequest(commonRequest);
-									updateAgreementRequest.setUserKey(userKey);
-									updateAgreementRequest.setMbrClauseAgreeList(searchAgreementListResponse
-											.getMbrClauseAgreeList());
-									this.userSCI.updateAgreement(updateAgreementRequest);
-
-								} catch (StorePlatformException e) {
-									// ignore exception
-								}
+								// 약관이 존재하면 통합아이디로 이관처리
+								UpdateAgreementRequest updateAgreementRequest = new UpdateAgreementRequest();
+								updateAgreementRequest.setCommonRequest(commonRequest);
+								updateAgreementRequest.setUserKey(userKey);
+								updateAgreementRequest.setMbrClauseAgreeList(searchAgreementListResponse
+										.getMbrClauseAgreeList());
+								this.userSCI.updateAgreement(updateAgreementRequest);
 							}
 						} catch (StorePlatformException spe) {
 							LOGGER.error(spe.getMessage(), spe);
