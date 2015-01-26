@@ -157,6 +157,8 @@ public class PurchaseOrderAssistServiceImpl implements PurchaseOrderAssistServic
 				checkDate = DateUtils.addYears(checkDate, Integer.parseInt(periodVal));
 			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_CURR_MONTH)) { // 당월
 				checkDate = DateUtils.ceiling(checkDate, Calendar.MONTH);
+			} else if (StringUtils.equals(periodUnitCd, PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_MINUTE)) { // 분
+				checkDate = DateUtils.addMinutes(checkDate, Integer.parseInt(periodVal));
 			} else {
 				throw new StorePlatformException("SAC_PUR_7215", periodUnitCd);
 			}
