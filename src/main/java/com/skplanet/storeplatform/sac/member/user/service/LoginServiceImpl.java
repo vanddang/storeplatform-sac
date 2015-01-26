@@ -2682,6 +2682,7 @@ public class LoginServiceImpl implements LoginService {
 		if (marketRes != null) {
 
 			res.setTrxNo(req.getTrxNo());
+			res.setDeviceId(req.getDeviceId());
 			res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S02
 			res.setDeviceTelecom(req.getDeviceTelecom());
 
@@ -2867,6 +2868,7 @@ public class LoginServiceImpl implements LoginService {
 		if (marketRes != null) {
 
 			res.setTrxNo(req.getTrxNo());
+			res.setDeviceId(req.getDeviceId());
 			res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S03
 			res.setDeviceTelecom(req.getDeviceTelecom());
 
