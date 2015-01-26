@@ -3299,35 +3299,39 @@ public class IdpServiceImpl implements IdpService {
 					setAgreementInfo = new AgreementInfo();
 					setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE);
 					setAgreementInfo.setIsExtraAgreement("Y");
+					agreementList.add(setAgreementInfo);
 				} else if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC002)) {
 					// TAC002 통신과금서비스 이용약관
 					setAgreementInfo = new AgreementInfo();
 					setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE);
 					setAgreementInfo.setIsExtraAgreement("Y");
+					agreementList.add(setAgreementInfo);
 				} else if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC003)) {
 					// TAC003 TSTORE캐쉬이용약관
 					setAgreementInfo = new AgreementInfo();
 					setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_CASH);
 					setAgreementInfo.setIsExtraAgreement("Y");
+					agreementList.add(setAgreementInfo);
 				} else if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC004)) {
 					// TAC004 개인정보 수집 및 이용안내
 					setAgreementInfo = new AgreementInfo();
 					setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE);
 					setAgreementInfo.setIsExtraAgreement("Y");
+					agreementList.add(setAgreementInfo);
 				} else if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC005)) {
 					// TAC005 3자정보제공동의
 					setAgreementInfo = new AgreementInfo();
 					setAgreementInfo
 							.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_OTHERS);
 					setAgreementInfo.setIsExtraAgreement("Y");
+					agreementList.add(setAgreementInfo);
 				} else if (StringUtils.equals(mbrClauseAgree, MemberConstants.ONEID_AGREEMENT_CLAUSE_TAC006)) {
 					// TAC006 TSTORE정보광고활용
 					setAgreementInfo = new AgreementInfo();
 					setAgreementInfo.setExtraAgreementId(MemberConstants.POLICY_AGREEMENT_CLAUSE_MARKETING);
 					setAgreementInfo.setIsExtraAgreement("Y");
+					agreementList.add(setAgreementInfo);
 				}
-
-				agreementList.add(setAgreementInfo);
 			}
 		}
 
