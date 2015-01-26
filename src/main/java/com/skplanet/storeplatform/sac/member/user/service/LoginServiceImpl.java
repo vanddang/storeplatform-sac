@@ -2824,7 +2824,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
 				res.setDeviceInfo(new DeviceInfo());
-				res.setExtraInfo(new Object());
+				// res.setExtraInfo(new Object());
 
 			} else {
 
@@ -2832,7 +2832,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
 				res.setDeviceInfo(new DeviceInfo());
-				res.setExtraInfo(new Object());
+				// res.setExtraInfo(new Object());
 
 			}
 
@@ -3010,7 +3010,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
 				res.setDeviceInfo(new DeviceInfo());
-				res.setExtraInfo(new Object());
+				// res.setExtraInfo(new Object());
 
 			} else {
 
@@ -3018,7 +3018,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
 				res.setDeviceInfo(new DeviceInfo());
-				res.setExtraInfo(new Object());
+				// res.setExtraInfo(new Object());
 
 			}
 

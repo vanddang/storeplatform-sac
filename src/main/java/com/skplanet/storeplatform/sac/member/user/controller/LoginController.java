@@ -324,8 +324,7 @@ public class LoginController {
 
 		AuthorizeForOllehMarketSacRes res = this.loginService.authorizeForOllehMarket(requestHeader, req);
 
-		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
-				res.getUserStatus());
+		LOGGER.info("Response : {}, {}, {}", res.getDeviceId(), res.getUserInfo().getUserKey(), res.getUserStatus());
 
 		return res;
 
@@ -351,8 +350,7 @@ public class LoginController {
 
 		AuthorizeForUplusStoreSacRes res = this.loginService.authorizeForUplusStore(requestHeader, req);
 
-		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
-				res.getUserStatus());
+		LOGGER.info("Response : {}, {}, {}", res.getDeviceId(), res.getUserInfo().getUserKey(), res.getUserStatus());
 
 		return res;
 
