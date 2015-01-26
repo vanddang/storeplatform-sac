@@ -74,6 +74,8 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String SKT_SYSTEM_DIVISION_NORMAL_CANCEL = "033B"; // Default 취소용
 	public static final String SKT_SYSTEM_DIVISION_VOD_FIXRATE_APPROVAL = "033C"; // VOD정액상품 승인용
 	public static final String SKT_SYSTEM_DIVISION_VOD_FIXRATE_CANCEL = "033D"; // VOD정액상품 취소용
+	public static final String SKT_SYSTEM_DIVISION_IAP_APPROVAL = "033K"; // P/P IAP 승인용
+	public static final String SKT_SYSTEM_DIVISION_IAP_CANCEL = "033N"; // P/P IAP 취소용
 
 	/** 후불 결제수단 재정의 원인 타입 */
 	public static final String PHONE_ADJUST_REASON_NO_LIMIT = "L00"; // 제한없음 / 타통신사
