@@ -373,8 +373,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 				LOGGER.info("{} 모바일회원 탈퇴처리", deviceId);
 
-			} else if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_IDPID)
-					|| StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
+			} else if (StringUtils.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_IDPID)) {
 
 				this.deviceIdInvalidByDeviceKey(requestHeader, detailRes.getUserInfo().getUserKey(), detailRes
 						.getDeviceInfoList().get(0).getDeviceKey());
@@ -394,7 +393,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					LOGGER.info("MQ process fail {}", mqInfo);
 				}
 
-				LOGGER.info("{} 휴대기기 삭제처리", deviceId);
+				LOGGER.info("{} IDP ID 휴대기기 삭제처리", deviceId);
 			}
 
 		} catch (StorePlatformException e) {
