@@ -190,9 +190,34 @@
                    )
                 ELSE
                   PD.DRM_YN
-              END)  AS DRM_YN               
-            , PD.USE_PERIOD_UNIT_CD
-            , PD.USE_PERIOD    
+              END)  AS DRM_YN     
+            , (SELECT 
+                     (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_USE_PERIOD_UNIT_CD
+                           WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_USE_PERIOD_UNIT_CD
+                      END) AS USE_PERIOD_UNIT_CD
+                 FROM  TB_DP_FIXRATE_PROD_MAPG A
+                      ,TB_DP_PROD_RSHP B
+                      ,TB_DP_PROD C
+                WHERE A.PART_PROD_ID = B.PROD_ID
+                  AND B.PART_PROD_ID = C.PROD_ID
+                  AND B.PROD_RSHP_CD = #{prodRshpCd}
+                  AND B.PART_PROD_ID = PM.PART_PROD_ID
+                  AND A.PROD_ID = PM.PROD_ID                  
+              ) AS USE_PERIOD_UNIT_CD
+            , (SELECT 
+                      NVL(
+                           (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_USE_PERIOD
+                                 WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_USE_PERIOD
+                            END),0) AS USE_PERIOD
+                 FROM  TB_DP_FIXRATE_PROD_MAPG A
+                      ,TB_DP_PROD_RSHP B
+                      ,TB_DP_PROD C
+                WHERE A.PART_PROD_ID = B.PROD_ID
+                  AND B.PART_PROD_ID = C.PROD_ID
+                  AND B.PROD_RSHP_CD = #{prodRshpCd}
+                  AND B.PART_PROD_ID = PM.PART_PROD_ID
+                  AND A.PROD_ID = PM.PROD_ID                  
+             ) AS USE_PERIOD                            
             , PD.CID        
         FROM 
               TB_DP_PROD PD
