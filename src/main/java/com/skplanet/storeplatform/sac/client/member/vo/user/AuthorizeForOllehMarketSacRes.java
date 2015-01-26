@@ -44,11 +44,6 @@ public class AuthorizeForOllehMarketSacRes extends CommonInfo {
 	 */
 	private String userStatus = "";
 	/**
-	 * 인증 Key.
-	 */
-	private String userAuthKey = "";
-
-	/**
 	 * 사용자 정보.
 	 */
 	private UserInfo userInfo;
@@ -141,21 +136,6 @@ public class AuthorizeForOllehMarketSacRes extends CommonInfo {
 	 */
 	public void setUserStatus(String userStatus) {
 		this.userStatus = userStatus;
-	}
-
-	/**
-	 * @return userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
 	}
 
 	/**
