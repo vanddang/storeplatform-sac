@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.JoinForWapEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.SecedeForWapEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -109,7 +110,6 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		String svcMangNo = checkSaveNSyncResponse.getSvcMangNo(); // SKT 서비스 관리번호
 
 		SaveAndSync saveAndSync = new SaveAndSync();
-		String newMbrNo = null;
 
 		if (StringUtils.equals(isSaveNSync, MemberConstants.USE_Y)) { // 변동성 대상
 
@@ -139,7 +139,9 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * IDP 무선회원 가입
 				 */
-				newMbrNo = this.joinForWap(deviceId, deviceTelecom);
+				JoinForWapEcRes joinForWapEcRes = this.joinForWap(deviceId, deviceTelecom);
+				LOGGER.info("{} 기존 svcMangNum : {}, 신규 svcMangNum : {}", deviceId, svcMangNo,
+						joinForWapEcRes.getSvcMngNum());
 
 				/**
 				 * 기존 IDP 모바일 회원 탈퇴.
@@ -149,7 +151,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * 회원 MBR_NO 업데이트
 				 */
-				this.modMbrNo(sacHeader, userKey, deviceKey, deviceId, deviceTelecom, newMbrNo);
+				this.modMbrNo(sacHeader, userKey, deviceKey, deviceId, deviceTelecom, joinForWapEcRes.getUserKey(),
+						joinForWapEcRes.getSvcMngNum());
 
 				/** MQ 연동(번호변경) */
 				ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
@@ -178,7 +181,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 				/**
 				 * IDP 모바일 회원 신규 가입후에 SC 회원 복구 요청.
 				 */
-				newMbrNo = this.reviveUser(sacHeader, userKey, deviceId, deviceTelecom, deviceKey);
+				this.reviveUser(sacHeader, userKey, deviceId, deviceTelecom, deviceKey);
 				/** MQ 연동(MDN 등록) */
 				CreateDeviceAmqpSacReq mqInfo = new CreateDeviceAmqpSacReq();
 				try {
@@ -256,12 +259,11 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 *            기기 ID
 	 * @param deviceTelecom
 	 *            통신사
-	 * @return IDP (MBR_NO)
+	 * @return joinForWapEcRes JoinForWapEcRes
 	 */
-	private String joinForWap(String deviceId, String deviceTelecom) {
+	private JoinForWapEcRes joinForWap(String deviceId, String deviceTelecom) {
 
-		String mbrNo = "";
-
+		JoinForWapEcRes joinForWapEcRes = null;
 		try {
 
 			/**
@@ -271,7 +273,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 			JoinForWapEcReq joinForWapEcReq = new JoinForWapEcReq();
 			joinForWapEcReq.setUserMdn(deviceId);
 			joinForWapEcReq.setMdnCorp(this.mcc.convertDeviceTelecom(deviceTelecom)); // 이동 통신사
-			mbrNo = this.idpSCI.joinForWap(joinForWapEcReq).getUserKey();
+			joinForWapEcRes = this.idpSCI.joinForWap(joinForWapEcReq);
 
 		} catch (StorePlatformException spe) {
 
@@ -292,7 +294,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 
 		}
 
-		return mbrNo;
+		return joinForWapEcRes;
 
 	}
 
@@ -349,8 +351,8 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		/**
 		 * IDP 모바일 회원 가입.
 		 */
-		String newMbrNo = this.joinForWap(deviceId, deviceTelecom);
-
+		JoinForWapEcRes joinForWapEcRes = this.joinForWap(deviceId, deviceTelecom);
+		String newMbrNo = joinForWapEcRes.getUserKey();
 		/**
 		 * SC 회원 복구 요청.
 		 */
@@ -385,9 +387,11 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 	 *            통신사
 	 * @param mbrNo
 	 *            IDP Key
+	 * @param svcMangNum
+	 *            SKT 서비스 관리번호
 	 */
 	private void modMbrNo(SacRequestHeader sacHeader, String userKey, String deviceKey, String deviceId,
-			String deviceTelecom, String mbrNo) {
+			String deviceTelecom, String mbrNo, String svcMangNum) {
 
 		/**
 		 * SC 단말 Device 업데이트.
@@ -401,6 +405,7 @@ public class SaveAndSyncServiceImpl implements SaveAndSyncService {
 		userMbrDevice.setDeviceKey(deviceKey);
 		userMbrDevice.setDeviceID(deviceId); // 수정할 DeviceId
 		userMbrDevice.setDeviceTelecom(deviceTelecom);
+		userMbrDevice.setSvcMangNum(svcMangNum);
 		createDeviceRequest.setUserMbrDevice(userMbrDevice);
 
 		this.deviceSCI.createDevice(createDeviceRequest);

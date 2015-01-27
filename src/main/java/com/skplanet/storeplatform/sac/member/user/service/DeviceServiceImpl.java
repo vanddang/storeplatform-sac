@@ -158,7 +158,8 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceId = req.getDeviceInfo().getDeviceId();
 
 		/* 모번호 조회 */
-		deviceId = this.commService.getOpmdMdnInfo(deviceId);
+		// deviceId = this.commService.getOpmdMdnInfo(deviceId);
+		req.getDeviceInfo().setDeviceId(this.commService.getOpmdMdnInfo(deviceId));
 
 		/* 회원 정보 조회 */
 		SearchUserResponse schUserRes = this.srhUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
