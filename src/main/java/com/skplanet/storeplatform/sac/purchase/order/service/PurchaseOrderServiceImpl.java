@@ -722,11 +722,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// SKT 후불 SYSTEM_DIVISION
 			if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
 
+				// if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+				// PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+				// res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_IAP_APPROVAL);
+				// res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_IAP_CANCEL);
+				// }
 				if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
-					res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_IAP_APPROVAL);
-					res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_IAP_CANCEL);
-				} else if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
 						|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
 								PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
