@@ -171,7 +171,7 @@
                              END
                         END		                    
                      ) = 1
-               ) AS PHONE_SPRT_YN            
+               ) AS PROD_SPRT_YN            
             ,(CASE WHEN PM.CMPX_PROD_CLSF_CD NOT IN ('OR004305') THEN 
                    (
                     SELECT 
