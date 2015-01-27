@@ -512,59 +512,58 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 					specialSaleYn = true;
 				}
 
+				// 2015-01-27 결제무시라도 DB에 취소로 업데이트 처리한다.
 				// 결제 취소 무시가 아니면 DB업데이트 진행.
-				if (!purchaseCancelSacParam.getIgnorePayment()) {
+				// if (!purchaseCancelSacParam.getIgnorePayment()) {
 
-					PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
-					purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
-					purchaseCancelPaymentDetailScReq.setSystemId(StringUtils.isEmpty(purchaseCancelSacParam
-							.getReqUserId()) ? purchaseCancelSacParam.getSystemId() : purchaseCancelSacParam
-							.getReqUserId());
-					purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
-					purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
-					purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
+				PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
+				purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
+				purchaseCancelPaymentDetailScReq
+						.setSystemId(StringUtils.isEmpty(purchaseCancelSacParam.getReqUserId()) ? purchaseCancelSacParam
+								.getSystemId() : purchaseCancelSacParam.getReqUserId());
+				purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
+				purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
+				purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
 
-					// T Store 결제일 경우 처리
-					if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
-							&& purchaseCancelDetailSacParam.gettStorePayCancelResultList().size() > 0) {
-						for (PayCancelResult payCancelResult : purchaseCancelDetailSacParam
-								.gettStorePayCancelResultList()) {
-							if (StringUtils.equals(payCancelResult.getPayCls(), paymentSacParam.getPaymentMtdCd())) {
-								if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
-										payCancelResult.getPayCancelResultCd())) {
-									// T Store 결제 취소 실패이면
-									purchaseCancelPaymentDetailScReq
-											.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
-								}
-								purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(payCancelResult
-										.getPayCancelResultCd());
+				// T Store 결제일 경우 처리
+				if (purchaseCancelDetailSacParam.gettStorePayCancelResultList() != null
+						&& purchaseCancelDetailSacParam.gettStorePayCancelResultList().size() > 0) {
+					for (PayCancelResult payCancelResult : purchaseCancelDetailSacParam.gettStorePayCancelResultList()) {
+						if (StringUtils.equals(payCancelResult.getPayCls(), paymentSacParam.getPaymentMtdCd())) {
+							if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYMENT_CANCEL_SUCCESS,
+									payCancelResult.getPayCancelResultCd())) {
+								// T Store 결제 취소 실패이면
+								purchaseCancelPaymentDetailScReq
+										.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
 							}
+							purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(payCancelResult
+									.getPayCancelResultCd());
 						}
 					}
-
-					// Pay Planet 결제일 경우 처리 2014.09.01
-					if (purchaseCancelDetailSacParam.getPayPlanetCancelEcRes() != null
-							&& purchaseCancelDetailSacParam.getPayPlanetCancelEcRes().getResPaymethod().size() > 0) {
-						for (CancelEcResPaymethod cancelEcResPaymethod : purchaseCancelDetailSacParam
-								.getPayPlanetCancelEcRes().getResPaymethod()) {
-							if (StringUtils.equals(
-									PaymethodUtil.convert2StoreCode(cancelEcResPaymethod.getCdPaymethod()),
-									paymentSacParam.getPaymentMtdCd())) {
-								if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYPLANET_CANCEL_SUCCESS,
-										cancelEcResPaymethod.getResultCode())) {
-									// PayPlanet 결제 취소 실패이면
-									purchaseCancelPaymentDetailScReq
-											.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
-								}
-								purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(cancelEcResPaymethod
-										.getResultCode());
-							}
-						}
-					}
-
-					purchaseCancelPaymentDetailScReqList.add(purchaseCancelPaymentDetailScReq);
-
 				}
+
+				// Pay Planet 결제일 경우 처리 2014.09.01
+				if (purchaseCancelDetailSacParam.getPayPlanetCancelEcRes() != null
+						&& purchaseCancelDetailSacParam.getPayPlanetCancelEcRes().getResPaymethod().size() > 0) {
+					for (CancelEcResPaymethod cancelEcResPaymethod : purchaseCancelDetailSacParam
+							.getPayPlanetCancelEcRes().getResPaymethod()) {
+						if (StringUtils.equals(PaymethodUtil.convert2StoreCode(cancelEcResPaymethod.getCdPaymethod()),
+								paymentSacParam.getPaymentMtdCd())) {
+							if (!StringUtils.equals(PurchaseConstants.TSTORE_PAYPLANET_CANCEL_SUCCESS,
+									cancelEcResPaymethod.getResultCode())) {
+								// PayPlanet 결제 취소 실패이면
+								purchaseCancelPaymentDetailScReq
+										.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_PAYMENT_FAIL);
+							}
+							purchaseCancelPaymentDetailScReq.settStorePaymentStatusCd(cancelEcResPaymethod
+									.getResultCode());
+						}
+					}
+				}
+
+				purchaseCancelPaymentDetailScReqList.add(purchaseCancelPaymentDetailScReq);
+
+				// }
 
 			}
 		}
