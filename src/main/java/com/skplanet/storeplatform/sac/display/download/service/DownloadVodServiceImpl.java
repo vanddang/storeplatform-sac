@@ -554,6 +554,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					metaInfo.setDrmYn(metaInfo.getPlayDrmYn());
 				}
 			}
+			//상품/정액권의 DRM_YN 설정 값이 없을 경우 구매 DRM_YN 을 참조
+			if(StringUtils.isEmpty(metaInfo.getDrmYn()) 
+					&& (historySacIn != null && StringUtils.isNotEmpty(historySacIn.getDrmYn()))) {
+				metaInfo.setDrmYn(historySacIn.getDrmYn());
+			}
 		}
 	}
 }
