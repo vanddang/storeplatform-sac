@@ -546,6 +546,11 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 		int prchsDtlCnt = 2; // 전권 소장/대여 상품 자체가 1, 에피소드는 2부터
 		for (EpisodeInfoRes episode : episodeList) {
+
+			if (StringUtils.isBlank(episode.getUsePeriodUnitCd())) {
+				throw new StorePlatformException("SAC_PUR_7215", "전권 에피소드 <null>");
+			}
+
 			prchsDtlMore = new PrchsDtlMore();
 
 			prchsDtlMore.setSystemId(ebookflatInfo.getSystemId());
