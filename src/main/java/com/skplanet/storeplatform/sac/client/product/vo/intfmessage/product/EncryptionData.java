@@ -40,6 +40,8 @@ public class EncryptionData extends CommonInfo implements Serializable {
 	private EncryptionDeviceKey deviceKey;
 	private EncryptionStatus status;
 	private String extra;
+    private String tenantId;
+    private String systemId;
 
 
 	/**
@@ -253,6 +255,19 @@ public class EncryptionData extends CommonInfo implements Serializable {
 		this.extra = extra;
 	}
 
+    public String getTenantId() {
+        return tenantId;
+    }
 
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
+    public String getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
 }
