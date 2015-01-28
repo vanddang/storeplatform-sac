@@ -126,6 +126,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
 			 */
             metaInfo.setSystemId(header.getTenantHeader().getSystemId());
+            metaInfo.setTenantId(header.getTenantHeader().getTenantId());
             downloadCommonService.validateVisitPathNm(metaInfo, comicReq.getVisitPathNm(), productId);
 
             Product product = new Product();

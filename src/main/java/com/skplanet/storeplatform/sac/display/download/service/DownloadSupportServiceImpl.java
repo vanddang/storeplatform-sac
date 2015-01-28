@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import com.skplanet.storeplatform.framework.test.JacksonMarshallingHelper;
-import com.skplanet.storeplatform.framework.test.MarshallingHelper;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -19,11 +17,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,27 +62,20 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
 
     @Override
     public Encryption generateEncryption(MetaInfo metaInfo, String prchProdId) {
-        EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
-        Encryption encryption = encryption(prchProdId, contents);
-        return encryption;
+        return generateEncryption(metaInfo, prchProdId, false);
     }
 
     @Override
-    public Encryption generateEncryptionForVod(MetaInfo metaInfo, String prchProdId, boolean supportFhdVideo) {
-        EncryptionContents contents = this.encryptionGenerator.generateEncryptionContentsForVod(metaInfo, supportFhdVideo);
-        Encryption encryption = encryption(prchProdId, contents);
-        return encryption;
-    }
-
-    private Encryption encryption(String prchProdId, EncryptionContents contents) {
-        // JSON 파싱
-        MarshallingHelper marshaller = new JacksonMarshallingHelper();
-        byte[] jsonData = marshaller.marshal(contents);
+    public Encryption generateEncryption(MetaInfo metaInfo, String prchProdId, boolean supportFhdVideo) {
+        EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo, supportFhdVideo);
+        JSONObject jsonObject = new JSONObject(contents);
+        byte[] jsonData = jsonObject.toString().getBytes(Charset.forName("UTF-8"));
 
         // JSON 암호화
         int keyIdx = this.downloadAES128Helper.getRandomKeyIndex();
 
         byte[] encryptByte = this.downloadAES128Helper.encryption(keyIdx, jsonData);
+
         String encryptString = this.downloadAES128Helper.toHexString(encryptByte);
 
         // 암호화 정보 (AES-128)
@@ -92,6 +85,9 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         encryption.setDigest(this.downloadAES128Helper.toHexString(digest));
         encryption.setKeyIndex(String.valueOf(keyIdx));
         encryption.setToken(encryptString);
+
+        logger.debug("Encryption={}", ReflectionToStringBuilder.reflectionToString(encryption));
+
         return encryption;
     }
 }

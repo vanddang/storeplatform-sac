@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -35,8 +34,8 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 @Component
 public class EncrytionGeneratorImpl implements EncryptionGenerator {
 
-	@Override
-	public EncryptionContents generateEncryptionContents(MetaInfo metaInfo) {
+    @Override
+		public EncryptionContents generateEncryptionContents(MetaInfo metaInfo, boolean supportFhdVideo) {
         EncryptionContents contents = new EncryptionContents();
         EncryptionData data = new EncryptionData();
         EncryptionUsagePolicy usagePolicy = new EncryptionUsagePolicy();
@@ -60,6 +59,8 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
         data.setPurchaseId(metaInfo.getPurchaseId());
         data.setUserKey(metaInfo.getUserKey());
         data.setPurchasePrice(metaInfo.getPurchasePrice());
+        data.setSystemId(metaInfo.getSystemId());
+        data.setTenantId(metaInfo.getTenantId());
 
         date = new Date();
         date.setTextUtc(DateUtils.parseDate(metaInfo.getPurchaseDt()));
@@ -77,13 +78,13 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
                 EncryptionSubContents sdSc = getEncryptionSdSubContents(metaInfo);
                 subContentsList.add(sdSc);
             }
-            //HD2 (D화질) 정보 우선, 없으며 HD 정보를 내려줌
+            //HD2 (D화질) 정보 우선, 없으면 HD 정보를 내려줌
             if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId()) || StringUtils.isNotEmpty(metaInfo.getHd2SubContsId())) {
                 EncryptionSubContents hdSc = getEncryptionHdSubContents(metaInfo);
                 subContentsList.add(hdSc);
             }
             //FHD
-            if (StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
+            if (supportFhdVideo && StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
                 EncryptionSubContents fhdSc = getEncryptionFhdSubContents(metaInfo);
                 subContentsList.add(fhdSc);
             }
@@ -149,97 +150,6 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
         sdSc.setScid(metaInfo.getSdSubContsId());
         sdSc.setPath(metaInfo.getSdFilePath());
         return sdSc;
-    }
-
-    @Override
-	public EncryptionContents generateEncryptionContentsForVod(MetaInfo metaInfo, boolean supportFhdVideo) {
-        EncryptionContents contents = new EncryptionContents();
-        EncryptionData data = new EncryptionData();
-        EncryptionUsagePolicy usagePolicy = new EncryptionUsagePolicy();
-        EncryptionDeviceKey deviceKey = new EncryptionDeviceKey();
-        Date date = new Date();
-        EncryptionStatus status = new EncryptionStatus();
-
-        List<EncryptionSubContents> subContentsList = new ArrayList<EncryptionSubContents>();
-
-        // 요청 만료 정보
-        date.setTextUtc(DateUtils.parseDate(metaInfo.getExpiredDate()));
-        contents.setExpired(date.getText());
-
-        // 상품 및 구매 정보
-        data.setTitle(metaInfo.getProdNm());
-        data.setTopCatCd(metaInfo.getTopMenuId());
-        data.setCatCd(metaInfo.getMenuId());
-        data.setPacketFee(StringUtils.defaultString(metaInfo.getProdClsfCd()));
-        data.setProductFee(metaInfo.getProdChrg());
-        data.setProductId(metaInfo.getPurchaseProdId());
-        data.setPurchaseId(metaInfo.getPurchaseId());
-        data.setUserKey(metaInfo.getUserKey());
-        data.setPurchasePrice(metaInfo.getPurchasePrice());
-
-        date = new Date();
-        date.setTextUtc(DateUtils.parseDate(metaInfo.getPurchaseDt()));
-        data.setPurchaseDate(date.getText());
-
-        if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(metaInfo.getTopMenuId())
-                || DisplayConstants.DP_TV_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
-
-            // 서브 컨텐츠 정보
-            if (StringUtils.isNotEmpty(metaInfo.getNmSubContsId())) {
-                EncryptionSubContents nmSc = getEncryptionNmSubContents(metaInfo);
-                subContentsList.add(nmSc);
-            }
-            if (StringUtils.isNotEmpty(metaInfo.getSdSubContsId())) {
-                EncryptionSubContents sdSc = getEncryptionSdSubContents(metaInfo);
-                subContentsList.add(sdSc);
-            }
-
-            //HD2 (D화질) 정보 우선, 없으며 HD 정보를 내려줌
-            if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId()) || StringUtils.isNotEmpty(metaInfo.getHd2SubContsId())) {
-                EncryptionSubContents hdSc = getEncryptionHdSubContents(metaInfo);
-                subContentsList.add(hdSc);
-            }
-            //FHD
-            if (supportFhdVideo && StringUtils.isNotEmpty(metaInfo.getFhdSubContsId())) {
-                EncryptionSubContents fhdSc = getEncryptionFhdSubContents(metaInfo);
-                subContentsList.add(fhdSc);
-            }
-            
-        }
-        data.setSubContents(subContentsList);
-
-        // 사용 정책
-        usagePolicy.setApplyDrm(metaInfo.getDrmYn());
-        if (StringUtils.isNotEmpty(metaInfo.getUseExprDt())) {
-            date = new Date();
-            date.setTextUtc(DateUtils.parseDate(metaInfo.getUseExprDt()));
-            usagePolicy.setExpirationDate(date.getText());
-        } else {
-            usagePolicy.setExpirationDate("");
-        }
-        data.setUsagePolicy(usagePolicy);
-
-        // 기기 정보
-        deviceKey.setKey(metaInfo.getDeviceKey());
-        deviceKey.setType(metaInfo.getDeviceType());
-        deviceKey.setSubKey(metaInfo.getDeviceSubKey());
-        data.setDeviceKey(deviceKey);
-
-        // 구매내역 숨김 유무 / 업데이트 알람 유무
-        if (StringUtils.isNotEmpty(metaInfo.getPurchaseHide())
-                && StringUtils.isNotEmpty(metaInfo.getUpdateAlarm())) {
-
-            status.setPurchaseHide(metaInfo.getPurchaseHide());
-            status.setUpdateAlarm(metaInfo.getUpdateAlarm());
-
-            data.setStatus(status);
-        }
-
-        // extra : 값의 형식은 "key=value;key2=value2;"로 구성된다. 추후 정의하여 사용.
-        data.setExtra(this.makeExtra(metaInfo));
-
-        contents.setData(data);
-        return contents;
     }
 
     private EncryptionSubContents getEncryptionFhdSubContents(MetaInfo metaInfo) {

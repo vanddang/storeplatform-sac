@@ -18,16 +18,6 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
  * Updated on : 2014. 02. 11. Updated by : 이태희, 부르칸.
  */
 public interface EncryptionGenerator {
-	/**
-	 * <pre>
-	 * 상품 정보 조회 (for download) 전용 Encryption Contents 생성.
-	 * </pre>
-	 * 
-	 * @param metaInfo
-	 *            metaInfo
-	 * @return EncryptionContents
-	 */
-	public EncryptionContents generateEncryptionContents(MetaInfo metaInfo);
 
     /**
      * <pre>
@@ -41,5 +31,5 @@ public interface EncryptionGenerator {
      *            FHD 화질 지원 여부
      * @return EncryptionContents
      */
-	public EncryptionContents generateEncryptionContentsForVod(MetaInfo metaInfo, boolean supportFhdVideo);
+	public EncryptionContents generateEncryptionContents(MetaInfo metaInfo, boolean supportFhdVideo);
 }

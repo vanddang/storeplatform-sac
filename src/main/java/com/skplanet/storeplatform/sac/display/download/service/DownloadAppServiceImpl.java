@@ -100,14 +100,14 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 	@Override
 	public DownloadAppSacRes searchDownloadApp(SacRequestHeader requestheader, DownloadAppSacReq downloadAppSacReq) {
-		TenantHeader tanantHeader = requestheader.getTenantHeader();
+		TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
 		String osVersion = DisplayCommonUtil.extractOsVer(deviceHeader.getOs());
-		downloadAppSacReq.setTenantId(tanantHeader.getTenantId());
+		downloadAppSacReq.setTenantId(tenantHeader.getTenantId());
 		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
 		downloadAppSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
-		downloadAppSacReq.setLangCd(tanantHeader.getLangCd());
+		downloadAppSacReq.setLangCd(tenantHeader.getLangCd());
 		downloadAppSacReq.setOsVersion(osVersion); // OS Version
 		downloadAppSacReq.setLcdSize(deviceHeader.getResolution()); // LCD SIZE
 		downloadAppSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
@@ -181,7 +181,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			/*
 			 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
 			 */
-			metaInfo.setSystemId(tanantHeader.getSystemId());
+			metaInfo.setSystemId(tenantHeader.getSystemId());
+            metaInfo.setTenantId(tenantHeader.getTenantId());
 			downloadCommonService.validateVisitPathNm(metaInfo, downloadAppSacReq.getVisitPathNm(), productId);
 			metaInfo.setDwldTypeCd(downloadAppSacReq.getDwldTypeCd());
 
@@ -437,7 +438,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						 * 구매내역이 존재하지 않는 경우 예외적으로 다운로드 허용
 						 * 예) 앱가이드, 스마트청구서, T 통화 도우미
 						 */
-						if ( isProdWithoutPrchsHis(tanantHeader.getTenantId(), productId) ) {
+						if ( isProdWithoutPrchsHis(tenantHeader.getTenantId(), productId) ) {
 							makeDefaultMetaWithoutPrchsHis(metaInfo, downloadAppSacReq, purchaseDt, reqExpireDate);
 
 							Encryption encryption = supportService.generateEncryption(metaInfo, productId);
@@ -478,7 +479,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			product.setApp(appInfoGenerator.generateApp(metaInfo)); // App 상세정보
 			product.setRights(commonGenerator.generateRights(metaInfo)); // 권한
 			product.setDistributor(commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
-			if (tingMemberFlag == true) {
+			if (tingMemberFlag) {
 				/**
 				 * ting 요금제 가입자가 어학/교육 카테고리를 다운받을때는
 				 * packetFee 값이 'paid'로 내려가야함.
@@ -554,8 +555,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		metaInfo.setDeltaType("delta");
 		metaInfo.setDeltaFileSize(appDeltaUpdate.getDeltaFileSize());
 		metaInfo.setDeltaFilePath(appDeltaUpdate.getDeltaFilePath());
-
-		return;
 	}
 
 	private void makeDeviceSubKey(MetaInfo metaInfo, final String userKey, final String deviceKey) {
@@ -576,8 +575,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			log.error("단말정보 조회 연동 중 오류가 발생하였습니다.\n", ex);
 			// 예외 무시
 		}
-
-		return;
 	}
 
 	private void makeDefaultMetaWithoutPrchsHis(MetaInfo metaInfo, final DownloadAppSacReq sacReq, final String purchaseDt, final String expiredDate) {

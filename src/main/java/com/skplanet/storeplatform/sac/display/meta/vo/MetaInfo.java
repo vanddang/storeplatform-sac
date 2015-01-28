@@ -346,6 +346,7 @@ public class MetaInfo extends CommonInfo {
 	private String deltaFilePath;
 	private String visitPathNm;
 	private String dwldTypeCd;
+    private String tenantId;
 
 	/**
 	 * @return the topMenuId
@@ -4563,4 +4564,12 @@ public class MetaInfo extends CommonInfo {
 	public void setEpsdCid(String epsdCid) {
 		this.epsdCid = epsdCid;
 	}
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 }

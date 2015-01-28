@@ -48,5 +48,5 @@ public interface DownloadSupportService {
      * @param supportFhdVideo
      * @return
      */
-    Encryption generateEncryptionForVod(MetaInfo metaInfo, String prchProdId, boolean supportFhdVideo);
+    Encryption generateEncryption(MetaInfo metaInfo, String prchProdId, boolean supportFhdVideo);
 }

@@ -94,7 +94,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
         StopWatch sw = new StopWatch();
         sw.start();
 
-        TenantHeader tanantHeader = requestheader.getTenantHeader();
+        TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
 		MetaInfo downloadSystemDate = this.commonDAO.queryForObject("Download.selectDownloadSystemDate", "",
@@ -102,9 +102,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		String sysDate = downloadSystemDate.getSysDate();
 		String reqExpireDate = downloadSystemDate.getExpiredDate();
-		downloadVodSacReq.setTenantId(tanantHeader.getTenantId());
+		downloadVodSacReq.setTenantId(tenantHeader.getTenantId());
 		downloadVodSacReq.setDeviceModelCd(deviceHeader.getModel());
-		downloadVodSacReq.setLangCd(tanantHeader.getLangCd());
+		downloadVodSacReq.setLangCd(tenantHeader.getLangCd());
 		downloadVodSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 		downloadVodSacReq.setAnyDeviceModelCd(DisplayConstants.DP_ANY_PHONE_4MM);
 
@@ -389,8 +389,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 										this.log.debug("DownloadVodServiceImpl ProdChrg={}, prchsReqPathCd={}, StoreProdId={}, PlayDrmYn={}, DrmYn={}", metaInfo.getProdChrg(), prchsReqPathCd, metaInfo.getStoreProdId(), metaInfo.getPlayDrmYn(), metaInfo.getDrmYn());
 
 										// 암호화 정보 (JSON)
-										metaInfo.setSystemId(tanantHeader.getSystemId());
-                                        Encryption encryption = this.supportService.generateEncryptionForVod(metaInfo, prchsProdId, supportFhdVideo);
+										metaInfo.setSystemId(tenantHeader.getSystemId());
+                                        metaInfo.setTenantId(tenantHeader.getTenantId());
+                                        Encryption encryption = this.supportService.generateEncryption(metaInfo, prchsProdId, supportFhdVideo);
 										encryptionList.add(encryption);
 
 										this.log.debug("-------------------------------------------------------------");
