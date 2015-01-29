@@ -32,7 +32,7 @@ public class AuthorizeV2SacRes extends CommonInfo {
 	private String userMainStatus = "";
 
 	/**
-	 * 트랜잭션 번호
+	 * 트랜잭션 번호.
 	 */
 	private String trxNo;
 
