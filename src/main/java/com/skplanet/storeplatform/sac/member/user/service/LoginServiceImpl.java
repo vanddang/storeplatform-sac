@@ -2796,7 +2796,11 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(userInfo);
 				res.setAgreementList(agreementList);
 				res.setDeviceInfo(deviceInfo);
-				res.setExtraInfo(marketRes.getExtraInfo());
+				if (marketRes.getExtraInfo() == null) {
+					res.setExtraInfo("");
+				} else {
+					res.setExtraInfo(marketRes.getExtraInfo());
+				}
 
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
@@ -2982,7 +2986,11 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserInfo(userInfo);
 				res.setAgreementList(agreementList);
 				res.setDeviceInfo(deviceInfo);
-				res.setExtraInfo(marketRes.getExtraInfo());
+				if (marketRes.getExtraInfo() == null) {
+					res.setExtraInfo("");
+				} else {
+					res.setExtraInfo(marketRes.getExtraInfo());
+				}
 
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
