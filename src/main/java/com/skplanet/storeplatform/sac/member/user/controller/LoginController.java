@@ -38,6 +38,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSync
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSaveAndSyncByMacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -351,6 +353,50 @@ public class LoginController {
 		AuthorizeForUplusStoreSacRes res = this.loginService.authorizeForUplusStore(requestHeader, req);
 
 		LOGGER.info("Response : {}, {}, {}", res.getDeviceId(), res.getUserInfo().getUserKey(), res.getUserStatus());
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * PayPlanet에 제공되는 3사(SKT/KT/U+) 회원인증.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeV2SacReq
+	 * @return AuthorizeV2SacRes
+	 */
+	@RequestMapping(value = "/member/user/authorize/v2", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeV2SacRes authorizeV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeV2SacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		// tenantId 없는 경우 default S01
+		if (StringUtils.isBlank(req.getTenantId())) {
+			req.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+		}
+
+		// 타사 인증시 필수 파라메터 체크
+		if (!StringUtils.equals(req.getTenantId(), MemberConstants.TENANT_ID_TSTORE)) {
+
+			if (StringUtils.isBlank(req.getTrxNo())) {
+				throw new StorePlatformException("SAC_MEM_0001", "trxNo");
+			}
+
+			if (StringUtils.isBlank(req.getNativeId())) {
+				throw new StorePlatformException("SAC_MEM_0001", "nativeId");
+			}
+
+		}
+
+		AuthorizeV2SacRes res = this.loginService.authorizeV2(requestHeader, req);
+
+		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
+				res.getUserMainStatus());
 
 		return res;
 

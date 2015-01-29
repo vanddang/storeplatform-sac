@@ -307,6 +307,9 @@ public final class MemberConstants {
 	public static final String INAPP_USER_STATUS_PAUSE = "US014602"; // 이용제한 회원
 	public static final String INAPP_USER_STATUS_NO_MEMBER = "US014603"; // 비회원
 	public static final String INAPP_USER_STATUS_IMEI_MISMATCH = "US014604"; // IMEI 불일치
+	public static final String INAPP_USER_STATUS_USIM_MISMATCH = "US014605"; // USIM 불일치
+	public static final String INAPP_USER_STATUS_PARAM_ERROR = "US014606"; // 파라메터 오류
+	public static final String INAPP_USER_STATUS_SYSTEM_ERROR = "US014607"; // 시스템 연동 오류
 
 	/**
 	 * 판매자 회원 상수들.
