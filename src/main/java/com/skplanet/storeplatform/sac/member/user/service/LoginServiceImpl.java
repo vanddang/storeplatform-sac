@@ -1789,7 +1789,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setAgreementList(new ArrayList<Agreement>());
 				res.setDeviceInfo(new DeviceInfo());
 				res.setPinInfo(new MarketPinInfo());
-				res.setMbrAuth(detailRes.getMbrAuth());
+				res.setMbrAuth(new MbrAuth());
 				res.setTstoreEtcInfo(new TstoreEtcInfo());
 
 				return res;
