@@ -1194,31 +1194,22 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// 기본 등록ID.
 		String regId = this.getMaskRegId(prodNoti.getRegId());
 
-		// 사용자 조회후.
+		/**
+		 * REG_ID 정책. 회원 데이타를 기준으로 regId를 세팅한다. (회원 데이타 없을경우 Noti 테이블의 reg_id 참조.)
+		 */
 		if (searchUserSacRes != null) {
 			if (!CollectionUtils.isEmpty(searchUserSacRes.getUserInfo())) {
 				UserInfoSac userInfoSac = searchUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
 				if (userInfoSac != null) {
 					// 사용자가 기기사용자이면.
 					if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
-						// 사용후기 이면
-						if (prodNoti.getNotiSeq() != null) {
-							// 사용후기 테이블의 정보 셋팅 후 마스킹 처리.
-							regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
-						} else {
-							// 평점 이면.
-							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) {
-								// 회원정보 셋팅 후 마스킹 처리.
-								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0),
-										userInfoSac.getUserId());
-							}
-						}
-					}
-					// 기존 입력된 데이터중 모바일회원으로 등록해서 사용후기를 작성후 oneID로 전환한 데이터인경우엔(MDN합치기)
-					// 기존 모바일회원의 상태가 탈퇴상태로 바뀌고 ONEID회원으로 USER_TYPE_ONEID으로 바뀌어서 회원테이블의 ID를 보여줘야함.
-					// 회원테이블을 조회하여 mbr_id정보를 마스킹해서 regId에 셋팅함. 20140515 추가 로직
-					if (regId.equals("")) {
+
+						regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
+
+					} else {
+
 						regId = this.getMaskRegId(userInfoSac.getUserId());
+
 					}
 				}
 			}
