@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import javax.validation.constraints.Pattern;
-
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -31,10 +29,9 @@ public class AuthorizeForUplusStoreSacReq extends CommonInfo {
 	private String deviceId;
 
 	/**
-	 * 통신사(US001203:U+).
+	 * 통신사.
 	 */
 	@NotEmpty
-	@Pattern(regexp = "US001203")
 	private String deviceTelecom;
 
 	/**
