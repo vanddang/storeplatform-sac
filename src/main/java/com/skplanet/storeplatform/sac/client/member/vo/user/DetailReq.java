@@ -26,6 +26,11 @@ public class DetailReq extends CommonInfo {
 	/* 외부연동 키 */
 	private String mbrNo;
 
+	/**
+	 * 테넌트 아이디.
+	 */
+	private String tenantId;
+
 	private SearchExtentReq searchExtent;
 
 	public String getUserId() {
@@ -78,6 +83,14 @@ public class DetailReq extends CommonInfo {
 
 	public void setMbrNo(String mbrNo) {
 		this.mbrNo = mbrNo;
+	}
+
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }
