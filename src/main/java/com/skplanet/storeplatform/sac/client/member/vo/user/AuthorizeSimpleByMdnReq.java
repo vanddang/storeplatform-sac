@@ -25,6 +25,11 @@ public class AuthorizeSimpleByMdnReq extends CommonInfo implements Serializable 
 	private String deviceId;
 
 	/**
+	 * 테넌트 아이디.
+	 */
+	private String tenantId;
+
+	/**
 	 * @return deviceId
 	 */
 	public String getDeviceId() {
@@ -37,6 +42,21 @@ public class AuthorizeSimpleByMdnReq extends CommonInfo implements Serializable 
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            String
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }
