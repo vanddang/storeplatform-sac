@@ -41,6 +41,11 @@ public class AuthorizeSimpleByMdnRes extends CommonInfo implements Serializable 
 	private String isLoginSuccess;
 
 	/**
+	 * 테넌트 아이디.
+	 */
+	private String tenantId;
+
+	/**
 	 * @return isLoginSuccess
 	 */
 	public String getIsLoginSuccess() {
@@ -98,6 +103,21 @@ public class AuthorizeSimpleByMdnRes extends CommonInfo implements Serializable 
 	 */
 	public void setUserAuthKey(String userAuthKey) {
 		this.userAuthKey = userAuthKey;
+	}
+
+	/**
+	 * @return tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            String
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }
