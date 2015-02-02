@@ -383,6 +383,10 @@ public class LoginController {
 		// 타사 인증시 필수 파라메터 체크
 		if (!StringUtils.equals(req.getTenantId(), MemberConstants.TENANT_ID_TSTORE)) {
 
+			if (StringUtils.isBlank(req.getDeviceTelecom())) {
+				throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
+			}
+
 			if (StringUtils.isBlank(req.getTrxNo())) {
 				throw new StorePlatformException("SAC_MEM_0001", "trxNo");
 			}
