@@ -166,6 +166,11 @@ public class LoginController {
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeSimpleByMdnReq req) {
 
+		// tenantId 없는 경우 default S01
+		if (StringUtils.isBlank(req.getTenantId())) {
+			req.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+		}
+
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeSimpleByMdnRes res = this.loginService.authorizeSimpleByMdn(requestHeader, req);

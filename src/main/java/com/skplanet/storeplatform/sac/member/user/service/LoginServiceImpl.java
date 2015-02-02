@@ -945,6 +945,11 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req) {
 
+		// 테넌트 아이디 헤더 셋팅
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		tenant.setTenantId(req.getTenantId());
+		requestHeader.setTenantHeader(tenant);
+
 		String deviceId = req.getDeviceId();
 
 		/* 모번호 조회 */
@@ -1550,6 +1555,11 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
+		// 로그인 이력 저장
+		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+		}
+
 		return res;
 	}
 
@@ -1740,6 +1750,11 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
+		// 로그인 이력 저장
+		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+		}
+
 		return res;
 	}
 
@@ -1755,7 +1770,7 @@ public class LoginServiceImpl implements LoginService {
 
 		TenantHeader tenant = requestHeader.getTenantHeader();
 		tenant.setTenantId(req.getTenantId());
-		tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2);
+		// tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2); //TODO. systemId 정의예정.
 		requestHeader.setTenantHeader(tenant);
 
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회
