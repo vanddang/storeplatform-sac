@@ -37,6 +37,11 @@ public class DetailV2Res extends CommonInfo {
 	/* 사용자 키 */
 	private String userKey;
 
+	/**
+	 * 테넌트 아이디.
+	 */
+	private String tenantId;
+
 	/* 사용자 인증정보 */
 	private MbrAuth mbrAuth;
 
@@ -236,6 +241,21 @@ public class DetailV2Res extends CommonInfo {
 	 */
 	public void setGradeInfo(GradeInfo gradeInfo) {
 		this.gradeInfo = gradeInfo;
+	}
+
+	/**
+	 * @return tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            String
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }
