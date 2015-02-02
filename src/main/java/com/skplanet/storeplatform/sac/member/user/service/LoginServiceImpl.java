@@ -974,6 +974,7 @@ public class LoginServiceImpl implements LoginService {
 			res.setDeviceKey(simpleLoginResponse.getDeviceKey());
 			res.setUserKey(simpleLoginResponse.getUserKey());
 			res.setUserAuthKey(this.tempUserAuthKey);
+			req.setTenantId(req.getTenantId());
 		}
 		res.setIsLoginSuccess(simpleLoginResponse.getIsLoginSuccess());
 
