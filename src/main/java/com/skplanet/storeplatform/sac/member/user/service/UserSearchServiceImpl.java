@@ -118,6 +118,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -1541,6 +1542,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 */
 	@Override
 	public DetailV2Res detailV2(SacRequestHeader sacHeader, DetailReq req) {
+
+		/**
+		 * 테넌트 아이디 헤더 셋팅
+		 */
+		TenantHeader tenant = sacHeader.getTenantHeader();
+		tenant.setTenantId(req.getTenantId());
+		sacHeader.setTenantHeader(tenant);
 
 		/**
 		 * 모번호 조회 (989 일 경우만)

@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 
@@ -276,6 +278,11 @@ public class UserSearchController {
 		if (StringUtil.isBlank(req.getDeviceKey()) && StringUtil.isBlank(req.getDeviceId())
 				&& StringUtil.isBlank(req.getUserId()) && StringUtil.isBlank(req.getUserKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "userId || userKey || deviceId || deviceKey");
+		}
+
+		// tenantId 없는 경우 default S01
+		if (StringUtils.isBlank(req.getTenantId())) {
+			req.setTenantId(MemberConstants.TENANT_ID_TSTORE);
 		}
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
