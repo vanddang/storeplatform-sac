@@ -518,9 +518,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 				PurchaseCancelPaymentDetailScReq purchaseCancelPaymentDetailScReq = new PurchaseCancelPaymentDetailScReq();
 				purchaseCancelPaymentDetailScReq.setTenantId(purchaseCancelSacParam.getTenantId());
-				purchaseCancelPaymentDetailScReq
-						.setSystemId(StringUtils.isEmpty(purchaseCancelSacParam.getReqUserId()) ? purchaseCancelSacParam
-								.getSystemId() : purchaseCancelSacParam.getReqUserId());
+				purchaseCancelPaymentDetailScReq.setSystemId(purchaseCancelSacParam.getSystemId());
 				purchaseCancelPaymentDetailScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 				purchaseCancelPaymentDetailScReq.setPaymentDtlId(paymentSacParam.getPaymentDtlId());
 				purchaseCancelPaymentDetailScReq.setPaymentStatusCd(PurchaseConstants.PRCHS_STATUS_CANCEL);
@@ -647,9 +645,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelScReq.setTenantId(purchaseCancelSacParam.getTenantId());
 		purchaseCancelScReq.setSystemId(purchaseCancelSacParam.getSystemId());
 		// 구매 취소 정보를 넣어준다.
-		purchaseCancelScReq
-				.setReqUserId(StringUtils.isEmpty(purchaseCancelSacParam.getReqUserId()) ? purchaseCancelSacParam
-						.getSystemId() : purchaseCancelSacParam.getReqUserId());
+		purchaseCancelScReq.setReqUserId(purchaseCancelSacParam.getSystemId());
 		purchaseCancelScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelScReq.setCancelReqPathCd(purchaseCancelSacParam.getCancelReqPathCd());
 
@@ -676,7 +672,6 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelDetailSacParam.setPrchsCancelCnt(purchaseCancelScRes.getPrchsCancelCnt());
 		purchaseCancelDetailSacParam.setPrchsProdCntCnt(purchaseCancelScRes.getPrchsProdCntCnt());
 		purchaseCancelDetailSacParam.setAutoPrchsCancelCnt(purchaseCancelScRes.getAutoPrchsCancelCnt());
-
 		purchaseCancelDetailSacParam.setCancelDt(cancelDt);
 
 		return purchaseCancelDetailSacParam;
@@ -774,6 +769,10 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		purchaseCancelScReq.setCurrPrchsStatusCd(PurchaseConstants.PRCHS_STATUS_RESERVATION);
 		purchaseCancelScReq.setPurchaseCancelPaymentDetailScReqList(purchaseCancelPaymentDetailScReqList);
 		purchaseCancelScReq.setInsertPurchaseProductCountScReq(insertPurchaseProductCountScReq);
+
+		// 취소일자 셋팅을 위해 DB Sysdate 조회
+		String cancelDt = this.purchaseCancelSCI.getNowDate();
+		purchaseCancelScReq.setCancelDt(cancelDt);
 
 		PurchaseCancelScRes purchaseCancelScRes = this.purchaseCancelSCI.updatePurchaseCancel(purchaseCancelScReq);
 
