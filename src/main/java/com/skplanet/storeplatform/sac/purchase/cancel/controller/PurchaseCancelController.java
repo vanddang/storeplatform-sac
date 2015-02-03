@@ -251,6 +251,11 @@ public class PurchaseCancelController {
 
 		}
 
+		// systemId에 요청자 정보가 있으면 셋팅하고 없으면 systemId로 셋팅
+		purchaseCancelSacParam
+				.setSystemId(!StringUtils.isEmpty(purchaseCancelByUserSacReq.getReqUserId()) ? purchaseCancelByUserSacReq
+						.getReqUserId() : purchaseCancelSacParam.getSystemId());
+
 		purchaseCancelSacParam.setPrchsCancelList(prchsCancelList);
 
 		return purchaseCancelSacParam;
@@ -371,6 +376,11 @@ public class PurchaseCancelController {
 
 		}
 
+		// systemId에 요청자 정보가 있으면 셋팅하고 없으면 systemId로 셋팅
+		purchaseCancelSacParam
+				.setSystemId(!StringUtils.isEmpty(purchaseCancelByAdminSacReq.getReqUserId()) ? purchaseCancelByAdminSacReq
+						.getReqUserId() : purchaseCancelSacParam.getSystemId());
+
 		purchaseCancelSacParam.setPrchsCancelList(prchsCancelList);
 
 		return purchaseCancelSacParam;
@@ -446,6 +456,11 @@ public class PurchaseCancelController {
 		// request admin type setting.
 		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_ADMIN);
 
+		// systemId에 요청자 정보가 있으면 셋팅하고 없으면 systemId로 셋팅
+		purchaseCancelSacParam
+				.setSystemId(!StringUtils.isEmpty(purchaseCancelForPaymentErrorSacReq.getReqUserId()) ? purchaseCancelForPaymentErrorSacReq
+						.getReqUserId() : purchaseCancelSacParam.getSystemId());
+
 		// parameter setting.
 		List<PurchaseCancelDetailSacParam> prchsCancelList = new ArrayList<PurchaseCancelDetailSacParam>();
 		PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
@@ -506,6 +521,11 @@ public class PurchaseCancelController {
 		PurchaseCancelDetailSacParam purchaseCancelDetailSacParam = new PurchaseCancelDetailSacParam();
 
 		purchaseCancelDetailSacParam.setPrchsId(purchaseCancelForInAppSacReq.getPrchsId());
+
+		// systemId에 요청자 정보가 있으면 셋팅하고 없으면 systemId로 셋팅
+		purchaseCancelSacParam
+				.setSystemId(!StringUtils.isEmpty(purchaseCancelForInAppSacReq.getReqUserId()) ? purchaseCancelForInAppSacReq
+						.getReqUserId() : purchaseCancelSacParam.getSystemId());
 
 		prchsCancelList.add(purchaseCancelDetailSacParam);
 
@@ -570,6 +590,11 @@ public class PurchaseCancelController {
 			prchsCancelList.add(purchaseCancelDetailSacParam);
 
 		}
+
+		// systemId에 요청자 정보가 있으면 셋팅하고 없으면 systemId로 셋팅
+		purchaseCancelSacParam
+				.setSystemId(!StringUtils.isEmpty(purchaseCancelForTCashSacReq.getReqUserId()) ? purchaseCancelForTCashSacReq
+						.getReqUserId() : purchaseCancelSacParam.getSystemId());
 
 		purchaseCancelSacParam.setPrchsCancelList(prchsCancelList);
 
