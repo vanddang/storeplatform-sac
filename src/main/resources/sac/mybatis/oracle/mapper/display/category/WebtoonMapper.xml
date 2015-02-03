@@ -373,7 +373,7 @@
            AND ROWNUM = 1
     </select>
     
-    <select id="getWebtoonPreNext" parameterType="WebtoonDetailSacReq" resultType="String">
+    <select id="getWebtoonPreNext" parameterType="map" resultType="String">
 	    SELECT /* WebtoonMapper.xml, getWebtoonPreNext, SAC 전시, 2014-02-20 */
 	           PART_PROD_ID
 		  FROM (SELECT B.PART_PROD_ID
@@ -384,7 +384,7 @@
 		         WHERE A.PART_PROD_ID = #{prodId}
 		           AND A.PROD_ID = B.PROD_ID
 		           AND B.PART_PROD_ID = C.PROD_ID
-		           AND C.TENANT_ID = 'S01'
+		           AND C.TENANT_ID = #{tenantId}
 		           AND C.PROD_STATUS_CD = 'PD000403'
 		           AND C.PROD_ID = D.PROD_ID
 		           <if test='orderedBy == "pre"'>

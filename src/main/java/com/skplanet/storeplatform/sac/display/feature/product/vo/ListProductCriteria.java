@@ -19,6 +19,8 @@ public class ListProductCriteria {
 	
 	private static final int DEFAULT_LIST_COUNT = 20;
 	private static final int MIN_EXPO_ORD = -99999999;
+
+    private String tenantId;
 	private String listId;
 	private List<HashMap<String, String>> menuIdCondList;
 	private List<String> prodGradeCdList;
@@ -28,10 +30,11 @@ public class ListProductCriteria {
 	private Integer count;
 	private String  stdDt; //YYYYMM DDHH24MISS
 	
-	public ListProductCriteria(ProductListSacReq req, String stdDt){
+	public ListProductCriteria(ProductListSacReq req, String tenantId, String stdDt){
 		listId = req.getListId();
-		
-		setupMenuIdCondList(req);
+        this.tenantId = tenantId;
+
+        setupMenuIdCondList(req);
 		setupProdGradeCdList(req);
 		setupOrders(req);
 		setProdChage(req);
@@ -42,8 +45,7 @@ public class ListProductCriteria {
 	private void setupMenuIdCondList(ProductListSacReq req) {
 		if(req.getMenuId()==null)
 			return;
-		List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-		menuIdCondList = list;
+		menuIdCondList = new ArrayList<HashMap<String, String>>();
 		StringTokenizer st = new StringTokenizer(req.getMenuId(), "+|^", true);
 		HashMap<String, String> hm = new HashMap<String, String>();
 		menuIdCondList.add(hm);
@@ -68,7 +70,7 @@ public class ListProductCriteria {
 
 	private void setupProdGradeCdList(ProductListSacReq req) {
 		String exp = req.getProdGradeCd();
-		if(exp== null)
+		if(exp == null)
 			return;
 		String[] array = exp.split("\\+");
 		prodGradeCdList=Arrays.asList(array);
@@ -94,7 +96,7 @@ public class ListProductCriteria {
 
 	private void setProdChage(ProductListSacReq req) {
 		if(req.getProdCharge()!=null){
-			prodCharge = req.getProdCharge().equals("Y")?true:false;
+			prodCharge = req.getProdCharge().equals("Y");
 		}
 	}
 	
@@ -149,4 +151,12 @@ public class ListProductCriteria {
 	public void setStdDt(String stdDt) {
 		this.stdDt = stdDt;
 	}
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 }

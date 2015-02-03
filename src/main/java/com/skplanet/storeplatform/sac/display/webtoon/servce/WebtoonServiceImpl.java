@@ -15,12 +15,15 @@ import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.webtoon.vo.WebtoonDetail;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 웹툰 상품 상세 조회
@@ -36,8 +39,6 @@ public class WebtoonServiceImpl implements WebtoonService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
-	@Autowired
-	private DisplayCommonService displayCommonService;
 
 	/*
 	 * (non-Javadoc)
@@ -48,168 +49,165 @@ public class WebtoonServiceImpl implements WebtoonService {
 	@Override
 	public WebtoonDetailSacRes searchWebtoonDetail(WebtoonDetailSacReq req, SacRequestHeader header) {
 
-		WebtoonDetailSacRes res = new WebtoonDetailSacRes();
-		CommonResponse commonResponse = new CommonResponse();
+        String tenantId = header.getTenantHeader().getTenantId();
+        WebtoonDetailSacRes res = new WebtoonDetailSacRes();
+        CommonResponse commonResponse = new CommonResponse();
 
-		// 헤더값 세팅
-		req.setDeviceModelCd(header.getDeviceHeader().getModel());
-		req.setTenantId(header.getTenantHeader().getTenantId());
-		req.setImageCd(DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-		req.setLangCd(header.getTenantHeader().getLangCd());
+        // 헤더값 세팅
+        req.setDeviceModelCd(header.getDeviceHeader().getModel());
+        req.setTenantId(header.getTenantHeader().getTenantId());
+        req.setImageCd(DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
+        req.setLangCd(header.getTenantHeader().getLangCd());
 
-		List<WebtoonDetail> resultList = this.commonDAO.queryForList("Webtoon.searchWebtoonDetail", req,
-				WebtoonDetail.class);
+        List<WebtoonDetail> resultList = this.commonDAO.queryForList("Webtoon.searchWebtoonDetail", req,
+                WebtoonDetail.class);
 
-		List<Product> listVO = new ArrayList<Product>();
+        List<Product> listVO = new ArrayList<Product>();
 
-		WebtoonDetail webtoonDetail = new WebtoonDetail();
-		Product product;
-		Identifier identifier;
-		Distributor distributor;
-		Title title;
-		Book book;
-		Accrual accrual;
-		Source source;
-		Menu menu;
-		Date date;
-		Contributor contributor;
+        Product product;
+        Identifier identifier;
+        Distributor distributor;
+        Title title;
+        Book book;
+        Accrual accrual;
+        Source source;
+        Menu menu;
+        Date date;
+        Contributor contributor;
 
-		// Response VO를 만들기위한 생성자
-		List<Menu> menuList;
-		List<Source> sourceList;
-		List<Identifier> identifierList = new ArrayList<Identifier>();
+        // Response VO를 만들기위한 생성자
+        List<Menu> menuList;
+        List<Source> sourceList;
+        List<Identifier> identifierList = new ArrayList<Identifier>();
 
-		String prePartId = "";
-		String nextPartId = "";
+        String prePartId = "";
+        String nextPartId = "";
 
-		if (resultList != null && resultList.size() > 0) {
-			for (int i = 0; i < resultList.size(); i++) {
-				webtoonDetail = resultList.get(i);
-				product = new Product();
+        if (CollectionUtils.isEmpty(resultList))
+            throw new StorePlatformException("SAC_DSP_0009");
 
-				String chapter = resultList.get(i).getChapter();
-				req.setChapter(chapter);
+        for (WebtoonDetail webtoonDetail : resultList) {
+            product = new Product();
 
-				if (!StringUtils.isEmpty(chapter)) {
-					// 이전회 상품ID
-					req.setOrderedBy("pre");
-					prePartId = (String) this.commonDAO.queryForObject("Webtoon.getWebtoonPreNext", req);
-					// 다음회 상품ID
-					req.setOrderedBy("next");
-					nextPartId = (String) this.commonDAO.queryForObject("Webtoon.getWebtoonPreNext", req);
-				}
+            String chapter = webtoonDetail.getChapter();
+            req.setChapter(chapter);
 
-				// 서비스그룹코드
-				product.setSvcGrpCd(webtoonDetail.getSvcGrpCd());
+            if (!StringUtils.isEmpty(chapter)) {
+                Map<String, Object> qreq = new HashMap<String, Object>();
+                qreq.put("tenantId", tenantId);
+                qreq.put("prodId", req.getProdId());
+                qreq.put("chapter", req.getChapter());
 
-				// 채널상품ID
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-				identifier.setText(webtoonDetail.getProdId());
-				identifierList.add(identifier);
-				// 에피소드 상품ID
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-				identifier.setText(webtoonDetail.getPartProdId());
-				identifierList.add(identifier);
-				// 이전회 상품ID
-				identifier = new Identifier();
-				identifier.setType("pre");
-				identifier.setText(prePartId);
-				identifierList.add(identifier);
-				// 다음회 상품ID
-				identifier = new Identifier();
-				identifier.setType("next");
-				identifier.setText(nextPartId);
-				identifierList.add(identifier);
+                // 이전회 상품ID
+                qreq.put("orderedBy", "pre");
+                prePartId = (String) this.commonDAO.queryForObject("Webtoon.getWebtoonPreNext", qreq);
+                // 다음회 상품ID
+                qreq.put("orderedBy", "next");
+                nextPartId = (String) this.commonDAO.queryForObject("Webtoon.getWebtoonPreNext", qreq);
+            }
 
-				product.setIdentifierList(identifierList);
+            // 서비스그룹코드
+            product.setSvcGrpCd(webtoonDetail.getSvcGrpCd());
 
-				// 회원번호
-				distributor = new Distributor();
-				distributor.setSellerKey(webtoonDetail.getSellerMbrNo());
-				product.setDistributor(distributor);
+            // 채널상품ID
+            identifier = new Identifier();
+            identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+            identifier.setText(webtoonDetail.getProdId());
+            identifierList.add(identifier);
+            // 에피소드 상품ID
+            identifier = new Identifier();
+            identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+            identifier.setText(webtoonDetail.getPartProdId());
+            identifierList.add(identifier);
+            // 이전회 상품ID
+            identifierList.add(new Identifier("pre", prePartId));
+            // 다음회 상품ID
+            identifierList.add(new Identifier("next", nextPartId));
 
-				// 상품 정보 (상품명)
-				title = new Title();
-				title.setName(webtoonDetail.getChnlProdNm()); // 채널명
-				title.setText(webtoonDetail.getProdNm()); // 에피소드명
-				title.setPostfix(webtoonDetail.getChapter()); // 회차
-				product.setTitle(title);
+            product.setIdentifierList(identifierList);
 
-				// 메뉴 정보
-				menu = new Menu();
-				menuList = new ArrayList<Menu>();
-				menu.setId(webtoonDetail.getMenuId());
-				menu.setName(webtoonDetail.getMenuNm());
-				menu.setDesc(webtoonDetail.getMenuDesc());
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId(webtoonDetail.getTopMenuId());
-				menu.setName(webtoonDetail.getTopMenuNm());
-				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
-				menu.setId(webtoonDetail.getMetaClsfCd());
-				menuList.add(menu);
-				product.setMenuList(menuList);
+            // 회원번호
+            distributor = new Distributor();
+            distributor.setSellerKey(webtoonDetail.getSellerMbrNo());
+            product.setDistributor(distributor);
 
-				// source 정보
-				source = new Source();
-				sourceList = new ArrayList<Source>();
-				source.setType("mainThumbNail");
-				source.setUrl(webtoonDetail.getMainFilePath());
-				sourceList.add(source);
-				source = new Source();
-				String filePath = webtoonDetail.getFilePath();
-				filePath = filePath.substring(0, filePath.lastIndexOf("/")); // 이미지 경로
-				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-				source.setUrl(filePath);
-				sourceList.add(source);
-				product.setSourceList(sourceList);
+            // 상품 정보 (상품명)
+            title = new Title();
+            title.setName(webtoonDetail.getChnlProdNm()); // 채널명
+            title.setText(webtoonDetail.getProdNm()); // 에피소드명
+            title.setPostfix(webtoonDetail.getChapter()); // 회차
+            product.setTitle(title);
 
-				// 페이지 수
-				book = new Book();
-				book.setTotalPages(webtoonDetail.getBookPageCnt());
-				product.setBook(book);
+            // 메뉴 정보
+            menu = new Menu();
+            menuList = new ArrayList<Menu>();
+            menu.setId(webtoonDetail.getMenuId());
+            menu.setName(webtoonDetail.getMenuNm());
+            menu.setDesc(webtoonDetail.getMenuDesc());
+            menuList.add(menu);
+            menu = new Menu();
+            menu.setId(webtoonDetail.getTopMenuId());
+            menu.setName(webtoonDetail.getTopMenuNm());
+            menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+            menuList.add(menu);
+            menu = new Menu();
+            menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
+            menu.setId(webtoonDetail.getMetaClsfCd());
+            menuList.add(menu);
+            product.setMenuList(menuList);
 
-				// contributor 작가명
-				contributor = new Contributor();
-				contributor.setName(webtoonDetail.getArtist1Nm());
-				product.setContributor(contributor);
+            // source 정보
+            source = new Source();
+            sourceList = new ArrayList<Source>();
+            source.setType("mainThumbNail");
+            source.setUrl(webtoonDetail.getMainFilePath());
+            sourceList.add(source);
+            source = new Source();
+            String filePath = webtoonDetail.getFilePath();
+            filePath = filePath.substring(0, filePath.lastIndexOf("/")); // 이미지 경로
+            source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+            source.setUrl(filePath);
+            sourceList.add(source);
+            product.setSourceList(sourceList);
 
-				// 업데이트 일자
-				date = new Date();
-				date.setType("updDt");
-				date.setTextFromDate(DateUtils.parseDate(webtoonDetail.getUpdDt()));
-				product.setDate(date);
+            // 페이지 수
+            book = new Book();
+            book.setTotalPages(webtoonDetail.getBookPageCnt());
+            product.setBook(book);
 
-				// 평점, 참여자수
-				accrual = new Accrual();
-				accrual.setScore(webtoonDetail.getAvgEvluScore());
-				accrual.setVoterCount(webtoonDetail.getPaticpersCnt());
-				product.setAccrual(accrual);
+            // contributor 작가명
+            contributor = new Contributor();
+            contributor.setName(webtoonDetail.getArtist1Nm());
+            product.setContributor(contributor);
 
-				// 상품설명
-				product.setProductExplain(webtoonDetail.getProdBaseDesc());
-				product.setProductDetailExplain(webtoonDetail.getProdDtlDesc());
+            // 업데이트 일자
+            date = new Date();
+            date.setType("updDt");
+            date.setTextFromDate(DateUtils.parseDate(webtoonDetail.getUpdDt()));
+            product.setDate(date);
 
-				// 상품 판매상태
-				product.setSalesStatus(webtoonDetail.getProdStatusCd());
+            // 평점, 참여자수
+            accrual = new Accrual();
+            accrual.setScore(webtoonDetail.getAvgEvluScore());
+            accrual.setVoterCount(webtoonDetail.getPaticpersCnt());
+            product.setAccrual(accrual);
 
-				listVO.add(product);
+            // 상품설명
+            product.setProductExplain(webtoonDetail.getProdBaseDesc());
+            product.setProductDetailExplain(webtoonDetail.getProdDtlDesc());
 
-			}
-			commonResponse.setTotalCount(webtoonDetail.getTotalCount());
-			res.setCommonResponse(commonResponse);
-			res.setProductList(listVO);
-		} else {
-			// 조회 결과 없음
-			throw new StorePlatformException("SAC_DSP_0009");
-		}
+            // 상품 판매상태
+            product.setSalesStatus(webtoonDetail.getProdStatusCd());
 
-		return res;
-	}
+            listVO.add(product);
+
+            commonResponse.setTotalCount(webtoonDetail.getTotalCount());
+        }
+
+        res.setCommonResponse(commonResponse);
+        res.setProductList(listVO);
+
+        return res;
+    }
 
 }

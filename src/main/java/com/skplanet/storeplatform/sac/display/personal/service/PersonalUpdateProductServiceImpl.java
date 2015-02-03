@@ -3,10 +3,7 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -508,6 +505,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 							ObjectUtils.toString(updateTargetApp.get("PROD_VER")),
 							((Long) updateTargetApp.get("FILE_SIZE")), null, null,
 							ObjectUtils.toString(updateTargetApp.get("FILE_PATH")));
+                    app.setPackageNameMappedTenant(Arrays.asList("S01", "S02"));
 
 					Update update = this.appGenerator.generateUpdate(
 							new Date(null, (java.util.Date)updateTargetApp.get("LAST_DEPLOY_DT")),

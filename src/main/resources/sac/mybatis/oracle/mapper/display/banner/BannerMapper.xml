@@ -29,9 +29,9 @@
 		                      , 'DP010306' /* 카테고리 배너 */
 		                      , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE LANG_CD = 'ko' AND MENU_ID = JA.BNR_INFO)
 		                      , 'DP010307' /* 운영자 임의추천 배너 */
-		                      , (SELECT LIST_NM FROM TB_DP_LIST WHERE TENANT_ID = 'S01' AND LIST_ID = JA.BNR_INFO)
+		                      , (SELECT LIST_NM FROM TB_DP_LIST WHERE TENANT_ID = #{tenantId} AND LIST_ID = JA.BNR_INFO)
 		                      , 'DP010309' /* 특정 브랜드샵 배너 */
-		                      , (SELECT BRAND_SHOP_NM FROM TB_DP_BRAND_SHOP WHERE TENANT_ID = 'S01' AND BRAND_SHOP_NO = JA.BNR_INFO)
+		                      , (SELECT BRAND_SHOP_NM FROM TB_DP_BRAND_SHOP WHERE TENANT_ID = #{tenantId} AND BRAND_SHOP_NO = JA.BNR_INFO)
 		                      , 'DP010310' /* 내부URL 배너 */
 		                      ,  BNR_NM)
 		             WHEN BNR_MENU_ID = 'DP010926' THEN
@@ -44,11 +44,11 @@
 		                  /* 앱가이드 */
 		                  DECODE(BNR_INFO_TYPE_CD
 		                      , 'DP010301' /* 외부URL 배너 */
-		                      , (SELECT LIST_NM FROM TB_DP_LIST WHERE TENANT_ID = 'S01' AND LIST_ID = JA.BNR_INFO)
+		                      , (SELECT LIST_NM FROM TB_DP_LIST WHERE TENANT_ID = #{tenantId} AND LIST_ID = JA.BNR_INFO)
 		                      , 'DP010303' /* 상품 배너 */
 		                      , (SELECT PROD_NM FROM TB_DP_PROD_DESC WHERE LANG_CD = 'ko' AND PROD_ID = JA.BNR_INFO)
 		                      , 'DP010312' /* 테마추천 배너 */
-		                      , (SELECT LIST_NM FROM TB_DP_LIST WHERE TENANT_ID = 'S01' AND LIST_ID = JA.BNR_INFO)
+		                      , (SELECT LIST_NM FROM TB_DP_LIST WHERE TENANT_ID = #{tenantId} AND LIST_ID = JA.BNR_INFO)
 		                      ,  BNR_NM)
 		             ELSE BNR_NM END AS BNR_NM
 		      , CASE WHEN JA.BNR_INFO_TYPE_CD = 'DP010311' THEN

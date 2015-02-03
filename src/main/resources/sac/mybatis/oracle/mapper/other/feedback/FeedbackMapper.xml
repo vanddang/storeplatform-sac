@@ -908,7 +908,7 @@
                  AND  a.prod_id = #{prodId}             /* 상품 ID */
                  AND  a.prod_rshp_cd = 'DP010802'       /* 상품 관계 코드(채널/에피소드 관계) */
                  AND  c.prod_status_cd = 'PD000403'     /* 상품 상태 코드(판매중) */
-                 AND  c.tenant_id = 'S01'               /* 테넌트 ID */
+                 AND  c.tenant_id = #{tenantId}               /* 테넌트 ID */
                  AND  e.use_yn = 'Y'                    /* 사용 여부 */
                GROUP 
                   BY  a.prod_id
@@ -951,7 +951,7 @@
          AND  a.prod_id = #{prodId}             /* 상품 ID */
          AND  a.prod_rshp_cd = 'DP010802'       /* 상품 관계 코드(채널/에피소드 관계) */
          AND  c.prod_status_cd = 'PD000403'     /* 상품 상태 코드(판매중) */
-         AND  c.tenant_id = 'S01'               /* 테넌트 ID */
+         AND  c.tenant_id = #{tenantId}               /* 테넌트 ID */
          AND  e.use_yn = 'Y'                    /* 사용 여부 */
        GROUP 
           BY  c.tenant_id, a.prod_id

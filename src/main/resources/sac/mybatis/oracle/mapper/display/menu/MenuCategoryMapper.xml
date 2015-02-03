@@ -339,7 +339,7 @@
                                 AND A1.RANK_START_DAY = (
                                     SELECT MAX(TO_CHAR(A2.STD_DT, 'YYYYMMDD'))
                                     FROM TB_DP_BATCH_COMPT A2
-                                    WHERE A2.TENANT_ID = 'S01'
+                                    WHERE A2.TENANT_ID = #{tenantId}
                                     AND A2.BATCH_ID = 'MELON_DP004905'
                                     )
                                 UNION ALL
@@ -349,7 +349,7 @@
                                 AND  A1.RANK_START_DAY = (
                                     SELECT MAX(TO_CHAR(A2.STD_DT, 'YYYYMMDD'))
                                     FROM TB_DP_BATCH_COMPT A2
-                                    WHERE A2.TENANT_ID = 'S01'
+                                    WHERE A2.TENANT_ID = #{tenantId}
                                     AND A2.BATCH_ID = 'MELON_DP004904'
                                     )
                                   ) C /* 에피 */

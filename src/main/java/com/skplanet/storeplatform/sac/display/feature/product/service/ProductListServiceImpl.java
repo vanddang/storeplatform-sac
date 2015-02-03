@@ -75,7 +75,7 @@ public class ProductListServiceImpl implements ProductListService{
 		ProductListSacRes response = new ProductListSacRes();
 
 		String stdDt = getBatchStdDateStringFromDB(requestVO, header);
-		ListProductCriteria lpCriteria = new ListProductCriteria(requestVO, stdDt);
+		ListProductCriteria lpCriteria = new ListProductCriteria(requestVO, header.getTenantHeader().getTenantId(), stdDt);
 
 		while(true) {
 			List<ListProduct> prodListFromDB = commonDAO.queryForList( "ProductList.selectListProdList", lpCriteria, ListProduct.class);

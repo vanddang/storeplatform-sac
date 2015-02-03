@@ -15,7 +15,7 @@
 					IMG_PATH, ETC_PROP
 			  FROM TB_DP_LIST LI
 			 WHERE 1=1
-				AND TENANT_ID='S01'
+				AND TENANT_ID=#{tenantId}
 				<if test="listId != null">    
 				AND LIST_ID = #{listId}
 				</if>
