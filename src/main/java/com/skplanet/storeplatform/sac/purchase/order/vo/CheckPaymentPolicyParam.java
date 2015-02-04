@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.vo;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -25,6 +27,8 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	private String userKey;
 	private String deviceKey;
 	private String deviceId;
+	private String marketDeviceKey; // SAP
+	private String userAuthKey; // SAP
 	private String recvTenantId;
 	private String recvUserKey;
 	private String recvDeviceKey;
@@ -43,6 +47,8 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	private boolean autoPrchs; // 자동결제 상품여부
 	private boolean s2sAutoPrchs; // IAP S2S 자동결제 상품여부
 	private boolean s2s; // IAP S2S 상품여부
+
+	private List<String> sapPolicyCdList;
 
 	/**
 	 * @return the tenantId
@@ -117,6 +123,36 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return the marketDeviceKey
+	 */
+	public String getMarketDeviceKey() {
+		return this.marketDeviceKey;
+	}
+
+	/**
+	 * @param marketDeviceKey
+	 *            the marketDeviceKey to set
+	 */
+	public void setMarketDeviceKey(String marketDeviceKey) {
+		this.marketDeviceKey = marketDeviceKey;
+	}
+
+	/**
+	 * @return the userAuthKey
+	 */
+	public String getUserAuthKey() {
+		return this.userAuthKey;
+	}
+
+	/**
+	 * @param userAuthKey
+	 *            the userAuthKey to set
+	 */
+	public void setUserAuthKey(String userAuthKey) {
+		this.userAuthKey = userAuthKey;
 	}
 
 	/**
@@ -342,6 +378,21 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	 */
 	public void setS2s(boolean s2s) {
 		this.s2s = s2s;
+	}
+
+	/**
+	 * @return the sapPolicyCdList
+	 */
+	public List<String> getSapPolicyCdList() {
+		return this.sapPolicyCdList;
+	}
+
+	/**
+	 * @param sapPolicyCdList
+	 *            the sapPolicyCdList to set
+	 */
+	public void setSapPolicyCdList(List<String> sapPolicyCdList) {
+		this.sapPolicyCdList = sapPolicyCdList;
 	}
 
 }

@@ -3,11 +3,13 @@ package com.skplanet.storeplatform.sac.purchase.order.vo;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 public class VerifyOrderInfo extends CommonInfo {
-	private static final long serialVersionUID = 201402261L;
+	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // 테넌트 ID
 	private String systemId; // 시스템 ID
 	private String prchsId; // 구매ID
+	private String marketDeviceKey; // 타 스토어 디바이스 Key
+	private String userAuthKey; // 인증 Key
 
 	/**
 	 * @return the tenantId
@@ -52,6 +54,36 @@ public class VerifyOrderInfo extends CommonInfo {
 	 */
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the marketDeviceKey
+	 */
+	public String getMarketDeviceKey() {
+		return this.marketDeviceKey;
+	}
+
+	/**
+	 * @param marketDeviceKey
+	 *            the marketDeviceKey to set
+	 */
+	public void setMarketDeviceKey(String marketDeviceKey) {
+		this.marketDeviceKey = marketDeviceKey;
+	}
+
+	/**
+	 * @return the userAuthKey
+	 */
+	public String getUserAuthKey() {
+		return this.userAuthKey;
+	}
+
+	/**
+	 * @param userAuthKey
+	 *            the userAuthKey to set
+	 */
+	public void setUserAuthKey(String userAuthKey) {
+		this.userAuthKey = userAuthKey;
 	}
 
 }

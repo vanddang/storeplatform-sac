@@ -51,6 +51,13 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String SACINNER_MEMBER_RESULT_NOTFOUND = "SC_MEM_9982";
 	public static final String SACINNER_MEMBER_RESULT_NOTEXIST_KEY = "SC_MEM_9995"; // 회원키 없음
 
+	/** SAP 결제정책코드 값 */
+	public static final String SAP_POLICY_LIMIT_ALL = "LIMIT_ALL"; // 전체 결제수단 결제 제한
+	public static final String SAP_POLICY_LIMIT_PHONEBILL = "LIMIT_PHONEBILL"; // 후불결제 제한(전체 상품)
+	public static final String SAP_POLICY_LIMIT_IAP_PHONEBILL = "LIMIT_IAP_PHONEBILL"; // In-App 상품 후불결제 제한
+	public static final String SAP_POLICY_LIMIT_CREDIT = "LIMIT_CREDIT"; // 신용카드 결제 불가
+	public static final String SAP_POLICY_TEST_PHONE = "TEST_PHONE"; // 시험폰
+
 	/** 무제한 일시 */
 	public static final String UNLIMITED_DATE = "99991231235959";
 
@@ -89,6 +96,8 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PHONE_ADJUST_REASON_LIMIT = "L08"; // 후불 한도금액
 	public static final String PHONE_ADJUST_REASON_RECV_LIMIT = "L09"; // 후불 선물수신 한도금액
 	public static final String PHONE_ADJUST_REASON_SHOPPING_RECV_USERPART_LIMIT = "L10"; // 후불 쇼핑상품 선물수신 회원 별 강제적용 한도금액
+	public static final String PHONE_ADJUST_REASON_SAP_LIMIT_PHONEBILL = "L11"; // SAP 후불결제 제한(전체 상품)
+	public static final String PHONE_ADJUST_REASON_SAP_LIMIT_IAP_PHONEBILL = "L12"; // SAP In-App상품 후불결제 제한
 
 	/** 쇼핑 상품 판매자 디폴트 정보 */
 	public static final String SHOPPING_SELLER_DEFAULT_NAME = "Tstore"; // 판매자명

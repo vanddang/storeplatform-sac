@@ -707,7 +707,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		String deferredPaymentType = PurchaseConstants.DEFERRED_PAYMENT_TYPE_NORMAL;
 
 		CheckPaymentPolicyResult checkPaymentPolicyResult = this.checkPaymentPolicy(prchsDtlMoreList,
-				verifyOrderInfo.getSystemId(), reservedDataMap);
+				verifyOrderInfo.getSystemId(), verifyOrderInfo.getMarketDeviceKey(), verifyOrderInfo.getUserAuthKey(),
+				reservedDataMap);
 
 		if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)
 				&& StringUtils.equals(reservedDataMap.get("telecom"), PurchaseConstants.TELECOM_SKT) == false) {
@@ -1973,18 +1974,20 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * <pre> 결제 정책 체크. </pre>
 	 * 
-	 * @param prchsDtlMore 구매 정보
+	 * @param prchsDtlMoreList 구매 정보
 	 * 
-	 * @param telecom 통신사
+	 * @param checkSystemId 구매인증 요청한 시스템ID
 	 * 
-	 * @param payDeviceId 결제 MDN
+	 * @param marketDeviceKey SAP 통신사 디바이스 고유 Key
 	 * 
-	 * @param useDeviceId 이용 MDN
+	 * @param userAuthKey SAP 통신사 디바이스 고유 Key 의 hash 값. SHA256 with salt 권장
+	 * 
+	 * @param reservedDataMap 구매예약 정보
 	 * 
 	 * @return 결제 정책 체크 결과
 	 */
 	private CheckPaymentPolicyResult checkPaymentPolicy(List<PrchsDtlMore> prchsDtlMoreList, String checkSystemId,
-			Map<String, String> reservedDataMap) {
+			String marketDeviceKey, String userAuthKey, Map<String, String> reservedDataMap) {
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
 		// TAKTODO:: 상품별 정책은 상품 1개일 경우에만 적용. IAP/쇼핑 상품은 하나의 상품만 구매 가능하다는 전제.
@@ -2013,6 +2016,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		policyCheckParam.setParentProdId(checkParentProdId);
 		policyCheckParam.setProdCaseCd(reservedDataMap.get("prodCaseCd"));
 		policyCheckParam.setCmpxProdClsfCd(reservedDataMap.get("cmpxProdClsfCd"));
+		policyCheckParam.setMarketDeviceKey(marketDeviceKey); // SAP
+		policyCheckParam.setUserAuthKey(userAuthKey); // SAP
 		if (StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_GIFT_CD)) {
 			policyCheckParam.setUserKey(prchsDtlMore.getSendInsdUsermbrNo());
 			policyCheckParam.setDeviceKey(prchsDtlMore.getSendInsdDeviceId());

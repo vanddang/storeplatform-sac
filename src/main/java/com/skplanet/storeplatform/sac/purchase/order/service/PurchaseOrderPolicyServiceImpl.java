@@ -22,6 +22,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.sap.sci.SapPurchaseSCI;
+import com.skplanet.storeplatform.external.client.sap.vo.CheckPurchasePolicyEcReq;
+import com.skplanet.storeplatform.external.client.sap.vo.CheckPurchasePolicyEcRes;
+import com.skplanet.storeplatform.external.client.sap.vo.CheckPurchasePolicyInfoEc;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
@@ -51,6 +55,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 	@Autowired
 	private PurchaseOrderSCI purchaseOrderSCI;
+	@Autowired
+	private SapPurchaseSCI sapPurchaseSCI;
 	@Autowired
 	private PurchaseOrderSearchSCI purchaseOrderSearchSCI;
 	@Autowired
@@ -347,7 +353,28 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			checkPaymentPolicyResult.setDeferredPaymentType(PurchaseConstants.DEFERRED_PAYMENT_TYPE_NORMAL);
 
 		} else {
-			checkPaymentPolicyResult = this.checkPhonePaymentPolicy(checkPaymentPolicyParam);
+			// --------------------------------------------------------------------------------------------------
+			// 관련 정책 목록 조회
+			Map<String, List<PurchaseTenantPolicy>> policyListMap = this.purchaseTenantPolicyService
+					.searchPurchaseTenantPolicyListByMap(checkPaymentPolicyParam.getTenantId(),
+							checkPaymentPolicyParam.getTenantProdGrpCd());
+			this.logger.info("PRCHS,ORDER,SAC,POLICY,LISTMAP,{}", policyListMap);
+
+			// SAP 결제정책 조회
+			List<String> sapPolicyCdList = null;
+			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SAP_CHECK_POLICY)) {
+				sapPolicyCdList = this.checkSapPurchasePolicy(checkPaymentPolicyParam.getTenantId(),
+						checkPaymentPolicyParam.getMarketDeviceKey(), checkPaymentPolicyParam.getUserAuthKey());
+				if (CollectionUtils.isNotEmpty(sapPolicyCdList)
+						&& sapPolicyCdList.contains(PurchaseConstants.SAP_POLICY_LIMIT_ALL)) { // 모든결제차단
+					throw new StorePlatformException("SAC_PUR_6103");
+				}
+
+				policyListMap.remove(PurchaseConstants.POLICY_ID_SAP_CHECK_POLICY);
+			}
+			checkPaymentPolicyParam.setSapPolicyCdList(sapPolicyCdList);
+
+			checkPaymentPolicyResult = this.checkPhonePaymentPolicy(checkPaymentPolicyParam, policyListMap);
 
 			// 통신사 결제 처리 타입
 			if (checkPaymentPolicyResult.isTelecomTestMdn()) {
@@ -378,9 +405,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		// 이용가능 결제수단 재정의
-		String paymentAdjInfo = this.adjustPaymethod(phonePaymethodInfo, checkPaymentPolicyParam);
-
-		checkPaymentPolicyResult.setPaymentAdjInfo(paymentAdjInfo);
+		checkPaymentPolicyResult.setPaymentAdjInfo(this.adjustPaymethod(phonePaymethodInfo, checkPaymentPolicyParam));
 
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}",
 				ReflectionToStringBuilder.toString(checkPaymentPolicyResult, ToStringStyle.SHORT_PREFIX_STYLE));
@@ -392,13 +417,53 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 	/*
 	 * 
+	 * <pre> SAP 결제정책 조회. </pre>
+	 * 
+	 * @param tenantId 테넌트ID
+	 * 
+	 * @param marketDeviceKey 통신사 디바이스 Key
+	 * 
+	 * @param deviceKeyAuth 통신사 디바이스 Key 인증값
+	 * 
+	 * @return 조회된 결제정책 코드값 리스트
+	 */
+	private List<String> checkSapPurchasePolicy(String tenantId, String marketDeviceKey, String deviceKeyAuth) {
+		CheckPurchasePolicyEcReq checkPurchasePolicyEcReq = new CheckPurchasePolicyEcReq();
+		checkPurchasePolicyEcReq.setTenantId(tenantId);
+		checkPurchasePolicyEcReq.setDeviceKey(marketDeviceKey);
+		checkPurchasePolicyEcReq.setDeviceKeyAuth(deviceKeyAuth);
+
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,SAP,REQ,{}",
+				ReflectionToStringBuilder.toString(checkPurchasePolicyEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+		CheckPurchasePolicyEcRes checkPurchasePolicyEcRes = this.sapPurchaseSCI
+				.checkPurchasePolicy(checkPurchasePolicyEcReq);
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,SAP,RES,{}",
+				ReflectionToStringBuilder.toString(checkPurchasePolicyEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+
+		List<String> policyCodeList = null;
+		if (CollectionUtils.isNotEmpty(checkPurchasePolicyEcRes.getPolicyList())) {
+			policyCodeList = new ArrayList<String>();
+
+			for (CheckPurchasePolicyInfoEc policy : checkPurchasePolicyEcRes.getPolicyList()) {
+				policyCodeList.add(policy.getPolicyCode());
+			}
+		}
+
+		return policyCodeList;
+	}
+
+	/*
+	 * 
 	 * <pre> 통신사 후불 결제 진행 시 관련 정책 체크. </pre>
 	 * 
 	 * @param checkPaymentPolicyParam 정책 체크 대상 데이터
 	 * 
+	 * @param policyListMap 조회한 결제정책
+	 * 
 	 * @return 정책 체크 결과
 	 */
-	private CheckPaymentPolicyResult checkPhonePaymentPolicy(CheckPaymentPolicyParam checkPaymentPolicyParam) {
+	private CheckPaymentPolicyResult checkPhonePaymentPolicy(CheckPaymentPolicyParam checkPaymentPolicyParam,
+			Map<String, List<PurchaseTenantPolicy>> policyListMap) {
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,PHONE,START,{}",
 				ReflectionToStringBuilder.toString(checkPaymentPolicyParam, ToStringStyle.SHORT_PREFIX_STYLE));
 
@@ -406,13 +471,6 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_NO_LIMIT);
 
 		boolean bTstore = StringUtils.equals(checkPaymentPolicyParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE);
-
-		// --------------------------------------------------------------------------------------------------
-		// 관련 정책 목록 조회
-
-		Map<String, List<PurchaseTenantPolicy>> policyListMap = this.purchaseTenantPolicyService
-				.searchPurchaseTenantPolicyListByMap(checkPaymentPolicyParam.getTenantId(),
-						checkPaymentPolicyParam.getTenantProdGrpCd());
 
 		// --------------------------------------------------------------------------------------------------
 		// UAPS Mapping정보 조회
@@ -515,8 +573,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// --------------------------------------------------------------------------------------------------
 		// SKT 시험폰 체크 (참고, SKT시험폰이라면 100% 법인폰)
 
+		// 회원측 관리 SAP 시험폰 정책 조회
 		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SAP_TEST_DEVICE)) {
-			// 회원측 관리 SAP 시험폰 정책 조회
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_SAP_TEST_DEVICE);
 
 			policyListMap.remove(PurchaseConstants.POLICY_ID_SAP_TEST_DEVICE);
@@ -525,7 +583,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		if (this.isTelecomTestMdn(checkPaymentPolicyParam.getTenantId(), sktUapsMappingInfo,
-				checkPaymentPolicyParam.getDeviceId(), policyList)) {
+				checkPaymentPolicyParam.getDeviceId(), policyList, checkPaymentPolicyParam.getSapPolicyCdList())) {
 			checkPaymentPolicyResult.setTelecomTestMdn(true);
 			boolean bWhite = false;
 
@@ -555,11 +613,34 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		}
 
 		// --------------------------------------------------------------------------------------------------
-		// 후불 쇼핑상품 한도금액 제한
+		// 여기서부터는 ::: 후불 한도 제한 체크
 
 		checkPaymentPolicyResult.setPhoneRestAmt(checkPaymentPolicyParam.getPaymentTotAmt());
 
 		Double phoneRestAmtObj = null;
+
+		// --
+		// SAP 결제정책 체크
+
+		if (CollectionUtils.isNotEmpty(checkPaymentPolicyParam.getSapPolicyCdList())) {
+			if (checkPaymentPolicyParam.getSapPolicyCdList().contains(PurchaseConstants.SAP_POLICY_LIMIT_IAP_PHONEBILL)) {
+				checkPaymentPolicyResult
+						.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SAP_LIMIT_IAP_PHONEBILL);
+				checkPaymentPolicyResult.setPhoneRestAmt(0.0);
+
+				return checkPaymentPolicyResult;
+
+			} else if (checkPaymentPolicyParam.getSapPolicyCdList().contains(
+					PurchaseConstants.SAP_POLICY_LIMIT_PHONEBILL)) {
+				checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SAP_LIMIT_PHONEBILL);
+				checkPaymentPolicyResult.setPhoneRestAmt(0.0);
+
+				return checkPaymentPolicyResult;
+			}
+		}
+
+		// --
+		// 후불 쇼핑상품 한도금액 제한
 
 		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_SHOPPING_PRCHS_LIMIT)) {
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_SHOPPING_PRCHS_LIMIT);
@@ -637,7 +718,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyListMap.remove(PurchaseConstants.POLICY_ID_PHONE_SHOPPING_PRCHS_LIMIT);
 		}
 
-		// --------------------------------------------------------------------------------------------------
+		// --
 		// 통신사 후불 한도금액 제한
 
 		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_PRCHS_LIMIT)) {
@@ -666,7 +747,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyListMap.remove(PurchaseConstants.POLICY_ID_PHONE_PRCHS_LIMIT);
 		}
 
-		// --------------------------------------------------------------------------------------------------
+		// --
 		// SKT 후불 선물수신 한도금액 제한
 
 		if (StringUtils.isNotBlank(checkPaymentPolicyParam.getRecvTenantId())) {
@@ -859,7 +940,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return SKT 시험폰 여부: true-SKT 시험폰, false-SKT 시험폰 아님
 	 */
 	private boolean isTelecomTestMdn(String tenantId, UserEcRes sktUapsMappingInfo, String deviceId,
-			List<PurchaseTenantPolicy> policyList) {
+			List<PurchaseTenantPolicy> policyList, List<String> sapPolicyCdList) {
 		boolean bTelecomTestMdn = false;
 
 		// UAPS 조회
@@ -878,6 +959,13 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		if (bTelecomTestMdn) {
 			return true;
+		}
+
+		// SAP 결제정책 조회 체크
+		if (CollectionUtils.isNotEmpty(sapPolicyCdList)) {
+			if (sapPolicyCdList.contains(PurchaseConstants.SAP_POLICY_TEST_PHONE)) {
+				return true;
+			}
 		}
 
 		// 회원DB 관리 조회
@@ -1246,6 +1334,24 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			sbPaymethodInfo.append("11:0:0;");
 		} else {
 			sbPaymethodInfo.append(phonePaymethodInfo).append(";12:0:0;");
+		}
+
+		if (paymentAdjustInfo.contains("13:0:0") == false) { // SAP 결제정책 : 신용카드 제한
+			if (CollectionUtils.isNotEmpty(checkPaymentPolicyParam.getSapPolicyCdList())
+					&& checkPaymentPolicyParam.getSapPolicyCdList().contains(PurchaseConstants.SAP_POLICY_LIMIT_CREDIT)) {
+				sbPaymethodInfo.append("13:0:0;");
+				int pos13 = paymentAdjustInfo.startsWith("13:") ? 0 : (paymentAdjustInfo.indexOf(";13:") + 1);
+				if (pos13 >= 0) {
+					String info13 = "";
+					int endPos = paymentAdjustInfo.indexOf(";", pos13);
+					if (endPos >= 0) {
+						info13 = paymentAdjustInfo.substring(pos13, endPos);
+					} else {
+						info13 = paymentAdjustInfo.substring(pos13);
+					}
+					paymentAdjustInfo = paymentAdjustInfo.replaceAll(info13, "");
+				}
+			}
 		}
 
 		sbPaymethodInfo.append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
