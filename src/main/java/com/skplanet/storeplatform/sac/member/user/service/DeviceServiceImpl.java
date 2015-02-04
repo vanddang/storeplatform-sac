@@ -45,10 +45,10 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchRealNameResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TransferDeviceSetInfoRequest;
@@ -71,6 +71,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentation
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
@@ -83,6 +84,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceListSacR
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
@@ -149,65 +151,46 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public CreateDeviceRes regDevice(SacRequestHeader requestHeader, CreateDeviceReq req) {
 
-		/* 헤더 정보 셋팅 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
-		String userKey = req.getUserKey();
-		String deviceId = req.getDeviceInfo().getDeviceId();
-
 		/* 모번호 조회 */
-		deviceId = this.commService.getOpmdMdnInfo(deviceId);
+		req.getDeviceInfo().setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceInfo().getDeviceId()));
 
 		/* 회원 정보 조회 */
-		SearchUserResponse schUserRes = this.srhUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
+		UserInfo userInfo = this.srhUser(requestHeader, req.getUserKey());
 
 		/* 등록 가능한 휴대기기 개수 초과 */
-		if (StringUtils.equals(req.getRegMaxCnt(), "0")
-				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr()
-						.getDeviceCount()) >= Integer.parseInt(req.getRegMaxCnt()))) {
+		if (Integer.parseInt(userInfo.getDeviceCount()) >= Integer.parseInt(req.getRegMaxCnt())) {
 			throw new StorePlatformException("SAC_MEM_1501");
 		}
 
 		/* 이미 등록된 휴대기기 체크 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 		listDeviceReq.setIsMainDevice("N");
-		listDeviceReq.setUserKey(userKey);
-
+		listDeviceReq.setUserKey(req.getUserKey());
 		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
-		if (listDeviceRes.getDeviceInfoList() != null) {
-			List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
-			if (deviceInfoList != null) {
-				for (DeviceInfo deviceInfo : deviceInfoList) {
-					if (StringUtils.equals(deviceInfo.getDeviceId(), deviceId)) {
-						throw new StorePlatformException("SAC_MEM_1502");
-					}
+		if (listDeviceRes != null && listDeviceRes.getDeviceInfoList() != null) {
+			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
+				if (StringUtils.equals(deviceInfo.getDeviceId(), req.getDeviceInfo().getDeviceId())) {
+					throw new StorePlatformException("SAC_MEM_1502");
 				}
 			}
 		}
 
-		DeviceInfo deviceInfo = req.getDeviceInfo();
-
 		/* device header 값 셋팅(단말모델코드, OS버젼, SC버젼) */
-		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
-
-		/* device request 값 셋팅(단말모텔코드). */
-		deviceInfo.setDeviceModelNo(req.getDeviceInfo().getDeviceModelNo());
+		req.getDeviceInfo().setTenantId(requestHeader.getTenantHeader().getTenantId());
+		req.getDeviceInfo().setUserKey(req.getUserKey());
+		req.setDeviceInfo(this.setDeviceHeader(requestHeader.getDeviceHeader(), req.getDeviceInfo()));
 
 		/* 휴대기기 주요정보 확인 */
-		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		deviceInfo.setUserKey(userKey);
-		deviceInfo = this.getDeviceMajorInfo(deviceInfo);
+		req.setDeviceInfo(this.getDeviceMajorInfo(req.getDeviceInfo()));
 
 		/* 휴대기기 등록 처리 */
-		String deviceKey = this.regDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey,
-				deviceInfo);
+		String deviceKey = this.regDeviceInfo(requestHeader.getTenantHeader().getSystemId(), requestHeader
+				.getTenantHeader().getTenantId(), req.getUserKey(), req.getDeviceInfo());
 
 		CreateDeviceRes res = new CreateDeviceRes();
-		res.setDeviceId(deviceId);
+		res.setDeviceId(req.getDeviceInfo().getDeviceId());
+		res.setUserKey(req.getUserKey());
 		res.setDeviceKey(deviceKey);
-		res.setUserKey(userKey);
 
 		return res;
 
@@ -551,8 +534,18 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 5. 통합회원에 휴대기기 등록시 무선회원 해지 */
-		SearchUserResponse schUserRes = this.srhUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
-		if (schUserRes.getUserMbr().getImSvcNo() != null) {
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(userKey);
+		keySearchList.add(keySchUserKey);
+		SearchExtentUserRequest searchExtentUserRequest = new SearchExtentUserRequest();
+		searchExtentUserRequest.setCommonRequest(commonRequest);
+		searchExtentUserRequest.setKeySearchList(keySearchList);
+		searchExtentUserRequest.setUserInfoYn("Y");
+		SearchExtentUserResponse schUserRes = this.userSCI.searchExtentUser(searchExtentUserRequest);
+
+		if (StringUtils.isNotBlank(schUserRes.getUserMbr().getImSvcNo())) {
 
 			try {
 
@@ -1094,35 +1087,32 @@ public class DeviceServiceImpl implements DeviceService {
 	/**
 	 * SC회원정보 조회.
 	 * 
-	 * @param commonRequest
-	 *            CommonRequest
-	 * @param keyType
-	 *            조회타입
-	 * @param keyString
-	 *            조회값
-	 * @return SearchUserResponse
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userKey
+	 *            String
+	 * @return UserInfo
 	 */
-	public SearchUserResponse srhUser(CommonRequest commonRequest, String keyType, String keyString) {
-		SearchUserRequest schUserReq = new SearchUserRequest();
-		schUserReq.setCommonRequest(commonRequest);
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(keyType);
-		key.setKeyString(keyString);
-		keySearchList.add(key);
-		schUserReq.setKeySearchList(keySearchList);
+	public UserInfo srhUser(SacRequestHeader requestHeader, String userKey) {
+
+		DetailReq detailReq = new DetailReq();
+		detailReq.setUserKey(userKey);
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+		DetailV2Res detailRes = null;
 
 		try {
-			return this.userSCI.searchUser(schUserReq);
+			detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+			return detailRes.getUserInfo();
 		} catch (StorePlatformException ex) {
 			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)
 					|| ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_USERKEY)) {
-				throw new StorePlatformException("SAC_MEM_0003", "userKey", keyString);
+				throw new StorePlatformException("SAC_MEM_0003", "userKey", userKey);
 			} else {
 				throw ex;
 			}
 		}
-
 	}
 
 	/*

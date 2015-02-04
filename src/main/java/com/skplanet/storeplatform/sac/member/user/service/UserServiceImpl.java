@@ -1,8 +1,5 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +11,13 @@ import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcReq;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -52,6 +48,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserSCI userSCI;
 
+	@Autowired
+	private UserSearchService userSearchService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -62,32 +61,21 @@ public class UserServiceImpl implements UserService {
 	public void modProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) {
 
 		/* 회원정보 조회 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+		DetailReq detailReq = new DetailReq();
+		detailReq.setUserKey(userKey);
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+		DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-		SearchUserRequest schUserReq = new SearchUserRequest();
-		schUserReq.setCommonRequest(commonRequest);
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		key.setKeyString(userKey);
-		keySearchList.add(key);
-		schUserReq.setKeySearchList(keySearchList);
-		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
-
-		if (!StringUtil.equals(schUserRes.getUserMbr().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
-			/* 휴대기기 목록 조회 */
-			ListDeviceReq listDeviceReq = new ListDeviceReq();
-			listDeviceReq.setIsMainDevice("N");
-			listDeviceReq.setUserKey(userKey);
+		if (!StringUtil.equals(detailRes.getUserInfo().getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
 			String userPhoneStr = "";
 
-			ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
-			if (listDeviceRes.getDeviceInfoList() != null) {
+			if (detailRes.getDeviceInfoList() != null) {
 				StringBuffer sbUserPhone = new StringBuffer();
-				for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
+				for (DeviceInfo deviceInfo : detailRes.getDeviceInfoList()) {
 
 					String imMngNum = deviceInfo.getSvcMangNum();
 					String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
@@ -108,10 +96,10 @@ public class UserServiceImpl implements UserService {
 				userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
 			}
 
-			if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
+			if (StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) { // 통합회원
 				UpdateAdditionalInfoEcReq req = new UpdateAdditionalInfoEcReq();
 				req.setUserAuthKey(userAuthKey);
-				req.setKey(schUserRes.getUserMbr().getImSvcNo());
+				req.setKey(detailRes.getUserInfo().getImSvcNo());
 				req.setUserMdn(userPhoneStr);
 				LOGGER.info("{} updateAdditionalInfo userMdn : {}", userKey, userPhoneStr);
 				this.imIdpSCI.updateAdditionalInfo(req);
@@ -119,7 +107,7 @@ public class UserServiceImpl implements UserService {
 				ModifyProfileEcReq req = new ModifyProfileEcReq();
 				req.setKeyType("2"); // idp키로 조회
 				req.setUserAuthKey(userAuthKey);
-				req.setKey(schUserRes.getUserMbr().getImMbrNo());
+				req.setKey(detailRes.getUserInfo().getImMbrNo());
 				req.setUserPhone(userPhoneStr);
 				LOGGER.info("{} modifyProfile userMdn : {}", userKey, userPhoneStr);
 				this.idpSCI.modifyProfile(req);
