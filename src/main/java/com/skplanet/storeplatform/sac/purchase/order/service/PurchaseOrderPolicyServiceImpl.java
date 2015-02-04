@@ -455,6 +455,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			}
 		}
 
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,SAP,POLICYLIST,{}", policyCodeList);
 		return policyCodeList;
 	}
 
