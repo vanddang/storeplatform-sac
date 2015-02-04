@@ -358,7 +358,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			Map<String, List<PurchaseTenantPolicy>> policyListMap = this.purchaseTenantPolicyService
 					.searchPurchaseTenantPolicyListByMap(checkPaymentPolicyParam.getTenantId(),
 							checkPaymentPolicyParam.getTenantProdGrpCd());
-			this.logger.info("PRCHS,ORDER,SAC,POLICY,LISTMAP,{}", policyListMap);
+			// this.logger.info("PRCHS,ORDER,SAC,POLICY,LISTMAP,{}", policyListMap);
 
 			// SAP 결제정책 조회
 			List<String> sapPolicyCdList = null;
