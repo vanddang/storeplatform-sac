@@ -435,8 +435,14 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,SAP,REQ,{}",
 				ReflectionToStringBuilder.toString(checkPurchasePolicyEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
-		CheckPurchasePolicyEcRes checkPurchasePolicyEcRes = this.sapPurchaseSCI
-				.checkPurchasePolicy(checkPurchasePolicyEcReq);
+
+		CheckPurchasePolicyEcRes checkPurchasePolicyEcRes = null;
+		try {
+			checkPurchasePolicyEcRes = this.sapPurchaseSCI.checkPurchasePolicy(checkPurchasePolicyEcReq);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_PUR_7220", e);
+		}
+
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,SAP,RES,{}",
 				ReflectionToStringBuilder.toString(checkPurchasePolicyEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 
