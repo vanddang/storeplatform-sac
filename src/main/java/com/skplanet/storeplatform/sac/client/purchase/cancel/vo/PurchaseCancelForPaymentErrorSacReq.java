@@ -28,7 +28,7 @@ public class PurchaseCancelForPaymentErrorSacReq extends PurchaseCommonSacReq {
 	private String reqUserId;
 
 	@NotBlank
-	@Pattern(regexp = "^OR000440|^OR000443|^OR000447")
+	@Pattern(regexp = "^OR000440|^OR000443|^OR000447|^OR000452")
 	private String cancelReqPathCd;
 
 	@NotBlank
