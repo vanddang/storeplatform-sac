@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -17,6 +19,7 @@ public class AuthorizeSacReq extends CommonInfo {
 	/**
 	 * 기기 ID.
 	 */
+	@NotEmpty
 	private String deviceId;
 
 	/**
