@@ -630,16 +630,16 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// SAP 결제정책 체크
 
 		if (CollectionUtils.isNotEmpty(checkPaymentPolicyParam.getSapPolicyCdList())) {
-			if (checkPaymentPolicyParam.getSapPolicyCdList().contains(PurchaseConstants.SAP_POLICY_LIMIT_IAP_PHONEBILL)) {
-				checkPaymentPolicyResult
-						.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SAP_LIMIT_IAP_PHONEBILL);
+			if (checkPaymentPolicyParam.getSapPolicyCdList().contains(PurchaseConstants.SAP_POLICY_LIMIT_PHONEBILL)) {
+				checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SAP_LIMIT_PHONEBILL);
 				checkPaymentPolicyResult.setPhoneRestAmt(0.0);
 
 				return checkPaymentPolicyResult;
 
 			} else if (checkPaymentPolicyParam.getSapPolicyCdList().contains(
-					PurchaseConstants.SAP_POLICY_LIMIT_PHONEBILL)) {
-				checkPaymentPolicyResult.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SAP_LIMIT_PHONEBILL);
+					PurchaseConstants.SAP_POLICY_LIMIT_IAP_PHONEBILL)) {
+				checkPaymentPolicyResult
+						.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SAP_LIMIT_IAP_PHONEBILL);
 				checkPaymentPolicyResult.setPhoneRestAmt(0.0);
 
 				return checkPaymentPolicyResult;
