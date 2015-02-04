@@ -145,12 +145,21 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			if (!this.setTbDpProdDescListValue(couponInfo, itemInfoList, tbDpProdDescList, couponReq.getCudType())) {
 				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
-
+			
+			// TB_DP_PROD_CATALOG_MAPG 값 셋팅
+			// log.info("■■■■■ setTbDpProdCatalogMapgInfoValue 시작 ■■■■■");
+			if (!this.setTbDpProdCatalogMapgInfoValue(couponInfo, itemInfoList, tbDpProdCatalogMapgList,
+					couponReq.getCudType())) {
+				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
+			}
+			
+			
 			// TB_DP_PROD_RSHP 값 셋팅
 			// log.info("■■■■■ setTbDpProdRshpValue 시작 ■■■■■");
 			if (!this.setTbDpProdRshpValue(couponInfo, itemInfoList, tbDpProdRshpList, couponReq.getCudType())) {
 				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
+
 
 			// TB_DP_TENANT_PROD 값 셋팅
 			// log.info("■■■■■ setTbDpTenantProdListValue 시작 ■■■■■");
@@ -168,13 +177,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// TB_DP_PROD_OPT 값 셋팅
 			// log.info("■■■■■ setTbDpProdRshpValue 시작 ■■■■■");
 			if (!this.setTbDpProdOptValue(couponInfo, itemInfoList, tbDpProdOptList, couponReq.getCudType())) {
-				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
-			}
-
-			// TB_DP_PROD_CATALOG_MAPG 값 셋팅
-			// log.info("■■■■■ setTbDpProdCatalogMapgInfoValue 시작 ■■■■■");
-			if (!this.setTbDpProdCatalogMapgInfoValue(couponInfo, itemInfoList, tbDpProdCatalogMapgList,
-					couponReq.getCudType())) {
 				throw new CouponException(couponInfo.getErrorCode(), couponInfo.getMessage(), null);
 			}
 
