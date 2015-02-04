@@ -43,6 +43,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
@@ -302,6 +303,12 @@ public class LoginController {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
 
+		// tenantId, systemId 설정
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
+		tenant.setSystemId(MemberConstants.SYSTEM_ID_PAYPLANET_S01);
+		requestHeader.setTenantHeader(tenant);
+
 		AuthorizeSacRes res = this.loginService.authorize(requestHeader, req);
 
 		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
@@ -380,6 +387,10 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
+		if (StringUtils.equals(req.getDeviceId(), "null")) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+		}
+
 		// tenantId 없는 경우 default S01
 		if (StringUtils.isBlank(req.getTenantId())) {
 			req.setTenantId(MemberConstants.TENANT_ID_TSTORE);
@@ -399,8 +410,19 @@ public class LoginController {
 			if (StringUtils.isBlank(req.getNativeId())) {
 				throw new StorePlatformException("SAC_MEM_0001", "nativeId");
 			}
-
 		}
+
+		// tenantId, systemId 설정
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		tenant.setTenantId(req.getTenantId());
+		if (StringUtils.equals(req.getTenantId(), MemberConstants.TENANT_ID_TSTORE)) {
+			tenant.setSystemId(MemberConstants.SYSTEM_ID_PAYPLANET_S01);
+		} else if (StringUtils.equals(req.getTenantId(), MemberConstants.TENANT_ID_OLLEH_MARKET)) {
+			tenant.setSystemId(MemberConstants.SYSTEM_ID_PAYPLANET_S02);
+		} else if (StringUtils.equals(req.getTenantId(), MemberConstants.TENANT_ID_UPLUS_STORE)) {
+			tenant.setSystemId(MemberConstants.SYSTEM_ID_PAYPLANET_S03);
+		}
+		requestHeader.setTenantHeader(tenant);
 
 		AuthorizeV2SacRes res = this.loginService.authorizeV2(requestHeader, req);
 

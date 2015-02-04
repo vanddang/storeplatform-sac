@@ -1351,12 +1351,6 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeSacRes authorize(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeSacReq req) {
 
-		// Tstore 회원전용이므로 tenantId S01
-		TenantHeader tenant = requestHeader.getTenantHeader();
-		tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
-		tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2);
-		requestHeader.setTenantHeader(tenant);
-
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
 
 		AuthorizeSacRes res = this.getTstoreMemberInfoForPayPlanet(requestHeader, req);
@@ -1768,11 +1762,6 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	@Override
 	public AuthorizeV2SacRes authorizeV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeV2SacReq req) {
-
-		TenantHeader tenant = requestHeader.getTenantHeader();
-		tenant.setTenantId(req.getTenantId());
-		// tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2); //TODO. systemId 정의예정.
-		requestHeader.setTenantHeader(tenant);
 
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회
 

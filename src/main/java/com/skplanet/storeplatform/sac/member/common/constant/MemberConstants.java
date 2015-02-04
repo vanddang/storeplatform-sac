@@ -291,6 +291,12 @@ public final class MemberConstants {
 	public static final String SYSTEM_ID_DEV_POC = "S00-02001";
 	/** IN APP 2.0 SystemID */
 	public static final String SYSTEM_ID_INAPP_2 = "S01-12001";
+	/** Pay Planet T store SystemID */
+	public static final String SYSTEM_ID_PAYPLANET_S01 = "S01-14001";
+	/** Pay Planet K store SystemID */
+	public static final String SYSTEM_ID_PAYPLANET_S02 = "S02-14001";
+	/** Pay Planet U store SystemID */
+	public static final String SYSTEM_ID_PAYPLANET_S03 = "S03-14001";
 
 	/** SMS 인증 타입 코드 */
 	public static final String AUTH_TYPE_CD_SMS = "CM010901";
