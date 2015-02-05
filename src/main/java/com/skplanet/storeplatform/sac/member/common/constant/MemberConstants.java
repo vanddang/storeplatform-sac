@@ -290,7 +290,7 @@ public final class MemberConstants {
 	/** 개발자센터 SystemID */
 	public static final String SYSTEM_ID_DEV_POC = "S00-02001";
 	/** IN APP 2.0 SystemID */
-	public static final String SYSTEM_ID_INAPP_2 = "S01-12001";
+	public static final String SYSTEM_ID_INAPP_2 = "S01-11002";
 	/** Pay Planet T store SystemID */
 	public static final String SYSTEM_ID_PAYPLANET_S01 = "S01-14001";
 	/** Pay Planet K store SystemID */
