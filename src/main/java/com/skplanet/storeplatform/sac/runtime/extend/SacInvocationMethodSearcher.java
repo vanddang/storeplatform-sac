@@ -80,6 +80,10 @@ public class SacInvocationMethodSearcher implements InvocationMethodSearcher {
             serviceNm = "com.skplanet.storeplatform.sac.display.product.service.DeviceMappingCompositeServiceImpl";
             mtdNm = "executeProcess";
         }
+        else if(messageQueueName.contains("icms-app-admin.sac.device-remapping.async")) {
+            serviceNm = "com.skplanet.storeplatform.sac.display.product.service.DeviceRemappingCompositeServiceImpl";
+            mtdNm = "executeProcess";
+        }
         else
             throw new RuntimeException();
 
