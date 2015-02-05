@@ -176,8 +176,6 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* device header 값 셋팅(단말모델코드, OS버젼, SC버젼) */
-		req.getDeviceInfo().setTenantId(requestHeader.getTenantHeader().getTenantId());
-		req.getDeviceInfo().setUserKey(req.getUserKey());
 		req.setDeviceInfo(this.setDeviceHeader(requestHeader.getDeviceHeader(), req.getDeviceInfo()));
 
 		/* 휴대기기 주요정보 확인 */
@@ -406,9 +404,6 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setCommonRequest(commonRequest);
 		createDeviceReq.setIsNew("Y");
 		createDeviceReq.setUserKey(userKey);
-
-		deviceInfo.setUserKey(userKey);
-		deviceInfo.setTenantId(tenantId);
 
 		if (StringUtils.isNotBlank(deviceInfo.getDeviceAccount())) {
 			deviceInfo.setDeviceAccount(DeviceUtil.getGmailStr(deviceInfo.getDeviceAccount()));
@@ -786,12 +781,14 @@ public class DeviceServiceImpl implements DeviceService {
 		String osVersion = requestHeader.getDeviceHeader().getOs(); // OS버젼
 		String svcVersion = requestHeader.getDeviceHeader().getSvc(); // SC버젼
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
-				osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo)); // osVersion 휴대기기
-																									   // 부가속성에 셋팅
+				osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
+				deviceInfo.getDeviceExtraInfoList())); // osVersion 휴대기기
+		// 부가속성에 셋팅
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
-				svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo)); // svcVersion
-																										  // 휴대기기 부가속성에
-																										  // 셋팅
+				svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
+				deviceInfo.getDeviceExtraInfoList())); // svcVersion
+		// 휴대기기 부가속성에
+		// 셋팅
 
 		boolean isSearchSvcMangNo = false;
 		/* 통신사가 자사로 들어왔는데 SKT서비스관리번호가 존재하지 않을 때 보정처리 */
@@ -837,9 +834,11 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 			uacd = majorDeviceInfo.getUacd();
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-					majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo)); // UACD
+					majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
+					deviceInfo.getDeviceExtraInfoList())); // UACD
 			deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo)); // OMDUACD
+					majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
+					deviceInfo.getDeviceExtraInfoList())); // OMDUACD
 
 		} else {
 			LOGGER.info("{} deviceHeader model 정보 없거나 default모델 : {}", deviceInfo.getDeviceId(), deviceModelNo);
@@ -891,7 +890,7 @@ public class DeviceServiceImpl implements DeviceService {
 					uacd = "SSO0";
 				}
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-						uacd, deviceInfo));
+						uacd, deviceInfo.getDeviceExtraInfoList()));
 			}
 
 			deviceInfoChangeLog.append("[deviceModelNo]").append(dbDeviceInfo.getDeviceModelNo()).append("->")
@@ -1137,13 +1136,15 @@ public class DeviceServiceImpl implements DeviceService {
 			if (StringUtils.isNotBlank(osVersion)) {
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
 						MemberConstants.DEVICE_EXTRA_OSVERSION,
-						osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo));
+						osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()),
+						deviceInfo.getDeviceExtraInfoList()));
 			}
 
 			if (StringUtils.isNotBlank(svcVersion)) {
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(
 						MemberConstants.DEVICE_EXTRA_SCVERSION,
-						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo));
+						svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()),
+						deviceInfo.getDeviceExtraInfoList()));
 			}
 		}
 
@@ -1172,11 +1173,14 @@ public class DeviceServiceImpl implements DeviceService {
 
 		deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum());
 
-		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-				majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
+		deviceInfo
+				.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
+						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
+						deviceInfo.getDeviceExtraInfoList()));
 
 		deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-				majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
+				majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
+				deviceInfo.getDeviceExtraInfoList()));
 
 		return deviceInfo;
 	}

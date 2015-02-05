@@ -61,6 +61,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.SaveAndSync;
 
 /**
@@ -748,7 +749,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
-			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
+			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(sacHeader, req.getDeviceExtraInfoList(),
+					majorDeviceInfo)); // 단말부가정보
 
 		} else if (obj instanceof CreateByAgreementReq) {
 
@@ -768,7 +770,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
-			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
+			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(sacHeader, req.getDeviceExtraInfoList(),
+					majorDeviceInfo)); // 단말부가정보
 
 		} else if (obj instanceof CreateBySimpleReq) {
 
@@ -788,7 +791,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
-			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
+			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(sacHeader, req.getDeviceExtraInfoList(),
+					majorDeviceInfo)); // 단말부가정보
 
 		} else if (obj instanceof CreateSaveAndSyncReq) {
 
@@ -808,7 +812,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum()); // SKT 통합 서비스 관리번호
-			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
+			deviceInfo.setDeviceExtraInfoList(this.getDeviceExtra(sacHeader, req.getDeviceExtraInfoList(),
+					majorDeviceInfo)); // 단말부가정보
 
 		} else {
 
@@ -842,13 +847,15 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 * 단말 부가정보 setting.
 	 * </pre>
 	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
 	 * @param deviceExtraInfoList
 	 *            List<DeviceExtraInfo>
 	 * @param majorDeviceInfo
 	 *            MajorDeviceInfo
 	 * @return List<DeviceExtraInfo>
 	 */
-	private List<DeviceExtraInfo> getDeviceExtra(List<DeviceExtraInfo> deviceExtraInfoList,
+	private List<DeviceExtraInfo> getDeviceExtra(SacRequestHeader sacHeader, List<DeviceExtraInfo> deviceExtraInfoList,
 			MajorDeviceInfo majorDeviceInfo) {
 
 		LOGGER.debug("## 세팅 전 deviceExtraInfoList : {}", deviceExtraInfoList);
@@ -880,6 +887,20 @@ public class UserJoinServiceImpl implements UserJoinService {
 			omdUacd.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMDUACD);
 			omdUacd.setExtraProfileValue(majorDeviceInfo.getOmdUacd());
 			deviceExtraInfoList.add(omdUacd);
+		}
+
+		/**
+		 * 헤더 정보 셋팅.
+		 */
+		String osVersion = sacHeader.getDeviceHeader().getOs();
+		String svcVersion = sacHeader.getDeviceHeader().getSvc();
+		if (StringUtils.isNotBlank(osVersion)) {
+			deviceExtraInfoList = DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceExtraInfoList);
+		}
+		if (StringUtils.isNotBlank(svcVersion)) {
+			deviceExtraInfoList = DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
+					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceExtraInfoList);
 		}
 
 		LOGGER.debug("## 세팅후 deviceExtraInfoList : {}", deviceExtraInfoList);

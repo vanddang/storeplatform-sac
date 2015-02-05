@@ -1107,9 +1107,11 @@ public class LoginServiceImpl implements LoginService {
 					}
 				}
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
+						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
+						deviceInfo.getDeviceExtraInfoList()));
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-						majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
+						majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
+						deviceInfo.getDeviceExtraInfoList()));
 			} else {
 				deviceInfo.setDeviceModelNo(null); // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
 				if (!StringUtils.equals(mdnDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
@@ -1198,9 +1200,11 @@ public class LoginServiceImpl implements LoginService {
 					deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
 				}
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(), deviceInfo));
+						majorDeviceInfo.getUacd() == null ? "" : majorDeviceInfo.getUacd(),
+						deviceInfo.getDeviceExtraInfoList()));
 				deviceInfo.setDeviceExtraInfoList(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
-						majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
+						majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(),
+						deviceInfo.getDeviceExtraInfoList()));
 			} else {
 				deviceInfo.setDeviceModelNo(null); // 디폴트 모델명이 넘어온경우도 있으므로 초기화 하여 업데이트 하지 않게 함
 				if (!StringUtils.equals(macDeviceInfo.getDeviceModelNo(), MemberConstants.NOT_SUPPORT_HP_MODEL_CD)
