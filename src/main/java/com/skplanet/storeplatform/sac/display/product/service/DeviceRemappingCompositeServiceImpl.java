@@ -209,7 +209,7 @@ public class DeviceRemappingCompositeServiceImpl implements DeviceMappingComposi
         dmr.setContentList(resultFailList);
         dmr.setCommandCode(type);
 
-        this.deviceMappingRabbitTemplate.convertAndSend(dmr);
+        this.deviceRemappingRabbitTemplate.convertAndSend(dmr);
 
         this.log.debug("*********************************************************");
         this.log.debug("***** dmr.getResult         :::: {}", dmr.getResult());
