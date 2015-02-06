@@ -74,8 +74,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String nmSeller; // 판매자명
 	private String emailSeller; // 판매자 이메일 주소
 	private String noTelSeller; // 판매자 전화번호
-	private String nmDelivery; // 선물수신자 성명
-	private String noMdnDelivery; // 선물수신자 MDN
 
 	/**
 	 * @return the tenantId
@@ -735,36 +733,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setNoTelSeller(String noTelSeller) {
 		this.noTelSeller = noTelSeller;
-	}
-
-	/**
-	 * @return the nmDelivery
-	 */
-	public String getNmDelivery() {
-		return this.nmDelivery;
-	}
-
-	/**
-	 * @param nmDelivery
-	 *            the nmDelivery to set
-	 */
-	public void setNmDelivery(String nmDelivery) {
-		this.nmDelivery = nmDelivery;
-	}
-
-	/**
-	 * @return the noMdnDelivery
-	 */
-	public String getNoMdnDelivery() {
-		return this.noMdnDelivery;
-	}
-
-	/**
-	 * @param noMdnDelivery
-	 *            the noMdnDelivery to set
-	 */
-	public void setNoMdnDelivery(String noMdnDelivery) {
-		this.noMdnDelivery = noMdnDelivery;
 	}
 
 }
