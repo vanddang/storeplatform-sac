@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.response;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -785,10 +786,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		}
 		book.setStatus(metaInfo.getBookStatus());
 
-		// Date 생성
-		// Date date = this.commonGenerator.generateDate(metaInfo);
-		Date date = new Date(DisplayConstants.DP_DATE_UPT_NM, metaInfo.getUpdDt());
-
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -798,7 +795,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setBook(book);
-		product.setDate(date);
+        product.setDateList(Arrays.asList(new Date(DisplayConstants.DP_DATE_REG, metaInfo.getUpdDt())));    // updDt이지만 실제로는 lastDeployDt임
 		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
