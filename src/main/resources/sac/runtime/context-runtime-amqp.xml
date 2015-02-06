@@ -179,6 +179,8 @@
 	    <bean id="cmsAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
 	    <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
 	    <bean id="deviceMappingRabbitTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
+        <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
+        <bean id="deviceRemappingRabbitTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
 	    <!-- Member - Add Device Rabbit Template -->
 	    <bean id="memberAddDeviceAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
 	    <!-- Member - Modify Device Rabbit Template -->

@@ -46,7 +46,7 @@ public class DeviceRemappingCompositeServiceImpl implements DeviceMappingComposi
 	private CommonDAO commonDAO;
 
 	@Resource
-	private AmqpTemplate deviceMappingRabbitTemplate;
+	private AmqpTemplate deviceRemappingRabbitTemplate;
 
 	/**
 	 * @descriion DEVICE-MPING 통합CMS > dev3.0 전문 처리
