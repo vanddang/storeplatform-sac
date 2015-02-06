@@ -265,7 +265,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList) {
+	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList , String prodId) {
 		try {
 			for (TbDpTenantProdInfo vo : tbDpTenantProdList) {
 
@@ -282,6 +282,12 @@ public class CouponItemServiceImpl implements CouponItemService {
 					this.commonDAO.update("Coupon.updateTbDpProdLastDeployDt", map);
 				}
 			}
+			
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("prodId", prodId);
+			map.put("tenentId", CouponConstants.TENANT_ID);
+
+			this.commonDAO.update("Coupon.updateDPCouponCNT", map);			
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
@@ -342,11 +348,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 					}
 				}
 			}
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("prodId", prodId);
-			map.put("tenentId", CouponConstants.TENANT_ID);
 
-			this.commonDAO.update("Coupon.updateDPCouponCNT", map);
 
 		} catch (CouponException e) {
 			throw e;

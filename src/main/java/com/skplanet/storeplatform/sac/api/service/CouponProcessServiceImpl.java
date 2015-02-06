@@ -638,7 +638,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				IcmsJobPrint.printTbTenantDpProd(dtpd, "TB_DP_TENANT_PROD - ITEM:::" + i);
 			}
 			// 저장
-			this.couponItemService.insertTbDpTenantProdInfo(tbDpTenantProdList);
+			this.couponItemService.insertTbDpTenantProdInfo(tbDpTenantProdList , couponInfo.getProdId());
 			this.log.info("■■■■■ setTbDpTenantProdListValue End ■■■■■");
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_TENANT_PROD VO 셋팅 실패", null);

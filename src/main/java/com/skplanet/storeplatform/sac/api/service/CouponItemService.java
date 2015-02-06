@@ -138,7 +138,7 @@ public interface CouponItemService {
 	 * @param tbDpTenantProdList
 	 *            tbDpTenantProdList
 	 */
-	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList);
+	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList , String prodId);
 
 	/**
 	 * <pre>
