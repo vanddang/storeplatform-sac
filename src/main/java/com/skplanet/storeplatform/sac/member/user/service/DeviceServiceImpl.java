@@ -175,7 +175,7 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
-		/* device header 값 셋팅(단말모델코드, OS버젼, SC버젼) */
+		/* device header 값 셋팅(OS버젼, SC버젼) */
 		req.setDeviceInfo(this.setDeviceHeader(requestHeader.getDeviceHeader(), req.getDeviceInfo()));
 
 		/* 휴대기기 주요정보 확인 */
@@ -1129,6 +1129,7 @@ public class DeviceServiceImpl implements DeviceService {
 			String osVersion = deviceheader.getOs(); // OS버젼
 			String svcVersion = deviceheader.getSvc(); // SC버젼
 
+			// deviceInfo에 모델정보가 존재하면 헤더 모델정보를 셋팅하지 않는다.
 			if (StringUtils.isBlank(deviceInfo.getDeviceModelNo()) && StringUtils.isNotBlank(model)) {
 				deviceInfo.setDeviceModelNo(model);
 			}
