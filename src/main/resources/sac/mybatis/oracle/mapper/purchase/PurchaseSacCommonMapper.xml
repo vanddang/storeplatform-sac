@@ -84,7 +84,14 @@
               , cond_clsf_unit_cd
               , cond_clsf_value
               , policy_prior
-          FROM  tb_cm_tenant_sale_policy 
+          FROM  <choose>
+                    <when test="@com.skplanet.storeplatform.sac.common.environment.ActvieProfileProvider@getActiveProfile() == 'stg'">
+                        tb_cm_tenant_sale_policy_stg
+                    </when>
+                    <otherwise>
+                        tb_cm_tenant_sale_policy
+                    </otherwise>
+                </choose>
          WHERE  tenant_id = #{tenantId}
          <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(procPatternCd)">
            AND  proc_pattern_cd = #{procPatternCd}
@@ -118,7 +125,14 @@
 		             , cond_clsf_unit_cd
 		             , cond_clsf_value
 		             , policy_prior
-		         FROM  tb_cm_tenant_sale_policy 
+		         FROM  <choose>
+                           <when test="@com.skplanet.storeplatform.sac.common.environment.ActvieProfileProvider@getActiveProfile() == 'stg'">
+                               tb_cm_tenant_sale_policy_stg
+                           </when>
+                           <otherwise>
+                               tb_cm_tenant_sale_policy
+                           </otherwise>
+                       </choose> 
 		        WHERE  tenant_id = #{tenantId}
 		          AND  proc_pattern_cd = #{procPatternCd}
 		          AND  tenant_prod_grp_cd = #{prodId, jdbcType=VARCHAR}
@@ -142,7 +156,14 @@
 		             , cond_clsf_unit_cd
 		             , cond_clsf_value
 		             , policy_prior
-		         FROM  tb_cm_tenant_sale_policy 
+		         FROM  <choose>
+                           <when test="@com.skplanet.storeplatform.sac.common.environment.ActvieProfileProvider@getActiveProfile() == 'stg'">
+                               tb_cm_tenant_sale_policy_stg
+                           </when>
+                           <otherwise>
+                               tb_cm_tenant_sale_policy
+                           </otherwise>
+                       </choose> 
 		        WHERE  tenant_id = #{tenantId}
 		          AND  proc_pattern_cd = #{procPatternCd}
 		          AND  tenant_prod_grp_cd = #{parentProdId, jdbcType=VARCHAR}
@@ -167,7 +188,14 @@
                               , cond_clsf_unit_cd
                               , cond_clsf_value
                               , policy_prior
-                          FROM  tb_cm_tenant_sale_policy 
+                          FROM  <choose>
+                                    <when test="@com.skplanet.storeplatform.sac.common.environment.ActvieProfileProvider@getActiveProfile() == 'stg'">
+                                        tb_cm_tenant_sale_policy_stg
+                                    </when>
+                                    <otherwise>
+                                        tb_cm_tenant_sale_policy
+                                    </otherwise>
+                                </choose>
                          WHERE  tenant_id = #{tenantId}
                            AND  proc_pattern_cd = #{procPatternCd}
                            AND  (tenant_prod_grp_cd IS NULL OR #{tenantProdGrpCd, jdbcType=VARCHAR} LIKE CONCAT(tenant_prod_grp_cd, '%'))
