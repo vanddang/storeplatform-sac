@@ -100,6 +100,10 @@
         <typeAlias alias="DisplayListCriteria"      type="com.skplanet.storeplatform.sac.display.feature.list.vo.DisplayListCriteria"/>
         <typeAlias alias="DisplayList"              type="com.skplanet.storeplatform.sac.display.feature.list.vo.DisplayListFromDB"/>
         
+        <!-- 전시 타사 홈상품 목록 통합 조회 SAP -->
+        <typeAlias alias="OutProductListCriteria"   type="com.skplanet.storeplatform.sac.display.feature.outproduct.vo.OutProductListCriteria"/>
+        <typeAlias alias="OutProductDbResultMap"    type="com.skplanet.storeplatform.sac.display.feature.outproduct.vo.OutProductDbResultMap"/>
+        
         <!-- 전시 상품 목록 통합 조회 T-Store4.0 -->
         <typeAlias alias="ListProductCriteria"      type="com.skplanet.storeplatform.sac.display.feature.product.vo.ListProductCriteria"/>
         <typeAlias alias="ListProductMetaCriteria"  type="com.skplanet.storeplatform.sac.display.feature.product.vo.ListProductMetaCriteria"/>
