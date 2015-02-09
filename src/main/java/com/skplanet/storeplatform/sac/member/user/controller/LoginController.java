@@ -172,6 +172,11 @@ public class LoginController {
 			req.setTenantId(MemberConstants.TENANT_ID_TSTORE);
 		}
 
+		// 테넌트 아이디 헤더 셋팅
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		tenant.setTenantId(req.getTenantId());
+		requestHeader.setTenantHeader(tenant);
+
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeSimpleByMdnRes res = this.loginService.authorizeSimpleByMdn(requestHeader, req);

@@ -945,11 +945,6 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeSimpleByMdnRes authorizeSimpleByMdn(SacRequestHeader requestHeader, AuthorizeSimpleByMdnReq req) {
 
-		// 테넌트 아이디 헤더 셋팅
-		TenantHeader tenant = requestHeader.getTenantHeader();
-		tenant.setTenantId(req.getTenantId());
-		requestHeader.setTenantHeader(tenant);
-
 		String deviceId = req.getDeviceId();
 
 		/* 모번호 조회 */
