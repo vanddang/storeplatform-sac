@@ -78,7 +78,7 @@ public class OutProductListServiceImpl implements OutProductListService {
 	private void setStartKey(List<OutProductDbResultMap> prodListsFromDB, OutProductListSacRes res) {
 		if(prodListsFromDB==null||prodListsFromDB.isEmpty())
 			return;
-		res.setStartKey(prodListsFromDB.get(prodListsFromDB.size()-1).getRank());
+		res.setStartKey(prodListsFromDB.get(prodListsFromDB.size()-1).getRank().toString());
 	}
 
 	private void setListNm(OutProductListSacRes res, List<DisplayListFromDB> dplistFromDB) {
@@ -116,9 +116,7 @@ public class OutProductListServiceImpl implements OutProductListService {
 
 	private OutProduct makeResponse(OutProductDbResultMap rm) {
 		OutProduct p = new OutProduct();
-		p.setTenantId(rm.getTenantId());
-		p.setListId(rm.getListId());
-		p.setStdDt(rm.getStdDt());
+
 		p.setDetailUrl(rm.getDetailUrl());
 		p.setRank(rm.getRank());
 		p.setTitle(rm.getTitle());

@@ -5,24 +5,24 @@ public class OutProductDbResultMap {
 	private String listId;			// LIST_ID	VARCHAR2(20 BYTE)
 	private String stdDt;			// STD_DT	DATE
 	private String detailUrl;		// DETAIL_URL	VARCHAR2(300 BYTE)
-	private String rank;			// RANK	NUMBER
+	private Integer rank;			// RANK	NUMBER
 	private String title;			// TITLE	VARCHAR2(1000 BYTE)
 	private String thumbnailUrl;	// THUMBNAIL_URL	VARCHAR2(300 BYTE)
 	private String thumbnailPath;	// THUMBNAIL_PATH	VARCHAR2(300 BYTE)
-	private String score;			// SCORE	NUMBER
-	private String voterCount;		// VOTER_COUNT	NUMBER
-	private String accrualCount;	// ACCRUAL_COUNT	NUMBER
-	private String rankChange;		// RANK_CHANGE	NUMBER
+	private Double score;			// SCORE	NUMBER
+	private Integer voterCount;		// VOTER_COUNT	NUMBER
+	private Integer accrualCount;	// ACCRUAL_COUNT	NUMBER
+	private Integer rankChange;		// RANK_CHANGE	NUMBER
 	private String category;		// CATEGORY	VARCHAR2(600 BYTE)
 	private String categorySub;		// CATEGORY_SUB	VARCHAR2(600 BYTE)
 	private String rightGrade;		// RIGHT_GRADE	VARCHAR2(60 BYTE)
-	private String price;			// PRICE	NUMBER
-	private String priceRent;		// PRICE_RENT	NUMBER
-	private String priceFixed;		// PRICE_FIXED	NUMBER
-	private String discountRate;	// DISCOUNT_RATE	NUMBER
+	private Integer price;			// PRICE	NUMBER
+	private Integer priceRent;		// PRICE_RENT	NUMBER
+	private Integer priceFixed;		// PRICE_FIXED	NUMBER
+	private Double discountRate;	// DISCOUNT_RATE	NUMBER
 	private String support;			// SUPPORT	VARCHAR2(600 BYTE)
-	private String chapter;			// CHAPTER	NUMBER
-	private String subCount;		// SUB_COUNT	NUMBER
+	private Integer chapter;			// CHAPTER	NUMBER
+	private Integer subCount;		// SUB_COUNT	NUMBER
 	private String description;		// DESCRIPTION	VARCHAR2(4000 BYTE)
 	private String runningTime;		// RUNNING_TIME	DATE
 	private String contributorName;			// CONTRIBUTOR_NAME	VARCHAR2(600 BYTE)
@@ -53,7 +53,6 @@ public class OutProductDbResultMap {
 	private String freeDefined08;		// FREE_DEFINED_08	VARCHAR2(600 BYTE)
 	private String freeDefined09;		// FREE_DEFINED_09	VARCHAR2(600 BYTE)
 	private String freeDefined10;		// FREE_DEFINED_10	VARCHAR2(600 BYTE)
-
 	public String getTenantId() {
 		return tenantId;
 	}
@@ -78,10 +77,10 @@ public class OutProductDbResultMap {
 	public void setDetailUrl(String detailUrl) {
 		this.detailUrl = detailUrl;
 	}
-	public String getRank() {
+	public Integer getRank() {
 		return rank;
 	}
-	public void setRank(String rank) {
+	public void setRank(Integer rank) {
 		this.rank = rank;
 	}
 	public String getTitle() {
@@ -102,28 +101,28 @@ public class OutProductDbResultMap {
 	public void setThumbnailPath(String thumbnailPath) {
 		this.thumbnailPath = thumbnailPath;
 	}
-	public String getScore() {
+	public Double getScore() {
 		return score;
 	}
-	public void setScore(String score) {
+	public void setScore(Double score) {
 		this.score = score;
 	}
-	public String getVoterCount() {
+	public Integer getVoterCount() {
 		return voterCount;
 	}
-	public void setVoterCount(String voterCount) {
+	public void setVoterCount(Integer voterCount) {
 		this.voterCount = voterCount;
 	}
-	public String getAccrualCount() {
+	public Integer getAccrualCount() {
 		return accrualCount;
 	}
-	public void setAccrualCount(String accrualCount) {
+	public void setAccrualCount(Integer accrualCount) {
 		this.accrualCount = accrualCount;
 	}
-	public String getRankChange() {
+	public Integer getRankChange() {
 		return rankChange;
 	}
-	public void setRankChange(String rankChange) {
+	public void setRankChange(Integer rankChange) {
 		this.rankChange = rankChange;
 	}
 	public String getCategory() {
@@ -144,28 +143,28 @@ public class OutProductDbResultMap {
 	public void setRightGrade(String rightGrade) {
 		this.rightGrade = rightGrade;
 	}
-	public String getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
-	public void setPrice(String price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
-	public String getPriceRent() {
+	public Integer getPriceRent() {
 		return priceRent;
 	}
-	public void setPriceRent(String priceRent) {
+	public void setPriceRent(Integer priceRent) {
 		this.priceRent = priceRent;
 	}
-	public String getPriceFixed() {
+	public Integer getPriceFixed() {
 		return priceFixed;
 	}
-	public void setPriceFixed(String priceFixed) {
+	public void setPriceFixed(Integer priceFixed) {
 		this.priceFixed = priceFixed;
 	}
-	public String getDiscountRate() {
+	public Double getDiscountRate() {
 		return discountRate;
 	}
-	public void setDiscountRate(String discountRate) {
+	public void setDiscountRate(Double discountRate) {
 		this.discountRate = discountRate;
 	}
 	public String getSupport() {
@@ -174,16 +173,16 @@ public class OutProductDbResultMap {
 	public void setSupport(String support) {
 		this.support = support;
 	}
-	public String getChapter() {
+	public Integer getChapter() {
 		return chapter;
 	}
-	public void setChapter(String chapter) {
+	public void setChapter(Integer chapter) {
 		this.chapter = chapter;
 	}
-	public String getSubCount() {
+	public Integer getSubCount() {
 		return subCount;
 	}
-	public void setSubCount(String subCount) {
+	public void setSubCount(Integer subCount) {
 		this.subCount = subCount;
 	}
 	public String getDescription() {
