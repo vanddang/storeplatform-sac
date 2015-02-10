@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 public class SellerMbrAmqpSacReq extends CommonInfo {
@@ -133,11 +135,58 @@ public class SellerMbrAmqpSacReq extends CommonInfo {
 
 	private String pmtCnt;
 
-	private String multimdaCd;
+	private List<Multimda> multimdaList;
 
-	private String tenantSettRate;
+	public static class Multimda {
+		private String multimdaCd;
+		private String tenantSettRate;
+		private String sellermbrSettRate;
 
-	private String sellermbrSettRate;
+		/**
+		 * @return the multimdaCd
+		 */
+		public String getMultimdaCd() {
+			return this.multimdaCd;
+		}
+
+		/**
+		 * @param multimdaCd
+		 *            the multimdaCd to set
+		 */
+		public void setMultimdaCd(String multimdaCd) {
+			this.multimdaCd = multimdaCd;
+		}
+
+		/**
+		 * @return the tenantSettRate
+		 */
+		public String getTenantSettRate() {
+			return this.tenantSettRate;
+		}
+
+		/**
+		 * @param tenantSettRate
+		 *            the tenantSettRate to set
+		 */
+		public void setTenantSettRate(String tenantSettRate) {
+			this.tenantSettRate = tenantSettRate;
+		}
+
+		/**
+		 * @return the sellermbrSettRate
+		 */
+		public String getSellermbrSettRate() {
+			return this.sellermbrSettRate;
+		}
+
+		/**
+		 * @param sellermbrSettRate
+		 *            the sellermbrSettRate to set
+		 */
+		public void setSellermbrSettRate(String sellermbrSettRate) {
+			this.sellermbrSettRate = sellermbrSettRate;
+		}
+	}
 
 	/**
 	 * @return the workCd
@@ -1100,48 +1149,18 @@ public class SellerMbrAmqpSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the multimdaCd
+	 * @return the multimdaList
 	 */
-	public String getMultimdaCd() {
-		return this.multimdaCd;
+	public List<Multimda> getMultimdaList() {
+		return this.multimdaList;
 	}
 
 	/**
-	 * @param multimdaCd
-	 *            the multimdaCd to set
+	 * @param multimdaList
+	 *            the multimdaList to set
 	 */
-	public void setMultimdaCd(String multimdaCd) {
-		this.multimdaCd = multimdaCd;
-	}
-
-	/**
-	 * @return the tenantSettRate
-	 */
-	public String getTenantSettRate() {
-		return this.tenantSettRate;
-	}
-
-	/**
-	 * @param tenantSettRate
-	 *            the tenantSettRate to set
-	 */
-	public void setTenantSettRate(String tenantSettRate) {
-		this.tenantSettRate = tenantSettRate;
-	}
-
-	/**
-	 * @return the sellermbrSettRate
-	 */
-	public String getSellermbrSettRate() {
-		return this.sellermbrSettRate;
-	}
-
-	/**
-	 * @param sellermbrSettRate
-	 *            the sellermbrSettRate to set
-	 */
-	public void setSellermbrSettRate(String sellermbrSettRate) {
-		this.sellermbrSettRate = sellermbrSettRate;
+	public void setMultimdaList(List<Multimda> multimdaList) {
+		this.multimdaList = multimdaList;
 	}
 
 }
