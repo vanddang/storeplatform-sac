@@ -538,12 +538,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				MetaInfo fixrateProd = (MetaInfo) this.commonDAO.queryForObject("Download.selectFixrateProdInfo", paramFixrateProd);
 
 				// 정액권 상품의 DRM_YN / 소장, 대여 구분(Store : 소장, Play : 대여)
-				if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-					metaInfo.setStoreDrmYn(fixrateProd.getStoreDrmYn());
-					metaInfo.setDrmYn(fixrateProd.getStoreDrmYn());
-				} else {
-					metaInfo.setPlayDrmYn(fixrateProd.getPlayDrmYn());
-					metaInfo.setDrmYn(fixrateProd.getPlayDrmYn());
+				if(fixrateProd != null) {
+					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
+						metaInfo.setStoreDrmYn(fixrateProd.getStoreDrmYn());
+						metaInfo.setDrmYn(fixrateProd.getStoreDrmYn());
+					} else {
+						metaInfo.setPlayDrmYn(fixrateProd.getPlayDrmYn());
+						metaInfo.setDrmYn(fixrateProd.getPlayDrmYn());
+					}
 				}
 
 			} else {
