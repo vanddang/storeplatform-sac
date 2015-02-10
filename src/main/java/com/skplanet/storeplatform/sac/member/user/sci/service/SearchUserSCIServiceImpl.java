@@ -138,6 +138,10 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		List<String> userKeyList = request.getUserKeyList();
 
 		SearchMbrUserRequest searchMbrUserRequest = new SearchMbrUserRequest();
+		// tenantId 추가, incorss_bottangs, 2015.02.10
+		searchMbrUserRequest
+				.setTenantId(StringUtils.isBlank(request.getTenantId()) ? MemberConstants.TENANT_ID_TSTORE : request
+						.getTenantId());
 		searchMbrUserRequest.setUserKeyList(userKeyList);
 		searchMbrUserRequest.setCommonRequest(commonRequest);
 		LOGGER.debug("SAC Request {}", request);
@@ -161,6 +165,8 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 					userInfoSac.setUserType(userInfoMap.get(userKeyList.get(i)).getUserType());
 					// 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
 					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyList.get(i)).getDeviceIDList());
+					// tenantId 추가, incross_bottangs, 2015.02.10
+					userInfoSac.setTenantId(userInfoMap.get(userKeyList.get(i)).getTenantID());
 
 					userInfo.put(userKeyList.get(i), userInfoSac);
 				}
