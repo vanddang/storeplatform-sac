@@ -4,44 +4,44 @@
 
     <!-- 사용후기 기등록 여부 조회  -->
     <select id="getRegProdNoti" parameterType="ProdNoti" resultType="ProdNoti">
-      SELECT  /* FeedbackMapper.xml, getRegProdNoti, SAC 기타, 2014-02-04 */ 
-              noti_seq   /* 후기 SEQ */
-            , noti_dscr  /* 후기 내용 */
-        FROM
-             (
-              SELECT  a.noti_seq  /* 후기 SEQ */
-                    , a.noti_dscr /* 후기 내용 */
-                FROM  tb_dp_prod_noti a /* 상품 후기 */
-               WHERE  1 = 1
-                 AND  a.mbr_no = #{mbrNo}        /* 회원 번호 */
-                 AND  a.tenant_id = #{tenantId}  /* 테넌트 ID */
-                 <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-                 AND  a.prod_id = #{chnlId}      /* 상품 ID */
-                 AND  a.catalog_id = #{prodId}   /* 카탈로그 ID */
-                 </if>
-                 <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
-                 AND  a.prod_id = #{prodId}      /* 상품 ID */
-                 </if>
-                 AND  a.noti_type_cd = 'DP000401'    /* 후기 타입 코드 DP000401(댓글)*/
-                 AND  a.del_yn = 'N'                 /* 삭제 여부 */
-                 AND  a.bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
-                 AND  a.spam_yn = 'N'                /* 스펨 여부 */
-                 AND EXISTS (
-                             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
-                             SELECT  'X'
-                               FROM  tb_dp_shpg_catalog sa     /* 쇼핑 카탈로그 */
-                              WHERE  sa.catalog_id = #{prodId} /* 카탈로그 ID */
-                                AND  sa.chnl_cnt > 0           /* 채널 수 */
-                             </if>
-                             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
-                             SELECT  'X'
-                               FROM  tb_dp_prod sa             /* 상품 */
-                              WHERE  sa.prod_id = a.prod_id    /* 상품 ID */
-                             </if>
-                             )
-                ORDER BY reg_dt DESC  /* 등록일시 최신순 정렬 */
-              )
-       WHERE  ROWNUM <![CDATA[<=]]> 1 /* 조회건수중 1개 */
+		SELECT  /* FeedbackMapper.xml, getRegProdNoti, SAC 기타, 2014-02-04 */ 
+		        noti_seq   /* 후기 SEQ */
+		      , noti_dscr  /* 후기 내용 */
+		  FROM
+		       (
+		        SELECT  a.noti_seq  /* 후기 SEQ */
+		              , a.noti_dscr /* 후기 내용 */
+		          FROM  tb_dp_prod_noti a /* 상품 후기 */
+		         WHERE  1 = 1
+		           AND  a.mbr_no = #{mbrNo}        /* 회원 번호 */
+		           AND  a.tenant_id = #{tenantId}  /* 테넌트 ID */
+		           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+		           AND  a.prod_id = #{chnlId}      /* 상품 ID */
+		           AND  a.catalog_id = #{prodId}   /* 카탈로그 ID */
+		           </if>
+		           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
+		           AND  a.prod_id = #{prodId}      /* 상품 ID */
+		           </if>
+		           AND  a.noti_type_cd = 'DP000401'    /* 후기 타입 코드 DP000401(댓글)*/
+		           AND  a.del_yn = 'N'                 /* 삭제 여부 */
+		           AND  a.bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
+		           AND  a.spam_yn = 'N'                /* 스펨 여부 */
+		           AND EXISTS (
+		                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+		                       SELECT  'X'
+		                         FROM  tb_dp_shpg_catalog sa     /* 쇼핑 카탈로그 */
+		                        WHERE  sa.catalog_id = #{prodId} /* 카탈로그 ID */
+		                          AND  sa.chnl_cnt > 0           /* 채널 수 */
+		                       </if>
+		                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
+		                       SELECT  'X'
+		                         FROM  tb_dp_prod sa             /* 상품 */
+		                        WHERE  sa.prod_id = a.prod_id    /* 상품 ID */
+		                       </if>
+		                       )
+		          ORDER BY reg_dt DESC  /* 등록일시 최신순 정렬 */
+		        )
+		 WHERE  ROWNUM <![CDATA[<=]]> 1 /* 조회건수중 1개 */
     </select>
     
     <!-- 사용후기 등록  -->
@@ -768,7 +768,7 @@
 
     <!-- 평점, 다운로드 조회 -->
     <select id="getProdEvalInfo" parameterType="TenantProdStats" resultType="TenantProdStats">
-      SELECT  /* FeedbackMapper.xml, getProdEvalInfo, SAC 기타, 2014-02-13 */
+<!--       SELECT  /* FeedbackMapper.xml, getProdEvalInfo, SAC 기타, 2014-02-13 */
              (
               SELECT LISTAGG (RTRIM (TO_CHAR (avg_score_pct, 'FM990D9'), '.'), ',') WITHIN GROUP (ORDER BY avg_score DESC)
                 FROM ( 
@@ -813,7 +813,59 @@
             , TRIM ( NVL ( TO_CHAR ( (tot_evlu_score / DECODE(paticpers_cnt, 0, NULL, paticpers_cnt)) / 5.0 * 100, '99900.00'), '0')) AS avg_evlu_score_pct  /* 평균 평점 페센트 */
         FROM  tb_dp_tenant_prod_stats  /* 테넌트 상품 통계 */
        WHERE  tenant_id = #{tenantId}  /* 테넌트 ID */
-         AND  prod_id = #{prodId}      /* 상품 ID */      
+         AND  prod_id = #{prodId}      /* 상품 ID */       -->
+        <![CDATA[
+			SELECT /* FeedbackMapper.xml, getProdEvalInfo, SAC 기타, 2015-02-10 */
+			       (
+			          SELECT LISTAGG (RTRIM (TO_CHAR (AVG_SCORE_PCT, 'FM990D9'), '.'), ',') WITHIN GROUP (ORDER BY AVG_SCORE DESC)
+			            FROM (
+			                    SELECT  AVG_SCORE  /* 평균 점수 */  
+			                          , NVL (AVG_COUNT, 0) AS PATICPERS_CNT  /* 참여자 수 */
+			                          , NVL (ROUND ( (AVG_COUNT / DECODE(TOT_PATICPERS_CNT, 0, NULL, TOT_PATICPERS_CNT)) * 100, 1), 0) AS AVG_SCORE_PCT  /* 평균 평점 퍼센트 */
+			                     FROM (
+			                            SELECT   B.AVG_SCORE
+			                                   , AVG_COUNT
+			                                   , (
+			                                      SELECT SUM(PATICPERS_CNT)
+			                                        FROM TB_DP_TENANT_PROD_STATS
+			                                       WHERE TENANT_ID IN ('S01', 'S02', 'S03')
+			                                         AND PROD_ID = #{prodId}
+			                                   ) AS TOT_PATICPERS_CNT
+			                              FROM (
+			                                      SELECT  AVG_SCORE
+			                                            , COUNT (AVG_SCORE) AS AVG_COUNT
+			                                       FROM  TB_DP_MBR_AVG
+			                                      WHERE  TENANT_ID IN ('S01', 'S02', 'S03')
+			                                        AND  PROD_ID = #{prodId}
+			                                      GROUP BY AVG_SCORE
+			                                    ) A,
+			                                    (
+			                                      SELECT LEVEL AS AVG_SCORE
+			                                        FROM DUAL
+			                                      CONNECT BY LEVEL < 6
+			                                    ) B
+			                              WHERE A.AVG_SCORE(+) = B.AVG_SCORE
+			                    )
+			                    ORDER BY AVG_SCORE DESC
+			          )
+			       ) AS AVG_EVLU_SCORE_PCTS
+			       , NVL (SUM(TOT_EVLU_SCORE), 0) AS TOT_EVLU_SCORE
+			       , NVL (SUM(PRCHS_CNT), 0) AS DWLD_CNT
+			       , (CASE WHEN SUM(PATICPERS_CNT) = 0 THEN 0
+			               ELSE (CASE WHEN (NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0)  >  0 AND NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0) <  1) THEN 1
+			                          WHEN NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0)  >  5 THEN 5
+			                          ELSE NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0)
+			                          END
+			                     )
+			                END       
+			        ) AS AVG_EVLU_SCORE
+			       , NVL (SUM(PATICPERS_CNT), 0) AS PATICPERS_CNT
+			       , TRIM ( NVL ( TO_CHAR ( (SUM(TOT_EVLU_SCORE) / DECODE(SUM(PATICPERS_CNT), 0, NULL, SUM(PATICPERS_CNT))) / 5.0 * 100, 'FM99900.00'), '0')) AS AVG_EVLU_SCORE_PCT
+			       , PROD_ID
+			 FROM TB_DP_TENANT_PROD_STATS
+			WHERE PROD_ID = #{prodId}
+			GROUP BY PROD_ID
+        ]]>
     </select>
     
     <!-- 참여수 조회 -->

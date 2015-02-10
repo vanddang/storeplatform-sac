@@ -592,8 +592,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			listFeedbackRes.setDwldCnt("0");
 			listFeedbackRes.setPaticpersCnt("0");
 		} else {
-			listFeedbackRes.setAvgEvluScorePcts(ObjectUtils.defaultIfNull(getProdEvalInfo.getAvgEvluScorePcts(),
-					"0,0,0,0,0"));
+			listFeedbackRes.setAvgEvluScorePcts(ObjectUtils.defaultIfNull(getProdEvalInfo.getAvgEvluScorePcts(), "0,0,0,0,0"));
 			listFeedbackRes.setAvgEvluScore(ObjectUtils.defaultIfNull(getProdEvalInfo.getAvgEvluScore(), "0"));
 			listFeedbackRes.setDwldCnt(ObjectUtils.defaultIfNull(getProdEvalInfo.getDwldCnt(), "0"));
 			listFeedbackRes.setPaticpersCnt(ObjectUtils.defaultIfNull(getProdEvalInfo.getPaticpersCnt(), "0"));
