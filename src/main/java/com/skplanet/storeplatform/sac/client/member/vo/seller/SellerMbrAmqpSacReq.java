@@ -137,7 +137,7 @@ public class SellerMbrAmqpSacReq extends CommonInfo {
 
 	private List<Multimda> multimdaList;
 
-	public static class Multimda {
+	public class Multimda {
 		private String multimdaCd;
 		private String tenantSettRate;
 		private String sellermbrSettRate;
