@@ -878,16 +878,16 @@
               SELECT  ib.avg_score  /* 평균 평점 */
                     , avg_count     /* 평균 평점 갯수 */
                     , (
-                       SELECT  paticpers_cnt            /* 참여자 수*/
+                       SELECT  SUM(paticpers_cnt) AS paticpers_cnt      /* 참여자 수*/
                          FROM  tb_dp_tenant_prod_stats  /* 테넌트 상품 통계 */
-                        WHERE  tenant_id = #{tenantId}  /* 테넌트 ID */
+                        WHERE  tenant_id IN ('S01','S02','S03')  /* 테넌트 ID */
                           AND  prod_id = #{prodId}      /* 상품 ID */
                       ) AS paticpers_cnt                /* 참여자 수 */
                 FROM  (
                        SELECT  avg_score                       /* 평균 평점 */
                              , COUNT (avg_score) AS avg_count  /* 평균 평점 갯수 */
                          FROM  tb_dp_mbr_avg                   /* 상품 평점 */
-                        WHERE  tenant_id = #{tenantId}         /* 태넌트 ID */
+                        WHERE  tenant_id IN ('S01','S02','S03')         /* 태넌트 ID */
                           AND  prod_id = #{prodId}             /* 상품 ID */
                         GROUP 
                            BY  avg_score
