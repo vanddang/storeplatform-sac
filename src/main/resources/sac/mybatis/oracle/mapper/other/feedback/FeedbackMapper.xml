@@ -851,14 +851,12 @@
 			       ) AS AVG_EVLU_SCORE_PCTS
 			       , NVL (SUM(TOT_EVLU_SCORE), 0) AS TOT_EVLU_SCORE
 			       , NVL (SUM(PRCHS_CNT), 0) AS DWLD_CNT
-			       , (CASE WHEN SUM(PATICPERS_CNT) = 0 THEN 0
-			               ELSE (CASE WHEN (NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0)  >  0 AND NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0) <  1) THEN 1
-			                          WHEN NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0)  >  5 THEN 5
-			                          ELSE NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0)
-			                          END
-			                     )
-			                END       
-			        ) AS AVG_EVLU_SCORE
+                   , (CASE WHEN NVL(SUM(PATICPERS_CNT), 0) = 0 THEN 0
+                           WHEN (NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0)  >  0 AND NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0) <  1) THEN 1
+                           WHEN NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0)  >  5 THEN 5
+                           ELSE NVL (ROUND(SUM(TOT_EVLU_SCORE) / SUM(PATICPERS_CNT), 1), 0)
+                       END
+                    ) AS AVG_EVLU_SCORE
 			       , NVL (SUM(PATICPERS_CNT), 0) AS PATICPERS_CNT
 			       , TRIM ( NVL ( TO_CHAR ( (SUM(TOT_EVLU_SCORE) / DECODE(SUM(PATICPERS_CNT), 0, NULL, SUM(PATICPERS_CNT))) / 5.0 * 100, 'FM99900.00'), '0')) AS AVG_EVLU_SCORE_PCT
 			       , PROD_ID
