@@ -101,6 +101,8 @@ public class OutProductListServiceImpl implements OutProductListService {
 			OutProduct p = makeResponse(rm);
 			list.add(p);
 		}
+		res.setProductList(list);
+		
 		return res;
 	}
 
