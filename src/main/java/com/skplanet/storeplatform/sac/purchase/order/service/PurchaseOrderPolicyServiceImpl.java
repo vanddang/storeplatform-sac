@@ -28,6 +28,7 @@ import com.skplanet.storeplatform.external.client.sap.vo.CheckPurchasePolicyEcRe
 import com.skplanet.storeplatform.external.client.sap.vo.CheckPurchasePolicyInfoEc;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchSktPaymentScReq;
@@ -440,7 +441,15 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		try {
 			checkPurchasePolicyEcRes = this.sapPurchaseSCI.checkPurchasePolicy(checkPurchasePolicyEcReq);
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7220", e);
+			this.logger.info("PRCHS,ORDER,SAC,POLICY,SAP,RES,EXCEPTION,", e);
+
+			if (e instanceof StorePlatformException) {
+				ErrorInfo errorInfo = ((StorePlatformException) e).getErrorInfo();
+				throw new StorePlatformException("SAC_PUR_7221", errorInfo.getCode(), errorInfo.getMessage());
+
+			} else {
+				throw new StorePlatformException("SAC_PUR_7220", e);
+			}
 		}
 
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,SAP,RES,{}",
