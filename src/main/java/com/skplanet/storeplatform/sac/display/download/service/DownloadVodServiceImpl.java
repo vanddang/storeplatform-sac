@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +37,6 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -480,7 +477,15 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			product.setRights(this.commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
 			product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 
-			commonResponse.setTotalCount(1);
+            // 보안을 위해 물리파일 경로는 API응답에서 삭제
+            if (product.getVideoInfo() != null) {
+                List<VideoInfo> videoInfoList = product.getVod().getVideoInfoList();
+                for (VideoInfo info : videoInfoList) {
+                    info.setFilePath(null);
+                }
+            }
+
+            commonResponse.setTotalCount(1);
 		} else {
 			throw new StorePlatformException("SAC_DSP_0009");
 		}

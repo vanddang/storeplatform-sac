@@ -69,7 +69,7 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 	@Override
 	public App generateApp(MetaInfo metaInfo) {
 		return this.generateApp(metaInfo.getAid(), metaInfo.getApkPkgNm(), metaInfo.getApkVer(), metaInfo.getProdVer(),
-				metaInfo.getFileSize(), metaInfo.getSupportedOs(), metaInfo.getSubContentsId(), metaInfo.getFilePath());
+				metaInfo.getFileSize(), metaInfo.getSupportedOs(), metaInfo.getSubContentsId(), null);
 	}
 
 	@Override
