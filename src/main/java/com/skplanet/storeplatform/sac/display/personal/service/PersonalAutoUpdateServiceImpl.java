@@ -83,10 +83,11 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 
         this.log.debug("##### updateAutoUpdateList start!!!!!!!!!!");
         final String deviceId = req.getDeviceId();
+        final String networkType = header.getNetworkHeader().getType();
         new TLogUtil().set(new ShuttleSetter() {
             @Override
             public void customize(TLogSentinelShuttle shuttle) {
-                shuttle.log_id("TL_SAC_DSP_0001").device_id(deviceId);
+                shuttle.log_id("TL_SAC_DSP_0001").device_id(deviceId).network_type(networkType);
             }
         });
 
