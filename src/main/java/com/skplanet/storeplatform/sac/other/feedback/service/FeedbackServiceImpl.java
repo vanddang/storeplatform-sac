@@ -484,7 +484,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 사용후기 평균평점.
 		TenantProdStats tenantProdStats = new TenantProdStats();
-		tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		tenantProdStats.setProdId(listFeedbackSacReq.getProdId());
 		TenantProdStats getProdEvalInfo = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
 
@@ -581,7 +580,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 사용후기 평균평점.
 		TenantProdStats tenantProdStats = new TenantProdStats();
-		tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		tenantProdStats.setProdId(listFeedbackSacReq.getProdId());
 		TenantProdStats getProdEvalInfo = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
 
