@@ -26,7 +26,7 @@ public class VerifyOrderSacReq extends CommonInfo {
 	private String prchsId; // 구매ID
 	private String mctSpareParam; // 가맹점 파라미터
 	private String marketDeviceKey; // 타 스토어 디바이스 Key
-	private String userAuthKey; // 인증 Key
+	private String deviceKeyAuth; // 인증 Key
 
 	/**
 	 * @return the prchsId
@@ -74,18 +74,18 @@ public class VerifyOrderSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the userAuthKey
+	 * @return the deviceKeyAuth
 	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
+	public String getDeviceKeyAuth() {
+		return this.deviceKeyAuth;
 	}
 
 	/**
-	 * @param userAuthKey
-	 *            the userAuthKey to set
+	 * @param deviceKeyAuth
+	 *            the deviceKeyAuth to set
 	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
+	public void setDeviceKeyAuth(String deviceKeyAuth) {
+		this.deviceKeyAuth = deviceKeyAuth;
 	}
 
 }
