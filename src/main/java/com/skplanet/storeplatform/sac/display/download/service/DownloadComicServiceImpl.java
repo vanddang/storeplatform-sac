@@ -312,6 +312,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
                                     deviceReq = new SearchDeviceIdSacReq();
                                     deviceReq.setUserKey(comicReq.getUserKey());
                                     deviceReq.setDeviceKey(comicReq.getDeviceKey());
+                                    deviceReq.setTenantId(header.getTenantHeader().getTenantId());
 
                                     logger.debug("--------------------------------------------------------------");
                                     logger.debug("[DownloadComicLog] 단말정보 조회 요청 파라미터");

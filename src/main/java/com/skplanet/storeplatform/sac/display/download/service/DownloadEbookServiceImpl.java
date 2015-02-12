@@ -336,6 +336,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 									deviceReq = new SearchDeviceIdSacReq();
 									deviceReq.setUserKey(ebookReq.getUserKey());
 									deviceReq.setDeviceKey(ebookReq.getDeviceKey());
+                                    deviceReq.setTenantId(header.getTenantHeader().getTenantId());
 
 									logger.debug("--------------------------------------------------------------");
 									logger.debug("[DownloadEbookLog] 단말정보 조회 요청 파라미터");

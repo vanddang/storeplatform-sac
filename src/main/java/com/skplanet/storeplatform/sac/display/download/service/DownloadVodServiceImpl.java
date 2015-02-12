@@ -323,6 +323,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 									deviceReq = new SearchDeviceIdSacReq();
 									deviceReq.setUserKey(downloadVodSacReq.getUserKey());
 									deviceReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
+                                    deviceReq.setTenantId(tenantHeader.getTenantId());
 									this.log.debug("----------------------------------------------------------------");
 									this.log.debug("*******************회원 단말 정보 조회 파라미터*********************");
 									this.log.debug("[DownloadVodServiceImpl] userKey : {}", deviceReq.getUserKey());

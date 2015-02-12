@@ -302,6 +302,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 									deviceReq = new SearchDeviceIdSacReq();
 									deviceReq.setUserKey(downloadMusicSacReq.getUserKey());
 									deviceReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
+                                    deviceReq.setTenantId(tanantHeader.getTenantId());
 									this.log.info("----------------------------------------------------------------");
 									this.log.info("*******************회원 단말 정보 조회 파라미터*********************");
 									this.log.info("[DownloadMusicServiceImpl] userKey : {}", deviceReq.getUserKey());

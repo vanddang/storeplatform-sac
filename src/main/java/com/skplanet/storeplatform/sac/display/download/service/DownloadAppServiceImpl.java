@@ -333,6 +333,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 									deviceReq = new SearchDeviceIdSacReq();
 									deviceReq.setUserKey(downloadAppSacReq.getUserKey());
 									deviceReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
+                                    deviceReq.setTenantId(tenantHeader.getTenantId());
 
 									log.debug("----------------------------------------------------------------");
 									log.debug("*******************회원 단말 정보 조회 파라미터*********************");
