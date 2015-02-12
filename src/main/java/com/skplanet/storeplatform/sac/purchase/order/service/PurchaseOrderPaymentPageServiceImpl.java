@@ -106,21 +106,35 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 
 		// T store 는 IAP/EBOOK스토어/SC 에 따라 MID 변형 필요
 		// : PP에서 EBOOK 스토어가 먼저 오픈되서 T store Ebook Store MID가 기본형이 되었음.
+		// : Olleh / U+ MID 하드코딩 변형
 		if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(), PurchaseConstants.PRCHS_REQ_PATH_IAP)) {
 			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_IAP);
-			if (StringUtils.equals(purchaseOrderInfo.getMid(), PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE)) {
-				paymentPageParam.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE_IAP); // MID 변형 세팅
+
+			if (StringUtils.equals(purchaseOrderInfo.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
+				paymentPageParam.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE_IAP);
+			} else if (StringUtils.equals(purchaseOrderInfo.getTenantId(), PurchaseConstants.TENANT_ID_OLLEH)) {
+				paymentPageParam.setMid("KTXXXX0002");
+			} else if (StringUtils.equals(purchaseOrderInfo.getTenantId(), PurchaseConstants.TENANT_ID_UPLUS)) {
+				paymentPageParam.setMid("LGXXXX0002");
 			}
+
 		} else if (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
 				PurchaseConstants.PRCHS_REQ_PATH_EBOOK_STORAGE)) {
 			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_EBOOKSTORE);
-			if (StringUtils.equals(purchaseOrderInfo.getMid(), PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE)) {
-				paymentPageParam.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE); // MID 변형 세팅
+
+			if (StringUtils.equals(purchaseOrderInfo.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
+				paymentPageParam.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE);
 			}
+
 		} else {
 			paymentPageParam.setServiceId(PurchaseConstants.PAYMENT_PAGE_SERVICE_ID_SHOPCLIENT);
-			if (StringUtils.equals(purchaseOrderInfo.getMid(), PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE)) {
+
+			if (StringUtils.equals(purchaseOrderInfo.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
 				paymentPageParam.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE); // MID 변형 세팅
+			} else if (StringUtils.equals(purchaseOrderInfo.getTenantId(), PurchaseConstants.TENANT_ID_OLLEH)) {
+				paymentPageParam.setMid("KTXXXX0003");
+			} else if (StringUtils.equals(purchaseOrderInfo.getTenantId(), PurchaseConstants.TENANT_ID_UPLUS)) {
+				paymentPageParam.setMid("LGXXXX0003");
 			}
 		}
 		paymentPageParam.setOPMDLineNo(purchaseOrderInfo.getOpmdNo());
