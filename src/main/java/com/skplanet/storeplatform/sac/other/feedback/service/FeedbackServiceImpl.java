@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.other.feedback.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +106,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<String> userKeyList = new ArrayList<String>();
 		userKeyList.add(createFeedbackSacReq.getUserKey());
 		searchUserSacReq.setUserKeyList(userKeyList);
+		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 
 		try {
 			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
@@ -162,6 +162,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<String> userKeyList = new ArrayList<String>();
 		userKeyList.add(modifyFeedbackSacReq.getUserKey());
 		searchUserSacReq.setUserKeyList(userKeyList);
+		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		try {
 			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 		} catch (StorePlatformException e) {
@@ -214,6 +215,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<String> userKeyList = new ArrayList<String>();
 		userKeyList.add(removeFeedbackSacReq.getUserKey());
 		searchUserSacReq.setUserKeyList(userKeyList);
+		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		try {
 			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 		} catch (StorePlatformException e) {
@@ -235,7 +237,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 			tenantProdStats.setUpdId(removeFeedbackSacReq.getUserId());
 			// 상품 통계가 존재하면.
 			TenantProdStats getTenantProdStats = this.feedbackRepository.getTenantProdStats(tenantProdStats);
-			HashMap<String, String> param = new HashMap<String, String>();
 			if (getTenantProdStats != null) {
 				// 참여수가 1일경우 삭제.(모두 0으로 업데이트).
 				if (NumberUtils.toInt(getTenantProdStats.getPaticpersCnt(), 0) == 1) {
@@ -290,6 +291,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<String> userKeyList = new ArrayList<String>();
 		userKeyList.add(createRecommendFeedbackReq.getUserKey());
 		searchUserSacReq.setUserKeyList(userKeyList);
+		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		try {
 			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 		} catch (StorePlatformException e) {
@@ -323,8 +325,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 사용후기 추천 업데이트.
 		prodNotiGood.setAction("create");
-
-		HashMap<String, String> param = new HashMap<String, String>();
 
 		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
 
@@ -361,6 +361,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		userKeyList.clear();
 		userKeyList.add(res.getMbrNo());
 		searchUserSacReq.setUserKeyList(userKeyList);
+		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		SearchUserSacRes searchUserSacRes = null;
 
 		// 회원 조회.
@@ -389,6 +390,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		List<String> userKeyList = new ArrayList<String>();
 		userKeyList.add(removeRecommendFeedbackSacReq.getUserKey());
 		searchUserSacReq.setUserKeyList(userKeyList);
+		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		try {
 			this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
 		} catch (StorePlatformException e) {
@@ -421,8 +423,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		// 사용후기 추천 업데이트.
 		prodNotiGood.setAction("remove");
-
-		HashMap<String, String> param = new HashMap<String, String>();
 
 		affectedRow = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
 
@@ -460,6 +460,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		userKeyList.clear();
 		userKeyList.add(res.getMbrNo());
 		searchUserSacReq.setUserKeyList(userKeyList);
+		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		SearchUserSacRes searchUserSacRes = null;
 
 		// 회원 조회.
@@ -554,6 +555,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
 			userKeyList.addAll(userKeySet);
 			searchUserSacReq.setUserKeyList(userKeyList);
+			searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 			SearchUserSacRes searchUserSacRes = null;
 
 			// 회원 조회.
@@ -668,6 +670,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
 			userKeyList.addAll(userKeySet);
 			searchUserSacReq.setUserKeyList(userKeyList);
+			searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 			SearchUserSacRes searchUserSacRes = null;
 
 			// 회원 조회.
@@ -791,6 +794,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
 		userKeyList.addAll(userKeySet);
 		searchUserSacReq.setUserKeyList(userKeyList);
+		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		SearchUserSacRes searchUserSacRes = null;
 
 		// 회원 조회.
@@ -884,6 +888,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
 		userKeyList.addAll(userKeySet);
 		searchUserSacReq.setUserKeyList(userKeyList);
+		searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		SearchUserSacRes searchUserSacRes = null;
 
 		// 회원 조회.
