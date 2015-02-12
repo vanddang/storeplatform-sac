@@ -287,7 +287,7 @@ public class PurchaseOrderController {
 		verifyOrderInfo.setSystemId(systemId);
 		verifyOrderInfo.setPrchsId(req.getPrchsId());
 		verifyOrderInfo.setMarketDeviceKey(req.getMarketDeviceKey());
-		verifyOrderInfo.setUserAuthKey(req.getUserAuthKey());
+		verifyOrderInfo.setDeviceKeyAuth(req.getDeviceKeyAuth());
 
 		VerifyOrderSacRes res = this.orderService.verifyPurchaseOrder(verifyOrderInfo);
 		this.logger.info("PRCHS,ORDER,SAC,VERIFY,RES,{},{}", req.getPrchsId(),

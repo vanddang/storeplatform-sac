@@ -365,7 +365,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			List<String> sapPolicyCdList = null;
 			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SAP_CHECK_POLICY)) {
 				sapPolicyCdList = this.checkSapPurchasePolicy(checkPaymentPolicyParam.getTenantId(),
-						checkPaymentPolicyParam.getMarketDeviceKey(), checkPaymentPolicyParam.getUserAuthKey());
+						checkPaymentPolicyParam.getMarketDeviceKey(), checkPaymentPolicyParam.getDeviceKeyAuth());
 				if (CollectionUtils.isNotEmpty(sapPolicyCdList)
 						&& sapPolicyCdList.contains(PurchaseConstants.SAP_POLICY_LIMIT_ALL)) { // 모든결제차단
 					throw new StorePlatformException("SAC_PUR_6103");

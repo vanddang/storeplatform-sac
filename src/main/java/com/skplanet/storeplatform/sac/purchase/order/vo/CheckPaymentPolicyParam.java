@@ -28,7 +28,7 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	private String deviceKey;
 	private String deviceId;
 	private String marketDeviceKey; // SAP
-	private String userAuthKey; // SAP
+	private String deviceKeyAuth; // SAP
 	private String recvTenantId;
 	private String recvUserKey;
 	private String recvDeviceKey;
@@ -141,18 +141,18 @@ public class CheckPaymentPolicyParam extends CommonInfo {
 	}
 
 	/**
-	 * @return the userAuthKey
+	 * @return the deviceKeyAuth
 	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
+	public String getDeviceKeyAuth() {
+		return this.deviceKeyAuth;
 	}
 
 	/**
-	 * @param userAuthKey
-	 *            the userAuthKey to set
+	 * @param deviceKeyAuth
+	 *            the deviceKeyAuth to set
 	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
+	public void setDeviceKeyAuth(String deviceKeyAuth) {
+		this.deviceKeyAuth = deviceKeyAuth;
 	}
 
 	/**
