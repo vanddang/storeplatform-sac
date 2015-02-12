@@ -29,42 +29,42 @@
 	<cache
 	    name="sac:display:getPanelList"
 	    eternal="false" 
-	    maxElementsInMemory="100"
+	    maxElementsInMemory="1000"
 		overflowToDisk="false" 
 		diskPersistent="false" 
 		timeToIdleSeconds="0"
-		timeToLiveSeconds="60"
+		timeToLiveSeconds="300"
 		memoryStoreEvictionPolicy="LRU" />
 
     <cache
         name="sac:display:getCardSegmentInfo"
         eternal="false"
-        maxElementsInMemory="100"
+        maxElementsInMemory="1000"
         overflowToDisk="false"
         diskPersistent="false"
         timeToIdleSeconds="0"
-        timeToLiveSeconds="60"
-        memoryStoreEvictionPolicy="LRU" />
+        timeToLiveSeconds="300"
+        memoryStoreEvictionPolicy="LFU" />
 
     <cache
         name="sac:display:getCardListInPanel"
         eternal="false"
-        maxElementsInMemory="100"
+        maxElementsInMemory="1000"
         overflowToDisk="false"
         diskPersistent="false"
         timeToIdleSeconds="0"
-        timeToLiveSeconds="60"
+        timeToLiveSeconds="300"
         memoryStoreEvictionPolicy="LRU" />
 
     <cache
         name="sac:display:getCardInfo"
         eternal="false"
-        maxElementsInMemory="300"
+        maxElementsInMemory="1000"
         overflowToDisk="false"
         diskPersistent="false"
         timeToIdleSeconds="0"
-        timeToLiveSeconds="60"
-        memoryStoreEvictionPolicy="LRU" />
+        timeToLiveSeconds="300"
+        memoryStoreEvictionPolicy="LFU" />
 
     <cache
         name="sac:display:getMenuList"
