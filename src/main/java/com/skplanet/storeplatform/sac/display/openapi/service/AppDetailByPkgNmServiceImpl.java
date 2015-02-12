@@ -3,6 +3,19 @@
  */
 package com.skplanet.storeplatform.sac.display.openapi.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.openapi.AppDetailByPackageNameSacReq;
@@ -11,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -20,14 +34,8 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
+import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
+import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 
 /**
  * 상품 상세 정보 요청(Package Name) Service 구현체
@@ -55,6 +63,9 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 
 	@Value("#{propertiesForSac['web.poc.apps.detail.url']}")
 	private String webPocAppsDetailUrl;
+
+	@Autowired
+	private FeedbackRepository feedbackRepository;
 
 	/*
 	 * (non-Javadoc)
@@ -192,7 +203,15 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 
 				product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품가격
 
-				product.setAccrual(this.commonGenerator.generateAccrual(metaInfo)); // 평점정보
+				// 평점정보
+				TenantProdStats tenantProdStats = new TenantProdStats();
+				tenantProdStats.setProdId(metaInfo.getProdId());
+				TenantProdStats getProdEvalInfo = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
+				Accrual accrual = new Accrual();
+				accrual.setVoterCount(Integer.parseInt(getProdEvalInfo.getPaticpersCnt()));
+				accrual.setDownloadCount(Integer.parseInt(getProdEvalInfo.getDwldCnt()));
+				accrual.setScore(Double.parseDouble(getProdEvalInfo.getAvgEvluScore()));
+				product.setAccrual(accrual);
 
 				// App 상세정보
 				App app = new App();
