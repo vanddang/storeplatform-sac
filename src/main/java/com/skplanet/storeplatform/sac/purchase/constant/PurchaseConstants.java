@@ -208,7 +208,8 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	// public static final String PAYPLANET_MID_UPLUS = "SKTstore03"; // U+ Store
 
 	/** Pay Planet MID prefix */
-	public static final List<String> PAYPLANET_MID_PREFIX_LIST = Arrays.asList("TSTORE", "SKTstore");
+	public static final List<String> PAYPLANET_MID_PREFIX_LIST = Arrays
+			.asList("TSTORE", "SKTstore", "KTXXXX", "LGXXXX");
 
 	/** Pay Planet 네트워크 타입 */
 	public static final String PAYPLANET_NETWORK_TYPE_3GLTE = "1"; // 3G, LTE
