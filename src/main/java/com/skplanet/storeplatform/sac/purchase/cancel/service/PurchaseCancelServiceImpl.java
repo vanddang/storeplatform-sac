@@ -409,20 +409,21 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		}
 
 		/** RO 삭제 처리. */
-		if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
-			for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
-				if (!StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) {
-					// APP 상품이 아니면 통과.
-					continue;
-				}
-				try {
-					this.cancelRO(purchaseCancelSacParam, purchaseCancelDetailSacParam, prchsDtlSacParam);
-				} catch (Exception e) {
-					this.logger.info("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
-				}
-			}
-		}
+		// 2015.02.02 최상훈C 요청 주석처리
+		// if (!purchaseCancelSacParam.getIgnorePayPlanet()) {
+		// for (PrchsDtlSacParam prchsDtlSacParam : purchaseCancelDetailSacParam.getPrchsDtlSacParamList()) {
+		// if (!StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
+		// PurchaseConstants.TENANT_PRODUCT_GROUP_APP)) {
+		// // APP 상품이 아니면 통과.
+		// continue;
+		// }
+		// try {
+		// this.cancelRO(purchaseCancelSacParam, purchaseCancelDetailSacParam, prchsDtlSacParam);
+		// } catch (Exception e) {
+		// this.logger.info("RO 삭제 실패! ========= {}, {}", prchsDtlSacParam.getProdId(), e);
+		// }
+		// }
+		// }
 
 		purchaseCancelDetailSacResult.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
 		purchaseCancelDetailSacResult.setResultCd("SAC_PUR_0000");
@@ -442,8 +443,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			this.logger.error("### 구매 취소 SMS 발송 실패  prchsId : " + purchaseCancelDetailSacParam.getPrchsId());
 		}
 
-		// SAP 관련 구매취소 Noti
-		if (!StringUtils.equals(prchsSacParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
+		// SAP 관련 구매취소 Noti (타사이면서 유료상품에 대해서만 noti)
+		if (!StringUtils.equals(prchsSacParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)
+				&& prchsSacParam.getTotAmt() > 0) {
 			this.cancelNoti(prchsSacParam, purchaseCancelDetailSacParam, purchaseCancelSacParam);
 		}
 
@@ -803,49 +805,49 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	 * @param purchaseCancelParamDetail
 	 *            purchaseCancelParamDetail
 	 */
-	private void cancelRO(PurchaseCancelSacParam purchaseCancelSacParam,
-			PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, PrchsDtlSacParam prchsDtlSacParam) {
-
-		/** 사용자 deviceId 조회. */
-		String deviceId = this.purchaseCancelRepository.searchOrderDeviceId(prchsDtlSacParam.getTenantId(),
-				prchsDtlSacParam.getUseInsdUsermbrNo(), prchsDtlSacParam.getUseInsdDeviceId());
-
-		/** appId 조회. */
-		PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
-		paymentInfoSacReq.setTenantId(prchsDtlSacParam.getUseTenantId());
-
-		List<String> prodIdList = new ArrayList<String>();
-		prodIdList.add(prchsDtlSacParam.getProdId());
-		paymentInfoSacReq.setProdIdList(prodIdList);
-
-		paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
-		PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq);
-		if (paymentInfoSacRes == null || paymentInfoSacRes.getPaymentInfoList() == null
-				|| paymentInfoSacRes.getPaymentInfoList().size() < 1) {
-			throw new StorePlatformException("SAC_PUR_5101");
-		}
-		prchsDtlSacParam.setAppId(paymentInfoSacRes.getPaymentInfoList().get(0).getAid());
-
-		String resultMsg = "";
-		/** AOM PUSH */
-		try {
-			resultMsg = this.purchaseCancelRepository.aomPush(deviceId, prchsDtlSacParam.getAppId());
-
-			this.logger.debug("removeRO.AomPush result ===== {}", resultMsg);
-		} catch (Exception e) {
-			this.logger.debug("aom push fail! ========= {}", e.toString());
-		}
-
-		/** ARM License Remove */
-		try {
-			resultMsg = this.purchaseCancelRepository.armRemoveLicense(deviceId, prchsDtlSacParam.getAppId());
-
-			this.logger.debug("removeRO.ArmPush result ===== {}", resultMsg);
-		} catch (Exception e) {
-			this.logger.debug("arm license remove fail! ========= {}", e.toString());
-		}
-
-	}
+	// private void cancelRO(PurchaseCancelSacParam purchaseCancelSacParam,
+	// PurchaseCancelDetailSacParam purchaseCancelDetailSacParam, PrchsDtlSacParam prchsDtlSacParam) {
+	//
+	// /** 사용자 deviceId 조회. */
+	// String deviceId = this.purchaseCancelRepository.searchOrderDeviceId(prchsDtlSacParam.getTenantId(),
+	// prchsDtlSacParam.getUseInsdUsermbrNo(), prchsDtlSacParam.getUseInsdDeviceId());
+	//
+	// /** appId 조회. */
+	// PaymentInfoSacReq paymentInfoSacReq = new PaymentInfoSacReq();
+	// paymentInfoSacReq.setTenantId(prchsDtlSacParam.getUseTenantId());
+	//
+	// List<String> prodIdList = new ArrayList<String>();
+	// prodIdList.add(prchsDtlSacParam.getProdId());
+	// paymentInfoSacReq.setProdIdList(prodIdList);
+	//
+	// paymentInfoSacReq.setLangCd(purchaseCancelSacParam.getLangCd());
+	// PaymentInfoSacRes paymentInfoSacRes = this.paymentInfoSCI.searchPaymentInfo(paymentInfoSacReq);
+	// if (paymentInfoSacRes == null || paymentInfoSacRes.getPaymentInfoList() == null
+	// || paymentInfoSacRes.getPaymentInfoList().size() < 1) {
+	// throw new StorePlatformException("SAC_PUR_5101");
+	// }
+	// prchsDtlSacParam.setAppId(paymentInfoSacRes.getPaymentInfoList().get(0).getAid());
+	//
+	// String resultMsg = "";
+	// /** AOM PUSH */
+	// try {
+	// resultMsg = this.purchaseCancelRepository.aomPush(deviceId, prchsDtlSacParam.getAppId());
+	//
+	// this.logger.debug("removeRO.AomPush result ===== {}", resultMsg);
+	// } catch (Exception e) {
+	// this.logger.debug("aom push fail! ========= {}", e.toString());
+	// }
+	//
+	// /** ARM License Remove */
+	// try {
+	// resultMsg = this.purchaseCancelRepository.armRemoveLicense(deviceId, prchsDtlSacParam.getAppId());
+	//
+	// this.logger.debug("removeRO.ArmPush result ===== {}", resultMsg);
+	// } catch (Exception e) {
+	// this.logger.debug("arm license remove fail! ========= {}", e.toString());
+	// }
+	//
+	// }
 
 	/**
 	 * 
