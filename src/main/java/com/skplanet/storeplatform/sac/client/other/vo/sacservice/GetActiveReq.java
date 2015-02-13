@@ -1,7 +1,10 @@
 package com.skplanet.storeplatform.sac.client.other.vo.sacservice;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GetActiveReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;

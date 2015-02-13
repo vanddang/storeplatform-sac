@@ -1,7 +1,11 @@
 package com.skplanet.storeplatform.sac.client.other.vo.sacservice;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class GetActiveRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
