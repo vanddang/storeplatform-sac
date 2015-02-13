@@ -289,6 +289,9 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	/** Payplanet 결제 성공 코드 */
 	public static final String TSTORE_PAYPLANET_CANCEL_SUCCESS = "0000";
 
+	/** Sap 성공 코드 */
+	public static final String SAP_SUCCESS = "0000";
+
 	/** 구매 상품 건수 업데이트 처리 상태 코드 */
 	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_NO = "N";
 	public static final String PURCHASE_PRODUCT_COUNT_PROC_STATUS_RESERVE = "R";
