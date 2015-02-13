@@ -1874,7 +1874,7 @@ public class LoginServiceImpl implements LoginService {
 			marketReq.setDeviceTelecom(req.getDeviceTelecom());
 			marketReq.setNativeId(req.getNativeId());
 			marketReq.setSimSerialNo(req.getSimSerialNo());
-			marketReq.setUserVerifyReason("InApp");
+			marketReq.setUserVerifyReason("ShopClient");
 
 			LOGGER.info("{} authorizeMarket Request : {}", req.getDeviceId(),
 					ConvertMapperUtils.convertObjectToJson(marketReq));
