@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.other.sacservice.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
 /**
- * SacServiceDataService DB 구현체
+ * SacServiceService 구현체
  *
  * Updated on 2014. 08. 08. by 서대영, SK플래닛 : 최초 작성
  */
@@ -40,13 +41,13 @@ public class SacServiceServiceImpl implements SacServiceService {
 	}
 
 	@Override
-	public void getServiceActiveList(List<SacService> service) {
-		// TODO Auto-generated method stub
+	public List<SacService> getServiceActiveList(List<SacService> serviceList) {
+		return abilityService.getServiceList(serviceList);
 	}
 
 	@Override
-	public void setServiceActiveList(List<SacService> service) {
-		// TODO Auto-generated method stub
+	public List<SacService> setServiceActiveList(List<SacService> service) {
+		return Collections.emptyList();
 	}
 
 }

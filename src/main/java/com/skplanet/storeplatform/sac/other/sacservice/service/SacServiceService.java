@@ -14,7 +14,7 @@ import java.util.List;
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
 /**
- * SacServiceDataService 인터페이스
+ * SacServiceService 인터페이스
  *
  * Created on 2014. 06. 02. by 서대영, SK플래닛
  */
@@ -33,11 +33,11 @@ public interface SacServiceService {
 	/**
 	 * 어려 서비스의 On/Off 값을 조회온다.
 	 */
-	void getServiceActiveList(List<SacService> service);
+	List<SacService> getServiceActiveList(List<SacService> serviceList);
 
 	/**
 	 * 어려 서비스의 On/Off 값을 수정한다.
 	 */
-	void setServiceActiveList(List<SacService> service);
+	List<SacService> setServiceActiveList(List<SacService> service);
 
 }

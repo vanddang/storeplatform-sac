@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="SacService">
 
+	<select id="selectList" parameterType="list" resultType="SacService">
+   		/* SacServiceMapper.xml, selectOne, SAC : 서대영, 2015-02-13 */
+        SELECT *		
+        FROM TB_CM_SERVICE 
+        WHERE service_cd IN
+        <foreach item="serviceCd" collection="list" open="(" separator="," close=")">
+      		#{serviceCd}
+    	</foreach>
+	</select>
+	
 	<select id="selectOne" parameterType="string" resultType="SacService">
    		/* SacServiceMapper.xml, selectOne, SAC : 서대영, 2014-08-11 */
         SELECT *		

@@ -88,13 +88,13 @@ public class SacServiceServiceMap implements SacServiceService {
 	}
 
 	@Override
-	public void getServiceActiveList(List<SacService> service) {
-		// TODO Auto-generated method stub
+	public List<SacService> getServiceActiveList(List<SacService> service) {
+		return null;
 	}
 
 	@Override
-	public void setServiceActiveList(List<SacService> service) {
-		// TODO Auto-generated method stub
+	public List<SacService> setServiceActiveList(List<SacService> service) {
+		return null;
 	}
 
 }

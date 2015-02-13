@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.other.sacservice.service;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 
 /**
@@ -19,5 +21,7 @@ import com.skplanet.storeplatform.sac.other.sacservice.vo.SacService;
 public interface SacServiceAbilityService {
 
 	boolean isServiceEnabled(SacService svc);
+	
+	List<SacService> getServiceList(List<SacService> svcList);
 	
 }

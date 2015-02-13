@@ -22,6 +22,8 @@ import com.skplanet.storeplatform.sac.other.sacservice.vo.SacServiceSchedule;
  */
 public interface SacServiceDataService {
 
+	List<SacService> selectServiceList(List<String> svcCdList);
+	
 	SacService selectService(String serviceCd);
 
 	List<String> selectSimOperatorList(String serviceCd);

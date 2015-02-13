@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.other.sacservice.controller;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveReq;
+import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveReqList;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveRes;
+import com.skplanet.storeplatform.sac.client.other.vo.sacservice.GetActiveResList;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.SetActiveReq;
 import com.skplanet.storeplatform.sac.client.other.vo.sacservice.SetActiveRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -77,12 +80,16 @@ public class SacServiceActiveController {
 
 	@RequestMapping(value = "/getActiveList/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public List<GetActiveRes> getActiveList(@RequestBody @Validated List<GetActiveReq> reqList, SacRequestHeader sacRequestHeader) {
+	public GetActiveResList getActiveList(@RequestBody @Validated GetActiveReqList reqList, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("/getActiveList/v1's reqList : {}", reqList);
-		List<SacService> voList = this.typeSvc.fromGetReqList(reqList, sacRequestHeader);
-		this.svc.getServiceActiveList(voList);
+		if (CollectionUtils.isEmpty(reqList.getServiceList())) {
+			return new GetActiveResList();
+		}
+		
+		List<SacService> voList = this.typeSvc.fromGetReqList(reqList.getServiceList(), sacRequestHeader);
+		voList = this.svc.getServiceActiveList(voList);
 		List<GetActiveRes> resList = this.typeSvc.toGetResList(voList);
-		return resList;
+		return new GetActiveResList(resList);
 	}
 
 	@RequestMapping(value = "/setActiveList/v1", method = RequestMethod.POST)
@@ -90,7 +97,7 @@ public class SacServiceActiveController {
 	public List<SetActiveRes> setActiveList(@RequestBody @Validated List<SetActiveReq> reqList, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("/setActiveList/v1's reqList : {}", reqList);
 		List<SacService> voList = this.typeSvc.fromSetReqList(reqList, sacRequestHeader);
-		this.svc.getServiceActiveList(voList);
+		voList = this.svc.setServiceActiveList(voList);
 		List<SetActiveRes> resList = this.typeSvc.toSetResList(voList);
 		return resList;
 	}

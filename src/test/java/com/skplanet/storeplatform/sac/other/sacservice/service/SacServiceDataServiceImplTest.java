@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.other.sacservice.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -32,6 +33,13 @@ public class SacServiceDataServiceImplTest {
 	public void setUp() {
 		svc = new SacServiceDataServiceImpl();
 		svc.setCommonDAO(commonDAO);
+	}
+	
+	@Test
+	public void testSelectList() {
+		List<String> serviceCdList = Arrays.asList("tstore.test", "tstore.mileage");
+		List<SacService> list = svc.selectServiceList(serviceCdList);
+		System.out.println("<<< testSelectLsit() >>>\n" + list);
 	}
 	
 	@Test

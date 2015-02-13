@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.other.sacservice.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,6 +96,21 @@ public class SacServiceAbilityServiceImpl implements SacServiceAbilityService {
 		}
 		
 		return true;
+	}
+	
+	public List<SacService> getServiceList(List<SacService> svcList) {
+		List<String> svcCdList = new ArrayList<String>();
+		for (SacService svc : svcList) {
+			svcCdList.add(svc.getServiceCd());
+		}
+		List<SacService> svcListFromDb = dataSvc.selectServiceList(svcCdList);
+		
+		for (SacService svc : svcListFromDb) {
+			boolean enabled = isServiceEnabled(svc);
+			svc.setActive(enabled);
+		}
+		
+		return svcListFromDb;
 	}
 
 }

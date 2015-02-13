@@ -41,6 +41,17 @@ public class SacServiceDataServiceImpl implements SacServiceDataService {
 		this.commonDAO = commonDAO;
 	}
 
+	@Cacheable(value = "sac:other:sacservice:selectServiceList")
+	@Override
+	public List<SacService> selectServiceList(List<String> svcCdList) {
+		List<SacService> list = commonDAO.queryForList("SacService.selectList", svcCdList, SacService.class);
+		if (list == null) {
+			list = Collections.emptyList();
+		}
+		return list;
+	}
+
+	
 	@Cacheable(value = "sac:other:sacservice:selectService")
 	@Override
 	public SacService selectService(String serviceCd) {
@@ -88,6 +99,7 @@ public class SacServiceDataServiceImpl implements SacServiceDataService {
 	}
 
     @CacheEvict(value = {
+    		"sac:other:sacservice:selectServiceList",
     		"sac:other:sacservice:selectService",
     		"sac:other:sacservice:selectSimOperatorList",
     		"sac:other:sacservice:selectModelList",
@@ -97,6 +109,5 @@ public class SacServiceDataServiceImpl implements SacServiceDataService {
 	@Override
 	public void flushCache() {
 	}
-
 
 }
