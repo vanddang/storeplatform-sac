@@ -87,7 +87,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
         new TLogUtil().set(new ShuttleSetter() {
             @Override
             public void customize(TLogSentinelShuttle shuttle) {
-                shuttle.log_id("TL_SAC_DSP_0001").device_id(deviceId).network_type(networkType);
+                shuttle.log_id("TL_SAC_DSP_0001").device_id(deviceId);
             }
         });
 
@@ -180,7 +180,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
         new TLogUtil().set(new ShuttleSetter() {
             @Override
             public void customize(TLogSentinelShuttle shuttle) {
-                shuttle.app_id(forTlogAppIdList);
+                shuttle.app_id(forTlogAppIdList).network_type(networkType);
             }
         });
 
