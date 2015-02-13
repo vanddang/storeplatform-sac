@@ -80,6 +80,10 @@ public class DisplayCacheController {
             cacheEvictManager.evictAllUpdateProduct();
             success = true;
         }
+        else if(type.equalsIgnoreCase("deviceprofile")) {
+            cacheEvictManager.evictAllDeviceProfile();
+            success = true;
+        }
 
         Map<String, Object> res = new HashMap<String, Object>();
         res.put("type", type);

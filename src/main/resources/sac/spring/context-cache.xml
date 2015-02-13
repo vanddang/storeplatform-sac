@@ -69,6 +69,9 @@
 
                 <entry key="sac:display:getCardListInPanel:v1" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:getCardSegmentInfo:v1" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
+
+                <entry key="sac:display:device:profile:v1" value="21600" value-type="java.lang.Long"/>  <!-- 360분-->
+
             </map>
         </property>
     </bean>

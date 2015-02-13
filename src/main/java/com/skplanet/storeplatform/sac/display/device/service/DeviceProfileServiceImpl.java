@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.cache.service.DeviceProfileManager;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfile;
 import org.slf4j.Logger;
@@ -40,6 +41,8 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+    @Autowired
+    private DeviceProfileManager deviceProfileManager;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -48,17 +51,11 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 	 */
 	@Override
 	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq req, SacRequestHeader header) {
-		// TODO Auto-generated method stub
 
-		CommonResponse commonResponse = new CommonResponse();
-		DeviceProfileRes deviceProfileResponse = new DeviceProfileRes();
-		TenantHeader tenantHeader = header.getTenantHeader();
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("tenantHeader", tenantHeader);
-		paramMap.put("req", req);
+        CommonResponse commonResponse = new CommonResponse();
+        DeviceProfileRes deviceProfileResponse = new DeviceProfileRes();
 
-		DeviceProfile deviceProfile = this.commonDAO.queryForObject("DeviceProfile.selectDeviceProfile", paramMap,
-				DeviceProfile.class);
+        DeviceProfile deviceProfile = this.deviceProfileManager.getDeviceProfile(req.getDeviceModelNo(), header.getTenantHeader().getLangCd());
 
 		// DeviceHeader Profile 조회
 		Device device = new Device();
@@ -94,6 +91,7 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 
 		deviceProfileResponse.setDevice(device);
 		deviceProfileResponse.setCommonResponse(commonResponse);
+
 		return deviceProfileResponse;
 	}
 }

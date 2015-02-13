@@ -61,4 +61,10 @@ public interface CacheEvictManager {
     void evictAllTmembershipDcRate();
 
     void evictAllUpdateProduct();
+
+    /**
+     * DeviceProfile 캐쉬 정보를 모두 Evict 한다.
+     *
+     */
+    void evictAllDeviceProfile();
 }

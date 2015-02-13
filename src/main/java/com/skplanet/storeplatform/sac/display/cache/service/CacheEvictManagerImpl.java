@@ -136,4 +136,10 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     public void evictAllUpdateProduct() {
 
     }
+
+    @Override
+    @CacheEvict(value = "sac:display:device:profile:v1", allEntries = true)
+    public void evictAllDeviceProfile() {
+
+    }
 }
