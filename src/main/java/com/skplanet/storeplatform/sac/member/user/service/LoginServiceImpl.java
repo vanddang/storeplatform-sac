@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForWapEcReq;
@@ -43,6 +44,8 @@ import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes
 import com.skplanet.storeplatform.external.client.market.vo.MarketClauseExtraInfoEc;
 import com.skplanet.storeplatform.external.client.tstore.sci.TstoreTransferSCI;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
@@ -483,6 +486,19 @@ public class LoginServiceImpl implements LoginService {
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
+		// tLog Request 정보 셋팅
+		final String tLogDeviceId = req.getDeviceId();
+		final String tLogMnoTypeReq = req.getDeviceTelecom();
+		final String tLogEmailReq = req.getDeviceAccount();
+		final String tLogImeiReq = req.getNativeId();
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SAC_MEM_0005").device_id(tLogDeviceId).mno_type_req(tLogMnoTypeReq)
+						.email_req(tLogEmailReq).imei_req(tLogImeiReq);
+			}
+		});
+
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
 
 			if (!isOpmd) { // OPMD단말인경우 변동성 체크를 하지 않는다.
@@ -524,6 +540,21 @@ public class LoginServiceImpl implements LoginService {
 			} else {
 				LOGGER.info("{} {} OPMD 단말 변동성 성공처리", req.getDeviceId(), oDeviceId);
 			}
+
+			// tLog DB 정보 셋팅
+			final String tLogUserKey = deviceInfo.getUserKey();
+			final String tLogDeviceKey = deviceInfo.getDeviceKey();
+			final String tLogMnoTypeDB = deviceInfo.getDeviceTelecom();
+			final String tLogEmailDB = deviceInfo.getDeviceAccount();
+			final String tLogImeiDB = deviceInfo.getNativeId();
+			new TLogUtil().set(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.insd_usermbr_no(tLogUserKey).insd_device_id(tLogDeviceKey).mno_type_db(tLogMnoTypeDB)
+							.email_db(tLogEmailDB).imei_db(tLogImeiDB);
+				}
+			});
+
 		} else {
 
 			/* 변동성 여부 조회 */
@@ -605,6 +636,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		res.setIsVariability(isVariability);
+
 		return res;
 
 	}
