@@ -282,12 +282,14 @@ public class CouponItemServiceImpl implements CouponItemService {
 					this.commonDAO.update("Coupon.updateTbDpProdLastDeployDt", map);
 				}
 			}
+			this.log.info("■■■■■ updateDPCouponCNT Start ■■■■■");
 			
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("prodId", prodId);
 			map.put("tenentId", CouponConstants.TENANT_ID);
 
 			this.commonDAO.update("Coupon.updateDPCouponCNT", map);			
+			this.log.info("■■■■■ updateDPCouponCNT End ■■■■■");
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
