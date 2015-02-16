@@ -479,6 +479,7 @@ public class DeviceServiceImpl implements DeviceService {
 						MbrAuth mbrAuth = new MbrAuth();
 						mbrAuth.setCi(" ");
 						mbrAuth.setIsRealName("N");
+						mbrAuth.setRealNameSite(commonRequest.getSystemID());
 						updRealNameReq.setUserMbrAuth(mbrAuth);
 						this.userSCI.updateRealName(updRealNameReq);
 					}
