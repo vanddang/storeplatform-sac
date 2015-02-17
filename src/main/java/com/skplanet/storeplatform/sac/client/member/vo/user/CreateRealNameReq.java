@@ -47,6 +47,7 @@ public class CreateRealNameReq extends CommonInfo {
 	/**
 	 * 실명인증 일시
 	 */
+	@NotEmpty
 	private String realNameDate = "";
 
 	/**
