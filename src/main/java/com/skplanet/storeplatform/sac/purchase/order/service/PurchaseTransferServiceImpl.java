@@ -66,6 +66,8 @@ public class PurchaseTransferServiceImpl implements PurchaseTransferService {
 			purchaseTransferSc.setPrchsDt(purchaseTransferSac.getPrchsDt());
 			purchaseTransferSc.setMarketPrchsId(purchaseTransferSac.getMarketPrchsId());
 			purchaseTransferSc.setMarketProdId(purchaseTransferSac.getMarketProdId());
+			purchaseTransferSc.setStatusCd(purchaseTransferSac.getStatusCd());
+			purchaseTransferSc.setCancelDt(purchaseTransferSac.getCancelDt());
 
 			purchaseTransferScList.add(purchaseTransferSc);
 		}
