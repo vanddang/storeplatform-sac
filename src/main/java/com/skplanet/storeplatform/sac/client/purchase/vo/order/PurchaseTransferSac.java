@@ -23,6 +23,8 @@ public class PurchaseTransferSac extends CommonInfo {
 	private String prchsDt;
 	private String marketPrchsId;
 	private String marketProdId;
+	private String statusCd;
+	private String cancelDt;
 
 	/**
 	 * @return the prchsDt
@@ -67,6 +69,36 @@ public class PurchaseTransferSac extends CommonInfo {
 	 */
 	public void setMarketProdId(String marketProdId) {
 		this.marketProdId = marketProdId;
+	}
+
+	/**
+	 * @return the statusCd
+	 */
+	public String getStatusCd() {
+		return this.statusCd;
+	}
+
+	/**
+	 * @param statusCd
+	 *            the statusCd to set
+	 */
+	public void setStatusCd(String statusCd) {
+		this.statusCd = statusCd;
+	}
+
+	/**
+	 * @return the cancelDt
+	 */
+	public String getCancelDt() {
+		return this.cancelDt;
+	}
+
+	/**
+	 * @param cancelDt
+	 *            the cancelDt to set
+	 */
+	public void setCancelDt(String cancelDt) {
+		this.cancelDt = cancelDt;
 	}
 
 }
