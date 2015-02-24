@@ -1416,19 +1416,23 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setNativeId(req.getNativeId());
 		marketReq.setSimSerialNo(req.getSimSerialNo());
 		marketReq.setExtraInfo(req.getExtraInfo());
+
+		LOGGER.info("{} authorizeForOllehMarket Request : {}", req.getDeviceId(),
+				ConvertMapperUtils.convertObjectToJson(marketReq));
+
 		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForOllehMarket(marketReq);
 
 		AuthorizeForOllehMarketSacRes res = new AuthorizeForOllehMarketSacRes();
 
 		if (marketRes != null) {
 
+			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(),
+					ConvertMapperUtils.convertObjectToJson(marketRes));
+
 			res.setTrxNo(req.getTrxNo());
 			res.setDeviceId(req.getDeviceId());
 			res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S02
 			res.setDeviceTelecom(req.getDeviceTelecom());
-
-			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(),
-					ConvertMapperUtils.convertObjectToJson(marketRes));
 
 			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상회원
 
@@ -1543,6 +1547,9 @@ public class LoginServiceImpl implements LoginService {
 					res.setExtraInfo(marketRes.getExtraInfo());
 				}
 
+				// 로그인 이력 저장
+				this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
 				// Tstore에 가입된 회원인경우 탈퇴 처리
@@ -1581,11 +1588,6 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 
-		}
-
-		// 로그인 이력 저장
-		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
 		}
 
 		return res;
@@ -1611,19 +1613,23 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setSimSerialNo(req.getSimSerialNo());
 		marketReq.setDeviceType(req.getDeviceType());
 		marketReq.setExtraInfo(req.getExtraInfo());
+
+		LOGGER.info("{} authorizeForUplusStore Request : {}", req.getDeviceId(),
+				ConvertMapperUtils.convertObjectToJson(marketReq));
+
 		MarketAuthorizeEcRes marketRes = this.marketSCI.simpleAuthorizeForUplusStore(marketReq);
 
 		AuthorizeForUplusStoreSacRes res = new AuthorizeForUplusStoreSacRes();
 
 		if (marketRes != null) {
 
+			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(),
+					ConvertMapperUtils.convertObjectToJson(marketRes));
+
 			res.setTrxNo(req.getTrxNo());
 			res.setDeviceId(req.getDeviceId());
 			res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S03
 			res.setDeviceTelecom(req.getDeviceTelecom());
-
-			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(),
-					ConvertMapperUtils.convertObjectToJson(marketRes));
 
 			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상회원
 
@@ -1738,6 +1744,9 @@ public class LoginServiceImpl implements LoginService {
 					res.setExtraInfo(marketRes.getExtraInfo());
 				}
 
+				// 로그인 이력 저장
+				this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
 				// Tstore에 가입된 회원인경우 탈퇴 처리
@@ -1776,11 +1785,6 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 
-		}
-
-		// 로그인 이력 저장
-		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
 		}
 
 		return res;
