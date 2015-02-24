@@ -544,9 +544,9 @@ public class LoginServiceImpl implements LoginService {
 			// tLog DB 정보 셋팅
 			final String tLogUserKey = deviceInfo.getUserKey();
 			final String tLogDeviceKey = deviceInfo.getDeviceKey();
-			final String tLogMnoTypeDB = deviceInfo.getDeviceTelecom();
-			final String tLogEmailDB = deviceInfo.getDeviceAccount();
-			final String tLogImeiDB = deviceInfo.getNativeId();
+			final String tLogMnoTypeDB = StringUtils.defaultIfBlank(deviceInfo.getDeviceTelecom(), "");
+			final String tLogEmailDB = StringUtils.defaultIfBlank(deviceInfo.getDeviceAccount(), "");
+			final String tLogImeiDB = StringUtils.defaultIfBlank(deviceInfo.getNativeId(), "");
 			new TLogUtil().set(new ShuttleSetter() {
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
