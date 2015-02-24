@@ -53,9 +53,9 @@ public class OutProductListServiceImpl implements OutProductListService {
 			List<DisplayListFromDB> dplistFromDB) {
 		if(dplistFromDB!=null && !dplistFromDB.isEmpty()){
     		setListNm(res, dplistFromDB);
-    		setHasNext(countFromReq, prodListsFromDB, res);
+    		setHasNextAndRemoveLastProduct(countFromReq, prodListsFromDB, res);
     		setStartKey(prodListsFromDB, res);
-    		res.setCount(prodListsFromDB.size());
+    		res.setCount(res.getProductList().size());
 		} else {
 			res.setCount(0);
 			res.setProductList(new ArrayList<OutProduct>());
@@ -85,10 +85,14 @@ public class OutProductListServiceImpl implements OutProductListService {
 		res.setListNm(dplistFromDB.get(0).getListNm());
 	}
 
-	private void setHasNext(Integer countFromReq, List<OutProductDbResultMap> prodListsFromDB, OutProductListSacRes res) {
+	private void setHasNextAndRemoveLastProduct(Integer countFromReq, List<OutProductDbResultMap> prodListsFromDB, OutProductListSacRes res) {
 		if(prodListsFromDB!=null && countFromReq<prodListsFromDB.size()) {
 			res.setHasNext("Y");
-			prodListsFromDB.remove(prodListsFromDB.size()-1);
+			
+			List<OutProduct> list = res.getProductList();
+			list.remove(list.size()-1);
+			res.setProductList(list);
+
 		} else {
 			res.setHasNext("N");
 		}
