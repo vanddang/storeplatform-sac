@@ -427,9 +427,10 @@ public class EpubServiceImpl implements EpubService {
 		// 상품 정보 (상품명)
 		product.setTitle(new Title(mapperVO.getProdNm()));
 
-		//productDetailExplain (상품 상세설명)
-		product.setProductExplain(mapperVO.getProdBaseDesc());
-
+		// productExplain(상품설명) 
+		// 저자 설명(PROD_BASE_DESC)값이 아닌 상품 상세설명(PROD_DTL_DESC) 값으로 변경 (14.02.24)
+		product.setProductExplain(mapperVO.getProdDtlDesc());	
+	
 		//productDetailExplain (상품 상세설명)
 		product.setProductDetailExplain(mapperVO.getProdDtlDesc());
 
