@@ -1552,7 +1552,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		/** 회원 기본 정보V2. */
 		DetailV2Res res = this.srhUserV2(req, sacHeader);
-		res.setTenantId(sacHeader.getTenantHeader().getTenantId());
 
 		/* 정보조회범위 */
 		if (req.getSearchExtent() != null) {
