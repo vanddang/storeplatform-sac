@@ -88,11 +88,7 @@ public class OutProductListServiceImpl implements OutProductListService {
 	private void setHasNextAndRemoveLastProduct(Integer countFromReq, List<OutProductDbResultMap> prodListsFromDB, OutProductListSacRes res) {
 		if(prodListsFromDB!=null && countFromReq<prodListsFromDB.size()) {
 			res.setHasNext("Y");
-			
-			List<OutProduct> list = res.getProductList();
-			list.remove(list.size()-1);
-			res.setProductList(list);
-
+			res.getProductList().remove(res.getProductList().size()-1);
 		} else {
 			res.setHasNext("N");
 		}
