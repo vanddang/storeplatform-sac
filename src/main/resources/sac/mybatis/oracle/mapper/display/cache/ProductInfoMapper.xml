@@ -1059,4 +1059,15 @@
               AND MC.USE_YN = 'Y'
     </select>
 
+    <select id="getProductStats" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManagerImpl$RawProductStats">
+        SELECT /* ProductInfoMapper.xml, getProductStats, 정희원, 2015-02-25 */
+            SUM(NVL(PRCHS_CNT, 0)) AS PRCHS_CNT,
+            SUM(NVL(TOT_EVLU_SCORE, 0)) AS TOT_EVLU_SCORE,
+            SUM(NVL(PATICPERS_CNT, 0)) AS PATICPERS_CNT
+        FROM TB_DP_TENANT_PROD_STATS
+        WHERE PROD_ID = #{prodId}
+              AND TENANT_ID IN <foreach collection="tenantList" open="(" close=")" separator="," item="v">#{v}</foreach>
+        GROUP BY PROD_ID
+    </select>
+
 </mapper>

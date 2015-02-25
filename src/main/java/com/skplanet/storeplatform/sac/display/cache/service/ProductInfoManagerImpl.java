@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
+import com.google.common.base.Strings;
 import com.skplanet.spring.data.plandasj.PlandasjTemplate;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -251,5 +253,58 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         reqMap.put("langCd", param.getLangCd());
         // TODO 몇Depth메뉴인지 판단을 해야 함
         return commonDAO.queryForObject("ProductInfo.getMenuInfo", reqMap, MenuInfo.class);
+    }
+
+    @Override
+    public ProductStats getProductStats(ProductStatsParam param) {
+        if(param == null || Strings.isNullOrEmpty(param.getProdId()))
+            throw new IllegalArgumentException();
+
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("prodId", param.getProdId());
+        req.put("tenantList", Arrays.asList("S01", "S02", "S03"));
+
+        RawProductStats rawProductStats = commonDAO.queryForObject("ProductInfo.getProductStats", req, RawProductStats.class);
+        if(rawProductStats == null)
+            return new ProductStats();
+
+        ProductStats stats = new ProductStats();
+        stats.setPurchaseCount(rawProductStats.getPrchsCnt());
+        if (rawProductStats.getPaticpersCnt() > 0) {
+            stats.setParticipantCount(rawProductStats.getPaticpersCnt());
+            stats.setAverageScore((double)rawProductStats.getTotEvluScore() / rawProductStats.getPaticpersCnt());
+        }
+
+        return stats;
+    }
+
+    public static class RawProductStats {
+        private Integer prchsCnt;
+        private Integer totEvluScore;
+        private Integer paticpersCnt;
+
+        public Integer getPrchsCnt() {
+            return prchsCnt;
+        }
+
+        public void setPrchsCnt(Integer prchsCnt) {
+            this.prchsCnt = prchsCnt;
+        }
+
+        public Integer getTotEvluScore() {
+            return totEvluScore;
+        }
+
+        public void setTotEvluScore(Integer totEvluScore) {
+            this.totEvluScore = totEvluScore;
+        }
+
+        public Integer getPaticpersCnt() {
+            return paticpersCnt;
+        }
+
+        public void setPaticpersCnt(Integer paticpersCnt) {
+            this.paticpersCnt = paticpersCnt;
+        }
     }
 }

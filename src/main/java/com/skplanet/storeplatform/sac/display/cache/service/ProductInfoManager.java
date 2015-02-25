@@ -80,4 +80,11 @@ public interface ProductInfoManager {
      * @return
      */
     MenuInfo getMenuInfo(MenuInfoParam param);
+
+    /**
+     * 상품 통계(참여자 수, 구매건수, 평점)을 조회한다.
+     * @param param
+     * @return
+     */
+    ProductStats getProductStats(ProductStatsParam param);
 }
