@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRe
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyResult;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PaymethodAdjustPolicyInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
@@ -343,38 +345,44 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}",
 				ReflectionToStringBuilder.toString(checkPaymentPolicyParam, ToStringStyle.SHORT_PREFIX_STYLE));
 
+		// --------------------------------------------------------------------------------------------------
+		// 관련 정책 목록 조회
+
+		Map<String, List<PurchaseTenantPolicy>> policyListMap = this.purchaseTenantPolicyService
+				.searchPurchaseTenantPolicyListByMap(checkPaymentPolicyParam.getTenantId(),
+						checkPaymentPolicyParam.getTenantProdGrpCd());
+
+		// SAP 결제정책 조회 : 연동
+		List<String> sapPolicyCdList = null;
+		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SAP_CHECK_POLICY)) {
+
+			sapPolicyCdList = this.checkSapPurchasePolicy(checkPaymentPolicyParam.getTenantId(),
+					checkPaymentPolicyParam.getMarketDeviceKey(), checkPaymentPolicyParam.getDeviceKeyAuth());
+
+			if (CollectionUtils.isNotEmpty(sapPolicyCdList)
+					&& sapPolicyCdList.contains(PurchaseConstants.SAP_POLICY_LIMIT_ALL)) { // 모든결제차단
+				throw new StorePlatformException("SAC_PUR_6103");
+			}
+
+			policyListMap.remove(PurchaseConstants.POLICY_ID_SAP_CHECK_POLICY);
+		}
+		checkPaymentPolicyParam.setSapPolicyCdList(sapPolicyCdList);
+
+		// --------------------------------------------------------------------------------------------------
+		// 결제 정책 체크
+
 		CheckPaymentPolicyResult checkPaymentPolicyResult = null;
 
-		// 후불 제한 정책 조회: T store 회원이면서 SKT 통신사가 아닌 경우는 제외
-		String phonePaymethodInfo = null;
+		// 통신사 후불 결제 여부 : 테넌트 별 통신사 결제 여부
+		boolean bTelecomPaymethod = StringUtils.equals(checkPaymentPolicyParam.getTelecom(),
+				PurchaseConstants.TENANT_DEFAULT_TELECOM_MAP.get(checkPaymentPolicyParam.getTenantId()));
 
-		if (StringUtils.equals(checkPaymentPolicyParam.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)
-				&& StringUtils.equals(checkPaymentPolicyParam.getTelecom(), PurchaseConstants.TELECOM_SKT) == false) {
-			checkPaymentPolicyResult = new CheckPaymentPolicyResult();
-			checkPaymentPolicyResult.setDeferredPaymentType(PurchaseConstants.DEFERRED_PAYMENT_TYPE_NORMAL);
+		// 후불/소액 기본 정책 정보 (결제수단 재정의 정책 미고려)
+		String phonePaymethodBaseInfo = null;
 
-		} else {
-			// --------------------------------------------------------------------------------------------------
-			// 관련 정책 목록 조회
-			Map<String, List<PurchaseTenantPolicy>> policyListMap = this.purchaseTenantPolicyService
-					.searchPurchaseTenantPolicyListByMap(checkPaymentPolicyParam.getTenantId(),
-							checkPaymentPolicyParam.getTenantProdGrpCd());
-			// this.logger.info("PRCHS,ORDER,SAC,POLICY,LISTMAP,{}", policyListMap);
+		if (bTelecomPaymethod) { // 후불 사용하는 경우
 
-			// SAP 결제정책 조회
-			List<String> sapPolicyCdList = null;
-			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_SAP_CHECK_POLICY)) {
-				sapPolicyCdList = this.checkSapPurchasePolicy(checkPaymentPolicyParam.getTenantId(),
-						checkPaymentPolicyParam.getMarketDeviceKey(), checkPaymentPolicyParam.getDeviceKeyAuth());
-				if (CollectionUtils.isNotEmpty(sapPolicyCdList)
-						&& sapPolicyCdList.contains(PurchaseConstants.SAP_POLICY_LIMIT_ALL)) { // 모든결제차단
-					throw new StorePlatformException("SAC_PUR_6103");
-				}
-
-				policyListMap.remove(PurchaseConstants.POLICY_ID_SAP_CHECK_POLICY);
-			}
-			checkPaymentPolicyParam.setSapPolicyCdList(sapPolicyCdList);
-
+			// 후불 관련 정책 체크: 정책에 의해 후불 제한되면 바로 return
 			checkPaymentPolicyResult = this.checkPhonePaymentPolicy(checkPaymentPolicyParam, policyListMap);
 
 			// 통신사 결제 처리 타입
@@ -392,21 +400,26 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			}
 
 			// 통신사 후불 재조정
-			double phoneRestAmt = checkPaymentPolicyResult.getPhoneRestAmt();
-			if (StringUtils.equals(checkPaymentPolicyResult.getDeferredPaymentType(),
-					PurchaseConstants.DEFERRED_PAYMENT_TYPE_ETCSERVICE)) {
-				phonePaymethodInfo = "11:0:0";
+			if (checkPaymentPolicyResult.getPhoneRestAmt() <= 0.0
+					|| StringUtils.equals(checkPaymentPolicyResult.getDeferredPaymentType(),
+							PurchaseConstants.DEFERRED_PAYMENT_TYPE_ETCSERVICE)) {
+				phonePaymethodBaseInfo = "11:0:0;12:0:0";
+
 			} else {
-				if (phoneRestAmt > 0.0) {
-					phonePaymethodInfo = "11:" + phoneRestAmt + ":100";
-				} else {
-					phonePaymethodInfo = "11:0:0";
-				}
+				phonePaymethodBaseInfo = "11:" + checkPaymentPolicyResult.getPhoneRestAmt() + ":100;12:0:0";
 			}
+
+		} else { // 소액 결제 사용 하는 경우 : 12는 별다른 정책 체크는 없음
+
+			checkPaymentPolicyResult = new CheckPaymentPolicyResult();
+			checkPaymentPolicyResult.setDeferredPaymentType(PurchaseConstants.DEFERRED_PAYMENT_TYPE_NORMAL);
+
+			phonePaymethodBaseInfo = "11:0:0";
 		}
 
-		// 이용가능 결제수단 재정의
-		checkPaymentPolicyResult.setPaymentAdjInfo(this.adjustPaymethod(phonePaymethodInfo, checkPaymentPolicyParam));
+		// 이용가능 결제수단 재정의 (결제수단 재정의 정책 기반)
+		checkPaymentPolicyResult.setPaymentAdjInfo(this.adjustPaymethod(checkPaymentPolicyParam,
+				phonePaymethodBaseInfo, bTelecomPaymethod));
 
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,END,{}",
 				ReflectionToStringBuilder.toString(checkPaymentPolicyResult, ToStringStyle.SHORT_PREFIX_STYLE));
@@ -1258,13 +1271,14 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * <pre> 결제 수단 재정의. </pre>
 	 * 
-	 * @param phonePaymethodInfo SKT결제 재정의 정보
+	 * @param phonePaymethodBaseInfo 후불/소액 기본 정책 정보
 	 * 
 	 * @param checkPaymentPolicyParam 정책 체크 대상 데이터
 	 * 
 	 * @return 재정의 된 결제 수단 정보
 	 */
-	private String adjustPaymethod(String phonePaymethodInfo, CheckPaymentPolicyParam checkPaymentPolicyParam) {
+	private String adjustPaymethod(CheckPaymentPolicyParam checkPaymentPolicyParam, String phonePaymethodBaseInfo,
+			boolean bTelecomPaymethod) {
 		String tenantId = checkPaymentPolicyParam.getTenantId();
 		// String systemId = checkPaymentPolicyParam.getSystemId();
 		String tenantProdGrpCd = checkPaymentPolicyParam.getTenantProdGrpCd();
@@ -1274,146 +1288,245 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		String prodId = checkPaymentPolicyParam.getProdId();
 		String parentProdId = checkPaymentPolicyParam.getParentProdId();
 
-		// 결제수단 별 가능 거래금액/비율 조정 정보
-		String prodKindCd = null;
-		if (StringUtils.isNotBlank(prodCaseCd)) {
-			prodKindCd = prodCaseCd;
-		} else if (StringUtils.isNotBlank(cmpxProdClsfCd)) {
-			prodKindCd = cmpxProdClsfCd;
-		}
+		// 상품타입: 쇼핑 경우 - VOD/이북 정액상품 경우 추가
+		String prodKindCd = StringUtils.isNotBlank(prodCaseCd) ? prodCaseCd : (StringUtils.isNotBlank(cmpxProdClsfCd) ? cmpxProdClsfCd : null);
 
-		String paymentAdjustInfo = this.getAvailablePaymethodAdjustInfo(tenantId, tenantProdGrpCd, prodKindCd, prodId,
-				parentProdId);
-		if (paymentAdjustInfo == null) {
+		// ---------------------------------------------------------------------------------------------------
+		// 결제수단 별 가능 거래금액/비율 조정 정책 조회
+
+		PurchaseTenantPolicy paymentPolicy = this.purchaseTenantPolicyService.searchPaymentPolicy(tenantId,
+				tenantProdGrpCd, prodKindCd, prodId, parentProdId);
+		if (paymentPolicy == null) {
 			throw new StorePlatformException("SAC_PUR_7103");
 		}
 
-		// 후불 처리 비교
-		int phonePos = paymentAdjustInfo.indexOf("11:");
+		String paymethodAdjustInfo = StringUtils.defaultString(paymentPolicy.getApplyValue(), "");
+		this.logger.info("PRCHS,ORDER,SAC,POLICY,ADJUST,PRE,{},{}", phonePaymethodBaseInfo, paymethodAdjustInfo);
 
-		if (StringUtils.isNotBlank(phonePaymethodInfo)) {
-			String[] resultPhonePolicyInfo = phonePaymethodInfo.split(":");
-			double resultMaxAmt = Double.parseDouble(resultPhonePolicyInfo[1]);
-			int resultMaxPer = (int) (Double.parseDouble(resultPhonePolicyInfo[2]));
+		List<PaymethodAdjustPolicyInfo> paymethodAdjustPolicyList = new ArrayList<PaymethodAdjustPolicyInfo>();
 
-			double phoneAvailAmt = resultMaxAmt;
-			int phoneAvailPer = resultMaxPer;
+		String[] arInfo = null;
+		for (String paymethodInfo : paymethodAdjustInfo.split(";")) {
+			arInfo = paymethodInfo.split(":");
 
-			if (phonePos >= 0) {
-				int sepPos = paymentAdjustInfo.indexOf(";", phonePos);
-				String phonePolicyInfo = paymentAdjustInfo.substring(phonePos, sepPos);
-				String[] arPhonePolicyInfo = phonePolicyInfo.split(":");
-				String maxAmt = arPhonePolicyInfo[1];
-				int maxPer = (int) (Double.parseDouble(arPhonePolicyInfo[2]));
+			PaymethodAdjustPolicyInfo policyInfo = new PaymethodAdjustPolicyInfo();
+			policyInfo.setPaymethodCode(arInfo[0]);
+			policyInfo.setAvailAmt(Double.parseDouble(arInfo[1].replaceAll("MAXAMT", String.valueOf(payAmt))));
+			policyInfo.setAvailPer((int) (Double.parseDouble(arInfo[2])));
 
-				if (StringUtils.equals(maxAmt, "MAXAMT")) {
-					phoneAvailAmt = resultMaxAmt;
-				} else {
-					if (Double.parseDouble(maxAmt) < resultMaxAmt) {
-						phoneAvailAmt = Double.parseDouble(maxAmt);
-					}
-				}
+			paymethodAdjustPolicyList.add(policyInfo);
+		}
 
-				if (maxPer < resultMaxPer) {
-					phoneAvailPer = maxPer;
-				}
+		// ---------------------------------------------------------------------------------------------------
+		// 휴대폰 정책 결정
 
-				this.logger.info("PRCHS,ORDER,SAC,POLICY,PHONE,ADJ,{},{}", phonePaymethodInfo, paymentAdjustInfo);
+		StringBuffer sbPaymethodAdjustInfoWithoutPhone = new StringBuffer(64);
+		String phonePaymethodInfo = null;
 
-				if (phonePos == 0) {
-					paymentAdjustInfo = paymentAdjustInfo.substring(sepPos + 1);
-				} else {
-					paymentAdjustInfo = paymentAdjustInfo.substring(0, phonePos)
-							+ paymentAdjustInfo.substring(sepPos + 1);
-				}
+		List<String> phoneCodeList = new ArrayList<String>();
+		phoneCodeList.add("11");
+		phoneCodeList.add("12");
+
+		String baseTargetPhoneCode = bTelecomPaymethod ? "11" : "12";
+
+		// 결제수단 정책에서 휴대폰 정책 추출
+		PaymethodAdjustPolicyInfo targetPhonePolicy = null;
+
+		PaymethodAdjustPolicyInfo paymethodPolicy = null;
+
+		Iterator<PaymethodAdjustPolicyInfo> itr = paymethodAdjustPolicyList.iterator();
+
+		while (itr.hasNext()) {
+			paymethodPolicy = itr.next();
+
+			if (StringUtils.equals(baseTargetPhoneCode, paymethodPolicy.getPaymethodCode())) {
+				targetPhonePolicy = paymethodPolicy;
 			}
 
-			phonePaymethodInfo = "11:" + phoneAvailAmt + ":" + phoneAvailPer;
+			if (phoneCodeList.contains(paymethodPolicy.getPaymethodCode())) {
+				itr.remove();
 
-		} else {
-			if (phonePos >= 0) {
-				int sepPos = paymentAdjustInfo.indexOf(";", phonePos);
-				phonePaymethodInfo = paymentAdjustInfo.substring(phonePos, sepPos);
-
-				if (phonePos == 0) {
-					paymentAdjustInfo = paymentAdjustInfo.substring(sepPos + 1);
-				} else {
-					paymentAdjustInfo = paymentAdjustInfo.substring(0, phonePos)
-							+ paymentAdjustInfo.substring(sepPos + 1);
+			} else {
+				if (sbPaymethodAdjustInfoWithoutPhone.length() > 0) {
+					sbPaymethodAdjustInfoWithoutPhone.append(";");
 				}
+				sbPaymethodAdjustInfoWithoutPhone.append(paymethodPolicy.getPaymethodCode()).append(":")
+						.append(paymethodPolicy.getAvailAmt()).append(":").append(paymethodPolicy.getAvailPer());
 			}
 		}
+
+		paymethodAdjustInfo = sbPaymethodAdjustInfoWithoutPhone.toString(); // 휴대폰들 제거
+
+		// // 휴대폰 기본 정책 추출
+		// PaymethodAdjustPolicyInfo baseTargetPhonePolicy = null;
+		//
+		// PaymethodAdjustPolicyInfo basePhonePolicy11 = null;
+		// PaymethodAdjustPolicyInfo basePhonePolicy12 = null;
+		//
+		// if (phonePaymethodBaseInfo != null) {
+		// for (String phoneCode : phoneCodeList) {
+		// int codePos = phonePaymethodBaseInfo.indexOf(phoneCode + ":");
+		// if (codePos >= 0) {
+		// int sepPos = phonePaymethodBaseInfo.indexOf(";", codePos);
+		// String baseInfo = null;
+		// if (sepPos >= 0) {
+		// baseInfo = phonePaymethodBaseInfo.substring(codePos, sepPos);
+		// } else {
+		// baseInfo = phonePaymethodBaseInfo.substring(codePos);
+		// }
+		// arInfo = baseInfo.split(":");
+		//
+		// if (StringUtils.equals(phoneCode, "11")) {
+		// basePhonePolicy11 = new PaymethodAdjustPolicyInfo();
+		// basePhonePolicy11.setPaymethodCode(arInfo[0]);
+		// basePhonePolicy11.setAvailAmt(Double.parseDouble(arInfo[1]));
+		// basePhonePolicy11.setAvailPer((int) (Double.parseDouble(arInfo[2])));
+		//
+		// } else if (StringUtils.equals(phoneCode, "12")) {
+		// basePhonePolicy12 = new PaymethodAdjustPolicyInfo();
+		// basePhonePolicy12.setPaymethodCode(arInfo[0]);
+		// basePhonePolicy12.setAvailAmt(Double.parseDouble(arInfo[1]));
+		// basePhonePolicy12.setAvailPer((int) (Double.parseDouble(arInfo[2])));
+		// }
+		// }
+		// }
+		//
+		// if (bTelecomPaymethod) {
+		// baseTargetPhonePolicy = basePhonePolicy11;
+		// } else {
+		// baseTargetPhonePolicy = basePhonePolicy12;
+		// }
+		//
+		// }
+
+		// 결제정책 & 기본정책 비교 처리
+		PaymethodAdjustPolicyInfo resultPhonePolicy = null;
+
+		if (targetPhonePolicy == null) { // 결제수단 정책에 없는 경우
+			phonePaymethodInfo = phonePaymethodBaseInfo;
+
+		} else { // 결제수단 정책에 있는 경우: 이용 가능한 금액/퍼센트 비교 처리
+
+			// 휴대폰 기본 정책 추출
+
+			PaymethodAdjustPolicyInfo baseTargetPhonePolicy = null;
+
+			if (phonePaymethodBaseInfo != null) {
+
+				int codePos = phonePaymethodBaseInfo.indexOf(baseTargetPhoneCode + ":");
+				if (codePos >= 0) {
+					int sepPos = phonePaymethodBaseInfo.indexOf(";", codePos);
+					String baseInfo = null;
+					if (sepPos >= 0) {
+						baseInfo = phonePaymethodBaseInfo.substring(codePos, sepPos);
+					} else {
+						baseInfo = phonePaymethodBaseInfo.substring(codePos);
+					}
+
+					arInfo = baseInfo.split(":");
+
+					baseTargetPhonePolicy = new PaymethodAdjustPolicyInfo();
+					baseTargetPhonePolicy.setPaymethodCode(arInfo[0]);
+					baseTargetPhonePolicy.setAvailAmt(Double.parseDouble(arInfo[1]));
+					baseTargetPhonePolicy.setAvailPer((int) (Double.parseDouble(arInfo[2])));
+				}
+			}
+
+			// 결제정책과 비교
+			resultPhonePolicy = new PaymethodAdjustPolicyInfo();
+
+			resultPhonePolicy.setPaymethodCode(targetPhonePolicy.getPaymethodCode());
+			resultPhonePolicy
+					.setAvailAmt(Math.min(baseTargetPhonePolicy.getAvailAmt(), targetPhonePolicy.getAvailAmt()));
+			resultPhonePolicy
+					.setAvailPer(Math.min(baseTargetPhonePolicy.getAvailPer(), targetPhonePolicy.getAvailPer()));
+
+			phonePaymethodInfo = resultPhonePolicy.getPaymethodCode() + ":" + resultPhonePolicy.getAvailAmt() + ":"
+					+ resultPhonePolicy.getAvailPer();
+
+			if (bTelecomPaymethod) {
+				phonePaymethodInfo = phonePaymethodInfo + ";12:0:0";
+			} else {
+				phonePaymethodInfo = "11:0:0;" + phonePaymethodInfo;
+			}
+
+		}
+
+		// ---------------------------------------------------------------------------------------------------
+		// TAKTODO:: String 제거 PaymethodAdjustPolicyInfo 사용?
+		// 최종 결제 정책 결정
 
 		StringBuffer sbPaymethodInfo = new StringBuffer(64);
 
-		if (StringUtils.isBlank(phonePaymethodInfo)) { // T store 회원 중 SKT 가입자가 아닌경우 : 다날 유효
-			sbPaymethodInfo.append("11:0:0;");
-		} else {
-			sbPaymethodInfo.append(phonePaymethodInfo).append(";12:0:0;");
-		}
+		sbPaymethodInfo.append(phonePaymethodInfo).append(";"); // 휴대폰
 
-		if (paymentAdjustInfo.contains("13:0:0") == false) { // SAP 결제정책 : 신용카드 제한
+		if (paymethodAdjustInfo.contains("13:0:0") == false) { // SAP 결제정책 : 신용카드 제한
 			if (CollectionUtils.isNotEmpty(checkPaymentPolicyParam.getSapPolicyCdList())
 					&& checkPaymentPolicyParam.getSapPolicyCdList().contains(PurchaseConstants.SAP_POLICY_LIMIT_CREDIT)) {
 				sbPaymethodInfo.append("13:0:0;");
-				int pos13 = paymentAdjustInfo.startsWith("13:") ? 0 : (paymentAdjustInfo.indexOf(";13:") + 1);
+				int pos13 = paymethodAdjustInfo.startsWith("13:") ? 0 : (paymethodAdjustInfo.indexOf(";13:") + 1);
 				if (pos13 >= 0) {
 					String info13 = "";
-					int endPos = paymentAdjustInfo.indexOf(";", pos13);
+					int endPos = paymethodAdjustInfo.indexOf(";", pos13);
 					if (endPos >= 0) {
-						info13 = paymentAdjustInfo.substring(pos13, endPos);
+						info13 = paymethodAdjustInfo.substring(pos13, endPos);
 					} else {
-						info13 = paymentAdjustInfo.substring(pos13);
+						info13 = paymethodAdjustInfo.substring(pos13);
 					}
-					paymentAdjustInfo = paymentAdjustInfo.replaceAll(info13, "");
+					paymethodAdjustInfo = paymethodAdjustInfo.replaceAll(info13, "");
 				}
 			}
 		}
 
-		sbPaymethodInfo.append(paymentAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
+		sbPaymethodInfo.append(paymethodAdjustInfo.replaceAll("MAXAMT", String.valueOf(payAmt)));
 
 		String paymethodInfo = sbPaymethodInfo.toString();
 
-		// 시리즈 패스
-		if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
-			paymethodInfo = paymethodInfo.replaceAll("14:0:0;", "").replaceAll(";14:0:0", "");
-		}
+		// 상품 별 또는 모상품 별 지정한 것들은 정책 그대로. 기본 카테고리 정책이면 상품 별 예외 하드코딩 정책 적용
+		if (StringUtils.equals(paymentPolicy.getPolicyId(), PurchaseConstants.POLICY_ID_PAYMETHOD_ADJUST)) {
 
-		// 인앱 자동결제 상품의 경우(서버2서버 자동결제 포함), 휴대폰결제/신용카드만 노출되며 T멤버십은 호핀 앱에서만 노출한다.
-		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
-			if (checkPaymentPolicyParam.isAutoPrchs() || checkPaymentPolicyParam.isS2sAutoPrchs()) {
-				StringBuffer sbPaymethodAdjInfo = new StringBuffer(128);
-				int pos = paymethodInfo.indexOf("11:");
-				if (pos >= 0) {
-					sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
-							.append(";");
-				}
-				pos = paymethodInfo.indexOf("12:");
-				if (pos >= 0) {
-					sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
-							.append(";");
-				}
-				pos = paymethodInfo.indexOf("13:");
-				if (pos >= 0) {
-					sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
-							.append(";");
-				}
+			// 시리즈 패스: PayPin 허용
+			if (StringUtils.equals(cmpxProdClsfCd, PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
+				paymethodInfo = paymethodInfo.replaceAll("14:0:0;", "").replaceAll(";14:0:0", "");
+			}
 
-				if (PurchaseConstants.HOPPIN_AID_LIST.contains(checkPaymentPolicyParam.getParentProdId())) {
-					pos = paymethodInfo.indexOf("21:");
+			// 인앱 자동결제 상품의 경우(서버2서버 자동결제 포함), 휴대폰결제/신용카드만 노출되며 T멤버십은 호핀 앱에서만 노출한다.
+			if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+
+				if (checkPaymentPolicyParam.isAutoPrchs() || checkPaymentPolicyParam.isS2sAutoPrchs()) {
+					StringBuffer sbPaymethodAdjInfo = new StringBuffer(128);
+					int pos = paymethodInfo.indexOf("11:");
 					if (pos >= 0) {
 						sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
 								.append(";");
 					}
-				} else {
-					sbPaymethodAdjInfo.append("21:0:0;");
+					pos = paymethodInfo.indexOf("12:");
+					if (pos >= 0) {
+						sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+								.append(";");
+					}
+					pos = paymethodInfo.indexOf("13:");
+					if (pos >= 0) {
+						sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+								.append(";");
+					}
+
+					if (PurchaseConstants.HOPPIN_AID_LIST.contains(checkPaymentPolicyParam.getParentProdId())) {
+						pos = paymethodInfo.indexOf("21:");
+						if (pos >= 0) {
+							sbPaymethodAdjInfo.append(paymethodInfo.substring(pos, paymethodInfo.indexOf(";", pos)))
+									.append(";");
+						}
+					} else {
+						sbPaymethodAdjInfo.append("21:0:0;");
+					}
+
+					sbPaymethodAdjInfo.append("14:0:0;20:0:0;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0;27:0:0;30:0:0");
+
+					paymethodInfo = sbPaymethodAdjInfo.toString();
 				}
 
-				sbPaymethodAdjInfo.append("14:0:0;20:0:0;22:0:0;23:0:0;24:0:0;25:0:0;26:0:0;27:0:0;30:0:0");
-
-				paymethodInfo = sbPaymethodAdjInfo.toString();
 			}
-
 		}
 
 		return paymethodInfo;

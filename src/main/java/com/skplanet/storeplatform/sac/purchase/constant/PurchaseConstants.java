@@ -10,7 +10,9 @@
 package com.skplanet.storeplatform.sac.purchase.constant;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 구매 관련 상수
@@ -27,6 +29,13 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String TENANT_ID_TSTORE = "S01";
 	public static final String TENANT_ID_OLLEH = "S02";
 	public static final String TENANT_ID_UPLUS = "S03";
+
+	public static final Map<String, String> TENANT_DEFAULT_TELECOM_MAP = new HashMap<String, String>();
+	static {
+		TENANT_DEFAULT_TELECOM_MAP.put(TENANT_ID_TSTORE, TELECOM_SKT);
+		TENANT_DEFAULT_TELECOM_MAP.put(TENANT_ID_OLLEH, TELECOM_KT);
+		TENANT_DEFAULT_TELECOM_MAP.put(TENANT_ID_UPLUS, TELECOM_UPLUS);
+	}
 
 	/** 서비스 서버 단계 환경변수 */
 	public static final String ENV_SERVER_LEVEL_STAGING = "stg"; // System 설정 서버 단계 property: 상용 스테이징

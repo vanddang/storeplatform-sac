@@ -284,7 +284,7 @@ public class PurchaseOrderController {
 		}
 
 		// 요청값 체크
-		if (StringUtils.equals(tenantId, "S02") || StringUtils.equals(tenantId, "S03")) {
+		if (StringUtils.equals(tenantId, "S01") == false) {
 			if (StringUtils.isBlank(req.getMarketDeviceKey()) || StringUtils.isBlank(req.getDeviceKeyAuth())) {
 				throw new StorePlatformException("SAC_PUR_5100", "SAP 정보 누락");
 			}
