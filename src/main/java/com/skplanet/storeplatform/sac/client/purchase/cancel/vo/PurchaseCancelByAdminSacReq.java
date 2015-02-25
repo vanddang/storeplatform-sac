@@ -30,6 +30,7 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 
 	private String tenantId;
 	private String reqUserId;
+	private String userKey;
 
 	@NotBlank
 	@Pattern(regexp = "^OR000400|^OR000435|^OR000437|^OR000438|^OR000439")
@@ -145,6 +146,23 @@ public class PurchaseCancelByAdminSacReq extends PurchaseCommonSacReq {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	@Override
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	@Override
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }

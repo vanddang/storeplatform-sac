@@ -20,6 +20,8 @@ public class MileageSaveGetSacReq extends PurchaseHeaderSacReq {
 	@NotBlank
 	private String prchsId; // 구매ID
 
+	private String userKey;
+
 	/**
 	 * @return the tenantId
 	 */
@@ -65,6 +67,21 @@ public class MileageSaveGetSacReq extends PurchaseHeaderSacReq {
 	 */
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }

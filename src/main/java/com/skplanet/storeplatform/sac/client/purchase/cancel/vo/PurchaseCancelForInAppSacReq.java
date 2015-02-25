@@ -33,6 +33,8 @@ public class PurchaseCancelForInAppSacReq extends PurchaseCommonSacReq {
 	@NotBlank
 	private String prchsId;
 
+	private String userKey;
+
 	/**
 	 * @return the reqUserId
 	 */
@@ -62,6 +64,23 @@ public class PurchaseCancelForInAppSacReq extends PurchaseCommonSacReq {
 
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	@Override
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	@Override
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }

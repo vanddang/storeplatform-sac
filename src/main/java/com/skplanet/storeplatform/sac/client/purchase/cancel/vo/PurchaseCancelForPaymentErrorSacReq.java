@@ -34,6 +34,8 @@ public class PurchaseCancelForPaymentErrorSacReq extends PurchaseCommonSacReq {
 	@NotBlank
 	private String prchsId;
 
+	private String userKey;
+
 	/**
 	 * @return the reqUserId
 	 */
@@ -78,6 +80,23 @@ public class PurchaseCancelForPaymentErrorSacReq extends PurchaseCommonSacReq {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	@Override
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	@Override
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }

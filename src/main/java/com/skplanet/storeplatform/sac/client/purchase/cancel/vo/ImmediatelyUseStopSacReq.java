@@ -22,6 +22,8 @@ public class ImmediatelyUseStopSacReq extends PurchaseHeaderSacReq {
 	@NotBlank
 	private String drawbackAmt; // 환불금액
 
+	private String userKey;
+
 	/**
 	 * @return the prchsId
 	 */
@@ -80,6 +82,21 @@ public class ImmediatelyUseStopSacReq extends PurchaseHeaderSacReq {
 	 */
 	public void setDrawbackAmt(String drawbackAmt) {
 		this.drawbackAmt = drawbackAmt;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }
