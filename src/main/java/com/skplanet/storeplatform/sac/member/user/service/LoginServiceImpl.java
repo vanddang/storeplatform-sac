@@ -1802,6 +1802,8 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회
 
 		AuthorizeV2SacRes res = new AuthorizeV2SacRes();
+		res.setTrxNo(req.getTrxNo());
+		res.setTenantId(req.getTenantId());
 
 		if (StringUtils.equals(req.getTenantId(), MemberConstants.TENANT_ID_TSTORE)) {
 
@@ -1825,7 +1827,6 @@ public class LoginServiceImpl implements LoginService {
 					res.setUserMainStatus(MemberConstants.INAPP_USER_STATUS_SYSTEM_ERROR); // 시스템 연동 오류
 				}
 
-				res.setTenantId(req.getTenantId());
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
 				res.setDeviceInfo(new DeviceInfo());
@@ -1886,7 +1887,6 @@ public class LoginServiceImpl implements LoginService {
 			pinInfo.setIsPinClosed(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn());
 			pinInfo.setSetPinUrl(this.getPinSetUrl(pinInfo));
 
-			res.setTenantId(req.getTenantId());
 			res.setUserMainStatus(MemberConstants.INAPP_USER_STATUS_NORMAL); // 회원상태 정상
 			res.setUserAuthKey(this.tempUserAuthKey); // 임시 인증키
 			res.setUserInfo(userInfo);
@@ -1900,9 +1900,6 @@ public class LoginServiceImpl implements LoginService {
 		} else { // 타사 인증
 
 			MarketAuthorizeEcRes marketRes = null;
-
-			res.setTrxNo(req.getTrxNo());
-			res.setTenantId(req.getTenantId());
 
 			// 타사 마켓회원 인증 요청
 			MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
