@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.runtime.common.service;
 
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
 
 /**
@@ -19,6 +18,6 @@ import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
 */
 public interface RoutingDataService {
 
-	Bypass selectBypassByInterface(Interface interfac);
+	Bypass selectBypassByInterface(String interfaceId, String tenantId);
 
 }

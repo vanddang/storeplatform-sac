@@ -9,8 +9,8 @@ public class SacExternalUrlBuilder {
 
 	public static UriComponentsBuilder buildUrl(Bypass bypass) {
 		Component component = bypass.getComponent();
-		String scheme = component.getProtocolNm();
-		String host = component.getDomain();
+		String scheme = component.getScheme();
+		String host = component.getHost();
 		int port = component.getPort();
 		String path = bypass.getPath();
 

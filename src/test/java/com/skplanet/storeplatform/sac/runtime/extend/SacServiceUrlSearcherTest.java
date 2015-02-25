@@ -43,6 +43,7 @@ public class SacServiceUrlSearcherTest {
 
 	@Before
 	public void before() {
+		
 	}
 
 	@Test
@@ -76,6 +77,7 @@ public class SacServiceUrlSearcherTest {
 	@Test
 	public void testSearchForBypass() {
 		String interfaceId = "I04000001";
+		String tenantId = "S01";
 		Interface intf = new Interface(interfaceId);
 		intf.setBypassYn("Y");
 		when(this.dataService.selectInterfaceById(interfaceId)).thenReturn(intf);
@@ -86,10 +88,11 @@ public class SacServiceUrlSearcherTest {
 	    this.setRequestContextHolder(contextPath, requestURI, queryString);
 
 	    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://localhost:8210").path("/nate/search");
-	    when(this.extUrlBuilder.buildUrl(requestURI, interfaceId)).thenReturn(builder);
+	    when(this.extUrlBuilder.buildUrl(requestURI, interfaceId, tenantId)).thenReturn(builder);
 
 		Map<String, Object> headerMap = new HashMap<String, Object>();
 		headerMap.put(CommonConstants.HEADER_INTERFACE_ID, interfaceId);
+		headerMap.put(CommonConstants.HEADER_TENANT_ID, tenantId);
 		String serviceUrl = this.searcher.search(headerMap);
 		System.out.println("# serviceUrl : " + serviceUrl);
 
@@ -101,7 +104,9 @@ public class SacServiceUrlSearcherTest {
 	    request.setContextPath(contextPath);
 	    request.setRequestURI(requestURI);
 	    request.setQueryString(queryString);
-	    RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+	    
+	    ServletRequestAttributes attributes = new ServletRequestAttributes(request);
+	    RequestContextHolder.setRequestAttributes(attributes);
 	}
 
 

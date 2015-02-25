@@ -30,12 +30,11 @@ public class SacExternalUrlServiceDb implements SacExternalUrlService {
 	private RoutingDataService dataSvc;
 
 	@Override
-	public UriComponentsBuilder buildUrl(String innerRequestURI, String interfaceId) {
-		Interface intf = new Interface(interfaceId);
+	public UriComponentsBuilder buildUrl(String innerRequestURI, String interfaceId, String tenantId) {
 		Bypass bypass;
 
 		try {
-			bypass = this.dataSvc.selectBypassByInterface(intf);
+			bypass = this.dataSvc.selectBypassByInterface(interfaceId, tenantId);
 		} catch (Exception e) {
 			// 인터페이스({0})의 바이패스 데이터 조회에 문제가 발생하였습니다.
 			throw new StorePlatformException("SAC_CMN_0091", interfaceId, e);

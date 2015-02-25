@@ -10,29 +10,29 @@
     </resultMap>
    
     <!-- SELECT SQL -->
-    <select id="selectBypassByInterface" parameterType="Interface" resultMap="bypassResultMap" >
+    <select id="selectBypassByInterface" parameterType="map" resultMap="bypassResultMap" >
         /* Route.selectBypassByInterface, 인터페이스가 라우팅할 바이패스 정보 조회, 서대영/SK플래닛, 2014-06-16 */
         SELECT 
-            bypass_id, 
-            path, 
-            component_id, 
-            protocol_cd,
-            (SELECT cd_nm FROM tb_cm_cd WHERE cd_id = protocol_cd) as protocol_nm, 
-            domain, 
-            port
+		  bypass_id, 
+		  path, 
+		  component_id, 
+		  scheme, 
+		  host, 
+		  port
         FROM tb_fw_route
         JOIN tb_fw_bypass
         USING (bypass_id)
         <choose>
 	        <when test="@com.skplanet.storeplatform.sac.common.environment.ActvieProfileProvider@getActiveProfile() == 'stg'">
-	        JOIN tb_fw_component_stg$
+	        JOIN tb_fw_component_domain_stg$
 	        </when>
 	        <otherwise>
-	        JOIN tb_fw_component
+	        JOIN tb_fw_component_domain
 	        </otherwise>
         </choose>
         USING (component_id)
         WHERE interface_id = #{interfaceId}
+        AND tenant_id = #{tenantId}
     </select>
     
 </mapper>

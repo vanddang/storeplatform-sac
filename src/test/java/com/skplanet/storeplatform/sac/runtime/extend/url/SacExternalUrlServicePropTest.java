@@ -31,7 +31,7 @@ public class SacExternalUrlServicePropTest {
 	@Test
 	public void test() {
 		String requestURI = "/other/search/v1";
-		String serviceUrl = this.builder.buildUrl(requestURI, "").build(false).toUriString();
+		String serviceUrl = this.builder.buildUrl(requestURI, "", "S01").build(false).toUriString();
 		System.out.println("# serviceUrl : " + serviceUrl);
 		String expectedUrl = this.externalBaseUrl + "/nate/search";
 		assertEquals(expectedUrl, serviceUrl);

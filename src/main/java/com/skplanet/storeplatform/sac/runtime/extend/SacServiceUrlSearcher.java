@@ -73,7 +73,8 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
 		// Bypass 이면 EC URL을 Properties에서 가져오고 그외에는 내부 서블릿 URL 호출
 		if (this.isBypass(interfaceId)) {
-			to = this.extUrlBuilder.buildUrl(innerRequestURI, interfaceId);
+			String tenantId = (String) headerMap.get(CommonConstants.HEADER_TENANT_ID);
+			to = this.extUrlBuilder.buildUrl(innerRequestURI, interfaceId, tenantId);
 		} else {
 			to = this.intUrlBuilder.buildUrl(innerRequestURI, requestContextPath);
 		}

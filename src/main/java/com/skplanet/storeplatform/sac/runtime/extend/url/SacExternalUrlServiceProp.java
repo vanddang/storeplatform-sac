@@ -42,7 +42,7 @@ public class SacExternalUrlServiceProp implements SacExternalUrlService {
 	}
 
 	@Override
-	public UriComponentsBuilder buildUrl(String innerRequestURI, String interfaceId) {
+	public UriComponentsBuilder buildUrl(String innerRequestURI, String interfaceId, String tenantId) {
 
 
 

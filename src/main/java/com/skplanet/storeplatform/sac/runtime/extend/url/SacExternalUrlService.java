@@ -18,6 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 public interface SacExternalUrlService {
 
-	UriComponentsBuilder buildUrl(String innerRequestURI, String interfaceId);
+	UriComponentsBuilder buildUrl(String innerRequestURI, String interfaceId, String tenantId);
 
 }

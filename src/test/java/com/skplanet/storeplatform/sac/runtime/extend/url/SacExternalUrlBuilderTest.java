@@ -16,8 +16,8 @@ public class SacExternalUrlBuilderTest {
 		bypass.setPath("/nate/search");
 
 		Component component = new Component("005");
-		component.setProtocolNm("http");
-		component.setDomain("localhost");
+		component.setScheme("http");
+		component.setHost("localhost");
 		component.setPort(8210);
 		bypass.setComponent(component);
 
@@ -34,8 +34,8 @@ public class SacExternalUrlBuilderTest {
 		bypass.setPath("/nate/search");
 
 		Component component = new Component("005");
-		component.setProtocolNm("http");
-		component.setDomain("ec.store.sungsu.skplanet.com");
+		component.setScheme("http");
+		component.setHost("ec.store.sungsu.skplanet.com");
 		component.setPort(80);
 		bypass.setComponent(component);
 

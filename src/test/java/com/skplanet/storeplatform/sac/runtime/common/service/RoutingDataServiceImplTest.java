@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.runtime.common.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
 
 @ActiveProfiles(value = "local")
@@ -32,10 +32,13 @@ public class RoutingDataServiceImplTest {
 
 	@Test
 	public void testSelectBypassByInterface() {
-		Interface interfac = new Interface("I04000001");
-		Bypass bypass = this.svc.selectBypassByInterface(interfac);
+		String interfaceId = "I04000001";
+		String tenantId = "S02";
+		
+		Bypass bypass = this.svc.selectBypassByInterface(interfaceId, tenantId);
 		System.out.println("# testSelectBypassByInterface :\n" + bypass);
 		assertEquals("0050001", bypass.getBypassId());
+		assertTrue(bypass.getComponent().getHost().contains("kstore"));
 	}
 
 }

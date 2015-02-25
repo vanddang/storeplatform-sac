@@ -9,13 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.runtime.common.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
 
 /**
@@ -35,8 +37,11 @@ public class RoutingDataServiceImpl implements RoutingDataService {
 
 	@Cacheable(value = "sac:runtime:selectBypassByInterface")
 	@Override
-	public Bypass selectBypassByInterface(Interface interfac) {
-		return this.dao.queryForObject("Route.selectBypassByInterface", interfac, Bypass.class);
+	public Bypass selectBypassByInterface(String interfaceId, String tenantId) {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("interfaceId", interfaceId);
+		paramMap.put("tenantId", tenantId);
+		return this.dao.queryForObject("Route.selectBypassByInterface", paramMap, Bypass.class);
 	}
 
 }
