@@ -36,12 +36,14 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Dist
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStats;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
-import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 
 /**
  * 상품 상세 정보 요청(Product Id) Service 구현체
@@ -60,6 +62,9 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 	private CommonMetaInfoGenerator commonGenerator;
 	@Autowired
 	private AppInfoGenerator appInfoGenerator;
+
+	@Autowired
+	private ProductInfoManager productInfoManager;
 
 	@Value("#{propertiesForSac['web.poc.domain']}")
 	private String webPocDomain;
@@ -94,12 +99,6 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 		String webPocAppsUrl = this.webPocDomain + this.webPocAppsDetailUrl;
 		String scUrl = DisplayConstants.DP_OPENAPI_SC_URL;
 		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
-
-		// appDetailByProductIdSacReq.setTenantId(tenantHeader.getTenantId());
-		// appDetailByProductIdSacReq.setLangCd(tenantHeader.getLangCd());
-		// appDetailByProductIdSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-		// appDetailByProductIdSacReq.setWebPocUrl(DisplayConstants.DP_OPENAPI_APP_URL);
-		// appDetailByProductIdSacReq.setScUrl(DisplayConstants.DP_OPENAPI_SC_URL);
 
 		AppDetailByProductIdSacRes response = new AppDetailByProductIdSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -193,13 +192,13 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 				product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품가격
 
 				// 평점정보
-				TenantProdStats tenantProdStats = new TenantProdStats();
-				tenantProdStats.setProdId(metaInfo.getProdId());
-				TenantProdStats getProdEvalInfo = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
 				Accrual accrual = new Accrual();
-				accrual.setVoterCount(Integer.parseInt(getProdEvalInfo.getPaticpersCnt()));
-				accrual.setDownloadCount(Integer.parseInt(getProdEvalInfo.getDwldCnt()));
-				accrual.setScore(Double.parseDouble(getProdEvalInfo.getAvgEvluScore()));
+				// 3사 통함 평점, 구매수, 참여수 조회 (캐쉬적용)
+				ProductStats productStats = this.productInfoManager.getProductStats(new ProductStatsParam(
+						appDetailByProductIdSacReq.getProductId()));
+				accrual.setVoterCount(productStats.getParticipantCount());
+				accrual.setDownloadCount(productStats.getPurchaseCount());
+				accrual.setScore(productStats.getAverageScore());
 				product.setAccrual(accrual);
 
 				// App 상세정보
@@ -261,7 +260,8 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 
 					this.log.info("##### [SAC DSP LocalSCI] SAC Member End : sellerSearchSCI.detailInformationListForProduct");
 					long end = System.currentTimeMillis();
-					this.log.info("##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformationListForProduct takes {} ms",
+					this.log.info(
+							"##### [SAC DSP LocalSCI] SAC Member sellerSearchSCI.detailInformationListForProduct takes {} ms",
 							(end - start));
 
 					if (StringUtils.isNotEmpty(sellerMbrNo)) {

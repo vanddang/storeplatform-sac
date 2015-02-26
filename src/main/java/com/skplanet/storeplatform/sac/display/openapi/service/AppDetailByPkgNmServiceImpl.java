@@ -30,12 +30,14 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Devi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStats;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
-import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 
 /**
  * 상품 상세 정보 요청(Package Name) Service 구현체
@@ -54,6 +56,9 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 	private CommonMetaInfoGenerator commonGenerator;
 	@Autowired
 	private AppInfoGenerator appInfoGenerator;
+
+	@Autowired
+	private ProductInfoManager productInfoManager;
 
 	@Value("#{propertiesForSac['web.poc.domain']}")
 	private String webPocDomain;
@@ -86,12 +91,6 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 		String webPocAppsUrl = this.webPocDomain + this.webPocAppsDetailUrl;
 		String scUrl = DisplayConstants.DP_OPENAPI_SC_URL;
 		String rshpCd = DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD;
-
-		// appDetailByPackageNameSacReq.setTenantId(tenantHeader.getTenantId());
-		// appDetailByPackageNameSacReq.setLangCd(tenantHeader.getLangCd());
-		// appDetailByPackageNameSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-		// appDetailByPackageNameSacReq.setWebPocUrl(DisplayConstants.DP_OPENAPI_APP_URL);
-		// appDetailByPackageNameSacReq.setScUrl(DisplayConstants.DP_OPENAPI_SC_URL);
 
 		AppDetailByPackageNameSacRes response = new AppDetailByPackageNameSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -204,13 +203,12 @@ public class AppDetailByPkgNmServiceImpl implements AppDetailByPkgNmService {
 				product.setPrice(this.commonGenerator.generatePrice(metaInfo)); // 상품가격
 
 				// 평점정보
-				TenantProdStats tenantProdStats = new TenantProdStats();
-				tenantProdStats.setProdId(metaInfo.getProdId());
-				TenantProdStats getProdEvalInfo = this.feedbackRepository.getProdEvalInfo(tenantProdStats);
 				Accrual accrual = new Accrual();
-				accrual.setVoterCount(Integer.parseInt(getProdEvalInfo.getPaticpersCnt()));
-				accrual.setDownloadCount(Integer.parseInt(getProdEvalInfo.getDwldCnt()));
-				accrual.setScore(Double.parseDouble(getProdEvalInfo.getAvgEvluScore()));
+				// 3사 통함 평점, 구매수, 참여수 조회 (캐쉬적용)
+				ProductStats productStats = this.productInfoManager.getProductStats(new ProductStatsParam(productId));
+				accrual.setVoterCount(productStats.getParticipantCount());
+				accrual.setDownloadCount(productStats.getPurchaseCount());
+				accrual.setScore(productStats.getAverageScore());
 				product.setAccrual(accrual);
 
 				// App 상세정보
