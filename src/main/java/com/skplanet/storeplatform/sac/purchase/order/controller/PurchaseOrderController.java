@@ -362,28 +362,40 @@ public class PurchaseOrderController {
 		this.orderPostService.postPurchase(prchsDtlMoreList, notifyPaymentReq);
 
 		// ------------------------------------------------------------------------------
-		// 응답
+		// 응답 : PP 결제 여부에 따른 차별 세팅
 
 		NotifyPaymentSacRes res = new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq
 				.getPaymentInfoList().size());
 
-		// 구매완료Noti정보 세팅: PayPlanet 결제건 또는 IAP 은 skip
 		boolean bPayPlanet = this.payPlanetShopService.startsWithPayPlanetMID(notifyPaymentReq.getPaymentInfoList()
 				.get(0).getTid()); // PayPlanet 결제 여부
 
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
-		if ((bPayPlanet == false)
-				&& (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) == false)) {
-			Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore
-					.getPrchsResvDesc());
+		if (bPayPlanet) { // Pay Planet 결제 경우
 
-			res.setPrchsDt(prchsDtlMore.getPrchsDt());
-			res.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
-			res.setDeviceKey(prchsDtlMore.getUseInsdDeviceId());
-			res.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
-			res.setPublishType(reservedDataMap.get("tstoreNotiPublishType"));
+			// 쇼핑상품 배송지 입력 URL
+			if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
+					&& prchsDtlMoreList.size() == 1
+					&& StringUtils.equals(prchsDtlMore.getPrchsCaseCd(), PurchaseConstants.PRCHS_CASE_PURCHASE_CD)) {
+				res.setShippingUrl(prchsDtlMore.getCpnDlvUrl());
+			}
+
+		} else { // T store 결제 경우
+
+			// 구매완료 Noti 정보
+			if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) == false) {
+
+				Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore
+						.getPrchsResvDesc());
+
+				res.setPrchsDt(prchsDtlMore.getPrchsDt());
+				res.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());
+				res.setDeviceKey(prchsDtlMore.getUseInsdDeviceId());
+				res.setType(PurchaseConstants.TSTORE_NOTI_TYPE_NORMALPAY);
+				res.setPublishType(reservedDataMap.get("tstoreNotiPublishType"));
+			}
 		}
 
 		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,RES,{}",
