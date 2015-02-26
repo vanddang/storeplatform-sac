@@ -677,7 +677,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// 예약된 구매정보 조회
 
 		List<PrchsDtlMore> prchsDtlMoreList = this.searchReservedPurchaseList(verifyOrderInfo.getTenantId(),
-				verifyOrderInfo.getPrchsId());
+				verifyOrderInfo.getPrchsId(), verifyOrderInfo.getUserKey());
 
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
@@ -1026,7 +1026,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------
 		// 구매 예약 건 조회
 
-		List<PrchsDtlMore> prchsDtlMoreList = this.searchReservedPurchaseList(tenantId, notifyPaymentReq.getPrchsId());
+		List<PrchsDtlMore> prchsDtlMoreList = this.searchReservedPurchaseList(tenantId, notifyPaymentReq.getPrchsId(),
+				notifyPaymentReq.getUserKey());
 
 		// ------------------------------------------------------------------------------
 		// 구매예약 시, 추가 저장해 두었던 데이터 추출
@@ -1945,13 +1946,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param prchsId 조회할 구매 ID
 	 * 
+	 * @param userKey 결제사용자 내부관리 번호
+	 * 
 	 * @return 구매 예약 정보 목록
 	 */
-	private List<PrchsDtlMore> searchReservedPurchaseList(String tenantId, String prchsId) {
+	private List<PrchsDtlMore> searchReservedPurchaseList(String tenantId, String prchsId, String userKey) {
 		SearchPurchaseListByStatusScReq reqSearch = new SearchPurchaseListByStatusScReq();
 		reqSearch.setTenantId(tenantId);
 		reqSearch.setPrchsId(prchsId);
 		reqSearch.setStatusCd(null);
+		// TAKTODO:: userKey
 
 		SearchPurchaseListByStatusScRes searchPurchaseListRes = this.purchaseOrderSearchSCI
 				.searchPurchaseListByStatus(reqSearch);

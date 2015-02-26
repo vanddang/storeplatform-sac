@@ -8,6 +8,7 @@ public class VerifyOrderInfo extends CommonInfo {
 	private String tenantId; // 테넌트 ID
 	private String systemId; // 시스템 ID
 	private String prchsId; // 구매ID
+	private String userKey; // 사용자 내부관리 번호
 	private String marketDeviceKey; // 타 스토어 디바이스 Key
 	private String deviceKeyAuth; // 인증 Key
 
@@ -54,6 +55,21 @@ public class VerifyOrderInfo extends CommonInfo {
 	 */
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 	/**

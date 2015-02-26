@@ -294,6 +294,7 @@ public class PurchaseOrderController {
 		verifyOrderInfo.setTenantId(tenantId);
 		verifyOrderInfo.setSystemId(systemId);
 		verifyOrderInfo.setPrchsId(req.getPrchsId());
+		verifyOrderInfo.setUserKey(req.getUserKey());
 		verifyOrderInfo.setMarketDeviceKey(req.getMarketDeviceKey());
 		verifyOrderInfo.setDeviceKeyAuth(req.getDeviceKeyAuth());
 
