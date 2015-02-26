@@ -1427,6 +1427,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			ConfirmPurchaseScRes confirmPurchaseScRes = this.purchaseOrderSCI.confirmPurchase(confirmPurchaseScReq);
 			this.logger.info("PRCHS,ORDER,SAC,CONFIRM,CNT,{}", confirmPurchaseScRes.getCount());
 
+			// 쇼핑 배송지 입력 URL 세팅: 1개 구매 시에만 응답
+			if (CollectionUtils.isNotEmpty(shoppingCouponList)) {
+				prchsDtlMoreList.get(0).setCpnDlvUrl(shoppingCouponList.get(0).getShippingUrl());
+			}
+
 		} catch (StorePlatformException e) {
 			// 중복된 구매요청 체크
 			checkException = (this.purchaseOrderAssistService.isDuplicateKeyException(e) ? new StorePlatformException(

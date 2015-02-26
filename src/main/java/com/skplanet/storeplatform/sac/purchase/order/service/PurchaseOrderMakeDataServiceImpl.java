@@ -300,6 +300,9 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			payment.setRegId(systemId);
 			payment.setUpdId(systemId);
 
+			payment.setMnoCd(paymentInfo.getMnoCd());
+			payment.setLimtUserYn(paymentInfo.getLimitUserYn());
+
 			paymentList.add(payment);
 		}
 

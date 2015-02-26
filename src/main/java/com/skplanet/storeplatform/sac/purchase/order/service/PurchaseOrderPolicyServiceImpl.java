@@ -1306,15 +1306,18 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		List<PaymethodAdjustPolicyInfo> paymethodAdjustPolicyList = new ArrayList<PaymethodAdjustPolicyInfo>();
 
 		String[] arInfo = null;
-		for (String paymethodInfo : paymethodAdjustInfo.split(";")) {
-			arInfo = paymethodInfo.split(":");
 
-			PaymethodAdjustPolicyInfo policyInfo = new PaymethodAdjustPolicyInfo();
-			policyInfo.setPaymethodCode(arInfo[0]);
-			policyInfo.setAvailAmt(Double.parseDouble(arInfo[1].replaceAll("MAXAMT", String.valueOf(payAmt))));
-			policyInfo.setAvailPer((int) (Double.parseDouble(arInfo[2])));
+		if (StringUtils.isNotBlank(paymethodAdjustInfo)) {
+			for (String paymethodInfo : paymethodAdjustInfo.split(";")) {
+				arInfo = paymethodInfo.split(":");
 
-			paymethodAdjustPolicyList.add(policyInfo);
+				PaymethodAdjustPolicyInfo policyInfo = new PaymethodAdjustPolicyInfo();
+				policyInfo.setPaymethodCode(arInfo[0]);
+				policyInfo.setAvailAmt(Double.parseDouble(arInfo[1].replaceAll("MAXAMT", String.valueOf(payAmt))));
+				policyInfo.setAvailPer((int) (Double.parseDouble(arInfo[2])));
+
+				paymethodAdjustPolicyList.add(policyInfo);
+			}
 		}
 
 		// ---------------------------------------------------------------------------------------------------

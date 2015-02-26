@@ -148,10 +148,13 @@ public class PurchaseOrderPolicyServiceImplTest {
 	 */
 	@Test
 	public void checkTenantPolicy() {
+		boolean bTest = false;
+
 		CheckPaymentPolicyResult checkPaymentPolicyResult = null;
 
 		// S01 / SKT / 구매 / 쇼핑
 		checkPaymentPolicyResult = this.purchasePolicyService.checkPaymentPolicy(this.checkPaymentPolicyParam);
+		checkPaymentPolicyResult.getPaymentAdjInfo(); // dummy 4 warning
 		// System.out.println("RESULT\n" + checkPaymentPolicyResult);
 
 		// S01 / KT / 구매 / 쇼핑
@@ -159,11 +162,32 @@ public class PurchaseOrderPolicyServiceImplTest {
 		checkPaymentPolicyResult = this.purchasePolicyService.checkPaymentPolicy(this.checkPaymentPolicyParam);
 		// System.out.println("RESULT\n" + checkPaymentPolicyResult);
 
-		// S03 / U+ / 구매 / IAP
+		// S02 / KT / 구매 / 쇼핑 / 상품ID:S900017839
 		TenantHeader tenantHeader = new TenantHeader();
+		tenantHeader.setTenantId("S02");
+		tenantHeader.setSystemId("S02-01002");
+		SacRequestHeader sacRequestHeader = new SacRequestHeader();
+		sacRequestHeader.setTenantHeader(tenantHeader);
+		RequestContextHolder.getRequestAttributes().setAttribute(SacRequestHeader.class.getName(), sacRequestHeader,
+				RequestAttributes.SCOPE_REQUEST);
+
+		this.checkPaymentPolicyParam.setTenantId(tenantHeader.getTenantId());
+		this.checkPaymentPolicyParam.setSystemId(tenantHeader.getTenantId() + "XXXX");
+		this.checkPaymentPolicyParam.setProdId("S900017839");
+
+		checkPaymentPolicyResult = this.purchasePolicyService.checkPaymentPolicy(this.checkPaymentPolicyParam);
+		// System.out.println("RESULT\n" + checkPaymentPolicyResult);
+
+		this.checkPaymentPolicyParam.setProdId(null);
+
+		if (bTest == false) {
+			return;
+		}
+
+		// S03 / U+ / 구매 / IAP
+		tenantHeader = new TenantHeader();
 		tenantHeader.setTenantId("S03");
 		tenantHeader.setSystemId("S03-01002");
-		SacRequestHeader sacRequestHeader = new SacRequestHeader();
 		sacRequestHeader.setTenantHeader(tenantHeader);
 		RequestContextHolder.getRequestAttributes().setAttribute(SacRequestHeader.class.getName(), sacRequestHeader,
 				RequestAttributes.SCOPE_REQUEST);
