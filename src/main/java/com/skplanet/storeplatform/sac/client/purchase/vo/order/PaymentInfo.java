@@ -39,6 +39,8 @@ public class PaymentInfo extends CommonInfo {
 	private String ocbType; // 신OCB 처리타입 : ID-ONE ID, CARD-OCB 카드번호
 	private String moid; // 테넌트 결제수단 관리 정보
 	private String sktTestDeviceYn; // SKT 시험폰 결제 여부
+	private String mnoCd; // DCB 결제 통신사 코드
+	private String limitUserYn; // 한도가입자 여부 Y/N
 
 	/**
 	 * @return the tid
@@ -218,6 +220,36 @@ public class PaymentInfo extends CommonInfo {
 	 */
 	public void setSktTestDeviceYn(String sktTestDeviceYn) {
 		this.sktTestDeviceYn = sktTestDeviceYn;
+	}
+
+	/**
+	 * @return the mnoCd
+	 */
+	public String getMnoCd() {
+		return this.mnoCd;
+	}
+
+	/**
+	 * @param mnoCd
+	 *            the mnoCd to set
+	 */
+	public void setMnoCd(String mnoCd) {
+		this.mnoCd = mnoCd;
+	}
+
+	/**
+	 * @return the limitUserYn
+	 */
+	public String getLimitUserYn() {
+		return this.limitUserYn;
+	}
+
+	/**
+	 * @param limitUserYn
+	 *            the limitUserYn to set
+	 */
+	public void setLimitUserYn(String limitUserYn) {
+		this.limitUserYn = limitUserYn;
 	}
 
 }
