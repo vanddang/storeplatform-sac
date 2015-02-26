@@ -32,6 +32,7 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	private String resultMsg; // 결제처리결과 메시지
 	@NotBlank
 	private String prchsId; // 구매 ID
+	private String userKey; // 사용자 내부관리 번호
 	private String prodId;
 	@NotNull
 	private double totAmt; // 결제 총 금액
@@ -89,6 +90,21 @@ public class NotifyPaymentSacReq extends CommonInfo {
 	 */
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 	/**
