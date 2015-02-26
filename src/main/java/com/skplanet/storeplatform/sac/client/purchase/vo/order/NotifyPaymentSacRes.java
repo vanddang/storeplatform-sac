@@ -22,6 +22,9 @@ public class NotifyPaymentSacRes extends CommonInfo {
 
 	private String prchsId; // 구매 ID
 	private int count; // 처리된 결제수단 갯수
+	private String shippingUrl; // 상품 배송지 입력 URL
+
+	// T store 구매완료 Noti 값들
 	private String userKey; // 상품 보유자 회원 Key
 	private String deviceKey; // 상품 보유자 디바이스 Key
 	private String prchsDt; // 구매일시
@@ -72,6 +75,21 @@ public class NotifyPaymentSacRes extends CommonInfo {
 	 */
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	/**
+	 * @return the shippingUrl
+	 */
+	public String getShippingUrl() {
+		return this.shippingUrl;
+	}
+
+	/**
+	 * @param shippingUrl
+	 *            the shippingUrl to set
+	 */
+	public void setShippingUrl(String shippingUrl) {
+		this.shippingUrl = shippingUrl;
 	}
 
 	/**
