@@ -43,7 +43,6 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.AppInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
-import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
 
 /**
  * 상품 상세 정보 요청(Product Id) Service 구현체
@@ -77,9 +76,6 @@ public class AppDetailByProdIdServiceImpl implements AppDetailByProdIdService {
 
 	@Autowired
 	private SellerSearchSCI sellerSearchSCI;
-
-	@Autowired
-	private FeedbackRepository feedbackRepository;
 
 	/*
 	 * (non-Javadoc)
