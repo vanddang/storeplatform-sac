@@ -91,6 +91,8 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String simNo; // SIM Serial Number
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String simYn; // SIM 조회 가능 여부
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String smsFlag; // SMS 인증 필요 여부
 	@Null(groups = { GroupCreateBizPurchase.class })
 	private String mediaId; // CPS CPID
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
@@ -398,6 +400,21 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	 */
 	public void setSimYn(String simYn) {
 		this.simYn = simYn;
+	}
+
+	/**
+	 * @return the smsFlag
+	 */
+	public String getSmsFlag() {
+		return this.smsFlag;
+	}
+
+	/**
+	 * @param smsFlag
+	 *            the smsFlag to set
+	 */
+	public void setSmsFlag(String smsFlag) {
+		this.smsFlag = smsFlag;
 	}
 
 	/**
