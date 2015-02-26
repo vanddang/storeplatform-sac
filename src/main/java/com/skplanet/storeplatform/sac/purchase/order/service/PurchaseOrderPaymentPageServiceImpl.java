@@ -103,6 +103,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		}
 		paymentPageParam.setNoSim(purchaseOrderInfo.getSimNo());
 		// paymentPageParam.setFlgSim(purchaseOrderInfo.getSimYn());
+		paymentPageParam.setSmsFlag(purchaseOrderInfo.getSmsFlag());
 
 		// T store 는 IAP/EBOOK스토어/SC 에 따라 MID 변형 필요
 		// : PP에서 EBOOK 스토어가 먼저 오픈되서 T store Ebook Store MID가 기본형이 되었음.
@@ -481,7 +482,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				.append(StringUtils.defaultString(nmSellerCompanyWithUrlEncoding)).append("&nmSeller=")
 				.append(StringUtils.defaultString(nmSellerWithUrlEncoding)).append("&emailSeller=")
 				.append(StringUtils.defaultString(paymentPageParam.getEmailSeller())).append("&noTelSeller=")
-				.append(StringUtils.defaultString(paymentPageParam.getNoTelSeller()));
+				.append(StringUtils.defaultString(paymentPageParam.getNoTelSeller())).append("&smsFlag=")
+				.append(StringUtils.defaultString(paymentPageParam.getSmsFlag()));
 
 		String plainData = sb.toString();
 		this.logger.info("PRCHS,ORDER,SAC,PAYPAGE,EDATA,SRC,{}", plainData);

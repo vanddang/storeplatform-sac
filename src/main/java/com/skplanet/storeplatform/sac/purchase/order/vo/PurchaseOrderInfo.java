@@ -50,6 +50,7 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String uacd; // 단말 모델 식별 번호
 	private String simNo; // SIM Serial Number
 	private String simYn; // SIM 조회 가능 여부
+	private String smsFlag; // SMS 인증 필요 여부
 	private String mediaId; // CPS CPID
 
 	// ------------------------------------------------------------------------
@@ -529,6 +530,21 @@ public class PurchaseOrderInfo extends CommonInfo {
 	 */
 	public void setSimYn(String simYn) {
 		this.simYn = simYn;
+	}
+
+	/**
+	 * @return the smsFlag
+	 */
+	public String getSmsFlag() {
+		return this.smsFlag;
+	}
+
+	/**
+	 * @param smsFlag
+	 *            the smsFlag to set
+	 */
+	public void setSmsFlag(String smsFlag) {
+		this.smsFlag = smsFlag;
 	}
 
 	/**

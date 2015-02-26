@@ -61,6 +61,7 @@ public class PaymentPageParam extends CommonInfo {
 	private String nmSeller; // 판매자명
 	private String emailSeller; // 판매자 이메일 주소
 	private String noTelSeller; // 판매자 전화번호
+	private String smsFlag; // SMS 인증 필요 여부
 
 	// ==========================================================================================
 
@@ -602,6 +603,21 @@ public class PaymentPageParam extends CommonInfo {
 	 */
 	public void setNoTelSeller(String noTelSeller) {
 		this.noTelSeller = noTelSeller;
+	}
+
+	/**
+	 * @return the smsFlag
+	 */
+	public String getSmsFlag() {
+		return this.smsFlag;
+	}
+
+	/**
+	 * @param smsFlag
+	 *            the smsFlag to set
+	 */
+	public void setSmsFlag(String smsFlag) {
+		this.smsFlag = smsFlag;
 	}
 
 }
