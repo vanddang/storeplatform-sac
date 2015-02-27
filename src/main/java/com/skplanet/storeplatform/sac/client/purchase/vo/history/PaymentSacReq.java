@@ -26,6 +26,8 @@ public class PaymentSacReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
+	private String userKey;
+
 	@NotNull
 	private List<String> prchsIdList; // 구매ID
 
@@ -57,6 +59,21 @@ public class PaymentSacReq extends CommonInfo implements Serializable {
 	 */
 	public void setPrchsIdList(List<String> prchsIdList) {
 		this.prchsIdList = prchsIdList;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }
