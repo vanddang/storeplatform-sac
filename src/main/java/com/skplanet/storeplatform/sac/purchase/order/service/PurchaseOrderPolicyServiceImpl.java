@@ -1532,7 +1532,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			}
 		}
 
-		return paymethodInfo;
+		return StringUtils.endsWith(paymethodInfo, ";") ? StringUtils.substring(paymethodInfo, 0,
+				paymethodInfo.length() - 1) : paymethodInfo;
 	}
 
 	/**

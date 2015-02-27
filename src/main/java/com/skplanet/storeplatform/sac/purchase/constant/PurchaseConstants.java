@@ -213,8 +213,10 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYPLANET_MID_TSTORE = "TSTORE0003"; // T store S/C Default
 	public static final String PAYPLANET_MID_TSTORE_IAP = "TSTORE0004"; // T store IAP
 	public static final String PAYPLANET_MID_TSTORE_EBOOKSTORE = "SKTstore01"; // T store Ebook Store
-	// public static final String PAYPLANET_MID_OLLEH = "SKTstore02"; // Olleh Market
-	// public static final String PAYPLANET_MID_UPLUS = "SKTstore03"; // U+ Store
+	public static final String PAYPLANET_MID_OLLEH = "KTXXXX0003"; // Olleh Market S/C Default
+	public static final String PAYPLANET_MID_OLLEH_IAP = "KTXXXX0002"; // Olleh Market IAP
+	public static final String PAYPLANET_MID_UPLUS = "LGXXXX0003"; // U+ Store S/C Default
+	public static final String PAYPLANET_MID_UPLUS_IAP = "LGXXXX0002"; // U+ Store IAP
 
 	/** Pay Planet MID prefix */
 	public static final List<String> PAYPLANET_MID_PREFIX_LIST = Arrays
