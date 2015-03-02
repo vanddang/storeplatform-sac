@@ -659,7 +659,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				return checkPaymentPolicyResult;
 
 			} else if (checkPaymentPolicyParam.getSapPolicyCdList().contains(
-					PurchaseConstants.SAP_POLICY_LIMIT_IAP_PHONEBILL)) {
+					PurchaseConstants.SAP_POLICY_LIMIT_IAP_PHONEBILL)
+					&& StringUtils.startsWith(checkPaymentPolicyParam.getTenantProdGrpCd(),
+							PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
 				checkPaymentPolicyResult
 						.setPhoneLimitType(PurchaseConstants.PHONE_ADJUST_REASON_SAP_LIMIT_IAP_PHONEBILL);
 				checkPaymentPolicyResult.setPhoneRestAmt(0.0);
