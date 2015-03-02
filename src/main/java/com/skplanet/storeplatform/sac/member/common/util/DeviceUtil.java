@@ -290,8 +290,8 @@ public class DeviceUtil {
 		String delim = "\\,";
 		String gmailStr = "";
 
-		if (gmail == null || StringUtils.equals(gmail, "")) {
-			return "";
+		if (StringUtils.isBlank(gmail)) {
+			return gmail;
 		}
 
 		String tempGmailArr[] = gmail.split(delim);
