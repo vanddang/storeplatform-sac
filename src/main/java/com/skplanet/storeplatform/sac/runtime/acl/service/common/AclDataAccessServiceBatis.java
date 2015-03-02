@@ -90,7 +90,8 @@ public class AclDataAccessServiceBatis implements AclDataAccessService {
     		"sac:runtime:selectSystem",
     		"sac:runtime:selectSystemByIp",
     		"sac:runtime:selectUsableInterface",
-    		"sac:runtime:selectBypassByInterface"},
+    		"sac:runtime:selectBypassByInterface",
+    		"sac:runtime:selectBypassByInterface:v2"},
     		allEntries = true)
     @Override
     public void flushCache() {
