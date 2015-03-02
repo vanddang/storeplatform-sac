@@ -16,13 +16,11 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
+import com.skplanet.storeplatform.purchase.client.common.vo.PayPlanetShop;
+import com.skplanet.storeplatform.purchase.client.payplanet.sci.PurchasePayPlanetSCI;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
@@ -33,15 +31,13 @@ import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
  */
 @Service
 public class PayPlanetShopServiceImpl implements PayPlanetShopService {
-	private static final String PAYPLANET_CODE_PREFIX = "PP0";
 	private static final String SERVER_LEVEL_DEV = "DV"; // 조회대상 서버 단계: 개발기
 	private static final String SERVER_LEVEL_QA = "QA"; // 조회대상 서버 단계: QA
 	private static final String SERVER_LEVEL_REAL = "LV"; // 조회대상 서버 단계: 상용
 	private static final String SERVER_LEVEL_STAGING = "ST"; // 조회대상 서버 단계: 상용 스테이징
 
 	@Autowired
-	@Qualifier("sac")
-	private CommonDAO commonDao;
+	private PurchasePayPlanetSCI PurchasePayPlanetSCI;
 
 	@Value("#{systemProperties['spring.profiles.active']}")
 	private String envServerLevel;
@@ -59,31 +55,6 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 		} else {
 			this.serverLevel = SERVER_LEVEL_DEV;
 		}
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Pay Planet 가맹점 정보 조회.
-	 * </pre>
-	 * 
-	 * @param tenantId
-	 *            조회할 가맹점의 테넌트 ID
-	 * @return Pay Planet 가맹점 정보
-	 */
-	@Override
-	public PayPlanetShop getPayPlanetShopInfo(String tenantId) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(PAYPLANET_CODE_PREFIX).append(tenantId).append(this.serverLevel);
-
-		PayPlanetShop shopInfo = this.commonDao.queryForObject("PurchaseSacCommon.searchPayPlanetShopInfoDetail",
-				sb.toString(), PayPlanetShop.class);
-		if (shopInfo == null) {
-			throw new StorePlatformException("SAC_PUR_7102");
-		}
-
-		shopInfo.setTenantId(tenantId);
-		return shopInfo;
 	}
 
 	/**
@@ -144,17 +115,17 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 					shopInfo.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE_IAP);
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else if (StringUtils.equals(reqPathCd, PurchaseConstants.PRCHS_REQ_PATH_EBOOK_STORAGE)) { // 이북보관함
 					shopInfo.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE);
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else { // 일반 (S/C)
 					shopInfo.setMid(PurchaseConstants.PAYPLANET_MID_TSTORE);
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				}
 
 			} else if (StringUtils.equals(apiTypeCd, PurchaseConstants.PAYPLANET_API_TYPE_CANCEL)) { // 결제취소
@@ -186,7 +157,7 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
 
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else { // 일반 (S/C)
 					shopInfo.setMid(PurchaseConstants.PAYPLANET_MID_OLLEH);
 
@@ -195,7 +166,7 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
 
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				}
 
 			} else if (StringUtils.equals(apiTypeCd, PurchaseConstants.PAYPLANET_API_TYPE_CANCEL)) { // 결제취소
@@ -223,7 +194,7 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
 
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else { // 일반 (S/C)
 					shopInfo.setMid(PurchaseConstants.PAYPLANET_MID_UPLUS);
 
@@ -232,7 +203,7 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
 
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				}
 
 			} else if (StringUtils.equals(apiTypeCd, PurchaseConstants.PAYPLANET_API_TYPE_CANCEL)) { // 결제취소
@@ -281,15 +252,15 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 				if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_TSTORE_IAP)) { // IAP
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE)) { // 이북보관함
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else { // 일반 (S/C)
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				}
 
 			} else if (StringUtils.equals(apiTypeCd, PurchaseConstants.PAYPLANET_API_TYPE_CANCEL)) { // 결제취소
@@ -297,15 +268,15 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 				if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_TSTORE_IAP)) { // IAP
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_TSTORE_EBOOKSTORE)) { // 이북보관함
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else { // 일반 (S/C)
 					shopInfo.setAuthKey("6b6fa0a99e621f5b0fc9a77622c42b67e7a3317c");
 					shopInfo.setEncKey("qnqnsdbfyghk0001");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				}
 			}
 
@@ -316,11 +287,11 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 				if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_OLLEH_IAP)) { // IAP
 					shopInfo.setAuthKey("c87fb588abc7efc58367cafc15b4d9661291286f");
 					shopInfo.setEncKey("a27880e386bbb5e2");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_OLLEH)) { // 일반 (S/C)
 					shopInfo.setAuthKey("456d99087506813ac75ffe99b71a08ded9250d41");
 					shopInfo.setEncKey("3be59250f04d12b5");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				}
 
 			} else if (StringUtils.equals(apiTypeCd, PurchaseConstants.PAYPLANET_API_TYPE_CANCEL)) { // 결제취소
@@ -328,11 +299,11 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 				if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_OLLEH_IAP)) { // IAP
 					shopInfo.setAuthKey("c87fb588abc7efc58367cafc15b4d9661291286f");
 					shopInfo.setEncKey("a27880e386bbb5e2");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_OLLEH)) { // 일반 (S/C)
 					shopInfo.setAuthKey("456d99087506813ac75ffe99b71a08ded9250d41");
 					shopInfo.setEncKey("3be59250f04d12b5");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				}
 			}
 
@@ -343,11 +314,11 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 				if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_UPLUS_IAP)) { // IAP
 					shopInfo.setAuthKey("203168e6c618d034da53a6946fcc186b372ddfdf");
 					shopInfo.setEncKey("cadea142602bfb4c");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_UPLUS)) { // 일반 (S/C)
 					shopInfo.setAuthKey("d29bc3cddc8ec39d7dba6d91b00605f47dc9b040");
 					shopInfo.setEncKey("3e99ee0c23492e07");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				}
 
 			} else if (StringUtils.equals(apiTypeCd, PurchaseConstants.PAYPLANET_API_TYPE_CANCEL)) { // 결제취소
@@ -355,11 +326,11 @@ public class PayPlanetShopServiceImpl implements PayPlanetShopService {
 				if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_UPLUS_IAP)) { // IAP
 					shopInfo.setAuthKey("203168e6c618d034da53a6946fcc186b372ddfdf");
 					shopInfo.setEncKey("cadea142602bfb4c");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				} else if (StringUtils.equals(mid, PurchaseConstants.PAYPLANET_MID_UPLUS)) { // 일반 (S/C)
 					shopInfo.setAuthKey("d29bc3cddc8ec39d7dba6d91b00605f47dc9b040");
 					shopInfo.setEncKey("3e99ee0c23492e07");
-					shopInfo.setPaymentUrl(PP_PAY_URL_MAP.get(this.serverLevel));
+					shopInfo.setUrl(PP_PAY_URL_MAP.get(this.serverLevel));
 				}
 			}
 

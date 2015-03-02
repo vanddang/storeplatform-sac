@@ -14,14 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
+import com.skplanet.storeplatform.purchase.client.policy.sci.PurchaseTenantPolicySCI;
 
 /**
  * 
@@ -34,8 +31,7 @@ import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyService {
 
 	@Autowired
-	@Qualifier("sac")
-	private CommonDAO commonDao;
+	private PurchaseTenantPolicySCI purchaseTenantPolicySCI;
 
 	/**
 	 * 
@@ -50,15 +46,14 @@ public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyServ
 	 * @return 해당 테넌트의 구매Part 정책 목록 (정책ID를 Key로, 관련 정책 목록을 Value로 갖는 Map형태)
 	 */
 	@Override
-	public Map<String, List<PurchaseTenantPolicy>> searchPurchaseTenantPolicyListByMap(String tenantId,
-			String tenantProdGrpCd) {
-		List<PurchaseTenantPolicy> policyList = this.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd);
+	public Map<String, List<TenantSalePolicy>> searchTenantSalePolicyListByMap(String tenantId, String tenantProdGrpCd) {
+		List<TenantSalePolicy> policyList = this.searchTenantSalePolicyList(tenantId, tenantProdGrpCd);
 
-		Map<String, List<PurchaseTenantPolicy>> policyListMap = new HashMap<String, List<PurchaseTenantPolicy>>();
-		List<PurchaseTenantPolicy> valuePolicyList = null;
+		Map<String, List<TenantSalePolicy>> policyListMap = new HashMap<String, List<TenantSalePolicy>>();
+		List<TenantSalePolicy> valuePolicyList = null;
 
-		for (PurchaseTenantPolicy policy : policyList) {
-			valuePolicyList = policyListMap.containsKey(policy.getPolicyId()) ? policyListMap.get(policy.getPolicyId()) : new ArrayList<PurchaseTenantPolicy>();
+		for (TenantSalePolicy policy : policyList) {
+			valuePolicyList = policyListMap.containsKey(policy.getPolicyId()) ? policyListMap.get(policy.getPolicyId()) : new ArrayList<TenantSalePolicy>();
 
 			valuePolicyList.add(policy);
 
@@ -81,8 +76,8 @@ public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyServ
 	 * @return 해당 테넌트의 구매Part 정책 목록
 	 */
 	@Override
-	public List<PurchaseTenantPolicy> searchPurchaseTenantPolicyList(String tenantId, String tenantProdGrpCd) {
-		return this.searchPurchaseTenantPolicyList(tenantId, tenantProdGrpCd, null, false);
+	public List<TenantSalePolicy> searchTenantSalePolicyList(String tenantId, String tenantProdGrpCd) {
+		return this.searchTenantSalePolicyList(tenantId, tenantProdGrpCd, null, false);
 	}
 
 	/**
@@ -102,16 +97,10 @@ public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyServ
 	 * @return 해당 테넌트의 구매Part 정책 목록
 	 */
 	@Override
-	public List<PurchaseTenantPolicy> searchPurchaseTenantPolicyList(String tenantId, String tenantProdGrpCd,
+	public List<TenantSalePolicy> searchTenantSalePolicyList(String tenantId, String tenantProdGrpCd,
 			String procPatternCd, boolean ignoreTenantProdGrpCd) {
-		PurchaseTenantPolicy qryParam = new PurchaseTenantPolicy();
-		qryParam.setTenantId(tenantId);
-		qryParam.setTenantProdGrpCd(tenantProdGrpCd);
-		qryParam.setProcPatternCd(procPatternCd);
-		qryParam.setIgnoreTenantProdGrpCd(ignoreTenantProdGrpCd);
-
-		return this.commonDao.queryForList("PurchaseSacCommon.searchPurchaseTenantPolicyList", qryParam,
-				PurchaseTenantPolicy.class);
+		return this.purchaseTenantPolicySCI.searchTenantSalePolicyList(tenantId, tenantProdGrpCd, procPatternCd,
+				ignoreTenantProdGrpCd);
 	}
 
 	/**
@@ -133,17 +122,10 @@ public class PurchaseTenantPolicyServiceImpl implements PurchaseTenantPolicyServ
 	 * @return 해당 테넌트의 구매Part 정책 목록
 	 */
 	@Override
-	public PurchaseTenantPolicy searchPaymentPolicy(String tenantId, String tenantProdGrpCd, String prodKindCd,
+	public TenantSalePolicy searchPaymentPolicy(String tenantId, String tenantProdGrpCd, String prodKindCd,
 			String prodId, String parentProdId) {
-		PurchaseTenantPolicy qryParam = new PurchaseTenantPolicy();
-		qryParam.setTenantId(tenantId);
-		qryParam.setTenantProdGrpCd(tenantProdGrpCd + StringUtils.defaultString(prodKindCd)); // 쇼핑/정액권 경우, 상품타입까지.
-		qryParam.setProcPatternCd(PurchaseConstants.POLICY_PATTERN_ADJUST_PAYMETHOD);
-		qryParam.setProdId(prodId);
-		qryParam.setParentProdId(parentProdId);
-
-		return this.commonDao.queryForObject("PurchaseSacCommon.searchPaymentPolicy", qryParam,
-				PurchaseTenantPolicy.class);
+		return this.purchaseTenantPolicySCI.searchPaymentPolicy(tenantId, tenantProdGrpCd, prodKindCd, prodId,
+				parentProdId);
 	}
 
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
 import com.skplanet.storeplatform.purchase.client.history.sci.HistorySCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountScRes;
@@ -52,7 +53,6 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistorySacV2;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductCountSac;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
@@ -163,17 +163,17 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 */
 		long polscStTime = System.currentTimeMillis();
 
-		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
-				.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
-						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
+		List<TenantSalePolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService.searchTenantSalePolicyList(
+				request.getTenantId(), request.getTenantProdGrpCd(),
+				PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
 		this.logger
-				.info("##### [SAC History CallTime] HistorySC purchaseTenantPolicyService.searchPurchaseTenantPolicyList END takes {} ms",
+				.info("##### [SAC History CallTime] HistorySC purchaseTenantPolicyService.searchTenantSalePolicyList END takes {} ms",
 						(System.currentTimeMillis() - polscStTime));
 
 		// Device를 조회 조건으로 넣을지 여부
 		String selectDeviceYn = "N";
 
-		for (PurchaseTenantPolicy obj : purchaseTenantPolicyList) {
+		for (TenantSalePolicy obj : purchaseTenantPolicyList) {
 			mdnCategoryList.add(obj.getTenantProdGrpCd());
 
 			if (!StringUtils.isBlank(request.getTenantProdGrpCd())
@@ -623,17 +623,17 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 */
 		long polscStTime = System.currentTimeMillis();
 
-		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
-				.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
-						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
+		List<TenantSalePolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService.searchTenantSalePolicyList(
+				request.getTenantId(), request.getTenantProdGrpCd(),
+				PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
 		this.logger
-				.info("##### [SAC History2 CallTime] HistorySC purchaseTenantPolicyService.searchPurchaseTenantPolicyList END takes {} ms",
+				.info("##### [SAC History2 CallTime] HistorySC purchaseTenantPolicyService.searchTenantSalePolicyList END takes {} ms",
 						(System.currentTimeMillis() - polscStTime));
 
 		// Device를 조회 조건으로 넣을지 여부
 		String selectDeviceYn = "N";
 
-		for (PurchaseTenantPolicy obj : purchaseTenantPolicyList) {
+		for (TenantSalePolicy obj : purchaseTenantPolicyList) {
 			mdnCategoryList.add(obj.getTenantProdGrpCd());
 
 			if (!StringUtils.isBlank(request.getTenantProdGrpCd())
@@ -1061,9 +1061,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 		 * 구매정책을 조회하여 list에 셋팅
 		 */
 		long polTime = System.currentTimeMillis();
-		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
-				.searchPurchaseTenantPolicyList(request.getTenantId(), request.getTenantProdGrpCd(),
-						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
+		List<TenantSalePolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService.searchTenantSalePolicyList(
+				request.getTenantId(), request.getTenantProdGrpCd(),
+				PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
 		this.logger.info(
 				"##### [SAC History Count CallTime] HistoryListServiceImpl.searchHistoryCount Policy Call takes {} ms",
 				(System.currentTimeMillis() - polTime));
@@ -1071,7 +1071,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// Device를 조회 조건으로 넣을지 여부
 		String selectDeviceYn = "N";
 
-		for (PurchaseTenantPolicy obj : purchaseTenantPolicyList) {
+		for (TenantSalePolicy obj : purchaseTenantPolicyList) {
 
 			if (!StringUtils.isBlank(request.getTenantProdGrpCd())
 					&& obj.getTenantProdGrpCd().equals(request.getTenantProdGrpCd())) {

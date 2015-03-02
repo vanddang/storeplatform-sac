@@ -42,7 +42,9 @@ import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
+import com.skplanet.storeplatform.purchase.client.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
+import com.skplanet.storeplatform.purchase.client.common.vo.PaymentPromotion;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.common.vo.UniqueTid;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
@@ -60,6 +62,7 @@ import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseListByS
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseListByStatusScRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseSequenceAndDateRes;
 import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
+import com.skplanet.storeplatform.purchase.client.promotion.sci.PurchasePromotionSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.BannerInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Banner;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.BannerInfoSacReq;
@@ -79,10 +82,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderPromot
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.purchase.common.service.MembershipReserveService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
-import com.skplanet.storeplatform.sac.purchase.common.service.PaymentPromotionService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PaymentPromotion;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
@@ -121,6 +121,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private PurchaseOrderSearchSCI purchaseOrderSearchSCI;
 	@Autowired
 	private BannerInfoSCI bannerInfoSCI;
+	@Autowired
+	private PurchasePromotionSCI purchasePromotionSCI;
 
 	@Autowired
 	private PurchaseOrderAssistService purchaseOrderAssistService;
@@ -138,8 +140,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private PurchaseOrderValidationService purchaseOrderValidationService;
 	@Autowired
 	private PayPlanetShopService payPlanetShopService;
-	@Autowired
-	private PaymentPromotionService paymentPromotionService;
 	@Autowired
 	private MembershipReserveService membershipReserveService;
 
@@ -566,11 +566,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -----------------------------------------------------------------------------
 		// PayPlanet 가맹점 정보 조회
 
-		PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(purchaseOrderInfo.getTenantId());
+		PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(purchaseOrderInfo.getTenantId(),
+				PurchaseConstants.PAYPLANET_API_TYPE_PURCHASE, purchaseOrderInfo.getPrchsReqPathCd());
 		purchaseOrderInfo.setMid(payPlanetShop.getMid());
 		purchaseOrderInfo.setAuthKey(payPlanetShop.getAuthKey());
 		purchaseOrderInfo.setEncKey(payPlanetShop.getEncKey());
-		purchaseOrderInfo.setPaymentPageUrl(payPlanetShop.getPaymentUrl());
+		purchaseOrderInfo.setPaymentPageUrl(payPlanetShop.getUrl());
 
 		// -----------------------------------------------------------------------------
 		// 구매생성 요청 데이터 생성
@@ -2127,7 +2128,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		List<PaymentPromotion> paymentPromotionList = null;
 
 		try {
-			paymentPromotionList = this.paymentPromotionService.searchPaymentPromotionList(prchsDtlMore.getTenantId());
+			paymentPromotionList = this.purchasePromotionSCI.searchPaymentPromotionList(prchsDtlMore.getTenantId());
 		} catch (Exception e) {
 			// 이 때 발생하는 예외는 로깅만.
 			this.logger.info("PRCHS,ORDER,SAC,VERIFY,PROMOTION,ERROR,{}",

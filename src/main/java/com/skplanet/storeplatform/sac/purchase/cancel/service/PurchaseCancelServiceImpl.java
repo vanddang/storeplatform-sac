@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
+import com.skplanet.storeplatform.purchase.client.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.purchase.client.common.vo.SapNoti;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
@@ -62,7 +63,6 @@ import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSac
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;

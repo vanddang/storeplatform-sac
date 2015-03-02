@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.common.service;
 import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
+import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
 
 /**
  * 
@@ -35,8 +35,7 @@ public interface PurchaseTenantPolicyService {
 	 *            정책 기준이 되는 테넌트 상품 그룹 코드
 	 * @return 해당 테넌트의 구매Part 정책 목록 (정책ID를 Key로, 관련 정책 목록을 Value로 갖는 Map형태)
 	 */
-	public Map<String, List<PurchaseTenantPolicy>> searchPurchaseTenantPolicyListByMap(String tenantId,
-			String tenantProdGrpCd);
+	public Map<String, List<TenantSalePolicy>> searchTenantSalePolicyListByMap(String tenantId, String tenantProdGrpCd);
 
 	/**
 	 * 
@@ -50,7 +49,7 @@ public interface PurchaseTenantPolicyService {
 	 *            정책 기준이 되는 테넌트 상품 그룹 코드
 	 * @return 해당 테넌트의 구매Part 정책 목록
 	 */
-	public List<PurchaseTenantPolicy> searchPurchaseTenantPolicyList(String tenantId, String tenantProdGrpCd);
+	public List<TenantSalePolicy> searchTenantSalePolicyList(String tenantId, String tenantProdGrpCd);
 
 	/**
 	 * 
@@ -68,7 +67,7 @@ public interface PurchaseTenantPolicyService {
 	 *            정책 대상이 카테고리 무시 여부: true-해당 처리패턴의 모든 정책 조회, false-해당 처리패턴 정책 중 기준 테넌트 상품 그룹 코드에 속하는 정책 조회
 	 * @return 해당 테넌트의 구매Part 정책 목록
 	 */
-	public List<PurchaseTenantPolicy> searchPurchaseTenantPolicyList(String tenantId, String tenantProdGrpCd,
+	public List<TenantSalePolicy> searchTenantSalePolicyList(String tenantId, String tenantProdGrpCd,
 			String procPatternCd, boolean ignoreTenantProdGrpCd);
 
 	/**
@@ -89,6 +88,6 @@ public interface PurchaseTenantPolicyService {
 	 *            정책 조회할 모상품ID
 	 * @return 해당 테넌트의 구매Part 정책 목록
 	 */
-	public PurchaseTenantPolicy searchPaymentPolicy(String tenantId, String tenantProdGrpCd, String prodKindCd,
+	public TenantSalePolicy searchPaymentPolicy(String tenantId, String tenantProdGrpCd, String prodKindCd,
 			String prodId, String parentProdId);
 }

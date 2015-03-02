@@ -24,8 +24,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.skplanet.storeplatform.purchase.client.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PayPlanetShop;
 
 /**
  * 
@@ -52,14 +52,6 @@ public class PayPlanetShopServiceImplTest {
 	@Before
 	public void init() {
 		this.bSystemOut = StringUtils.equals(this.envServerLevel, this.loggingLevel);
-	}
-
-	@Test
-	public void getShopInfoOld() {
-		String tenantId = "S01";
-
-		PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(tenantId);
-		assertNotNull(payPlanetShop);
 	}
 
 	@Test

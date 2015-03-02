@@ -22,11 +22,11 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
+import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
@@ -63,9 +63,8 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 		// 내부구매처리시 기구매 체크는 inputValue = true
 
 		// TenantProdGrpCd(Device기반 모든정책 조회 )
-		List<PurchaseTenantPolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService
-				.searchPurchaseTenantPolicyList(existenceScReq.getTenantId(), "",
-						PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
+		List<TenantSalePolicy> purchaseTenantPolicyList = this.purchaseTenantPolicyService.searchTenantSalePolicyList(
+				existenceScReq.getTenantId(), "", PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, true);
 
 		for (final ExistenceScRes existenceScRes : resultList) {
 			try {
@@ -153,7 +152,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 	 * @return String
 	 */
 	private String checkMdn(ExistenceScReq existenceScReq, ExistenceScRes existenceScRes,
-			List<PurchaseTenantPolicy> purchaseTenantPolicyList, String flag) {
+			List<TenantSalePolicy> purchaseTenantPolicyList, String flag) {
 
 		// flag의 값은 ID, MDN, NOT_MDN를 가진다
 		// flag : ID => ID기반
@@ -165,7 +164,7 @@ public class ExistenceSacServiceImpl implements ExistenceSacService {
 			flag = "ID";
 		} else {
 			if (purchaseTenantPolicyList.size() > 0) {
-				for (PurchaseTenantPolicy purchaseTenantPolicy : purchaseTenantPolicyList) {
+				for (TenantSalePolicy purchaseTenantPolicy : purchaseTenantPolicyList) {
 
 					String tenantProdGrpCd = existenceScRes.getTenantProdGrpCd();
 					// 조회한 tenantProdGrpCd의 시작 코드와 정책코드가 같다면 MDN기반

@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiPayment
 import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiProductInfoEc;
 import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiSellerInfoEc;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.purchase.client.common.sci.PurchaseCommonSCI;
+import com.skplanet.storeplatform.purchase.client.common.vo.PurchaseCommonCode;
 import com.skplanet.storeplatform.purchase.client.common.vo.SapNoti;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreateSapNotiScReq;
@@ -35,9 +37,7 @@ import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
-import com.skplanet.storeplatform.sac.purchase.common.service.CommonCodeService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonCode;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.interworking.service.InterworkingSacService;
 import com.skplanet.storeplatform.sac.purchase.interworking.vo.Interworking;
@@ -61,9 +61,9 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	private PurchaseOrderSCI purchaseOrderSCI;
 	@Autowired
 	private SapPurchaseSCI sapPurchaseSCI;
-
 	@Autowired
-	private CommonCodeService commonCodeService;
+	private PurchaseCommonSCI purchaseCommonSCI;
+
 	@Autowired
 	private PayPlanetShopService payPlanetShopService;
 	@Autowired
@@ -226,7 +226,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 			for (PaymentInfo paymentNotiReq : notifyPaymentReq.getPaymentInfoList()) {
 				paymentMtdCdList.add(PaymethodUtil.convert2StoreCode(paymentNotiReq.getPaymentMtdCd()));
 			}
-			Map<String, PurchaseCommonCode> commonCodeMap = this.commonCodeService.searchCommonCodeMap(
+			Map<String, PurchaseCommonCode> commonCodeMap = this.purchaseCommonSCI.searchCommonCodeMap(
 					paymentMtdCdList, prchsDtlMore.getCurrencyCd());
 			PurchaseCommonCode commonCode = null;
 

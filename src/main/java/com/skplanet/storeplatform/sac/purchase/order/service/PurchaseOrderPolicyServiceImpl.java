@@ -30,13 +30,13 @@ import com.skplanet.storeplatform.external.client.sap.vo.CheckPurchasePolicyInfo
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
+import com.skplanet.storeplatform.purchase.client.common.vo.TenantSalePolicy;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchSktPaymentScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchSktPaymentScRes;
 import com.skplanet.storeplatform.sac.client.internal.member.miscellaneous.vo.IndividualPolicyInfoSac;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseIapRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
@@ -87,7 +87,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public boolean isDeviceBasedPurchaseHistory(String tenantId, String tenantProdGrpCd) {
-		return CollectionUtils.isNotEmpty(this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(tenantId,
+		return CollectionUtils.isNotEmpty(this.purchaseTenantPolicyService.searchTenantSalePolicyList(tenantId,
 				tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_DEVICE_BASED_PRCHSHST, false));
 	}
 
@@ -107,8 +107,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public int searchtMileageSaveLimit(String tenantId, String tenantProdGrpCd) {
-		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
-				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_TMILEAGE_SAVE_LIMIT, false);
+		List<TenantSalePolicy> policyList = this.purchaseTenantPolicyService.searchTenantSalePolicyList(tenantId,
+				tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_TMILEAGE_SAVE_LIMIT, false);
 		return CollectionUtils.isEmpty(policyList) ? 0 : Integer.parseInt(policyList.get(0).getApplyValue());
 	}
 
@@ -128,8 +128,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 */
 	@Override
 	public String searchtMileageSavePaymentMethod(String tenantId, String tenantProdGrpCd) {
-		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
-				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_TMILEAGE_SAVE_PAYMENT_METHOD, false);
+		List<TenantSalePolicy> policyList = this.purchaseTenantPolicyService.searchTenantSalePolicyList(tenantId,
+				tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_TMILEAGE_SAVE_PAYMENT_METHOD, false);
 		return CollectionUtils.isEmpty(policyList) ? "" : policyList.get(0).getApplyValue();
 	}
 
@@ -151,15 +151,15 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	public boolean isBlockPayment(String tenantId, String deviceId, String tenantProdGrpCd) {
 
 		// 테넌트 구매차단 정책 조회
-		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
-				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_USER_BLOCK_CD, false);
+		List<TenantSalePolicy> policyList = this.purchaseTenantPolicyService.searchTenantSalePolicyList(tenantId,
+				tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_USER_BLOCK_CD, false);
 
 		if (CollectionUtils.isEmpty(policyList)) {
 			return false;
 		}
 
 		List<String> policyCodeList = new ArrayList<String>();
-		for (PurchaseTenantPolicy policy : policyList) {
+		for (TenantSalePolicy policy : policyList) {
 			policyCodeList.add(policy.getApplyValue());
 		}
 
@@ -210,15 +210,15 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	public boolean isTestMdn(String tenantId, String deviceId, String tenantProdGrpCd) {
 
 		// 테넌트 구매차단 정책 조회
-		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
-				tenantId, tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_STORE_TEST_DEVICE_CD, false);
+		List<TenantSalePolicy> policyList = this.purchaseTenantPolicyService.searchTenantSalePolicyList(tenantId,
+				tenantProdGrpCd, PurchaseConstants.POLICY_PATTERN_STORE_TEST_DEVICE_CD, false);
 
 		if (CollectionUtils.isEmpty(policyList)) {
 			return false;
 		}
 
 		List<String> policyCodeList = new ArrayList<String>();
-		for (PurchaseTenantPolicy policy : policyList) {
+		for (TenantSalePolicy policy : policyList) {
 			policyCodeList.add(policy.getApplyValue());
 		}
 
@@ -309,8 +309,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// TAKTODO:: QA지원을 위한 임시 하드코딩
 
 		// 테넌트 구매차단 정책 조회
-		List<PurchaseTenantPolicy> policyList = this.purchaseTenantPolicyService.searchPurchaseTenantPolicyList(
-				tenantId, tenantProdGrpCd, "TEMP_001", false);
+		List<TenantSalePolicy> policyList = this.purchaseTenantPolicyService.searchTenantSalePolicyList(tenantId,
+				tenantProdGrpCd, "TEMP_001", false);
 
 		if (CollectionUtils.isEmpty(policyList)) {
 			return false;
@@ -348,8 +348,8 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// --------------------------------------------------------------------------------------------------
 		// 관련 정책 목록 조회
 
-		Map<String, List<PurchaseTenantPolicy>> policyListMap = this.purchaseTenantPolicyService
-				.searchPurchaseTenantPolicyListByMap(checkPaymentPolicyParam.getTenantId(),
+		Map<String, List<TenantSalePolicy>> policyListMap = this.purchaseTenantPolicyService
+				.searchTenantSalePolicyListByMap(checkPaymentPolicyParam.getTenantId(),
 						checkPaymentPolicyParam.getTenantProdGrpCd());
 
 		// SAP 결제정책 조회 : 연동
@@ -492,7 +492,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return 정책 체크 결과
 	 */
 	private CheckPaymentPolicyResult checkPhonePaymentPolicy(CheckPaymentPolicyParam checkPaymentPolicyParam,
-			Map<String, List<PurchaseTenantPolicy>> policyListMap) {
+			Map<String, List<TenantSalePolicy>> policyListMap) {
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,PHONE,START,{}",
 				ReflectionToStringBuilder.toString(checkPaymentPolicyParam, ToStringStyle.SHORT_PREFIX_STYLE));
 
@@ -514,7 +514,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			this.logger.info("PRCHS,ORDER,SAC,POLICY,PHONE,SVCNUM,{}", sktUapsMappingInfo.getSvcMngNum());
 		}
 
-		List<PurchaseTenantPolicy> policyList = null;
+		List<TenantSalePolicy> policyList = null;
 
 		// --------------------------------------------------------------------------------------------------
 		// MVNO 체크
@@ -523,7 +523,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_MVNO_ALLOW_CD);
 
 			boolean bMvno = false;
-			for (PurchaseTenantPolicy policy : policyList) {
+			for (TenantSalePolicy policy : policyList) {
 				bMvno = this.isMvno(checkPaymentPolicyParam.getTenantId(), sktUapsMappingInfo, policy.getApplyValue(),
 						checkPaymentPolicyParam.getDeviceId());
 
@@ -560,7 +560,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_CORP_DEVICE);
 
 			boolean bLimit = false;
-			for (PurchaseTenantPolicy policy : policyList) {
+			for (TenantSalePolicy policy : policyList) {
 				// SKP법인폰은 위에서 이미 체크
 				if (StringUtils.equals(policy.getApplyValue(), PurchaseConstants.SKP_CORPORATION_NO)) {
 					bLimit = checkPaymentPolicyResult.isSkpCorporation();
@@ -579,7 +579,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD)) {
 					policyList = policyListMap.get(PurchaseConstants.POLICY_ID_ALLOW_PURCHASE_DEVICE_CD);
 
-					for (PurchaseTenantPolicy policy : policyList) {
+					for (TenantSalePolicy policy : policyList) {
 						if (this.isAllowPurchaseCorpDevice(policy, checkPaymentPolicyParam)) {
 							bAllowDevice = true;
 							break;
@@ -624,7 +624,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_TEST_DEVICE)) {
 					policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_TEST_DEVICE);
 
-					for (PurchaseTenantPolicy policy : policyList) {
+					for (TenantSalePolicy policy : policyList) {
 						if (this.isTelecomTestMdnWhiteList(checkPaymentPolicyParam.getTenantId(),
 								policy.getApplyValue(), checkPaymentPolicyParam.getDeviceId())) {
 							bWhite = true;
@@ -675,7 +675,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_SHOPPING_PRCHS_LIMIT);
 
 			// 회원 측 강제설정 적용
-			for (PurchaseTenantPolicy policy : policyList) {
+			for (TenantSalePolicy policy : policyList) {
 				if (StringUtils.equals(policy.getProcPatternCd(),
 						PurchaseConstants.POLICY_PATTERN_PHONE_SHOPPING_PRCHS_USER_LIMIT) == false) {
 					continue;
@@ -700,7 +700,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			// 잔여 한도 조회 적용 : 회원 측 강제적용 값이 없는 경우에만 진행
 			if (phoneRestAmtObj == null) {
 
-				for (PurchaseTenantPolicy policy : policyList) {
+				for (TenantSalePolicy policy : policyList) {
 
 					if (StringUtils.equals(policy.getProcPatternCd(),
 							PurchaseConstants.POLICY_PATTERN_PHONE_PRCHS_LIMIT)) { // CM011601: SKT후불 결제 한도제한
@@ -753,7 +753,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_PRCHS_LIMIT)) {
 			policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_PRCHS_LIMIT);
 
-			for (PurchaseTenantPolicy policy : policyList) {
+			for (TenantSalePolicy policy : policyList) {
 				// CM011601: SKT후불 결제 한도제한
 				if (StringUtils.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_PHONE_PRCHS_LIMIT) == false) {
 					continue;
@@ -787,7 +787,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_SHOPPING_RECV_LIMIT);
 
 				// 회원 측 강제설정 적용
-				for (PurchaseTenantPolicy policy : policyList) {
+				for (TenantSalePolicy policy : policyList) {
 					if (StringUtils.equals(policy.getProcPatternCd(),
 							PurchaseConstants.POLICY_PATTERN_PHONE_SHOPPING_RECV_USER_LIMIT) == false) { // CM011615
 						continue;
@@ -815,7 +815,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			if (policyListMap.containsKey(PurchaseConstants.POLICY_ID_PHONE_RECV_LIMIT)) {
 				policyList = policyListMap.get(PurchaseConstants.POLICY_ID_PHONE_RECV_LIMIT);
 
-				for (PurchaseTenantPolicy policy : policyList) {
+				for (TenantSalePolicy policy : policyList) {
 					if (StringUtils
 							.equals(policy.getProcPatternCd(), PurchaseConstants.POLICY_PATTERN_PHONE_RECV_LIMIT) == false) {
 						continue;
@@ -926,8 +926,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @return 쇼핑상품 구매 허용된 시험폰(법인폰) 여부
 	 */
-	private boolean isAllowPurchaseCorpDevice(PurchaseTenantPolicy policy,
-			CheckPaymentPolicyParam checkPaymentPolicyParam) {
+	private boolean isAllowPurchaseCorpDevice(TenantSalePolicy policy, CheckPaymentPolicyParam checkPaymentPolicyParam) {
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,ALLOWPURCHASE,START,{}({})", policy.getPolicyId(),
 				policy.getPolicySeq());
 
@@ -969,7 +968,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * @return SKT 시험폰 여부: true-SKT 시험폰, false-SKT 시험폰 아님
 	 */
 	private boolean isTelecomTestMdn(String tenantId, UserEcRes sktUapsMappingInfo, String deviceId,
-			List<PurchaseTenantPolicy> policyList, List<String> sapPolicyCdList) {
+			List<TenantSalePolicy> policyList, List<String> sapPolicyCdList) {
 		boolean bTelecomTestMdn = false;
 
 		// UAPS 조회
@@ -1001,7 +1000,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		if (CollectionUtils.isNotEmpty(policyList)) {
 			this.logger.info("PRCHS,ORDER,SAC,POLICY,TELECOMTEST,MEMBER,START,{}", deviceId);
 
-			for (PurchaseTenantPolicy policy : policyList) {
+			for (TenantSalePolicy policy : policyList) {
 				if (this.isSapTestMdn(tenantId, policy.getApplyValue(), deviceId)) {
 					bTelecomTestMdn = true;
 					break;
@@ -1083,7 +1082,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @return 남은 후불 결제 가능 금액
 	 */
-	private Double checkPhoneShoppingUserLimitRest(PurchaseTenantPolicy policy,
+	private Double checkPhoneShoppingUserLimitRest(TenantSalePolicy policy,
 			CheckPaymentPolicyParam checkPaymentPolicyParam) {
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,USERLIMIT,START,{}({})", policy.getPolicyId(), policy.getPolicySeq());
 
@@ -1170,7 +1169,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @return 남은 후불 결제 가능 금액
 	 */
-	private Double checkPhoneLimitRest(PurchaseTenantPolicy policy, CheckPaymentPolicyParam checkPaymentPolicyParam) {
+	private Double checkPhoneLimitRest(TenantSalePolicy policy, CheckPaymentPolicyParam checkPaymentPolicyParam) {
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}({})", policy.getPolicyId(), policy.getPolicySeq());
 
 		double checkVal = 0.0;
@@ -1237,7 +1236,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @return 남은 후불 선물수신 가능 금액
 	 */
-	private Double checkPhoneRecvLimit(PurchaseTenantPolicy policy, CheckPaymentPolicyParam checkPaymentPolicyParam) {
+	private Double checkPhoneRecvLimit(TenantSalePolicy policy, CheckPaymentPolicyParam checkPaymentPolicyParam) {
 		this.logger.info("PRCHS,ORDER,SAC,POLICY,START,{}({})", policy.getPolicyId(), policy.getPolicySeq());
 
 		double checkVal = 0.0;
@@ -1294,7 +1293,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 		// ---------------------------------------------------------------------------------------------------
 		// 결제수단 별 가능 거래금액/비율 조정 정책 조회
 
-		PurchaseTenantPolicy paymentPolicy = this.purchaseTenantPolicyService.searchPaymentPolicy(tenantId,
+		TenantSalePolicy paymentPolicy = this.purchaseTenantPolicyService.searchPaymentPolicy(tenantId,
 				tenantProdGrpCd, prodKindCd, prodId, parentProdId);
 		if (paymentPolicy == null) {
 			throw new StorePlatformException("SAC_PUR_7103");
@@ -1558,7 +1557,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	@Override
 	public String getAvailablePaymethodAdjustInfo(String tenantId, String tenantProdGrpCd, String prodKindCd,
 			String prodId, String parentProdId) {
-		PurchaseTenantPolicy policy = this.purchaseTenantPolicyService.searchPaymentPolicy(tenantId, tenantProdGrpCd,
+		TenantSalePolicy policy = this.purchaseTenantPolicyService.searchPaymentPolicy(tenantId, tenantProdGrpCd,
 				prodKindCd, prodId, parentProdId);
 
 		if (policy != null) {
