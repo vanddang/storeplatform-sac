@@ -479,7 +479,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 
             // 보안을 위해 물리파일 경로는 API응답에서 삭제
-            if (product.getVideoInfo() != null) {
+            if (product.getVod() != null) {
                 List<VideoInfo> videoInfoList = product.getVod().getVideoInfoList();
                 for (VideoInfo info : videoInfoList) {
                     info.setFilePath(null);
