@@ -9,15 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.skplanet.plandasj.Plandasj;
+import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
+import com.skplanet.storeplatform.sac.common.util.PartialProcessor;
+import com.skplanet.storeplatform.sac.common.util.PartialProcessorHandler;
+import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,8 @@ import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
 public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
 
     private static final Logger logger = LoggerFactory.getLogger(AppUpdateSupportServiceImpl.class);
+    public static final String PLANDAS_APKPROD_MAPG = "sacdp://apk-prod/";
+    public static final String PLANDAS_APKPROD_SET = "sacdp://apk-prod-set/";
 
     @Autowired
     @Qualifier("sac")
@@ -62,55 +65,149 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
     @Autowired
     private SearchUserSCI searchUserSCI;
 
+    @Autowired(required = false)
+    private PlandasjConnectionFactory connectionFactory;
+
     private static final int VAR_WINDOW_SIZE = 100;
 
-    class PriorityDescComparator implements Comparator<SubContentInfo> {
+    public static class PkgNmPidMapg {
+        private String apkPkgNm;
+        private String prodId;
+        private Date lastDeployDt;
 
-		@Override
-		public int compare(SubContentInfo o1, SubContentInfo o2) {
+        public String getApkPkgNm() {
+            return apkPkgNm;
+        }
 
-			return o1.getPriority() > o2.getPriority() ? -1 : o1.getPriority() < o2.getPriority() ? 1:0;
-		}
+        public void setApkPkgNm(String apkPkgNm) {
+            this.apkPkgNm = apkPkgNm;
+        }
+
+        public String getProdId() {
+            return prodId;
+        }
+
+        public void setProdId(String prodId) {
+            this.prodId = prodId;
+        }
+
+        public void setLastDeployDt(Date lastDeployDt) {
+            this.lastDeployDt = lastDeployDt;
+        }
+
+        public String getSortKey() {
+            return apkPkgNm + lastDeployDt.getTime();
+        }
     }
 
     @Override
-    public List<SubContentInfo> searchSubContentByPkg(String deviceModelCd, List<String> pkgList, boolean isHashed) {
+    public List<SubContentInfo> searchSubContentByPkg(final String deviceModelCd, List<String> pkgList, boolean isHashed) {
 
-        Map<String, Object> req = new HashMap<String, Object>();
-        req.put("parentClsfCd", DisplayConstants.DP_PART_PARENT_CLSF_CD);
-        req.put("deviceModelCd", deviceModelCd);
+        final Plandasj client = connectionFactory.getConnectionPool().getClient();
+        final Map<String, String> pidPkgMap = new HashMap<String, String>(pkgList.size());
+        List<String> pkgsToFind = new ArrayList<String>(pkgList.size());
 
-        List<SubContentInfo> res = new ArrayList<SubContentInfo>(pkgList.size());
-
-        int size = pkgList.size();
-        int loopCnt = size / VAR_WINDOW_SIZE + (size % VAR_WINDOW_SIZE == 0 ? 0 : 1);
-        for(int lp = 0; lp < loopCnt; ++lp) {
-
-            int toIdx;
-            int paddingCnt = 0;
-            List<String> reqProdId;
-            toIdx = (lp + 1) * VAR_WINDOW_SIZE;
-            if(toIdx > size) {
-                paddingCnt = toIdx - size;
-                toIdx = size;
-            }
-            reqProdId = new ArrayList<String>(pkgList.subList(lp * VAR_WINDOW_SIZE, toIdx));
-            if(paddingCnt > 0) {
-                for(int j=0; j<paddingCnt; ++j)
-                   reqProdId.add("");
-            }
-
-            if(isHashed)
-                req.put("hashedPkgList", reqProdId);
+        // 패키지명으로 prodId를 조회한다
+        for (String apkNm : pkgList) {
+            String pid = client.get(PLANDAS_APKPROD_MAPG + apkNm);
+            if(pid == null)
+                pkgsToFind.add(apkNm);
             else
-                req.put("pkgList", reqProdId);
-
-            res.addAll(this.commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", req, SubContentInfo.class));
+                pidPkgMap.put(pid, apkNm);
         }
 
-        Collections.sort(res, new PriorityDescComparator());
+        if (CollectionUtils.isNotEmpty(pkgsToFind)) {
+            PartialProcessor.process(pkgsToFind, new PartialProcessorHandler<String>() {
+                @Override
+                public String processPaddingItem() {
+                    return StringUtils.EMPTY;
+                }
+
+                @Override
+                public void processPartial(List<String> partialList) {
+                    Map<String, Object> req = new HashMap<String, Object>();
+
+                    List<String> hashedPkgList = Lists.transform(partialList, new Function<String, String>() {
+                        @Override
+                        public String apply(String input) {
+                            return DisplayCryptUtils.hashPkgNm(input);
+                        }
+                    });
+
+                    req.put("hashedPkgList", hashedPkgList);
+                    List<PkgNmPidMapg> mapgs = commonDAO.queryForList("PersonalUpdateProduct.searchPidByHashedPkg", req, PkgNmPidMapg.class);
+
+                    // MAPG_APK_PKG_NM 기준 정렬
+                    Collections.sort(mapgs, new Comparator<PkgNmPidMapg>() {
+                        @Override
+                        public int compare(PkgNmPidMapg pkgNmPidMapg, PkgNmPidMapg pkgNmPidMapg2) {
+                            return pkgNmPidMapg.getSortKey().compareTo(pkgNmPidMapg2.getSortKey());
+                        }
+                    });
+
+                    PkgNmPidMapg prev = null;
+                    for (PkgNmPidMapg m : mapgs) {
+                        if (prev == null) {
+                            prev = m;
+                            continue;
+                        }
+
+                        if(!prev.getApkPkgNm().equals(m.getApkPkgNm())) {
+                            storeApkPidMapg(client, pidPkgMap, prev.getProdId(), prev.getApkPkgNm());
+                        }
+                        prev = m;
+                    }
+
+                    if(prev != null)
+                        storeApkPidMapg(client, pidPkgMap, prev.getProdId(), prev.getApkPkgNm());
+                }
+            }, VAR_WINDOW_SIZE);
+        }
+
+        final List<SubContentInfo> res = new ArrayList<SubContentInfo>(pidPkgMap.size());
+
+        // prodId로 업데이트할 상품을 조회한다.
+        PartialProcessor.process(pidPkgMap.keySet(), new PartialProcessorHandler<String>() {
+            @Override
+            public String processPaddingItem() {
+                return StringUtils.EMPTY;
+            }
+
+            @Override
+            public void processPartial(List<String> partialList) {
+                Map<String, Object> req = new HashMap<String, Object>();
+                req.put("deviceModelCd", deviceModelCd);
+                req.put("prodIds", partialList);
+
+                List<SubContentInfo> updateList = commonDAO.queryForList("PersonalUpdateProduct.searchUpdateList", req, SubContentInfo.class);
+                res.addAll(Lists.transform(updateList, new Function<SubContentInfo, SubContentInfo>() {
+                    @Override
+                    public SubContentInfo apply(SubContentInfo v) {
+                        v.setApkPkgNm(pidPkgMap.get(v.getProdId()));
+                        return v;
+                    }
+                }));
+            }
+        });
+
+        Collections.sort(res, new Comparator<SubContentInfo>() {
+            @Override
+            public int compare(SubContentInfo o1, SubContentInfo o2) {
+                return o1.getPriority() > o2.getPriority() ? -1 : o1.getPriority() < o2.getPriority() ? 1 : 0;
+            }
+        });
 
         return res;
+    }
+
+    private void storeApkPidMapg(Plandasj client, Map<String, String> pidPkgMap, String pid, String apkPkgNm) {
+        String key = PLANDAS_APKPROD_MAPG + apkPkgNm;
+        client.set(key, pid);
+        client.pexpire(PLANDAS_APKPROD_MAPG + apkPkgNm, 1000 * 60 * 60 * 1);  // 1시간
+//        client.pexpire(PLANDAS_APKPROD_MAPG + apkPkgNm, 1000 * 30); // 30초
+        client.sadd(PLANDAS_APKPROD_SET, apkPkgNm);
+
+        pidPkgMap.put(pid, apkPkgNm);
     }
 
     @Override

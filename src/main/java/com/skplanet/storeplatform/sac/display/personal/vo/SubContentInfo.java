@@ -11,7 +11,7 @@ package com.skplanet.storeplatform.sac.display.personal.vo;
 
 /**
  * <p>
- * DESC
+ * 업데이트 작업시 사용하는 서브컨텐츠 정보
  * </p>
  * Updated on : 2014. 07. 01 Updated by : 정희원, SK 플래닛.
  */
@@ -22,6 +22,7 @@ public class SubContentInfo {
     private Integer apkVer;
     private String subContentsId;
     private Integer priority;
+    private String pkgMapgTenant;
 
     public String getProdId() {
         return this.prodId;
@@ -63,4 +64,11 @@ public class SubContentInfo {
 		this.priority = priority;
 	}
 
+    public String getPkgMapgTenant() {
+        return pkgMapgTenant;
+    }
+
+    public void setPkgMapgTenant(String pkgMapgTenant) {
+        this.pkgMapgTenant = pkgMapgTenant;
+    }
 }

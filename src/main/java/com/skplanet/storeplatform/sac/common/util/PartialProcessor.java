@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.common.util;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ public class PartialProcessor {
 
     public static final int DEFAULT_PARTIAL_WINDOW_SIZE = 1000;
 
-    public static <T> void process(List<T> list, PartialProcessorHandler<T> handler, int windowSize) {
+    public static <T> void process(Collection<T> list, PartialProcessorHandler<T> handler, int windowSize) {
         if(handler == null)
             throw new IllegalArgumentException("PartialProcessorHandler cannot be null.");
 
@@ -33,6 +34,7 @@ public class PartialProcessor {
 
         boolean doPadding = handler.processPaddingItem() != null;
         int size = list.size();
+        List<T> data = new ArrayList<T>(list);
         int loopCnt = size / windowSize + (size % windowSize == 0 ? 0 : 1);
 
         for(int lp = 0; lp < loopCnt; ++lp) {
@@ -46,7 +48,7 @@ public class PartialProcessor {
                 toIdx = size;
             }
 
-            partialList = new ArrayList<T>(list.subList(lp * windowSize, toIdx));
+            partialList = new ArrayList<T>(data.subList(lp * windowSize, toIdx));
 
             // padding 처리
             if(doPadding && paddingCnt > 0) {
@@ -60,7 +62,7 @@ public class PartialProcessor {
         }
     }
 
-    public static <T> void process(List<T> list, PartialProcessorHandler<T> handler) {
+    public static <T> void process(Collection<T> list, PartialProcessorHandler<T> handler) {
         process(list, handler, DEFAULT_PARTIAL_WINDOW_SIZE);
     }
 

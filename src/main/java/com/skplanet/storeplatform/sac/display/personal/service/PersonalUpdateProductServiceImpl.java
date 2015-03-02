@@ -5,6 +5,11 @@ package com.skplanet.storeplatform.sac.display.personal.service;
 
 import java.util.*;
 
+import com.skplanet.plandasj.Plandasj;
+import com.skplanet.spring.data.plandasj.PlandasjConnection;
+import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
+import com.skplanet.spring.data.plandasj.PlandasjTemplate;
+import com.skplanet.spring.data.plandasj.operations.BoundListOperations;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -110,18 +115,18 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 		/**************************************************************
 		 * Package 명으로 상품 조회
 		 **************************************************************/
-        List<String> hashedPkgList = new ArrayList<String>(packageInfoList.size());
+        List<String> pkgList = new ArrayList<String>(packageInfoList.size());
         for (String s : packageInfoList) {
 			String[] arrInfo = StringUtils.split(s, "/");
 			if (arrInfo.length >= 2) {
 				String pkgNm = arrInfo[0];
 				// parameter가 적어도 packageName/version정보로 와야지만 update 리스트에 추가한다.
 				this.log.debug("##### update package name : {}", pkgNm);
-                hashedPkgList.add(DisplayCryptUtils.hashPkgNm(pkgNm));
+                pkgList.add(pkgNm);
             }
 		}
 
-        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceHeader.getModel(), hashedPkgList, true);
+        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceHeader.getModel(), pkgList, false);
 		List<Map<String, Object>> listPkg = new ArrayList<Map<String, Object>>();
 
 		for (SubContentInfo scInfo : subContentInfos) {
@@ -148,6 +153,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
                 prod.put("FILE_PATH", up.getFilePath());
                 prod.put("LAST_DEPLOY_DT", up.getLastDeployDt());
                 prod.put("UPDT_TEXT", up.getUpdtText());
+                prod.put("PACKAGE_MAPPED_TENANT", scInfo.getPkgMapgTenant());
 
                 listPkg.add(prod);
             }
@@ -508,7 +514,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
                     ((Long) updateTargetApp.get("FILE_SIZE")), null, null,
                     ObjectUtils.toString(updateTargetApp.get("FILE_PATH")));
 
-//            app.setPackageNameMappedTenant(Arrays.asList("S01", "S02"));    // FIXME
+            app.setPackageNameMappedTenant(Arrays.asList(StringUtils.split(""+updateTargetApp.get("PACKAGE_MAPPED_TENANT"), ",")));
 
             Update update = this.appGenerator.generateUpdate(
                     new Date(null, (java.util.Date)updateTargetApp.get("LAST_DEPLOY_DT")),

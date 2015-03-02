@@ -112,12 +112,12 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
         for (String s : packageInfoList) {
             UpdatePkgDetail dtl = new UpdatePkgDetail(s);
             if (StringUtils.isNotEmpty(dtl.getPkgNm())) {
-                hashedPkgList.add(DisplayCryptUtils.hashPkgNm(dtl.getPkgNm()));
+                hashedPkgList.add(dtl.getPkgNm());
                 pkgReqMap.put(dtl.getPkgNm(), dtl);
             }
         }
 
-        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceModelCd, hashedPkgList, true);
+        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceModelCd, hashedPkgList, false);
 
         this.log.debug("##### auto update target list  : {}", hashedPkgList);
         this.log.debug("##### auto update target cnt   : {}", hashedPkgList.size());

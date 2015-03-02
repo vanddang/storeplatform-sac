@@ -33,6 +33,41 @@
          )LA
          WHERE RNUM = 1
      </select>
+
+    <select id="searchPidByHashedPkg" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.personal.service.AppUpdateSupportServiceImpl$PkgNmPidMapg">
+        SELECT /*PersonalUpdateProductMapper.searchPidByHashedPkg, 정희원, 2015-03-02 */ /*+ NO_EXPAND ORDERED USE_NL(P) */
+            TP.PROD_ID,
+            TP.MAPG_APK_PKG_NM AS APK_PKG_NM,
+            P.LAST_DEPLOY_DT
+        FROM TB_DP_TENANT_PROD TP
+          INNER JOIN TB_DP_PROD P
+            ON P.PROD_ID = TP.PROD_ID
+        WHERE 1=1
+          AND TP.MAPG_APK_PKG_HASH IN <foreach collection="hashedPkgList" item="v" open="(" separator="," close=")">#{v}</foreach>
+    </select>
+
+    <select id="searchUpdateList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo">
+        SELECT /*PersonalUpdateProductMapper.searchUpdateList, 정희원, 2015-03-02 */
+            SPRT.PROD_ID,
+            SC.APK_VER,
+            SC.SUB_CONTENTS_ID,
+            NVL(AUAP.PRIORITY, 0) AS PRIORITY,
+            NVL(EI.CONTENT, 'S01') AS PKG_MAPG_TENANT
+        FROM
+            TB_CM_DEVICE DEV
+            INNER JOIN TB_DP_SPRT_DEVICE SPRT
+              ON SPRT.DEVICE_MODEL_CD = DEV.DEVICE_MODEL_CD
+            INNER JOIN TB_DP_SUB_CONTENTS SC
+              ON SC.PROD_ID = SPRT.PROD_ID AND SC.SUB_CONTENTS_ID = SPRT.SUB_CONTENTS_ID
+            LEFT OUTER JOIN TB_DP_PROD_EXTRA_INFO EI
+              ON EI.PROD_ID = SPRT.PROD_ID AND EI.INFO_CLSF_CD = 'DP011702'
+            LEFT OUTER JOIN TB_CM_AUTO_UPGRD_ALTR_PROD AUAP
+              ON AUAP.PROD_ID = SPRT.PROD_ID AND AUAP.CLSF_CD = 'DP012502'
+        WHERE 1=1
+          AND SPRT.PROD_ID in <foreach collection="prodIds" item="v" open="(" separator="," close=")">#{v}</foreach>
+          AND DEV.DEVICE_MODEL_CD = #{deviceModelCd}
+          AND DEV.USE_YN='Y'
+    </select>
     
     
     
