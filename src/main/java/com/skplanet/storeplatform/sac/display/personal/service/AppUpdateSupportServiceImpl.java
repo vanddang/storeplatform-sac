@@ -103,7 +103,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
     @Override
     public List<SubContentInfo> searchSubContentByPkg(final String deviceModelCd, List<String> pkgList, boolean isHashed) {
 
-        final Plandasj client = connectionFactory.getConnection().getNativeConnection();
+        final Plandasj client = connectionFactory.getConnectionPool().getClient();
         final Map<String, String> pidPkgMap = new HashMap<String, String>(pkgList.size());
         List<String> pkgsToFind = new ArrayList<String>(pkgList.size());
 
@@ -203,7 +203,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
     private void storeApkPidMapg(Plandasj client, Map<String, String> pidPkgMap, String pid, String apkPkgNm) {
         String key = PLANDAS_APKPROD_MAPG + apkPkgNm;
         client.set(key, pid);
-        client.expire(PLANDAS_APKPROD_MAPG + apkPkgNm, 1000 * 60 * 60 * 1);  // 1시간
+        client.pexpire(PLANDAS_APKPROD_MAPG + apkPkgNm, 1000 * 60 * 60 * 1);  // 1시간
 //        client.pexpire(PLANDAS_APKPROD_MAPG + apkPkgNm, 1000 * 30); // 30초
         client.sadd(PLANDAS_APKPROD_SET, apkPkgNm);
 
