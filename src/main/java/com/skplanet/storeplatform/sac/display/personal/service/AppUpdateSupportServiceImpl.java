@@ -103,7 +103,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
     @Override
     public List<SubContentInfo> searchSubContentByPkg(final String deviceModelCd, List<String> pkgList, boolean isHashed) {
 
-        final Plandasj client = connectionFactory.getConnectionPool().getClient();
+        final Plandasj client = connectionFactory.getConnection().getNativeConnection();
         final Map<String, String> pidPkgMap = new HashMap<String, String>(pkgList.size());
         List<String> pkgsToFind = new ArrayList<String>(pkgList.size());
 
