@@ -31,30 +31,36 @@
   	</select>
   		
   
-	<insert id="insertDPTenant" parameterType="dpTenantProductVO">
-		INSERT    /* DP_TENANT-insertDPTenant : mhcha123 (2014-01-03) */
-		INTO TB_DP_TENANT_PROD (
-			PROD_ID
-			,TENANT_ID
-			,PROD_STATUS_CD
-			,EXPO_YN
-			,EXPO_ORD
-			,REG_ID
-			,REG_DT
-			,UPD_ID
-			,UPD_DT
-		)
-		VALUES(
-			#{prodId}
-			,#{tenantId}
-			,#{prodStatusCd, jdbcType=VARCHAR}
-			,#{expoYn, jdbcType=VARCHAR}
-			,#{expoOrd, jdbcType=INTEGER}
-			,#{regId, jdbcType=VARCHAR}
-			,TO_DATE(#{regDt}, 'yyyyMMddHH24MISS')
-			,#{updId, jdbcType=VARCHAR}
-			,SYSDATE
-		 )
+	<insert id="insertDPTenant" parameterType="map">
+        INSERT    /* DP_TENANT-insertDPTenant : mhcha123 (2014-01-03) */
+        INTO TB_DP_TENANT_PROD (
+            PROD_ID
+            ,TENANT_ID
+            ,PROD_STATUS_CD
+            ,EXPO_YN
+            ,EXPO_ORD
+            ,REG_ID
+            ,REG_DT
+            ,UPD_ID
+            ,UPD_DT
+            ,MAPG_PROD_ID
+            ,MAPG_APK_PKG_NM
+            ,MAPG_APK_PKG_HASH
+        )
+        VALUES(
+            #{tp.prodId}
+            ,#{tp.tenantId}
+            ,#{tp.prodStatusCd, jdbcType=VARCHAR}
+            ,#{tp.expoYn, jdbcType=VARCHAR}
+            ,#{tp.expoOrd, jdbcType=INTEGER}
+            ,#{tp.regId, jdbcType=VARCHAR}
+            ,TO_DATE(#{tp.regDt}, 'yyyyMMddHH24MISS')
+            ,#{tp.updId, jdbcType=VARCHAR}
+            ,SYSDATE
+            ,#{mapgProdId, jdbcType=VARCHAR}
+            ,#{mapgPkgNm, jdbcType=VARCHAR}
+            ,#{mapgPkgHash, jdbcType=VARCHAR}
+        )
 	</insert>
 
 	<delete id="deleteDPTenant"  parameterType="dpTenantProductVO" >

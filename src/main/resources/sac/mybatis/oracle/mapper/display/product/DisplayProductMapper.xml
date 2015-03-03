@@ -188,5 +188,16 @@
         FROM TB_DP_PROD DP
         WHERE DP.PROD_ID = #{prodId, jdbcType=VARCHAR}
     </select>
+
+    <!-- ExtraInfo 추가 -->
+    <update id="Display_Product.insertExtraInfo" parameterType="map" >
+        MERGE INTO TB_DP_PROD_EXTRA_INFO
+          USING DUAL
+            ON (PROD_ID=#{prodId} AND INFO_CLSF_CD=#{infoClsfCd})
+        WHEN MATCHED THEN
+          UPDATE SET CONTENT=#{cont}, UPD_ID='admin', UPD_DT=sysdate
+        WHEN NOT MATCHED THEN
+          INSERT (PROD_ID, INFO_CLSF_CD, CONTENT, USE_YN, REG_DT, REG_ID, UPD_DT, UPD_ID) VALUES (#{prodId}, #{infoClsfCd}, #{cont}, 'Y', sysdate, 'admin', sysdate, 'admin')
+    </update>
 	
 </mapper>

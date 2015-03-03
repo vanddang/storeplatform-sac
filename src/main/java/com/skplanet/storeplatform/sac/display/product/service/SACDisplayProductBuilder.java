@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.product.service;
 
 import com.skplanet.icms.refactoring.deploy.*;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -13,11 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 
@@ -83,6 +83,10 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
     @Autowired
     private DisplayCommonService displayCommonService;
 
+    @Autowired
+    @Qualifier("sac")
+    private CommonDAO commonDAO;
+
 	@Override
 	public void insertProdInfo(NotificationRefactoringSac notification, List<Map<String, Object>> tempList, Set<String> prodExistTenant, String oldSellerMbrNo) {
 
@@ -90,6 +94,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 		String prodId = dpProd.getProdId(); // 상품_아이디
 		String mbrNo = dpProd.getSellerMbrNo(); // 회원_번호
         String newSellerMbrNo = notification.getDpProductTotal().getDpProduct().getSellerMbrNo();   // prod.sellerMbrNo
+        DPSapMappingVO dpSapMapping = notification.getDpSapMapping();
 
         execSapPhase1(notification);
 
@@ -112,7 +117,22 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 
             // 테넌트 정보 등록
             log.info("Insert CMS Tenant Info");
-            dpTenantProductService.insertDPTenant(vo);
+            String mapgProdId = null, mapgPkgNm = null;
+
+            if (vo.getTenantId().equals("S01")) {
+                mapgProdId = dpSapMapping.getProdId();
+                mapgPkgNm = notification.getDpProductSubContsList().get(0).getApkPkgNm();
+            }
+            else if (vo.getTenantId().equals("S02")) {
+                mapgProdId = dpSapMapping.getKtProdId();
+                mapgPkgNm = dpSapMapping.getKtApkPkgNm();
+            }
+            else if (vo.getTenantId().equals("S03")) {
+                mapgProdId = dpSapMapping.getLgProdId();
+                mapgPkgNm = dpSapMapping.getLgApkPkgNm();
+            }
+
+            dpTenantProductService.insertDPTenant(vo, mapgProdId, mapgPkgNm);
         }
 		
 		
@@ -248,12 +268,12 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 		/*
 		 * 전시상품 Tag정보
 		 */
-		List<DPTagInfoVO> displayTabInfoList = notification.getDpTagInfoList();
-        printCountLog("CMS displayTabInfoList Size = {}", displayTabInfoList);
-        for (DPTagInfoVO vo : displayTabInfoList) {
+		List<DPTagInfoVO> displayTagInfoList = notification.getDpTagInfoList();
+        printCountLog("CMS displayTagInfoList Size = {}", displayTagInfoList);
+        for (DPTagInfoVO vo : displayTagInfoList) {
 
             // 전시상품 Tag정보 등록
-            log.info("Insert CMS DisplayTabInfo Info");
+            log.info("Insert CMS DisplayTagInfo Info");
             dpTagInfoService.insertDPTagInfo(vo);
         }
 
@@ -289,10 +309,25 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
          * SAP 상품 매핑 정보 - Phase 1에서만 이용함
          */
         log.info("Insert CMS DpSapProdMapg Info");
-        DPSapMappingVO dpSapMapping = notification.getDpSapMapping();
-        if(dpSapMapping != null)
+        if(dpSapMapping != null) {
             dpSapProdMapgService.insertDPSapProdMapg(dpSapMapping);
 
+            // ExtraInfo추가
+            List<String> pkgMapgTenants = new ArrayList<String>(3);
+            pkgMapgTenants.add("S01");
+            if(StringUtils.isNotEmpty(dpSapMapping.getKtApkPkgNm())) {
+                pkgMapgTenants.add("S02");
+            }
+            if(StringUtils.isNotEmpty(dpSapMapping.getLgApkPkgNm())) {
+                pkgMapgTenants.add("S03");
+            }
+            String pkgMapg = StringUtils.join(pkgMapgTenants, ",");
+            Map<String, Object> reqEi = new HashMap<String, Object>();
+            reqEi.put("prodId", dpSapMapping.getProdId());
+            reqEi.put("infoClsfCd", "DP011702");
+            reqEi.put("cont", pkgMapg);
+            commonDAO.update("Display_Product.insertExtraInfo", reqEi);
+        }
 
         if (CollectionUtils.isNotEmpty(tenantInfo)) {
 			log.info("CMS tenantInfo Size = " + tenantInfo.size());
@@ -472,7 +507,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
 
                     // IN-APP 테넌트 정보 등록
                     log.info("Insert CMS InAppTenant Info");
-                    dpTenantProductService.insertDPTenant(vo);
+                    dpTenantProductService.insertDPTenant(vo, null, null);
                 }
             }
 

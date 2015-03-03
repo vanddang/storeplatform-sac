@@ -23,12 +23,13 @@ public interface DPTenantProductService {
 	 * @return
 	 */
 	List<DPTenantProductVO> getDPTenant(String prodId, String TenantId);
-	
-	/**
-	 * 
-	 * @param dpProdCat
-	 */
-	void insertDPTenant(DPTenantProductVO dpTenantProduct);
+
+    /**
+     * @param dpProdCat
+     * @param mapgProdId
+     * @param mapgPkgNm
+     */
+    void insertDPTenant(DPTenantProductVO dpTenantProduct, String mapgProdId, String mapgPkgNm);
 
 	/**
 	 * 
