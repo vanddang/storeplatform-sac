@@ -486,19 +486,6 @@ public class LoginServiceImpl implements LoginService {
 		CheckDuplicationResponse chkDupRes = this.checkDuplicationUser(requestHeader,
 				MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId());
 
-		// tLog Request 정보 셋팅
-		final String tLogDeviceId = req.getDeviceId();
-		final String tLogMnoTypeReq = req.getDeviceTelecom();
-		final String tLogEmailReq = req.getDeviceAccount();
-		final String tLogImeiReq = req.getNativeId();
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL_SAC_MEM_0005").device_id(tLogDeviceId).mno_type_req(tLogMnoTypeReq)
-						.email_req(tLogEmailReq).imei_req(tLogImeiReq);
-			}
-		});
-
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "Y")) {
 
 			if (!isOpmd) { // OPMD단말인경우 변동성 체크를 하지 않는다.
@@ -541,8 +528,12 @@ public class LoginServiceImpl implements LoginService {
 				LOGGER.info("{} {} OPMD 단말 변동성 성공처리", req.getDeviceId(), oDeviceId);
 			}
 
-			// tLog DB 정보 셋팅
+			// tLog 정보 셋팅
 			if (deviceInfo != null) {
+				final String tLogDeviceId = req.getDeviceId();
+				final String tLogMnoTypeReq = req.getDeviceTelecom();
+				final String tLogEmailReq = req.getDeviceAccount();
+				final String tLogImeiReq = req.getNativeId();
 				final String tLogUserKey = deviceInfo.getUserKey();
 				final String tLogDeviceKey = deviceInfo.getDeviceKey();
 				final String tLogMnoTypeDB = deviceInfo.getDeviceTelecom();
@@ -551,8 +542,10 @@ public class LoginServiceImpl implements LoginService {
 				new TLogUtil().set(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.insd_usermbr_no(tLogUserKey).insd_device_id(tLogDeviceKey).mno_type_db(tLogMnoTypeDB)
-								.email_db(tLogEmailDB).imei_db(tLogImeiDB);
+						shuttle.log_id("TL_SAC_MEM_0005").device_id(tLogDeviceId).mno_type_req(tLogMnoTypeReq)
+								.email_req(tLogEmailReq).imei_req(tLogImeiReq).insd_usermbr_no(tLogUserKey)
+								.insd_device_id(tLogDeviceKey).mno_type_db(tLogMnoTypeDB).email_db(tLogEmailDB)
+								.imei_db(tLogImeiDB);
 					}
 				});
 			}
