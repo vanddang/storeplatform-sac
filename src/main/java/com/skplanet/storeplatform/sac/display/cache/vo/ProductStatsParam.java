@@ -36,4 +36,8 @@ public class ProductStatsParam implements Serializable {
     public void setProdId(String prodId) {
         this.prodId = prodId;
     }
+
+    public String getCacheKey() {
+        return prodId;
+    }
 }

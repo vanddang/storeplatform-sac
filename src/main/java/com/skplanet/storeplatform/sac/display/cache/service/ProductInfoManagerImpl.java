@@ -10,6 +10,8 @@
 package com.skplanet.storeplatform.sac.display.cache.service;
 
 import com.google.common.base.Strings;
+import com.skplanet.plandasj.Plandasj;
+import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.spring.data.plandasj.PlandasjTemplate;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
@@ -39,9 +41,6 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     @Autowired
     @Qualifier("sac")
     private CommonDAO commonDAO;
-
-    @Autowired(required = false)
-    PlandasjTemplate<String, String> plandasjTemplate;
 
     private static final String APP_SVC_GRP_CD = "DP000201";
     private static final String APP_IMG_CD = "DP000101";
@@ -256,13 +255,14 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
     }
 
     @Override
+    @Cacheable(value = "sac:display:productStats", key = "#param.getCacheKey()", unless = "#result == null")
     public ProductStats getProductStats(ProductStatsParam param) {
         if(param == null || Strings.isNullOrEmpty(param.getProdId()))
             throw new IllegalArgumentException();
 
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("prodId", param.getProdId());
-        req.put("tenantList", Arrays.asList("S01", "S02", "S03"));
+        req.put("tenantList", Arrays.asList("S01", "S02", "S03"));  // FIXME
 
         RawProductStats rawProductStats = commonDAO.queryForObject("ProductInfo.getProductStats", req, RawProductStats.class);
         if(rawProductStats == null)
