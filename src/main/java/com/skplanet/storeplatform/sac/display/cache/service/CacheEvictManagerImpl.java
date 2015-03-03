@@ -9,18 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
+import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
-
-import com.skplanet.storeplatform.sac.display.cache.vo.AppMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.EbookComicMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.FreepassMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.MenuInfoParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.MusicMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.ShoppingMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.SubContentParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.VodMetaParam;
-import com.skplanet.storeplatform.sac.display.cache.vo.WebtoonMetaParam;
 
 /**
  * <p>
@@ -140,6 +131,18 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     @Override
     @CacheEvict(value = "sac:display:device:profile:v1", allEntries = true)
     public void evictAllDeviceProfile() {
+
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:productStats", key = "#param.getCacheKey()")
+    public void evictProductStats(ProductStatsParam param) {
+
+    }
+
+    @Override
+    @CacheEvict(value = "sac:display:productStats", key = "#param.getCacheKey()", allEntries = true)
+    public void evictAllProductStats() {
 
     }
 }

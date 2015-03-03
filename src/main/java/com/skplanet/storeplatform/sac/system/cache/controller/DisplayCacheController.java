@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.skplanet.storeplatform.sac.display.cache.service.CacheEvictManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -82,6 +83,10 @@ public class DisplayCacheController {
         }
         else if(type.equalsIgnoreCase("deviceprofile")) {
             cacheEvictManager.evictAllDeviceProfile();
+            success = true;
+        }
+        else if(type.equalsIgnoreCase("productstats")) {
+            cacheEvictManager.evictAllProductStats();
             success = true;
         }
 

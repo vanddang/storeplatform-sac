@@ -92,6 +92,7 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
                     }
                 }
             }
+            this.cacheEvictManager.evictProductStats(new ProductStatsParam(_prodId));
         }
     }
 

@@ -272,7 +272,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
         stats.setPurchaseCount(rawProductStats.getPrchsCnt());
         if (rawProductStats.getPaticpersCnt() > 0) {
             stats.setParticipantCount(rawProductStats.getPaticpersCnt());
-            stats.setAverageScore((double)rawProductStats.getTotEvluScore() / rawProductStats.getPaticpersCnt());
+            stats.setAverageScore((double)Math.round(100 * rawProductStats.getTotEvluScore() / rawProductStats.getPaticpersCnt()) / 100);
         }
 
         return stats;

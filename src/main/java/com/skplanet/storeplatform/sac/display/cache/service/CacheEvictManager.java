@@ -41,6 +41,8 @@ public interface CacheEvictManager {
 
     void evictFreepassMeta(FreepassMetaParam param);
 
+    void evictProductStats(ProductStatsParam param);
+
     /**
      * 앱 메타 캐쉬 정보를 모두 Evict한다.
      */
@@ -61,6 +63,8 @@ public interface CacheEvictManager {
     void evictAllTmembershipDcRate();
 
     void evictAllUpdateProduct();
+
+    void evictAllProductStats();
 
     /**
      * DeviceProfile 캐쉬 정보를 모두 Evict 한다.
