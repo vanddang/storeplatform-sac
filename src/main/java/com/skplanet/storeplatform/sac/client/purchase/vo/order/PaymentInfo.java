@@ -40,7 +40,7 @@ public class PaymentInfo extends CommonInfo {
 	private String moid; // 테넌트 결제수단 관리 정보
 	private String sktTestDeviceYn; // SKT 시험폰 결제 여부
 	private String mnoCd; // DCB 결제 통신사 코드
-	private String limitUserYn; // 한도가입자 여부 Y/N
+	private String limitMemberYn; // 한도가입자 여부 Y/N
 
 	/**
 	 * @return the tid
@@ -238,18 +238,18 @@ public class PaymentInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the limitUserYn
+	 * @return the limitMemberYn
 	 */
-	public String getLimitUserYn() {
-		return this.limitUserYn;
+	public String getLimitMemberYn() {
+		return this.limitMemberYn;
 	}
 
 	/**
-	 * @param limitUserYn
-	 *            the limitUserYn to set
+	 * @param limitMemberYn
+	 *            the limitMemberYn to set
 	 */
-	public void setLimitUserYn(String limitUserYn) {
-		this.limitUserYn = limitUserYn;
+	public void setLimitMemberYn(String limitMemberYn) {
+		this.limitMemberYn = limitMemberYn;
 	}
 
 }
