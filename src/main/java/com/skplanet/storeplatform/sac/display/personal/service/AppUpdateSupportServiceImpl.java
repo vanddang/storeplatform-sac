@@ -203,7 +203,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
     private void storeApkPidMapg(Plandasj client, Map<String, String> pidPkgMap, String pid, String apkPkgNm) {
         String key = PLANDAS_APKPROD_MAPG + apkPkgNm;
         client.set(key, pid);
-        client.pexpire(PLANDAS_APKPROD_MAPG + apkPkgNm, 1000 * 60 * 60 * 1);  // 1시간
+        client.expire(PLANDAS_APKPROD_MAPG + apkPkgNm, 1000 * 60 * 60 * 1);  // 1시간
 //        client.pexpire(PLANDAS_APKPROD_MAPG + apkPkgNm, 1000 * 30); // 30초
         client.sadd(PLANDAS_APKPROD_SET, apkPkgNm);
 
