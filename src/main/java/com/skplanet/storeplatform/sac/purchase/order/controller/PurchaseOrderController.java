@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
@@ -283,12 +282,12 @@ public class PurchaseOrderController {
 			systemId = tenantHeader.getSystemId();
 		}
 
-		// 요청값 체크
-		if (StringUtils.equals(tenantId, "S01") == false) {
-			if (StringUtils.isBlank(req.getMarketDeviceKey()) || StringUtils.isBlank(req.getDeviceKeyAuth())) {
-				throw new StorePlatformException("SAC_PUR_5100", "SAP 정보 누락");
-			}
-		}
+		// TAKTODO:: SAP 요청값 체크 03.04 일단 생략
+		// if (StringUtils.equals(tenantId, "S01") == false) {
+		// if (StringUtils.isBlank(req.getMarketDeviceKey()) || StringUtils.isBlank(req.getDeviceKeyAuth())) {
+		// throw new StorePlatformException("SAC_PUR_5100", "SAP 정보 누락");
+		// }
+		// }
 
 		VerifyOrderInfo verifyOrderInfo = new VerifyOrderInfo();
 		verifyOrderInfo.setTenantId(tenantId);
