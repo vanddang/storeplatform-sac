@@ -1361,48 +1361,6 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 		paymethodAdjustInfo = sbPaymethodAdjustInfoWithoutPhone.toString(); // 휴대폰들 제거
 
-		// // 휴대폰 기본 정책 추출
-		// PaymethodAdjustPolicyInfo baseTargetPhonePolicy = null;
-		//
-		// PaymethodAdjustPolicyInfo basePhonePolicy11 = null;
-		// PaymethodAdjustPolicyInfo basePhonePolicy12 = null;
-		//
-		// if (phonePaymethodBaseInfo != null) {
-		// for (String phoneCode : phoneCodeList) {
-		// int codePos = phonePaymethodBaseInfo.indexOf(phoneCode + ":");
-		// if (codePos >= 0) {
-		// int sepPos = phonePaymethodBaseInfo.indexOf(";", codePos);
-		// String baseInfo = null;
-		// if (sepPos >= 0) {
-		// baseInfo = phonePaymethodBaseInfo.substring(codePos, sepPos);
-		// } else {
-		// baseInfo = phonePaymethodBaseInfo.substring(codePos);
-		// }
-		// arInfo = baseInfo.split(":");
-		//
-		// if (StringUtils.equals(phoneCode, "11")) {
-		// basePhonePolicy11 = new PaymethodAdjustPolicyInfo();
-		// basePhonePolicy11.setPaymethodCode(arInfo[0]);
-		// basePhonePolicy11.setAvailAmt(Double.parseDouble(arInfo[1]));
-		// basePhonePolicy11.setAvailPer((int) (Double.parseDouble(arInfo[2])));
-		//
-		// } else if (StringUtils.equals(phoneCode, "12")) {
-		// basePhonePolicy12 = new PaymethodAdjustPolicyInfo();
-		// basePhonePolicy12.setPaymethodCode(arInfo[0]);
-		// basePhonePolicy12.setAvailAmt(Double.parseDouble(arInfo[1]));
-		// basePhonePolicy12.setAvailPer((int) (Double.parseDouble(arInfo[2])));
-		// }
-		// }
-		// }
-		//
-		// if (bTelecomPaymethod) {
-		// baseTargetPhonePolicy = basePhonePolicy11;
-		// } else {
-		// baseTargetPhonePolicy = basePhonePolicy12;
-		// }
-		//
-		// }
-
 		// 결제정책 & 기본정책 비교 처리
 		PaymethodAdjustPolicyInfo resultPhonePolicy = null;
 
@@ -1440,10 +1398,15 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 			resultPhonePolicy = new PaymethodAdjustPolicyInfo();
 
 			resultPhonePolicy.setPaymethodCode(targetPhonePolicy.getPaymethodCode());
-			resultPhonePolicy
-					.setAvailAmt(Math.min(baseTargetPhonePolicy.getAvailAmt(), targetPhonePolicy.getAvailAmt()));
-			resultPhonePolicy
-					.setAvailPer(Math.min(baseTargetPhonePolicy.getAvailPer(), targetPhonePolicy.getAvailPer()));
+			if (baseTargetPhonePolicy == null) {
+				resultPhonePolicy.setAvailAmt(targetPhonePolicy.getAvailAmt());
+				resultPhonePolicy.setAvailPer(targetPhonePolicy.getAvailPer());
+			} else {
+				resultPhonePolicy.setAvailAmt(Math.min(baseTargetPhonePolicy.getAvailAmt(),
+						targetPhonePolicy.getAvailAmt()));
+				resultPhonePolicy.setAvailPer(Math.min(baseTargetPhonePolicy.getAvailPer(),
+						targetPhonePolicy.getAvailPer()));
+			}
 
 			phonePaymethodInfo = resultPhonePolicy.getPaymethodCode() + ":" + resultPhonePolicy.getAvailAmt() + ":"
 					+ resultPhonePolicy.getAvailPer();
