@@ -45,9 +45,9 @@ public class MetaInfoServiceImpl implements MetaInfoService {
     @Autowired
     private MemberBenefitService memberBenefitService;
 
-    private void commonHandler(MetaInfo me, String tenantId) {
-        // 집계는 항상 채널 기준으로 노출하고 있음
-        ProductStats productStats = productInfoManager.getProductStats(new ProductStatsParam(me.getProdId()));
+    private void commonHandler(MetaInfo me, String tenantId, String prodKey) {
+        // 집계는 쇼핑의 경우 catalogId, 그 외에는 항상 채널 기준으로 노출하고 있음
+        ProductStats productStats = productInfoManager.getProductStats(new ProductStatsParam(prodKey));
         me.setPaticpersCnt(productStats.getParticipantCount());
         me.setAvgEvluScore(productStats.getAverageScore());
         me.setPrchsCnt(productStats.getPurchaseCount());
@@ -103,7 +103,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
             me = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
 
-        commonHandler(me, tenantHeader.getTenantId());
+        commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
         return me;
 	}
@@ -201,7 +201,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		    me = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
 
 //        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
-        commonHandler(me, tenantHeader.getTenantId());
+        commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
         return me;
 	}
@@ -256,7 +256,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 		    me = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
 
 //        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
-        commonHandler(me, tenantHeader.getTenantId());
+        commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
         return me;
 	}
@@ -311,7 +311,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
 		    me = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
 
-        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
+//        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
+        commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
         return me;
 	}
@@ -393,7 +394,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         	me = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
 
 //        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
-        commonHandler(me, tenantHeader.getTenantId());
+        commonHandler(me, tenantHeader.getTenantId(), me.getCatalogId());
 
         return me;
     }
