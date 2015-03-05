@@ -861,7 +861,8 @@
 			       , TRIM ( NVL ( TO_CHAR ( (SUM(TOT_EVLU_SCORE) / DECODE(SUM(PATICPERS_CNT), 0, NULL, SUM(PATICPERS_CNT))) / 5.0 * 100, 'FM99900.00'), '0')) AS AVG_EVLU_SCORE_PCT
 			       , PROD_ID
 			 FROM TB_DP_TENANT_PROD_STATS
-			WHERE PROD_ID = #{prodId}
+			WHERE TENANT_ID IN ('S01', 'S02', 'S03')
+			  AND PROD_ID = #{prodId}
 			GROUP BY PROD_ID
         ]]>
     </select>
