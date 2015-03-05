@@ -69,7 +69,7 @@ public class AutoPaymentCancelSacServiceImpl implements AutoPaymentCancelSacServ
 				tStoreNotiV2EcReq.setReason(PurchaseConstants.TSTORE_NOTI_REASON_AUTOPAY_CLOSED); // 01:VOD 월정액 해지 요청시
 				tStoreNotiV2EcReq.setProdId(autoPaymentCancelRes.getProdId());
 
-				tStoreNotiV2EcReq.setPublishType("01");
+				tStoreNotiV2EcReq.setPublishType(PurchaseConstants.TSTORE_NOTI_PUBLISH_TYPE_SYNC);
 				tStoreNotiV2EcReq.setGiftYn("N");
 
 				try {
