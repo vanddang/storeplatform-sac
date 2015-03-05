@@ -93,7 +93,9 @@ public class UserServiceImpl implements UserService {
 					sbUserPhone.append("|");
 				}
 				userPhoneStr = sbUserPhone.toString();
-				userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+				if (userPhoneStr.indexOf("|") > -1) {
+					userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+				}
 			}
 
 			if (StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) { // 통합회원
@@ -154,7 +156,9 @@ public class UserServiceImpl implements UserService {
 				sbUserPhone.append("|");
 			}
 			userPhoneStr = sbUserPhone.toString();
-			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+			if (userPhoneStr.indexOf("|") > -1) {
+				userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+			}
 		}
 
 		UpdateAdditionalInfoEcReq req = new UpdateAdditionalInfoEcReq();
