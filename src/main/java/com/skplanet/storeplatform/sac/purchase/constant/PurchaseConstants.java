@@ -201,6 +201,9 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String TSTORE_NOTI_RESULT_SUCCESS = "00"; // 00: 성공
 	public static final String TSTORE_NOTI_RESULT_FAIL = "01"; // 01: 실패
 
+	/* Noti 사유코드 */
+	public static final String TSTORE_NOTI_REASON_AUTOPAY_CLOSED = "01";
+
 	/** UAPS */
 	public static final String UAPS_SVC_TP_SKTTEST = "12"; // 회선 타입: 시험폰
 	public static final String[] UAPS_SVC_LIMIT_SERVICE = { "NA00002125" }; // 한도요금 상품
