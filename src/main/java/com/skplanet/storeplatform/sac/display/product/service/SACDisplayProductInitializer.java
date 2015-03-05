@@ -163,12 +163,7 @@ public class SACDisplayProductInitializer implements DisplayProductInitializer {
 				 * 전시상품 상품상세
 				 */
 				dpProductDescService.deleteDPProductDesc(inApp.getDpProduct().getProdId());
-				
-				/*
-				 * 전시상품 APP 상품
-				 */
-				dpAppProductService.deleteDPAppProduct(inApp.getDpProduct().getProdId());
-				
+
 				/*
 				 * 상품정보 매핑
 				 */
@@ -187,7 +182,11 @@ public class SACDisplayProductInitializer implements DisplayProductInitializer {
 				 * 전시상품 정보
 				 */
 				dpProductService.deleteDPPartProduct(inApp.getDpProduct().getProdId());
-				
+
+                /*
+				 * 전시상품 APP 상품
+				 */
+                dpAppProductService.deleteDPAppProduct(inApp.getDpProduct().getProdId());
 			}
 			
 		}
