@@ -96,7 +96,7 @@ public class SACDisplayProductBuilder implements DisplayProductBuilder {
         String newSellerMbrNo = notification.getDpProductTotal().getDpProduct().getSellerMbrNo();   // prod.sellerMbrNo
         DPSapMappingVO dpSapMapping = notification.getDpSapMapping();
 
-        execSapPhase1(notification);
+//        execSapPhase1(notification);
 
 		/*
 		 * 전시상품 정보
