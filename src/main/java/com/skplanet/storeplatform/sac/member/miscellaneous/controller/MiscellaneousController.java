@@ -18,8 +18,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCapt
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
@@ -440,29 +438,4 @@ public class MiscellaneousController {
 		return response;
 	}
 
-	/**
-	 * <pre>
-	 * 2.3.17.휴대폰 인증 여부 확인.
-	 * </pre>
-	 * 
-	 * @param header
-	 *            SacRequestHeader
-	 * @param request
-	 *            ConfirmPhoneAuthorizationCheckReq
-	 * @return ConfirmPhoneAuthorizationCheckRes
-	 */
-	@RequestMapping(value = "/confirmPhoneAuthorizationCheck/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public ConfirmPhoneAuthorizationCheckRes confirmPhoneAuthorizationCheck(SacRequestHeader header,
-			@RequestBody @Validated ConfirmPhoneAuthorizationCheckReq request) {
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
-
-		if (!ValidationCheckUtils.isMdn(request.getUserPhone())) {
-			throw new StorePlatformException("SAC_MEM_3004");
-		}
-
-		ConfirmPhoneAuthorizationCheckRes response = this.service.confirmPhoneAutorizationCheck(header, request);
-		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
-		return response;
-	}
 }

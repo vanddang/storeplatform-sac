@@ -187,19 +187,4 @@
      WHERE  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */
        AND  auth_value = #{authValue}
     </select>
-    
-    <!-- 휴대폰 인증 여부 확인 --> 
-    <select id="searchPhoneAuthCheck" parameterType="ServiceAuth" resultType="ServiceAuth">
-    SELECT /* MiscellaneousMapper.searchPhoneAuthCheck, SAC (SAC), 윤보영, 2015-03-05 */
-            auth_mdn,
-	        auth_compt_yn,
-	        TO_CHAR (reg_dt, 'YYYYMMDDHH24MISS') AS reg_dt,
-	        TO_CHAR (upd_dt, 'YYYYMMDDHH24MISS') AS upd_dt
-	 FROM TB_CM_SVC_AUTH
-	WHERE tenant_id = #{tenantId}
-      AND system_id = #{systemId}
-      AND auth_type_cd = #{authTypeCd}
-      AND auth_mdn = #{authMdn}
-      AND auth_sign = #{authSign}
-    </select>
 </mapper>
