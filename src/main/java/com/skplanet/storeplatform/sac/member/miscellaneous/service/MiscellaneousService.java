@@ -6,6 +6,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCapt
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
@@ -240,4 +242,18 @@ public interface MiscellaneousService {
 	 * @return CreateDCDRes
 	 */
 	public CreateDCDRes createDCD(SacRequestHeader header, CreateDCDReq req);
+
+	/**
+	 * <pre>
+	 * 2.3.17.	휴대폰 인증 여부 확인.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param request
+	 *            ConfirmPhoneAuthorizationCheckReq
+	 * @return ConfirmPhoneAuthorizationCheckRes
+	 */
+	public ConfirmPhoneAuthorizationCheckRes confirmPhoneAutorizationCheck(SacRequestHeader header,
+			ConfirmPhoneAuthorizationCheckReq req);
 }
