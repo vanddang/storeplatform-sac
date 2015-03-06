@@ -336,9 +336,7 @@ public class LoginController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeForOllehMarketSacRes res = null;
-		if (StringUtils.equals(this.envServerLevel, "local")) {
-			res = this.loginService.authorizeForOllehMarketTest(requestHeader, req);
-		} else if (StringUtils.equals(this.envServerLevel, "qa")) {
+		if (StringUtils.equals(this.envServerLevel, "qa")) {
 			res = this.loginService.authorizeForOllehMarket(requestHeader, req);
 		} else {
 			res = this.loginService.authorizeForOllehMarketTest(requestHeader, req);
@@ -369,9 +367,7 @@ public class LoginController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeForUplusStoreSacRes res = null;
-		if (StringUtils.equals(this.envServerLevel, "local")) {
-			res = this.loginService.authorizeForUplusStoreTest(requestHeader, req);
-		} else if (StringUtils.equals(this.envServerLevel, "qa")) {
+		if (StringUtils.equals(this.envServerLevel, "qa")) {
 			res = this.loginService.authorizeForUplusStore(requestHeader, req);
 		} else {
 			res = this.loginService.authorizeForUplusStoreTest(requestHeader, req);
