@@ -3041,17 +3041,17 @@ public class LoginServiceImpl implements LoginService {
 		Integer year = Integer.parseInt(DateUtil.getToday("yyyy"));
 
 		if (MemberConstants.PROD_EXPO_LEVL_19_MORE.equals(prodExpoLevl)) {
-			birth = String.valueOf(year -= 20);
+			year -= 20;
 		} else if (MemberConstants.PROD_EXPO_LEVL_18_MORE.equals(prodExpoLevl)) {
-			birth = String.valueOf(year -= 19);
+			year -= 19;
 		} else if (MemberConstants.PROD_EXPO_LEVL_15_MORE.equals(prodExpoLevl)) {
-			birth = String.valueOf(year -= 16);
+			year -= 16;
 		} else if (MemberConstants.PROD_EXPO_LEVL_12_MORE.equals(prodExpoLevl)) {
-			birth = String.valueOf(year -= 13);
+			year -= 13;
 		} else {
-			birth = String.valueOf(year -= 12);
+			year -= 12;
 		}
-		birth += "1231";
+		birth = String.valueOf(year) + "1231";
 
 		return birth;
 	}
