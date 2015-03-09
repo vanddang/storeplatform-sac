@@ -317,6 +317,13 @@ public final class MemberConstants {
 	public static final String INAPP_USER_STATUS_PARAM_ERROR = "US014606"; // 파라메터 오류
 	public static final String INAPP_USER_STATUS_SYSTEM_ERROR = "US014607"; // 시스템 연동 오류
 
+	/** SAP 회원의 연령대 정보 */
+	public static final String PROD_EXPO_LEVL_19_MORE = "US014705"; // 19세 이상
+	public static final String PROD_EXPO_LEVL_18_MORE = "US014704"; // 18세 이상
+	public static final String PROD_EXPO_LEVL_15_MORE = "US014703"; // 15세 이상
+	public static final String PROD_EXPO_LEVL_12_MORE = "US014702"; // 12세 이상
+	public static final String PROD_EXPO_LEVL_12_UNDER = "US014701"; // 12세 미만
+
 	/**
 	 * 판매자 회원 상수들.
 	 * 
