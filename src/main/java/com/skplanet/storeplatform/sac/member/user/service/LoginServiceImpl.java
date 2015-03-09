@@ -42,6 +42,7 @@ import com.skplanet.storeplatform.external.client.market.sci.MarketSCI;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq;
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
 import com.skplanet.storeplatform.external.client.market.vo.MarketClauseExtraInfoEc;
+import com.skplanet.storeplatform.external.client.market.vo.MarketDeviceInfoEc;
 import com.skplanet.storeplatform.external.client.tstore.sci.TstoreTransferSCI;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
@@ -122,6 +123,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.common.util.CommonUtils;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonInternalComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.IdpConstants;
@@ -1457,6 +1459,8 @@ public class LoginServiceImpl implements LoginService {
 
 					}
 
+					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
+
 				} catch (StorePlatformException e) {
 
 					if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
@@ -1482,6 +1486,9 @@ public class LoginServiceImpl implements LoginService {
 							// 변경된 deviceId로 회원정보 재조회
 							detailReq.setDeviceId(marketRes.getDeviceId());
 							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+							this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(),
+									marketRes);
 
 						} catch (StorePlatformException ex) {
 
@@ -1610,7 +1617,9 @@ public class LoginServiceImpl implements LoginService {
 
 		MarketAuthorizeEcRes marketRes = new MarketAuthorizeEcRes();
 		marketRes.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL);
-
+		MarketDeviceInfoEc marketDeviceInfo = new MarketDeviceInfoEc();
+		marketDeviceInfo.setProdExpoLevl(MemberConstants.PROD_EXPO_LEVL_15_MORE);
+		marketRes.setDeviceInfo(marketDeviceInfo);
 		AuthorizeForOllehMarketSacRes res = new AuthorizeForOllehMarketSacRes();
 
 		if (marketRes != null) {
@@ -1842,6 +1851,8 @@ public class LoginServiceImpl implements LoginService {
 
 					}
 
+					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
+
 				} catch (StorePlatformException e) {
 
 					if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
@@ -1867,6 +1878,9 @@ public class LoginServiceImpl implements LoginService {
 							// 변경된 deviceId로 회원정보 재조회
 							detailReq.setDeviceId(marketRes.getDeviceId());
 							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+							this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(),
+									marketRes);
 
 						} catch (StorePlatformException ex) {
 
@@ -1996,7 +2010,9 @@ public class LoginServiceImpl implements LoginService {
 
 		MarketAuthorizeEcRes marketRes = new MarketAuthorizeEcRes();
 		marketRes.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL);
-
+		MarketDeviceInfoEc marketDeviceInfo = new MarketDeviceInfoEc();
+		marketDeviceInfo.setProdExpoLevl(MemberConstants.PROD_EXPO_LEVL_15_MORE);
+		marketRes.setDeviceInfo(marketDeviceInfo);
 		AuthorizeForUplusStoreSacRes res = new AuthorizeForUplusStoreSacRes();
 
 		if (marketRes != null) {
@@ -2306,6 +2322,8 @@ public class LoginServiceImpl implements LoginService {
 
 						}
 
+						this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
+
 					} catch (StorePlatformException e) {
 
 						if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
@@ -2331,6 +2349,9 @@ public class LoginServiceImpl implements LoginService {
 								// 변경된 deviceId로 회원정보 재조회
 								detailReq.setDeviceId(marketRes.getDeviceId());
 								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+								this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(),
+										marketRes);
 
 							} catch (StorePlatformException ex) {
 
@@ -2658,17 +2679,73 @@ public class LoginServiceImpl implements LoginService {
 		int age = Integer.parseInt(realAge);
 
 		if (age >= 19) {
-			prodExpoLevl = "US014705";
+			prodExpoLevl = MemberConstants.PROD_EXPO_LEVL_19_MORE;
 		} else if (age >= 18) {
-			prodExpoLevl = "US014704";
+			prodExpoLevl = MemberConstants.PROD_EXPO_LEVL_18_MORE;
 		} else if (age >= 15) {
-			prodExpoLevl = "US014703";
+			prodExpoLevl = MemberConstants.PROD_EXPO_LEVL_15_MORE;
 		} else if (age >= 12) {
-			prodExpoLevl = "US014702";
+			prodExpoLevl = MemberConstants.PROD_EXPO_LEVL_12_MORE;
 		} else {
-			prodExpoLevl = "US014701";
+			prodExpoLevl = MemberConstants.PROD_EXPO_LEVL_12_UNDER;
 		}
 		return prodExpoLevl;
+	}
+
+	/**
+	 * <pre>
+	 * 회원 연령코드를 생년월일로 변환.
+	 * 만생년 + 1231 임시로 생성
+	 * </pre>
+	 * 
+	 * @param prodExpoLevl
+	 *            String
+	 * @return birth 생년월일
+	 */
+	private String getProdExpoLevlToBirth(String prodExpoLevl) {
+
+		String birth = "";
+		if (StringUtils.isBlank(prodExpoLevl)) {
+			return birth;
+		}
+
+		Integer year = Integer.parseInt(DateUtil.getToday("yyyy"));
+
+		if (MemberConstants.PROD_EXPO_LEVL_19_MORE.equals(prodExpoLevl)) {
+			birth = String.valueOf(year -= 20);
+		} else if (MemberConstants.PROD_EXPO_LEVL_18_MORE.equals(prodExpoLevl)) {
+			birth = String.valueOf(year -= 19);
+		} else if (MemberConstants.PROD_EXPO_LEVL_15_MORE.equals(prodExpoLevl)) {
+			birth = String.valueOf(year -= 16);
+		} else if (MemberConstants.PROD_EXPO_LEVL_12_MORE.equals(prodExpoLevl)) {
+			birth = String.valueOf(year -= 13);
+		} else {
+			birth = String.valueOf(year -= 12);
+		}
+		birth += "1231";
+
+		return birth;
+	}
+
+	/**
+	 * <pre>
+	 * 생년월일을 회원 연령코드로 변환.
+	 * </pre>
+	 * 
+	 * @param birth
+	 *            String
+	 * @return prodExpoLevl 회원연령코드
+	 */
+	private String getBirthToProdExpoLevl(String birth) {
+
+		if (StringUtils.isBlank(birth)) {
+			return "";
+		}
+
+		String ageChk = ("19".equals(birth.substring(0, 2))) ? "1" : "3";
+		Integer realAge = CommonUtils.getAgeBySocalNumber(birth.substring(2, 8), ageChk);
+
+		return this.getProdExpoLevl(String.valueOf(realAge));
 	}
 
 	/**
@@ -3210,6 +3287,8 @@ public class LoginServiceImpl implements LoginService {
 
 					}
 
+					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
+
 				} catch (StorePlatformException e) {
 
 					if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
@@ -3235,6 +3314,9 @@ public class LoginServiceImpl implements LoginService {
 							// 변경된 deviceId로 회원정보 재조회
 							detailReq.setDeviceId(marketRes.getDeviceId());
 							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
+
+							this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(),
+									marketRes);
 
 						} catch (StorePlatformException ex) {
 
@@ -3495,6 +3577,7 @@ public class LoginServiceImpl implements LoginService {
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
 		userMbr.setUserID(deviceId); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
+		userMbr.setUserBirthDay(this.getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl())); // 생년월일
 		createUserRequest.setUserMbr(userMbr);
 
 		// SC 사용자 가입요청
@@ -3526,6 +3609,54 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		return createUserResponse.getUserKey();
+	}
+
+	/**
+	 * <pre>
+	 * 마켓회원 회원정보 수정.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param deviceId
+	 *            String
+	 * @param userInfo
+	 *            UserInfo
+	 * @param marketRes
+	 *            MarketAuthorizeEcRes
+	 */
+	private void updateMarketUserInfo(SacRequestHeader requestHeader, String deviceId, UserInfo userInfo,
+			MarketAuthorizeEcRes marketRes) {
+
+		UserMbr userMbr = null;
+		String userBirthDay = null;
+
+		// 회원 연령대 코드에 따라 생년월일 업데이트
+		if (StringUtils.isBlank(userInfo.getUserBirthDay())) {
+			userBirthDay = this.getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl());
+			LOGGER.info("{} 생년월일 최초 수집 {}", deviceId, userBirthDay);
+		} else {
+			if (!StringUtils.equals(this.getBirthToProdExpoLevl(userInfo.getUserBirthDay()), marketRes.getDeviceInfo()
+					.getProdExpoLevl())) {
+				userBirthDay = this.getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl());
+				LOGGER.info("{} 생년월일 변경 {} -> {}", deviceId, userInfo.getUserBirthDay(), userBirthDay);
+			}
+		}
+
+		if (StringUtils.isNotBlank(userBirthDay)) {
+			if (userMbr == null)
+				userMbr = new UserMbr();
+
+			userMbr.setUserBirthDay(userBirthDay);
+		}
+
+		if (userMbr != null) {
+			userMbr.setUserKey(userInfo.getUserKey());
+			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+			updateUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+			updateUserRequest.setUserMbr(userMbr);
+			this.userSCI.updateUser(updateUserRequest);
+		}
 	}
 
 	/**
