@@ -333,7 +333,7 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		AuthorizeForOllehMarketSacRes res = this.loginService.authorizeForOllehMarket(requestHeader, req);
+		AuthorizeForOllehMarketSacRes res = this.loginService.authorizeForOllehMarketTest(requestHeader, req);
 
 		LOGGER.info("Response : {}, {}, {}", res.getDeviceId(), res.getUserInfo().getUserKey(), res.getUserStatus());
 
@@ -359,7 +359,7 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		AuthorizeForUplusStoreSacRes res = this.loginService.authorizeForUplusStore(requestHeader, req);
+		AuthorizeForUplusStoreSacRes res = this.loginService.authorizeForUplusStoreTest(requestHeader, req);
 
 		LOGGER.info("Response : {}, {}, {}", res.getDeviceId(), res.getUserInfo().getUserKey(), res.getUserStatus());
 
