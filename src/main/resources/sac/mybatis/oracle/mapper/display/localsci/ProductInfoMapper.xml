@@ -628,23 +628,22 @@
                          ,TB_DP_TENANT_PROD_PRICE L
                          ,TB_DP_PROD_DESC M
                          ,(
-                           
-                          SELECT * 
-                          FROM ( 
-	                           SELECT 
-	                                 B1.PROD_ID
-	                               , B1.CPN_ID
-	                           FROM  TB_DP_PROD_RSHP A1
-	                                ,TB_DP_SPRC_PROD B1
-	                           WHERE 1=1
-	                             AND A1.PART_PROD_ID = B1.PROD_ID
-	                             <if test="productBasicInfo.partProdId != null ">
-	                             AND B1.PROD_ID  = #{productBasicInfo.partProdId}
-	                             </if>                             
-	                             AND B1.EXPO_YN ='Y'
-	                             AND B1.CPN_ID IS NOT NULL
-	                             ORDER BY  B1.SPRC_APPLY_END_DT DESC
-                           ) WHERE ROWNUM =1                         
+	                          SELECT * 
+	                          FROM ( 
+		                           SELECT 
+		                                 B1.PROD_ID
+		                               , B1.CPN_ID
+		                           FROM  TB_DP_PROD_RSHP A1
+		                                ,TB_DP_SPRC_PROD B1
+		                           WHERE 1=1
+		                             AND A1.PART_PROD_ID = B1.PROD_ID
+		                             <if test="productBasicInfo.partProdId != null ">
+		                             AND B1.PROD_ID  = #{productBasicInfo.partProdId}
+		                             </if>                             
+		                             AND B1.EXPO_YN ='Y'
+		                             AND B1.CPN_ID IS NOT NULL
+		                             ORDER BY  B1.SPRC_APPLY_END_DT DESC
+	                           ) WHERE ROWNUM =1                         
                           )N                         
                          ,TB_DP_PROD_IMG PI
                          ,TB_DP_PROD_OPT OPT
