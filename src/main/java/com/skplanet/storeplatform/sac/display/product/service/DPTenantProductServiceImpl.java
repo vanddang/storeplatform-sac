@@ -10,6 +10,7 @@ package com.skplanet.storeplatform.sac.display.product.service;
 
 import com.skplanet.icms.refactoring.deploy.DPTenantProductVO;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -57,8 +58,10 @@ public class DPTenantProductServiceImpl implements DPTenantProductService {
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("tp", dpProdCat);
         req.put("mapgProdId", mapgProdId);
-        req.put("mapgPkgNm", mapgPkgNm);
-        req.put("mapgPkgHash", DisplayCryptUtils.hashPkgNm(mapgPkgNm));
+        if (StringUtils.isNotEmpty(mapgPkgNm)) {
+            req.put("mapgPkgNm", mapgPkgNm);
+            req.put("mapgPkgHash", DisplayCryptUtils.hashPkgNm(mapgPkgNm));
+        }
         this.commonDAO.insert(NAMESPACE + ".insertDPTenant", req);
     }
 
