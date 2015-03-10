@@ -1206,7 +1206,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 					// 사용자가 기기사용자이면.
 					if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-						regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
+						// 회원정보는 있으나 단말정보가 없을경우 방어로직.
+						if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
+							regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
+						} else { // 단말정보가 미존재.
+							regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
+						}
 
 					} else {
 
