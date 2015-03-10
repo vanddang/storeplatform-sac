@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,6 +60,9 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 public class LoginController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+
+	@Value("#{systemProperties['spring.profiles.active']}")
+	private String envServerLevel;
 
 	@Autowired
 	private LoginService loginService;
@@ -359,7 +363,12 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		AuthorizeForUplusStoreSacRes res = this.loginService.authorizeForUplusStore(requestHeader, req);
+		AuthorizeForUplusStoreSacRes res = null;
+		if (StringUtils.equals(this.envServerLevel, "real")) {
+			res = this.loginService.authorizeForUplusStoreTest(requestHeader, req);
+		} else {
+			res = this.loginService.authorizeForUplusStore(requestHeader, req);
+		}
 
 		LOGGER.info("Response : {}, {}, {}", res.getDeviceId(), res.getUserInfo().getUserKey(), res.getUserStatus());
 
