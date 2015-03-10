@@ -3067,12 +3067,12 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	private String getBirthToProdExpoLevl(String birth) {
 
-		if (StringUtils.isBlank(birth)) {
+		if (StringUtils.isBlank(birth) || !StringUtils.isNumeric(birth) || birth.length() != 8) {
 			return "";
 		}
 
 		String ageChk = ("19".equals(birth.substring(0, 2))) ? "1" : "3";
-		Integer realAge = CommonUtils.getAgeBySocalNumber(birth.substring(2, 8), ageChk);
+		int realAge = CommonUtils.getAgeBySocalNumber(birth.substring(2, 8), ageChk);
 
 		return this.getProdExpoLevl(String.valueOf(realAge));
 	}
