@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
+import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,6 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
     @Value("#{propertiesForSac['skp.common.service.language']}")
     private String SERVICE_LANG;
 
-    // FIXME 서비스에 추가될 테넌트 추가
-    private final String[] TENANT_LIST = new String[]{"S01","S02","S03"};
-
     @Override
     public void evictProductMeta(ProductType prodType, List<String> prodIdList) {
         String[] langList = SERVICE_LANG.split(",");
@@ -55,7 +53,7 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
                 supportDeviceList = cacheSupportService.getSupportDeviceList(_prodId);
                 menuList = cacheSupportService.getMenuList(_prodId);
             }
-            for(String tenant : TENANT_LIST) {
+            for(String tenant : ServicePropertyManager.getSupportTenantList()) {
                 for(String langCd : langList) {
                     if(prodType == App) {
                         this.cacheEvictManager.evictAppMeta(new AppMetaParam(_prodId, langCd, tenant));

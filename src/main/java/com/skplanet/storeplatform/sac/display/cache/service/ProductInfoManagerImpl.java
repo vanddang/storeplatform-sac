@@ -14,6 +14,7 @@ import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.spring.data.plandasj.PlandasjTemplate;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.ContentType;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -262,7 +263,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("prodId", param.getProdId());
-        req.put("tenantList", Arrays.asList("S01", "S02", "S03"));  // FIXME
+        req.put("tenantList", ServicePropertyManager.getSupportTenantList());
 
         RawProductStats rawProductStats = commonDAO.queryForObject("ProductInfo.getProductStats", req, RawProductStats.class);
         if(rawProductStats == null)
