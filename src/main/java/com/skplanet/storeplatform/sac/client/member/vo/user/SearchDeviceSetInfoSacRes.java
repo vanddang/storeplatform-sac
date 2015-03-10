@@ -31,6 +31,8 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	private String isAdult;
 	/** 결제 PIN 잠김 여부. */
 	private String isPinClosed;
+	/** 인증실패 횟수. */
+	private String failCnt;
 
 	/**
 	 * @return the isPin
@@ -150,6 +152,21 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	 */
 	public void setIsPinClosed(String isPinClosed) {
 		this.isPinClosed = isPinClosed;
+	}
+
+	/**
+	 * @return the failCnt
+	 */
+	public String getFailCnt() {
+		return this.failCnt;
+	}
+
+	/**
+	 * @param failCnt
+	 *            the failCnt to set
+	 */
+	public void setFailCnt(String failCnt) {
+		this.failCnt = failCnt;
 	}
 
 }
