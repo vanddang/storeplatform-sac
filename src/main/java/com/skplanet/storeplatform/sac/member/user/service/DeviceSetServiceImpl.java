@@ -323,6 +323,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 				null));
 		res.setIsPinClosed(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn(),
 				null));
+		res.setFailCnt(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthCnt(), null));
 
 		return res;
 	}
