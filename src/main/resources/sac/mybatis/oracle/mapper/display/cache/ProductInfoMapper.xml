@@ -868,8 +868,8 @@
                 RSHP.PROD_ID,
                 RSHP.PART_PROD_ID,
                 SPROD.DLV_PROD_YN,
-                CASE WHEN NVL(TSTAT.PRCHS_CNT, 0) <![CDATA[<]]> 0 THEN 0
-                ELSE NVL(TSTAT.PRCHS_CNT, 0) END                                               AS PRCHS_CNT,
+                (CASE WHEN NVL(TSTAT.PRCHS_CNT, 0) <![CDATA[<]]> 0 THEN 0
+                ELSE NVL(TSTAT.PRCHS_CNT, 0) END)                                              AS PRCHS_CNT,
                 EPROD.PROD_GRD_CD,
                 TO_CHAR(NVL(SPP.SPRC_APPLY_START_DT, TPRC.APPLY_START_DT), 'YYYYMMDDHH24MISS') AS APPLY_START_DT,
                 TO_CHAR(NVL(SPP.SPRC_APPLY_END_DT, TPRC.APPLY_END_DT), 'YYYYMMDDHH24MISS')     AS APPLY_END_DT,
