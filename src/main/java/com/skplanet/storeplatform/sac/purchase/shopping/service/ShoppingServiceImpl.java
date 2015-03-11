@@ -149,8 +149,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 					specialReq.setSpecialCouponId(product.getSpecialSaleCouponId());
 					specialReq.setSpecialCouponAmt(product.getProdAmt() - product.getSpecialSaleAmt());
 
-					// 1회 구매 가능 수량 체크
-					if (couponPublishAvailableSacV2Param.getItemCount() > product.getSpecialSaleOncePrchsLimit()) {
+					// 1회 구매 가능 수량 체크 (선물이 아닌경우만 체크함)
+					if (!StringUtils.equals("Y", couponPublishAvailableSacV2Param.getGiftFlag())
+							&& couponPublishAvailableSacV2Param.getItemCount() > product.getSpecialSaleOncePrchsLimit()) {
 						throw new StorePlatformException("SAC_PUR_6113");
 					}
 
