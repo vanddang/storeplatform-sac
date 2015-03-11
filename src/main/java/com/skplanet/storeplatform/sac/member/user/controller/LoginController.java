@@ -44,8 +44,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdn
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV3SacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV3SacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -470,60 +468,4 @@ public class LoginController {
 
 	}
 
-	/**
-	 * <pre>
-	 * PayPlanet에 제공되는 3사(SKT/KT/U+) 회원인증 V3.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            AuthorizeV3SacReq
-	 * @return AuthorizeV3SacRes
-	 */
-	@RequestMapping(value = "/member/user/authorize/v3", method = RequestMethod.POST)
-	@ResponseBody
-	public AuthorizeV3SacRes authorizeV3(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeV3SacReq req) {
-
-		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		String tenantId = "";
-
-		/* TODO. 전시 다운로드 이력여부로 테넌트 아이디 구분 */
-
-		// 타사 인증시 필수 파라메터 체크
-		if (!StringUtils.equals(tenantId, MemberConstants.TENANT_ID_TSTORE)) {
-
-			if (StringUtils.isBlank(req.getDeviceTelecom())) {
-				throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
-			}
-
-			if (StringUtils.isBlank(req.getTrxNo())) {
-				throw new StorePlatformException("SAC_MEM_0001", "trxNo");
-			}
-
-			if (StringUtils.isBlank(req.getNativeId())) {
-				throw new StorePlatformException("SAC_MEM_0001", "nativeId");
-			}
-		}
-
-		TenantHeader tenant = requestHeader.getTenantHeader();
-		tenant.setTenantId(tenantId);
-		if (StringUtils.equals(tenantId, MemberConstants.TENANT_ID_TSTORE)) {
-			tenant.setSystemId(MemberConstants.SYSTEM_ID_PAYPLANET_S01);
-		} else if (StringUtils.equals(tenantId, MemberConstants.TENANT_ID_OLLEH_MARKET)) {
-			tenant.setSystemId(MemberConstants.SYSTEM_ID_PAYPLANET_S02);
-		} else if (StringUtils.equals(tenantId, MemberConstants.TENANT_ID_UPLUS_STORE)) {
-			tenant.setSystemId(MemberConstants.SYSTEM_ID_PAYPLANET_S03);
-		}
-		requestHeader.setTenantHeader(tenant);
-
-		AuthorizeV3SacRes res = this.loginService.authorizeV3(requestHeader, req);
-
-		LOGGER.info("Response : {}, {}, {}", res.getDeviceInfo().getDeviceId(), res.getUserInfo().getUserKey(),
-				res.getUserMainStatus());
-
-		return res;
-
-	}
 }

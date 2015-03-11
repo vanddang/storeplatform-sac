@@ -22,8 +22,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdn
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeSimpleByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV2SacRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV3SacReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeV3SacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckVariabilityRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -216,16 +214,4 @@ public interface LoginService {
 	 */
 	public AuthorizeV2SacRes authorizeV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeV2SacReq req);
 
-	/**
-	 * <pre>
-	 * PayPlanet에 제공되는 3사(SKT/KT/U+) 회원인증 V3.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            AuthorizeV3SacReq
-	 * @return AuthorizeV3SacRes
-	 */
-	public AuthorizeV3SacRes authorizeV3(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeV3SacReq req);
 }
