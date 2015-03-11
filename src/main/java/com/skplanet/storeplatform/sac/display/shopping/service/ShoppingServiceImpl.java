@@ -2861,6 +2861,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							if (retMetaInfo != null) {
 								// 쇼핑 Response Generate
 								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+								product.setSpecialProdYn(retMetaInfo.getSpecialSale()); // 특가 상품 일 경우
 								productList.add(product);
 							}
 						}
@@ -3305,6 +3306,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							if (retMetaInfo != null) {
 								// 쇼핑 Response Generate
 								Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+								product.setSpecialProdYn(retMetaInfo.getSpecialSale()); // 특가 상품 일 경우
 								productList.add(product);
 							}
 						}
@@ -3465,6 +3467,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
 						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+						product.setSpecialProdYn(retMetaInfo.getSpecialSale()); // 특가 상품 일 경우
 						productList.add(product);
 					}
 				}
@@ -3620,6 +3623,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
 						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
+						product.setSpecialProdYn(retMetaInfo.getSpecialSale()); // 특가 상품 일 경우
 						productList.add(product);
 					}
 				}
