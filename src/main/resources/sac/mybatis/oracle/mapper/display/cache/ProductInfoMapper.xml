@@ -848,7 +848,7 @@
                 NVL(SPP.SPRC_DC_RATE, NVL(TPRC.DC_RATE, 0))                                    AS DC_RATE,
                 NVL(SPP.SPRC_DC_PRICE, NVL(TPRC.DC_AMT, 0))                                    AS DC_AMT,
                 CASE WHEN SPP.SPRC_DC_RATE IS NOT NULL THEN 'Y'
-                ELSE 'N' END                                                                   AS specialSale,
+                ELSE 'N' END                                                                   AS SPECIAL_SALE_YN,
                 SBRD.BRAND_ID,
                 SBRD.BRAND_NM,
                 MSM.MENU_ID,
