@@ -174,7 +174,7 @@ public class AppServiceImpl implements AppService {
         		if(pointList == null) pointList = new ArrayList<Point>();
 	        	String userGrade = userGradeInfo.getUserGradeCd();
 	        	Integer prodAmt = appDetail.getProdAmt();
-	        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), topMenuId, request.getChannelId(), prodAmt);
+	        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), appDetail.getTopMenuId(), request.getChannelId(), prodAmt);
 	        	
 	        	//무료인 경우 예외처리
 	        	if(prodAmt == null || prodAmt == 0) {
