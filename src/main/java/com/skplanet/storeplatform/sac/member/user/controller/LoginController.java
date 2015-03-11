@@ -300,6 +300,44 @@ public class LoginController {
 
 	/**
 	 * <pre>
+	 * PayPlanet에 InApp용으로 제공되는 3사 통합 회원인증 V3.
+	 * 구매하는 상품의 최근 다운로드 이력정보로 tenantId를 구분한다.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForInAppSacReq
+	 * @return AuthorizeForInAppSacRes
+	 */
+	@RequestMapping(value = "/member/user/authorizeForInApp/v3", method = RequestMethod.POST)
+	@ResponseBody
+	public AuthorizeForInAppSacRes authorizeForInAppV3(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForInAppSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if (StringUtils.equals(req.getDeviceId(), "null")) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+		}
+
+		if (!StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)
+				&& !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_KT)
+				&& !StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_LGT)) {
+			throw new StorePlatformException("SAC_MEM_1203");
+		}
+
+		AuthorizeForInAppSacRes res = this.loginService.authorizeForInAppV3(requestHeader, req);
+
+		LOGGER.info("Response : {}, {}, {}, {}, {}", res.getTenantId(), res.getDeviceId(), res.getUserInfo()
+				.getUserKey(), res.getUserInfo().getImMbrNo(), res.getUserStatus());
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
 	 * PayPlanet에 제공되는 T Store 회원인증.
 	 * </pre>
 	 * 

@@ -121,6 +121,21 @@ public interface LoginService {
 	/**
 	 * <pre>
 	 * PayPlanet에 InApp용으로 제공되는 3사 회원인증.
+	 * prodId의 다운로드 이력여부로 tenantId를 구분한다.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            AuthorizeForInAppSacReq
+	 * @return AuthorizeForInAppSacRes
+	 */
+	public AuthorizeForInAppSacRes authorizeForInAppV3(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForInAppSacReq req);
+
+	/**
+	 * <pre>
+	 * PayPlanet에 InApp용으로 제공되는 3사 회원인증 V3.
 	 * </pre>
 	 * 
 	 * @param requestHeader

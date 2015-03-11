@@ -79,6 +79,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UserDownloadInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
@@ -1358,6 +1359,56 @@ public class LoginServiceImpl implements LoginService {
 				res = this.getMarketMemberInfoForInApp(requestHeader, req, tenantId);
 
 			}
+		}
+
+		// 로그인 이력 저장
+		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+		}
+
+		return res;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeForInAppV2(com.skplanet.storeplatform
+	 * .sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeForInAppSacReq)
+	 */
+	@Override
+	public AuthorizeForInAppSacRes authorizeForInAppV3(SacRequestHeader requestHeader,
+			@Valid @RequestBody AuthorizeForInAppSacReq req) {
+
+		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
+		String tenantId = null;
+		AuthorizeForInAppSacRes res = null;
+
+		UserDownloadInfoRes userDownloadInfoRes = this.mcic.getUserDownloadInfo(req.getDeviceId(), req.getNativeId(),
+				req.getProdId()); // 모상품 prodId 최근 다운로드 정보조회
+
+		if (userDownloadInfoRes == null || StringUtils.isBlank(userDownloadInfoRes.getLatestTenantId())) {
+			tenantId = this.commService.getTenantIdByDeviceTelecom(req.getDeviceTelecom()); // 이통사 정보로 TenantID 부여
+		} else {
+			tenantId = userDownloadInfoRes.getLatestTenantId();
+		}
+
+		TenantHeader tenant = requestHeader.getTenantHeader();
+		tenant.setTenantId(tenantId);
+		tenant.setSystemId(MemberConstants.SYSTEM_ID_INAPP_2);
+		requestHeader.setTenantHeader(tenant);
+
+		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, tenantId)) {
+
+			LOGGER.info("{} Tstore 회원인증", req.getDeviceId());
+			res = this.getTstoreMemberInfoForInApp(requestHeader, req);
+
+		} else {
+
+			LOGGER.info("{} 타사 마켓 회원인증", req.getDeviceId());
+			res = this.getMarketMemberInfoForInApp(requestHeader, req, tenantId);
+
 		}
 
 		// 로그인 이력 저장

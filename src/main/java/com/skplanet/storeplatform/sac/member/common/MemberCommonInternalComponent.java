@@ -20,10 +20,13 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreTransferOwnerE
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ChangeDisplayUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.IapProductInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchDcdSupportProductSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UserDownloadInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ChangeDisplayUserSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.DcdSupportProductRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UserDownloadInfoReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UserDownloadInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.PurchaseUserInfoInternalSCI;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.UserInfoSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.sci.ExistenceInternalSacSCI;
@@ -58,6 +61,9 @@ public class MemberCommonInternalComponent {
 
 	@Autowired
 	IapProductInfoSCI iapProductInfoSCI;
+
+	@Autowired
+	UserDownloadInfoSCI userDownloadInfoSCI;
 
 	/**
 	 * <pre>
@@ -189,5 +195,37 @@ public class MemberCommonInternalComponent {
 		}
 
 		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 사용자의 최근 다운로드 정보를 조회한다. 조회 대상이 없는 경우 null을 응답한다.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 *            String
+	 * @param nativeId
+	 *            String
+	 * @param prodId
+	 *            String
+	 * @return UserDownloadInfoRes
+	 */
+	public UserDownloadInfoRes getUserDownloadInfo(String deviceId, String nativeId, String prodId) {
+
+		UserDownloadInfoReq req = new UserDownloadInfoReq();
+		req.setMdn(deviceId);
+		req.setImei(nativeId);
+		req.setAid(prodId);
+
+		LOGGER.info("{} getUserDownloadInfo Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(req));
+		UserDownloadInfoRes res = this.userDownloadInfoSCI.getUserDownloadInfo(req);
+		if (res == null) {
+			LOGGER.info("{} getUserDownloadInfo Response : {}", deviceId, res);
+		} else {
+			LOGGER.info("{} getUserDownloadInfo Response : {}", deviceId, ConvertMapperUtils.convertObjectToJson(res));
+		}
+
+		return res;
+
 	}
 }
