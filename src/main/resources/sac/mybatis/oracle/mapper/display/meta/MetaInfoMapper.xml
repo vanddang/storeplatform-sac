@@ -813,7 +813,7 @@
                                ,NVL(N.SPRC_PRICE, NVL(L.DC_AFT_PROD_AMT, 0)) AS PROD_AMT 
                                ,NVL(N.SPRC_DC_RATE, NVL(L.DC_RATE,0)) AS DC_RATE
                                ,NVL(N.SPRC_DC_PRICE, NVL(L.DC_AMT, 0)) AS DC_AMT
-                               ,CASE WHEN N.SPRC_DC_RATE IS NOT NULL THEN 'Y' ELSE 'N'END AS SPECIAL_SALE_YN
+                               ,CASE WHEN N.SPRC_DC_RATE IS NOT NULL THEN 'Y' ELSE 'N'END AS specialSale
                                ,A.BRAND_ID  
                                ,A.BRAND_NM  
                                ,D.MENU_ID  
