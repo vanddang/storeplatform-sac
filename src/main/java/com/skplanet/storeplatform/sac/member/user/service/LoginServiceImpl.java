@@ -217,13 +217,6 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
 
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL_SAC_MEM_0006");
-			}
-		});
-
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
 		/* 자번호 셋팅(mdn 로그인시 deviceId는 자번호로 넘어온다) */
@@ -332,13 +325,6 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	@Override
 	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
-
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id("TL_SAC_MEM_0006");
-			}
-		});
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 

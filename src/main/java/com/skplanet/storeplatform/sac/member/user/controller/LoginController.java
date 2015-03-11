@@ -22,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
@@ -80,6 +83,13 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SAC_MEM_0006");
+			}
+		});
+
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
@@ -101,6 +111,13 @@ public class LoginController {
 	@RequestMapping(value = "/member/user/authorizeByMdn/v2", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdnV2(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
+
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SAC_MEM_0006");
+			}
+		});
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
@@ -335,6 +352,13 @@ public class LoginController {
 	public AuthorizeForOllehMarketSacRes authorizeForOllehMarket(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForOllehMarketSacReq req) {
 
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SAC_MEM_0006");
+			}
+		});
+
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeForOllehMarketSacRes res = this.loginService.authorizeForOllehMarket(requestHeader, req);
@@ -360,6 +384,13 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeForUplusStoreSacRes authorizeForUplusStore(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForUplusStoreSacReq req) {
+
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SAC_MEM_0006");
+			}
+		});
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 

@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
 			String userPhoneStr = "";
 
-			if (detailRes.getDeviceInfoList() != null) {
+			if (detailRes.getDeviceInfoList() != null && detailRes.getDeviceInfoList().size() > 0) {
 				StringBuffer sbUserPhone = new StringBuffer();
 				for (DeviceInfo deviceInfo : detailRes.getDeviceInfoList()) {
 
@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
 		String userPhoneStr = "";
 
 		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
-		if (listDeviceRes.getDeviceInfoList() != null) {
+		if (listDeviceRes.getDeviceInfoList() != null && listDeviceRes.getDeviceInfoList().size() > 0) {
 			StringBuffer sbUserPhone = new StringBuffer();
 			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
 
