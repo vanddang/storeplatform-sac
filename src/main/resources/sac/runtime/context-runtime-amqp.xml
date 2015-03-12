@@ -45,6 +45,9 @@
     <!--<rabbit:queue name="sac.icms-app-admin.device-remapping-result.async" >-->
         <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
     <!--</rabbit:queue>-->
+    <rabbit:queue name="sac.dummy.dont-delete-me.async" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>
     <rabbit:queue name="sac.tenant.member-add-device.async" >
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
     </rabbit:queue>
@@ -84,15 +87,16 @@
 	    </bean>
         
  	
-	    <!--<bean id="inboundQueueNames" class="com.skplanet.storeplatform.sac.common.util.MqUtils" factory-method="buildQueueName">-->
-	        <!--<constructor-arg>-->
-	            <!--<list>-->
+	    <bean id="inboundQueueNames" class="com.skplanet.storeplatform.sac.common.util.MqUtils" factory-method="buildQueueName">
+	        <constructor-arg>
+	            <list>
+	                <value>sac.dummy.dont-delete-me.async</value>
 	                <!--<value>icms-app-refactoring-deploy.sac.deploy.async</value>-->
 	                <!--<value>icms-app-admin.sac.device-mapping.async</value>-->
 	                <!--<value>icms-app-admin.sac.device-remapping.async</value>-->
-	            <!--</list>-->
-	        <!--</constructor-arg>-->
-	    <!--</bean>-->
+	            </list>
+	        </constructor-arg>
+	    </bean>
 
 		<rabbit:admin connection-factory="sacRabbitConnectionFactory" auto-startup="true" />
 	   	<!--<rabbit:connection-factory id="sacRabbitConnectionFactory" />-->

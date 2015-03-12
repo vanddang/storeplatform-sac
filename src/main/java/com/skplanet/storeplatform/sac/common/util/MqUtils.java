@@ -33,7 +33,10 @@ public class MqUtils {
             String prefix = System.getProperty("user.name", "local");
             resNameList = new ArrayList<String>();
             for(String name : nameList) {
-                resNameList.add(prefix + "." + name);
+                if(name.equals("sac.dummy.dont-delete-me.async"))
+                    resNameList.add(name);
+                else
+                    resNameList.add(prefix + "." + name);
             }
         }
         else {
