@@ -27,24 +27,24 @@
     <value>tenant1.sac.response.sync.content.test0001</value> 
     -->
     
-    <rabbit:queue name="#{T(com.skplanet.storeplatform.sac.common.util.MqUtils).buildQueueName('icms-app-refactoring-deploy.sac.deploy.async')}" >
-        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
-    </rabbit:queue>
-    <rabbit:queue name="#{T(com.skplanet.storeplatform.sac.common.util.MqUtils).buildQueueName('icms-app-admin.sac.device-mapping.async')}" >
-        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
-    </rabbit:queue>
-    <rabbit:queue name="#{T(com.skplanet.storeplatform.sac.common.util.MqUtils).buildQueueName('icms-app-admin.sac.device-remapping.async')}" >
-        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
-    </rabbit:queue>
-    <rabbit:queue name="icms-app-refactoring-deploy.deploy-result.async" >
-        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
-    </rabbit:queue>
-    <rabbit:queue name="sac.icms-app-admin.device-mapping-result.async" >
-        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
-    </rabbit:queue>
-    <rabbit:queue name="sac.icms-app-admin.device-remapping-result.async" >
-        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
-    </rabbit:queue>
+    <!--<rabbit:queue name="#{T(com.skplanet.storeplatform.sac.common.util.MqUtils).buildQueueName('icms-app-refactoring-deploy.sac.deploy.async')}" >-->
+        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
+    <!--</rabbit:queue>-->
+    <!--<rabbit:queue name="#{T(com.skplanet.storeplatform.sac.common.util.MqUtils).buildQueueName('icms-app-admin.sac.device-mapping.async')}" >-->
+        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
+    <!--</rabbit:queue>-->
+    <!--<rabbit:queue name="#{T(com.skplanet.storeplatform.sac.common.util.MqUtils).buildQueueName('icms-app-admin.sac.device-remapping.async')}" >-->
+        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
+    <!--</rabbit:queue>-->
+    <!--<rabbit:queue name="icms-app-refactoring-deploy.deploy-result.async" >-->
+        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
+    <!--</rabbit:queue>-->
+    <!--<rabbit:queue name="sac.icms-app-admin.device-mapping-result.async" >-->
+        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
+    <!--</rabbit:queue>-->
+    <!--<rabbit:queue name="sac.icms-app-admin.device-remapping-result.async" >-->
+        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
+    <!--</rabbit:queue>-->
     <rabbit:queue name="sac.tenant.member-add-device.async" >
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
     </rabbit:queue>
@@ -84,15 +84,15 @@
 	    </bean>
         
  	
-	    <bean id="inboundQueueNames" class="com.skplanet.storeplatform.sac.common.util.MqUtils" factory-method="buildQueueName">
-	        <constructor-arg>
-	            <list>
-	                <value>icms-app-refactoring-deploy.sac.deploy.async</value>
-	                <value>icms-app-admin.sac.device-mapping.async</value>
-	                <value>icms-app-admin.sac.device-remapping.async</value>
-	            </list>
-	        </constructor-arg>
-	    </bean>
+	    <!--<bean id="inboundQueueNames" class="com.skplanet.storeplatform.sac.common.util.MqUtils" factory-method="buildQueueName">-->
+	        <!--<constructor-arg>-->
+	            <!--<list>-->
+	                <!--<value>icms-app-refactoring-deploy.sac.deploy.async</value>-->
+	                <!--<value>icms-app-admin.sac.device-mapping.async</value>-->
+	                <!--<value>icms-app-admin.sac.device-remapping.async</value>-->
+	            <!--</list>-->
+	        <!--</constructor-arg>-->
+	    <!--</bean>-->
 
 		<rabbit:admin connection-factory="sacRabbitConnectionFactory" auto-startup="true" />
 	   	<!--<rabbit:connection-factory id="sacRabbitConnectionFactory" />-->
@@ -102,30 +102,18 @@
 	       	<property name="channelCacheSize" value="10"/>
 	   	</bean>
 	   
-	   	<rabbit:template id="storeplatformRabbitTemplate" connection-factory="sacRabbitConnectionFactory" message-converter="sacRabbitJsonMessageConverter" reply-timeout="60000" />
+	   	<!--<rabbit:template id="storeplatformRabbitTemplate" connection-factory="sacRabbitConnectionFactory" message-converter="sacRabbitJsonMessageConverter" reply-timeout="60000" />-->
 	   
     
 	    <!-- CMS DISPLAY RESULT Rabbit Template -->
-	    <bean id="cmsAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-	        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
-	        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
-	        <property name="routingKey" value="sac.icms-app-refactoring-deploy.deploy-result.async" />
-	    </bean>
-	    
+	    <bean id="cmsAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
+
 	    <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
-	    <bean id="deviceMappingRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-	        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
-	        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
-	        <property name="routingKey" value="sac.icms-app-admin.device-mapping-result.async" />
-	    </bean>
+	    <bean id="deviceMappingRabbitTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 
         <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
-        <bean id="deviceRemappingRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-            <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
-            <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
-            <property name="routingKey" value="sac.icms-app-admin.device-remapping-result.async" />
-        </bean>
-	
+        <bean id="deviceRemappingRabbitTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
+
 	    <!-- Member - Add Device Rabbit Template -->
 	    <bean id="memberAddDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
 	        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
