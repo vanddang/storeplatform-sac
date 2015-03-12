@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcR
 import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcRes;
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UafmapEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
@@ -62,6 +63,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCapt
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
@@ -956,4 +959,44 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 2.3.17.	휴대폰 인증 여부 확인.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param request
+	 *            ConfirmPhoneAuthorizationCheckReq
+	 * @return ConfirmPhoneAuthorizationCheckRes
+	 */
+	@Override
+	public ConfirmPhoneAuthorizationCheckRes confirmPhoneAutorizationCheck(SacRequestHeader header,
+			ConfirmPhoneAuthorizationCheckReq req) {
+		String tenantId = header.getTenantHeader().getTenantId();
+		String systemId = header.getTenantHeader().getSystemId();
+		String userPhone = req.getUserPhone();
+
+		ServiceAuth serviceAuthInfo = new ServiceAuth();
+		serviceAuthInfo.setTenantId(tenantId);
+		serviceAuthInfo.setSystemId(systemId);
+		serviceAuthInfo.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_SMS);
+		serviceAuthInfo.setAuthMdn(userPhone);
+		serviceAuthInfo.setAuthSign(req.getPhoneSign());
+
+		ServiceAuth resultInfo = this.commonDao.queryForObject("Miscellaneous.searchPhoneAuthCheck", serviceAuthInfo,
+				ServiceAuth.class);
+
+		if (resultInfo == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "휴대폰 인증");
+		}
+
+		ConfirmPhoneAuthorizationCheckRes res = new ConfirmPhoneAuthorizationCheckRes();
+		res.setUserPhone(userPhone);
+		res.setComptYn(resultInfo.getAuthComptYn());
+		res.setRegDt(resultInfo.getRegDt());
+		// 인증번호만 요청한 상태 공백처리
+		res.setUpdDt(StringUtil.nvl(resultInfo.getUpdDt(), ""));
+		return res;
+	}
 }
