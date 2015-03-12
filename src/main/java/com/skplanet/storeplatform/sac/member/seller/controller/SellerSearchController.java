@@ -33,6 +33,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.TermsAgreementInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.TermsAgreementInformationSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
@@ -316,4 +318,24 @@ public class SellerSearchController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 2.2.37. 판매자 약관 동의 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            TermsAgreementInformationSacRes
+	 * @param req
+	 *            TermsAgreementInformationSacReq
+	 * @return TermsAgreementInformationSacRes
+	 */
+	@RequestMapping(value = "/termsAgreementInformation/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public TermsAgreementInformationSacRes termsAgreementInformation(SacRequestHeader header,
+			@RequestBody @Validated TermsAgreementInformationSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		TermsAgreementInformationSacRes res = this.sellerSearchService.termsAgreementInformation(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
 }

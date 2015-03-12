@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
+import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -44,6 +45,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerUpgrade;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAgreementSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAgreementSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateFlurryRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateFlurryResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
@@ -57,6 +60,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerRespon
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpgradeSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpgradeSellerResponse;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAgreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
@@ -72,6 +77,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateTermsAgreementSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq;
@@ -97,6 +104,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 
 /**
@@ -130,6 +138,12 @@ public class SellerServiceImpl implements SellerService {
 	 */
 	@Resource(name = "sellerWithdrawAmqpTemplate")
 	private AmqpTemplate sellerWithdrawAmqpTemplate;
+
+	/**
+	 * SPSAC DB 관련 Respository.
+	 */
+	@Autowired
+	private MemberCommonRepository repository;
 
 	/**
 	 * <pre>
@@ -1663,6 +1677,69 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.debug("==>>[SAC] CreateChangeSacRes.toString() : \n{}", res.toString());
 
 		LOGGER.debug("############ SellerServiceImpl.createChange() [END] ############");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.36. 판매자 약관 동의 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateTermsAgreementSacReq
+	 * @return CreateTermsAgreementSacRes
+	 */
+	@Override
+	public CreateTermsAgreementSacRes regTermsAgreement(SacRequestHeader header, CreateTermsAgreementSacReq req) {
+
+		List<SellerAgreement> agreementList = req.getAgreementList();
+
+		LOGGER.debug("############ SellerServiceImpl.regTermsAgreement() [START] ############");
+
+		UpdateAgreementSellerRequest updateAgreementRequest = new UpdateAgreementSellerRequest();
+		updateAgreementRequest.setCommonRequest(this.component.getSCCommonRequest(header));
+		updateAgreementRequest.setSellerKey(req.getSellerKey());
+
+		if (agreementList.size() > 0) {
+
+			/**
+			 * 약관 동의 리스트 setting.
+			 */
+			List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+			for (SellerAgreement info : agreementList) {
+
+				if (StringUtils.isBlank(info.getClauseAgreementId())
+						|| StringUtils.isBlank(info.getIsClauseAgreement())) {
+					throw new StorePlatformException("SAC_MEM_0001", "clauseAgreementId 또는 isClauseAgreement");
+				}
+
+				MbrClauseAgree mbrClauseAgree = new MbrClauseAgree();
+				mbrClauseAgree.setExtraAgreementID(info.getClauseAgreementId());
+				mbrClauseAgree.setExtraAgreementVersion(info.getClauseAgreementVersion());
+				mbrClauseAgree.setIsExtraAgreement(info.getIsClauseAgreement());
+				mbrClauseAgree.setIsMandatory(info.getIsClauseMandatory());
+				mbrClauseAgree.setRegDate(DateUtil.getToday("yyyyMMddHHmmss"));
+				mbrClauseAgreeList.add(mbrClauseAgree);
+			}
+			updateAgreementRequest.setMbrClauseAgreeList(mbrClauseAgreeList);
+
+		}
+
+		LOGGER.debug("==>>[SC] updateAgreementSeller.updateAgreementRequest.toString() : {}",
+				updateAgreementRequest.toString());
+
+		/**
+		 * SC 약관동의 정보를 등록 또는 수정 연동.
+		 */
+		UpdateAgreementSellerResponse updateAgreementResponse = this.sellerSCI
+				.updateAgreementSeller(updateAgreementRequest);
+
+		CreateTermsAgreementSacRes res = new CreateTermsAgreementSacRes();
+		res.setSellerKey(updateAgreementResponse.getSellerKey());
+		// Debug
+		LOGGER.debug("############ SellerServiceImpl.regTermsAgreement() [END] ############");
 		return res;
 	}
 

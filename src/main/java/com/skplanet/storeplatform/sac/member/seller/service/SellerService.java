@@ -14,6 +14,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateFlurrySacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateTermsAgreementSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq;
@@ -279,4 +281,17 @@ public interface SellerService {
 	 * @return CreateChangeSacRes
 	 */
 	public CreateChangeSacRes regChange(SacRequestHeader header, CreateChangeSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.2.36. 판매자 약관 동의 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateTermsAgreementSacReq
+	 * @return CreateTermsAgreementSacRes
+	 */
+	public CreateTermsAgreementSacRes regTermsAgreement(SacRequestHeader header, CreateTermsAgreementSacReq req);
 }

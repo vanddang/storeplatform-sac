@@ -14,6 +14,7 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
+import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerRequest;
@@ -26,6 +27,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.ResetPasswordSelle
 import com.skplanet.storeplatform.member.client.seller.sci.vo.ResetPasswordSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAgreementListSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAgreementListSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchFlurryListRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchFlurryListResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequest;
@@ -42,6 +45,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerReques
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.SearchSellerKeySCI;
 import com.skplanet.storeplatform.sac.client.member.vo.common.BanksByCountry;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
@@ -50,6 +54,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.FlurryAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAgreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerBpSac;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrSac;
@@ -76,6 +81,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.TermsAgreementInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.TermsAgreementInformationSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -94,7 +101,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	private SellerSCI sellerSCI; // 회원 Component 판매자 기능 Interface.
 
 	@Autowired
-	private SearchSellerKeySCI searchSellerKeySCI; // 전시 Internal Interface.
+	private SearchSellerKeySCI searchSellerKeySCI; // 전시 Internal Interfac.
 
 	@Autowired
 	@Qualifier("sac")
@@ -929,6 +936,49 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setBizUnregReason(sellerMbr.getBizUnregReason());
 		}
 		return sellerMbrRes;
+	}
+
+	/**
+	 * <pre>
+	 * 2.2.37. 판매자 약관 동의 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            TermsAgreementInformationSacRes
+	 * @param req
+	 *            TermsAgreementInformationSacReq
+	 * @return TermsAgreementInformationSacRes
+	 */
+	@Override
+	public TermsAgreementInformationSacRes termsAgreementInformation(SacRequestHeader header,
+			TermsAgreementInformationSacReq req) {
+
+		/* 약관동의 목록 조회 */
+		SearchAgreementListSellerRequest schAgreementListReq = new SearchAgreementListSellerRequest();
+		schAgreementListReq.setSellerKey(req.getSellerKey());
+		schAgreementListReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+
+		// SC Call (약관조회)
+		SearchAgreementListSellerResponse scRes = this.sellerSCI.searchAgreementListSeller(schAgreementListReq);
+		List<SellerAgreement> agreementList = new ArrayList<SellerAgreement>();
+
+		// 약관 Value Object 설정
+		for (MbrClauseAgree scAgree : scRes.getMbrClauseAgreeList()) {
+			SellerAgreement agree = new SellerAgreement();
+			agree.setClauseAgreementId(StringUtil.setTrim(scAgree.getExtraAgreementID()));
+			agree.setClauseAgreementVersion(StringUtil.setTrim(scAgree.getExtraAgreementVersion()));
+			agree.setIsClauseAgreement(StringUtil.setTrim(scAgree.getIsExtraAgreement()));
+			agree.setIsClauseMandatory(StringUtil.setTrim(scAgree.getIsMandatory()));
+			agreementList.add(agree);
+		}
+
+		TermsAgreementInformationSacRes res = new TermsAgreementInformationSacRes();
+		res.setSellerKey(scRes.getSellerKey());
+		res.setAgreementList(agreementList);
+
+		LOGGER.debug("termsAgreementInformation : ", res.toString());
+
+		return res;
 	}
 
 }

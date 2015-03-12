@@ -21,6 +21,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.TermsAgreementInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.TermsAgreementInformationSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -184,4 +186,17 @@ public interface SellerSearchService {
 	 */
 	public ListBanksByCountryRes listBanksByCountry(SacRequestHeader header);
 
+	/**
+	 * <pre>
+	 * 2.2.37. 판매자 약관 동의 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            TermsAgreementInformationSacRes
+	 * @param req
+	 *            TermsAgreementInformationSacReq
+	 * @return TermsAgreementInformationSacRes
+	 */
+	public TermsAgreementInformationSacRes termsAgreementInformation(SacRequestHeader header,
+			TermsAgreementInformationSacReq req);
 }
