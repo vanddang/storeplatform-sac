@@ -2056,10 +2056,8 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setDeviceType(req.getDeviceType());
 		marketReq.setExtraInfo(req.getExtraInfo());
 
-		LOGGER.info("{} authorizeForUplusStore Request : {}", req.getDeviceId(),
+		LOGGER.info("{} simpleAuthorizeForUplusStoreTest Request : {}", req.getDeviceId(),
 				ConvertMapperUtils.convertObjectToJson(marketReq));
-
-		this.marketSCI.simpleAuthorizeForUplusStoreTest(marketReq);
 
 		MarketAuthorizeEcRes marketRes = new MarketAuthorizeEcRes();
 		marketRes.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL);
