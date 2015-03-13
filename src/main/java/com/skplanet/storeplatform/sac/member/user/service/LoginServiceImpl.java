@@ -2059,6 +2059,8 @@ public class LoginServiceImpl implements LoginService {
 		LOGGER.info("{} authorizeForUplusStore Request : {}", req.getDeviceId(),
 				ConvertMapperUtils.convertObjectToJson(marketReq));
 
+		this.marketSCI.simpleAuthorizeForUplusStoreTest(marketReq);
+
 		MarketAuthorizeEcRes marketRes = new MarketAuthorizeEcRes();
 		marketRes.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL);
 		MarketDeviceInfoEc marketDeviceInfo = new MarketDeviceInfoEc();
@@ -3730,13 +3732,13 @@ public class LoginServiceImpl implements LoginService {
 				AgreementInfo agreement = new AgreementInfo();
 				String extraAgreementId = "";
 				if (StringUtils.equals(info.getExtraProfile(), "US003505")) { // 개인정보 수집 및 이용동의
-					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE;
+					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE;
 					agreement.setExtraAgreementURL(info.getExtraProfileSetURL());
 				} else if (StringUtils.equals(info.getExtraProfile(), "US003509")) { // 통신과금서비스 이용약관
 					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE;
 					agreement.setExtraAgreementURL(info.getExtraProfileSetURL());
 				} else if (StringUtils.equals(info.getExtraProfile(), "US003511")) { // 마켓 서비스 이용약관
-					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_SAVE;
+					extraAgreementId = MemberConstants.POLICY_AGREEMENT_CLAUSE_TSTORE;
 					agreement.setExtraAgreementURL(info.getExtraProfileSetURL());
 				} else { // 규격서에 정의되지 않은 약관코드인 경우
 					throw new StorePlatformException("SAC_MEM_1105", info.getExtraProfile());
