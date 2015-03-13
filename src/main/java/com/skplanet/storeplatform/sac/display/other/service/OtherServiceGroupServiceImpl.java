@@ -102,7 +102,7 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 				product.setIdentifierList(identifierList);
 
                 // chnlId로 요청시 epsdId목록을 응답에 추가
-                if(otherServiceGroup.getContentsTypeCd().equals(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD)) {
+                if(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(otherServiceGroup.getContentsTypeCd())) {
                     List<String> partProdIds = selectPartProdId(otherServiceGroup.getProdId());
                     for (String v : partProdIds) {
                         identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, v));
