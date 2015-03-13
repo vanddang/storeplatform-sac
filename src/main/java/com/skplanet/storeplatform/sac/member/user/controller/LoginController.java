@@ -431,7 +431,8 @@ public class LoginController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		AuthorizeForUplusStoreSacRes res = null;
-		if (StringUtils.equals(this.envServerLevel, "real") || StringUtils.equals(this.envServerLevel, "local")) {
+		if (StringUtils.equals(this.envServerLevel, "real") || StringUtils.equals(this.envServerLevel, "local")
+				|| StringUtils.equals(this.envServerLevel, "qa")) {
 			res = this.loginService.authorizeForUplusStoreTest(requestHeader, req);
 		} else {
 			res = this.loginService.authorizeForUplusStore(requestHeader, req);
