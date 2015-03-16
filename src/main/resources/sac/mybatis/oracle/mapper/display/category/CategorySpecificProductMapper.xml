@@ -239,7 +239,7 @@
                    </if>
                    AND  B.PROD_ID = #{productBasicInfo.prodId}            /* 상품ID */
                    AND  G.TENANT_ID = #{tenantHeader.tenantId}            /* 테넌트ID */
-                   AND  I.DEVICE_MODEL_CD = #{deviceHeader.model}         /* 단말모델코드 */
+                   AND  I.DEVICE_MODEL_CD = #{deviceModelCd}         /* 단말모델코드 */
                    AND ROWNUM = 1
        ) TB
     </select>

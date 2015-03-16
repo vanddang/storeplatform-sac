@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
+import com.google.common.base.Strings;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -80,6 +81,8 @@ public class CategorySpecificAppServiceImpl implements CategorySpecificAppServic
             paramMap.put("tenantHeader", header.getTenantHeader());
             paramMap.put("deviceHeader", header.getDeviceHeader());
             paramMap.put("lang", "ko");
+            paramMap.put("deviceModelCd", Strings.nullToEmpty(req.getIgnoreProvisionYn()).equals("N") ?
+                                            header.getDeviceHeader().getModel() : DisplayConstants.DP_ANY_PHONE_4APP);
 
             for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
                 String topMenuId = productBasicInfo.getTopMenuId();
