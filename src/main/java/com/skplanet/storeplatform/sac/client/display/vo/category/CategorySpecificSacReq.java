@@ -10,6 +10,8 @@ public class CategorySpecificSacReq extends CommonInfo {
 	@NotBlank(message = "필수 파라미터 입니다.")
 	private String list;
 
+    private String ignoreProvisionYn = "N";
+
 	public String getList() {
 		return this.list;
 	}
@@ -19,4 +21,11 @@ public class CategorySpecificSacReq extends CommonInfo {
 	}
 
 
+    public String getIgnoreProvisionYn() {
+        return ignoreProvisionYn;
+    }
+
+    public void setIgnoreProvisionYn(String ignoreProvisionYn) {
+        this.ignoreProvisionYn = ignoreProvisionYn;
+    }
 }
