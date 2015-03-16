@@ -2062,7 +2062,7 @@ public class LoginServiceImpl implements LoginService {
 		MarketAuthorizeEcRes marketRes = new MarketAuthorizeEcRes();
 		marketRes.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL);
 		MarketDeviceInfoEc marketDeviceInfo = new MarketDeviceInfoEc();
-		marketDeviceInfo.setProdExpoLevl(MemberConstants.PROD_EXPO_LEVL_15_MORE);
+		// marketDeviceInfo.setProdExpoLevl(MemberConstants.PROD_EXPO_LEVL_15_MORE);
 		marketRes.setDeviceInfo(marketDeviceInfo);
 		AuthorizeForUplusStoreSacRes res = new AuthorizeForUplusStoreSacRes();
 
@@ -2106,6 +2106,7 @@ public class LoginServiceImpl implements LoginService {
 					// detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 					//
 					// }
+					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
 
 				} catch (StorePlatformException e) {
 					res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NO_MEMBER);
@@ -3630,8 +3631,8 @@ public class LoginServiceImpl implements LoginService {
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
 		userMbr.setUserID(deviceId); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
-		userMbr.setUserBirthDay(birth); // 생년월일
 		if (StringUtils.isNotBlank(birth)) {
+			userMbr.setUserBirthDay(birth); // 생년월일
 			userMbr.setIsRealName(MemberConstants.USE_Y);
 		}
 		createUserRequest.setUserMbr(userMbr);
@@ -3703,12 +3704,11 @@ public class LoginServiceImpl implements LoginService {
 			if (userMbr == null)
 				userMbr = new UserMbr();
 
-			userMbr.setUserBirthDay(userBirthDay);
-
 			/**
-			 * sap회원은 TB_US_MEMBER.REALNM_AUTH_YN = 'Y', TB_US_MBR_AUTH 미저장. 회원정보조회 V2, LocalSCI 2.1.4.사용자키, 디바이스키를 이용한
-			 * 회원 정보 조회 에서는 TB_US_MEMBER.REALNM_AUTH_YN = 'Y' 인데 TB_US_MBR_AUTH 데이터가 없으면 TB_US_MEMBER.BIRTH 정보를 내려준다.
-			 * */
+			 * sap회원은 TB_US_MBR_AUTH 미저장. 회원정보조회 V2, LocalSCI 2.1.4.사용자키, 디바이스키를 이용한 회원 정보 조회 에서 보정로직으로 TB_US_USERMBR의
+			 * 생년월일이 내려간다.
+			 **/
+			userMbr.setUserBirthDay(userBirthDay);
 			userMbr.setIsRealName(MemberConstants.USE_Y);
 		}
 
