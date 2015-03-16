@@ -64,8 +64,8 @@
     <!--  휴대폰 SMS 인증 카운트 -->
     <select id="searchPhoneAuthCnt" parameterType="ServiceAuth" resultType="Integer">
     SELECT /* MiscellaneousMapper.searchPhoneAuthCnt, 휴대폰 SMS 인증 카운트, 김영균/지티소프트, 2014-08-27 */ 
-           NVL(auth_cnt, 0) auth_cnt
-      FROM(SELECT auth_cnt,
+           auth_cnt
+      FROM(SELECT NVL(auth_cnt, 0) auth_cnt,
                   ROW_NUMBER () OVER (ORDER BY auth_seq DESC) rnum
 		    FROM tb_cm_svc_auth
 		    WHERE  tenant_id = #{tenantId}
