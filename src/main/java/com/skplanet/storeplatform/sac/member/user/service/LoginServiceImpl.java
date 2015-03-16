@@ -1363,7 +1363,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "");
 		}
 
 		return res;
@@ -1413,7 +1413,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "");
 		}
 
 		return res;
@@ -1473,11 +1473,6 @@ public class LoginServiceImpl implements LoginService {
 
 			LOGGER.info("{} authorizeForOllehMarket Response : {}", req.getDeviceId(),
 					ConvertMapperUtils.convertObjectToJson(marketRes));
-
-			res.setTrxNo(req.getTrxNo());
-			res.setDeviceId(req.getDeviceId());
-			res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S02
-			res.setDeviceTelecom(req.getDeviceTelecom());
 
 			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상회원
 
@@ -1587,6 +1582,10 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
 				deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
 
+				res.setTrxNo(req.getTrxNo());
+				res.setDeviceId(marketRes.getDeviceId());
+				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S02
+				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(userInfo);
 				res.setAgreementList(agreementList);
@@ -1598,7 +1597,7 @@ public class LoginServiceImpl implements LoginService {
 				}
 
 				// 로그인 이력 저장
-				this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+				this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", marketRes.getDeviceId(), "N", "");
 
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
@@ -1622,6 +1621,10 @@ public class LoginServiceImpl implements LoginService {
 					}
 				}
 
+				res.setTrxNo(req.getTrxNo());
+				res.setDeviceId(req.getDeviceId());
+				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S02
+				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
@@ -1630,6 +1633,10 @@ public class LoginServiceImpl implements LoginService {
 
 			} else {
 
+				res.setTrxNo(req.getTrxNo());
+				res.setDeviceId(req.getDeviceId());
+				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S02
+				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
@@ -1866,11 +1873,6 @@ public class LoginServiceImpl implements LoginService {
 			LOGGER.info("{} authorizeForUplusStore Response : {}", req.getDeviceId(),
 					ConvertMapperUtils.convertObjectToJson(marketRes));
 
-			res.setTrxNo(req.getTrxNo());
-			res.setDeviceId(req.getDeviceId());
-			res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S03
-			res.setDeviceTelecom(req.getDeviceTelecom());
-
 			if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) { // 정상회원
 
 				// Tstore 회원가입여부 조회
@@ -1979,6 +1981,10 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
 				deviceInfo.setDeviceTelecom(detailRes.getDeviceInfoList().get(0).getDeviceTelecom());
 
+				res.setTrxNo(req.getTrxNo());
+				res.setDeviceId(marketRes.getDeviceId());
+				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S03
+				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(userInfo);
 				res.setAgreementList(agreementList);
@@ -1990,7 +1996,7 @@ public class LoginServiceImpl implements LoginService {
 				}
 
 				// 로그인 이력 저장
-				this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+				this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", marketRes.getDeviceId(), "N", "");
 
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
@@ -2014,6 +2020,10 @@ public class LoginServiceImpl implements LoginService {
 					}
 				}
 
+				res.setTrxNo(req.getTrxNo());
+				res.setDeviceId(req.getDeviceId());
+				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S03
+				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
@@ -2022,6 +2032,10 @@ public class LoginServiceImpl implements LoginService {
 
 			} else {
 
+				res.setTrxNo(req.getTrxNo());
+				res.setDeviceId(req.getDeviceId());
+				res.setTenantId(requestHeader.getTenantHeader().getTenantId()); // S03
+				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
@@ -2527,7 +2541,8 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserMainStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", req.getDeviceId(), "N", "");
+			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", res.getDeviceInfo().getDeviceId(),
+					"N", "");
 		}
 
 		return res;
@@ -3279,11 +3294,6 @@ public class LoginServiceImpl implements LoginService {
 		AuthorizeForInAppSacRes res = new AuthorizeForInAppSacRes();
 		MarketAuthorizeEcRes marketRes = null;
 
-		res.setTrxNo(req.getTrxNo());
-		res.setTenantId(tenantId);
-		res.setDeviceId(req.getDeviceId());
-		res.setDeviceTelecom(req.getDeviceTelecom());
-
 		// 타사 마켓회원 인증 요청
 		MarketAuthorizeEcReq marketReq = new MarketAuthorizeEcReq();
 		marketReq.setTrxNo(req.getTrxNo());
@@ -3437,6 +3447,10 @@ public class LoginServiceImpl implements LoginService {
 					}
 				}
 
+				res.setTrxNo(req.getTrxNo());
+				res.setTenantId(tenantId);
+				res.setDeviceId(marketRes.getDeviceId());
+				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserAuthKey(this.tempUserAuthKey);
 				res.setUserInfo(userInfo);
@@ -3468,6 +3482,10 @@ public class LoginServiceImpl implements LoginService {
 					}
 				}
 
+				res.setTrxNo(req.getTrxNo());
+				res.setTenantId(tenantId);
+				res.setDeviceId(req.getDeviceId());
+				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
@@ -3478,6 +3496,10 @@ public class LoginServiceImpl implements LoginService {
 
 			} else {
 
+				res.setTrxNo(req.getTrxNo());
+				res.setTenantId(tenantId);
+				res.setDeviceId(req.getDeviceId());
+				res.setDeviceTelecom(req.getDeviceTelecom());
 				res.setUserStatus(marketRes.getUserStatus());
 				res.setUserInfo(new UserInfo());
 				res.setAgreementList(new ArrayList<Agreement>());
