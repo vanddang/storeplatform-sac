@@ -2106,7 +2106,7 @@ public class LoginServiceImpl implements LoginService {
 					// detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 					//
 					// }
-					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
+					// this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
 
 				} catch (StorePlatformException e) {
 					res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NO_MEMBER);
