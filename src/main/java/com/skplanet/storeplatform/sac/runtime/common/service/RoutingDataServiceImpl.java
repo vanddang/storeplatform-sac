@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
+import com.skplanet.storeplatform.sac.runtime.common.vo.Component;
 
 /**
 * RouteDataService 클래스
@@ -50,6 +51,15 @@ public class RoutingDataServiceImpl implements RoutingDataService {
 	@Override
 	public Bypass selectBypassByInterface(Interface interfac) {
 		return this.dao.queryForObject("Route.selectBypassByInterface", interfac, Bypass.class);
+	}
+	
+	@Cacheable(value = "sac:runtime:selectComponent")
+	@Override
+	public Component selectComponent(String componentId, String tenantId) {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("componentId", componentId);
+		paramMap.put("tenantId", tenantId);
+		return this.dao.queryForObject("Route.selectComponent", paramMap, Component.class);
 	}
 
 }

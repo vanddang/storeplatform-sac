@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.runtime.common.service;
 
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
+import com.skplanet.storeplatform.sac.runtime.common.vo.Component;
 
 /**
 * RouteDataService 인터페이스
@@ -20,7 +21,7 @@ import com.skplanet.storeplatform.sac.runtime.common.vo.Bypass;
 public interface RoutingDataService {
 
 	/**
-	 * 신 버젼 : 15/03/04 패치 이 후에 제거 요망
+	 * 신 버젼
 	 */
 	Bypass selectBypassByInterface(String interfaceId, String tenantId);
 
@@ -28,5 +29,10 @@ public interface RoutingDataService {
 	 * 구 버젼 : 15/03/04 패치 이 후에 제거 요망
 	 */
 	Bypass selectBypassByInterface(Interface interfac);
+
+	/**
+	 * 컴포넌트 정보 조회 (Remote SCI 용)
+	 */
+	Component selectComponent(String componentId, String tenantId);
 
 }
