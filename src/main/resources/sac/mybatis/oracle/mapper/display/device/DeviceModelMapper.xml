@@ -11,7 +11,7 @@
     </select>
     
     <!-- 단말 모델 정보 조회 (by UserAgent) -->
-	<select id="searchDeviceUserAgentList" parameterType="DeviceUserAgentSacReq" resultType="MetaInfo">
+	<select id="searchDeviceUserAgentList" parameterType="Map" resultType="MetaInfo">
 		SELECT  /* DeviceModelMapper.searchDeviceUserAgentList, 단말 모델 정보 조회 (by UserAgent), 이태희/부르칸, 2014-03-17 */
 		        COUNT(1) OVER() AS TOTAL_COUNT
 		      , DEVICE_MODEL_CD

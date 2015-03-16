@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.device.service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceChangeSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceUserAgentSacRes;
@@ -21,7 +22,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * DeviceChange Service 인터페이스(CoreStoreBusiness) 구현체
@@ -33,6 +38,11 @@ public class DeviceChangeServiceImpl implements DeviceChangeService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+    /**
+     * nested parentheses for two depth
+     */
+    private static final Pattern pattern = Pattern.compile("\\((([^()]|(\\([^()]*\\)))*)\\)");
 
 	/*
 	 * (non-Javadoc)
@@ -88,8 +98,16 @@ public class DeviceChangeServiceImpl implements DeviceChangeService {
 		Device device = null;
 		List<Device> deviceList = new ArrayList<Device>();
 
+        String userAgentComment = deviceReq.getUserAgent();
+        Matcher matcher = pattern.matcher(deviceReq.getUserAgent());
+        if (matcher.find() && matcher.groupCount() >= 1) {
+            userAgentComment = matcher.group(1);
+        }
+
 		// 단말 모델 정보 조회 (by UserAgent)
-		List<MetaInfo> resultList = this.commonDAO.queryForList("DeviceModel.searchDeviceUserAgentList", deviceReq,
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("userAgent", userAgentComment);
+		List<MetaInfo> resultList = this.commonDAO.queryForList("DeviceModel.searchDeviceUserAgentList", params,
 				MetaInfo.class);
 
 		if (resultList != null && !resultList.isEmpty()) {
