@@ -22,6 +22,8 @@
         </property>
     </bean>
     
+    <bean id="applicationContextProvder" class="com.skplanet.storeplatform.framework.core.proxy.ApplicationContextProvider"/>
+    
     <bean id="restTemplate" class="com.skplanet.storeplatform.framework.web.client.StoreplatformRestTemplate">      
         <property name="componentId" value="SAC" />  
         <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
