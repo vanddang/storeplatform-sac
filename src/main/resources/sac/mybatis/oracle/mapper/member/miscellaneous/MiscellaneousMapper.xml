@@ -23,11 +23,19 @@
              , TO_CHAR(auth_value_create_dt, 'yyyyMMdd hh24:mi:ss') AS auth_value_create_dt 
              , auth_compt_yn
              , NVL(auth_cnt, 0) auth_cnt
-         FROM  tb_cm_svc_auth
-        WHERE  auth_type_cd = #{authTypeCd}
-          AND  auth_sign = #{authSign}
-          AND  auth_value = #{authValue}
-          AND  auth_mdn = #{authMdn}
+         FROM(SELECT auth_seq
+		             , auth_sign
+		             , auth_value
+		             , auth_value_create_dt
+		             , auth_compt_yn
+		             , auth_cnt
+		             , ROW_NUMBER () OVER (ORDER BY auth_seq DESC) rnum
+		         FROM  tb_cm_svc_auth
+		        WHERE  auth_type_cd = #{authTypeCd}
+		          AND  auth_sign = #{authSign}
+		          AND  auth_value = #{authValue}
+		          AND  auth_mdn = #{authMdn}
+		 )WHERE rnum = 1
     </select>
     
     <!--  휴대폰 SMS 및 이메일 인증 여부 업데이트(인증성공) -->
@@ -60,14 +68,17 @@
     <!--  휴대폰 SMS 인증 카운트 -->
     <select id="searchPhoneAuthCnt" parameterType="ServiceAuth" resultType="Integer">
     SELECT /* MiscellaneousMapper.searchPhoneAuthCnt, 휴대폰 SMS 인증 카운트, 김영균/지티소프트, 2014-08-27 */ 
-            NVL(auth_cnt, 0) auth_cnt
-    FROM tb_cm_svc_auth
-    WHERE  tenant_id = #{tenantId}
-       AND  system_id = #{systemId}
-       AND  auth_mdn = #{authMdn}
-       AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */ 
-       AND  auth_compt_yn = 'N'       
-       AND auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (#{timeToLive} / 24 / 60))        /* 3분이내 */
+           NVL(auth_cnt, 0) auth_cnt
+      FROM(SELECT auth_cnt,
+                  ROW_NUMBER () OVER (ORDER BY auth_seq DESC) rnum
+		    FROM tb_cm_svc_auth
+		    WHERE  tenant_id = #{tenantId}
+		      AND  system_id = #{systemId}
+		      AND  auth_mdn = #{authMdn}
+		      AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */ 
+		      AND  auth_compt_yn = 'N'       
+		      AND auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (#{timeToLive} / 24 / 60))        /* 3분이내 */
+      )WHERE rnum = 1
     </select>
     
     <!-- 휴대폰 SMS 및 이메일 인증 코드 정보 저장 -->
@@ -137,17 +148,22 @@
     
     <!-- 휴대폰 인증 SMS 기발송 확인 -->
     <select id="confirmSendedSms" parameterType="ServiceAuth" resultType="ServiceAuth">
-    SELECT  /* MiscellaneousMapper.confirmSendedSms, 휴대폰 인증 SMS 기발송 확인, 김다슬/인크로스, 2014-06-26 */ 
-            auth_seq
-          , auth_sign
-      FROM  tb_cm_svc_auth
-     WHERE  tenant_id = #{tenantId}
-       AND  system_id = #{systemId}
-       AND  auth_mdn = #{authMdn}
-       AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */ 
-       AND  auth_compt_yn = 'N'       
-       AND ( auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (3 / 24 / 60))
-       AND NVL(auth_cnt, 0) <![CDATA[<]]> #{authCnt} )           /* 3분이내, 3회 실패 */ 
+    SELECT /* MiscellaneousMapper.confirmSendedSms, 휴대폰 인증 SMS 기발송 확인, 김다슬/인크로스, 2014-06-26 */ 
+           auth_seq,
+           auth_sign
+      FROM(SELECT  
+	             auth_seq
+	           , auth_sign
+	           , ROW_NUMBER () OVER (ORDER BY auth_seq DESC) rnum
+	     FROM  tb_cm_svc_auth
+	    WHERE  tenant_id = #{tenantId}
+	      AND  system_id = #{systemId}
+	      AND  auth_mdn = #{authMdn}
+	      AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */ 
+	      AND  auth_compt_yn = 'N'       
+	      AND ( auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (3 / 24 / 60))
+	      AND NVL(auth_cnt, 0) <![CDATA[<]]> #{authCnt} )           /* 3분이내, 3회 실패 */ 
+       ) WHERE rnum = 1
     </select>
     
     <!-- 미인증 이메일 코드 존재여부 확인 -->
@@ -191,20 +207,28 @@
     
     <!-- 휴대폰 인증 여부 확인 --> 
     <select id="searchPhoneAuthCheck" parameterType="ServiceAuth" resultType="ServiceAuth">
-    SELECT /* MiscellaneousMapper.searchPhoneAuthCheck, SAC (SAC), 윤보영, 2015-03-05 */
-            auth_mdn,
-            auth_compt_yn,
-            TO_CHAR (reg_dt, 'YYYYMMDDHH24MISS') AS reg_dt,
-            CASE
-              WHEN (auth_compt_yn = 'N' AND auth_cnt IS NULL) THEN NULL -- 인증번호만 요청한 상태
+     SELECT /* MiscellaneousMapper.searchPhoneAuthCheck, SAC (SAC), 윤보영, 2015-03-05 */
+		    auth_mdn,
+		    auth_compt_yn,
+		    TO_CHAR (reg_dt, 'YYYYMMDDHH24MISS') AS reg_dt,
+		    CASE
+              WHEN (auth_compt_yn = 'N' AND auth_cnt IS NULL) THEN NULL  -- 인증번호만 요청한 상태
               ELSE TO_CHAR (upd_dt, 'YYYYMMDDHH24MISS')
             END
               upd_dt
-     FROM tb_cm_svc_auth
-    WHERE tenant_id = #{tenantId}
-      AND system_id = #{systemId}
-      AND auth_type_cd = #{authTypeCd}
-      AND auth_mdn = #{authMdn}
-      AND auth_sign = #{authSign}
+	 FROM(SELECT 
+            auth_mdn,
+            auth_compt_yn,
+            auth_cnt,
+            reg_dt,
+            upd_dt,
+            ROW_NUMBER () OVER (ORDER BY auth_seq DESC) rnum
+	       FROM tb_cm_svc_auth
+	      WHERE tenant_id = #{tenantId}
+	        AND system_id = #{systemId}
+	        AND auth_type_cd = #{authTypeCd}
+	        AND auth_mdn = #{authMdn}
+	        AND auth_sign = #{authSign}
+     ) WHERE rnum = 1
     </select>
 </mapper>
