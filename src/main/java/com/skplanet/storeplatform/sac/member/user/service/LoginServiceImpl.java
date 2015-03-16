@@ -1663,8 +1663,10 @@ public class LoginServiceImpl implements LoginService {
 		marketReq.setSimSerialNo(req.getSimSerialNo());
 		marketReq.setExtraInfo(req.getExtraInfo());
 
-		LOGGER.info("{} authorizeForOllehMarket Request : {}", req.getDeviceId(),
+		LOGGER.info("{} authorizeForOllehMarketTest Request : {}", req.getDeviceId(),
 				ConvertMapperUtils.convertObjectToJson(marketReq));
+
+		this.marketSCI.simpleAuthorizeForUplusStoreTest(marketReq);
 
 		MarketAuthorizeEcRes marketRes = new MarketAuthorizeEcRes();
 		marketRes.setUserStatus(MemberConstants.INAPP_USER_STATUS_NORMAL);
