@@ -3619,6 +3619,8 @@ public class LoginServiceImpl implements LoginService {
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader)); // 공통코드 셋팅
 
+		String birth = this.getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl());
+
 		// SC 사용자 기본정보 setting
 		UserMbr userMbr = new UserMbr();
 		userMbr.setImMbrNo(marketRes.getDeviceInfo().getDeviceKey()); // MBR_NO
@@ -3628,7 +3630,10 @@ public class LoginServiceImpl implements LoginService {
 		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
 		userMbr.setUserID(deviceId); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부
-		userMbr.setUserBirthDay(this.getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl())); // 생년월일
+		userMbr.setUserBirthDay(birth); // 생년월일
+		if (StringUtils.isNotBlank(birth)) {
+			userMbr.setIsRealName(MemberConstants.USE_Y);
+		}
 		createUserRequest.setUserMbr(userMbr);
 
 		// SC 사용자 가입요청
@@ -3699,6 +3704,12 @@ public class LoginServiceImpl implements LoginService {
 				userMbr = new UserMbr();
 
 			userMbr.setUserBirthDay(userBirthDay);
+
+			/**
+			 * sap회원은 TB_US_MEMBER.REALNM_AUTH_YN = 'Y', TB_US_MBR_AUTH 미저장. 회원정보조회 V2, LocalSCI 2.1.4.사용자키, 디바이스키를 이용한
+			 * 회원 정보 조회 에서는 TB_US_MEMBER.REALNM_AUTH_YN = 'Y' 인데 TB_US_MBR_AUTH 데이터가 없으면 TB_US_MEMBER.BIRTH 정보를 내려준다.
+			 * */
+			userMbr.setIsRealName(MemberConstants.USE_Y);
 		}
 
 		if (userMbr != null) {
