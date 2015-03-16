@@ -35,4 +35,24 @@
         AND tenant_id = #{tenantId}
     </select>
     
+    <!-- SELECT SQL -->
+    <select id="selectComponent" parameterType="map" resultMap="componentResultMap" >
+        /* Route.selectComponent, 컴포넌트 정보 조회, 서대영/SK플래닛, 2015-03-13 */
+        SELECT 
+		  component_id,
+		  scheme, 
+		  host, 
+		  port
+        <choose>
+	        <when test="@com.skplanet.storeplatform.sac.common.environment.ActvieProfileProvider@getActiveProfile() == 'stg'">
+	        FROM tb_fw_component_domain_stg$
+	        </when>
+	        <otherwise>
+	        FROM tb_fw_component_domain
+	        </otherwise>
+        </choose>
+        WHERE component_id = #{componentId}
+        AND tenant_id = #{tenantId}
+    </select>
+    
 </mapper>
