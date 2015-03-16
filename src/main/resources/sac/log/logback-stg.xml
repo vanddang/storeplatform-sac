@@ -105,6 +105,13 @@
         <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
     </logger>
     
+    <!-- FRAMEWORK LOGGER -->
+    <logger name="com.skplanet.storeplatform.framework.core.proxy" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
+        <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE_ASYNC" />
+    </logger>
+    
     <!-- TLOG LOGGER -->
     <logger name="TLOG_SAC_LOGGER" additivity="false">
         <level value="INFO" />
