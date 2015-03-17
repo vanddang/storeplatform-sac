@@ -1363,7 +1363,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "");
+			this.regLoginHistory(requestHeader, res.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "");
 		}
 
 		return res;
@@ -1413,7 +1413,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "");
+			this.regLoginHistory(requestHeader, res.getDeviceId(), null, "Y", "Y", res.getDeviceId(), "N", "");
 		}
 
 		return res;
@@ -1597,7 +1597,8 @@ public class LoginServiceImpl implements LoginService {
 				}
 
 				// 로그인 이력 저장
-				this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", marketRes.getDeviceId(), "N", "");
+				this.regLoginHistory(requestHeader, marketRes.getDeviceId(), null, "Y", "Y", marketRes.getDeviceId(),
+						"N", "");
 
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
@@ -1996,7 +1997,8 @@ public class LoginServiceImpl implements LoginService {
 				}
 
 				// 로그인 이력 저장
-				this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", marketRes.getDeviceId(), "N", "");
+				this.regLoginHistory(requestHeader, marketRes.getDeviceId(), null, "Y", "Y", marketRes.getDeviceId(),
+						"N", "");
 
 			} else if (StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) { // 비회원
 
@@ -2541,8 +2543,8 @@ public class LoginServiceImpl implements LoginService {
 
 		// 로그인 이력 저장
 		if (StringUtils.equals(res.getUserMainStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
-			this.regLoginHistory(requestHeader, req.getDeviceId(), null, "Y", "Y", res.getDeviceInfo().getDeviceId(),
-					"N", "");
+			this.regLoginHistory(requestHeader, res.getDeviceInfo().getDeviceId(), null, "Y", "Y", res.getDeviceInfo()
+					.getDeviceId(), "N", "");
 		}
 
 		return res;
