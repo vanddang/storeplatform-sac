@@ -397,7 +397,12 @@ public class LoginController {
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
-		AuthorizeForOllehMarketSacRes res = this.loginService.authorizeForOllehMarket(requestHeader, req);
+		AuthorizeForOllehMarketSacRes res = null;
+		if (StringUtils.equals(this.envServerLevel, "real") || StringUtils.equals(this.envServerLevel, "local")) {
+			res = this.loginService.authorizeForOllehMarketTest(requestHeader, req);
+		} else {
+			res = this.loginService.authorizeForOllehMarket(requestHeader, req);
+		}
 
 		LOGGER.info("Response : {}, {}, {}", res.getDeviceId(), res.getUserInfo().getUserKey(), res.getUserStatus());
 
