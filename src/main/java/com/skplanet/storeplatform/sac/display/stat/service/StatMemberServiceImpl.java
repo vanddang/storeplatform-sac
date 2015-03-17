@@ -38,7 +38,7 @@ public class StatMemberServiceImpl implements StatMemberService {
 	public ListByMemberRes listByMember(ListByMemberReq req, SacRequestHeader header) {
 		StatLike statLike = typeService.fromReqToVo(req, header);
 		List<StatLike> voList = dataService.selectStatLikeList(statLike);
-		ListByMemberRes res = typeService.fromVotoRes(voList, req, header);
+		ListByMemberRes res = typeService.fromVoToRes(voList, req, header);
 		return res;
 	}
 

@@ -26,6 +26,6 @@ public interface StatMemberTypeService {
 	
 	StatLike fromReqToVo(ListByMemberReq req, SacRequestHeader header);
 
-	ListByMemberRes fromVotoRes(List<StatLike> voList, ListByMemberReq req, SacRequestHeader header);
+	ListByMemberRes fromVoToRes(List<StatLike> voList, ListByMemberReq req, SacRequestHeader header);
 	
 }

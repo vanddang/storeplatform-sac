@@ -75,9 +75,18 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 		
 		// 정적 처리 (Cache)
         CardInfo cardInfo = panelCardInfoManager.getCardInfo(tenantId, cardId);
+        
+        if (cardInfo == null)  {
+        	return null;
+        }
+        
         CardDetail cardDetail = new CardDetail();
         BeanUtils.copyProperties(cardInfo, cardDetail);
         Card card = cardDetailService.makeCard(cardDetail, preferredCategoryInfo, langCd);
+        
+        if (card == null) {
+        	return null;
+        }
         
         // 동적 처리
         CardDynamicInfoProcessor processor = new CardDynamicInfoProcessor(tenantId, cardDetailService);

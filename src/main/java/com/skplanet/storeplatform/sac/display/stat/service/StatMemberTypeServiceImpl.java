@@ -27,7 +27,8 @@ import com.skplanet.storeplatform.sac.display.stat.vo.StatLike;
  * <p>
  * StatMemberTypeServiceImpl
  * </p>
- * Updated on : 2014. 11. 04 Updated by : 서대영, SK 플래닛.
+ * Created on 2014.11.04 by : 서대영, SK 플래닛.
+ * Updated on 2015.03.12 by : 서대영, SK 플래닛 : 좋아요 아이템이 없는 경우 목록에 추가하지 않도록 방어
  */
 @Service
 public class StatMemberTypeServiceImpl implements StatMemberTypeService {
@@ -49,7 +50,7 @@ public class StatMemberTypeServiceImpl implements StatMemberTypeService {
 	}
 	
 	@Override
-	public ListByMemberRes fromVotoRes(List<StatLike> voList, ListByMemberReq req, SacRequestHeader header) {
+	public ListByMemberRes fromVoToRes(List<StatLike> voList, ListByMemberReq req, SacRequestHeader header) {
 		ListByMemberRes res = new ListByMemberRes();		
 		mapLikeList(res, voList, req, header);
 		mapTotalCount(res, voList);
@@ -70,16 +71,21 @@ public class StatMemberTypeServiceImpl implements StatMemberTypeService {
 			String statsClsf = each.getStatsClsf();
 			String statsKey = each.getStatsKey();
 			
-			int cntLike = each.getCntLike();
-			if (cntLike < 0) {
+			Integer cntLike = each.getCntLike();
+			if (cntLike == null || cntLike < 0) {
 				cntLike = 0;
 			}
-			int cntShar = each.getCntShar();
-			if (cntShar < 0) {
+			
+			Integer cntShar = each.getCntShar();
+			if (cntShar == null || cntShar < 0) {
 				cntShar = 0;
 			}
 			
 			Object item = itemService.findItem(each, header, preferredCategoryInfo);
+			
+			if (item == null) {
+				continue;
+			}
 			
 			LikeRes likeRes = new LikeRes();
 			likeRes.setStatsClsf(statsClsf);
