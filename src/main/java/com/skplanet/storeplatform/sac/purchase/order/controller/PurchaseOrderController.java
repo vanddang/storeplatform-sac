@@ -457,9 +457,9 @@ public class PurchaseOrderController {
 		}
 		purchaseOrderInfo.setImei(createPurchaseSacReq.getImei()); // 단말 식별 번호
 		purchaseOrderInfo.setUacd(createPurchaseSacReq.getUacd()); // 단말 모델 식별 번호
-		purchaseOrderInfo.setSimNo(createPurchaseSacReq.getSimNo()); // SIM Serial Number
-		purchaseOrderInfo.setSimYn(createPurchaseSacReq.getSimYn()); // SIM 조회 가능 여부
-		purchaseOrderInfo.setSmsFlag(createPurchaseSacReq.getSmsFlag()); // SMS 인증 필요 여부
+		purchaseOrderInfo.setSid(StringUtils.defaultIfBlank(createPurchaseSacReq.getSid(),
+				createPurchaseSacReq.getSimNo())); // SIM Serial Number TAKTODO:: simNo 제거
+		purchaseOrderInfo.setFlag(createPurchaseSacReq.getFlag()); // SMS 인증 필요 여부
 		purchaseOrderInfo.setMediaId(createPurchaseSacReq.getMediaId()); // CPS CPID
 
 		purchaseOrderInfo.setOfferingId(createPurchaseSacReq.getOfferingId()); // 오퍼링 ID

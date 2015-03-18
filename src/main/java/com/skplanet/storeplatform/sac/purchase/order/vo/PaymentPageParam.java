@@ -49,7 +49,7 @@ public class PaymentPageParam extends CommonInfo {
 	private String typeNetwork; // 결제요청Network (1: 3G(LTE) , 2:Wifi)
 	private String carrier; // 통신사 (1: SKT , 2: LGU, 3: KT)
 	private String noSim; // SIM Serial Number
-	// private String flgSim; // SIM 조회가능여부
+	private String flag; // SMS 인증 필요 여부
 	private String serviceId; // 가맹점 내 서비스 구분 (TS001: Tstore 샵클라이언트, TS002: Tstore ebook, TS003: Tstore IAP)
 	private String OPMDLineNo; // OPMD 번호
 	private String userKey; // 결제자 UserKey
@@ -61,7 +61,6 @@ public class PaymentPageParam extends CommonInfo {
 	private String nmSeller; // 판매자명
 	private String emailSeller; // 판매자 이메일 주소
 	private String noTelSeller; // 판매자 전화번호
-	private String smsFlag; // SMS 인증 필요 여부
 
 	// ==========================================================================================
 
@@ -606,18 +605,18 @@ public class PaymentPageParam extends CommonInfo {
 	}
 
 	/**
-	 * @return the smsFlag
+	 * @return the flag
 	 */
-	public String getSmsFlag() {
-		return this.smsFlag;
+	public String getFlag() {
+		return this.flag;
 	}
 
 	/**
-	 * @param smsFlag
-	 *            the smsFlag to set
+	 * @param flag
+	 *            the flag to set
 	 */
-	public void setSmsFlag(String smsFlag) {
-		this.smsFlag = smsFlag;
+	public void setFlag(String flag) {
+		this.flag = flag;
 	}
 
 }

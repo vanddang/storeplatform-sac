@@ -48,9 +48,10 @@ public class PurchaseOrderInfo extends CommonInfo {
 	private String telecomCd; // 통신사: US001201-SKT, US001202-KT, US001203-LG U+
 	private String imei; // 단말 식별 번호
 	private String uacd; // 단말 모델 식별 번호
-	private String simNo; // SIM Serial Number
-	private String simYn; // SIM 조회 가능 여부
-	private String smsFlag; // SMS 인증 필요 여부
+
+	private String sid; // SIM Serial Number
+	private String flag; // SMS 인증 필요 여부
+
 	private String mediaId; // CPS CPID
 
 	// ------------------------------------------------------------------------
@@ -503,48 +504,33 @@ public class PurchaseOrderInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the simNo
+	 * @return the sid
 	 */
-	public String getSimNo() {
-		return this.simNo;
+	public String getSid() {
+		return this.sid;
 	}
 
 	/**
-	 * @param simNo
-	 *            the simNo to set
+	 * @param sid
+	 *            the sid to set
 	 */
-	public void setSimNo(String simNo) {
-		this.simNo = simNo;
+	public void setSid(String sid) {
+		this.sid = sid;
 	}
 
 	/**
-	 * @return the simYn
+	 * @return the flag
 	 */
-	public String getSimYn() {
-		return this.simYn;
+	public String getFlag() {
+		return this.flag;
 	}
 
 	/**
-	 * @param simYn
-	 *            the simYn to set
+	 * @param flag
+	 *            the flag to set
 	 */
-	public void setSimYn(String simYn) {
-		this.simYn = simYn;
-	}
-
-	/**
-	 * @return the smsFlag
-	 */
-	public String getSmsFlag() {
-		return this.smsFlag;
-	}
-
-	/**
-	 * @param smsFlag
-	 *            the smsFlag to set
-	 */
-	public void setSmsFlag(String smsFlag) {
-		this.smsFlag = smsFlag;
+	public void setFlag(String flag) {
+		this.flag = flag;
 	}
 
 	/**
