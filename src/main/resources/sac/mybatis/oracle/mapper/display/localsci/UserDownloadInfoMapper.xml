@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserDownloadInfo">
+
+    <!-- 상품 군 조회 -->
+    <select id="getUserDownloadInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.localsci.sci.vo.UserDownloadInfo">
+        SELECT /* UserDownloadInfo.xml, getUserDownloadInfo, 정희원M, 2015-03-16 */
+            UD.TENANT_ID as "latestTenantId",
+            UD.LATEST_DWLD_DT as "latestDownloadDate",
+            UD.PROD_ID as "prodId"
+        FROM   TB_DP_USER_DWLD UD
+        WHERE  1=1
+        AND    UD.MDNAID_KEY = #{mdnaidKey}
+        AND    UD.AID = #{aid}
+    </select>
+
+</mapper>

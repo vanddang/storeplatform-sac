@@ -1161,7 +1161,16 @@
 		   WHERE  a.prod_id = #{fixrateProdId} /* 정액권 상품ID */
 		     AND  a.part_prod_id = b.prod_id
 		     AND  b.part_prod_id = #{prodId} /* 상품ID */
-
     </select>
+
+    <update id="updateUserDownloadInfo" parameterType="map">
+        MERGE INTO TB_DP_USER_DWLD UD
+          USING DUAL
+            ON (UD.MDNAID_KEY = #{mdnaidKey} and UD.AID = #{aid})
+          WHEN MATCHED THEN
+            UPDATE SET LATEST_DWLD_DT = sysdate
+          WHEN NOT MATCHED THEN
+            INSERT VALUES (#{mdnaidKey}, #{aid}, #{prodId}, #{tenantId}, sysdate, sysdate)
+    </update>
     
 </mapper>

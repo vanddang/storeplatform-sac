@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.common;
 
+import com.google.common.base.Strings;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,35 @@ public class DisplayCryptUtils {
         catch (Exception e) {
             logger.error("패키지명 해쉬 적용중 에러: {}", nm, e);
             return nm;
+        }
+
+        return result;
+    }
+
+    /**
+     * 28자 문자열이 응답됨
+     * @param mdn
+     * @param aid
+     * @return
+     */
+    public static String hashMdnAidKey(String mdn, String aid) {
+
+        String result;
+        if(Strings.isNullOrEmpty(mdn) || Strings.isNullOrEmpty(aid))
+            return "";
+
+        String rawKey = mdn + "|" + aid;
+        try {
+
+            // compute the hmac on input data bytes
+            byte[] rawHmac = getSha1Mac().doFinal(rawKey.getBytes(ENCODING));
+
+            // base64-encode the hmac
+            result = new String(Base64.encodeBase64(rawHmac));
+        }
+        catch (Exception e) {
+            logger.error("Mdn+Aid 해쉬 적용중 에러: {}", rawKey, e);
+            return "";
         }
 
         return result;
