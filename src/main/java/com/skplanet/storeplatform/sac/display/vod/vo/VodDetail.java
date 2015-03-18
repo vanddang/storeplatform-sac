@@ -248,27 +248,27 @@ public class VodDetail extends CommonInfo {
 	/** SD화질 화면비율. */
 	private String sdDpPicRatio;
 
-	/** HD화질 sub 컨텐츠 Id. */
+	/** HD화질(C) sub 컨텐츠 Id. */
 	private String hdSubContsId;
-	/** HD화질 상품버전. */
+	/** HD화질(C) 상품버전. */
 	private String hdProdVer;
-	/** HD화질 파일용량.  */
+	/** HD화질(C) 파일용량.  */
 	private String hdFileSize;
-	/** HD화질 해상도. */
+	/** HD화질(C) 해상도. */
 	private String hdDpPixel;
-	/** HD화질 화면비율. */
+	/** HD화질(C) 화면비율. */
 	private String hdDpPicRatio;
 	
 	/** HD화질 (D화질) sub 컨텐츠 Id. */
-	private String hd2SubContsId;
+	private String hihdSubContsId;
 	/** HD화질 (D화질) 상품버전. */
-	private String hd2ProdVer;
+	private String hihdProdVer;
 	/** HD화질 (D화질) 파일용량.  */
-	private String hd2FileSize;
+	private String hihdFileSize;
 	/** HD화질 (D화질) 해상도. */
-	private String hd2DpPixel;
+	private String hihdDpPixel;
 	/** HD화질 (D화질) 화면비율. */
-	private String hd2DpPicRatio;
+	private String hihdDpPicRatio;
 	
 	/** FHD화질 sub 컨텐츠 Id. */
 	private String fhdSubContsId;
@@ -1164,7 +1164,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * HD화질 sub 컨텐츠 Id.
+	 * HD화질(C) sub 컨텐츠 Id.
 	 * @return
 	 * 		HD화질 sub 컨텐츠 Id.
 	 */
@@ -1173,7 +1173,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * HD화질 sub 컨텐츠 Id.
+	 * HD화질(C) sub 컨텐츠 Id.
 	 * @param hdSubContsId
 	 * 			HD화질 sub 컨텐츠 Id.
 	 */
@@ -1182,7 +1182,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * HD화질 상품버전.
+	 * HD화질(C) 상품버전.
 	 * @return
 	 * 		HD화질 상품버전.
 	 */
@@ -1191,7 +1191,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * HD화질 상품버전.
+	 * HD화질(C) 상품버전.
 	 * @param hdProdVer
 	 * 			HD화질 상품버전.
 	 */
@@ -1200,7 +1200,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * HD화질 파일용량.
+	 * HD화질(C) 파일용량.
 	 * @return
 	 * 		HD화질 파일용량.
 	 */
@@ -1209,7 +1209,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * HD화질 파일용량.
+	 * HD화질(C) 파일용량.
 	 * @param hdFileSize
 	 * 		HD화질 파일용량.
 	 */
@@ -1218,7 +1218,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * HD화질 해상도.
+	 * HD화질(C) 해상도.
 	 * @return
 	 * 		HD화질 해상도.
 	 */
@@ -1227,7 +1227,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * HD화질 해상도.
+	 * HD화질(C) 해상도.
 	 * @param hdDpPixel
 	 * 			HD화질 해상도.
 	 */
@@ -1236,7 +1236,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * HD화질 화면비율.
+	 * HD화질(C) 화면비율.
 	 * @return
 	 * 		HD화질 화면비율.
 	 */
@@ -1245,7 +1245,7 @@ public class VodDetail extends CommonInfo {
 	}
 
 	/**
-	 * HD화질 화면비율.
+	 * HD화질(C) 화면비율.
 	 * @param hdDpPicRatio
 	 * 				HD화질 화면비율.
 	 */
@@ -1376,73 +1376,73 @@ public class VodDetail extends CommonInfo {
 
 	
 	/**
-	 * @return the hd2SubContsId
+	 * @return the hihdSubContsId
 	 */
-	public String getHd2SubContsId() {
-		return hd2SubContsId;
+	public String getHihdSubContsId() {
+		return hihdSubContsId;
 	}
 
 	/**
-	 * @param hd2SubContsId the hd2SubContsId to set
+	 * @param hihdSubContsId the hihdSubContsId to set
 	 */
-	public void setHd2SubContsId(String hd2SubContsId) {
-		this.hd2SubContsId = hd2SubContsId;
+	public void setHihdSubContsId(String hihdSubContsId) {
+		this.hihdSubContsId = hihdSubContsId;
 	}
 
 	/**
-	 * @return the hd2ProdVer
+	 * @return the hihdProdVer
 	 */
-	public String getHd2ProdVer() {
-		return hd2ProdVer;
+	public String getHihdProdVer() {
+		return hihdProdVer;
 	}
 
 	/**
-	 * @param hd2ProdVer the hd2ProdVer to set
+	 * @param hihdProdVer the hihdProdVer to set
 	 */
-	public void setHd2ProdVer(String hd2ProdVer) {
-		this.hd2ProdVer = hd2ProdVer;
+	public void setHihdProdVer(String hihdProdVer) {
+		this.hihdProdVer = hihdProdVer;
 	}
 
 	/**
-	 * @return the hd2FileSize
+	 * @return the hihdFileSize
 	 */
-	public String getHd2FileSize() {
-		return hd2FileSize;
+	public String getHihdFileSize() {
+		return hihdFileSize;
 	}
 
 	/**
-	 * @param hd2FileSize the hd2FileSize to set
+	 * @param hihdFileSize the hihdFileSize to set
 	 */
-	public void setHd2FileSize(String hd2FileSize) {
-		this.hd2FileSize = hd2FileSize;
+	public void setHihdFileSize(String hihdFileSize) {
+		this.hihdFileSize = hihdFileSize;
 	}
 
 	/**
-	 * @return the hd2DpPixel
+	 * @return the hihdDpPixel
 	 */
-	public String getHd2DpPixel() {
-		return hd2DpPixel;
+	public String getHihdDpPixel() {
+		return hihdDpPixel;
 	}
 
 	/**
-	 * @param hd2DpPixel the hd2DpPixel to set
+	 * @param hihdDpPixel the hihdDpPixel to set
 	 */
-	public void setHd2DpPixel(String hd2DpPixel) {
-		this.hd2DpPixel = hd2DpPixel;
+	public void setHihdDpPixel(String hihdDpPixel) {
+		this.hihdDpPixel = hihdDpPixel;
 	}
 
 	/**
-	 * @return the hd2DpPicRatio
+	 * @return the hihdDpPicRatio
 	 */
-	public String getHd2DpPicRatio() {
-		return hd2DpPicRatio;
+	public String getHihdDpPicRatio() {
+		return hihdDpPicRatio;
 	}
 
 	/**
-	 * @param hd2DpPicRatio the hd2DpPicRatio to set
+	 * @param hihdDpPicRatio the hihdDpPicRatio to set
 	 */
-	public void setHd2DpPicRatio(String hd2DpPicRatio) {
-		this.hd2DpPicRatio = hd2DpPicRatio;
+	public void setHihdDpPicRatio(String hihdDpPicRatio) {
+		this.hihdDpPicRatio = hihdDpPicRatio;
 	}
 
 	/**

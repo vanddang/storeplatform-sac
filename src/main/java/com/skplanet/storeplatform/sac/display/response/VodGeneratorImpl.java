@@ -235,7 +235,7 @@ public class VodGeneratorImpl implements VodGenerator {
 		/*
 		 * HD 고화질 정보
 		 */
-		if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId()) || StringUtils.isNotEmpty(metaInfo.getHd2SubContsId())) {
+		if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId()) || StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
             videoInfo = getHdVideoInfo(metaInfo);
             videoInfoList.add(videoInfo);
         }
@@ -285,22 +285,23 @@ public class VodGeneratorImpl implements VodGenerator {
     @Override
     public VideoInfo getHdVideoInfo(MetaInfo metaInfo) {
     	VideoInfo videoInfo = new VideoInfo();
-    	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
     	
-    	if (StringUtils.isNotEmpty(metaInfo.getHd2SubContsId())) {
-    		videoInfo.setPictureSize(metaInfo.getHd2DpPicRatio());
-            videoInfo.setPixel(metaInfo.getHd2DpPixel());
-            videoInfo.setScid(metaInfo.getHd2SubContsId());
-            videoInfo.setSize(metaInfo.getHd2FileSize());
-            videoInfo.setVersion(metaInfo.getHd2ProdVer());
-            videoInfo.setFilePath(metaInfo.getHd2FilePath());
+    	if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
+    		videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
+    		videoInfo.setPictureSize(metaInfo.getHihdDpPicRatio());
+            videoInfo.setPixel(metaInfo.getHihdDpPixel());
+            videoInfo.setScid(metaInfo.getHihdSubContsId());
+            videoInfo.setSize(metaInfo.getHihdFileSize());
+            videoInfo.setVersion(metaInfo.getHihdProdVer());
+            videoInfo.setFilePath(metaInfo.getHihdFilePath());
     	} else {
+    		videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
             videoInfo.setPictureSize(metaInfo.getHdDpPicRatio());
             videoInfo.setPixel(metaInfo.getHdDpPixel());
             videoInfo.setScid(metaInfo.getHdSubContsId());
             videoInfo.setSize(metaInfo.getHdFileSize());
             videoInfo.setVersion(metaInfo.getHdProdVer());
-            videoInfo.setFilePath(metaInfo.getHdFilePath());
+            videoInfo.setFilePath(metaInfo.getHiFilePath());
     	}
         
         return videoInfo;

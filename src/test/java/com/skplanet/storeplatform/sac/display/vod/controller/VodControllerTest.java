@@ -52,7 +52,7 @@ public class VodControllerTest {
 	@Test
 	public void searchVodDetail_includeProdStopStatus() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("channelId", "H000043500"); // 왕가네 식구들
+		param.put("channelId", "H000461711"); // 왕가네 식구들
 		param.put("orderedBy", "recent");
 		param.put("includeProdStopStatus", "Y");
 		param.put("offset", 1);
@@ -291,6 +291,7 @@ public class VodControllerTest {
 	public void searchVodDetail_방송_recent() throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("channelId", "H001220250");	// 왕가네 식구들
+//		param.put("channelId", "H002796736");	// 왕가네 식구들
 		param.put("deviceKey", "DE201402201711283140002222");
 		param.put("userKey", "US201402201711282940003170");
 		param.put("orderedBy", "recent");

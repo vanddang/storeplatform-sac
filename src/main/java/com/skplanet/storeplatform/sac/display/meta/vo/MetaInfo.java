@@ -160,32 +160,37 @@ public class MetaInfo extends CommonInfo {
 	private String sdSubContsId;
 	private String sdFileSize;
 	private String sdProdVer;
+	
 	private String hdBtvCid;
-	private String hd2BtvCid;
-	private String fhdBtvCid;
-	private String hdDpPicRatio;
-	private String hd2DpPicRatio;
-	private String fhdDpPicRatio;
 	private String hdDpPixel;
-	private String hd2DpPixel;
-	private String fhdDpPixel;
+	private String hdDpPicRatio;
 	private String hdSubContsId;
-	private String hd2SubContsId;
-	private String fhdSubContsId;
 	private String hdFileSize;
-	private String hd2FileSize;
-	private String fhdFileSize;
 	private String hdProdVer;
-	private String hd2ProdVer;
+	private String hdFilePath;
+	
+	private String hihdBtvCid;
+	private String hihdDpPixel;
+	private String hihdDpPicRatio;
+	private String hihdSubContsId;
+	private String hihdFileSize;
+	private String hihdProdVer;
+	private String hihdFilePath;
+	
+	private String fhdBtvCid;
+	private String fhdDpPixel;
+	private String fhdDpPicRatio;
+	private String fhdSubContsId;
+	private String fhdFileSize;
 	private String fhdProdVer;
+	private String fhdFilePath;
+	
 	private String dwldAreaLimtYn;
 	private String strmNetworkCd;
 	private String dwldNetworkCd;
 	private String nmFilePath;
 	private String sdFilePath;
-	private String hdFilePath;
-	private String hd2FilePath;
-	private String fhdFilePath;
+	
 	private String chnlProdNm;
 	private String genreCd;
 	private String genreCd2;
@@ -2288,7 +2293,7 @@ public class MetaInfo extends CommonInfo {
 	 * @param hdBtvCid
 	 *            the hdBtvCid to set
 	 */
-	public void setHdBtvCid(String hdBtvCid) {
+	public void setHiBtvCid(String hdBtvCid) {
 		this.hdBtvCid = hdBtvCid;
 	}
 
@@ -2443,18 +2448,18 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	/**
-	 * @return the hdFilePath
+	 * @return the hiFilePath
 	 */
-	public String getHdFilePath() {
+	public String getHiFilePath() {
 		return this.hdFilePath;
 	}
 
 	/**
-	 * @param hdFilePath
-	 *            the hdFilePath to set
+	 * @param hiFilePath
+	 *            the hiFilePath to set
 	 */
-	public void setHdFilePath(String hdFilePath) {
-		this.hdFilePath = hdFilePath;
+	public void setHiFilePath(String hiFilePath) {
+		this.hdFilePath = hiFilePath;
 	}
 
 	/**
@@ -4292,60 +4297,60 @@ public class MetaInfo extends CommonInfo {
 		this.deltaFilePath = deltaFilePath;
 	}
 
-	public String getHd2BtvCid() {
-		return this.hd2BtvCid;
+	public String getHihdBtvCid() {
+		return this.hihdBtvCid;
 	}
 
-	public void setHd2BtvCid(String hd2BtvCid) {
-		this.hd2BtvCid = hd2BtvCid;
+	public void setHihdBtvCid(String hihdBtvCid) {
+		this.hihdBtvCid = hihdBtvCid;
 	}
 
-	public String getHd2DpPicRatio() {
-		return this.hd2DpPicRatio;
+	public String getHihdDpPicRatio() {
+		return this.hihdDpPicRatio;
 	}
 
-	public void setHd2DpPicRatio(String hd2DpPicRatio) {
-		this.hd2DpPicRatio = hd2DpPicRatio;
+	public void setHihdDpPicRatio(String hihdDpPicRatio) {
+		this.hihdDpPicRatio = hihdDpPicRatio;
 	}
 
-	public String getHd2DpPixel() {
-		return this.hd2DpPixel;
+	public String getHihdDpPixel() {
+		return this.hihdDpPixel;
 	}
 
-	public void setHd2DpPixel(String hd2DpPixel) {
-		this.hd2DpPixel = hd2DpPixel;
+	public void setHihdDpPixel(String hihdDpPixel) {
+		this.hihdDpPixel = hihdDpPixel;
 	}
 
-	public String getHd2SubContsId() {
-		return this.hd2SubContsId;
+	public String getHihdSubContsId() {
+		return this.hihdSubContsId;
 	}
 
-	public void setHd2SubContsId(String hd2SubContsId) {
-		this.hd2SubContsId = hd2SubContsId;
+	public void setHihdSubContsId(String hihdSubContsId) {
+		this.hihdSubContsId = hihdSubContsId;
 	}
 
-	public String getHd2FileSize() {
-		return this.hd2FileSize;
+	public String getHihdFileSize() {
+		return this.hihdFileSize;
 	}
 
-	public void setHd2FileSize(String hd2FileSize) {
-		this.hd2FileSize = hd2FileSize;
+	public void setHihdFileSize(String hihdFileSize) {
+		this.hihdFileSize = hihdFileSize;
 	}
 
-	public String getHd2ProdVer() {
-		return this.hd2ProdVer;
+	public String getHihdProdVer() {
+		return this.hihdProdVer;
 	}
 
-	public void setHd2ProdVer(String hd2ProdVer) {
-		this.hd2ProdVer = hd2ProdVer;
+	public void setHihdProdVer(String hihdProdVer) {
+		this.hihdProdVer = hihdProdVer;
 	}
 
-	public String getHd2FilePath() {
-		return this.hd2FilePath;
+	public String getHihdFilePath() {
+		return this.hihdFilePath;
 	}
 
-	public void setHd2FilePath(String hd2FilePath) {
-		this.hd2FilePath = hd2FilePath;
+	public void setHihdFilePath(String hihdFilePath) {
+		this.hihdFilePath = hihdFilePath;
 	}
 
 	public String getFhdFileSize() {

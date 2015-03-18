@@ -398,13 +398,15 @@ public class DisplayConstants {
     public static final String DP_SERIAL_VOD_SKT_META_CLASS_CD = "CT16";
 
     // //////////////////////////////////// VOD 화질 유형 //////////////////////////////////////////
-    public static final String DP_VOD_QUALITY_NORMAL = "normal";
+    public static final String DP_VOD_QUALITY_NORMAL = "normal"; 	//일반화질 (A)
 
-    public static final String DP_VOD_QUALITY_SD = "sd";
+    public static final String DP_VOD_QUALITY_SD = "sd";			//SD화질 (B)
 
-    public static final String DP_VOD_QUALITY_HD = "hd";
+    public static final String DP_VOD_QUALITY_HD = "hd"; 			//고화질 (C)
 
-    public static final String DP_VOD_QUALITY_FHD = "fhd";
+    public static final String DP_VOD_QUALITY_HIHD = "hihd";		//HD화질 (D)
+
+    public static final String DP_VOD_QUALITY_FHD = "fhd";			//Full HD (E)
 
     // //////////////////////////////////// VOD 지원명 //////////////////////////////////////////
 

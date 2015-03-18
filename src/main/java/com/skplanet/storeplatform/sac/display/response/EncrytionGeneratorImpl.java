@@ -79,7 +79,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
                 subContentsList.add(sdSc);
             }
             //HD2 (D화질) 정보 우선, 없으면 HD 정보를 내려줌
-            if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId()) || StringUtils.isNotEmpty(metaInfo.getHd2SubContsId())) {
+            if (StringUtils.isNotEmpty(metaInfo.getHdSubContsId()) || StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
                 EncryptionSubContents hdSc = getEncryptionHdSubContents(metaInfo);
                 subContentsList.add(hdSc);
             }
@@ -177,20 +177,20 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
     private EncryptionSubContents getEncryptionHdSubContents(MetaInfo metaInfo) {
         EncryptionSubContents hdSc = new EncryptionSubContents();
         
-        if (StringUtils.isNotEmpty(metaInfo.getHd2SubContsId())) {
+        if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
         	hdSc.setType("");
             hdSc.setDeltaPath("");
             hdSc.setDeltaSize(0L);
-            hdSc.setSize(Long.parseLong(metaInfo.getHd2FileSize()));
-            hdSc.setScid(metaInfo.getHd2SubContsId());
-            hdSc.setPath(metaInfo.getHd2FilePath());	
+            hdSc.setSize(Long.parseLong(metaInfo.getHihdFileSize()));
+            hdSc.setScid(metaInfo.getHihdSubContsId());
+            hdSc.setPath(metaInfo.getHihdFilePath());	
         } else {
         	hdSc.setType("");
             hdSc.setDeltaPath("");
             hdSc.setDeltaSize(0L);
             hdSc.setSize(Long.parseLong(metaInfo.getHdFileSize()));
             hdSc.setScid(metaInfo.getHdSubContsId());
-            hdSc.setPath(metaInfo.getHdFilePath());
+            hdSc.setPath(metaInfo.getHiFilePath());
         }
         
         return hdSc;

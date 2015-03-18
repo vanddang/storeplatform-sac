@@ -885,6 +885,11 @@ public class VodServiceImpl implements VodService {
             vod.setChapter(chapter);
         }
 
+        
+        //-------------------------------------------------------------
+        // 화질 정보
+        // NM:일반화질 (A), SD:SD화질 (B), HI:고화질 (C), HD:HD화질 (D)
+        //-------------------------------------------------------------
         /** 일반화질 정보 */
         if (StringUtils.isNotEmpty(mapperVO.getNmSubContsId())) {
             videoInfo = getNmVideoInfo(mapperVO);
@@ -896,8 +901,8 @@ public class VodServiceImpl implements VodService {
             videoInfoList.add(videoInfo);
         }
 
-        // HD2 (D화질) 정보 우선, 없으며 HD 정보를 내려줌
-        if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId()) || StringUtils.isNotEmpty(mapperVO.getHd2SubContsId())) {
+        // HD (D화질) 정보 우선, 없으며 HI 정보를 내려줌
+        if (StringUtils.isNotEmpty(mapperVO.getHdSubContsId()) || StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
             /** HD 화질 정보 */
             videoInfo = getHdVideoInfo(mapperVO);
             videoInfoList.add(videoInfo);
@@ -943,17 +948,18 @@ public class VodServiceImpl implements VodService {
      */
     private VideoInfo getHdVideoInfo(VodDetail mapperVO) {
         VideoInfo videoInfo = new VideoInfo();
-        videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
         
-        if (StringUtils.isNotEmpty(mapperVO.getHd2SubContsId())) {
+        if (StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
         	//HD2 (D화질)
-            videoInfo.setPictureSize(mapperVO.getHd2DpPicRatio());
-            videoInfo.setPixel(mapperVO.getHd2DpPixel());
-            videoInfo.setScid(mapperVO.getHd2SubContsId());
-            videoInfo.setSize(mapperVO.getHd2FileSize().toString());
-            videoInfo.setVersion(mapperVO.getHd2ProdVer());
+        	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
+            videoInfo.setPictureSize(mapperVO.getHihdDpPicRatio());
+            videoInfo.setPixel(mapperVO.getHihdDpPixel());
+            videoInfo.setScid(mapperVO.getHihdSubContsId());
+            videoInfo.setSize(mapperVO.getHihdFileSize().toString());
+            videoInfo.setVersion(mapperVO.getHihdProdVer());
         } else {
-        	//HD
+        	//HI (C화질)
+        	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
             videoInfo.setPictureSize(mapperVO.getHdDpPicRatio());
             videoInfo.setPixel(mapperVO.getHdDpPixel());
             videoInfo.setScid(mapperVO.getHdSubContsId());
