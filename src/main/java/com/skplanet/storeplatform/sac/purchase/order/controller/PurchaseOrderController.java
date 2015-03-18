@@ -463,6 +463,10 @@ public class PurchaseOrderController {
 		purchaseOrderInfo.setMediaId(createPurchaseSacReq.getMediaId()); // CPS CPID
 
 		purchaseOrderInfo.setOfferingId(createPurchaseSacReq.getOfferingId()); // 오퍼링 ID
+		// offeringId, resvCol01(암묵적 오퍼링 ID) 처리 : 오퍼링 서비스를 SAC가 수용 시 관련 컬럼 생성 및 예약필드 암묵적 사용 제거
+		if (StringUtils.isBlank(createPurchaseSacReq.getProductList().get(0).getResvCol01())) {
+			createPurchaseSacReq.getProductList().get(0).setResvCol01(createPurchaseSacReq.getOfferingId());
+		}
 
 		purchaseOrderInfo.setTotAmt(createPurchaseSacReq.getTotAmt()); // 총 결제 금액
 		purchaseOrderInfo.setRealTotAmt(createPurchaseSacReq.getTotAmt()); // 최종 결제 총 금액
