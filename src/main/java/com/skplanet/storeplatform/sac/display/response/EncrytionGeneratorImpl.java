@@ -124,15 +124,15 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
         deviceKey.setSubKey(metaInfo.getDeviceSubKey());
         data.setDeviceKey(deviceKey);
 
-        // 구매내역 숨김 유무 / 업데이트 알람 유무
-        if (StringUtils.isNotEmpty(metaInfo.getPurchaseHide())
-                && StringUtils.isNotEmpty(metaInfo.getUpdateAlarm())) {
-
+        // 구매내역 숨김 여부
+        if ( StringUtils.isNotEmpty(metaInfo.getPurchaseHide()) ) {
             status.setPurchaseHide(metaInfo.getPurchaseHide());
-            status.setUpdateAlarm(metaInfo.getUpdateAlarm());
-
-            data.setStatus(status);
         }
+        // 업데이트 알람 수신 여부
+        if ( StringUtils.isNotEmpty(metaInfo.getUpdateAlarm()) ) {
+            status.setUpdateAlarm(metaInfo.getUpdateAlarm());
+        }
+        data.setStatus(status);
 
         // extra : 값의 형식은 "key=value;key2=value2;"로 구성된다. 추후 정의하여 사용.
         data.setExtra(this.makeExtra(metaInfo));

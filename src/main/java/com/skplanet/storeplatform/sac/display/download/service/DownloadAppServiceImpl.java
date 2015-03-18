@@ -178,13 +178,19 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			doBunchProdProvisioning(downloadAppSacReq, metaInfo);
 			validateParentBunchProd(downloadAppSacReq, metaInfo);
 
-			/*
+			/**
 			 * 암호화된 DL Token extra 필드에서 사용 할 공통 meta 정보
 			 */
 			metaInfo.setSystemId(tenantHeader.getSystemId());
             metaInfo.setTenantId(tenantHeader.getTenantId());
 			downloadCommonService.validateVisitPathNm(metaInfo, downloadAppSacReq.getVisitPathNm(), productId);
 			metaInfo.setDwldTypeCd(downloadAppSacReq.getDwldTypeCd());
+
+            /**
+             * 업데이트 알람 수신 여부가 SAC구매에서 테넌트로 옮겨짐.
+             * For D/L API에 파마리터로 현재 상태의 알람 수신 여부를 받도록 변경
+             */
+            metaInfo.setUpdateAlarm(downloadAppSacReq.getUpdateAlarmYn());
 
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
@@ -274,7 +280,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 							drmYn = historyRes.getHistoryList().get(i).getDrmYn();
 							permitDeviceYn = historyRes.getHistoryList().get(i).getPermitDeviceYn();
 							purchaseHide = historyRes.getHistoryList().get(i).getHidingYn();
-							updateAlarm = historyRes.getHistoryList().get(i).getAlarmYn();
 
 							// 구매상태 확인
 							downloadAppSacReq.setPrchsDt(prchsDt);
@@ -370,7 +375,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										metaInfo.setDeviceType(deviceIdType);
 										metaInfo.setDeviceSubKey(deviceId);
 										metaInfo.setPurchaseHide(purchaseHide);
-										metaInfo.setUpdateAlarm(updateAlarm);
 
 										// 단말의 통신사가 SKT 일때만 적용
 										if (DisplayConstants.DP_TELECOM_TYPE_CD_SKT.equals(deviceTelecom)) {
