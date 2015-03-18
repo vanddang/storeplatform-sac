@@ -87,12 +87,19 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	private String imei; // 단말 식별 번호
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
 	private String uacd; // 단말 모델 식별 번호
+
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
-	private String simNo; // SIM Serial Number
+	private String sid; // SIM Serial Number
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
-	private String simYn; // SIM 조회 가능 여부
+	private String flag; // SMS 인증 필요 여부
+
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
-	private String smsFlag; // SMS 인증 필요 여부
+	private String simNo; // TAKTODO:: 사용제외 / 추후 제거
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String simYn; // TAKTODO:: 사용제외 / 추후 제거
+	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
+	private String smsFlag; // TAKTODO:: 사용제외 / 추후 제거
+
 	@Null(groups = { GroupCreateBizPurchase.class })
 	private String mediaId; // CPS CPID
 	@Null(groups = { GroupCreateFreePurchase.class, GroupCreateBizPurchase.class })
@@ -370,6 +377,36 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	 */
 	public void setUacd(String uacd) {
 		this.uacd = uacd;
+	}
+
+	/**
+	 * @return the sid
+	 */
+	public String getSid() {
+		return this.sid;
+	}
+
+	/**
+	 * @param sid
+	 *            the sid to set
+	 */
+	public void setSid(String sid) {
+		this.sid = sid;
+	}
+
+	/**
+	 * @return the flag
+	 */
+	public String getFlag() {
+		return this.flag;
+	}
+
+	/**
+	 * @param flag
+	 *            the flag to set
+	 */
+	public void setFlag(String flag) {
+		this.flag = flag;
 	}
 
 	/**
