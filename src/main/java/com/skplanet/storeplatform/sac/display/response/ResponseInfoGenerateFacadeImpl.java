@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -217,7 +218,12 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(rights);
 		product.setContributor(contributor);
 		product.setMusic(music);
-		product.setDateList(Arrays.asList(new Date(DisplayConstants.DP_DATE_REG, metaInfo.getRegDt())));
+        if (metaInfo.getRegDt() != null) {
+            java.util.Date regDt = DateUtils.parseDate(metaInfo.getRegDt());
+            if(regDt != null)
+                product.setDateList(Arrays.asList(new Date(DisplayConstants.DP_DATE_REG, regDt)));
+        }
+
 		// Music 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
 		// 판매상태 설정
@@ -228,6 +234,44 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 		return product;
 	}
+
+    @Override
+    public Product generateMusicProductShort(MetaInfo metaInfo) {
+        Product product = new Product();
+        // Identifier 설정
+        product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+        // Title 설정
+        Title title = this.commonGenerator.generateTitle(metaInfo);
+        // Price 설정
+        Price price = this.commonGenerator.generatePrice(metaInfo);
+        // MenuList 생성
+        List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
+        // SourceList 생성
+        List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+        // Accrual 설정
+        Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
+        // Rights 설정
+        Rights rights = this.commonGenerator.generateRights(metaInfo);
+        // Music용 Contributor 설정
+        Contributor contributor = this.musicGenerator.generateContributor(metaInfo);
+        // Music 생성
+        Music music = this.musicGenerator.generateMusic(metaInfo);
+
+        product.setTitle(title);
+        product.setPrice(price);
+        product.setMenuList(menuList);
+        product.setSourceList(sourceList);
+        product.setAccrual(accrual);
+        product.setRights(rights);
+        product.setContributor(contributor);
+        product.setMusic(music);
+        product.setProductExplain(metaInfo.getProdBaseDesc());
+
+        // 마일리지
+        this.appendMileageInfo(metaInfo, product);
+
+        return product;
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -261,51 +305,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	public Product generateAlbumDetailProduct(AlbumMeta albumMeta) {
 		Product product = this.generateAlbumProduct(albumMeta);
 		product.setLikeYn(albumMeta.getLikeYn());
-		return product;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateMusicProductShort(com.skplanet
-	 * . storeplatform.sac.display.meta.vo.MetaInfo)
-	 */
-	@Override
-	public Product generateMusicProductShort(MetaInfo metaInfo) {
-		Product product = new Product();
-		// Identifier 설정
-		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
-		// Title 설정
-		Title title = this.commonGenerator.generateTitle(metaInfo);
-		// Price 설정
-		Price price = this.commonGenerator.generatePrice(metaInfo);
-		// MenuList 생성
-		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
-		// SourceList 생성
-		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
-		// Accrual 설정
-		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
-		// Rights 설정
-		Rights rights = this.commonGenerator.generateRights(metaInfo);
-		// Music용 Contributor 설정
-		Contributor contributor = this.musicGenerator.generateContributor(metaInfo);
-		// Music 생성
-		Music music = this.musicGenerator.generateMusic(metaInfo);
-
-		product.setTitle(title);
-		product.setPrice(price);
-		product.setMenuList(menuList);
-		product.setSourceList(sourceList);
-		product.setAccrual(accrual);
-		product.setRights(rights);
-		product.setContributor(contributor);
-		product.setMusic(music);
-		product.setProductExplain(metaInfo.getProdBaseDesc());
-
-		// 마일리지
-		this.appendMileageInfo(metaInfo, product);
-
 		return product;
 	}
 
