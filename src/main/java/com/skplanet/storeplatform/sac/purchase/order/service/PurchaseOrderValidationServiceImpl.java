@@ -961,7 +961,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 								product.setDwldExprDt(useExistenceScRes.getUseExprDt());
 							}
 
-							product.setUseFixrateProdId(useExistenceScRes.getProdId()); // 사용할 정액권ID 세팅
+							product.setUseFixrateProdId(useExistenceScRes.getProdId()); // 사용할 정액권 상품ID 세팅
+							product.setUseFixratePrchsId(useExistenceScRes.getPrchsId()); // 사용할 정액권 구매ID 세팅
 							product.setUseFixrateProdClsfCd(freepassInfo.getCmpxProdClsfCd()); // 사용할 정액권 타입
 
 							// 무료구매 처리 데이터 세팅

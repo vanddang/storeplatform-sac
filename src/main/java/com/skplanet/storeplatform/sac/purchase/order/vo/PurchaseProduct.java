@@ -37,6 +37,7 @@ public class PurchaseProduct extends PaymentInfo {
 	private String resvCol05;
 	private String useExprDt; // [비과금 구매요청 시 사용]
 	private String useFixrateProdId; // 이용한 정액제 상품ID
+	private String useFixratePrchsId; // 이용한 정액제 구매ID
 	private String useFixrateProdClsfCd; // 이용한 정액제 상품 타입
 	// IAP
 	private String tid; // 부분유료화 개발사 구매Key
@@ -268,6 +269,21 @@ public class PurchaseProduct extends PaymentInfo {
 	}
 
 	/**
+	 * @return the useFixratePrchsId
+	 */
+	public String getUseFixratePrchsId() {
+		return this.useFixratePrchsId;
+	}
+
+	/**
+	 * @param useFixratePrchsId
+	 *            the useFixratePrchsId to set
+	 */
+	public void setUseFixratePrchsId(String useFixratePrchsId) {
+		this.useFixratePrchsId = useFixratePrchsId;
+	}
+
+	/**
 	 * @return the useFixrateProdClsfCd
 	 */
 	public String getUseFixrateProdClsfCd() {
@@ -449,16 +465,16 @@ public class PurchaseProduct extends PaymentInfo {
 		this.iapPostbackUrl = iapPostbackUrl;
 	}
 
-	
 	/**
 	 * @return the autoPrchsLastPeriodValue
 	 */
 	public Integer getAutoPrchsLastPeriodValue() {
-		return autoPrchsLastPeriodValue;
+		return this.autoPrchsLastPeriodValue;
 	}
 
 	/**
-	 * @param autoPrchsLastPeriodValue the autoPrchsLastPeriodValue to set
+	 * @param autoPrchsLastPeriodValue
+	 *            the autoPrchsLastPeriodValue to set
 	 */
 	public void setAutoPrchsLastPeriodValue(Integer autoPrchsLastPeriodValue) {
 		this.autoPrchsLastPeriodValue = autoPrchsLastPeriodValue;

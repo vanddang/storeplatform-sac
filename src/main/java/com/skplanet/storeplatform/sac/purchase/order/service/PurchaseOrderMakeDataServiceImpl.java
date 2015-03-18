@@ -192,6 +192,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					}
 
 					prchsDtlMore.setUseFixrateProdId(product.getUseFixrateProdId());
+					prchsDtlMore.setUseFixratePrchsId(product.getUseFixratePrchsId());
 					prchsDtlMore.setUseFixrateProdClsfCd(product.getUseFixrateProdClsfCd());
 					prchsDtlMore.setDrmYn(product.getDrmYn());
 					prchsDtlMore.setAlarmYn(PurchaseConstants.USE_Y);
@@ -601,6 +602,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			prchsDtlMore.setUsePeriodUnitCd(ebookflatInfo.getUsePeriodUnitCd());
 			prchsDtlMore.setUsePeriod(ebookflatInfo.getUsePeriod());
 			prchsDtlMore.setUseFixrateProdId(ebookflatInfo.getProdId());
+			prchsDtlMore.setUseFixratePrchsId(ebookflatInfo.getPrchsId());
 			prchsDtlMore.setDrmYn(ebookflatInfo.getDrmYn());
 			prchsDtlMore.setAlarmYn(PurchaseConstants.USE_Y);
 			prchsDtlMore.setRegId(ebookflatInfo.getRegId());
