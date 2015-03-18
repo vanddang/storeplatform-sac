@@ -431,7 +431,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			final String fdsLogMdn = mdn;
 			final String fdsLogSvcMngNum = svcMngNum;
 			final String fdsLogDeviceKey = deviceKey;
-			final String fdsTenantId = tenantId;
+			final String fdsSystemId = systemId;
 			final String fdsResult = result;
 			final String fdsResultMsg = resultMsg;
 
@@ -443,7 +443,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 								.insd_usermbr_no(fdsLogUserKey).insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn)
 								.device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum)
 								.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
-								.request_system_id(fdsTenantId).exception_log("");
+								.request_system_id(fdsSystemId).exception_log("");
 					}
 				});
 			} else {
@@ -454,7 +454,7 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 								.insd_usermbr_no(fdsLogUserKey).insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn)
 								.device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn).svc_mng_no(fdsLogSvcMngNum)
 								.insd_device_id_pre(fdsLogDeviceKey).insd_device_id_post(fdsLogDeviceKey)
-								.request_system_id(fdsTenantId).exception_log("");
+								.request_system_id(fdsSystemId).exception_log("");
 					}
 				});
 			}
