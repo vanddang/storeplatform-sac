@@ -28,14 +28,23 @@ public class DownloadAppSacReq extends CommonInfo {
 	private String productId; // 상품Id
 	private String packageName; // 패키지명
 	private String deviceKey; // device key
-	private String userKey; // 판매자 회원번호
+	private String userKey; // 구매자 회원번호
 	private String parentBunchId;
 	private Integer apkVerCd; // Pre package versionCode
 	private String visitPathNm; // 다운로드 요청 경로
 	private String dwldTypeCd; // 다운로드 유형 코드 (DP012701:다운로드, DP012702:자동 업데이트, DP012703:수동 업데이트, DP012704:이어받기)
+    private String mdn;
     private String updateAlarmYn; // 업데이트 알람 수신 여부
 
-	/* internal values */
+    public String getMdn() {
+        return mdn;
+    }
+
+    public void setMdn(String mdn) {
+        this.mdn = mdn;
+    }
+
+    /* internal values */
 	private String tenantId; // tenantId
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
