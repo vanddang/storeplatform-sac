@@ -33,6 +33,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	private Integer apkVerCd; // Pre package versionCode
 	private String visitPathNm; // 다운로드 요청 경로
 	private String dwldTypeCd; // 다운로드 유형 코드 (DP012701:다운로드, DP012702:자동 업데이트, DP012703:수동 업데이트, DP012704:이어받기)
+    private String updateAlarmYn; // 업데이트 알람 수신 여부
 
 	/* internal values */
 	private String tenantId; // tenantId
@@ -455,6 +456,11 @@ public class DownloadAppSacReq extends CommonInfo {
 		this.dwldTypeCd = dwldTypeCd;
 	}
 
+    public String getUpdateAlarmYn() {
+        return updateAlarmYn;
+    }
 
-
+    public void setUpdateAlarmYn(String updateAlarmYn) {
+        this.updateAlarmYn = updateAlarmYn;
+    }
 }
