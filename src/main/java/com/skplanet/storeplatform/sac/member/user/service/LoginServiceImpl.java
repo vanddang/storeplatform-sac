@@ -72,6 +72,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TlogInfo;
+import com.skplanet.storeplatform.member.client.user.sci.vo.TlogRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
@@ -1500,6 +1502,14 @@ public class LoginServiceImpl implements LoginService {
 						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
 						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
 
+						TlogInfo tlogInfo = new TlogInfo();
+						tlogInfo.setTlogID("TL_SC_MEM_0006");
+						tlogInfo.setUsermbrNoPre(detailRes.getUserInfo().getImMbrNo());
+						tlogInfo.setUsermbrNoPost(marketRes.getDeviceInfo().getDeviceKey());
+						TlogRequest tlogRequest = new TlogRequest();
+						tlogRequest.setTlogInfo(tlogInfo);
+						this.userSCI.tlog(tlogRequest);
+
 						// 재가입시킨 회원정보 재조회
 						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
@@ -1528,6 +1538,23 @@ public class LoginServiceImpl implements LoginService {
 							deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 							deviceInfo.setDeviceId(marketRes.getDeviceId());
 							this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
+
+							// deviceId 변경 Tlog
+							final String fdsLogUserKey = detailRes.getUserKey();
+							final String fdsLogBeMdn = detailRes.getDeviceInfoList().get(0).getDeviceId();
+							final String fdsLogMdn = marketRes.getDeviceId();
+							final String fdsLogSvcMngNum = detailRes.getDeviceInfoList().get(0).getSvcMangNum();
+							final String fdsLogDeviceKey = detailRes.getDeviceInfoList().get(0).getDeviceKey();
+							new TLogUtil().log(new ShuttleSetter() {
+								@Override
+								public void customize(TLogSentinelShuttle shuttle) {
+									shuttle.log_id("TL_SAC_MEM_0002").insd_usermbr_no(fdsLogUserKey)
+											.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn)
+											.device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
+											.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey)
+											.insd_device_id_post(fdsLogDeviceKey);
+								}
+							});
 
 							// 변경된 deviceId로 회원정보 재조회
 							detailReq.setDeviceId(marketRes.getDeviceId());
@@ -1902,6 +1929,14 @@ public class LoginServiceImpl implements LoginService {
 						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
 						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
 
+						TlogInfo tlogInfo = new TlogInfo();
+						tlogInfo.setTlogID("TL_SC_MEM_0006");
+						tlogInfo.setUsermbrNoPre(detailRes.getUserInfo().getImMbrNo());
+						tlogInfo.setUsermbrNoPost(marketRes.getDeviceInfo().getDeviceKey());
+						TlogRequest tlogRequest = new TlogRequest();
+						tlogRequest.setTlogInfo(tlogInfo);
+						this.userSCI.tlog(tlogRequest);
+
 						// 재가입시킨 회원정보 재조회
 						detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
@@ -1930,6 +1965,23 @@ public class LoginServiceImpl implements LoginService {
 							deviceInfo.setDeviceKey(detailRes.getDeviceInfoList().get(0).getDeviceKey());
 							deviceInfo.setDeviceId(marketRes.getDeviceId());
 							this.deviceService.modDeviceInfo(requestHeader, deviceInfo, true);
+
+							// deviceId 변경 Tlog
+							final String fdsLogUserKey = detailRes.getUserKey();
+							final String fdsLogBeMdn = detailRes.getDeviceInfoList().get(0).getDeviceId();
+							final String fdsLogMdn = marketRes.getDeviceId();
+							final String fdsLogSvcMngNum = detailRes.getDeviceInfoList().get(0).getSvcMangNum();
+							final String fdsLogDeviceKey = detailRes.getDeviceInfoList().get(0).getDeviceKey();
+							new TLogUtil().log(new ShuttleSetter() {
+								@Override
+								public void customize(TLogSentinelShuttle shuttle) {
+									shuttle.log_id("TL_SAC_MEM_0002").insd_usermbr_no(fdsLogUserKey)
+											.insd_device_id(fdsLogDeviceKey).device_id(fdsLogMdn)
+											.device_id_pre(fdsLogBeMdn).device_id_post(fdsLogMdn)
+											.svc_mng_no(fdsLogSvcMngNum).insd_device_id_pre(fdsLogDeviceKey)
+											.insd_device_id_post(fdsLogDeviceKey);
+								}
+							});
 
 							// 변경된 deviceId로 회원정보 재조회
 							detailReq.setDeviceId(marketRes.getDeviceId());
