@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckDevicePinSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckDevicePinSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDevicePinSacReq;
@@ -56,6 +59,13 @@ public class DeviceSetController {
 	@ResponseBody
 	public CreateDevicePinSacRes createDevicePin(SacRequestHeader header,
 			@RequestBody @Validated CreateDevicePinSacReq req) {
+
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SAC_MEM_0008");
+			}
+		});
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		CreateDevicePinSacRes res = this.deviceSetService.regDevicePin(header, req);
@@ -123,6 +133,12 @@ public class DeviceSetController {
 	@ResponseBody
 	public CheckDevicePinSacRes checkDevicePin(SacRequestHeader header, @RequestBody @Validated CheckDevicePinSacReq req) {
 
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.log_id("TL_SAC_MEM_0010");
+			}
+		});
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 		CheckDevicePinSacRes res = this.deviceSetService.checkDevicePin(header, req);
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));

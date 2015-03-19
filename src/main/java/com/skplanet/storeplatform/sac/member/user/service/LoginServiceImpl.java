@@ -1675,6 +1675,24 @@ public class LoginServiceImpl implements LoginService {
 				res.setDeviceInfo(new DeviceInfo());
 				res.setExtraInfo("");
 
+				new TLogUtil().set(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.log_id("TL_SAC_MEM_0006");
+					}
+				});
+			}
+
+			// 정상회원응답이 아닌경우 회원상태를 Tlog 남김
+			if (!StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+				final String userStatus = marketRes.getUserStatus();
+				final String userStatusTxt = this.commService.convertSapUserStatusCode(marketRes.getUserStatus());
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.result_code(userStatus).result_message(userStatusTxt);
+					}
+				});
 			}
 
 		}
@@ -2106,6 +2124,18 @@ public class LoginServiceImpl implements LoginService {
 				res.setDeviceInfo(new DeviceInfo());
 				res.setExtraInfo("");
 
+			}
+
+			// 정상회원응답이 아닌경우 회원상태를 Tlog 남김
+			if (!StringUtils.equals(marketRes.getUserStatus(), MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+				final String userStatus = marketRes.getUserStatus();
+				final String userStatusTxt = this.commService.convertSapUserStatusCode(marketRes.getUserStatus());
+				new TLogUtil().log(new ShuttleSetter() {
+					@Override
+					public void customize(TLogSentinelShuttle shuttle) {
+						shuttle.result_code(userStatus).result_message(userStatusTxt);
+					}
+				});
 			}
 
 		}

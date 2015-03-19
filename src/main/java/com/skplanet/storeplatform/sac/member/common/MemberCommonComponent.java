@@ -1220,4 +1220,33 @@ public class MemberCommonComponent {
 		}
 		return tenantId;
 	}
+
+	/**
+	 * <pre>
+	 * SAP 회원 상태코드 Text를 리턴.
+	 * </pre>
+	 * 
+	 * @param userStatusCode
+	 *            String
+	 * @return userStatusText
+	 */
+	public String convertSapUserStatusCode(String userStatusCode) {
+		String userStatusText = "";
+		if (StringUtils.equals(userStatusCode, MemberConstants.INAPP_USER_STATUS_NORMAL)) {
+			userStatusText = MemberConstants.INAPP_USER_STATUS_NORMAL_TEXT;
+		} else if (StringUtils.equals(userStatusCode, MemberConstants.INAPP_USER_STATUS_PAUSE)) {
+			userStatusText = MemberConstants.INAPP_USER_STATUS_PAUSE_TEXT;
+		} else if (StringUtils.equals(userStatusCode, MemberConstants.INAPP_USER_STATUS_NO_MEMBER)) {
+			userStatusText = MemberConstants.INAPP_USER_STATUS_NO_MEMBER_TEXT;
+		} else if (StringUtils.equals(userStatusCode, MemberConstants.INAPP_USER_STATUS_IMEI_MISMATCH)) {
+			userStatusText = MemberConstants.INAPP_USER_STATUS_IMEI_MISMATCH_TEXT;
+		} else if (StringUtils.equals(userStatusCode, MemberConstants.INAPP_USER_STATUS_USIM_MISMATCH)) {
+			userStatusText = MemberConstants.INAPP_USER_STATUS_USIM_MISMATCH_TEXT;
+		} else if (StringUtils.equals(userStatusCode, MemberConstants.INAPP_USER_STATUS_PARAM_ERROR)) {
+			userStatusText = MemberConstants.INAPP_USER_STATUS_PARAM_ERROR_TEXT;
+		} else if (StringUtils.equals(userStatusCode, MemberConstants.INAPP_USER_STATUS_SYSTEM_ERROR)) {
+			userStatusText = MemberConstants.INAPP_USER_STATUS_SYSTEM_ERROR_TEXT;
+		}
+		return userStatusText;
+	}
 }

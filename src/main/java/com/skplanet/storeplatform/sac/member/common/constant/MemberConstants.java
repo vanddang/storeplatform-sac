@@ -317,6 +317,15 @@ public final class MemberConstants {
 	public static final String INAPP_USER_STATUS_PARAM_ERROR = "US014606"; // 파라메터 오류
 	public static final String INAPP_USER_STATUS_SYSTEM_ERROR = "US014607"; // 시스템 연동 오류
 
+	/** InApp 회원상태코드 메세지. */
+	public static final String INAPP_USER_STATUS_NORMAL_TEXT = "성공(정상회원)";
+	public static final String INAPP_USER_STATUS_PAUSE_TEXT = "이용제한 회원";
+	public static final String INAPP_USER_STATUS_NO_MEMBER_TEXT = "비회원";
+	public static final String INAPP_USER_STATUS_IMEI_MISMATCH_TEXT = "IMEI 불일치";
+	public static final String INAPP_USER_STATUS_USIM_MISMATCH_TEXT = "USIM 불일치";
+	public static final String INAPP_USER_STATUS_PARAM_ERROR_TEXT = "파라메터 오류";
+	public static final String INAPP_USER_STATUS_SYSTEM_ERROR_TEXT = "시스템 연동 오류";
+
 	/** SAP 회원의 연령대 정보 */
 	public static final String PROD_EXPO_LEVL_19_MORE = "US014705"; // 19세 이상
 	public static final String PROD_EXPO_LEVL_18_MORE = "US014704"; // 18세 이상

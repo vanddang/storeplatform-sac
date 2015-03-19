@@ -115,6 +115,14 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 				}
 			});
 
+			// TL_SAC_MEM_0008 tlog set
+			new TLogUtil().set(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey).device_id(tlogDeviceId);
+				}
+			});
+
 			/**
 			 * 검색 조건 setting
 			 */
@@ -134,11 +142,11 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 
 			createDevicePinResponse = this.deviceSetSCI.createDevicePin(createDevicePinRequest);
 
+			// TL_SAC_MEM_0008 tlog set
 			new TLogUtil().log(new ShuttleSetter() {
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL_SAC_MEM_0008").insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey)
-							.device_id(tlogDeviceId).result_code("보안비밀번호 설정 여부").result_message("보안비밀번호 설정 성공");
+					shuttle.result_code("보안비밀번호 설정 여부").result_message("보안비밀번호 설정 성공");
 				}
 			});
 
@@ -154,11 +162,11 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 				});
 			}
 
+			// TL_SAC_MEM_0008 tlog set
 			new TLogUtil().log(new ShuttleSetter() {
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL_SAC_MEM_0008").insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey)
-							.device_id(tlogDeviceId).result_code("보안비밀번호 설정 여부").result_message("보안비밀번호 설정 실패");
+					shuttle.result_code("보안비밀번호 설정 여부").result_message("보안비밀번호 설정 실패");
 				}
 			});
 
@@ -342,6 +350,15 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 							.insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey).device_id(tlogDeviceId);
 				}
 			});
+
+			// TL_SAC_MEM_0010 tlog set
+			new TLogUtil().set(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey).device_id(tlogDeviceId);
+				}
+			});
+
 			checkDevicePinResponse = this.deviceSetSCI.checkDevicePin(checkDevicePinRequest);
 
 		} catch (StorePlatformException e) {
@@ -356,46 +373,50 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 				});
 			}
 
+			// TL_SAC_MEM_0010 tlog set
 			new TLogUtil().log(new ShuttleSetter() {
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL_SAC_MEM_0010").insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey)
-							.device_id(tlogDeviceId).result_code("보안비밀번호 인증 여부").result_message("보안비밀번호 인증 실패");
+					shuttle.result_code("보안비밀번호 인증 여부").result_message("보안비밀번호 인증 실패");
 				}
 			});
 
 			throw e;
 		}
 
-		final String tlogDeviceId = schDeviceRes != null ? schDeviceRes.getUserMbrDevice().getDeviceID() : null;
 		// Pin 계정 잠김 상태 - 인증 5회 실패로 인한
 		if (StringUtils.equals(MemberConstants.USE_Y, checkDevicePinResponse.getUserMbrDeviceSet().getAuthLockYn())
 				&& StringUtils.equals("0", checkDevicePinResponse.getFailCnt())) {
+
+			// TL_SAC_MEM_0010 tlog set
 			new TLogUtil().log(new ShuttleSetter() {
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL_SAC_MEM_0010").insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey)
-							.device_id(tlogDeviceId).result_code("보안비밀번호 인증 여부").result_message("보안비밀번호 인증 5회실패");
+					shuttle.result_code("보안비밀번호 인증 여부").result_message("보안비밀번호 인증 5회실패");
+				}
+			});
+			throw new StorePlatformException("SAC_MEM_1512");
+
+		} else if (!StringUtils.equals("0", checkDevicePinResponse.getFailCnt())) {
+
+			// TL_SAC_MEM_0010 tlog set
+			new TLogUtil().log(new ShuttleSetter() {
+				@Override
+				public void customize(TLogSentinelShuttle shuttle) {
+					shuttle.result_code("보안비밀번호 인증 여부").result_message("보안비밀번호 인증 실패");
 				}
 			});
 
-			throw new StorePlatformException("SAC_MEM_1512");
-		} else if (!StringUtils.equals("0", checkDevicePinResponse.getFailCnt())) {
-			new TLogUtil().log(new ShuttleSetter() {
-				@Override
-				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL_SAC_MEM_0010").insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey)
-							.device_id(tlogDeviceId).result_code("보안비밀번호 인증 여부").result_message("보안비밀번호 인증 실패");
-				}
-			});
 		} else {
+
+			// TL_SAC_MEM_0010 tlog set
 			new TLogUtil().log(new ShuttleSetter() {
 				@Override
 				public void customize(TLogSentinelShuttle shuttle) {
-					shuttle.log_id("TL_SAC_MEM_0010").insd_usermbr_no(tlogUserKey).insd_device_id(tlogDeviceKey)
-							.device_id(tlogDeviceId).result_code("보안비밀번호 인증 여부").result_message("보안비밀번호 인증 성공");
+					shuttle.result_code("보안비밀번호 인증 여부").result_message("보안비밀번호 인증 성공");
 				}
 			});
+
 		}
 
 		CheckDevicePinSacRes res = new CheckDevicePinSacRes();
