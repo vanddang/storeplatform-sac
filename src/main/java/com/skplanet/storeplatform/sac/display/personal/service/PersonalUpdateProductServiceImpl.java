@@ -345,36 +345,30 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
                             this.log.debug("##### Server app version : {}", iPkgVerCd);
                             this.log.debug("##### User app version : {}", iReqPkgVerCd);
 
-                            String alarmYn = prchInfo.getAlarmYn();
-                            this.log.debug("##### Alarm Yn : {}", alarmYn);
-                            // 알람 설정이 Y인 app들만 업데이트 목록에 추가
-                            if ("Y".equals(alarmYn)) {
-                                // 구매내역 존재 시 업데이트 목록 가공
-                                // ① 서버 Version > 단말 Version 인 경우
-                                // ② 서버 Version = 단말 Version 인 경우
-                                // Fake Update 상품이고 Google Play에서 설치(installer가 'com.android.vending') 했으면 업데이트
-                                // 대상
 
-                                if (iPkgVerCd > iReqPkgVerCd) {
-                                    this.log.debug("##### Server app version > User app verion");
+                            // 구매내역 존재 시 업데이트 목록 가공
+                            // ① 서버 Version > 단말 Version 인 경우
+                            // ② 서버 Version = 단말 Version 인 경우
+                            // Fake Update 상품이고 Google Play에서 설치(installer가 'com.android.vending') 했으면 업데이트
+                            // 대상
+
+                            if (iPkgVerCd > iReqPkgVerCd) {
+                                this.log.debug("##### Server app version > User app verion");
+                                mapPkg.put("PRCHS_ID", prchID);
+                                this.log.debug("##### Set PRCH_ID to {}", prchID);
+                            } else if (iPkgVerCd == iReqPkgVerCd) {
+                                this.log.debug("##### Server app version = User app verion");
+                                if (sFakeYn.equals("Y") && sInstaller.equals("com.android.vending")) {
+                                    this.log.debug("##### Fake update target && install is com.android.vending");
                                     mapPkg.put("PRCHS_ID", prchID);
                                     this.log.debug("##### Set PRCH_ID to {}", prchID);
-                                } else if (iPkgVerCd == iReqPkgVerCd) {
-                                    this.log.debug("##### Server app version = User app verion");
-                                    if (sFakeYn.equals("Y") && sInstaller.equals("com.android.vending")) {
-                                        this.log.debug("##### Fake update target && install is com.android.vending");
-                                        mapPkg.put("PRCHS_ID", prchID);
-                                        this.log.debug("##### Set PRCH_ID to {}", prchID);
-                                    } else {
-                                        mapPkg.clear();
-                                    }
                                 } else {
                                     mapPkg.clear();
                                 }
                             } else {
-                                this.log.debug("##### Not alarm setting app!!!!!!!!!!!");
                                 mapPkg.clear();
                             }
+
                             this.log.debug("###########################################");
                             isPrchsExists = true;
                             break;
