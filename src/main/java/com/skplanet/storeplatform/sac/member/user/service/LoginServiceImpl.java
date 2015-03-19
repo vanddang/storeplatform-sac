@@ -1545,7 +1545,7 @@ public class LoginServiceImpl implements LoginService {
 							final String fdsLogMdn = marketRes.getDeviceId();
 							final String fdsLogSvcMngNum = detailRes.getDeviceInfoList().get(0).getSvcMangNum();
 							final String fdsLogDeviceKey = detailRes.getDeviceInfoList().get(0).getDeviceKey();
-							new TLogUtil().log(new ShuttleSetter() {
+							new TLogUtil().set(new ShuttleSetter() {
 								@Override
 								public void customize(TLogSentinelShuttle shuttle) {
 									shuttle.log_id("TL_SAC_MEM_0002").insd_usermbr_no(fdsLogUserKey)
@@ -1972,7 +1972,7 @@ public class LoginServiceImpl implements LoginService {
 							final String fdsLogMdn = marketRes.getDeviceId();
 							final String fdsLogSvcMngNum = detailRes.getDeviceInfoList().get(0).getSvcMangNum();
 							final String fdsLogDeviceKey = detailRes.getDeviceInfoList().get(0).getDeviceKey();
-							new TLogUtil().log(new ShuttleSetter() {
+							new TLogUtil().set(new ShuttleSetter() {
 								@Override
 								public void customize(TLogSentinelShuttle shuttle) {
 									shuttle.log_id("TL_SAC_MEM_0002").insd_usermbr_no(fdsLogUserKey)
