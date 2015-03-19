@@ -1500,13 +1500,18 @@ public class LoginServiceImpl implements LoginService {
 						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
 								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
 						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
-						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+						String newUserKey = this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(),
+								marketRes);
 
 						TlogInfo tlogInfo = new TlogInfo();
 						tlogInfo.setTlogID("TL_SC_MEM_0006");
+						tlogInfo.setUserKey(newUserKey);
+						tlogInfo.setDeviceKey(marketRes.getDeviceInfo().getDeviceKey());
+						tlogInfo.setDeviceId(req.getDeviceId());
 						tlogInfo.setUsermbrNoPre(detailRes.getUserInfo().getImMbrNo());
 						tlogInfo.setUsermbrNoPost(marketRes.getDeviceInfo().getDeviceKey());
 						TlogRequest tlogRequest = new TlogRequest();
+						tlogRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 						tlogRequest.setTlogInfo(tlogInfo);
 						this.userSCI.tlog(tlogRequest);
 
@@ -1927,13 +1932,18 @@ public class LoginServiceImpl implements LoginService {
 						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
 								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
 						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
-						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
+						String newUserKey = this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(),
+								marketRes);
 
 						TlogInfo tlogInfo = new TlogInfo();
 						tlogInfo.setTlogID("TL_SC_MEM_0006");
+						tlogInfo.setUserKey(newUserKey);
+						tlogInfo.setDeviceKey(marketRes.getDeviceInfo().getDeviceKey());
+						tlogInfo.setDeviceId(req.getDeviceId());
 						tlogInfo.setUsermbrNoPre(detailRes.getUserInfo().getImMbrNo());
 						tlogInfo.setUsermbrNoPost(marketRes.getDeviceInfo().getDeviceKey());
 						TlogRequest tlogRequest = new TlogRequest();
+						tlogRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 						tlogRequest.setTlogInfo(tlogInfo);
 						this.userSCI.tlog(tlogRequest);
 
