@@ -1520,7 +1520,7 @@ public class LoginServiceImpl implements LoginService {
 
 					}
 
-					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
+					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
 
 				} catch (StorePlatformException e) {
 
@@ -1564,8 +1564,7 @@ public class LoginServiceImpl implements LoginService {
 							detailReq.setDeviceId(marketRes.getDeviceId());
 							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-							this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(),
-									marketRes);
+							this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
 
 						} catch (StorePlatformException ex) {
 
@@ -1969,7 +1968,7 @@ public class LoginServiceImpl implements LoginService {
 
 					}
 
-					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
+					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
 
 				} catch (StorePlatformException e) {
 
@@ -2013,8 +2012,7 @@ public class LoginServiceImpl implements LoginService {
 							detailReq.setDeviceId(marketRes.getDeviceId());
 							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-							this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(),
-									marketRes);
+							this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
 
 						} catch (StorePlatformException ex) {
 
@@ -2484,7 +2482,7 @@ public class LoginServiceImpl implements LoginService {
 
 						}
 
-						this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
+						this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
 
 					} catch (StorePlatformException e) {
 
@@ -2512,8 +2510,7 @@ public class LoginServiceImpl implements LoginService {
 								detailReq.setDeviceId(marketRes.getDeviceId());
 								detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-								this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(),
-										marketRes);
+								this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
 
 							} catch (StorePlatformException ex) {
 
@@ -3445,7 +3442,7 @@ public class LoginServiceImpl implements LoginService {
 
 					}
 
-					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(), marketRes);
+					this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
 
 				} catch (StorePlatformException e) {
 
@@ -3473,8 +3470,7 @@ public class LoginServiceImpl implements LoginService {
 							detailReq.setDeviceId(marketRes.getDeviceId());
 							detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 
-							this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes.getUserInfo(),
-									marketRes);
+							this.updateMarketUserInfo(requestHeader, req.getDeviceId(), detailRes, marketRes);
 
 						} catch (StorePlatformException ex) {
 
@@ -3800,21 +3796,21 @@ public class LoginServiceImpl implements LoginService {
 	 * @param marketRes
 	 *            MarketAuthorizeEcRes
 	 */
-	private void updateMarketUserInfo(SacRequestHeader requestHeader, String deviceId, UserInfo userInfo,
+	private void updateMarketUserInfo(SacRequestHeader requestHeader, String deviceId, DetailV2Res detailRes,
 			MarketAuthorizeEcRes marketRes) {
 
 		UserMbr userMbr = null;
 		String userBirthDay = null;
 
 		// 회원 연령대 코드에 따라 생년월일 업데이트
-		if (StringUtils.isBlank(userInfo.getUserBirthDay())) {
+		if (StringUtils.isBlank(detailRes.getUserInfo().getUserBirthDay())) {
 			userBirthDay = this.getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl());
 			LOGGER.info("{} 생년월일 최초 수집 {}", deviceId, userBirthDay);
 		} else {
-			if (!StringUtils.equals(this.getBirthToProdExpoLevl(userInfo.getUserBirthDay()), marketRes.getDeviceInfo()
-					.getProdExpoLevl())) {
+			if (!StringUtils.equals(this.getBirthToProdExpoLevl(detailRes.getUserInfo().getUserBirthDay()), marketRes
+					.getDeviceInfo().getProdExpoLevl())) {
 				userBirthDay = this.getProdExpoLevlToBirth(marketRes.getDeviceInfo().getProdExpoLevl());
-				LOGGER.info("{} 생년월일 변경 {} -> {}", deviceId, userInfo.getUserBirthDay(), userBirthDay);
+				LOGGER.info("{} 생년월일 변경 {} -> {}", deviceId, detailRes.getUserInfo().getUserBirthDay(), userBirthDay);
 			}
 		}
 
@@ -3831,7 +3827,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		if (userMbr != null) {
-			userMbr.setUserKey(userInfo.getUserKey());
+			userMbr.setUserKey(detailRes.getUserKey());
 			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 			updateUserRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 			updateUserRequest.setUserMbr(userMbr);
