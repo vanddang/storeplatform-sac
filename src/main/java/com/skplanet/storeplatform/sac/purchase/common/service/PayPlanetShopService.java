@@ -54,6 +54,24 @@ public interface PayPlanetShopService {
 	/**
 	 * 
 	 * <pre>
+	 * Pay Planet 가맹점 정보 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            조회할 가맹점의 테넌트 ID
+	 * @param apiTypeCd
+	 *            P/P 연동 API 타입 코드
+	 * @param prchsReqPathCd
+	 *            구매요청경로코드
+	 * @param mid
+	 *            P/P 가맹점ID
+	 * @return Pay Planet 가맹점 정보
+	 */
+	public PayPlanetShop getPayPlanetShopInfoByMid(String tenantId, String apiTypeCd, String prchsReqPathCd, String mid);
+
+	/**
+	 * 
+	 * <pre>
 	 * Pay Planet 가맹점 ID 여부 확인.
 	 * </pre>
 	 * 
