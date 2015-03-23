@@ -145,6 +145,7 @@ public class AppServiceImpl implements AppService {
         product.setSvcGrpCd(appDetail.getSvcGrpCd());
 
         product.setLikeYn(appDetail.getLikeYn());
+        product.setAvailableTenantList(Arrays.asList("S01"));   // TODO Implement
 
         // Menu
         List<MenuItem> menuList = commonService.getMenuItemList(request.getChannelId(), request.getLangCd());
