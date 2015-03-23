@@ -129,9 +129,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
             status.setPurchaseHide(metaInfo.getPurchaseHide());
         }
         // 업데이트 알람 수신 여부
-        if ( StringUtils.isNotEmpty(metaInfo.getUpdateAlarm()) ) {
-            status.setUpdateAlarm(metaInfo.getUpdateAlarm());
-        }
+        status.setUpdateAlarm(metaInfo.getUpdateAlarm());
         data.setStatus(status);
 
         // extra : 값의 형식은 "key=value;key2=value2;"로 구성된다. 추후 정의하여 사용.

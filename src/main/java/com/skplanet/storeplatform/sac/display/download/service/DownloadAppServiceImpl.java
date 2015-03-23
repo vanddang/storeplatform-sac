@@ -193,7 +193,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
              * 업데이트 알람 수신 여부가 SAC구매에서 테넌트로 옮겨짐.
              * For D/L API에 파마리터로 현재 상태의 알람 수신 여부를 받도록 변경
              */
-            metaInfo.setUpdateAlarm(downloadAppSacReq.getUpdateAlarmYn());
+            metaInfo.setUpdateAlarm(StringUtils.defaultString(downloadAppSacReq.getUpdateAlarmYn(), "Y"));
 
 
 			if (StringUtils.isNotEmpty(deviceKey) && StringUtils.isNotEmpty(userKey)) {
