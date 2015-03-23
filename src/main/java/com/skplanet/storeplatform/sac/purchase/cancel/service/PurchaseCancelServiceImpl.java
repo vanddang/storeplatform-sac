@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.helper.MultiMessageSourceAccessor;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
-import com.skplanet.storeplatform.purchase.client.common.vo.PayPlanetShop;
+import com.skplanet.storeplatform.purchase.client.common.vo.PpProperty;
 import com.skplanet.storeplatform.purchase.client.common.vo.SapNoti;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
@@ -873,7 +873,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			if (this.payPlanetShopService.startsWithPayPlanetMID(paymentSacParam.getTid())) {
 				this.logger.info("[##PurchaseCancel] PayPlanet 결제처리");
 
-				PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfoByMid(
+				PpProperty payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfoByMid(
 						purchaseCancelDetailSacParam.getPrchsSacParam().getTenantId(),
 						PurchaseConstants.PAYPLANET_API_TYPE_CANCEL, purchaseCancelDetailSacParam.getPrchsSacParam()
 								.getPrchsReqPathCd(), StringUtils.substringBefore(paymentSacParam.getTid(), "_"));

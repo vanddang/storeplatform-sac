@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.common.service;
 
 import com.skplanet.storeplatform.purchase.client.common.vo.PayPlanetShop;
+import com.skplanet.storeplatform.purchase.client.common.vo.PpProperty;
 
 /**
  * 
@@ -22,18 +23,20 @@ public interface PayPlanetShopService {
 	/**
 	 * 
 	 * <pre>
-	 * Pay Planet 가맹점 정보 조회.
+	 * SKT 결제/결제취소 용 SYSTEM DIVISION 조회.
 	 * </pre>
 	 * 
 	 * @param tenantId
 	 *            조회할 가맹점의 테넌트 ID
-	 * @param apiTypeCd
-	 *            P/P 연동 API 타입 코드
-	 * @param reqPathCd
-	 *            구매 요청 경로 코드
-	 * @return Pay Planet 가맹점 정보
+	 * @param prodId
+	 *            상품 ID
+	 * @param parentProdId
+	 *            인앱 모상품 APP ID
+	 * @param tenantProdGrpCd
+	 *            테넌트 상품 분류 코드
+	 * @return 결제/결제취소 용 SYSTEM DIVISION 정보
 	 */
-	public PayPlanetShop getPayPlanetShopInfo(String tenantId, String apiTypeCd, String reqPathCd);
+	public PpProperty getDcbSystemDivision(String tenantId, String prodId, String parentProdId, String tenantProdGrpCd);
 
 	/**
 	 * 
@@ -45,11 +48,11 @@ public interface PayPlanetShopService {
 	 *            조회할 가맹점의 테넌트 ID
 	 * @param apiTypeCd
 	 *            P/P 연동 API 타입 코드
-	 * @param mid
-	 *            P/P 가맹점ID
+	 * @param prchsReqPathCd
+	 *            구매 요청 경로 코드
 	 * @return Pay Planet 가맹점 정보
 	 */
-	public PayPlanetShop getPayPlanetShopInfoByMid(String tenantId, String apiTypeCd, String mid);
+	public PpProperty getPayPlanetShopInfo(String tenantId, String apiTypeCd, String prchsReqPathCd);
 
 	/**
 	 * 
@@ -67,7 +70,23 @@ public interface PayPlanetShopService {
 	 *            P/P 가맹점ID
 	 * @return Pay Planet 가맹점 정보
 	 */
-	public PayPlanetShop getPayPlanetShopInfoByMid(String tenantId, String apiTypeCd, String prchsReqPathCd, String mid);
+	public PpProperty getPayPlanetShopInfoByMid(String tenantId, String apiTypeCd, String prchsReqPathCd, String mid);
+
+	/**
+	 * 
+	 * <pre>
+	 * Pay Planet 가맹점 정보 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            조회할 가맹점의 테넌트 ID
+	 * @param apiTypeCd
+	 *            P/P 연동 API 타입 코드
+	 * @param mid
+	 *            P/P 가맹점ID
+	 * @return Pay Planet 가맹점 정보
+	 */
+	public PayPlanetShop getPayPlanetShopInfoByMid(String tenantId, String apiTypeCd, String mid);
 
 	/**
 	 * 

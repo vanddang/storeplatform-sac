@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.purchase.client.common.vo.PayPlanetShop;
+import com.skplanet.storeplatform.purchase.client.common.vo.PpProperty;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 
 /**
@@ -55,6 +56,127 @@ public class PayPlanetShopServiceImplTest {
 	}
 
 	@Test
+	public void getDcbSystemDivision() {
+		String tenantId = null;
+		String prodId = null;
+		String parentProdId = null;
+		String tenantProdGrpCd = null;
+
+		// S01 / 게임 카테고리
+		tenantId = "S01";
+		tenantProdGrpCd = "OR006211DP01OR006311";
+		PpProperty sysDivProperty = this.payPlanetShopService.getDcbSystemDivision(tenantId, prodId, parentProdId,
+				tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+
+		// S01 / VOD 영화 단품
+		tenantId = "S01";
+		tenantProdGrpCd = "OR006212DP17OR006311";
+		sysDivProperty = this.payPlanetShopService
+				.getDcbSystemDivision(tenantId, prodId, parentProdId, tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+
+		// S01 / VOD 영화 정액제
+		tenantId = "S01";
+		tenantProdGrpCd = "OR006212DP17OR006331";
+		sysDivProperty = this.payPlanetShopService
+				.getDcbSystemDivision(tenantId, prodId, parentProdId, tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+
+		// S01 / VOD TV 단품
+		tenantId = "S01";
+		tenantProdGrpCd = "OR006212DP18OR006311";
+		sysDivProperty = this.payPlanetShopService
+				.getDcbSystemDivision(tenantId, prodId, parentProdId, tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+
+		// S01 / VOD TV 정액제
+		tenantId = "S01";
+		tenantProdGrpCd = "OR006212DP18OR006331";
+		sysDivProperty = this.payPlanetShopService
+				.getDcbSystemDivision(tenantId, prodId, parentProdId, tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+
+		// S01 / 쇼핑 카테고리
+		tenantId = "S01";
+		tenantProdGrpCd = "OR006221DP28OR006311";
+		sysDivProperty = this.payPlanetShopService
+				.getDcbSystemDivision(tenantId, prodId, parentProdId, tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+
+		// S01 / IAP 카테고리
+		tenantId = "S01";
+		tenantProdGrpCd = "OR006321DP01OR006311";
+		sysDivProperty = this.payPlanetShopService
+				.getDcbSystemDivision(tenantId, prodId, parentProdId, tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+
+		// S01 / 상품ID: 09TEST / IAP 카테고리
+		tenantId = "S01";
+		prodId = "09TEST";
+		tenantProdGrpCd = "OR006321DP01OR006311";
+		sysDivProperty = this.payPlanetShopService
+				.getDcbSystemDivision(tenantId, prodId, parentProdId, tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+
+		// S01 / AID: OA00668559 / IAP 카테고리
+		tenantId = "S01";
+		prodId = "09TEST";
+		parentProdId = "OA00668559";
+		tenantProdGrpCd = "OR006321DP01OR006311";
+		sysDivProperty = this.payPlanetShopService
+				.getDcbSystemDivision(tenantId, prodId, parentProdId, tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+
+		// S02 / 게임 카테고리
+		tenantId = "S02";
+		tenantProdGrpCd = "OR006211DP01OR006311";
+		sysDivProperty = this.payPlanetShopService
+				.getDcbSystemDivision(tenantId, prodId, parentProdId, tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+
+		// S02 / IAP 카테고리
+		tenantId = "S02";
+		tenantProdGrpCd = "OR006321DP01OR006311";
+		sysDivProperty = this.payPlanetShopService
+				.getDcbSystemDivision(tenantId, prodId, parentProdId, tenantProdGrpCd);
+		if (this.bSystemOut) {
+			System.out.println("SYS_DIV:[" + tenantId + "/" + prodId + "/" + parentProdId + "/" + tenantProdGrpCd
+					+ "]:" + ReflectionToStringBuilder.toString(sysDivProperty, ToStringStyle.SHORT_PREFIX_STYLE));
+		}
+	}
+
+	@Test
 	public void getShopInfo() {
 		if (this.bSystemOut) {
 			System.out.println("############# getShopInfo #############");
@@ -65,8 +187,7 @@ public class PayPlanetShopServiceImplTest {
 		String prchsReqPathCd = "OR000407";
 
 		// S01 / 구매요청 / IAP
-		PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(tenantId, apiTypeCd,
-				prchsReqPathCd);
+		PpProperty payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(tenantId, apiTypeCd, prchsReqPathCd);
 		assertNotNull(payPlanetShop);
 		if (this.bSystemOut) {
 			System.out.println("GET:[" + tenantId + "/" + apiTypeCd + "/" + prchsReqPathCd + "]:"

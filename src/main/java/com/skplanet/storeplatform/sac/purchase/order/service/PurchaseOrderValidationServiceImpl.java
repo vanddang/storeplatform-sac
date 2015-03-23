@@ -25,10 +25,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.NoSuchMessageException;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
@@ -66,6 +73,12 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 	@Value("#{systemProperties['spring.profiles.active']}")
 	private String envServerLevel;
+
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor;
+	@Autowired
+	@Qualifier("scPurchase")
+	private MessageSourceAccessor scMessageSourceAccessor;
 
 	@Autowired
 	private ExistenceSCI existenceSCI;
@@ -475,9 +488,71 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			// S2S 상품 가격 조회
 			if (StringUtils.isNotBlank(purchaseProduct.getSearchPriceUrl())) {
-				String reqTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-				double price = this.purchaseIapRepository.searchIapS2SPrice(purchaseProduct.getSearchPriceUrl(),
-						reqTime, purchaseProduct.getAid(), purchaseProduct.getProdId(), reqProdList.get(0).getTid());
+
+				final List<String> tLogProdIdList = new ArrayList<String>();
+				tLogProdIdList.add(purchaseProduct.getProdId());
+				final List<String> aidList = new ArrayList<String>();
+				aidList.add(purchaseProduct.getAid());
+				final String tid = reqProdList.get(0).getTid();
+				final String tx_id = reqProdList.get(0).getTxId();
+				final List<Long> prodPriceList = new ArrayList<Long>();
+				final String mbr_id = purchaseOrderInfo.getPurchaseUser().getUserId();
+				final String device_id = purchaseOrderInfo.getPurchaseUser().getDeviceId();
+				final String search_price_url = purchaseProduct.getSearchPriceUrl();
+
+				StorePlatformException checkException = null;
+
+				double price = 0.0;
+				try {
+					String reqTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+
+					price = this.purchaseIapRepository.searchIapS2SPrice(purchaseProduct.getSearchPriceUrl(), reqTime,
+							purchaseProduct.getAid(), purchaseProduct.getProdId(), tid);
+
+					prodPriceList.add((long) price);
+
+				} catch (StorePlatformException e) {
+					checkException = e;
+					throw checkException;
+				} catch (Exception e) {
+					checkException = new StorePlatformException("SAC_PUR_7222", e);
+					throw checkException;
+				} finally {
+					// S2S 상품가격 조회 결과 로깅
+					ErrorInfo errorInfo = (checkException != null ? checkException.getErrorInfo() : null);
+
+					String msg = "";
+					if (errorInfo != null) {
+						try {
+							if (StringUtils.startsWith(errorInfo.getCode(), "SC_")) {
+								msg = this.scMessageSourceAccessor.getMessage(errorInfo.getCode());
+							} else {
+								msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+							}
+						} catch (NoSuchMessageException e) {
+							msg = "";
+						}
+					}
+
+					final String result_code = (errorInfo != null ? errorInfo.getCode() : PurchaseConstants.TLOG_RESULT_CODE_SUCCESS);
+					final String result_message = msg;
+					final String exception_log = (errorInfo != null ? (errorInfo.getCause() == null ? "" : errorInfo
+							.getCause().toString()) : "");
+
+					new TLogUtil().log(new ShuttleSetter() {
+						@Override
+						public void customize(TLogSentinelShuttle shuttle) {
+							shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_S2S_SEARCHPRICE).mbr_id(mbr_id)
+									.device_id(device_id).tx_id(tx_id).tid(tid).product_id(tLogProdIdList)
+									.app_id(aidList).product_price(prodPriceList).search_price_url(search_price_url)
+									.result_code(result_code);
+							if (StringUtils.equals(result_code, PurchaseConstants.TLOG_RESULT_CODE_SUCCESS) == false) {
+								shuttle.result_message(result_message).exception_log(exception_log);
+							}
+						}
+					});
+				}
+
 				purchaseProduct.setProdAmt(price);
 			}
 

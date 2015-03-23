@@ -49,6 +49,10 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String TLOG_ID_PURCHASE_ORDER_PRECHECK = "TL_SAC_PUR_0003"; // 구매 선결조건 체크
 	public static final String TLOG_ID_PURCHASE_ORDER_RESULT = "TL_SAC_PUR_0005"; // 구매 결과
 	public static final String TLOG_ID_PURCHASE_ORDER_RESERVE = "TL_SAC_PUR_0007"; // 구매 예약
+	public static final String TLOG_ID_PURCHASE_ORDER_S2S_SEARCHPRICE = "TL_SAC_PUR_0008"; // S2S 가격조회 결과
+	public static final String TLOG_ID_PURCHASE_ORDER_VERIFY = "TL_SAC_PUR_0009"; // 구매인증 결과
+	/** TLOG RESULT CODE */
+	public static final String TLOG_RESULT_CODE_SUCCESS = "SUCC";
 
 	/** 호핀 AID */
 	public static final List<String> HOPPIN_AID_LIST = Arrays.asList("OA00252337"); // 호핀 AID

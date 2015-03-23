@@ -42,9 +42,9 @@ import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
-import com.skplanet.storeplatform.purchase.client.common.vo.PayPlanetShop;
 import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PaymentPromotion;
+import com.skplanet.storeplatform.purchase.client.common.vo.PpProperty;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.common.vo.UniqueTid;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
@@ -494,7 +494,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					}
 				}
 
-				final String result_code = (errorInfo != null ? errorInfo.getCode() : "SUCC");
+				final String result_code = (errorInfo != null ? errorInfo.getCode() : PurchaseConstants.TLOG_RESULT_CODE_SUCCESS);
 				final String result_message = msg;
 				final String exception_log = (errorInfo != null ? (errorInfo.getCause() == null ? "" : errorInfo
 						.getCause().toString()) : "");
@@ -544,7 +544,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 									.coupon_publish_code(coupon_publish_code).coupon_code(coupon_code)
 									.coupon_item_code(coupon_item_code).auto_payment_yn(auto_payment_yn)
 									.top_cat_code(topCatCodeList).result_code(result_code);
-							if (StringUtils.equals(result_code, "SUCC") == false) {
+							if (StringUtils.equals(result_code, PurchaseConstants.TLOG_RESULT_CODE_SUCCESS) == false) {
 								shuttle.result_message(result_message).exception_log(exception_log);
 							}
 						}
@@ -566,12 +566,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// -----------------------------------------------------------------------------
 		// PayPlanet 가맹점 정보 조회
 
-		PayPlanetShop payPlanetShop = this.payPlanetShopService.getPayPlanetShopInfo(purchaseOrderInfo.getTenantId(),
+		PpProperty payPlanetShopInfo = this.payPlanetShopService.getPayPlanetShopInfo(purchaseOrderInfo.getTenantId(),
 				PurchaseConstants.PAYPLANET_API_TYPE_PURCHASE, purchaseOrderInfo.getPrchsReqPathCd());
-		purchaseOrderInfo.setMid(payPlanetShop.getMid());
-		purchaseOrderInfo.setAuthKey(payPlanetShop.getAuthKey());
-		purchaseOrderInfo.setEncKey(payPlanetShop.getEncKey());
-		purchaseOrderInfo.setPaymentPageUrl(payPlanetShop.getUrl());
+		purchaseOrderInfo.setMid(payPlanetShopInfo.getMid());
+		purchaseOrderInfo.setAuthKey(payPlanetShopInfo.getAuthKey());
+		purchaseOrderInfo.setEncKey(payPlanetShopInfo.getEncKey());
+		purchaseOrderInfo.setPaymentPageUrl(payPlanetShopInfo.getUrl());
 
 		// -----------------------------------------------------------------------------
 		// 구매생성 요청 데이터 생성
@@ -626,7 +626,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				}
 			}
 
-			final String result_code = (errorInfo != null ? errorInfo.getCode() : "SUCC");
+			final String result_code = (errorInfo != null ? errorInfo.getCode() : PurchaseConstants.TLOG_RESULT_CODE_SUCCESS);
 			final String result_message = msg;
 			final String exception_log = (errorInfo != null ? (errorInfo.getCause() == null ? "" : errorInfo.getCause()
 					.toString()) : "");
@@ -653,7 +653,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 							.device_id(device_id).purchase_id(purchase_id).product_id(product_id_list)
 							.product_name(product_name_list).product_price(product_price_list).product_qty(product_qty)
 							.result_code(result_code);
-					if (StringUtils.equals(result_code, "SUCC") == false) {
+					if (StringUtils.equals(result_code, PurchaseConstants.TLOG_RESULT_CODE_SUCCESS) == false) {
 						shuttle.result_message(result_message).exception_log(exception_log);
 					}
 				}
@@ -702,6 +702,22 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore
 				.getPrchsResvDesc());
 
+		// 구매인증 결과 T Log 일부 세팅 (구매인증 응답 VO에 없는 항목들)
+		// : insd_usermbr_no, insd_device_id, purchase_inflow_channel, mbr_id, device_id, purchase_id
+		final String insd_usermbr_no = payUserKey;
+		final String insd_device_id = payDeviceKey;
+		final String purchase_inflow_channel = prchsDtlMore.getPrchsCaseCd();
+		final String mbr_id = reservedDataMap.get("userId");
+		final String device_id = reservedDataMap.get("deviceId");
+		final String purchase_id = prchsDtlMore.getPrchsId();
+		new TLogUtil().set(new ShuttleSetter() {
+			@Override
+			public void customize(TLogSentinelShuttle shuttle) {
+				shuttle.insd_usermbr_no(insd_usermbr_no).insd_device_id(insd_device_id).mbr_id(mbr_id)
+						.device_id(device_id).purchase_inflow_channel(purchase_inflow_channel).purchase_id(purchase_id);
+			}
+		});
+
 		// ------------------------------------------------------------------------------------------------
 		// 결제수단 재정의 - 통신사 후불 관련 정책 체크: 시험폰, MVNO, 법인폰, 한도금액 조회
 
@@ -722,23 +738,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			deferredPaymentType = checkPaymentPolicyResult.getDeferredPaymentType();
 
 			// SKT 후불 SYSTEM_DIVISION
-			if (StringUtils.equals(prchsDtlMore.getTenantId(), PurchaseConstants.TENANT_ID_TSTORE)) {
-
-				// if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-				// PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
-				// res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_IAP_APPROVAL);
-				// res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_IAP_CANCEL);
-				// }
-				if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_MOVIE_FIXRATE)
-						|| StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
-								PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_TV_FIXRATE)) {
-					res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_VOD_FIXRATE_APPROVAL);
-					res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_VOD_FIXRATE_CANCEL);
-				} else {
-					res.setApprovalSd(PurchaseConstants.SKT_SYSTEM_DIVISION_NORMAL_APPROVAL);
-					res.setCancelSd(PurchaseConstants.SKT_SYSTEM_DIVISION_NORMAL_CANCEL);
-				}
+			String parentProdId = StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) ? reservedDataMap.get("aid") : null;
+			PpProperty sysDivision = this.payPlanetShopService.getDcbSystemDivision(prchsDtlMore.getTenantId(),
+					prchsDtlMore.getProdId(), parentProdId, prchsDtlMore.getTenantProdGrpCd());
+			if (sysDivision != null) {
+				res.setApprovalSd(sysDivision.getSysDiv());
+				res.setCancelSd(sysDivision.getCnclSysDiv());
 			}
 		}
 
@@ -1469,7 +1475,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				}
 			}
 
-			final String result_code = (errorInfo != null ? errorInfo.getCode() : "SUCC");
+			final String result_code = (errorInfo != null ? errorInfo.getCode() : PurchaseConstants.TLOG_RESULT_CODE_SUCCESS);
 			final String result_message = msg;
 			final String exception_log = (errorInfo != null ? (errorInfo.getCause() == null ? "" : errorInfo.getCause()
 					.toString()) : "");
@@ -1529,7 +1535,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 								.download_expired_time(download_expired_time).product_qty(product_qty)
 								.coupon_publish_code(coupon_publish_code).device_id_recv(device_id_recv)
 								.top_cat_code(topCatCodeList).result_code(result_code);
-						if (StringUtils.equals(result_code, "SUCC") == false) {
+						if (StringUtils.equals(result_code, PurchaseConstants.TLOG_RESULT_CODE_SUCCESS) == false) {
 							shuttle.result_message(result_message).exception_log(exception_log);
 						}
 					}
@@ -1849,7 +1855,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				new TLogUtil().log(new ShuttleSetter() {
 					@Override
 					public void customize(TLogSentinelShuttle shuttle) {
-						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_PRECHECK).result_code("SUCC");
+						shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_PRECHECK).result_code(
+								PurchaseConstants.TLOG_RESULT_CODE_SUCCESS);
 					}
 				});
 
