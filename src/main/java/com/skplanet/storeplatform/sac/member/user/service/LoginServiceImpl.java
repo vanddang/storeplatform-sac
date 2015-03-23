@@ -2873,9 +2873,12 @@ public class LoginServiceImpl implements LoginService {
 			year -= 16;
 		} else if (MemberConstants.PROD_EXPO_LEVL_12_MORE.equals(prodExpoLevl)) {
 			year -= 13;
-		} else {
+		} else if (MemberConstants.PROD_EXPO_LEVL_12_UNDER.equals(prodExpoLevl)) {
 			year -= 12;
+		} else {
+			return birth;
 		}
+
 		birth = String.valueOf(year) + "1231";
 
 		return birth;
