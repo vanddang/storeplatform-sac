@@ -374,7 +374,17 @@ public class Product extends CommonInfo implements Serializable {
 	private String expoOrd;
 	private String expoOrdSub;
 
-	public String getProdCase() {
+    private List<String> availableTenantList;
+
+    public List<String> getAvailableTenantList() {
+        return availableTenantList;
+    }
+
+    public void setAvailableTenantList(List<String> availableTenantList) {
+        this.availableTenantList = availableTenantList;
+    }
+
+    public String getProdCase() {
 		return this.prodCase;
 	}
 
