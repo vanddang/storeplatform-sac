@@ -119,15 +119,12 @@ public class SimilarMovieServiceImpl implements SimilarMovieService {
 	 * @return
 	 */
 	private Product makeProductFrom(String prodId, SacRequestHeader header) {
-		Product p = new Product();
-
 		ListProduct lp = new ListProduct();
 		lp.setProdId(prodId);
 		lp.setTopMenuId(DisplayConstants.DP_MOVIE_TOP_MENU_ID);
 		lp.setSvcGrpCd(DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
 		lp.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 
-		p = productListService.getProduct(header, lp);
-		return p;
+		return productListService.getProduct(header, lp);
 	}
 }
