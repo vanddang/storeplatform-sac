@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.related.AlbumProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.AlbumProductSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.related.ArtistProductSacReq;
@@ -23,6 +21,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherPr
 import com.skplanet.storeplatform.sac.client.display.vo.related.BoughtTogetherProductSacV3Req;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SellerProductSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarMovieSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarMovieSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.related.SimilarProductSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -31,12 +31,13 @@ import com.skplanet.storeplatform.sac.display.related.service.ArtistProductServi
 import com.skplanet.storeplatform.sac.display.related.service.AuthorProductService;
 import com.skplanet.storeplatform.sac.display.related.service.BoughtTogetherProductService;
 import com.skplanet.storeplatform.sac.display.related.service.SellerProductService;
+import com.skplanet.storeplatform.sac.display.related.service.SimilarMovieService;
 import com.skplanet.storeplatform.sac.display.related.service.SimilarProductService;
 
 /**
- * 
+ *
  * 메뉴 조회 Controller.
- * 
+ *
  * Updated on : 2014. 02. 20. Updated by : 유시혁.
  */
 
@@ -47,6 +48,9 @@ public class RelatedProductController {
 
 	@Autowired
 	private SimilarProductService similarProductService;
+
+	@Autowired
+	private SimilarMovieService similarMovieService;
 
 	@Autowired
 	private BoughtTogetherProductService boughtTogetherProductService;
@@ -64,11 +68,11 @@ public class RelatedProductController {
 	private AlbumProductService albumProductService;
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * [I03000032] 2.5.1.이 상품과 유사 상품 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            SimilarProductSacReq
 	 * @param requestHeader
@@ -86,11 +90,11 @@ public class RelatedProductController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * [] 2.5.7.이 상품과 유사 상품 조회 V2.
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            SimilarProductSacReq
 	 * @param requestHeader
@@ -141,11 +145,11 @@ public class RelatedProductController {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * [I03000034] 2.5.3. 특정 판매자별 상품 조회
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            SellerProductSacReq
 	 * @param requestHeader
@@ -185,11 +189,11 @@ public class RelatedProductController {
     }
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * [I03000036] 2.5.4.특정 작가별 상품 조회
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            AuthorProductSacReq
 	 * @param requestHeader
@@ -229,11 +233,11 @@ public class RelatedProductController {
     }
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * [I03000037] 2.5.5. 특정 아티스트별 상품(곡) 조회
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            ArtistProductSacReq
 	 * @param requestHeader
@@ -273,11 +277,11 @@ public class RelatedProductController {
     }
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * [??] 2.5.?. 특정 앨범별 상품(곡) 조회
 	 * </pre>
-	 * 
+	 *
 	 * @param requestVO
 	 *            AlbumProductSacReq
 	 * @param requestHeader
@@ -288,11 +292,32 @@ public class RelatedProductController {
 	@ResponseBody
 	public AlbumProductSacRes searchAlbumProductList(@Validated AlbumProductSacReq requestVO,
 			SacRequestHeader requestHeader) {
-		
+
 		this.logger.debug("RelatedProductController.searchAlbumProductList start !!");
 		return this.albumProductService.searchAlbumProductList(requestVO, requestHeader);
 	}
-	
-	
+
+	/**
+	 *
+	 * <pre>
+	 * [I03000032] 2.5.11.이 영화와 유사 영화 조회.
+	 * </pre>
+	 *
+	 * @param requestVO
+	 *            SimilarProductSacReq
+	 * @param requestHeader
+	 *            SimilarProductSacReq
+	 * @return SimilarProductSacRes
+	 */
+	@RequestMapping(value = "/similar/movie/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public SimilarMovieSacRes searchSimilarMovieList(@Validated SimilarMovieSacReq requestVO,
+			SacRequestHeader requestHeader) {
+
+		this.logger.debug("RelatedProductController.searchSimilarMovieList start !!");
+		return this.similarMovieService.searchSimilarMovieList(requestVO, requestHeader);
+	}
+
+
 
 }
