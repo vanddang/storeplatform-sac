@@ -267,8 +267,11 @@ public class ProductListServiceImpl implements ProductListService{
 		else if (prodId.startsWith("CL")) {
 			paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 			metaInfo = metaInfoService.getShoppingMetaInfo(paramMap);
-			if(metaInfo!=null)
+			if(metaInfo!=null) {
 				product = responseInfoGenerateFacade.generateShoppingProduct(metaInfo);
+				// 쇼핑 4.0 일 경우 특가 상품 여부 추가
+				product.setSpecialProdYn(metaInfo.getSpecialSaleYn());
+			}
 		}
 
 		if(product==null)
