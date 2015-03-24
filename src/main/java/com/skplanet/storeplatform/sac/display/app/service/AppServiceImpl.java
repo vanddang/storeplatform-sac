@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.app.service;
 
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
@@ -26,10 +27,13 @@ import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.service.MemberBenefitService;
+import com.skplanet.storeplatform.sac.display.common.service.menu.MenuInfo;
+import com.skplanet.storeplatform.sac.display.common.service.menu.MenuInfoService;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
+import com.skplanet.storeplatform.sac.display.menu.service.MenuDataService;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,10 +89,11 @@ public class AppServiceImpl implements AppService {
     @Autowired
     private CommonMetaInfoGenerator metaInfoGenerator;
 
+    @Autowired
+    private MenuInfoService menuInfoService;
+
 	@Override
 	public AppDetailRes searchAppDetail(AppDetailParam request) {
-        logger.info("channelId={},userKey={},deviceKey={},deviceModel={}",
-                request.getChannelId(), request.getUserKey(), request.getDeviceKey(), request.getDeviceModelCd());
 
 		AppDetail appDetail = this.commonDAO.queryForObject("AppDetail.getAppDetail", request, AppDetail.class);
 		if (appDetail == null)
@@ -153,22 +158,27 @@ public class AppServiceImpl implements AppService {
         // Menu
         List<MenuItem> menuList = commonService.getMenuItemList(request.getChannelId(), request.getLangCd());
         product.setMenuList(new ArrayList<Menu>());
-        String topMenuId = "";
+
+        // Add topMenu
+        if(!Strings.isNullOrEmpty(appDetail.getTopMenuId())) {
+            product.getMenuList()
+                    .add(new Menu(appDetail.getTopMenuId(), menuInfoService.getMenuName(appDetail.getTopMenuId(), request.getLangCd()), "topClass"));
+        }
+
         for (MenuItem mi : menuList) {
+            if(mi.isInfrMenu())
+                continue;
+
             Menu menu = new Menu();
             menu.setId(mi.getMenuId());
             menu.setName(mi.getMenuNm());
-            if(mi.isInfrMenu()) {
-            	topMenuId = mi.getMenuId();
-                menu.setType("topClass");
-            } else
-                menu.setDesc(mi.getMenuDesc());
+            menu.setDesc(mi.getMenuDesc());
 
 			product.getMenuList().add(menu);
 		}
 
         //tmembership 할인율
-        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(request.getTenantId(), topMenuId);
+        TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(request.getTenantId(), appDetail.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
         //Tstore멤버십 적립율 정보
         if (StringUtils.isNotEmpty(request.getUserKey())) {
@@ -179,22 +189,22 @@ public class AppServiceImpl implements AppService {
 	        	String userGrade = userGradeInfo.getUserGradeCd();
 	        	Integer prodAmt = appDetail.getProdAmt();
 	        	MileageInfo mileageInfo = benefitService.getMileageInfo(request.getTenantId(), appDetail.getTopMenuId(), request.getChannelId(), prodAmt);
-	        	
+
 	        	//무료인 경우 예외처리
 	        	if(prodAmt == null || prodAmt == 0) {
 	        		if(StringUtils.equals(mileageInfo.getPolicyTargetCd(), DisplayConstants.POLICY_TARGET_CD_CATEGORY)
 	        				&& !supportInApp(appDetail)) {
 	        			//무료 && 카테고리 (예외상품 아님) && 인앱 미지원
 	        			// 마일리지 정보를 내려주지 않는다.
-	        			mileageInfo = new MileageInfo(); 
+	        			mileageInfo = new MileageInfo();
 	        		}
 	        	}
 	        	pointList.addAll(metaInfoGenerator.generateMileage(mileageInfo, userGrade));
         	}
         }
         if(pointList.size() > 0) product.setPointList(pointList);
-        
-        
+
+
         product.setSupportList(new ArrayList<Support>());
         product.getSupportList().add(new Support("drm", appDetail.getDrmYn()));
         product.getSupportList().add(new Support("iab", supportInApp(appDetail) ? "Y" : "N"));
