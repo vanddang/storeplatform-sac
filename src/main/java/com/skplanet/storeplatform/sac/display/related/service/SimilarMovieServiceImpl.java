@@ -104,11 +104,15 @@ public class SimilarMovieServiceImpl implements SimilarMovieService {
 			String prodId = prodIdWithPoint.split("\\(")[0].trim();
 			logger.debug("add prodId={}",prodId);
 			Product p = makeProductFrom(prodId, header);
-			if(p!=null)
+			if(p!=null && onSale(p))
 				list.add(p);
 		}
 		res.setProductList(list);
 		return res;
+	}
+
+	private boolean onSale(Product product) {
+		return product.getSalesStatus().equals(DisplayConstants.DP_SALE_STAT_ING);
 	}
 
 	/**
