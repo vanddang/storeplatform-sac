@@ -82,4 +82,13 @@
         AND LANG_CD = #{langCd}
     </select>
 
+    <select id="getTenantProductList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.app.service.AppServiceImpl$TenantProductInfo">
+        SELECT /* AppDetailMapper.xml, getTenantProductList, SAC : 정희원 , 2015-03-24 */
+          TENANT_ID, MAPG_PROD_ID, PROD_STATUS_CD
+        FROM TB_DP_TENANT_PROD
+        WHERE PROD_ID = #{prodId}
+        AND TENANT_ID IN <foreach collection="tenantIdList" separator="," item="v" open="(" close=")">#{v}</foreach>
+        AND MAPG_PROD_ID IS NOT NULL
+    </select>
+
 </mapper>

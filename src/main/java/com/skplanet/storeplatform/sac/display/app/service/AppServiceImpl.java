@@ -9,34 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.display.app.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetail;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.display.app.vo.ImageSource;
@@ -49,6 +31,15 @@ import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.TmembershipDcInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.UpdateHistory;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 앱 상품 상세조회
@@ -145,7 +136,19 @@ public class AppServiceImpl implements AppService {
         product.setSvcGrpCd(appDetail.getSvcGrpCd());
 
         product.setLikeYn(appDetail.getLikeYn());
-        product.setAvailableTenantList(Arrays.asList("S01"));   // TODO Implement
+
+        List<TenantProductInfo> tenantProdInfoList = getTenantProdList(request.getChannelId());
+        List<TenantProduct> tenantProductList = Lists.transform(tenantProdInfoList, new Function<TenantProductInfo, TenantProduct>() {
+            @Override
+            public TenantProduct apply(TenantProductInfo input) {
+                TenantProduct tp = new TenantProduct();
+                tp.setTenantId(input.getTenantId());
+                tp.setMapgProdId(input.getMapgProdId());
+                tp.setSalesStatus(input.getProdStatusCd());
+                return tp;
+            }
+        });
+        product.setTenantProductList(tenantProductList);
 
         // Menu
         List<MenuItem> menuList = commonService.getMenuItemList(request.getChannelId(), request.getLangCd());
@@ -326,6 +329,44 @@ public class AppServiceImpl implements AppService {
         }
 
         return sourceList;
+    }
+
+    private List<TenantProductInfo> getTenantProdList(String chnlId) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("prodId", chnlId);
+        req.put("tenantIdList", ServicePropertyManager.getSupportTenantList());
+
+        return commonDAO.queryForList("AppDetail.getTenantProductList", req, TenantProductInfo.class);
+    }
+
+    public static class TenantProductInfo {
+        private String tenantId;
+        private String mapgProdId;
+        private String prodStatusCd;
+
+        public String getTenantId() {
+            return tenantId;
+        }
+
+        public void setTenantId(String tenantId) {
+            this.tenantId = tenantId;
+        }
+
+        public String getMapgProdId() {
+            return mapgProdId;
+        }
+
+        public void setMapgProdId(String mapgProdId) {
+            this.mapgProdId = mapgProdId;
+        }
+
+        public String getProdStatusCd() {
+            return prodStatusCd;
+        }
+
+        public void setProdStatusCd(String prodStatusCd) {
+            this.prodStatusCd = prodStatusCd;
+        }
     }
 
 }
