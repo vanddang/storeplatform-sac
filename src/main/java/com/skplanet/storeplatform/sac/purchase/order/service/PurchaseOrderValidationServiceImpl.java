@@ -487,7 +487,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 
 			// S2S 상품 가격 조회
-			purchaseProduct.setSearchPriceUrl("http://test.test.test.test");
 			if (StringUtils.isNotBlank(purchaseProduct.getSearchPriceUrl())) {
 
 				final List<String> tLogProdIdList = new ArrayList<String>();
