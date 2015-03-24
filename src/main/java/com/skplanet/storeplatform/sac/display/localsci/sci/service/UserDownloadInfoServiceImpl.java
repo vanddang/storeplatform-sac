@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
 import com.google.common.base.Strings;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.GetUserDownloadInfoParam;
