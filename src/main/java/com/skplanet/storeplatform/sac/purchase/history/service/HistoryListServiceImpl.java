@@ -636,10 +636,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 		for (TenantSalePolicy obj : purchaseTenantPolicyList) {
 			mdnCategoryList.add(obj.getTenantProdGrpCd());
 
-			if (!StringUtils.isBlank(request.getTenantProdGrpCd())
-					&& StringUtils.startsWith(request.getTenantProdGrpCd(), obj.getTenantProdGrpCd())) {
-				selectDeviceYn = "Y"; // 디바이스정책 카테고리 조회일 경우 조회 조건으로 DeviceKey를 넣는다.
-			}
+			// if (!StringUtils.isBlank(request.getTenantProdGrpCd())
+			// && StringUtils.startsWith(request.getTenantProdGrpCd(), obj.getTenantProdGrpCd())) {
+			// selectDeviceYn = "Y"; // 디바이스정책 카테고리 조회일 경우 조회 조건으로 DeviceKey를 넣는다.
+			// }
 		}
 
 		// 요청값중 deviceHistoryYn이 Y로 들어올 경우 무조건 DEVICE기반으로 구매내역을 조회하도록 처리함.
