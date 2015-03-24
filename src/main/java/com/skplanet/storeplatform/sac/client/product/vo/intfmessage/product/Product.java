@@ -9,21 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
-import java.io.Serializable;
-import java.util.List;
-
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonRawValue;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Interface Message Product Value Object.
@@ -374,14 +367,14 @@ public class Product extends CommonInfo implements Serializable {
 	private String expoOrd;
 	private String expoOrdSub;
 
-    private List<String> availableTenantList;
+    private List<TenantProduct> tenantProductList;
 
-    public List<String> getAvailableTenantList() {
-        return availableTenantList;
+    public List<TenantProduct> getTenantProductList() {
+        return tenantProductList;
     }
 
-    public void setAvailableTenantList(List<String> availableTenantList) {
-        this.availableTenantList = availableTenantList;
+    public void setTenantProductList(List<TenantProduct> tenantProductList) {
+        this.tenantProductList = tenantProductList;
     }
 
     public String getProdCase() {
