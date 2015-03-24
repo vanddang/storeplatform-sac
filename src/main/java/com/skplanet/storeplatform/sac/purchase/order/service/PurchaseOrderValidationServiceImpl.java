@@ -1230,8 +1230,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 특가상품 구매가능 건수 체크
 		if (StringUtils.isNotBlank(product.getSpecialSaleCouponId())) {
 
-			// 1회 구매 가능 수량 체크
-			if (publishQty > product.getSpecialSaleOncePrchsLimit()) {
+			// 1회 구매 가능 수량 체크: 특가 상품 선물 시에는 생략
+			if (bGift == false && publishQty > product.getSpecialSaleOncePrchsLimit()) {
 				throw new StorePlatformException("SAC_PUR_6113");
 			}
 
