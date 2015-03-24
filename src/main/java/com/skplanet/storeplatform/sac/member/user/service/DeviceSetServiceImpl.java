@@ -83,11 +83,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 	 */
 	@Override
 	public CreateDevicePinSacRes regDevicePin(SacRequestHeader header, CreateDevicePinSacReq req) {
-		CreateDevicePinRequest createDevicePinRequest = new CreateDevicePinRequest();
-		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
-
 		CreateDevicePinResponse createDevicePinResponse = null;
 		SearchDeviceResponse schDeviceRes = null;
 		final String tlogUserKey = req.getUserKey();
@@ -101,11 +97,12 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 			keySchUserKey.setKeyString(req.getDeviceKey());
 			keySearchList.add(keySchUserKey);
 
+			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 			searchDeviceRequest.setCommonRequest(commonRequest);
 			searchDeviceRequest.setUserKey(req.getUserKey());
 			searchDeviceRequest.setKeySearchList(keySearchList);
-
 			schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
 			final String tlogDeviceId = schDeviceRes.getUserMbrDevice().getDeviceID();
 			new TLogUtil().log(new ShuttleSetter() {
 				@Override
@@ -136,10 +133,10 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 			keySchUserKey.setKeyString(req.getUserKey());
 			keySearchList.add(keySchUserKey);
 
+			CreateDevicePinRequest createDevicePinRequest = new CreateDevicePinRequest();
 			createDevicePinRequest.setCommonRequest(commonRequest);
 			createDevicePinRequest.setPinNo(req.getPinNo());
 			createDevicePinRequest.setKeySearchList(keySearchList);
-
 			createDevicePinResponse = this.deviceSetSCI.createDevicePin(createDevicePinRequest);
 
 			// TL_SAC_MEM_0008 tlog set
@@ -301,11 +298,7 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 	 */
 	@Override
 	public CheckDevicePinSacRes checkDevicePin(SacRequestHeader header, CheckDevicePinSacReq req) {
-		CheckDevicePinRequest checkDevicePinRequest = new CheckDevicePinRequest();
-
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
-
-		// SC Call
 		CheckDevicePinResponse checkDevicePinResponse = null;
 		SearchDeviceResponse schDeviceRes = null;
 		final String tlogUserKey = req.getUserKey();
@@ -323,25 +316,8 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 			searchDeviceRequest.setCommonRequest(commonRequest);
 			searchDeviceRequest.setUserKey(req.getUserKey());
 			searchDeviceRequest.setKeySearchList(keySearchList);
-
-			/**
-			 * 검색 조건 setting
-			 */
-			keySearchList = new ArrayList<KeySearch>();
-			keySchUserKey = new KeySearch();
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-			keySchUserKey.setKeyString(req.getDeviceKey());
-			keySearchList.add(keySchUserKey);
-			keySchUserKey = new KeySearch();
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-			keySchUserKey.setKeyString(req.getUserKey());
-			keySearchList.add(keySchUserKey);
-
-			checkDevicePinRequest.setCommonRequest(commonRequest);
-			checkDevicePinRequest.setKeySearchList(keySearchList);
-			checkDevicePinRequest.setPinNo(req.getPinNo());
-
 			schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
 			final String tlogDeviceId = schDeviceRes.getUserMbrDevice().getDeviceID();
 			new TLogUtil().log(new ShuttleSetter() {
 				@Override
@@ -359,6 +335,23 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 				}
 			});
 
+			/**
+			 * 검색 조건 setting
+			 */
+			keySearchList = new ArrayList<KeySearch>();
+			keySchUserKey = new KeySearch();
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+			keySchUserKey.setKeyString(req.getDeviceKey());
+			keySearchList.add(keySchUserKey);
+			keySchUserKey = new KeySearch();
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+			keySchUserKey.setKeyString(req.getUserKey());
+			keySearchList.add(keySchUserKey);
+
+			CheckDevicePinRequest checkDevicePinRequest = new CheckDevicePinRequest();
+			checkDevicePinRequest.setCommonRequest(commonRequest);
+			checkDevicePinRequest.setKeySearchList(keySearchList);
+			checkDevicePinRequest.setPinNo(req.getPinNo());
 			checkDevicePinResponse = this.deviceSetSCI.checkDevicePin(checkDevicePinRequest);
 
 		} catch (StorePlatformException e) {
