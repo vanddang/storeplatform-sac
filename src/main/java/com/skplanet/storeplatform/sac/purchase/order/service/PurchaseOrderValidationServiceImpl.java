@@ -498,7 +498,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				final List<Long> prodPriceList = new ArrayList<Long>();
 				final String mbr_id = purchaseOrderInfo.getPurchaseUser().getUserId();
 				final String device_id = purchaseOrderInfo.getPurchaseUser().getDeviceId();
-				final String search_price_url = purchaseProduct.getSearchPriceUrl();
+				// final String search_price_url = purchaseProduct.getSearchPriceUrl();
 
 				StorePlatformException checkException = null;
 
@@ -544,7 +544,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						public void customize(TLogSentinelShuttle shuttle) {
 							shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_S2S_SEARCHPRICE).mbr_id(mbr_id)
 									.device_id(device_id).tx_id(tx_id).tid(tid).product_id(tLogProdIdList)
-									.app_id(aidList).product_price(prodPriceList).search_price_url(search_price_url)
+									.app_id(aidList).product_price(prodPriceList)
+									// .search_price_url(search_price_url)
 									.result_code(result_code);
 							if (StringUtils.equals(result_code, PurchaseConstants.TLOG_RESULT_CODE_SUCCESS) == false) {
 								shuttle.result_message(result_message).exception_log(exception_log);

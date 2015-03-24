@@ -51,7 +51,6 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSac
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseUserInfo;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderIapInfoSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -335,7 +334,6 @@ public class PurchaseOrderController {
 				this.logger.info("PRCHS,ORDER,SAC,VERIFY,RES,ERROR,{},{}", req.getPrchsId(), checkException);
 			}
 
-			// 구매완료 TLog 상품 별 로깅
 			ErrorInfo errorInfo = (checkException != null ? checkException.getErrorInfo() : null);
 
 			String msg = "";
@@ -640,59 +638,59 @@ public class PurchaseOrderController {
 	 * @param sacRequestHeader 요청 헤더
 	 */
 	private void loggingVerifyRes(VerifyOrderSacRes verifyRes) {
-		final String one_id = verifyRes.getOneId();
-		final String flg_tele_billing_agree = verifyRes.getFlgTeleBillingAgree();
-		final String flg_ocb_use_agree = verifyRes.getFlgOcbUseAgree();
-		final String flg_product_status = verifyRes.getFlgProductStatus();
-		final String flg_mbr_status = verifyRes.getFlgMbrStatus();
-		final String type_danal_content = verifyRes.getTypeDanalContent();
-		final String approval_sd = verifyRes.getApprovalSd();
-		final String cancel_sd = verifyRes.getCancelSd();
-		final String skt_limit_type = verifyRes.getTypeSktLimit();
-		final String max_amt_rate_cd = verifyRes.getCdMaxAmtRate();
-		final String ocb_save_info = verifyRes.getCdOcbSaveInfo();
-		final String ocb_auth_mtd = verifyRes.getOcbAuthMtdCd();
-		final String ocb_num = verifyRes.getNoOcbCard();
-		final String coupon_list = verifyRes.getNoCouponList();
-		final String cash_point_list = verifyRes.getCashPointList();
-		final String test_mdn_type = verifyRes.getTypeTestMdn();
-		final String payment_template = verifyRes.getCdPaymentTemplate();
-		final String top_menu_id = verifyRes.getTopMenuId();
-		final String bonus_cash_point = verifyRes.getBonusCashPoint();
-		final String bonus_cash_usable_day = verifyRes.getBonusCashUsableDayCnt();
-		final String after_payment_dt = verifyRes.getAfterAutoPayDt();
-		final String use_start_dt = verifyRes.getUseStartDt();
-		final String use_expr_dt = verifyRes.getUseExprDt();
-		final String dwld_available_day_cnt = verifyRes.getDwldAvailableDayCnt();
-		final String use_period_cnt = verifyRes.getUsePeriodCnt();
-		final String prod_kind = verifyRes.getProdKind();
-		VerifyOrderIapInfoSac iapProdInfo = verifyRes.getIapProdInfo();
-		if (iapProdInfo == null) {
-			iapProdInfo = new VerifyOrderIapInfoSac();
-		}
-		final String iap_post_back_url = iapProdInfo.getPostbackUrl();
-		final String iap_prod_kind = iapProdInfo.getProdKind();
-		final String iap_prod_case = iapProdInfo.getProdCase();
-		final Integer iap_use_period = iapProdInfo.getUsePeriod();
-
-		new TLogUtil().set(new ShuttleSetter() {
-			@Override
-			public void customize(TLogSentinelShuttle shuttle) {
-				shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_VERIFY).one_id(one_id)
-						.flg_tele_billing_agree(flg_tele_billing_agree).flg_ocb_use_agree(flg_ocb_use_agree)
-						.flg_product_status(flg_product_status).flg_mbr_status(flg_mbr_status)
-						.type_danal_content(type_danal_content).approval_sd(approval_sd).cancel_sd(cancel_sd)
-						.skt_limit_type(skt_limit_type).max_amt_rate_cd(max_amt_rate_cd).ocb_save_info(ocb_save_info)
-						.ocb_auth_mtd(ocb_auth_mtd).ocb_num(ocb_num).coupon_list(coupon_list)
-						.cash_point_list(cash_point_list).test_mdn_type(test_mdn_type)
-						.payment_template(payment_template).top_menu_id(top_menu_id).bonus_cash_point(bonus_cash_point)
-						.bonus_cash_usable_day(bonus_cash_usable_day).after_payment_dt(after_payment_dt)
-						.use_start_dt(use_start_dt).use_expr_dt(use_expr_dt)
-						.dwld_available_day_cnt(dwld_available_day_cnt).use_period_cnt(use_period_cnt)
-						.prod_kind(prod_kind).iap_post_back_url(iap_post_back_url).iap_prod_kind(iap_prod_kind)
-						.iap_prod_case(iap_prod_case)
-						.iap_use_period(iap_use_period == null ? null : String.valueOf(iap_use_period.intValue()));
-			}
-		});
+		// final String one_id = verifyRes.getOneId();
+		// final String flg_tele_billing_agree = verifyRes.getFlgTeleBillingAgree();
+		// final String flg_ocb_use_agree = verifyRes.getFlgOcbUseAgree();
+		// final String flg_product_status = verifyRes.getFlgProductStatus();
+		// final String flg_mbr_status = verifyRes.getFlgMbrStatus();
+		// final String type_danal_content = verifyRes.getTypeDanalContent();
+		// final String approval_sd = verifyRes.getApprovalSd();
+		// final String cancel_sd = verifyRes.getCancelSd();
+		// final String skt_limit_type = verifyRes.getTypeSktLimit();
+		// final String max_amt_rate_cd = verifyRes.getCdMaxAmtRate();
+		// final String ocb_save_info = verifyRes.getCdOcbSaveInfo();
+		// final String ocb_auth_mtd = verifyRes.getOcbAuthMtdCd();
+		// final String ocb_num = verifyRes.getNoOcbCard();
+		// final String coupon_list = verifyRes.getNoCouponList();
+		// final String cash_point_list = verifyRes.getCashPointList();
+		// final String test_mdn_type = verifyRes.getTypeTestMdn();
+		// final String payment_template = verifyRes.getCdPaymentTemplate();
+		// final String top_menu_id = verifyRes.getTopMenuId();
+		// final String bonus_cash_point = verifyRes.getBonusCashPoint();
+		// final String bonus_cash_usable_day = verifyRes.getBonusCashUsableDayCnt();
+		// final String after_payment_dt = verifyRes.getAfterAutoPayDt();
+		// final String use_start_dt = verifyRes.getUseStartDt();
+		// final String use_expr_dt = verifyRes.getUseExprDt();
+		// final String dwld_available_day_cnt = verifyRes.getDwldAvailableDayCnt();
+		// final String use_period_cnt = verifyRes.getUsePeriodCnt();
+		// final String prod_kind = verifyRes.getProdKind();
+		// VerifyOrderIapInfoSac iapProdInfo = verifyRes.getIapProdInfo();
+		// if (iapProdInfo == null) {
+		// iapProdInfo = new VerifyOrderIapInfoSac();
+		// }
+		// final String iap_post_back_url = iapProdInfo.getPostbackUrl();
+		// final String iap_prod_kind = iapProdInfo.getProdKind();
+		// final String iap_prod_case = iapProdInfo.getProdCase();
+		// final Integer iap_use_period = iapProdInfo.getUsePeriod();
+		//
+		// new TLogUtil().set(new ShuttleSetter() {
+		// @Override
+		// public void customize(TLogSentinelShuttle shuttle) {
+		// shuttle.log_id(PurchaseConstants.TLOG_ID_PURCHASE_ORDER_VERIFY).one_id(one_id)
+		// .flg_tele_billing_agree(flg_tele_billing_agree).flg_ocb_use_agree(flg_ocb_use_agree)
+		// .flg_product_status(flg_product_status).flg_mbr_status(flg_mbr_status)
+		// .type_danal_content(type_danal_content).approval_sd(approval_sd).cancel_sd(cancel_sd)
+		// .skt_limit_type(skt_limit_type).max_amt_rate_cd(max_amt_rate_cd).ocb_save_info(ocb_save_info)
+		// .ocb_auth_mtd(ocb_auth_mtd).ocb_num(ocb_num).coupon_list(coupon_list)
+		// .cash_point_list(cash_point_list).test_mdn_type(test_mdn_type)
+		// .payment_template(payment_template).top_menu_id(top_menu_id).bonus_cash_point(bonus_cash_point)
+		// .bonus_cash_usable_day(bonus_cash_usable_day).after_payment_dt(after_payment_dt)
+		// .use_start_dt(use_start_dt).use_expr_dt(use_expr_dt)
+		// .dwld_available_day_cnt(dwld_available_day_cnt).use_period_cnt(use_period_cnt)
+		// .prod_kind(prod_kind).iap_post_back_url(iap_post_back_url).iap_prod_kind(iap_prod_kind)
+		// .iap_prod_case(iap_prod_case)
+		// .iap_use_period(iap_use_period == null ? null : String.valueOf(iap_use_period.intValue()));
+		// }
+		// });
 	}
 }
