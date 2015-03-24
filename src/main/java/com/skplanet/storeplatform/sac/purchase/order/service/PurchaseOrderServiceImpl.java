@@ -483,14 +483,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 				String msg = "";
 				if (errorInfo != null) {
-					try {
-						if (StringUtils.startsWith(errorInfo.getCode(), "SC_")) {
-							msg = this.scMessageSourceAccessor.getMessage(errorInfo.getCode());
-						} else {
-							msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+					if (StringUtils.isNotBlank(errorInfo.getMessage())) {
+						msg = errorInfo.getMessage();
+					} else {
+						try {
+							if (StringUtils.startsWith(errorInfo.getCode(), "SC_")) {
+								msg = this.scMessageSourceAccessor.getMessage(errorInfo.getCode());
+							} else {
+								msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+							}
+						} catch (NoSuchMessageException e) {
+							msg = "";
 						}
-					} catch (NoSuchMessageException e) {
-						msg = "";
 					}
 				}
 
@@ -619,10 +623,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			String msg = "";
 			if (errorInfo != null) {
-				try {
-					msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
-				} catch (NoSuchMessageException e) {
-					msg = "";
+				if (StringUtils.isNotBlank(errorInfo.getMessage())) {
+					msg = errorInfo.getMessage();
+				} else {
+					try {
+						msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+					} catch (NoSuchMessageException e) {
+						msg = "";
+					}
 				}
 			}
 
@@ -1464,14 +1472,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			String msg = "";
 			if (errorInfo != null) {
-				try {
-					if (StringUtils.startsWith(errorInfo.getCode(), "SC_")) {
-						msg = this.scMessageSourceAccessor.getMessage(errorInfo.getCode());
-					} else {
-						msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+				if (StringUtils.isNotBlank(errorInfo.getMessage())) {
+					msg = errorInfo.getMessage();
+				} else {
+					try {
+						if (StringUtils.startsWith(errorInfo.getCode(), "SC_")) {
+							msg = this.scMessageSourceAccessor.getMessage(errorInfo.getCode());
+						} else {
+							msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+						}
+					} catch (NoSuchMessageException e) {
+						msg = "";
 					}
-				} catch (NoSuchMessageException e) {
-					msg = "";
 				}
 			}
 
@@ -1862,10 +1874,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 			} else {
 				String msg = null;
-				try {
-					msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
-				} catch (NoSuchMessageException e) {
-					msg = "";
+				if (StringUtils.isNotBlank(errorInfo.getMessage())) {
+					msg = errorInfo.getMessage();
+				} else {
+					try {
+						msg = this.messageSourceAccessor.getMessage(errorInfo.getCode());
+					} catch (NoSuchMessageException e) {
+						msg = "";
+					}
 				}
 
 				final String result_code = errorInfo.getCode();
