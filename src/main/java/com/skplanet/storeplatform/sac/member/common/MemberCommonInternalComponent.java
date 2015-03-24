@@ -214,7 +214,6 @@ public class MemberCommonInternalComponent {
 
 		UserDownloadInfoReq req = new UserDownloadInfoReq();
 		req.setMdn(deviceId);
-		req.setImei(nativeId);
 		req.setAid(prodId);
 
 		LOGGER.info("{} getUserDownloadInfo Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(req));
