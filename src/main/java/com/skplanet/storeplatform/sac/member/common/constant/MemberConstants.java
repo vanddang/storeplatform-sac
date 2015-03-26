@@ -304,8 +304,10 @@ public final class MemberConstants {
 	public static final String AUTH_TYPE_CD_EMAIL = "CM010902";
 
 	/** DCD 가입 코드 */
+	@Deprecated
 	public static final String DCD_REG_CD = "4097";
 	/** DCD 가입 상품 아이디 */
+	@Deprecated
 	public static final String DCD_REG_PROD_ID = "A000Z00001";
 
 	/** InApp 회원상태코드. */
