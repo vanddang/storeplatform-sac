@@ -241,6 +241,7 @@ public interface MiscellaneousService {
 	 *            CreateDCDReq
 	 * @return CreateDCDRes
 	 */
+	@Deprecated
 	public CreateDCDRes createDCD(SacRequestHeader header, CreateDCDReq req);
 
 	/**

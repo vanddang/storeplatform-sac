@@ -426,7 +426,7 @@ public class MiscellaneousController {
 	 *            RemoveIndividualPolicyReq
 	 * @return RemoveIndividualPolicyRes
 	 */
-	@RequestMapping(value = "/createDCD/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/createDCD/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateDCDRes createDCD(SacRequestHeader header, @RequestBody @Validated CreateDCDReq request) {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));

@@ -38,10 +38,8 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ChangedDeviceLog;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateChangedDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDCDRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.DCDInfo;
 import com.skplanet.storeplatform.member.client.user.sci.vo.NonMbrSegment;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
@@ -64,12 +62,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrSegment;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.DcdSupportProductRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceItem;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListRes;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
-import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
@@ -104,12 +96,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 
 	@Autowired
 	private DeviceService deviceService;
-
-	// @Autowired
-	// private SearchDcdSupportProductSCI searchDcdSupportProductSCI;
-	//
-	// @Autowired
-	// private ExistenceInternalSacSCI existenceInternalSacSCI;
 
 	@Autowired
 	@Resource(name = "memberModDeviceAmqpTemplate")
@@ -401,11 +387,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			changeDeviceLog.setMessageIDP(requestUrl);
 			if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_SUCCESS_CODE)) {
 				changeDeviceLog.setPreData(beMdn);
-
-				/* DCD 연동정보 저장 */
-				this.insertDcdInfo(commonRequest, userKey, deviceKey, svcMngNum, mdn,
-						IdpConstants.DCD_ENTRY_CHANGE_NUMBER);
-
 			} else if (StringUtil.equals(result, IdpConstants.IDP_RESPONSE_NO_DATA)) {
 				changeDeviceLog.setPreData("FAIL");
 			} else {
@@ -482,130 +463,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		this.userSCI.createChangedDevice(createChangeDeviceReq);
 	}
 
-	/**
-	 * <pre>
-	 * DCD 정보 저장.
-	 * </pre>
-	 * 
-	 * @param commonRequest
-	 *            CommonRequest
-	 * @param userKey
-	 *            사용자키
-	 * @param deviceKey
-	 *            기기 키
-	 * @param svcMngNum
-	 *            SKT 서비스 관리번호
-	 * @param mdn
-	 *            휴대기기 mdn
-	 * @param entryClass
-	 *            DCD 연동코드
-	 * @throws StorePlatformException
-	 *             Exception
-	 */
-	public void insertDcdInfo(CommonRequest commonRequest, String userKey, String deviceKey, String svcMngNum,
-			String mdn, String entryClass) throws StorePlatformException {
-
-		DCDInfo dcdInfo = new DCDInfo();
-
-		if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_CHANGE_NUMBER)) { // DCD 번호변경
-
-			dcdInfo.setRegChannel(commonRequest.getSystemID());
-			dcdInfo.setTenantID(commonRequest.getTenantID());
-			dcdInfo.setEntryClass(entryClass);
-			dcdInfo.setServiceNumber(svcMngNum);
-			dcdInfo.setDeviceID(null);
-			dcdInfo.setRegDeviceID(mdn);
-			dcdInfo.setPriorityClass("0");
-			dcdInfo.setProductID(null);
-
-			CreateDCDRequest createDcdReq = new CreateDCDRequest();
-			createDcdReq.setCommonRequest(commonRequest);
-			createDcdReq.setDCDInfo(dcdInfo);
-			this.userSCI.createDCD(createDcdReq);
-
-		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_CHANGE_MODEL)) { // DCD 기기변경
-
-			dcdInfo.setRegChannel(commonRequest.getSystemID());
-			dcdInfo.setTenantID(commonRequest.getTenantID());
-			dcdInfo.setEntryClass(entryClass);
-			dcdInfo.setServiceNumber(svcMngNum);
-			dcdInfo.setDeviceID(mdn);
-			dcdInfo.setRegDeviceID(null);
-			dcdInfo.setPriorityClass("0");
-			dcdInfo.setProductID(null);
-
-			CreateDCDRequest createDcdReq = new CreateDCDRequest();
-			createDcdReq.setCommonRequest(commonRequest);
-			createDcdReq.setDCDInfo(dcdInfo);
-			this.userSCI.createDCD(createDcdReq);
-
-		} else if (StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_SECEDE)
-				|| StringUtil.equals(entryClass, IdpConstants.DCD_ENTRY_JOIN)) { // DCD
-																				 // 등록
-																				 // 및
-																				 // 해지
-
-			/* DCD 상품 조회 */
-			DcdSupportProductRes dcdSupportProductRes = this.mcic.srhDcdSupportProduct();
-
-			List<ExistenceItem> existenceItemList = new ArrayList<ExistenceItem>();
-			ExistenceItem existenceItem = null;
-			for (ProductInfo prodDcdInfo : dcdSupportProductRes.getProductList()) {
-				existenceItem = new ExistenceItem();
-				existenceItem.setProdId(prodDcdInfo.getProdId());
-				existenceItemList.add(existenceItem);
-			}
-
-			/* 기구매상품 조회 */
-			if (existenceItemList.size() > 0) {
-
-				ExistenceReq existenceReq = new ExistenceReq();
-				existenceReq.setTenantId(commonRequest.getTenantID());
-				existenceReq.setUserKey(userKey);
-				existenceReq.setDeviceKey(deviceKey);
-				existenceReq.setExistenceItem(existenceItemList);
-				ExistenceListRes existenceListRes = this.mcic.srhExistenceList(existenceReq);
-
-				/* 기존번호 상품별로 DCD 단말 등록 및 해지 처리 */
-				if (existenceListRes.getExistenceListRes() != null) {
-					for (ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
-						dcdInfo = new DCDInfo();
-						dcdInfo.setRegChannel(commonRequest.getSystemID());
-						dcdInfo.setTenantID(commonRequest.getTenantID());
-						dcdInfo.setEntryClass(entryClass);
-						dcdInfo.setServiceNumber(svcMngNum);
-						dcdInfo.setDeviceID(mdn);
-						dcdInfo.setRegDeviceID(null);
-						dcdInfo.setPriorityClass("0");
-						dcdInfo.setProductID(existenceRes.getProdId());
-
-						CreateDCDRequest createDcdReq = new CreateDCDRequest();
-						createDcdReq.setCommonRequest(commonRequest);
-						createDcdReq.setDCDInfo(dcdInfo);
-						this.userSCI.createDCD(createDcdReq);
-					}
-				}
-			}
-
-			dcdInfo = new DCDInfo();
-			dcdInfo.setRegChannel(commonRequest.getSystemID());
-			dcdInfo.setTenantID(commonRequest.getTenantID());
-			dcdInfo.setEntryClass(entryClass);
-			dcdInfo.setServiceNumber(svcMngNum);
-			dcdInfo.setDeviceID(mdn);
-			dcdInfo.setRegDeviceID(null);
-			dcdInfo.setPriorityClass("0");
-			dcdInfo.setProductID("A000Z00001");
-
-			CreateDCDRequest createDcdReq = new CreateDCDRequest();
-			createDcdReq.setCommonRequest(commonRequest);
-			createDcdReq.setDCDInfo(dcdInfo);
-			this.userSCI.createDCD(createDcdReq);
-
-		}
-
-	}
-
 	/*
 	 * 
 	 * <pre> 회선 변경 정보 Provisioning (기기변경) - CMD : changeMobileID </pre>
@@ -625,8 +482,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 		String systemId = StringUtil.nvl(map.get("systemID"), "");
 		String deviceTelecom = MemberConstants.DEVICE_TELECOM_SKT;
 		String deviceNickName = null;
-		String beforeV4SprtYn = null; // 이전 단말 DCD 지원여부
-		String v4SprtYn = null; // 변경될 단말 DCD 지원여부
 		String preData = null;
 
 		String userKey = null;
@@ -656,17 +511,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			userKey = schDeviceRes.getUserMbrDevice().getUserKey();
 			deviceKey = schDeviceRes.getUserMbrDevice().getDeviceKey();
 
-			/* 이전 단말의 DCD 지원여부 조회 */
-			Device beforeDevice = this.mcc.getPhoneInfo(schDeviceRes.getUserMbrDevice().getDeviceModelNo());
-			if (beforeDevice == null) {
-				beforeV4SprtYn = "N";
-				preData = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
-			} else {
-				beforeV4SprtYn = beforeDevice.getItoppV4SprtYn() == null ? "N" : beforeDevice.getItoppV4SprtYn();
-				preData = beforeDevice.getDeviceModelCd();
-			}
-
-			/* 변경될 단말의 정보 조회 */
 			Device device = this.mcc.getPhoneInfoByUacd(uacd);
 
 			if (device == null) {
@@ -676,7 +520,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 				uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 				modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 				deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
-				v4SprtYn = "N"; // V4 무조건 해지
 
 			} else {
 
@@ -688,7 +531,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 								MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
 					deviceNickName = device.getModelNm();
 				}
-				v4SprtYn = device.getItoppV4SprtYn() == null ? "N" : device.getItoppV4SprtYn(); // DCD 연동 지원여부
 
 				if (StringUtil.equals(device.getVerifyDvcYn(), "Y")) { // 타겟 단말인 경우
 
@@ -734,7 +576,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 						uacd = MemberConstants.NOT_SUPPORT_HP_UACODE;
 						modelCd = MemberConstants.NOT_SUPPORT_HP_MODEL_CD;
 						deviceNickName = MemberConstants.NOT_SUPPORT_HP_MODEL_NM;
-						v4SprtYn = "N"; // V4 무조건 해지
 					}
 
 				}
@@ -772,42 +613,6 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
 
 			CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
-
-			/* DCD 연동 */
-			if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "N")) {
-
-				LOGGER.info("<changeMobileID> V4지원 -> V4미지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
-						mdn, modelCd, uacd, svcMngNum);
-
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
-						IdpConstants.DCD_ENTRY_SECEDE);
-
-			} else if (StringUtil.equals(beforeV4SprtYn, "Y") && StringUtil.equals(v4SprtYn, "Y")) {
-
-				LOGGER.info("<changeMobileID> V4지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
-						mdn, modelCd, uacd, svcMngNum);
-
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
-						IdpConstants.DCD_ENTRY_CHANGE_MODEL);
-
-			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "Y")) {
-
-				LOGGER.info("<changeMobileID> V4미지원 -> V4지원 기변. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
-						mdn, modelCd, uacd, svcMngNum);
-
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
-						IdpConstants.DCD_ENTRY_JOIN);
-
-			} else if (StringUtil.equals(beforeV4SprtYn, "N") && StringUtil.equals(v4SprtYn, "N")) {
-
-				LOGGER.info(
-						"<changeMobileID> V4미지원 -> V4미지원 기변 시 DCD 한번더 해지 처리. mdn : {}, model_cd : {}, uacd : {}, svc_mng_num : {}",
-						mdn, modelCd, uacd, svcMngNum);
-
-				this.insertDcdInfo(commonRequest, userKey, createDeviceRes.getDeviceKey(), svcMngNum, mdn,
-						IdpConstants.DCD_ENTRY_SECEDE);
-
-			}
 
 			/* MQ 연동 */
 			ModifyDeviceAmqpSacReq mqInfo = new ModifyDeviceAmqpSacReq();
