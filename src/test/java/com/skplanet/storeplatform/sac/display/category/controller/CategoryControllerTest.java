@@ -79,9 +79,8 @@ public class CategoryControllerTest {
 	 */
 	@Test
 	public void searchSpecificEbookList() throws Exception {
-		//2.4.1.4. 특정 상품 music 조회.
 		this.mvc.perform(
-				get("/display/category/specific/epub/list/v1?list=H900167694")
+				get("/display/category/specific/epub/list/v1?list=H900474171")
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
 				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
@@ -122,7 +121,70 @@ public class CategoryControllerTest {
 	public void searchSpecificVodList() throws Exception {
 		//2.4.1.4. 특정 상품 music 조회.
 		this.mvc.perform(
-				get("/display/category/specific/vod/list/v1?list=H001609400")
+				get("/display/category/specific/vod/list/v1?list=H000043773")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(header().string("x-sac-result-code", "SUCC"))
+				;
+	}
+	
+	/**
+	 * VOD 보관함
+	 * @throws Exception
+	 */
+	@Test
+	public void searchVodBoxList_방송() throws Exception {
+		//		H102802804
+		//		H102802811
+		//		H102802840
+		//		H102802825
+		//		H102802847
+		//		H102802863
+		//		H102802873
+		//		H102802877
+		//		H102802880
+		//		H102802883
+		//		H102802887
+		//		H102802891
+		//		H102802894
+
+		this.mvc.perform(
+				get("/display/category/vodBox/list/v1?duration=30&filteredBy=duration&channelId=H102802804")
+				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
+				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
+				)
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(header().string("x-sac-result-code", "SUCC"))
+				;
+	}
+	
+	@Test
+	public void searchVodBoxList_영화() throws Exception {
+		
+		//		H102802792
+		//		H102802805
+		//		H102802812
+		//		H102802816
+		//		H102802822
+		//		H102802827
+		//		H102802831
+		//		H102802837
+		//		H102802841
+		//		H102802848
+		//		H102802852
+		//		H102802859
+		//		H102802862
+		//		H102802867
+		this.mvc.perform(
+				get("/display/category/vodBox/list/v1?duration=30&filteredBy=duration&channelId=H102802883")
 				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 				.header("x-sac-device-info", "model=\"SHW-M110S\", dpi=\"320\", resolution=\"480*720\", os=\"Android/4.0.4\", pkg=\"sac.store.skplanet.com/37\", svc=\"SAC_Client/4.3\"")
 				.header("x-sac-network-info", "operator=\"unknown/unknown\", simOperator=\"450/05\", type=\"wifi\"")
