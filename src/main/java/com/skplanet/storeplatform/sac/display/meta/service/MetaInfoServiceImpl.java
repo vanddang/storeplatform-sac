@@ -103,7 +103,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
             me = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
 
-        commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
+        if(me != null)
+            commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
         return me;
 	}
@@ -200,8 +201,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
 		    me = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
 
-//        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
-        commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
+        if(me != null)
+            commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
         return me;
 	}
@@ -255,8 +256,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
 		    me = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap, MetaInfo.class);
 
-//        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
-        commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
+        if(me != null)
+            commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
         return me;
 	}
@@ -311,8 +312,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
 		    me = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
 
-//        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
-        commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
+        if(me != null)
+            commonHandler(me, tenantHeader.getTenantId(), me.getProdId());
 
         return me;
 	}
@@ -393,8 +394,8 @@ public class MetaInfoServiceImpl implements MetaInfoService {
         else
         	me = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap, MetaInfo.class);
 
-//        me.setMileageInfo(memberBenefitService.getMileageInfo(tenantHeader.getTenantId(), me.getTopMenuId(), me.getProdId(), me.getProdAmt()));
-        commonHandler(me, tenantHeader.getTenantId(), me.getCatalogId());
+        if(me != null)
+            commonHandler(me, tenantHeader.getTenantId(), me.getCatalogId());
 
         return me;
     }
