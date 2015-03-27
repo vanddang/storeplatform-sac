@@ -28,24 +28,30 @@ public class CategoryVodBox {
 	private String nmSubContentsId;
 	private String sdSubContentsId;
 	private String hdSubContentsId;
+	private String hihdSubContentsId;
 	private String nmProdVer;
 	private String sdProdVer;
 	private String hdProdVer;
+	private String hihdProdVer;
 	private String nmFileSize;
 	private String sdFileSize;
 	private String hdFileSize;
+	private String hihdFileSize;
 	private String nmRsltnCd;
 	private String nmRsltnNm;
 	private String sdRsltnCd;
 	private String sdRsltnNm;
 	private String hdRsltnCd;
 	private String hdRsltnNm;
+	private String hihdRsltnNm;
 	private String nmDpPgRatioCd;
 	private String nmDpPgRatioNm;
 	private String sdDpPgRatioCd;
 	private String sdDpPgRatioNm;
 	private String hdDpPgRatioCd;
 	private String hdDpPgRatioNm;
+	private String hihdDpPgRatioCd;
+	private String hihdDpPgRatioNm;
 	private Integer storeProdAmt;
 	private Integer storeProdNetAmt;
 	private Integer playProdAmt;
@@ -1529,4 +1535,52 @@ public class CategoryVodBox {
 		this.filePath = filePath;
 	}
 
+	public String getHihdSubContentsId() {
+		return hihdSubContentsId;
+	}
+
+	public void setHihdSubContentsId(String hihdSubContentsId) {
+		this.hihdSubContentsId = hihdSubContentsId;
+	}
+
+	public String getHihdProdVer() {
+		return hihdProdVer;
+	}
+
+	public void setHihdProdVer(String hihdProdVer) {
+		this.hihdProdVer = hihdProdVer;
+	}
+
+	public String getHihdFileSize() {
+		return hihdFileSize;
+	}
+
+	public void setHihdFileSize(String hihdFileSize) {
+		this.hihdFileSize = hihdFileSize;
+	}
+
+	public String getHihdRsltnNm() {
+		return hihdRsltnNm;
+	}
+
+	public void setHihdRsltnNm(String hihdRsltnNm) {
+		this.hihdRsltnNm = hihdRsltnNm;
+	}
+
+	public String getHihdDpPgRatioCd() {
+		return hihdDpPgRatioCd;
+	}
+
+	public void setHihdDpPgRatioCd(String hihdDpPgRatioCd) {
+		this.hihdDpPgRatioCd = hihdDpPgRatioCd;
+	}
+
+	public String getHihdDpPgRatioNm() {
+		return hihdDpPgRatioNm;
+	}
+
+	public void setHihdDpPgRatioNm(String hihdDpPgRatioNm) {
+		this.hihdDpPgRatioNm = hihdDpPgRatioNm;
+	}
+	
 }

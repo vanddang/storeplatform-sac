@@ -950,7 +950,7 @@ public class VodServiceImpl implements VodService {
         VideoInfo videoInfo = new VideoInfo();
         
         if (StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
-        	//HD2 (D화질)
+        	//HIHD (D화질)
         	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
             videoInfo.setPictureSize(mapperVO.getHihdDpPicRatio());
             videoInfo.setPixel(mapperVO.getHihdDpPixel());
@@ -958,7 +958,7 @@ public class VodServiceImpl implements VodService {
             videoInfo.setSize(mapperVO.getHihdFileSize().toString());
             videoInfo.setVersion(mapperVO.getHihdProdVer());
         } else {
-        	//HI (C화질)
+        	//HD (C화질)
         	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
             videoInfo.setPictureSize(mapperVO.getHdDpPicRatio());
             videoInfo.setPixel(mapperVO.getHdDpPixel());

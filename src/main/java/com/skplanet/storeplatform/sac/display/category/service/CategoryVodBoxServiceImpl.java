@@ -247,7 +247,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 
 				if (StringUtils.isNotEmpty(categoryVodBox.getNmSubContentsId())) {
 					videoInfo = new VideoInfo();
-					videoInfo.setType("normal");
+					videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
 					videoInfo.setScid(categoryVodBox.getNmSubContentsId());
 					videoInfo.setPixel(categoryVodBox.getNmRsltnNm());
 					videoInfo.setPictureSize(categoryVodBox.getNmDpPgRatioNm());
@@ -258,7 +258,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 
 				if (StringUtils.isNotEmpty(categoryVodBox.getSdSubContentsId())) {
 					videoInfo = new VideoInfo();
-					videoInfo.setType("sd");
+					videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_SD);
 					videoInfo.setScid(categoryVodBox.getSdSubContentsId());
 					videoInfo.setPixel(categoryVodBox.getSdRsltnNm());
 					videoInfo.setPictureSize(categoryVodBox.getSdDpPgRatioNm());
@@ -267,16 +267,42 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 					videoInfoList.add(videoInfo);
 				}
 
+				//D화질 추가
+				/*
+		        if (StringUtils.isNotEmpty(categoryVodBox.getHihdSubContentsId())) {
+		        	//HIHD (D화질)
+		        	videoInfo = new VideoInfo();
+		        	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
+		            videoInfo.setPictureSize(categoryVodBox.getHihdDpPgRatioNm());
+		            videoInfo.setPixel(categoryVodBox.getHihdRsltnNm());
+		            videoInfo.setScid(categoryVodBox.getHihdSubContentsId());
+		            videoInfo.setSize(categoryVodBox.getHihdFileSize());
+		            videoInfo.setVersion(categoryVodBox.getHihdProdVer());
+		            videoInfoList.add(videoInfo);
+		        } else if (StringUtils.isNotEmpty(categoryVodBox.getHdSubContentsId())) {
+		        	//HD (C화질)
+		        	videoInfo = new VideoInfo();
+		        	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
+		            videoInfo.setPictureSize(categoryVodBox.getHdDpPgRatioNm());
+		            videoInfo.setPixel(categoryVodBox.getHdRsltnNm());
+		            videoInfo.setScid(categoryVodBox.getHdSubContentsId());
+		            videoInfo.setSize(categoryVodBox.getHdFileSize());
+		            videoInfo.setVersion(categoryVodBox.getHdProdVer());
+		            videoInfoList.add(videoInfo);
+		        }
+		        */
 				if (StringUtils.isNotEmpty(categoryVodBox.getHdSubContentsId())) {
-					videoInfo = new VideoInfo();
-					videoInfo.setType("hd");
-					videoInfo.setScid(categoryVodBox.getHdSubContentsId());
-					videoInfo.setPixel(categoryVodBox.getHdRsltnNm());
-					videoInfo.setPictureSize(categoryVodBox.getHdDpPgRatioNm());
-					videoInfo.setVersion(categoryVodBox.getHdProdVer());
-					videoInfo.setSize(categoryVodBox.getHdFileSize());
-					videoInfoList.add(videoInfo);
-				}
+		        	//HD (C화질)
+		        	videoInfo = new VideoInfo();
+		        	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
+		            videoInfo.setPictureSize(categoryVodBox.getHdDpPgRatioNm());
+		            videoInfo.setPixel(categoryVodBox.getHdRsltnNm());
+		            videoInfo.setScid(categoryVodBox.getHdSubContentsId());
+		            videoInfo.setSize(categoryVodBox.getHdFileSize());
+		            videoInfo.setVersion(categoryVodBox.getHdProdVer());
+		            videoInfoList.add(videoInfo);
+		        }
+
 
 				vod.setVideoInfoList(videoInfoList);
 				product.setVod(vod);
