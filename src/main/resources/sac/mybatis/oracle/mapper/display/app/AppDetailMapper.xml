@@ -20,7 +20,7 @@
             SC.APK_VER_NM,
             SC.VM_VER,
             SC.FILE_SIZE,
-            DECODE( NVL( APP.PROD_CLSF_CD, 'PD000601' )
+            DECODE( NVL( TP.PROD_CLSF_CD, 'PD000601' )
             , 'PD000601', 'paid'
             , 'PD000602', 'library'
             , 'PD000603', 'vm'

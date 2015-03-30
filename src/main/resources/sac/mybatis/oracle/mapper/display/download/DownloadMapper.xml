@@ -183,7 +183,7 @@
                                , E.VER_MINOR
                                , E.PART_PARENT_CLSF_CD
                                , E.PKG_VER_CD
-                               , E.PROD_CLSF_CD
+                               , G.PROD_CLSF_CD
                                , E.GAME_CENTR_VER_CD
                                , E.GAME_CENTR_ID                           
                                , E.PKG_NM

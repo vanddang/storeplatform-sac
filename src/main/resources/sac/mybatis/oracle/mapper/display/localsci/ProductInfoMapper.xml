@@ -128,7 +128,7 @@
                       , E.VER_MAJOR
                       , E.VER_MINOR
                       , E.PART_PARENT_CLSF_CD
-                      , E.PROD_CLSF_CD
+                      , TENANT.PROD_CLSF_CD
                       , E.PROD_CASE
                       , E.PROD_KIND
                       , E.PLAT_CLSF_CD
