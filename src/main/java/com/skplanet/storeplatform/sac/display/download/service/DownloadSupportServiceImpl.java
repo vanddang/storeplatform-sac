@@ -111,6 +111,8 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
             return;
         }
 
+        logger.info("Regist_UD:{},{},{},{}", mdn,aid,key,tenantId);
+
         req.put("mdnaidKey", key);
         req.put("aid", aid);
         req.put("prodId", prodId);

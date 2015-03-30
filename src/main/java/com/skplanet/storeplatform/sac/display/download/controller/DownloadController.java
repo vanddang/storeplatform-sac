@@ -75,8 +75,8 @@ public class DownloadController {
             downloadSupportService.createUserDownloadInfo(
                     downloadAppSacReq.getMdn(),
                     result.getAid(),
-                    result.getProdId(),
-                    requestheader.getTenantHeader().getTenantId());
+                    requestheader.getTenantHeader().getTenantId(),
+                    result.getProdId());
         }
 
         return result.getDownloadAppSacRes();
