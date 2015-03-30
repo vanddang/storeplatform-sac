@@ -1,8 +1,14 @@
 package com.skplanet.storeplatform.sac.display.download.controller;
 
+import com.google.common.base.Strings;
 import com.skplanet.storeplatform.sac.client.display.vo.download.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.download.service.*;
+import com.skplanet.storeplatform.sac.display.download.vo.SearchDownloadAppResult;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 상품 정보 요청(for download)
@@ -36,6 +44,9 @@ public class DownloadController {
 	@Autowired
 	private DownloadComicService downloadComicService;
 
+    @Autowired
+    private DownloadSupportService downloadSupportService;
+
 	@InitBinder("downloadAppSacReq")
 	public void initDownloadAppSacReqBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new DownloadAppSacReqValidator());
@@ -57,8 +68,19 @@ public class DownloadController {
 	@ResponseBody
 	public DownloadAppSacRes downloadApp(SacRequestHeader requestheader,
 			@RequestBody @Validated DownloadAppSacReq downloadAppSacReq) {
-		return this.downloadAppService.searchDownloadApp(requestheader, downloadAppSacReq);
-	}
+        SearchDownloadAppResult result = this.downloadAppService.searchDownloadApp(requestheader, downloadAppSacReq);
+
+        if (!Strings.isNullOrEmpty(downloadAppSacReq.getMdn()) && result.isHasDl()) {
+
+            downloadSupportService.createUserDownloadInfo(
+                    downloadAppSacReq.getMdn(),
+                    result.getAid(),
+                    result.getProdId(),
+                    requestheader.getTenantHeader().getTenantId());
+        }
+
+        return result.getDownloadAppSacRes();
+    }
 
 	/**
 	 * 

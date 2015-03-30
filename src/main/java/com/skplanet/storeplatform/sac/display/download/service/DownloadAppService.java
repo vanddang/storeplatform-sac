@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.display.download.service;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.download.vo.SearchDownloadAppResult;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
@@ -23,5 +24,5 @@ public interface DownloadAppService {
 	 *            downloadAppSacReq
 	 * @return DownloadAppSacRes
 	 */
-	DownloadAppSacRes searchDownloadApp(SacRequestHeader requestheader, DownloadAppSacReq downloadAppSacReq);
+	SearchDownloadAppResult searchDownloadApp(SacRequestHeader requestheader, DownloadAppSacReq downloadAppSacReq);
 }
