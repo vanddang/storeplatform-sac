@@ -35,14 +35,14 @@ public class SacExternalUrlBuilderTest {
 
 		Component component = new Component("005");
 		component.setScheme("http");
-		component.setHost("ec.store.sungsu.skplanet.com");
+		component.setHost("ec-store.sungsu.skplanet.com");
 		component.setPort(80);
 		bypass.setComponent(component);
 
 		UriComponentsBuilder builder = SacExternalUrlBuilder.buildUrl(bypass);
 		String actual = builder.build().toString();
 		System.out.println("# testBuildProd() :" + actual);
-		String expected = "http://ec.store.sungsu.skplanet.com:80/nate/search";
+		String expected = "http://ec-store.sungsu.skplanet.com:80/nate/search";
 		assertEquals(expected, actual);
 	}
 
