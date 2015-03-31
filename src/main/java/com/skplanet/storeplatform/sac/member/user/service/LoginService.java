@@ -176,20 +176,6 @@ public interface LoginService {
 
 	/**
 	 * <pre>
-	 * Olleh Market 회원의 회원인증 성능테스트용.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            AuthorizeForOllehMarketSacReq
-	 * @return AuthorizeForOllehMarketSacRes
-	 */
-	public AuthorizeForOllehMarketSacRes authorizeForOllehMarketTest(SacRequestHeader requestHeader,
-			@Valid @RequestBody AuthorizeForOllehMarketSacReq req);
-
-	/**
-	 * <pre>
 	 * Uplus Store 회원의 회원인증.
 	 * </pre>
 	 * 
@@ -200,20 +186,6 @@ public interface LoginService {
 	 * @return AuthorizeForUplusStoreSacRes
 	 */
 	public AuthorizeForUplusStoreSacRes authorizeForUplusStore(SacRequestHeader requestHeader,
-			@Valid @RequestBody AuthorizeForUplusStoreSacReq req);
-
-	/**
-	 * <pre>
-	 * Uplus Store 회원의 회원인증 성능테스트용.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 *            SacRequestHeader
-	 * @param req
-	 *            AuthorizeForUplusStoreSacReq
-	 * @return AuthorizeForUplusStoreSacRes
-	 */
-	public AuthorizeForUplusStoreSacRes authorizeForUplusStoreTest(SacRequestHeader requestHeader,
 			@Valid @RequestBody AuthorizeForUplusStoreSacReq req);
 
 	/**
