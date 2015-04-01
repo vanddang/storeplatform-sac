@@ -52,9 +52,16 @@ public class SimilarMovieServiceImpl implements SimilarMovieService {
 		String tenantId = header.getTenantHeader().getTenantId();
 		String prodId = requestVO.getProdId();
 		String stdDt = getBatchStdDateStringFromDB(tenantId);
+
 		List<SimilarMovieDbResultMap> moviesFromDB = getSimilarMovieListFromDb(tenantId, prodId, stdDt);
-		SimilarMovieSacRes res = makeResponseFrom(moviesFromDB, header);
+		SimilarMovieSacRes res = makeResponseFrom(moviesFromDB, requestVO, header);
 		return res;
+	}
+
+	private String[] toProdGradeCdArr(String prodGradeCd) {
+		if(StringUtils.isEmpty(prodGradeCd))
+			return null;
+		return StringUtils.split(prodGradeCd, "+");
 	}
 
 	/**
@@ -91,9 +98,14 @@ public class SimilarMovieServiceImpl implements SimilarMovieService {
 	 * method 설명.
 	 * </pre>
 	 * @param moviesFromDB
+	 * @param requestVO
+	 * @param header
 	 * @return
 	 */
-	private SimilarMovieSacRes makeResponseFrom(List<SimilarMovieDbResultMap> moviesFromDB, SacRequestHeader header) {
+	private SimilarMovieSacRes makeResponseFrom(List<SimilarMovieDbResultMap> moviesFromDB, SimilarMovieSacReq requestVO, SacRequestHeader header) {
+		String[] prodGradeCdArr = toProdGradeCdArr(requestVO.getProdGradeCd());
+		Integer reqCount = requestVO.getCount();
+		String hasNext = "N";
 		SimilarMovieSacRes res = new SimilarMovieSacRes();
 		List<Product> list = new ArrayList<Product>();
 		if(moviesFromDB==null || moviesFromDB.isEmpty())
@@ -104,11 +116,28 @@ public class SimilarMovieServiceImpl implements SimilarMovieService {
 			String prodId = prodIdWithPoint.split("\\(")[0].trim();
 			logger.debug("add prodId={}",prodId);
 			Product p = makeProductFrom(prodId, header);
-			if(p!=null && onSale(p))
-				list.add(p);
+			if(p!=null && onSale(p) && requestedGrade(p,prodGradeCdArr)) {
+				if(list.size()<reqCount)
+					list.add(p);
+				else {
+					hasNext = "Y";
+					break;
+				}
+			}
 		}
 		res.setProductList(list);
+		res.setCount(list.size());
+		res.setHasNext(hasNext);
 		return res;
+	}
+
+	private boolean requestedGrade(Product p, String[] prodGradeCds) {
+		if(prodGradeCds==null)
+			return true;
+		for(String gradeCd:prodGradeCds)
+			if(p.getRights()!=null && p.getRights().getGrade().equals(gradeCd))
+				return true;
+		return false;
 	}
 
 	private boolean onSale(Product product) {
