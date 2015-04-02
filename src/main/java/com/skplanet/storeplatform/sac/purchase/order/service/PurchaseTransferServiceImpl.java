@@ -9,16 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseTransferSCI;
-import com.skplanet.storeplatform.purchase.client.order.vo.PurchaseTransferSc;
 import com.skplanet.storeplatform.purchase.client.order.vo.PurchaseTransferScReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseTransferSac;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseTransferSacReq;
@@ -38,6 +35,9 @@ public class PurchaseTransferServiceImpl implements PurchaseTransferService {
 	@Autowired
 	private PurchaseTransferSCI purchaseTransferSCI;
 
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor;
+
 	/**
 	 * 
 	 * <pre>
@@ -51,33 +51,53 @@ public class PurchaseTransferServiceImpl implements PurchaseTransferService {
 	@Override
 	public PurchaseTransferSacRes createPurchaseTransfer(PurchaseTransferSacReq request) {
 
-		PurchaseTransferScReq purchaseTransferScReq = new PurchaseTransferScReq();
+		PurchaseTransferScReq purchaseTransferScReq;
 
-		List<PurchaseTransferSc> purchaseTransferScList = new ArrayList<PurchaseTransferSc>();
-		PurchaseTransferSc purchaseTransferSc;
-
-		purchaseTransferScReq.setTenantId(request.getTenantId());
-		purchaseTransferScReq.setMarketDeviceKey(request.getMarketDeviceKey());
-		purchaseTransferScReq.setPrchsCount(request.getPrchsCount());
-		purchaseTransferScReq.setSystemId(request.getSystemId());
+		int count = 0;
+		int succCount = 0;
+		int failCount = 0;
 
 		for (PurchaseTransferSac purchaseTransferSac : request.getPrchsList()) {
-			purchaseTransferSc = new PurchaseTransferSc();
-			purchaseTransferSc.setPrchsDt(purchaseTransferSac.getPrchsDt());
-			purchaseTransferSc.setMarketPrchsId(purchaseTransferSac.getMarketPrchsId());
-			purchaseTransferSc.setMarketProdId(purchaseTransferSac.getMarketProdId());
-			purchaseTransferSc.setStatusCd(purchaseTransferSac.getStatusCd());
-			purchaseTransferSc.setCancelDt(purchaseTransferSac.getCancelDt());
 
-			purchaseTransferScList.add(purchaseTransferSc);
+			purchaseTransferScReq = new PurchaseTransferScReq();
+			purchaseTransferScReq.setTenantId(request.getTenantId());
+			purchaseTransferScReq.setMarketDeviceKey(request.getMarketDeviceKey());
+			purchaseTransferScReq.setPrchsCount(request.getPrchsCount());
+			purchaseTransferScReq.setSystemId(request.getSystemId());
+
+			purchaseTransferScReq.setPrchsDt(purchaseTransferSac.getPrchsDt());
+			purchaseTransferScReq.setMarketPrchsId(purchaseTransferSac.getMarketPrchsId());
+			purchaseTransferScReq.setMarketProdId(purchaseTransferSac.getMarketProdId());
+			purchaseTransferScReq.setStatusCd(purchaseTransferSac.getStatusCd());
+			purchaseTransferScReq.setCancelDt(purchaseTransferSac.getCancelDt());
+			purchaseTransferScReq.setTrcResultCd(PurchaseConstants.TRC_RESULT_PLAN);
+
+			try {
+				this.purchaseTransferSCI.createPurchaseTransfer(purchaseTransferScReq);
+				succCount++;
+			} catch (Exception e) {
+				this.logger.info("## PRCHS,ORDER,SAC,CREATE,HIST,FAIL,{},{},{}",
+						purchaseTransferScReq.getMarketPrchsId(), purchaseTransferScReq.getMarketDeviceKey(), e);
+				failCount++;
+			}
+			count++;
 		}
-		purchaseTransferScReq.setPrchsList(purchaseTransferScList);
-
-		this.purchaseTransferSCI.createPurchaseTransfer(purchaseTransferScReq);
 
 		PurchaseTransferSacRes response = new PurchaseTransferSacRes();
-		response.setCode(PurchaseConstants.SAP_SUCCESS);
-		response.setMessage("");
+
+		this.logger.info("## PRCHS,ORDER,SAC,CREATE,HIST,TOTAL,CNT {}", count);
+		this.logger.info("## PRCHS,ORDER,SAC,CREATE,HIST,SUCC,CNT {}", succCount);
+		this.logger.info("## PRCHS,ORDER,SAC,CREATE,HIST,FAIL,CNT {}", failCount);
+
+		if (succCount > 0) {
+			response.setCode(PurchaseConstants.SAP_SUCCESS);
+			response.setMessage("SUCCESS COUNT : " + succCount);
+		} else {
+			response.setCode("SAC_PUR_7999");
+			response.setMessage(this.messageSourceAccessor.getMessage("SAC_PUR_7999"));
+		}
+
 		return response;
 	}
+
 }
