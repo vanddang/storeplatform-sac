@@ -22,10 +22,26 @@
 			,CRD.LND_IMG_PATH
 			,CRD.LND_IMG_RATIO	
 			,CRD.MENU_ID	
-			,CRD.SMART_OFR_LIST_ID			
-			,(	SELECT NVL2(CD_DESC, CD_DESC||'/'||TO_CHAR(SYSDATE, 'YYYYMMDDHH24'), '')
-				FROM TB_CM_CD 
-				WHERE CD_ID = 'DP0124' || #{tenantId})  AS SHARE_URL			
+			,CRD.SMART_OFR_LIST_ID
+            <choose>
+                <when test='tenantId=="S01"'>
+                ,(  CASE WHEN (SELECT COUNT(1) FROM TB_DP_CARD WHERE CARD_ID = #{cardId}) &gt; 1
+                         THEN
+                            (SELECT NVL2(CD_DESC, CD_DESC||'/'||TO_CHAR(SYSDATE, 'YYYYMMDDHH24'), '')
+                                    FROM TB_CM_CD
+                                    WHERE CD_ID = 'DP0124' || #{tenantId} || 'O')
+                         ELSE
+                            (SELECT NVL2(CD_DESC, CD_DESC||'/'||TO_CHAR(SYSDATE, 'YYYYMMDDHH24'), '')
+                                    FROM TB_CM_CD
+                                    WHERE CD_ID = 'DP0124' || #{tenantId} || 'T')
+                      END ) AS SHARE_URL
+                </when>
+                <otherwise>
+                ,(	SELECT NVL2(CD_DESC, CD_DESC||'/'||TO_CHAR(SYSDATE, 'YYYYMMDDHH24'), '')
+                    FROM TB_CM_CD
+                    WHERE CD_ID = 'DP0124' || #{tenantId})  AS SHARE_URL
+                </otherwise>
+            </choose>
 			,NVL(CEA.EXPO_YN_CARD_TITLE, 'N') 			AS EXPO_YN_CARD_TITLE
 			,NVL(CEA.EXPO_YN_CARD_DESC, 'N') 			AS EXPO_YN_CARD_DESC
 			,NVL(CEA.EXPO_YN_CARD_LIKE, 'N') 			AS EXPO_YN_CARD_LIKE
