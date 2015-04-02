@@ -110,7 +110,7 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 
 		int specialProdSize = 3;
 
-		// 상품 기본 정보(상품군) 조회
+		// 특가 상품 여부 조회
 		if(req.getPurchaseStatusCd().equals("OR000301")){
 			Integer specialProductCount = this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialProductCount", map,
 					Integer.class);
