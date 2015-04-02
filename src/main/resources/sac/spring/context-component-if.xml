@@ -26,6 +26,12 @@
     
     <bean id="restTemplate" class="com.skplanet.storeplatform.framework.web.client.StoreplatformRestTemplate">      
         <property name="componentId" value="SAC" />  
+		<constructor-arg>
+			<bean class="org.springframework.http.client.SimpleClientHttpRequestFactory">
+				<property name="connectTimeout" value="2000" />
+				<property name="readTimeout" value="30000" />
+			</bean>
+		</constructor-arg>
         <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
         <property name="errorHandler">
             <bean class="com.skplanet.storeplatform.framework.web.bind.StorePlatformResponseErrorHandler">
