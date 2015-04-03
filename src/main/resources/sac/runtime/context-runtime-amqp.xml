@@ -1,50 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:int="http://www.springframework.org/schema/integration"
-	xmlns:int-http="http://www.springframework.org/schema/integration/http"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
-    xmlns:rabbit="http://www.springframework.org/schema/rabbit"
-	xsi:schemaLocation="
-		http://www.springframework.org/schema/mvc 				  http://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
-		http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context             http://www.springframework.org/schema/context/spring-context.xsd
-		http://www.springframework.org/schema/integration/http    http://www.springframework.org/schema/integration/http/spring-integration-http-2.2.xsd 
-		http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
-		http://www.springframework.org/schema/spring/config       http://www.springframework.org/schema/spring/config/spring-config.xsd
-		http://www.springframework.org/schema/util				  http://www.springframework.org/schema/util/spring-util.xsd
-		http://www.springframework.org/schema/integration/amqp    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.2.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/rabbit              http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
 
-    <!-- 
-    <value>cmsapp.sac.request.sync.content.test99999</value>
-    <value>cmsapp.sac.request.sync.content.test0001</value>
-    <value>cmsapp.sac.response.sync.content.test0001</value>
-    <value>tenant1.sac.request.sync.content.test0001</value>
-    <value>tenant1.sac.response.sync.content.test0001</value> 
-    -->
-    
-    <!--<rabbit:queue name="#{T(com.skplanet.storeplatform.sac.common.util.MqUtils).buildQueueName('icms-app-refactoring-deploy.sac.deploy.async')}" >-->
-        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
-    <!--</rabbit:queue>-->
-    <!--<rabbit:queue name="#{T(com.skplanet.storeplatform.sac.common.util.MqUtils).buildQueueName('icms-app-admin.sac.device-mapping.async')}" >-->
-        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
-    <!--</rabbit:queue>-->
-    <!--<rabbit:queue name="#{T(com.skplanet.storeplatform.sac.common.util.MqUtils).buildQueueName('icms-app-admin.sac.device-remapping.async')}" >-->
-        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
-    <!--</rabbit:queue>-->
-    <!--<rabbit:queue name="icms-app-refactoring-deploy.deploy-result.async" >-->
-        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
-    <!--</rabbit:queue>-->
-    <!--<rabbit:queue name="sac.icms-app-admin.device-mapping-result.async" >-->
-        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
-    <!--</rabbit:queue>-->
-    <!--<rabbit:queue name="sac.icms-app-admin.device-remapping-result.async" >-->
-        <!--<rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>-->
-    <!--</rabbit:queue>-->
+
+    <!-- MQ 선언 - Inbound/Outbound 모두 선언되어야 한다 -->
     <rabbit:queue name="sac.dummy.dont-delete-me.async" >
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
     </rabbit:queue>
@@ -68,15 +30,15 @@
     <rabbit:queue name="sac-shopping.iprm.deploy.async" >
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
     </rabbit:queue>
-    
-    
-    <bean id="sacRabbitJsonMessageConverter" class="org.springframework.amqp.support.converter.JsonMessageConverter" />
 
-    
-    <!-- MQ에서 수신하는 큐 이름들이 정의되어야 합니다. 수신MQ는 rabbit:queue name속성시 buildInboundQueueName을 적용해야 합니다.-->
     <!-- Staging 서버에서는 수신받지 않도록 profile 예외처리 적용 -->
     <beans profile="dev,qa,real">
         <import resource="classpath*:runtime/context-runtime-amqp.xml"/>
+
+        <!-- Inbound MQ이름 선언 - Spring integration에서 참조된다. 전처리부가 독립되면서 이부분은 동작을 위한 더미 큐만 선언된다.-->
+        <bean id="inboundQueueNames" class="java.lang.String">
+            <constructor-arg><value>sac.dummy.dont-delete-me.async</value></constructor-arg>
+        </bean>
  	
 	 	<bean class="com.rabbitmq.client.ConnectionFactory">
 	        <property name="host" ><value>#{propertiesForSac['skp.mq.server.host']}</value></property>
@@ -86,104 +48,60 @@
 	        <property name="virtualHost" ><value>#{propertiesForSac['skp.mq.server.virtualHost']}</value></property>
 	    </bean>
         
- 	
-	    <bean id="inboundQueueNames" class="com.skplanet.storeplatform.sac.common.util.MqUtils" factory-method="buildQueueName">
-	        <constructor-arg>
-	            <list>
-	                <value>sac.dummy.dont-delete-me.async</value>
-	                <!--<value>icms-app-refactoring-deploy.sac.deploy.async</value>-->
-	                <!--<value>icms-app-admin.sac.device-mapping.async</value>-->
-	                <!--<value>icms-app-admin.sac.device-remapping.async</value>-->
-	            </list>
-	        </constructor-arg>
-	    </bean>
-
-		<rabbit:admin connection-factory="sacRabbitConnectionFactory" auto-startup="true" />
-	   	<!--<rabbit:connection-factory id="sacRabbitConnectionFactory" />-->
-	   
-		<bean id="sacRabbitConnectionFactory" class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory" >
-	    	<constructor-arg ref="com.rabbitmq.client.ConnectionFactory" />
-	       	<property name="channelCacheSize" value="10"/>
-	   	</bean>
-	   
-	   	<!--<rabbit:template id="storeplatformRabbitTemplate" connection-factory="sacRabbitConnectionFactory" message-converter="sacRabbitJsonMessageConverter" reply-timeout="60000" />-->
-	   
-    
-	    <!-- CMS DISPLAY RESULT Rabbit Template -->
-	    <bean id="cmsAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
-
-	    <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
-	    <bean id="deviceMappingRabbitTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
-
-        <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
-        <bean id="deviceRemappingRabbitTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
-
+        <!-- Outbound 발송용 AmqpTemplate정의 -->
 	    <!-- Member - Add Device Rabbit Template -->
 	    <bean id="memberAddDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-	        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
-	        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+	        <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
+	        <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
 	        <property name="routingKey" value="sac.tenant.member-add-device.async" />
 	    </bean>
 	    <!-- Member - Modify Device Rabbit Template -->
 	    <bean id="memberModDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-	        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
-	        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+	        <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
+	        <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
 	        <property name="routingKey" value="sac.tenant.member-mod-device.async" />
 	    </bean>
 	    <!-- Member - Delete Device Rabbit Template -->
 	    <bean id="memberDelDeviceAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-	        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
-	        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+	        <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
+	        <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
 	        <property name="routingKey" value="sac.tenant.member-del-device.async" />
 	    </bean>
 	    <!-- Member - Retire Rabbit Template -->
 	    <bean id="memberRetireAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-	        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
-	        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+	        <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
+	        <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
 	        <property name="routingKey" value="sac.tenant.member-retire.async" />
 	    </bean>
 	
 	   <!-- Member - Seller Withdraw Rabbit Template -->
 	    <bean id="sellerWithdrawAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-	        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
-	        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+	        <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
+	        <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
 	        <property name="routingKey" value="tstore.icms-app-admin.rmc.sync" />
 	    </bean>
 	
 	   <!-- shopping - Iprm Rabbit Template -->
 	    <bean id="shoppingIprmAmqpTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-	        <property name="connectionFactory" ref="sacRabbitConnectionFactory" />
-	        <property name="messageConverter" ref="sacRabbitJsonMessageConverter" />
+	        <property name="connectionFactory" ref="storeplatformRabbitConnectionFactory" />
+	        <property name="messageConverter" ref="storeplatformRabbitJsonMessageConverter" />
 	        <property name="routingKey" value="sac-shopping.iprm.deploy.async" />
 	    </bean>
     </beans>
     
 	<!-- Staging 서버에서는 MQ 송수신 하지않도록 "stg" profile 예외처리 적용 -->
     <beans profile="local,stg">
-        <!-- 
-		<bean id="inboundQueueNames" class="java.lang.String">
-		    <constructor-arg>
-				<value>sac.dummy.dont-delete-me.async</value>
-			</constructor-arg>
-	    </bean>
-	    -->
-	    <!-- CMS DISPLAY RESULT Rabbit Template -->
-	    <bean id="cmsAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
-	    <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
-	    <bean id="deviceMappingRabbitTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
-        <!-- CMS DEVICE REMAPPING RESULT Rabbit Template -->
-        <bean id="deviceRemappingRabbitTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
 	    <!-- Member - Add Device Rabbit Template -->
-	    <bean id="memberAddDeviceAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
+	    <bean id="memberAddDeviceAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	    <!-- Member - Modify Device Rabbit Template -->
-	    <bean id="memberModDeviceAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
+	    <bean id="memberModDeviceAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	    <!-- Member - Delete Device Rabbit Template -->
-	    <bean id="memberDelDeviceAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
+	    <bean id="memberDelDeviceAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	    <!-- Member - Retire Rabbit Template -->
-	    <bean id="memberRetireAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
+	    <bean id="memberRetireAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	   	<!-- Member - Seller Withdraw Rabbit Template -->
-	    <bean id="sellerWithdrawAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
+	    <bean id="sellerWithdrawAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	   	<!-- shopping - Iprm Rabbit Template -->
-	    <bean id="shoppingIprmAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"></bean>
+	    <bean id="shoppingIprmAmqpTemplate" class="com.skplanet.storeplatform.sac.common.util.NoOpRabbitTemplate"/>
 	</beans>
-</beans> 
+</beans>

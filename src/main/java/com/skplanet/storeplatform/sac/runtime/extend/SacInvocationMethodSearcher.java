@@ -67,26 +67,6 @@ public class SacInvocationMethodSearcher implements InvocationMethodSearcher {
 	 */
 	@Override
 	public InvocationMethod searchName(String messageQueueName) {
-        String serviceNm, mtdNm;
-
-        if(StringUtils.isEmpty(messageQueueName))
-            throw new RuntimeException("Service not found.");
-
-        if(messageQueueName.contains("icms-app-refactoring-deploy.sac.deploy.async")) {
-            serviceNm = "com.skplanet.storeplatform.sac.display.product.service.ProductDeployCompositeServiceImpl";
-            mtdNm = "executeProcess";
-        }
-        else if(messageQueueName.contains("icms-app-admin.sac.device-mapping.async")) {
-            serviceNm = "com.skplanet.storeplatform.sac.display.product.service.DeviceMappingCompositeServiceImpl";
-            mtdNm = "executeProcess";
-        }
-        else if(messageQueueName.contains("icms-app-admin.sac.device-remapping.async")) {
-            serviceNm = "com.skplanet.storeplatform.sac.display.product.service.DeviceRemappingCompositeServiceImpl";
-            mtdNm = "executeProcess";
-        }
-        else
-            throw new RuntimeException();
-
-        return new InvocationMethod(serviceNm, mtdNm);
+        throw new RuntimeException("Service not found.");
 	}
 }
