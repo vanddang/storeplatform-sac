@@ -2929,157 +2929,166 @@ public class IdpServiceImpl implements IdpService {
 							return imResult;
 						}
 
-						try {
+						String deviceId = jsonParsingMap.get("mdn"); // mdn
+						String telecomTypeByMdnInfo = jsonParsingMap.get("carrier"); // carrier
+						String userKeyByMdnInfo = jsonParsingMap.get("user_key"); // user_key
+						String svcMngNumByMdnInfo = ObjectUtils.toString(jsonParsingMap.get("svc_mng_num"));// svc_mng_num
+						String modelIdByMdnInfo = ObjectUtils.toString(jsonParsingMap.get("model_id")); // model_id
+						String insdUserKeyByMdnInfo = ""; // 내부사용자키
+						String telecomValueByMdnInfo = ""; // 통신사코드정보
+						String isPrimary = "N"; // 대표단말여부
 
-							String deviceId = jsonParsingMap.get("mdn"); // mdn
-							String telecomTypeByMdnInfo = jsonParsingMap.get("carrier"); // carrier
-							String userKeyByMdnInfo = jsonParsingMap.get("user_key"); // user_key
-							String svcMngNumByMdnInfo = ObjectUtils.toString(jsonParsingMap.get("svc_mng_num"));// svc_mng_num
-							String modelIdByMdnInfo = ObjectUtils.toString(jsonParsingMap.get("model_id")); // model_id
-							String insdUserKeyByMdnInfo = ""; // 내부사용자키
-							String telecomValueByMdnInfo = ""; // 통신사코드정보
-							String isPrimary = "N"; // 대표단말여부
-
-							// MDN_CARRIER_DEVICE_TELECOM_SKT
-							if (telecomTypeByMdnInfo.equals(MemberConstants.MDN_CARRIER_DEVICE_TELECOM_SKT)) {
-								telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_SKT;
-							} else if (telecomTypeByMdnInfo.equals(MemberConstants.MDN_CARRIER_DEVICE_TELECOM_KTF)) {
-								telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_KT;
-							} else if (telecomTypeByMdnInfo.equals(MemberConstants.MDN_CARRIER_DEVICE_TELECOM_LGT)) {
-								telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_LGT;
-							} else {
-								telecomValueByMdnInfo = telecomTypeByMdnInfo;
-							}
-
-							// MDN정보 USERMBR_NO로 INSD_USERMBR_NO를 조회하기위해 사용자 목록을 조회함.
-							List<KeySearch> keySearchListByMdnInfo = new ArrayList<KeySearch>();
-							KeySearch keySearchByMdnInfo = new KeySearch();
-							keySearchByMdnInfo.setKeyType(MemberConstants.KEY_TYPE_USERMBR_NO);
-							keySearchByMdnInfo.setKeyString(userKeyByMdnInfo); // MBR_NO - USERMBR_NO
-							keySearchListByMdnInfo.add(keySearchByMdnInfo);
-							SearchUserRequest searchUserRequestByMdnInfo = new SearchUserRequest();
-							searchUserRequestByMdnInfo.setCommonRequest(commonRequest);
-							searchUserRequestByMdnInfo.setKeySearchList(keySearchListByMdnInfo);
-							SearchUserResponse searchUserResponseByMdnInfo = null;
-
+						// MDN 합치기기 필수 정보 없을 경우 MDN 등록안함
+						if (StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(telecomTypeByMdnInfo)
+								&& StringUtils.isNotBlank(userKeyByMdnInfo)
+								&& StringUtils.isNotBlank(svcMngNumByMdnInfo)
+								&& StringUtils.isNotBlank(modelIdByMdnInfo)) {
 							try {
-								searchUserResponseByMdnInfo = this.userSCI.searchUser(searchUserRequestByMdnInfo);
-							} catch (StorePlatformException e) {
-								if (!StringUtil.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
-									throw e;
-								}
-							}
 
-							if (searchUserResponseByMdnInfo != null) {
-								insdUserKeyByMdnInfo = searchUserResponseByMdnInfo.getUserKey();
-
-								SacRequestHeader requestHeader = new SacRequestHeader();
-								TenantHeader tenant = new TenantHeader();
-								tenant.setSystemId(systemId);
-								tenant.setTenantId(tenantId);
-								requestHeader.setTenantHeader(tenant);
-
-								DeviceInfo getDeviceInfo = this.deviceService.srhDevice(requestHeader,
-										MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, insdUserKeyByMdnInfo);
-
-								ListDeviceReq req = new ListDeviceReq();
-
-								req.setUserKey(insdUserKeyByMdnInfo);
-								req.setIsMainDevice("N");
-
-								if (searchUserResponse != null) {
-									ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, req);
-
-									if (listDeviceRes.getDeviceInfoList() != null) {
-										for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
-											if (StringUtils.equals(deviceInfo.getIsPrimary(), "Y")) {
-												isPrimary = "Y";
-											} else {
-												isPrimary = "N";
-											}
-										}
-									}
-
+								// MDN_CARRIER_DEVICE_TELECOM_SKT
+								if (telecomTypeByMdnInfo.equals(MemberConstants.MDN_CARRIER_DEVICE_TELECOM_SKT)) {
+									telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_SKT;
+								} else if (telecomTypeByMdnInfo.equals(MemberConstants.MDN_CARRIER_DEVICE_TELECOM_KTF)) {
+									telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_KT;
+								} else if (telecomTypeByMdnInfo.equals(MemberConstants.MDN_CARRIER_DEVICE_TELECOM_LGT)) {
+									telecomValueByMdnInfo = MemberConstants.DEVICE_TELECOM_LGT;
 								} else {
-									isPrimary = "Y"; // 이용동의로 신규가입할 경우 대표기기 여부는 Y로 셋팅
+									telecomValueByMdnInfo = telecomTypeByMdnInfo;
 								}
 
-								// 휴대기기 등록시 MDN_JSON_DATA 정보중 MDN,CARRIER,SVC_MNG_NUM, MODEL_ID정보는 REQUEST PARAM
-								if (getDeviceInfo != null) {
+								// MDN정보 USERMBR_NO로 INSD_USERMBR_NO를 조회하기위해 사용자 목록을 조회함.
+								List<KeySearch> keySearchListByMdnInfo = new ArrayList<KeySearch>();
+								KeySearch keySearchByMdnInfo = new KeySearch();
+								keySearchByMdnInfo.setKeyType(MemberConstants.KEY_TYPE_USERMBR_NO);
+								keySearchByMdnInfo.setKeyString(userKeyByMdnInfo); // MBR_NO - USERMBR_NO
+								keySearchListByMdnInfo.add(keySearchByMdnInfo);
+								SearchUserRequest searchUserRequestByMdnInfo = new SearchUserRequest();
+								searchUserRequestByMdnInfo.setCommonRequest(commonRequest);
+								searchUserRequestByMdnInfo.setKeySearchList(keySearchListByMdnInfo);
+								SearchUserResponse searchUserResponseByMdnInfo = null;
 
-									/* 단말코드 조회 */
-									Device device = this.mcc.getPhoneInfoByUacd(modelIdByMdnInfo);
-									if (device == null) {
-										getDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD);
-										getDeviceInfo.setModelNm(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
-										modelIdByMdnInfo = MemberConstants.NOT_SUPPORT_HP_UACODE;
-									} else {
-										getDeviceInfo.setDeviceModelNo(device.getDeviceModelCd());
-										// getDeviceInfo.setModelNm(device.getModelNm());
-										if (StringUtils.equals(getDeviceInfo.getDeviceNickName(),
-												MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
-												&& StringUtils.equals(getDeviceInfo.getDeviceModelNo(),
-														MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
-											getDeviceInfo.setDeviceNickName(device.getModelNm());
-										}
+								try {
+									searchUserResponseByMdnInfo = this.userSCI.searchUser(searchUserRequestByMdnInfo);
+								} catch (StorePlatformException e) {
+									if (!StringUtil.equals(e.getErrorInfo().getCode(),
+											MemberConstants.SC_ERROR_NO_USERKEY)) {
+										throw e;
 									}
+								}
 
-									// 휴대기기등록
-									getDeviceInfo.setDeviceId(deviceId);
-									getDeviceInfo.setDeviceTelecom(telecomValueByMdnInfo);
-									getDeviceInfo.setSvcMangNum(svcMngNumByMdnInfo);
-									getDeviceInfo.setIsPrimary(isPrimary);
+								if (searchUserResponseByMdnInfo != null) {
+									insdUserKeyByMdnInfo = searchUserResponseByMdnInfo.getUserKey();
 
-									if (getDeviceInfo.getDeviceExtraInfoList() != null) { // 부가속성
+									SacRequestHeader requestHeader = new SacRequestHeader();
+									TenantHeader tenant = new TenantHeader();
+									tenant.setSystemId(systemId);
+									tenant.setTenantId(tenantId);
+									requestHeader.setTenantHeader(tenant);
 
-										for (int i = 0; i < getDeviceInfo.getDeviceExtraInfoList().size(); i++) {
-											DeviceExtraInfo checkInfo = getDeviceInfo.getDeviceExtraInfoList().get(i);
-											if (checkInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD)) {
-												getDeviceInfo.getDeviceExtraInfoList().get(i)
-														.setExtraProfileValue(modelIdByMdnInfo);
+									DeviceInfo getDeviceInfo = this.deviceService.srhDevice(requestHeader,
+											MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, insdUserKeyByMdnInfo);
+
+									ListDeviceReq req = new ListDeviceReq();
+
+									req.setUserKey(insdUserKeyByMdnInfo);
+									req.setIsMainDevice("N");
+
+									if (searchUserResponse != null) {
+										ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, req);
+
+										if (listDeviceRes.getDeviceInfoList() != null) {
+											for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
+												if (StringUtils.equals(deviceInfo.getIsPrimary(), "Y")) {
+													isPrimary = "Y";
+												} else {
+													isPrimary = "N";
+												}
 											}
 										}
+
+									} else {
+										isPrimary = "Y"; // 이용동의로 신규가입할 경우 대표기기 여부는 Y로 셋팅
 									}
 
-									String afterDeviceKey = this.deviceService.regDeviceInfo(systemId, tenantId,
-											userKey, getDeviceInfo);
+									// 휴대기기 등록시 MDN_JSON_DATA 정보중 MDN,CARRIER,SVC_MNG_NUM, MODEL_ID정보는 REQUEST PARAM
+									if (getDeviceInfo != null) {
 
-									// insertDeviceInfo 호출시 deviceKey가 새로 생성되는데 새로 생성된 값을 updateDeviceInfo
-									// api호출해서 부가속성을 모두 바꿔줘야함.
-									// getDeviceInfo.setDeviceKey(afterDeviceKey);
-									// if (getDeviceInfo.getDeviceExtraInfoList() != null) { // 부가속성
-									// for (int i = 0; i < getDeviceInfo.getDeviceExtraInfoList().size(); i++) {
-									// getDeviceInfo.getDeviceExtraInfoList().get(i).setDeviceKey(afterDeviceKey);
-									// }
-									// }
-									//
-									// this.deviceService.updateDeviceInfo(requestHeader, getDeviceInfo, false);
+										/* 단말코드 조회 */
+										Device device = this.mcc.getPhoneInfoByUacd(modelIdByMdnInfo);
+										if (device == null) {
+											getDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD);
+											getDeviceInfo.setModelNm(MemberConstants.NOT_SUPPORT_HP_MODEL_NM);
+											modelIdByMdnInfo = MemberConstants.NOT_SUPPORT_HP_UACODE;
+										} else {
+											getDeviceInfo.setDeviceModelNo(device.getDeviceModelCd());
+											// getDeviceInfo.setModelNm(device.getModelNm());
+											if (StringUtils.equals(getDeviceInfo.getDeviceNickName(),
+													MemberConstants.NOT_SUPPORT_HP_MODEL_NM)
+													&& StringUtils.equals(getDeviceInfo.getDeviceModelNo(),
+															MemberConstants.NOT_SUPPORT_HP_MODEL_CD)) {
+												getDeviceInfo.setDeviceNickName(device.getModelNm());
+											}
+										}
 
+										// 휴대기기등록
+										getDeviceInfo.setDeviceId(deviceId);
+										getDeviceInfo.setDeviceTelecom(telecomValueByMdnInfo);
+										getDeviceInfo.setSvcMangNum(svcMngNumByMdnInfo);
+										getDeviceInfo.setIsPrimary(isPrimary);
+
+										if (getDeviceInfo.getDeviceExtraInfoList() != null) { // 부가속성
+
+											for (int i = 0; i < getDeviceInfo.getDeviceExtraInfoList().size(); i++) {
+												DeviceExtraInfo checkInfo = getDeviceInfo.getDeviceExtraInfoList().get(
+														i);
+												if (checkInfo.getExtraProfile().equals(
+														MemberConstants.DEVICE_EXTRA_UACD)) {
+													getDeviceInfo.getDeviceExtraInfoList().get(i)
+															.setExtraProfileValue(modelIdByMdnInfo);
+												}
+											}
+										}
+
+										String afterDeviceKey = this.deviceService.regDeviceInfo(systemId, tenantId,
+												userKey, getDeviceInfo);
+
+										// insertDeviceInfo 호출시 deviceKey가 새로 생성되는데 새로 생성된 값을 updateDeviceInfo
+										// api호출해서 부가속성을 모두 바꿔줘야함.
+										// getDeviceInfo.setDeviceKey(afterDeviceKey);
+										// if (getDeviceInfo.getDeviceExtraInfoList() != null) { // 부가속성
+										// for (int i = 0; i < getDeviceInfo.getDeviceExtraInfoList().size(); i++) {
+										// getDeviceInfo.getDeviceExtraInfoList().get(i).setDeviceKey(afterDeviceKey);
+										// }
+										// }
+										//
+										// this.deviceService.updateDeviceInfo(requestHeader, getDeviceInfo, false);
+
+									}
+
+									// MDN 합치기시에는 약관정보가 내려오지 않으므로, 모바일 회원인 MDN의 이용약관을 통합회원으로 이관처리. 2015-01-07. vanddang
+									// 모바일 회원 약관정보 조회
+									SearchAgreementListRequest searchAgreementListRequest = new SearchAgreementListRequest();
+									searchAgreementListRequest.setCommonRequest(commonRequest);
+									searchAgreementListRequest.setUserKey(searchUserResponseByMdnInfo.getUserKey());
+									SearchAgreementListResponse searchAgreementListResponse = null;
+
+									searchAgreementListResponse = this.userSCI
+											.searchAgreementList(searchAgreementListRequest);
+
+									// 약관이 존재하면 통합아이디로 이관처리
+									UpdateAgreementRequest updateAgreementRequest = new UpdateAgreementRequest();
+									updateAgreementRequest.setCommonRequest(commonRequest);
+									updateAgreementRequest.setUserKey(userKey);
+									updateAgreementRequest.setMbrClauseAgreeList(searchAgreementListResponse
+											.getMbrClauseAgreeList());
+									this.userSCI.updateAgreement(updateAgreementRequest);
 								}
-
-								// MDN 합치기시에는 약관정보가 내려오지 않으므로, 모바일 회원인 MDN의 이용약관을 통합회원으로 이관처리. 2015-01-07. vanddang
-								// 모바일 회원 약관정보 조회
-								SearchAgreementListRequest searchAgreementListRequest = new SearchAgreementListRequest();
-								searchAgreementListRequest.setCommonRequest(commonRequest);
-								searchAgreementListRequest.setUserKey(searchUserResponseByMdnInfo.getUserKey());
-								SearchAgreementListResponse searchAgreementListResponse = null;
-
-								searchAgreementListResponse = this.userSCI
-										.searchAgreementList(searchAgreementListRequest);
-
-								// 약관이 존재하면 통합아이디로 이관처리
-								UpdateAgreementRequest updateAgreementRequest = new UpdateAgreementRequest();
-								updateAgreementRequest.setCommonRequest(commonRequest);
-								updateAgreementRequest.setUserKey(userKey);
-								updateAgreementRequest.setMbrClauseAgreeList(searchAgreementListResponse
-										.getMbrClauseAgreeList());
-								this.userSCI.updateAgreement(updateAgreementRequest);
+							} catch (StorePlatformException spe) {
+								LOGGER.error(spe.getMessage(), spe);
+								imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+								imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+								return imResult;
 							}
-						} catch (StorePlatformException spe) {
-							LOGGER.error(spe.getMessage(), spe);
-							imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-							imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
-							return imResult;
 						}
 					}
 					// MDN합치기 기능추가 20140410 END
