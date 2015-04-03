@@ -11,13 +11,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
@@ -27,18 +30,41 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSac
 
 public class HttpClientTest {
 
-	private final HttpClient client = HttpClientBuilder.create().build();
+	// private final HttpClient client = HttpClientBuilder.create().build();
+	// private final HttpClient client = HttpClients.createDefault();
+	private HttpClient client;
 
-	private final ObjectMapper mapper = new ObjectMapper();
+	private ObjectMapper mapper = new ObjectMapper();
+	
+	@Before
+	public void before() {
+		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();		 
+		cm.setMaxTotal(200); // connections in total 
+		cm.setDefaultMaxPerRoute(200); // concurrent connections per given route
+		
+		RequestConfig config = RequestConfig.custom()
+				.setSocketTimeout(30 * 1000) // socket timeout = 30sec
+				.setConnectTimeout(2 * 1000) // connect timeout = 5sec
+			    .build();
+		
+		client = HttpClients.custom()
+				.setConnectionManager(cm)
+				.setDefaultRequestConfig(config)
+				.build();
+	}
 
 	@Test
 	public void testGet() throws ClientProtocolException, IOException {
 		String scheme = "http";
-		String host = "devspweb1.sungsu.skplanet.com/sp_sac";
-		String path = "/other/feedback/listScorePaticpers/v1";
+		String host = "store.sungsu.skplanet.com";
+		String path = "/example/sample/detail";
 
+		// String scheme = "http";
+		// String host = "devspweb1.sungsu.skplanet.com/sp_sac";
+		// String path = "/other/feedback/modify/v1";
+		
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-		urlParameters.add(new BasicNameValuePair("prodId", "0000647637"));
+		urlParameters.add(new BasicNameValuePair("no", "5"));
 
 		String query = URLEncodedUtils.format(urlParameters, "UTF-8");
 		String url = scheme + "://" + host + path + "?" + query;
