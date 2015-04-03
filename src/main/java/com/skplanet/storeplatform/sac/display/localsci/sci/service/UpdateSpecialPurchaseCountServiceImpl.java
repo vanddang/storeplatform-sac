@@ -87,6 +87,14 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 		if (StringUtils.isEmpty(req.getPurchaseDate())) {
 			throw new StorePlatformException("SAC_DSP_0002", "purchaseDate", req.getPurchaseDate());
 		}
+		
+		if(req.getPurchaseStatusCd().equals("OR000302")){
+			if (StringUtils.isEmpty(req.getPurchaseCancelDate())) {
+				throw new StorePlatformException("SAC_DSP_0002", "purchaseCancelDate", req.getPurchaseCancelDate());
+			}
+			
+		}
+		
 
 		boolean successFlag = true;
 		Map<String, String> map = new HashMap<String, String>();
@@ -181,6 +189,30 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 		try {
 			int prodCnt = 0;
 			int prchsCnt = 0;
+			int beforeProdCnt =0;
+			int beforePrchsCnt = 0;
+			
+			
+			// (기존 데이터 00:00:00) - 취소인 경우  그 건에 대해서만 취소함  S
+			if(map.get("purchaseStatusCd").equals("OR000302")){
+				beforeProdCnt = (Integer) this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialProdBeforeCount", map);
+				
+				if (beforeProdCnt > 0) {
+					map.put("purchaseCount", Integer.toString(reqPurchsCnt));
+					beforePrchsCnt = (Integer) this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialPurchaseBeforeCount", map);
+					// 해당상품의 구매수 + 업데이트 구매수가 0보다 작으면 현재 상품의 구매 수만큼 -해서 상품구매수를 0으로 되게 SET
+					if (beforePrchsCnt + reqPurchsCnt < 0) {
+						Integer resetCount = 0 - beforePrchsCnt; // 상품의 현재 구매수만큼 -해주기 위한 변수
+						map.put("purchaseCount", resetCount.toString());
+					}
+
+					// channel 및 catalog Id에 대한 update 실행
+					this.commonDAO.update("SpecialPurchaseCount.updateSpecialPurchaseBeforeCount", map);
+					return flag;
+				}
+			}
+			// (기존 데이터 00:00:00) - 취소인 경우  그 건에 대해서만 취소함  E			
+			
 			// TB_DP_SPRC_PROD_PRCHS_MANG 상품 존재 유무 확인
 			prodCnt = (Integer) this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialProdCount", map);
 
