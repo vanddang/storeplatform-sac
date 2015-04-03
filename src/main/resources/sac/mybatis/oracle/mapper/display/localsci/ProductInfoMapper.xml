@@ -89,6 +89,7 @@
               , TB.EXPO_SELLER_TELNO
               , TB.SELLER_MBR_NO
               , TB.CASE_REF_CD AS SEED_CASE_REF_CD
+              , NVL2(TB.CASE_REF_CD, 'Y', 'N') AS LAUNCHER_YN
               , (CASE
 		           WHEN TB.PART_PARENT_CLSF_CD = 'PD012302'
 		           THEN
@@ -158,6 +159,7 @@
                    AND  B.PROD_ID = F.PROD_ID
                    AND  B.PROD_ID = TENANT.PROD_ID
                    AND  SMAP.PROD_ID(+) = E.PROD_ID
+                   AND  SMAP.CASE_REF_CD(+) = #{seedLauncherCd}
                    AND  TENANT.TENANT_ID = #{tenantId}
                    AND  C.LANG_CD = #{lang}                /* ko : 한국어 */
                    <if test='productBasicInfo.svcGrpCd != null'>

@@ -38,7 +38,8 @@ import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
  */
 @Service
 public class ProductInfoServiceImpl implements ProductInfoService {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+    public static final String SEED_REF_LAUNCHER_CD = "PD013018";
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -100,6 +101,7 @@ public class ProductInfoServiceImpl implements ProductInfoService {
 				if (typeInfo.getProductType() == ProductType.App) {
 					paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 					paramMap.put("inAppRshpCd", DisplayConstants.DP_PARENT_CHILD_RELATIONSHIP_CD);
+					paramMap.put("seedLauncherCd", SEED_REF_LAUNCHER_CD);
 					product = this.commonDAO.queryForObject("ProductInfo.getAppMetaInfo", paramMap, ProductInfo.class);
 				}
                 else if(typeInfo.getProductType() == ProductType.Vod) {
