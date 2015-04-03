@@ -193,7 +193,7 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 			int beforePrchsCnt = 0;
 			
 			
-			// (기존 데이터 00:00:00) - 취소인 경우  그 건에 대해서만 취소함  S
+			// (기존 데이터 00:00:00) - 취소인 경우  변경전 데이터  취소함  S
 			if(map.get("purchaseStatusCd").equals("OR000302")){
 				beforeProdCnt = (Integer) this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialProdBeforeCount", map);
 				
@@ -211,7 +211,7 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 					return flag;
 				}
 			}
-			// (기존 데이터 00:00:00) - 취소인 경우  그 건에 대해서만 취소함  E			
+			// (기존 데이터 00:00:00) - 취소인 경우  변경전 데이터  취소함  E			
 			
 			// TB_DP_SPRC_PROD_PRCHS_MANG 상품 존재 유무 확인
 			prodCnt = (Integer) this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialProdCount", map);
