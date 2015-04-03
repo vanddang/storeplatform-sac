@@ -47,9 +47,9 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PaymethodAdjustPolicyInf
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 
 /**
- * 
+ *
  * 구매 제한정책 체크 서비스 구현체
- * 
+ *
  * Updated on : 2014. 1. 22. Updated by : 이승택, nTels.
  */
 @Service
@@ -72,17 +72,17 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	private PurchaseIapRepository iapRepository;
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 해당 테넌트상품분류코드 가 디바이스 기반 구매정책 인지 체크.
 	 * </pre>
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트 ID
-	 * 
+	 *
 	 * @param tenantProdGrpCd
 	 *            테넌트상품분류코드
-	 * 
+	 *
 	 * @return 디바이스 기반 구매정책 여부: true-디바이스 기반, false-ID 기반
 	 */
 	@Override
@@ -92,17 +92,17 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * T마일리지 적립 한도 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트 ID
-	 * 
+	 *
 	 * @param tenantProdGrpCd
 	 *            테넌트상품분류코드
-	 * 
+	 *
 	 * @return T마일리지 적립 한도
 	 */
 	@Override
@@ -113,17 +113,17 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * T마일리지 적립 가능 결제수단 조회.
 	 * </pre>
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트 ID
-	 * 
+	 *
 	 * @param tenantProdGrpCd
 	 *            테넌트상품분류코드
-	 * 
+	 *
 	 * @return T마일리지 적립 가능 결제수단
 	 */
 	@Override
@@ -134,11 +134,11 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 구매(결제)차단 여부 체크.
 	 * </pre>
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트ID
 	 * @param deviceId
@@ -193,11 +193,11 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * TEST MDN 여부 체크.
 	 * </pre>
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트ID
 	 * @param deviceId
@@ -255,11 +255,11 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 회원 정책 체크: TestMDN / 구매차단.
 	 * </pre>
-	 * 
+	 *
 	 * @param purchaseOrderInfo
 	 *            구매주문 정보
 	 */
@@ -290,11 +290,11 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 마일리지 적립 가능한 SKT시험폰 여부 체크.
 	 * </pre>
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트ID
 	 * @param deviceId
@@ -331,11 +331,11 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 결제 정책 체크.
 	 * </pre>
-	 * 
+	 *
 	 * @param checkPaymentPolicyParam
 	 *            정책 체크 대상 데이터
 	 * @return 정책 체크 결과
@@ -1501,11 +1501,11 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보 조회
 	 * </pre>
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트 ID
 	 * @param tenantProdGrpCd
@@ -1516,7 +1516,7 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 *            상품별 정책 조회할 상품ID
 	 * @param parentProdId
 	 *            상품별 정책 조회할 모상품ID (인앱 경우 AID)
-	 * 
+	 *
 	 * @return 결제수단 재정의 (가능수단 정의 & 제한금액/할인율 정의) 정보
 	 */
 	@Override
@@ -1533,26 +1533,26 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 결제수단 별 OCB 적립율 산정.
 	 * </pre>
-	 * 
+	 *
 	 * @param tenantId
 	 *            테넌트 ID
-	 * 
+	 *
 	 * @param telecom
 	 *            통신사
-	 * 
+	 *
 	 * @param tenantProdGrpCd
 	 *            테넌트 상품 그룹 코드
-	 * 
+	 *
 	 * @param iapProdCase
 	 *            IAP 상품 유형
-	 * 
+	 *
 	 * @param sktTestOrSkpCorp
 	 *            시험폰 또는 SKP법인폰 여부
-	 * 
+	 *
 	 * @return 결제수단 별 OCB 적립율
 	 */
 	@Override
@@ -1581,12 +1581,14 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 
 				sbOcbAccum.append("13:0.1;14:0.1;25:0.1"); // 신용카드, PayPin, T store Cash
 
+				// 2015.04.03 타사 OCB 적립 안함
 			} else if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_OLLEH)) {
-				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:0.1;"); // 시험폰, SKP법인폰 결제 제외
-				sbOcbAccum.append("13:0.1"); // 신용카드
-
+				// sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0;" : "11:0.1;"); // 시험폰, SKP법인폰 결제 제외
+				// sbOcbAccum.append("13:0.1"); // 신용카드
+				return "";
 			} else if (StringUtils.equals(tenantId, PurchaseConstants.TENANT_ID_UPLUS)) {
-				sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0" : "11:0.1"); // 시험폰, SKP법인폰 결제 제외
+				// sbOcbAccum.append(sktTestOrSkpCorp ? "11:0.0" : "11:0.1"); // 시험폰, SKP법인폰 결제 제외
+				return "";
 			}
 
 			return sbOcbAccum.toString();
