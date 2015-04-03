@@ -68,6 +68,44 @@
            , SYSDATE
         )
     </insert>      
+    
+    <!--특가 상품 존재 유무 조회 (기존 데이터 00:00:00) - 취소인 경우 -->
+    <select id="getSpecialProdBeforeCount" parameterType="HashMap" resultType="Integer">
+        SELECT /* LocalSciMapper.getSpecialProdBeforeCount, 특가 상품 존재 유무 조회 (기존 데이터 00:00:00) - 취소인 경우 , 김형식/지티소프트, 2014-02-13 */
+                NVL(COUNT(*),0) AS COUNT
+          FROM TB_DP_SPRC_PROD_PRCHS_MANG
+         WHERE 1=1
+           AND PROD_ID = #{productId}
+           AND TO_CHAR(PRCHS_DT,'yyyymmddhh24miss') =SUBSTR(#{purchaseDate},0,8) || '000000'     
+    </select>    
+        
+
+    <!--특가 상품 구매수 조회 (기존 데이터 00:00:00) - 취소인 경우 -->
+    <select id="getSpecialPurchaseBeforeCount" parameterType="HashMap" resultType="Integer">
+        SELECT /* LocalSciMapper.getSpecialPurchaseBeforeCount, 특가 상품 구매수 조회 (기존 데이터 00:00:00) - 취소인 경우 , 김형식/지티소프트, 2014-02-13 */
+               NVL(PRCHS_CNT, 0) AS PRCHS_CNT
+          FROM TB_DP_SPRC_PROD_PRCHS_MANG
+         WHERE 1=1
+           AND PROD_ID = #{productId}
+           AND TO_CHAR(PRCHS_DT,'yyyymmddhh24miss') =SUBSTR(#{purchaseDate},0,8) || '000000'     
+    </select>    
+
+    <!-- 특가 상품 구매건수 업데이트 (기존 데이터 00:00:00) - 취소인 경우-->
+    <update id="updateSpecialPurchaseBeforeCount" parameterType="HashMap">
+        /* SpecialPurchaseCount.updateSpecialPurchaseBeforeCount,특가 상품 구매건수 (기존 데이터 00:00:00) - 취소인 경우 UPDATE , 김형식/SK플래닛, 2015-03-26 */
+        UPDATE TB_DP_SPRC_PROD_PRCHS_MANG
+           SET PRCHS_CNT =  ( SELECT NVL(PRCHS_CNT, 0) + #{purchaseCount,jdbcType=NUMERIC} 
+                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG
+                                 WHERE 1=1
+                                   AND PROD_ID = #{productId}
+                                   AND TO_CHAR(PRCHS_DT,'yyyymmddhh24miss') =SUBSTR(#{purchaseDate},0,8) || '000000'
+                              )
+                ,UPD_DT = SYSDATE            
+         WHERE 1=1 
+           AND PROD_ID= #{productId}
+           AND TO_CHAR(PRCHS_DT,'yyyymmddhh24miss') =SUBSTR(#{purchaseDate},0,8) || '000000'
+    </update>  
+
 
     <!--특가 상품 구매수 조회 -->
     <select id="getSpecialPurchaseCount" parameterType="HashMap" resultType="Integer">
