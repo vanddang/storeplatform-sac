@@ -508,7 +508,7 @@
                                         WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
                                    , 0 ) AS MTH_PRCHS_CNT
-                               , NVL( ( SELECT TSPP.PRCHS_CNT
+                               , NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                         WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
@@ -1868,7 +1868,7 @@
                                 WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
                                   AND TSPP.PROD_ID = H.PART_PROD_ID )
                            , 0 ) AS MTH_PRCHS_CNT
-                        ,NVL( ( SELECT TSPP.PRCHS_CNT
+                        ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                 WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
                                   AND TSPP.PROD_ID = H.PART_PROD_ID )
@@ -2217,7 +2217,7 @@
                                                 WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
                                                   AND TSPP.PROD_ID = H.PART_PROD_ID )
                                            , 0 ) AS MTH_PRCHS_CNT
-                                       , NVL( ( SELECT TSPP.PRCHS_CNT
+                                       , NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                                 WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
                                                   AND TSPP.PROD_ID = H.PART_PROD_ID )
@@ -3590,7 +3590,7 @@
                                         WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
                                    , 0 ) AS MTH_PRCHS_CNT
-                                ,NVL( ( SELECT TSPP.PRCHS_CNT
+                                ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                         WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
@@ -3755,7 +3755,7 @@
                                 WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
                                   AND TSPP.PROD_ID = A.EPSD_PROD_ID )
                            , 0 ) AS MTH_PRCHS_CNT
-                       ,NVL( ( SELECT TSPP.PRCHS_CNT
+                       ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                 WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
                                   AND TSPP.PROD_ID = A.EPSD_PROD_ID )
@@ -3946,7 +3946,7 @@
                                         WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
                                    , 0 ) AS MTH_PRCHS_CNT
-                                ,NVL( ( SELECT TSPP.PRCHS_CNT
+                                ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
                                         WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
