@@ -29,7 +29,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	@Qualifier("cmsApp")
+    @Qualifier("sac")
 	private CommonDAO commonDAO;
 
 	/**
