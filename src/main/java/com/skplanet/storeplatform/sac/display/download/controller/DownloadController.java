@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.download.controller;
 
 import com.google.common.base.Strings;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.display.vo.download.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
@@ -27,7 +28,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/display/download")
 public class DownloadController {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    public static final String DL_TP_AUTO = "DP012702";
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private DownloadAppService downloadAppService;
@@ -70,7 +72,9 @@ public class DownloadController {
 			@RequestBody @Validated DownloadAppSacReq downloadAppSacReq) {
         SearchDownloadAppResult result = this.downloadAppService.searchDownloadApp(requestheader, downloadAppSacReq);
 
-        if (!Strings.isNullOrEmpty(downloadAppSacReq.getMdn()) && result.isHasDl()) {
+        if (!StringUtils.equals(downloadAppSacReq.getDwldTypeCd(), DL_TP_AUTO)
+                && !Strings.isNullOrEmpty(downloadAppSacReq.getMdn())
+                && result.isHasDl()) {
 
             downloadSupportService.createUserDownloadInfo(
                     downloadAppSacReq.getMdn(),
