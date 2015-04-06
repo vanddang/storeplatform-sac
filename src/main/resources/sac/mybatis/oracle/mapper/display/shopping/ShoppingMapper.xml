@@ -510,7 +510,7 @@
                                    , 0 ) AS MTH_PRCHS_CNT
                                , NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                        WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+                                        WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT 
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
                                    , 0 ) AS DLY_PRCHS_CNT 
                                ,N.MM_PROD_MAX_SALE_QTY
@@ -1870,7 +1870,7 @@
                            , 0 ) AS MTH_PRCHS_CNT
                         ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+                                WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                   AND TSPP.PROD_ID = H.PART_PROD_ID )
                            , 0 ) AS DLY_PRCHS_CNT           
                         ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID 
@@ -2219,7 +2219,7 @@
                                            , 0 ) AS MTH_PRCHS_CNT
                                        , NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                                WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+                                                WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                                   AND TSPP.PROD_ID = H.PART_PROD_ID )
                                            , 0 ) AS DLY_PRCHS_CNT 
                                        ,N.MM_PROD_MAX_SALE_QTY
@@ -3592,7 +3592,7 @@
                                    , 0 ) AS MTH_PRCHS_CNT
                                 ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                        WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+                                        WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
                                    , 0 ) AS DLY_PRCHS_CNT           
                                 ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID 
@@ -3757,7 +3757,7 @@
                            , 0 ) AS MTH_PRCHS_CNT
                        ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+                                WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                   AND TSPP.PROD_ID = A.EPSD_PROD_ID )
                           , 0 ) AS DLY_PRCHS_CNT         
                        ,N.SOLD_OUT_YN
@@ -3948,7 +3948,7 @@
                                    , 0 ) AS MTH_PRCHS_CNT
                                 ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                        WHERE TO_CHAR(TSPP.PRCHS_DT,'YYYYMMDD') = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+                                        WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
                                    , 0 ) AS DLY_PRCHS_CNT           
                                 ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID 
