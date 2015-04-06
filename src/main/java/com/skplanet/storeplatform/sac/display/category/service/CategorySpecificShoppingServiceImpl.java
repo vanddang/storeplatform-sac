@@ -126,7 +126,7 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 		reqMap.put("channelContentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-
+		
 
 		if (!this.commonSupportDeviceShopping(header)) {
 			// 조회 결과 없음
@@ -171,7 +171,10 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 	 */
 	private boolean commonSupportDeviceShopping(SacRequestHeader header) {
 		boolean result = true;
-
+		
+		if(StringUtils.isEmpty(header.getDeviceHeader().getModel())){
+			throw new StorePlatformException("SAC_DSP_0029");
+		}
 		// 단말 지원정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
 				.getModel());

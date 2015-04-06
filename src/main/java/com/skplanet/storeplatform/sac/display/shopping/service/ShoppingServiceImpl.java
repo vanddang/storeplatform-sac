@@ -2397,6 +2397,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 	private boolean commonSupportDeviceShopping(SacRequestHeader header) {
 		boolean result = true;
 
+		if(StringUtils.isEmpty(header.getDeviceHeader().getModel())){
+			throw new StorePlatformException("SAC_DSP_0029");
+		}
+		
 		// 단말 지원정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
 				.getModel());
