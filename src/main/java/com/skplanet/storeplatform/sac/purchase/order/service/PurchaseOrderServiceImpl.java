@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +68,6 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Banner
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.BannerInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac.SellerMbrAppSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseInfoSac;
@@ -335,17 +333,21 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					throw new StorePlatformException("SAC_PUR_7212", e);
 				}
 
-			} else { // 쇼핑상품 무료상품
+			} else { // 쇼핑상품 무료상품 : 현재는 간혹 이벤트성으로 발생 (구매 건만)
 
 				PurchaseProduct purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
 
 				String useDeviceId = useUser.getDeviceId();
 
 				if (purchaseOrderInfo.getApiVer() > 1) { // 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (1:N 선물 지원)
-					// TAKTODO:: 복수개 구매 시 useMdnList 에 구매수량만큼 반복
-
 					List<String> useMdnList = new ArrayList<String>();
-					useMdnList.add(useDeviceId);
+					if (purchaseOrderInfo.isGift()) {
+						for (PurchaseUserDevice user : purchaseOrderInfo.getReceiveUserList()) {
+							useMdnList.add(user.getDeviceId());
+						}
+					} else {
+						useMdnList.add(useDeviceId);
+					}
 
 					CouponPublishV2EcRes couponPublishV2EcRes = this.purchaseShoppingOrderRepository
 							.createCouponPublishV2(purchaseOrderInfo.getPrchsId(), purchaseProduct.getCouponCode(),
@@ -847,10 +849,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// (이번회) T마일리지 적립예정 금액
 		String targetDt = "20" + prchsDtlMore.getPrchsId().substring(0, 12);
 
-		// TAKTODO::오타때문에 2개 항목 세팅
 		int reserveAmt = this.membershipReserveService.searchSaveExpectTotalAmt(prchsDtlMore.getTenantId(), payUserKey,
 				targetDt, null);
-		res.settMileageReseveAmt(reserveAmt);
 		res.settMileageReserveAmt(reserveAmt);
 
 		// ------------------------------------------------------------------------------------------------
@@ -955,71 +955,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		if (StringUtils.startsWith(verifyOrderInfo.getSystemId(), "S00")) {
 			res.setPromotionList(this.searchPromotionList(prchsDtlMore));
 			res.setBannerList(this.searchBannerList(prchsDtlMore));
-		}
-
-		// TAKTODO:: 판매자 정보 - P/P 결제Page 요청 파라미터로 추가하면서 제거될 것임. (P/P 작업 수정 이후 제거)
-		// 판매자 정보 세팅
-		// SellerMbrSac sellerInfo = this.searchSellerInfo(reservedDataMap.get("sellerMbrNo"),
-		// prchsDtlMore.getTenantProdGrpCd());
-		// res.setNmSellerCompany(sellerInfo.getSellerCompany()); // 회사명
-		// res.setNmSeller(sellerInfo.getSellerNickName()); // 쇼핑 노출명
-		// res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
-		// res.setNoTelSeller(sellerInfo.getRepPhone()); // 대표전화번호
-
-		// SellerMbrAppSac sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
-		// reservedDataMap.get("sellerMbrNo"), prchsDtlMore.getTenantProdGrpCd());
-		// res.setNmSellerCompany(sellerInfo.getSellerCompany()); // 회사명
-		// res.setNmSeller(sellerInfo.getSellerName()); // 쇼핑 노출명
-		// res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
-		// res.setNoTelSeller(sellerInfo.getSellerPhone()); // 대표전화번호
-
-		String tenantProdGrpCd = prchsDtlMore.getTenantProdGrpCd();
-		if (StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_APP)
-				|| StringUtils.startsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
-
-			boolean bFlat = false;
-			if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)
-					|| StringUtils.startsWith(tenantProdGrpCd,
-							PurchaseConstants.TENANT_PRODUCT_GROUP_DTL_GAMECASH_FIXRATE)) {
-				bFlat = true;
-			}
-
-			Map<String, PurchaseProduct> purchaseProductMap = this.purchaseDisplayRepository.searchPurchaseProductList(
-					prchsDtlMore.getTenantId(), prchsDtlMore.getCurrencyCd(), reservedDataMap.get("useDeviceModelCd"),
-					Arrays.asList(prchsDtlMore.getProdId()), bFlat);
-			PurchaseProduct purchaseProduct = purchaseProductMap.get(prchsDtlMore.getProdId());
-
-			// 상품 정보의 판매자명은 회사명에만 세팅: 2015.01.05.염동환M
-			res.setNmSellerCompany(purchaseProduct.getSellerNm());
-			res.setNmSeller(null);
-			res.setEmailSeller(purchaseProduct.getSellerEmail());
-			res.setNoTelSeller(purchaseProduct.getSellerTelno());
-
-			if (StringUtils.isBlank(res.getNmSellerCompany()) || StringUtils.isBlank(res.getEmailSeller())
-					|| StringUtils.isBlank(res.getNoTelSeller())) {
-				SellerMbrAppSac sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
-						purchaseProduct.getSellerMbrNo(), tenantProdGrpCd);
-
-				if (StringUtils.isBlank(res.getNmSellerCompany())) {
-					res.setNmSellerCompany(sellerInfo.getSellerCompany());
-				}
-				// paymentPageParam.setNmSeller(sellerInfo.getSellerName());
-				if (StringUtils.isBlank(res.getEmailSeller())) {
-					res.setEmailSeller(sellerInfo.getSellerEmail());
-				}
-				if (StringUtils.isBlank(res.getNoTelSeller())) {
-					res.setNoTelSeller(sellerInfo.getSellerPhone());
-				}
-			}
-
-		} else {
-			SellerMbrAppSac sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
-					reservedDataMap.get("sellerMbrNo"), tenantProdGrpCd);
-
-			res.setNmSellerCompany(sellerInfo.getSellerCompany()); // 회사명
-			res.setNmSeller(sellerInfo.getSellerName()); // 쇼핑 노출명
-			res.setEmailSeller(sellerInfo.getSellerEmail()); // 판매자 이메일 주소
-			res.setNoTelSeller(sellerInfo.getSellerPhone()); // 대표전화번호
 		}
 
 		return res;
@@ -1170,8 +1105,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// {1:N선물구분
 
 			if (apiVer > 1) { // 구매요청 버전 V2 부터는 신규 쿠폰발급요청 규격 이용 (1:N 선물 지원)
-				// TAKTODO:: 복수개 구매 시 useMdnList 에 구매수량만큼 반복
-
 				List<String> useMdnList = this.concatResvDescByList(prchsDtlMoreList, "useDeviceId");
 
 				CouponPublishV2EcRes couponPublishV2EcRes = null;
@@ -2023,7 +1956,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			String marketDeviceKey, String deviceKeyAuth, Map<String, String> reservedDataMap) {
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
-		// TAKTODO:: 상품별 정책은 상품 1개일 경우에만 적용. IAP/쇼핑 상품은 하나의 상품만 구매 가능하다는 전제.
+		// 상품별 정책은 상품 1개일 경우에만 적용: IAP/쇼핑 별도 정책 적용 상품은 하나의 상품만 구매 가능하다는 전제.
 		String checkProdId = null;
 		if (prchsDtlMoreList.size() == 1
 				|| StringUtils

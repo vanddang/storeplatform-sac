@@ -15,7 +15,6 @@ import java.util.Map;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 
 /**
@@ -46,25 +45,6 @@ public interface PurchaseDisplayRepository {
 	 */
 	public Map<String, PurchaseProduct> searchPurchaseProductList(String tenantId, String langCd, String deviceModelCd,
 			List<String> prodIdList, boolean bFlat);
-
-	/**
-	 * 
-	 * <pre>
-	 * 소장/대여 상품 정보 조회.
-	 * </pre>
-	 * 
-	 * @param tenantId
-	 *            테넌트ID
-	 * @param langCd
-	 *            언어코드
-	 * @param prodId
-	 *            조회할 상품ID
-	 * @param possLendClsfCd
-	 *            해당 상품ID의 소장/대여 구분 코드
-	 * @return 상품ID에 매핑되는 상품정보를 담은 Map
-	 */
-	public PossLendProductInfo searchPossLendProductInfo(String tenantId, String langCd, String prodId,
-			String possLendClsfCd);
 
 	/**
 	 * 

@@ -395,22 +395,11 @@ public class PurchaseOrderController {
 				ReflectionToStringBuilder.toString(notifyPaymentReq, ToStringStyle.SHORT_PREFIX_STYLE),
 				sacRequestHeader);
 
-		// TAKTODO:: 결제실패 경우 처리 - 구매실패(결제실패) 이력 관리 할건가?
-		if (Integer.parseInt(notifyPaymentReq.getResultCd()) != 0) {
+		if (Integer.parseInt(notifyPaymentReq.getResultCd()) != 0) { // 결제실패 경우, 아무 처리 안 함
 			this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,FAIL,{},{}", notifyPaymentReq.getResultCd(),
 					notifyPaymentReq.getResultMsg());
 			return new NotifyPaymentSacRes(notifyPaymentReq.getPrchsId(), notifyPaymentReq.getPaymentInfoList().size());
 		}
-
-		// String tenantId = null;
-		// if (StringUtils.isNotBlank(notifyPaymentReq.getMctSpareParam())) { // P/P -> E/C 통해서 들어온 경우, 가맹점 파라미터 사용
-		// tenantId = notifyPaymentReq.getMctSpareParam();
-		// } else {
-		// TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
-		// if (tenantHeader != null) {
-		// tenantId = tenantHeader.getTenantId();
-		// }
-		// }
 
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 

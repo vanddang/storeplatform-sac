@@ -513,7 +513,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 
 		if (StringUtils.equals(tStoreCashChargeCancelEcRes.getResultCd(),
 				PurchaseConstants.TSTORE_CASH_RESULT_CD_SUCCESS) == false) {
-			// TAKTODO:: 충전 취소 실패 시, 어떻게?
+			// POSTCHECK: 충전 취소 실패 시 일단 아무 처리 안 함.
 			;
 		}
 	}

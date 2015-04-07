@@ -755,7 +755,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 							.append("&s2sAutoYn=").append(StringUtils.defaultString(product.getS2sAutoPrchsYn()))
 							.append("&s2sYn=").append(StringUtils.isNotBlank(product.getSearchPriceUrl()) ? "Y" : "N");
 
-					// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
+					// 대여정보: VOD/이북 단건, 유료 결제 요청 시
 					if (purchaseOrderInfo.getPurchaseProductList().size() == 1
 							&& purchaseOrderInfo.getRealTotAmt() > 0.0
 							&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
@@ -763,11 +763,11 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 						if (StringUtils.equals(StringUtils.defaultIfBlank(product.getPossLendClsfCd(),
 								PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION),
-								PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION)) {
-							sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=");
-						} else {
+								PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL)) {
 							sbReserveData.append("&dwldAvailableDayCnt=").append(product.getUsePeriod())
 									.append("&usePeriodCnt=").append(product.getUsePeriod());
+						} else {
+							sbReserveData.append("&dwldAvailableDayCnt=&usePeriodCnt=");
 						}
 
 					} else {

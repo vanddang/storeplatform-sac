@@ -46,7 +46,6 @@ import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecial
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePass;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -142,7 +141,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			}
 		}
 
-		// TAKTODO:: 링&벨
+		// TAKTODO:: 링&벨 필수 항목 체크 확인 처리
 		// if( StringUtils.startsWith(req.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_RINGBELL)) {
 		// for(CreatePurchaseSacReqProduct product : req.getProductList()) {
 		// if( StringUtils.isBlank(product.getTimbreClsf()) ) {
@@ -696,20 +695,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			purchaseOrderInfo.setRealTotAmt(checkTotAmt);
 		}
-
-		// 소장/대여 상품 정보 조회: VOD/이북 단건, 유료 결제 요청 시
-		if (purchaseOrderInfo.getPurchaseProductList().size() == 1 && purchaseOrderInfo.getRealTotAmt() > 0.0
-				&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
-				&& purchaseOrderInfo.isFlat() == false) {
-
-			purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
-
-			PossLendProductInfo possLendProductInfo = this.purchaseDisplayRepository.searchPossLendProductInfo(
-					tenantId, langCd, purchaseProduct.getProdId(), purchaseProduct.getPossLendClsfCd());
-			if (possLendProductInfo != null) {
-				purchaseProduct.setPossLendProductInfo(possLendProductInfo);
-			}
-		}
 	}
 
 	/**
@@ -751,8 +736,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		// 기구매 체크 처리 용 변수
 		List<String> existenceProdIdList = new ArrayList<String>();
 		List<String> tempExistenceProdIdList = null;
-
-		String removeWhenExistPossLendProdId = null; // 소장/대여 상품 정보 중 구매요청 상품 외 상품은 기구매 시 제외하고 구매 진행
 
 		// CLINK 예외처리용
 		boolean bClink = purchaseOrderInfo.isClink();
@@ -936,17 +919,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 				// 이용 가능한 정액권 기구매 확인 처리 : T프리미엄 요청 경로에 대해서는 정액권 이용 제외
 
-				// if (CollectionUtils.isNotEmpty(product.getAvailableFixrateProdIdList())
-				// && (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
-				// PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
-				// && (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
-				// PurchaseConstants.PRCHS_REQ_PATH_T_BENEFIT_EVENT) == false)) {
-				//
-				// tempExistenceProdIdList = new ArrayList<String>();
-				// for (String fixrateProdId : product.getAvailableFixrateProdIdList()) {
-				// tempExistenceProdIdList.add(fixrateProdId);
-				// }
-
 				if (CollectionUtils.isNotEmpty(product.getAvailableFixrateInfoList())
 						&& (StringUtils.equals(purchaseOrderInfo.getPrchsReqPathCd(),
 								PurchaseConstants.PRCHS_REQ_PATH_T_FREEMIUM) == false)
@@ -1054,27 +1026,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			// 기구매 체크 대상 추가
 			if (product.getFullIapProductInfo() != null) { // IAP 정식판 전환 상품 존재 경우, 해당 상품으로 기구매체크 대신
 				existenceProdIdList.add(product.getFullIapProductInfo().getProdId());
-
 			} else if (purchaseOrderInfo.isPossibleDuplication() == false) {
-
-				// 소장/대여 상품 기구매 처리
-				PossLendProductInfo possLendProductInfo = product.getPossLendProductInfo();
-
-				if (possLendProductInfo == null) {
-					existenceProdIdList.add(product.getProdId());
-
-				} else {
-					existenceProdIdList.add(possLendProductInfo.getPossProdId());
-					existenceProdIdList.add(possLendProductInfo.getLendProdId());
-
-					removeWhenExistPossLendProdId = StringUtils.equals(product.getPossLendClsfCd(),
-							PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION) ? possLendProductInfo.getLendProdId() : possLendProductInfo
-							.getPossProdId();
-				}
+				existenceProdIdList.add(product.getProdId());
 			}
 		}
-
-		boolean bRemovePossLend = false;
 
 		// 기구매 체크
 		if (existenceProdIdList.size() > 0) {
@@ -1088,11 +1043,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 				for (ExistenceScRes checkRes : checkPurchaseResultList) {
 					if (StringUtils.equals(checkRes.getStatusCd(), PurchaseConstants.PRCHS_STATUS_COMPT)) {
-						if (StringUtils.equals(checkRes.getProdId(), removeWhenExistPossLendProdId)) {
-							bRemovePossLend = true;
-							continue;
-						}
-
 						if (bClink) { // CLINK 예외 처리
 							for (PurchaseProduct product : purchaseOrderInfo.getPurchaseProductList()) {
 								if (StringUtils.equals(checkRes.getProdId(), product.getProdId())) {
@@ -1107,10 +1057,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					// TAKTODO:: 예약 상태 경우 해당 구매ID 사용... 복수 구매 시 일부 예약상태일 때 처리 방안?
 				}
 			}
-		}
-
-		if (bRemovePossLend) {
-			purchaseOrderInfo.getPurchaseProductList().get(0).setPossLendProductInfo(null);
 		}
 
 		// ------------------------------------------------------------------------------------------------------
