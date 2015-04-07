@@ -46,7 +46,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String tMileageSaveRate; // 상품 T마일리지 적립률 (T마일리지 적립율 (등급:적립율;[반복])
 	private String tMileageAvailMtd; // T마일리지 적립 가능 결제수단 (결제수단코드;결제수단코드;[반복])
 	private Integer tMileageLimitAmt; // T마일리지 적립한도 금액
-	private Integer tMileageReseveAmt; // T마일리지 적립예정 금액 (적립예정일:예정금액;[반복])
 	private Integer tMileageReserveAmt; // T마일리지 적립예정 금액 (적립예정일:예정금액;[반복])
 	private String typeTestMdn; // 법인 및 일반 시험폰 처리 타입: T01, T02, T03
 	private String cdPaymentTemplate; // 결제Page 템플릿 코드: TC01-일반, TC02-정액제(게임캐쉬), TC03-대여/소장, TC04-자동결제, TC05-쇼핑, TC06-선물
@@ -58,22 +57,11 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String useExprDt; // 이용 종료 일시
 	private String dwldAvailableDayCnt; // 다운로드 가능기간(일)
 	private String usePeriodCnt; // 이용기간(일)
-	// 대여/소장 TAB 제거 : 2014/08/27 적용
-	// private String basePid; // 기본 상품 ID (대여/소장 TAB 하이라이트 처리)
-	// private String loanPid; // 대여하기 상품 ID
-	// private Double loanAmt; // 대여하기 상품 금액
-	// private String ownPid; // 소장하기 상품 ID
-	// private Double ownAmt; // 소장하기 상품 금액
 	private String prodKind; // 쇼핑상품 종류
 
 	private VerifyOrderIapInfoSac iapProdInfo; // IAP상품 정보
 	private List<VerifyOrderPromotionInfoSac> promotionList; // 프로모션 정보
 	private List<VerifyOrderBannerInfoSac> bannerList; // 배너 정보
-
-	private String nmSellerCompany; // 회사명
-	private String nmSeller; // 판매자명
-	private String emailSeller; // 판매자 이메일 주소
-	private String noTelSeller; // 판매자 전화번호
 
 	/**
 	 * @return the tenantId
@@ -436,21 +424,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	}
 
 	/**
-	 * @return the tMileageReseveAmt
-	 */
-	public Integer gettMileageReseveAmt() {
-		return this.tMileageReseveAmt;
-	}
-
-	/**
-	 * @param tMileageReseveAmt
-	 *            the tMileageReseveAmt to set
-	 */
-	public void settMileageReseveAmt(Integer tMileageReseveAmt) {
-		this.tMileageReseveAmt = tMileageReseveAmt;
-	}
-
-	/**
 	 * @return the tMileageReserveAmt
 	 */
 	public Integer gettMileageReserveAmt() {
@@ -673,66 +646,6 @@ public class VerifyOrderSacRes extends CommonInfo {
 	 */
 	public void setBannerList(List<VerifyOrderBannerInfoSac> bannerList) {
 		this.bannerList = bannerList;
-	}
-
-	/**
-	 * @return the nmSellerCompany
-	 */
-	public String getNmSellerCompany() {
-		return this.nmSellerCompany;
-	}
-
-	/**
-	 * @param nmSellerCompany
-	 *            the nmSellerCompany to set
-	 */
-	public void setNmSellerCompany(String nmSellerCompany) {
-		this.nmSellerCompany = nmSellerCompany;
-	}
-
-	/**
-	 * @return the nmSeller
-	 */
-	public String getNmSeller() {
-		return this.nmSeller;
-	}
-
-	/**
-	 * @param nmSeller
-	 *            the nmSeller to set
-	 */
-	public void setNmSeller(String nmSeller) {
-		this.nmSeller = nmSeller;
-	}
-
-	/**
-	 * @return the emailSeller
-	 */
-	public String getEmailSeller() {
-		return this.emailSeller;
-	}
-
-	/**
-	 * @param emailSeller
-	 *            the emailSeller to set
-	 */
-	public void setEmailSeller(String emailSeller) {
-		this.emailSeller = emailSeller;
-	}
-
-	/**
-	 * @return the noTelSeller
-	 */
-	public String getNoTelSeller() {
-		return this.noTelSeller;
-	}
-
-	/**
-	 * @param noTelSeller
-	 *            the noTelSeller to set
-	 */
-	public void setNoTelSeller(String noTelSeller) {
-		this.noTelSeller = noTelSeller;
 	}
 
 }
