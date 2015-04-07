@@ -505,7 +505,7 @@
                                ,PI.FILE_NM
                                , NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                        WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
+                                        WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
                                    , 0 ) AS MTH_PRCHS_CNT
                                , NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
@@ -1866,7 +1866,7 @@
                          </if>
                         ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
+                                WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                   AND TSPP.PROD_ID = H.PART_PROD_ID )
                            , 0 ) AS MTH_PRCHS_CNT
                         ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
@@ -2216,7 +2216,7 @@
                                        ,PI.FILE_NM
                                        , NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                                  FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                                WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
+                                                WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                                   AND TSPP.PROD_ID = H.PART_PROD_ID )
                                            , 0 ) AS MTH_PRCHS_CNT
                                        , NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
@@ -3590,7 +3590,7 @@
                                  </if>
                                 ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                        WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
+                                        WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
                                    , 0 ) AS MTH_PRCHS_CNT
                                 ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
@@ -3756,7 +3756,7 @@
                        ,NVL(N.ONCE_MAX_PRCHS_POSB_CNT, B.FIRST_MAX_PRCHS_QTY ) AS EACH_MAX_CNT  /* 1차_최대_구매_수량 */
                        ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                 FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
+                                WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                   AND TSPP.PROD_ID = A.EPSD_PROD_ID )
                            , 0 ) AS MTH_PRCHS_CNT
                        ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
@@ -3948,7 +3948,7 @@
                                 ,CASE WHEN N.PROD_ID IS NOT NULL THEN N.CPN_ID ELSE '' END AS SPECIAL_COUPON_ID
                                 ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
-                                        WHERE TO_CHAR(TSPP.PRCHS_DT, 'YYYYMMDD') BETWEEN TO_CHAR( N.SPRC_APPLY_START_DT, 'YYYYMMDD' ) AND TO_CHAR( N.SPRC_APPLY_END_DT, 'YYYYMMDD')
+                                        WHERE TSPP.PRCHS_DT BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT
                                           AND TSPP.PROD_ID = H.PART_PROD_ID )
                                    , 0 ) AS MTH_PRCHS_CNT
                                 ,NVL( ( SELECT SUM(TSPP.PRCHS_CNT)
