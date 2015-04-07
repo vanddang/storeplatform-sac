@@ -198,8 +198,6 @@
 					, FM.PROD_ID
     		        , FM.PART_PROD_ID
     		        , FM.CONTENTS_CLSF_CD
-    		        , FM.DRM_SET_CLSF_CD
-    		        , FM.DRM_USE_PERIOD
     		        , FM.DWLD_DRM_YN
     		        , FM.EXPO_ORD
                     ,(CASE WHEN FM.ICON_CLSF_CD='DP006701' THEN 'new' 
@@ -714,8 +712,6 @@
 					, FM.PROD_ID
     		        , FM.PART_PROD_ID
     		        , FM.CONTENTS_CLSF_CD
-    		        , FM.DRM_SET_CLSF_CD
-    		        , FM.DRM_USE_PERIOD
     		        , FM.DWLD_DRM_YN
     		        , FM.EXPO_ORD
                     ,(CASE WHEN FM.ICON_CLSF_CD='DP006701' THEN 'new' 

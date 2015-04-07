@@ -11,51 +11,15 @@
             , DC.PROD_NM AS cmpxProdNm
             , PM.PART_PROD_ID AS episodeProdId
             ,(CASE WHEN CM.CMPX_PROD_CLSF_CD NOT IN ('OR004305') THEN 
-                   (
-                    SELECT 
-                          NVL(
-                               (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_YN
-                                     WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_YN
-                                END),'N') AS DRM_YN
-                     FROM  TB_DP_FIXRATE_PROD_MAPG A
-                          ,TB_DP_PROD_RSHP B
-                          ,TB_DP_PROD C
-                    WHERE A.PART_PROD_ID = B.PROD_ID
-                      AND B.PART_PROD_ID = C.PROD_ID
-                      AND B.PROD_RSHP_CD = 'DP010802'
-                      AND B.PART_PROD_ID = PM.PART_PROD_ID
-                      AND A.PROD_ID = PD.PROD_ID                  
-                   )
-                ELSE
+                (CASE WHEN PM.POSS_LEND_CLSF_CD  ='DP010601' THEN PM.DWLD_DRM_YN
+                      WHEN PM.POSS_LEND_CLSF_CD  ='DP010602' THEN PM.STRM_DRM_YN
+                 END) 
+              ELSE
                   PD.DRM_YN
-              END)  AS DRM_YN            
-            , (SELECT 
-                     (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_USE_PERIOD_UNIT_CD
-                           WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_USE_PERIOD_UNIT_CD
-                      END) AS USE_PERIOD_UNIT_CD
-                 FROM  TB_DP_FIXRATE_PROD_MAPG A
-                      ,TB_DP_PROD_RSHP B
-                      ,TB_DP_PROD C
-                WHERE A.PART_PROD_ID = B.PROD_ID
-                  AND B.PART_PROD_ID = C.PROD_ID
-                  AND B.PROD_RSHP_CD = 'DP010802'
-                  AND B.PART_PROD_ID = PM.PART_PROD_ID
-                  AND A.PROD_ID = PD.PROD_ID                  
-              ) AS USE_PERIOD_UNIT_CD
-            , (SELECT 
-                      NVL(
-                           (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_USE_PERIOD
-                                 WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_USE_PERIOD
-                            END),0) AS USE_PERIOD
-                 FROM  TB_DP_FIXRATE_PROD_MAPG A
-                      ,TB_DP_PROD_RSHP B
-                      ,TB_DP_PROD C
-                WHERE A.PART_PROD_ID = B.PROD_ID
-                  AND B.PART_PROD_ID = C.PROD_ID
-                  AND B.PROD_RSHP_CD = 'DP010802'
-                  AND B.PART_PROD_ID = PM.PART_PROD_ID
-                  AND A.PROD_ID = PD.PROD_ID                  
-             ) AS USE_PERIOD             
+              END
+             )  AS DRM_YN            
+            , PM.USE_PERIOD_UNIT_CD  
+            , PM.USE_PERIOD              
             , CM.CMPX_PROD_CLSF_CD
             , PD.TOP_MENU_ID      
             , TP.PROD_STATUS_CD      
@@ -65,16 +29,21 @@
             , TB_DP_PROD_DESC DC
             , TB_DP_TENANT_PROD TP
             , TB_DP_TENANT_PROD_PRICE PR
-            ,(SELECT  A.PROD_ID 
+            ,(SELECT  A.PROD_ID
+                     ,A.DWLD_DRM_YN
+                     ,A.STRM_DRM_YN
                      ,B.PART_PROD_ID
-                     ,A.DWLD_DRM_USE_PERIOD_UNIT_CD
-                     ,A.DWLD_DRM_USE_PERIOD
-                     ,A.STRM_DRM_USE_PERIOD_UNIT_CD
-                     ,A.STRM_DRM_USE_PERIOD  
+                     ,D.POSS_LEND_CLSF_CD
+                     ,D.USE_PERIOD_UNIT_CD
+                     ,D.USE_PERIOD
                 FROM  TB_DP_FIXRATE_PROD_MAPG A
                      ,TB_DP_PROD_RSHP B
+                     ,TB_DP_PROD C
+                     ,TB_DP_USE_POLICY D                          
                WHERE A.PART_PROD_ID = B.PROD_ID
                  AND B.PROD_RSHP_CD ='DP010802'
+                 AND B.PART_PROD_ID = C.PROD_ID
+                 AND C.USE_POLICY_ID =D.USE_POLICY_ID                  
                  AND B.PART_PROD_ID=#{episodeProdId}
              )PM             
         WHERE PD.PROD_ID = #{prodId}
@@ -101,10 +70,18 @@
             , PM.EPISODE_PROD_ID AS episodeProdId
 			, PM.DWLD_DRM_YN
 			, PM.STRM_DRM_YN
-			, PM.DWLD_DRM_USE_PERIOD_UNIT_CD
-			, PM.DWLD_DRM_USE_PERIOD
-			, PM.STRM_DRM_USE_PERIOD_UNIT_CD
-			, PM.STRM_DRM_USE_PERIOD            
+            ,(CASE WHEN PM.POSS_LEND_CLSF_CD  ='DP010601' THEN PM.USE_PERIOD_UNIT_CD
+              ELSE ''
+              END) AS DWLD_DRM_USE_PERIOD_UNIT_CD
+            ,(CASE WHEN PM.POSS_LEND_CLSF_CD  ='DP010601' THEN PM.USE_PERIOD
+              ELSE 0
+              END) AS DWLD_DRM_USE_PERIOD    
+            ,(CASE WHEN PM.POSS_LEND_CLSF_CD  ='DP010602' THEN PM.USE_PERIOD_UNIT_CD
+              ELSE ''
+              END) AS STRM_DRM_USE_PERIOD_UNIT_CD
+            ,(CASE WHEN PM.POSS_LEND_CLSF_CD  ='DP010602' THEN PM.USE_PERIOD
+              ELSE 0
+              END) AS STRM_DRM_USE_PERIOD                
             , CM.CMPX_PROD_CLSF_CD
             , PD.TOP_MENU_ID      
             , TP.PROD_STATUS_CD      
@@ -114,12 +91,21 @@
             , TB_DP_PROD_DESC DC
             , TB_DP_TENANT_PROD TP
             , TB_DP_TENANT_PROD_PRICE PR
-            ,(SELECT  A.* 
+            ,(SELECT  A.DWLD_DRM_YN 
+                     ,A.STRM_DRM_YN 
+                     ,A.PROD_ID
                      ,B.PART_PROD_ID AS EPISODE_PROD_ID
+                     ,D.POSS_LEND_CLSF_CD
+                     ,D.USE_PERIOD_UNIT_CD
+                     ,D.USE_PERIOD                    
                 FROM  TB_DP_FIXRATE_PROD_MAPG A
                      ,TB_DP_PROD_RSHP B
+                     ,TB_DP_PROD C
+                     ,TB_DP_USE_POLICY D                        
                WHERE A.PART_PROD_ID = B.PROD_ID
                  AND B.PROD_RSHP_CD ='DP010802'
+                 AND B.PART_PROD_ID = C.PROD_ID
+                 AND C.USE_POLICY_ID =D.USE_POLICY_ID                    
                  AND B.PART_PROD_ID=#{episodeProdId}
              )PM             
         WHERE PD.PROD_ID = #{prodId}
@@ -173,52 +159,14 @@
                      ) = 1
                ) AS PROD_SPRT_YN            
             ,(CASE WHEN PM.CMPX_PROD_CLSF_CD NOT IN ('OR004305') THEN 
-                   (
-                    SELECT 
-                          NVL(
-                               (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_YN
-                                     WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_YN
-                                END),'N') AS DRM_YN
-                     FROM  TB_DP_FIXRATE_PROD_MAPG A
-                          ,TB_DP_PROD_RSHP B
-                          ,TB_DP_PROD C
-                    WHERE A.PART_PROD_ID = B.PROD_ID
-                      AND B.PART_PROD_ID = C.PROD_ID
-                      AND B.PROD_RSHP_CD = #{prodRshpCd}
-                      AND B.PART_PROD_ID = PM.PART_PROD_ID
-                      AND A.PROD_ID = PM.PROD_ID                  
-                   )
+	                (CASE WHEN PM.POSS_LEND_CLSF_CD  ='DP010601' THEN PM.DWLD_DRM_YN
+	                      WHEN PM.POSS_LEND_CLSF_CD  ='DP010602' THEN PM.STRM_DRM_YN
+	                 END)                
                 ELSE
                   PD.DRM_YN
               END)  AS DRM_YN     
-            , (SELECT 
-                  NVL(
-                     (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_USE_PERIOD_UNIT_CD
-                           WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_USE_PERIOD_UNIT_CD
-                      END),PD.USE_PERIOD_UNIT_CD) AS USE_PERIOD_UNIT_CD
-                 FROM  TB_DP_FIXRATE_PROD_MAPG A
-                      ,TB_DP_PROD_RSHP B
-                      ,TB_DP_PROD C
-                WHERE A.PART_PROD_ID = B.PROD_ID
-                  AND B.PART_PROD_ID = C.PROD_ID
-                  AND B.PROD_RSHP_CD = #{prodRshpCd}
-                  AND B.PART_PROD_ID = PM.PART_PROD_ID
-                  AND A.PROD_ID = PM.PROD_ID                  
-              ) AS USE_PERIOD_UNIT_CD
-            , (SELECT 
-                      NVL(
-                           (CASE WHEN C.USE_PERIOD_UNIT_CD  ='PD00310' THEN A.DWLD_DRM_USE_PERIOD
-                                 WHEN C.USE_PERIOD_UNIT_CD !='PD00310' THEN A.STRM_DRM_USE_PERIOD
-                            END),PD.USE_PERIOD) AS USE_PERIOD
-                 FROM  TB_DP_FIXRATE_PROD_MAPG A
-                      ,TB_DP_PROD_RSHP B
-                      ,TB_DP_PROD C
-                WHERE A.PART_PROD_ID = B.PROD_ID
-                  AND B.PART_PROD_ID = C.PROD_ID
-                  AND B.PROD_RSHP_CD = #{prodRshpCd}
-                  AND B.PART_PROD_ID = PM.PART_PROD_ID
-                  AND A.PROD_ID = PM.PROD_ID                  
-             ) AS USE_PERIOD                            
+            , NVL(PM.USE_PERIOD_UNIT_CD,PD.USE_PERIOD_UNIT_CD) AS USE_PERIOD_UNIT_CD
+            , NVL(PM.USE_PERIOD,PD.USE_PERIOD) AS USE_PERIOD
             , PD.CID        
         FROM 
               TB_DP_PROD PD
@@ -226,19 +174,28 @@
             , TB_DP_TENANT_PROD TP
             , TB_DP_TENANT_PROD_PRICE PR
             ,(SELECT  A.PROD_ID 
+                    , A.DWLD_DRM_YN 
+                    , A.STRM_DRM_YN             
                     , B.PART_PROD_ID
                     , C.CMPX_PROD_CLSF_CD
+                    , H.POSS_LEND_CLSF_CD
+                    , H.USE_PERIOD_UNIT_CD
+                    , H.USE_PERIOD                    
                 FROM  TB_DP_FIXRATE_PROD_MAPG A
                      ,TB_DP_PROD_RSHP B
                      ,TB_DP_CMPX_PROD C
                      ,TB_DP_PROD_DESC D
                      ,TB_DP_TENANT_PROD E
                      ,TB_DP_TENANT_PROD_PRICE F
+                     ,TB_DP_PROD G
+                     ,TB_DP_USE_POLICY H                       
                WHERE A.PART_PROD_ID = B.PROD_ID
                  AND A.PROD_ID = C.PROD_ID
                  AND A.PROD_ID = D.PROD_ID
                  AND A.PROD_ID = E.PROD_ID
                  AND A.PROD_ID = F.PROD_ID
+                 AND B.PART_PROD_ID  = G.PROD_ID
+                 AND G.USE_POLICY_ID = H.USE_POLICY_ID                  
 		         AND D.LANG_CD = #{langCd} 
 		         AND E.TENANT_ID = #{tenantId}
 		         AND E.TENANT_ID = F.TENANT_ID 
