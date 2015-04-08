@@ -86,12 +86,12 @@
 		              MAX(RSHP.PART_PROD_ID) AS PROD_ID, 
 		              MAX(A.MENU_ID) AS MENU_ID, 
 		              MAX(C.MENU_NM) AS MENU_NM, 
-		              SUM(DECODE(NVL(CASE WHEN D.USE_PERIOD_UNIT_CD = 'PD00310' THEN D.DRM_YN END, 'N'), 'Y', 1, 0)) AS STORE_DRM, 
-		              SUM(DECODE(NVL(CASE WHEN D.USE_PERIOD_UNIT_CD != 'PD00310' THEN D.DRM_YN END, 'N'), 'Y', 1, 0)) AS PLAY_DRM, 
-		              MAX(DECODE(D.USE_PERIOD_UNIT_CD, 'PD00310', D.PROD_ID)) AS STORE_PROD_ID, 
-		              MAX(DECODE(D.USE_PERIOD_UNIT_CD, 'PD00310', NULL, D.PROD_ID)) AS PLAY_PROD_ID, 
-		              MAX(DECODE(D.USE_PERIOD_UNIT_CD, 'PD00310', NULL, D.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD,
-					  MAX(DECODE(D.USE_PERIOD_UNIT_CD, 'PD00310', NULL, D.USE_PERIOD)) AS PLAY_USE_PERIOD 
+		              SUM(DECODE(NVL(CASE WHEN M.USE_PERIOD_UNIT_CD = 'PD00310' THEN D.DRM_YN END, 'N'), 'Y', 1, 0)) AS STORE_DRM, 
+		              SUM(DECODE(NVL(CASE WHEN M.USE_PERIOD_UNIT_CD != 'PD00310' THEN D.DRM_YN END, 'N'), 'Y', 1, 0)) AS PLAY_DRM, 
+		              MAX(DECODE(M.USE_PERIOD_UNIT_CD, 'PD00310', D.PROD_ID)) AS STORE_PROD_ID, 
+		              MAX(DECODE(M.USE_PERIOD_UNIT_CD, 'PD00310', NULL, D.PROD_ID)) AS PLAY_PROD_ID, 
+		              MAX(DECODE(M.USE_PERIOD_UNIT_CD, 'PD00310', NULL, M.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD,
+					  MAX(DECODE(M.USE_PERIOD_UNIT_CD, 'PD00310', NULL, M.USE_PERIOD)) AS PLAY_USE_PERIOD 
 		          FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
 		              , TB_DP_MENU_CATEGORY B
 		              , TB_DP_MENU_CATEGORY_DESC C 
@@ -100,12 +100,14 @@
 		              , TB_DP_TENANT_PROD G
 		              , TB_DP_SUB_CONTENTS SC 
 		              , TB_DP_SPRT_DEVICE K 
-		              , TB_CM_DEVICE L 
+		              , TB_CM_DEVICE L
+		              , TB_DP_USE_POLICY M
 		          WHERE A.MENU_ID = B.MENU_ID AND A.BASE_YN = 'Y'AND B.USE_YN = 'Y'
 		            AND A.MENU_ID = C.MENU_ID AND C.LANG_CD = #{langCd}
 		            AND A.PROD_ID = RSHP.PROD_ID
 		            AND RSHP.PROD_ID = #{channelId}
 		            AND RSHP.PART_PROD_ID = D.PROD_ID
+		            AND D.USE_POLICY_ID = M.USE_POLICY_ID(+)
 		            AND D.SVC_GRP_CD = 'DP000203'  AND D.CONTENTS_TYPE_CD = 'PD002502' AND D.SVC_TYPE_CD IN ('DP001112', 'DP001115') 
 		            AND D.PROD_ID = G.PROD_ID AND G.TENANT_ID = #{tenantId}
 					<choose>
@@ -340,7 +342,7 @@
 		                        , PD.CID , PD.PROD_ID, PR.PROD_ID AS CHNL_PROD_ID
 		                        , PD.META_CLSF_CD
 		                        , MP.CHAPTER
-		                        , PD.REG_DT, PD.LAST_DEPLOY_DT, PD.USE_PERIOD, PD.USE_PERIOD_UNIT_CD
+		                        , PD.REG_DT, PD.LAST_DEPLOY_DT, UP.USE_PERIOD, UP.USE_PERIOD_UNIT_CD
 		                        , DSC.PROD_NM, DSC.PROD_BASE_DESC, DSC.PROD_DTL_DESC, DSC.PROD_INTR_DSCR, DSC.ARTIST1_NM, DSC.ARTIST2_NM, DSC.ARTIST3_NM, MP.VOD_TITL_NM
 		                        , MP.GENRE_CD, MP.ISSUE_DAY, MP.BRDC_COMP_CD, MP.SVC_START_DT, MP.CHNL_COMP_NM
 		                        , MP.HDCP_YN, MP.HDV_YN, MP.DOLBY_SPRT_YN, DV.DOLBY_SPRT_YN AS DOLBY_YN
@@ -392,6 +394,7 @@
 		                    , TB_DP_VOD_PROD MP
 		                    , TB_DP_SPRT_DEVICE SD
 		                    , TB_CM_DEVICE DV
+		                    , TB_DP_USE_POLICY UP
 		                  WHERE PR.PROD_ID = #{channelId}
 		                    AND PR.PART_PROD_ID = PD.PROD_ID
 	                    	<if test="orderedBy == 'nonPayment'">
