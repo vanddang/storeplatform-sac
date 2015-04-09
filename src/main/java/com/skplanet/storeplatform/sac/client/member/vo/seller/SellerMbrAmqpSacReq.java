@@ -137,6 +137,8 @@ public class SellerMbrAmqpSacReq extends CommonInfo {
 
 	private List<Multimda> multimdaList;
 
+	private List<Agreement> agreementList;
+
 	public class Multimda {
 		private String multimdaCd;
 		private String tenantSettRate;
@@ -186,6 +188,27 @@ public class SellerMbrAmqpSacReq extends CommonInfo {
 		public void setSellermbrSettRate(String sellermbrSettRate) {
 			this.sellermbrSettRate = sellermbrSettRate;
 		}
+	}
+
+	public class Agreement {
+		/** 약관 동의 코드. */
+		public String clauseAgreementId;
+
+		/**
+		 * @return the clauseAgreementId
+		 */
+		public String getClauseAgreementId() {
+			return this.clauseAgreementId;
+		}
+
+		/**
+		 * @param clauseAgreementId
+		 *            the clauseAgreementId to set
+		 */
+		public void setClauseAgreementId(String clauseAgreementId) {
+			this.clauseAgreementId = clauseAgreementId;
+		}
+
 	}
 
 	/**
@@ -1161,6 +1184,21 @@ public class SellerMbrAmqpSacReq extends CommonInfo {
 	 */
 	public void setMultimdaList(List<Multimda> multimdaList) {
 		this.multimdaList = multimdaList;
+	}
+
+	/**
+	 * @return the agreementList
+	 */
+	public List<Agreement> getAgreementList() {
+		return this.agreementList;
+	}
+
+	/**
+	 * @param agreementList
+	 *            the agreementList to set
+	 */
+	public void setAgreementList(List<Agreement> agreementList) {
+		this.agreementList = agreementList;
 	}
 
 }
