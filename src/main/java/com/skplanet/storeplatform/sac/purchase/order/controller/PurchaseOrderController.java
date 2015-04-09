@@ -37,33 +37,16 @@ import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateBizPurchaseSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateFreePurchaseSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.*;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateFreePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchaseV2;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseUserInfo;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderIapInfoSac;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderMakeDataService;
-import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPaymentPageService;
-import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
-import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPostService;
-import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
-import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderValidationService;
+import com.skplanet.storeplatform.sac.purchase.order.service.*;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
@@ -99,6 +82,8 @@ public class PurchaseOrderController {
 	private PurchaseOrderValidationService validationService;
 	@Autowired
 	private PurchaseOrderPolicyService policyService;
+	@Autowired
+	private PayPlanetService payPlanetService;
 
 	/**
 	 * 
@@ -270,7 +255,7 @@ public class PurchaseOrderController {
 	 * 결제 진행 전 구매인증 - 구매 유효성 체크 및 결제수단 정보 정의 등 체크.
 	 * </pre>
 	 * 
-	 * @param verifyOrderReq
+	 * @param req
 	 *            구매인증 요청 VO
 	 * @return 구매인증 응답 VO
 	 */
@@ -463,6 +448,34 @@ public class PurchaseOrderController {
 		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,RES,{}",
 				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		return res;
+	}
+
+	/**
+	 *
+	 * <pre>
+	 * 결제 처리 결과 Notice.
+	 * EC 대응 규격
+	 * </pre>
+	 *
+	 * @param ppNotifyPaymentSacReq
+	 *            결제 결과 정보
+	 * @return 결제 결과 처리 응답
+	 */
+	@RequestMapping(value = { "/pp/notifyPayment/v1" }, method = RequestMethod.POST)
+	@ResponseBody
+	public PPNotifyPaymentSacRes ppNotifyPayment(@RequestBody @Validated PPNotifyPaymentSacReq ppNotifyPaymentSacReq,
+			SacRequestHeader sacRequestHeader) {
+		this.logger.info("PRCHS,ORDER,SAC,PP,NOTIFY,REQ,{}", ppNotifyPaymentSacReq);
+
+		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
+		NotifyPaymentSacReq notifyPaymentSacReq = this.payPlanetService.notifyPayment(tenantId, ppNotifyPaymentSacReq);
+		NotifyPaymentSacRes notifyPaymentSacRes = notifyPayment(notifyPaymentSacReq, sacRequestHeader);
+
+		PPNotifyPaymentSacRes ppNotifyPaymentSacRes = new PPNotifyPaymentSacRes();
+		ppNotifyPaymentSacRes.setPrchsId(notifyPaymentSacRes.getPrchsId());
+		ppNotifyPaymentSacRes.setCount(notifyPaymentSacRes.getCount());
+		ppNotifyPaymentSacRes.setShippingUrl(notifyPaymentSacRes.getShippingUrl());
+		return ppNotifyPaymentSacRes;
 	}
 
 	/*
