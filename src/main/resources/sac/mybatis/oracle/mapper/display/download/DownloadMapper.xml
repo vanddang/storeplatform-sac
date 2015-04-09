@@ -282,8 +282,8 @@
                  , PROD_NM
                  , REGEXP_REPLACE( CHAPTER, '[^[:digit:]]' ) AS CHAPTER
                  , ( CASE WHEN CHAPTER IS NOT NULL THEN '회' END ) AS CHAPTER_UNIT
-                 , DECODE( USE_PERIOD_UNIT_CD
-                         , 'PD00310', NULL
+                 , DECODE( POSS_LEND_CLSF_CD
+                         , 'DP010601', NULL
                          , CONCAT( USE_PERIOD, USE_PERIOD_UNIT_CD_NM ) ) AS USE_PERIOD_NM
                  , USE_PERIOD_UNIT_CD            
                  , NVL(DWLD_AREA_LIMT_YN , 'N') AS DWLD_AREA_LIMT_YN 
@@ -349,6 +349,7 @@
                          , PLAY_PROD_CHRG
                          , STORE_USE_PERIOD_UNIT_CD
                          , PLAY_USE_PERIOD_UNIT_CD
+                         , POSS_LEND_CLSF_CD
                          , STORE_DRM_YN
                          , PLAY_DRM_YN
                          , HDCP_YN
@@ -391,10 +392,11 @@
                                   , MAX( JA.PLAY_PROD_AMT ) AS PLAY_PROD_AMT
                                   , MAX( JA.STORE_DRM_YN ) AS STORE_DRM_YN
                                   , MAX( JA.PLAY_DRM_YN ) AS PLAY_DRM_YN
-                                  , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS STORE_PROD_CHRG
-                                  , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG
-                                  , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.USE_PERIOD_UNIT_CD)) AS STORE_USE_PERIOD_UNIT_CD
-                                  , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD
+                                  , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS STORE_PROD_CHRG
+                                  , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG
+                                  , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.USE_PERIOD_UNIT_CD)) AS STORE_USE_PERIOD_UNIT_CD
+                                  , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD
+                                  , MAX( JA.POSS_LEND_CLSF_CD ) AS POSS_LEND_CLSF_CD
                                   , MAX( JA.HDCP_YN ) AS HDCP_YN
                                   , MAX( JA.HDV_YN ) AS HDV_YN
                                   , MAX( JA.PROD_NM ) AS PROD_NM
@@ -434,8 +436,9 @@
                                           , IA.TOP_MENU_ID
                                           , IA.TOP_MENU_NM
                                           , IA.META_CLSF_CD
-                                          , DECODE( IA.USE_PERIOD_UNIT_CD, 'PD00310', IA.PROD_ID ) AS STORE_PROD_ID
-                                          , DECODE( IA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, IA.PROD_ID ) AS PLAY_PROD_ID
+                                          , DECODE( IA.POSS_LEND_CLSF_CD, 'DP010601', IA.PROD_ID ) AS STORE_PROD_ID
+                                          , DECODE( IA.POSS_LEND_CLSF_CD, 'DP010601', NULL, IA.PROD_ID ) AS PLAY_PROD_ID
+                                          , IA.POSS_LEND_CLSF_CD
                                           , IA.STORE_PROD_AMT
                                           , IA.PLAY_PROD_AMT
                                           , IA.STORE_DRM_YN
@@ -490,14 +493,15 @@
                                                      WHERE MENU_ID = J.TOP_MENU_ID
                                                        AND LANG_CD = #{langCd}
                                                        AND ROWNUM = 1) AS TOP_MENU_NM        
-                                                 , J.USE_PERIOD_UNIT_CD
+                                                 , U.USE_PERIOD_UNIT_CD
+                                                 , U.POSS_LEND_CLSF_CD
                                                  , J.META_CLSF_CD
-                                                 , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', O.PROD_AMT ) AS STORE_PROD_AMT
-                                                 , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', NULL, O.PROD_AMT ) AS PLAY_PROD_AMT
-                                                 , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', J.DRM_YN ) AS STORE_DRM_YN
-                                                 , DECODE( J.USE_PERIOD_UNIT_CD, 'PD00310', NULL, J.DRM_YN ) AS PLAY_DRM_YN              
+                                                 , DECODE( U.POSS_LEND_CLSF_CD, 'DP010601', O.PROD_AMT ) AS STORE_PROD_AMT
+                                                 , DECODE( U.POSS_LEND_CLSF_CD, 'DP010601', NULL, O.PROD_AMT ) AS PLAY_PROD_AMT
+                                                 , DECODE( U.POSS_LEND_CLSF_CD, 'DP010601', J.DRM_YN ) AS STORE_DRM_YN
+                                                 , DECODE( U.POSS_LEND_CLSF_CD, 'DP010601', NULL, J.DRM_YN ) AS PLAY_DRM_YN
                                                  ,( SELECT CHAPTER FROM TB_DP_VOD_PROD WHERE PROD_ID = I.PART_PROD_ID) AS CHAPTER     
-                                                 , J.USE_PERIOD
+                                                 , U.USE_PERIOD
                                                  , J.PROD_GRD_CD 
                                                  , J.SELLER_MBR_NO
                                                  , J.EXPO_SELLER_NM
@@ -551,6 +555,7 @@
                                                  , TB_DP_TENANT_PROD_PRICE       O
                                                  , TB_DP_VOD_PROD                P
                                                  , TB_DP_PROD_DESC               Q
+                                                 , TB_DP_USE_POLICY              U
                                              WHERE A.MENU_ID = B.MENU_ID
                                                AND A.PROD_ID = D.PROD_ID
                                                AND D.PROD_ID = E.PROD_ID  
@@ -565,6 +570,7 @@
                                                AND N.TENANT_ID = O.TENANT_ID                                         
                                                AND J.PROD_ID = P.PROD_ID
                                                AND J.PROD_ID = Q.PROD_ID                                     
+                                               AND J.USE_POLICY_ID = U.USE_POLICY_ID
 --                                               AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                                AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                                                AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
@@ -635,22 +641,22 @@
                   WHERE MENU_ID = KA.MENU_ID
                     AND LANG_CD = #{langCd}
                     AND ROWNUM = 1) AS MENU_NM
-              , CASE WHEN KA.USE_PERIOD_UNIT_CD != 'PD00310' THEN CONCAT(USE_PERIOD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = KA.USE_PERIOD_UNIT_CD AND LANG_CD = #{langCd}))
+              , CASE WHEN KA.POSS_LEND_CLSF_CD != 'DP010601' THEN CONCAT(USE_PERIOD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = KA.USE_PERIOD_UNIT_CD AND LANG_CD = #{langCd}))
                      ELSE '' END AS USE_PERIOD_NM
-          FROM (SELECT  MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PART_PROD_ID)) AS STORE_PROD_ID
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PART_PROD_ID)) AS PLAY_PROD_ID
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PROD_AMT)) AS STORE_PROD_AMT
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PROD_AMT)) AS PLAY_PROD_AMT
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PROD_NET_AMT)) AS STORE_PROD_NET_AMT
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PROD_NET_AMT)) AS PLAY_PROD_NET_AMT
-                      , NVL(MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.DRM_YN)), 'N') AS STORE_DRM_YN
-                      , NVL(MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.DRM_YN)), 'N') AS PLAY_DRM_YN
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PROD_STATUS_CD)) AS STORE_PROD_STATUS_CD
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PROD_STATUS_CD)) AS PLAY_PROD_STATUS_CD
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS STORE_PROD_CHRG
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.USE_PERIOD_UNIT_CD)) AS STORE_USE_PERIOD_UNIT_CD
-                      , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD
+          FROM (SELECT  MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.PART_PROD_ID)) AS STORE_PROD_ID
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.PART_PROD_ID)) AS PLAY_PROD_ID
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.PROD_AMT)) AS STORE_PROD_AMT
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.PROD_AMT)) AS PLAY_PROD_AMT
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.PROD_NET_AMT)) AS STORE_PROD_NET_AMT
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.PROD_NET_AMT)) AS PLAY_PROD_NET_AMT
+                      , NVL(MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.DRM_YN)), 'N') AS STORE_DRM_YN
+                      , NVL(MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.DRM_YN)), 'N') AS PLAY_DRM_YN
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.PROD_STATUS_CD)) AS STORE_PROD_STATUS_CD
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.PROD_STATUS_CD)) AS PLAY_PROD_STATUS_CD
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS STORE_PROD_CHRG
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, DECODE(JA.PROD_CHRG_YN, 'Y', 'paid', 'free'))) AS PLAY_PROD_CHRG
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.USE_PERIOD_UNIT_CD)) AS STORE_USE_PERIOD_UNIT_CD
+                      , MAX(DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.USE_PERIOD_UNIT_CD)) AS PLAY_USE_PERIOD_UNIT_CD
                       , MAX(JA.PROD_ID) AS PROD_ID
                       , MAX(JA.PART_PROD_ID) AS PART_PROD_ID
                       , MAX(JA.SELLER_MBR_NO) AS SELLER_MBR_NO
@@ -668,6 +674,7 @@
                       , MAX(JA.META_CLSF_CD) AS META_CLSF_CD
                       , MAX(JA.BOOK_CLSF_CD) AS BOOK_CLSF_CD
                       , MAX(JA.MALL_CD) AS MALL_CD
+                      , MAX(JA.POSS_LEND_CLSF_CD) AS POSS_LEND_CLSF_CD
                       , MAX(JA.USE_PERIOD_UNIT_CD) AS USE_PERIOD_UNIT_CD
                       , MAX(JA.USE_PERIOD) AS USE_PERIOD
                       , MAX(JA.SUB_CONTENTS_ID) AS SUB_CONTENTS_ID
@@ -706,8 +713,9 @@
                                       , EP_F.PROD_GRD_CD
                                       , EP_F.CID
                                       , EP_F.DRM_YN
-                                      , EP_F.USE_PERIOD_UNIT_CD
-                                      , EP_F.USE_PERIOD
+                                      , EP_P.POSS_LEND_CLSF_CD
+                                      , EP_P.USE_PERIOD_UNIT_CD
+                                      , EP_P.USE_PERIOD
                                       , EP_F.PROD_CHRG_YN
                                       , EP_F.MALL_CD
                                       , EP_G.PROD_NM
@@ -742,6 +750,7 @@
                                       , TB_DP_SPRT_DEVICE             EP_K
                                       , TB_CM_DEVICE                  EP_L
                                       , TB_DP_SUB_CONTENTS            EP_M
+                                      , TB_DP_USE_POLICY              EP_P
                                  WHERE  CH_A.PROD_ID = CH_B.PROD_ID
                                    AND  CH_A.PROD_ID = CH_C.PROD_ID
                                    AND  CH_A.PROD_ID = CH_D.PROD_ID
@@ -754,6 +763,7 @@
                                    AND  EP_I.TENANT_ID = EP_J.TENANT_ID
                                    AND  MP_E.PART_PROD_ID = EP_K.PROD_ID 
                                    AND  MP_E.PART_PROD_ID = EP_M.PROD_ID
+                                   AND  EP_F.USE_POLICY_ID = EP_P.USE_POLICY_ID
                                    AND  CH_A.SVC_GRP_CD = 'DP000203'
                                    AND  CH_A.CONTENTS_TYPE_CD = 'PD002501'
                                    AND  CH_B.LANG_CD = #{langCd}
@@ -818,17 +828,17 @@
               , DECODE(JA.META_CLSF_CD, 'CT26', NVL(JA.MALL_CD, 'MM001308'), JA.MALL_CD) AS MALL_CD
               , CONCAT(JB.FILE_PATH, JB.FILE_NM) AS IMAGE_PATH
               , JB.FILE_SIZE AS IMAGE_SIZE
-              , DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PART_PROD_ID) AS STORE_PROD_ID
-              , DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PART_PROD_ID) AS PLAY_PROD_ID
-			  , DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PROD_AMT) AS STORE_PROD_AMT
-              , DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PROD_AMT) AS PLAY_PROD_AMT
-              , DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PROD_NET_AMT) AS STORE_PROD_NET_AMT
-              , DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PROD_NET_AMT) AS PLAY_PROD_NET_AMT
-              , DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.DRM_YN) AS STORE_DRM_YN
-              , DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.DRM_YN) AS PLAY_DRM_YN
-              , DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.USE_PERIOD_UNIT_CD) AS STORE_USE_PERIOD_UNIT_CD
-              , DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.USE_PERIOD_UNIT_CD) AS PLAY_USE_PERIOD_UNIT_CD
-              , CASE WHEN JA.USE_PERIOD_UNIT_CD != 'PD00310' THEN CONCAT(USE_PERIOD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = JA.USE_PERIOD_UNIT_CD AND LANG_CD = #{langCd}))
+              , DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.PART_PROD_ID) AS STORE_PROD_ID
+              , DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.PART_PROD_ID) AS PLAY_PROD_ID
+			  , DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.PROD_AMT) AS STORE_PROD_AMT
+              , DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.PROD_AMT) AS PLAY_PROD_AMT
+              , DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.PROD_NET_AMT) AS STORE_PROD_NET_AMT
+              , DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.PROD_NET_AMT) AS PLAY_PROD_NET_AMT
+              , DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.DRM_YN) AS STORE_DRM_YN
+              , DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.DRM_YN) AS PLAY_DRM_YN
+              , DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', JA.USE_PERIOD_UNIT_CD) AS STORE_USE_PERIOD_UNIT_CD
+              , DECODE(JA.POSS_LEND_CLSF_CD, 'DP010601', NULL, JA.USE_PERIOD_UNIT_CD) AS PLAY_USE_PERIOD_UNIT_CD
+              , CASE WHEN JA.POSS_LEND_CLSF_CD != 'DP010601' THEN CONCAT(USE_PERIOD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = JA.USE_PERIOD_UNIT_CD AND LANG_CD = #{langCd}))
                      ELSE '' END AS USE_PERIOD_NM
               , (SELECT MENU_NM
                    FROM TB_DP_MENU_CATEGORY_DESC
@@ -856,8 +866,9 @@
                               , EP_F.META_CLSF_CD
                               , EP_F.PROD_GRD_CD
                               , EP_F.DRM_YN
-                              , EP_F.USE_PERIOD_UNIT_CD
-                              , EP_F.USE_PERIOD
+                              , EP_P.POSS_LEND_CLSF_CD
+                              , EP_P.USE_PERIOD_UNIT_CD
+                              , EP_P.USE_PERIOD
                               , EP_F.PROD_CHRG_YN
                               , EP_F.MALL_CD
                               , EP_G.PROD_NM
@@ -891,6 +902,7 @@
                               , TB_DP_SPRT_DEVICE       EP_K
                               , TB_CM_DEVICE            EP_L
                               , TB_DP_SUB_CONTENTS      EP_M
+                              , TB_DP_USE_POLICY        EP_P
                          WHERE  CH_A.PROD_ID = CH_B.PROD_ID
                            AND  CH_A.PROD_ID = CH_C.PROD_ID
                            AND  CH_A.PROD_ID = CH_D.PROD_ID
@@ -903,6 +915,7 @@
                            AND  EP_I.TENANT_ID = EP_J.TENANT_ID
                            AND  MP_E.PART_PROD_ID = EP_K.PROD_ID
                            AND  MP_E.PART_PROD_ID = EP_M.PROD_ID
+                           AND  EP_F.USE_POLICY_ID = EP_P.USE_POLICY_ID
                            AND  CH_A.SVC_GRP_CD = 'DP000203'
                            AND  CH_A.CONTENTS_TYPE_CD = 'PD002501'
                            AND  CH_B.LANG_CD = #{langCd}
