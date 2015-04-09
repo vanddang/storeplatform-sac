@@ -28,7 +28,9 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.order.service.PayPlanetService;
 
 /**
- * The type PP purchase order controller.
+ * 구매 처리 컨트롤러 - EC대응
+ *
+ * Updated on : 15. 4. 9. Updated by : 황민규, SK 플래닛.
  */
 @Controller
 @RequestMapping("/purchase/order/pp")
