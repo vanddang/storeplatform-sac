@@ -860,7 +860,7 @@ public class FreepassServiceImpl implements FreepassService {
 			for (int i = 0; i < arrayProdGradeCd.length; i++) {
 				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
 					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
-							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+							&& !"PD004403".equals(arrayProdGradeCd[i])&& !"PD004404".equals(arrayProdGradeCd[i])) {
 						this.log.debug("----------------------------------------------------------------");
 						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
 						this.log.debug("----------------------------------------------------------------");
@@ -1043,7 +1043,7 @@ public class FreepassServiceImpl implements FreepassService {
 			for (int i = 0; i < arrayProdGradeCd.length; i++) {
 				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
 					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
-							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+							&& !"PD004403".equals(arrayProdGradeCd[i])&& !"PD004404".equals(arrayProdGradeCd[i])) {
 						this.log.debug("----------------------------------------------------------------");
 						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
 						this.log.debug("----------------------------------------------------------------");
@@ -1166,7 +1166,7 @@ public class FreepassServiceImpl implements FreepassService {
 			for (int i = 0; i < arrayProdGradeCd.length; i++) {
 				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
 					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
-							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+							&& !"PD004403".equals(arrayProdGradeCd[i])&& !"PD004404".equals(arrayProdGradeCd[i])) {
 						this.log.debug("----------------------------------------------------------------");
 						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
 						this.log.debug("----------------------------------------------------------------");
