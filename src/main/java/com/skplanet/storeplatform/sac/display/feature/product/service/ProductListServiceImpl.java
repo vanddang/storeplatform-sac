@@ -75,18 +75,19 @@ public class ProductListServiceImpl implements ProductListService{
 		ProductListSacRes response = new ProductListSacRes();
 
 		String stdDt = getBatchStdDateStringFromDB(requestVO, header);
-		ListProductCriteria lpCriteria = new ListProductCriteria(requestVO, header.getTenantHeader().getTenantId(), stdDt);
 
-		while(true) {
-			List<ListProduct> prodListFromDB = commonDAO.queryForList( "ProductList.selectListProdList", lpCriteria, ListProduct.class);
+		ListProductCriteria param = new ListProductCriteria(requestVO, header.getTenantHeader().getTenantId(), stdDt);
+
+		while( true ) {
+
+			List<ListProduct> prodListFromDB = commonDAO.queryForList( "ProductList.selectListProdList", param, ListProduct.class);
+
 			addListProductIntoResponse(header, response, prodListFromDB);
 
-			if( responseGetEnoughProdList(response, requestVO) || noMoreProdToGet(prodListFromDB, lpCriteria.getCount()))
-				break;
-			else {
-				setNextExpoOrdIntoCriteria(lpCriteria, prodListFromDB);
-				lpCriteria.setCount(lpCriteria.getCount()-response.getProductList().size());
-			}
+			if( responseGetEnoughProdList(response, requestVO) || noMoreProdToGet(prodListFromDB, param.getCount()) ) break;
+
+			setNextExpoOrdIntoCriteria(param, prodListFromDB);
+
 		}
 
 		setHasNextIntoResponse(response, requestVO);
@@ -127,7 +128,7 @@ public class ProductListServiceImpl implements ProductListService{
 	}
 
 	private boolean noMoreProdToGet(List<ListProduct> prodListFromDB, int countExpected) {
-		return prodListFromDB.size()<countExpected;
+		return prodListFromDB.size() == 0 || prodListFromDB.size() < countExpected;
 	}
 
 	private void setNextExpoOrdIntoCriteria(ListProductCriteria lpCriteria, List<ListProduct> prodListFromDB) {
