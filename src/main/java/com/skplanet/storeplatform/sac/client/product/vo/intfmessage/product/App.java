@@ -38,7 +38,15 @@ public class App extends CommonInfo {
 	private List<Device> supportDeviceList;
 	private String isDeviceSupported; // 현재 단말기 지원 여부
     private String descriptionVideoUrl;    // 설명 Video URL
-    private List<String> packageNameMappedTenant;
+    private String hasDiffPkgYn; // 테넌트명
+
+    public String getHasDiffPkgYn() {
+        return hasDiffPkgYn;
+    }
+
+    public void setHasDiffPkgYn(String hasDiffPkgYn) {
+        this.hasDiffPkgYn = hasDiffPkgYn;
+    }
 
     public String getDescriptionVideoUrl() {
         return descriptionVideoUrl;
@@ -336,11 +344,4 @@ public class App extends CommonInfo {
 		this.supportDeviceList = supportDeviceList;
 	}
 
-    public List<String> getPackageNameMappedTenant() {
-        return packageNameMappedTenant;
-    }
-
-    public void setPackageNameMappedTenant(List<String> packageNameMappedTenant) {
-        this.packageNameMappedTenant = packageNameMappedTenant;
-    }
 }
