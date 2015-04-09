@@ -82,8 +82,6 @@ public class PurchaseOrderController {
 	private PurchaseOrderValidationService validationService;
 	@Autowired
 	private PurchaseOrderPolicyService policyService;
-	@Autowired
-	private PayPlanetService payPlanetService;
 
 	/**
 	 * 
@@ -448,34 +446,6 @@ public class PurchaseOrderController {
 		this.logger.info("PRCHS,ORDER,SAC,NOTIFYPAY,RES,{}",
 				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		return res;
-	}
-
-	/**
-	 *
-	 * <pre>
-	 * 결제 처리 결과 Notice.
-	 * EC 대응 규격
-	 * </pre>
-	 *
-	 * @param ppNotifyPaymentSacReq
-	 *            결제 결과 정보
-	 * @return 결제 결과 처리 응답
-	 */
-	@RequestMapping(value = { "/pp/notifyPayment/v1" }, method = RequestMethod.POST)
-	@ResponseBody
-	public PPNotifyPaymentSacRes ppNotifyPayment(@RequestBody @Validated PPNotifyPaymentSacReq ppNotifyPaymentSacReq,
-			SacRequestHeader sacRequestHeader) {
-		this.logger.info("PRCHS,ORDER,SAC,PP,NOTIFY,REQ,{}", ppNotifyPaymentSacReq);
-
-		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
-		NotifyPaymentSacReq notifyPaymentSacReq = this.payPlanetService.notifyPayment(tenantId, ppNotifyPaymentSacReq);
-		NotifyPaymentSacRes notifyPaymentSacRes = notifyPayment(notifyPaymentSacReq, sacRequestHeader);
-
-		PPNotifyPaymentSacRes ppNotifyPaymentSacRes = new PPNotifyPaymentSacRes();
-		ppNotifyPaymentSacRes.setPrchsId(notifyPaymentSacRes.getPrchsId());
-		ppNotifyPaymentSacRes.setCount(notifyPaymentSacRes.getCount());
-		ppNotifyPaymentSacRes.setShippingUrl(notifyPaymentSacRes.getShippingUrl());
-		return ppNotifyPaymentSacRes;
 	}
 
 	/*
