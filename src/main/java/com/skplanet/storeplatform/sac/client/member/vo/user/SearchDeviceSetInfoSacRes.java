@@ -33,6 +33,10 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	private String isPinClosed;
 	/** 인증실패 횟수. */
 	private String failCnt;
+	/** 성인 컨텐츠 잠금 여부. */
+	private String isAdultLock;
+	/** Wi-Fi에서만 다운로드 여부. */
+	private String isDownloadWifiOnly;
 
 	/**
 	 * @return the isPin
@@ -167,6 +171,36 @@ public class SearchDeviceSetInfoSacRes extends CommonInfo {
 	 */
 	public void setFailCnt(String failCnt) {
 		this.failCnt = failCnt;
+	}
+
+	/**
+	 * @return the isAdultLock
+	 */
+	public String getIsAdultLock() {
+		return this.isAdultLock;
+	}
+
+	/**
+	 * @param isAdultLock
+	 *            the isAdultLock to set
+	 */
+	public void setIsAdultLock(String isAdultLock) {
+		this.isAdultLock = isAdultLock;
+	}
+
+	/**
+	 * @return the isDownloadWifiOnly
+	 */
+	public String getIsDownloadWifiOnly() {
+		return this.isDownloadWifiOnly;
+	}
+
+	/**
+	 * @param isDownloadWifiOnly
+	 *            the isDownloadWifiOnly to set
+	 */
+	public void setIsDownloadWifiOnly(String isDownloadWifiOnly) {
+		this.isDownloadWifiOnly = isDownloadWifiOnly;
 	}
 
 }

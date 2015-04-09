@@ -34,6 +34,10 @@ public class ModifyDeviceSetInfoSacReq extends CommonInfo {
 	private String isPinRetry;
 	/** 성인 콘테츠 잠금 유무. */
 	private String isAdult;
+	/** 성인 컨텐츠 잠금 여부. */
+	private String isAdultLock;
+	/** Wi-Fi에서만 다운로드 여부. */
+	private String isDownloadWifiOnly;
 
 	/**
 	 * @return the deviceKey
@@ -153,6 +157,36 @@ public class ModifyDeviceSetInfoSacReq extends CommonInfo {
 	 */
 	public void setIsAdult(String isAdult) {
 		this.isAdult = isAdult;
+	}
+
+	/**
+	 * @return the isAdultLock
+	 */
+	public String getIsAdultLock() {
+		return this.isAdultLock;
+	}
+
+	/**
+	 * @param isAdultLock
+	 *            the isAdultLock to set
+	 */
+	public void setIsAdultLock(String isAdultLock) {
+		this.isAdultLock = isAdultLock;
+	}
+
+	/**
+	 * @return the isDownloadWifiOnly
+	 */
+	public String getIsDownloadWifiOnly() {
+		return this.isDownloadWifiOnly;
+	}
+
+	/**
+	 * @param isDownloadWifiOnly
+	 *            the isDownloadWifiOnly to set
+	 */
+	public void setIsDownloadWifiOnly(String isDownloadWifiOnly) {
+		this.isDownloadWifiOnly = isDownloadWifiOnly;
 	}
 
 }
