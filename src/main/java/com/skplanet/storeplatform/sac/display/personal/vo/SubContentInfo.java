@@ -22,7 +22,6 @@ public class SubContentInfo {
     private Integer apkVer;
     private String subContentsId;
     private Integer priority;
-    private String pkgMapgTenant;
 
     public String getProdId() {
         return this.prodId;
@@ -64,11 +63,4 @@ public class SubContentInfo {
 		this.priority = priority;
 	}
 
-    public String getPkgMapgTenant() {
-        return pkgMapgTenant;
-    }
-
-    public void setPkgMapgTenant(String pkgMapgTenant) {
-        this.pkgMapgTenant = pkgMapgTenant;
-    }
 }

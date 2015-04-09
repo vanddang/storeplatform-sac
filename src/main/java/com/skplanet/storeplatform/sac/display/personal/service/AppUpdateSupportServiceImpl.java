@@ -17,6 +17,7 @@ import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.sac.common.util.PartialProcessor;
 import com.skplanet.storeplatform.sac.common.util.PartialProcessorHandler;
+import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -283,5 +284,16 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
     public void logUpdateResult(String type, String deviceId, String userKey, String deviceKey, String network, List<String> updateList) {
         String updateListStr = StringUtils.join(updateList, ",");
         logger.info("UpdateResult: type={}, deviceId={}, userKey={}, deviceKey={}, network={}, updateList=[{}]", type, deviceId, userKey, deviceId, network, updateListStr);
+    }
+
+    @Override
+    public boolean getDifferentPackageNameYn(String prodId) {
+        Map<String, Object> req = new HashMap<String, Object>();
+        req.put("prodId", prodId);
+        req.put("tenantIds", ServicePropertyManager.getSupportTenantList());
+        int v = commonDAO.queryForInt("PersonalUpdateProduct.getPackageNameWarning", req);
+
+        // 매핑된 패키지명의 가짓수가 1개 이상이면 경고
+        return v > 1;
     }
 }

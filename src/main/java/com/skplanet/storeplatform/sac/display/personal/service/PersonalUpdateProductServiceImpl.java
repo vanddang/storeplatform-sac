@@ -121,7 +121,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
                 prod.put("PROD_ID", up.getProdId());
                 prod.put("PART_PROD_ID", up.getPartProdId());
                 prod.put("APK_VER", up.getApkVer());
-                prod.put("APK_PKG_NM", up.getApkPkgNm());
+                prod.put("APK_PKG_NM", scInfo.getApkPkgNm());
                 prod.put("FAKE_YN", up.getFakeYn());
                 prod.put("PROD_AMT", up.getProdAmt());
                 prod.put("TOP_MENU_ID", up.getTopMenuId());
@@ -137,7 +137,6 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
                 prod.put("FILE_PATH", up.getFilePath());
                 prod.put("LAST_DEPLOY_DT", up.getLastDeployDt());
                 prod.put("UPDT_TEXT", up.getUpdtText());
-                prod.put("PACKAGE_MAPPED_TENANT", scInfo.getPkgMapgTenant());
 
                 listPkg.add(prod);
             }
@@ -170,49 +169,47 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
             sFakeYn = ObjectUtils.toString(mapPkg.get("FAKE_YN"));
             iPkgVerCd = NumberUtils.toInt(ObjectUtils.toString(mapPkg.get("APK_VER")));
 
-            String sArrPkgInfo[] = null;
-            int iReqPkgVerCd = 0;
-
+            // 파라메터로 넘어온 패키지명과 대조 TODO 이 루프를 위의 루프에서 처리하도록 개선
             for (String s : packageInfoList) {
-                sArrPkgInfo = StringUtils.split(s, "/");
-                if (sArrPkgInfo.length >= 2) {
-                    this.log.debug("##### sArrPkgInfo's length is over 2!!!!");
-                    if (sPkgNm.equals(sArrPkgInfo[0])) {
-                        iReqPkgVerCd = NumberUtils.toInt(sArrPkgInfo[1]);
+                String sArrPkgInfo[] = StringUtils.split(s, "/");
+                if (sArrPkgInfo.length < 2)
+                    continue;
 
-                        // 단말에서 올라온 VERSION_CODE, installer 셋팅
-                        mapPkg.put("REQ_APK_VER_CD", sArrPkgInfo[1]);
-                        mapPkg.put("REQ_INSTALLER", ((sArrPkgInfo.length > 2) ? sArrPkgInfo[2] : ""));
-                        this.log.debug("###########################################");
-                        this.log.debug("##### {}'s server version is {} !!!!!!!!!!", sPkgNm, iPkgVerCd);
-                        this.log.debug("##### {}'s user   version is {} !!!!!!!!!!", sPkgNm, iReqPkgVerCd);
-                        this.log.debug("##### Is fake update?????????? : {} ", sFakeYn);
-                        if (sFakeYn.equals("Y")) {
-                            // Fake Update 대상일 경우( 단말 Version <= 서버 Version )
-                            if (iPkgVerCd >= iReqPkgVerCd) {
-                                this.log.debug("##### package nm: {}", sPkgNm);
-                                // Version 이 동일할 경우 +1
-                                if (iPkgVerCd == iReqPkgVerCd) {
-                                    this.log.debug("##### fake update target & same version !!!!!!!!!");
-                                    mapPkg.put("APK_VER_CD", Integer.toString((iPkgVerCd + 1)));
-                                    this.log.debug("##### fake update target version up from {} to {}", iPkgVerCd,
-                                            iPkgVerCd + 1);
-                                }
-                                listProd.add(mapPkg);
-                                listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
+                if (sPkgNm.equals(sArrPkgInfo[0])) {
+                    int  iReqPkgVerCd = NumberUtils.toInt(sArrPkgInfo[1]);
+
+                    // 단말에서 올라온 VERSION_CODE, installer 셋팅
+                    mapPkg.put("REQ_APK_VER_CD", sArrPkgInfo[1]);
+                    mapPkg.put("REQ_INSTALLER", ((sArrPkgInfo.length > 2) ? sArrPkgInfo[2] : ""));
+                    this.log.debug("###########################################");
+                    this.log.debug("##### {}'s server version is {} !!!!!!!!!!", sPkgNm, iPkgVerCd);
+                    this.log.debug("##### {}'s user   version is {} !!!!!!!!!!", sPkgNm, iReqPkgVerCd);
+                    this.log.debug("##### Is fake update?????????? : {} ", sFakeYn);
+                    if (sFakeYn.equals("Y")) {
+                        // Fake Update 대상일 경우( 단말 Version <= 서버 Version )
+                        if (iPkgVerCd >= iReqPkgVerCd) {
+                            this.log.debug("##### package nm: {}", sPkgNm);
+                            // Version 이 동일할 경우 +1
+                            if (iPkgVerCd == iReqPkgVerCd) {
+                                this.log.debug("##### fake update target & same version !!!!!!!!!");
+                                mapPkg.put("APK_VER_CD", Integer.toString((iPkgVerCd + 1)));
+                                this.log.debug("##### fake update target version up from {} to {}", iPkgVerCd,
+                                        iPkgVerCd + 1);
                             }
-                        } else {
-                            // 일반 업데이트 대상 ( 단말 Version < 서버 Version )
-                            if (iPkgVerCd > iReqPkgVerCd) {
-                                this.log.debug("##### is fake update target? : {}", sPkgNm);
-                                listProd.add(mapPkg);
-                                listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
-                            } else {
-                                this.log.debug("##### {} is not update target ", sPkgNm);
-                            }
+                            listProd.add(mapPkg);
+                            listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
                         }
-                        break;
+                    } else {
+                        // 일반 업데이트 대상 ( 단말 Version < 서버 Version )
+                        if (iPkgVerCd > iReqPkgVerCd) {
+                            this.log.debug("##### is fake update target? : {}", sPkgNm);
+                            listProd.add(mapPkg);
+                            listPid.add(ObjectUtils.toString(mapPkg.get("PROD_ID")));
+                        } else {
+                            this.log.debug("##### {} is not update target ", sPkgNm);
+                        }
                     }
+                    break;
                 }
             }
         }
@@ -441,8 +438,8 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 
         // Response 정보 가공
         for (Map<String, Object> updateTargetApp : listUpdate) {
-
-            updatePidList.add((String) updateTargetApp.get("PROD_ID"));
+            String prodId = (String) updateTargetApp.get("PROD_ID");
+            updatePidList.add(prodId);
 
             Product product = new Product();
             History history = new History();
@@ -459,7 +456,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
             identifierList.add(this.commonGenerator.generateIdentifier(
                     DisplayConstants.DP_EPISODE_IDENTIFIER_CD, (String) updateTargetApp.get("PART_PROD_ID")));
             identifierList.add(this.commonGenerator.generateIdentifier(
-                    DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, (String) updateTargetApp.get("PROD_ID")));
+                    DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, prodId));
             product.setIdentifierList(identifierList);
 
             Title title = new Title();
@@ -475,13 +472,12 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
             product.setRights(rights);
 
             Price price = this.commonGenerator.generatePrice(
-                    ((Integer)updateTargetApp.get("PROD_AMT")), null);
+                    ((Integer) updateTargetApp.get("PROD_AMT")), null);
             product.setPrice(price);
             // 구매 정보는 구매 내역이 있는 App만 표시한다.
             if (!StringUtils.isEmpty(prchId)) {
                 Purchase purchage = this.commonGenerator.generatePurchase(
-                        (String) updateTargetApp.get("PRCHS_ID"), (String) updateTargetApp.get("PROD_ID"),
-                        null, null, null);
+                        (String) updateTargetApp.get("PRCHS_ID"), prodId, null, null, null);
                 product.setPurchase(purchage);
             }
 
@@ -492,11 +488,11 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
                     ((Long) updateTargetApp.get("FILE_SIZE")), null, null,
                     ObjectUtils.toString(updateTargetApp.get("FILE_PATH")));
 
-            app.setPackageNameMappedTenant(Arrays.asList(StringUtils.split(""+updateTargetApp.get("PACKAGE_MAPPED_TENANT"), ",")));
+            app.setHasDiffPkgYn(appUpdateSupportService.getDifferentPackageNameYn(prodId) ? "Y" : "N");
 
             Update update = this.appGenerator.generateUpdate(
-                    new Date(null, (java.util.Date)updateTargetApp.get("LAST_DEPLOY_DT")),
-                    (String)updateTargetApp.get("UPDT_TEXT"));
+                    new Date(null, (java.util.Date) updateTargetApp.get("LAST_DEPLOY_DT")),
+                    (String) updateTargetApp.get("UPDT_TEXT"));
             updateList.add(update);
             history.setUpdate(updateList);
             app.setHistory(history);

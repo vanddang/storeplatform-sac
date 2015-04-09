@@ -58,4 +58,11 @@ public interface AppUpdateSupportService {
      * @param updateList
      */
     void logUpdateResult(String type, String deviceId, String userKey, String deviceKey, String network, List<String> updateList);
+
+    /**
+     * 상품에 테넌트별로 패키지명이 다르게 매핑되었는지 조회한다.
+     * @param prodId 상품ID
+     * @return true 다른 매핑이 조회됨.
+     */
+    boolean getDifferentPackageNameYn(String prodId);
 }

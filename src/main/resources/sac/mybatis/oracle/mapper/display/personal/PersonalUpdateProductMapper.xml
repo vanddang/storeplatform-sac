@@ -46,6 +46,20 @@
           AND TP.MAPG_APK_PKG_HASH IN <foreach collection="hashedPkgList" item="v" open="(" separator="," close=")">#{v}</foreach>
     </select>
 
+    <select id="getPackageNameWarning" parameterType="map" resultType="Integer">
+        SELECT
+            count(*) as CNT
+        FROM
+            (SELECT
+                 tdtp.prod_id
+             FROM TB_DP_TENANT_PROD TDTP
+             WHERE 1=1
+                   and tdtp.tenant_id in <foreach collection="tenantIds" item="v" open="(" separator="," close=")">#{v}</foreach>
+                   and tdtp.prod_id = #{prodId}
+                   and MAPG_APK_PKG_NM is not null
+             group by tdtp.prod_id, tdtp.mapg_apk_pkg_hash)
+    </select>
+
     <select id="searchUpdateList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo">
         SELECT /*PersonalUpdateProductMapper.searchUpdateList, 정희원, 2015-03-02 */
             SPRT.PROD_ID,
