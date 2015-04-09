@@ -60,6 +60,7 @@ public class ImmediatelyUseStopServiceImpl implements ImmediatelyUseStopService 
 		scRequest.setAdminId(request.getAdminId());
 		scRequest.setReqPathCd(request.getReqPathCd());
 		scRequest.setDrawbackAmt(request.getDrawbackAmt());
+		scRequest.setUserKey(request.getUserKey());
 
 		// 정액권 상품정보 조회
 		List<PrchsDtl> prchsDtl = this.immediatelyUseStopSci.searchPrchsDtl(scRequest);
