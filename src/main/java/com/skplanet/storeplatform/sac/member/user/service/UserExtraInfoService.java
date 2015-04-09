@@ -1,6 +1,8 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckAdditionalInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckAdditionalInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -101,4 +103,18 @@ public interface UserExtraInfoService {
 	 * @throws Exception
 	 */
 	public String registeredProfileCode(UserInfo searchUser, UserExtraInfoReq req);
+
+	/**
+	 * <pre>
+	 * 회원 부가 정보 중복 확인.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            CheckAdditionalInformationSacReq
+	 * @return CheckAdditionalInformationSacRes
+	 */
+	public CheckAdditionalInformationSacRes checkAdditionalInformation(SacRequestHeader sacHeader,
+			CheckAdditionalInformationSacReq req);
 }

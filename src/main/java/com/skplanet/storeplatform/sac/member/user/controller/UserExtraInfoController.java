@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckAdditionalInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckAdditionalInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -115,6 +117,31 @@ public class UserExtraInfoController {
 		UserExtraInfoRes res = this.userExtraService.listAdditionalInformation(req, sacHeader);
 
 		LOGGER.info("Response : {}", res.getUserKey());
+
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 회원 부가 정보 중복 확인.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            CheckAdditionalInformationSacReq
+	 * @return CheckAdditionalInformationSacRes
+	 */
+	@RequestMapping(value = "/checkAdditionalInformation/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CheckAdditionalInformationSacRes checkAdditionalInformation(SacRequestHeader sacHeader,
+			@RequestBody CheckAdditionalInformationSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		CheckAdditionalInformationSacRes res = this.userExtraService.checkAdditionalInformation(sacHeader, req);
+
+		LOGGER.info("Response : {}", res);
 
 		return res;
 	}

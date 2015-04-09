@@ -15,13 +15,23 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementResponse;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceKeyInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckAdditionalInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CheckAdditionalInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
@@ -48,6 +58,9 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 	@Autowired
 	private MemberCommonComponent mcc;
+
+	@Autowired
+	private UserSearchService userSearchService;
 
 	/**
 	 * 사용자 부가정보 등록/수정
@@ -243,5 +256,84 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 			registeredProfileCode = "Y";
 		}
 		return registeredProfileCode;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.UserExtraInfoService#checkAdditionalInformation(com.skplanet
+	 * .storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.CheckAdditionalInformationSacReq)
+	 */
+	@Override
+	public CheckAdditionalInformationSacRes checkAdditionalInformation(SacRequestHeader sacHeader,
+			CheckAdditionalInformationSacReq req) {
+
+		SearchManagementRequest searchManagementRequest = new SearchManagementRequest();
+		searchManagementRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		searchManagementRequest.setExtraProfile(req.getExtraProfile());
+		searchManagementRequest.setExtraProfileValue(req.getExtraProfileValue());
+
+		CheckAdditionalInformationSacRes res = new CheckAdditionalInformationSacRes();
+		SearchManagementResponse searchManagementResponse = null;
+
+		try {
+
+			// 회원 부가정보 조회 요청
+			searchManagementResponse = this.userSCI.searchManagement(searchManagementRequest);
+			LOGGER.info("tenantId : {}, userKey : {}, extraProfile : {}, extraProfileValue : {}",
+					searchManagementResponse.getTenantId(), searchManagementResponse.getUserKey(),
+					searchManagementResponse.getExtraProfile(), searchManagementResponse.getExtraProfileValue());
+
+		} catch (StorePlatformException e) {
+			if (e.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				res.setUseYn(MemberConstants.USE_N);
+				return res;
+			} else {
+				throw e;
+			}
+		}
+
+		// 부가정보_WD 테이블로 이관되기 전에 조회 될 수 있기 때문에 정상회원의 정보인지 확인
+		try {
+
+			// 테넌트 아이디 셋팅
+			TenantHeader tenant = sacHeader.getTenantHeader();
+			tenant.setTenantId(searchManagementResponse.getTenantId()); // 소셜네트워크 계정을 가지고 있는 회원의 tenantId
+			sacHeader.setTenantHeader(tenant);
+			sacHeader.setTenantHeader(tenant);
+
+			// 휴대기기 리스트 조회
+			DetailReq detailReq = new DetailReq();
+			detailReq.setUserKey(searchManagementResponse.getUserKey());
+			SearchExtentReq searchExtent = new SearchExtentReq();
+			searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
+			detailReq.setSearchExtent(searchExtent);
+			DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
+			List<DeviceKeyInfo> deviceKeyList = new ArrayList<DeviceKeyInfo>();
+			DeviceKeyInfo deviceKeyInfo = null;
+			if (detailRes.getDeviceInfoList() != null && detailRes.getDeviceInfoList().size() > 0) {
+				for (DeviceInfo deviceInfo : detailRes.getDeviceInfoList()) {
+					deviceKeyInfo = new DeviceKeyInfo();
+					deviceKeyInfo.setDeviceKey(deviceInfo.getDeviceKey());
+					deviceKeyList.add(deviceKeyInfo);
+				}
+			}
+
+			res.setUseYn(MemberConstants.USE_Y);
+			res.setUserKey(searchManagementResponse.getUserKey());
+			res.setTenantId(searchManagementResponse.getTenantId());
+			res.setDeviceKeyList(deviceKeyList);
+
+		} catch (StorePlatformException e) {
+			if (StringUtils.equals(e.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_USERKEY)) {
+				res.setUseYn(MemberConstants.USE_N);
+			} else {
+				throw e;
+			}
+		}
+
+		return res;
 	}
 }
