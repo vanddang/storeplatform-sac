@@ -460,22 +460,33 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 				.searchDeviceSetInfo(searchDeviceSetInfoRequest);
 
 		SearchDeviceSetInfoSacRes res = new SearchDeviceSetInfoSacRes();
+
 		res.setAutoUpdateSet(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
 				.getAutoUpdateSet(), null));
 		res.setIsAdult(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsAdult(), null));
-		res.setIsAutoUpdate(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
-				.getIsAutoUpdate(), null));
-		res.setIsAutoUpdateWifi(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
-				.getIsAutoUpdateWifi(), null));
-		res.setIsLoginLock(StringUtils.defaultString(
-				searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsLoginLock(), null));
 		res.setIsPin(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPin());
-		res.setIsPinRetry(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry(),
-				null));
 		res.setIsPinClosed(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthLockYn(),
 				null));
 		res.setFailCnt(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getAuthCnt(), null));
 
+		// Default=Y
+		res.setIsPinRetry(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsPinRetry(),
+				null));
+		// Default=Y
+		res.setIsAutoUpdate(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
+				.getIsAutoUpdate(), null));
+		// Default=Y
+		res.setIsAutoUpdateWifi(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
+				.getIsAutoUpdateWifi(), null));
+		// Default=N
+		res.setIsLoginLock(StringUtils.defaultString(
+				searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsLoginLock(), null));
+		// Default=Y
+		res.setIsAdultLock(StringUtils.defaultString(
+				searchDeviceSetInfoResponse.getUserMbrDeviceSet().getIsAdultLock(), null));
+		// Default=Y
+		res.setIsDownloadWifiOnly(StringUtils.defaultString(searchDeviceSetInfoResponse.getUserMbrDeviceSet()
+				.getIsDownloadWifiOnly(), null));
 		return res;
 	}
 
@@ -520,6 +531,8 @@ public class DeviceSetServiceImpl implements DeviceSetService {
 		userMbrDeviceSet.setIsLoginLock(req.getIsLoginLock());
 		userMbrDeviceSet.setIsPinRetry(req.getIsPinRetry());
 		userMbrDeviceSet.setIsAdult(req.getIsAdult());
+		userMbrDeviceSet.setIsAdultLock(req.getIsAdultLock());
+		userMbrDeviceSet.setIsDownloadWifiOnly(req.getIsDownloadWifiOnly());
 		modifyDeviceSetInfoRequest.setUserMbrDeviceSet(userMbrDeviceSet);
 
 		// SC Call
