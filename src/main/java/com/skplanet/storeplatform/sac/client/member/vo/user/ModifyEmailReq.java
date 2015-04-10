@@ -27,7 +27,6 @@ public class ModifyEmailReq extends CommonInfo {
 	/**
 	 * IDP 인증 Key.
 	 */
-	@NotEmpty
 	private String userAuthKey = "";
 
 	/**

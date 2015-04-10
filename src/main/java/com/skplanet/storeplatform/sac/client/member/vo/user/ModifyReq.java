@@ -70,6 +70,9 @@ public class ModifyReq extends CommonInfo {
 	 */
 	private String userCalendar = "";
 
+	/** 사용자 업데이트 이메일. */
+	private String userUpdEmail;
+
 	/**
 	 * @return String : userKey
 	 */
@@ -233,6 +236,21 @@ public class ModifyReq extends CommonInfo {
 	 */
 	public void setUserCalendar(String userCalendar) {
 		this.userCalendar = userCalendar;
+	}
+
+	/**
+	 * @return the userUpdEmail
+	 */
+	public String getUserUpdEmail() {
+		return this.userUpdEmail;
+	}
+
+	/**
+	 * @param userUpdEmail
+	 *            the userUpdEmail to set
+	 */
+	public void setUserUpdEmail(String userUpdEmail) {
+		this.userUpdEmail = userUpdEmail;
 	}
 
 }
