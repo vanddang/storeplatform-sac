@@ -23,11 +23,13 @@ import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.AuthForIdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.FindCommonProfileForServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyAuthInfoEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.ModifyEmailEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.CheckIdPwdAuthEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.ModifyPwdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateGuardianEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEmIDPEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserNameEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
@@ -56,6 +58,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
@@ -64,6 +68,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -90,6 +95,9 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 	@Autowired
 	private ImIdpSCI imIdpSCI;
+
+	@Autowired
+	private UserSearchService userSearchService;
 
 	@Override
 	public ModifyRes mod(SacRequestHeader sacHeader, ModifyReq req) {
@@ -313,14 +321,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 	@Override
 	public ModifyEmailRes modEmail(SacRequestHeader sacHeader, ModifyEmailReq req) {
 
-		/**
-		 * TODO 정확한 로직 미정의로 수정가능성 있음...... (현재는 사용자 이메일정보만 무조건 업데이트함.)
-		 * 
-		 * TODO 정확한 로직 미정의로 수정가능성 있음...... (현재는 사용자 이메일정보만 무조건 업데이트함.)
-		 * 
-		 * TODO 정확한 로직 미정의로 수정가능성 있음...... (현재는 사용자 이메일정보만 무조건 업데이트함.)
-		 */
-
 		TenantHeader tenant = sacHeader.getTenantHeader();
 		if (StringUtils.isBlank(req.getTenantId())) {
 			tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
@@ -328,6 +328,32 @@ public class UserModifyServiceImpl implements UserModifyService {
 			tenant.setTenantId(req.getTenantId());
 		}
 		sacHeader.setTenantHeader(tenant);
+
+		/** 사용자 정보 조회 후 IDP/ImIDP 이메일 정보 변경 요청. 2015-04-09. */
+		DetailReq detailReq = new DetailReq();
+		detailReq.setUserKey(req.getUserKey());
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setUserInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+		DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
+
+		if (StringUtils.equals(MemberConstants.USER_TYPE_ONEID, detailRes.getUserInfo().getUserType())
+				&& StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
+			// 통합 IDP 회원
+			UpdateUserInfoEmIDPEcReq updateUserInfoEmIDPEcReq = new UpdateUserInfoEmIDPEcReq();
+			// ImserviceNo
+			updateUserInfoEmIDPEcReq.setKey(detailRes.getUserInfo().getImSvcNo());
+			updateUserInfoEmIDPEcReq.setUserEmail(req.getNewEmail());
+			this.imIdpSCI.updateUserInfoEmIDP(updateUserInfoEmIDPEcReq);
+
+		} else if (StringUtils.equals(MemberConstants.USER_TYPE_IDPID, detailRes.getUserInfo().getUserType())) {
+			// IDP 회원
+			ModifyEmailEcReq modifyEmailEcReq = new ModifyEmailEcReq();
+			modifyEmailEcReq.setUserId(detailRes.getUserInfo().getUserId()); // ID
+			modifyEmailEcReq.setPreUserEmail(detailRes.getUserInfo().getUserEmail()); // 변경전Email
+			modifyEmailEcReq.setUserEmail(req.getNewEmail()); // 변경할 Email
+			this.idpSCI.modifyEmail(modifyEmailEcReq);
+		}
 
 		/**
 		 * 사용자 기본정보 setting.
@@ -622,36 +648,43 @@ public class UserModifyServiceImpl implements UserModifyService {
 		/**
 		 * 사용자 연락처 (Sync 대상)
 		 */
-		if (!StringUtils.equals(req.getUserPhone(), "")) {
+		if (StringUtils.isNotBlank(req.getUserPhone())) {
 			userMbr.setUserPhone(req.getUserPhone());
 		}
 
 		/**
 		 * SMS 수신 여부
 		 */
-		if (!StringUtils.equals(req.getIsRecvSms(), "")) {
+		if (StringUtils.isNotBlank(req.getIsRecvSms())) {
 			userMbr.setIsRecvSMS(req.getIsRecvSms());
 		}
 
 		/**
 		 * 이메일 수신여부
 		 */
-		if (!StringUtils.equals(req.getIsRecvEmail(), "")) {
+		if (StringUtils.isNotBlank(req.getIsRecvEmail())) {
 			userMbr.setIsRecvEmail(req.getIsRecvEmail());
 		}
 
 		/**
 		 * 사용자 성별 (Sync 대상)
 		 */
-		if (!StringUtils.equals(req.getUserSex(), "")) {
+		if (StringUtils.isNotBlank(req.getUserSex())) {
 			userMbr.setUserSex(req.getUserSex());
 		}
 
 		/**
 		 * 사용자 생년월일 (Sync 대상)
 		 */
-		if (!StringUtils.equals(req.getUserBirthDay(), "")) {
+		if (StringUtils.isNotBlank(req.getUserBirthDay())) {
 			userMbr.setUserBirthDay(req.getUserBirthDay());
+		}
+
+		/**
+		 * 사용자 업데이트 이메일.
+		 */
+		if (StringUtils.isNotBlank(req.getUserUpdEmail())) {
+			userMbr.setUserUpdEmail(req.getUserUpdEmail());
 		}
 
 		LOGGER.debug("## SC Request 사용자 기본정보 : {}", userMbr);
