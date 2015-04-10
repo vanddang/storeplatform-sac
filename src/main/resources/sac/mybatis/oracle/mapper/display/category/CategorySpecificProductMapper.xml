@@ -336,8 +336,8 @@
               , ( CASE WHEN LA.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
               </if>
               <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-              , ( CASE WHEN LA.USE_PERIOD_UNIT_CD = 'PD00310' THEN 'Y' END ) AS SUPPORT_STORE
-              , ( CASE WHEN LA.USE_PERIOD_UNIT_CD != 'PD00310' THEN 'Y' END ) AS SUPPORT_PLAY
+              , ( CASE WHEN LA.POSS_LEND_CLSF_CD = 'DP010601' THEN 'Y' END ) AS SUPPORT_STORE
+              , ( CASE WHEN LA.POSS_LEND_CLSF_CD != 'DP010601' THEN 'Y' END ) AS SUPPORT_PLAY
               </if>   
             <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
               , CASE WHEN (LA.CHNL_PERIOD_AMT >= 0  AND LA.STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
@@ -384,7 +384,7 @@
                     , JA.MENU_NM
                     , JA.MENU_DESC
                     , JA.PROD_GRD_CD
-                    , JA.USE_PERIOD_UNIT_CD
+                    , JA.POSS_LEND_CLSF_CD
                     , JA.META_CLSF_CD
                     , JA.CONTENTS_TYPE_CD
                     , JA.EXPO_SELLER_EMAIL
@@ -434,7 +434,7 @@
                            , I.PART_PROD_ID
                            , C.MENU_NM
                            , C.MENU_DESC
-                           , Q.USE_PERIOD_UNIT_CD
+                           , Q.POSS_LEND_CLSF_CD
                            , D.META_CLSF_CD
                            , D.CONTENTS_TYPE_CD
                            , D.EXPO_SELLER_EMAIL
@@ -733,8 +733,8 @@
              , ( CASE WHEN TB.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
               </if>
               <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-             , ( CASE WHEN TB.USE_PERIOD_UNIT_CD = 'PD00310' THEN 'Y' END ) AS SUPPORT_STORE
-             , ( CASE WHEN TB.USE_PERIOD_UNIT_CD != 'PD00310' THEN 'Y' END ) AS SUPPORT_PLAY
+             , ( CASE WHEN TB.POSS_LEND_CLSF_CD = 'DP010601' THEN 'Y' END ) AS SUPPORT_STORE
+             , ( CASE WHEN TB.POSS_LEND_CLSF_CD != 'DP010601' THEN 'Y' END ) AS SUPPORT_PLAY
               </if>      
              , TB.COMPT_YN
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS                          
@@ -775,7 +775,7 @@
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
                                                         , TO_NUMBER( REGEXP_REPLACE( L.CHAPTER, '[^[:digit:]]') ) DESC
-                                                        , NVL( J.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
+                                                        , NVL( P.POSS_LEND_CLSF_CD, 'DP010601' ) DESC
                                                         , J.LAST_DEPLOY_DT DESC ) AS RN
                       , A.UP_MENU_ID
                       , A.TOP_MENU_ID                                                             
@@ -784,7 +784,7 @@
                       , I.PART_PROD_ID                                     
                       , C.MENU_NM
                       , C.MENU_DESC
-                      , P.USE_PERIOD_UNIT_CD
+                      , P.POSS_LEND_CLSF_CD
                       , D.META_CLSF_CD
                       , D.CONTENTS_TYPE_CD
                       , E.STRM_EPSD_CNT
