@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  */
 @Service
 public class ProductListServiceImpl implements ProductListService{
+
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -72,40 +73,50 @@ public class ProductListServiceImpl implements ProductListService{
 	 */
 	@Override
 	public ProductListSacRes searchProductList(ProductListSacReq requestVO, SacRequestHeader header) {
+
 		ProductListSacRes response = new ProductListSacRes();
 
 		String stdDt = getBatchStdDateStringFromDB(requestVO, header);
 
-		ListProductCriteria param = new ListProductCriteria(requestVO, header.getTenantHeader().getTenantId(), stdDt);
+		// 1건을 더 조회하도록 파라미터가 세팅된다.
+		ListProductCriteria param = new ListProductCriteria( requestVO, header.getTenantHeader().getTenantId(), stdDt );
 
 		while( true ) {
 
-			List<ListProduct> prodListFromDB = commonDAO.queryForList( "ProductList.selectListProdList", param, ListProduct.class);
+			List<ListProduct> prodListFromDB = commonDAO.queryForList( "ProductList.selectListProdList", param, ListProduct.class );
 
-			addListProductIntoResponse(header, response, prodListFromDB);
+			addListProductIntoResponse( header, response, prodListFromDB, param.getCount() );
 
-			if( responseGetEnoughProdList(response, requestVO) || noMoreProdToGet(prodListFromDB, param.getCount()) ) break;
+			if( hasResponseEnoughProdList(response, param.getCount()) || noMoreProdToGet(prodListFromDB, param.getCount()) ) break;
 
-			setNextExpoOrdIntoCriteria(param, prodListFromDB);
+			setNextExpoOrdIntoCriteria( param, prodListFromDB );
 
 		}
 
-		setHasNextIntoResponse(response, requestVO);
-		removeRedundantLastItem(response, requestVO.getCount());
-		setStartKeyIntoResponse(response);
-		response.setCount(response.getProductList().size());
-		setStdDtIntoResponse(response, stdDt);
-		setListIdAndEtcPropIntoResponse(response, requestVO, header);
+		// 1건을 더 조회하여, 다음페이지 존재여부를 체크하고
+		setHasNext( response, requestVO );
+
+		// 최종결과에서는 1건을 제외시킨다.
+		removeRedundantLastItem( response, requestVO );
+
+		setStartKey( response );
+		setCount( response );
+		setStdDt( response, stdDt );
+		setListIdAndEtcProp( response, requestVO, header );
 
 		return response;
 	}
 
-	private void setListIdAndEtcPropIntoResponse(ProductListSacRes response, ProductListSacReq requestVO, SacRequestHeader header) {
+	private void setListIdAndEtcProp(ProductListSacRes response, ProductListSacReq requestVO, SacRequestHeader header) {
+
 		String tenantId = header.getTenantHeader().getTenantId();
 		String listId = requestVO.getListId();
 		int count = 1;
+
 		DisplayListCriteria listCriteria = new DisplayListCriteria(tenantId, listId, "N", count);
+
 		List<DisplayListFromDB> listsFromDB = commonDAO.queryForList( "DisplayList.selectDisplayList", listCriteria, DisplayListFromDB.class);
+
 		if(!listsFromDB.isEmpty()){
     		response.setEtcProp(listsFromDB.get(0).getEtcProp());
     		response.setListId(listsFromDB.get(0).getListId());
@@ -114,17 +125,17 @@ public class ProductListServiceImpl implements ProductListService{
 			response.setCount(0);
 			response.setProductList(new ArrayList<Product>());
 		}
+
 	}
 
-	private boolean responseGetEnoughProdList(ProductListSacRes response, ProductListSacReq requestVO) {
-		return response.getProductList().size()>=requestVO.getCount();
+	private boolean hasResponseEnoughProdList( ProductListSacRes response, int limitCount ) {
+		return response.getProductList().size() >= limitCount;
 	}
 
-	private void setHasNextIntoResponse(ProductListSacRes response, ProductListSacReq requestVO) {
-		if(response.getProductList().size()>requestVO.getCount())
-			response.setHasNext("Y");
-		else
-			response.setHasNext("N");
+	private void setHasNext( ProductListSacRes response, ProductListSacReq requestVO ) {
+
+		response.setHasNext( response.getProductList().size() > requestVO.getCount() ? "Y" : "N" );
+
 	}
 
 	private boolean noMoreProdToGet(List<ListProduct> prodListFromDB, int countExpected) {
@@ -132,19 +143,24 @@ public class ProductListServiceImpl implements ProductListService{
 	}
 
 	private void setNextExpoOrdIntoCriteria(ListProductCriteria lpCriteria, List<ListProduct> prodListFromDB) {
-		String lastExpoOrd    = prodListFromDB.get(prodListFromDB.size()-1).getExpoOrd();
-		String lastExpoOrdSub = prodListFromDB.get(prodListFromDB.size()-1).getExpoOrdSub();
-		lpCriteria.setLastExpoOrd(   new Integer(lastExpoOrd   ));
-		lpCriteria.setLastExpoOrdSub(new Integer(lastExpoOrdSub));
+
+		ListProduct lastProd = prodListFromDB.get( prodListFromDB.size() - 1 );
+
+		lpCriteria.setLastExpoOrd(    new Integer(lastProd.getExpoOrd()   ) );
+		lpCriteria.setLastExpoOrdSub( new Integer(lastProd.getExpoOrdSub()) );
+
 	}
 
-	private void removeRedundantLastItem(ProductListSacRes response, int requestedCount) {
+	private void removeRedundantLastItem(ProductListSacRes response, ProductListSacReq requestedCount) {
+
 		List<Product> list = response.getProductList();
-		while(list.size() > requestedCount)
+
+		while( list.size() > requestedCount.getCount() )
 			list.remove(list.size()-1);
+
 	}
 
-	private void setStdDtIntoResponse(ProductListSacRes response, String stdDt) {
+	private void setStdDt(ProductListSacRes response, String stdDt) {
 		Date date = commonGenerator.generateDate(DisplayConstants.DP_DATE_REG, stdDt);
 		response.setDate(date);
 	}
@@ -162,16 +178,23 @@ public class ProductListServiceImpl implements ProductListService{
 		return stdDt;
 	}
 
-	private void addListProductIntoResponse(SacRequestHeader header, ProductListSacRes response, List<ListProduct> listProds) {
+	private void addListProductIntoResponse( SacRequestHeader header, ProductListSacRes response, List<ListProduct> listProds, int limitCount ) {
+
 		List<Product> productList = response.getProductList();
-		for(ListProduct listProd: listProds){
-			Product p = getProduct(header, listProd);
-			if(p!=null)
-				productList.add(p);
+
+		for( ListProduct prod : listProds ) {
+
+			if( productList.size() >= limitCount ) break;
+
+			Product prodMeta = getProductMeta( header, prod );
+
+			if( prodMeta != null ) productList.add( prodMeta );
+
 		}
+
 	}
 
-	private void setStartKeyIntoResponse(ProductListSacRes response) {
+	private void setStartKey(ProductListSacRes response) {
 		List<Product> prodList = response.getProductList();
 		if(prodList.size()==0)
 			return;
@@ -180,8 +203,13 @@ public class ProductListServiceImpl implements ProductListService{
 		response.setStartKey(startKey);
 	}
 
+	private void setCount( ProductListSacRes response ) {
+		response.setCount( response.getProductList().size() );
+	}
+
 	@Override
-	public Product getProduct(SacRequestHeader header, ListProduct listProd) {
+	public Product getProductMeta( SacRequestHeader header, ListProduct listProd ) {
+
 		Product product = null;
 		String prodId=listProd.getProdId();
 		String topMenuId=listProd.getTopMenuId();
@@ -275,8 +303,7 @@ public class ProductListServiceImpl implements ProductListService{
 			}
 		}
 
-		if(product==null)
-			return null;
+		if( product==null ) return null;
 
 		product.setRecommendedReason(listProd.getRecomReason());
 		product.setEtcProp(listProd.getEtcProp());
@@ -284,5 +311,7 @@ public class ProductListServiceImpl implements ProductListService{
 		product.setExpoOrdSub(listProd.getExpoOrdSub());
 
 		return product;
+
 	}
+
 }
