@@ -186,7 +186,7 @@ public class ProductListServiceImpl implements ProductListService{
 
 			if( productList.size() >= limitCount ) break;
 
-			Product prodMeta = getProductMeta( header, prod );
+			Product prodMeta = getProduct( header, prod );
 
 			if( prodMeta != null ) productList.add( prodMeta );
 
@@ -208,7 +208,7 @@ public class ProductListServiceImpl implements ProductListService{
 	}
 
 	@Override
-	public Product getProductMeta( SacRequestHeader header, ListProduct listProd ) {
+	public Product getProduct( SacRequestHeader header, ListProduct listProd ) {
 
 		Product product = null;
 		String prodId=listProd.getProdId();

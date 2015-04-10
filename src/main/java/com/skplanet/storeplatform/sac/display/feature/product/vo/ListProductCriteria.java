@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.skplanet.storeplatform.sac.display.feature.product.vo;
 
@@ -15,8 +15,9 @@ import org.slf4j.LoggerFactory;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.product.ProductListSacReq;
 
 public class ListProductCriteria {
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	
+
 	private static final int DEFAULT_LIST_COUNT = 20;
 	private static final int MIN_EXPO_ORD = -99999999;
 
@@ -29,7 +30,7 @@ public class ListProductCriteria {
 	private boolean prodCharge;
 	private Integer count;
 	private String  stdDt; //YYYYMM DDHH24MISS
-	
+
 	public ListProductCriteria(ProductListSacReq req, String tenantId, String stdDt){
 		listId = req.getListId();
         this.tenantId = tenantId;
@@ -78,7 +79,7 @@ public class ListProductCriteria {
 
 	private void setupOrders(ProductListSacReq req) {
 		String startKey = req.getStartKey();
-		
+
 		if(startKey==null || startKey.isEmpty()){
 			lastExpoOrd    = MIN_EXPO_ORD;
 			lastExpoOrdSub = MIN_EXPO_ORD;
@@ -90,8 +91,8 @@ public class ListProductCriteria {
 	}
 
 	private void setCount(ProductListSacReq req) {
-		count = req.getCount()==null?DEFAULT_LIST_COUNT:req.getCount();
-		count++; //To set "hasNext"
+		count = req.getCount() == null ? DEFAULT_LIST_COUNT : req.getCount();
+		count++; // To set "hasNext"
 	}
 
 	private void setProdChage(ProductListSacReq req) {
@@ -99,7 +100,7 @@ public class ListProductCriteria {
 			prodCharge = req.getProdCharge().equals("Y");
 		}
 	}
-	
+
 	public String getListId() {
 		return listId;
 	}
