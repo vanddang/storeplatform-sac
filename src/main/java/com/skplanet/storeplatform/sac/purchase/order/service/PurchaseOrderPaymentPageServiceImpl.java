@@ -119,11 +119,16 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		paymentPageParam.setNmDelivery(purchaseOrderInfo.getNmDelivery());
 		paymentPageParam.setNoMdnDelivery(purchaseOrderInfo.getNoMdnDelivery());
 
-		// 회원정보 세팅
+		// 판매자 정보 세팅
 		PurchaseProduct purchaseProduct = purchaseOrderInfo.getPurchaseProductList().get(0);
+
+		SellerMbrAppSacParam sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
+				purchaseProduct.getSellerMbrNo(), purchaseOrderInfo.getTenantProdGrpCd());
+		paymentPageParam.setSellerType(sellerInfo.getSellerClass());
+
 		if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_APP)
 				|| StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) {
+						PurchaseConstants.TENANT_PRODUCT_GROUP_IAP)) { // APP/IAP 상품
 			// 상품 정보의 판매자명은 회사명에만 세팅: 2015.01.05.염동환M
 			paymentPageParam.setNmSellerCompany(purchaseProduct.getSellerNm());
 			paymentPageParam.setNmSeller(null);
@@ -133,10 +138,7 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			if (StringUtils.isBlank(paymentPageParam.getNmSellerCompany())
 					|| StringUtils.isBlank(paymentPageParam.getEmailSeller())
 					|| StringUtils.isBlank(paymentPageParam.getNoTelSeller())) {
-				SellerMbrAppSacParam sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
-						purchaseProduct.getSellerMbrNo(), purchaseOrderInfo.getTenantProdGrpCd());
 
-				paymentPageParam.setSellerType(sellerInfo.getSellerClass());
 				if (StringUtils.isBlank(paymentPageParam.getNmSellerCompany())) {
 					paymentPageParam.setNmSellerCompany(sellerInfo.getSellerCompany());
 				}
@@ -150,14 +152,10 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			}
 
 		} else {
-			SellerMbrAppSacParam sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
-					purchaseProduct.getSellerMbrNo(), purchaseOrderInfo.getTenantProdGrpCd());
-
 			paymentPageParam.setNmSellerCompany(sellerInfo.getSellerCompany());
 			paymentPageParam.setNmSeller(sellerInfo.getSellerName());
 			paymentPageParam.setEmailSeller(sellerInfo.getSellerEmail());
 			paymentPageParam.setNoTelSeller(sellerInfo.getSellerPhone());
-			paymentPageParam.setSellerType(sellerInfo.getSellerClass());
 		}
 
 		// pDescription
