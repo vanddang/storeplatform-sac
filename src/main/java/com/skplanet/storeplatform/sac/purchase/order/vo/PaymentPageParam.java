@@ -61,6 +61,7 @@ public class PaymentPageParam extends CommonInfo {
 	private String nmSeller; // 판매자명
 	private String emailSeller; // 판매자 이메일 주소
 	private String noTelSeller; // 판매자 전화번호
+	private String sellerType; // 판매자 타입
 
 	// ==========================================================================================
 
@@ -602,6 +603,25 @@ public class PaymentPageParam extends CommonInfo {
 	 */
 	public void setNoTelSeller(String noTelSeller) {
 		this.noTelSeller = noTelSeller;
+	}
+
+	/**
+	 * Gets seller type.
+	 *
+	 * @return the seller type
+	 */
+	public String getSellerType() {
+		return sellerType;
+	}
+
+	/**
+	 * Sets seller type.
+	 *
+	 * @param sellerType
+	 *            the seller type
+	 */
+	public void setSellerType(String sellerType) {
+		this.sellerType = sellerType;
 	}
 
 	/**

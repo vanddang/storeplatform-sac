@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationListForProductSacRes.SellerMbrInfoSac.SellerMbrAppSac;
 import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -28,6 +27,7 @@ import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRe
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
+import com.skplanet.storeplatform.sac.purchase.order.vo.SellerMbrAppSacParam;
 
 /**
  * 
@@ -133,9 +133,10 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			if (StringUtils.isBlank(paymentPageParam.getNmSellerCompany())
 					|| StringUtils.isBlank(paymentPageParam.getEmailSeller())
 					|| StringUtils.isBlank(paymentPageParam.getNoTelSeller())) {
-				SellerMbrAppSac sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
+				SellerMbrAppSacParam sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
 						purchaseProduct.getSellerMbrNo(), purchaseOrderInfo.getTenantProdGrpCd());
 
+				paymentPageParam.setSellerType(sellerInfo.getSellerClass());
 				if (StringUtils.isBlank(paymentPageParam.getNmSellerCompany())) {
 					paymentPageParam.setNmSellerCompany(sellerInfo.getSellerCompany());
 				}
@@ -149,13 +150,14 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 			}
 
 		} else {
-			SellerMbrAppSac sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
+			SellerMbrAppSacParam sellerInfo = this.purchaseMemberRepository.detailInformationListForProduct(
 					purchaseProduct.getSellerMbrNo(), purchaseOrderInfo.getTenantProdGrpCd());
 
 			paymentPageParam.setNmSellerCompany(sellerInfo.getSellerCompany());
 			paymentPageParam.setNmSeller(sellerInfo.getSellerName());
 			paymentPageParam.setEmailSeller(sellerInfo.getSellerEmail());
 			paymentPageParam.setNoTelSeller(sellerInfo.getSellerPhone());
+			paymentPageParam.setSellerType(sellerInfo.getSellerClass());
 		}
 
 		// pDescription
@@ -457,7 +459,8 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 				.append(StringUtils.defaultString(nmSellerCompanyWithUrlEncoding)).append("&nmSeller=")
 				.append(StringUtils.defaultString(nmSellerWithUrlEncoding)).append("&emailSeller=")
 				.append(StringUtils.defaultString(paymentPageParam.getEmailSeller())).append("&noTelSeller=")
-				.append(StringUtils.defaultString(paymentPageParam.getNoTelSeller())).append("&flag=")
+				.append(StringUtils.defaultString(paymentPageParam.getNoTelSeller())).append("&sellerType=")
+				.append(StringUtils.defaultString(paymentPageParam.getSellerType())).append("&flag=")
 				.append(StringUtils.defaultString(paymentPageParam.getFlag()));
 
 		String plainData = sb.toString();
