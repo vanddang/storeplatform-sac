@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UserDownloadInfoRes;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.GetUserDownloadInfoParam;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.UserDownloadInfo;
 
@@ -25,6 +26,6 @@ public interface UserDownloadInfoService {
      * @param param
      * @return
      */
-    UserDownloadInfo getUserDownloadInfo(GetUserDownloadInfoParam param);
+    UserDownloadInfoRes getUserDownloadInfo(GetUserDownloadInfoParam param);
 
 }

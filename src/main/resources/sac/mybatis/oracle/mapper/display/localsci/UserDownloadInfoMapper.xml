@@ -3,15 +3,30 @@
 <mapper namespace="UserDownloadInfo">
 
     <!-- 상품 군 조회 -->
-    <select id="getUserDownloadInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.localsci.sci.vo.UserDownloadInfo">
-        SELECT /* UserDownloadInfo.xml, getUserDownloadInfo, 정희원M, 2015-03-16 */
-            UD.TENANT_ID as "latestTenantId",
-            UD.LATEST_DWLD_DT as "latestDownloadDate",
-            UD.PROD_ID as "prodId"
-        FROM   TB_DP_USER_DWLD UD
-        WHERE  1=1
-        AND    UD.MDNAID_KEY = #{mdnaidKey}
-        AND    UD.AID = #{aid}
+    <select id="getRawUserDownloadInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.localsci.sci.service.UserDownloadInfoServiceImpl$RawUserDownloadInfo">
+        select
+            NVL(MAX(TENANT1_YN), 'N') AS TENANT1_YN,
+            NVL(MAX(TENANT2_YN), 'N') AS TENANT2_YN,
+            MAX(LATEST_TENANT_ID) AS LATEST_TENANT_ID
+        FROM
+            (SELECT
+                 CASE tp.tenant_id
+                 WHEN #{tenant1} THEN 'Y'
+                 ELSE null END AS TENANT1_YN,
+                 CASE tp.tenant_id
+                 WHEN #{tenant2} THEN 'Y'
+                 ELSE null END AS TENANT2_YN,
+                 ud.tenant_id  AS LATEST_TENANT_ID
+             FROM TB_DP_APP_PROD ap
+                 INNER JOIN TB_DP_TENANT_PROD tp
+                     ON tp.prod_id = ap.prod_id
+                 LEFT OUTER JOIN TB_DP_USER_DWLD ud
+                     ON ud.AID = ap.aid AND ud.MDNAID_KEY = #{mdnaidKey}
+             WHERE ap.aid = #{aid}
+                   and (ap.part_parent_clsf_cd = 'PD012301' or ap.part_parent_clsf_cd is null)
+                   AND tp.tenant_id IN (#{tenant1}, #{tenant2})
+            )
+        group by 1
     </select>
 
 </mapper>

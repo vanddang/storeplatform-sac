@@ -17,24 +17,24 @@ package com.skplanet.storeplatform.sac.display.localsci.sci.vo;
  */
 public class GetUserDownloadInfoParam {
     private String mdn;
-    private String imei;
     private String aid;
+    private String tenantId;
 
-    public GetUserDownloadInfoParam(String mdn, String imei, String aid) {
+    public GetUserDownloadInfoParam(String mdn, String aid, String tenantId) {
         this.mdn = mdn;
-        this.imei = imei;
         this.aid = aid;
+        this.tenantId = tenantId;
     }
 
     public String getMdn() {
         return mdn;
     }
 
-    public String getImei() {
-        return imei;
-    }
-
     public String getAid() {
         return aid;
+    }
+
+    public String getTenantId() {
+        return tenantId;
     }
 }

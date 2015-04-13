@@ -32,15 +32,9 @@ public class UserDownloadInfoSCIController implements UserDownloadInfoSCI {
 
     @Override
     public UserDownloadInfoRes getUserDownloadInfo(UserDownloadInfoReq req) {
-        UserDownloadInfo userDownloadInfo = userDownloadInfoService.getUserDownloadInfo(new GetUserDownloadInfoParam(req.getMdn(), "", req.getAid()));
-        if(userDownloadInfo == null)
-            return null;
+        if(req == null)
+            throw new IllegalArgumentException();
 
-        UserDownloadInfoRes res = new UserDownloadInfoRes();
-        res.setProdId(userDownloadInfo.getProdId());
-        res.setLatestDownloadDate(userDownloadInfo.getLatestDownloadDate());
-        res.setLatestTenantId(userDownloadInfo.getLatestTenantId());
-
-        return res;
+        return userDownloadInfoService.getUserDownloadInfo(new GetUserDownloadInfoParam(req.getMdn(), req.getAid(), req.getTenantId()));
     }
 }
