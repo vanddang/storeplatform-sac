@@ -12,7 +12,6 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */
-
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class UserInfo extends CommonInfo {
 
@@ -218,6 +217,11 @@ public class UserInfo extends CommonInfo {
 	 * 샵클 업데이트 여부(sap 회원용).
 	 */
 	private String isSCUpdate;
+
+	/**
+	 * 사용자 업데이트 이메일.
+	 */
+	private String userUpdEmail;
 
 	/* 사용자 부가정보 */
 	private List<UserExtraInfo> userExtraInfoList;
@@ -850,6 +854,21 @@ public class UserInfo extends CommonInfo {
 	 */
 	public void setIsSCUpdate(String isSCUpdate) {
 		this.isSCUpdate = isSCUpdate;
+	}
+
+	/**
+	 * @return userUpdEmail
+	 */
+	public String getUserUpdEmail() {
+		return this.userUpdEmail;
+	}
+
+	/**
+	 * @param userUpdEmail
+	 *            String
+	 */
+	public void setUserUpdEmail(String userUpdEmail) {
+		this.userUpdEmail = userUpdEmail;
 	}
 
 }
