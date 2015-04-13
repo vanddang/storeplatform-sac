@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserNameEcR
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
@@ -52,6 +53,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
@@ -60,6 +62,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreement
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
+import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
@@ -1161,5 +1165,63 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		}
 
+	}
+
+	/**
+	 * <pre>
+	 * 실명 인증 정보 초기화.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	@Override
+	public InitRealNameRes initRealName(SacRequestHeader sacHeader, InitRealNameReq req) {
+		SearchUserRequest searchUserRequest = new SearchUserRequest();
+		searchUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+		/**
+		 * 검색 조건 setting
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(req.getUserKey());
+		keySearchList.add(keySchUserKey);
+		searchUserRequest.setKeySearchList(keySearchList);
+
+		/**
+		 * 회원 정보조회
+		 */
+		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
+		/**
+		 * 실명 인증 정보가 존재하지 않을 경우
+		 */
+		if (StringUtil.equals(schUserRes.getMbrAuth().getIsRealName(), Constant.TYPE_YN_N)) {
+			throw new StorePlatformException("SAC_MEM_0002", "실명 인증");
+		}
+
+		/**
+		 * 실명인증 초기화 기본 req setting.
+		 */
+		UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
+		updateRealNameRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		updateRealNameRequest.setUserKey(req.getUserKey());
+
+		/**
+		 * SC 사용자 회원 실명인증 초기화.
+		 */
+		UpdateRealNameResponse updateRealNameResponse = this.userSCI.initRealName(updateRealNameRequest);
+		if (StringUtil.isEmpty(updateRealNameResponse.getUserKey())) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
+		}
+
+		InitRealNameRes res = new InitRealNameRes();
+		res.setUserKey(updateRealNameResponse.getUserKey());
+
+		return res;
 	}
 }

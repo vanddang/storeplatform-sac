@@ -25,6 +25,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
@@ -257,5 +259,36 @@ public class UserModifyController {
 
 		return res;
 
+	}
+
+	/**
+	 * <pre>
+	 * 실명 인증 정보 초기화.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	@RequestMapping(value = "/member/user/initRealName/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public InitRealNameRes initRealName(SacRequestHeader sacHeader, @Validated @RequestBody InitRealNameReq req) {
+
+		LOGGER.debug("####################################");
+		LOGGER.debug("##### 2.1.57 실명 인증 정보 초기화   #####");
+		LOGGER.debug("####################################");
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		/**
+		 * 실명인증 초기화 Biz
+		 */
+		InitRealNameRes res = this.svc.initRealName(sacHeader, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
 	}
 }

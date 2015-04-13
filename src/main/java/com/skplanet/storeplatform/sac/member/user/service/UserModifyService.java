@@ -13,6 +13,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.InitRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
@@ -107,5 +109,18 @@ public interface UserModifyService {
 	 * @return Response Value Object
 	 */
 	public CreateRealNameRes regRealName(SacRequestHeader sacHeader, CreateRealNameReq req);
+
+	/**
+	 * <pre>
+	 * 실명 인증 정보 초기화.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	public InitRealNameRes initRealName(SacRequestHeader sacHeader, InitRealNameReq req);
 
 }
