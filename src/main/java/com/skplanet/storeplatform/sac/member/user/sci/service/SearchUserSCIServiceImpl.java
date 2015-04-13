@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.common.vo.MemberPoint;
+import com.skplanet.storeplatform.member.client.common.vo.SearchMbrSapUserInfo;
 import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchMemberPointResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
@@ -46,6 +47,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchExtentUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrSapUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrSapUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchMbrUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserExtraInfoRequest;
@@ -61,6 +64,9 @@ import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.GradeInfoSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
@@ -179,6 +185,76 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		searchUserSacRes.setUserInfo(userInfo);
 
 		return searchUserSacRes;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.sci.service.SearchUserSCIService#srhSapUserByUserKey(com.skplanet.
+	 * storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacReq)
+	 */
+	@Override
+	public SearchSapUserSacRes srhSapUserByUserKey(SacRequestHeader sacHeader, SearchSapUserSacReq request) {
+
+		// 공통파라미터 셋팅
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		List<SearchSapUserInfoSac> userKeyList = request.getUserKeyList();
+		List<SearchMbrSapUserInfo> userKeyMbrList = null;
+		if (userKeyList != null && userKeyList.size() > 0) {
+			userKeyMbrList = new ArrayList<SearchMbrSapUserInfo>();
+			SearchMbrSapUserInfo searchMbrSapUserInfo = null;
+			for (SearchSapUserInfoSac info : userKeyList) {
+				if (StringUtils.isBlank(info.getUserKey()) || StringUtils.isBlank(info.getTenantId())) {
+					throw new StorePlatformException("SAC_MEM_0001",
+							StringUtils.isBlank(info.getUserKey()) ? "userKey" : "tenantId");
+				}
+				searchMbrSapUserInfo = new SearchMbrSapUserInfo();
+				searchMbrSapUserInfo.setTenantId(info.getTenantId());
+				searchMbrSapUserInfo.setUserKey(info.getUserKey());
+				userKeyMbrList.add(searchMbrSapUserInfo);
+			}
+		}
+
+		SearchMbrSapUserRequest searchMbrSapUserRequest = new SearchMbrSapUserRequest();
+		searchMbrSapUserRequest.setUserKeyList(userKeyMbrList);
+		searchMbrSapUserRequest.setCommonRequest(commonRequest);
+		SearchMbrSapUserResponse searchMbrSapUserResponse = this.userSCI.searchMbrSapUser(searchMbrSapUserRequest);
+
+		Map<String, UserMbrStatus> userInfoMap = searchMbrSapUserResponse.getUserMbrStatusMap();
+
+		Map<String, UserInfoSac> userInfo = new HashMap<String, UserInfoSac>();
+		UserInfoSac userInfoSac = null;
+		if (userInfoMap != null) {
+			for (int i = 0; i < userKeyMbrList.size(); i++) {
+				if (userInfoMap.get(userKeyMbrList.get(i).getUserKey()) != null) {
+					userInfoSac = new UserInfoSac();
+					userInfoSac.setUserKey(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getUserKey());
+					userInfoSac.setUserId(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getUserID());
+					userInfoSac.setUserMainStatus(userInfoMap.get(userKeyMbrList.get(i).getUserKey())
+							.getUserMainStatus());
+					userInfoSac
+							.setUserSubStatus(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getUserSubStatus());
+					userInfoSac.setUserType(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getUserType());
+					// 등록기기(deviceIdList) 없는경우, size=0 인 List로 내려달라고 SAC 전시 요청 -> SC 회원에서 size=0인 List로 내려주기로함.
+					userInfoSac.setDeviceIdList(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getDeviceIDList());
+					// tenantId 추가, incross_bottangs, 2015.02.10
+					userInfoSac.setTenantId(userInfoMap.get(userKeyMbrList.get(i).getUserKey()).getTenantID());
+
+					userInfo.put(userKeyMbrList.get(i).getUserKey(), userInfoSac);
+				}
+			}
+		}
+		// 회원정보 없는 경우 SC 회원에서 Exception 처리함.
+		SearchSapUserSacRes searchSapUserSacRes = new SearchSapUserSacRes();
+		searchSapUserSacRes.setUserInfo(userInfo);
+
+		return searchSapUserSacRes;
+
 	}
 
 	/**
@@ -1097,4 +1173,5 @@ public class SearchUserSCIServiceImpl implements SearchUserSCIService {
 		res.setSearchUserExtraInfoSacRes(searchUserExtraInfoSacRes);
 		return res;
 	}
+
 }

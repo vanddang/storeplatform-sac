@@ -21,6 +21,8 @@ import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
@@ -83,6 +85,29 @@ public class SearchUserSCIController implements SearchUserSCI {
 		SearchUserSacRes searchUserSacRes = this.searchUserSCIService.srhUserByUserKey(requestHeader, request);
 		LOGGER.info("Response : user count : {}", searchUserSacRes.getUserInfo().size());
 		return searchUserSacRes;
+	}
+
+	/**
+	 * <pre>
+	 * userKey, tenantId 목록을 이용하여 회원정보 목록조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            SearchSapUserSacReq
+	 * @return SearchSapUserSacRes
+	 */
+	@Override
+	@RequestMapping(value = "/searchSapUserByUserKey", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchSapUserSacRes searchSapUserByUserKey(@RequestBody @Validated SearchSapUserSacReq request) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(request));
+		// 헤더 정보 셋팅
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+
+		SearchSapUserSacRes searchSapUserSacRes = this.searchUserSCIService.srhSapUserByUserKey(requestHeader, request);
+		LOGGER.info("Response : user count : {}", searchSapUserSacRes.getUserInfo().size());
+		return searchSapUserSacRes;
 	}
 
 	/**
@@ -404,5 +429,4 @@ public class SearchUserSCIController implements SearchUserSCI {
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 		return res;
 	}
-
 }

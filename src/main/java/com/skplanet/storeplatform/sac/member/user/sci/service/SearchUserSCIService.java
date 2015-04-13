@@ -13,6 +13,8 @@ import java.util.Map;
 
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
@@ -51,6 +53,17 @@ public interface SearchUserSCIService {
 	 * @return
 	 */
 	public SearchUserSacRes srhUserByUserKey(SacRequestHeader sacHeader, SearchUserSacReq request);
+
+	/**
+	 * <pre>
+	 * userKey, tenantId 목록을 이용하여 회원정보 목록조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            SearchSapUserSacReq
+	 * @return SearchSapUserSacRes
+	 */
+	public SearchSapUserSacRes srhSapUserByUserKey(SacRequestHeader sacHeader, SearchSapUserSacReq request);
 
 	/**
 	 * 
