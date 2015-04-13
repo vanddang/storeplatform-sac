@@ -40,15 +40,13 @@ public class UserDownloadInfoServiceImpl implements UserDownloadInfoService {
         if (Strings.isNullOrEmpty(param.getMdn()) || Strings.isNullOrEmpty(param.getAid()) || Strings.isNullOrEmpty(param.getTenantId()))
             throw new IllegalArgumentException("mdn, aid, tenantId는 필수값입니다.");
 
-        /*
         String key = DisplayCryptUtils.hashMdnAidKey(param.getMdn(), param.getAid());
         if(Strings.isNullOrEmpty(key))
             throw new IllegalStateException();
-        */
 
         req.put("tenant1", TENANT_TSTORE);
         req.put("tenant2", param.getTenantId());
-        req.put("mdnaidKey", param.getMdn());   // FIXME
+        req.put("mdnaidKey", key);
         req.put("aid", param.getAid());
 
         RawUserDownloadInfo v = commonDAO.queryForObject("UserDownloadInfo.getRawUserDownloadInfo", req, RawUserDownloadInfo.class);
