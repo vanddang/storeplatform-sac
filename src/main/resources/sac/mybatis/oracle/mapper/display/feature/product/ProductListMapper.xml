@@ -4,81 +4,86 @@
 
 	<!--상품 목록 통합 조회 -->
 	<select id="selectListProdList" parameterType="ListProductCriteria" resultType="ListProduct">
-		SELECT /* ProductListMapper.xml, selectListProdList, SAC 전시 , 2014-10-08 */
-	              A.PROD_ID
-	            , A.CONTENTS_TYPE_CD
-	            , A.SVC_GRP_CD
-	            , A.TOP_MENU_ID
-	            , A.MENU_ID
-	            , A.IMG_PATH
-	            , A.EXPO_ORD
-	            , A.EXPO_ORD_SUB
-	            , A.RECOM_REASON
-	            , A.ETC_PROP
-	         FROM (
-					SELECT DISTINCT
-					       LP.PROD_ID, P.CONTENTS_TYPE_CD, P.SVC_GRP_CD, P.TOP_MENU_ID,
-					       LP.MENU_ID, LP.IMG_PATH, LP.EXPO_ORD, LP.EXPO_ORD_SUB,
-					       LP.RECOM_REASON, LP.ETC_PROP
-					  FROM TB_DP_LIST_PROD LP
-					  	LEFT OUTER JOIN TB_DP_PROD P				ON LP.PROD_ID  = P.PROD_ID
-					  	LEFT OUTER JOIN TB_DP_TENANT_PROD TP		ON LP.PROD_ID  = TP.PROD_ID
-					  	LEFT OUTER JOIN TB_DP_PROD_CATALOG_MAPG PCM ON LP.PROD_ID  = PCM.CATALOG_ID
-					  	LEFT OUTER JOIN TB_DP_TENANT_PROD TP2       ON PCM.PROD_ID = TP2.PROD_ID
-					  	LEFT OUTER JOIN TB_DP_MENU_CATEGORY     MC  ON LP.MENU_ID  = MC.MENU_ID 
-					 WHERE 1=1
-						AND LP.TENANT_ID=#{tenantId}
-						AND LP.LIST_ID=#{listId}
-						AND LP.EXPO_YN = 'Y'
-						AND MC.USE_YN  = 'Y'
-						/* PROD_STATUS_CD : PD000403(판매중) */
-						/* 앨범은 TB_DP_TENANT_PROD에 없음. PROD_ID가 'AL%'이면 앨범 */ 
-						AND (  (TP.PROD_STATUS_CD  = 'PD000403' AND TP.EXPO_YN  = 'Y')
-                        	OR (TP2.PROD_STATUS_CD = 'PD000403' AND TP2.EXPO_YN = 'Y')
-                        	OR  P.PROD_ID LIKE 'AL%' 
-                        	)
-						<if test="menuIdCondList != null">
-						AND
-						  <foreach collection="menuIdCondList" item="menuIdCond" open=" (" close=") " >
-						    <if test='menuIdCond.op1st=="AND"'> AND </if>
-						    <if test='menuIdCond.op1st=="OR"'>  OR  </if>
-						    LP.MENU_ID 
-						    <if test='menuIdCond.op2nd=="NOT"'> NOT </if>
-						    LIKE #{menuIdCond.menuId}||'%'
-						  </foreach>
-						</if>
-						<if test='stdDt != null and stdDt != ""'>
-						AND LP.STD_DT = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
-						</if>
-						/* 상품등급코드 */
-						/* 쇼핑은 등급을 무시하기 위해 NULL인 경우 표시 */
-			            <if test='prodGradeCdList != null'>
-			            AND ( P.PROD_GRD_CD IS NULL OR P.PROD_GRD_CD IN
-			            <foreach collection="prodGradeCdList" item="prodGradeCd" index="index" open="(" close=")" separator=",">
-			             #{prodGradeCd}          
-			            </foreach>
-			            	)
-			            </if>
-			            AND ( (LP.EXPO_ORD          =  #{lastExpoOrd,   javaType=Integer,jdbcType=NUMERIC}
-			                  AND LP.EXPO_ORD_SUB &gt; #{lastExpoOrdSub,javaType=Integer,jdbcType=NUMERIC}
-			                  ) OR LP.EXPO_ORD    &gt; #{lastExpoOrd,   javaType=Integer,jdbcType=NUMERIC}
-			                )
-						AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
-					ORDER BY LP.EXPO_ORD, LP.EXPO_ORD_SUB
-					) A
-		WHERE ROWNUM &lt;= #{count,javaType=Integer,jdbcType=NUMERIC}
-         ORDER BY ROWNUM
+        SELECT  /* ProductListMapper.xml, selectListProdList, SAC 전시 , 2014-10-08 */
+                A.prod_id
+              , A.contents_type_cd
+              , A.svc_grp_cd
+              , A.top_menu_id
+              , A.menu_id
+              , A.img_path
+              , A.expo_ord
+              , A.expo_ord_sub
+              , A.recom_reason
+              , A.etc_prop
+        FROM
+        (
+                SELECT  DISTINCT
+                        LP.prod_id
+                      , P.contents_type_cd
+                      , P.svc_grp_cd
+                      , P.top_menu_id
+                      , LP.menu_id
+                      , LP.img_path
+                      , LP.expo_ord
+                      , LP.expo_ord_sub
+                      , LP.recom_reason
+                      , LP.etc_prop
+                FROM            TB_DP_LIST_PROD         LP
+                LEFT OUTER JOIN TB_DP_PROD              P   ON( LP.prod_id  = P.prod_id      )
+                LEFT OUTER JOIN TB_DP_TENANT_PROD       TP  ON( LP.prod_id  = TP.prod_id     )
+                LEFT OUTER JOIN TB_DP_PROD_CATALOG_MAPG PCM ON( LP.prod_id  = PCM.catalog_id )
+                LEFT OUTER JOIN TB_DP_TENANT_PROD       TP2 ON( PCM.prod_id = TP2.prod_id    )
+                LEFT OUTER JOIN TB_DP_MENU_CATEGORY     MC  ON( LP.menu_id  = MC.menu_id     )
+                WHERE   1 = 1
+                AND     LP.tenant_id = #{tenantId}
+                AND     LP.list_id   = #{listId}
+                AND     LP.expo_yn   = 'Y'
+                AND     MC.use_yn    = 'Y'
+                /* PROD_STATUS_CD : PD000403(판매중) */
+                /* 앨범은 TB_DP_TENANT_PROD에 없음. PROD_ID가 'AL%'이면 앨범 */
+                AND (
+                       ( TP.prod_status_cd  = 'PD000403' AND TP.expo_yn  = 'Y' )
+                    OR ( TP2.prod_status_cd = 'PD000403' AND TP2.expo_yn = 'Y' )
+                    OR  P.prod_id LIKE 'AL%'
+                )
+                <if test="menuIdCondList != null">
+                    AND
+                    <foreach collection="menuIdCondList" item="menuIdCond" open=" (" close=") " >
+                      <if test='menuIdCond.op1st=="AND"'> AND </if>
+                      <if test='menuIdCond.op1st=="OR"'>  OR  </if>
+                    LP.menu_id
+                      <if test='menuIdCond.op2nd=="NOT"'> NOT </if>
+                        LIKE #{menuIdCond.menuId}||'%'
+                    </foreach>
+                </if>
+                <if test='stdDt != null and stdDt != ""'>
+                    AND LP.std_dt = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS')
+                </if>
+                /* 상품등급코드 */
+                /* 쇼핑은 등급을 무시하기 위해 NULL인 경우 표시 */
+                <if test='prodGradeCdList != null'>
+                    AND ( P.prod_grd_cd IS NULL OR P.prod_grd_cd IN <foreach collection="prodGradeCdList" item="prodGradeCd" index="index" open="(" close=")" separator=",">#{prodGradeCd}</foreach> )
+                </if>
+                AND (
+                       ( LP.expo_ord =    #{lastExpoOrd,javaType=Integer,jdbcType=NUMERIC} AND LP.expo_ord_sub &gt; #{lastExpoOrdSub,javaType=Integer,jdbcType=NUMERIC} )
+                    OR ( LP.expo_ord &gt; #{lastExpoOrd,javaType=Integer,jdbcType=NUMERIC} )
+                )
+                AND  SYSDATE BETWEEN LP.expo_start_dt AND LP.expo_end_dt
+                ORDER BY LP.expo_ord, LP.expo_ord_sub
+        ) A
+        WHERE   ROWNUM &lt;= #{count,javaType=Integer,jdbcType=NUMERIC}
+        ORDER BY ROWNUM
 	</select>
-			
+
 	<!--상품 단건 통합 조회 -->
 	<select id="selectListProd" parameterType="string" resultType="ListProduct">
-		SELECT /* ProductListMapper.xml, selectListProd, SAC 전시 , 2014-11-05 */
-			PROD_ID, 
-			CONTENTS_TYPE_CD, 
-			SVC_GRP_CD, 
-			TOP_MENU_ID
-		FROM TB_DP_PROD			
-		WHERE PROD_ID = #{prodId}
+		SELECT  /* ProductListMapper.xml, selectListProd, SAC 전시 , 2014-11-05 */
+			    prod_id,
+			    contents_type_cd,
+			    svc_grp_cd,
+			    top_menu_id
+		FROM    TB_DP_PROD
+		WHERE   prod_id = #{prodId}
 	</select>
 
 </mapper>
