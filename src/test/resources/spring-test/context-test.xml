@@ -24,7 +24,6 @@
                 <ref bean="transactionManagerForSac" />
                 <ref bean="transactionManagerForScPurchase" />
                 <ref bean="transactionManagerForScMember" />
-                <ref bean="transactionManagerForCmsApp" />
             </list>
         </constructor-arg>
     </bean>
