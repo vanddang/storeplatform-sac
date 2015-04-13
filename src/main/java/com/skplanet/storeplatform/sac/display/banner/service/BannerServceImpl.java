@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.display.banner.service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
+import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerProdMapgSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -14,6 +15,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prev
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.banner.vo.BannerDefault;
+import com.skplanet.storeplatform.sac.display.banner.vo.BannerProdMapg;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -384,7 +386,7 @@ public class BannerServceImpl implements BannerService {
 					if ("DP010912".equals(bnrMenuId) || "DP010926".equals(bnrMenuId)) {
 						bannerReq.setProdId(prodId);
 
-						// 상품 리스트 조회 (앱가이드 및 모바일웹 직사각형너너너의 경우 배너정보에 채널 상품ID가 입력)
+						// 상품 리스트 조회 (앱가이드 및 모바일웹 직사각형 배너의 경우 배너정보에 채널 상품ID가 입력)
 						prodList = this.commonDAO.queryForList("Banner.searchAppGuideProdList", bannerReq,
 								BannerDefault.class);
 
@@ -626,73 +628,78 @@ public class BannerServceImpl implements BannerService {
 		String prodId = bannerReq.getProdId();
 		String topMenuId = bannerReq.getTopMenuId();
 
-		MetaInfo metaInfo = null; // 메타정보 VO
-		ProductBasicInfo productInfo = new ProductBasicInfo(); // 메타정보 조회용 상품 파라미터
-		Map<String, Object> paramMap = new HashMap<String, Object>(); // 메타정보 조회용 파라미터
-
-		// 메타정보 조회를 위한 파라미터 세팅
-		productInfo.setProdId(prodId);
-		productInfo.setPartProdId(prodId);
-		productInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
-		paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-		paramMap.put("tenantHeader", header.getTenantHeader());
-		paramMap.put("deviceHeader", header.getDeviceHeader());
-		paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-		paramMap.put("productBasicInfo", productInfo);
-
-		// APP
-		if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
-				|| DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
-				|| DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
-				|| DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("[searchBannerLog] 메타정보조회 : 앱상품");
-			this.logger.debug("----------------------------------------------------------------");
-
-			paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-			metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
-		}
-		// 이북 및 코믹
-		else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-				|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("[searchBannerLog] 메타정보조회 : 이북, 코믹");
-			this.logger.debug("----------------------------------------------------------------");
-
-			paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-			metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
-		}
-		// 영화 및 방송
-		else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
-				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("[searchBannerLog] 메타정보조회 : 영화, 방송");
-			this.logger.debug("----------------------------------------------------------------");
-
-			paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-			metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
-		}
-		// Tstore 쇼핑
-		else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("[searchBannerLog] 메타정보조회 : Tstore 쇼핑");
-			this.logger.debug("----------------------------------------------------------------");
-
-			paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-			metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
-		}
-
-		return metaInfo;
+		return this.getMetaInfo(header, prodId, topMenuId);
 	}
+
+    private MetaInfo getMetaInfo(SacRequestHeader header, String prodId, String topMenuId) {
+
+        MetaInfo metaInfo = null; // 메타정보 VO
+        ProductBasicInfo productInfo = new ProductBasicInfo(); // 메타정보 조회용 상품 파라미터
+        Map<String, Object> paramMap = new HashMap<String, Object>(); // 메타정보 조회용 파라미터
+
+        // 메타정보 조회를 위한 파라미터 세팅
+        productInfo.setProdId(prodId);
+        productInfo.setPartProdId(prodId);
+        productInfo.setContentsTypeCd(DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+        paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+        paramMap.put("tenantHeader", header.getTenantHeader());
+        paramMap.put("deviceHeader", header.getDeviceHeader());
+        paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+        paramMap.put("productBasicInfo", productInfo);
+
+        // APP
+        if (DisplayConstants.DP_GAME_TOP_MENU_ID.equals(topMenuId)
+                || DisplayConstants.DP_FUN_TOP_MENU_ID.equals(topMenuId)
+                || DisplayConstants.DP_LIFE_LIVING_TOP_MENU_ID.equals(topMenuId)
+                || DisplayConstants.DP_LANG_EDU_TOP_MENU_ID.equals(topMenuId)) {
+            this.logger.debug("----------------------------------------------------------------");
+            this.logger.debug("[searchBannerLog] 메타정보조회 : 앱상품");
+            this.logger.debug("----------------------------------------------------------------");
+
+            paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+            metaInfo = this.metaInfoService.getAppMetaInfo(paramMap);
+        }
+        // 이북 및 코믹
+        else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+                || DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
+            this.logger.debug("----------------------------------------------------------------");
+            this.logger.debug("[searchBannerLog] 메타정보조회 : 이북, 코믹");
+            this.logger.debug("----------------------------------------------------------------");
+
+            paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+            metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
+        }
+        // 영화 및 방송
+        else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+                || DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+            this.logger.debug("----------------------------------------------------------------");
+            this.logger.debug("[searchBannerLog] 메타정보조회 : 영화, 방송");
+            this.logger.debug("----------------------------------------------------------------");
+
+            paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+            metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
+        }
+        // Tstore 쇼핑
+        else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(topMenuId)) {
+            this.logger.debug("----------------------------------------------------------------");
+            this.logger.debug("[searchBannerLog] 메타정보조회 : Tstore 쇼핑");
+            this.logger.debug("----------------------------------------------------------------");
+
+            paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+            metaInfo = this.metaInfoService.getShoppingMetaInfo(paramMap);
+        }
+
+        return metaInfo;
+    }
 
 	/**
 	 * <pre>
 	 * 배너 Response 생성.
 	 * </pre>
 	 *
-	 * @param list
+	 * @param resultList
 	 *            list
-	 * @return BannerSacResㄴ
+	 * @return BannerSacRes
 	 */
 	private BannerSacRes generateResponse(List<BannerDefault> resultList) {
 		String bnrType = null;
@@ -884,4 +891,130 @@ public class BannerServceImpl implements BannerService {
 		bannerRes.setCommonResponse(commonResponse);
 		return bannerRes;
 	}
+
+
+    private BannerProdMapg getBannerProdMapg(String tenantId, String prodId, String contentsTypeCd, String topMenuId) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("tenantId", tenantId);
+        param.put("prodId", prodId);
+        param.put("contentsTypeCd", contentsTypeCd);
+        param.put("topMenuId", topMenuId);
+
+        return this.commonDAO.queryForObject("Banner.getBannerProdMapg", param, BannerProdMapg.class);
+    }
+
+    private String getChannelIdByEpisodeId(String tenantId, String prodId) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("tenantId", tenantId);
+        param.put("prodId", prodId);
+
+        return this.commonDAO.queryForObject("Banner.getChannelIdByEpisodeId", param, String.class);
+    }
+
+    private List<String> getEpisodeIdsByChannelId(String tenantId, String prodId) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("tenantId", tenantId);
+        param.put("prodId", prodId);
+
+        return this.commonDAO.queryForList("Banner.getEpisodeIdsByChannelId", param, String.class);
+    }
+
+    private BannerDefault getBanner(BannerProdMapg bannerProdMapg, String langCd) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("tenantId", bannerProdMapg.getTenantId());
+        param.put("bnrMenuId", bannerProdMapg.getBnrMenuId());
+        param.put("bnrSeq", bannerProdMapg.getBnrSeq());
+        param.put("bnrExpoMenuId", bannerProdMapg.getBnrExpoMenuId());
+        param.put("imgSizeCd", bannerProdMapg.getImgSizeCd());
+        param.put("langCd", langCd);
+
+        return this.commonDAO.queryForObject("Banner.getBanner", param, BannerDefault.class);
+    }
+
+    private Integer getProdProvisioning(String tenantId, String prodId, String deviceModelCd) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("tenantId", tenantId);
+        param.put("prodId", prodId);
+        param.put("deviceModelCd", deviceModelCd);
+        param.put("anyDeviceModelCd", DisplayConstants.DP_ANY_PHONE_4MM);
+
+        return this.commonDAO.queryForObject("Banner.getProdProvisioning", param, Integer.class);
+    }
+
+    private boolean addMetaToBannerDefault(BannerDefault bannerDefault, SacRequestHeader header, String tenantId, String deviceModelCd) {
+        List<String> episodeIds = getEpisodeIdsByChannelId(tenantId, bannerDefault.getBnrInfo());
+        for(String episodeId : episodeIds) {
+            if ( getProdProvisioning(tenantId, episodeId, deviceModelCd) > 0 ) {
+
+                // 메타정보 조회
+                MetaInfo metaInfo = this.getMetaInfo(header, episodeId, bannerDefault.getTopMenuId());
+
+                if (metaInfo != null) {
+                    // 쇼핑상품은 카탈로그ID, 일반상품은 채널상품ID를 내려준다.
+                    if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(bannerDefault.getTopMenuId())) {
+                        bannerDefault.setBnrInfo(metaInfo.getCatalogId());
+                    } else {
+                        bannerDefault.setBnrInfo(metaInfo.getProdId());
+                    }
+                    bannerDefault.setTopMenuId(metaInfo.getTopMenuId());
+                    bannerDefault.setTopMenuNm(metaInfo.getTopMenuNm());
+                    bannerDefault.setMenuId(metaInfo.getMenuId());
+                    bannerDefault.setMenuNm(metaInfo.getMenuNm());
+                    bannerDefault.setMetaClsfCd(metaInfo.getMetaClsfCd());
+                    bannerDefault.setSampleUrl(metaInfo.getScSamplUrl());
+                    bannerDefault.setSampleUrlHq(metaInfo.getSamplUrl());
+                    bannerDefault.setProdCaseCd(metaInfo.getProdCaseCd());
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private BannerDefault getBnrMapgByProdId(SacRequestHeader header, String prodId, String contentsTypeCd) {
+        if (StringUtils.isBlank(prodId)) return null;
+
+        String tenantId = header.getTenantHeader().getTenantId();
+        String langCd = header.getTenantHeader().getLangCd();
+        String deviceModelCd = header.getDeviceHeader().getModel();
+        String topMenuId = DisplayConstants.DP_WEBTOON_TOP_MENU_ID;
+
+        BannerProdMapg bannerProdMapg = this.getBannerProdMapg(tenantId, prodId, contentsTypeCd, topMenuId);
+        if ( bannerProdMapg == null ) return null;
+
+        BannerDefault bannerDefault = this.getBanner(bannerProdMapg, langCd);
+        if ( bannerDefault == null ) return null;
+
+
+        String bnrType = bannerDefault.getBnrInfoTypeCd();
+        if (DisplayConstants.DP_BANNER_PRODUCT_CD.equals(bnrType)) {
+            // 웹툰 배너 매핑 배너에 등록된 상품은 채널.
+            if ( !this.addMetaToBannerDefault(bannerDefault, header, tenantId, deviceModelCd)) return null;
+        }
+
+        return bannerDefault;
+    }
+
+    @Override
+    public BannerSacRes searchBannerProdMapgList(SacRequestHeader header, BannerProdMapgSacReq bannerProdMapgReq) {
+
+        String tenantId = header.getTenantHeader().getTenantId();
+        String episodeId = bannerProdMapgReq.getEpisodeId();
+
+        BannerDefault bannerDefault;
+        List<BannerDefault> resultList = new ArrayList<BannerDefault>(); // 결과 리스트
+
+        bannerDefault = this.getBnrMapgByProdId(header, episodeId, DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+        if (bannerDefault == null) {
+            // episodeId에 해당하는 배너가 등록되어 있지 않으면 channelId로 다시 조회.
+            String channelId = this.getChannelIdByEpisodeId(tenantId, episodeId);
+            bannerDefault = this.getBnrMapgByProdId(header, channelId, DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+        }
+
+        if (bannerDefault != null) resultList.add(bannerDefault);
+
+        return this.generateResponse(resultList);
+    }
 }

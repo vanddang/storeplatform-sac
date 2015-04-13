@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.banner.controller;
 
+import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerProdMapgSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -47,4 +48,11 @@ public class BannerController {
 
 		return this.bannerService.searchBannerList(header, bannerReq, null);
 	}
+
+    @RequestMapping(value = "/prodmapg/v1", method = RequestMethod.GET)
+    @ResponseBody
+    public BannerSacRes searchBannerProdMapgList(SacRequestHeader header, @Validated BannerProdMapgSacReq bannerProdMapgReq) {
+
+        return this.bannerService.searchBannerProdMapgList(header, bannerProdMapgReq);
+    }
 }
