@@ -15,13 +15,13 @@
               , LA.CONTENTS_TYPE_CD
           FROM (
                 SELECT KA.*
-                  FROM 
+                  FROM
                        (
                         SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD_ALWAYS_YN DESC, JA.EXPO_ORD, JA.EXPO_ORD_SUB) AS RNUM
-                          FROM 
+                          FROM
                                (
                                 SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-                                  FROM 
+                                  FROM
                                        (
                                         SELECT ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY D.LAST_DEPLOY_DT DESC) AS RN
                                              , B.TOP_MENU_ID
@@ -43,7 +43,7 @@
                                                   FROM TB_DP_LIST_PROD
                                                  WHERE TENANT_ID = #{tenantId} /* header param : tenantId */
                                                    AND LIST_ID = #{listId}     /* param : listId */
-                                                   AND EXPO_YN = 'Y'           /* 전시여부 */  
+                                                   AND EXPO_YN = 'Y'           /* 전시여부 */
                                                    AND STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
                                                    AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
                                                )                        A
@@ -73,22 +73,22 @@
                                            AND (CASE WHEN M.VIDEO_DRM_SPRT_YN = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
                                                      ELSE 'SUPPORT' END) = 'SUPPORT' /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
                                            AND M.USE_YN = 'Y'
-                                       <if test='filteredBy == "movie+broadcast"'>                                                    
+                                       <if test='filteredBy == "movie+broadcast"'>
                                            AND B.TOP_MENU_ID IN ('DP17', 'DP18')     /* 탑메뉴ID */
                                        </if>
-                                       <if test='filteredBy == "movie"'>                                                    
+                                       <if test='filteredBy == "movie"'>
                                            AND B.TOP_MENU_ID = 'DP17'                /* 탑메뉴ID */
                                        </if>
-                                       <if test='filteredBy == "broadcast"'>                                                    
+                                       <if test='filteredBy == "broadcast"'>
                                            AND B.TOP_MENU_ID = 'DP18'                /* 탑메뉴ID */
-                                       </if>                                                                           
+                                       </if>
                                        <if test="arrayProdGradeCd != null">
                                            AND D.PROD_GRD_CD IN
                                            <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
                                                #{prodGradeCd}
                                            </foreach>
                                        </if>
-                                       
+
                                        ) IA
                                  WHERE IA.RN = 1
                                ) JA
@@ -96,104 +96,95 @@
                  WHERE KA.RNUM BETWEEN #{offset} AND #{count}
                ) LA
     </select>
-    
+
     <!-- BEST 컨텐츠 상품 조회(ebook, comic) -->
     <select id="selectBestContentsBookList" parameterType="BestContentsSacReq" resultType="ProductBasicInfo">
-        SELECT  /* BestContentsMapper.xml, selectBestContentsBookList, SAC 전시, 2014-02-03 */
-                LA.TOTAL_COUNT
-              , LA.RNUM
-              , LA.TOP_MENU_ID
-              , LA.MENU_ID
-              , LA.PROD_ID
-              , LA.PART_PROD_ID
-              , LA.META_CLSF_CD
-              , LA.EXPO_ORD
-              , LA.CONTENTS_TYPE_CD
-          FROM (
-                SELECT KA.*
-                  FROM 
-                       (
-                        SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD_ALWAYS_YN DESC, JA.EXPO_ORD, JA.EXPO_ORD_SUB) AS RNUM
-                          FROM 
-                               (
-                                SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-                                  FROM 
-                                       (
-                                        SELECT ROW_NUMBER( ) OVER ( PARTITION BY A.PROD_ID
-                                                                        ORDER BY  DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
-                                                                                , L.CHAPTER DESC
-                                                                                , NVL( J.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
-                                                                                , J.LAST_DEPLOY_DT DESC ) AS RN
-                                             , B.TOP_MENU_ID
-                                             , A.MENU_ID
-                                             , A.PROD_ID
-                                             , I.PART_PROD_ID
-                                             , A.EXPO_ORD_ALWAYS_YN
-                                             , A.EXPO_ORD
-                                             , A.EXPO_ORD_SUB
-                                             , D.META_CLSF_CD
-                                             , D.CONTENTS_TYPE_CD
-                                          FROM (SELECT TENANT_ID
-                                                      ,PROD_ID
-                                                      ,MENU_ID
-                                                      ,EXPO_ORD_ALWAYS_YN
-                                                      ,EXPO_ORD
-                                                      ,EXPO_ORD_SUB
-                                                  FROM TB_DP_LIST_PROD
-                                                 WHERE TENANT_ID = #{tenantId} /* header param : tenantId */
-                                                   AND LIST_ID = #{listId}     /* param : listId */
-                                                   AND EXPO_YN = 'Y'           /* 전시여부 */  
-                                                   AND STD_DT  = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
-                                                   AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
-                                               )                        A
-                                             , TB_DP_MENU_CATEGORY      B
-                                             , TB_DP_PROD               D
-                                             , TB_DP_EBOOK_PROD         E
-                                             , TB_DP_TENANT_PROD        G
-                                             , TB_DP_PROD_RSHP          I
-                                             , TB_DP_PROD               J
-                                             , TB_DP_SPRT_DEVICE        K
-                                             , TB_DP_EBOOK_PROD         L
-                                             , TB_CM_DEVICE             M
-                                         WHERE A.MENU_ID = B.MENU_ID
-                                           AND A.PROD_ID = D.PROD_ID
-                                           AND A.PROD_ID = E.PROD_ID
-                                           AND A.PROD_ID = G.PROD_ID
-                                           AND A.TENANT_ID = G.TENANT_ID
-                                           AND A.PROD_ID = I.PROD_ID
-                                           AND I.PART_PROD_ID = J.PROD_ID
-                                           AND I.PART_PROD_ID = K.PROD_ID
-                                           AND I.PART_PROD_ID = L.PROD_ID
-                                           AND K.DEVICE_MODEL_CD = M.DEVICE_MODEL_CD
-                                           AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-                                           AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
-                                           AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
-                                           AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
-                                           AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
-                                           AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
-                                           AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */
-                                           AND (M.DEVICE_MODEL_CD = #{deviceModelCd} OR M.DEVICE_MODEL_CD = 'ANY-PHONE-4MM') /* header param : 단말모델코드 */
-                                           AND M.USE_YN = 'Y'
-                                       <if test='filteredBy == "ebook+comic"'>                                                    
-                                           AND B.TOP_MENU_ID IN ('DP13', 'DP14')     /* 탑메뉴ID */
-                                       </if>
-                                       <if test='filteredBy == "ebook"'>                                                    
-                                           AND B.TOP_MENU_ID = 'DP13'                /* 탑메뉴ID */
-                                       </if>
-                                       <if test='filteredBy == "comic"'>                                                    
-                                           AND B.TOP_MENU_ID = 'DP14'                /* 탑메뉴ID */
-                                       </if>   
-                                       <if test="arrayProdGradeCd != null">
-                                           AND D.PROD_GRD_CD IN
-                                           <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
-                                               #{prodGradeCd}
-                                           </foreach>
-                                       </if>
-                                       ) IA
-                                 WHERE IA.RN = 1
-                               ) JA
-                       ) KA
-                 WHERE KA.RNUM BETWEEN #{offset} AND #{count}
-               ) LA
-    </select>    
+      SELECT  /* BestContentsMapper.xml, selectBestContentsBookList, SAC 전시, 2015-04-13 */
+              LA.total_count
+            , LA.rnum
+            , LA.top_menu_id
+            , LA.menu_id
+            , LA.prod_id
+            , LA.part_prod_id
+            , LA.meta_clsf_cd
+            , LA.expo_ord
+            , LA.contents_type_cd
+      FROM (
+              SELECT  KA.*
+              FROM (
+                      SELECT  JA.*, ROW_NUMBER() OVER(ORDER BY JA.expo_ord_always_yn DESC, JA.expo_ord, JA.expo_ord_sub) AS rnum
+                      FROM (
+                              SELECT  IA.*, COUNT(IA.prod_id) OVER() AS total_count
+                              FROM (
+                                      SELECT ROW_NUMBER() OVER ( PARTITION BY A.prod_id ORDER BY DECODE( L.book_clsf_cd, E.book_clsf_cd, 1, 2 ), L.chapter DESC, NVL( K.use_period_unit_cd, 'PD00310' ) DESC, J.last_deploy_dt DESC ) AS RN
+                                           , B.top_menu_id
+                                           , A.menu_id
+                                           , A.prod_id
+                                           , I.part_prod_id
+                                           , A.expo_ord_always_yn
+                                           , A.expo_ord
+                                           , A.expo_ord_sub
+                                           , D.meta_clsf_cd
+                                           , D.contents_type_cd
+                                      FROM (
+                                             SELECT  tenant_id
+                                                   , prod_id
+                                                   , menu_id
+                                                   , expo_ord_always_yn
+                                                   , expo_ord
+                                                   , expo_ord_sub
+                                             FROM    TB_DP_LIST_PROD
+                                             WHERE   tenant_id = #{tenantId}   /* header param : tenantId */
+                                             AND     list_id   = #{listId}     /* param : listId */
+                                             AND     expo_yn   = 'Y'           /* 전시여부 */
+                                             AND     std_dt    = TO_DATE(#{stdDt}, 'YYYYMMDDHH24MISS') /* 기준일시 */
+                                             AND     SYSDATE BETWEEN expo_start_dt AND expo_end_dt
+                                      )                               A
+                                      JOIN   TB_DP_MENU_CATEGORY      B
+                                             ON( A.menu_id = B.menu_id AND B.use_yn = 'Y' )
+                                      JOIN   TB_DP_PROD               D /* 채널상품 */
+                                             ON( A.prod_id = D.prod_id AND D.contents_type_cd = 'PD002501' )
+                                      JOIN   TB_DP_EBOOK_PROD         E
+                                             ON( A.prod_id = E.prod_id )
+                                      JOIN   TB_DP_TENANT_PROD        G
+                                             ON( A.tenant_id = G.tenant_id AND A.prod_id = G.prod_id AND G.expo_yn = 'Y' )
+                                      JOIN   TB_DP_PROD_RSHP          I
+                                             ON( A.prod_id = I.prod_id AND I.prod_rshp_cd = 'DP010802' ) /* DP010802 : 채널-에피소드 상품 관계 */
+                                      JOIN   TB_DP_PROD               J /* 에피소드상품 */
+                                             ON( I.part_prod_id = J.prod_id AND J.contents_type_cd = 'PD002502' )
+                                      JOIN   TB_DP_USE_POLICY         K /* 에피소드 상품에 대해서만 정책을 가질 수 있음 */
+                                             ON( J.use_policy_id = K.use_policy_id )
+                                      JOIN   TB_DP_EBOOK_PROD         L
+                                             ON( I.PART_PROD_ID = L.PROD_ID )
+                                      WHERE  1 = 1
+                                      AND    D.svc_grp_cd       = 'DP000203' /* DP000203 : 멀티미디어 */
+                                      AND    G.prod_status_cd   = 'PD000403' /* PD000403 : 판매중 */
+                                      AND    EXISTS (
+                                             SELECT  1
+                                             FROM    TB_DP_SPRT_DEVICE  SP1
+                                             JOIN    TB_CM_DEVICE       SP2
+                                                     ON( SP1.device_model_cd = SP2.device_model_cd )
+                                             WHERE   SP1.prod_id = I.part_prod_id
+                                             AND     SP2.device_model_cd IN ( 'ANY-PHONE-4MM', #{deviceModelCd} )
+                                             AND     SP2.use_yn = 'Y'
+                                      )
+                                     <if test='filteredBy == "ebook+comic"'>
+                                         AND B.top_menu_id IN ('DP13', 'DP14')  /* 탑메뉴ID */
+                                     </if>
+                                     <if test='filteredBy == "ebook"'>
+                                         AND B.top_menu_id = 'DP13'             /* 탑메뉴ID */
+                                     </if>
+                                     <if test='filteredBy == "comic"'>
+                                         AND B.top_menu_id = 'DP14'             /* 탑메뉴ID */
+                                     </if>
+                                     <if test="arrayProdGradeCd != null">
+                                         AND D.prod_grd_cd IN <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")"> #{prodGradeCd} </foreach>
+                                     </if>
+                               ) IA
+                               WHERE IA.RN = 1
+                      ) JA
+              ) KA
+              WHERE   KA.RNUM BETWEEN #{offset} AND #{count}
+      ) LA
+    </select>
 </mapper>
