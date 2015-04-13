@@ -1386,11 +1386,22 @@ public class LoginServiceImpl implements LoginService {
 		String tenantId = null;
 		AuthorizeForInAppSacRes res = null;
 
-		UserDownloadInfoRes userDownloadInfoRes = this.mcic.getUserDownloadInfo(req.getDeviceId(), req.getNativeId(),
-				req.getProdId()); // 모상품 prodId 최근 다운로드 정보조회
+		// 모상품 prodId 최근 다운로드 정보조회
+		UserDownloadInfoRes userDownloadInfoRes = this.mcic.getUserDownloadInfo(req.getDeviceId(), req.getProdId());
 
 		if (userDownloadInfoRes == null || StringUtils.isBlank(userDownloadInfoRes.getLatestTenantId())) {
-			tenantId = this.commService.getTenantIdByDeviceTelecom(req.getDeviceTelecom()); // 이통사 정보로 TenantID 부여
+			res = new AuthorizeForInAppSacRes();
+			res.setTrxNo(req.getTrxNo());
+			res.setDeviceId(req.getDeviceId());
+			res.setDeviceTelecom(req.getDeviceTelecom());
+			res.setUserStatus(MemberConstants.INAPP_USER_STATUS_NOT_PURCHASE);
+			res.setUserInfo(new UserInfo());
+			res.setAgreementList(new ArrayList<Agreement>());
+			res.setDeviceInfo(new DeviceInfo());
+			res.setPinInfo(new MarketPinInfo());
+			res.setMbrAuth(new MbrAuth());
+			res.setTstoreEtcInfo(new TstoreEtcInfo());
+			return res;
 		} else {
 			tenantId = userDownloadInfoRes.getLatestTenantId();
 		}

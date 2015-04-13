@@ -318,6 +318,7 @@ public final class MemberConstants {
 	public static final String INAPP_USER_STATUS_USIM_MISMATCH = "US014605"; // USIM 불일치
 	public static final String INAPP_USER_STATUS_PARAM_ERROR = "US014606"; // 파라메터 오류
 	public static final String INAPP_USER_STATUS_SYSTEM_ERROR = "US014607"; // 시스템 연동 오류
+	public static final String INAPP_USER_STATUS_NOT_PURCHASE = "US014608"; // 구매할 수 없는 회원
 
 	/** InApp 회원상태코드 메세지. */
 	public static final String INAPP_USER_STATUS_NORMAL_TEXT = "성공(정상회원)";

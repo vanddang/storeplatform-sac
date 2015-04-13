@@ -204,13 +204,11 @@ public class MemberCommonInternalComponent {
 	 * 
 	 * @param deviceId
 	 *            String
-	 * @param nativeId
-	 *            String
 	 * @param prodId
 	 *            String
 	 * @return UserDownloadInfoRes
 	 */
-	public UserDownloadInfoRes getUserDownloadInfo(String deviceId, String nativeId, String prodId) {
+	public UserDownloadInfoRes getUserDownloadInfo(String deviceId, String prodId) {
 
 		UserDownloadInfoReq req = new UserDownloadInfoReq();
 		req.setMdn(deviceId);
