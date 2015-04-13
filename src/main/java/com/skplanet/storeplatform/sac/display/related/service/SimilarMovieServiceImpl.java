@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.display.related.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class SimilarMovieServiceImpl implements SimilarMovieService {
 	@Override
 	public SimilarMovieSacRes searchSimilarMovieList(SimilarMovieSacReq requestVO, SacRequestHeader header){
 		String tenantId = header.getTenantHeader().getTenantId();
-		String prodId = requestVO.getProdId();
+		String prodId = requestVO.getProductId();
 		String stdDt = getBatchStdDateStringFromDB(tenantId);
 
 		List<SimilarMovieDbResultMap> moviesFromDB = getSimilarMovieListFromDb(tenantId, prodId, stdDt);
@@ -104,6 +105,8 @@ public class SimilarMovieServiceImpl implements SimilarMovieService {
 	 */
 	private SimilarMovieSacRes makeResponseFrom(List<SimilarMovieDbResultMap> moviesFromDB, SimilarMovieSacReq requestVO, SacRequestHeader header) {
 		String[] prodGradeCdArr = toProdGradeCdArr(requestVO.getProdGradeCd());
+		String[] exceptIdArr = toExceptIdArr(requestVO.getExceptId());
+
 		Integer reqCount = requestVO.getCount();
 		String hasNext = "N";
 		SimilarMovieSacRes res = new SimilarMovieSacRes();
@@ -116,7 +119,7 @@ public class SimilarMovieServiceImpl implements SimilarMovieService {
 			String prodId = prodIdWithPoint.split("\\(")[0].trim();
 			logger.debug("add prodId={}",prodId);
 			Product p = makeProductFrom(prodId, header);
-			if(p!=null && onSale(p) && requestedGrade(p,prodGradeCdArr)) {
+			if(p!=null && onSale(p) && requestedGrade(p,prodGradeCdArr) && notInExceptId(prodId,exceptIdArr)) {
 				if(list.size()<reqCount)
 					list.add(p);
 				else {
@@ -129,6 +132,16 @@ public class SimilarMovieServiceImpl implements SimilarMovieService {
 		res.setCount(list.size());
 		res.setHasNext(hasNext);
 		return res;
+	}
+
+	private boolean notInExceptId(String prodId, String[] exceptIdArr) {
+		return !ArrayUtils.contains(exceptIdArr, prodId);
+	}
+
+	private String[] toExceptIdArr(String exceptIdStr) {
+		if (StringUtils.isEmpty(exceptIdStr))
+			return null;
+		return StringUtils.split(exceptIdStr, "+");
 	}
 
 	private boolean requestedGrade(Product p, String[] prodGradeCds) {
