@@ -332,7 +332,7 @@
 
     <!-- (일반회원 사용후기) 기 추천 여부 -->
     <select id="getProdNotiGoodCount" parameterType="ProdNoti" resultType="int">
-      SELECT  /* FeedbackMapper.xml, getProdNotiGoodCount, SAC 기타, 2014-02-04 */
+<!--       SELECT  /* FeedbackMapper.xml, getProdNotiGoodCount, SAC 기타, 2014-02-04 */
               COUNT(*)
         FROM  tb_dp_prod_noti a              /* 상품 후기 */
             , tb_dp_prod_notigood b          /* 상품 후기 선호 */
@@ -345,7 +345,13 @@
          AND  a.prod_id = #{prodId}          /* 상품 ID */
          AND  b.noti_seq = #{notiSeq}        /* 후기 SEQ */
          AND  b.mbr_no = #{mbrNo}            /* 회원 번호 */
-         AND  b.tenant_id = #{tenantId}      /* 테넌트 ID */
+         AND  b.tenant_id = #{tenantId}      /* 테넌트 ID */ -->
+		SELECT  /* FeedbackMapper.xml, getProdNotiGoodCount, SAC 기타, 2014-02-04 */
+		        COUNT(1)
+		  FROM TB_DP_PROD_NOTIGOOD
+		 WHERE TENANT_ID = #{tenantId}
+		   AND NOTI_SEQ = #{notiSeq}
+		   AND MBR_NO = #{mbrNo}
     </select>
     
     <!-- (일반회원 후기) 추천 수 증감처리 -->
@@ -359,7 +365,7 @@
          SET  noti_score = NVL(noti_score, 0) - 1  /* 후기 점수(추천) */
          </if>
             , upd_dt = SYSDATE                     /* 수정 일시 */
-       WHERE  tenant_id = #{tenantId}              /* 테넌트 ID */
+       WHERE  tenant_id in ('S01', 'S02', 'S03')   /* 테넌트 ID */
          AND  noti_seq = #{notiSeq}                /* 후기 SEQ */
     </update>
     
