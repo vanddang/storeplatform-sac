@@ -66,21 +66,51 @@ public class UserDownloadInfoServiceImpl implements UserDownloadInfoService {
         boolean tenantS01 = "Y".equals(v.getTenant1Yn()),
                 tenantParam = "Y".equals(v.getTenant2Yn());
 
-        if(!tenantS01 && !tenantParam)
+//        if(!tenantS01 && !tenantParam)
+//            return null;
+//        else if(!tenantS01)
+//            return new UserDownloadInfoRes(v.getLatestTenantId());
+//        else {
+//            if(Strings.isNullOrEmpty(v.getLatestTenantId())) {
+//                return new UserDownloadInfoRes(param.getTenantId());
+//            }
+//            else {
+//                Set<String> tenantSet = new HashSet<String>(Arrays.asList("S01", param.getTenantId()));
+//                if(tenantSet.contains(v.getLatestTenantId()))
+//                    return new UserDownloadInfoRes(v.getLatestTenantId());
+//                else
+//                    return new UserDownloadInfoRes(param.getTenantId());
+//            }
+//        }
+
+        // == 0: NULL 반환
+        if(!tenantS01 && !tenantParam) {
             return null;
-        else if(!tenantS01)
-            return new UserDownloadInfoRes(v.getLatestTenantId());
-        else {
+        }
+        // == 2: 최근 다운로드 TenantID(이하 LAST-DN-TID) 조회
+        else if (tenantS01 && tenantParam) {
+            // LAST-DN-TID == NULL: IAB-TID 반환
             if(Strings.isNullOrEmpty(v.getLatestTenantId())) {
                 return new UserDownloadInfoRes(param.getTenantId());
-            }
-            else {
-                Set<String> tenantSet = new HashSet<String>(Arrays.asList("S01", param.getTenantId()));
-                if(tenantSet.contains(v.getLatestTenantId()))
+            } else {
+                Set<String> tenantSet = new HashSet<String>(Arrays.asList(TENANT_TSTORE, param.getTenantId()));
+                if(tenantSet.contains(v.getLatestTenantId())) {
+                    // LAST-DN-TID in [IAP-TID, 'S01'] : LAST-DN-TID 반환
                     return new UserDownloadInfoRes(v.getLatestTenantId());
-                else
+                } else {
+                    //LAST-DN-TID not in [IAP-TID, 'S01']: IAP-TID 반환
                     return new UserDownloadInfoRes(param.getTenantId());
+                }
             }
+
+        }
+        // == 1
+        else {
+            //매핑된 상품의 Tenant ID 반환
+            if (tenantS01)
+                return new UserDownloadInfoRes(TENANT_TSTORE);
+            else
+                return new UserDownloadInfoRes(param.getTenantId());
         }
     }
 
