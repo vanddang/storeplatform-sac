@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -139,7 +140,9 @@ public class SellerMbrAmqpSacReq extends CommonInfo {
 
 	private List<Agreement> agreementList;
 
-	public class Multimda {
+	public class Multimda implements Serializable {
+
+		private static final long serialVersionUID = 1L;
 		private String multimdaCd;
 		private String tenantSettRate;
 		private String sellermbrSettRate;
@@ -190,7 +193,9 @@ public class SellerMbrAmqpSacReq extends CommonInfo {
 		}
 	}
 
-	public class Agreement {
+	public class Agreement implements Serializable {
+
+		private static final long serialVersionUID = 1L;
 		/** 약관 동의 코드. */
 		public String clauseAgreementId;
 
