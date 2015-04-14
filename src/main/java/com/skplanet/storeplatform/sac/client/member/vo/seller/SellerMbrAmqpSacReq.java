@@ -140,12 +140,13 @@ public class SellerMbrAmqpSacReq extends CommonInfo {
 
 	private List<Agreement> agreementList;
 
-	public class Multimda implements Serializable {
-
+	public static class Multimda extends CommonInfo{
+		
 		private static final long serialVersionUID = 1L;
-		private String multimdaCd;
-		private String tenantSettRate;
-		private String sellermbrSettRate;
+		public String multimdaCd;
+		public String tenantSettRate;
+		public String sellermbrSettRate;
+
 
 		/**
 		 * @return the multimdaCd
@@ -193,7 +194,7 @@ public class SellerMbrAmqpSacReq extends CommonInfo {
 		}
 	}
 
-	public class Agreement implements Serializable {
+	public static class Agreement extends CommonInfo{
 
 		private static final long serialVersionUID = 1L;
 		/** 약관 동의 코드. */
