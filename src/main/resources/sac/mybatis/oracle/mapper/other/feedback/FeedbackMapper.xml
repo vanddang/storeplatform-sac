@@ -368,7 +368,7 @@
       SELECT  /* FeedbackMapper.xml, getProdNotiCount, SAC 기타, 2014-02-04 */
               COUNT(*) AS total_count      /* 상품 후기 갯수 */
         FROM  tb_dp_prod_noti              /* 상품 후기 */
-       WHERE  tenant_id = #{tenantId}      /* 테넌트 ID */
+       WHERE  tenant_id in ('S01', 'S02', 'S03')      /* 테넌트 ID */
          AND  del_yn = 'N'                 /* 삭제 여부 */
          AND  bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
          AND  spam_yn = 'N'                /* 스펨 여부 */
@@ -392,7 +392,8 @@
     <!-- 사용후기 전체 목록 조회 -->
      <select id="getProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
       SELECT  /* FeedbackMapper.xml, getProdNotiList, SAC 기타, 2014-02-04 */
-              a.noti_seq       /* 후기 SEQ */
+              a.tenant_id      /* 테넌트 ID */
+            , a.noti_seq       /* 후기 SEQ */
             , a.mbr_no         /* 회원 번호 */
             , a.seller_mbr_no  /* 판매자 회원 번호 */
             , DECODE( a.title, NULL, CASE WHEN LENGTH(NVL(a.noti_dscr,0)) <![CDATA[<=]]> 10 THEN a.noti_dscr ELSE (SUBSTR( a.noti_dscr , 0, 10 )||'...') END , a.title ) AS title  /* 제목 */
@@ -472,7 +473,7 @@
                                    , ib.expo_seller_nm      /* 노출 판매자 명 */
                                FROM  tb_dp_prod_noti ia  /* 상품 후기 */    
                                    , tb_dp_prod ib       /* 상품 */
-                              WHERE  ia.tenant_id = #{tenantId}  /* 테넌트 ID */
+                              WHERE  ia.tenant_id in ('S01', 'S02', 'S03')  /* 테넌트 ID */
                                 AND  ib.prod_id = ia.prod_id     /* 상품 ID */
                                 <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
                                 AND  ia.noti_seq = #{notiSeq}    /* 후기 SEQ */
@@ -1013,7 +1014,7 @@
       SELECT  /* FeedbackMapper.xml, getProdNotiCountV2, SAC 기타, 2014-02-04 */
               COUNT(*) AS total_count      /* 상품 후기 갯수 */
         FROM  tb_dp_prod_noti              /* 상품 후기 */
-       WHERE  tenant_id = #{tenantId}      /* 테넌트 ID */
+       WHERE  tenant_id in ('S01', 'S02', 'S03')      /* 테넌트 ID */
          AND  del_yn = 'N'                 /* 삭제 여부 */
          AND  bad_noti_yn IN ( 'N', 'R' )  /* 불량 후기 여부 */
          AND  spam_yn = 'N'                /* 스펨 여부 */
@@ -1124,7 +1125,7 @@
                                    , ib.expo_seller_nm      /* 노출 판매자 명 */
                                FROM  tb_dp_prod_noti ia  /* 상품 후기 */    
                                    , tb_dp_prod ib       /* 상품 */
-                              WHERE  ia.tenant_id = #{tenantId}  /* 테넌트 ID */
+                              WHERE  ia.tenant_id in ('S01', 'S02', 'S03')  /* 테넌트 ID */
                                 AND  ib.prod_id = ia.prod_id     /* 상품 ID */
                                 <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
                                 AND  ia.noti_seq = #{notiSeq}    /* 후기 SEQ */

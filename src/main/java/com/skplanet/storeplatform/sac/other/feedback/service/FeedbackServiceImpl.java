@@ -31,6 +31,9 @@ import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.SellerMbrSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserInfoSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
@@ -529,14 +532,18 @@ public class FeedbackServiceImpl implements FeedbackService {
 			List<Feedback> notiList = new ArrayList<Feedback>();
 			List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 			Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
-			List<String> userKeyList = new ArrayList<String>();
-			Set<String> userKeySet = new HashSet<String>();
+			List<SearchSapUserInfoSac> userKeyList = new ArrayList<SearchSapUserInfoSac>();
+			Set<SearchSapUserInfoSac> userKeySet = new HashSet<SearchSapUserInfoSac>();
 			// 회원/ 판매자 요청 리스트.
 			for (ProdNoti res : getProdnotiList) {
 				SellerMbrSac sellerMbrSac = new SellerMbrSac();
 				sellerMbrSac.setSellerKey(res.getSellerMbrNo());
 				sellerMbrSacSet.add(sellerMbrSac);
-				userKeySet.add(res.getMbrNo());
+
+				SearchSapUserInfoSac searchSapUserInfoSac = new SearchSapUserInfoSac();
+				searchSapUserInfoSac.setTenantId(res.getTenantId());
+				searchSapUserInfoSac.setUserKey(res.getMbrNo());
+				userKeySet.add(searchSapUserInfoSac);
 			}
 			// 판매자 조회 요청.
 			sellerMbrSacList.addAll(sellerMbrSacSet);
@@ -552,23 +559,22 @@ public class FeedbackServiceImpl implements FeedbackService {
 			}
 
 			// 회원 조회 요청.
-			SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
+			SearchSapUserSacReq searchSapUserSacReq = new SearchSapUserSacReq();
 			userKeyList.addAll(userKeySet);
-			searchUserSacReq.setUserKeyList(userKeyList);
-			searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-			SearchUserSacRes searchUserSacRes = null;
+			searchSapUserSacReq.setUserKeyList(userKeyList);
+			SearchSapUserSacRes searchSacUserSacRes = null;
 
 			// 회원 조회.
 			try {
-				searchUserSacRes = this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+				searchSacUserSacRes = this.feedbackRepository.searchSapUserByUserKey(searchSapUserSacReq);
 			} catch (Exception e) {
-				searchUserSacRes = null;
+				searchSacUserSacRes = null;
 			}
 
 			// 응답셋팅.
 			for (ProdNoti res : getProdnotiList) {
 				notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType(), detailInformationSacRes,
-						searchUserSacRes));
+						searchSacUserSacRes));
 			}
 			// 응답.
 			listFeedbackRes.setNotiList(notiList);
@@ -646,12 +652,21 @@ public class FeedbackServiceImpl implements FeedbackService {
 			Set<SellerMbrSac> sellerMbrSacSet = new HashSet<SellerMbrSac>();
 			List<String> userKeyList = new ArrayList<String>();
 			Set<String> userKeySet = new HashSet<String>();
+
+			List<SearchSapUserInfoSac> userSapKeyList = new ArrayList<SearchSapUserInfoSac>();
+			Set<SearchSapUserInfoSac> userSapKeySet = new HashSet<SearchSapUserInfoSac>();
+
 			// 회원/ 판매자 요청 리스트.
 			for (ProdNoti res : getProdnotiList) {
 				SellerMbrSac sellerMbrSac = new SellerMbrSac();
 				sellerMbrSac.setSellerKey(res.getSellerMbrNo());
 				sellerMbrSacSet.add(sellerMbrSac);
 				userKeySet.add(res.getMbrNo());
+
+				SearchSapUserInfoSac searchSapUserInfoSac = new SearchSapUserInfoSac();
+				searchSapUserInfoSac.setTenantId(res.getTenantId());
+				searchSapUserInfoSac.setUserKey(res.getMbrNo());
+				userSapKeySet.add(searchSapUserInfoSac);
 			}
 			// 판매자 조회 요청.
 			sellerMbrSacList.addAll(sellerMbrSacSet);
@@ -667,17 +682,16 @@ public class FeedbackServiceImpl implements FeedbackService {
 			}
 
 			// 회원 조회 요청.
-			SearchUserSacReq searchUserSacReq = new SearchUserSacReq();
-			userKeyList.addAll(userKeySet);
-			searchUserSacReq.setUserKeyList(userKeyList);
-			searchUserSacReq.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-			SearchUserSacRes searchUserSacRes = null;
+			SearchSapUserSacReq searchSapUserSacReq = new SearchSapUserSacReq();
+			userSapKeyList.addAll(userSapKeySet);
+			searchSapUserSacReq.setUserKeyList(userSapKeyList);
+			SearchSapUserSacRes searchSacUserSacRes = null;
 
 			// 회원 조회.
 			try {
-				searchUserSacRes = this.feedbackRepository.searchUserByUserKey(searchUserSacReq);
+				searchSacUserSacRes = this.feedbackRepository.searchSapUserByUserKey(searchSapUserSacReq);
 			} catch (Exception e) {
-				searchUserSacRes = null;
+				searchSacUserSacRes = null;
 			}
 
 			// 회원 부가속성 정보 조회 (프로파일 이미지 "US010912")
@@ -715,7 +729,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 				}
 
 				notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType(), detailInformationSacRes,
-						searchUserSacRes));
+						searchSacUserSacRes));
 			}
 
 			// 응답.
@@ -1183,8 +1197,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	 *            searchUserSacRes
 	 * @return Feedback
 	 */
-	private Feedback setFeedback(ProdNoti prodNoti, String prodType, DetailInformationSacRes detailInformationSacRes,
-			SearchUserSacRes searchUserSacRes) {
+	private Feedback setFeedback(ProdNoti prodNoti, String prodType, DetailInformationSacRes detailInformationSacRes, Object obj) {
 		Feedback feedback = new Feedback();
 		feedback.setNotiSeq(prodNoti.getNotiSeq());
 		feedback.setUserKey(prodNoti.getMbrNo());
@@ -1196,27 +1209,61 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// 기본 등록ID.
 		String regId = this.getMaskRegId(prodNoti.getRegId());
 
-		/**
-		 * REG_ID 정책. 회원 데이타를 기준으로 regId를 세팅한다. (회원 데이타 없을경우 Noti 테이블의 reg_id 참조.)
-		 */
-		if (searchUserSacRes != null) {
-			if (!CollectionUtils.isEmpty(searchUserSacRes.getUserInfo())) {
-				UserInfoSac userInfoSac = searchUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
-				if (userInfoSac != null) {
-					// 사용자가 기기사용자이면.
-					if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+		LOGGER.info("@@@ -->> {}", obj);
 
-						// 회원정보는 있으나 단말정보가 없을경우 방어로직.
-						if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
-							regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
-						} else { // 단말정보가 미존재.
-							regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
+		if (obj instanceof SearchSapUserSacRes) {
+
+			SearchSapUserSacRes searchSapUserSacRes = (SearchSapUserSacRes) obj;
+			/**
+			 * REG_ID 정책. 회원 데이타를 기준으로 regId를 세팅한다. (회원 데이타 없을경우 Noti 테이블의 reg_id 참조.)
+			 */
+			if (searchSapUserSacRes != null) {
+				if (!CollectionUtils.isEmpty(searchSapUserSacRes.getUserInfo())) {
+					UserInfoSac userInfoSac = searchSapUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
+					if (userInfoSac != null) {
+						// 사용자가 기기사용자이면.
+						if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+
+							// 회원정보는 있으나 단말정보가 없을경우 방어로직.
+							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
+								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
+							} else { // 단말정보가 미존재.
+								regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
+							}
+
+						} else {
+
+							regId = this.getMaskRegId(userInfoSac.getUserId());
+
 						}
+					}
+				}
+			}
+		} else {
 
-					} else {
+			SearchUserSacRes searchUserSacRes = (SearchUserSacRes) obj;
+			/**
+			 * REG_ID 정책. 회원 데이타를 기준으로 regId를 세팅한다. (회원 데이타 없을경우 Noti 테이블의 reg_id 참조.)
+			 */
+			if (searchUserSacRes != null) {
+				if (!CollectionUtils.isEmpty(searchUserSacRes.getUserInfo())) {
+					UserInfoSac userInfoSac = searchUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
+					if (userInfoSac != null) {
+						// 사용자가 기기사용자이면.
+						if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-						regId = this.getMaskRegId(userInfoSac.getUserId());
+							// 회원정보는 있으나 단말정보가 없을경우 방어로직.
+							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
+								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
+							} else { // 단말정보가 미존재.
+								regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
+							}
 
+						} else {
+
+							regId = this.getMaskRegId(userInfoSac.getUserId());
+
+						}
 					}
 				}
 			}

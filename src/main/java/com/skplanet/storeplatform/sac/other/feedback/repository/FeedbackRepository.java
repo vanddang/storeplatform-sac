@@ -14,6 +14,8 @@ import java.util.Map;
 
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
@@ -55,6 +57,16 @@ public interface FeedbackRepository {
 	 * @return SearchUserSacRes
 	 */
 	public SearchUserSacRes searchUserByUserKey(SearchUserSacReq searchUserSacReq);
+
+	/**
+	 * <pre>
+	 * 일반 회원정보 조회(SAP).
+	 * </pre>
+	 * 
+	 * @param searchSapUserSacReq
+	 * @return
+	 */
+	public SearchSapUserSacRes searchSapUserByUserKey(SearchSapUserSacReq searchSapUserSacReq);
 
 	/**
 	 * 

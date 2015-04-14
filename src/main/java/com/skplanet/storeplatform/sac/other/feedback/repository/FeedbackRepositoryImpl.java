@@ -23,6 +23,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.seller.sci.SellerSe
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.seller.vo.DetailInformationSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchSapUserSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserExtraInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserSacReq;
@@ -69,6 +71,14 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 		SearchUserSacRes searchUserSacRes = this.searchUserSCI.searchUserByUserKey(searchUserSacReq);
 		LOGGER.info("################ [SAC OTH LocalSCI] SAC Member Start : searchUserSCI.searchUserByUserKey");
 		return searchUserSacRes;
+	}
+
+	@Override
+	public SearchSapUserSacRes searchSapUserByUserKey(SearchSapUserSacReq searchSapUserSacReq) {
+		LOGGER.info("################ [SAC OTH LocalSCI] SAC Member Start : searchUserSCI.searchSapUserByUserKey");
+		SearchSapUserSacRes searchSapUserSacRes = this.searchUserSCI.searchSapUserByUserKey(searchSapUserSacReq);
+		LOGGER.info("################ [SAC OTH LocalSCI] SAC Member Start : searchUserSCI.searchSapUserByUserKey");
+		return searchSapUserSacRes;
 	}
 
 	@Override
