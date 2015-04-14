@@ -1375,6 +1375,47 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 							this.deviceSCI.removeDevice(removeDeviceReq);
 						}
 					}
+				} else {
+
+					/* 사용자 휴대기기 목록 조회 */
+					SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
+					schDeviceListReq.setUserKey(userKey);
+					schDeviceListReq.setIsMainDevice("N");
+					key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+					key.setKeyString(userKey);
+					keySearchList.add(key);
+					schDeviceListReq.setKeySearchList(keySearchList);
+					schDeviceListReq.setCommonRequest(commonRequest);
+					SearchDeviceListResponse schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
+
+					if (schDeviceListRes != null && schDeviceListRes.getUserMbrDevice().size() > 0) {
+						List<String> removeKeyList = new ArrayList<String>();
+						for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
+
+							LOGGER.info("delete deviceId : {}", userMbrDevice.getDeviceID());
+							removeKeyList.add(userMbrDevice.getDeviceKey());
+
+							/* mdn 삭제 MQ 연동 */
+							RemoveDeviceAmqpSacReq mqInfo = new RemoveDeviceAmqpSacReq();
+							try {
+								mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+								mqInfo.setUserKey(userMbrDevice.getUserKey());
+								mqInfo.setDeviceKey(userMbrDevice.getDeviceKey());
+								mqInfo.setDeviceId(userMbrDevice.getDeviceID());
+								mqInfo.setSvcMangNo(userMbrDevice.getSvcMangNum());
+								mqInfo.setChgCaseCd(MemberConstants.GAMECENTER_WORK_CD_MOBILENUMBER_DELETE);
+								this.memberDelDeviceAmqpTemplate.convertAndSend(mqInfo);
+							} catch (AmqpException ex) {
+								LOGGER.info("MQ process fail {}", mqInfo);
+							}
+						}
+
+						RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+						removeDeviceReq.setCommonRequest(commonRequest);
+						removeDeviceReq.setUserKey(userKey);
+						removeDeviceReq.setDeviceKey(removeKeyList);
+						this.deviceSCI.removeDevice(removeDeviceReq);
+					}
 				}
 				result = IdpConstants.IDP_RESPONSE_SUCCESS_CODE;
 			} else {
