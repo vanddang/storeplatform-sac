@@ -685,13 +685,13 @@ public class FeedbackServiceImpl implements FeedbackService {
 			SearchSapUserSacReq searchSapUserSacReq = new SearchSapUserSacReq();
 			userSapKeyList.addAll(userSapKeySet);
 			searchSapUserSacReq.setUserKeyList(userSapKeyList);
-			SearchSapUserSacRes searchSacUserSacRes = null;
+			SearchSapUserSacRes searchSapUserSacRes = null;
 
 			// 회원 조회.
 			try {
-				searchSacUserSacRes = this.feedbackRepository.searchSapUserByUserKey(searchSapUserSacReq);
+				searchSapUserSacRes = this.feedbackRepository.searchSapUserByUserKey(searchSapUserSacReq);
 			} catch (Exception e) {
-				searchSacUserSacRes = null;
+				searchSapUserSacRes = null;
 			}
 
 			// 회원 부가속성 정보 조회 (프로파일 이미지 "US010912")
@@ -729,7 +729,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 				}
 
 				notiList.add(this.setFeedback(res, listFeedbackSacReq.getProdType(), detailInformationSacRes,
-						searchSacUserSacRes));
+						searchSapUserSacRes));
 			}
 
 			// 응답.

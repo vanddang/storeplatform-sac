@@ -519,7 +519,7 @@
     
     <!-- 자기가작성한 사용후기.  -->
     <select id="getMyProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
-      SELECT  /* FeedbackMapper.xml, getProdNotiList, SAC 기타, 2014-02-04 */
+      SELECT  /* FeedbackMapper.xml, getMyProdNotiList, SAC 기타, 2014-02-04 */
               a.noti_seq       /* 후기 SEQ */
             , a.mbr_no         /* 회원 번호 */
             , a.seller_mbr_no  /* 판매자 회원 번호 */
@@ -1051,7 +1051,8 @@
     <!-- 사용후기 전체 목록 조회V2 -->
      <select id="getProdNotiListV2" parameterType="ProdNoti" resultType="ProdNoti">
       SELECT  /* FeedbackMapper.xml, getProdNotiListV2, SAC 기타, 2014-02-04 */
-              a.noti_seq       /* 후기 SEQ */
+              a.tenant_id      /* 테넌트 ID */
+            , a.noti_seq       /* 후기 SEQ */
             , a.mbr_no         /* 회원 번호 */
             , a.seller_mbr_no  /* 판매자 회원 번호 */
             , DECODE( a.title, NULL, CASE WHEN LENGTH(NVL(a.noti_dscr,0)) <![CDATA[<=]]> 10 THEN a.noti_dscr ELSE (SUBSTR( a.noti_dscr , 0, 10 )||'...') END , a.title ) AS title  /* 제목 */
