@@ -880,6 +880,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				paymentSacParam.setAuthKey(payPlanetShop.getAuthKey());
 				// paymentSacParam.setMid(payPlanetShop.getMid());
 				paymentSacParam.setMid(StringUtils.substringBefore(paymentSacParam.getTid(), "_"));
+				this.logger.info("[##PurchaseCancel] TID Prefix {}", paymentSacParam.getMid());
 
 				break;
 			}
