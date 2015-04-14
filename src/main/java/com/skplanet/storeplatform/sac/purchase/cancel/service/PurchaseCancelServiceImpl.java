@@ -878,7 +878,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 						purchaseCancelDetailSacParam.getPrchsSacParam().getPrchsReqPathCd());
 
 				paymentSacParam.setAuthKey(payPlanetShop.getAuthKey());
-				paymentSacParam.setMid(payPlanetShop.getMid());
+				// paymentSacParam.setMid(payPlanetShop.getMid());
+				paymentSacParam.setMid(StringUtils.substringBefore(paymentSacParam.getTid(), "_"));
 
 				break;
 			}
