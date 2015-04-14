@@ -202,15 +202,18 @@ public class MemberCommonInternalComponent {
 	 * 사용자의 최근 다운로드 정보를 조회한다. 조회 대상이 없는 경우 null을 응답한다.
 	 * </pre>
 	 * 
+	 * @param tenantId
+	 *            String
 	 * @param deviceId
 	 *            String
 	 * @param prodId
 	 *            String
 	 * @return UserDownloadInfoRes
 	 */
-	public UserDownloadInfoRes getUserDownloadInfo(String deviceId, String prodId) {
+	public UserDownloadInfoRes getUserDownloadInfo(String tenantId, String deviceId, String prodId) {
 
 		UserDownloadInfoReq req = new UserDownloadInfoReq();
+		req.setTenantId(tenantId);
 		req.setMdn(deviceId);
 		req.setAid(prodId);
 

@@ -1383,11 +1383,12 @@ public class LoginServiceImpl implements LoginService {
 			@Valid @RequestBody AuthorizeForInAppSacReq req) {
 
 		req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회 (989 일 경우만)
-		String tenantId = null;
 		AuthorizeForInAppSacRes res = null;
+		String tenantId = this.commService.getTenantIdByDeviceTelecom(req.getDeviceTelecom()); // 이통사 정보로 TenantID 부여
 
 		// 모상품 prodId 최근 다운로드 정보조회
-		UserDownloadInfoRes userDownloadInfoRes = this.mcic.getUserDownloadInfo(req.getDeviceId(), req.getProdId());
+		UserDownloadInfoRes userDownloadInfoRes = this.mcic.getUserDownloadInfo(tenantId, req.getDeviceId(),
+				req.getProdId());
 
 		if (userDownloadInfoRes == null || StringUtils.isBlank(userDownloadInfoRes.getLatestTenantId())) {
 			res = new AuthorizeForInAppSacRes();
