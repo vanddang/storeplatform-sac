@@ -30,9 +30,9 @@
                       , LP.etc_prop
                 FROM            TB_DP_LIST_PROD         LP
                 LEFT OUTER JOIN TB_DP_PROD              P   ON( LP.prod_id  = P.prod_id      )
-                LEFT OUTER JOIN TB_DP_TENANT_PROD       TP  ON( LP.prod_id  = TP.prod_id     )
+                LEFT OUTER JOIN TB_DP_TENANT_PROD       TP  ON( LP.prod_id  = TP.prod_id  AND LP.tenant_id = TP.tenant_id  )
                 LEFT OUTER JOIN TB_DP_PROD_CATALOG_MAPG PCM ON( LP.prod_id  = PCM.catalog_id )
-                LEFT OUTER JOIN TB_DP_TENANT_PROD       TP2 ON( PCM.prod_id = TP2.prod_id    )
+                LEFT OUTER JOIN TB_DP_TENANT_PROD       TP2 ON( PCM.prod_id = TP2.prod_id AND LP.tenant_id = TP2.tenant_id )
                 LEFT OUTER JOIN TB_DP_MENU_CATEGORY     MC  ON( LP.menu_id  = MC.menu_id     )
                 WHERE   1 = 1
                 AND     LP.tenant_id = #{tenantId}
