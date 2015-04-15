@@ -70,8 +70,8 @@
             ELSE 'N'
             END                 AS PROD_SPRT_YN,
             A.DRM_YN,
-            A.USE_PERIOD_UNIT_CD,
-            A.USE_PERIOD,
+            UP.USE_PERIOD_UNIT_CD,
+            UP.USE_PERIOD,
             AP.AID,
             A.MALL_CD,
             A.SELLER_MBR_NO,
@@ -122,6 +122,7 @@
             , TB_DP_EBOOK_PROD EB
             , TB_DP_VOD_PROD VO
             , TB_DP_MUSIC_PROD MU
+            , TB_DP_USE_POLICY UP
         WHERE A.PROD_ID = B.PROD_ID
           AND B.LANG_CD = #{langCd}
           AND A.PROD_ID = C.PROD_ID
@@ -132,6 +133,7 @@
           AND A.PROD_ID = EB.PROD_ID (+)
           AND A.PROD_ID = VO.PROD_ID (+)
           AND A.PROD_ID = MU.PROD_ID (+)
+          AND A.USE_POLICY_ID = UP.USE_POLICY_ID(+)
           AND A.PROD_ID = #{prodId}
     </select>
     

@@ -349,6 +349,7 @@
                , TB_DP_PROD SB
                , TB_DP_TENANT_PROD_PRICE SC
                , TB_DP_TENANT_PROD SD
+               , TB_DP_USE_POLICY UP
              WHERE SA.PROD_ID = R.PROD_ID
                    AND SA.PROD_RSHP_CD = 'DP010802'
                    AND SA.PART_PROD_ID = SB.PROD_ID
@@ -360,13 +361,15 @@
                    AND SC.PROD_ID = SD.PROD_ID
                    AND SD.TENANT_ID = SC.TENANT_ID
                    AND SD.PROD_STATUS_CD = 'PD000403'
-                   AND SB.USE_PERIOD_UNIT_CD = 'PD00310'
+                   AND SB.USE_POLICY_ID = UP.USE_POLICY_ID(+)
+                   AND UP.POSS_LEND_CLSF_CD = 'DP010601' /* 소장 */
             ) AS EPSD_UNLMT_AMT  /* 에피소드 동일 CID 소장 가격 */
           , (SELECT MAX(SC.PROD_AMT)
              FROM TB_DP_PROD_RSHP SA
                , TB_DP_PROD SB
                , TB_DP_TENANT_PROD_PRICE SC
                , TB_DP_TENANT_PROD SD
+               , TB_DP_USE_POLICY UP
              WHERE SA.PROD_ID = R.PROD_ID
                    AND SA.PROD_RSHP_CD = 'DP010802'
                    AND SA.PART_PROD_ID = SB.PROD_ID
@@ -378,7 +381,8 @@
                    AND SC.PROD_ID = SD.PROD_ID
                    AND SD.TENANT_ID = SC.TENANT_ID
                    AND SD.PROD_STATUS_CD = 'PD000403'
-                   AND SB.USE_PERIOD_UNIT_CD != 'PD00310'
+                   AND SB.USE_POLICY_ID = UP.USE_POLICY_ID(+)
+                   AND UP.POSS_LEND_CLSF_CD = 'DP010602' /* 대여 */
             ) AS EPSD_PERIOD_AMT  /* 에피소드 동일 CID 대여 가격 */
         , R.PROD_CHRG_YN AS PROD_CHRG
         , NVL(R.PATICPERS_CNT, 0) AS PATICPERS_CNT
@@ -400,7 +404,6 @@
             RSHP.PROD_ID
             , RSHP.PART_PROD_ID
             , CPROD.PROD_GRD_CD
-            , CPROD.USE_PERIOD_UNIT_CD
             , CPROD.META_CLSF_CD
             , CPROD.CONTENTS_TYPE_CD
             , CPROD.EXPO_SELLER_EMAIL
@@ -565,6 +568,7 @@
                , TB_DP_PROD SB
                , TB_DP_TENANT_PROD_PRICE SC
                , TB_DP_TENANT_PROD SD
+               , TB_DP_USE_POLICY UP
              WHERE SA.PROD_ID = TB.PROD_ID
                    AND SA.PROD_RSHP_CD = 'DP010802'
                    AND SA.PART_PROD_ID = SB.PROD_ID
@@ -576,13 +580,15 @@
                    AND SC.PROD_ID = SD.PROD_ID
                    AND SD.TENANT_ID = SC.TENANT_ID
                    AND SD.PROD_STATUS_CD = 'PD000403'
-                   AND SB.USE_PERIOD_UNIT_CD = 'PD00310'
+                   AND SB.USE_POLICY_ID = UP.USE_POLICY_ID(+)
+                   AND UP.POSS_LEND_CLSF_CD = 'DP010601' /* 소장 */
             ) AS EPSD_UNLMT_AMT  /* 에피소드 동일 CID 소장 가격 */
           , (SELECT MAX(SC.PROD_AMT)
              FROM TB_DP_PROD_RSHP SA
                , TB_DP_PROD SB
                , TB_DP_TENANT_PROD_PRICE SC
                , TB_DP_TENANT_PROD SD
+               , TB_DP_USE_POLICY UP
              WHERE SA.PROD_ID = TB.PROD_ID
                    AND SA.PROD_RSHP_CD = 'DP010802'
                    AND SA.PART_PROD_ID = SB.PROD_ID
@@ -594,7 +600,8 @@
                    AND SC.PROD_ID = SD.PROD_ID
                    AND SD.TENANT_ID = SC.TENANT_ID
                    AND SD.PROD_STATUS_CD = 'PD000403'
-                   AND SB.USE_PERIOD_UNIT_CD != 'PD00310'
+                   AND SB.USE_POLICY_ID = UP.USE_POLICY_ID(+)
+                   AND UP.POSS_LEND_CLSF_CD = 'DP010602' /* 대여 */
             ) AS EPSD_PERIOD_AMT  /* 에피소드 동일 CID 대여 가격 */
             ]]>
             , TB.SELLER_MBR_NO
@@ -608,7 +615,6 @@
                 CMCD.MENU_NM,
                 CMCD.MENU_DESC,
                 CPROD.PROD_GRD_CD,
-                CPROD.USE_PERIOD_UNIT_CD,
                 CPROD.META_CLSF_CD,
                 CPROD.CONTENTS_TYPE_CD,
                 CPROD.SELLER_MBR_NO,
@@ -668,6 +674,8 @@
                 ON ETPRC.PROD_ID = RSHP.PART_PROD_ID AND ETPRC.TENANT_ID = CTPROD.TENANT_ID
                 INNER JOIN TB_DP_PROD EPROD
                 ON EPROD.PROD_ID = RSHP.PART_PROD_ID
+                LEFT OUTE JOIN TB_DP_USE_POLICY EUPOL
+                ON EPROD.USE_POLICY_ID = EUPOL.USE_POLICY_ID
                 INNER JOIN TB_DP_EBOOK_PROD EEBOOK
                 ON EEBOOK.PROD_ID = RSHP.PART_PROD_ID
                 INNER JOIN TB_DP_MENU_CATEGORY_PROD_MAPG CMCM
@@ -699,7 +707,7 @@
                 AND CMC.USE_YN = 'Y'
             ORDER BY
                 EEBOOK.CHAPTER DESC
-                , NVL(EPROD.USE_PERIOD_UNIT_CD, 'PD00310') DESC
+                , NVL(EUPOL.POSS_LEND_CLSF_CD, 'DP010601') DESC
                 , EPROD.LAST_DEPLOY_DT DESC
         ) TB
         WHERE ROWNUM = 1
@@ -753,7 +761,6 @@
                 CMCD.MENU_NM,
                 CMCD.MENU_DESC,
                 CPROD.PROD_GRD_CD,
-                CPROD.USE_PERIOD_UNIT_CD,
                 CPROD.META_CLSF_CD,
                 CPROD.CONTENTS_TYPE_CD,
                 CEBOOK.STRM_EPSD_CNT,

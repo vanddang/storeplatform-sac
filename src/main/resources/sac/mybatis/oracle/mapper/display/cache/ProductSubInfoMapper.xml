@@ -7,15 +7,17 @@
         FROM (
             SELECT
                 EDP.PROD_ID,
-                EDP.USE_PERIOD,
-                EDP.USE_PERIOD_UNIT_CD,
+                UP.USE_PERIOD,
+                UP.USE_PERIOD_UNIT_CD,
                 NVL(ETPRC.PROD_AMT, 0) AS PROD_AMT,
-                ROW_NUMBER() OVER (PARTITION BY EDP.USE_PERIOD_UNIT_CD, EDP.USE_PERIOD ORDER BY ETPRC.PROD_AMT DESC) RN
+                ROW_NUMBER() OVER (PARTITION BY UP.USE_PERIOD_UNIT_CD, UP.USE_PERIOD ORDER BY ETPRC.PROD_AMT DESC) RN
             FROM TB_DP_PROD EDP
                 INNER JOIN TB_DP_TENANT_PROD ETPP
                     ON ETPP.PROD_ID = EDP.PROD_ID
                 INNER JOIN TB_DP_TENANT_PROD_PRICE ETPRC
                     ON ETPRC.PROD_ID = EDP.PROD_ID AND ETPRC.TENANT_ID = ETPP.TENANT_ID
+                LEFT OUTER JOIN TB_DP_USE_POLICY UP
+                    ON EDP.USE_POLICY_ID = UP.USE_POLICY_ID
             WHERE 1=1
                   AND ETPP.TENANT_ID = #{tenantId, jdbcType=VARCHAR}
                   AND ETPP.PROD_STATUS_CD = 'PD000403'
