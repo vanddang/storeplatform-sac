@@ -95,7 +95,7 @@
       <if test="authMdn !=null">
     , auth_mdn  /* SMS 인증 대상 번호 */
       </if>
-    , auth_type_cd  /* 인증 타입 (CM010901:SMS, CM010902:Email) */
+    , auth_type_cd  /* 인증 타입 (CM010901:SMS, CM010902:Email, CM010903:EmailAuthUrl) */
       <if test="authSign !=null">
     , auth_sign  /* 인증 Signature */
       </if>
@@ -155,7 +155,7 @@
 	    WHERE  tenant_id = #{tenantId}
 	      AND  system_id = #{systemId}
 	      AND  auth_mdn = #{authMdn}
-	      AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */ 
+	      AND  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email, CM010903:EmailAuthUrl) */
 	      AND  auth_compt_yn = 'N'       
 	      AND ( auth_value_create_dt <![CDATA[>=]]> (SYSDATE - (3 / 24 / 60))
 	      AND NVL(auth_cnt, 0) <![CDATA[<]]> #{authCnt} )           /* 3분이내, 3회 실패 */ 
@@ -164,12 +164,13 @@
     
     <!-- 미인증 이메일 코드 존재여부 확인 -->
     <select id="searchEmailAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
-    SELECT  /* MiscellaneousMapper.searchEmailAuthYn, 미인증 이메일 코드 존재여부 확인, 김다슬/인크로스, 2014-01-23 */ 
+    SELECT  /* MiscellaneousMapper.searchEmailAuthYn, 미인증 이메일 코드 존재여부 확인, burkhan_rejoice, 2015-04-15 */ 
             auth_seq
           , auth_value
       FROM  tb_cm_svc_auth
-     WHERE  mbr_no = #{mbrNo} 
+     WHERE  mbr_no = #{mbrNo}
        AND  auth_compt_yn = 'N'
+       AND  auth_type_cd = #{authTypeCd} /* 인증 타입 (CM010901:SMS, CM010902:Email, CM010903:EmailAuthUrl) */
     </select>
     
     
@@ -197,7 +198,7 @@
           , TO_CHAR(auth_value_create_dt, 'yyyyMMdd hh24:mi:ss') AS auth_value_create_dt
           , auth_compt_yn
       FROM  tb_cm_svc_auth
-     WHERE  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email) */
+     WHERE  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email, CM010903:EmailAuthUrl) */
        AND  auth_value = #{authValue}
     </select>
     

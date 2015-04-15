@@ -302,6 +302,8 @@ public final class MemberConstants {
 	public static final String AUTH_TYPE_CD_SMS = "CM010901";
 	/** EMAIL 인증 타입 코드 */
 	public static final String AUTH_TYPE_CD_EMAIL = "CM010902";
+	/** 변경 인증 EMAIL 인증 타입 코드 */
+	public static final String AUTH_TYPE_CD_EMAIL_AUTH_URL = "CM010903";
 
 	/** DCD 가입 코드 */
 	@Deprecated

@@ -6,6 +6,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCapt
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationUrlSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationUrlSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
@@ -21,6 +23,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAddition
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationUrlSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationUrlSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeReq;
@@ -257,4 +261,32 @@ public interface MiscellaneousService {
 	 */
 	public ConfirmPhoneAuthorizationCheckRes confirmPhoneAutorizationCheck(SacRequestHeader header,
 			ConfirmPhoneAuthorizationCheckReq req);
+
+	/**
+	 * <pre>
+	 * 2.3.19. 이메일 인증 URL 생성.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            GetEmailAuthorizationUrlSacReq
+	 * @return GetEmailAuthorizationUrlSacRes
+	 */
+	public GetEmailAuthorizationUrlSacRes getEmailAuthorizationUrl(SacRequestHeader header,
+			GetEmailAuthorizationUrlSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.3.19. 이메일 인증 URL 확인.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ConfirmEmailAuthorizationUrlSacReq
+	 * @return ConfirmEmailAuthorizationUrlSacRes
+	 */
+	public ConfirmEmailAuthorizationUrlSacRes confirmEmailAuthorizationUrl(SacRequestHeader header,
+			ConfirmEmailAuthorizationUrlSacReq req);
 }

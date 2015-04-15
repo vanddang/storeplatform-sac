@@ -18,6 +18,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCapt
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationUrlSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationUrlSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCheckRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
@@ -33,6 +35,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAddition
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationUrlSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationUrlSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeReq;
@@ -465,4 +469,47 @@ public class MiscellaneousController {
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(response));
 		return response;
 	}
+
+	/**
+	 * <pre>
+	 * 2.3.19. 이메일 인증 URL 생성.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            GetEmailAuthorizationUrlSacReq
+	 * @return GetEmailAuthorizationUrlSacRes
+	 */
+	@RequestMapping(value = "/getEmailAuthorizationUrl/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public GetEmailAuthorizationUrlSacRes getEmailAuthorizationUrl(SacRequestHeader header,
+			@RequestBody @Validated GetEmailAuthorizationUrlSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		GetEmailAuthorizationUrlSacRes res = this.service.getEmailAuthorizationUrl(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.3.19. 이메일 인증 URL 확인.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            SacRequestHeader
+	 * @param req
+	 *            ConfirmEmailAuthorizationUrlSacReq
+	 * @return ConfirmEmailAuthorizationUrlSacRes
+	 */
+	@RequestMapping(value = "/confirmEmailAuthorizationUrl/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ConfirmEmailAuthorizationUrlSacRes confirmEmailAuthorizationUrl(SacRequestHeader header,
+			@RequestBody @Validated ConfirmEmailAuthorizationUrlSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		ConfirmEmailAuthorizationUrlSacRes res = this.service.confirmEmailAuthorizationUrl(header, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
 }
