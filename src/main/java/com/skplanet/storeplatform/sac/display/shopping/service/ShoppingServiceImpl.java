@@ -2435,15 +2435,22 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if(StringUtils.isEmpty(header.getDeviceHeader().getModel())){
 			throw new StorePlatformException("SAC_DSP_0029");
 		}
-		
+
 		// 단말 지원정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
 				.getModel());
+		
+		if(supportDevice == null){
+			throw new StorePlatformException("SAC_DSP_0012", header.getDeviceHeader()
+					.getModel());
+		}
+
 		if (!supportDevice.getSclShpgSprtYn().equals("Y")) {
 			this.log.debug("----------------------------------------------------------------");
 			this.log.debug("[shopping] supportDevice is empty!");
 			this.log.debug("----------------------------------------------------------------");
-			result = false;
+			throw new StorePlatformException("SAC_DSP_0012", header.getDeviceHeader()
+					.getModel());
 		}
 		return result;
 	}
