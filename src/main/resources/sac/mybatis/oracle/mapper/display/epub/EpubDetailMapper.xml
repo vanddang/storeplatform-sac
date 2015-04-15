@@ -204,15 +204,17 @@
     <select id="selectEpubSubscription" parameterType="map" resultType="MgzinSubscription">
 		SELECT /* EpubDetailMapper.xml, selectEpubSubscription, SAC : 임근대 , 2014-01-28 */
 			   EPI.MGZIN_SUBSCRIP_CD
-			 , P.USE_PERIOD
-			 , P.USE_PERIOD_UNIT_CD
+			 , UP.USE_PERIOD
+			 , UP.USE_PERIOD_UNIT_CD
 			 , PRC.CHNL_PERIOD_AMT
 			 , PRC.DC_AMT
 		  FROM TB_DP_PROD P
 		    	, TB_DP_EBOOK_PROD EPI
 		    	, TB_DP_TENANT_PROD_PRICE PRC
+		    	, TB_DP_USE_POLICY UP
 		 WHERE P.PROD_ID = EPI.PROD_ID
 		   AND P.PROD_ID = PRC.PROD_ID
+		   AND P.USE_POLICY_ID = UP.USE_POLICY_ID(+)
 		   AND PRC.TENANT_ID = #{tenantId}
 		   AND P.PROD_ID = #{channelId}
 		   AND EPI.CHNL_CLSF_CD = 'DP001401'
@@ -265,20 +267,20 @@
 			                , MAX( T2.PROD_BASE_DESC ) AS PROD_BASE_DESC, MAX( T2.PROD_DTL_DESC ) AS PROD_DTL_DESC, MAX( T2.PROD_INTR_DSCR ) AS PROD_INTR_DSCR
 			                , MAX( T2.ARTIST1_NM ) AS ARTIST1_NM, MAX( T2.ARTIST2_NM ) AS ARTIST2_NM, MAX( T2.ARTIST3_NM ) AS ARTIST3_NM
 			                , MAX( T2.REG_DT ) AS REG_DT, MAX( T2.REG_ID ) AS REG_ID, MAX( T2.LAST_DEPLOY_DT ) AS LAST_DEPLOY_DT
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.PROD_ID ) ) AS STORE_PROD_ID
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.PROD_ID ) ) AS PLAY_PROD_ID
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.PROD_AMT ) ) AS STORE_PROD_AMT
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.PROD_AMT ) ) AS PLAY_PROD_AMT
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.PROD_NET_AMT ) ) AS STORE_PROD_NET_AMT
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.PROD_NET_AMT ) ) AS PLAY_PROD_NET_AMT
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.DRM_YN ) ) AS STORE_DRM_YN
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.DRM_YN ) ) AS PLAY_DRM_YN
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.PROD_STATUS_CD ) ) AS STORE_PROD_STATUS_CD
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.PROD_STATUS_CD ) ) AS PLAY_PROD_STATUS_CD
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.USE_PERIOD ) ) AS STORE_USE_PERIOD
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.USE_PERIOD ) ) AS PLAY_USE_PERIOD
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', T2.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
-			                , MAX( DECODE( T2.USE_PERIOD_UNIT_CD, 'PD00310', NULL, T2.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', T2.PROD_ID ) ) AS STORE_PROD_ID
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.PROD_ID ) ) AS PLAY_PROD_ID
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', T2.PROD_AMT ) ) AS STORE_PROD_AMT
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.PROD_AMT ) ) AS PLAY_PROD_AMT
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', T2.PROD_NET_AMT ) ) AS STORE_PROD_NET_AMT
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.PROD_NET_AMT ) ) AS PLAY_PROD_NET_AMT
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', T2.DRM_YN ) ) AS STORE_DRM_YN
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.DRM_YN ) ) AS PLAY_DRM_YN
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', T2.PROD_STATUS_CD ) ) AS STORE_PROD_STATUS_CD
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.PROD_STATUS_CD ) ) AS PLAY_PROD_STATUS_CD
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', T2.USE_PERIOD ) ) AS STORE_USE_PERIOD
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.USE_PERIOD ) ) AS PLAY_USE_PERIOD
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', T2.USE_PERIOD_UNIT_CD ) ) AS STORE_USE_PERIOD_UNIT_CD
+			                , MAX( DECODE( T2.POSS_LEND_CLSF_CD, 'DP010601', NULL, T2.USE_PERIOD_UNIT_CD ) ) AS PLAY_USE_PERIOD_UNIT_CD
 			            FROM (
 			            SELECT T1.*
 			              FROM (
@@ -293,8 +295,9 @@
 		                      , PD.REG_ID
 		                      , PD.REG_DT
 		                      , PD.LAST_DEPLOY_DT
-		                      , PD.USE_PERIOD
-		                      , PD.USE_PERIOD_UNIT_CD
+		                      , UP.USE_PERIOD
+		                      , UP.USE_PERIOD_UNIT_CD
+		                      , UP.POSS_LEND_CLSF_CD
 		                      , PD.DRM_YN
 		                      , DSC.PROD_NM
 		                      , DSC.PROD_BASE_DESC, DSC.PROD_DTL_DESC, DSC.PROD_INTR_DSCR
@@ -309,6 +312,7 @@
 		                      , ROW_NUMBER() OVER ( PARTITION BY PD.PROD_ID ORDER BY SC.PROD_VER DESC ) AS RN
 		                    FROM TB_DP_PROD_RSHP PR
 		                      , TB_DP_PROD PD
+		                      , TB_DP_USE_POLICY UP
 		                      , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
 		                      , TB_DP_MENU_CATEGORY MC
 		                      , TB_DP_PROD_DESC DSC
@@ -329,6 +333,7 @@
 							  </if>
 							  </if>
 		                      AND TP.PROD_ID = PD.PROD_ID
+		                      AND PD.USE_POLICY_ID = UP.USE_POLICY_ID(+)
 		                      AND PRC.PROD_ID  = PD.PROD_ID AND PRC.TENANT_ID = TP.TENANT_ID
 		                      AND MP.PROD_ID = PD.PROD_ID
 		                      AND TP.TENANT_ID = #{tenantId} 

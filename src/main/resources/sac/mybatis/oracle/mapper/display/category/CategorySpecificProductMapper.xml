@@ -999,7 +999,6 @@
                     <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                       , J.PROD_GRD_CD   -- 에피소드 상품 ID 조회
                     </if>    
-                      , D.USE_PERIOD_UNIT_CD
                       , D.META_CLSF_CD
                       , D.CONTENTS_TYPE_CD
                       , E.STRM_EPSD_CNT

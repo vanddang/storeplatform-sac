@@ -78,16 +78,18 @@
                                 ,ROW_NUMBER( ) OVER ( PARTITION BY Z1.PROD_ID
                                                           ORDER BY CASE WHEN Z2.BOOK_CLSF_CD = Z3.BOOK_CLSF_CD THEN 1 ELSE 2 END
                                                                  , Z3.CHAPTER DESC
-                                                                 , NVL( Z4.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
+                                                                 , NVL( Z5.POSS_LEND_CLSF_CD, 'DP010601' ) DESC
                                                                  , Z4.LAST_DEPLOY_DT DESC ) AS RN
                          FROM   TB_DP_PROD_RSHP  Z1
                                ,TB_DP_EBOOK_PROD Z2 /* 채널 상품 */
                                ,TB_DP_EBOOK_PROD Z3 /* 에피소드 상품 */
                                ,TB_DP_PROD       Z4 /* 에피소드 상품 */
+                               ,TB_DP_USE_POLICY Z5 /* 에피소드 상품 정책 */
                          WHERE  Z1.PROD_ID = Z2.PROD_ID
                          AND    Z1.PROD_RSHP_CD = 'DP010802' /* DP010802 : 채널-에피소드 상품 관계 */
                          AND    Z1.PART_PROD_ID = Z3.PROD_ID
                          AND    Z1.PART_PROD_ID = Z4.PROD_ID
+                         AND    Z4.USE_POLICY_ID = Z5.USE_POLICY_ID(+)
                         ) Z
                  WHERE  Z.PROD_ID = LA.PROD_ID
                  AND    Z.RN = 1

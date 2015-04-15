@@ -460,7 +460,6 @@
                       , C.MENU_NM
                       , C.MENU_DESC
                       , D.PROD_GRD_CD
-                      , D.USE_PERIOD_UNIT_CD
                       , D.META_CLSF_CD
                       , D.CONTENTS_TYPE_CD
                       , E.VOD_TITL_NM
