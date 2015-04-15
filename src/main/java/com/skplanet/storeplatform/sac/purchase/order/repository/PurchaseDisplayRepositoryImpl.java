@@ -23,29 +23,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.IapProductInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PossLendProductInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.UpdateSpecialPriceSoldOutSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.SpecialPriceSoldOutReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.*;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 
 /**
- * 
+ *
  * 구매 시 필요한 전시Part SAC internal I/F repository
- * 
+ *
  * Updated on : 2014. 2. 27. Updated by : 이승택, nTels.
  */
 @Component
@@ -62,6 +48,8 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 	private FreePassInfoSCI freepassInfoSCI;
 	@Autowired
 	private UpdateSpecialPriceSoldOutSCI updateSpecialPriceSoldOutSCI;
+	@Autowired
+	private UpdateSpecialPurchaseCountSCI updateSpecialPurchaseCountSCI;
 
 	/**
 	 * 
@@ -306,6 +294,44 @@ public class PurchaseDisplayRepositoryImpl implements PurchaseDisplayRepository 
 			this.updateSpecialPriceSoldOutSCI.updateSpecialPriceSoldOut(specialPriceSoldOutReq);
 		} catch (Exception e) {
 			this.logger.info("PRCHS,ORDER,SAC,DISP,SOLDOUT,RES,ERROR,{}", e); // throw 는 하지 않음
+		}
+	}
+
+	/**
+	 * @param tenentId
+	 *            테넌트ID
+	 * @param purchaseId
+	 *            구매ID
+	 * @param productId
+	 *            상품ID
+	 * @param purchaseStatusCd
+	 *            구매상태코드
+	 * @param purchaseCount
+	 *            구매건수
+	 * @param purchaseDate
+	 *            구매일시
+	 * @param purchaseCancelDate
+	 *            구매취소 일시
+	 */
+	@Override
+	public void updateSpecialPurchaseCount(String tenentId, String purchaseId, String productId,
+			String purchaseStatusCd, Integer purchaseCount, String purchaseDate, String purchaseCancelDate) {
+
+		SpecialPurchaseCountSacReq specialPurchaseCountSacReq = new SpecialPurchaseCountSacReq();
+		specialPurchaseCountSacReq.setTenantId(tenentId);
+		specialPurchaseCountSacReq.setPurchaseId(purchaseId);
+		specialPurchaseCountSacReq.setProductId(productId);
+		specialPurchaseCountSacReq.setPurchaseStatusCd(purchaseStatusCd);
+		specialPurchaseCountSacReq.setPurchaseCount(purchaseCount);
+		specialPurchaseCountSacReq.setPurchaseDate(purchaseDate);
+		specialPurchaseCountSacReq.setPurchaseCancelDate(purchaseCancelDate);
+
+		this.logger.info("PRCHS,ORDER,SAC,DISP,SPECIALCNT,REQ,ONLY,{}",
+				ReflectionToStringBuilder.toString(specialPurchaseCountSacReq, ToStringStyle.SHORT_PREFIX_STYLE));
+		try {
+			this.updateSpecialPurchaseCountSCI.updateSpecialPurchaseCount(specialPurchaseCountSacReq);
+		} catch (Exception e) {
+			this.logger.info("PRCHS,ORDER,SAC,DISP,SPECIALCNT,RES,ERROR,{}", e); // throw 는 하지 않음
 		}
 	}
 }

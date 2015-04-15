@@ -41,6 +41,7 @@ import com.skplanet.storeplatform.purchase.client.membership.sci.MembershipReser
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreateSapNotiScReq;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
@@ -55,17 +56,12 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.Coupo
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInReq;
 import com.skplanet.storeplatform.sac.client.internal.purchase.shopping.vo.CouponUseStatusSacInRes;
 import com.skplanet.storeplatform.sac.purchase.cancel.repository.PurchaseCancelRepository;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacResult;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacResult;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.*;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
 
 /**
@@ -113,6 +109,9 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 	@Autowired
 	private PurchaseOrderSCI purchaseOrderSCI;
+
+	@Autowired
+	private PurchaseDisplayRepository purchaseDisplayRepository;
 
 	@Override
 	public PurchaseCancelSacResult cancelPurchaseList(PurchaseCancelSacParam purchaseCancelSacParam) {
@@ -186,6 +185,15 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 			if (StringUtils.equals("SAC_PUR_0000", purchaseCancelDetailSacResult.getResultCd())) {
 				successCnt++;
+
+				// 쇼핑 특가 상품의 경우 취소 시 실시간 반영
+				PrchsDtlSacParam prchsDtlSacParam = purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0);
+				if (StringUtil.isNotBlank(prchsDtlSacParam.getSpecialSaleCouponId())) {
+					this.purchaseDisplayRepository.updateSpecialPurchaseCount(prchsDtlSacParam.getTenantId(),
+							prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getProdId(),
+							prchsDtlSacParam.getStatusCd(), -prchsDtlSacParam.getProdQty(),
+							prchsDtlSacParam.getPrchsDt(), prchsDtlSacParam.getCancelDt());
+				}
 			} else {
 				failCnt++;
 			}
@@ -193,7 +201,6 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			prchsCancelList.add(purchaseCancelDetailSacResult);
 
 		}
-
 		purchaseCancelSacResult.setTotCnt(totCnt);
 		purchaseCancelSacResult.setSuccessCnt(successCnt);
 		purchaseCancelSacResult.setFailCnt(failCnt);

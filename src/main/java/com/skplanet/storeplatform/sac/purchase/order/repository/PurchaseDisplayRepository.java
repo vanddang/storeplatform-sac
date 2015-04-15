@@ -111,4 +111,25 @@ public interface PurchaseDisplayRepository {
 	 *            품절상태로 등록할 쇼핑특가상품ID
 	 */
 	public void updateSpecialPriceSoldOut(String tenantId, String prodId);
+
+	/**
+	 * 실시간으로 구매 및 구매 취소시에 쇼핑 특가 상품에 대한 구매수를 업데이트 한다.
+	 *
+	 * @param tenentId
+	 *            테넌트ID
+	 * @param purchaseId
+	 *            구매ID
+	 * @param productId
+	 *            상품ID
+	 * @param purchaseStatusCd
+	 *            구매상태 코드
+	 * @param purchaseCount
+	 *            업데이트할 구매건수
+	 * @param purchaseDate
+	 *            구매 일시
+	 * @param purchaseCancelDate
+	 *            구매취소 일시
+	 */
+	public void updateSpecialPurchaseCount(String tenentId, String purchaseId, String productId,
+			String purchaseStatusCd, Integer purchaseCount, String purchaseDate, String purchaseCancelDate);
 }
