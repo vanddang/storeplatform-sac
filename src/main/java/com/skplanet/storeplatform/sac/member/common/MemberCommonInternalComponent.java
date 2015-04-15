@@ -222,7 +222,8 @@ public class MemberCommonInternalComponent {
 		if (res == null) {
 			LOGGER.info("{} getUserDownloadInfo Response : {}", deviceId, res);
 		} else {
-			LOGGER.info("{} getUserDownloadInfo Response : {}", deviceId, ConvertMapperUtils.convertObjectToJson(res));
+			LOGGER.info("{} getUserDownloadInfo Response : {}", deviceId,
+					ConvertMapperUtils.defaultConvertObjectToJson(res));
 		}
 
 		return res;
