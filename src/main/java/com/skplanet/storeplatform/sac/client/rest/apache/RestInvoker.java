@@ -13,8 +13,8 @@ public class RestInvoker {
 
 	static {
 		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();		 
-		cm.setMaxTotal(200); // connections in total 
-		cm.setDefaultMaxPerRoute(200); // concurrent connections per given route
+		cm.setMaxTotal(400); // connections in total 
+		cm.setDefaultMaxPerRoute(400); // concurrent connections per given route
 		
 		RequestConfig config = RequestConfig.custom()
 				.setSocketTimeout(20 * 1000) // socket timeout = 20sec
