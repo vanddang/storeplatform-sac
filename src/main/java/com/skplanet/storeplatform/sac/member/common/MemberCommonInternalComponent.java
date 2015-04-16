@@ -215,7 +215,7 @@ public class MemberCommonInternalComponent {
 		UserDownloadInfoReq req = new UserDownloadInfoReq();
 		req.setTenantId(tenantId);
 		req.setMdn(deviceId);
-		req.setAid(prodId);
+		req.setPartProdId(prodId);
 
 		LOGGER.info("{} getUserDownloadInfo Request : {}", deviceId, ConvertMapperUtils.convertObjectToJson(req));
 		UserDownloadInfoRes res = this.userDownloadInfoSCI.getUserDownloadInfo(req);
