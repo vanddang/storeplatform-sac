@@ -1377,6 +1377,11 @@ public class IdpProvisionServiceImpl implements IdpProvisionService {
 					}
 				} else {
 
+					// user_phone이 빈값으로 내려온 경우 기존IDP계정/통합계정에 MDN이 모두 삭제 된 것으로 판단하여 휴대기기 삭제처리.
+					// ex) AAA 아이디, 111MDN 등록되어 있을 때 , BBB계정에 111MDN 등록시 AAA계정정보로 user_phone이 빈값이 내려옴.
+					// 휴대기기 등록시 AAA아이디의 111MDN은 invalid 처리를 하기 때문에 정상적인 경우라면 휴대기기 삭제처리할 MDN이 없어서 아무 처리도 안하게 됨.
+					// 단순 보청처리용으로 추가되었음.
+
 					/* 사용자 휴대기기 목록 조회 */
 					SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
 					schDeviceListReq.setUserKey(userKey);
