@@ -418,7 +418,7 @@
             , ( CASE WHEN ( 
                            SELECT  COUNT(*)                   /* 상품 후기 선호 갯수 */
                              FROM  tb_dp_prod_notigood l      /* 상품 후기 선호 */
-                            WHERE  l.tenant_id = a.tenant_id  /* 테넌트 ID */
+                            WHERE  l.tenant_id in ('S01', 'S02', 'S03') /* 테넌트 ID */
                               AND  l.mbr_no = #{mbrNo}        /* 회원 번호 */
                               AND  l.noti_seq = a.noti_seq    /* 후기 SEQ */
                            ) > 0 THEN 'Y'                     /* 선호 갯수가 0보다 큰것 */
@@ -537,7 +537,7 @@
             , ( CASE WHEN ( 
                            SELECT  COUNT(*)                   /* 상품 후기 선호 갯수 */
                              FROM  tb_dp_prod_notigood l      /* 상품 후기 선호 */
-                            WHERE  l.tenant_id = a.tenant_id  /* 테넌트 ID */
+                            WHERE  l.tenant_id in ('S01', 'S02', 'S03') /* 테넌트 ID */
                               AND  l.mbr_no = #{mbrNo}        /* 회원 번호 */
                               AND  l.noti_seq = a.noti_seq    /* 후기 SEQ */
                           ) > 0 THEN 'Y'                      /* 후기 선호 갯수가 0보다 큰것 */
@@ -1071,7 +1071,7 @@
             , ( CASE WHEN ( 
                            SELECT  COUNT(*)                   /* 상품 후기 선호 갯수 */
                              FROM  tb_dp_prod_notigood l      /* 상품 후기 선호 */
-                            WHERE  l.tenant_id = a.tenant_id  /* 테넌트 ID */
+                            WHERE  l.tenant_id in ('S01', 'S02', 'S03') /* 테넌트 ID */
                               AND  l.mbr_no = #{mbrNo}        /* 회원 번호 */
                               AND  l.noti_seq = a.noti_seq    /* 후기 SEQ */
                            ) > 0 THEN 'Y'                     /* 선호 갯수가 0보다 큰것 */
