@@ -140,6 +140,10 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
                 identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
                         productBasicInfo.getFirstProdId());
                 identifierList.add(identifier);
+                identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONNECT_IDENTIFIER_CD,
+                        productBasicInfo.getConnedtedProdId());
+                identifierList.add(identifier);
+             
                 date.setType("week/serially");
                 date.setText(productBasicInfo.getSeriallyWkdy());
 
