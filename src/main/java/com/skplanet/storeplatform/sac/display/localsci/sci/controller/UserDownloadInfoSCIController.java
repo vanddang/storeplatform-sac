@@ -35,6 +35,6 @@ public class UserDownloadInfoSCIController implements UserDownloadInfoSCI {
         if(req == null)
             throw new IllegalArgumentException();
 
-        return userDownloadInfoService.getUserDownloadInfo(new GetUserDownloadInfoParam(req.getMdn(), req.getAid(), req.getTenantId()));
+        return userDownloadInfoService.getUserDownloadInfo(new GetUserDownloadInfoParam(req.getMdn(), req.getPartProdId(), req.getTenantId()));
     }
 }

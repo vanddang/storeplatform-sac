@@ -2,7 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="UserDownloadInfo">
 
-    <!-- 상품 군 조회 -->
+    <select id="getAidByPartProdId" parameterType="map" resultType="String">
+        select ap.AID
+        from TB_DP_PROD_RSHP rs
+          inner join TB_DP_APP_PROD ap
+            on ap.prod_id = rs.prod_id
+        where 1=1
+          and rs.PROD_RSHP_CD = #{prodRshpCd}
+          and rs.part_prod_id = #{partProdId}
+    </select>
     <select id="getRawUserDownloadInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.localsci.sci.service.UserDownloadInfoServiceImpl$RawUserDownloadInfo">
         select
             NVL(MAX(TENANT1_YN), 'N') AS TENANT1_YN,

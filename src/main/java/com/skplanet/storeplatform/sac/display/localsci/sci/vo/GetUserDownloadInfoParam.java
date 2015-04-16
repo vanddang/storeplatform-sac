@@ -11,18 +11,18 @@ package com.skplanet.storeplatform.sac.display.localsci.sci.vo;
 
 /**
  * <p>
- * DESC
+ * GetUserDownloadInfoParam
  * </p>
  * Updated on : 2015. 03. 16 Updated by : 정희원, SK 플래닛.
  */
 public class GetUserDownloadInfoParam {
     private String mdn;
-    private String aid;
+    private String partProdId;
     private String tenantId;
 
-    public GetUserDownloadInfoParam(String mdn, String aid, String tenantId) {
+    public GetUserDownloadInfoParam(String mdn, String partProdId, String tenantId) {
         this.mdn = mdn;
-        this.aid = aid;
+        this.partProdId = partProdId;
         this.tenantId = tenantId;
     }
 
@@ -30,11 +30,11 @@ public class GetUserDownloadInfoParam {
         return mdn;
     }
 
-    public String getAid() {
-        return aid;
-    }
-
     public String getTenantId() {
         return tenantId;
+    }
+
+    public String getPartProdId() {
+        return partProdId;
     }
 }

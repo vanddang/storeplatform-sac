@@ -10,9 +10,11 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
 import com.google.common.base.Strings;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UserDownloadInfoRes;
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.localsci.sci.vo.GetUserDownloadInfoParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,17 +39,22 @@ public class UserDownloadInfoServiceImpl implements UserDownloadInfoService {
     @Override
     public UserDownloadInfoRes getUserDownloadInfo(GetUserDownloadInfoParam param) {
         Map<String, Object> req = new HashMap<String, Object>();
-        if (Strings.isNullOrEmpty(param.getMdn()) || Strings.isNullOrEmpty(param.getAid()) || Strings.isNullOrEmpty(param.getTenantId()))
-            throw new IllegalArgumentException("mdn, aid, tenantId는 필수값입니다.");
+        if (Strings.isNullOrEmpty(param.getMdn()) || Strings.isNullOrEmpty(param.getPartProdId()) || Strings.isNullOrEmpty(param.getTenantId()))
+            throw new IllegalArgumentException("mdn, prodId, tenantId는 필수값입니다.");
 
-        String key = DisplayCryptUtils.hashMdnAidKey(param.getMdn(), param.getAid());
+        // 자상품ID로 모상품ID를 조회한다
+        String aid = getAidByPartProdId(param.getPartProdId());
+        if(aid == null)
+            throw new StorePlatformException("SAC_DSP_0005", param.getPartProdId());
+
+        String key = DisplayCryptUtils.hashMdnAidKey(param.getMdn(), aid);
         if(Strings.isNullOrEmpty(key))
             throw new IllegalStateException();
 
         req.put("tenant1", TENANT_TSTORE);
         req.put("tenant2", param.getTenantId());
         req.put("mdnaidKey", key);
-        req.put("aid", param.getAid());
+        req.put("aid", aid);
 
         RawUserDownloadInfo v = commonDAO.queryForObject("UserDownloadInfo.getRawUserDownloadInfo", req, RawUserDownloadInfo.class);
 
@@ -112,6 +119,15 @@ public class UserDownloadInfoServiceImpl implements UserDownloadInfoService {
             else
                 return new UserDownloadInfoRes(param.getTenantId());
         }
+    }
+
+    private String getAidByPartProdId(String partProdId) {
+        Map<String, Object> req = new HashMap<String, Object>();
+
+        req.put("prodRshpCd", DisplayConstants.DP_PARENT_CHILD_RELATIONSHIP_CD);
+        req.put("partProdId", partProdId);
+
+        return commonDAO.queryForObject("UserDownloadInfo.getAidByPartProdId", req, String.class);
     }
 
     public static class RawUserDownloadInfo {
