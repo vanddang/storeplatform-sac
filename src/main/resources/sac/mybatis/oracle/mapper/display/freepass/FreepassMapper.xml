@@ -48,6 +48,7 @@
 					AND TP.TENANT_ID = PR.TENANT_ID
 					AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
 					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+					AND PD.SVC_GRP_CD  ='DP000207'
 			    	AND EXISTS ( SELECT /*+ index(SP PK_DP_SPRT_DEVICE) */ SP.PROD_ID 
 			    	               FROM TB_DP_SPRT_DEVICE SP 
 			    	              WHERE SP.PROD_ID=PD.PROD_ID 
@@ -582,6 +583,7 @@
                         		ELSE 'Y' END
     		        		ELSE 'Y' END
 			          )
+			        AND PD.SVC_GRP_CD  ='DP000207'
 			    <if test='prodStatusCd != null and prodStatusCd != ""'>
       		AND TP.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
       		</if>
