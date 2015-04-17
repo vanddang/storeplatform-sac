@@ -3292,6 +3292,8 @@ public class IdpServiceImpl implements IdpService {
 				} else {
 					// 타사이트 이용동의 Rx시 ONEID 테이블 정보 저장 (2015-04-16)
 					try {
+						LOGGER.info("RXUpdateAgreeUserIDP, 가입사이트 코드 : {}, 타사이트 이용동의(Tstore제외) : [join_sst_list={}]",
+								joinSstCode, joinSiteTotalList);
 						// Tstore 회원이면서 타사이트 이용동의시 UserKey 조회
 						SearchUserRequest searchUserRequest = new SearchUserRequest();
 						searchUserRequest.setCommonRequest(commonRequest);
