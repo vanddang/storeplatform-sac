@@ -276,4 +276,16 @@ public interface PurchaseCancelRepository {
 	 */
 	MembershipReserve getMembershipReserve(PrchsSacParam prchsSacParam);
 
+	/**
+	 * <pre>
+	 * 특가쿠폰 사용 여부.
+	 * </pre>
+	 *
+	 * @param tenantId
+	 *            테넌트 ID
+	 * @param prchsId
+	 *            구매 ID
+	 * @return 특가쿠폰 사용 여부
+	 */
+	public boolean useSpecialCoupon(String tenantId, String prchsId);
 }

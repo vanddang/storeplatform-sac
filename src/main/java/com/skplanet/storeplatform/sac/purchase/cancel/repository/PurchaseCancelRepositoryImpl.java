@@ -1040,4 +1040,24 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 		return this.membershipReserveSCI.getSaveInfo(membershipReserveReq);
 	}
+
+	/**
+	 * <pre>
+	 * 특가쿠폰 사용 여부.
+	 * </pre>
+	 *
+	 * @param tenantId
+	 *            테넌트 ID
+	 * @param prchsId
+	 *            구매 ID
+	 * @return 특가쿠폰 사용 여부
+	 */
+	@Override
+	public boolean useSpecialCoupon(String tenantId, String prchsId) {
+		PurchaseScReq req = new PurchaseScReq();
+		req.setTenantId(tenantId);
+		req.setPrchsId(prchsId);
+
+		return this.purchaseCancelSCI.useSpecialCoupon(req);
+	}
 }

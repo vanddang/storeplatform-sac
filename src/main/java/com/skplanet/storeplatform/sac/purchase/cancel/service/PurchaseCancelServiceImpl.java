@@ -188,7 +188,8 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 
 				// 쇼핑 특가 상품의 경우 취소 시 실시간 반영
 				PrchsDtlSacParam prchsDtlSacParam = purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0);
-				if (StringUtil.isNotBlank(prchsDtlSacParam.getSpecialSaleCouponId())) {
+				// - 특가상품 여부 체크
+				if (purchaseCancelRepository.useSpecialCoupon(prchsDtlSacParam.getTenantId(), prchsDtlSacParam.getPrchsId())) {
 					this.purchaseDisplayRepository.updateSpecialPurchaseCount(prchsDtlSacParam.getTenantId(),
 							prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getProdId(),
 							prchsDtlSacParam.getStatusCd(), -prchsDtlSacParam.getProdQty(),
