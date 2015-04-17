@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.Charset;
@@ -118,8 +119,11 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         req.put("prodId", prodId);
         req.put("tenantId", tenantId);
 
-        Integer updCnt = commonDAO.update("Download.updateUserDownloadInfo", req);
-        if(updCnt == null || updCnt == 0)
-            commonDAO.update("Download.insertUserDownloadInfo", req);
+        try {
+            commonDAO.update("Download.mergeUserDownloadInfo", req);
+        }
+        catch (DuplicateKeyException e) {
+            logger.error("", e);
+        }
     }
 }
