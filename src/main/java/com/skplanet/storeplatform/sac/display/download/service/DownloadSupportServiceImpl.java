@@ -118,6 +118,8 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
         req.put("prodId", prodId);
         req.put("tenantId", tenantId);
 
-        commonDAO.update("Download.updateUserDownloadInfo", req);
+        Integer updCnt = commonDAO.update("Download.updateUserDownloadInfo", req);
+        if(updCnt == null || updCnt == 0)
+            commonDAO.update("Download.insertUserDownloadInfo", req);
     }
 }

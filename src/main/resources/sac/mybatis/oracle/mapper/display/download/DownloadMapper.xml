@@ -1176,14 +1176,30 @@
 		     AND  b.part_prod_id = #{prodId} /* 상품ID */
     </select>
 
-    <update id="updateUserDownloadInfo" parameterType="map">
+    <update id="mergeUserDownloadInfo" parameterType="map">
         MERGE INTO TB_DP_USER_DWLD UD
           USING DUAL
             ON (UD.MDNAID_KEY = #{mdnaidKey} and UD.AID = #{aid})
           WHEN MATCHED THEN
-            UPDATE SET LATEST_DWLD_DT = sysdate
+            UPDATE SET LATEST_DWLD_DT = sysdate, TENANT_ID = #{tenantId}
           WHEN NOT MATCHED THEN
             INSERT VALUES (#{mdnaidKey}, #{aid}, #{prodId}, #{tenantId}, sysdate, sysdate)
     </update>
+
+    <update id="updateUserDownloadInfo" parameterType="map">
+        UPDATE /* DownloadMapper.updateUserDownloadInfo, 정희원/SKP, 2015-04-17 */
+            TB_DP_USER_DWLD
+        SET
+            TENANT_ID=#{tenantId}, LATEST_DWLD_DT=sysdate
+        WHERE MDNAID_KEY=#{mdnaidKey} AND AID=#{aid}
+    </update>
+
+    <insert id="insertUserDownloadInfo" parameterType="map">
+        INSERT /* DownloadMapper.insertUserDownloadInfo, 정희원/SKP, 2015-04-17 */
+        INTO TB_DP_USER_DWLD
+          (MDNAID_KEY, AID, PROD_ID, TENANT_ID, LATEST_DWLD_DT, REG_DT)
+        VALUES
+          (#{mdnaidKey}, #{aid}, #{prodId}, #{tenantId}, sysdate, sysdate)
+    </insert>
     
 </mapper>
