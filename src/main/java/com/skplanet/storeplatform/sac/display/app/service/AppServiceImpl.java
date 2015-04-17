@@ -23,6 +23,9 @@ import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetail;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetailParam;
 import com.skplanet.storeplatform.sac.display.app.vo.ImageSource;
+import com.skplanet.storeplatform.sac.display.cache.service.ProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStats;
+import com.skplanet.storeplatform.sac.display.cache.vo.ProductStatsParam;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -91,6 +94,9 @@ public class AppServiceImpl implements AppService {
 
     @Autowired
     private MenuInfoService menuInfoService;
+
+    @Autowired
+    private ProductInfoManager productInfoManager;
 
 	@Override
 	public AppDetailRes searchAppDetail(AppDetailParam request) {
@@ -213,10 +219,11 @@ public class AppServiceImpl implements AppService {
         List<Source> sourceList = getImageList(request.getChannelId(), request.getLangCd());
 		product.setSourceList(sourceList);
 
-		Accrual accrual = new Accrual();
-		accrual.setVoterCount(appDetail.getPaticpersCnt());
-		accrual.setDownloadCount(appDetail.getDwldCnt());
-		accrual.setScore(appDetail.getAvgEvluScore());
+        ProductStats stats = productInfoManager.getProductStats(new ProductStatsParam(request.getChannelId()));
+        Accrual accrual = new Accrual();
+		accrual.setVoterCount(stats.getParticipantCount());
+		accrual.setDownloadCount(stats.getPurchaseCount());
+		accrual.setScore(stats.getAverageScore());
 		product.setAccrual(accrual);
 
 		Rights rights = new Rights();
