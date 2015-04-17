@@ -30,6 +30,7 @@ public class IapProductInfo extends CommonInfo {
     private String prodCase;
     private String prodKind;
     private Integer usePeriod;
+    private String mapgProdId;
 
     public String getProdCase() {
         return prodCase;
@@ -109,5 +110,13 @@ public class IapProductInfo extends CommonInfo {
 
     public void setUsePeriod(Integer usePeriod) {
         this.usePeriod = usePeriod;
+    }
+
+    public String getMapgProdId() {
+        return mapgProdId;
+    }
+
+    public void setMapgProdId(String mapgProdId) {
+        this.mapgProdId = mapgProdId;
     }
 }

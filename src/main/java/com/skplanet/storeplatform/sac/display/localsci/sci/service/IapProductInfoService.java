@@ -18,7 +18,6 @@ import com.skplanet.storeplatform.sac.display.localsci.sci.vo.IapProductInfo;
  * Updated on : 2014. 04. 16 Updated by : 정희원, SK 플래닛.
  */
 public interface IapProductInfoService {
-    IapProductInfo getIapProductInfo(String partProdId);
+    IapProductInfo getIapProductInfo(String partProdId, String tenantId);
 
-    String getTenantProdId(String tenantId, String prodId);
 }

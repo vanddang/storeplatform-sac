@@ -14,6 +14,7 @@
             ,(SELECT PROD_ID FROM TB_DP_APP_PROD WHERE AID = PARTAPP.FULL_PROD_ID AND PART_PARENT_CLSF_CD='PD012301') AS FULL_PROD_ID
             ,MCM.MENU_ID
             ,PARTAPP.USE_PERIOD
+            ,TP.MAPG_PROD_ID
         FROM TB_DP_PROD_RSHP RSHP
             INNER JOIN TB_DP_PROD PARTPROD
                 ON PARTPROD.PROD_ID = RSHP.PART_PROD_ID
@@ -21,20 +22,13 @@
                 ON PARTAPP.PROD_ID = PARTPROD.PROD_ID
             INNER JOIN TB_DP_MENU_CATEGORY_PROD_MAPG MCM
                 ON MCM.PROD_ID = RSHP.PROD_ID AND MCM.BASE_YN = 'Y'
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID = RSHP.PROD_ID
         WHERE 1=1
               AND RSHP.PROD_RSHP_CD = 'DP010801'
               AND PARTAPP.PART_PARENT_CLSF_CD = 'PD012302'
-              AND RSHP.PART_PROD_ID = #{partProdId}
-    </select>
-
-    <select id="getSapProdMapg" parameterType="String" resultType="map">
-        SELECT /* IapProductInfo.getSapProdMapg, 정희원/SKP, 2014-11-04 */
-            AID,
-            PROD_ID AS S01_PROD_ID,
-            CASE KT_CHECK_YN WHEN 'Y' THEN KT_PROD_ID ELSE null END AS S02_PROD_ID,
-            CASE LG_CHECK_YN WHEN 'Y' THEN LG_PROD_ID ELSE null END AS S03_PROD_ID
-        FROM TB_DP_SAP_PROD_MAPG
-        WHERE PROD_ID = #{id}
+              AND RSHP.PART_PROD_ID = #{partProdId, jdbcType=VARCHAR}
+              AND TP.TENANT_ID = #{tenantId, jdbcType=VARCHAR}
     </select>
 
 </mapper>

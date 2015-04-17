@@ -41,23 +41,13 @@ public class IapProductInfoSCIController implements IapProductInfoSCI {
 
     @Override
     public IapProductInfoRes getIapProductInfo(@Validated IapProductInfoReq req) {
-        IapProductInfo iapProductInfo = iapProductInfoService.getIapProductInfo(req.getPartProdId());
+        IapProductInfo iapProductInfo = iapProductInfoService.getIapProductInfo(req.getPartProdId(), req.getTenantId());
         if (iapProductInfo == null)
             return null;
 
         IapProductInfoRes res = new IapProductInfoRes();
 
-        /*
-         * SAP 상품 식별자 매핑 정보 조회
-         * SAP Phase 1 기간에만 유지되는 로직임
-         */
-        // ----- Start -----
-        String parentProdId = iapProductInfoService.getTenantProdId(req.getTenantId(), iapProductInfo.getParentProdId());
-        if(parentProdId == null)
-            return null;
-        // -----  End  -----
-
-        res.setParentProdId(parentProdId);
+        res.setParentProdId(iapProductInfo.getMapgProdId());
         res.setPartProdId(iapProductInfo.getPartProdId());
         res.setFullAid(iapProductInfo.getFullAid());
         res.setHasFullProdYn(iapProductInfo.getHasFullProdYn());

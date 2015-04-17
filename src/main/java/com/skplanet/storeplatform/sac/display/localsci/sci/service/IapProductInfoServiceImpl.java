@@ -31,27 +31,12 @@ public class IapProductInfoServiceImpl implements IapProductInfoService {
     @Qualifier("sac")
     private CommonDAO commonDAO;
 
-    private static final String TENANT_TSTORE = "S01";
-
     @Override
-    public IapProductInfo getIapProductInfo(String partProdId) {
+    public IapProductInfo getIapProductInfo(String partProdId, String tenantId) {
         Map<String, Object> req = new HashMap<String, Object>();
         req.put("partProdId", partProdId);
+        req.put("tenantId", tenantId);
         return commonDAO.queryForObject("IapProductInfo.getIapProductInfo", req, IapProductInfo.class);
     }
 
-    @Override
-    public String getTenantProdId(String tenantId, String prodId) {
-
-        Map map = commonDAO.queryForObject("IapProductInfo.getSapProdMapg", prodId, Map.class);
-
-        if (map == null) {
-            if(TENANT_TSTORE.equals(tenantId))
-                return prodId;
-            else
-                return null;
-        }
-
-        return (String)map.get(tenantId + "_PROD_ID");
-    }
 }
