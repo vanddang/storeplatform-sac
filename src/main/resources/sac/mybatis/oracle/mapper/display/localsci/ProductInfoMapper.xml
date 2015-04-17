@@ -541,7 +541,7 @@
 	             , TB_DP_EBOOK_PROD              E
 	             , TB_DP_PROD_DESC               F
 	             , TB_DP_PROD_RSHP               I
-	             , TB_DP_USE_POLICY UP           J
+	             , TB_DP_USE_POLICY              J
 	             , TB_DP_TENANT_PROD             TENANT
 	             , TB_DP_SUB_CONTENTS            SUBCONTENTS 
 	             , TB_DP_EBOOK_PROD              CE
