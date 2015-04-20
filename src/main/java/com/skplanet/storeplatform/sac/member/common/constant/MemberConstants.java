@@ -338,6 +338,12 @@ public final class MemberConstants {
 	public static final String PROD_EXPO_LEVL_12_MORE = "US014702"; // 12세 이상
 	public static final String PROD_EXPO_LEVL_12_UNDER = "US014701"; // 12세 미만
 
+	/** SMS발송 테넌트 구분 */
+	public static final String SMS_SENDER_GRP_CD = "US0121"; // SMS발송 테넌트 구분 그룹 코드
+	public static final String SMS_SENDER_TENANT_ID_TSTORE = "US012101"; // 티스토어
+	public static final String SMS_SENDER_TENANT_ID_UPLUS_STORE = "US012102"; // U+ 스토어
+	public static final String SMS_SENDER_TENANT_ID_OLLEH_MARKET = "US012103"; // 올레마켓
+
 	/**
 	 * 판매자 회원 상수들.
 	 * 
