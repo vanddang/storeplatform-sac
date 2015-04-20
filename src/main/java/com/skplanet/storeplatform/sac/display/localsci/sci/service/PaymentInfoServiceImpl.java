@@ -135,6 +135,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 
         // 상품 군 조회 (VOD는 VOD끼리만, 이북/코믹은 이북/코믹끼리만 요청이 오므로, 1번만 조회)
         ProductInfo prodInfo = displayCommonService.getProductInfo(prodIdList.get(0));
+        // FIXME channelId인 경우 예외 발생시킴
 
         if (prodInfo.getProductType() == ProductType.Shopping) { // 쇼핑 상품
             paymentInfoList = this.shoppingService.getShoppingforPayment(req);
@@ -207,6 +208,11 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                     paymentInfo.setChapterUnit(this.displayCommonService.getEpubChapterUnit(paymentInfo.getBookClsfCd()));
                     paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
                 }
+            }
+            else {
+                // 앱상품의 경우 사용정책 값을 무제한으로 지정
+                paymentInfo.setUsePeriod("0");
+                paymentInfo.setUsePeriodUnitCd(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE);
             }
 
             // 시리즈 여부 세팅
