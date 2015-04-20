@@ -103,6 +103,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.vo.CommonCode;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
@@ -140,6 +141,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor; // Message Properties
+
+	@Autowired
+	private MemberCommonComponent mcc;
 
 	@Autowired
 	@Qualifier("sac")
@@ -261,6 +265,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String messageText = "auth.message.";
 		String messageSender = "auth.message.sendNum.";
 		String authCode = "";
+		// tenantId 별 prefix
+		String prefixMessageText = "";
+		// tenantId 별 cdId
+		String tenantCdId = "";
 
 		// 3분 이내 동일한 MDN과 SystemID로 요청 여부 확인.
 		ServiceAuth confirmSendedSmsReq = new ServiceAuth();
@@ -290,9 +298,38 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			Object[] object = new Object[1];
 			object[0] = authCode;
 
-			if (MemberConstants.TENANT_ID_TSTORE.equals(tenantId)) {
-				messageText += "tstore";
-				messageSender += "tstore";
+			if (MemberConstants.TENANT_ID_TSTORE.equals(tenantId)
+					|| MemberConstants.TENANT_ID_OLLEH_MARKET.equals(tenantId)
+					|| MemberConstants.TENANT_ID_UPLUS_STORE.equals(tenantId)) {
+
+				messageText += "common";
+
+				// tenantId 별 설정
+				if (MemberConstants.TENANT_ID_TSTORE.equals(tenantId)) {
+					tenantCdId = MemberConstants.SMS_SENDER_TENANT_ID_TSTORE;
+					messageSender += "tstore";
+
+				} else if (MemberConstants.TENANT_ID_OLLEH_MARKET.equals(tenantId)) {
+					tenantCdId = MemberConstants.SMS_SENDER_TENANT_ID_OLLEH_MARKET;
+					messageSender += "kstore";
+
+				} else if (MemberConstants.TENANT_ID_UPLUS_STORE.equals(tenantId)) {
+					tenantCdId = MemberConstants.SMS_SENDER_TENANT_ID_UPLUS_STORE;
+					messageSender += "ustore";
+
+				}
+
+				// SMS발송 테넌트 구분 코드 목록 조회
+				List<CommonCode> codes = this.mcc.getCommonCode(MemberConstants.SMS_SENDER_GRP_CD);
+
+				for (CommonCode commonCode : codes) {
+					if (tenantCdId.equals(commonCode.getCdId())) {
+						// tenant별 prefix 문구 설정
+						prefixMessageText = "[" + commonCode.getCdNm() + "]";
+						break;
+					}
+				}
+
 			} else if (MemberConstants.TENANT_ID_NON_SPECIFIC.equals(tenantId)
 					&& MemberConstants.SYSTEM_ID_DEV_POC.equals(systemId)) {
 				messageText += "dev";
@@ -305,7 +342,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			messageText = this.messageSourceAccessor.getMessage(messageText, object, LocaleContextHolder.getLocale());
 			messageSender = this.messageSourceAccessor.getMessage(messageSender, object,
 					LocaleContextHolder.getLocale());
-			LOGGER.debug("## [SAC] messageText : {}, messageSender : {}", messageText, messageSender);
+
+			LOGGER.debug("## [SAC] prefixMessageText: {}, messageText : {}, messageSender : {}", prefixMessageText,
+					messageText, messageSender);
 
 			/* 인증 Signautre 생성 - guid 형식 */
 			String authSign = UUID.randomUUID().toString().replace("-", "");
@@ -328,7 +367,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			smsReq.setSendMdn(messageSender);
 			smsReq.setRecvMdn(request.getRecvMdn());
 			smsReq.setTeleSvcId(request.getTeleSvcId());
-			smsReq.setMsg(messageText);
+			// tenantId 별 prefix 설정
+			smsReq.setMsg(StringUtil.isNotEmpty(prefixMessageText) ? prefixMessageText + messageText : messageText);
 			// 통신사정보 Optional
 			smsReq.setCarrier(StringUtils.defaultIfBlank(request.getCarrier(), null));
 
