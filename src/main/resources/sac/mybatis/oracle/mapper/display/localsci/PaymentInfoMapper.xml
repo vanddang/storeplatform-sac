@@ -382,7 +382,11 @@
                     , '' AS autoPrchsLastDt           
                     , CM.BNS_CASH_AMT
                     , CM.BNS_USE_PERIOD_UNIT_CD
-                    , CM.BNS_USE_PERIOD                    
+                    , CM.BNS_USE_PERIOD
+                    , (CASE WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301', 'OR004302', 'OR004303', 'OR004304') 
+                        THEN (CASE WHEN CM.POSS_LEND_CLSF_CD IS NULL THEN 'DP010603' ELSE CM.POSS_LEND_CLSF_CD END)
+                        ELSE '' 
+                       END) AS POSS_LEND_CLSF_CD                   
                 FROM 
                       TB_DP_PROD PD
                     , TB_DP_CMPX_PROD CM
