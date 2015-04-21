@@ -44,7 +44,7 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 	 * 
 	 * @param req
 	 *            req
-	 * @return SpecialPurchaseCountSacRes 상품 정보 .
+	 * @return SpecialPurchaseCountSacRes  상품 정보 .            
 	 */
 	@Override
 	public SpecialPurchaseCountSacRes updateSpecialPurchaseCount(SpecialPurchaseCountSacReq req) {
@@ -64,21 +64,21 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 
 		if (StringUtils.isEmpty(req.getPurchaseStatusCd())) {
 			throw new StorePlatformException("SAC_DSP_0002", "purchaseStatusCd", req.getPurchaseStatusCd());
-		} else {
+		}else{
 			if (!"OR000301".equals(req.getPurchaseStatusCd()) && !"OR000302".equals(req.getPurchaseStatusCd())) {
 				throw new StorePlatformException("SAC_DSP_0003", "purchaseStatusCd", req.getPurchaseStatusCd());
-			}
+			}			
 		}
 
 		if (req.getPurchaseCount() == null) {
 			throw new StorePlatformException("SAC_DSP_0002", "purchaseCount", req.getPurchaseCount());
-		} else {
-			if (req.getPurchaseStatusCd().equals("OR000301")) {
-				if (req.getPurchaseCount() <= 0) { // 무조건 양수 (음수로 올경우 에러)
+		}else{
+			if(req.getPurchaseStatusCd().equals("OR000301")){
+				if(req.getPurchaseCount() <=0){	// 무조건 양수 (음수로 올경우 에러)
 					throw new StorePlatformException("SAC_DSP_0003", "purchaseCount", req.getPurchaseCount());
 				}
-			} else {
-				if (req.getPurchaseCount() >= 0) { // 무조건 음수 (양수로 올경우 에러)
+			}else{
+				if(req.getPurchaseCount() >=0){	// 무조건 음수 (양수로 올경우 에러)
 					throw new StorePlatformException("SAC_DSP_0003", "purchaseCount", req.getPurchaseCount());
 				}
 			}
@@ -87,13 +87,14 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 		if (StringUtils.isEmpty(req.getPurchaseDate())) {
 			throw new StorePlatformException("SAC_DSP_0002", "purchaseDate", req.getPurchaseDate());
 		}
-
-		if (req.getPurchaseStatusCd().equals("OR000302")) {
+		
+		if(req.getPurchaseStatusCd().equals("OR000302")){
 			if (StringUtils.isEmpty(req.getPurchaseCancelDate())) {
 				throw new StorePlatformException("SAC_DSP_0002", "purchaseCancelDate", req.getPurchaseCancelDate());
 			}
-
+			
 		}
+		
 
 		boolean successFlag = true;
 		Map<String, String> map = new HashMap<String, String>();
@@ -113,18 +114,20 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 		this.log.info("purchaseCount : {}", req.getPurchaseCount());
 		this.log.info("purchaseDate : {}", req.getPurchaseDate());
 		this.log.info("purchaseCancelDate : {}", req.getPurchaseCancelDate());
-		this.log.info("----------------------------------------------------------");
+		this.log.info("----------------------------------------------------------");		
 
 		int specialProdSize = 3;
 
 		// 특가 상품 여부 조회
-		if (req.getPurchaseStatusCd().equals("OR000301")) {
-			Integer specialProductCount = this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialProductCount",
-					map, Integer.class);
-			if (specialProductCount <= 0) {
+		if(req.getPurchaseStatusCd().equals("OR000301")){
+			Integer specialProductCount = this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialProductCount", map,
+					Integer.class);
+			if(specialProductCount <=0 ){
 				throw new StorePlatformException("SAC_DSP_0005", "특가");
 			}
 		}
+		
+		
 
 		// 상품 기본 정보(상품군) 조회
 		ProductBasicInfo productBasicInfo = this.commonDAO.queryForObject("SpecialPurchaseCount.getProductInfo", map,
@@ -154,21 +157,20 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 				} else if (kk == 2) {
 					map.put("productId", productBasicInfo.getCatalogId()); // 특가 상품 카탈로그
 				}
-				if (successFlag) {
-					// successFlag = this.updateSpecialPurchaseCount(map, req.getPurchaseCount()); // 특가상품 Update 로직 실행
-					successFlag = true;
+				if(successFlag){
+					successFlag = this.updateSpecialPurchaseCount(map, req.getPurchaseCount()); // 특가상품 Update 로직 실행
 				}
 			}
-		} else {
+		}else{
 			throw new StorePlatformException("SAC_DSP_0003", "productId", req.getProductId());
 		}
 
 		res.setProductId(req.getProductId());
 		res.setPurchaseId(req.getPurchaseId());
 
-		if (successFlag) {
+		if(successFlag){
 			res.setPurchaseCountStatus("PD003700");
-		} else {
+		}else{
 			res.setPurchaseCountStatus("PD003701");
 		}
 		return res;
@@ -187,18 +189,17 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 		try {
 			int prodCnt = 0;
 			int prchsCnt = 0;
-			int beforeProdCnt = 0;
+			int beforeProdCnt =0;
 			int beforePrchsCnt = 0;
-
-			// (기존 데이터 00:00:00) - 취소인 경우 변경전 데이터 취소함 S
-			if (map.get("purchaseStatusCd").equals("OR000302")) {
-				beforeProdCnt = (Integer) this.commonDAO.queryForObject(
-						"SpecialPurchaseCount.getSpecialProdBeforeCount", map);
-
+			
+			
+			// (기존 데이터 00:00:00) - 취소인 경우  변경전 데이터  취소함  S
+			if(map.get("purchaseStatusCd").equals("OR000302")){
+				beforeProdCnt = (Integer) this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialProdBeforeCount", map);
+				
 				if (beforeProdCnt > 0) {
 					map.put("purchaseCount", Integer.toString(reqPurchsCnt));
-					beforePrchsCnt = (Integer) this.commonDAO.queryForObject(
-							"SpecialPurchaseCount.getSpecialPurchaseBeforeCount", map);
+					beforePrchsCnt = (Integer) this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialPurchaseBeforeCount", map);
 					// 해당상품의 구매수 + 업데이트 구매수가 0보다 작으면 현재 상품의 구매 수만큼 -해서 상품구매수를 0으로 되게 SET
 					if (beforePrchsCnt + reqPurchsCnt < 0) {
 						Integer resetCount = 0 - beforePrchsCnt; // 상품의 현재 구매수만큼 -해주기 위한 변수
@@ -210,8 +211,8 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 					return flag;
 				}
 			}
-			// (기존 데이터 00:00:00) - 취소인 경우 변경전 데이터 취소함 E
-
+			// (기존 데이터 00:00:00) - 취소인 경우  변경전 데이터  취소함  E			
+			
 			// TB_DP_SPRC_PROD_PRCHS_MANG 상품 존재 유무 확인
 			prodCnt = (Integer) this.commonDAO.queryForObject("SpecialPurchaseCount.getSpecialProdCount", map);
 
@@ -233,10 +234,11 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 
 			// channel 및 catalog Id에 대한 update 실행
 			this.commonDAO.update("SpecialPurchaseCount.updateSpecialPurchaseCount", map);
-		} catch (Exception e) {
-			flag = false;
+		}catch (Exception e){
+			flag =false;
 		}
 		return flag;
 	}
+
 
 }
