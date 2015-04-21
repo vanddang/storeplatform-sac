@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -37,16 +38,33 @@ import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.*;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateBizPurchaseSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateFreePurchaseSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateBizPurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreateFreePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchase;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq.GroupCreatePurchaseV2;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseUserInfo;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderIapInfoSac;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.order.service.*;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderMakeDataService;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPaymentPageService;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPostService;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderValidationService;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
@@ -510,7 +528,9 @@ public class PurchaseOrderController {
 
 		purchaseOrderInfo.setOfferingId(createPurchaseSacReq.getOfferingId()); // 오퍼링 ID
 		// offeringId, resvCol01(암묵적 오퍼링 ID) 처리 : 오퍼링 서비스를 SAC가 수용 시 관련 컬럼 생성 및 예약필드 암묵적 사용 제거
-		if (StringUtils.isBlank(createPurchaseSacReq.getProductList().get(0).getResvCol01())) {
+		// Biz쿠폰 경우 productList 없으니, 예외처리
+		if (CollectionUtils.isNotEmpty(createPurchaseSacReq.getProductList())
+				&& StringUtils.isBlank(createPurchaseSacReq.getProductList().get(0).getResvCol01())) {
 			createPurchaseSacReq.getProductList().get(0).setResvCol01(createPurchaseSacReq.getOfferingId());
 		}
 
