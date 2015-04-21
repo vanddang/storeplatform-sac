@@ -54,7 +54,7 @@ public class OutProductListServiceImpl implements OutProductListService {
 		if(dplistFromDB!=null && !dplistFromDB.isEmpty()){
     		setListNm(res, dplistFromDB);
     		setHasNextAndRemoveLastProduct(countFromReq, prodListsFromDB, res);
-    		setStartKey(prodListsFromDB, res);
+    		setStartKey(res);
     		res.setCount(res.getProductList().size());
 		} else {
 			res.setCount(0);
@@ -75,10 +75,11 @@ public class OutProductListServiceImpl implements OutProductListService {
 		return dplistFromDB;
 	}
 
-	private void setStartKey(List<OutProductDbResultMap> prodListsFromDB, OutProductListSacRes res) {
-		if(prodListsFromDB==null||prodListsFromDB.isEmpty())
+	private void setStartKey(OutProductListSacRes res) {
+		List<OutProduct> list = res.getProductList();
+		if(list==null||list.isEmpty())
 			return;
-		res.setStartKey(prodListsFromDB.get(prodListsFromDB.size()-1).getRank().toString());
+		res.setStartKey(list.get(list.size()-1).getRank().toString());
 	}
 
 	private void setListNm(OutProductListSacRes res, List<DisplayListFromDB> dplistFromDB) {
@@ -102,7 +103,7 @@ public class OutProductListServiceImpl implements OutProductListService {
 			list.add(p);
 		}
 		res.setProductList(list);
-		
+
 		return res;
 	}
 
