@@ -406,6 +406,7 @@
 						   	</if>
 						   	</if>
 		                    AND TP.PROD_ID = PD.PROD_ID
+		                    AND PD.USE_POLICY_ID = UP.USE_POLICY_ID(+)
 		                    AND PRC.PROD_ID  = PD.PROD_ID AND PRC.TENANT_ID = TP.TENANT_ID
 		                    AND MP.PROD_ID = PD.PROD_ID
 		                    AND TP.TENANT_ID = #{tenantId} AND TP.EXPO_YN = 'Y'
