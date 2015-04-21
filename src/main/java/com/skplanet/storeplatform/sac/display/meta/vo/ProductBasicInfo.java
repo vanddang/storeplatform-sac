@@ -30,7 +30,7 @@ public class ProductBasicInfo extends CommonInfo {
 
 	// 웹툰 관련
 	private String seriallyWkdy;
-	private String connedtedProdId;
+	private String connectedProdId;
 
 	// eBook
 	private String etcCd;
@@ -253,18 +253,18 @@ public class ProductBasicInfo extends CommonInfo {
 	}
 	
 	/**
-	 * @return the connedtedProdId
+	 * @return the connectedProdId
 	 */
-	public String getConnedtedProdId() {
-		return this.connedtedProdId;
+	public String getConnectedProdId() {
+		return this.connectedProdId;
 	}
 
 	/**
-	 * @param connedtedProdId
-	 *            the connedtedProdId to set
+	 * @param connectedProdId
+	 *            the connectedProdId to set
 	 */
-	public void setConnedtedProdId(String connedtedProdId) {
-		this.connedtedProdId = connedtedProdId;
+	public void setConnectedProdId(String connectedProdId) {
+		this.connectedProdId = connectedProdId;
 	}
 
 	/**

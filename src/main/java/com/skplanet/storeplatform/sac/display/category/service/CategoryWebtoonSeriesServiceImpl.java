@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -140,10 +142,13 @@ public class CategoryWebtoonSeriesServiceImpl implements CategoryWebtoonSeriesSe
                 identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
                         productBasicInfo.getFirstProdId());
                 identifierList.add(identifier);
-                identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONNECT_IDENTIFIER_CD,
-                        productBasicInfo.getConnedtedProdId());
-                identifierList.add(identifier);
-             
+
+                if(StringUtils.isNotBlank(productBasicInfo.getConnectedProdId())) {
+                	 identifier = this.commonGenerator.generateIdentifier(DisplayConstants.DP_CONNECT_IDENTIFIER_CD,
+                             productBasicInfo.getConnectedProdId()); 
+                     identifierList.add(identifier);
+                }
+ 
                 date.setType("week/serially");
                 date.setText(productBasicInfo.getSeriallyWkdy());
 
