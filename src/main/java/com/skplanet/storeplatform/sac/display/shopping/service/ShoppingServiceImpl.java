@@ -4326,7 +4326,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			memberFlag = false;
 			this.log.debug("[ShoppingServiceImpl] SearchDevice Id Search Exception : {}");
 			this.log.error("단말정보 조회 연동 중 오류가 발생하였습니다. \n{}", ex);
-			// throw new StorePlatformException("SAC_DSP_1001", ex);
+			throw new StorePlatformException("SAC_DSP_1001", ex);
 		}
 
 		this.log.debug("----------------------------------------------------------------");
