@@ -9,17 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -28,6 +19,15 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SellerMbrAppSacParam;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * 
@@ -355,7 +355,13 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
 			if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
-				return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_SERIES;
+				if(StringUtil.equals(purchaseProduct.getPossLendClsfCd(), PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION))
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN; // 소장
+				else if(StringUtil.equals(purchaseProduct.getPossLendClsfCd(), PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL))
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_LOAN; // 대여
+				else
+					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_SERIES; // 구매
+						
 
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {

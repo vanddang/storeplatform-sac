@@ -288,9 +288,9 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_HIGH = "컬러링 : 롱(60초)";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_RING_BASIC = "컬러링 : 일반(40초)";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_AUTO = "자동결제";
-	public static final String PAYMENT_PAGE_PRODUCT_DESC_SERIES = "전회차 구매";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_OWN = "전권 소장";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_EBOOKCOMIC_ALL_LOAN = "전권 대여";
+	public static final String PAYMENT_PAGE_PRODUCT_DESC_SERIES = "구매";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_OWN = "소장";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_LOAN = "대여";
 	public static final String PAYMENT_PAGE_PRODUCT_DESC_DATE_SUFFIX = "일 이용권";
