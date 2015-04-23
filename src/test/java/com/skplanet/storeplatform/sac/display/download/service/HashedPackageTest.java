@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.download.service;
 
 import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.personal.service.AppUpdateSupportService;
+import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +63,8 @@ public class HashedPackageTest {
             Collections.shuffle(PKG_LIST);
             List<String> req = PKG_LIST.subList(0, 200 + i * 2);
             List<String> hashed = applyHash(req);
-            appUpdateSupportService.searchSubContentByPkg("ANY-PHONE-4APP", hashed, true);
+            List<SubContentInfo> scInfos = new ArrayList<SubContentInfo>(hashed.size());
+            appUpdateSupportService.addSubContentByMapgPkg(scInfos, "ANY-PHONE-4APP", hashed);
         }
     }
 

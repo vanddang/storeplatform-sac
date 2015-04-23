@@ -106,21 +106,18 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
          * Package 명으로 상품 조회
          **************************************************************/
         final int reqSize = packageInfoList.size();
-        List<String> hashedPkgList = new ArrayList<String>(reqSize);
+        List<String> pkgList = new ArrayList<String>(reqSize);
         Map<String, UpdatePkgDetail> pkgReqMap = new LinkedHashMap<String, UpdatePkgDetail>(reqSize);
 
         for (String s : packageInfoList) {
             UpdatePkgDetail dtl = new UpdatePkgDetail(s);
             if (StringUtils.isNotEmpty(dtl.getPkgNm())) {
-                hashedPkgList.add(dtl.getPkgNm());
+                pkgList.add(dtl.getPkgNm());
                 pkgReqMap.put(dtl.getPkgNm(), dtl);
             }
         }
 
-        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceModelCd, hashedPkgList, false);
-
-        this.log.debug("##### auto update target list  : {}", hashedPkgList);
-        this.log.debug("##### auto update target cnt   : {}", hashedPkgList.size());
+        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceModelCd, pkgList);
 
         Map<String, UpdateProduct> upMap = new LinkedHashMap<String, UpdateProduct>(reqSize);
         List<String> pidPurList = new ArrayList<String>();
@@ -192,7 +189,6 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
         res.setCommonResponse(commonResponse);
         res.setProductList(productList);
 
-        this.log.debug("##### updateAutoUpdateList finished !!!!!!!!!!");
         appUpdateSupportService.logUpdateResult("Auto", deviceId, member.getUserKey(), member.getDeviceKey(), header.getNetworkHeader().getType(), forTlogAppIdList);
 
         return res;

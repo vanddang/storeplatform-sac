@@ -101,8 +101,25 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
         }
     }
 
+
     @Override
-    public List<SubContentInfo> searchSubContentByPkg(final String deviceModelCd, List<String> pkgList, boolean isHashed) {
+    public List<SubContentInfo> addSubContentByMapgPkg(List<SubContentInfo> subContentInfos, String deviceModelCd, List<String> pkgList) {
+        Set<String> findPkgSet = new HashSet<String>(subContentInfos.size());
+        for (SubContentInfo scInfo : subContentInfos)
+            findPkgSet.add(scInfo.getApkPkgNm());
+
+        List<String> mapgPkgList = new ArrayList<String>(pkgList.size());
+        for (String s : pkgList) {
+            if (!findPkgSet.contains(s))
+                mapgPkgList.add(s);
+        }
+
+        if (!mapgPkgList.isEmpty())
+            subContentInfos.addAll(searchSubContentByMapgPkg(deviceModelCd, mapgPkgList));
+        return subContentInfos;
+    }
+
+    private List<SubContentInfo> searchSubContentByMapgPkg(final String deviceModelCd, List<String> pkgList) {
 
         final Plandasj client = connectionFactory.getConnectionPool().getClient();
         final Map<String, String> pidPkgMap = new HashMap<String, String>(pkgList.size());
@@ -184,17 +201,12 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
                 res.addAll(Lists.transform(updateList, new Function<SubContentInfo, SubContentInfo>() {
                     @Override
                     public SubContentInfo apply(SubContentInfo v) {
+                        if (!StringUtils.equals(v.getApkPkgNm(), pidPkgMap.get(v.getProdId())))
+                            v.setHasDiffPkgYn("Y");
                         v.setApkPkgNm(pidPkgMap.get(v.getProdId()));
                         return v;
                     }
                 }));
-            }
-        });
-
-        Collections.sort(res, new Comparator<SubContentInfo>() {
-            @Override
-            public int compare(SubContentInfo o1, SubContentInfo o2) {
-                return o1.getPriority() > o2.getPriority() ? -1 : o1.getPriority() < o2.getPriority() ? 1 : 0;
             }
         });
 
@@ -209,6 +221,49 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
         client.sadd(PLANDAS_APKPROD_SET, apkPkgNm);
 
         pidPkgMap.put(pid, apkPkgNm);
+    }
+
+
+
+    @Override
+    public List<SubContentInfo> searchSubContentByPkg(final String deviceModelCd, List<String> pkgList) {
+
+        final List<SubContentInfo> res = new ArrayList<SubContentInfo>(pkgList.size());
+
+        PartialProcessor.process(pkgList, new PartialProcessorHandler<String>() {
+            @Override
+            public String processPaddingItem() {
+                return StringUtils.EMPTY;
+            }
+
+            @Override
+            public void processPartial(List<String> partialList) {
+
+                List<String> hashedPkgList = Lists.transform(partialList, new Function<String, String>() {
+                    @Override
+                    public String apply(String input) {
+                        return DisplayCryptUtils.hashPkgNm(input);
+                    }
+                });
+
+                Map<String, Object> req = new HashMap<String, Object>();
+                req.put("parentClsfCd", DisplayConstants.DP_PART_PARENT_CLSF_CD);
+                req.put("deviceModelCd", deviceModelCd);
+                req.put("hashedPkgList", hashedPkgList);
+
+                res.addAll(commonDAO.queryForList("PersonalUpdateProduct.searchRecentFromPkgNm", req, SubContentInfo.class));
+            }
+        }, VAR_WINDOW_SIZE);
+
+        // 관리되는 특정 앱 상품을 상위 목록으로 변경한다.(ex, 시럽, OCB)
+        Collections.sort(res, new Comparator<SubContentInfo>() {
+            @Override
+            public int compare(SubContentInfo o1, SubContentInfo o2) {
+                return o1.getPriority() > o2.getPriority() ? -1 : o1.getPriority() < o2.getPriority() ? 1 : 0;
+            }
+        });
+
+        return res;
     }
 
     @Override

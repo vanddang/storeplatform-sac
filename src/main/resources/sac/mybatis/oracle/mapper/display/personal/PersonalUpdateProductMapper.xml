@@ -6,31 +6,32 @@
          SELECT /*PersonalUpdateProductMapper.searchRecentFromPkgNm, searchRecentFromPkgNm, 오승민/인크로스, 2014-02-28 */
          LA.*
          FROM
-             ( SELECT /*+ NO_EXPAND LEADING(CMDEVICE SC DEVICE APPPROD) USE_NL(SC DEVICE APPPROD) */
-               SC.PROD_ID
-             , SC.APK_PKG_NM
-             , SC.APK_VER
-             , SC.SUB_CONTENTS_ID
-             , NVL(AUAP.PRIORITY, 0) AS PRIORITY
-             ,ROW_NUMBER() OVER (PARTITION BY SC.APK_PKG_NM ORDER BY SC.APK_VER DESC) AS RNUM
-         FROM TB_DP_APP_PROD APPPROD
-             ,TB_DP_SUB_CONTENTS SC
-             ,TB_DP_SPRT_DEVICE DEVICE
-             ,TB_CM_DEVICE CMDEVICE
-             ,TB_CM_AUTO_UPGRD_ALTR_PROD AUAP
-         WHERE
-             <if test="pkgList != null">SC.APK_PKG_NM IN <foreach collection="pkgList" item="v" open="(" separator="," close=")">#{v}</foreach></if>
-             <if test="hashedPkgList != null">SC.APK_PKG_HASH IN<foreach collection="hashedPkgList" item="v" open="(" separator="," close=")">#{v}</foreach></if>
-             AND APPPROD.PROD_ID = SC.PROD_ID
-             AND SC.PROD_ID = DEVICE.PROD_ID
-             AND SC.SUB_CONTENTS_ID = DEVICE.SUB_CONTENTS_ID
-             AND DEVICE.DEVICE_MODEL_CD = #{deviceModelCd}
-             AND DEVICE.DEVICE_MODEL_CD = CMDEVICE.DEVICE_MODEL_CD
-             AND (APPPROD.PART_PARENT_CLSF_CD = #{parentClsfCd} or APPPROD.PART_PARENT_CLSF_CD is null)
-             AND CMDEVICE.USE_YN = 'Y'
-             AND AUAP.PROD_ID(+) = APPPROD.PROD_ID
-             AND AUAP.CLSF_CD(+) = 'DP012502' /* DP012502 : 우선순위 지정 업데이트 */
-         )LA
+         (
+             SELECT /*+ NO_EXPAND LEADING(CMDEVICE SC DEVICE APPPROD) USE_NL(SC DEVICE APPPROD) */
+                   SC.PROD_ID
+                 , SC.APK_PKG_NM
+                 , SC.APK_VER
+                 , SC.SUB_CONTENTS_ID
+                 , NVL(AUAP.PRIORITY, 0) AS PRIORITY
+                 ,ROW_NUMBER() OVER (PARTITION BY SC.APK_PKG_NM ORDER BY SC.APK_VER DESC) AS RNUM
+             FROM TB_DP_APP_PROD APPPROD
+                 ,TB_DP_SUB_CONTENTS SC
+                 ,TB_DP_SPRT_DEVICE DEVICE
+                 ,TB_CM_DEVICE CMDEVICE
+                 ,TB_CM_AUTO_UPGRD_ALTR_PROD AUAP
+             WHERE
+                 <if test="pkgList != null">SC.APK_PKG_NM IN <foreach collection="pkgList" item="v" open="(" separator="," close=")">#{v}</foreach></if>
+                 <if test="hashedPkgList != null">SC.APK_PKG_HASH IN<foreach collection="hashedPkgList" item="v" open="(" separator="," close=")">#{v}</foreach></if>
+                 AND APPPROD.PROD_ID = SC.PROD_ID
+                 AND SC.PROD_ID = DEVICE.PROD_ID
+                 AND SC.SUB_CONTENTS_ID = DEVICE.SUB_CONTENTS_ID
+                 AND DEVICE.DEVICE_MODEL_CD = #{deviceModelCd}
+                 AND DEVICE.DEVICE_MODEL_CD = CMDEVICE.DEVICE_MODEL_CD
+                 AND (APPPROD.PART_PARENT_CLSF_CD = #{parentClsfCd} or APPPROD.PART_PARENT_CLSF_CD is null)
+                 AND CMDEVICE.USE_YN = 'Y'
+                 AND AUAP.PROD_ID(+) = APPPROD.PROD_ID
+                 AND AUAP.CLSF_CD(+) = 'DP012502' /* DP012502 : 우선순위 지정 업데이트 */
+         ) LA
          WHERE RNUM = 1
      </select>
 
@@ -63,20 +64,15 @@
     <select id="searchUpdateList" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo">
         SELECT /*PersonalUpdateProductMapper.searchUpdateList, 정희원, 2015-03-02 */
             SPRT.PROD_ID,
+            SC.APK_PKG_NM,
             SC.APK_VER,
-            SC.SUB_CONTENTS_ID,
-            NVL(AUAP.PRIORITY, 0) AS PRIORITY,
-            NVL(EI.CONTENT, 'S01') AS PKG_MAPG_TENANT
+            SC.SUB_CONTENTS_ID
         FROM
             TB_CM_DEVICE DEV
             INNER JOIN TB_DP_SPRT_DEVICE SPRT
               ON SPRT.DEVICE_MODEL_CD = DEV.DEVICE_MODEL_CD
             INNER JOIN TB_DP_SUB_CONTENTS SC
               ON SC.PROD_ID = SPRT.PROD_ID AND SC.SUB_CONTENTS_ID = SPRT.SUB_CONTENTS_ID
-            LEFT OUTER JOIN TB_DP_PROD_EXTRA_INFO EI
-              ON EI.PROD_ID = SPRT.PROD_ID AND EI.INFO_CLSF_CD = 'DP011702'
-            LEFT OUTER JOIN TB_CM_AUTO_UPGRD_ALTR_PROD AUAP
-              ON AUAP.PROD_ID = SPRT.PROD_ID AND AUAP.CLSF_CD = 'DP012502'
         WHERE 1=1
           AND SPRT.PROD_ID in <foreach collection="prodIds" item="v" open="(" separator="," close=")">#{v}</foreach>
           AND DEV.DEVICE_MODEL_CD = #{deviceModelCd}

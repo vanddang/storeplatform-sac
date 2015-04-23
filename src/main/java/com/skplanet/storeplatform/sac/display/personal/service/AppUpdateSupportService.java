@@ -27,9 +27,16 @@ public interface AppUpdateSupportService {
      * 패키지명으로 서브컨텐트 정보를 조회한다.
      * @param deviceModelCd
      * @param pkgList @return
-     * @param isHashed
      */
-    List<SubContentInfo> searchSubContentByPkg(String deviceModelCd, List<String> pkgList, boolean isHashed);
+    List<SubContentInfo> searchSubContentByPkg(String deviceModelCd, List<String> pkgList);
+
+    /**
+     * 타사 매핑 패키지명으로 서브컨텐트 정보를 조회한다.
+     * @param deviceModelCd
+     * @param pkgList
+     * @return
+     */
+    List<SubContentInfo> addSubContentByMapgPkg(List<SubContentInfo> subContentInfos, String deviceModelCd, List<String> pkgList);
 
     /**
      * 기구매 내역을 조회한다.

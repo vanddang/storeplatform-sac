@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.cache.service.UpdateProductInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
+import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
@@ -50,6 +51,8 @@ import java.util.*;
 @Service
 public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    private final String TENANT_ID_TSTORE = "S01";
 
 	@Autowired
 	@Qualifier("sac")
@@ -84,18 +87,20 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
 	@Override
 	public PersonalUpdateProductRes searchUpdateProductList(PersonalUpdateProductReq req, SacRequestHeader header,
 			List<String> packageInfoList) {
-		this.log.debug("##### searchUpdateProductList start!!!!!!!!!!");
 		PersonalUpdateProductRes res = new PersonalUpdateProductRes();
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
-		TenantHeader tenantHeader = header.getTenantHeader();
-        String tenantId = header.getTenantHeader().getTenantId();
-        String langCd = header.getTenantHeader().getLangCd();
+
         List<HistorySacIn> listPrchs = null;
         List<String> updatePidList = new ArrayList<String>();
 
-		String memberType = req.getMemberType();
+        DeviceHeader deviceHeader = header.getDeviceHeader();
+        TenantHeader tenantHeader = header.getTenantHeader();
+        String tenantId = header.getTenantHeader().getTenantId();
+        String langCd = header.getTenantHeader().getLangCd();
+        String deviceModelCd = header.getDeviceHeader().getModel();
+
+
 		/**************************************************************
 		 * Package 명으로 상품 조회
 		 **************************************************************/
@@ -110,9 +115,14 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
             }
 		}
 
-        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceHeader.getModel(), pkgList, false);
-		List<Map<String, Object>> listPkg = new ArrayList<Map<String, Object>>();
+        List<SubContentInfo> subContentInfos = appUpdateSupportService.searchSubContentByPkg(deviceModelCd, pkgList);
+        if (!StringUtils.equals(TENANT_ID_TSTORE, tenantId)) {
+            // 타사 요청인 경우 MAPG_PKG_NM으로 한번더 subContent를 조회 하여 추출 리스트에 추가한다.
+            appUpdateSupportService.addSubContentByMapgPkg(subContentInfos, deviceModelCd, pkgList);
+        }
 
+
+		List<Map<String, Object>> listPkg = new ArrayList<Map<String, Object>>();
 		for (SubContentInfo scInfo : subContentInfos) {
 
             UpdateProduct up = updateProductInfoManager.getUpdateProductInfo(new UpdateProductParam(tenantId, langCd, scInfo.getProdId(), scInfo.getSubContentsId()));
@@ -137,6 +147,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
                 prod.put("FILE_PATH", up.getFilePath());
                 prod.put("LAST_DEPLOY_DT", up.getLastDeployDt());
                 prod.put("UPDT_TEXT", up.getUpdtText());
+                prod.put("HAS_DIFF_PKG_YN", scInfo.getHasDiffPkgYn());
 
                 listPkg.add(prod);
             }
@@ -227,6 +238,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
             throw new StorePlatformException("SAC_DSP_0006");
         }
 
+        String memberType = req.getMemberType();
         if (memberType.equals("updatedList")) {
             // 회원일 경우 회원 상태 조회
             String userKey = req.getUserKey();
@@ -488,7 +500,7 @@ public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductSe
                     ((Long) updateTargetApp.get("FILE_SIZE")), null, null,
                     ObjectUtils.toString(updateTargetApp.get("FILE_PATH")));
 
-            app.setHasDiffPkgYn(appUpdateSupportService.getDifferentPackageNameYn(prodId) ? "Y" : "N");
+            app.setHasDiffPkgYn((String) updateTargetApp.get("HAS_DIFF_PKG_YN"));
 
             Update update = this.appGenerator.generateUpdate(
                     new Date(null, (java.util.Date) updateTargetApp.get("LAST_DEPLOY_DT")),

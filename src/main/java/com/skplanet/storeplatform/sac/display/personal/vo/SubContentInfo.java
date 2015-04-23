@@ -22,6 +22,7 @@ public class SubContentInfo {
     private Integer apkVer;
     private String subContentsId;
     private Integer priority;
+    private String hasDiffPkgYn = "N";
 
     public String getProdId() {
         return this.prodId;
@@ -63,4 +64,11 @@ public class SubContentInfo {
 		this.priority = priority;
 	}
 
+    public String getHasDiffPkgYn() {
+        return hasDiffPkgYn;
+    }
+
+    public void setHasDiffPkgYn(String hasDiffPkgYn) {
+        this.hasDiffPkgYn = hasDiffPkgYn;
+    }
 }
