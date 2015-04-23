@@ -1184,23 +1184,19 @@ public class UserModifyServiceImpl implements UserModifyService {
 		searchUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 		/**
-		 * 검색 조건 setting
+		 * 회원 정보 조회 - 실명 인증 정보 조회
 		 */
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		keySchUserKey.setKeyString(req.getUserKey());
-		keySearchList.add(keySchUserKey);
-		searchUserRequest.setKeySearchList(keySearchList);
+		DetailReq detailReq = new DetailReq();
+		detailReq.setUserKey(req.getUserKey());
+		SearchExtentReq searchExtent = new SearchExtentReq();
+		searchExtent.setMbrAuthInfoYn(MemberConstants.USE_Y);
+		detailReq.setSearchExtent(searchExtent);
+		DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
 
-		/**
-		 * 회원 정보조회
-		 */
-		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 		/**
 		 * 실명 인증 정보가 존재하지 않을 경우
 		 */
-		if (StringUtil.equals(schUserRes.getMbrAuth().getIsRealName(), Constant.TYPE_YN_N)) {
+		if (StringUtil.equals(detailRes.getMbrAuth().getIsRealName(), Constant.TYPE_YN_N)) {
 			throw new StorePlatformException("SAC_MEM_0002", "실명 인증");
 		}
 
@@ -1215,9 +1211,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 * SC 사용자 회원 실명인증 초기화.
 		 */
 		UpdateRealNameResponse updateRealNameResponse = this.userSCI.initRealName(updateRealNameRequest);
-		if (StringUtil.isEmpty(updateRealNameResponse.getUserKey())) {
-			throw new StorePlatformException("SAC_MEM_0002", "userKey");
-		}
 
 		InitRealNameRes res = new InitRealNameRes();
 		res.setUserKey(updateRealNameResponse.getUserKey());
