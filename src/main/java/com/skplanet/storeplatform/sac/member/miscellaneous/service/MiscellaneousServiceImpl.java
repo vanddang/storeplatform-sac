@@ -16,15 +16,18 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
+import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageRes;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinSupServiceRequestEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.JoinSupServiceRequestEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.ModifyEmailEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ServiceSubscriptionCheckEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ServiceSubscriptionCheckEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.WaterMarkAuthImageEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateUserInfoEmIDPEcReq;
 import com.skplanet.storeplatform.external.client.inicis.sci.InicisSCI;
 import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcReq;
 import com.skplanet.storeplatform.external.client.inicis.vo.InicisAuthAccountEcRes;
@@ -128,6 +131,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	@Autowired
 	private IdpSCI idpSCI; // IDP 연동 Interface.
+	@Autowired
+	private ImIdpSCI imIdpSCI; // IMIDP 연동 Interface.
 	@Autowired
 	private UapsSCI uapsSCI; // UAPS 연동 Interface.
 	@Autowired
@@ -1165,6 +1170,26 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			// 2. 사용자 업데이트 이메일 정보를 "" 변경 처리
 			if (StringUtils.equals(StringUtils.defaultString(detailRes.getUserInfo().getUserUpdEmail()),
 					serviceAuthInfo.getAuthEmail())) {
+
+				// IDP
+				if (StringUtils.equals(MemberConstants.USER_TYPE_ONEID, detailRes.getUserInfo().getUserType())
+						&& StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
+					// 통합 IDP 회원
+					UpdateUserInfoEmIDPEcReq updateUserInfoEmIDPEcReq = new UpdateUserInfoEmIDPEcReq();
+					// ImserviceNo
+					updateUserInfoEmIDPEcReq.setKey(detailRes.getUserInfo().getImSvcNo());
+					updateUserInfoEmIDPEcReq.setUserEmail(detailRes.getUserInfo().getUserUpdEmail());
+					this.imIdpSCI.updateUserInfoEmIDP(updateUserInfoEmIDPEcReq);
+
+				} else if (StringUtils.equals(MemberConstants.USER_TYPE_IDPID, detailRes.getUserInfo().getUserType())) {
+					// IDP 회원
+					ModifyEmailEcReq modifyEmailEcReq = new ModifyEmailEcReq();
+					modifyEmailEcReq.setUserId(detailRes.getUserInfo().getUserId()); // ID
+					modifyEmailEcReq.setPreUserEmail(detailRes.getUserInfo().getUserEmail()); // 변경전Email
+					modifyEmailEcReq.setUserEmail(detailRes.getUserInfo().getUserUpdEmail()); // 변경할 Email
+					this.idpSCI.modifyEmail(modifyEmailEcReq);
+				}
+
 				UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 				updateUserRequest.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 				UserMbr userMbr = new UserMbr();
@@ -1173,6 +1198,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				userMbr.setUserUpdEmail("");
 				updateUserRequest.setUserMbr(userMbr);
 				this.userSCI.updateUser(updateUserRequest);
+
 			} else {
 				// 인증 이메일정보 != 사용자 업데이트 이메일
 				throw new StorePlatformException("SAC_MEM_3006");
