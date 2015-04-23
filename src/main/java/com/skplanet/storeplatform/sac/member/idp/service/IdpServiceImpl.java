@@ -3305,9 +3305,21 @@ public class IdpServiceImpl implements IdpService {
 						keySearchList.add(keySearch);
 						searchUserRequest.setKeySearchList(keySearchList);
 						SearchUserResponse searchUserResponse = null;
+
 						try {
+							// UserKey 조회
 							searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 							userKey = searchUserResponse.getUserKey();
+
+							// 회원정보 수정 - 가입 사이트 리스트
+							UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+							updateUserRequest.setCommonRequest(commonRequest);
+							UserMbr userMbr = new UserMbr();
+							userMbr.setUserKey(userKey);
+							userMbr.setImSiteCode(joinSiteTotalList);
+							updateUserRequest.setUserMbr(userMbr);
+							this.userSCI.updateUser(updateUserRequest);
+
 						} catch (StorePlatformException spe) {
 							searchUserResponse = null; // 정보가 없을경우 null로 셋팅
 						}
