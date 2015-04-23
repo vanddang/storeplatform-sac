@@ -94,6 +94,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
+	@Deprecated
 	public GetProvisioningHistoryRes getProvisioningHistory(SacRequestHeader sacHeader, GetProvisioningHistoryReq req);
 
 	/**

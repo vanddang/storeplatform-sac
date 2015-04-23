@@ -76,7 +76,7 @@ public class UserSearchController {
 		return res;
 	}
 
-	@RequestMapping(value = "/member/user/getProvisioningHistory/v1", method = RequestMethod.POST)
+	/* @RequestMapping(value = "/member/user/getProvisioningHistory/v1", method = RequestMethod.POST) */
 	@ResponseBody
 	public GetProvisioningHistoryRes getProvisioningHistory(@RequestBody GetProvisioningHistoryReq req,
 			SacRequestHeader sacHeader) {
