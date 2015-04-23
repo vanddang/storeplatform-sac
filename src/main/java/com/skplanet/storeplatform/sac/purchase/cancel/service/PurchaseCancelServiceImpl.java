@@ -9,17 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.sap.sci.SapPurchaseSCI;
 import com.skplanet.storeplatform.external.client.sap.vo.SendPurchaseNotiEcReq;
@@ -41,7 +30,6 @@ import com.skplanet.storeplatform.purchase.client.membership.sci.MembershipReser
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.CreateSapNotiScReq;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.PaymentInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacRes;
@@ -63,6 +51,16 @@ import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelSacService;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseUapsRepository;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 구매 취소 Service Implements.
@@ -189,15 +187,14 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 				// 쇼핑 특가 상품의 경우 취소 시 실시간 반영
 				PrchsDtlSacParam prchsDtlSacParam = purchaseCancelDetailSacParam.getPrchsDtlSacParamList().get(0);
 				// - 특가상품 여부 체크
-
 				if (StringUtils.startsWith(prchsDtlSacParam.getTenantProdGrpCd(),
 						PurchaseConstants.TENANT_PRODUCT_GROUP_SHOPPING)
 						&& purchaseCancelRepository.useSpecialCoupon(prchsDtlSacParam.getTenantId(),
 								prchsDtlSacParam.getPrchsId())) {
 					this.purchaseDisplayRepository.updateSpecialPurchaseCount(prchsDtlSacParam.getTenantId(),
 							prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getProdId(),
-							prchsDtlSacParam.getStatusCd(), -prchsDtlSacParam.getProdQty(),
-							prchsDtlSacParam.getPrchsDt(), prchsDtlSacParam.getCancelDt());
+							PurchaseConstants.PRCHS_STATUS_CANCEL, -prchsDtlSacParam.getProdQty(),
+							prchsDtlSacParam.getPrchsDt(), purchaseCancelDetailSacParam.getCancelDt());
 				}
 			} else {
 				failCnt++;
