@@ -158,7 +158,7 @@ public class UpdateSpecialPurchaseCountServiceImpl implements UpdateSpecialPurch
 					map.put("productId", productBasicInfo.getCatalogId()); // 특가 상품 카탈로그
 				}
 				if(successFlag){
-					successFlag = this.updateSpecialPurchaseCount(map, req.getPurchaseCount()); // 특가상품 Update 로직 실행
+//					successFlag = this.updateSpecialPurchaseCount(map, req.getPurchaseCount()); // 특가상품 Update 로직 실행
 				}
 			}
 		}else{
