@@ -373,9 +373,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 * SC 사용자 회원 기본정보 수정 요청.
 		 */
 		UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
-		if (updateUserResponse.getUserKey() == null || StringUtils.equals(updateUserResponse.getUserKey(), "")) {
-			throw new StorePlatformException("SAC_MEM_0002", "userKey");
-		}
 
 		/**
 		 * 결과 setting.
