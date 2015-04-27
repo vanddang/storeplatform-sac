@@ -16,6 +16,8 @@ public class DisplayListFromDB {
 	private String expoOrdSub;
 	private String etcProp;
 
+	private boolean mergeTestFlag = false;
+
 	public String getListId() {
 		return listId;
 	}
