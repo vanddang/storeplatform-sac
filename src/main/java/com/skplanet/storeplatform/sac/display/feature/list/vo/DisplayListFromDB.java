@@ -1,14 +1,21 @@
 
 package com.skplanet.storeplatform.sac.display.feature.list.vo;
 
+/**
+ * 상품리스트 응답조건
+ *
+ * Updated on : 2015. 4. 27.
+ * Updated by : 1002159
+ */
 public class DisplayListFromDB {
+
 	private String listId;
 	private String listNm;
 	private String imgPath;
 	private String expoOrd;
 	private String expoOrdSub;
 	private String etcProp;
-	
+
 	public String getListId() {
 		return listId;
 	}
