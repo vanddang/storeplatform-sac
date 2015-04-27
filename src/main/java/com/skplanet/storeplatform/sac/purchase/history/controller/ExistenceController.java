@@ -96,9 +96,9 @@ public class ExistenceController {
 		List<ExistenceItemSc> productList = new ArrayList<ExistenceItemSc>();
 
 		if (StringUtils.isBlank(existenceSacReq.getPrchsId())) {
-			// if (StringUtils.isBlank(existenceSacReq.getUserKey())) {
-			// throw new StorePlatformException("SAC_PUR_0001", "UserKey");
-			// }
+			if (StringUtils.isBlank(existenceSacReq.getUserKey())) {
+				throw new StorePlatformException("SAC_PUR_0001", "UserKey");
+			}
 			if (StringUtils.isBlank(existenceSacReq.getDeviceKey())) {
 				throw new StorePlatformException("SAC_PUR_0001", "DeviceKey");
 			}
