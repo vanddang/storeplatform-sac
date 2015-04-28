@@ -1766,8 +1766,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		// realAge 설정시 성별 유무 로직 제거
-		if (StringUtils.equals(MemberConstants.USE_Y, schUserRes.getMbrAuth().getIsRealName())
-				&& StringUtils.isNotBlank(userInfo.getUserBirthDay())) {
+		if (StringUtils.isNotBlank(userInfo.getUserBirthDay())) {
 			// if (StringUtil.isNotBlank(userInfo.getUserSex()) && StringUtil.isNotBlank(userInfo.getUserSex())) {
 			String ageChk = "";
 			String userSex = userInfo.getUserSex();
@@ -1783,7 +1782,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 					ageChk = ("19".equals(userBirthDay.substring(0, 2))) ? "1" : "3";
 				}
 				int age = CommonUtils.getAgeBySocalNumber(userBirthDay.substring(2, 8), ageChk);
-				userInfo.setRealAge(String.valueOf(age));
+				// 14세 미만이거나 실명인증 여부 Y 인 경우만 만나이 내려줌.
+				if (age < 14 || StringUtils.equals(MemberConstants.USE_Y, schUserRes.getMbrAuth().getIsRealName())) {
+					userInfo.setRealAge(String.valueOf(age));
+				}
 			}
 			// }
 		}
