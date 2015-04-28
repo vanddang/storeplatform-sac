@@ -17,8 +17,9 @@ public class RestInvoker {
 		cm.setDefaultMaxPerRoute(400); // concurrent connections per given route
 		
 		RequestConfig config = RequestConfig.custom()
-				.setSocketTimeout(10 * 1000) // socket timeout = 10sec
 				.setConnectTimeout(2 * 1000) // connect timeout = 2sec
+				.setConnectionRequestTimeout(10 * 1000) // connection request timeout = 10sec
+				.setSocketTimeout(10 * 1000) // socket timeout = 10sec
 			    .build();
 		
 		client = HttpClients.custom()
