@@ -1,5 +1,20 @@
 package com.skplanet.storeplatform.sac.display.localsci.sci.service;
 
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.EXINFO_S2S_INFO;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.SET_SERIES_META;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
 import com.google.common.base.Strings;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -18,22 +33,6 @@ import com.skplanet.storeplatform.sac.display.common.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.display.common.vo.SupportDevice;
 import com.skplanet.storeplatform.sac.display.freepass.service.FreepassService;
 import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
-import org.apache.commons.collections.CollectionUtils;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.SET_SERIES_META;
-import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.*;
 
 /**
  *
@@ -148,9 +147,9 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         for (PaymentInfo paymentInfo : paymentInfoList) {
             Map<String, Integer> milMap = new HashMap<String, Integer>();
             MileageInfo mileageInfo;
-            
+
             Integer prodAmt = paymentInfo.getProdAmt() != null ? paymentInfo.getProdAmt().intValue() : null;
-            
+
             if("Y".equals(paymentInfo.getInAppYn())) {
                 mileageInfo = benefitService.getMileageInfo(tenantId, paymentInfo.getTopMenuId(), paymentInfo.getParentProdId(), prodAmt);
             }
@@ -158,7 +157,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                 mileageInfo = benefitService.getMileageInfo(tenantId, paymentInfo.getTopMenuId(), paymentInfo.getProdId(), prodAmt);
 
             // Tstore 멤버십 - 방어코드 추가
-            if(mileageInfo == null) mileageInfo = new MileageInfo();	 
+            if(mileageInfo == null) mileageInfo = new MileageInfo();
             milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV1, mileageInfo.getRateLv1());
             milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV2, mileageInfo.getRateLv2());
             milMap.put(DisplayConstants.POINT_TP_MILEAGE_LV3, mileageInfo.getRateLv3());
@@ -209,7 +208,7 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                     paymentInfo.setProdNm(paymentInfo.getChnlProdNm());
                 }
             }
-            else {
+            else if (prodInfo.getProductType() == ProductType.App) {
                 // 앱상품의 경우 사용정책 값을 무제한으로 지정
                 paymentInfo.setUsePeriod("0");
                 paymentInfo.setUsePeriodUnitCd(DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE);
