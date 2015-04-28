@@ -598,7 +598,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 			listFeedbackRes.setDwldCnt("0");
 			listFeedbackRes.setPaticpersCnt("0");
 		} else {
-			listFeedbackRes.setAvgEvluScorePcts(ObjectUtils.defaultIfNull(getProdEvalInfo.getAvgEvluScorePcts(), "0,0,0,0,0"));
+			listFeedbackRes.setAvgEvluScorePcts(ObjectUtils.defaultIfNull(getProdEvalInfo.getAvgEvluScorePcts(),
+					"0,0,0,0,0"));
 			listFeedbackRes.setAvgEvluScore(ObjectUtils.defaultIfNull(getProdEvalInfo.getAvgEvluScore(), "0"));
 			listFeedbackRes.setDwldCnt(ObjectUtils.defaultIfNull(getProdEvalInfo.getDwldCnt(), "0"));
 			listFeedbackRes.setPaticpersCnt(ObjectUtils.defaultIfNull(getProdEvalInfo.getPaticpersCnt(), "0"));
@@ -697,6 +698,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 			// 회원 부가속성 정보 조회 (프로파일 이미지 "US010912")
 			SearchUserExtraInfoSacRes searchUserExtraInfoSacRes = null;
 			SearchUserExtraInfoSacReq searchUserExtraInfoSacReq = new SearchUserExtraInfoSacReq();
+			userKeyList.addAll(userKeySet);
 			searchUserExtraInfoSacReq.setUserKeyList(userKeyList);
 
 			List<String> extraProfileList = new ArrayList<String>();
@@ -1197,7 +1199,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 	 *            searchUserSacRes
 	 * @return Feedback
 	 */
-	private Feedback setFeedback(ProdNoti prodNoti, String prodType, DetailInformationSacRes detailInformationSacRes, Object obj) {
+	private Feedback setFeedback(ProdNoti prodNoti, String prodType, DetailInformationSacRes detailInformationSacRes,
+			Object obj) {
 		Feedback feedback = new Feedback();
 		feedback.setNotiSeq(prodNoti.getNotiSeq());
 		feedback.setUserKey(prodNoti.getMbrNo());
@@ -1226,7 +1229,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 							// 회원정보는 있으나 단말정보가 없을경우 방어로직.
 							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
-								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
+								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0),
+										userInfoSac.getUserId());
 							} else { // 단말정보가 미존재.
 								regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
 							}
@@ -1254,7 +1258,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 							// 회원정보는 있으나 단말정보가 없을경우 방어로직.
 							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
-								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0), userInfoSac.getUserId());
+								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0),
+										userInfoSac.getUserId());
 							} else { // 단말정보가 미존재.
 								regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
 							}
