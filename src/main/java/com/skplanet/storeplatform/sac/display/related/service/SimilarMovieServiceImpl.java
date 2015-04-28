@@ -111,8 +111,12 @@ public class SimilarMovieServiceImpl implements SimilarMovieService {
 		String hasNext = "N";
 		SimilarMovieSacRes res = new SimilarMovieSacRes();
 		List<Product> list = new ArrayList<Product>();
-		if(moviesFromDB==null || moviesFromDB.isEmpty())
+		if(moviesFromDB==null || moviesFromDB.isEmpty()) {
+			res.setCount(0);
+			res.setHasNext("N");
+			res.setProductList(new ArrayList<Product>());
 			return res;
+		}
 		SimilarMovieDbResultMap rm =  moviesFromDB.get(0);
 		String[] prodIdWithPointArr = rm.getSimProdIdList().split(",");
 		for(String prodIdWithPoint : prodIdWithPointArr){
