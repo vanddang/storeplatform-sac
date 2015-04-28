@@ -1766,7 +1766,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		// realAge 설정시 성별 유무 로직 제거
-		if (StringUtils.isNotBlank(userInfo.getUserBirthDay())) {
+		if (StringUtils.equals(MemberConstants.USE_Y, schUserRes.getMbrAuth().getIsRealName())
+				&& StringUtils.isNotBlank(userInfo.getUserBirthDay())) {
 			// if (StringUtil.isNotBlank(userInfo.getUserSex()) && StringUtil.isNotBlank(userInfo.getUserSex())) {
 			String ageChk = "";
 			String userSex = userInfo.getUserSex();
