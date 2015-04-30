@@ -21,7 +21,6 @@ public class ImmediatelyUseStopSacReq extends PurchaseHeaderSacReq {
 	private String reqPathCd; // 요청경로코드
 	@NotBlank
 	private String drawbackAmt; // 환불금액
-	@NotBlank
 	private String userKey;
 
 	/**
