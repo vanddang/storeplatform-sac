@@ -10,6 +10,8 @@
 package com.skplanet.storeplatform.sac.display.other.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTenantProductMappingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherUserTenantReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherUserTenantRes;
 
 /**
  * <p>
@@ -20,5 +22,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTenantProduct
 public interface OtherTenantProductMappingService {
 
     OtherTenantProductMappingRes getTenantProductMapping(String prodId);
+
+	OtherUserTenantRes getUserTenant(OtherUserTenantReq req);
 
 }
