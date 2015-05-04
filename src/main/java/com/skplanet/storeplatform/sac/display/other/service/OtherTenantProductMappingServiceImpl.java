@@ -144,7 +144,7 @@ public class OtherTenantProductMappingServiceImpl implements OtherTenantProductM
         // ProdId로 AID를 조회한다
         String aid = getAidByProdId(param.getProdId());
         if(aid == null)
-            throw new StorePlatformException("SAC_DSP_0005", param.getProdId());
+            return new OtherUserTenantRes(param.getTenantId());
 
         String key = DisplayCryptUtils.hashMdnAidKey(param.getMdn(), aid);
         if(Strings.isNullOrEmpty(key))
