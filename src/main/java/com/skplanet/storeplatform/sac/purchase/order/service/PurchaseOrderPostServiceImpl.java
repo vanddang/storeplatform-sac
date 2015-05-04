@@ -282,8 +282,10 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 					seller.setSellerName(sellerMbrSac.getSellerName());
 					seller.setSellerEmail(sellerMbrSac.getSellerEmail());
 					seller.setSellerAddress(sellerMbrSac.getSellerAddress());
-					seller.setSellerPhone(sellerMbrSac.getRepPhone());
-					seller.setBizRegNumber(sellerMbrSac.getBizRegNumber());
+					seller.setSellerPhone(StringUtils.defaultIfBlank(sellerMbrSac.getRepPhone(),
+							PurchaseConstants.SAP_NOTI_SELLER_DEFAULT_TEL));
+					seller.setBizRegNumber(StringUtils.defaultIfBlank(sellerMbrSac.getBizRegNumber(),
+							PurchaseConstants.SAP_NOTI_SELLER_DEFAULT_BIZ_REG_NUMBER));
 
 					product.setSellerInfo(seller);
 				}
