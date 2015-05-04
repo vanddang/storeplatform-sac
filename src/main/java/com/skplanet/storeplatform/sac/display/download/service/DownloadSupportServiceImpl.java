@@ -123,7 +123,7 @@ public class DownloadSupportServiceImpl implements DownloadSupportService {
             commonDAO.update("Download.mergeUserDownloadInfo", req);
         }
         catch (DuplicateKeyException e) {
-            logger.error("", e);
+            // NOOP
         }
     }
 }
