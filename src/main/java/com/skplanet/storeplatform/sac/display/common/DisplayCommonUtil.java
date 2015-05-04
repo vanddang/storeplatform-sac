@@ -67,10 +67,11 @@ public class DisplayCommonUtil {
 	 * @param osVer 운영체제 정보 문자열
 	 * @return majVer.minVer 형태의 문자열. 읽을 수 없는 형태인 경우 0.0 출력
 	 */
-    private static Pattern RX_EXTRACT_VERSION = Pattern.compile("(?:(?:.+)\\s?/\\s?)?(\\d+)(?:\\.(\\d+))?(?:\\.\\d+)?");
+    private static final Pattern RX_EXTRACT_VERSION = Pattern.compile("(?:(?:.+)\\s?/\\s?)?(\\d+)(?:\\.(\\d+))?(?:\\.\\d+)?");
+	public static final String WRONG_OS_VER = "0.0";
 	public static String extractOsVer(String osVer) {
 		if (StringUtils.isEmpty(osVer))
-			return "0.0";
+			return WRONG_OS_VER;
 
         int majVer = 0, minVer = 0;
         Matcher m = RX_EXTRACT_VERSION.matcher(osVer);

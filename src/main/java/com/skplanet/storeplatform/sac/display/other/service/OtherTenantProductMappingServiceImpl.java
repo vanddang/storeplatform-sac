@@ -172,9 +172,9 @@ public class OtherTenantProductMappingServiceImpl implements OtherTenantProductM
         boolean tenantS01 = "Y".equals(v.getTenant1Yn()),
                 tenantParam = "Y".equals(v.getTenant2Yn());
 
-        // == 0: NULL 반환
+        // == 0: 파라메터로 넘어온 tenantId 응답.
         if(!tenantS01 && !tenantParam) {
-            return null;
+            return new OtherUserTenantRes(param.getTenantId());
         }
         // == 2: 최근 다운로드 TenantID(이하 LAST-DN-TID) 조회
         else if (tenantS01 && tenantParam) {

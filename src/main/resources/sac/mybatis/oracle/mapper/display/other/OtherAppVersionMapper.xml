@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OtherAppVersion">
+	<select id="getVersionInfoByPkg" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.other.service.OtherAppVersionServiceImpl$RawVersionInfo">
+		SELECT SC.PROD_ID, SC.VM_VER, SC.APK_VER
+		FROM TB_DP_SUB_CONTENTS SC
+		  INNER JOIN TB_DP_SPRT_DEVICE SD
+		    ON SD.PROD_ID = SC.PROD_ID AND SD.SUB_CONTENTS_ID = SC.SUB_CONTENTS_ID
+		WHERE APK_PKG_NM = #{apkPkgNm}
+		  AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
+		  AND ROWNUM = 1
+	</select>
+
+</mapper>
