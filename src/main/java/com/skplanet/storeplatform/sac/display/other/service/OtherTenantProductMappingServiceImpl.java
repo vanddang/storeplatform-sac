@@ -159,7 +159,7 @@ public class OtherTenantProductMappingServiceImpl implements OtherTenantProductM
 
         /*
         ref #37318
-        == 0: NULL 반환
+        == 0: 파라메터로 넘어온 tenantId 응답. (자체 SC구동 위함)
         == 1: 매핑된 상품의 Tenant ID 반환
         == 2: 최근 다운로드 TenantID(이하 LAST-DN-TID) 조회
                 LAST-DN-TID == NULL: IAB-TID 반환
@@ -167,7 +167,7 @@ public class OtherTenantProductMappingServiceImpl implements OtherTenantProductM
                 LAST-DN-TID not in [IAP-TID, 'S01']: IAP-TID 반환
          */
         if(v == null)
-            return null;
+            return new OtherUserTenantRes(param.getTenantId());
 
         boolean tenantS01 = "Y".equals(v.getTenant1Yn()),
                 tenantParam = "Y".equals(v.getTenant2Yn());
