@@ -879,6 +879,24 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 
+			/* 로그인 성공이력 저장 */
+			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null);
+
+			/* 일시정지 / 로그인제한 / 직권중지 상태인 경우 */
+			if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
+					|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
+					|| StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
+
+				res.setUserKey(userKey);
+				res.setUserType(userType);
+				res.setUserMainStatus(userMainStatus);
+				res.setUserSubStatus(userSubStatus);
+				res.setLoginStatusCode(loginStatusCode);
+				res.setStopStatusCode(stopStatusCode);
+				res.setIsLoginSuccess("Y");
+				return res;
+			}
+
 		} else { // 기존 IDP 계정인 경우
 
 			try {
@@ -890,6 +908,24 @@ public class LoginServiceImpl implements LoginService {
 					this.modStatus(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId,
 							MemberConstants.USER_LOGIN_STATUS_NOMAL, null, null, null);
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
+				}
+
+				/* 로그인 성공이력 저장 */
+				this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null);
+
+				/* 일시정지 / 로그인제한 / 직권중지 상태인 경우 */
+				if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
+						|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
+						|| StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
+
+					res.setUserKey(userKey);
+					res.setUserType(userType);
+					res.setUserMainStatus(userMainStatus);
+					res.setUserSubStatus(userSubStatus);
+					res.setLoginStatusCode(loginStatusCode);
+					res.setStopStatusCode(stopStatusCode);
+					res.setIsLoginSuccess("Y");
+					return res;
 				}
 
 				/* 인증요청 */
@@ -931,24 +967,6 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 
-		}
-
-		/* 로그인 성공이력 저장 */
-		this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null);
-
-		/* 일시정지 / 로그인제한 / 직권중지 상태인 경우 */
-		if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
-				|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
-				|| StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
-
-			res.setUserKey(userKey);
-			res.setUserType(userType);
-			res.setUserMainStatus(userMainStatus);
-			res.setUserSubStatus(userSubStatus);
-			res.setLoginStatusCode(loginStatusCode);
-			res.setStopStatusCode(stopStatusCode);
-			res.setIsLoginSuccess("Y");
-			return res;
 		}
 
 		/* 로그인 결과 */
