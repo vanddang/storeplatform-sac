@@ -29,6 +29,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHisto
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
@@ -286,4 +288,15 @@ public interface UserSearchService {
 	 * @return ExistListSacRes
 	 */
 	public ExistListSacRes existList(SacRequestHeader sacHeader, ExistListSacReq req);
+
+	/**
+	 * 2.1.56. 가입 테넌트 정보 목록 조회.
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            ListTenantReq
+	 * @return ListTenantRes
+	 */
+	public ListTenantRes listTenant(SacRequestHeader requestHeader, ListTenantReq req);
 }

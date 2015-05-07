@@ -49,6 +49,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.DeviceSystemStats;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.GameCenter;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
@@ -87,6 +89,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.GradeInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
+import com.skplanet.storeplatform.sac.client.member.vo.common.TenantInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
@@ -107,6 +110,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHisto
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
@@ -1971,4 +1976,41 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	}
 
+	/**
+	 * 2.1.56. 가입 테넌트 정보 목록 조회.
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            ListTenantReq
+	 * @return ListTenantRes
+	 */
+	@Override
+	public ListTenantRes listTenant(SacRequestHeader requestHeader, ListTenantReq req) {
+
+		/**
+		 * ListTenantReq setting
+		 */
+		ListTenantRequest listTenantRequest = new ListTenantRequest();
+		listTenantRequest.setDeviceId(req.getDeviceId());
+
+		/**
+		 * SC 휴대기기로 테넌트 리스트를 조회 기능 호출.
+		 */
+		ListTenantResponse listTenantResponse = this.userSCI.searchTenantList(listTenantRequest);
+
+		List<TenantInfo> tenantList = new ArrayList<TenantInfo>();
+		for (String tenantId : listTenantResponse.getTenantList()) {
+			TenantInfo tenantInfo = new TenantInfo();
+			tenantInfo.setTenantId(tenantId);
+
+			tenantList.add(tenantInfo);
+		}
+
+		ListTenantRes res = new ListTenantRes();
+		res.setDeviceId(req.getDeviceId());
+		res.setTenantList(tenantList);
+
+		return res;
+	}
 }
