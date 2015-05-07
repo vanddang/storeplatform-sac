@@ -74,7 +74,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreement
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
@@ -325,14 +324,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 	@Override
 	public ModifyEmailRes modEmail(SacRequestHeader sacHeader, ModifyEmailReq req) {
 
-		TenantHeader tenant = sacHeader.getTenantHeader();
-		if (StringUtils.isBlank(req.getTenantId())) {
-			tenant.setTenantId(MemberConstants.TENANT_ID_TSTORE);
-		} else {
-			tenant.setTenantId(req.getTenantId());
-		}
-		sacHeader.setTenantHeader(tenant);
-
 		/** 사용자 정보 조회 후 IDP/ImIDP 이메일 정보 변경 요청. 2015-04-09. */
 		DetailReq detailReq = new DetailReq();
 		detailReq.setUserKey(req.getUserKey());
@@ -341,22 +332,25 @@ public class UserModifyServiceImpl implements UserModifyService {
 		detailReq.setSearchExtent(searchExtent);
 		DetailV2Res detailRes = this.userSearchService.detailV2(sacHeader, detailReq);
 
-		if (StringUtils.equals(MemberConstants.USER_TYPE_ONEID, detailRes.getUserInfo().getUserType())
-				&& StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
-			// 통합 IDP 회원
-			UpdateUserInfoEmIDPEcReq updateUserInfoEmIDPEcReq = new UpdateUserInfoEmIDPEcReq();
-			// ImserviceNo
-			updateUserInfoEmIDPEcReq.setKey(detailRes.getUserInfo().getImSvcNo());
-			updateUserInfoEmIDPEcReq.setUserEmail(req.getNewEmail());
-			this.imIdpSCI.updateUserInfoEmIDP(updateUserInfoEmIDPEcReq);
+		// S01
+		if (StringUtils.equals(MemberConstants.TENANT_ID_TSTORE, sacHeader.getTenantHeader().getTenantId())) {
+			if (StringUtils.equals(MemberConstants.USER_TYPE_ONEID, detailRes.getUserInfo().getUserType())
+					&& StringUtils.isNotBlank(detailRes.getUserInfo().getImSvcNo())) {
+				// 통합 IDP 회원
+				UpdateUserInfoEmIDPEcReq updateUserInfoEmIDPEcReq = new UpdateUserInfoEmIDPEcReq();
+				// ImserviceNo
+				updateUserInfoEmIDPEcReq.setKey(detailRes.getUserInfo().getImSvcNo());
+				updateUserInfoEmIDPEcReq.setUserEmail(req.getNewEmail());
+				this.imIdpSCI.updateUserInfoEmIDP(updateUserInfoEmIDPEcReq);
 
-		} else if (StringUtils.equals(MemberConstants.USER_TYPE_IDPID, detailRes.getUserInfo().getUserType())) {
-			// IDP 회원
-			ModifyEmailEcReq modifyEmailEcReq = new ModifyEmailEcReq();
-			modifyEmailEcReq.setUserId(detailRes.getUserInfo().getUserId()); // ID
-			modifyEmailEcReq.setPreUserEmail(detailRes.getUserInfo().getUserEmail()); // 변경전Email
-			modifyEmailEcReq.setUserEmail(req.getNewEmail()); // 변경할 Email
-			this.idpSCI.modifyEmail(modifyEmailEcReq);
+			} else if (StringUtils.equals(MemberConstants.USER_TYPE_IDPID, detailRes.getUserInfo().getUserType())) {
+				// IDP 회원
+				ModifyEmailEcReq modifyEmailEcReq = new ModifyEmailEcReq();
+				modifyEmailEcReq.setUserId(detailRes.getUserInfo().getUserId()); // ID
+				modifyEmailEcReq.setPreUserEmail(detailRes.getUserInfo().getUserEmail()); // 변경전Email
+				modifyEmailEcReq.setUserEmail(req.getNewEmail()); // 변경할 Email
+				this.idpSCI.modifyEmail(modifyEmailEcReq);
+			}
 		}
 
 		/**
