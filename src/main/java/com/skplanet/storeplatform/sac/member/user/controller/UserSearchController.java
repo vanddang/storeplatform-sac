@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
@@ -33,6 +34,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDailyPhoneOsSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTenantRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
@@ -316,6 +319,40 @@ public class UserSearchController {
 		}
 
 		ExistListSacRes res = this.svc.existList(header, req);
+
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.56. 가입 테넌트 정보 조회.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	@RequestMapping(value = "/member/user/listTenant/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ListTenantRes listTenant(SacRequestHeader requestHeader, @RequestBody ListTenantReq req) {
+		LOGGER.debug("####################################");
+		LOGGER.debug("##### 2.1.56 가입 테넌트 정보 조회   #####");
+		LOGGER.debug("####################################");
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		if (StringUtils.isEmpty(req.getDeviceId())) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
+		}
+
+		/**
+		 * 가입 테넌트 정보 조회 Biz
+		 */
+		ListTenantRes res = this.svc.listTenant(requestHeader, req);
 
 		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
 
