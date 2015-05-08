@@ -35,6 +35,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	private String dwldTypeCd; // 다운로드 유형 코드 (DP012701:다운로드, DP012702:자동 업데이트, DP012703:수동 업데이트, DP012704:이어받기)
     private String mdn;
     private String updateAlarmYn; // 업데이트 알람 수신 여부
+    private String packetFreeYn; // packet 비과금 처리 여부
 
     public String getMdn() {
         return mdn;
@@ -42,6 +43,14 @@ public class DownloadAppSacReq extends CommonInfo {
 
     public void setMdn(String mdn) {
         this.mdn = mdn;
+    }
+
+    public String getPacketFreeYn() {
+        return packetFreeYn;
+    }
+
+    public void setPacketFreeYn(String packetFreeYn) {
+        this.packetFreeYn = packetFreeYn;
     }
 
     /* internal values */
