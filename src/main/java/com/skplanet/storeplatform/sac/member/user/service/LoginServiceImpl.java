@@ -969,7 +969,7 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
-		/* 로그인 결과 */
+		/* 정상 로그인 결과 */
 		res.setUserAuthKey(userAuthKey);
 		res.setUserKey(userKey);
 		res.setUserType(userType);
@@ -2718,7 +2718,7 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setUserID(userId);
 		loginReq.setUserPW(userPw);
 		loginReq.setIsSuccess(isSuccess);
-		loginReq.setIsOneID("Y");
+		// loginReq.setIsOneID("Y");
 		loginReq.setIsMobile(isMobile);
 		loginReq.setIsAutoLogin(StringUtils.equals(isAutoUpdate, "Y") ? isAutoUpdate : "N");
 
