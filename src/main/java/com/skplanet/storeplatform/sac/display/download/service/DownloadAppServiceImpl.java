@@ -418,6 +418,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 										// 암호화 정보 (JSON)
 										genenateMetaForAppDeltaUpdate(metaInfo, downloadAppSacReq.getApkVerCd());
 
+                                        // Push 강제 업그레이드인 경우
+                                        generateMetaForPushForceUpgrade(metaInfo, downloadAppSacReq.getPacketFreeYn());
+
                                         Encryption encryption = supportService.generateEncryption(metaInfo, prchsProdId);
                                         encryptionList.add(encryption);
 
@@ -487,16 +490,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			product.setApp(appInfoGenerator.generateApp(metaInfo)); // App 상세정보
 			product.setRights(commonGenerator.generateRights(metaInfo)); // 권한
 			product.setDistributor(commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
-			if (tingMemberFlag) {
-				/**
-				 * ting 요금제 가입자가 어학/교육 카테고리를 다운받을때는
-				 * packetFee 값이 'paid'로 내려가야함.
-				 * dl에 암호화된 token에 packetFee는 'half'로 내려가야함.
-				 */
-				product.setPacketFee(DisplayConstants.DP_PACKETFEE_TYPE_PAID);
-			} else {
-				product.setPacketFee(metaInfo.getProdClsfCd());
-			}
+            product.setPacketFee(makePacketFee(metaInfo, tingMemberFlag, downloadAppSacReq.getPacketFreeYn()));
 			product.setPlatClsfCd(metaInfo.getPlatClsfCd());
 			product.setPrice(commonGenerator.generatePrice(metaInfo)); // 상품금액 정보
 
@@ -514,6 +508,31 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		return new SearchDownloadAppResult(response, metaInfo.getAid(), metaInfo.getProdId(), CollectionUtils.isNotEmpty(encryptionList));
 	}
+
+    private void generateMetaForPushForceUpgrade(MetaInfo metaInfo, String packetFreeYn) {
+        // Push 강제 업그레이드인 경우 packetFee 값을 free로 설정
+        if (StringUtils.isNotBlank(packetFreeYn) && "Y".equals(packetFreeYn))
+            metaInfo.setProdClsfCd(DisplayConstants.DP_PACKETFEE_TYPE_FREE);
+    }
+
+    private String makePacketFee(MetaInfo metaInfo, boolean tingMemberFlag, String packetFreeYn) {
+
+        // Push 강제 업그레이드인 경우 packetFee 값을 free로 설정
+        if (StringUtils.isNotBlank(packetFreeYn) && "Y".equals(packetFreeYn)) {
+            return DisplayConstants.DP_PACKETFEE_TYPE_FREE;
+        }
+
+        if (tingMemberFlag) {
+            /**
+             * ting 요금제 가입자가 어학/교육 카테고리를 다운받을때는
+             * packetFee 값이 'paid'로 내려가야함.
+             * dl에 암호화된 token에 packetFee는 'half'로 내려가야함.
+             */
+            return DisplayConstants.DP_PACKETFEE_TYPE_PAID;
+        }
+
+        return metaInfo.getProdClsfCd();
+    }
 
 	private void doBunchProdProvisioning(DownloadAppSacReq downloadAppSacReq, MetaInfo metaInfo) {
 
