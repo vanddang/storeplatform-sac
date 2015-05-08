@@ -313,6 +313,11 @@
         <typeAlias alias="FreePass"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePass" />
         <typeAlias alias="EpisodeInfoRes"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes" />
         <typeAlias alias="FreePassBasicInfo"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfo" />
+        <typeAlias alias="CmpxBasicInfo"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxBasicInfo" />
+        <typeAlias alias="CmpxProductInfoList"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoList" />
+        <typeAlias alias="CmpxProductInfoSacReq"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoSacReq" />
+        <typeAlias alias="CmpxProductInfo"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfo" />
+        
 
         <!-- 소장/대여 상품 정보 조회(LocalSCI)-->
         <typeAlias alias="PossLendProductInfoSacReq"  type="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfoSacReq" />
