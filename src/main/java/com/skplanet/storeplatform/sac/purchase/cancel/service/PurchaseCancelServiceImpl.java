@@ -193,7 +193,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 								prchsDtlSacParam.getPrchsId())) {
 					this.purchaseDisplayRepository.updateSpecialPurchaseCount(prchsDtlSacParam.getTenantId(),
 							prchsDtlSacParam.getPrchsId(), prchsDtlSacParam.getProdId(),
-							PurchaseConstants.PRCHS_STATUS_CANCEL, -prchsDtlSacParam.getProdQty(),
+							PurchaseConstants.PRCHS_STATUS_CANCEL, -purchaseCancelDetailSacParam.getPrchsDtlSacParamList().size(),
 							prchsDtlSacParam.getPrchsDt(), purchaseCancelDetailSacParam.getCancelDt());
 				}
 			} else {
