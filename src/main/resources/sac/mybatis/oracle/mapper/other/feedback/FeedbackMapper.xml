@@ -446,15 +446,15 @@
                                         <if test="prodType == 'shopping'">
                                             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
                                                 <if test="orderedBy == 'recommend'">
-                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_05) */
+                                                /*+ INDEX_DESC(ia IDX_DP_PROD_NOTI_05) */
                                                 </if>
                                                 <if test="orderedBy == 'recent'">
-                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_01) */
+                                                /*+ INDEX_DESC(ia IDX_DP_PROD_NOTI_01) */
                                                 </if>
                                             </if>
                                             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
                                                 <if test="orderedBy == 'recommend'">
-                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_06) */
+                                                /*+ INDEX_DESC(ia IDX_DP_PROD_NOTI_06) */
                                                 </if>
                                             </if>
                                         </if>
@@ -1099,15 +1099,15 @@
                                         <if test="prodType == 'shopping'">
                                             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
                                                 <if test="orderedBy == 'recommend'">
-                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_05) */
+                                                /*+ INDEX_DESC(ia IDX_DP_PROD_NOTI_05) */
                                                 </if>
                                                 <if test="orderedBy == 'recent'">
-                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_01) */
+                                                /*+ INDEX_DESC(ia IDX_DP_PROD_NOTI_01) */
                                                 </if>
                                             </if>
                                             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
                                                 <if test="orderedBy == 'recommend'">
-                                                /*+ INDEX_DESC(N IDX_DP_PROD_NOTI_06) */
+                                                /*+ INDEX_DESC(ia IDX_DP_PROD_NOTI_06) */
                                                 </if>
                                             </if>
                                         </if>
