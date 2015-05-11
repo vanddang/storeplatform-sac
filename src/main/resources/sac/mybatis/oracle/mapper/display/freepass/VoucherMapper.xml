@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Voucher">
+
+    <!-- 정액제 리스트 조회-->
+    <select id="selectVoucherList" parameterType="VoucherListSacReq" resultType="ProductBasicInfo">
+		SELECT /* VoucherMapper.selectVoucherList, 이용권 상품 조회(자유 이용권 목록 조회), SAC전시 이태균/IS-PLUS, 2015-04-30 */
+            *
+		FROM
+		(
+            SELECT
+                IV.*
+                , ROWNUM AS RNUM
+            FROM
+            (
+                SELECT
+                    COUNT(PD.PROD_ID) OVER() AS TOTAL_COUNT
+                    , TP.TENANT_ID
+                    , DC.LANG_CD
+                    , PD.PROD_ID
+                    , PD.TOP_MENU_ID
+                    , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+                    , PD.META_CLSF_CD
+					, PD.PROD_CHRG_YN
+					, PD.SELLER_MBR_NO
+					, PD.SVC_GRP_CD
+					, PD.SVC_TYPE_CD
+					, PD.PROD_GRD_CD
+					, PD.CID
+					, PD.MALL_CD
+					, PD.FEE_CASE_CD
+					, PD.FEE_UNIT_CD
+					, PD.USE_PERIOD_UNIT_CD
+					, PD.USE_PERIOD
+					, PD.DRM_YN
+					, PD.DRM_SET_CD
+					, PD.DRM_SET_VALUE
+					, PD.CONTENTS_TYPE_CD
+					, TP.EXPO_ORD
+                FROM
+					TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC, TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
+                WHERE 
+                    PD.PROD_ID = CM.PROD_ID
+					AND PD.PROD_ID = DC.PROD_ID
+					AND PD.PROD_ID = TP.PROD_ID
+					AND PD.PROD_ID = PR.PROD_ID
+					AND DC.LANG_CD = #{langCd}
+					AND TP.TENANT_ID = #{tenantId}
+					AND TP.TENANT_ID = PR.TENANT_ID
+					AND CM.SALE_POC_CD IN ('OR004501','OR004503')
+					AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+                    AND EXISTS (
+                        SELECT 'X'
+                        FROM TB_CM_DEVICE DV
+                        WHERE 
+                            DV.DEVICE_MODEL_CD = #{deviceModelCd}
+							AND DV.USE_YN = 'Y'
+							AND 'Y' = CASE 
+                                WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN DV.VOD_FIXISTT_SPRT_YN
+                                WHEN PD.TOP_MENU_ID='DP13' THEN DV.EBOOK_SPRT_YN
+                                WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
+                                ELSE 'Y' END
+                    )
+                    AND PD.SVC_GRP_CD ='DP000207'
+                    <if test='prodStatusCd != null and prodStatusCd != ""'>
+                        AND TP.PROD_STATUS_CD = #{prodStatusCd} /* PD000403 : 판매중 */
+                    </if>
+					AND TP.EXPO_YN = 'Y'
+					<if test='kind != null and kind != ""'>
+						AND CM.FREE_PASS_CLSF_CD = #{kind}
+					</if>
+					<if test='topMenuId != null and topMenuId != ""'>
+						AND PD.TOP_MENU_ID IN /* DP13:ebook/DP14:코믹/DP17:영화/DP18:TV/방송 */
+						<foreach collection="arrTopMenuId" item="topMenuId" separator="," open="(" close=")">
+							#{topMenuId}
+						</foreach>
+					</if>
+					<if test='prodGradeCd != null and prodGradeCd != ""'>
+						AND PD.PROD_GRD_CD IN /* PD004401:전체이용가 / PD004402:12세이용가 / PD004403:15세이용가 / PD004404:청소년이용불가 */
+						<foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+							#{prodGradeCd}
+						</foreach>
+					</if>
+                ORDER BY PD.TOP_MENU_ID DESC, TP.EXPO_ORD, TP.REG_DT /*, PD.REG_DT DESC*/
+            ) IV
+        ) OV
+		WHERE 
+            OV.RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+		ORDER BY 
+            OV.RNUM
+    </select>
+    
+ </mapper>

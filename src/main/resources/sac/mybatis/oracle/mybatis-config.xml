@@ -260,6 +260,7 @@
         <typeAlias alias="FreepassSeriesSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq" />
         <typeAlias alias="FreepassMapProduct"  type="com.skplanet.storeplatform.sac.display.freepass.vo.FreepassProdMap" />
         <typeAlias alias="FreepassDetailInfo"  type="com.skplanet.storeplatform.sac.display.freepass.vo.FreepassDetail" />
+        <typeAlias alias="VoucherListSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListReq" />
                 
         <!-- Vod 보관함 정보 조회 -->
         <typeAlias alias="CategoryVodBoxSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq" />

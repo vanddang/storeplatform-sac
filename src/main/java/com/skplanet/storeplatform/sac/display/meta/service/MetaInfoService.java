@@ -1,10 +1,10 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
-import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-
 import java.util.List;
 import java.util.Map;
+
+import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
  * Meta 정보 조회 Service.
@@ -24,7 +24,8 @@ public interface MetaInfoService {
 	 */
 	public MetaInfo getAppMetaInfo(Map<String, Object> paramMap);
 
-    public List<MetaInfo> getAppMetaInfoList(List<String> prodIdList, String langCd, String tenantId, String deviceModelCd);
+	public List<MetaInfo> getAppMetaInfoList(List<String> prodIdList, String langCd, String tenantId,
+			String deviceModelCd);
 
 	/**
 	 * <pre>
@@ -81,7 +82,7 @@ public interface MetaInfoService {
 	 * @return MetaInfo
 	 */
 	public MetaInfo getShoppingMetaInfo(Map<String, Object> paramMap);
-	
+
 	/**
 	 * <pre>
 	 * 정액제 Meta 정보 조회.
@@ -92,8 +93,7 @@ public interface MetaInfoService {
 	 * @return MetaInfo
 	 */
 	public MetaInfo getFreepassMetaInfo(Map<String, Object> paramMap);
-	
-	
+
 	/**
 	 * <pre>
 	 * 앨범 Meta 정보 조회.
@@ -104,4 +104,15 @@ public interface MetaInfoService {
 	 * @return AlbumMeta
 	 */
 	public AlbumMeta getAlbumMetaInfo(Map<String, Object> paramMap);
+
+	/**
+	 * <pre>
+	 * 정액제 Meta 정보 조회.
+	 * </pre>
+	 * 
+	 * @param paramMap
+	 *            paramMap
+	 * @return MetaInfo
+	 */
+	public MetaInfo getVoucherMetaInfo(Map<String, Object> paramMap);
 }

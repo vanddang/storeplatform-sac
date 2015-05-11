@@ -1076,4 +1076,92 @@
         GROUP BY PROD_ID
     </select>
 
+
+    <select id="getVoucherMeta" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.VoucherMeta">
+        SELECT /* ProductInfoMapper.xml, getVoucherMeta, SAC-전시, 기타 : 이태균 , 2015-05-08 */
+            CPROD.PROD_ID
+            , CPROD.TOP_MENU_ID
+            , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = CPROD.TOP_MENU_ID AND LANG_CD = CPDESC.LANG_CD) AS TOP_MENU_NM
+            , CPROD.META_CLSF_CD
+            , CPROD.PROD_CHRG_YN
+            , CPROD.SELLER_MBR_NO
+            , CPROD.SVC_GRP_CD
+            , CPROD.SVC_TYPE_CD
+            , CPROD.PROD_GRD_CD
+            , CPROD.CID
+            , CPROD.MALL_CD
+            , CPROD.FEE_CASE_CD
+            , CPROD.FEE_UNIT_CD
+            , CPROD.USE_PERIOD_UNIT_CD
+            , CPROD.USE_PERIOD
+            , CPROD.DRM_YN
+            , CPROD.DRM_SET_CD
+            , CPROD.DRM_SET_VALUE
+            , CPROD.CONTENTS_TYPE_CD
+            , CXPROD.CMPX_PROD_CLSF_CD
+            , CXPROD.FREE_PASS_CLSF_CD
+            , CPDESC.PROD_INTR_DSCR
+            , TPRC.PROD_AMT
+            , CPDESC.PROD_NM
+            , CPDESC.PROD_ALIAS
+            , CPDESC.PROD_BASE_DESC
+            , (CASE WHEN CXPROD.CMPX_PROD_CLSF_CD = 'OR004301' THEN CPDESC.PROD_DTL_DESC ELSE '' END) as PROD_DTL_DESC 
+            , CPDESC.PROD_USE_MTD
+            , CXPROD.AUTO_APPR_YN
+            , CXPROD.MAX_SALE_CNT
+            , CXPROD.SALE_POC_CD
+            , CXPROD.DUP_PRCHS_LIMT_YN
+            , TP.PROD_STATUS_CD
+            , TP.EXPO_YN
+            , TP.EXPO_ORD
+            , TO_CHAR(TPRC.APPLY_START_DT, 'YYYYMMDDHH24MISS') AS APPLY_START_DT
+            , TO_CHAR(TPRC.APPLY_END_DT, 'YYYYMMDDHH24MISS') AS APPLY_END_DT
+            , TPRC.CHNL_UNLMT_AMT
+            , TPRC.CHNL_PERIOD_AMT
+            , TPRC.PROD_NET_AMT
+            , TPRC.DC_RATE
+            , TPRC.DC_AMT
+            , TPRC.DC_AFT_PROD_AMT
+            , TPRC.TAX_CLSF
+            , CPDESC.LANG_CD
+            , CXPROD.CASH_AMT
+            , CXPROD.BNS_CASH_AMT_CLSF_CD
+            , CXPROD.BNS_CASH_AMT
+            , CXPROD.BNS_CASH_RATIO
+            , CXPROD.BNS_USE_PERIOD_UNIT_CD
+            , CXPROD.BNS_USE_PERIOD
+            , NVL(BIMG.FILE_PATH, '') || NVL(BIMG.FILE_NM, '') AS BANNER_FILE_PATH
+            , NVL(TIMG.FILE_PATH, '') || NVL(TIMG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
+            , CXPROD.CMPX_PROD_GRP_CD 
+            , CXPROD.SERIES_BOOK_CLSF_CD
+            , POLICY.POSS_LEND_CLSF_CD  
+        FROM TB_DP_PROD CPROD
+            INNER JOIN TB_DP_CMPX_PROD CXPROD
+                ON CXPROD.PROD_ID = CPROD.PROD_ID
+            INNER JOIN TB_DP_PROD_DESC CPDESC
+                ON CPDESC.PROD_ID = CPROD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID = CPROD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+                ON TPRC.PROD_ID = CPROD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_PROD_IMG BIMG
+                ON BIMG.PROD_ID = CPROD.PROD_ID AND BIMG.LANG_CD = CPDESC.LANG_CD AND BIMG.IMG_CD = #{bannImageCd} -- Banner
+            LEFT OUTER JOIN TB_DP_PROD_IMG TIMG
+                ON TIMG.PROD_ID = CPROD.PROD_ID AND TIMG.LANG_CD = CPDESC.LANG_CD
+                   AND TIMG.IMG_CD = (
+                               CASE WHEN CXPROD.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN #{thmbImageCd} -- thumbnail
+                               WHEN CXPROD.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN #{ebookImageCd} -- ebook thumbnail
+                               END
+                       )
+            LEFT OUTER JOIN TB_DP_USE_POLICY POLICY
+                ON POLICY.USE_POLICY_ID = CPROD.PROD_ID                       
+        WHERE 1=1
+              AND CPROD.SVC_GRP_CD = #{svcGrpCd} -- 'DP000207'
+              AND CPROD.PROD_ID = #{prodId}
+              AND CPDESC.LANG_CD = #{langCd}
+              AND TP.TENANT_ID = #{tenantId}
+              AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
+    </select>
+
+
 </mapper>

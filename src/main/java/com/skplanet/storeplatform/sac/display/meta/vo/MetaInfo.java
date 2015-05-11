@@ -160,7 +160,7 @@ public class MetaInfo extends CommonInfo {
 	private String sdSubContsId;
 	private String sdFileSize;
 	private String sdProdVer;
-	
+
 	private String hdBtvCid;
 	private String hdDpPixel;
 	private String hdDpPicRatio;
@@ -168,7 +168,7 @@ public class MetaInfo extends CommonInfo {
 	private String hdFileSize;
 	private String hdProdVer;
 	private String hdFilePath;
-	
+
 	private String hihdBtvCid;
 	private String hihdDpPixel;
 	private String hihdDpPicRatio;
@@ -176,7 +176,7 @@ public class MetaInfo extends CommonInfo {
 	private String hihdFileSize;
 	private String hihdProdVer;
 	private String hihdFilePath;
-	
+
 	private String fhdBtvCid;
 	private String fhdDpPixel;
 	private String fhdDpPicRatio;
@@ -184,13 +184,13 @@ public class MetaInfo extends CommonInfo {
 	private String fhdFileSize;
 	private String fhdProdVer;
 	private String fhdFilePath;
-	
+
 	private String dwldAreaLimtYn;
 	private String strmNetworkCd;
 	private String dwldNetworkCd;
 	private String nmFilePath;
 	private String sdFilePath;
-	
+
 	private String chnlProdNm;
 	private String genreCd;
 	private String genreCd2;
@@ -295,7 +295,8 @@ public class MetaInfo extends CommonInfo {
 
 	// //////////////////////////정액제 상품 변수 ////////////////////////////
 	private String prodAlias; // 상품별명
-	private String cmpxProdClsfCd; // 복함상품구분코드
+	private String cmpxProdClsfCd; // 복합상품구분코드
+	private String freePassClsfCd; // 이용권구분코드
 	private String autoApprYn; // 자동결제여부
 	private String maxSaleCnt; // 최대판매수량
 	private String salePocCd; // 판매POC코드
@@ -310,6 +311,10 @@ public class MetaInfo extends CommonInfo {
 	private Double bnsCashRatio; // 보너스 캐쉬 할인률
 	private String bnsUsePeriodUnitCd; // 보너스 사용 기간단위 코드
 	private String bnsUsePeriod; // 보너스 사용기간
+
+	private String cmpxProdGrpCd; // 이용권 그룹코드
+	private String possLendClsfCd; // 소장, 대여 구분코드
+	private String seriesBookClsfCd; // 이북, 코믹, 연재/단행 구분코드
 
 	// ////////////////////////// 하루에 하나 변수 ////////////////////////////
 	private String expoDt;
@@ -352,7 +357,7 @@ public class MetaInfo extends CommonInfo {
 	private String deltaFilePath;
 	private String visitPathNm;
 	private String dwldTypeCd;
-    private String tenantId;
+	private String tenantId;
 
 	/**
 	 * @return the topMenuId
@@ -4500,7 +4505,6 @@ public class MetaInfo extends CommonInfo {
 		this.couponSendType = couponSendType;
 	}
 
-	
 	/**
 	 * @return the orgDiscountPrice
 	 */
@@ -4514,7 +4518,7 @@ public class MetaInfo extends CommonInfo {
 	public void setOrgDiscountPrice(Integer orgDiscountPrice) {
 		this.orgDiscountPrice = orgDiscountPrice;
 	}
-	
+
 	/**
 	 * @return the specialSaleYn
 	 */
@@ -4585,11 +4589,44 @@ public class MetaInfo extends CommonInfo {
 		this.epsdCid = epsdCid;
 	}
 
-    public String getTenantId() {
-        return tenantId;
-    }
+	public String getTenantId() {
+		return tenantId;
+	}
 
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public String getFreePassClsfCd() {
+		return this.freePassClsfCd;
+	}
+
+	public void setFreePassClsfCd(String freePassClsfCd) {
+		this.freePassClsfCd = freePassClsfCd;
+	}
+
+	public String getPossLendClsfCd() {
+		return this.possLendClsfCd;
+	}
+
+	public void setPossLendClsfCd(String possLendClsfCd) {
+		this.possLendClsfCd = possLendClsfCd;
+	}
+
+	public String getSeriesBookClsfCd() {
+		return this.seriesBookClsfCd;
+	}
+
+	public void setSeriesBookClsfCd(String seriesBookClsfCd) {
+		this.seriesBookClsfCd = seriesBookClsfCd;
+	}
+
+	public String getCmpxProdGrpCd() {
+		return this.cmpxProdGrpCd;
+	}
+
+	public void setCmpxProdGrpCd(String cmpxProdGrpCd) {
+		this.cmpxProdGrpCd = cmpxProdGrpCd;
+	}
+
 }

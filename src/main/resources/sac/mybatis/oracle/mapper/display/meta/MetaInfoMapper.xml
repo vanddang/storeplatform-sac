@@ -1014,4 +1014,93 @@
             END
        )	
     </select>
+    
+    
+    <!-- 정액제 상품 메타 조회 -->
+    <select id="getVoucherMetaInfo" parameterType="Map" resultType="MetaInfo">
+    SELECT  /* MetaInfoMapper.getVoucherMetaInfo, 정액제 상품 메타 조회, 이태균/IS-PLUS, 2015-05-08 */
+        IV.*
+        , NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
+        , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
+    FROM (
+        SELECT  
+            PD.PROD_ID
+            , PD.TOP_MENU_ID
+            , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
+            , PD.META_CLSF_CD
+            , PD.PROD_CHRG_YN
+            , PD.SELLER_MBR_NO
+            , PD.SVC_GRP_CD
+            , PD.SVC_TYPE_CD
+            , PD.PROD_GRD_CD
+            , PD.CID
+            , PD.MALL_CD
+            , PD.FEE_CASE_CD
+            , PD.FEE_UNIT_CD
+            , UP.USE_PERIOD_UNIT_CD
+            , UP.USE_PERIOD
+            , PD.DRM_YN
+            , PD.DRM_SET_CD
+            , PD.DRM_SET_VALUE
+            , PD.CONTENTS_TYPE_CD
+            , CM.CMPX_PROD_CLSF_CD
+            , CM.FREE_PASS_CLSF_CD
+            , DC.PROD_INTR_DSCR
+            , PR.PROD_AMT
+            , DC.PROD_NM
+            , DC.PROD_ALIAS
+            , DC.PROD_BASE_DESC
+            , (CASE WHEN CM.CMPX_PROD_CLSF_CD = 'OR004301' THEN DC.PROD_DTL_DESC ELSE '' END) as PROD_DTL_DESC
+            , DC.PROD_USE_MTD
+            , CM.AUTO_APPR_YN
+            , CM.MAX_SALE_CNT
+            , CM.SALE_POC_CD
+            , CM.DUP_PRCHS_LIMT_YN
+            , TP.PROD_STATUS_CD
+            , TP.EXPO_YN
+            , TP.EXPO_ORD
+            , TO_CHAR(PR.APPLY_START_DT, 'YYYYMMDDHH24MISS') AS APPLY_START_DT
+            , TO_CHAR(PR.APPLY_END_DT, 'YYYYMMDDHH24MISS') AS APPLY_END_DT
+            , PR.CHNL_UNLMT_AMT
+            , PR.CHNL_PERIOD_AMT
+            , PR.PROD_NET_AMT
+            , PR.DC_RATE
+            , PR.DC_AMT
+            , PR.DC_AFT_PROD_AMT
+            , PR.TAX_CLSF
+            , DC.LANG_CD
+            , CM.CASH_AMT
+            , CM.BNS_CASH_AMT_CLSF_CD
+            , CM.BNS_CASH_AMT
+            , CM.BNS_CASH_RATIO
+            , CM.BNS_USE_PERIOD_UNIT_CD
+            , CM.BNS_USE_PERIOD         
+            , CM.CMPX_PROD_GRP_CD 
+            , CM.SERIES_BOOK_CLSF_CD
+            , UP.POSS_LEND_CLSF_CD  
+        FROM 
+            TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC, 
+            TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR,
+            TB_DP_USE_POLICY UP
+        WHERE PD.PROD_ID = #{productBasicInfo.prodId}
+        AND PD.PROD_ID = CM.PROD_ID
+        AND PD.PROD_ID = DC.PROD_ID
+        AND PD.PROD_ID = TP.PROD_ID
+        AND PD.PROD_ID = PR.PROD_ID
+        AND PD.USE_POLICY_ID = UP.USE_POLICY_ID(+)
+        AND DC.LANG_CD = #{tenantHeader.langCd}
+        AND TP.TENANT_ID = #{tenantHeader.tenantId}
+        AND TP.TENANT_ID = PR.TENANT_ID
+        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+    ) IV LEFT OUTER JOIN TB_DP_PROD_IMG BIG
+    ON BIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = BIG.PROD_ID AND BIG.IMG_CD = #{bannerImageCd}
+    LEFT OUTER JOIN TB_DP_PROD_IMG TIG
+    ON TIG.LANG_CD = IV.LANG_CD 
+       AND IV.PROD_ID = TIG.PROD_ID 
+       AND TIG.IMG_CD = (
+            CASE WHEN IV.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN  #{thumbnailImageCd}
+                 WHEN IV.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN  #{ebookThumbnailImageCd}
+            END
+       )    
+    </select>    
  </mapper>

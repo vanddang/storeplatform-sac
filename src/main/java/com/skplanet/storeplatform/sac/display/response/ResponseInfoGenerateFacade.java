@@ -56,7 +56,7 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Product
 	 */
 	public Product generateMusicProduct(MetaInfo metaInfo);
-	
+
 	/**
 	 * <pre>
 	 * Music 상품 Product 생성.
@@ -68,8 +68,7 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Product
 	 */
 	public Product generateAlbumProduct(AlbumMeta albumMeta);
-	
-	
+
 	/**
 	 * <pre>
 	 * Music 상품 Product 생성.
@@ -81,7 +80,6 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Product
 	 */
 	public Product generateAlbumDetailProduct(AlbumMeta albumMeta);
-	
 
 	/**
 	 * <pre>
@@ -314,4 +312,15 @@ public interface ResponseInfoGenerateFacade {
 	 * @return Coupon
 	 */
 	public Coupon generateFreepassProduct(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 정액제 상품 Coupon 객체생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Coupon
+	 */
+	public Coupon generateVoucherProduct(MetaInfo metaInfo);
 }

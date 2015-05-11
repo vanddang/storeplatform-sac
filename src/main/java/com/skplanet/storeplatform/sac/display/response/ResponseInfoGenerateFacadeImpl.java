@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Coupon;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.FreepassAttr;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
@@ -40,6 +40,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.cache.vo.AlbumMeta;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -75,6 +76,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 	@Autowired
 	private FreepassInfoGenerator freepassGenerator;
+
+	@Autowired
+	private VoucherInfoGenerator voucherGenerator;
 
 	@Autowired
 	private DisplayCommonService commonService;
@@ -218,11 +222,11 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(rights);
 		product.setContributor(contributor);
 		product.setMusic(music);
-        if (metaInfo.getRegDt() != null) {
-            java.util.Date regDt = DateUtils.parseDate(metaInfo.getRegDt());
-            if(regDt != null)
-                product.setDateList(Arrays.asList(new Date(DisplayConstants.DP_DATE_REG, regDt)));
-        }
+		if (metaInfo.getRegDt() != null) {
+			java.util.Date regDt = DateUtils.parseDate(metaInfo.getRegDt());
+			if (regDt != null)
+				product.setDateList(Arrays.asList(new Date(DisplayConstants.DP_DATE_REG, regDt)));
+		}
 
 		// Music 상품상세설명
 		product.setProductDetailExplain(metaInfo.getProdDtlDesc());
@@ -235,43 +239,43 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
-    @Override
-    public Product generateMusicProductShort(MetaInfo metaInfo) {
-        Product product = new Product();
-        // Identifier 설정
-        product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
-        // Title 설정
-        Title title = this.commonGenerator.generateTitle(metaInfo);
-        // Price 설정
-        Price price = this.commonGenerator.generatePrice(metaInfo);
-        // MenuList 생성
-        List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
-        // SourceList 생성
-        List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
-        // Accrual 설정
-        Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
-        // Rights 설정
-        Rights rights = this.commonGenerator.generateRights(metaInfo);
-        // Music용 Contributor 설정
-        Contributor contributor = this.musicGenerator.generateContributor(metaInfo);
-        // Music 생성
-        Music music = this.musicGenerator.generateMusic(metaInfo);
+	@Override
+	public Product generateMusicProductShort(MetaInfo metaInfo) {
+		Product product = new Product();
+		// Identifier 설정
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+		// Title 설정
+		Title title = this.commonGenerator.generateTitle(metaInfo);
+		// Price 설정
+		Price price = this.commonGenerator.generatePrice(metaInfo);
+		// MenuList 생성
+		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
+		// SourceList 생성
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// Accrual 설정
+		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
+		// Rights 설정
+		Rights rights = this.commonGenerator.generateRights(metaInfo);
+		// Music용 Contributor 설정
+		Contributor contributor = this.musicGenerator.generateContributor(metaInfo);
+		// Music 생성
+		Music music = this.musicGenerator.generateMusic(metaInfo);
 
-        product.setTitle(title);
-        product.setPrice(price);
-        product.setMenuList(menuList);
-        product.setSourceList(sourceList);
-        product.setAccrual(accrual);
-        product.setRights(rights);
-        product.setContributor(contributor);
-        product.setMusic(music);
-        product.setProductExplain(metaInfo.getProdBaseDesc());
+		product.setTitle(title);
+		product.setPrice(price);
+		product.setMenuList(menuList);
+		product.setSourceList(sourceList);
+		product.setAccrual(accrual);
+		product.setRights(rights);
+		product.setContributor(contributor);
+		product.setMusic(music);
+		product.setProductExplain(metaInfo.getProdBaseDesc());
 
-        // 마일리지
-        this.appendMileageInfo(metaInfo, product);
+		// 마일리지
+		this.appendMileageInfo(metaInfo, product);
 
-        return product;
-    }
+		return product;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -1266,8 +1270,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 		coupon.setKind(metaInfo.getCmpxProdClsfCd());
 		coupon.setCouponExplain(metaInfo.getProdIntrDscr());
-		
-		//정액권 이용안내
+
+		// 정액권 이용안내
 		coupon.setFreepassGuide(metaInfo.getProdDtlDesc());
 
 		coupon.setTitle(title);
@@ -1277,6 +1281,56 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		coupon.setSaleStatus(metaInfo.getProdStatusCd());
 		if (metaInfo.getCashAmt() != null) {
 			coupon.setCashList(this.freepassGenerator.generateCashList(metaInfo));
+		}
+		return coupon;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateVoucherProduct(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Coupon generateVoucherProduct(MetaInfo metaInfo) {
+		Coupon coupon = new Coupon();
+
+		// Identifier 생성
+		coupon.setIdentifierList(this.voucherGenerator.generateIdentifierList(metaInfo));
+		// Title 생성
+		Title title = this.voucherGenerator.generateTitle(metaInfo);
+		// Price 생성
+		Price price = this.commonGenerator.generatePrice(metaInfo);
+		// MenuList 생성
+		AutoPay autoPay = this.voucherGenerator.generateAutoPay(metaInfo);
+		// SourceList 생성
+		coupon.setSourceList(this.voucherGenerator.generateSourceList(metaInfo));
+		// Date 생성
+		// Date date = this.voucherGenerator.generateDate(metaInfo);
+		coupon.setDateList(this.voucherGenerator.generateDateList(metaInfo));
+		// Menu 생성
+		coupon.setMenuList(this.voucherGenerator.generateMenuList(metaInfo));
+		// FreepassAttr 생성
+		FreepassAttr freepassAttr = this.voucherGenerator.generateFreepassAttrList(metaInfo);
+		// Rights 생성
+		Rights rights = this.voucherGenerator.generateRights(metaInfo);
+
+		coupon.setKind(metaInfo.getFreePassClsfCd());
+		coupon.setCouponExplain(metaInfo.getProdIntrDscr());
+
+		// 정액권 이용안내
+		coupon.setVoucherGuide(metaInfo.getProdDtlDesc());
+
+		coupon.setTitle(title);
+		coupon.setPrice(price);
+		coupon.setAutopay(autoPay);
+		coupon.setFreepassAttr(freepassAttr);
+		coupon.setRights(rights);
+		// coupon.setDate(date);
+		coupon.setSaleStatus(metaInfo.getProdStatusCd());
+		if (metaInfo.getCashAmt() != null) {
+			coupon.setCashList(this.voucherGenerator.generateCashList(metaInfo));
 		}
 		return coupon;
 	}
