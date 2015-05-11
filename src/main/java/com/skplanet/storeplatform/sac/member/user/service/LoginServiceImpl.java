@@ -2428,13 +2428,11 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_N)) { // PIN 설정
 			pinSetUrl = this.pinCodeSetUrl;
 		} else if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_Y)
-				&& StringUtils.equals(pinInfo.getIsPinRetry(), MemberConstants.USE_Y)
-				&& StringUtils.equals(pinInfo.getIsPinClosed(), MemberConstants.USE_N)) { // PIN 확인
-			pinSetUrl = this.pinCodeConfirmUrl;
-		} else if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_Y)
-				&& StringUtils.equals(pinInfo.getIsPinRetry(), MemberConstants.USE_Y)
 				&& StringUtils.equals(pinInfo.getIsPinClosed(), MemberConstants.USE_Y)) { // PIN 재설정
 			pinSetUrl = this.pinCodeInitUrl;
+		} else if (StringUtils.equals(pinInfo.getIsPinSet(), MemberConstants.USE_Y)
+				&& StringUtils.equals(pinInfo.getIsPinClosed(), MemberConstants.USE_N)) { // PIN 확인
+			pinSetUrl = this.pinCodeConfirmUrl;
 		}
 
 		return pinSetUrl;
