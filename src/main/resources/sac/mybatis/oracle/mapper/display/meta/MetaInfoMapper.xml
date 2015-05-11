@@ -1043,14 +1043,13 @@
             , PD.DRM_SET_CD
             , PD.DRM_SET_VALUE
             , PD.CONTENTS_TYPE_CD
-            , CM.CMPX_PROD_CLSF_CD
-            , CM.FREE_PASS_CLSF_CD
+            , CM.FREE_PASS_CLSF_CD as CMPX_PROD_CLSF_CD
             , DC.PROD_INTR_DSCR
             , PR.PROD_AMT
             , DC.PROD_NM
             , DC.PROD_ALIAS
             , DC.PROD_BASE_DESC
-            , (CASE WHEN CM.CMPX_PROD_CLSF_CD = 'OR004301' THEN DC.PROD_DTL_DESC ELSE '' END) as PROD_DTL_DESC
+            , (CASE WHEN CM.FREE_PASS_CLSF_CD = 'OR004301' THEN DC.PROD_DTL_DESC ELSE '' END) as PROD_DTL_DESC
             , DC.PROD_USE_MTD
             , CM.AUTO_APPR_YN
             , CM.MAX_SALE_CNT
@@ -1098,8 +1097,8 @@
     ON TIG.LANG_CD = IV.LANG_CD 
        AND IV.PROD_ID = TIG.PROD_ID 
        AND TIG.IMG_CD = (
-            CASE WHEN IV.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN  #{thumbnailImageCd}
-                 WHEN IV.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN  #{ebookThumbnailImageCd}
+            CASE WHEN IV.TOP_MENU_ID IN ('DP17','DP18') THEN  #{thumbnailImageCd}
+                 WHEN IV.TOP_MENU_ID IN ('DP13','DP14') THEN  #{ebookThumbnailImageCd}
             END
        )    
     </select>    
