@@ -14,12 +14,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherSpecificReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.freepass.service.VoucherService;
 
@@ -58,4 +61,39 @@ public class VoucherController {
 		return this.voucherService.searchVoucherList(req, header);
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	/**
+	 * <pre>
+	 * [I03000172] 2.4.1.3. 특정 상품이 적용된 이용권 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return VoucherListRes
+	 */
+
+	@RequestMapping(value = "/specific/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public VoucherListRes searchVoucherSpecific(@RequestBody @Validated VoucherSpecificReq req,
+			SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchVoucherSpecific Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.voucherService.searchVoucherSpecific(req, header);
+	}
 }

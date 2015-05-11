@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.freepass.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherSpecificReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -22,7 +23,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 public interface VoucherService {
 	/**
 	 * <pre>
-	 * 이용권 상품 조회(자유 이용권 목록 조회)
+	 * 이용권 상품 조회(자유 이용권 목록 조회).
 	 * </pre>
 	 * 
 	 * @param req
@@ -32,4 +33,19 @@ public interface VoucherService {
 	 * @return FreepassListRes FreepassListRes
 	 */
 	VoucherListRes searchVoucherList(VoucherListReq req, SacRequestHeader header);
+	
+	
+	
+	/**
+	 * <pre>
+	 * 특정 상품이 적용된 이용권 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            VoucherSpecificReq
+	 * @param header
+	 *            SacRequestHeader
+	 * @return VoucherListRes VoucherListRes
+	 */
+	VoucherListRes searchVoucherSpecific(VoucherSpecificReq req, SacRequestHeader header);
 }
