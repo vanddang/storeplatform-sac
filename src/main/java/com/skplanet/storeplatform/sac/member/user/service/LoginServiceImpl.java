@@ -122,6 +122,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveMemberAmqpSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -191,6 +192,10 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	@Resource(name = "memberAddDeviceAmqpTemplate")
 	private AmqpTemplate memberAddDeviceAmqpTemplate;
+
+	@Autowired
+	@Resource(name = "memberRetireAmqpTemplate")
+	private AmqpTemplate memberRetireAmqpTemplate;
 
 	@Autowired
 	private TstoreTransferSCI tstoreTransferSCI;
@@ -1528,7 +1533,7 @@ public class LoginServiceImpl implements LoginService {
 						// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
 						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
 								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
-						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
+						this.removeMarketUser(requestHeader, detailRes);
 						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
 
 						TlogInfo tlogInfo = new TlogInfo();
@@ -1672,7 +1677,7 @@ public class LoginServiceImpl implements LoginService {
 
 					DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 					LOGGER.info("{} 타사마켓 비회원으로 Tstore 탈퇴처리", req.getDeviceId());
-					this.removeMarketUser(requestHeader, detailRes.getDeviceInfoList().get(0).getUserKey());
+					this.removeMarketUser(requestHeader, detailRes);
 
 				} catch (StorePlatformException e) {
 
@@ -1778,7 +1783,7 @@ public class LoginServiceImpl implements LoginService {
 						// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
 						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
 								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
-						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
+						this.removeMarketUser(requestHeader, detailRes);
 						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
 
 						TlogInfo tlogInfo = new TlogInfo();
@@ -1922,7 +1927,7 @@ public class LoginServiceImpl implements LoginService {
 
 					DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 					LOGGER.info("{} 타사마켓 비회원으로 Tstore 탈퇴처리", req.getDeviceId());
-					this.removeMarketUser(requestHeader, detailRes.getDeviceInfoList().get(0).getUserKey());
+					this.removeMarketUser(requestHeader, detailRes);
 
 				} catch (StorePlatformException e) {
 
@@ -2133,7 +2138,7 @@ public class LoginServiceImpl implements LoginService {
 							// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
 							LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
 									.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
-							this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
+							this.removeMarketUser(requestHeader, detailRes);
 							this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
 
 							// 재가입시킨 회원정보 재조회
@@ -2258,7 +2263,7 @@ public class LoginServiceImpl implements LoginService {
 
 						DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 						LOGGER.info("{} 타사마켓 비회원으로 Tstore 탈퇴처리", req.getDeviceId());
-						this.removeMarketUser(requestHeader, detailRes.getDeviceInfoList().get(0).getUserKey());
+						this.removeMarketUser(requestHeader, detailRes);
 
 					} catch (StorePlatformException e) {
 
@@ -3096,7 +3101,7 @@ public class LoginServiceImpl implements LoginService {
 						// 타사 deviceKey가 다르면 탈퇴 후 재가입(사용자 변경)
 						LOGGER.info("{} 회원탈퇴 후 재가입 타사 userKey 변경 : {} -> {}", req.getDeviceId(), detailRes
 								.getUserInfo().getImMbrNo(), marketRes.getDeviceInfo().getDeviceKey());
-						this.removeMarketUser(requestHeader, detailRes.getUserInfo().getUserKey());
+						this.removeMarketUser(requestHeader, detailRes);
 						this.joinMaketUser(requestHeader, req.getDeviceId(), req.getNativeId(), marketRes);
 
 						// 재가입시킨 회원정보 재조회
@@ -3225,7 +3230,7 @@ public class LoginServiceImpl implements LoginService {
 
 					DetailV2Res detailRes = this.userSearchService.detailV2(requestHeader, detailReq);
 					LOGGER.info("{} 타사마켓 비회원으로 Tstore 탈퇴처리", req.getDeviceId());
-					this.removeMarketUser(requestHeader, detailRes.getDeviceInfoList().get(0).getUserKey());
+					this.removeMarketUser(requestHeader, detailRes);
 
 				} catch (StorePlatformException e) {
 
@@ -3366,13 +3371,28 @@ public class LoginServiceImpl implements LoginService {
 	 * @param userKey
 	 *            String
 	 */
-	private void removeMarketUser(SacRequestHeader requestHeader, String userKey) {
+	private void removeMarketUser(SacRequestHeader requestHeader, DetailV2Res detailRes) {
+		// 회원탈퇴처리
 		RemoveUserRequest scReq = new RemoveUserRequest();
 		scReq.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-		scReq.setUserKey(userKey);
+		scReq.setUserKey(detailRes.getUserKey());
 		scReq.setSecedeReasonCode(MemberConstants.USER_WITHDRAW_CLASS_USER_SELECTED);
 		scReq.setSecedeReasonMessage("SAP 회원탈퇴");
 		this.userSCI.remove(scReq);
+
+		// 탈퇴 MQ연동
+		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
+		mqInfo.setTenantId(detailRes.getDeviceInfoList().get(0).getTenantId());
+		mqInfo.setUserId(detailRes.getUserInfo().getUserId());
+		mqInfo.setUserKey(detailRes.getUserKey());
+		mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
+		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
+		LOGGER.info("{} 탈퇴 MQ info: {}", detailRes.getDeviceInfoList().get(0).getDeviceId(), mqInfo);
+		try {
+			this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
+		} catch (AmqpException ex) {
+			LOGGER.error("MQ process fail {}", mqInfo);
+		}
 	}
 
 	/**
