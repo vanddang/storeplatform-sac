@@ -5,12 +5,16 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-public class StatActionReq {
+public class StatActionV2Req {
 	@NotNull @NotBlank
 	private String userKey;
 	
 	@NotNull @NotBlank
 	private String key;
+	
+	@NotNull @NotBlank
+	@Pattern(regexp = "DP01210001|DP01210002|DP01210003")
+	private String clsf;
 	
 	@NotNull @NotBlank
 	@Pattern(regexp = "DP01220001|DP01220002|DP01220003")
@@ -28,12 +32,17 @@ public class StatActionReq {
 	public void setKey(String key) {
 		this.key = key;
 	}
+	public String getClsf() {
+		return clsf;
+	}
+	public void setClsf(String clsf) {
+		this.clsf = clsf;
+	}
 	public String getRegCaseCd() {
 		return regCaseCd;
 	}
 	public void setRegCaseCd(String regCaseCd) {
 		this.regCaseCd = regCaseCd;
 	}
-	
 	
 }
