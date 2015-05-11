@@ -30,6 +30,11 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 	private String deviceId;
 
 	/**
+	 * 탈퇴요청 tenantId/
+	 */
+	private String tenantId;
+
+	/**
 	 * @return the workDt
 	 */
 	public String getWorkDt() {
@@ -102,6 +107,21 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 	 */
 	public void setProfileImgPath(String profileImgPath) {
 		this.profileImgPath = profileImgPath;
+	}
+
+	/**
+	 * @return tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            String
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }
