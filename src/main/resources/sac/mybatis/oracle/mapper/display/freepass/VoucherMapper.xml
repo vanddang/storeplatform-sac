@@ -93,7 +93,7 @@
     
     
     
-    <!-- 특정 상품에 적용할 자유 이용권 조회(V3 버전)-->
+    <!-- 특정 상품이 적용된 이용권 조회-->
     <select id="searchVoucherSpecific" parameterType="VoucherSpecificReq" resultType="ProductBasicInfo">
             SELECT /* VoucherMapper.searchVoucherSpecific, 특정 상품이 적용된 이용권 조회, SAC전시 김형식/지티소프트, 2015-05-11 */
                 * 
