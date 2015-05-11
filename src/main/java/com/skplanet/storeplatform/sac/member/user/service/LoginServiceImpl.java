@@ -2723,7 +2723,6 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setUserID(userId);
 		loginReq.setUserPW(userPw);
 		loginReq.setIsSuccess(isSuccess);
-		loginReq.setIsOneID("Y");
 		loginReq.setIsMobile(isMobile);
 		loginReq.setIsAutoLogin(StringUtils.equals(isAutoUpdate, "Y") ? isAutoUpdate : "N");
 
