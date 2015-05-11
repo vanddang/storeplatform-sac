@@ -600,7 +600,7 @@
                       , TB_DP_TENANT_PROD_STATS       N /* 채널 Tenant 상품 통계 건수 */
                       , TB_DP_TENANT_PROD_PRICE       O /* 에피소드 Tenant 상품 가격 */
                       , TB_DP_TENANT_PROD             P /* 에피소드 Tenant 상품 */
-                      , TB_DP_USE_POLICY UP           Q /* 에피소드 상품 정책 */
+                      , TB_DP_USE_POLICY              Q /* 에피소드 상품 정책 */
                  WHERE A.MENU_ID = B.MENU_ID
                    AND A.MENU_ID = C.MENU_ID
                    AND B.PROD_ID = D.PROD_ID
