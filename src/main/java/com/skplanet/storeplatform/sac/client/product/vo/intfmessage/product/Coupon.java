@@ -122,10 +122,55 @@ public class Coupon extends CommonInfo implements Serializable {
 	/**
 	 * 정액권 이용안내 (freepassGuide).
 	 */
-	
+
 	private String freepassGuide;
-	
-	
+
+	/**
+	 * 이용권 이용안내 (freepassGuide).
+	 */
+
+	private String voucherGuide;
+
+	/**
+	 * 이용권 속성정보
+	 */
+	private FreepassAttr freepassAttr;
+
+	/**
+	 * 이용권 속성정보
+	 */
+	private Rights rights;
+
+	/**
+	 * @return rights
+	 */
+	public Rights getRights() {
+		return this.rights;
+	}
+
+	/**
+	 * @param rights
+	 *            rights
+	 */
+	public void setRights(Rights rights) {
+		this.rights = rights;
+	}
+
+	/**
+	 * @return FreepassAttr
+	 */
+	public FreepassAttr getFreepassAttr() {
+		return this.freepassAttr;
+	}
+
+	/**
+	 * @param freepassAttr
+	 *            freepassAttr
+	 */
+	public void setFreepassAttr(FreepassAttr freepassAttr) {
+		this.freepassAttr = freepassAttr;
+	}
+
 	/**
 	 * @return Identifier
 	 */
@@ -430,14 +475,30 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * @return the freepassGuide
 	 */
 	public String getFreepassGuide() {
-		return freepassGuide;
+		return this.freepassGuide;
 	}
 
 	/**
-	 * @param freepassGuide the freepassGuide to set
+	 * @param freepassGuide
+	 *            the freepassGuide to set
 	 */
 	public void setFreepassGuide(String freepassGuide) {
 		this.freepassGuide = freepassGuide;
+	}
+
+	/**
+	 * @return the voucherGuide
+	 */
+	public String getVoucherGuide() {
+		return this.voucherGuide;
+	}
+
+	/**
+	 * @param voucherGuide
+	 *            the voucherGuide to set
+	 */
+	public void setVoucherGuide(String voucherGuide) {
+		this.voucherGuide = voucherGuide;
 	}
 
 }
