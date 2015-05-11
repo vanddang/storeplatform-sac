@@ -38,6 +38,7 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
+import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
@@ -51,6 +52,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.ExistListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.GameCenter;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.ListTenantResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.ResetPasswordUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
@@ -630,6 +632,16 @@ public class UserSearchServiceImpl implements UserSearchService {
 			res.setUserPw("");
 			res.setSendMean("03");
 		}
+
+		// 비밀번호 관련 필드 초기화 (업데이트 일자, 로그인 실패 횟수)
+		ResetPasswordUserRequest resetPasswordUserRequest = new ResetPasswordUserRequest();
+		resetPasswordUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+		MbrPwd mbrPwd = new MbrPwd();
+		mbrPwd.setMemberID(info.getUserId()); // 사용자 아이디
+		resetPasswordUserRequest.setMbrPwd(mbrPwd);
+
+		this.userSCI.updateResetPasswordUser(resetPasswordUserRequest);
 
 		return res;
 	}

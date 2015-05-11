@@ -1087,7 +1087,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 	/**
 	 * <pre>
-	 * SC 회원 비밀번호 변경 요청.
+	 * SC 회원 비밀번호 관련 필드 변경 요청.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -1106,11 +1106,11 @@ public class UserModifyServiceImpl implements UserModifyService {
 		mbrPwd.setMemberID(userId); // 사용자 아이디
 		mbrPwd.setMemberKey(req.getUserKey()); // 사용자 Key
 		/**
-		 * 신규번호만 있을시에는 업데이트, 신규번호 + 기존번호 둘다 존재시에는 SC 에서 패스워드 비교를 한다.
+		 * IDP에서 비밀번호를 관리하고 SC에서는 비밀번호를 관리하지 않기 때문에 비밀번호 관련 필드만 업데이트함.
 		 * 
-		 * IDP 에서 이미 패스워드 검증을 하기 때문에 신규번호만 넣고 업데이트함.
+		 * 패스워드 검증은 IDP에서 함.
 		 */
-		mbrPwd.setMemberPW(req.getNewPassword()); // 신규 비밀번호
+		// mbrPwd.setMemberPW(req.getNewPassword()); // 신규 비밀번호
 		mbrPwd.setPwRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 비밀번호 변경 일시
 		updatePasswordUserRequest.setMbrPwd(mbrPwd);
 
