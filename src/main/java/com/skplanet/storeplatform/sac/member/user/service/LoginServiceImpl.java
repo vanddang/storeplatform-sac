@@ -821,6 +821,9 @@ public class LoginServiceImpl implements LoginService {
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
+				/* 로그인 성공이력 저장 */
+				this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null);
+
 				/* 단말정보 update */
 				// this.modDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
@@ -884,9 +887,6 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 
-			/* 로그인 성공이력 저장 */
-			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null);
-
 			/* 일시정지 / 로그인제한 / 직권중지 상태인 경우 */
 			if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
 					|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
@@ -915,9 +915,6 @@ public class LoginServiceImpl implements LoginService {
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
-				/* 로그인 성공이력 저장 */
-				this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null);
-
 				/* 일시정지 / 로그인제한 / 직권중지 상태인 경우 */
 				if (StringUtils.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
 						|| StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
@@ -941,6 +938,9 @@ public class LoginServiceImpl implements LoginService {
 						.authForId(authForIdEcReq);
 
 				userAuthKey = authForIdEcRes.getUserAuthKey();
+
+				/* 로그인 성공이력 저장 */
+				this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null);
 
 				/* 단말정보 update */
 				// this.modDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
