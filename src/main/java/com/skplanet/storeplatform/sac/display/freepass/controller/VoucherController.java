@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherSpecificReq;
@@ -59,6 +60,28 @@ public class VoucherController {
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.voucherService.searchVoucherList(req, header);
+	}
+
+	/**
+	 * <pre>
+	 * 이용권 상품 상세 조회 (자유 이용권 상품 상세 조회)
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return CategoryAppRes
+	 */
+	@RequestMapping(value = "/detail/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public VoucherDetailRes searchVoucherDetail(@Validated @RequestBody VoucherDetailReq req, SacRequestHeader header) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchVoucherDetail Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.voucherService.searchVoucherDetail(req, header);
 	}
 
 	

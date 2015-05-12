@@ -796,7 +796,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setBook(book);
-        product.setDateList(Arrays.asList(new Date(DisplayConstants.DP_DATE_REG, metaInfo.getUpdDt())));    // updDt이지만 실제로는 lastDeployDt임
+		product.setDateList(Arrays.asList(new Date(DisplayConstants.DP_DATE_REG, metaInfo.getUpdDt()))); // updDt이지만
+																										 // 실제로는
+																										 // lastDeployDt임
 		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
 		// 판매상태 설정
 		product.setSalesStatus(metaInfo.getProdStatusCd());
@@ -1316,11 +1318,14 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Rights 생성
 		Rights rights = this.voucherGenerator.generateRights(metaInfo);
 
-		coupon.setKind(metaInfo.getFreePassClsfCd());
+		coupon.setKind(metaInfo.getCmpxProdClsfCd());
 		coupon.setCouponExplain(metaInfo.getProdIntrDscr());
 
 		// 정액권 이용안내
-		coupon.setVoucherGuide(metaInfo.getProdDtlDesc());
+		coupon.setFreepassGuide(metaInfo.getProdDtlDesc());
+
+		// 요청 상품 여부
+		coupon.setRequestProduct(metaInfo.getRequestProduct());
 
 		coupon.setTitle(title);
 		coupon.setPrice(price);

@@ -315,6 +315,7 @@ public class MetaInfo extends CommonInfo {
 	private String cmpxProdGrpCd; // 이용권 그룹코드
 	private String possLendClsfCd; // 소장, 대여 구분코드
 	private String seriesBookClsfCd; // 이북, 코믹, 연재/단행 구분코드
+	private String requestProduct; // 요청상품정보
 
 	// ////////////////////////// 하루에 하나 변수 ////////////////////////////
 	private String expoDt;
@@ -4509,11 +4510,12 @@ public class MetaInfo extends CommonInfo {
 	 * @return the orgDiscountPrice
 	 */
 	public Integer getOrgDiscountPrice() {
-		return orgDiscountPrice;
+		return this.orgDiscountPrice;
 	}
 
 	/**
-	 * @param orgDiscountPrice the orgDiscountPrice to set
+	 * @param orgDiscountPrice
+	 *            the orgDiscountPrice to set
 	 */
 	public void setOrgDiscountPrice(Integer orgDiscountPrice) {
 		this.orgDiscountPrice = orgDiscountPrice;
@@ -4523,11 +4525,12 @@ public class MetaInfo extends CommonInfo {
 	 * @return the specialSaleYn
 	 */
 	public String getSpecialSaleYn() {
-		return specialSaleYn;
+		return this.specialSaleYn;
 	}
 
 	/**
-	 * @param specialSaleYn the specialSaleYn to set
+	 * @param specialSaleYn
+	 *            the specialSaleYn to set
 	 */
 	public void setSpecialSaleYn(String specialSaleYn) {
 		this.specialSaleYn = specialSaleYn;
@@ -4582,7 +4585,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getEpsdCid() {
-		return epsdCid;
+		return this.epsdCid;
 	}
 
 	public void setEpsdCid(String epsdCid) {
@@ -4590,7 +4593,7 @@ public class MetaInfo extends CommonInfo {
 	}
 
 	public String getTenantId() {
-		return tenantId;
+		return this.tenantId;
 	}
 
 	public void setTenantId(String tenantId) {
@@ -4627,6 +4630,14 @@ public class MetaInfo extends CommonInfo {
 
 	public void setCmpxProdGrpCd(String cmpxProdGrpCd) {
 		this.cmpxProdGrpCd = cmpxProdGrpCd;
+	}
+
+	public String getRequestProduct() {
+		return this.requestProduct;
+	}
+
+	public void setRequestProduct(String requestProduct) {
+		this.requestProduct = requestProduct;
 	}
 
 }

@@ -261,6 +261,8 @@
         <typeAlias alias="FreepassMapProduct"  type="com.skplanet.storeplatform.sac.display.freepass.vo.FreepassProdMap" />
         <typeAlias alias="FreepassDetailInfo"  type="com.skplanet.storeplatform.sac.display.freepass.vo.FreepassDetail" />
         <typeAlias alias="VoucherListSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherListReq" />
+        <typeAlias alias="VoucherDetailSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherDetailReq" />
+        <typeAlias alias="VoucherMapProduct"  type="com.skplanet.storeplatform.sac.display.freepass.vo.VoucherProdMap" />
         <typeAlias alias="VoucherSpecificReq"  type="com.skplanet.storeplatform.sac.client.display.vo.freepass.VoucherSpecificReq" />
                 
         <!-- Vod 보관함 정보 조회 -->

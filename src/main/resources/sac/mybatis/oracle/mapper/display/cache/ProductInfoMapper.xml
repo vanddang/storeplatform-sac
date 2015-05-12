@@ -1098,14 +1098,13 @@
             , CPROD.DRM_SET_CD
             , CPROD.DRM_SET_VALUE
             , CPROD.CONTENTS_TYPE_CD
-            , CXPROD.CMPX_PROD_CLSF_CD
-            , CXPROD.FREE_PASS_CLSF_CD
+            , CXPROD.FREE_PASS_CLSF_CD as CMPX_PROD_CLSF_CD            
             , CPDESC.PROD_INTR_DSCR
             , TPRC.PROD_AMT
             , CPDESC.PROD_NM
             , CPDESC.PROD_ALIAS
             , CPDESC.PROD_BASE_DESC
-            , (CASE WHEN CXPROD.CMPX_PROD_CLSF_CD = 'OR004301' THEN CPDESC.PROD_DTL_DESC ELSE '' END) as PROD_DTL_DESC 
+            , (CASE WHEN CXPROD.FREE_PASS_CLSF_CD = 'OR004301' THEN CPDESC.PROD_DTL_DESC ELSE '' END) as PROD_DTL_DESC 
             , CPDESC.PROD_USE_MTD
             , CXPROD.AUTO_APPR_YN
             , CXPROD.MAX_SALE_CNT
@@ -1149,8 +1148,8 @@
             LEFT OUTER JOIN TB_DP_PROD_IMG TIMG
                 ON TIMG.PROD_ID = CPROD.PROD_ID AND TIMG.LANG_CD = CPDESC.LANG_CD
                    AND TIMG.IMG_CD = (
-                               CASE WHEN CXPROD.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN #{thmbImageCd} -- thumbnail
-                               WHEN CXPROD.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN #{ebookImageCd} -- ebook thumbnail
+                               CASE WHEN CPROD.TOP_MENU_ID IN ('DP17','DP18') THEN #{thmbImageCd} -- thumbnail
+                               WHEN CPROD.TOP_MENU_ID IN ('DP13','DP14') THEN #{ebookImageCd} -- ebook thumbnail
                                END
                        )
             LEFT OUTER JOIN TB_DP_USE_POLICY POLICY

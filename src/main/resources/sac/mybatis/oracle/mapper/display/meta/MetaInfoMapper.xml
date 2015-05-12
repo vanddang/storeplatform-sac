@@ -1016,9 +1016,9 @@
     </select>
     
     
-    <!-- 정액제 상품 메타 조회 -->
+    <!-- 이용권 상품 메타 조회 -->
     <select id="getVoucherMetaInfo" parameterType="Map" resultType="MetaInfo">
-    SELECT  /* MetaInfoMapper.getVoucherMetaInfo, 정액제 상품 메타 조회, 이태균/IS-PLUS, 2015-05-08 */
+    SELECT  /* MetaInfoMapper.getVoucherMetaInfo, 이용권 상품 메타 조회, 이태균/IS-PLUS, 2015-05-08 */
         IV.*
         , NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
         , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
