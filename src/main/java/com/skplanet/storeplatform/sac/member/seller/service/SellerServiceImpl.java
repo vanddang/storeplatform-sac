@@ -600,8 +600,12 @@ public class SellerServiceImpl implements SellerService {
 		// 무료
 		if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY, searchSellerResponse.getSellerMbr()
 				.getSellerCategory())) {
-			throw new StorePlatformException("SAC_MEM_2004", searchSellerResponse.getSellerMbr().getSellerCategory(),
-					searchSellerResponse.getSellerMbr().getSellerClass());
+			// 개인/법인 사업자
+			if (!StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
+					.getSellerMbr().getSellerClass())) {
+				throw new StorePlatformException("SAC_MEM_2004", searchSellerResponse.getSellerMbr()
+						.getSellerCategory(), searchSellerResponse.getSellerMbr().getSellerClass());
+			}
 		}
 
 		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
@@ -632,6 +636,17 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setCeoBirthDay(req.getCeoBirthDay());
 		sellerMbr.setCustomerPhoneCountry(req.getSellerBizPhoneCountry());
 		sellerMbr.setCustomerPhone(req.getSellerBizPhone());
+
+		// 주민 번호 추가
+		sellerMbr.setSellerSSNumber(req.getSellerSSNumber());
+		// 개인, 무료, 주민번호가 있을경우 --> 유료 상태 업데이트
+		if (StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_PRIVATE_PERSON, searchSellerResponse
+				.getSellerMbr().getSellerClass())
+				&& StringUtils.equals(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY, searchSellerResponse
+						.getSellerMbr().getSellerCategory()) && StringUtils.isNotBlank(req.getSellerSSNumber())) {
+
+			sellerMbr.setSellerCategory(MemberConstants.SellerConstants.SELLER_TYPE_PAY);
+		}
 
 		updateAccountSellerRequest.setSellerMbr(sellerMbr);
 
