@@ -299,7 +299,7 @@ public class ProductInfoManagerImpl implements ProductInfoManager {
 	}
 
 	@Override
-	@Cacheable(value = "sac:display:product:voucher", key = "#param.getCacheKey()", unless = "#result == null")
+	@Cacheable(value = "sac:display:product:voucher:v1", key = "#param.getCacheKey()", unless = "#result == null")
 	public VoucherMeta getVoucherMeta(VoucherMetaParam param) {
 		Map<String, Object> reqMap = new HashMap<String, Object>();
 		reqMap.put("prodId", param.getChannelId());
