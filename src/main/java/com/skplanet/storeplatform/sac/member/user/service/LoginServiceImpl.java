@@ -1669,7 +1669,6 @@ public class LoginServiceImpl implements LoginService {
 				// Tstore에 가입된 회원인경우 탈퇴 처리
 				DetailReq detailReq = new DetailReq();
 				SearchExtentReq searchExtent = new SearchExtentReq();
-				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 				detailReq.setDeviceId(req.getDeviceId());
 				detailReq.setSearchExtent(searchExtent);
@@ -1920,7 +1919,6 @@ public class LoginServiceImpl implements LoginService {
 				// Tstore에 가입된 회원인경우 탈퇴 처리
 				DetailReq detailReq = new DetailReq();
 				SearchExtentReq searchExtent = new SearchExtentReq();
-				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 				detailReq.setDeviceId(req.getDeviceId());
 				detailReq.setSearchExtent(searchExtent);
@@ -2257,7 +2255,6 @@ public class LoginServiceImpl implements LoginService {
 					// Tstore에 가입된 회원인경우 탈퇴 처리
 					DetailReq detailReq = new DetailReq();
 					SearchExtentReq searchExtent = new SearchExtentReq();
-					searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 					searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 					detailReq.setDeviceId(req.getDeviceId());
 					detailReq.setSearchExtent(searchExtent);
@@ -3222,7 +3219,6 @@ public class LoginServiceImpl implements LoginService {
 				// Tstore에 가입된 회원인경우 탈퇴 처리
 				DetailReq detailReq = new DetailReq();
 				SearchExtentReq searchExtent = new SearchExtentReq();
-				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 				detailReq.setDeviceId(req.getDeviceId());
 				detailReq.setSearchExtent(searchExtent);
@@ -3384,7 +3380,7 @@ public class LoginServiceImpl implements LoginService {
 		// 탈퇴 MQ연동
 		RemoveMemberAmqpSacReq mqInfo = new RemoveMemberAmqpSacReq();
 		mqInfo.setTenantId(detailRes.getDeviceInfoList().get(0).getTenantId());
-		mqInfo.setUserId(detailRes.getUserInfo().getUserId());
+		mqInfo.setUserId(detailRes.getDeviceInfoList().get(0).getUserId());
 		mqInfo.setUserKey(detailRes.getUserKey());
 		mqInfo.setDeviceId(detailRes.getDeviceInfoList().get(0).getDeviceId());
 		mqInfo.setWorkDt(DateUtil.getToday("yyyyMMddHHmmss"));
