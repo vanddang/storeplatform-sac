@@ -8,6 +8,7 @@
          SELECT  
                  PD.PROD_ID as cmpxProdId
                , DC.PROD_NM as cmpxProdNm
+               , PD.PROD_GRD_CD
  			   , UP.USE_PERIOD_UNIT_CD
 			   , UP.USE_PERIOD               
                , CM.FREE_PASS_CLSF_CD as cmpxProdClsfCd
