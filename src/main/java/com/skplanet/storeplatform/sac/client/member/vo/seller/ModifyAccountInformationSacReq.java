@@ -130,6 +130,9 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	/** 은행BSB . */
 	private String bankBsb; //
 
+	/** 주민등록번호. */
+	private String sellerSSNumber;
+
 	/** 서류 관련 리스트. */
 	private List<ExtraDocument> extraDocumentList;
 
@@ -701,6 +704,21 @@ public class ModifyAccountInformationSacReq extends CommonInfo {
 	 */
 	public void setBankBsb(String bankBsb) {
 		this.bankBsb = bankBsb;
+	}
+
+	/**
+	 * @return the sellerSSNumber
+	 */
+	public String getSellerSSNumber() {
+		return this.sellerSSNumber;
+	}
+
+	/**
+	 * @param sellerSSNumber
+	 *            the sellerSSNumber to set
+	 */
+	public void setSellerSSNumber(String sellerSSNumber) {
+		this.sellerSSNumber = sellerSSNumber;
 	}
 
 	/**
