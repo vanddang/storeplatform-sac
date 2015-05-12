@@ -111,7 +111,8 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
 
         for (String s : packageInfoList) {
             UpdatePkgDetail dtl = new UpdatePkgDetail(s);
-            if (StringUtils.isNotEmpty(dtl.getPkgNm())) {
+            // parameter가 적어도 packageName/version정보로 와야지만 update 리스트에 추가한다.
+            if (StringUtils.isNotEmpty(dtl.getPkgNm()) && dtl.getVer() != null) {
                 pkgList.add(dtl.getPkgNm());
                 pkgReqMap.put(dtl.getPkgNm(), dtl);
             }
