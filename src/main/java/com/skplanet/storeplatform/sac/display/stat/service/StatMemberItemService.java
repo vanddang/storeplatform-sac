@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.stat.service;
 
 import com.skplanet.storeplatform.sac.client.product.vo.Card;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
@@ -28,5 +29,7 @@ public interface StatMemberItemService {
 	Card findCard(String cardId, String userKey, SacRequestHeader header, PreferredCategoryInfo preferredCategoryInfo);
 
 	Product findProd(String prodId, SacRequestHeader header);
+	
+	Contributor findArtist(String prodId, SacRequestHeader header);
 
 }
