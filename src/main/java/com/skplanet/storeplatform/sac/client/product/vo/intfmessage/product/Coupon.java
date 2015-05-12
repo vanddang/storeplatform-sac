@@ -142,6 +142,11 @@ public class Coupon extends CommonInfo implements Serializable {
 	private Rights rights;
 
 	/**
+	 * 이용권 속성정보
+	 */
+	private String requestProduct;
+
+	/**
 	 * @return rights
 	 */
 	public Rights getRights() {
@@ -499,6 +504,21 @@ public class Coupon extends CommonInfo implements Serializable {
 	 */
 	public void setVoucherGuide(String voucherGuide) {
 		this.voucherGuide = voucherGuide;
+	}
+
+	/**
+	 * @return the requestProduct
+	 */
+	public String getRequestProduct() {
+		return this.requestProduct;
+	}
+
+	/**
+	 * @param requestProduct
+	 *            the requestProduct to set
+	 */
+	public void setRequestProduct(String requestProduct) {
+		this.requestProduct = requestProduct;
 	}
 
 }
