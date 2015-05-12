@@ -75,10 +75,10 @@
 							#{topMenuId}
 						</foreach>
 					</if>
-					<if test='prodGradeCd != null and prodGradeCd != ""'>
+					<if test='cmpxProdGradeCd != null and cmpxProdGradeCd != ""'>
 						AND PD.PROD_GRD_CD IN /* PD004401:전체이용가 / PD004402:12세이용가 / PD004403:15세이용가 / PD004404:청소년이용불가 */
-						<foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
-							#{prodGradeCd}
+						<foreach collection="arrayCmpxProdGradeCd" item="cmpxProdGradeCd" separator="," open="(" close=")">
+							#{cmpxProdGradeCd}
 						</foreach>
 					</if>
                 ORDER BY PD.TOP_MENU_ID DESC, TP.EXPO_ORD, TP.REG_DT /*, PD.REG_DT DESC*/
@@ -177,6 +177,12 @@
 		           WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
 		           ELSE 'Y' END
             )
+            <if test='cmpxProdGradeCd != null and cmpxProdGradeCd != ""'>
+				AND PD.PROD_GRD_CD IN /* PD004401:전체이용가 / PD004402:12세이용가 / PD004403:15세이용가 / PD004404:청소년이용불가 */
+				<foreach collection="arrayCmpxProdGradeCd" item="cmpxProdGradeCd" separator="," open="(" close=")">
+				    #{cmpxProdGradeCd}
+				</foreach>
+            </if>            
     ) IV LEFT OUTER JOIN TB_DP_PROD_IMG BIG
     ON BIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = BIG.PROD_ID AND BIG.IMG_CD = #{bannerImageCd}
     LEFT OUTER JOIN TB_DP_PROD_IMG TIG

@@ -248,6 +248,29 @@ public class VoucherServiceImpl implements VoucherService {
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
 
+		// '+'로 연결 된 이용등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getCmpxProdGradeCd())) {
+			try {
+				String[] arrayCmpxProdGradeCd = req.getCmpxProdGradeCd().split("\\+");
+				for (int i = 0; i < arrayCmpxProdGradeCd.length; i++) {
+					if (StringUtils.isNotEmpty(arrayCmpxProdGradeCd[i])) {
+						if (!"PD004401".equals(arrayCmpxProdGradeCd[i]) && !"PD004402".equals(arrayCmpxProdGradeCd[i])
+								&& !"PD004403".equals(arrayCmpxProdGradeCd[i])
+								&& !"PD004404".equals(arrayCmpxProdGradeCd[i])) {
+							this.log.debug("----------------------------------------------------------------");
+							this.log.debug("유효하지않은 이용권 이용등급 코드 : " + arrayCmpxProdGradeCd[i]);
+							this.log.debug("----------------------------------------------------------------");
+							throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 cmpxProdGradeCd",
+									arrayCmpxProdGradeCd[i]);
+						}
+					}
+				}
+				req.setArrayCmpxProdGradeCd(arrayCmpxProdGradeCd);
+			} catch (Exception e) {
+				throw new StorePlatformException("SAC_DSP_0003", "cmpxProdGradeCd", req.getTopMenuId());
+			}
+		}
+
 		// 시작점 ROW Default 세팅
 		if (req.getOffset() == 0) {
 			req.setOffset(1);
