@@ -17,7 +17,8 @@ public enum ProductType {
     Vod("vod"),
     EbookComic("ebookcomic"),
     Webtoon("webtoon"),
-    RingBell("ringbell");
+    RingBell("ringbell"),
+    Voucher("voucher");
 
     private String name;
     private ProductType(String name) {

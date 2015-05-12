@@ -63,7 +63,13 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     public void evictWebtoonMeta(WebtoonMetaParam param) {
 
     }
+    
+    @Override
+    @CacheEvict(value = "sac:display:product:voucher:v1", key = "#param.getCacheKey()")
+    public void evictVoucherMeta(VoucherMetaParam param) {
 
+    }
+    
     @Override
     @CacheEvict(value = "sac:display:product:shopping", key = "#param.getCacheKey()")
     public void evictShoppingMeta(ShoppingMetaParam param) {
@@ -101,6 +107,12 @@ public class CacheEvictManagerImpl implements CacheEvictManager {
     @Override
     @CacheEvict(value = "sac:display:product:webtoon", allEntries = true)
     public void evictAllWebtoonMeta() {
+
+    }
+    
+    @Override
+    @CacheEvict(value = "sac:display:product:voucher:v1", allEntries = true)
+    public void evictAllVoucherMeta() {
 
     }
 

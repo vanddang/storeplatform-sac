@@ -88,6 +88,9 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
                     else if(prodType == Webtoon) {
                         this.cacheEvictManager.evictWebtoonMeta(new WebtoonMetaParam(_prodId, langCd, tenant));
                     }
+                    else if(prodType == Voucher) {
+                        this.cacheEvictManager.evictVoucherMeta(new VoucherMetaParam(_prodId, langCd, tenant));
+                    }
                 }
             }
             this.cacheEvictManager.evictProductStats(new ProductStatsParam(_prodId));
@@ -125,6 +128,9 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
         }
         else if(prodType == Webtoon) {
             cacheEvictManager.evictAllWebtoonMeta();
+        }
+        else if(prodType == Voucher) {
+            cacheEvictManager.evictAllVoucherMeta();
         }
     }
 

@@ -36,6 +36,8 @@ public interface CacheEvictManager {
     void evictEbookComicMeta(EbookComicMetaParam param);
 
     void evictWebtoonMeta(WebtoonMetaParam param);
+    
+    void evictVoucherMeta(VoucherMetaParam param);
 
     void evictShoppingMeta(ShoppingMetaParam param);
 
@@ -55,6 +57,8 @@ public interface CacheEvictManager {
     void evictAllEbookComicMeta();
 
     void evictAllWebtoonMeta();
+    
+    void evictAllVoucherMeta();
 
     void evictAllShoppingMeta();
 
