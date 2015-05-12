@@ -1092,8 +1092,8 @@
             , CPROD.MALL_CD
             , CPROD.FEE_CASE_CD
             , CPROD.FEE_UNIT_CD
-            , CPROD.USE_PERIOD_UNIT_CD
-            , CPROD.USE_PERIOD
+            , POLICY.USE_PERIOD_UNIT_CD
+            , POLICY.USE_PERIOD
             , CPROD.DRM_YN
             , CPROD.DRM_SET_CD
             , CPROD.DRM_SET_VALUE
