@@ -1669,6 +1669,7 @@ public class LoginServiceImpl implements LoginService {
 				// Tstore에 가입된 회원인경우 탈퇴 처리
 				DetailReq detailReq = new DetailReq();
 				SearchExtentReq searchExtent = new SearchExtentReq();
+				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 				detailReq.setDeviceId(req.getDeviceId());
 				detailReq.setSearchExtent(searchExtent);
@@ -1919,6 +1920,7 @@ public class LoginServiceImpl implements LoginService {
 				// Tstore에 가입된 회원인경우 탈퇴 처리
 				DetailReq detailReq = new DetailReq();
 				SearchExtentReq searchExtent = new SearchExtentReq();
+				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 				detailReq.setDeviceId(req.getDeviceId());
 				detailReq.setSearchExtent(searchExtent);
@@ -2255,6 +2257,7 @@ public class LoginServiceImpl implements LoginService {
 					// Tstore에 가입된 회원인경우 탈퇴 처리
 					DetailReq detailReq = new DetailReq();
 					SearchExtentReq searchExtent = new SearchExtentReq();
+					searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 					searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 					detailReq.setDeviceId(req.getDeviceId());
 					detailReq.setSearchExtent(searchExtent);
@@ -3219,6 +3222,7 @@ public class LoginServiceImpl implements LoginService {
 				// Tstore에 가입된 회원인경우 탈퇴 처리
 				DetailReq detailReq = new DetailReq();
 				SearchExtentReq searchExtent = new SearchExtentReq();
+				searchExtent.setUserInfoYn(MemberConstants.USE_Y);
 				searchExtent.setDeviceInfoYn(MemberConstants.USE_Y);
 				detailReq.setDeviceId(req.getDeviceId());
 				detailReq.setSearchExtent(searchExtent);
