@@ -216,6 +216,7 @@
                   				 AND R.PART_PROD_ID = T.PROD_ID
                   				 AND T.TENANT_ID = #{tenantId}
                   				 AND T.EXPO_YN = 'Y'
+                  				 AND T.PROD_STATUS_CD = 'PD000403'
                   				 AND ROWNUM = 1
                 			 ) AS CONNECTED_PROD_ID   
                           ,  SUBSTR(J.SERIALLY_WKDY,1,3) AS SERIALLY_WKDY
