@@ -1153,7 +1153,7 @@
                                END
                        )
             LEFT OUTER JOIN TB_DP_USE_POLICY POLICY
-                ON POLICY.USE_POLICY_ID = CPROD.PROD_ID                       
+                ON POLICY.USE_POLICY_ID = CPROD.USE_POLICY_ID                       
         WHERE 1=1
               AND CPROD.SVC_GRP_CD = #{svcGrpCd} -- 'DP000207'
               AND CPROD.PROD_ID = #{prodId}
