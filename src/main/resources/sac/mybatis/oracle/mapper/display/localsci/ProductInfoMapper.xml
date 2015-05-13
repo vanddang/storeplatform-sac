@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ProductInfo">
-	<!-- 상품별 서비스 그룹 코드 조회-->
-	<resultMap id="retMap" type="Map">
+    <!-- 상품별 서비스 그룹 코드 조회-->
+    <resultMap id="retMap" type="Map">
         <result property="topMenuId" column="top_menu_id" />
-	    <result property="upMenuId" column="up_menu_id" />
-	    <result property="menuId" column="menu_id" />
-	    <result property="menuNm" column="menu_nm" />
-	    <result property="prodId" column="prod_id" />
-	    <result property="aid" column="aid" />
-	    <result property="prodNm" column="prod_nm" />
-	    <result property="prodBaseDesc" column="prod_base_desc" />
-	    <result property="prodGrdCd" column="prod_grd_cd" />
-	    <result property="partParentClsfCd" column="part_parent_clsf_cd" />
-	    <result property="drmYn" column="drm_yn" />
-	    <result property="contentsTypeCd" column="contents_type_cd" />
-	    <result property="prodVer" column="prod_ver" />
-	    <result property="pkgNm" column="pkg_nm" />
-	    <result property="pkgVerCd" column="pkg_ver_cd" />
-	    <result property="filePath" column="file_path" />
-	    <result property="phoneSprtYn" column="phone_sprt_yn" />
+        <result property="upMenuId" column="up_menu_id" />
+        <result property="menuId" column="menu_id" />
+        <result property="menuNm" column="menu_nm" />
+        <result property="prodId" column="prod_id" />
+        <result property="aid" column="aid" />
+        <result property="prodNm" column="prod_nm" />
+        <result property="prodBaseDesc" column="prod_base_desc" />
+        <result property="prodGrdCd" column="prod_grd_cd" />
+        <result property="partParentClsfCd" column="part_parent_clsf_cd" />
+        <result property="drmYn" column="drm_yn" />
+        <result property="contentsTypeCd" column="contents_type_cd" />
+        <result property="prodVer" column="prod_ver" />
+        <result property="pkgNm" column="pkg_nm" />
+        <result property="pkgVerCd" column="pkg_ver_cd" />
+        <result property="filePath" column="file_path" />
+        <result property="phoneSprtYn" column="phone_sprt_yn" />
     </resultMap>
     
-	<select id="selectProductInfoList" resultType="ProductBasicInfo">
-		SELECT /* ProductInfoMapper.selectProductInfoList, 상품별 서비스 그룹코드 조회, 오승민/인크로스, 2014-03-10 */
+    <select id="selectProductInfoList" resultType="ProductBasicInfo">
+        SELECT /* ProductInfoMapper.selectProductInfoList, 상품별 서비스 그룹코드 조회, 오승민/인크로스, 2014-03-10 */
            PROD_ID,SVC_GRP_CD,SVC_TYPE_CD,CONTENTS_TYPE_CD,META_CLSF_CD,TOP_MENU_ID,PROD_ID AS PART_PROD_ID
       FROM TB_DP_PROD
       <if test = "list !=null">
@@ -52,12 +52,12 @@
               , TB.PROD_BASE_DESC 
               , TB.PROD_GRD_CD
               , DECODE( NVL( TB.PROD_CLSF_CD, 'PD000601' )
-								            , 'PD000601', 'paid'
-								            , 'PD000602', 'library'
-								            , 'PD000603', 'vm'
-								            , 'PD000604', 'free'
-								            , 'PD000605', 'paid-rss'
-								            , 'PD000606', 'free-rss' )  AS PROD_CLSF_CD
+                                            , 'PD000601', 'paid'
+                                            , 'PD000602', 'library'
+                                            , 'PD000603', 'vm'
+                                            , 'PD000604', 'free'
+                                            , 'PD000605', 'paid-rss'
+                                            , 'PD000606', 'free-rss' )  AS PROD_CLSF_CD
               , DECODE( TB.PART_PARENT_CLSF_CD, 'PD012301', 'Y', 'N' ) AS IAB_YN
               , TB.DRM_YN
               , TB.CONTENTS_TYPE_CD
@@ -91,22 +91,22 @@
               , TB.CASE_REF_CD AS SEED_CASE_REF_CD
               , NVL2(TB.CASE_REF_CD, 'Y', 'N') AS LAUNCHER_YN
               , (CASE
-		           WHEN TB.PART_PARENT_CLSF_CD = 'PD012302'
-		           THEN
-		              (SELECT FILE_PATH
-		                 FROM TB_DP_PROD_IMG IMG
-		                WHERE     IMG.PROD_ID = TB.PROD_ID
-		                      AND IMG.EXPO_ORD = 1
-		                      AND IMG.LANG_CD = 'ko'
-		                      AND IMG.IMG_CD = #{imageCd})
-		           ELSE
-		              (SELECT FILE_PATH
-		                 FROM TB_DP_PROD_IMG IMG
-		                WHERE     IMG.PROD_ID = TB.PART_PROD_ID
-		                      AND IMG.EXPO_ORD = 1
-		                      AND IMG.LANG_CD = #{lang}
-		                      AND IMG.IMG_CD = #{imageCd})
-		            END) AS FILE_PATH
+                   WHEN TB.PART_PARENT_CLSF_CD = 'PD012302'
+                   THEN
+                      (SELECT FILE_PATH
+                         FROM TB_DP_PROD_IMG IMG
+                        WHERE     IMG.PROD_ID = TB.PROD_ID
+                              AND IMG.EXPO_ORD = 1
+                              AND IMG.LANG_CD = 'ko'
+                              AND IMG.IMG_CD = #{imageCd})
+                   ELSE
+                      (SELECT FILE_PATH
+                         FROM TB_DP_PROD_IMG IMG
+                        WHERE     IMG.PROD_ID = TB.PART_PROD_ID
+                              AND IMG.EXPO_ORD = 1
+                              AND IMG.LANG_CD = #{lang}
+                              AND IMG.IMG_CD = #{imageCd})
+                    END) AS FILE_PATH
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
                       , A.MENU_ID
@@ -183,98 +183,98 @@
        ) TB
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="ProductInfo">
-	        SELECT  /* ProductInfoMapper.getVODMetaInfo, VOD상품메타조회, 오승민/인크로스, 2014-03-10 */
-			         A.MENU_ID
-			       , A.UP_MENU_ID
-			       , A.TOP_MENU_ID
-			       , I.PROD_ID
-			       , I.PART_PROD_ID
-			       , C.MENU_NM
-			       , C.MENU_DESC
-			       , D.PROD_GRD_CD
-			       , D.META_CLSF_CD
-			       , D.CONTENTS_TYPE_CD
-			       , D.EXPO_SELLER_EMAIL
-			       , D.EXPO_SELLER_NM
-			       , D.EXPO_SELLER_TELNO
-			       , J.USE_PERIOD
-			       , J.USE_PERIOD_UNIT_CD
-			       , D.SELLER_MBR_NO
-			       , D.CID
-			       , E.COMPT_YN
-			       , E.VOD_TITL_NM
-			       , E.STRM_EPSD_CNT
-			       , E.EPSD_CNT
-			       , E.ISSUE_DAY
-			       , E.CHNL_COMP_NM
-			       , E.AGENCY_NM
-			       , E.HDV_YN
-			       , E.HDCP_YN
-			       , E.REG_DT
-			       , E.PLAY_TM
-			       , E.CHAPTER
-			       , E.POSS_LEND_CLSF_CD
-			       , E.DOLBY_SPRT_YN
-			       , 'paid' as PROD_CLSF_CD
-			       , F.PROD_NM
-			       , F.ARTIST1_NM
-			       , F.ARTIST2_NM
-			       , F.PROD_BASE_DESC
-			       , D.DRM_YN
-			       , E.OUTSD_CONTENTS_ID
-			       , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
-			            FROM TB_DP_SPRT_DEVICE A
-			           WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
-			              AND A.PROD_ID = I.PART_PROD_ID 
-			              AND (CASE WHEN NVL(D.DRM_YN, 'N') = 'Y' AND #{supportDevice.videoDrmSprtYn} = 'N' THEN 0
-	                           ELSE 
-	                                CASE WHEN #{supportDevice.sdVideoSprtYn} = 'Y' THEN 1 
-	                                ELSE 0
-	                                END
-	                           END) = 1
-			              ) AS PHONE_SPRT_YN
-			       , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId} AND TENANT1.EXPO_YN ='Y') as chnlProdStatusCd
-			       , TENANT.PROD_STATUS_CD
-			  <![CDATA[
-			  , ( CASE WHEN E.EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_STORE
-			 ]]>
-			  <![CDATA[
-			  , ( CASE WHEN E.STRM_EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_PLAY
-			 ]]>
-			   ,(SELECT MENU_NM
-			       FROM TB_DP_MENU_CATEGORY_DESC
-			      WHERE MENU_ID = A.TOP_MENU_ID
-			        AND LANG_CD = 'ko'
-			        AND ROWNUM = 1) AS TOP_MENU_NM
-			    ,( SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG IMG WHERE IMG.PROD_ID = I.PROD_ID  AND  IMG.EXPO_ORD = 1 AND  IMG.LANG_CD = #{lang} AND  IMG.IMG_CD = #{imageCd}) AS FILE_PATH
-			    FROM  TB_DP_MENU_CATEGORY           A
-			        , TB_DP_MENU_CATEGORY_PROD_MAPG B
-			        , TB_DP_MENU_CATEGORY_DESC      C
-			        , TB_DP_PROD                    D
-			        , TB_DP_VOD_PROD                E
-			        , TB_DP_PROD_DESC               F
-			        , TB_DP_PROD_RSHP               I
-			        , TB_DP_USE_POLICY              J
-			        , TB_DP_TENANT_PROD             TENANT
-			   WHERE A.MENU_ID = B.MENU_ID
-			     AND A.MENU_ID = C.MENU_ID
-			     AND B.PROD_ID = D.PROD_ID
-			     AND B.PROD_ID = E.PROD_ID
-			     AND B.PROD_ID = F.PROD_ID
-			     AND B.PROD_ID = I.PART_PROD_ID
-			     AND B.PROD_ID = TENANT.PROD_ID
-			     AND D.USE_POLICY_ID = J.USE_POLICY_ID(+)
-			     AND TENANT.TENANT_ID = #{tenantId}
-			     AND B.BASE_YN = 'Y'
-			     AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
-			     AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
-			     AND D.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 채널타입 */
-			     AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
-			     AND I.PART_PROD_ID = #{productBasicInfo.partProdId}
-			     AND I.PROD_RSHP_CD = #{rshpCd}
-	</select>
-	
-	<select id="getMusicMetaInfo" parameterType="Map" resultType="ProductInfo">
+            SELECT  /* ProductInfoMapper.getVODMetaInfo, VOD상품메타조회, 오승민/인크로스, 2014-03-10 */
+                     A.MENU_ID
+                   , A.UP_MENU_ID
+                   , A.TOP_MENU_ID
+                   , I.PROD_ID
+                   , I.PART_PROD_ID
+                   , C.MENU_NM
+                   , C.MENU_DESC
+                   , D.PROD_GRD_CD
+                   , D.META_CLSF_CD
+                   , D.CONTENTS_TYPE_CD
+                   , D.EXPO_SELLER_EMAIL
+                   , D.EXPO_SELLER_NM
+                   , D.EXPO_SELLER_TELNO
+                   , J.USE_PERIOD
+                   , J.USE_PERIOD_UNIT_CD
+                   , D.SELLER_MBR_NO
+                   , D.CID
+                   , E.COMPT_YN
+                   , E.VOD_TITL_NM
+                   , E.STRM_EPSD_CNT
+                   , E.EPSD_CNT
+                   , E.ISSUE_DAY
+                   , E.CHNL_COMP_NM
+                   , E.AGENCY_NM
+                   , E.HDV_YN
+                   , E.HDCP_YN
+                   , E.REG_DT
+                   , E.PLAY_TM
+                   , E.CHAPTER
+                   , E.POSS_LEND_CLSF_CD
+                   , E.DOLBY_SPRT_YN
+                   , 'paid' as PROD_CLSF_CD
+                   , F.PROD_NM
+                   , F.ARTIST1_NM
+                   , F.ARTIST2_NM
+                   , F.PROD_BASE_DESC
+                   , D.DRM_YN
+                   , E.OUTSD_CONTENTS_ID
+                   , (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
+                        FROM TB_DP_SPRT_DEVICE A
+                       WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
+                          AND A.PROD_ID = I.PART_PROD_ID 
+                          AND (CASE WHEN NVL(D.DRM_YN, 'N') = 'Y' AND #{supportDevice.videoDrmSprtYn} = 'N' THEN 0
+                               ELSE 
+                                    CASE WHEN #{supportDevice.sdVideoSprtYn} = 'Y' THEN 1 
+                                    ELSE 0
+                                    END
+                               END) = 1
+                          ) AS PHONE_SPRT_YN
+                   , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId} AND TENANT1.EXPO_YN ='Y') as chnlProdStatusCd
+                   , TENANT.PROD_STATUS_CD
+              <![CDATA[
+              , ( CASE WHEN E.EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_STORE
+             ]]>
+              <![CDATA[
+              , ( CASE WHEN E.STRM_EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_PLAY
+             ]]>
+               ,(SELECT MENU_NM
+                   FROM TB_DP_MENU_CATEGORY_DESC
+                  WHERE MENU_ID = A.TOP_MENU_ID
+                    AND LANG_CD = 'ko'
+                    AND ROWNUM = 1) AS TOP_MENU_NM
+                ,( SELECT CONCAT(FILE_PATH,FILE_NM) FROM TB_DP_PROD_IMG IMG WHERE IMG.PROD_ID = I.PROD_ID  AND  IMG.EXPO_ORD = 1 AND  IMG.LANG_CD = #{lang} AND  IMG.IMG_CD = #{imageCd}) AS FILE_PATH
+                FROM  TB_DP_MENU_CATEGORY           A
+                    , TB_DP_MENU_CATEGORY_PROD_MAPG B
+                    , TB_DP_MENU_CATEGORY_DESC      C
+                    , TB_DP_PROD                    D
+                    , TB_DP_VOD_PROD                E
+                    , TB_DP_PROD_DESC               F
+                    , TB_DP_PROD_RSHP               I
+                    , TB_DP_USE_POLICY              J
+                    , TB_DP_TENANT_PROD             TENANT
+               WHERE A.MENU_ID = B.MENU_ID
+                 AND A.MENU_ID = C.MENU_ID
+                 AND B.PROD_ID = D.PROD_ID
+                 AND B.PROD_ID = E.PROD_ID
+                 AND B.PROD_ID = F.PROD_ID
+                 AND B.PROD_ID = I.PART_PROD_ID
+                 AND B.PROD_ID = TENANT.PROD_ID
+                 AND D.USE_POLICY_ID = J.USE_POLICY_ID(+)
+                 AND TENANT.TENANT_ID = #{tenantId}
+                 AND B.BASE_YN = 'Y'
+                 AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
+                 AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
+                 AND D.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 채널타입 */
+                 AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
+                 AND I.PART_PROD_ID = #{productBasicInfo.partProdId}
+                 AND I.PROD_RSHP_CD = #{rshpCd}
+    </select>
+    
+    <select id="getMusicMetaInfo" parameterType="Map" resultType="ProductInfo">
        SELECT /* ProductInfoMapper.getMusicMetaInfo, Music상품 메타조회, 오승민/인크로스, 2014-03-10 */
              CP.PROD_ID 
             , CP.PART_PROD_ID
@@ -466,107 +466,107 @@
                 )
          ) AS FILE_PATH                            
         FROM(
-	        SELECT /* ProductInfoMapper.getEbookComicMetaInfo, ebook/Comic 상품메타 조회, 오승민/인크로스, 2014-03-10 */
-	               A.UP_MENU_ID
-	             , A.TOP_MENU_ID   
-	             , (SELECT MENU_NM
-			          FROM TB_DP_MENU_CATEGORY_DESC
-			         WHERE MENU_ID = A.TOP_MENU_ID
-			           AND LANG_CD = #{lang}
-			           AND ROWNUM = 1) AS TOP_MENU_NM                                                          
-	             , A.MENU_ID
-	             , I.PROD_ID
-	             , I.PART_PROD_ID                                     
-	             , C.MENU_NM
-	             , C.MENU_DESC
-	             , D.PROD_GRD_CD
-	             , D.META_CLSF_CD
-	             , D.CONTENTS_TYPE_CD
-	             , D.SELLER_MBR_NO
-	             , D.EXPO_SELLER_EMAIL
-	             , D.EXPO_SELLER_NM
-	             , D.EXPO_SELLER_TELNO
-	             , D.DRM_YN
-	             , J.USE_PERIOD
-	             , J.USE_PERIOD_UNIT_CD
-	             , D.CID
-	             , E.COMPT_YN
-	             , E.STRM_EPSD_CNT
-	             , E.ISSUE_DAY
-	             ,(SELECT CHNL_COMP_NM FROM TB_DP_EBOOK_PROD WHERE PROD_ID = I.PROD_ID) as PUBLISHER
+            SELECT /* ProductInfoMapper.getEbookComicMetaInfo, ebook/Comic 상품메타 조회, 오승민/인크로스, 2014-03-10 */
+                   A.UP_MENU_ID
+                 , A.TOP_MENU_ID   
+                 , (SELECT MENU_NM
+                      FROM TB_DP_MENU_CATEGORY_DESC
+                     WHERE MENU_ID = A.TOP_MENU_ID
+                       AND LANG_CD = #{lang}
+                       AND ROWNUM = 1) AS TOP_MENU_NM                                                          
+                 , A.MENU_ID
+                 , I.PROD_ID
+                 , I.PART_PROD_ID                                     
+                 , C.MENU_NM
+                 , C.MENU_DESC
+                 , D.PROD_GRD_CD
+                 , D.META_CLSF_CD
+                 , D.CONTENTS_TYPE_CD
+                 , D.SELLER_MBR_NO
+                 , D.EXPO_SELLER_EMAIL
+                 , D.EXPO_SELLER_NM
+                 , D.EXPO_SELLER_TELNO
+                 , D.DRM_YN
+                 , J.USE_PERIOD
+                 , J.USE_PERIOD_UNIT_CD
+                 , D.CID
+                 , E.COMPT_YN
+                 , E.STRM_EPSD_CNT
+                 , E.ISSUE_DAY
+                 ,(SELECT CHNL_COMP_NM FROM TB_DP_EBOOK_PROD WHERE PROD_ID = I.PROD_ID) as PUBLISHER
                  , E.EPSD_CNT
-	             , E.CHAPTER
-	             , E.BOOK_PAGE_CNT
-	             , E.BOOK_CLSF_CD
-	             , E.POSS_LEND_CLSF_CD
-	             , 'paid' as PROD_CLSF_CD
-	             , F.PROD_NM
-	             , F.ARTIST1_NM as AUTHOR
-	             , F.ARTIST2_NM as PAINTER
-	             , F.ARTIST3_NM as TRANSLATOR
-	             , F.PROD_BASE_DESC
-	             , F.PROD_DTL_DESC
-	             , E.OUTSD_CONTENTS_ID
-	             , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) OR E.BOOK_CLSF_CD = 'DP004302' THEN 'serial' END ) AS BOOK_TYPE
-			     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( E.EPSD_CNT + E.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
-			     , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( CE.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
-	             ,  (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
-	                    FROM TB_DP_SPRT_DEVICE A
-	                   WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
-	                      AND A.PROD_ID = I.PART_PROD_ID 
-	                      AND (
-	                      CASE WHEN #{productBasicInfo.topMenuId} = 'DP13' THEN
-		                       CASE WHEN #{supportDevice.ebookSprtYn} = 'Y' THEN 1 
-		                       ELSE 0 
-		                       END
-	                           WHEN #{productBasicInfo.topMenuId} = 'DP14' THEN
-	                           CASE WHEN #{supportDevice.comicSprtYn} = 'Y' THEN 1 
-	                           ELSE 0 
-	                           END
-	                      ELSE 1
-	                      END   
-	                      ) = 1
-	                ) AS PHONE_SPRT_YN
-	             , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId} AND TENANT1.EXPO_YN ='Y') as chnlProdStatusCd
-	             , TENANT.PROD_STATUS_CD
-	             , SUBCONTENTS.PROD_VER AS BOOK_VERSION
-	             , SUBCONTENTS.SUB_CONTENTS_ID AS SCID
-				 , CE.BOOK_CONTENTS_CNT
-               	 , CE.SERIES_CONTENTS_CNT
-               	 , CE.MGZIN_CONTENTS_CNT
-	         FROM  TB_DP_MENU_CATEGORY           A
-	             , TB_DP_MENU_CATEGORY_PROD_MAPG B
-	             , TB_DP_MENU_CATEGORY_DESC      C
-	             , TB_DP_PROD                    D
-	             , TB_DP_EBOOK_PROD              E
-	             , TB_DP_PROD_DESC               F
-	             , TB_DP_PROD_RSHP               I
-	             , TB_DP_USE_POLICY              J
-	             , TB_DP_TENANT_PROD             TENANT
-	             , TB_DP_SUB_CONTENTS            SUBCONTENTS 
-	             , TB_DP_EBOOK_PROD              CE
-	        WHERE A.MENU_ID = B.MENU_ID
-	          AND A.MENU_ID = C.MENU_ID
-	          AND B.PROD_ID = D.PROD_ID
-	          AND B.PROD_ID = E.PROD_ID
-	          AND B.PROD_ID = F.PROD_ID
-	          AND I.PROD_ID = CE.PROD_ID
-	          AND B.PROD_ID = TENANT.PROD_ID
-	          AND B.PROD_ID = SUBCONTENTS.PROD_ID
-	          AND D.USE_POLICY_ID = J.USE_POLICY_ID(+)
-	          AND TENANT.TENANT_ID = #{tenantId}
-	          AND B.PROD_ID = I.PART_PROD_ID
-	          AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
-	          AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
-	          AND D.CONTENTS_TYPE_CD = 'PD002502'      /* PD002502 : 에피소드 */     
-	          AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
-	          -----------------------------------------------------------------------------
-	          -- INPUT PARAMETER
-	          ----------------------------------------------------------------------------- 
-	          AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
-	          AND I.PROD_RSHP_CD = #{rshpCd}
-	          AND B.BASE_YN = 'Y'
-	     ) TA
+                 , E.CHAPTER
+                 , E.BOOK_PAGE_CNT
+                 , E.BOOK_CLSF_CD
+                 , E.POSS_LEND_CLSF_CD
+                 , 'paid' as PROD_CLSF_CD
+                 , F.PROD_NM
+                 , F.ARTIST1_NM as AUTHOR
+                 , F.ARTIST2_NM as PAINTER
+                 , F.ARTIST3_NM as TRANSLATOR
+                 , F.PROD_BASE_DESC
+                 , F.PROD_DTL_DESC
+                 , E.OUTSD_CONTENTS_ID
+                 , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) OR E.BOOK_CLSF_CD = 'DP004302' THEN 'serial' END ) AS BOOK_TYPE
+                 , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( E.EPSD_CNT + E.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
+                 , ( CASE WHEN D.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( CE.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
+                 ,  (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
+                        FROM TB_DP_SPRT_DEVICE A
+                       WHERE (A.DEVICE_MODEL_CD = #{deviceModelNo} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
+                          AND A.PROD_ID = I.PART_PROD_ID 
+                          AND (
+                          CASE WHEN #{productBasicInfo.topMenuId} = 'DP13' THEN
+                               CASE WHEN #{supportDevice.ebookSprtYn} = 'Y' THEN 1 
+                               ELSE 0 
+                               END
+                               WHEN #{productBasicInfo.topMenuId} = 'DP14' THEN
+                               CASE WHEN #{supportDevice.comicSprtYn} = 'Y' THEN 1 
+                               ELSE 0 
+                               END
+                          ELSE 1
+                          END   
+                          ) = 1
+                    ) AS PHONE_SPRT_YN
+                 , (SELECT PROD_STATUS_CD FROM TB_DP_TENANT_PROD TENANT1 WHERE I.PROD_ID = TENANT1.PROD_ID AND TENANT1.TENANT_ID = #{tenantId} AND TENANT1.EXPO_YN ='Y') as chnlProdStatusCd
+                 , TENANT.PROD_STATUS_CD
+                 , SUBCONTENTS.PROD_VER AS BOOK_VERSION
+                 , SUBCONTENTS.SUB_CONTENTS_ID AS SCID
+                 , CE.BOOK_CONTENTS_CNT
+                 , CE.SERIES_CONTENTS_CNT
+                 , CE.MGZIN_CONTENTS_CNT
+             FROM  TB_DP_MENU_CATEGORY           A
+                 , TB_DP_MENU_CATEGORY_PROD_MAPG B
+                 , TB_DP_MENU_CATEGORY_DESC      C
+                 , TB_DP_PROD                    D
+                 , TB_DP_EBOOK_PROD              E
+                 , TB_DP_PROD_DESC               F
+                 , TB_DP_PROD_RSHP               I
+                 , TB_DP_USE_POLICY              J
+                 , TB_DP_TENANT_PROD             TENANT
+                 , TB_DP_SUB_CONTENTS            SUBCONTENTS 
+                 , TB_DP_EBOOK_PROD              CE
+            WHERE A.MENU_ID = B.MENU_ID
+              AND A.MENU_ID = C.MENU_ID
+              AND B.PROD_ID = D.PROD_ID
+              AND B.PROD_ID = E.PROD_ID
+              AND B.PROD_ID = F.PROD_ID
+              AND I.PROD_ID = CE.PROD_ID
+              AND B.PROD_ID = TENANT.PROD_ID
+              AND B.PROD_ID = SUBCONTENTS.PROD_ID
+              AND D.USE_POLICY_ID = J.USE_POLICY_ID(+)
+              AND TENANT.TENANT_ID = #{tenantId}
+              AND B.PROD_ID = I.PART_PROD_ID
+              AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
+              AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
+              AND D.CONTENTS_TYPE_CD = 'PD002502'      /* PD002502 : 에피소드 */     
+              AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
+              -----------------------------------------------------------------------------
+              -- INPUT PARAMETER
+              ----------------------------------------------------------------------------- 
+              AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
+              AND I.PROD_RSHP_CD = #{rshpCd}
+              AND B.BASE_YN = 'Y'
+         ) TA
     </select>
     <select id="getShoppingMetaInfo" parameterType="Map" resultType="ProductInfo">
            SELECT  /* ProductInfoMapper.xml, getShoppingMetaInfo,에피소드ID 이용 상품조회(쇼핑) , 김형식/SK플래닛, 2014-01-07 */
@@ -654,7 +654,7 @@
                                      AND B1.CPN_ID IS NOT NULL
                                      ORDER BY  B1.SPRC_APPLY_END_DT DESC
                                ) WHERE ROWNUM =1                         
-                          )N                             
+                          )N                           
                          ,TB_DP_PROD_IMG PI
                          ,TB_DP_PROD_OPT OPT
                 WHERE 1=1
@@ -693,13 +693,13 @@
     </select>
     
     <select id="getFreePassMetaInfo" parameterType="Map" resultType="ProductInfo">
-		  SELECT   /* ProductInfoMapper.xml, getFreePassMetaInfo,에피소드ID 이용 상품조회(정액권) , 김형식/SK플래닛, 2014-01-07 */
-		        IV.* 
-		        ,'freepass' as couponType
-		        ,'thumbnail' AS fileType 
-		        , CONCAT(NVL(TIG.FILE_PATH, '') , NVL(TIG.FILE_NM, '')) AS FILE_PATH
-		    FROM (
-		        SELECT  
+          SELECT   /* ProductInfoMapper.xml, getFreePassMetaInfo,에피소드ID 이용 상품조회(정액권) , 김형식/SK플래닛, 2014-01-07 */
+                IV.* 
+                ,'freepass' as couponType
+                ,'thumbnail' AS fileType 
+                , CONCAT(NVL(TIG.FILE_PATH, '') , NVL(TIG.FILE_NM, '')) AS FILE_PATH
+            FROM (
+                SELECT  
                       PD.PROD_ID
                     , PD.PROD_ID as PART_PROD_ID
                     , DC.PROD_NM
@@ -720,7 +720,7 @@
                     , PD.PROD_CHRG_YN
                     , '' as CHAPTER
                     , PD.PROD_GRD_CD
-                    , '' as POSS_LEND_CLSF_CD
+                    , NVL(CM.POSS_LEND_CLSF_CD,'DP010603') AS POSS_LEND_CLSF_CD
                     , PD.USE_PERIOD_UNIT_CD
                     , PD.USE_PERIOD
                     , PD.DRM_YN 
@@ -731,8 +731,8 @@
                                 WHERE  1=1
                                   AND  SP.PROD_ID = PD.PROD_ID 
                                   AND  'Y' = CASE 
-                                       WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN #{supportDevice.vodFixisttSprtYn}
-                                       WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
+                                       WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN #{supportDevice.vodFixisttSprtYn}  /* DP17 :영화 ,DP18: 방송 */
+                                       WHEN PD.TOP_MENU_ID IN ('DP13','DP14') THEN   /* DP13 :이북 ,DP14: 코믹 */
                                             CASE WHEN PD.TOP_MENU_ID='DP13' THEN #{supportDevice.ebookSprtYn}
                                                  WHEN PD.TOP_MENU_ID='DP14' THEN #{supportDevice.comicSprtYn}
                                             ELSE 'Y' END
@@ -747,33 +747,32 @@
                     , '' chnlProdStatusCd
                     , TP.PROD_STATUS_CD
                     , CM.AUTO_APPR_YN
-                    ,(CASE WHEN CM.CMPX_PROD_CLSF_CD='OR004301' THEN 'movieFreepass'  -- 영화 자동결제
-                           WHEN CM.CMPX_PROD_CLSF_CD='OR004302' THEN 'seriesFreepass' -- 시리즈 1회결제
-                           WHEN CM.CMPX_PROD_CLSF_CD='OR004303' THEN 'seriesFreepass/ebook' -- 전권 소장 
-                           WHEN CM.CMPX_PROD_CLSF_CD='OR004304' THEN 'rentalFreepass/ebook' -- 전권 대여
-                           WHEN CM.CMPX_PROD_CLSF_CD='OR004305' THEN 'gameCash' -- 게임 캐쉬  
+                    ,(CASE WHEN CM.FREE_PASS_CLSF_CD='OR004301' THEN 'freepass'  -- 영화 자동결제
+                           WHEN CM.FREE_PASS_CLSF_CD='OR004302' THEN 'seriesFreepass' -- 시리즈 1회결제
+                           WHEN CM.FREE_PASS_CLSF_CD='OR004305' THEN 'gameCash' -- 게임 캐쉬  
                       END) AS KIND                       
-                    , CM.CMPX_PROD_CLSF_CD AS PLAN_TYPE     
-		        FROM 
-		              TB_DP_PROD PD
-		            , TB_DP_CMPX_PROD CM
-		            , TB_DP_PROD_DESC DC
-		            , TB_DP_TENANT_PROD TP
-		            , TB_DP_TENANT_PROD_PRICE PR
-		        WHERE PD.PROD_ID = #{productBasicInfo.partProdId}
-		        AND PD.PROD_ID = CM.PROD_ID
-		        AND PD.PROD_ID = DC.PROD_ID
-		        AND PD.PROD_ID = TP.PROD_ID
-		        AND PD.PROD_ID = PR.PROD_ID
-		        AND DC.LANG_CD = #{lang}
-		        AND TP.TENANT_ID = #{tenantId}
-		        AND TP.TENANT_ID = PR.TENANT_ID
-		    ) IV  LEFT OUTER JOIN TB_DP_PROD_IMG TIG
+                    , CM.FREE_PASS_CLSF_CD AS PLAN_TYPE
+                    , CM.SERIES_BOOK_CLSF_CD AS cmpxProdBookClsfCd     
+                FROM 
+                      TB_DP_PROD PD
+                    , TB_DP_CMPX_PROD CM
+                    , TB_DP_PROD_DESC DC
+                    , TB_DP_TENANT_PROD TP
+                    , TB_DP_TENANT_PROD_PRICE PR
+                WHERE PD.PROD_ID = #{productBasicInfo.partProdId}
+                AND PD.PROD_ID = CM.PROD_ID
+                AND PD.PROD_ID = DC.PROD_ID
+                AND PD.PROD_ID = TP.PROD_ID
+                AND PD.PROD_ID = PR.PROD_ID
+                AND DC.LANG_CD = #{lang}
+                AND TP.TENANT_ID = #{tenantId}
+                AND TP.TENANT_ID = PR.TENANT_ID
+            ) IV  LEFT OUTER JOIN TB_DP_PROD_IMG TIG
                ON TIG.LANG_CD = IV.LANG_CD 
                AND IV.PROD_ID = TIG.PROD_ID 
                AND TIG.IMG_CD = (
-                    CASE WHEN IV.PLAN_TYPE IN ('OR004301','OR004302','OR004305') THEN  #{imageCd}
-                         WHEN IV.PLAN_TYPE IN ('OR004303','OR004304') THEN  #{ebookImageCd}
+                    CASE WHEN IV.TOP_MENU_ID IN ('DP17','DP18') THEN  #{imageCd}
+                         WHEN IV.TOP_MENU_ID IN ('DP13','DP14') THEN  #{ebookImageCd}
                     END
                     )
                

@@ -277,12 +277,9 @@
                              , B.PART_PROD_ID
                         FROM TB_DP_FIXRATE_PROD_MAPG A
                              ,TB_DP_PROD_RSHP B
-                             ,TB_DP_EBOOK_PROD C
                        WHERE A.PART_PROD_ID = B.PROD_ID
                          AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                          AND B.PART_PROD_ID= #{prodId}
-						 AND B.PART_PROD_ID = C.PROD_ID(+)
-   						 AND (C.PROD_ID IS NULL OR C.BOOK_CLSF_CD = 'DP004301') /*이북,단행만 전권구매 가능하도록(연재제외)*/
                      )PM                    
                 WHERE  PD.PROD_ID = CM.PROD_ID
                 AND PD.PROD_ID = DC.PROD_ID
@@ -304,6 +301,7 @@
                 SELECT  
                       PD.PROD_ID
                      ,NVL(CM.POSS_LEND_CLSF_CD,'DP010603') AS POSS_LEND_CLSF_CD
+                     ,CM.SERIES_BOOK_CLSF_CD AS cmpxProdBookClsfCd 
                  FROM 
                       TB_DP_PROD PD
                     , TB_DP_CMPX_PROD CM
@@ -314,12 +312,9 @@
                              , B.PART_PROD_ID
                         FROM TB_DP_FIXRATE_PROD_MAPG A
                              ,TB_DP_PROD_RSHP B
-                             ,TB_DP_EBOOK_PROD C
                        WHERE A.PART_PROD_ID = B.PROD_ID
                          AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/ 
                          AND B.PART_PROD_ID= #{prodId}
-                         AND B.PART_PROD_ID = C.PROD_ID(+)
-                         AND (C.PROD_ID IS NULL OR C.BOOK_CLSF_CD = 'DP004301') /*이북,단행만 전권구매 가능하도록(연재제외)*/
                      )PM                    
                 WHERE  PD.PROD_ID = CM.PROD_ID
                 AND PD.PROD_ID = DC.PROD_ID
@@ -351,8 +346,8 @@
                                 WHERE  1=1
                                   AND  SP.PROD_ID = PD.PROD_ID 
                                   AND  'Y' = CASE 
-                                       WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301','OR004302') THEN #{supportDevice.vodFixisttSprtYn}
-                                       WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004303','OR004304') THEN
+                                       WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN #{supportDevice.vodFixisttSprtYn} /* DP17 :영화 ,DP18: 방송 */
+                                       WHEN PD.TOP_MENU_ID IN ('DP13','DP14') THEN  /* DP13 :이북 ,DP14: 코믹 */
                                             CASE WHEN PD.TOP_MENU_ID='DP13' THEN #{supportDevice.ebookSprtYn}
                                                  WHEN PD.TOP_MENU_ID='DP14' THEN #{supportDevice.comicSprtYn}
                                             ELSE 'Y' END
@@ -369,7 +364,8 @@
                     ,PD.SVC_GRP_CD
                     ,PD.TOP_MENU_ID
                     ,'N' as inAppYn
-                    , CM.CMPX_PROD_CLSF_CD
+                    , CM.FREE_PASS_CLSF_CD as CMPX_PROD_CLSF_CD
+                    , CM.SERIES_BOOK_CLSF_CD AS cmpxProdBookClsfCd
                     , PD.MALL_CD
                     ,'' AS outsdContentsId
                     , PD.SELLER_MBR_NO 
@@ -383,10 +379,35 @@
                     , CM.BNS_CASH_AMT
                     , CM.BNS_USE_PERIOD_UNIT_CD
                     , CM.BNS_USE_PERIOD
-                    , (CASE WHEN CM.CMPX_PROD_CLSF_CD IN ('OR004301', 'OR004302', 'OR004303', 'OR004304') 
-                        THEN (CASE WHEN CM.POSS_LEND_CLSF_CD IS NULL THEN 'DP010603' ELSE CM.POSS_LEND_CLSF_CD END)
-                        ELSE '' 
-                       END) AS POSS_LEND_CLSF_CD                   
+                    , NVL(CM.POSS_LEND_CLSF_CD,'DP010603') AS POSS_LEND_CLSF_CD     
+                    ,( SELECT MAX(C.CHAPTER) 
+                         FROM TB_DP_FIXRATE_PROD_MAPG A
+                             ,TB_DP_PROD_RSHP B
+                             ,TB_DP_EBOOK_PROD C
+                        WHERE A.PART_PROD_ID = B.PROD_ID
+                          AND B.PART_PROD_ID = C.PROD_ID
+                          AND A.PROD_ID = PD.PROD_ID    
+                          AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
+                      ) AS chapterText
+                    ,( SELECT BB.BOOK_CLSF_CD 
+                         FROM (
+	                      SELECT 
+	                             MAX(C.CHAPTER) AS CHAPTER 
+                                ,C.PROD_ID AS EPISODE_ID
+                                ,A.PROD_ID 
+	                        FROM TB_DP_FIXRATE_PROD_MAPG A
+	                            ,TB_DP_PROD_RSHP B
+	                            ,TB_DP_EBOOK_PROD C
+	                       WHERE A.PART_PROD_ID = B.PROD_ID
+	                         AND B.PART_PROD_ID = C.PROD_ID
+	                         AND B.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
+	                       GROUP BY C.PROD_ID ,A.PROD_ID
+	                      )AA
+                        , TB_DP_EBOOK_PROD BB
+                       WHERE AA.EPISODE_ID = BB.PROD_ID
+                         AND AA.CHAPTER = BB.CHAPTER
+                         AND ROWNUM =1
+                      ) AS chapterUnit              
                 FROM 
                       TB_DP_PROD PD
                     , TB_DP_CMPX_PROD CM
@@ -405,12 +426,22 @@
             ) IV 
     </select>     
     
-    <select id="getExclusiveFixrateProdIdList" parameterType="Map" resultType="String">
-          /* PaymentInfoMapper.xml, getExclusiveFixrateProdIdList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
+    <select id="getExclusiveTypeInfoList" parameterType="Map" resultType="com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ExclusiveFreePass">
+          /* PaymentInfoMapper.xml, getExclusiveTypeInfoList,결제시 상품 리스트(정액권), 김형식/SK플래닛, 2014-02-27 */
             SELECT 
-                   DUP_PRCHS_LIMT_PROD_ID 
+                    DUP_PRCHS_LIMT_PROD_ID 
+                   ,DUP_PRCHS_LIMT_TYPE_CD
               FROM TB_DP_DUP_PRCHS_LIMT
              WHERE PROD_ID =#{productId} 
-    </select>            
+    </select>  
+
+
+    <select id="getExclusiveGroupProdIdList" parameterType="Map" resultType="String">
+          /* PaymentInfoMapper.xml, getExclusiveGroupProdIdList,결제시 복합상품 그룹코드로 상품 리스트 조회(정액권), 김형식/SK플래닛, 2015-05-11 */
+			SELECT PROD_ID 
+			  FROM TB_DP_CMPX_PROD       
+			WHERE CMPX_PROD_GRP_CD =#{dupPrchsLimtProdId}
+    </select>
+
     
 </mapper>
