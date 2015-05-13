@@ -27,8 +27,9 @@ import com.skplanet.storeplatform.sac.display.stat.vo.StatLike;
  * <p>
  * StatMemberTypeServiceImpl
  * </p>
- * Created on 2014.11.04 by : 서대영, SK 플래닛.
- * Updated on 2015.03.12 by : 서대영, SK 플래닛 : 좋아요 아이템이 없는 경우 목록에 추가하지 않도록 방어
+ * Created on 2014.11.04 by 서대영, SK플래닛.
+ * Updated on 2015.03.12 by 서대영, SK플래닛 : 좋아요 아이템이 없는 경우 목록에 추가하지 않도록 방어
+ * Updated on 2015.05.13 by 서대영, SK플래닛 : 통계구분 필터링 목록 추가
  */
 @Service
 public class StatMemberTypeServiceImpl implements StatMemberTypeService {
@@ -42,10 +43,12 @@ public class StatMemberTypeServiceImpl implements StatMemberTypeService {
 		String userKey = req.getUserKey();
 		int startKey = req.getStartKey();
 		int count = req.getCount();
+		List<String> statsClsfList = req.getStatsClsfList(); 
 		
 		StatLike statLike = new StatLike(tenantId, userKey); 
 		statLike.setStartKey(startKey);
 		statLike.setCount(count);
+		statLike.setStatsClsfList(statsClsfList);
 		return statLike;
 	}
 	
