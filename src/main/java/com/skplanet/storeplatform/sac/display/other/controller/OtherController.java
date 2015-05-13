@@ -221,7 +221,7 @@ public class OtherController {
 	@RequestMapping(value = "/appVersion/get/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public OtherAppVersionRes getAppVersion(@Valid OtherAppVersionReq req) {
-		VersionInfo versionInfo = appVersionService.getVersionInfoByPkg(new GetVersionInfoByPkgParam(req.getApkPkgNm(), req.getDeviceModelCd(), req.getOsVersion()));
+		VersionInfo versionInfo = appVersionService.getVersionInfoByPkg(new GetVersionInfoByPkgParam(req.getPkgNm(), req.getDeviceModelCd(), req.getOsVer()));
 		if(versionInfo == null)
 			throw new StorePlatformException("SAC_DSP_0009");
 
