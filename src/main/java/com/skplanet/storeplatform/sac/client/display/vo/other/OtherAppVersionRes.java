@@ -22,11 +22,13 @@ public class OtherAppVersionRes extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
     private String prodId;
-    private Integer versionCode;
+    private Integer verCd;
+    private String ver;
 
-    public OtherAppVersionRes(String prodId, Integer versionCode) {
+    public OtherAppVersionRes(String prodId, Integer verCd, String ver) {
         this.prodId = prodId;
-        this.versionCode = versionCode;
+        this.verCd = verCd;
+        this.ver = ver;
     }
 
     public String getProdId() {
@@ -37,11 +39,19 @@ public class OtherAppVersionRes extends CommonInfo {
         this.prodId = prodId;
     }
 
-    public Integer getVersionCode() {
-        return versionCode;
+    public Integer getVerCd() {
+        return verCd;
     }
 
-    public void setVersionCode(Integer versionCode) {
-        this.versionCode = versionCode;
+    public void setVerCd(Integer verCd) {
+        this.verCd = verCd;
+    }
+
+    public String getVer() {
+        return ver;
+    }
+
+    public void setVer(String ver) {
+        this.ver = ver;
     }
 }
