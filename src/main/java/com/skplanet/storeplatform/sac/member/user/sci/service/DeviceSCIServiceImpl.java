@@ -3,6 +3,9 @@
  */
 package com.skplanet.storeplatform.sac.member.user.sci.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,19 +14,27 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAllDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchChangedDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchOrderDeviceResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateDeviceManagementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateDeviceManagementResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UpdateLimitChargeYnSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UpdateLimitChargeYnSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -203,4 +214,77 @@ public class DeviceSCIServiceImpl implements DeviceSCIService {
 
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * 2.1.13. 회원 한도 요금제 사용여부 업데이트.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            UpdateLimitChargeYnSacReq
+	 * @return UpdateLimitChargeYnSacRes
+	 */
+	@Override
+	public UpdateLimitChargeYnSacRes updateLimitChargeYn(SacRequestHeader header, UpdateLimitChargeYnSacReq req) {
+		// 공통 파라미터 셋팅
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		LOGGER.debug("[DeviceSCIController.updateLimitChargeYn] SC Request deviceSCI.searchOrderDevice : {}", req);
+
+		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		searchDeviceRequest.setCommonRequest(commonRequest);
+		searchDeviceRequest.setUserKey(req.getUserKey());
+
+		/**
+		 * 검색 조건 setting
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySchUserKey.setKeyString(req.getDeviceKey());
+		keySearchList.add(keySchUserKey);
+		searchDeviceRequest.setKeySearchList(keySearchList);
+
+		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
+
+		UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
+		updateDeviceManagementRequest.setCommonRequest(commonRequest);
+		updateDeviceManagementRequest.setUserKey(req.getUserKey());
+		updateDeviceManagementRequest.setDeviceKey(req.getDeviceKey());
+
+		// 단말 부가속성 (한도요금제 저장값) 설정
+		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+		userMbrDeviceDetail.setDeviceKey(req.getDeviceKey());
+		userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN);
+		userMbrDeviceDetail.setExtraProfileValue(req.getLimitChargeYn());
+		userMbrDeviceDetail.setRegDate(req.getSearchDt());
+
+		List<UserMbrDeviceDetail> userMbrDeviceDetails = searchDeviceResponse.getUserMbrDevice()
+				.getUserMbrDeviceDetail();
+		if (userMbrDeviceDetails != null) {
+			for (UserMbrDeviceDetail userMbrDeviceDetail2 : userMbrDeviceDetails) {
+
+				// 단말 부가속성중 한도요금제 속성 여부
+				if (StringUtils.equals(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN,
+						userMbrDeviceDetail2.getExtraProfile())) {
+					userMbrDeviceDetail.setUpdateDate(req.getSearchDt());
+					userMbrDeviceDetail.setRegDate(null);
+					break;
+				}
+			}
+		}
+
+		List<UserMbrDeviceDetail> deviceDetails = new ArrayList<UserMbrDeviceDetail>();
+		deviceDetails.add(userMbrDeviceDetail);
+		updateDeviceManagementRequest.setUserMbrDeviceDetail(deviceDetails);
+
+		UpdateDeviceManagementResponse updateDeviceManagementResponse = this.deviceSCI
+				.updateDeviceManagement(updateDeviceManagementRequest);
+		UpdateLimitChargeYnSacRes res = new UpdateLimitChargeYnSacRes();
+		res.setDeviceKey(updateDeviceManagementResponse.getDeviceKey());
+		res.setUserKey(updateDeviceManagementResponse.getUserKey());
+		return res;
+	}
+
 }

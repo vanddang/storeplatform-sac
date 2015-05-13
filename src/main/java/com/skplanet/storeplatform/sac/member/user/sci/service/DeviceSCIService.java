@@ -7,6 +7,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDevi
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.ChangedDeviceHistorySacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UpdateLimitChargeYnSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UpdateLimitChargeYnSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -59,4 +61,15 @@ public interface DeviceSCIService {
 	 * @return SearchOrderDeviceIdSacRes
 	 */
 	public SearchOrderDeviceIdSacRes searchOrderDeviceId(SacRequestHeader header, SearchOrderDeviceIdSacReq req);
+
+	/**
+	 * <pre>
+	 * 2.1.13. 회원 한도 요금제 사용여부 업데이트.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            UpdateLimitChargeYnSacReq
+	 * @return UpdateLimitChargeYnSacRes
+	 */
+	public UpdateLimitChargeYnSacRes updateLimitChargeYn(SacRequestHeader header, UpdateLimitChargeYnSacReq req);
 }

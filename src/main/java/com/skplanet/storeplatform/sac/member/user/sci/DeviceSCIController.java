@@ -19,6 +19,8 @@ import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDevic
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UpdateLimitChargeYnSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.UpdateLimitChargeYnSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -144,4 +146,27 @@ public class DeviceSCIController implements DeviceSCI {
 		LOGGER.info("Response : {}", res.getDeviceId());
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * 2.1.13. 회원 한도 요금제 사용여부 업데이트.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            UpdateLimitChargeYnSacReq
+	 * @return UpdateLimitChargeYnSacRes
+	 */
+	@Override
+	@ResponseBody
+	@RequestMapping(value = "/updateLimitChargeYn", method = RequestMethod.POST)
+	public UpdateLimitChargeYnSacRes updateLimitChargeYn(@RequestBody @Validated UpdateLimitChargeYnSacReq req) {
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+		// 공통 파라미터 셋팅
+		SacRequestHeader requestHeader = SacRequestHeaderHolder.getValue();
+
+		UpdateLimitChargeYnSacRes res = this.deviceService.updateLimitChargeYn(requestHeader, req);
+		LOGGER.info("Response : {}", ConvertMapperUtils.convertObjectToJson(res));
+		return res;
+	}
+
 }
