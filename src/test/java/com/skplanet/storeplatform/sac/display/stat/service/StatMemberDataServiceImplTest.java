@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.display.stat.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -32,7 +33,6 @@ public class StatMemberDataServiceImplTest {
 		this.service.setCommonDAO(this.commonDAO);
 	}
 
-	
 	@Test
 	public void testSelectList() {
 		StatLike like = new StatLike();
@@ -40,6 +40,18 @@ public class StatMemberDataServiceImplTest {
 		like.setUserKey("IM120000055187820140428114155");
 		like.setStartKey(99);
 		like.setCount(5);
+		List<StatLike> list = service.selectStatLikeList(like);
+		System.out.println("testSelectList()\n" +list);
+	}
+	
+	@Test
+	public void testSelectList2() {
+		StatLike like = new StatLike();
+		like.setTenantId("S01");
+		like.setUserKey("IM120000055187820140428114155");
+		like.setStartKey(99);
+		like.setCount(5);
+		like.setStatsClsfList(Arrays.asList("DP01210003", "DP01210004"));
 		List<StatLike> list = service.selectStatLikeList(like);
 		System.out.println("testSelectList()\n" +list);
 	}
