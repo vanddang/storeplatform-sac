@@ -184,8 +184,10 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if (StringUtils.isEmpty(req.getChapter())) {
 			req.setChapter(null);
 		}
-		CmpxProductInfo cmpxProductInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxProductInfo", req,
+		CmpxProductInfo cmpxProductInfo = null;
+		cmpxProductInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxProductInfo", req,
 				CmpxProductInfo.class);
+		
 		return cmpxProductInfo;
 	}
 }
