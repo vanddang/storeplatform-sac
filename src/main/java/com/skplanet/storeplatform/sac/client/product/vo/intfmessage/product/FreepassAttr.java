@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -19,6 +21,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2015. 05. 07. Updated by : 이태균, IS PLUS.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class FreepassAttr extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
@@ -39,42 +42,52 @@ public class FreepassAttr extends CommonInfo {
 	 */
 	private String serialBook;
 
-	public FreepassAttr() {
-	}
-
-	public FreepassAttr(String couponGroup, String possLend, String serialBook) {
-		super();
-		this.couponGroup = couponGroup;
-		this.possLend = possLend;
-		this.serialBook = serialBook;
-	}
-
+	/**
+	 * @return the couponGroup
+	 */
 	public String getCouponGroup() {
-		return this.couponGroup;
+		return couponGroup;
 	}
 
+
+	/**
+	 * @param couponGroup the couponGroup to set
+	 */
 	public void setCouponGroup(String couponGroup) {
 		this.couponGroup = couponGroup;
 	}
 
+
+	/**
+	 * @return the possLend
+	 */
 	public String getPossLend() {
-		return this.possLend;
+		return possLend;
 	}
 
+
+	/**
+	 * @param possLend the possLend to set
+	 */
 	public void setPossLend(String possLend) {
 		this.possLend = possLend;
 	}
 
+
+	/**
+	 * @return the serialBook
+	 */
 	public String getSerialBook() {
-		return this.serialBook;
+		return serialBook;
 	}
 
+
+	/**
+	 * @param serialBook the serialBook to set
+	 */
 	public void setSerialBook(String serialBook) {
 		this.serialBook = serialBook;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
 }
