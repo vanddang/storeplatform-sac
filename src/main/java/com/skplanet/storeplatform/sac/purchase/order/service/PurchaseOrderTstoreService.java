@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
+
+import java.util.List;
 
 /**
  * 
@@ -20,6 +20,28 @@ import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeRese
  * Updated on : 2014. 5. 28. Updated by : 이승택, nTels.
  */
 public interface PurchaseOrderTstoreService {
+	/**
+	 *
+	 * <pre>
+	 * T Store 쿠폰 목록 조회(구) - 차후 삭제 필요.
+	 * </pre>
+	 *
+	 * @param userKey
+	 *            내부 회원 NO
+	 *
+	 * @param deviceId
+	 *            MDN
+	 *
+	 * @param prodIdList
+	 *            구매상품ID 목록
+	 *
+	 * @param purchaseQty
+	 *            구매 갯수
+	 *
+	 * @return T Store 쿠폰 목록
+	 */
+	String searchTstoreOldCouponList(String userKey, String deviceId, List<String> prodIdList, int purchaseQty);
+
 	/**
 	 * 
 	 * <pre>

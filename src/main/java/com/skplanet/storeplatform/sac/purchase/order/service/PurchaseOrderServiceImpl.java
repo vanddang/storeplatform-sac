@@ -9,13 +9,36 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemDetailEcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2ItemDetailEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
+import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
+import com.skplanet.storeplatform.purchase.client.common.vo.*;
+import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
+import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
+import com.skplanet.storeplatform.purchase.client.order.vo.*;
+import com.skplanet.storeplatform.purchase.client.promotion.sci.PurchasePromotionSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.BannerInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.*;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.*;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
+import com.skplanet.storeplatform.sac.purchase.common.service.MembershipReserveService;
+import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
+import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
+import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShoppingOrderRepository;
+import com.skplanet.storeplatform.sac.purchase.order.vo.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -30,69 +53,8 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.pdp.sentinel.shuttle.TLogSentinelShuttle;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishItemDetailEcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2EcRes;
-import com.skplanet.storeplatform.external.client.shopping.vo.CouponPublishV2ItemDetailEcRes;
-import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeReserveDetailEcRes;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.exception.vo.ErrorInfo;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
-import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
-import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
-import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
-import com.skplanet.storeplatform.purchase.client.common.vo.PaymentPromotion;
-import com.skplanet.storeplatform.purchase.client.common.vo.PpProperty;
-import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
-import com.skplanet.storeplatform.purchase.client.common.vo.UniqueTid;
-import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSCI;
-import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
-import com.skplanet.storeplatform.purchase.client.order.vo.AutoPrchsMore;
-import com.skplanet.storeplatform.purchase.client.order.vo.ConfirmPurchaseScReq;
-import com.skplanet.storeplatform.purchase.client.order.vo.ConfirmPurchaseScRes;
-import com.skplanet.storeplatform.purchase.client.order.vo.CreateCompletePurchaseScReq;
-import com.skplanet.storeplatform.purchase.client.order.vo.MakeFreePurchaseScReq;
-import com.skplanet.storeplatform.purchase.client.order.vo.MakeFreePurchaseScRes;
-import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
-import com.skplanet.storeplatform.purchase.client.order.vo.ReservePurchaseScReq;
-import com.skplanet.storeplatform.purchase.client.order.vo.ReservePurchaseScRes;
-import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseListByStatusScReq;
-import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseListByStatusScRes;
-import com.skplanet.storeplatform.purchase.client.order.vo.SearchPurchaseSequenceAndDateRes;
-import com.skplanet.storeplatform.purchase.client.order.vo.ShoppingCouponPublishInfo;
-import com.skplanet.storeplatform.purchase.client.promotion.sci.PurchasePromotionSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.BannerInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Banner;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.BannerInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.BannerInfoSacRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserPayplanetSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseInfoSac;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreateCompletePurchaseSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderBannerInfoSac;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderIapInfoSac;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderPromotionInfoSac;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.VerifyOrderSacRes;
-import com.skplanet.storeplatform.sac.purchase.common.service.MembershipReserveService;
-import com.skplanet.storeplatform.sac.purchase.common.service.PayPlanetShopService;
-import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseTenantPolicyService;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
-import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseDisplayRepository;
-import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
-import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShoppingOrderRepository;
-import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
-import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyResult;
-import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
-import com.skplanet.storeplatform.sac.purchase.order.vo.VerifyOrderInfo;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 
@@ -789,11 +751,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 					&& StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"))) {
 				purchaseQty = prchsDtlMoreList.size();
 			}
-			res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreCouponList(payUserKey,
+			// (구) 쿠폰 리스트 규격 - 차후 삭제 필요
+			res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreOldCouponList(payUserKey,
+					reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
+			// (신) 쿠폰 리스트 규격
+			res.setCouponList(this.purchaseOrderTstoreService.searchTstoreCouponList(payUserKey,
 					reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
 
 		} else {
+			// (구) 쿠폰 리스트 규격 - 차후 삭제 필요
 			res.setNoCouponList("NULL");
+			// (신) 쿠폰 리스트 규격
+			res.setCouponList("NULL");
 		}
 
 		// ------------------------------------------------------------------------------------------------
