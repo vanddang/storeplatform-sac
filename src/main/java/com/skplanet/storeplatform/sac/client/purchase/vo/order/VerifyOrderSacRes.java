@@ -9,14 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+import java.util.List;
+
 /**
- * 
  * 구매인증 응답 VO
- * 
+ *
  * Updated on : 2014. 2. 26. Updated by : 이승택, nTels.
  */
 public class VerifyOrderSacRes extends CommonInfo {
@@ -40,7 +39,8 @@ public class VerifyOrderSacRes extends CommonInfo {
 	private String cdOcbSaveInfo; // OCB 적립코드
 	private String ocbAuthMtdCd; // OCB 인증수단 코드
 	private String noOcbCard; // OCB 카드번호
-	private String noCouponList; // 쿠폰 List
+	private String noCouponList; // (구)쿠폰 List
+	private String couponList; // (신)쿠폰 List
 	private String cashPointList; // 캐쉬/포인트 잔액 통합 정보
 	private String userGrade; // 회원등급
 	private String tMileageSaveRate; // 상품 T마일리지 적립률 (T마일리지 적립율 (등급:적립율;[반복])
@@ -648,4 +648,22 @@ public class VerifyOrderSacRes extends CommonInfo {
 		this.bannerList = bannerList;
 	}
 
+	/**
+	 * Sets 쿠폰 리스트(신)
+	 *
+	 * @param couponList
+	 *            the coupon list
+	 */
+	public void setCouponList(String couponList) {
+		this.couponList = couponList;
+	}
+
+	/**
+	 * Gets 쿠폰 리스트(신)
+	 *
+	 * @return the coupon list
+	 */
+	public String getCouponList() {
+		return couponList;
+	}
 }
