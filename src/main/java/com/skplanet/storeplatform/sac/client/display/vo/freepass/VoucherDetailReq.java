@@ -43,6 +43,9 @@ public class VoucherDetailReq {
 	private String[] arrayCmpxProdGradeCd;
 	private String cmpxProdGradeCd;
 
+	// 이용권 상품 그룹코드
+	private String cmpxProdGrpCd;
+
 	// 구매내역 체크
 	private String userKey; // 사용자키
 	private String deviceKey; // 단말키
@@ -362,11 +365,26 @@ public class VoucherDetailReq {
 	}
 
 	/**
-	 * @param deviceKey
-	 *            the deviceKey to set
+	 * @param cmpxProdGradeCd
+	 *            the cmpxProdGradeCd to set
 	 */
 	public void setCmpxProdGradeCd(String cmpxProdGradeCd) {
 		this.cmpxProdGradeCd = cmpxProdGradeCd;
+	}
+
+	/**
+	 * @return the cmpxProdGrpCd
+	 */
+	public String getCmpxProdGrpCd() {
+		return this.cmpxProdGrpCd;
+	}
+
+	/**
+	 * @param cmpxProdGrpCd
+	 *            the cmpxProdGrpCd to set
+	 */
+	public void setCmpxProdGrpCd(String cmpxProdGrpCd) {
+		this.cmpxProdGrpCd = cmpxProdGrpCd;
 	}
 
 }
