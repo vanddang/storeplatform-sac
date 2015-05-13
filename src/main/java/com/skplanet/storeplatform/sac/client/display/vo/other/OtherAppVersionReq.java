@@ -23,20 +23,20 @@ public class OtherAppVersionReq extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
     @NotEmpty
-    private String apkPkgNm;
+    private String pkgNm;
 
     @NotEmpty
     private String deviceModelCd;
 
     @NotEmpty
-    private String osVersion;
+    private String osVer;
 
-    public String getApkPkgNm() {
-        return apkPkgNm;
+    public String getPkgNm() {
+        return pkgNm;
     }
 
-    public void setApkPkgNm(String apkPkgNm) {
-        this.apkPkgNm = apkPkgNm;
+    public void setPkgNm(String pkgNm) {
+        this.pkgNm = pkgNm;
     }
 
     public String getDeviceModelCd() {
@@ -47,11 +47,11 @@ public class OtherAppVersionReq extends CommonInfo {
         this.deviceModelCd = deviceModelCd;
     }
 
-    public String getOsVersion() {
-        return osVersion;
+    public String getOsVer() {
+        return osVer;
     }
 
-    public void setOsVersion(String osVersion) {
-        this.osVersion = osVersion;
+    public void setOsVer(String osVer) {
+        this.osVer = osVer;
     }
 }
