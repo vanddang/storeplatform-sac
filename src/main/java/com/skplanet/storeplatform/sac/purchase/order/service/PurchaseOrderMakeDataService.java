@@ -21,6 +21,7 @@ import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.Episod
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseReservedData;
 
 /**
  * 
@@ -37,10 +38,12 @@ public interface PurchaseOrderMakeDataService {
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매요청 VO
+	 * @param statusCd
+	 *            구매상태코드
 	 * 
 	 * @return 구매생성을 위한 데이터 목록
 	 */
-	public List<PrchsDtlMore> makePrchsDtlMoreList(PurchaseOrderInfo purchaseOrderInfo);
+	public List<PrchsDtlMore> makePrchsDtlMoreList(PurchaseOrderInfo purchaseOrderInfo, String statusCd);
 
 	/**
 	 * 
@@ -128,10 +131,13 @@ public interface PurchaseOrderMakeDataService {
 	 * @param cmpxProdClsfCd
 	 *            정액권 타입 : 전권소장 / 전권대여
 	 * 
+	 * @param statusCd
+	 *            구매상태코드
+	 * 
 	 * @return 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록
 	 */
 	public List<PrchsDtlMore> makeEbookComicEpisodeList(PrchsDtlMore ebookflatInfo, List<EpisodeInfoRes> episodeList,
-			String cmpxProdClsfCd);
+			String cmpxProdClsfCd, String statusCd);
 
 	/**
 	 * <pre>
@@ -153,7 +159,19 @@ public interface PurchaseOrderMakeDataService {
 	 * @param reservedData
 	 *            구매예약시 저장해뒀던 추가 데이터들
 	 * 
+	 * @return 구매 예약 데이터
+	 */
+	public PurchaseReservedData parseReservedData(String reservedData);
+
+	/**
+	 * <pre>
+	 * 구매예약시 예약컬럼에 저장해뒀던 추가 데이터들.
+	 * </pre>
+	 * 
+	 * @param reservedData
+	 *            구매예약시 저장해뒀던 추가 데이터들
+	 * 
 	 * @return 분리된 파라미터 Map
 	 */
-	public Map<String, String> parseReservedData(String reservedData);
+	public Map<String, String> parseReservedDataByMap(String reservedData);
 }

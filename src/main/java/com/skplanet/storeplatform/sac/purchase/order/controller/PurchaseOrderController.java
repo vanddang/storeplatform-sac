@@ -450,8 +450,8 @@ public class PurchaseOrderController {
 			// 구매완료 Noti 정보
 			if (StringUtils.startsWith(prchsDtlMore.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_IAP) == false) {
 
-				Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore
-						.getPrchsResvDesc());
+				Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService
+						.parseReservedDataByMap(prchsDtlMore.getPrchsResvDesc());
 
 				res.setPrchsDt(prchsDtlMore.getPrchsDt());
 				res.setUserKey(prchsDtlMore.getUseInsdUsermbrNo());

@@ -93,17 +93,19 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 	public void postPurchase(List<PrchsDtlMore> prchsDtlMoreList, NotifyPaymentSacReq notifyPaymentReq) {
 		this.logger.info("PRCHS,ORDER,SAC,POST,START,{}", prchsDtlMoreList.get(0).getPrchsId());
 
-		// ------------------------------------------------------------------------------------
-		// 인터파크 / 씨네21
+		Exception exception = null;
+		try {
+			// 인터파크 / 씨네21
+			this.createInterworking(prchsDtlMoreList);
 
-		this.createInterworking(prchsDtlMoreList);
+			// 결제완료 Noti
+			this.sendPurchaseNoti(prchsDtlMoreList, notifyPaymentReq);
+		} catch (Exception e) {
+			exception = e;
+		}
 
-		// ------------------------------------------------------------------------------------
-		// 결제완료 Noti
-
-		this.sendPurchaseNoti(prchsDtlMoreList, notifyPaymentReq);
-
-		this.logger.info("PRCHS,ORDER,SAC,POST,END,{}", prchsDtlMoreList.get(0).getPrchsId());
+		this.logger.info("PRCHS,ORDER,SAC,POST,END,{},{}", prchsDtlMoreList.get(0).getPrchsId(),
+				exception == null ? "" : exception.getMessage());
 	}
 
 	/**
@@ -120,7 +122,7 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 		Map<String, String> reservedDataMap = null;
 
 		for (PrchsDtlMore prchsDtlMore : prchsDtlMoreList) {
-			reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsDtlMore.getPrchsResvDesc());
+			reservedDataMap = this.purchaseOrderMakeDataService.parseReservedDataByMap(prchsDtlMore.getPrchsResvDesc());
 
 			interworking = new Interworking();
 			interworking.setProdId(prchsDtlMore.getProdId());
@@ -262,7 +264,8 @@ public class PurchaseOrderPostServiceImpl implements PurchaseOrderPostService {
 					prodNm = purchaseProductMap.get(prchsInfo.getProdId()).getProdNm();
 				}
 
-				reservedDataMap = this.purchaseOrderMakeDataService.parseReservedData(prchsInfo.getPrchsResvDesc());
+				reservedDataMap = this.purchaseOrderMakeDataService
+						.parseReservedDataByMap(prchsInfo.getPrchsResvDesc());
 
 				product = new SendPurchaseNotiProductInfoEc();
 				product.setProdId(prchsInfo.getProdId());

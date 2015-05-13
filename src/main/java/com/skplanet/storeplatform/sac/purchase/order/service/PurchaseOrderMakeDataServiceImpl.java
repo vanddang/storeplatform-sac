@@ -37,6 +37,7 @@ import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
 import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseReservedData;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
 
 /**
@@ -58,10 +59,13 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	 * @param purchaseOrderInfo
 	 *            구매요청 VO
 	 * 
+	 * @param statusCd
+	 *            구매상태코드
+	 * 
 	 * @return 구매생성을 위한 데이터 목록
 	 */
 	@Override
-	public List<PrchsDtlMore> makePrchsDtlMoreList(PurchaseOrderInfo purchaseOrderInfo) {
+	public List<PrchsDtlMore> makePrchsDtlMoreList(PurchaseOrderInfo purchaseOrderInfo, String statusCd) {
 
 		// 구매생성 요청 데이터 세팅
 		List<PrchsDtlMore> prchsDtlMoreList = new ArrayList<PrchsDtlMore>();
@@ -111,6 +115,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					prchsDtlMore.setSystemId(purchaseOrderInfo.getSystemId());
 					prchsDtlMore.setPrchsId(purchaseOrderInfo.getPrchsId());
 					prchsDtlMore.setPrchsDt(purchaseOrderInfo.getPrchsDt());
+					prchsDtlMore.setStatusCd(statusCd);
 
 					// 발신자/수신자 세팅
 					if (purchaseOrderInfo.isGift()) {
@@ -535,11 +540,14 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	 * @param cmpxProdClsfCd
 	 *            정액권 타입 : 전권소장 / 전권대여
 	 * 
+	 * @param statusCd
+	 *            구매상태코드
+	 * 
 	 * @return 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록
 	 */
 	@Override
 	public List<PrchsDtlMore> makeEbookComicEpisodeList(PrchsDtlMore ebookflatInfo, List<EpisodeInfoRes> episodeList,
-			String cmpxProdClsfCd) {
+			String cmpxProdClsfCd, String statusCd) {
 
 		// 구매생성 요청 데이터 세팅
 		List<PrchsDtlMore> prchsDtlMoreList = new ArrayList<PrchsDtlMore>();
@@ -557,6 +565,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 			prchsDtlMore = new PrchsDtlMore();
 
+			prchsDtlMore.setStatusCd(statusCd);
 			prchsDtlMore.setSystemId(ebookflatInfo.getSystemId());
 			prchsDtlMore.setUseTenantId(ebookflatInfo.getUseTenantId());
 			prchsDtlMore.setUseInsdUsermbrNo(ebookflatInfo.getUseInsdUsermbrNo());
@@ -799,10 +808,74 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	 * @param reservedData
 	 *            구매예약시 저장해뒀던 추가 데이터들
 	 * 
+	 * @return 구매 예약 데이터
+	 */
+	@Override
+	public PurchaseReservedData parseReservedData(String reservedData) {
+		Map<String, String> reservedDataMap = this.parseReservedDataByMap(reservedData);
+
+		// --#
+		PurchaseReservedData purchaseReservedData = new PurchaseReservedData();
+		purchaseReservedData.setApiVer(reservedDataMap.get("apiVer"));
+		purchaseReservedData.setSystemId(reservedDataMap.get("systemId"));
+		purchaseReservedData.setUserId(reservedDataMap.get("userId"));
+		purchaseReservedData.setDeviceId(reservedDataMap.get("deviceId"));
+		purchaseReservedData.setMarketDeviceKey(reservedDataMap.get("marketDeviceKey"));
+		purchaseReservedData.setDeviceModelCd(reservedDataMap.get("deviceModelCd"));
+		purchaseReservedData.setTelecom(reservedDataMap.get("telecom"));
+		purchaseReservedData.setImei(reservedDataMap.get("imei"));
+		purchaseReservedData.setOneId(reservedDataMap.get("oneId"));
+		purchaseReservedData.setNetworkTypeCd(reservedDataMap.get("networkTypeCd"));
+		purchaseReservedData.setMediaId(reservedDataMap.get("mediaId"));
+		purchaseReservedData.setDupleYn(reservedDataMap.get("dupleYn"));
+		purchaseReservedData.settMileageRateInfo(reservedDataMap.get("tMileageRateInfo"));
+		// --#
+		purchaseReservedData.setUseDeviceId(reservedDataMap.get("useDeviceId"));
+		purchaseReservedData.setUseDeviceModelCd(reservedDataMap.get("useDeviceModelCd"));
+		purchaseReservedData.setAid(reservedDataMap.get("aid"));
+		purchaseReservedData.setCouponCode(reservedDataMap.get("couponCode"));
+		purchaseReservedData.setItemCode(reservedDataMap.get("itemCode"));
+		purchaseReservedData.setBonusPoint(reservedDataMap.get("bonusPoint"));
+		purchaseReservedData.setBonusPointUsePeriodUnitCd(reservedDataMap.get("bonusPointUsePeriodUnitCd"));
+		purchaseReservedData.setBonusPointUsePeriod(reservedDataMap.get("bonusPointUsePeriod"));
+		purchaseReservedData.setBonusPointUsableDayCnt(reservedDataMap.get("bonusPointUsableDayCnt"));
+		purchaseReservedData.setAutoPrchsPeriodUnitCd(reservedDataMap.get("autoPrchsPeriodUnitCd"));
+		purchaseReservedData.setAutoPrchsPeriodValue(reservedDataMap.get("autoPrchsPeriodValue"));
+		purchaseReservedData.setAfterAutoPayDt(reservedDataMap.get("afterAutoPayDt"));
+		purchaseReservedData.setSellerMbrNo(reservedDataMap.get("sellerMbrNo"));
+		purchaseReservedData.setMallCd(reservedDataMap.get("mallCd"));
+		purchaseReservedData.setOutsdContentsId(reservedDataMap.get("outsdContentsId"));
+		purchaseReservedData.setAutoPrchsYn(reservedDataMap.get("autoPrchsYn"));
+		purchaseReservedData.setAutoLastPeriod(reservedDataMap.get("autoLastPeriod"));
+		purchaseReservedData.setSpecialCouponId(reservedDataMap.get("specialCouponId"));
+		purchaseReservedData.setSpecialCouponAmt(reservedDataMap.get("specialCouponAmt"));
+		purchaseReservedData.setCmpxProdClsfCd(reservedDataMap.get("cmpxProdClsfCd"));
+		purchaseReservedData.setProdCaseCd(reservedDataMap.get("prodCaseCd"));
+		purchaseReservedData.setS2sAutoYn(reservedDataMap.get("s2sAutoYn"));
+		purchaseReservedData.setS2sYn(reservedDataMap.get("s2sYn"));
+		purchaseReservedData.setDwldAvailableDayCnt(reservedDataMap.get("dwldAvailableDayCnt"));
+		purchaseReservedData.setUsePeriodCnt(reservedDataMap.get("usePeriodCnt"));
+		purchaseReservedData.setIapYn(reservedDataMap.get("iapYn"));
+		purchaseReservedData.setIapPostbackUrl(reservedDataMap.get("iapPostbackUrl"));
+		purchaseReservedData.setIapProdKind(reservedDataMap.get("iapProdKind"));
+		purchaseReservedData.setIapProdCase(reservedDataMap.get("iapProdCase"));
+		purchaseReservedData.setIapUsePeriod(reservedDataMap.get("iapUsePeriod"));
+
+		return purchaseReservedData;
+	}
+
+	/**
+	 * <pre>
+	 * 구매예약시 예약컬럼에 저장해뒀던 추가 데이터들.
+	 * </pre>
+	 * 
+	 * @param reservedData
+	 *            구매예약시 저장해뒀던 추가 데이터들
+	 * 
 	 * @return 분리된 파라미터 Map
 	 */
 	@Override
-	public Map<String, String> parseReservedData(String reservedData) {
+	public Map<String, String> parseReservedDataByMap(String reservedData) {
 		Map<String, String> reservedDataMap = new HashMap<String, String>();
 		String[] arReservedData = null;
 		String[] arParamKeyValue = null;
