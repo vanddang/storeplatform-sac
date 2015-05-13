@@ -93,6 +93,7 @@
 	                    , C.DWLD_STRM_ATTR_CLSF
 	                    , BB.DWLD_STRM_CLSF_CD AS FREE_PASS_DWLD_STRM_CLSF_CD
 	                    , H.DWLD_STRM_CLSF_CD
+	                    , BB.POSS_LEND_CLSF_CD AS FREE_PASS_POSS_LEND_CLSF_CD
 	                    , H.POSS_LEND_CLSF_CD
 	                    , C.USE_PERIOD_ATTR_CLSF
 	                    , BB.USE_PERIOD_UNIT_CD AS FREE_PASS_USE_PERIOD_UNIT_CD
@@ -157,7 +158,7 @@
         SELECT  
               PD.PROD_ID AS cmpxProdId
             , DC.PROD_NM AS cmpxProdNm
-            , CM.POSS_LEND_CLSF_CD AS cmpxProdPossLendClsfCd
+            , PM.FREE_PASS_POSS_LEND_CLSF_CD AS cmpxProdPossLendClsfCd
             , PM.PART_PROD_ID AS episodeProdId
             ,(CASE WHEN CM.DRM_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_DRM_YN
                    WHEN CM.DRM_ATTR_CLSF  ='PD013402' THEN PM.DRM_YN
@@ -183,6 +184,7 @@
             , TB_DP_TENANT_PROD_PRICE PR
             ,(SELECT   A.PROD_ID
                      , B.PART_PROD_ID
+                     , BB.POSS_LEND_CLSF_CD AS FREE_PASS_POSS_LEND_CLSF_CD
                      , D.POSS_LEND_CLSF_CD
                      , BB.DWLD_STRM_CLSF_CD AS FREE_PASS_DWLD_STRM_CLSF_CD
                      , D.DWLD_STRM_CLSF_CD
