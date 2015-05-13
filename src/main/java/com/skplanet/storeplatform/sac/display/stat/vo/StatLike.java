@@ -8,13 +8,15 @@
  */
 package com.skplanet.storeplatform.sac.display.stat.vo;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * StatLike.selectList의 출력 타입
  * 
- * Updated on : 2014. 11. 04.
- * Updated by : 서대영, SK플래닛
+ * Created on 2014.11.04. by 서대영, SK플래닛
+ * Updated on 2014.11.04. by 서대영, SK플래닛 : statsClsfList 필드 추가 (통계구분 필터링을 위함)
  */
 public class StatLike extends CommonInfo {
 	
@@ -24,6 +26,7 @@ public class StatLike extends CommonInfo {
 	private String userKey;
 	private String statsClsf;
 	private String statsKey;
+	private List<String> statsClsfList; 
 	
 	private Integer cntLike;
 	private Integer cntBrws;
@@ -66,6 +69,20 @@ public class StatLike extends CommonInfo {
 	public void setStatsKey(String statsKey) {
 		this.statsKey = statsKey;
 	}
+	/**
+	 * @return the statsClsfList
+	 */
+	public List<String> getStatsClsfList() {
+		return statsClsfList;
+	}
+
+	/**
+	 * @param statsClsfList the statsClsfList to set
+	 */
+	public void setStatsClsfList(List<String> statsClsfList) {
+		this.statsClsfList = statsClsfList;
+	}
+
 	public Integer getCntLike() {
 		return cntLike;
 	}
