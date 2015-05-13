@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassListRes
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSeriesReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.FreepassSpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.freepass.SeriespassListRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ExclusiveFreePass;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePass;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfoSacReq;
@@ -707,6 +708,7 @@ public class FreepassServiceImpl implements FreepassService {
 		List<PaymentInfo> paymentInfoList = new ArrayList<PaymentInfo>();
 		List<String> prodIdList = req.getProdIdList();
 		List<String> exclusiveFixrateProdIdList = new ArrayList<String>();
+		List<ExclusiveFreePass> exclusiveTypeInfoList = new ArrayList<ExclusiveFreePass>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		// / 단말 지원 정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
@@ -724,8 +726,21 @@ public class FreepassServiceImpl implements FreepassService {
 			paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getFreePassMetaInfo", paramMap, PaymentInfo.class);
 			if (paymentInfo != null) {
 				paramMap.put("productId", paymentInfo.getProdId());
-				exclusiveFixrateProdIdList = this.commonDAO.queryForList("PaymentInfo.getExclusiveFixrateProdIdList",
-						paramMap, String.class);
+				
+				exclusiveTypeInfoList = this.commonDAO.queryForList("PaymentInfo.getExclusiveTypeInfoList",
+						paramMap, ExclusiveFreePass.class);
+
+				
+				for(ExclusiveFreePass info : exclusiveTypeInfoList){
+
+					if(info.getDupPrchsLimtTypeCd().equals("PD013403")){
+						paramMap.put("dupPrchsLimtProdId", info.getDupPrchsLimtProdId());
+						exclusiveFixrateProdIdList.addAll(this.commonDAO.queryForList("PaymentInfo.getExclusiveTypeInfoList",
+								paramMap, String.class));
+					}else{
+						exclusiveFixrateProdIdList.add(info.getDupPrchsLimtProdId());					
+					}
+				}
 
 				paymentInfo.setExclusiveFixrateProdIdList(exclusiveFixrateProdIdList);
 			} else {
