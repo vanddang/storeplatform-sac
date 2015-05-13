@@ -40,8 +40,16 @@
 			  FROM TB_DP_SOCIAL_STATS_MBR_LIKE A
 			  LEFT OUTER JOIN TB_DP_SOCIAL_STATS B
 			  USING (TENANT_ID, STATS_CLSF, STATS_KEY)
-			  WHERE TENANT_ID = #{tenantId}
-			  AND USER_KEY = #{userKey}
+			  <where>
+			  	TENANT_ID = #{tenantId}
+			  	AND USER_KEY = #{userKey}
+				<if test="@org.apache.commons.collections.CollectionUtils@isNotEmpty(statsClsfList)">
+					AND STATS_CLSF IN 
+					<foreach item="item" index="index" collection="statsClsfList" open="(" separator="," close=")">
+        				#{item}
+  					</foreach>
+				</if>
+			</where>
 			)
 			WHERE SEQ &lt;= TO_NUMBER(#{startKey})
 			ORDER BY SEQ DESC
