@@ -21,6 +21,8 @@ public class ListByMemberReq extends CommonInfo {
 	private int count = 20;
 	
 	private List<PreferredCategoryReq> preferredCategoryList;
+	
+	private List<String> statsClsfList;
 
 	public String getUserKey() {
 		return userKey;
@@ -52,6 +54,20 @@ public class ListByMemberReq extends CommonInfo {
 
 	public void setPreferredCategoryList(List<PreferredCategoryReq> preferredCategoryList) {
 		this.preferredCategoryList = preferredCategoryList;
+	}
+
+	/**
+	 * @return the statsClsfList
+	 */
+	public List<String> getStatsClsfList() {
+		return statsClsfList;
+	}
+
+	/**
+	 * @param statsClsfList the statsClsfList to set
+	 */
+	public void setStatsClsfList(List<String> statsClsfList) {
+		this.statsClsfList = statsClsfList;
 	}
 
 }
