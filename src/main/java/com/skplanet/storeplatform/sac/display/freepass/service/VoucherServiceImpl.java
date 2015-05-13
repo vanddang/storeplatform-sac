@@ -280,6 +280,10 @@ public class VoucherServiceImpl implements VoucherService {
 			req.setCount(20);
 		}
 
+		// CMPX_PROD_GRP_CD 알아오기
+		String cmpxProdGrpCd = (String) this.commonDAO.queryForObject("Voucher.selectCmpxProdGrpCd", req);
+		req.setCmpxProdGrpCd(cmpxProdGrpCd);
+
 		retMetaInfoList = this.commonDAO.queryForList("Voucher.selectVoucherDetail", req, MetaInfo.class);
 
 		if (retMetaInfoList == null)

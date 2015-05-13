@@ -90,6 +90,16 @@
             OV.RNUM
     </select>
     
+        
+    <!-- 복합상품 그룹코드 가져오기 -->
+    <select id="selectCmpxProdGrpCd" parameterType="VoucherDetailSacReq" resultType="String">
+        SELECT 
+            CMPX_PROD_GRP_CD 
+        FROM 
+            TB_DP_CMPX_PROD 
+        WHERE 
+            PROD_ID = #{productId}
+    </select>
     
     <!-- 이용권 상품 상세 조회 -->
     <select id="selectVoucherDetail" parameterType="VoucherDetailSacReq" resultType="metaInfo">
@@ -151,17 +161,27 @@
             , CM.BNS_USE_PERIOD_UNIT_CD
             , CM.BNS_USE_PERIOD             
             , DECODE(PD.PROD_ID, #{productId}, 'Y', 'N') AS REQUEST_PRODUCT
+            , CM.CMPX_PROD_GRP_CD 
+            , CM.SERIES_BOOK_CLSF_CD
+            , UP.POSS_LEND_CLSF_CD  
         FROM 
             TB_DP_PROD PD
+            <if test='cmpxProdGrpCd != null and cmpxProdGrpCd != ""'>
             , (SELECT * FROM TB_DP_CMPX_PROD WHERE CMPX_PROD_GRP_CD = (SELECT CMPX_PROD_GRP_CD FROM TB_DP_CMPX_PROD WHERE PROD_ID = #{productId} )) CM
+            </if>
+            <if test='cmpxProdGrpCd == null  or cmpxProdGrpCd == ""'>
+            , TB_DP_CMPX_PROD CM
+            </if>
             , TB_DP_PROD_DESC DC
             , TB_DP_TENANT_PROD TP
             , TB_DP_TENANT_PROD_PRICE PR
+            , TB_DP_USE_POLICY UP
         WHERE 
             PD.PROD_ID = CM.PROD_ID
             AND PD.PROD_ID = DC.PROD_ID
             AND PD.PROD_ID = TP.PROD_ID
             AND PD.PROD_ID = PR.PROD_ID
+            AND PD.USE_POLICY_ID = UP.USE_POLICY_ID(+)
             AND DC.LANG_CD = #{langCd}
             AND TP.TENANT_ID = #{tenantId}
             AND TP.TENANT_ID = PR.TENANT_ID
@@ -177,6 +197,9 @@
 		           WHEN PD.TOP_MENU_ID='DP14' THEN DV.COMIC_SPRT_YN
 		           ELSE 'Y' END
             )
+            <if test='cmpxProdGrpCd == null or cmpxProdGrpCd == ""'>
+                AND CM.PROD_ID = #{productId}
+            </if>
             <if test='cmpxProdGradeCd != null and cmpxProdGradeCd != ""'>
 				AND PD.PROD_GRD_CD IN /* PD004401:전체이용가 / PD004402:12세이용가 / PD004403:15세이용가 / PD004404:청소년이용불가 */
 				<foreach collection="arrayCmpxProdGradeCd" item="cmpxProdGradeCd" separator="," open="(" close=")">
