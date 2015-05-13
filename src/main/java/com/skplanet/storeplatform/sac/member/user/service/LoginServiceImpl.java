@@ -282,7 +282,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// UAPS 연동, 단말 부가정보 등록
-		if (limitChargeFlag) {
+		if (limitChargeFlag && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
 			UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
 			updateDeviceManagementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 			updateDeviceManagementRequest.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
@@ -464,7 +464,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// UAPS 연동, 단말 부가정보 등록
-		if (limitChargeFlag) {
+		if (limitChargeFlag && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
 			UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
 			updateDeviceManagementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
 			updateDeviceManagementRequest.setDeviceKey(schDeviceRes.getUserMbrDevice().getDeviceKey());
