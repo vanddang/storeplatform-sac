@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.display.freepass.service;
 
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -145,7 +144,8 @@ public class VoucherServiceImpl implements VoucherService {
 		// '+'로 연결 된 이용등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getCmpxProdGradeCd())) {
 			try {
-				String[] arrayCmpxProdGradeCd = URLDecoder.decode(req.getCmpxProdGradeCd(), "UTF-8").split("//+");
+				String[] arrayCmpxProdGradeCd = req.getCmpxProdGradeCd().split("\\+");
+				// String[] arrayCmpxProdGradeCd = URLDecoder.decode(req.getCmpxProdGradeCd(), "UTF-8").split("\\+");
 				for (int i = 0; i < arrayCmpxProdGradeCd.length; i++) {
 					if (StringUtils.isNotEmpty(arrayCmpxProdGradeCd[i])) {
 						if (!"PD004401".equals(arrayCmpxProdGradeCd[i]) && !"PD004402".equals(arrayCmpxProdGradeCd[i])
@@ -161,7 +161,7 @@ public class VoucherServiceImpl implements VoucherService {
 				}
 				req.setArrayCmpxProdGradeCd(arrayCmpxProdGradeCd);
 			} catch (Exception e) {
-				throw new StorePlatformException("SAC_DSP_0003", "cmpxProdGradeCd", req.getTopMenuId());
+				throw new StorePlatformException("SAC_DSP_0003", "cmpxProdGradeCd", req.getCmpxProdGradeCd());
 			}
 		}
 
