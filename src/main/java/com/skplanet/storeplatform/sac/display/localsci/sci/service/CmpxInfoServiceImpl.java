@@ -188,6 +188,10 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		cmpxProductInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxProductInfo", req,
 				CmpxProductInfo.class);
 		
+		if (cmpxProductInfo == null) {
+			throw new StorePlatformException("SAC_DSP_0005", "이용권 "+req.getProdId());
+		}		
+		
 		return cmpxProductInfo;
 	}
 }
