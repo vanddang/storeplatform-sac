@@ -225,7 +225,7 @@ public class OtherController {
 		if(versionInfo == null)
 			throw new StorePlatformException("SAC_DSP_0009");
 
-		return new OtherAppVersionRes(versionInfo.getProdId(), versionInfo.getVersionCode());
+		return new OtherAppVersionRes(versionInfo.getProdId(), versionInfo.getVersionCode(), versionInfo.getVersion());
 	}
 
 }

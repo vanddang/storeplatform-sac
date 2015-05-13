@@ -17,10 +17,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Hist
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.cache.service.UpdateProductInfoManager;
+import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct;
 import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
-import com.skplanet.storeplatform.sac.display.common.DisplayCryptUtils;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.personal.vo.MemberInfo;
 import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
@@ -62,7 +61,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
     private AppUpdateSupportService appUpdateSupportService;
 
     @Autowired
-    private UpdateProductInfoManager updateProductInfoManager;
+    private CachedExtraInfoManager cachedExtraInfoManager;
 
 
     /*
@@ -126,7 +125,7 @@ public class PersonalAutoUpdateServiceImpl implements PersonalAutoUpdateService 
         for (SubContentInfo scInfo : subContentInfos) {
 
             // 상품 메타데이터 조회
-            UpdateProduct up = updateProductInfoManager.getUpdateProductInfo(new UpdateProductParam(tenantId, langCd, scInfo.getProdId(), scInfo.getSubContentsId()));
+            UpdateProduct up = cachedExtraInfoManager.getUpdateProductInfo(new UpdateProductParam(tenantId, langCd, scInfo.getProdId(), scInfo.getSubContentsId()));
 
             if(up == null) {
                 continue;

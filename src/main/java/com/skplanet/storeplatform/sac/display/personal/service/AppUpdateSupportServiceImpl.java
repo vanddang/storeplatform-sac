@@ -53,8 +53,10 @@ import com.skplanet.storeplatform.sac.display.personal.vo.SubContentInfo;
 public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
 
     private static final Logger logger = LoggerFactory.getLogger(AppUpdateSupportServiceImpl.class);
-    public static final String PLANDAS_APKPROD_MAPG = "sacdp://apk-prod/";
-    public static final String PLANDAS_APKPROD_SET = "sacdp://apk-prod-set/";
+//    public static final String PLANDAS_APKPROD_MAPG = "sacdp://apk-prod/";
+//    public static final String PLANDAS_APKPROD_SET = "sacdp://apk-prod-set/";
+    public static final String PLANDAS_APKPROD_MAPG = "pkg2prod:";
+    public static final String PLANDAS_APKPROD_SET = "pkg2prods";
 
     @Autowired
     @Qualifier("sac")
@@ -126,6 +128,7 @@ public class AppUpdateSupportServiceImpl implements AppUpdateSupportService {
         List<String> pkgsToFind = new ArrayList<String>(pkgList.size());
 
         // 패키지명으로 prodId를 조회한다
+        // TODO 이 부분은 차후 CachedExtraInfoManager.getProdIdByPkgNm() 로 처리 by joyspring
         for (String apkNm : pkgList) {
             String pid = client.get(PLANDAS_APKPROD_MAPG + apkNm);
             if(pid == null)

@@ -9,7 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.service;
 
+import com.skplanet.plandasj.Plandasj;
+import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.sac.common.util.ServicePropertyManager;
+import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
 import com.skplanet.storeplatform.sac.display.cache.vo.*;
 import com.skplanet.storeplatform.sac.display.common.ProductType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,12 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
     @Autowired
     private CacheSupportService cacheSupportService;
 
+    @Autowired(required = false)
+    private PlandasjConnectionFactory connectionFactory;
+
+    @Autowired
+    private CachedExtraInfoManager cachedExtraInfoManager;
+
     @Value("#{propertiesForSac['skp.common.service.language']}")
     private String SERVICE_LANG;
 
@@ -52,6 +61,11 @@ public class CacheEvictHelperComponentImpl implements CacheEvictHelperComponent 
             if(prodType == App) {
                 supportDeviceList = cacheSupportService.getSupportDeviceList(_prodId);
                 menuList = cacheSupportService.getMenuList(_prodId);
+
+                Plandasj c = connectionFactory.getConnectionPool().getClient();
+                cachedExtraInfoManager.evictPkgsInProd(_prodId);
+                c.del(SacRedisKeys.pkgsInProd(_prodId));
+                c.del(SacRedisKeys.sprtdev(_prodId));
             }
             for(String tenant : ServicePropertyManager.getSupportTenantList()) {
                 for(String langCd : langList) {

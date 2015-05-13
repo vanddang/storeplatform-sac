@@ -18,10 +18,12 @@ package com.skplanet.storeplatform.sac.display.other.vo;
 public class VersionInfo {
     private String prodId;
     private Integer versionCode;
+    private String version;
 
-    public VersionInfo(String prodId, Integer versionCode) {
+    public VersionInfo(String prodId, Integer versionCode, String version) {
         this.prodId = prodId;
         this.versionCode = versionCode;
+        this.version = version;
     }
 
     public String getProdId() {
@@ -38,5 +40,13 @@ public class VersionInfo {
 
     public void setVersionCode(Integer versionCode) {
         this.versionCode = versionCode;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

@@ -9,16 +9,21 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
-import com.google.common.base.Strings;
 import com.skplanet.plandasj.Plandasj;
 import com.skplanet.spring.data.plandasj.PlandasjConnectionFactory;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleAction;
+import com.skplanet.storeplatform.sac.common.support.redis.RedisSimpleGetOrLoadHandler;
+import com.skplanet.storeplatform.sac.display.cache.SacRedisKeys;
+import com.skplanet.storeplatform.sac.display.cache.service.CachedExtraInfoManager;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.other.vo.GetVersionInfoByPkgParam;
 import com.skplanet.storeplatform.sac.display.other.vo.VersionInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +36,7 @@ import java.util.*;
  * <p>
  * OtherVersionServiceImpl
  * </p>
- * vmVer, apkVer의 패턴에 따라 조회하도록 하는 방법도 있음.
+ * FIXME json 라이브러리를 바꿔서 처리를 좀더 깔끔하게 해야겠음.
  * Updated on : 2015. 04. 27 Updated by : 정희원, SK 플래닛.
  */
 @Service
@@ -46,14 +51,12 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
     @Qualifier("sac")
     private CommonDAO commonDAO;
 
-    private static final String REDIS_VERSION_INFO_PREFIX = "product:version:"; // product:version:[apkPkgNm]:[deviceModelCd]
+    @Autowired
+    private CachedExtraInfoManager cachedExtraInfoManager;
 
     @Override
     public VersionInfo getVersionInfoByPkg(GetVersionInfoByPkgParam param) {
-        final Plandasj plandasj = connectionFactory.getConnectionPool().getClient();
-        String key = makeKey(param.getApkPkgNm(), param.getDeviceModelCd()),
-                osVer = DisplayCommonUtil.extractOsVer(param.getOsVersion());
-
+        String osVer = DisplayCommonUtil.extractOsVer(param.getOsVersion());
 
         if(StringUtils.equals(param.getDeviceModelCd(), DisplayConstants.DP_ANY_PHONE_4APP))
             throw new StorePlatformException("SAC_DSP_0031");
@@ -61,109 +64,143 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
         if(osVer.equals(DisplayCommonUtil.WRONG_OS_VER))
             throw new StorePlatformException("SAC_DSP_0030");
 
-        String v = plandasj.get(key);
-        RawVersionInfo rawVersionInfo;
+        String prodId = cachedExtraInfoManager.getProdIdByPkgNm(param.getApkPkgNm());
+        if (prodId == null)
+            return null;
 
-        if (Strings.isNullOrEmpty(v)) {
-            Map<String, Object> req = new HashMap<String, Object>();
-            req.put("apkPkgNm", param.getApkPkgNm());
-            req.put("deviceModelCd", param.getDeviceModelCd());
+        SprtDev sprtDev = RedisSimpleAction.getOrLoad(new SprtDevParam(prodId, param.getDeviceModelCd()),
+                new RedisSimpleGetOrLoadHandler<SprtDevParam, SprtDev>() {
+                    @Override
+                    public SprtDev load(SprtDevParam param, Plandasj redis) {
+                        String str = redis.hget(SacRedisKeys.sprtdev(param.getProdId()), param.getDeviceModelCd());
+                        if (str == null)
+                            return null;
 
-            rawVersionInfo = commonDAO.queryForObject("OtherAppVersion.getVersionInfoByPkg", req, RawVersionInfo.class);
-            if(rawVersionInfo == null)
-                return null;
+                        JSONObject v = (JSONObject) JSONValue.parse(str);
+                        SprtDev sprtDev = new SprtDev();
+                        try {
+                            sprtDev.setScId((String) v.get("scId"));
+                            sprtDev.setOsVer((String) v.get("osVer"));
+                            sprtDev.setVer((String) v.get("ver"));
+                            sprtDev.setVerCd(((Long)v.get("verCd")).intValue());
+                        } catch (RuntimeException e) {
+                            throw new StorePlatformException("SAC_DSP_9999", e);
+                        }
 
-            plandasj.setex(key, 60, rawVersionInfo.makeSerializeData());
-        }
-        else {
-            try {
-                rawVersionInfo = new RawVersionInfo(v);
-            }
-            catch (IllegalStateException e) {
-                throw new StorePlatformException("SAC_DSP_9999", e);
-            }
-        }
+                        return sprtDev;
 
-        // 통계 처리를 위하여
-        // Hash "product:version:stats" << "[prodId]:[deviceModelCd]:[osVer]"
-        plandasj.hincrBy("product:version:stats", rawVersionInfo.getProdId() + ":" + param.getDeviceModelCd() + ":" + osVer, 1);
+                    }
 
-        Map<String, String> map = plandasj.hgetAll("product:version:stats");
+                    @Override
+                    public void store(SprtDevParam param, SprtDev value, Plandasj redis) {
+                        JSONObject o = new JSONObject();
+                        o.put("scId", value.getScId());
+                        o.put("osVer", value.getOsVer());
+                        o.put("ver", value.getVer());
+                        o.put("verCd", new Integer(value.getVerCd()));
 
-        logger.info("Version stats: {}", map);
+                        redis.hset(SacRedisKeys.sprtdev(param.getProdId()), param.getDeviceModelCd(), o.toJSONString());
 
-        if (rawVersionInfo.isSupportVmVer(osVer)) {
-            return new VersionInfo(rawVersionInfo.getProdId(), rawVersionInfo.getApkVer());
-        }
-        else
-            throw new StorePlatformException("SAC_DSP_0023");
+                    }
+
+                    @Override
+                    public SprtDev makeValue(SprtDevParam param) {
+                        Map<String, Object> req = new HashMap<String, Object>();
+                        req.put("prodId", param.getProdId());
+                        req.put("deviceModelCd", param.getDeviceModelCd());
+                        commonDAO.queryForObject("OtherAppVersion.getSprtDev", req, SprtDev.class);
+
+                        return commonDAO.queryForObject("OtherAppVersion.getSprtDev", req, SprtDev.class);
+                    }
+                });
+
+        if (sprtDev == null)
+            return null;
+
+        // OS 프로비저닝
+        HashSet<String> verSet = new HashSet<String>(Arrays.asList(sprtDev.getOsVer().split(",")));
+        if(!verSet.contains(osVer))
+            return null;
+
+        // 통계처리
+        final Plandasj plandasj = connectionFactory.getConnectionPool().getClient();
+        plandasj.hincrBy("product:version:stats", prodId + ":" + param.getDeviceModelCd() + ":" + osVer, 1);
+
+        return new VersionInfo(prodId, sprtDev.getVerCd(), sprtDev.getVer());
     }
 
-    @Override
-    public void evictVersionInfo(String apkPkgNm, String[] deviceModelCds) {
-
-    }
-
-    private String makeKey(String apkPkgNm, String deviceModelCd) {
-        return REDIS_VERSION_INFO_PREFIX + apkPkgNm + ":" + deviceModelCd;
-    }
-
-    public static class RawVersionInfo {
+    private class SprtDevParam {
         private String prodId;
-        private Integer apkVer;
-        private String vmVer;
-        private Set<String> vmVerSet;
+        private String deviceModelCd;
 
-        public RawVersionInfo() {}
-
-        public RawVersionInfo(String rawStr) {
-            String[] v = StringUtils.split(rawStr);
-            if(v.length != 3)
-                throw new IllegalStateException();
-
-            this.prodId = v[0];
-
-            try {
-                this.apkVer = Integer.parseInt(v[1]);
-            }
-            catch (NumberFormatException e) {
-                throw new IllegalStateException(e);
-            }
-
-            setVmVer(v[2]);
+        public SprtDevParam(String prodId, String deviceModelCd) {
+            this.prodId = prodId;
+            this.deviceModelCd = deviceModelCd;
         }
 
         public String getProdId() {
             return prodId;
         }
 
-        public Integer getApkVer() {
-            return apkVer;
-        }
-
         public void setProdId(String prodId) {
             this.prodId = prodId;
         }
 
-        public void setApkVer(Integer apkVer) {
-            this.apkVer = apkVer;
+        public String getDeviceModelCd() {
+            return deviceModelCd;
         }
 
-        public String getVmVer() {
-            return vmVer;
-        }
-
-        public void setVmVer(String vmVer) {
-            this.vmVer = vmVer;
-            this.vmVerSet = new HashSet<String>(Arrays.asList(StringUtils.split(vmVer)));
-        }
-
-        public boolean isSupportVmVer(String vmVer) {
-            return vmVerSet.contains(vmVer);
-        }
-
-        public String makeSerializeData() {
-            return prodId + " " + apkVer + " " + vmVer;
+        public void setDeviceModelCd(String deviceModelCd) {
+            this.deviceModelCd = deviceModelCd;
         }
     }
+
+    public static class SprtDev {
+        private String scId;
+        private String osVer;
+        private String ver;
+        private Integer verCd;
+
+        public String getScId() {
+            return scId;
+        }
+
+        public void setScId(String scId) {
+            this.scId = scId;
+        }
+
+        public String getOsVer() {
+            return osVer;
+        }
+
+        public void setOsVer(String osVer) {
+            this.osVer = osVer;
+        }
+
+        public String getVer() {
+            return ver;
+        }
+
+        public void setVer(String ver) {
+            this.ver = ver;
+        }
+
+        public Integer getVerCd() {
+            return verCd;
+        }
+
+        public void setVerCd(Integer verCd) {
+            this.verCd = verCd;
+        }
+    }
+
+    @Override
+    public void evictVersionInfo(String prodId) {
+        Plandasj c = connectionFactory.getConnectionPool().getClient();
+
+        cachedExtraInfoManager.evictPkgsInProd(prodId);
+        c.del(SacRedisKeys.pkgsInProd(prodId));
+        c.del(SacRedisKeys.sprtdev(prodId));
+    }
+
 }

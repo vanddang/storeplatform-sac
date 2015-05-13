@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="UpdateProductInfo">
+<mapper namespace="CachedExtraInfoManager">
 
     <select id="getUpdateProductInfo" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.UpdateProduct">
         SELECT /* UpdateProductInfo.getUpdateProductInfo, 정희원/SKP, 2014-07-03 */
@@ -84,6 +84,36 @@
                                  AND   SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
                      ) LA
             )LB
-    </select>   
+    </select>
+
+    <select id="getProdIdByPkgNm" parameterType="map" resultType="String">
+        SELECT PROD_ID FROM (
+            SELECT PROD_ID FROM (
+                SELECT PROD_ID
+                FROM (
+                    SELECT TP.PROD_ID, LAST_DEPLOY_DT
+                    FROM TB_DP_TENANT_PROD TP
+                        INNER JOIN TB_DP_PROD P
+                            ON TP.PROD_ID = P.PROD_ID
+                    WHERE 1=1
+                          AND TP.TENANT_ID IN <foreach collection="tenantIds" separator="," item="v" open="(" close=")">#{v}</foreach>
+                          AND TP.MAPG_APK_PKG_HASH = #{hashedPkgNm}
+                    GROUP BY TP.PROD_ID, LAST_DEPLOY_DT
+                )
+                ORDER BY LAST_DEPLOY_DT DESC
+            )
+            UNION ALL
+            SELECT PROD_ID FROM (
+                SELECT SC.PROD_ID, LAST_DEPLOY_DT
+                FROM TB_DP_SUB_CONTENTS SC
+                    INNER JOIN TB_DP_PROD P
+                        ON P.PROD_ID = SC.PROD_ID
+                WHERE 1=1
+                      AND SC.APK_PKG_HASH = #{hashedPkgNm}
+                ORDER BY LAST_DEPLOY_DT DESC
+            )
+        )
+        WHERE ROWNUM = 1
+    </select>
     
 </mapper>

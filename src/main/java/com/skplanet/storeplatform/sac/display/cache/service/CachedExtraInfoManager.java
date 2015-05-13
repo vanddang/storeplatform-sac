@@ -14,11 +14,25 @@ import com.skplanet.storeplatform.sac.display.cache.vo.UpdateProductParam;
 
 /**
  * <p>
- * 업데이트 상품 정보
+ * 캐시된 이런저런 정보
  * </p>
  * Updated on : 2014. 06. 12 Updated by : 정희원, SK 플래닛.
  */
-public interface UpdateProductInfoManager {
+public interface CachedExtraInfoManager {
 
     UpdateProduct getUpdateProductInfo(UpdateProductParam param);
+
+    /**
+     * 패키지명으로 상품ID 조회.
+     * TODO 자동업데이트시에도 이 메소드를 이용하도록 하여야 한다.
+     * @param pkgNm 패키지명
+     * @return 상품ID
+     */
+    String getProdIdByPkgNm(String pkgNm);
+
+    /**
+     * 상품ID에 할당된 패키지명 정보를 evict합니다.
+     * @param prodId 상품ID
+     */
+    void evictPkgsInProd(String prodId);
 }
