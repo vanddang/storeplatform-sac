@@ -13,7 +13,7 @@ public class StatActionV2Req {
 	private String key;
 	
 	@NotNull @NotBlank
-	@Pattern(regexp = "DP01210001|DP01210002|DP01210003")
+	@Pattern(regexp = "DP01210001|DP01210002|DP01210003|DP01210004")
 	private String clsf;
 	
 	@NotNull @NotBlank
