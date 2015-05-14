@@ -266,7 +266,7 @@ public class FreepassServiceImpl implements FreepassService {
 				String userGrade = userGradeInfo.getUserGradeCd();
 				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
 						retMetaInfo.getTopMenuId(), req.getChannelId(), retMetaInfo.getProdAmt());
-				mileageInfo = benefitService.checkFreeProduct(mileageInfo, retMetaInfo.getProdAmt());
+				mileageInfo = this.benefitService.checkFreeProduct(mileageInfo, retMetaInfo.getProdAmt());
 				pointList.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
 			}
 		}
@@ -672,7 +672,7 @@ public class FreepassServiceImpl implements FreepassService {
 
 		return availableFixrateProdIdList;
 	}
-	
+
 	/**
 	 * 이용가능한 정액권목록 구매 연동.
 	 * 
@@ -681,7 +681,7 @@ public class FreepassServiceImpl implements FreepassService {
 	 * @return List<String>
 	 */
 	@Override
-	public List<FreePass> getAvailableFixrateInfoList (PaymentInfoSacReq req) {
+	public List<FreePass> getAvailableFixrateInfoList(PaymentInfoSacReq req) {
 		List<FreePass> availableFixrateInfoList = new ArrayList<FreePass>();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("lang", req.getLangCd());
@@ -694,7 +694,7 @@ public class FreepassServiceImpl implements FreepassService {
 				FreePass.class);
 
 		return availableFixrateInfoList;
-	}	
+	}
 
 	/**
 	 * 정액권 구매 연동.
@@ -726,19 +726,18 @@ public class FreepassServiceImpl implements FreepassService {
 			paymentInfo = this.commonDAO.queryForObject("PaymentInfo.getFreePassMetaInfo", paramMap, PaymentInfo.class);
 			if (paymentInfo != null) {
 				paramMap.put("productId", paymentInfo.getProdId());
-				
-				exclusiveTypeInfoList = this.commonDAO.queryForList("PaymentInfo.getExclusiveTypeInfoList",
-						paramMap, ExclusiveFreePass.class);
 
-				
-				for(ExclusiveFreePass info : exclusiveTypeInfoList){
+				exclusiveTypeInfoList = this.commonDAO.queryForList("PaymentInfo.getExclusiveTypeInfoList", paramMap,
+						ExclusiveFreePass.class);
 
-					if(info.getDupPrchsLimtTypeCd().equals("PD013403")){
+				for (ExclusiveFreePass info : exclusiveTypeInfoList) {
+
+					if (info.getDupPrchsLimtTypeCd().equals("PD013403")) {
 						paramMap.put("dupPrchsLimtProdId", info.getDupPrchsLimtProdId());
-						exclusiveFixrateProdIdList.addAll(this.commonDAO.queryForList("PaymentInfo.getExclusiveTypeInfoList",
-								paramMap, String.class));
-					}else{
-						exclusiveFixrateProdIdList.add(info.getDupPrchsLimtProdId());					
+						exclusiveFixrateProdIdList.addAll(this.commonDAO.queryForList(
+								"PaymentInfo.getExclusiveTypeInfoList", paramMap, String.class));
+					} else {
+						exclusiveFixrateProdIdList.add(info.getDupPrchsLimtProdId());
 					}
 				}
 
@@ -875,7 +874,7 @@ public class FreepassServiceImpl implements FreepassService {
 			for (int i = 0; i < arrayProdGradeCd.length; i++) {
 				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
 					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
-							&& !"PD004403".equals(arrayProdGradeCd[i])&& !"PD004404".equals(arrayProdGradeCd[i])) {
+							&& !"PD004403".equals(arrayProdGradeCd[i]) && !"PD004404".equals(arrayProdGradeCd[i])) {
 						this.log.debug("----------------------------------------------------------------");
 						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
 						this.log.debug("----------------------------------------------------------------");
@@ -906,7 +905,7 @@ public class FreepassServiceImpl implements FreepassService {
 		if (retMetaInfo == null)
 			throw new StorePlatformException("SAC_DSP_0009", req.getProductId(), req.getProductId());
 
-		// 상품 상태 조회 - 판매중,판매중지,판매종료가 아니면 노출 안함
+		// 상품 상태 조회 - 판매대기, 판매종료는 노출안함 ( 판매중,판매중지,판매금지는 노출함 )
 		if (!DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
 				&& !DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())
 				&& !DisplayConstants.DP_PASS_SALE_STAT_ING.equals(retMetaInfo.getProdStatusCd())) {
@@ -920,7 +919,7 @@ public class FreepassServiceImpl implements FreepassService {
 			boolean purchaseYn = this.displayCommonService.checkPurchase(req.getTenantId(), req.getUserKey(),
 					req.getDeviceKey(), req.getProductId());
 
-			// 구매가 있을 경우 : 판매중지,판매중,판매종료는 노출함
+			// 구매가 없을경우 : 판매중지,판매중,판매종료는 노출안함
 			if (!purchaseYn) {
 				if (DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
 						|| DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())) {
@@ -949,7 +948,7 @@ public class FreepassServiceImpl implements FreepassService {
 				String userGrade = userGradeInfo.getUserGradeCd();
 				MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
 						retMetaInfo.getTopMenuId(), req.getChannelId(), retMetaInfo.getProdAmt());
-				mileageInfo = benefitService.checkFreeProduct(mileageInfo, retMetaInfo.getProdAmt());
+				mileageInfo = this.benefitService.checkFreeProduct(mileageInfo, retMetaInfo.getProdAmt());
 				pointList.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
 			}
 		}
@@ -1058,7 +1057,7 @@ public class FreepassServiceImpl implements FreepassService {
 			for (int i = 0; i < arrayProdGradeCd.length; i++) {
 				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
 					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
-							&& !"PD004403".equals(arrayProdGradeCd[i])&& !"PD004404".equals(arrayProdGradeCd[i])) {
+							&& !"PD004403".equals(arrayProdGradeCd[i]) && !"PD004404".equals(arrayProdGradeCd[i])) {
 						this.log.debug("----------------------------------------------------------------");
 						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
 						this.log.debug("----------------------------------------------------------------");
@@ -1181,7 +1180,7 @@ public class FreepassServiceImpl implements FreepassService {
 			for (int i = 0; i < arrayProdGradeCd.length; i++) {
 				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
 					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
-							&& !"PD004403".equals(arrayProdGradeCd[i])&& !"PD004404".equals(arrayProdGradeCd[i])) {
+							&& !"PD004403".equals(arrayProdGradeCd[i]) && !"PD004404".equals(arrayProdGradeCd[i])) {
 						this.log.debug("----------------------------------------------------------------");
 						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
 						this.log.debug("----------------------------------------------------------------");

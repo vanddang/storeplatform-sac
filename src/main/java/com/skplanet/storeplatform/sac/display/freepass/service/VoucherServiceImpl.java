@@ -295,10 +295,15 @@ public class VoucherServiceImpl implements VoucherService {
 			for (MetaInfo metaInfo : retMetaInfoList) {
 				int i = 0;
 
-				// 상품 상태 조회 - 판매중,판매중지,판매종료가 아니면 노출 안함
+				// 상품 상태 조회 - 판매대기, 판매종료는 노출안함 ( 판매중,판매중지,판매금지는 노출함 )
 				if (!DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(metaInfo.getProdStatusCd())
 						&& !DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(metaInfo.getProdStatusCd())
 						&& !DisplayConstants.DP_PASS_SALE_STAT_ING.equals(metaInfo.getProdStatusCd())) {
+					// 요청한 상품일 경우
+					if ("Y".equals(retMetaInfoList.get(i).getRequestProduct())) {
+						throw new StorePlatformException("SAC_DSP_0011", metaInfo.getProdStatusCd(),
+								metaInfo.getProdStatusCd());
+					}
 				} else {
 					// 구매 여부 조회
 					if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
@@ -307,111 +312,110 @@ public class VoucherServiceImpl implements VoucherService {
 								req.getUserKey(), req.getDeviceKey(), req.getProductId());
 						// boolean purchaseYn = false; // TODO
 
-						// 구매가 있을 경우 : 판매중지,판매중,판매종료는 노출함
+						// 구매가 없을경우 : 판매중지,판매중,판매종료는 노출안함
 						if (!purchaseYn) {
 							if (DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(metaInfo.getProdStatusCd())
 									|| DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(metaInfo.getProdStatusCd())) {
-							} else {
 
-								coupon = this.responseInfoGenerateFacade.generateVoucherProduct(metaInfo);
-
-								// 티멤버십 DC 정보
-								TmembershipDcInfo info = this.displayCommonService.getTmembershipDcRateForMenu(header
-										.getTenantHeader().getTenantId(), metaInfo.getTopMenuId());
-								List<Point> pointList = this.commonGenerator.generatePoint(info);
-								// Tstore멤버십 적립율 정보
-								// 정액제 패스/시리즈 패스만 조회
-								if ((StringUtils.equals(DisplayConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE,
-										metaInfo.getCmpxProdClsfCd()) || StringUtils
-										.equals(DisplayConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS,
-												metaInfo.getCmpxProdClsfCd()))
-										&& StringUtils.isNotEmpty(req.getUserKey())) {
-									// 회원등급 조회
-									GradeInfoSac userGradeInfo = this.displayCommonService.getUserGrade(req
-											.getUserKey());
-									if (userGradeInfo != null) {
-										if (pointList == null)
-											pointList = new ArrayList<Point>();
-										String userGrade = userGradeInfo.getUserGradeCd();
-										MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
-												metaInfo.getTopMenuId(), req.getChannelId(), metaInfo.getProdAmt());
-										mileageInfo = this.benefitService.checkFreeProduct(mileageInfo,
-												metaInfo.getProdAmt());
-										pointList
-												.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
-									}
-								}
-								coupon.setPointList(pointList);
-								couponList.add(coupon);
-
-								// 요청한 상품이라면
+								// 요청한 상품일 경우
 								if ("Y".equals(retMetaInfoList.get(i).getRequestProduct())) {
-
-									mapList = this.commonDAO.queryForList("Voucher.selectVoucherMapProduct", req,
-											VoucherProdMap.class);
-
-									reqMap.put("tenantHeader", header.getTenantHeader());
-									reqMap.put("deviceHeader", header.getDeviceHeader());
-									reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-
-									for (VoucherProdMap prodMap : mapList) {
-
-										productBasicInfo.setProdId(prodMap.getPartProdId());
-										productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
-										productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-										reqMap.put("productBasicInfo", productBasicInfo);
-
-										commonResponse.setTotalCount(prodMap.getTotalCount());
-
-										if ("DP13".equals(prodMap.getTopMenuId())) {
-											reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-											metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-											if (metaInfo == null) {
-												minusCount += 1;
-												continue;
-											} else
-												product = this.responseInfoGenerateFacade
-														.generateEbookProduct(metaInfo);
-										} else if ("DP14".equals(prodMap.getTopMenuId())) {
-											reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-											metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-											if (metaInfo == null) {
-												minusCount += 1;
-												continue;
-											} else
-												product = this.responseInfoGenerateFacade
-														.generateComicProduct(metaInfo);
-										} else if ("DP17".equals(prodMap.getTopMenuId())) {
-											reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-											metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-											if (metaInfo == null) {
-												minusCount += 1;
-												continue;
-											} else
-												product = this.responseInfoGenerateFacade
-														.generateBroadcastProduct(metaInfo);
-										} else if ("DP18".equals(prodMap.getTopMenuId())) {
-											reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-											metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-											if (metaInfo == null) {
-												minusCount += 1;
-												continue;
-											} else
-												product = this.responseInfoGenerateFacade
-														.generateMovieProduct(metaInfo);
-										}
-										product.setStatus(prodMap.getIconClsfCd());
-										productList.add(product);
-									}
+									throw new StorePlatformException("SAC_DSP_0011", metaInfo.getProdStatusCd(),
+											metaInfo.getProdStatusCd());
 								}
 							}
 						}
 					}
-				}
+
+					// 조합
+					coupon = this.responseInfoGenerateFacade.generateVoucherProduct(metaInfo);
+
+					// 티멤버십 DC 정보
+					TmembershipDcInfo info = this.displayCommonService.getTmembershipDcRateForMenu(header
+							.getTenantHeader().getTenantId(), metaInfo.getTopMenuId());
+					List<Point> pointList = this.commonGenerator.generatePoint(info);
+					// Tstore멤버십 적립율 정보
+					// 정액제 패스/시리즈 패스만 조회
+					if ((StringUtils.equals(DisplayConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE,
+							metaInfo.getCmpxProdClsfCd()) || StringUtils.equals(
+							DisplayConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS, metaInfo.getCmpxProdClsfCd()))
+							&& StringUtils.isNotEmpty(req.getUserKey())) {
+						// 회원등급 조회
+						GradeInfoSac userGradeInfo = this.displayCommonService.getUserGrade(req.getUserKey());
+						if (userGradeInfo != null) {
+							if (pointList == null)
+								pointList = new ArrayList<Point>();
+							String userGrade = userGradeInfo.getUserGradeCd();
+							MileageInfo mileageInfo = this.benefitService.getMileageInfo(req.getTenantId(),
+									metaInfo.getTopMenuId(), req.getChannelId(), metaInfo.getProdAmt());
+							mileageInfo = this.benefitService.checkFreeProduct(mileageInfo, metaInfo.getProdAmt());
+							pointList.addAll(this.metaInfoGenerator.generateMileage(mileageInfo, userGrade));
+						}
+					}
+					coupon.setPointList(pointList);
+					couponList.add(coupon);
+
+					// 요청한 상품이라면
+					if ("Y".equals(retMetaInfoList.get(i).getRequestProduct())) {
+
+						mapList = this.commonDAO.queryForList("Voucher.selectVoucherMapProduct", req,
+								VoucherProdMap.class);
+
+						reqMap.put("tenantHeader", header.getTenantHeader());
+						reqMap.put("deviceHeader", header.getDeviceHeader());
+						reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+
+						for (VoucherProdMap prodMap : mapList) {
+
+							productBasicInfo.setProdId(prodMap.getPartProdId());
+							productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
+							productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+							reqMap.put("productBasicInfo", productBasicInfo);
+
+							commonResponse.setTotalCount(prodMap.getTotalCount());
+
+							if ("DP13".equals(prodMap.getTopMenuId())) {
+								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+								if (metaInfo == null) {
+									minusCount += 1;
+									continue;
+								} else
+									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
+							} else if ("DP14".equals(prodMap.getTopMenuId())) {
+								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+								if (metaInfo == null) {
+									minusCount += 1;
+									continue;
+								} else
+									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
+							} else if ("DP17".equals(prodMap.getTopMenuId())) {
+								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+								if (metaInfo == null) {
+									minusCount += 1;
+									continue;
+								} else
+									product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
+							} else if ("DP18".equals(prodMap.getTopMenuId())) {
+								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+								if (metaInfo == null) {
+									minusCount += 1;
+									continue;
+								} else
+									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
+							}
+							product.setStatus(prodMap.getIconClsfCd());
+							productList.add(product);
+						} // for
+
+					}// requestProdyct : Y
+
+				} // if : 판매상태 조회
 				i++;
-			}
+			} // for
 		}
-		//
 		// coupon.setRequestProduct(); <<
 
 		commonResponse.setTotalCount(commonResponse.getTotalCount() - minusCount);
