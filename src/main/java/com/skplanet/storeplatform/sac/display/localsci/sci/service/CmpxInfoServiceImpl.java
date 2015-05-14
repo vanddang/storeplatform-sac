@@ -130,11 +130,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
     		{
     			throw new StorePlatformException("SAC_DSP_0003", "serialBookClsfCd", req.getSerialBookClsfCd());
     		}
-		}else{
-			req.setSerialBookClsfCd(null);
 		}
-		
-			
 		
 		// / 단말 지원 정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
