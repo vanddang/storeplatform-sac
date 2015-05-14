@@ -40,6 +40,15 @@ public class DeviceExtraInfo extends CommonInfo {
 	 */
 	private String deviceKey;
 
+	/** 현재 일시. */
+	private String nowDate;
+
+	/** 등록일시 + 7일. */
+	private String regDatePlus7;
+
+	/** 수정일시 + 7 일. */
+	private String updateDatePlue7;
+
 	/**
 	 * @return extraProfile
 	 */
@@ -113,6 +122,51 @@ public class DeviceExtraInfo extends CommonInfo {
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return the nowDate
+	 */
+	public String getNowDate() {
+		return this.nowDate;
+	}
+
+	/**
+	 * @param nowDate
+	 *            the nowDate to set
+	 */
+	public void setNowDate(String nowDate) {
+		this.nowDate = nowDate;
+	}
+
+	/**
+	 * @return the regDatePlus7
+	 */
+	public String getRegDatePlus7() {
+		return this.regDatePlus7;
+	}
+
+	/**
+	 * @param regDatePlus7
+	 *            the regDatePlus7 to set
+	 */
+	public void setRegDatePlus7(String regDatePlus7) {
+		this.regDatePlus7 = regDatePlus7;
+	}
+
+	/**
+	 * @return the updateDatePlue7
+	 */
+	public String getUpdateDatePlue7() {
+		return this.updateDatePlue7;
+	}
+
+	/**
+	 * @param updateDatePlue7
+	 *            the updateDatePlue7 to set
+	 */
+	public void setUpdateDatePlue7(String updateDatePlue7) {
+		this.updateDatePlue7 = updateDatePlue7;
 	}
 
 }
