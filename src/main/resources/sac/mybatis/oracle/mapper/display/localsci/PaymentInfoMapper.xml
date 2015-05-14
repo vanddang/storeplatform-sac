@@ -300,8 +300,14 @@
             FROM (
                 SELECT  
                       PD.PROD_ID
-                     ,NVL(CM.POSS_LEND_CLSF_CD,'DP010603') AS POSS_LEND_CLSF_CD
-                     ,CM.SERIES_BOOK_CLSF_CD AS cmpxProdBookClsfCd 
+                     , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN NVL(CM.POSS_LEND_CLSF_CD,'DP010603')
+                        ELSE ''
+                        END
+                        ) AS POSS_LEND_CLSF_CD                        
+                     , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN CM.SERIES_BOOK_CLSF_CD
+                        ELSE ''
+                        END
+                        ) AS cmpxProdBookClsfCd       
                  FROM 
                       TB_DP_PROD PD
                     , TB_DP_CMPX_PROD CM
@@ -365,7 +371,10 @@
                     ,PD.TOP_MENU_ID
                     ,'N' as inAppYn
                     , CM.FREE_PASS_CLSF_CD as CMPX_PROD_CLSF_CD
-                    , CM.SERIES_BOOK_CLSF_CD AS cmpxProdBookClsfCd
+                    , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.SERIES_BOOK_CLSF_CD
+                        ELSE ''
+                        END
+                        ) AS cmpxProdBookClsfCd                       
                     , PD.MALL_CD
                     ,'' AS outsdContentsId
                     , PD.SELLER_MBR_NO 

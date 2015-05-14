@@ -16,7 +16,10 @@
                   ELSE ''
                   END
                   ) AS POSS_LEND_CLSF_CD
-			   , CM.SERIES_BOOK_CLSF_CD
+               , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN CM.SERIES_BOOK_CLSF_CD
+                  ELSE ''
+                  END
+                  ) AS SERIES_BOOK_CLSF_CD                  
 			   , PD.DRM_YN  
            FROM 
                  TB_DP_PROD PD

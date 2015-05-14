@@ -752,7 +752,10 @@
                            WHEN CM.FREE_PASS_CLSF_CD='OR004305' THEN 'gameCash' -- 게임 캐쉬  
                       END) AS KIND                       
                     , CM.FREE_PASS_CLSF_CD AS PLAN_TYPE
-                    , CM.SERIES_BOOK_CLSF_CD AS cmpxProdBookClsfCd     
+                    , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.SERIES_BOOK_CLSF_CD
+                        ELSE ''
+                        END
+                       ) AS cmpxProdBookClsfCd                       
                 FROM 
                       TB_DP_PROD PD
                     , TB_DP_CMPX_PROD CM
