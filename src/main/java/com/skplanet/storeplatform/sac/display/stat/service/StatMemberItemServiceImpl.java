@@ -35,7 +35,7 @@ import com.skplanet.storeplatform.sac.display.stat.vo.StatLike;
  * MemberSegmentServiceImpl
  * </p>
  * Created on 2014.11.05 by 서대영, SK플래닛
- * Updated on 2015.05.12 by 서대영, SK플래닛 : 아티스트 통계타입에 대한 통계조회 기능 추가 
+ * Updated on 2015.05.12 by 서대영, SK플래닛 : 앨범/아티스트 통계타입에 대한 통계조회 기능 추가 
  */
 @Service
 public class StatMemberItemServiceImpl implements StatMemberItemService {
@@ -43,6 +43,7 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 	private static final String CLSF_CARD = "DP01210001";
 	private static final String CLSF_PROD = "DP01210002";
 	private static final String CLSF_ARTIST = "DP01210003";
+	private static final String CLSF_ALBUM = "DP01210004";
 
 	@Autowired
 	private CardDetailService cardDetailService;
@@ -68,7 +69,7 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 		Object item;
 		if (CLSF_CARD.equals(statsClsf)) {
 			item = findCard(statsKey, userKey, header, preferredCategoryInfo);
-		} else if (CLSF_PROD.equals(statsClsf)) {
+		} else if (CLSF_PROD.equals(statsClsf) || CLSF_ALBUM.equals(statsClsf)) {
 			item = findProd(statsKey, header);
 		} else if (CLSF_ARTIST.equals(statsClsf)) {
 			item = findArtist(statsKey, header);
