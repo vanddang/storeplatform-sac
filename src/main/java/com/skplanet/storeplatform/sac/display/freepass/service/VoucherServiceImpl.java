@@ -361,58 +361,62 @@ public class VoucherServiceImpl implements VoucherService {
 					coupon.setPointList(pointList);
 					couponList.add(coupon);
 
-					mapList = this.commonDAO.queryForList("Voucher.selectVoucherMapProduct", req, VoucherProdMap.class);
+					// 요청한 상품에대해서만 상품을 조회한다
+					if ("Y".equals(metaInfo.getRequestProduct())) {
+						mapList = this.commonDAO.queryForList("Voucher.selectVoucherMapProduct", req,
+								VoucherProdMap.class);
 
-					reqMap.put("tenantHeader", header.getTenantHeader());
-					reqMap.put("deviceHeader", header.getDeviceHeader());
-					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+						reqMap.put("tenantHeader", header.getTenantHeader());
+						reqMap.put("deviceHeader", header.getDeviceHeader());
+						reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-					for (VoucherProdMap prodMap : mapList) {
-						int i = 0; // Product List Count 용도
-						productBasicInfo.setProdId(prodMap.getPartProdId());
-						productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
-						productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-						reqMap.put("productBasicInfo", productBasicInfo);
+						for (VoucherProdMap prodMap : mapList) {
+							int i = 0; // Product List Count 용도
+							productBasicInfo.setProdId(prodMap.getPartProdId());
+							productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
+							productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+							reqMap.put("productBasicInfo", productBasicInfo);
 
-						commonResponse.setTotalCount(prodMap.getTotalCount());
+							commonResponse.setTotalCount(prodMap.getTotalCount());
 
-						if ("DP13".equals(prodMap.getTopMenuId())) {
-							reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-							metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-							if (metaInfo == null) {
-								minusCount += 1;
-								continue;
-							} else
-								product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
-						} else if ("DP14".equals(prodMap.getTopMenuId())) {
-							reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-							metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-							if (metaInfo == null) {
-								minusCount += 1;
-								continue;
-							} else
-								product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
-						} else if ("DP17".equals(prodMap.getTopMenuId())) {
-							reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-							metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-							if (metaInfo == null) {
-								minusCount += 1;
-								continue;
-							} else
-								product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
-						} else if ("DP18".equals(prodMap.getTopMenuId())) {
-							reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-							metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-							if (metaInfo == null) {
-								minusCount += 1;
-								continue;
-							} else
-								product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
-						}
-						product.setStatus(prodMap.getIconClsfCd());
-						productList.add(product);
-						i++;
-					} // for
+							if ("DP13".equals(prodMap.getTopMenuId())) {
+								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+								if (metaInfo == null) {
+									minusCount += 1;
+									continue;
+								} else
+									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
+							} else if ("DP14".equals(prodMap.getTopMenuId())) {
+								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+								if (metaInfo == null) {
+									minusCount += 1;
+									continue;
+								} else
+									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
+							} else if ("DP17".equals(prodMap.getTopMenuId())) {
+								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+								if (metaInfo == null) {
+									minusCount += 1;
+									continue;
+								} else
+									product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
+							} else if ("DP18".equals(prodMap.getTopMenuId())) {
+								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+								if (metaInfo == null) {
+									minusCount += 1;
+									continue;
+								} else
+									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
+							}
+							product.setStatus(prodMap.getIconClsfCd());
+							productList.add(product);
+							i++;
+						} // for
+					} // if
 				} // if
 			} // for
 		}
