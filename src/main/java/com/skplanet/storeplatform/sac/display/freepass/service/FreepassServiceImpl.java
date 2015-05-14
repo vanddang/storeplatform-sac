@@ -919,7 +919,7 @@ public class FreepassServiceImpl implements FreepassService {
 			boolean purchaseYn = this.displayCommonService.checkPurchase(req.getTenantId(), req.getUserKey(),
 					req.getDeviceKey(), req.getProductId());
 
-			// 구매가 없을경우 : 판매중지,판매중,판매종료는 노출안함
+			// 구매가 없을경우 : 판매중지, 판매금지는 노출안함
 			if (!purchaseYn) {
 				if (DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(retMetaInfo.getProdStatusCd())
 						|| DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(retMetaInfo.getProdStatusCd())) {
