@@ -293,14 +293,15 @@ public class VoucherServiceImpl implements VoucherService {
 		if (retMetaInfoList != null && retMetaInfoList.size() > 0) {
 
 			for (MetaInfo metaInfo : retMetaInfoList) {
-				int i = 0;
-				boolean saveFlag = false;
+
+				boolean saveFlag = false; // Coupon List에 저장여부
 
 				// 상품 상태 조회 - 판매대기, 판매종료는 노출안함 ( 판매중,판매중지,판매금지는 노출함 )
 				if (!DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(metaInfo.getProdStatusCd())
 						&& !DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(metaInfo.getProdStatusCd())
 						&& !DisplayConstants.DP_PASS_SALE_STAT_ING.equals(metaInfo.getProdStatusCd())) {
-					if ("Y".equals(retMetaInfoList.get(i).getRequestProduct())) {
+					// 요청한 상품일 경우
+					if ("Y".equals(metaInfo.getRequestProduct())) {
 						throw new StorePlatformException("SAC_DSP_0011", metaInfo.getProdStatusCd(),
 								metaInfo.getProdStatusCd());
 					} else {
@@ -311,8 +312,7 @@ public class VoucherServiceImpl implements VoucherService {
 				}
 
 				// 요청한 상품일 경우 구매여부 조회
-				if ("Y".equals(retMetaInfoList.get(i).getRequestProduct())) {
-
+				if ("Y".equals(metaInfo.getRequestProduct())) {
 					// 구매 여부 조회
 					if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
 						// 공통 메서드로 변경 20140424
@@ -331,9 +331,9 @@ public class VoucherServiceImpl implements VoucherService {
 					}
 				}
 
+				// 조합
 				if (saveFlag) {
 
-					// 조합
 					coupon = this.responseInfoGenerateFacade.generateVoucherProduct(metaInfo);
 
 					// 티멤버십 DC 정보
@@ -361,64 +361,59 @@ public class VoucherServiceImpl implements VoucherService {
 					coupon.setPointList(pointList);
 					couponList.add(coupon);
 
-					// 요청한 상품이라면
-					if ("Y".equals(retMetaInfoList.get(i).getRequestProduct())) {
+					mapList = this.commonDAO.queryForList("Voucher.selectVoucherMapProduct", req, VoucherProdMap.class);
 
-						mapList = this.commonDAO.queryForList("Voucher.selectVoucherMapProduct", req,
-								VoucherProdMap.class);
+					reqMap.put("tenantHeader", header.getTenantHeader());
+					reqMap.put("deviceHeader", header.getDeviceHeader());
+					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-						reqMap.put("tenantHeader", header.getTenantHeader());
-						reqMap.put("deviceHeader", header.getDeviceHeader());
-						reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+					for (VoucherProdMap prodMap : mapList) {
+						int i = 0; // Product List Count 용도
+						productBasicInfo.setProdId(prodMap.getPartProdId());
+						productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
+						productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+						reqMap.put("productBasicInfo", productBasicInfo);
 
-						for (VoucherProdMap prodMap : mapList) {
+						commonResponse.setTotalCount(prodMap.getTotalCount());
 
-							productBasicInfo.setProdId(prodMap.getPartProdId());
-							productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
-							productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-							reqMap.put("productBasicInfo", productBasicInfo);
-
-							commonResponse.setTotalCount(prodMap.getTotalCount());
-
-							if ("DP13".equals(prodMap.getTopMenuId())) {
-								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-								if (metaInfo == null) {
-									minusCount += 1;
-									continue;
-								} else
-									product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
-							} else if ("DP14".equals(prodMap.getTopMenuId())) {
-								reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
-								metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
-								if (metaInfo == null) {
-									minusCount += 1;
-									continue;
-								} else
-									product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
-							} else if ("DP17".equals(prodMap.getTopMenuId())) {
-								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-								if (metaInfo == null) {
-									minusCount += 1;
-									continue;
-								} else
-									product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
-							} else if ("DP18".equals(prodMap.getTopMenuId())) {
-								reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-								metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
-								if (metaInfo == null) {
-									minusCount += 1;
-									continue;
-								} else
-									product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
-							}
-							product.setStatus(prodMap.getIconClsfCd());
-							productList.add(product);
-						} // for
-					} // if : 판매상태 조회
-				}
-				i++;
+						if ("DP13".equals(prodMap.getTopMenuId())) {
+							reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+							metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+							if (metaInfo == null) {
+								minusCount += 1;
+								continue;
+							} else
+								product = this.responseInfoGenerateFacade.generateEbookProduct(metaInfo);
+						} else if ("DP14".equals(prodMap.getTopMenuId())) {
+							reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+							metaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+							if (metaInfo == null) {
+								minusCount += 1;
+								continue;
+							} else
+								product = this.responseInfoGenerateFacade.generateComicProduct(metaInfo);
+						} else if ("DP17".equals(prodMap.getTopMenuId())) {
+							reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+							metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+							if (metaInfo == null) {
+								minusCount += 1;
+								continue;
+							} else
+								product = this.responseInfoGenerateFacade.generateBroadcastProduct(metaInfo);
+						} else if ("DP18".equals(prodMap.getTopMenuId())) {
+							reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+							metaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
+							if (metaInfo == null) {
+								minusCount += 1;
+								continue;
+							} else
+								product = this.responseInfoGenerateFacade.generateMovieProduct(metaInfo);
+						}
+						product.setStatus(prodMap.getIconClsfCd());
+						productList.add(product);
+						i++;
+					} // for
+				} // if
 			} // for
 		}
 		// coupon.setRequestProduct(); <<
