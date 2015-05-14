@@ -80,9 +80,12 @@
 	            , PM.CHAPTER AS chapterText 
                 , PM.BOOK_CLSF_CD  AS chapterUnit
 	            , PM.POSS_LEND_CLSF_CD
-                ,(CASE WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_DWLD_STRM_CLSF_CD
-                       WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013402' THEN PM.DWLD_STRM_CLSF_CD
-                  END)  AS downStrmClsfCd  	            
+                , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN
+	                    CASE WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_DWLD_STRM_CLSF_CD
+	                         WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013402' THEN PM.DWLD_STRM_CLSF_CD
+	                    END
+	               ELSE ''
+	               END)  AS downStrmClsfCd  	            
 	        FROM 
 	              TB_DP_PROD PD
 	            , TB_DP_PROD_DESC DC
@@ -183,9 +186,13 @@
               END)  AS USE_PERIOD_UNIT_CD
             ,(CASE WHEN CM.USE_PERIOD_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_USE_PERIOD
                    WHEN CM.USE_PERIOD_ATTR_CLSF  ='PD013402' THEN PM.USE_PERIOD
-              END)  AS USE_PERIOD           
-            ,(CASE WHEN CM.DWLD_STRM_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_DWLD_STRM_CLSF_CD
-                   WHEN CM.DWLD_STRM_ATTR_CLSF  ='PD013402' THEN PM.DWLD_STRM_CLSF_CD
+              END)  AS USE_PERIOD  
+                       
+            ,(CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN
+                   CASE WHEN CM.DWLD_STRM_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_DWLD_STRM_CLSF_CD
+                        WHEN CM.DWLD_STRM_ATTR_CLSF  ='PD013402' THEN PM.DWLD_STRM_CLSF_CD
+                   END
+              ELSE ''
               END)  AS downStrmClsfCd                  
             , PM.POSS_LEND_CLSF_CD    
             , CM.FREE_PASS_CLSF_CD AS cmpxProdClsfCd
