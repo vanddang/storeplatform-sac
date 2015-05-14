@@ -44,8 +44,8 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
 
     private static final Logger logger = LoggerFactory.getLogger(OtherAppVersionServiceImpl.class);
 
-    @Autowired(required = false)
-    private PlandasjConnectionFactory connectionFactory;
+//    @Autowired(required = false)
+//    private PlandasjConnectionFactory connectionFactory;
 
     @Autowired
     @Qualifier("sac")
@@ -123,12 +123,15 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
             return null;
 
         // 통계처리
+        /*
         final Plandasj plandasj = connectionFactory.getConnectionPool().getClient();
         plandasj.hincrBy("product:version:stats", prodId + ":" + param.getDeviceModelCd() + ":" + osVer, 1);
+        */
 
         return new VersionInfo(prodId, sprtDev.getVerCd(), sprtDev.getVer());
     }
 
+    ////////// VO Definition //////////
     private class SprtDevParam {
         private String prodId;
         private String deviceModelCd;
@@ -192,15 +195,6 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
         public void setVerCd(Integer verCd) {
             this.verCd = verCd;
         }
-    }
-
-    @Override
-    public void evictVersionInfo(String prodId) {
-        Plandasj c = connectionFactory.getConnectionPool().getClient();
-
-        cachedExtraInfoManager.evictPkgsInProd(prodId);
-        c.del(SacRedisKeys.pkgsInProd(prodId));
-        c.del(SacRedisKeys.sprtdev(prodId));
     }
 
 }

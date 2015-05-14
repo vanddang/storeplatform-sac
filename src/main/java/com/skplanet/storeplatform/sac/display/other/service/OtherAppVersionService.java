@@ -22,5 +22,4 @@ public interface OtherAppVersionService {
 
     VersionInfo getVersionInfoByPkg(GetVersionInfoByPkgParam param);
 
-    void evictVersionInfo(String prodId);
 }
