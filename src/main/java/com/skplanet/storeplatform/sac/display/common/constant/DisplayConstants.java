@@ -250,6 +250,7 @@ public class DisplayConstants {
 
     // ////////////////////////////////////// supported hardware 정보 //////////////////////////////////////////
     public static final String DP_DRM_SUPPORT_NM = "drm";
+    public static final String DP_DL_STRM_NM = "dlStrmCd";
     public static final String DP_IN_APP_SUPPORT_NM = "iab";
     public static final String DP_COLOR_SUPPORT_NM = "color";
 
@@ -438,7 +439,7 @@ public class DisplayConstants {
     public static final String DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION = "recent";
 
     public static final String DP_SHOPPING_POPULAR_DEFAULT_ORDERED_OPTION = "popular";
-    
+
     public static final String DP_SHOPPING_LOWPRICE_DEFAULT_ORDERED_OPTION = "lowprice";
 
     public static final String DP_SHOPPING_CLOSINGTIME_DEFAULT_ORDERED_OPTION = "closingTime";

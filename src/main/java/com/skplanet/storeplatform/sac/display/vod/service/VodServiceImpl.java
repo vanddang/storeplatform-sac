@@ -44,7 +44,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Point;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preference;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
@@ -83,10 +82,10 @@ public class VodServiceImpl implements VodService {
     //[2.x fadeout] 상품 상세 요청 시 예외 처리
 	@Value("#{propertiesForSac['sc2x.fadeout.dummy.product.vod.channel']}")
 	private String sc2xFadeOutDummyProductChannel;
-    
+
 	@Autowired
     private MemberBenefitService benefitService;
-	
+
     @Autowired
     private CommonMetaInfoGenerator metaInfoGenerator;
 
@@ -101,12 +100,12 @@ public class VodServiceImpl implements VodService {
 
 		VodDetailRes res = new VodDetailRes();
 		Product product = new Product();
-		
+
 		final String channelId = req.getChannelId();
-		
+
 		String userKey = StringUtils.defaultString(req.getUserKey());
 		String deviceKey = StringUtils.defaultString(req.getDeviceKey());
-		
+
 		// 1. Channel 정보 조회
 		final String orderedBy = StringUtils.defaultString(req.getOrderedBy(), DisplayConstants.DP_ORDEREDBY_TYPE_RECENT);
 		String includeProdStopStatus = StringUtils.defaultString(req.getIncludeProdStopStatus(), "N");
@@ -130,7 +129,7 @@ public class VodServiceImpl implements VodService {
         param.put("includeProdStopStatus", includeProdStopStatus);
         param.put("offset", req.getOffset() == null ? 1 : req.getOffset());
         param.put("count", req.getCount() == null ? 20 : req.getCount());
-        
+
 
 		VodDetail vodDetail = getVodChanndel(param);
 
@@ -141,7 +140,7 @@ public class VodServiceImpl implements VodService {
 
 			//좋아요 여부
 			product.setLikeYn(vodDetail.getLikeYn());
-			
+
             ExistenceListRes existenceListRes = null;
 			//orderedBy='nonPayment'
 			if(StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
@@ -150,25 +149,25 @@ public class VodServiceImpl implements VodService {
 				if(existenceListRes == null) {
 					existenceListRes = new ExistenceListRes();
 				}
-				
+
 				List<String> paymentProdIdList = new ArrayList<String>();
 				for(ExistenceRes existenceRes : existenceListRes.getExistenceListRes()) {
 					paymentProdIdList.add(existenceRes.getProdId());
 				}
-				
+
 				//#24889 VOD/이북 전권 소장/대여 후 미구매로 정렬 시 대여/소장이 노출되는 문제 수정
 				//episode id 로 filter 하면 전권대여/소장 구매 시 대여소장 상품 모두 Filtering 되지 않기 때문에 content id 로 filter.
 				List<String> paymentContentIdList = getContentIdListByEpisodeIdList(paymentProdIdList);
-				
+
 				param.put("paymentProdIdList", paymentProdIdList);
 				param.put("paymentContentIdList", paymentContentIdList);
 			}
-			
-			
+
+
 			// 2. subProjectList
             List<VodDetail> subProductList = getSubProjectList(param);
 
-            
+
             if(!StringUtils.equals(orderedBy, DisplayConstants.DP_ORDEREDBY_TYPE_NONPAYMENT) && StringUtils.isNotBlank(userKey) && StringUtils.isNotBlank(deviceKey)) {
             	//정렬방식이 미구매 순인 경우 필터링 데이터이기 떄문에 아닌 경우에만 구매 체크.
             	existenceListRes = getExistenceScReses(req, subProductList);
@@ -181,7 +180,7 @@ public class VodServiceImpl implements VodService {
         }
 		return res;
 	}
-	
+
 	/**
 	 * Episode id List 로 Content Id 조회
 	 * @param paymentProdIdList
@@ -220,7 +219,7 @@ public class VodServiceImpl implements VodService {
 	}
 
 	/**
-	 * Episode List 
+	 * Episode List
 	 * @param param
 	 * @return
 	 */
@@ -255,7 +254,7 @@ public class VodServiceImpl implements VodService {
             res.setExistenceListRes(new ArrayList<ExistenceRes>());
             return res;
     	}
-    	
+
         ExistenceListRes existenceListRes = null;
         if(subProductList != null && subProductList.size() > 0 && StringUtils.isNotBlank(req.getUserKey()) && StringUtils.isNotBlank(req.getDeviceKey())) {
             //기구매 체크
@@ -289,11 +288,11 @@ public class VodServiceImpl implements VodService {
 	private void mapProduct(VodDetailReq req, Product product, VodDetail mapperVO, List<ProductImage> screenshotList, boolean supportFhdVideo) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
-		
+
 		List<Identifier> identifierList = new ArrayList<Identifier>();
 		identifierList.add(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
 		product.setIdentifierList(identifierList);
-		
+
 		product.setTitle(mapTitle(mapperVO));
 
 		List<Source> sourceList = this.mapSourceList(mapperVO, screenshotList);
@@ -303,10 +302,10 @@ public class VodServiceImpl implements VodService {
 		product.setProductExplain(mapperVO.getProdBaseDesc());
 		product.setProductDetailExplain(mapperVO.getProdDtlDesc());
 		product.setProductIntroduction(mapperVO.getProdIntrDscr());
-		
+
 		//판매상태
 		product.setSalesStatus(mapperVO.getProdStatusCd());
-		
+
 		// SvcGrpCd
 		product.setSvcGrpCd(mapperVO.getSvcGrpCd());
 
@@ -339,10 +338,10 @@ public class VodServiceImpl implements VodService {
 		//Accrual
 		Accrual accrual = this.mapAccrual(mapperVO);
 		product.setAccrual(accrual);
-        
+
 		Vod vod = this.mapVod(mapperVO, supportFhdVideo);
 		product.setVod(vod);
-		
+
         //tmembership 할인율
         TmembershipDcInfo tmembershipDcInfo = commonService.getTmembershipDcRateForMenu(req.getTenantId(), mapperVO.getTopMenuId());
         List<Point> pointList = metaInfoGenerator.generatePoint(tmembershipDcInfo);
@@ -364,7 +363,7 @@ public class VodServiceImpl implements VodService {
         	}
         }
         if(pointList.size() > 0) product.setPointList(pointList);
-		
+
 	}
 
     /**
@@ -402,8 +401,8 @@ public class VodServiceImpl implements VodService {
 	private Rights mapRights(VodDetail mapperVO, VodDetailReq req, Map<String, ExistenceRes> existenceMap) {
 		Rights rights = new Rights();
 		rights.setGrade(mapperVO.getProdGrdCd());
-		
-		
+
+
 		// 영화,TV방송에 대한 allow 설정
 		if (StringUtils.equals(DisplayConstants.DP_MOVIE_TOP_MENU_ID, mapperVO.getTopMenuId())
 				|| StringUtils.equals(DisplayConstants.DP_TV_TOP_MENU_ID, mapperVO.getTopMenuId())
@@ -412,7 +411,7 @@ public class VodServiceImpl implements VodService {
 				rights.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_DOMESTIC);
 			}
 		}
-		
+
 		//rights.setAllow(mapperVO.getDwldAreaLimtYn());
 		/** dwldAreaLimitYn 다운로드 지역제한 == 'Y' 일 경우 domestic 리턴 */
 		/*
@@ -455,28 +454,29 @@ public class VodServiceImpl implements VodService {
 			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getStoreProdId()));
 			store.setIdentifierList(identifierList);
 
-			List<Support> supportList = new ArrayList<Support>(); 
+			List<Support> supportList = new ArrayList<Support>();
 			supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getStoreDrmYn()));
+			supportList.add(this.mapSupport(DisplayConstants.DP_DL_STRM_NM,     mapperVO.getStoreDlStrmCd()));
 			store.setSupportList(supportList);
 
 			//가격
 			store.setPrice(this.mapPrice(mapperVO.getStoreProdAmt(), mapperVO.getStoreProdNetAmt()));
-			
+
 			Source source = null;
 			if (StringUtils.isNotEmpty(mapperVO.getFilePath())) {
 				source = new Source();
 				source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getFilePath()));
 				source.setUrl(mapperVO.getFilePath());
 			}
-			
+
 			// 네트워크 제한이 있을경우
 			if (mapperVO.getDwldNetworkCd() != null) {
 				store.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 			}
-			
+
 			// 판매상태
 			store.setSalesStatus(mapperVO.getStoreProdStatusCd());
-			
+
 			// 사용자 구매 가능 상태
             if(existenceMap != null && existenceMap.containsKey(mapperVO.getStoreProdId()) && StringUtils.isNotBlank(req.getUserKey()) && StringUtils.isNotBlank(req.getDeviceKey())) {
                 String userPurStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
@@ -504,8 +504,9 @@ public class VodServiceImpl implements VodService {
 			identifierList.add(new Identifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, mapperVO.getPlayProdId()));
 			play.setIdentifierList(identifierList);
 
-			List<Support> supportList = new ArrayList<Support>(); 
+			List<Support> supportList = new ArrayList<Support>();
 			supportList.add(this.mapSupport(DisplayConstants.DP_DRM_SUPPORT_NM, mapperVO.getPlayDrmYn()));
+			supportList.add(this.mapSupport(DisplayConstants.DP_DL_STRM_NM,     mapperVO.getPlayDlStrmCd()));
 			play.setSupportList(supportList);
 
     		if(mapperVO.getPlayUsePeriod() != null) {
@@ -514,7 +515,7 @@ public class VodServiceImpl implements VodService {
 
             //가격
 			play.setPrice(this.mapPrice(mapperVO.getPlayProdAmt(), mapperVO.getPlayProdNetAmt()));
-			
+
 			Source source = null;
 			if (StringUtils.isNotEmpty(mapperVO.getFilePath())) {
 				source = new Source();
@@ -528,17 +529,17 @@ public class VodServiceImpl implements VodService {
 
 			// 판매상태
 			play.setSalesStatus(mapperVO.getPlayProdStatusCd());
-			
+
 			// 사용자 구매 가능 상태
 			if(existenceMap != null && existenceMap.containsKey(mapperVO.getPlayProdId()) && StringUtils.isNotBlank(req.getUserKey()) && StringUtils.isNotBlank(req.getDeviceKey())) {
 				String userPurStatus = getSalesStatus(mapperVO, req.getUserKey(), req.getDeviceKey());
 				if(userPurStatus != null)  play.setUserPurStatus(userPurStatus);
 			}
-            
+
 		}
 		return play;
 	}
-	
+
 	/**
 	 * Mapping Price
 	 * @param prodAmt
@@ -547,7 +548,7 @@ public class VodServiceImpl implements VodService {
 	 */
 	private Price mapPrice(Integer prodAmt, Integer prodNetAmt) {
 		Price price = null;
-		
+
 		if(prodAmt != null || prodNetAmt != null) {
 			price = new Price();
 			price.setText(prodAmt);
@@ -565,7 +566,7 @@ public class VodServiceImpl implements VodService {
      */
     private Support mapSupport(String type, String text) {
         Support support = null;
-        
+
         if(StringUtils.isNotEmpty(type) || StringUtils.isNotEmpty(type)) {
         	support = new Support();
         	support.setType(type);
@@ -573,7 +574,7 @@ public class VodServiceImpl implements VodService {
         }
         return support;
     }
-	
+
 
 	/**
 	 * <pre>
@@ -664,7 +665,7 @@ public class VodServiceImpl implements VodService {
             source.setUrl(imagePath);
             sourceList.add(source);
         }
-        
+
 		// screenshot
 		if(screenshotList != null) {
 			for (ProductImage screenshotImage : screenshotList) {
@@ -677,7 +678,7 @@ public class VodServiceImpl implements VodService {
 				sourceList.add(source);
 			}
 		}
-		
+
 		return sourceList;
 	}
 
@@ -764,14 +765,14 @@ public class VodServiceImpl implements VodService {
 		support.setType(DisplayConstants.DP_VOD_DOLBY_NM);
 		support.setText(mapperVO.getDolbySprtYn());
 		supportList.add(support);
-		
+
 		//BTV Support (기존 서비스 유지를 위해 하드코딩)
 		support = new Support();
 		support.setType(DisplayConstants.DP_VOD_BTV_SUPPORT_NM);
 		support.setText("Y");
 		supportList.add(support);
-		
-		
+
+
 		return supportList;
 	}
 
@@ -801,10 +802,10 @@ public class VodServiceImpl implements VodService {
 	                existenceMap.put(existenceRes.getProdId(), existenceRes);
 	            }
             }
-            
+
 			for(VodDetail mapperVO : vodDetailList) {
 				Product subProduct = new Product();
-				
+
 				//List<ProductImage> screenshotList = getScreenshotList(mapperVO.getProdId(), req.getLangCd());
 
 				List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -822,7 +823,7 @@ public class VodServiceImpl implements VodService {
 
 				List<Source> sourceList = this.mapSourceList(mapperVO, null);
 				subProduct.setSourceList(sourceList);
-				
+
                 //SupportList
 				List<Support> supportList = this.mapSupportList(mapperVO);
 				subProduct.setSupportList(supportList);
@@ -885,7 +886,7 @@ public class VodServiceImpl implements VodService {
             vod.setChapter(chapter);
         }
 
-        
+
         //-------------------------------------------------------------
         // 화질 정보
         // NM:일반화질 (A), SD:SD화질 (B), HI:고화질 (C), HD:HD화질 (D)
@@ -907,7 +908,7 @@ public class VodServiceImpl implements VodService {
             videoInfo = getHdVideoInfo(mapperVO);
             videoInfoList.add(videoInfo);
         }
-        
+
         //FHD 지원 : T store 4.0 에서는 NM, SD, HD, FHD 화질 지원
         if(supportFhdVideo && StringUtils.isNotEmpty(mapperVO.getFhdSubContsId())) {
         	/** FHD 고화질 정보 */
@@ -942,13 +943,13 @@ public class VodServiceImpl implements VodService {
 
 
     /**
-     * HD 
+     * HD
      * @param mapperVO
      * @return
      */
     private VideoInfo getHdVideoInfo(VodDetail mapperVO) {
         VideoInfo videoInfo = new VideoInfo();
-        
+
         if (StringUtils.isNotEmpty(mapperVO.getHihdSubContsId())) {
         	//HIHD (D화질)
         	videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HIHD);
@@ -969,7 +970,7 @@ public class VodServiceImpl implements VodService {
 
         return videoInfo;
     }
-    
+
     /**
      * Full HD 화질 Video 정보 리턴
      * @param mapperVO

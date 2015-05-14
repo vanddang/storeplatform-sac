@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.sac.display.common.vo.MileageInfo;
 
 /**
  * Ebook/Comic Meta Info.
- * 
+ *
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
 public class MetaInfo extends CommonInfo {
@@ -129,6 +129,7 @@ public class MetaInfo extends CommonInfo {
 	private Integer storeProdAmt;
 	private Integer storeProdNetAmt;
 	private String storeDrmYn;
+	private String storeDlStrmCd;
 	private String storeProdStatusCd;
 	private String storeProdChrg;
 	private String storeUsePeriodUnitCd;
@@ -136,6 +137,7 @@ public class MetaInfo extends CommonInfo {
 	private Integer playProdAmt;
 	private Integer playProdNetAmt;
 	private String playDrmYn;
+	private String playDlStrmCd;
 	private String playProdStatusCd;
 	private String playProdChrg;
 	private String playUsePeriodUnitCd;
@@ -1823,6 +1825,14 @@ public class MetaInfo extends CommonInfo {
 		this.storeDrmYn = storeDrmYn;
 	}
 
+	public String getStoreDlStrmCd() {
+		return storeDlStrmCd;
+	}
+
+	public void setStoreDlStrmCd(String storeDlStrmCd) {
+		this.storeDlStrmCd = storeDlStrmCd;
+	}
+
 	/**
 	 * @return the storeProdStatusCd
 	 */
@@ -1926,6 +1936,14 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setPlayDrmYn(String playDrmYn) {
 		this.playDrmYn = playDrmYn;
+	}
+
+	public String getPlayDlStrmCd() {
+		return playDlStrmCd;
+	}
+
+	public void setPlayDlStrmCd(String playDlStrmCd) {
+		this.playDlStrmCd = playDlStrmCd;
 	}
 
 	/**

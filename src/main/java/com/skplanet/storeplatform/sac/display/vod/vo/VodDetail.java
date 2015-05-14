@@ -9,9 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.vod.vo;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-
 import java.util.Date;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * VOD 상세조회 Value Object
@@ -50,7 +50,7 @@ public class VodDetail extends CommonInfo {
 	 * <li>DP000204 폰꾸미기</li>
 	 * <li>DP000205 소셜쇼핑</li>
 	 * <li>DP000206 T store Shopping</li>
-	 * </ul>         
+	 * </ul>
 	 */
 	private String svcGrpCd;
 
@@ -83,6 +83,8 @@ public class VodDetail extends CommonInfo {
 	private Integer storeProdNetAmt;
 	/** 다운로드 DRM */
 	private String storeDrmYn;
+	/** 소장 다운로드/스트리밍 */
+	private String storeDlStrmCd;
 	/** 다운로드 상품 상태 */
 	private String storeProdStatusCd;
 
@@ -96,6 +98,8 @@ public class VodDetail extends CommonInfo {
 	private Integer playProdNetAmt;
 	/** 바로보기 DRM */
 	private String playDrmYn;
+	/** 대여 다운로드/스트리밍 */
+	private String playDlStrmCd;
 	/** 바로보기 상품 상태 */
 	private String playProdStatusCd;
 	private Integer playUsePeriod;
@@ -126,12 +130,12 @@ public class VodDetail extends CommonInfo {
 	/** 발매일 */
 	private String issueDay;
 
-	
+
 	// ---------------------------------------------------
 	// Source File path
 	// ---------------------------------------------------
 	private String filePath;
-	
+
 	// ---------------------------------------------------
 	// Thumbnail
 	// ---------------------------------------------------
@@ -258,7 +262,7 @@ public class VodDetail extends CommonInfo {
 	private String hdDpPixel;
 	/** HD화질(C) 화면비율. */
 	private String hdDpPicRatio;
-	
+
 	/** HD화질 (D화질) sub 컨텐츠 Id. */
 	private String hihdSubContsId;
 	/** HD화질 (D화질) 상품버전. */
@@ -269,7 +273,7 @@ public class VodDetail extends CommonInfo {
 	private String hihdDpPixel;
 	/** HD화질 (D화질) 화면비율. */
 	private String hihdDpPicRatio;
-	
+
 	/** FHD화질 sub 컨텐츠 Id. */
 	private String fhdSubContsId;
 	/** FHD화질 상품버전. */
@@ -282,8 +286,8 @@ public class VodDetail extends CommonInfo {
 	private String fhdDpPicRatio;
 
 	// 좋아요 선택 여부
-	private String likeYn; 
-	
+	private String likeYn;
+
 
     public String getTopMenuId() {
 		return this.topMenuId;
@@ -884,6 +888,14 @@ public class VodDetail extends CommonInfo {
 		this.storeDrmYn = storeDrmYn;
 	}
 
+	public String getStoreDlStrmCd() {
+		return storeDlStrmCd;
+	}
+
+	public void setStoreDlStrmCd(String storeDlStrmCd) {
+		this.storeDlStrmCd = storeDlStrmCd;
+	}
+
 	public String getPlayProdId() {
 		return this.playProdId;
 	}
@@ -934,6 +946,14 @@ public class VodDetail extends CommonInfo {
 
 	public void setPlayDrmYn(String playDrmYn) {
 		this.playDrmYn = playDrmYn;
+	}
+
+	public String getPlayDlStrmCd() {
+		return playDlStrmCd;
+	}
+
+	public void setPlayDlStrmCd(String playDlStrmCd) {
+		this.playDlStrmCd = playDlStrmCd;
 	}
 
 	public String getChapter() {
@@ -1374,7 +1394,7 @@ public class VodDetail extends CommonInfo {
 		this.playUsePeriodUnitCdNm = playUsePeriodUnitCdNm;
 	}
 
-	
+
 	/**
 	 * @return the hihdSubContsId
 	 */
@@ -1514,15 +1534,12 @@ public class VodDetail extends CommonInfo {
 	public void setFhdDpPicRatio(String fhdDpPicRatio) {
 		this.fhdDpPicRatio = fhdDpPicRatio;
 	}
-	
+
 	public String getLikeYn() {
 		return likeYn;
 	}
-	
+
 	public void setLikeYn(String likeYn) {
 		this.likeYn = likeYn;
 	}
-	
-	
-	
 }
