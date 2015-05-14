@@ -12,7 +12,10 @@
  			   , UP.USE_PERIOD_UNIT_CD
 			   , UP.USE_PERIOD               
                , CM.FREE_PASS_CLSF_CD as cmpxProdClsfCd
-			   , UP.POSS_LEND_CLSF_CD
+               , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN UP.POSS_LEND_CLSF_CD
+                  ELSE ''
+                  END
+                  ) AS POSS_LEND_CLSF_CD
 			   , CM.SERIES_BOOK_CLSF_CD
 			   , PD.DRM_YN  
            FROM 
@@ -79,7 +82,7 @@
 	            , PD.CID  
 	            , PM.CHAPTER AS chapterText 
                 , PM.BOOK_CLSF_CD  AS chapterUnit
-	            , PM.POSS_LEND_CLSF_CD
+	            , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN PM.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD
                 , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN
 	                    CASE WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_DWLD_STRM_CLSF_CD
 	                         WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013402' THEN PM.DWLD_STRM_CLSF_CD
@@ -176,7 +179,7 @@
         SELECT  
               PD.PROD_ID AS cmpxProdId
             , DC.PROD_NM AS cmpxProdNm
-            , PM.FREE_PASS_POSS_LEND_CLSF_CD AS cmpxProdPossLendClsfCd
+            , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN PM.FREE_PASS_POSS_LEND_CLSF_CD ELSE '' END) AS cmpxProdPossLendClsfCd
             , PM.PART_PROD_ID AS episodeProdId
             ,(CASE WHEN CM.DRM_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_DRM_YN
                    WHEN CM.DRM_ATTR_CLSF  ='PD013402' THEN PM.DRM_YN
@@ -194,7 +197,7 @@
                    END
               ELSE ''
               END)  AS downStrmClsfCd                  
-            , PM.POSS_LEND_CLSF_CD    
+            , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN PM.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD    
             , CM.FREE_PASS_CLSF_CD AS cmpxProdClsfCd
             , PD.TOP_MENU_ID      
             , TP.PROD_STATUS_CD      
