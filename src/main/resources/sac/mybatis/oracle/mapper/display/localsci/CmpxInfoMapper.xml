@@ -77,14 +77,8 @@
                        WHEN PM.USE_PERIOD_ATTR_CLSF  ='PD013402' THEN PM.USE_PERIOD
                   END)  AS USE_PERIOD                    	              
 	            , PD.CID  
-	            ,(CASE WHEN PM.FREE_PASS_CLSF_CD='OR004302' AND PM.SERIES_BOOK_CLSF_CD='DP004302' THEN PM.CHAPTER 
-                  ELSE NULL
-                   END
-                  )AS chapterText 
-                ,(CASE WHEN PM.FREE_PASS_CLSF_CD='OR004302' AND PM.SERIES_BOOK_CLSF_CD='DP004302' THEN PM.BOOK_CLSF_CD 
-                  ELSE NULL
-                   END
-	             ) AS chapterUnit
+	            , PM.CHAPTERAS chapterText 
+                , PM.BOOK_CLSF_CD  AS chapterUnit
 	            , PM.POSS_LEND_CLSF_CD
                 ,(CASE WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_DWLD_STRM_CLSF_CD
                        WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013402' THEN PM.DWLD_STRM_CLSF_CD
