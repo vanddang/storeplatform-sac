@@ -147,7 +147,12 @@
 	        AND PD.PROD_ID = TP.PROD_ID
 	        AND PD.PROD_ID = PR.PROD_ID
             AND PD.USE_POLICY_ID = UP.USE_POLICY_ID
-            AND UP.POSS_LEND_CLSF_CD = #{possLendClsfCd}	        
+            <if test='possLendClsfCd == "DP010603"'>   
+            AND PM.POSS_LEND_CLSF_CD IN ('DP010601','DP010602')
+            </if>
+            <if test='possLendClsfCd != "DP010603"'>   
+            AND PM.POSS_LEND_CLSF_CD = #{possLendClsfCd}
+            </if>
 	        AND DC.LANG_CD = #{langCd} 
 	        AND TP.TENANT_ID = #{tenantId}
 	        AND TP.TENANT_ID = PR.TENANT_ID 
