@@ -720,7 +720,7 @@
                     , PD.PROD_CHRG_YN
                     , '' as CHAPTER
                     , PD.PROD_GRD_CD
-                    , NVL(CM.POSS_LEND_CLSF_CD,'DP010603') AS POSS_LEND_CLSF_CD
+                    , NVL(UP.POSS_LEND_CLSF_CD,'DP010603') AS POSS_LEND_CLSF_CD
                     , UP.USE_PERIOD_UNIT_CD
                     , UP.USE_PERIOD
                     , PD.DRM_YN 
