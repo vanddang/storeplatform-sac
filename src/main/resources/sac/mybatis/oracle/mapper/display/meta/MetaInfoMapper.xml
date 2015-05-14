@@ -1018,12 +1018,7 @@
     
     <!-- 이용권 상품 메타 조회 -->
     <select id="getVoucherMetaInfo" parameterType="Map" resultType="MetaInfo">
-    SELECT  /* MetaInfoMapper.getVoucherMetaInfo, 이용권 상품 메타 조회, 이태균/IS-PLUS, 2015-05-08 */
-        IV.*
-        , NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
-        , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
-    FROM (
-        SELECT  
+        SELECT /* MetaInfoMapper.getVoucherMetaInfo, 이용권 상품 메타 조회, 이태균/IS-PLUS, 2015-05-08 */  
             PD.PROD_ID
             , PD.TOP_MENU_ID
             , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
@@ -1074,32 +1069,29 @@
             , CM.BNS_CASH_RATIO
             , CM.BNS_USE_PERIOD_UNIT_CD
             , CM.BNS_USE_PERIOD         
+	        , NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
+	        , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH            
             , CM.CMPX_PROD_GRP_CD 
             , CM.SERIES_BOOK_CLSF_CD
             , UP.POSS_LEND_CLSF_CD  
         FROM 
-            TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC, 
-            TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR,
-            TB_DP_USE_POLICY UP
-        WHERE PD.PROD_ID = #{productBasicInfo.prodId}
-        AND PD.PROD_ID = CM.PROD_ID
-        AND PD.PROD_ID = DC.PROD_ID
-        AND PD.PROD_ID = TP.PROD_ID
-        AND PD.PROD_ID = PR.PROD_ID
-        AND PD.USE_POLICY_ID = UP.USE_POLICY_ID(+)
-        AND DC.LANG_CD = #{tenantHeader.langCd}
-        AND TP.TENANT_ID = #{tenantHeader.tenantId}
-        AND TP.TENANT_ID = PR.TENANT_ID
-        AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
-    ) IV LEFT OUTER JOIN TB_DP_PROD_IMG BIG
-    ON BIG.LANG_CD = IV.LANG_CD AND IV.PROD_ID = BIG.PROD_ID AND BIG.IMG_CD = #{bannerImageCd}
-    LEFT OUTER JOIN TB_DP_PROD_IMG TIG
-    ON TIG.LANG_CD = IV.LANG_CD 
-       AND IV.PROD_ID = TIG.PROD_ID 
-       AND TIG.IMG_CD = (
-            CASE WHEN IV.TOP_MENU_ID IN ('DP17','DP18') THEN  #{thumbnailImageCd}
-                 WHEN IV.TOP_MENU_ID IN ('DP13','DP14') THEN  #{ebookThumbnailImageCd}
-            END
-       )    
+            TB_DP_PROD PD
+            INNER JOIN TB_DP_CMPX_PROD CM ON PD.PROD_ID = CM.PROD_ID
+            INNER JOIN TB_DP_PROD_DESC DC ON PD.PROD_ID = DC.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD TP ON PD.PROD_ID = TP.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD_PRICE PR ON PD.PROD_ID = PR.PROD_ID
+            LEFT OUTER JOIN TB_DP_PROD_IMG BIG ON BIG.PROD_ID = PD.PROD_ID 
+                AND BIG.LANG_CD = DC.LANG_CD 
+                AND BIG.IMG_CD = #{bannerImageCd} 
+            LEFT OUTER JOIN TB_DP_PROD_IMG TIG ON TIG.PROD_ID = PD.PROD_ID 
+                AND TIG.LANG_CD = DC.LANG_CD
+                AND TIG.IMG_CD = ( CASE WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN #{thumbnailImageCd} WHEN PD.TOP_MENU_ID IN ('DP13','DP14') THEN #{ebookThumbnailImageCd} END )
+            LEFT JOIN TB_DP_USE_POLICY UP ON PD.USE_POLICY_ID = UP.USE_POLICY_ID            
+        WHERE 
+            PD.PROD_ID = #{productBasicInfo.prodId}
+            AND DC.LANG_CD = #{tenantHeader.langCd}
+            AND TP.TENANT_ID = #{tenantHeader.tenantId}
+            AND TP.TENANT_ID = PR.TENANT_ID
+            AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
     </select>    
  </mapper>
