@@ -136,10 +136,7 @@
 	                 AND B.PART_PROD_ID  = G.PROD_ID
 	                 AND G.PROD_ID  = I.PROD_ID(+)
                      <if test="chapter != null">
-                     AND (CASE WHEN C.FREE_PASS_CLSF_CD='OR004302' AND C.SERIES_BOOK_CLSF_CD='DP004302' THEN  I.CHAPTER 
-                          ELSE TO_NUMBER(#{chapter})
-                          END
-                         )  <![CDATA[ <= ]]> #{chapter}                     
+                     AND I.CHAPTER <![CDATA[ <= ]]> #{chapter}                    
                      </if>
 	                 AND G.USE_POLICY_ID = H.USE_POLICY_ID
 	                 AND D.LANG_CD = #{langCd} 
@@ -227,10 +224,7 @@
                  AND C.PROD_ID  = I.PROD_ID(+)               
                  AND B.PART_PROD_ID=#{episodeProdId}
                  <if test="chapter != null">
-                 AND (CASE WHEN CC.FREE_PASS_CLSF_CD='OR004302' AND CC.SERIES_BOOK_CLSF_CD='DP004302' THEN  I.CHAPTER 
-                      ELSE TO_NUMBER(#{chapter})
-                      END
-                     ) = #{chapter}                     
+                 AND I.CHAPTER = #{chapter}                     
                  </if>                 
              )PM             
         WHERE PD.PROD_ID = #{prodId}
