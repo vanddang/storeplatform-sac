@@ -169,6 +169,9 @@ public class DeviceUtil {
 					deviceExtraInfo.setDeviceKey(userMbrDeviceDetail.getDeviceKey());
 					deviceExtraInfo.setTenentId(userMbrDeviceDetail.getTenantID());
 					deviceExtraInfo.setUserKey(userMbrDeviceDetail.getUserKey());
+					deviceExtraInfo.setRegDatePlus7(userMbrDeviceDetail.getRegDatePlus7());
+					deviceExtraInfo.setUpdateDatePlue7(userMbrDeviceDetail.getUpdateDatePlue7());
+					deviceExtraInfo.setNowDate(userMbrDeviceDetail.getNowDate());
 					deviceExtraInfoList.add(deviceExtraInfo);
 				}
 			}
