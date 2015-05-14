@@ -158,32 +158,32 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			prodIdObjList.add(prodIdObj);
 		}
 
-		UserCouponListEcReq userCouponListEcReq = new UserCouponListEcReq();
-		userCouponListEcReq.setUserKey(userKey);
-		userCouponListEcReq.setMdn(deviceId);
+		UserCouponListV2EcReq userCouponListV2EcReq = new UserCouponListV2EcReq();
+		userCouponListV2EcReq.setUserKey(userKey);
+		userCouponListV2EcReq.setMdn(deviceId);
 		// userCouponListEcReq.setCouponType("");
-		userCouponListEcReq.setProdIdList(prodIdObjList);
+		userCouponListV2EcReq.setProdIdList(prodIdObjList);
 
-		UserCouponListEcRes userCouponListEcRes = null;
+		UserCouponListV2EcRes userCouponListV2EcRes = null;
 		try {
 			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,REQ,{}",
-					ReflectionToStringBuilder.toString(userCouponListEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
-			userCouponListEcRes = this.tStoreCouponSCI.getUserCouponListV2(userCouponListEcReq);
+					ReflectionToStringBuilder.toString(userCouponListV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+			userCouponListV2EcRes = this.tStoreCouponSCI.getUserCouponListV2(userCouponListV2EcReq);
 			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES,{}",
-					ReflectionToStringBuilder.toString(userCouponListEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+					ReflectionToStringBuilder.toString(userCouponListV2EcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7210", e);
 		}
 
-		if (StringUtils.equals(userCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
-			throw new StorePlatformException("SAC_PUR_7206", userCouponListEcRes.getResultCd(),
-					userCouponListEcRes.getResultMsg());
+		if (StringUtils.equals(userCouponListV2EcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
+			throw new StorePlatformException("SAC_PUR_7206", userCouponListV2EcRes.getResultCd(),
+					userCouponListV2EcRes.getResultMsg());
 		}
 
-		if (CollectionUtils.isNotEmpty(userCouponListEcRes.getCouponList())) {
+		if (CollectionUtils.isNotEmpty(userCouponListV2EcRes.getCouponList())) {
 			StringBuffer sbTstoreCoupon = new StringBuffer(256);
 
-			for (Coupon coupon : userCouponListEcRes.getCouponList()) {
+			for (Coupon coupon : userCouponListV2EcRes.getCouponList()) {
 				if (sbTstoreCoupon.length() > 0) {
 					sbTstoreCoupon.append(";");
 				}
@@ -192,7 +192,8 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 				if (StringUtils.equals(coupon.getCouponType(), PurchaseConstants.COUPON_TYPE_SHOPPING_SPECIAL_COUPON)) {
 					// 구매 v3.4 규격 - (0)쿠폰번호:(1)쿠폰명:(2)쿠폰할인방식:(3)쿠폰금액/할인율:(4)상한액:(5)하한액:(6)쿠폰생성주체:(7)쿠폰타입
 					sbTstoreCoupon.append(coupon.getCouponId()).append(":") // (0)쿠폰 번호
-							.append(StringUtils.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", "")).append(":") // (1)쿠폰명
+							.append(StringUtils
+									.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", "")).append(":") // (1)쿠폰명
 							.append(coupon.getCouponDcType()).append(":") // (2)쿠폰할인방식
 							.append(coupon.getCouponAmt() * purchaseQty).append(":") // (3)쿠폰금액/할인율
 							.append(":") // (4)상한할인금액-없음
@@ -204,7 +205,8 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 						return "NULL";
 					// v3.4 규격 - (0)쿠폰번호:(1)쿠폰명:(2)쿠폰할인방식:(3)쿠폰금액/할인율:(4)상한액:(5)하한액:(6)쿠폰생성주체:(7)쿠폰타입
 					sbTstoreCoupon.append(coupon.getCouponId()).append(":") // (0)쿠폰 번호
-							.append(StringUtils.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", "")).append(":") // (1)쿠폰명
+							.append(StringUtils
+									.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", "")).append(":") // (1)쿠폰명
 							.append(coupon.getCouponDcType()).append(":") // (2)쿠폰할인방식
 							.append(coupon.getCouponAmt()).append(":") // (3)쿠폰금액/할인율 (변경 필요)
 							.append(coupon.getCouponAmt()).append(":") // (4)상한할인금액
