@@ -77,7 +77,7 @@
                        WHEN PM.USE_PERIOD_ATTR_CLSF  ='PD013402' THEN PM.USE_PERIOD
                   END)  AS USE_PERIOD                    	              
 	            , PD.CID  
-	            , PM.CHAPTERAS chapterText 
+	            , PM.CHAPTER AS chapterText 
                 , PM.BOOK_CLSF_CD  AS chapterUnit
 	            , PM.POSS_LEND_CLSF_CD
                 ,(CASE WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_DWLD_STRM_CLSF_CD
