@@ -358,8 +358,8 @@
                          ELSE 'N'
                      END AS PROD_SPRT_YN                                    
                     , PD.DRM_YN
-                    , PD.USE_PERIOD_UNIT_CD
-                    , PD.USE_PERIOD
+                    , UP.USE_PERIOD_UNIT_CD
+                    , UP.USE_PERIOD
                     , '' as aid 
                     ,PD.SVC_GRP_CD
                     ,PD.TOP_MENU_ID
@@ -407,17 +407,28 @@
                        WHERE AA.EPISODE_ID = BB.PROD_ID
                          AND AA.CHAPTER = BB.CHAPTER
                          AND ROWNUM =1
-                      ) AS chapterUnit              
+                      ) AS chapterUnit     
+			         ,(SELECT 
+			                  CASE WHEN COUNT(1)>0 THEN 'Y'
+			                  ELSE 'N'
+			                  END
+			             FROM TB_DP_CMPX_PRCHS_POLICY 
+			            WHERE SVC_GRP_CD = PD.SVC_GRP_CD
+			              AND TOP_MENU_ID =PD.TOP_MENU_ID
+			              AND FREE_PASS_CLSF_CD =CM.FREE_PASS_CLSF_CD          
+			          ) AS packagePrchsYn                               
                 FROM 
                       TB_DP_PROD PD
                     , TB_DP_CMPX_PROD CM
                     , TB_DP_PROD_DESC DC
                     , TB_DP_TENANT_PROD TP
                     , TB_DP_TENANT_PROD_PRICE PR
+                    , TB_DP_USE_POLICY UP
                 WHERE  PD.PROD_ID = CM.PROD_ID
                 AND PD.PROD_ID = DC.PROD_ID
                 AND PD.PROD_ID = TP.PROD_ID
                 AND PD.PROD_ID = PR.PROD_ID
+                AND PD.USE_POLICY_ID = UP.USE_POLICY_ID
                 AND PD.PROD_ID = #{prodId}
                 AND DC.LANG_CD = #{lang}
                 AND TP.TENANT_ID = #{tenantId} 
