@@ -29,11 +29,11 @@ import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScRes;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistorySc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ProductCountSc;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.FreePassInfoSCI;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.CmpxInfoSCI;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.sci.ProductInfoSCI;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfo;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacReq;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassBasicInfoSacRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxBasicInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxBasicInfoSacReq;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxBasicInfoSacRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.ProductInfoSacRes;
@@ -74,8 +74,11 @@ public class HistoryListServiceImpl implements HistoryListService {
 	@Autowired
 	private ProductInfoSCI productInfoSCI;
 
+	// @Autowired
+	// private FreePassInfoSCI freePassInfoSCI;
+
 	@Autowired
-	private FreePassInfoSCI freePassInfoSCI;
+	private CmpxInfoSCI cmpxInfoSCI;
 
 	@Autowired
 	private SearchUserSCI searchUserSCI;
@@ -333,8 +336,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 			ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
 			ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
 
-			FreePassBasicInfoSacReq fixProductInfoSacReq = new FreePassBasicInfoSacReq();
-			FreePassBasicInfoSacRes fixProductInfoSacRes = new FreePassBasicInfoSacRes();
+			CmpxBasicInfoSacReq cmpxBasicInfoSacReq = new CmpxBasicInfoSacReq();
+			CmpxBasicInfoSacRes cmpxBasicInfoSacRes = new CmpxBasicInfoSacRes();
 
 			if (prodIdList.size() > 0) {
 
@@ -361,14 +364,14 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 			if (fixProdIdList.size() > 0) {
 
-				fixProductInfoSacReq.setTenantId(request.getTenantId());
-				fixProductInfoSacReq.setLang(request.getLangCd());
-				fixProductInfoSacReq.setList(fixProdIdList);
+				cmpxBasicInfoSacReq.setTenantId(request.getTenantId());
+				cmpxBasicInfoSacReq.setLang(request.getLangCd());
+				cmpxBasicInfoSacReq.setList(fixProdIdList);
 
 				long fixprodTime = System.currentTimeMillis();
 				this.logger.info("##### [SAC History CallTime] LOCAL SCI fix productInfoSCI.getProductList param {}",
-						fixProductInfoSacReq);
-				fixProductInfoSacRes = this.freePassInfoSCI.searchFreepassBasicList(fixProductInfoSacReq);
+						cmpxBasicInfoSacReq);
+				cmpxBasicInfoSacRes = this.cmpxInfoSCI.searchCmpxBasicInfoList(cmpxBasicInfoSacReq);
 				this.logger.info(
 						"##### [SAC History CallTime] LOCAL SCI fix productInfoSCI.getProductList END takes {} ms",
 						(System.currentTimeMillis() - fixprodTime));
@@ -393,8 +396,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 							// 구매한 정액권 ID 상품 정보조회
 							if (!StringUtils.isBlank(obj.getUseFixrateProdId())) {
-								for (FreePassBasicInfo fixInfo : fixProductInfoSacRes.getFreePassBasicInfo()) {
-									if (obj.getUseFixrateProdId().equals(fixInfo.getProdId())) {
+								for (CmpxBasicInfo fixInfo : cmpxBasicInfoSacRes.getCmpxBasicInfo()) {
+									if (obj.getUseFixrateProdId().equals(fixInfo.getCmpxProdId())) {
 										prodMap.put("fixProductMap", fixInfo);
 										break;
 									}
@@ -812,8 +815,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 		ProductInfoSacReq productInfoSacReq = new ProductInfoSacReq();
 		ProductInfoSacRes productInfoSacRes = new ProductInfoSacRes();
 
-		FreePassBasicInfoSacReq fixProductInfoSacReq = new FreePassBasicInfoSacReq();
-		FreePassBasicInfoSacRes fixProductInfoSacRes = new FreePassBasicInfoSacRes();
+		CmpxBasicInfoSacReq cmpxBasicInfoSacReq = new CmpxBasicInfoSacReq();
+		CmpxBasicInfoSacRes cmpxBasicInfoSacRes = new CmpxBasicInfoSacRes();
 
 		if (prodIdList.size() > 0) {
 
@@ -840,14 +843,14 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		if (fixProdIdList.size() > 0) {
 
-			fixProductInfoSacReq.setTenantId(request.getTenantId());
-			fixProductInfoSacReq.setLang(request.getLangCd());
-			fixProductInfoSacReq.setList(fixProdIdList);
+			cmpxBasicInfoSacReq.setTenantId(request.getTenantId());
+			cmpxBasicInfoSacReq.setLang(request.getLangCd());
+			cmpxBasicInfoSacReq.setList(fixProdIdList);
 
 			long fixprodTime = System.currentTimeMillis();
 			this.logger.info("##### [SAC History2 CallTime] LOCAL SCI fix productInfoSCI.getProductList param {}",
-					fixProductInfoSacReq);
-			fixProductInfoSacRes = this.freePassInfoSCI.searchFreepassBasicList(fixProductInfoSacReq);
+					cmpxBasicInfoSacReq);
+			cmpxBasicInfoSacRes = this.cmpxInfoSCI.searchCmpxBasicInfoList(cmpxBasicInfoSacReq);
 			this.logger.info(
 					"##### [SAC History2 CallTime] LOCAL SCI fix productInfoSCI.getProductList END takes {} ms",
 					(System.currentTimeMillis() - fixprodTime));
@@ -872,8 +875,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 						// 구매한 정액권 ID 상품 정보조회
 						if (!StringUtils.isBlank(obj.getUseFixrateProdId())) {
-							for (FreePassBasicInfo fixInfo : fixProductInfoSacRes.getFreePassBasicInfo()) {
-								if (obj.getUseFixrateProdId().equals(fixInfo.getProdId())) {
+							for (CmpxBasicInfo fixInfo : cmpxBasicInfoSacRes.getCmpxBasicInfo()) {
+								if (obj.getUseFixrateProdId().equals(fixInfo.getCmpxProdId())) {
 									prodMap.put("fixProductMap", fixInfo);
 									break;
 								}
