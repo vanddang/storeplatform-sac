@@ -284,12 +284,12 @@ public class VoucherServiceImpl implements VoucherService {
 		String cmpxProdGrpCd = (String) this.commonDAO.queryForObject("Voucher.selectCmpxProdGrpCd", req);
 		req.setCmpxProdGrpCd(cmpxProdGrpCd);
 
+		// 정액제 상품 조회
 		retMetaInfoList = this.commonDAO.queryForList("Voucher.selectVoucherDetail", req, MetaInfo.class);
 
 		if (retMetaInfoList == null)
 			throw new StorePlatformException("SAC_DSP_0009", req.getProductId(), req.getProductId());
 
-		// 정액제 상품 메타 조회
 		if (retMetaInfoList != null && retMetaInfoList.size() > 0) {
 
 			for (MetaInfo metaInfo : retMetaInfoList) {
@@ -300,36 +300,25 @@ public class VoucherServiceImpl implements VoucherService {
 				if (!DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(metaInfo.getProdStatusCd())
 						&& !DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(metaInfo.getProdStatusCd())
 						&& !DisplayConstants.DP_PASS_SALE_STAT_ING.equals(metaInfo.getProdStatusCd())) {
-					// 요청한 상품일 경우
-					if ("Y".equals(metaInfo.getRequestProduct())) {
-						throw new StorePlatformException("SAC_DSP_0011", metaInfo.getProdStatusCd(),
-								metaInfo.getProdStatusCd());
-					} else {
-						saveFlag = false;
-					}
+					saveFlag = false;
 				} else {
 					saveFlag = true;
 				}
 
-				// 요청한 상품일 경우 구매여부 조회
-				if ("Y".equals(metaInfo.getRequestProduct())) {
-					// 구매 여부 조회
-					if (!StringUtils.isEmpty(req.getUserKey())) { // userKey가 있을 경우만
-						// 공통 메서드로 변경 20140424
-						boolean purchaseYn = this.displayCommonService.checkPurchase(req.getTenantId(),
-								req.getUserKey(), req.getDeviceKey(), req.getProductId());
-
-						// 구매가 없을경우 : 판매중지, 판매종료는 노출안함
-						if (!purchaseYn) {
-							if (DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(metaInfo.getProdStatusCd())
-									|| DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(metaInfo.getProdStatusCd())) {
-
-								throw new StorePlatformException("SAC_DSP_0011", metaInfo.getProdStatusCd(),
-										metaInfo.getProdStatusCd());
-							}
-						}
-					}
-				}
+				// userKey가 있을 경우만
+				/*
+				 * if (!StringUtils.isEmpty(req.getUserKey())) { // 구매여부 조회 boolean purchaseYn =
+				 * this.displayCommonService.checkPurchase(req.getTenantId(), req.getUserKey(), req.getDeviceKey(),
+				 * req.getProductId());
+				 * 
+				 * // 구매가 없을경우 : 판매중지, 판매종료는 노출안함 if (!purchaseYn) { if
+				 * (DisplayConstants.DP_PASS_SALE_STAT_STOP.equals(metaInfo.getProdStatusCd()) ||
+				 * DisplayConstants.DP_PASS_SALE_STAT_RESTRIC.equals(metaInfo.getProdStatusCd())) {
+				 * 
+				 * saveFlag = false; if ("Y".equals(metaInfo.getRequestProduct())) { // throw new
+				 * StorePlatformException("SAC_DSP_0011", metaInfo.getProdStatusCd(), // metaInfo.getProdStatusCd()); }
+				 * } else { // 판매중인 상품만 내린다. saveFlag = true; } } }
+				 */
 
 				// 조합
 				if (saveFlag) {
@@ -361,7 +350,7 @@ public class VoucherServiceImpl implements VoucherService {
 					coupon.setPointList(pointList);
 					couponList.add(coupon);
 
-					// 요청한 상품에대해서만 상품을 조회한다
+					// 요청한 상품에대해서만 상품을 조회한다.
 					if ("Y".equals(metaInfo.getRequestProduct())) {
 						mapList = this.commonDAO.queryForList("Voucher.selectVoucherMapProduct", req,
 								VoucherProdMap.class);
