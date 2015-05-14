@@ -674,8 +674,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		VerifyOrderSacRes res = new VerifyOrderSacRes();
 
 		// 예약 저장해둔 데이터 추출
-		Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedDataByMap(prchsDtlMore
-				.getPrchsResvDesc());
+		Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedDataByMap(
+				prchsDtlMore.getPrchsResvDesc());
 
 		// 구매인증 결과 T Log 일부 세팅 (구매인증 응답 VO에 없는 항목들)
 		// : insd_usermbr_no, insd_device_id, purchase_inflow_channel, mbr_id, device_id, purchase_id
@@ -754,6 +754,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			// (구) 쿠폰 리스트 규격 - 차후 삭제 필요
 			res.setNoCouponList(this.purchaseOrderTstoreService.searchTstoreOldCouponList(payUserKey,
 					reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
+
+			purchaseQty = prchsDtlMoreList.size();
 			// (신) 쿠폰 리스트 규격
 			res.setCouponList(this.purchaseOrderTstoreService.searchTstoreCouponList(payUserKey,
 					reservedDataMap.get("deviceId"), prodIdList, purchaseQty));
@@ -952,8 +954,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------
 		// 구매예약 시, 추가 저장해 두었던 데이터 추출
 
-		Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService.parseReservedDataByMap(prchsDtlMoreList
-				.get(0).getPrchsResvDesc());
+		Map<String, String> reservedDataMap = this.purchaseOrderMakeDataService
+				.parseReservedDataByMap(prchsDtlMoreList.get(0).getPrchsResvDesc());
 
 		// 특가 상품 여부
 		boolean bSpecialProd = StringUtils.isNotBlank(reservedDataMap.get("specialCouponId"));
