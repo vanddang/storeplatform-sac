@@ -140,7 +140,6 @@
 	                 AND B.PROD_RSHP_CD =#{prodRshpCd}
 	                 AND A.PROD_ID =#{prodId}
 	                 AND C.FREE_PASS_CLSF_CD =#{cmpxProdClsfCd}
-	                 AND BB.POSS_LEND_CLSF_CD =#{possLendClsfCd}
 	             )PM             
 	        WHERE PD.PROD_ID = PM.PART_PROD_ID
 	        AND PD.PROD_ID = DC.PROD_ID
