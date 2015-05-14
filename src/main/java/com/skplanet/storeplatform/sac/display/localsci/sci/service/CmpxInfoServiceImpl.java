@@ -114,13 +114,26 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if (StringUtils.isEmpty(req.getPossLendClsfCd())) {
 			throw new StorePlatformException("SAC_DSP_0002", "possLendClsfCd", req.getPossLendClsfCd());
 		}
-		
+	
 		if (StringUtils.isEmpty(req.getDeviceModelCd())) {
 			throw new StorePlatformException("SAC_DSP_0002", "deviceModelCd", req.getDeviceModelCd());
 		}
 		if (StringUtils.isEmpty(req.getLangCd())) {
 			throw new StorePlatformException("SAC_DSP_0002", "langCd", req.getLangCd());
 		}
+		
+		if (StringUtils.isNotEmpty(req.getSerialBookClsfCd())) {
+    		if (   !"DP004301".equals(req.getSerialBookClsfCd())
+    			&& !"DP004302".equals(req.getSerialBookClsfCd())
+    		    && !"DP004305".equals(req.getSerialBookClsfCd())
+    		 ) 
+    		{
+    			throw new StorePlatformException("SAC_DSP_0003", "serialBookClsfCd", req.getSerialBookClsfCd());
+    		}
+		}else{
+			req.setSerialBookClsfCd(null);
+		}
+		
 			
 		
 		// / 단말 지원 정보 조회
@@ -142,7 +155,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		}else{
 			paramMap.put("chapter", req.getChapter());			
 		}
-		
+		paramMap.put("serialBookClsfCd", req.getSerialBookClsfCd());
 		paramMap.put("possLendClsfCd", req.getPossLendClsfCd());
 		paramMap.put("cmpxProdClsfCd", req.getCmpxProdClsfCd());
 		paramMap.put("supportDevice", supportDevice);
