@@ -3944,7 +3944,7 @@
                                   END) AS PROD_CASE_CD  
                                 ,NVL(N.MM_PROD_MAX_SALE_QTY, I.MM_MAX_SALE_QTY ) AS MTH_MAX_CNT     /* 월_최대_판매_수량 */
                                 ,NVL(N.DLY_PROD_MAX_SALE_QTY, I.DAY_MAX_SALE_QTY ) AS DLY_MAX_CNT   /* 일_최대_판매_수량 */
-                                ,CASE WHEN N.PROD_ID IS NOT NULL AND N.SPRC_TYPE_CD IN ('DP007501','DP007502') THEN 'Y' ELSE 'N'END AS SPECIAL_SALE_YN
+                                ,CASE WHEN N.PROD_ID IS NOT NULL THEN 'Y' ELSE 'N'END AS SPECIAL_SALE_YN
                                 ,CASE WHEN N.PROD_ID IS NOT NULL THEN N.CPN_ID ELSE '' END AS SPECIAL_COUPON_ID
                                 ,NVL( ( SELECT SUM( TSPP.PRCHS_CNT )
                                          FROM TB_DP_SPRC_PROD_PRCHS_MANG TSPP
@@ -3965,6 +3965,7 @@
                                                           )
                                                    ) as NO 
                                 ,N.SOLD_OUT_YN 
+                                ,N.SPRC_TYPE_CD
                                 ,CONCAT(PI.FILE_PATH,PI.FILE_NM) FILE_PATH 
                                 ,PI.FILE_NM
                                 ,PI.FILE_SIZE   

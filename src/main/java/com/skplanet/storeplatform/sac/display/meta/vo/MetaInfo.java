@@ -289,6 +289,7 @@ public class MetaInfo extends CommonInfo {
 	private String couponSendType;
 	private Integer orgDiscountPrice;
 	private String specialSaleYn;
+	private String sprcTypeCd;
 
 	// ////////////////////////// 태그 관련 변수 ////////////////////////////
 	private String tagCd;
@@ -4552,6 +4553,21 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setSpecialSaleYn(String specialSaleYn) {
 		this.specialSaleYn = specialSaleYn;
+	}
+	
+
+	/**
+	 * @return the sprcTypeCd
+	 */
+	public String getSprcTypeCd() {
+		return sprcTypeCd;
+	}
+
+	/**
+	 * @param sprcTypeCd the sprcTypeCd to set
+	 */
+	public void setSprcTypeCd(String sprcTypeCd) {
+		this.sprcTypeCd = sprcTypeCd;
 	}
 
 	public String getBookTbctns() {
