@@ -67,6 +67,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
@@ -90,7 +92,6 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceListR
 import com.skplanet.storeplatform.sac.client.internal.purchase.vo.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MarketPinInfo;
@@ -312,10 +313,26 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// 한도 요금제 여부 로직 추가 (2015-05-27)
+		// 공통 파라미터 셋팅
+		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		searchDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		searchDeviceRequest.setUserKey(dbDeviceInfo.getUserKey());
+		/**
+		 * 검색 조건 setting
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySchUserKey.setKeyString(dbDeviceInfo.getDeviceKey());
+		keySearchList.add(keySchUserKey);
+		searchDeviceRequest.setKeySearchList(keySearchList);
+		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
+
 		boolean limitChargeFlag = true;
-		List<DeviceExtraInfo> userMbrDeviceDetails = dbDeviceInfo.getDeviceExtraInfoList();
+		List<UserMbrDeviceDetail> userMbrDeviceDetails = searchDeviceResponse.getUserMbrDevice()
+				.getUserMbrDeviceDetail();
 		if (userMbrDeviceDetails != null) {
-			for (DeviceExtraInfo userMbrDeviceDetail : userMbrDeviceDetails) {
+			for (UserMbrDeviceDetail userMbrDeviceDetail : userMbrDeviceDetails) {
 
 				// 단말 부가속성중 한도요금제 속성 여부
 				if (StringUtils.equals(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN,
@@ -524,10 +541,26 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// 한도 요금제 여부 로직 추가 (2015-05-27)
+		// 공통 파라미터 셋팅
+		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		searchDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		searchDeviceRequest.setUserKey(dbDeviceInfo.getUserKey());
+		/**
+		 * 검색 조건 setting
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keySchUserKey.setKeyString(dbDeviceInfo.getDeviceKey());
+		keySearchList.add(keySchUserKey);
+		searchDeviceRequest.setKeySearchList(keySearchList);
+		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
+
 		boolean limitChargeFlag = true;
-		List<DeviceExtraInfo> userMbrDeviceDetails = dbDeviceInfo.getDeviceExtraInfoList();
+		List<UserMbrDeviceDetail> userMbrDeviceDetails = searchDeviceResponse.getUserMbrDevice()
+				.getUserMbrDeviceDetail();
 		if (userMbrDeviceDetails != null) {
-			for (DeviceExtraInfo userMbrDeviceDetail : userMbrDeviceDetails) {
+			for (UserMbrDeviceDetail userMbrDeviceDetail : userMbrDeviceDetails) {
 
 				// 단말 부가속성중 한도요금제 속성 여부
 				if (StringUtils.equals(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN,
@@ -585,6 +618,7 @@ public class LoginServiceImpl implements LoginService {
 						.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
 			}
 		}
+
 		/* 로그인 결과 */
 		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
 		res.setUserType(chkDupRes.getUserMbr().getUserType());
