@@ -1018,80 +1018,87 @@
     
     <!-- 이용권 상품 메타 조회 -->
     <select id="getVoucherMetaInfo" parameterType="Map" resultType="MetaInfo">
-        SELECT /* MetaInfoMapper.getVoucherMetaInfo, 이용권 상품 메타 조회, 이태균/IS-PLUS, 2015-05-08 */  
-            PD.PROD_ID
-            , PD.TOP_MENU_ID
-            , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = PD.TOP_MENU_ID AND LANG_CD = DC.LANG_CD) AS TOP_MENU_NM
-            , PD.META_CLSF_CD
-            , PD.PROD_CHRG_YN
-            , PD.SELLER_MBR_NO
-            , PD.SVC_GRP_CD
-            , PD.SVC_TYPE_CD
-            , PD.PROD_GRD_CD
-            , PD.CID
-            , PD.MALL_CD
-            , PD.FEE_CASE_CD
-            , PD.FEE_UNIT_CD
-            , UP.USE_PERIOD_UNIT_CD
-            , UP.USE_PERIOD
-            , PD.DRM_YN
-            , PD.DRM_SET_CD
-            , PD.DRM_SET_VALUE
-            , PD.CONTENTS_TYPE_CD
-            , CM.FREE_PASS_CLSF_CD as CMPX_PROD_CLSF_CD
-            , DC.PROD_INTR_DSCR
-            , PR.PROD_AMT
-            , DC.PROD_NM
-            , DC.PROD_ALIAS
-            , DC.PROD_BASE_DESC
-            , (CASE WHEN CM.FREE_PASS_CLSF_CD = 'OR004301' THEN DC.PROD_DTL_DESC ELSE '' END) as PROD_DTL_DESC
-            , DC.PROD_USE_MTD
-            , CM.AUTO_APPR_YN
-            , CM.MAX_SALE_CNT
-            , CM.SALE_POC_CD
-            , CM.DUP_PRCHS_LIMT_YN
+        SELECT /* MetaInfoMapper.getVoucherMetaInfo, 이용권 상품 메타 조회, 이태균/IS-PLUS, 2015-05-08 */
+              CPROD.PROD_ID
+            , CPROD.TOP_MENU_ID
+            , (SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = CPROD.TOP_MENU_ID AND LANG_CD = CPDESC.LANG_CD) AS TOP_MENU_NM
+            , CPROD.META_CLSF_CD
+            , CPROD.PROD_CHRG_YN
+            , CPROD.SELLER_MBR_NO
+            , CPROD.SVC_GRP_CD
+            , CPROD.SVC_TYPE_CD
+            , CPROD.PROD_GRD_CD
+            , CPROD.CID
+            , CPROD.MALL_CD
+            , CPROD.FEE_CASE_CD
+            , CPROD.FEE_UNIT_CD
+            , POLICY.USE_PERIOD_UNIT_CD
+            , POLICY.USE_PERIOD
+            , CPROD.DRM_YN
+            , CPROD.DRM_SET_CD
+            , CPROD.DRM_SET_VALUE
+            , CPROD.CONTENTS_TYPE_CD
+            , CXPROD.FREE_PASS_CLSF_CD as CMPX_PROD_CLSF_CD            
+            , CPDESC.PROD_INTR_DSCR
+            , TPRC.PROD_AMT
+            , CPDESC.PROD_NM
+            , CPDESC.PROD_ALIAS
+            , CPDESC.PROD_BASE_DESC
+            , (CASE WHEN CXPROD.FREE_PASS_CLSF_CD = 'OR004301' THEN CPDESC.PROD_DTL_DESC ELSE '' END) as PROD_DTL_DESC 
+            , CPDESC.PROD_USE_MTD
+            , CXPROD.AUTO_APPR_YN
+            , CXPROD.MAX_SALE_CNT
+            , CXPROD.SALE_POC_CD
+            , CXPROD.DUP_PRCHS_LIMT_YN
             , TP.PROD_STATUS_CD
             , TP.EXPO_YN
             , TP.EXPO_ORD
-            , TO_CHAR(PR.APPLY_START_DT, 'YYYYMMDDHH24MISS') AS APPLY_START_DT
-            , TO_CHAR(PR.APPLY_END_DT, 'YYYYMMDDHH24MISS') AS APPLY_END_DT
-            , PR.CHNL_UNLMT_AMT
-            , PR.CHNL_PERIOD_AMT
-            , PR.PROD_NET_AMT
-            , PR.DC_RATE
-            , PR.DC_AMT
-            , PR.DC_AFT_PROD_AMT
-            , PR.TAX_CLSF
-            , DC.LANG_CD
-            , CM.CASH_AMT
-            , CM.BNS_CASH_AMT_CLSF_CD
-            , CM.BNS_CASH_AMT
-            , CM.BNS_CASH_RATIO
-            , CM.BNS_USE_PERIOD_UNIT_CD
-            , CM.BNS_USE_PERIOD         
-	        , NVL(BIG.FILE_PATH, '') || NVL(BIG.FILE_NM, '') AS BANNER_FILE_PATH
-	        , NVL(TIG.FILE_PATH, '') || NVL(TIG.FILE_NM, '') AS THUMBNAIL_FILE_PATH            
-            , CM.CMPX_PROD_GRP_CD 
-            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.SERIES_BOOK_CLSF_CD ELSE '' END) AS SERIES_BOOK_CLSF_CD
-            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN UP.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD  
-        FROM 
-            TB_DP_PROD PD
-            INNER JOIN TB_DP_CMPX_PROD CM ON PD.PROD_ID = CM.PROD_ID
-            INNER JOIN TB_DP_PROD_DESC DC ON PD.PROD_ID = DC.PROD_ID
-            INNER JOIN TB_DP_TENANT_PROD TP ON PD.PROD_ID = TP.PROD_ID
-            INNER JOIN TB_DP_TENANT_PROD_PRICE PR ON PD.PROD_ID = PR.PROD_ID
-            LEFT OUTER JOIN TB_DP_PROD_IMG BIG ON BIG.PROD_ID = PD.PROD_ID 
-                AND BIG.LANG_CD = DC.LANG_CD 
-                AND BIG.IMG_CD = #{bannerImageCd} 
-            LEFT OUTER JOIN TB_DP_PROD_IMG TIG ON TIG.PROD_ID = PD.PROD_ID 
-                AND TIG.LANG_CD = DC.LANG_CD
-                AND TIG.IMG_CD = ( CASE WHEN PD.TOP_MENU_ID IN ('DP17','DP18') THEN #{thumbnailImageCd} WHEN PD.TOP_MENU_ID IN ('DP13','DP14') THEN #{ebookThumbnailImageCd} END )
-            LEFT JOIN TB_DP_USE_POLICY UP ON PD.USE_POLICY_ID = UP.USE_POLICY_ID            
-        WHERE 
-            PD.PROD_ID = #{productBasicInfo.prodId}
-            AND DC.LANG_CD = #{tenantHeader.langCd}
-            AND TP.TENANT_ID = #{tenantHeader.tenantId}
-            AND TP.TENANT_ID = PR.TENANT_ID
-            AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
+            , TO_CHAR(TPRC.APPLY_START_DT, 'YYYYMMDDHH24MISS') AS APPLY_START_DT
+            , TO_CHAR(TPRC.APPLY_END_DT, 'YYYYMMDDHH24MISS') AS APPLY_END_DT
+            , TPRC.CHNL_UNLMT_AMT
+            , TPRC.CHNL_PERIOD_AMT
+            , TPRC.PROD_NET_AMT
+            , TPRC.DC_RATE
+            , TPRC.DC_AMT
+            , TPRC.DC_AFT_PROD_AMT
+            , TPRC.TAX_CLSF
+            , CPDESC.LANG_CD
+            , CXPROD.CASH_AMT
+            , CXPROD.BNS_CASH_AMT_CLSF_CD
+            , CXPROD.BNS_CASH_AMT
+            , CXPROD.BNS_CASH_RATIO
+            , CXPROD.BNS_USE_PERIOD_UNIT_CD
+            , CXPROD.BNS_USE_PERIOD
+            , NVL(BIMG.FILE_PATH, '') || NVL(BIMG.FILE_NM, '') AS BANNER_FILE_PATH
+            , NVL(TIMG.FILE_PATH, '') || NVL(TIMG.FILE_NM, '') AS THUMBNAIL_FILE_PATH
+            , CXPROD.CMPX_PROD_GRP_CD 
+            ,(CASE WHEN CXPROD.FREE_PASS_CLSF_CD !='OR004305' THEN CXPROD.SERIES_BOOK_CLSF_CD ELSE '' END) AS SERIES_BOOK_CLSF_CD
+            ,(CASE WHEN CXPROD.FREE_PASS_CLSF_CD !='OR004305' THEN POLICY.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD   
+        FROM TB_DP_PROD CPROD
+            INNER JOIN TB_DP_CMPX_PROD CXPROD
+                ON CXPROD.PROD_ID = CPROD.PROD_ID
+            INNER JOIN TB_DP_PROD_DESC CPDESC
+                ON CPDESC.PROD_ID = CPROD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON TP.PROD_ID = CPROD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+                ON TPRC.PROD_ID = CPROD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_PROD_IMG BIMG
+                ON BIMG.PROD_ID = CPROD.PROD_ID AND BIMG.LANG_CD = CPDESC.LANG_CD AND BIMG.IMG_CD = #{bannerImageCd}  -- Banner
+            LEFT OUTER JOIN TB_DP_PROD_IMG TIMG
+                ON TIMG.PROD_ID = CPROD.PROD_ID AND TIMG.LANG_CD = CPDESC.LANG_CD
+                   AND TIMG.IMG_CD = (
+                               CASE WHEN CPROD.TOP_MENU_ID IN ('DP17','DP18') THEN #{thumbnailImageCd} -- thumbnail
+                               WHEN CPROD.TOP_MENU_ID IN ('DP13','DP14') THEN #{ebookThumbnailImageCd} -- ebook thumbnail
+                               END
+                       )
+            LEFT OUTER JOIN TB_DP_USE_POLICY POLICY
+                ON POLICY.USE_POLICY_ID = CPROD.USE_POLICY_ID                       
+        WHERE 1=1
+              AND CPROD.SVC_GRP_CD = 'DP000207'
+              AND CPROD.PROD_ID = #{productBasicInfo.prodId}
+              AND CPDESC.LANG_CD = #{tenantHeader.langCd}
+              AND TP.TENANT_ID = #{tenantHeader.tenantId}
+              AND SYSDATE BETWEEN TPRC.APPLY_START_DT AND TPRC.APPLY_END_DT
     </select>    
  </mapper>
