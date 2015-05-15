@@ -3942,8 +3942,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 							// 특가 상품일 경우
 							episodeProduct.setSpecialProdYn(episodeShopping.getSpecialSale());
-
-
+							episodeProduct.setSpecialTypeCd(episodeShopping.getSpecialTypeCd());
+							
 							// Title 생성
 							Title episodeTitle = this.commonGenerator.generateTitle(episodeShopping);
 							episodeProduct.setTitle(episodeTitle);
