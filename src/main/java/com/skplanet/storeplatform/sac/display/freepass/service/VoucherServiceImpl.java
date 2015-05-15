@@ -360,7 +360,6 @@ public class VoucherServiceImpl implements VoucherService {
 						reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
 						for (VoucherProdMap prodMap : mapList) {
-							int i = 0; // Product List Count 용도
 							productBasicInfo.setProdId(prodMap.getPartProdId());
 							productBasicInfo.setTenantId(header.getTenantHeader().getTenantId());
 							productBasicInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
@@ -403,7 +402,6 @@ public class VoucherServiceImpl implements VoucherService {
 							}
 							product.setStatus(prodMap.getIconClsfCd());
 							productList.add(product);
-							i++;
 						} // for
 					} // if
 				} // if
