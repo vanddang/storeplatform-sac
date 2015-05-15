@@ -155,18 +155,22 @@
 	        AND PD.PROD_ID = TP.PROD_ID
 	        AND PD.PROD_ID = PR.PROD_ID
             AND PD.USE_POLICY_ID = UP.USE_POLICY_ID
-            <if test='possLendClsfCd == "DP010603"'>   
-            AND PM.POSS_LEND_CLSF_CD IN ('DP010601','DP010602')
+            <if test='cmpxProdClsfCd != "OR004305"'>   
+	            <if test='possLendClsfCd == "DP010603"'>   
+	            AND PM.POSS_LEND_CLSF_CD IN ('DP010601','DP010602')
+	            </if>
+	            <if test='possLendClsfCd != "DP010603"'>   
+	            AND PM.POSS_LEND_CLSF_CD = #{possLendClsfCd}
+	            </if>
             </if>
-            <if test='possLendClsfCd != "DP010603"'>   
-            AND PM.POSS_LEND_CLSF_CD = #{possLendClsfCd}
-            </if>
-            <if test='serialBookClsfCd == "DP004305"'>   
-            AND PM.BOOK_CLSF_CD IN ('DP004301','DP004302')
-            </if>
-            <if test='serialBookClsfCd == "DP004301" or serialBookClsfCd == "DP004302"'>   
-            AND PM.BOOK_CLSF_CD = #{serialBookClsfCd}
-            </if>            
+            <if test='cmpxProdClsfCd != "OR004305"'>  
+	            <if test='serialBookClsfCd == "DP004305"'>   
+	            AND PM.BOOK_CLSF_CD IN ('DP004301','DP004302')
+	            </if>
+	            <if test='serialBookClsfCd == "DP004301" or serialBookClsfCd == "DP004302"'>   
+	            AND PM.BOOK_CLSF_CD = #{serialBookClsfCd}
+	            </if>    
+            </if>        
 	        AND DC.LANG_CD = #{langCd} 
 	        AND TP.TENANT_ID = #{tenantId}
 	        AND TP.TENANT_ID = PR.TENANT_ID 

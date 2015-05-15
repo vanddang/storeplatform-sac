@@ -38,12 +38,18 @@
 					, PD.CONTENTS_TYPE_CD
 					, TP.EXPO_ORD
                 FROM
-					TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC, TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
+					  TB_DP_PROD PD
+					, TB_DP_CMPX_PROD CM
+					, TB_DP_PROD_DESC DC
+					, TB_DP_TENANT_PROD TP
+					, TB_DP_TENANT_PROD_PRICE PR
+					, TB_DP_USE_POLICY UP
                 WHERE 
                     PD.PROD_ID = CM.PROD_ID
 					AND PD.PROD_ID = DC.PROD_ID
 					AND PD.PROD_ID = TP.PROD_ID
 					AND PD.PROD_ID = PR.PROD_ID
+					AND PD.USE_POLICY_ID = UP.USE_POLICY_ID
 					AND DC.LANG_CD = #{langCd}
 					AND TP.TENANT_ID = #{tenantId}
 					AND TP.TENANT_ID = PR.TENANT_ID
@@ -182,7 +188,7 @@
             AND PD.PROD_ID = TP.PROD_ID
             AND PD.PROD_ID = PR.PROD_ID
             AND PD.SVC_GRP_CD = 'DP000207'
-            AND PD.USE_POLICY_ID = UP.USE_POLICY_ID(+)
+            AND PD.USE_POLICY_ID = UP.USE_POLICY_ID
             AND DC.LANG_CD = #{langCd}
             AND TP.TENANT_ID = #{tenantId}
             AND TP.TENANT_ID = PR.TENANT_ID
@@ -244,8 +250,11 @@
                     , FM.STRM_DRM_YN
                     , PD.TOP_MENU_ID
                 FROM
-                    TB_DP_FIXRATE_PROD_MAPG FM, TB_DP_PROD PD, TB_DP_TENANT_PROD TP,
-                    TB_DP_MENU_CATEGORY_PROD_MAPG MP, TB_DP_MENU_CATEGORY CT
+                      TB_DP_FIXRATE_PROD_MAPG FM
+                    , TB_DP_PROD PD
+                    , TB_DP_TENANT_PROD TP
+                    , TB_DP_MENU_CATEGORY_PROD_MAPG MP
+                    , TB_DP_MENU_CATEGORY CT
                 WHERE FM.PROD_ID = #{productId}
                 AND FM.PART_PROD_ID = PD.PROD_ID
                 AND PD.PROD_ID = TP.PROD_ID
@@ -336,8 +345,12 @@
                         , TP.EXPO_ORD
                         , TP.PROD_STATUS_CD
                     FROM
-                        TB_DP_PROD PD, TB_DP_CMPX_PROD CM, TB_DP_PROD_DESC DC,
-                        TB_DP_TENANT_PROD TP, TB_DP_TENANT_PROD_PRICE PR
+                          TB_DP_PROD PD
+                        , TB_DP_CMPX_PROD CM
+                        , TB_DP_PROD_DESC DC
+                        , TB_DP_TENANT_PROD TP
+                        , TB_DP_TENANT_PROD_PRICE PR
+                        , TB_DP_USE_POLICY UP
                         ,(SELECT /*+ no_merge */ DISTINCT A.PROD_ID 
                             FROM TB_DP_FIXRATE_PROD_MAPG A
                                  ,TB_DP_PROD_RSHP B
@@ -355,6 +368,7 @@
                          )PM                        
                     WHERE PD.PROD_ID = CM.PROD_ID
                     AND PD.PROD_ID = DC.PROD_ID
+                    AND PD.USE_POLICY_ID = UP.USE_POLICY_ID
                     AND PD.PROD_ID = TP.PROD_ID
                     AND PD.PROD_ID = PR.PROD_ID
                     AND PD.PROD_ID = PM.PROD_ID
