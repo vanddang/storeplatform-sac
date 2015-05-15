@@ -1330,8 +1330,16 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		coupon.setTitle(title);
 		coupon.setPrice(price);
 		coupon.setAutopay(autoPay);
-		coupon.setFreepassAttr(freepassAttr);
-		coupon.setRights(rights);
+		if (freepassAttr.getCouponGroup()!= null
+			||freepassAttr.getPossLend()!= null
+			||freepassAttr.getSerialBook()!= null
+			)
+		{
+			coupon.setFreepassAttr(freepassAttr);
+		}
+		if (rights.getGrade() != null) {
+			coupon.setRights(rights);
+		}
 		// coupon.setDate(date);
 		coupon.setSaleStatus(metaInfo.getProdStatusCd());
 		if (metaInfo.getCashAmt() != null) {
