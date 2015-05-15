@@ -167,7 +167,7 @@
 	            <if test='serialBookClsfCd == "DP004305"'>   
 	            AND PM.BOOK_CLSF_CD IN ('DP004301','DP004302')
 	            </if>
-	            <if test='serialBookClsfCd == "DP004301" or serialBookClsfCd == "DP004302"'>   
+	            <if test='serialBookClsfCd != "DP004305"'>   
 	            AND PM.BOOK_CLSF_CD = #{serialBookClsfCd}
 	            </if>    
             </if>        
