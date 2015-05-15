@@ -54,18 +54,18 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 	 * @return CmpxBasicInfoSacRes
 	 */
 	@Override
-	public CmpxBasicInfoSacRes searchCmpxBasicInfoList(CmpxBasicInfoSacReq req){
+	public CmpxBasicInfoSacRes searchCmpxBasicInfoList(CmpxBasicInfoSacReq req) {
 		this.log.info("################ [SAC DP LocalSCI] SAC Cmpx Start : searchCmpxBasicInfoList :{} ",
 				DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
-		
+
 		if (StringUtils.isEmpty(req.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
-		
+
 		if (StringUtils.isEmpty(req.getLang())) {
 			throw new StorePlatformException("SAC_DSP_0002", "lang", req.getLang());
 		}
-		
+
 		CmpxBasicInfoSacRes res = new CmpxBasicInfoSacRes();
 		List<CmpxBasicInfo> cmpxBasicInfoList = new ArrayList<CmpxBasicInfo>();
 		List<String> prodIdList = req.getList();
@@ -75,8 +75,8 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 
 		for (String prodId : prodIdList) {
 			paramMap.put("prodId", prodId);
-			CmpxBasicInfo cmpxBasicInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxBasicInfoList",
-					paramMap, CmpxBasicInfo.class);
+			CmpxBasicInfo cmpxBasicInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxBasicInfoList", paramMap,
+					CmpxBasicInfo.class);
 
 			if (cmpxBasicInfo != null) {
 				cmpxBasicInfoList.add(cmpxBasicInfo);
@@ -97,11 +97,11 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 	 * 
 	 * @param req
 	 *            파라미터
-	 * @return CmpxProductListRes 
+	 * @return CmpxProductListRes
 	 */
 	@Override
 	public CmpxProductListRes searchCmpxProductList(CmpxProductSacReq req) {
-		
+
 		if (StringUtils.isEmpty(req.getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
@@ -111,39 +111,36 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if (StringUtils.isEmpty(req.getProdId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "prodId", req.getProdId());
 		}
-		
-		if (!req.getCmpxProdClsfCd().equals("OR004305")){
-    		if (StringUtils.isEmpty(req.getPossLendClsfCd())) {
-    			throw new StorePlatformException("SAC_DSP_0002", "possLendClsfCd", req.getPossLendClsfCd());
-    		}
-		}else{
+
+		if (!req.getCmpxProdClsfCd().equals("OR004305")) {
+			if (StringUtils.isEmpty(req.getPossLendClsfCd())) {
+				throw new StorePlatformException("SAC_DSP_0002", "possLendClsfCd", req.getPossLendClsfCd());
+			}
+		} else {
 			req.setPossLendClsfCd(null);
 		}
-	
+
 		if (StringUtils.isEmpty(req.getDeviceModelCd())) {
 			throw new StorePlatformException("SAC_DSP_0002", "deviceModelCd", req.getDeviceModelCd());
 		}
 		if (StringUtils.isEmpty(req.getLangCd())) {
 			throw new StorePlatformException("SAC_DSP_0002", "langCd", req.getLangCd());
 		}
-		
-		if (StringUtils.isNotEmpty(req.getSerialBookClsfCd())) {
-    		if (   !"DP004301".equals(req.getSerialBookClsfCd())
-    			&& !"DP004302".equals(req.getSerialBookClsfCd())
-    		    && !"DP004305".equals(req.getSerialBookClsfCd())
-    		 ) 
-    		{
-    			throw new StorePlatformException("SAC_DSP_0003", "serialBookClsfCd", req.getSerialBookClsfCd());
-    		}
+
+		if (StringUtils.isNotEmpty(req.getSeriesBookClsfCd())) {
+			if (!"DP004301".equals(req.getSeriesBookClsfCd()) && !"DP004302".equals(req.getSeriesBookClsfCd())
+					&& !"DP004305".equals(req.getSeriesBookClsfCd())) {
+				throw new StorePlatformException("SAC_DSP_0003", "seriesBookClsfCd", req.getSeriesBookClsfCd());
+			}
 		}
-		
+
 		// / 단말 지원 정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
 
-		if(supportDevice == null){
+		if (supportDevice == null) {
 			throw new StorePlatformException("SAC_DSP_0012", req.getDeviceModelCd());
 		}
-		
+
 		CmpxProductListRes res = new CmpxProductListRes();
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -153,10 +150,10 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		paramMap.put("prodId", req.getProdId());
 		if (StringUtils.isEmpty(req.getChapter())) {
 			paramMap.put("chapter", null);
-		}else{
-			paramMap.put("chapter", req.getChapter());			
+		} else {
+			paramMap.put("chapter", req.getChapter());
 		}
-		paramMap.put("serialBookClsfCd", req.getSerialBookClsfCd());
+		paramMap.put("seriesBookClsfCd", req.getSeriesBookClsfCd());
 		paramMap.put("possLendClsfCd", req.getPossLendClsfCd());
 		paramMap.put("cmpxProdClsfCd", req.getCmpxProdClsfCd());
 		paramMap.put("supportDevice", supportDevice);
@@ -177,7 +174,7 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 	 * 
 	 * @param req
 	 *            파라미터
-	 * @return CmpxProductInfo 
+	 * @return CmpxProductInfo
 	 */
 	@Override
 	public CmpxProductInfo searchCmpxProductInfo(CmpxProductInfoSacReq req) {
@@ -187,25 +184,24 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if (StringUtils.isEmpty(req.getLangCd())) {
 			throw new StorePlatformException("SAC_DSP_0002", "langCd", req.getLangCd());
 		}
-			
+
 		if (StringUtils.isEmpty(req.getProdId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "prodId", req.getProdId());
 		}
 		if (StringUtils.isEmpty(req.getEpisodeProdId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "episodeProdId", req.getEpisodeProdId());
 		}
-		
+
 		if (StringUtils.isEmpty(req.getChapter())) {
 			req.setChapter(null);
 		}
 		CmpxProductInfo cmpxProductInfo = null;
-		cmpxProductInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxProductInfo", req,
-				CmpxProductInfo.class);
-		
+		cmpxProductInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxProductInfo", req, CmpxProductInfo.class);
+
 		if (cmpxProductInfo == null) {
-			throw new StorePlatformException("SAC_DSP_0005", "이용권 "+req.getProdId());
-		}		
-		
+			throw new StorePlatformException("SAC_DSP_0005", "이용권 " + req.getProdId());
+		}
+
 		return cmpxProductInfo;
 	}
 }
