@@ -235,6 +235,7 @@ public class DisplayConstants {
 
     // //////////////////////////////////////Source Code //////////////////////////////////////////
     public static final String DP_THUMNAIL_SOURCE = "thumbnail";
+    public static final String DP_EPISODE_THUMNAIL_SOURCE = "episodeThumbnail";
     public static final String DP_DLM_SOURCE = "dlm";
 
     public static final String DP_MENU_TOPCLASS_TYPE = "topClass";

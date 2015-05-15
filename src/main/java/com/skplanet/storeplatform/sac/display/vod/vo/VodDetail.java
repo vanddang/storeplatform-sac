@@ -137,7 +137,7 @@ public class VodDetail extends CommonInfo {
 	private String filePath;
 
 	// ---------------------------------------------------
-	// Thumbnail
+	// 채널 대표 이미지 Thumbnail 이미지
 	// ---------------------------------------------------
 	/** thumbnail filePath */
 	private String imgPath;
@@ -145,6 +145,14 @@ public class VodDetail extends CommonInfo {
 	private String imgNm;
 	/** thumbnail fileSize */
 	private Long imgSize;
+
+	// ---------------------------------------------------
+	// 에피소드 VOD 시리즈 Thumbnail 이미지
+	// ---------------------------------------------------
+	/** thumbnail filePath */
+	private String epsdImgPath;
+	/** thumbnail fileName */
+	private String epsdImgNm;
 
 	// ---------------------------------------------------
 	// Accrual
@@ -602,6 +610,22 @@ public class VodDetail extends CommonInfo {
 	 */
 	public void setImgSize(Long imgSize) {
 		this.imgSize = imgSize;
+	}
+
+	public String getEpsdImgPath() {
+		return epsdImgPath;
+	}
+
+	public void setEpsdImgPath(String epsdImgPath) {
+		this.epsdImgPath = epsdImgPath;
+	}
+
+	public String getEpsdImgNm() {
+		return epsdImgNm;
+	}
+
+	public void setEpsdImgNm(String epsdImgNm) {
+		this.epsdImgNm = epsdImgNm;
 	}
 
 	/**

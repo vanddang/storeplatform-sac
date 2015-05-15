@@ -666,6 +666,17 @@ public class VodServiceImpl implements VodService {
             sourceList.add(source);
         }
 
+        // 에피소드 VOD 시리즈 thumbnail 이미지
+        if (StringUtils.isNotEmpty(mapperVO.getEpsdImgPath()) && StringUtils.isNotEmpty(mapperVO.getEpsdImgNm())) {
+        	source = new Source();
+        	String imagePath = mapperVO.getEpsdImgPath() + mapperVO.getEpsdImgNm();
+            source.setMediaType(DisplayCommonUtil.getMimeType(imagePath));
+            source.setSize(mapperVO.getImgSize());
+            source.setType(DisplayConstants.DP_EPISODE_THUMNAIL_SOURCE);
+            source.setUrl(imagePath);
+            sourceList.add(source);
+        }
+
 		// screenshot
 		if(screenshotList != null) {
 			for (ProductImage screenshotImage : screenshotList) {
