@@ -671,7 +671,7 @@ public class VodServiceImpl implements VodService {
         	source = new Source();
         	String imagePath = mapperVO.getEpsdImgPath() + mapperVO.getEpsdImgNm();
             source.setMediaType(DisplayCommonUtil.getMimeType(imagePath));
-            source.setSize(mapperVO.getImgSize());
+            source.setSize(mapperVO.getEpsdImgSize());
             source.setType(DisplayConstants.DP_EPISODE_THUMNAIL_SOURCE);
             source.setUrl(imagePath);
             sourceList.add(source);

@@ -153,6 +153,8 @@ public class VodDetail extends CommonInfo {
 	private String epsdImgPath;
 	/** thumbnail fileName */
 	private String epsdImgNm;
+	/** thumbnail fileSize */
+	private Long epsdImgSize;
 
 	// ---------------------------------------------------
 	// Accrual
@@ -626,6 +628,14 @@ public class VodDetail extends CommonInfo {
 
 	public void setEpsdImgNm(String epsdImgNm) {
 		this.epsdImgNm = epsdImgNm;
+	}
+
+	public Long getEpsdImgSize() {
+		return epsdImgSize;
+	}
+
+	public void setEpsdImgSize(Long epsdImgSize) {
+		this.epsdImgSize = epsdImgSize;
 	}
 
 	/**
