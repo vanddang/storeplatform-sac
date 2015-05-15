@@ -951,9 +951,6 @@ public class LoginServiceImpl implements LoginService {
 					loginStatusCode = MemberConstants.USER_LOGIN_STATUS_NOMAL;
 				}
 
-				/* 로그인 성공이력 저장 */
-				this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "N");
-
 				/* 단말정보 update */
 				// this.modDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
@@ -1031,6 +1028,9 @@ public class LoginServiceImpl implements LoginService {
 				res.setIsLoginSuccess("Y");
 				return res;
 			}
+
+			/* 로그인 성공이력 저장 */
+			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "N");
 
 		} else { // 기존 IDP 계정인 경우
 
