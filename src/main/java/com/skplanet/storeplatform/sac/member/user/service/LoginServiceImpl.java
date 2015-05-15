@@ -1029,9 +1029,6 @@ public class LoginServiceImpl implements LoginService {
 				return res;
 			}
 
-			/* 로그인 성공이력 저장 */
-			this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "N");
-
 		} else { // 기존 IDP 계정인 경우
 
 			try {
@@ -1069,9 +1066,6 @@ public class LoginServiceImpl implements LoginService {
 
 				userAuthKey = authForIdEcRes.getUserAuthKey();
 
-				/* 로그인 성공이력 저장 */
-				this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "N");
-
 				/* 단말정보 update */
 				// this.modDeviceInfoForLogin(requestHeader, userKey, authForIdEcRes.getUserAuthKey(), req);
 
@@ -1103,6 +1097,9 @@ public class LoginServiceImpl implements LoginService {
 			}
 
 		}
+
+		/* 로그인 성공이력 저장 */
+		this.regLoginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress(), "N", null, "N");
 
 		/* 정상 로그인 결과 */
 		res.setUserAuthKey(userAuthKey);
