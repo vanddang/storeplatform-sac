@@ -719,7 +719,7 @@
                       END ) AS CHAPTER_UNIT  
                     , PD.PROD_CHRG_YN
                     , '' as CHAPTER
-                    , PD.PROD_GRD_CD
+                    , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN PD.PROD_GRD_CD ELSE '' END) AS PROD_GRD_CD
                     , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN NVL(UP.POSS_LEND_CLSF_CD,'DP010603') ELSE '' END)  AS POSS_LEND_CLSF_CD
                     , UP.USE_PERIOD_UNIT_CD
                     , UP.USE_PERIOD

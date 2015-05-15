@@ -344,7 +344,7 @@
                     , DC.PROD_NM
                     , PR.PROD_AMT
                     , TP.PROD_STATUS_CD
-                    , PD.PROD_GRD_CD
+                    ,(CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN PD.PROD_GRD_CD ELSE '' END) AS PROD_GRD_CD 
                     ,CASE
                          WHEN ( 
                                SELECT COUNT(*) 

@@ -8,7 +8,7 @@
          SELECT  
                  PD.PROD_ID as cmpxProdId
                , DC.PROD_NM as cmpxProdNm
-               , PD.PROD_GRD_CD
+               , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN PD.PROD_GRD_CD ELSE '' END) AS PROD_GRD_CD
  			   , UP.USE_PERIOD_UNIT_CD
 			   , UP.USE_PERIOD               
                , CM.FREE_PASS_CLSF_CD as cmpxProdClsfCd
@@ -46,7 +46,7 @@
 	            , DC.PROD_NM
 	            , PR.PROD_AMT
 	            , TP.PROD_STATUS_CD 
-	            , PD.PROD_GRD_CD
+	            ,(CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN PD.PROD_GRD_CD ELSE '' END) AS PROD_GRD_CD
 	            ,  (SELECT DECODE (COUNT(1), 0, 'N', 'Y') 
 	                   FROM TB_DP_SPRT_DEVICE A
 	                  WHERE (A.DEVICE_MODEL_CD = #{deviceModelCd} or A.DEVICE_MODEL_CD = #{dpAnyPhone4mm}) 
