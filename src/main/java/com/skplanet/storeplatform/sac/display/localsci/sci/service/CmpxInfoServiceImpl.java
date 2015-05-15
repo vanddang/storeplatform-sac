@@ -132,6 +132,8 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 					&& !"DP004305".equals(req.getSeriesBookClsfCd())) {
 				throw new StorePlatformException("SAC_DSP_0003", "seriesBookClsfCd", req.getSeriesBookClsfCd());
 			}
+		}else{
+			req.setSeriesBookClsfCd(null);
 		}
 
 		// / 단말 지원 정보 조회
