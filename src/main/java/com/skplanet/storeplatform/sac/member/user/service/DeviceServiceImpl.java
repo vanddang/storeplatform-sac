@@ -505,6 +505,7 @@ public class DeviceServiceImpl implements DeviceService {
 						}
 					}
 				}
+				mqInfo.setChgMemberYn(MemberConstants.USE_Y);
 				this.memberRetireAmqpTemplate.convertAndSend(mqInfo);
 
 			} catch (AmqpException ex) {
