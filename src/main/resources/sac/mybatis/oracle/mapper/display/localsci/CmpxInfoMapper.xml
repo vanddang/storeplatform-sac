@@ -164,13 +164,15 @@
 	            </if>
             </if>
             <if test='cmpxProdClsfCd != "OR004305"'>  
-	            <if test='serialBookClsfCd == "DP004305"'>   
-	            AND PM.BOOK_CLSF_CD IN ('DP004301','DP004302')
-	            </if>
-	            <if test='serialBookClsfCd != "DP004305"'>   
-	            AND PM.BOOK_CLSF_CD = #{serialBookClsfCd}
-	            </if>    
-            </if>        
+	            <if test="serialBookClsfCd != null">
+		            <if test='serialBookClsfCd == "DP004305"'>   
+		            AND PM.BOOK_CLSF_CD IN ('DP004301','DP004302')
+		            </if>
+		            <if test='serialBookClsfCd != "DP004305"'>   
+		            AND PM.BOOK_CLSF_CD = #{serialBookClsfCd}
+		            </if>    
+	            </if>        
+            </if>
 	        AND DC.LANG_CD = #{langCd} 
 	        AND TP.TENANT_ID = #{tenantId}
 	        AND TP.TENANT_ID = PR.TENANT_ID 
