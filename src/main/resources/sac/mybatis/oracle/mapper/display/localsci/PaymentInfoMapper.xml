@@ -187,6 +187,7 @@
                         ,J.SVC_GRP_CD
                         ,J.TOP_MENU_ID
                         ,'N' as inAppYn
+                        ,N.SPRC_TYPE_CD as specialTypeCd
                   FROM 
                           TB_DP_SHPG_BRAND A
                          ,TB_DP_SHPG_CATALOG B
@@ -212,7 +213,8 @@
                                , B1.DLY_PROD_MAX_SALE_QTY   
                                , B1.PERMAN_MM_MAX_PRCHS_QTY
                                , B1.PERMAN_DAY_MAX_PRCHS_QTY
-                               , B1.ONCE_MAX_PRCHS_POSB_CNT                                    
+                               , B1.ONCE_MAX_PRCHS_POSB_CNT   
+                               , B1.SPRC_TYPE_CD                                 
                            FROM  TB_DP_PROD_RSHP A1
                                 ,TB_DP_SPRC_PROD B1
                            WHERE 1=1
