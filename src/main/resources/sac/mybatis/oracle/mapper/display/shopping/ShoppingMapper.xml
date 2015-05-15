@@ -3574,7 +3574,7 @@
                                 ,I.PRCHS_CANCEL_DRBK_REASON     /* 구매_취소_환불_사유 */
                                 ,I.B2B_PROD_YN                  /* B2B_상품_여부 */
                                 ,I.DLV_PROD_YN                  /* 배송_상품_여부 */
-                                ,CASE WHEN N.PROD_ID IS NOT NULL AND N.SPRC_TYPE_CD IN ('DP007501','DP007502') THEN 'Y' ELSE 'N'END AS SPECIAL_SALE_YN
+                                ,CASE WHEN N.PROD_ID IS NOT NULL THEN 'Y' ELSE 'N'END AS SPECIAL_SALE_YN
                                 ,CASE WHEN N.PROD_ID IS NOT NULL THEN N.CPN_ID ELSE '' END AS SPECIAL_COUPON_ID
                                 <if test="req.userKey != null">                        
                                 ,(SELECT ( CASE WHEN COUNT( PD.NOTI_SEQ )=0 THEN 'feedback' END )
@@ -3618,6 +3618,7 @@
                                 ,O.PROD_NM as catalogNm
                                 ,I.COUPON_SEND_TYPE 
                                 ,N.SOLD_OUT_YN 
+                                ,N.SPRC_TYPE_CD as specialTypeCd
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
