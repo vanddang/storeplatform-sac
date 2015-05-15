@@ -35,6 +35,11 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 	private String tenantId;
 
 	/**
+	 * 모바일 회원의 아이디회원 전환.
+	 */
+	private String chgMemberYn;
+
+	/**
 	 * @return the workDt
 	 */
 	public String getWorkDt() {
@@ -122,6 +127,21 @@ public class RemoveMemberAmqpSacReq extends CommonInfo {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return chgMemberYn
+	 */
+	public String getChgMemberYn() {
+		return this.chgMemberYn;
+	}
+
+	/**
+	 * @param chgMemberYn
+	 *            String
+	 */
+	public void setChgMemberYn(String chgMemberYn) {
+		this.chgMemberYn = chgMemberYn;
 	}
 
 }
