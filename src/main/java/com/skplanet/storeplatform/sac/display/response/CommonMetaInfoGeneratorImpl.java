@@ -612,7 +612,9 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
 		supportList.add(generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
-		supportList.add(generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getStoreDlStrmCd()));
+		if( !metaInfo.getTopMenuId().equals("DP13") && !metaInfo.getTopMenuId().equals("DP14")) {
+			supportList.add(generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getStoreDlStrmCd()));
+		}
 		store.setSupportList(supportList);
 
 		// 이용기간단위
@@ -622,6 +624,13 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		metaInfo.setProdAmt(metaInfo.getStoreProdAmt());
 		metaInfo.setProdNetAmt(metaInfo.getStoreProdNetAmt());
 		store.setPrice(this.generatePrice(metaInfo));
+		
+		// 이북/코믹 공통메타에 이용기간(unit/usagePeriod) 추가
+		if( metaInfo.getTopMenuId().equals("DP13") || metaInfo.getTopMenuId().equals("DP14")) {
+			if(metaInfo.getStoreUsePeriod() != null) {
+				store.setDate(DisplayCommonUtil.makeDateUsagePeriod(metaInfo.getStoreUsePeriodUnitCd(), metaInfo.getStoreUsePeriod(), metaInfo.getStoreUsePeriodUnitCdNm()));
+			}
+		} 
 
 		// 코믹일 경우 SQL 에서 PLAY_PROD_ID="play"로 리턴한다.
 		if (!DisplayConstants.DP_RIGHTS_STORE.equals(metaInfo.getStoreProdId())) {
@@ -640,7 +649,9 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 
 		ArrayList<Support> supportList = new ArrayList<Support>();
 		supportList.add(generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
-		supportList.add(generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getPlayDlStrmCd()));
+		if( !metaInfo.getTopMenuId().equals("DP13") && !metaInfo.getTopMenuId().equals("DP14")) {
+			supportList.add(generateSupport(DisplayConstants.DP_DL_STRM_NM, metaInfo.getPlayDlStrmCd()));
+		}
 		play.setSupportList(supportList);
 
 		// 이용기간단위
@@ -651,12 +662,19 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		metaInfo.setProdAmt(metaInfo.getPlayProdAmt());
 		metaInfo.setProdNetAmt(metaInfo.getPlayProdNetAmt());
 		play.setPrice(this.generatePrice(metaInfo));
-
-		Date date = new Date();
-		date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-		date.setText(metaInfo.getUsePeriodNm());
-		play.setDate(date);
-
+		
+		// 이북/코믹 공통메타에 이용기간(unit/usagePeriod) 추가
+		if( metaInfo.getTopMenuId().equals("DP13") || metaInfo.getTopMenuId().equals("DP14")) {
+			if(metaInfo.getPlayUsePeriod() != null) {
+				play.setDate(DisplayCommonUtil.makeDateUsagePeriod(metaInfo.getPlayUsePeriodUnitCd(), metaInfo.getPlayUsePeriod(), metaInfo.getPlayUsePeriodUnitCdNm()));
+			}
+		} else {
+			Date date = new Date();
+			date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
+			date.setText(metaInfo.getUsePeriodNm());
+			play.setDate(date);
+		}
+		
 		// 코믹일 경우 SQL 에서 PLAY_PROD_ID="play"로 리턴한다.
 		if (!DisplayConstants.DP_RIGHTS_PLAY.equals(metaInfo.getPlayProdId())) {
 			List<Identifier> identifierList = new ArrayList<Identifier>();
@@ -664,7 +682,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 					metaInfo.getPlayProdId()));
 			play.setIdentifierList(identifierList);
 		}
-
+		
 		return play;
 	}
 
