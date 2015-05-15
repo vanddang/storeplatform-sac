@@ -2553,12 +2553,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 				if (StringUtils.isEmpty(req.getUserKey())) {
 					throw new StorePlatformException("SAC_DSP_0026", "userKey", req.getUserKey());
 				}
-				if (!this.tingPaidYn(req.getUserKey(), req.getDeviceKey())) {
-					this.log.debug("----------------------------------------------------------------");
-					this.log.debug("팅 요금제을 사용하지 않음");
-					this.log.debug("----------------------------------------------------------------");
-					throw new StorePlatformException("SAC_DSP_0026");
-				}
+//				if (!this.tingPaidYn(req.getUserKey(), req.getDeviceKey())) {
+//					this.log.debug("----------------------------------------------------------------");
+//					this.log.debug("팅 요금제을 사용하지 않음");
+//					this.log.debug("----------------------------------------------------------------");
+//					throw new StorePlatformException("SAC_DSP_0026");
+//				}
 			}
 		}
 
@@ -3754,12 +3754,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 				throw new StorePlatformException("SAC_DSP_0026", "userKey", req.getUserKey());
 			}
 
-			if (!this.tingPaidYn(req.getUserKey(), req.getDeviceKey())) {
-				this.log.debug("----------------------------------------------------------------");
-				this.log.debug("팅 요금제을 사용하지 않음");
-				this.log.debug("----------------------------------------------------------------");
-				throw new StorePlatformException("SAC_DSP_0026");
-			}
+//			if (!this.tingPaidYn(req.getUserKey(), req.getDeviceKey())) {
+//				this.log.debug("----------------------------------------------------------------");
+//				this.log.debug("팅 요금제을 사용하지 않음");
+//				this.log.debug("----------------------------------------------------------------");
+//				throw new StorePlatformException("SAC_DSP_0026");
+//			}
 		}
 
 		if (StringUtils.isNotEmpty(req.getSpecialType())) {
