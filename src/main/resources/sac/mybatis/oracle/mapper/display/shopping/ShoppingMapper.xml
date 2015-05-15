@@ -3965,7 +3965,7 @@
                                                           )
                                                    ) as NO 
                                 ,N.SOLD_OUT_YN 
-                                ,N.SPRC_TYPE_CD
+                                ,N.SPRC_TYPE_CD as specialTypeCd
                                 ,CONCAT(PI.FILE_PATH,PI.FILE_NM) FILE_PATH 
                                 ,PI.FILE_NM
                                 ,PI.FILE_SIZE   
