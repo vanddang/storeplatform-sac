@@ -111,8 +111,13 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if (StringUtils.isEmpty(req.getProdId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "prodId", req.getProdId());
 		}
-		if (StringUtils.isEmpty(req.getPossLendClsfCd())) {
-			throw new StorePlatformException("SAC_DSP_0002", "possLendClsfCd", req.getPossLendClsfCd());
+		
+		if (!req.getCmpxProdClsfCd().equals("OR004305")){
+    		if (StringUtils.isEmpty(req.getPossLendClsfCd())) {
+    			throw new StorePlatformException("SAC_DSP_0002", "possLendClsfCd", req.getPossLendClsfCd());
+    		}
+		}else{
+			req.setPossLendClsfCd(null);
 		}
 	
 		if (StringUtils.isEmpty(req.getDeviceModelCd())) {
