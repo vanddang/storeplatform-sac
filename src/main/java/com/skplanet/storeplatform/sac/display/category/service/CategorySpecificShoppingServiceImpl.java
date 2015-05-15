@@ -148,6 +148,7 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 			if (StringUtils.isNotEmpty(req.getSpecialProdId())) {
 				product.setSpecialCouponId(retMetaInfo.getSpecialCouponId());
 				product.setSpecialProdYn(retMetaInfo.getSpecialSale());
+				product.setSpecialTypeCd(retMetaInfo.getSpecialTypeCd());
 			}
 			res.setProduct(product);
 			commonResponse.setTotalCount(1);
@@ -178,6 +179,11 @@ public class CategorySpecificShoppingServiceImpl implements CategorySpecificShop
 		// 단말 지원정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(header.getDeviceHeader()
 				.getModel());
+		if(supportDevice == null){
+			throw new StorePlatformException("SAC_DSP_0012", header.getDeviceHeader()
+					.getModel());
+		}
+		
 		if (!supportDevice.getSclShpgSprtYn().equals("Y")) {
 			this.log.debug("----------------------------------------------------------------");
 			this.log.debug("[shopping] supportDevice is empty!");
