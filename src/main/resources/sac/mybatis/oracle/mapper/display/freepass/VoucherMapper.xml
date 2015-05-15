@@ -181,6 +181,7 @@
             AND PD.PROD_ID = DC.PROD_ID
             AND PD.PROD_ID = TP.PROD_ID
             AND PD.PROD_ID = PR.PROD_ID
+            AND PD.SVC_GRP_CD = 'DP000207'
             AND PD.USE_POLICY_ID = UP.USE_POLICY_ID(+)
             AND DC.LANG_CD = #{langCd}
             AND TP.TENANT_ID = #{tenantId}
@@ -360,6 +361,7 @@
                     AND DC.LANG_CD = #{langCd}
                     AND TP.TENANT_ID = #{tenantId}
                     AND TP.TENANT_ID = PR.TENANT_ID
+                    AND PD.SVC_GRP_CD = 'DP000207'
                     AND SYSDATE BETWEEN PR.APPLY_START_DT AND PR.APPLY_END_DT
                     AND CM.SALE_POC_CD IN ('OR004501','OR004503') 
                      AND EXISTS (
