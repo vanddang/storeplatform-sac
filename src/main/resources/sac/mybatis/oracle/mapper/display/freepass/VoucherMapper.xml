@@ -123,7 +123,7 @@
             , PD.SELLER_MBR_NO
             , PD.SVC_GRP_CD
             , PD.SVC_TYPE_CD
-            , PD.PROD_GRD_CD
+            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN PD.PROD_GRD_CD ELSE '' END) AS PROD_GRD_CD
             , PD.CID
             , PD.MALL_CD
             , PD.FEE_CASE_CD
@@ -167,9 +167,9 @@
             , CM.BNS_USE_PERIOD_UNIT_CD
             , CM.BNS_USE_PERIOD             
             , DECODE(PD.PROD_ID, #{productId}, 'Y', 'N') AS REQUEST_PRODUCT
-            , CM.CMPX_PROD_GRP_CD 
-            , CM.SERIES_BOOK_CLSF_CD
-            , UP.POSS_LEND_CLSF_CD  
+            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.CMPX_PROD_GRP_CD ELSE '' END) AS CMPX_PROD_GRP_CD
+            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN CM.SERIES_BOOK_CLSF_CD ELSE '' END) AS SERIES_BOOK_CLSF_CD
+            , (CASE WHEN CM.FREE_PASS_CLSF_CD !='OR004305' THEN UP.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD               
         FROM 
             TB_DP_PROD PD
             <if test='cmpxProdGrpCd != null and cmpxProdGrpCd != ""'>
