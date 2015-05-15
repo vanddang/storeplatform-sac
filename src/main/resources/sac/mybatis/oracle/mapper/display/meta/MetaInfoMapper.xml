@@ -671,6 +671,7 @@
 		                   AND G.TENANT_ID = #{tenantHeader.tenantId} /* 테넌트ID */
 		        
 		               ) TB  
+		               WHERE TB.RN = 1 
 	         		) T      
 	         		LEFT OUTER JOIN (
 				      	SELECT 
@@ -711,7 +712,6 @@
 						ON T.PROD_ID = P.PROD_ID
 						AND T.CID = P.CID
 		   ) R					
-           WHERE R.RN = 1 
     </select>
     
     <select id="getWebtoonMetaInfo" parameterType="Map" resultType="MetaInfo">

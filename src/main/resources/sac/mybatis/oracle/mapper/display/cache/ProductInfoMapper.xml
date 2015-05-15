@@ -727,6 +727,7 @@
 		                , NVL(EUPOL.POSS_LEND_CLSF_CD, 'DP010601') DESC
 		                , EPROD.LAST_DEPLOY_DT DESC
 		        ) TB
+		      	WHERE ROWNUM = 1
 		      ) T
 		      LEFT OUTER JOIN (
 		      	SELECT 
@@ -767,7 +768,6 @@
 				ON T.PROD_ID = P.PROD_ID
 				AND T.CID = P.CID
 	    ) R  
-        WHERE ROWNUM = 1
     </select>
 
     <select id="getWebtoonMeta" parameterType="map" resultType="com.skplanet.storeplatform.sac.display.cache.vo.WebtoonMeta"><![CDATA[
