@@ -269,9 +269,9 @@ public class Product extends CommonInfo implements Serializable {
 	private String specialCouponId;
 	
 	/**
-	 * 특가상품 쿠폰 ID
+	 * 특가상품 타입 코드
 	 */
-	private String sprcTypeCd;
+	private String specialTypeCd;
 
 	/**
 	 * 부분 유료화 앱 여부
@@ -1200,17 +1200,17 @@ public class Product extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the sprcTypeCd
+	 * @return the specialTypeCd
 	 */
-	public String getSprcTypeCd() {
-		return sprcTypeCd;
+	public String getSpecialTypeCd() {
+		return specialTypeCd;
 	}
 
 	/**
-	 * @param sprcTypeCd the sprcTypeCd to set
+	 * @param specialTypeCd the specialTypeCd to set
 	 */
-	public void setSprcTypeCd(String sprcTypeCd) {
-		this.sprcTypeCd = sprcTypeCd;
+	public void setSpecialTypeCd(String specialTypeCd) {
+		this.specialTypeCd = specialTypeCd;
 	}
 
 	/**
