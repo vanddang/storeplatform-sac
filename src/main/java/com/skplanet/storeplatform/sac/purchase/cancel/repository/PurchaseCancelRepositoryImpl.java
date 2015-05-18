@@ -9,6 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.skplanet.storeplatform.external.client.arm.sci.ArmSCI;
 import com.skplanet.storeplatform.external.client.arm.vo.RemoveLicenseEcReq;
 import com.skplanet.storeplatform.external.client.arm.vo.RemoveLicenseEcRes;
@@ -23,30 +31,57 @@ import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcRes;
 import com.skplanet.storeplatform.external.client.payplanet.vo.CancelEcResPaymethod;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStoreCashSCI;
 import com.skplanet.storeplatform.external.client.tstore.sci.TStorePaymentSCI;
-import com.skplanet.storeplatform.external.client.tstore.vo.*;
+import com.skplanet.storeplatform.external.client.tstore.vo.Pay;
+import com.skplanet.storeplatform.external.client.tstore.vo.PayCancelResult;
+import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancel;
+import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.PaymentCancelResult;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelDetailEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashChargeCancelEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashRefundEcRes;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSaveCancelEcReq;
+import com.skplanet.storeplatform.external.client.tstore.vo.TStoreCashSaveCancelEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.cancel.sci.PurchaseCancelSCI;
-import com.skplanet.storeplatform.purchase.client.cancel.vo.*;
-import com.skplanet.storeplatform.purchase.client.common.vo.*;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.AutoPaymentScReq;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.AutoPaymentScRes;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelPaymentDetailScReq;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScReq;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseCancelScRes;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScReq;
+import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseScRes;
+import com.skplanet.storeplatform.purchase.client.common.vo.MembershipReserve;
+import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
+import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.membership.sci.MembershipReserveSCI;
 import com.skplanet.storeplatform.purchase.client.product.count.sci.PurchaseCountSCI;
 import com.skplanet.storeplatform.purchase.client.product.count.vo.InsertPurchaseProductCountScReq;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.sac.client.internal.member.user.sci.SearchUserSCI;
-import com.skplanet.storeplatform.sac.client.internal.member.user.vo.*;
-import com.skplanet.storeplatform.sac.purchase.cancel.vo.*;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchOrderUserByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSac;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacReq;
+import com.skplanet.storeplatform.sac.client.internal.member.user.vo.SearchUserDeviceSacRes;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PaymentSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsDtlSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PrchsSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelDetailSacParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelSacParam;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseErrorInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.PaymethodUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 구매 취소 repository implements.
@@ -97,6 +132,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		// 인입 된 사람의 정보 넣어준다.
 		purchaseScReq.setTenantId(purchaseCancelSacParam.getTenantId());
 		purchaseScReq.setSystemId(purchaseCancelSacParam.getSystemId());
+
+		// 2015.05.08 userKey 추가
+		purchaseScReq.setUserKey(purchaseCancelSacParam.getUserKey());
 
 		// 취소 할 구매ID를 넣어준다.
 		purchaseScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
@@ -472,9 +510,9 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 
 				// 구매 상품 건수 업데이트 시 특가상품 여부 확인.
 				if (StringUtils.equals(PurchaseConstants.PAYMENT_METHOD_COUPON, paymentSacParam.getPaymentMtdCd())
-						&& ( StringUtils.equals(PurchaseConstants.COUPON_TYPE_SHOPPING_SPECIAL_COUPON,
-						paymentSacParam.getCpnType()) || StringUtils.equals(PurchaseConstants.COUPON_TYPE_SPECIAL_PRICE_PRODUCT,
-						paymentSacParam.getCpnType()) ) ) {
+						&& (StringUtils.equals(PurchaseConstants.COUPON_TYPE_SHOPPING_SPECIAL_COUPON,
+								paymentSacParam.getCpnType()) || StringUtils.equals(
+								PurchaseConstants.COUPON_TYPE_SPECIAL_PRICE_PRODUCT, paymentSacParam.getCpnType()))) {
 					specialSaleYn = true;
 				}
 
@@ -610,6 +648,10 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 		// 인입 된 사람의 정보를 넣어준다.
 		purchaseCancelScReq.setTenantId(purchaseCancelSacParam.getTenantId());
 		purchaseCancelScReq.setSystemId(purchaseCancelSacParam.getSystemId());
+
+		// 2015.05.08 userKey추가
+		purchaseCancelScReq.setUserKey(purchaseCancelSacParam.getUserKey());
+
 		// 구매 취소 정보를 넣어준다.
 		purchaseCancelScReq.setReqUserId(purchaseCancelSacParam.getSystemId());
 		purchaseCancelScReq.setPrchsId(purchaseCancelDetailSacParam.getPrchsId());
@@ -1011,7 +1053,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	 * <pre>
 	 * 특가쿠폰 사용 여부.
 	 * </pre>
-	 *
+	 * 
 	 * @param tenantId
 	 *            테넌트 ID
 	 * @param prchsId
