@@ -631,13 +631,16 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 				store.setDate(DisplayCommonUtil.makeDateUsagePeriod(metaInfo.getStoreUsePeriodUnitCd(), metaInfo.getStoreUsePeriod(), metaInfo.getStoreUsePeriodUnitCdNm()));
 			}
 		} 
-
-		// 코믹일 경우 SQL 에서 PLAY_PROD_ID="play"로 리턴한다.
-		if (!DisplayConstants.DP_RIGHTS_STORE.equals(metaInfo.getStoreProdId())) {
-			List<Identifier> identifierList = new ArrayList<Identifier>();
-			identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-					metaInfo.getStoreProdId()));
-			store.setIdentifierList(identifierList);
+		
+		// 이북/코믹 공통메타에 이용기간 추가하면서 identifierList 값은 내려주지 않는다
+		if( !metaInfo.getTopMenuId().equals("DP13") && !metaInfo.getTopMenuId().equals("DP14")) {
+			// 코믹일 경우 SQL 에서 PLAY_PROD_ID="play"로 리턴한다.
+			if (!DisplayConstants.DP_RIGHTS_STORE.equals(metaInfo.getStoreProdId())) {
+				List<Identifier> identifierList = new ArrayList<Identifier>();
+				identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+						metaInfo.getStoreProdId()));
+				store.setIdentifierList(identifierList);
+			}
 		}
 
 		return store;
@@ -675,14 +678,17 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			play.setDate(date);
 		}
 		
-		// 코믹일 경우 SQL 에서 PLAY_PROD_ID="play"로 리턴한다.
-		if (!DisplayConstants.DP_RIGHTS_PLAY.equals(metaInfo.getPlayProdId())) {
-			List<Identifier> identifierList = new ArrayList<Identifier>();
-			identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
-					metaInfo.getPlayProdId()));
-			play.setIdentifierList(identifierList);
+		// 이북/코믹 공통메타에 이용기간 추가하면서 identifierList 값은 내려주지 않는다
+		if( !metaInfo.getTopMenuId().equals("DP13") && !metaInfo.getTopMenuId().equals("DP14")) {
+			// 코믹일 경우 SQL 에서 PLAY_PROD_ID="play"로 리턴한다.
+			if (!DisplayConstants.DP_RIGHTS_PLAY.equals(metaInfo.getPlayProdId())) {
+				List<Identifier> identifierList = new ArrayList<Identifier>();
+				identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+						metaInfo.getPlayProdId()));
+				play.setIdentifierList(identifierList);
+			}
 		}
-		
+
 		return play;
 	}
 
