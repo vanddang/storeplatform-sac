@@ -9,12 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.card.controller;
 
-import com.skplanet.storeplatform.sac.client.display.vo.card.CardListInPanelReq;
-import com.skplanet.storeplatform.sac.client.product.vo.Panel;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.card.service.CardListService;
-import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
-import com.skplanet.storeplatform.sac.display.cache.vo.SegmentInfo;
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
+import com.skplanet.storeplatform.sac.client.display.vo.card.CardListInPanelReq;
+import com.skplanet.storeplatform.sac.client.product.vo.Panel;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.cache.vo.SegmentInfo;
+import com.skplanet.storeplatform.sac.display.card.service.CardListService;
+import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
 
 /**
  * <p>
@@ -40,11 +41,12 @@ public class CardListController {
     @RequestMapping(value = "/display/card/listInPanel/v1", method = RequestMethod.POST)
     @ResponseBody
     public Panel listInPanel(@RequestBody @Valid CardListInPanelReq req, SacRequestHeader header) {
-        String tenantId = header.getTenantHeader().getTenantId();
-        String langCd = header.getTenantHeader().getLangCd();
+
+    	String      tenantId    = header.getTenantHeader().getTenantId();
+        String      langCd      = header.getTenantHeader().getLangCd();
         SegmentInfo segmentInfo = new SegmentInfo(req.getSegment());
 
-        return cardListService.listInPanel(tenantId, langCd, req.getPanelId(), req.getUserKey(), segmentInfo,
+        return cardListService.listInPanel(tenantId, langCd, req.getPanelId(), req.getUseGrdCd(), req.getUserKey(), segmentInfo,
                 new PreferredCategoryInfo(req.getPreferredCategoryList()), BooleanUtils.toBoolean(req.getDisableCardLimit()));
     }
 }

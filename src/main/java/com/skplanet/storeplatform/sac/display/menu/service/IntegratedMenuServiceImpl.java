@@ -9,15 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.display.menu.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.MenuDetail;
 import com.skplanet.storeplatform.sac.display.cache.service.PanelCardInfoManager;
 import com.skplanet.storeplatform.sac.display.cache.vo.MenuListCat;
 import com.skplanet.storeplatform.sac.display.menu.vo.IntegratedMenuList;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * <p>
@@ -36,14 +38,14 @@ public class IntegratedMenuServiceImpl implements IntegratedMenuService {
     private PanelCardInfoManager panelCardInfoManager;
 
     @Override
-    @SuppressWarnings("unchecked")
-    public IntegratedMenuList getIntegratedMenuList(String tenantId, String systemId, String langCd, String upMenuKey) {
+    public IntegratedMenuList getIntegratedMenuList(String tenantId, String systemId, String langCd, String upMenuKey, String useGrdCd ) {
 
         List<MenuListCat> listCatList = panelCardInfoManager.getMenuList(tenantId, systemId, langCd,
-                                                    StringUtils.isNotEmpty(upMenuKey) ? upMenuKey : MENU_KEY_ROOT);
+                                                    StringUtils.isNotEmpty(upMenuKey) ? upMenuKey : MENU_KEY_ROOT, useGrdCd );
 
         List<MenuDetail> featuredMenuList = new ArrayList<MenuDetail>();
         List<MenuDetail> categoryMenuList = new ArrayList<MenuDetail>();
+
         for (MenuListCat mc : listCatList) {
             MenuDetail md = new MenuDetail();
             md.setTenantId(mc.getTenantId());

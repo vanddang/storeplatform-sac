@@ -9,10 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.display.cache.vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.display.vo.card.SegmentReq;
-
-import java.util.List;
 
 /**
  * <p>
@@ -39,20 +40,26 @@ public class SegmentInfo extends CommonInfo {
 
     private List<String> categoryBest;
 
+    private String testMdnYn = "N";
+    private String tingYn    = "N";
+
     public SegmentInfo() {}
 
     public SegmentInfo(SegmentReq req) {
-        if(req == null)
-            return;
+
+    	if(req == null) return;
 
         this.outsdMbrGrdCd = req.getOutsdMbrGrdCd();
-        this.insdMbrGrdCd = req.getInsdMbrGrdCd();
-        this.sex = req.getSex();
-        this.ageClsfCd = req.getAgeClsfCd();
-        this.deviceChgYn = req.getDeviceChgYn();
-        this.newEntryYn = req.getNewEntryYn();
-        this.mnoClsfCd = req.getMnoClsfCd();
-        this.categoryBest = req.getCategoryBest();
+        this.insdMbrGrdCd  = req.getInsdMbrGrdCd();
+        this.sex           = req.getSex();
+        this.ageClsfCd     = req.getAgeClsfCd();
+        this.deviceChgYn   = req.getDeviceChgYn();
+        this.newEntryYn    = req.getNewEntryYn();
+        this.mnoClsfCd     = req.getMnoClsfCd();
+        this.categoryBest  = req.getCategoryBest();
+        this.testMdnYn     = req.getTestMdnYn();
+        this.tingYn        = req.getTingYn();
+
     }
 
     public String getOutsdMbrGrdCd() {
@@ -112,10 +119,19 @@ public class SegmentInfo extends CommonInfo {
     }
 
     public List<String> getCategoryBest() {
-        return categoryBest;
+        return categoryBest == null ? new ArrayList<String>() : categoryBest;
     }
 
     public void setCategoryBest(List<String> categoryBest) {
         this.categoryBest = categoryBest;
     }
+
+	public String getTestMdnYn() {
+	    return testMdnYn;
+    }
+
+	public String getTingYn() {
+	    return tingYn;
+    }
+
 }

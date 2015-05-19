@@ -17,19 +17,19 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * Class 설명
- * 
+ * Card가 호출할 API 파라미터 정보를 담고 있는 Injection Variable
+ *
  * Updated on : 2014. 10. 10.
  * Updated by : 양해엽, SK Planet
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class InjtVar extends CommonInfo {
-	
+
 	private static final long serialVersionUID = 4909559332367647311L;
-	
+
 	private Map<String, String> value;
 	private Map<String, String> desc;
-	
+
 	/**
 	 * @return the value
 	 */
@@ -54,9 +54,9 @@ public class InjtVar extends CommonInfo {
 	public void setDesc(Map<String, String> desc) {
 		this.desc = desc;
 	}
-	
-	
-	
-	
+
+
+
+
 
 }

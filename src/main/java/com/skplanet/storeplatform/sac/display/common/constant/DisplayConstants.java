@@ -820,18 +820,19 @@ public class DisplayConstants {
 	 */
 	public static final String EXINFO_S2S_INFO = "DP011701";
 
-    /**
-     * 카드 세그먼트 유형 - 모두
-     */
-    public static final String SGMT_TP_ALL = "DP01200001";
-    /**
-     * 카드 세그먼트 유형 - 세그먼트
-     */
-    public static final String SGMT_TP_SEGMENT = "DP01200002";
-    /**
-     * 카드 세그먼트 유형 - 개인화
-     */
-    public static final String SGMT_TP_PERSONAL = "DP01200003";
+    /** 카드 세그먼트 유형 - 모두 */
+    public static final String CARD_SGMT_TP_ALL = "DP01200001";
+    /** 카드 세그먼트 유형 - 세그먼트 */
+    public static final String CARD_SGMT_TP_SEGMENT = "DP01200002";
+    /** 카드 세그먼트 유형 - 개인화 */
+    public static final String CARD_SGMT_TP_PERSONAL = "DP01200003";
+
+    /** 카드 세그먼트 NA */
+    public static final String CARD_SGMT_NA = "NA";
+
+
+    /** TING 카드 */
+    public static final String CARD_TYPE_TING = "CD05000010";
 
     public static final String META_MUSIC_USE_CONTENT_TP = "useContentType";
 

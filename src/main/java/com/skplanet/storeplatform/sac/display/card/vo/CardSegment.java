@@ -62,7 +62,7 @@ public class CardSegment extends CommonInfo {
     }
 
     public String getDeviceChgYn() {
-        return deviceChgYn;
+        return deviceChgYn == null ? "NA" : deviceChgYn;
     }
 
     public void setDeviceChgYn(String deviceChgYn) {
@@ -70,7 +70,7 @@ public class CardSegment extends CommonInfo {
     }
 
     public String getNewEntryYn() {
-        return newEntryYn;
+        return newEntryYn == null ? "NA" : newEntryYn;
     }
 
     public void setNewEntryYn(String newEntryYn) {

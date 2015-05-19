@@ -10,7 +10,10 @@
 package com.skplanet.storeplatform.sac.display.card.service;
 
 import static com.skplanet.storeplatform.sac.display.common.DisplayJsonUtils.parseToSet;
-import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.SGMT_TP_SEGMENT;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.CARD_SGMT_NA;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.CARD_SGMT_TP_ALL;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.CARD_SGMT_TP_SEGMENT;
+import static com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants.CARD_TYPE_TING;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,8 +28,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.product.vo.Card;
 import com.skplanet.storeplatform.sac.client.product.vo.Panel;
 import com.skplanet.storeplatform.sac.display.cache.service.PanelCardInfoManager;
@@ -36,8 +39,8 @@ import com.skplanet.storeplatform.sac.display.cache.vo.PanelItem;
 import com.skplanet.storeplatform.sac.display.cache.vo.SegmentInfo;
 import com.skplanet.storeplatform.sac.display.card.util.CardDynamicInfoProcessor;
 import com.skplanet.storeplatform.sac.display.card.vo.CardDetail;
-import com.skplanet.storeplatform.sac.display.card.vo.CardListGeneratorContext;
 import com.skplanet.storeplatform.sac.display.card.vo.CardSegment;
+import com.skplanet.storeplatform.sac.display.card.vo.PanelContextParam;
 import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
 
 /**
@@ -55,7 +58,7 @@ public class CardListServiceImpl implements CardListService {
     private CardDetailService cardDetailService;
 
     @Autowired
-    private PanelCardInfoManager panelCardInfoManager;
+    private PanelCardInfoManager cacheManager;
 
     private static final int PN_LEVEL_LV2 = 2;
     private static final int PN_LEVEL_LV3 = 3;
@@ -63,35 +66,34 @@ public class CardListServiceImpl implements CardListService {
     private static final int CARD_LIMIT_MAX = 50;
 
     @Override
-    public Panel listInPanel(final String tenantId, final String langCd, final String panelId, final String userKey, final SegmentInfo sgmtKey,
+    public Panel listInPanel( String tenantId, String langCd, String panelId, String useGrdCd, String userKey, SegmentInfo sgmtKey,
                              PreferredCategoryInfo preferredCategoryInfo, boolean disableCardLimit) {
 
-        CardListGeneratorContext ctx = new CardListGeneratorContext(tenantId, langCd, panelId, userKey, sgmtKey, preferredCategoryInfo, disableCardLimit);
+        PanelContextParam panelContextParam = new PanelContextParam( tenantId, langCd, panelId, useGrdCd, userKey, sgmtKey, preferredCategoryInfo, disableCardLimit );
 
-        List<PanelItem> panelItems = panelCardInfoManager.getPanelList(ctx.getTenantId(), panelId);
+        List<PanelItem> panelItems = cacheManager.getPanelList( tenantId, panelId );
 
-        if(CollectionUtils.isEmpty(panelItems))
-            throw new StorePlatformException("SAC_DSP_0009");
+        if( CollectionUtils.isEmpty(panelItems) ) throw new StorePlatformException("SAC_DSP_0009");
 
         Panel rootPn = new Panel();
         rootPn.setSubGroup(new ArrayList<Panel>());
         rootPn.setCardList(new ArrayList<Card>());
 
-        CardDynamicInfoProcessor processor = new CardDynamicInfoProcessor(tenantId, cardDetailService);
+        CardDynamicInfoProcessor processor = new CardDynamicInfoProcessor( tenantId, cardDetailService );
 
         for (PanelItem panelItem : panelItems) {
-            if(panelItem.getPanelLevel() == PN_LEVEL_LV2) {
-                ctx.setCurPanelLevel(PN_LEVEL_LV2);
+        	if(panelItem.getPanelLevel() == PN_LEVEL_LV2) {
+                panelContextParam.setCurrentPanelLevel(PN_LEVEL_LV2);
                 mapPanel(rootPn, panelItem);
-                attachCardList(ctx, rootPn, panelItem.getPanelId(), processor);
-            }
-            else if (panelItem.getPanelLevel() == PN_LEVEL_LV3) {
-                ctx.setCurPanelLevel(PN_LEVEL_LV3);
+                attachCardList(panelContextParam, rootPn, panelItem.getPanelId(), processor);
+
+        	} else if (panelItem.getPanelLevel() == PN_LEVEL_LV3) {
+                panelContextParam.setCurrentPanelLevel(PN_LEVEL_LV3);
                 Panel subPn = new Panel();
                 subPn.setCardList(new ArrayList<Card>());
 
                 mapPanel(subPn, panelItem);
-                attachCardList(ctx, subPn, panelItem.getPanelId(), processor);
+                attachCardList(panelContextParam, subPn, panelItem.getPanelId(), processor);
 
                 rootPn.getSubGroup().add(subPn);
             }
@@ -104,19 +106,20 @@ public class CardListServiceImpl implements CardListService {
 
     /**
      * 패널에 카드목록을 붙인다.
-     * @param ctx
+     * @param contextParam
      * @param parentPanel
      * @param panelId
      * @param processor
      */
-    private void attachCardList(CardListGeneratorContext ctx, Panel parentPanel, String panelId, CardDynamicInfoProcessor processor) {
-        List<PanelCardMapping> cardList = getPanelCardMaping(ctx, panelId);
-        if(CollectionUtils.isEmpty(cardList))
-            return;
+    private void attachCardList( PanelContextParam contextParam, Panel parentPanel, String panelId, CardDynamicInfoProcessor processor ) {
 
-        int maxCardCnt = ctx.isDisableCardLimit() ? CARD_LIMIT_MAX :
-                            (parentPanel.getMaxDpCardCnt() != null ? parentPanel.getMaxDpCardCnt() : CARD_LIMIT_MAX), // 최대 표시 카드 수량
-            cardCnt = 0;    // 노출중인 카드 수량
+    	List<PanelCardMapping> cardList = getPanelCardMaping(contextParam, panelId);
+
+    	if( CollectionUtils.isEmpty(cardList) ) return;
+
+        int maxCardCnt = contextParam.isDisableCardLimit() ? CARD_LIMIT_MAX :
+                            (parentPanel.getMaxDpCardCnt() != null ? parentPanel.getMaxDpCardCnt() : CARD_LIMIT_MAX ); // 최대 표시 카드 수량
+        int cardCnt    = 0;    // 노출중인 카드 수량
 
         Date stdDt = new Date();
 
@@ -130,49 +133,66 @@ public class CardListServiceImpl implements CardListService {
          * else
          *   moreYn := "N"
          */
-        if(!ctx.isDisableCardLimit()) {
+        if( ! contextParam.isDisableCardLimit() ) {
             ++maxCardCnt;
         }
 
-        for (PanelCardMapping panCard : cardList) {
-            if(cardCnt >= maxCardCnt)
-                break;
+        for( PanelCardMapping panelCard : cardList ) {
 
-            if(!panCard.isVisibleForDate(stdDt))
-                continue;
+        	if( cardCnt >= maxCardCnt ) break;
 
-            CardInfo cardInfo = panelCardInfoManager.getCardInfo(ctx.getTenantId(), panCard.getCardId());
-            if (cardInfo == null)
-                continue;
+            if( ! panelCard.isVisibleForDate(stdDt) ) continue;
+
+            CardInfo cardInfo = cacheManager.getCardInfo(contextParam.getTenantId(), panelCard.getCardId());
+
+            if( isProvisioned(cardInfo, contextParam) ) continue;
 
             CardDetail cardDetail = new CardDetail();
             BeanUtils.copyProperties(cardInfo, cardDetail);
 
-            // NOTICE 플러그인 형태로 구현 가능하지 않을까?
-            // Segment 프로비저닝 적용
-            if (cardDetail.getSegmTypeCd().equals(SGMT_TP_SEGMENT)) {
-                if(!this.isPassSegmentProvision(ctx.getTenantId(), cardDetail.getCardId(), ctx.getSegmentInfo()))
-                    continue;
-            }
+            Card card = cardDetailService.makeCard( cardDetail, contextParam.getPreferredCategory(), contextParam.getLangCd() );
 
-            Card card = cardDetailService.makeCard(cardDetail, ctx.getPreferredCategoryInfo(), ctx.getLangCd());
-            if (card == null)
-                continue;
+            if (card == null) continue;
 
             processor.addCard(card);
 
             parentPanel.getCardList().add(card);
+
             ++cardCnt;
+
         }
 
-        if(!ctx.isDisableCardLimit()) {
+        if( ! contextParam.isDisableCardLimit() ) {
             if(cardCnt == maxCardCnt) {
                 parentPanel.setMoreYn("Y");
                 parentPanel.getCardList().remove(cardCnt - 1);
+            } else {
+            	parentPanel.setMoreYn("N");
             }
-            else
-                parentPanel.setMoreYn("N");
         }
+    }
+
+    private boolean isProvisioned( CardInfo cardInfo, PanelContextParam param ) {
+
+        if( cardInfo == null ) return true;
+
+        // 이용자 정보가 없을 경우, 세그먼트 타입이 '전체'가 아닐 경우 filtering
+        if( StringUtil.isEmpty(param.getUserKey()) &&  ! CARD_SGMT_TP_ALL.equals(cardInfo.getSegmTypeCd()) ) return true;
+
+        // 카드 이용등급 제어 (입력등급보다 낮을 경우 filtering)
+        if( cardInfo.getCardUseGrdCd().compareToIgnoreCase(param.getUseGrdCd()) > 0 ) return true;
+
+        // 팅카드 제어
+        if( CARD_TYPE_TING.equals(cardInfo.getCardTypeCd()) && ! "Y".equalsIgnoreCase(param.getSegmentInfo().getTingYn()) ) return true;
+
+        // TEST MDN 제어
+        if( "Y".equalsIgnoreCase(cardInfo.getTestMdnYn()) && ! "Y".equalsIgnoreCase(param.getSegmentInfo().getTestMdnYn()) ) return true;
+
+        // Segment 제어
+        if( CARD_SGMT_TP_SEGMENT.equals(cardInfo.getSegmTypeCd()) && isSegmentProvisioned( param.getTenantId(), cardInfo.getCardId(), param.getSegmentInfo()) ) return true;
+
+        return false;
+
     }
 
     /**
@@ -183,8 +203,8 @@ public class CardListServiceImpl implements CardListService {
      * @param panelId
      * @return
      */
-    private List<PanelCardMapping> getPanelCardMaping(CardListGeneratorContext ctx, String panelId) {
-        return panelCardInfoManager.getCardListInPanel(ctx.getTenantId(), panelId);
+    private List<PanelCardMapping> getPanelCardMaping(PanelContextParam ctx, String panelId) {
+        return cacheManager.getCardListInPanel(ctx.getTenantId(), panelId);
     }
 
     private void mapPanel(Panel pn, PanelItem panelItem) {
@@ -194,12 +214,14 @@ public class CardListServiceImpl implements CardListService {
         pn.setName(panelItem.getPanelDesc());
     }
 
-    @SuppressWarnings("unchecked")
-    private boolean isPassSegmentProvision(String tenantId, String cardId, SegmentInfo segmentInfo) {
-        CardSegment cardSegment = panelCardInfoManager.getCardSegmentInfo(tenantId, cardId);
-        if(cardSegment == null) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private boolean isSegmentProvisioned( String tenantId, String cardId, SegmentInfo segmentInfo ) {
+
+    	CardSegment cardSegment = cacheManager.getCardSegmentInfo( tenantId, cardId );
+
+    	if( cardSegment == null ) {
             logger.error("tenant#{}, #card{}에 해당하는 세그먼트 정보가 존재하지 않습니다.", tenantId, cardId);
-            return false;
+            return true;
         }
 
         Set<String> sgmtMbrLvl = new HashSet<String>(2);
@@ -207,22 +229,27 @@ public class CardListServiceImpl implements CardListService {
         sgmtMbrLvl.add(segmentInfo.getOutsdMbrGrdCd());
 
         Set outsdMbrLevel = parseToSet(cardSegment.getOutsdMbrLevelCd());
-        Set insdMbrLevel = parseToSet(cardSegment.getInsdMbrLevelCd());
+        Set insdMbrLevel  = parseToSet(cardSegment.getInsdMbrLevelCd());
         Set<String> cardMbrLvl = new HashSet<String>(outsdMbrLevel.size() + insdMbrLevel.size());
         cardMbrLvl.addAll(outsdMbrLevel);
         cardMbrLvl.addAll(insdMbrLevel);
 
-        Set ageClsf = parseToSet(cardSegment.getAgeClsfCd());
-        Set categoryBest = parseToSet(cardSegment.getCategoryBest());
-        Set mnoCd = parseToSet(cardSegment.getMnoCd());
-        Set sex = parseToSet(cardSegment.getSex());
+        Set cardAgeClsf      = parseToSet(cardSegment.getAgeClsfCd());
+        Set cardCategoryBest = parseToSet(cardSegment.getCategoryBest());
+        Set cardMnoCd        = parseToSet(cardSegment.getMnoCd());
+        Set cardSex          = parseToSet(cardSegment.getSex());
 
-        return CollectionUtils.containsAny(cardMbrLvl, sgmtMbrLvl) &&
-                ageClsf.contains(segmentInfo.getAgeClsfCd()) &&
-                segmentInfo.getCategoryBest() != null && CollectionUtils.containsAny(categoryBest, segmentInfo.getCategoryBest()) &&
-                mnoCd.contains(segmentInfo.getMnoClsfCd()) &&
-                sex.contains(segmentInfo.getSex()) &&
-                (cardSegment.getDeviceChgYn() == null || StringUtils.equals(segmentInfo.getDeviceChgYn(), cardSegment.getDeviceChgYn())) &&
-                (cardSegment.getNewEntryYn() == null || StringUtils.equals(segmentInfo.getNewEntryYn(), cardSegment.getNewEntryYn()));
+
+        if( ! cardMbrLvl.contains(CARD_SGMT_NA)       && ! CollectionUtils.containsAny(cardMbrLvl, sgmtMbrLvl)                          ) return true;
+        if( ! cardAgeClsf.contains(CARD_SGMT_NA)      && ! cardAgeClsf.contains(segmentInfo.getAgeClsfCd())                             ) return true;
+        if( ! cardCategoryBest.contains(CARD_SGMT_NA) && ! CollectionUtils.containsAny(cardCategoryBest, segmentInfo.getCategoryBest()) ) return true;
+        if( ! cardMnoCd.contains(CARD_SGMT_NA)        && ! cardMnoCd.contains(segmentInfo.getMnoClsfCd())                               ) return true;
+        if( ! cardSex.contains(CARD_SGMT_NA)          && ! cardSex.contains(segmentInfo.getSex())                                       ) return true;
+
+        if( ! cardSegment.getDeviceChgYn().equals(CARD_SGMT_NA) && ! cardSegment.getDeviceChgYn().equals(segmentInfo.getDeviceChgYn())  ) return true;
+        if( ! cardSegment.getNewEntryYn().equals(CARD_SGMT_NA)  && ! cardSegment.getNewEntryYn().equals(segmentInfo.getNewEntryYn())    ) return true;
+
+        return true;
+
     }
 }

@@ -68,7 +68,7 @@ public class CardDetailServiceImpl implements CardDetailService {
 	private CommonMetaInfoGenerator commonGenerator;
 
     @Autowired
-    private PanelCardInfoManager panelCardInfoManager;
+    private PanelCardInfoManager cachedCardInfoManager;
 
     @Autowired
     private MenuInfoService menuInfoService;
@@ -80,17 +80,25 @@ public class CardDetailServiceImpl implements CardDetailService {
 
 
 	@Override
-	public CardDetail searchCardDetail(final CardDetailParam cardDetailParam) {
+	public CardDetail searchCardDetail( final CardDetailParam parameter ) {
 
-		CardInfo cardInfo = panelCardInfoManager.getCardInfo(cardDetailParam.getTenantId(), cardDetailParam.getCardId());
+		CardInfo cardInfo = cachedCardInfoManager.getCardInfo( parameter.getTenantId(), parameter.getCardId() );
 
 		if (cardInfo == null) return null;
 
+		return mergeRealtimeInfo( cardInfo, parameter );
+
+	}
+
+	private CardDetail mergeRealtimeInfo( CardInfo cardInfo, final CardDetailParam cardDetailParam ) {
+
 		CardDetail cardDetail = new CardDetail();
+
 		BeanUtils.copyProperties(cardInfo, cardDetail);
 
 		List<CardDynamicInfo> dynamicInfoList = getCardDynamicInfo(cardDetailParam.getTenantId(), cardDetailParam.getUserKey(), Arrays.asList(cardDetailParam.getCardId()));
-        if (dynamicInfoList.size() > 0) {
+
+		if (dynamicInfoList.size() > 0) {
             CardDynamicInfo dynamicInfo = dynamicInfoList.get(0);
             cardDetail.setLikeYn(dynamicInfo.getLikeYn());
             cardDetail.setCntShar(dynamicInfo.getCntShar());
@@ -98,6 +106,7 @@ public class CardDetailServiceImpl implements CardDetailService {
         }
 
         return cardDetail;
+
 	}
 
     @Override
@@ -175,11 +184,12 @@ public class CardDetailServiceImpl implements CardDetailService {
 	@Override
 	public Card makeCard(final CardDetail cardDetail, final PreferredCategoryInfo preferredCategoryInfo, final String langCd) {
 
-		if (cardDetail == null) return null;
+		if ( cardDetail == null ) return null;
 
 		Card card = makeCard(cardDetail);
 
 		card.setTitleParam(new HashMap<String, String>());
+
 		if (isPersonalCard(card)) {
 			String prefMenuId = getPrefMenuIdInFCxCard(card, preferredCategoryInfo);
 			if (prefMenuId == null) {

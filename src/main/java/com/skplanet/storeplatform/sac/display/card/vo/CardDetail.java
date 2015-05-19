@@ -47,7 +47,7 @@ public class CardDetail extends CommonInfo {
 	private String expoYnInPanel;
 	private String likeYn = "N";
 	private String shareUrl;
-
+	private String lndPinAuthYn;
 	/**
 	 * CARD_ETC_ATTR
 	 */
@@ -488,4 +488,13 @@ public class CardDetail extends CommonInfo {
 	public void setCntShar(Integer cntShar) {
 		this.cntShar = cntShar;
 	}
+
+	public String getLndPinAuthYn() {
+	    return lndPinAuthYn;
+    }
+
+	public void setLndPinAuthYn( String lndPinAuthYn ) {
+	    this.lndPinAuthYn = lndPinAuthYn;
+    }
+
 }

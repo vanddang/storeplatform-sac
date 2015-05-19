@@ -62,11 +62,12 @@
             KEY_TYPE
         FROM TB_DP_MENU_LIST_CATEGORY
         WHERE 1=1
-            AND TENANT_ID = #{tenantId, jdbcType=VARCHAR}
-            AND SYSTEM_ID = #{systemId, jdbcType=VARCHAR}
+            AND TENANT_ID   = #{tenantId,  jdbcType=VARCHAR}
+            AND SYSTEM_ID   = #{systemId,  jdbcType=VARCHAR}
             AND UP_MENU_KEY = #{upMenuKey, jdbcType=VARCHAR}
             AND EXPO_YN = 'Y'
             AND KEY_TYPE IN ('DP01230001','DP01230002')
+            AND USE_GRD_CD  <![CDATA[<=]]> #{useGrdCd}
         ORDER BY KEY_TYPE, EXPO_ORD
     </select>
 

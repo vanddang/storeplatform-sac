@@ -59,11 +59,12 @@ public interface PanelCardInfoManager {
 
     /**
      * 통합 메뉴 리스트 조회
-     * @param tenantId
-     * @param systemId
-     * @param langCd
-     * @param upMenuKey
+     * @param tenantId   테넌트ID
+     * @param systemId   시스템ID
+     * @param langCd     언어코드
+     * @param upMenuKey  추출하고자 하는 상위 menuKey
+     * @param useGrdCd   이용등급
      * @return
      */
-    List<MenuListCat> getMenuList(String tenantId, String systemId, String langCd, String upMenuKey);
+    List<MenuListCat> getMenuList(String tenantId, String systemId, String langCd, String upMenuKey, String useGrdCd);
 }

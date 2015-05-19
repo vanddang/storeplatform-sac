@@ -21,11 +21,12 @@ public interface IntegratedMenuService {
 
     /**
      * 주어진 조건에 대한 메뉴 목록을 조회한다.
-     * @param tenantId Required
-     * @param systemId Required
-     * @param langCd Required
+     * @param tenantId  Required
+     * @param systemId  Required
+     * @param langCd    Required
      * @param upMenuKey Optional
+     * @param useGrdCd  Optional 이용등급
      * @return 메뉴 목록
      */
-    IntegratedMenuList getIntegratedMenuList(String tenantId, String systemId, String langCd, String upMenuKey);
+    IntegratedMenuList getIntegratedMenuList(String tenantId, String systemId, String langCd, String upMenuKey, String useGrdCd );
 }

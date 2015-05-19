@@ -45,6 +45,9 @@ public class CardInfo extends CommonInfo {
 	private String menuId;
 	private String smartOfrListId;
 	private String shareUrl;
+	private String testMdnYn;
+	private String lndPinAuthYn;
+	private String cardUseGrdCd;
 
 	/**
 	 * CARD_ETC_ATTR
@@ -448,5 +451,29 @@ public class CardInfo extends CommonInfo {
 	public void setItemLndUrl(String itemLndUrl) {
 		this.itemLndUrl = itemLndUrl;
 	}
+
+	public String getCardUseGrdCd() {
+	    return cardUseGrdCd;
+    }
+
+	public void setCardUseGrdCd( String cardUseGrdCd ) {
+	    this.cardUseGrdCd = cardUseGrdCd;
+    }
+
+	public String getLndPinAuthYn() {
+	    return lndPinAuthYn;
+    }
+
+	public void setLndPinAuthYn( String lndPinAuthYn ) {
+	    this.lndPinAuthYn = lndPinAuthYn;
+    }
+
+	public String getTestMdnYn() {
+	    return testMdnYn;
+    }
+
+	public void setTestMdnYn( String testMdnYn ) {
+	    this.testMdnYn = testMdnYn;
+    }
 
 }

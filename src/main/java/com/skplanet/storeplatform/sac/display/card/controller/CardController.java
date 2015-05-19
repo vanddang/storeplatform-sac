@@ -46,9 +46,9 @@ public class CardController {
 	public CardDetailSacRes getCardDetail(@RequestBody @Validated CardDetailSacReq req,	SacRequestHeader header) {
 
 		String tenantId = header.getTenantHeader().getTenantId();
-        String langCd = header.getTenantHeader().getLangCd();
-        String cardId = req.getId();
-        String userKey = req.getUserKey();
+        String langCd   = header.getTenantHeader().getLangCd();
+        String cardId   = req.getId();
+        String userKey  = req.getUserKey();
 
 		CardDetail cardDetail = this.cardDetailService.searchCardDetail(new CardDetailParam(tenantId, cardId, userKey));
 		if (cardDetail == null) {

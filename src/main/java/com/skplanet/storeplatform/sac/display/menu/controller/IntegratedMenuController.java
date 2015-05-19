@@ -9,16 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.display.menu.controller;
 
-import com.skplanet.storeplatform.sac.client.display.vo.menu.IntegratedMenuListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuIntegrationListReq;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.menu.service.IntegratedMenuService;
-import com.skplanet.storeplatform.sac.display.menu.vo.IntegratedMenuList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.skplanet.storeplatform.sac.client.display.vo.menu.IntegratedMenuListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuIntegrationListReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.menu.service.IntegratedMenuService;
+import com.skplanet.storeplatform.sac.display.menu.vo.IntegratedMenuList;
 
 /**
  * <p>
@@ -34,14 +35,17 @@ public class IntegratedMenuController {
 
     @RequestMapping(value = "/display/menu/integration/list/v1", method = RequestMethod.GET)
     @ResponseBody
-    public IntegratedMenuListRes listIntegratedMenu(MenuIntegrationListReq req, SacRequestHeader requestHeader) {
-        String tenantId = requestHeader.getTenantHeader().getTenantId();
-        String langCd = requestHeader.getTenantHeader().getLangCd();
-        String systemId = requestHeader.getTenantHeader().getSystemId();
-        String menuKey = req.getUpMenuId();
+    public IntegratedMenuListRes listIntegratedMenu( MenuIntegrationListReq req, SacRequestHeader requestHeader ) {
 
-        IntegratedMenuList integratedMenuList = integratedMenuService.getIntegratedMenuList(tenantId, systemId, langCd, menuKey);
+    	String tenantId = requestHeader.getTenantHeader().getTenantId();
+        String langCd   = requestHeader.getTenantHeader().getLangCd();
+        String systemId = requestHeader.getTenantHeader().getSystemId();
+        String menuKey  = req.getUpMenuId();
+        String useGrdCd = req.getUseGrdCd();
+
+        IntegratedMenuList integratedMenuList = integratedMenuService.getIntegratedMenuList(tenantId, systemId, langCd, menuKey, useGrdCd );
 
         return new IntegratedMenuListRes(integratedMenuList.getFeaturedMenuList(), integratedMenuList.getCategoryMenuList());
     }
+
 }

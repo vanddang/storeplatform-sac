@@ -10,8 +10,8 @@
 package com.skplanet.storeplatform.sac.display.card.service;
 
 import com.skplanet.storeplatform.sac.client.product.vo.Panel;
-import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
 import com.skplanet.storeplatform.sac.display.cache.vo.SegmentInfo;
+import com.skplanet.storeplatform.sac.display.card.vo.PreferredCategoryInfo;
 
 /**
  * <p>
@@ -21,5 +21,5 @@ import com.skplanet.storeplatform.sac.display.cache.vo.SegmentInfo;
  */
 public interface CardListService {
 
-    Panel listInPanel(String tenantId, String langCd, String pannelId, String userKey, SegmentInfo sgmtKey, PreferredCategoryInfo preferredCategoryInfo, boolean disableCardLimit);
+    Panel listInPanel(String tenantId, String langCd, String pannelId, String useGrdCd, String userKey, SegmentInfo sgmtKey, PreferredCategoryInfo preferredCategoryInfo, boolean disableCardLimit);
 }
