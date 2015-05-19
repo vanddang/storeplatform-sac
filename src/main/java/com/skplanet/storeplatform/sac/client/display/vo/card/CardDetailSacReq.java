@@ -22,7 +22,7 @@ public class CardDetailSacReq extends CommonInfo {
 	@NotBlank
 	private String id;
 
-	private String userKey;
+	private String  userKey;
 
 	private List<PreferredCategoryReq> preferredCategoryList;
 
@@ -30,26 +30,27 @@ public class CardDetailSacReq extends CommonInfo {
 		return id;
 	}
 
-	public void setId(String id) {
+	public CardDetailSacReq setId(String id) {
 		this.id = id;
+		return this;
 	}
 
 	public String getUserKey() {
 		return userKey;
 	}
 
-	public void setUserKey(String userKey) {
+	public CardDetailSacReq setUserKey(String userKey) {
 		this.userKey = userKey;
+		return this;
 	}
 
 	public List<PreferredCategoryReq> getPreferredCategoryList() {
 		return preferredCategoryList;
 	}
 
-	public void setPreferredCategoryList(List<PreferredCategoryReq> preferredCategoryList) {
+	public CardDetailSacReq setPreferredCategoryList(List<PreferredCategoryReq> preferredCategoryList) {
 		this.preferredCategoryList = preferredCategoryList;
+		return this;
 	}
-
-
 
 }

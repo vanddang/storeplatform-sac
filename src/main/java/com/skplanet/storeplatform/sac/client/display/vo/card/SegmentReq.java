@@ -9,11 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.card;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import java.util.List;
+
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Pattern;
-import java.util.List;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 
 /**
  * <p>
@@ -46,6 +47,12 @@ public class SegmentReq extends CommonInfo {
     private String mnoClsfCd;
 
     private List<String> categoryBest;
+
+    //@Pattern(regexp = "Y|N")
+    private String testMdnYn;
+
+    //@Pattern(regexp = "Y|N")
+    private String tingYn;
 
     public String getOutsdMbrGrdCd() {
         return outsdMbrGrdCd;
@@ -109,5 +116,21 @@ public class SegmentReq extends CommonInfo {
 
     public void setCategoryBest(List<String> categoryBest) {
         this.categoryBest = categoryBest;
+    }
+
+	public String getTestMdnYn() {
+	    return StringUtils.isEmpty(testMdnYn) ? "N" : testMdnYn;
+    }
+
+	public void setTestMdnYn( String testMdnYn ) {
+	    this.testMdnYn = testMdnYn;
+    }
+
+	public String getTingYn() {
+	    return StringUtils.isEmpty(tingYn) ? "N" : tingYn;
+    }
+
+	public void setTingYn( String tingYn ) {
+	    this.tingYn = tingYn;
     }
 }

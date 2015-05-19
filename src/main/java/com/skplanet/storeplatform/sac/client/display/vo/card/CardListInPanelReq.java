@@ -9,13 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.card;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import org.hibernate.validator.constraints.NotEmpty;
+import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.List;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
@@ -33,6 +34,8 @@ public class CardListInPanelReq extends CommonInfo {
     private SegmentReq segment;
 
     private String userKey;
+
+    private String useGrdCd = "PD004401"; // 12세 이용가
 
     private List<PreferredCategoryReq> preferredCategoryList;
 
@@ -77,5 +80,13 @@ public class CardListInPanelReq extends CommonInfo {
 
     public void setDisableCardLimit(String disableCardLimit) {
         this.disableCardLimit = disableCardLimit;
+    }
+
+	public String getUseGrdCd() {
+	    return useGrdCd;
+    }
+
+	public void setUseGrdCd( String useGrdCd ) {
+	    this.useGrdCd = useGrdCd;
     }
 }

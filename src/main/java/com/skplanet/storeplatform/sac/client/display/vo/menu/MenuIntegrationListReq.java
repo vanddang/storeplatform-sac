@@ -21,6 +21,7 @@ public class MenuIntegrationListReq extends CommonInfo {
     private static final long serialVersionUID = 1L;
 
     private String upMenuId;
+    private String useGrdCd = "PD004401";
 
     public String getUpMenuId() {
         return upMenuId;
@@ -29,4 +30,13 @@ public class MenuIntegrationListReq extends CommonInfo {
     public void setUpMenuId(String upMenuId) {
         this.upMenuId = upMenuId;
     }
+
+	public String getUseGrdCd() {
+	    return useGrdCd;
+    }
+
+	public void setUseGrdCd( String useGrdCd ) {
+	    this.useGrdCd = useGrdCd;
+    }
+
 }
