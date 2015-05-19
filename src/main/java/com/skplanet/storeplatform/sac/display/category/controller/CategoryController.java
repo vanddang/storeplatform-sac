@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecifi
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVodBoxSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVoucherSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryVoucherSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacReq;
@@ -44,6 +46,7 @@ import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificM
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificShoppingService;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificSongService;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificVodService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificVoucherService;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificWebtoonService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryVodBoxService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonSeriesService;
@@ -98,6 +101,8 @@ public class CategoryController {
 	@Autowired
 	private CategorySpecificShoppingService categorySpecificShoppingService;
 
+	@Autowired
+	private CategorySpecificVoucherService categorySpecificVoucherService;
 	/**
 	 * <pre>
 	 * 일반 카테고리 앱 상품 조회.
@@ -379,6 +384,27 @@ public class CategoryController {
 		this.logger.debug("searchSpecificShoppingDetail Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
 		return this.categorySpecificShoppingService.searchSpecificShoppingDetail(header, req);
+
+	}
+	
+	/**
+	 * <pre>
+	 * [I03000055] 2.4.1.8 특정 상품 이용권 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/specific/voucher/detail/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public CategoryVoucherSacRes searchSpecificVoucherDetail(SacRequestHeader header, @Validated CategoryVoucherSacReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchSpecificVoucherDetail Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.categorySpecificVoucherService.searchSpecificVoucherDetail(header, req);
 
 	}
 }
