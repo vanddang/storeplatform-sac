@@ -133,8 +133,6 @@ public class MetaInfo extends CommonInfo {
 	private String storeProdStatusCd;
 	private String storeProdChrg;
 	private String storeUsePeriodUnitCd;
-	private Integer storeUsePeriod;
-	private String storeUsePeriodUnitCdNm;
 	private String playProdId;
 	private Integer playProdAmt;
 	private Integer playProdNetAmt;
@@ -143,8 +141,6 @@ public class MetaInfo extends CommonInfo {
 	private String playProdStatusCd;
 	private String playProdChrg;
 	private String playUsePeriodUnitCd;
-	private Integer playUsePeriod;
-	private String playUsePeriodUnitCdNm;
 	private String usePeriodUnitCd;
 	private String usePeriod;
 	private String usePeriodNm;
@@ -1882,36 +1878,6 @@ public class MetaInfo extends CommonInfo {
 	public void setStoreUsePeriodUnitCd(String storeUsePeriodUnitCd) {
 		this.storeUsePeriodUnitCd = storeUsePeriodUnitCd;
 	}
-	
-	/**
-	 * @return the storeUsePeriod
-	 */
-	public Integer getStoreUsePeriod() {
-		return this.storeUsePeriod;
-	}
-
-	/**
-	 * @param storeUsePeriod
-	 *            the storeUsePeriod to set
-	 */
-	public void setStoreUsePeriod(Integer storeUsePeriod) {
-		this.storeUsePeriod = storeUsePeriod;
-	}
-	
-	/**
-	 * @return the storeUsePeriodUnitCdNm
-	 */
-	public String getStoreUsePeriodUnitCdNm() {
-		return this.storeUsePeriodUnitCdNm;
-	}
-
-	/**
-	 * @param storeUsePeriodUnitCdNm
-	 *            the storeUsePeriodUnitCdNm to set
-	 */
-	public void setStoreUsePeriodUnitCdNm(String storeUsePeriodUnitCdNm) {
-		this.storeUsePeriodUnitCdNm = storeUsePeriodUnitCdNm;
-	}
 
 	/**
 	 * @return the playProdId
@@ -2024,36 +1990,6 @@ public class MetaInfo extends CommonInfo {
 	 */
 	public void setPlayUsePeriodUnitCd(String playUsePeriodUnitCd) {
 		this.playUsePeriodUnitCd = playUsePeriodUnitCd;
-	}
-	
-	/**
-	 * @return the playUsePeriod
-	 */
-	public Integer getPlayUsePeriod() {
-		return this.playUsePeriod;
-	}
-
-	/**
-	 * @param playUsePeriod
-	 *            the playUsePeriod to set
-	 */
-	public void setPlayUsePeriod(Integer playUsePeriod) {
-		this.playUsePeriod = playUsePeriod;
-	}
-	
-	/**
-	 * @return the playUsePeriodUnitCdNm
-	 */
-	public String getPlayUsePeriodUnitCdNm() {
-		return this.playUsePeriodUnitCdNm;
-	}
-
-	/**
-	 * @param playUsePeriodUnitCdNm
-	 *            the playUsePeriodUnitCdNm to set
-	 */
-	public void setPlayUsePeriodUnitCdNm(String playUsePeriodUnitCdNm) {
-		this.playUsePeriodUnitCdNm = playUsePeriodUnitCdNm;
 	}
 
 	/**

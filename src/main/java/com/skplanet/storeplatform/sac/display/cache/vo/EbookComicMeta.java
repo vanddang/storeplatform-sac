@@ -68,17 +68,7 @@ public class EbookComicMeta extends CommonInfo {
     private String sellerMbrNo; 	//판매자 회원 번호
     private Integer serialCount;
     private Integer magazineCount;
-    private String playProdId;
-    private Integer playUsePeriod;
-    private String playUsePeriodUnitCd;
-    private String playUsePeriodUnitCdNm;
-    private String playDrmYn;
-    private String storeProdId;
-    private Integer storeUsePeriod;
-    private String storeUsePeriodUnitCd;
-    private String storeUsePeriodUnitCdNm;
-    private String storeDrmYn;
-    
+
     public Integer getChnlUnlmtAmt() {
         return chnlUnlmtAmt;
     }
@@ -438,85 +428,4 @@ public class EbookComicMeta extends CommonInfo {
     public void setMagazineCount(Integer magazineCount) {
         this.magazineCount = magazineCount;
     }
-    
-    public String getPlayProdId() {
-		return playProdId;
-	}
-
-	public void setPlayProdId(String playProdId) {
-		this.playProdId = playProdId;
-	}
-	    
-    public Integer getPlayUsePeriod() {
-		return playUsePeriod;
-	}
-
-	public void setPlayUsePeriod(Integer playUsePeriod) {
-		this.playUsePeriod = playUsePeriod;
-	}
-		    
-	public String getPlayUsePeriodUnitCd() {
-		return playUsePeriodUnitCd;
-	}
-	
-	public void setPlayUsePeriodUnitCd(String playUsePeriodUnitCd) {
-		this.playUsePeriodUnitCd = playUsePeriodUnitCd;
-	}
-
-	public String getPlayUsePeriodUnitCdNm() {
-		return playUsePeriodUnitCdNm;
-	}
-	
-	public void setPlayUsePeriodUnitCdNm(String playUsePeriodUnitCdNm) {
-		this.playUsePeriodUnitCdNm = playUsePeriodUnitCdNm;
-	}
-	
-	public String getPlayDrmYn() {
-		return playDrmYn;
-	}
-	
-	public void setPlayDrmYn(String playDrmYn) {
-		this.playDrmYn = playDrmYn;
-	}
-	
-	public String getStoreProdId() {
-		return storeProdId;
-	}
-	
-	public void setStoreProdId(String storeProdId) {
-		this.storeProdId = storeProdId;
-	}
-	
-	public Integer getStoreUsePeriod() {
-		return storeUsePeriod;
-	}
-
-	public void setStoreUsePeriod(Integer storeUsePeriod) {
-		this.storeUsePeriod = storeUsePeriod;
-	}
-	
-	public String getStoreUsePeriodUnitCd() {
-		return storeUsePeriodUnitCd;
-	}
-	
-	public void setStoreUsePeriodUnitCd(String storeUsePeriodUnitCd) {
-		this.storeUsePeriodUnitCd = storeUsePeriodUnitCd;
-	}
-	
-	public String getStoreUsePeriodUnitCdNm() {
-		return storeUsePeriodUnitCdNm;
-	}
-	
-	public void setStoreUsePeriodUnitCdNm(String storeUsePeriodUnitCdNm) {
-		this.storeUsePeriodUnitCdNm = storeUsePeriodUnitCdNm;
-	}
-	
-	public String getStoreDrmYn() {
-		return storeDrmYn;
-	}
-	
-	public void setStoreDrmYn(String storeDrmYn) {
-		this.storeDrmYn = storeDrmYn;
-	}
-	
 }

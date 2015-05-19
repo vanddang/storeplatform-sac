@@ -56,7 +56,6 @@
                 <entry key="sac:display:product:freepass" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:ebookcomic:v2" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:ebookcomic:v3" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
-                <entry key="sac:display:product:ebookcomic:v4" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:vod:v3" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:vod:v4" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
                 <entry key="sac:display:product:shopping" value="1800" value-type="java.lang.Long"/>  <!-- 30분 -->
