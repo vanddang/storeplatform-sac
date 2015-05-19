@@ -19,6 +19,7 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.order.vo.AutoPrchsMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.PurchaseUserInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoList;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -48,8 +50,15 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseUserDevice;
  */
 @Service
 public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataService {
+	private static final String PRE_DOWNLOAD_FLAG = "A"; // DRM 적용상품에 대해 다운로드 이전 상태 관리 플래그 값
+
 	@Value("#{systemProperties['spring.profiles.active']}")
 	private String envServerLevel;
+	@Value("#{propertiesForSac['purchase.order.drm.applicable']}")
+	private boolean drmApplicable;
+
+	@Autowired
+	private PurchaseOrderAssistService purchaseOrderAssistService;
 
 	/**
 	 * <pre>
@@ -179,10 +188,6 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					prchsDtlMore.setResvCol05(product.getResvCol05());
 					prchsDtlMore.setUsePeriodUnitCd(product.getUsePeriodUnitCd());
 					prchsDtlMore.setUsePeriod(product.getUsePeriod() == null ? "0" : product.getUsePeriod());
-					// 선물 시, 초기 재다운로드 종료일시는 무제한
-					if (bGift) {
-						prchsDtlMore.setDwldExprDt(PurchaseConstants.UNLIMITED_DATE);
-					}
 					// 정액권으로 에피소드 이용시, 다운로드 종료 일시
 					if (StringUtils.isNotBlank(product.getUseFixrateProdId())
 							&& StringUtils.isNotBlank(product.getDwldExprDt())) {
@@ -196,10 +201,29 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 						prchsDtlMore.setDwldExprDt(prchsDtlMore.getUseExprDt());
 					}
 
+					// 선물 시, 초기 재다운로드 종료일시는 무제한
+					if (bGift) {
+						prchsDtlMore.setDwldExprDt(PurchaseConstants.UNLIMITED_DATE);
+					}
+
+					prchsDtlMore.setDrmYn(product.getDrmYn());
+					// <DB 컬럼 의미 확장>
+					// DRM 적용 상품 대상으로
+					// - 초기 재다운로드 종료일시는 무제한 (다운로드 비대상인 정액제상품 & 정액제로 이용하는 에피소드 상품은 제외)
+					// - DRM_YN 값 변경
+					// - 외부구매경로(T프리미엄 등 비과금 구매요청 경로), 정액제 상품, 정액제 이용 에피소드 상품 경우 제외
+					if (this.drmApplicable) {
+						if (StringUtils.equals("Y", product.getDrmYn())
+								&& StringUtils.isBlank(product.getUseFixrateProdId())
+								&& purchaseOrderInfo.isFlat() == false && purchaseOrderInfo.isFreeChargeReq() == false) {
+							prchsDtlMore.setDwldExprDt(PurchaseConstants.UNLIMITED_DATE);
+							prchsDtlMore.setDrmYn(PRE_DOWNLOAD_FLAG);
+						}
+					}
+
 					prchsDtlMore.setUseFixrateProdId(product.getUseFixrateProdId());
 					prchsDtlMore.setUseFixratePrchsId(product.getUseFixratePrchsId());
 					prchsDtlMore.setUseFixrateProdClsfCd(product.getUseFixrateProdClsfCd());
-					prchsDtlMore.setDrmYn(product.getDrmYn());
 					prchsDtlMore.setAlarmYn(PurchaseConstants.USE_Y);
 					/* IAP */
 					prchsDtlMore.setTid(product.getTid()); // 부분유료화 개발사 구매Key
@@ -207,7 +231,13 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					prchsDtlMore.setParentProdId(product.getParentProdId()); // 부모_상품_ID
 					prchsDtlMore.setContentsType(product.getContentsType()); // 컨텐츠_타입
 					prchsDtlMore.setPartChrgVer(product.getPartChrgVer()); // 부분_유료_버전
-					prchsDtlMore.setPartChrgProdNm(product.getPartChrgProdNm()); // 부분_유료_상품_명
+					// <DB 컬럼 의미 확장>
+					// IAP 상품 경우-부분유료화 상품, 멀티 상품 경우-회차 정보
+					if (purchaseOrderInfo.isIap()) {
+						prchsDtlMore.setPartChrgProdNm(product.getPartChrgProdNm()); // 부분_유료_상품_명
+					} else {
+						prchsDtlMore.setPartChrgProdNm(product.getChapter());
+					}
 					/* Ring & Bell */
 					prchsDtlMore.setRnBillCd(product.getRnBillCd()); // RN_과금_코드
 					prchsDtlMore.setInfoUseFee(product.getInfoUseFee()); // 정보_이용_요금 (ISU_AMT_ADD)
@@ -531,7 +561,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	 * 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록 생성.
 	 * </pre>
 	 * 
-	 * @param ebookflatInfo
+	 * @param ebookfixrateInfo
 	 *            이북/코믹 전권 소장/대여 구매 정보 VO
 	 * 
 	 * @param episodeList
@@ -546,8 +576,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 	 * @return 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록
 	 */
 	@Override
-	public List<PrchsDtlMore> makeEbookComicEpisodeList(PrchsDtlMore ebookflatInfo, List<EpisodeInfoRes> episodeList,
-			String cmpxProdClsfCd, String statusCd) {
+	public List<PrchsDtlMore> makeEbookComicEpisodeList(PrchsDtlMore ebookfixrateInfo,
+			List<EpisodeInfoRes> episodeList, String cmpxProdClsfCd, String statusCd) {
 
 		// 구매생성 요청 데이터 세팅
 		List<PrchsDtlMore> prchsDtlMoreList = new ArrayList<PrchsDtlMore>();
@@ -566,9 +596,9 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 			prchsDtlMore = new PrchsDtlMore();
 
 			prchsDtlMore.setStatusCd(statusCd);
-			prchsDtlMore.setSystemId(ebookflatInfo.getSystemId());
-			prchsDtlMore.setUseTenantId(ebookflatInfo.getUseTenantId());
-			prchsDtlMore.setUseInsdUsermbrNo(ebookflatInfo.getUseInsdUsermbrNo());
+			prchsDtlMore.setSystemId(ebookfixrateInfo.getSystemId());
+			prchsDtlMore.setUseTenantId(ebookfixrateInfo.getUseTenantId());
+			prchsDtlMore.setUseInsdUsermbrNo(ebookfixrateInfo.getUseInsdUsermbrNo());
 			prchsDtlMore.setProdId(episode.getProdId());
 			prchsDtlMore.setCid(episode.getCid());
 
@@ -585,39 +615,120 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 			prchsDtlMore.setPrchsDtlId(prchsDtlCnt++);
 
-			prchsDtlMore.setTenantId(ebookflatInfo.getTenantId());
-			prchsDtlMore.setPrchsId(ebookflatInfo.getPrchsId());
-			prchsDtlMore.setPrchsDt(ebookflatInfo.getPrchsDt());
-			prchsDtlMore.setUseInsdDeviceId(ebookflatInfo.getUseInsdDeviceId());
-			prchsDtlMore.setSendInsdUsermbrNo(ebookflatInfo.getSendInsdUsermbrNo());
-			prchsDtlMore.setSendInsdDeviceId(ebookflatInfo.getSendInsdDeviceId());
-			prchsDtlMore.setTotAmt(ebookflatInfo.getTotAmt());
-			prchsDtlMore.setPrchsReqPathCd(ebookflatInfo.getPrchsReqPathCd());
-			prchsDtlMore.setClientIp(ebookflatInfo.getClientIp());
+			prchsDtlMore.setTenantId(ebookfixrateInfo.getTenantId());
+			prchsDtlMore.setPrchsId(ebookfixrateInfo.getPrchsId());
+			prchsDtlMore.setPrchsDt(ebookfixrateInfo.getPrchsDt());
+			prchsDtlMore.setUseInsdDeviceId(ebookfixrateInfo.getUseInsdDeviceId());
+			prchsDtlMore.setSendInsdUsermbrNo(ebookfixrateInfo.getSendInsdUsermbrNo());
+			prchsDtlMore.setSendInsdDeviceId(ebookfixrateInfo.getSendInsdDeviceId());
+			prchsDtlMore.setTotAmt(ebookfixrateInfo.getTotAmt());
+			prchsDtlMore.setPrchsReqPathCd(ebookfixrateInfo.getPrchsReqPathCd());
+			prchsDtlMore.setClientIp(ebookfixrateInfo.getClientIp());
 			prchsDtlMore.setUseHidingYn(PurchaseConstants.USE_N);
 			prchsDtlMore.setSendHidingYn(PurchaseConstants.USE_N);
-			prchsDtlMore.setPrchsCaseCd(ebookflatInfo.getPrchsCaseCd());
-			prchsDtlMore.setTenantProdGrpCd(ebookflatInfo.getTenantProdGrpCd().substring(0, 12)
+			prchsDtlMore.setPrchsCaseCd(ebookfixrateInfo.getPrchsCaseCd());
+			prchsDtlMore.setTenantProdGrpCd(ebookfixrateInfo.getTenantProdGrpCd().substring(0, 12)
 					+ PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT);
-			prchsDtlMore.setCurrencyCd(ebookflatInfo.getCurrencyCd());
-			prchsDtlMore.setNetworkTypeCd(ebookflatInfo.getNetworkTypeCd());
+			prchsDtlMore.setCurrencyCd(ebookfixrateInfo.getCurrencyCd());
+			prchsDtlMore.setNetworkTypeCd(ebookfixrateInfo.getNetworkTypeCd());
 			prchsDtlMore.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_UNIT); // 단위 상품
 			prchsDtlMore.setProdAmt(episode.getProdAmt());
 			prchsDtlMore.setProdQty(1);
-			prchsDtlMore.setUseStartDt(ebookflatInfo.getUseStartDt());
-			prchsDtlMore.setUseExprDt(ebookflatInfo.getUseExprDt());
-			prchsDtlMore.setDwldStartDt(ebookflatInfo.getDwldStartDt());
-			prchsDtlMore.setDwldExprDt(ebookflatInfo.getDwldExprDt());
-			prchsDtlMore.setUsePeriodUnitCd(ebookflatInfo.getUsePeriodUnitCd());
-			prchsDtlMore.setUsePeriod(ebookflatInfo.getUsePeriod());
-			prchsDtlMore.setUseFixrateProdId(ebookflatInfo.getProdId());
-			prchsDtlMore.setUseFixratePrchsId(ebookflatInfo.getPrchsId());
-			prchsDtlMore.setDrmYn(ebookflatInfo.getDrmYn());
+			prchsDtlMore.setUseStartDt(ebookfixrateInfo.getUseStartDt());
+			prchsDtlMore.setUseExprDt(ebookfixrateInfo.getUseExprDt());
+			prchsDtlMore.setDwldStartDt(ebookfixrateInfo.getDwldStartDt());
+			prchsDtlMore.setDwldExprDt(ebookfixrateInfo.getDwldExprDt());
+			prchsDtlMore.setUsePeriodUnitCd(ebookfixrateInfo.getUsePeriodUnitCd());
+			prchsDtlMore.setUsePeriod(ebookfixrateInfo.getUsePeriod());
+			prchsDtlMore.setUseFixrateProdId(ebookfixrateInfo.getProdId());
+			prchsDtlMore.setUseFixratePrchsId(ebookfixrateInfo.getPrchsId());
+			prchsDtlMore.setDrmYn(ebookfixrateInfo.getDrmYn());
 			prchsDtlMore.setAlarmYn(PurchaseConstants.USE_Y);
-			prchsDtlMore.setRegId(ebookflatInfo.getRegId());
-			prchsDtlMore.setRegDt(ebookflatInfo.getRegDt());
-			prchsDtlMore.setUpdId(ebookflatInfo.getUpdId());
-			prchsDtlMore.setUpdDt(ebookflatInfo.getUpdDt());
+			prchsDtlMore.setRegId(ebookfixrateInfo.getRegId());
+			prchsDtlMore.setRegDt(ebookfixrateInfo.getRegDt());
+			prchsDtlMore.setUpdId(ebookfixrateInfo.getUpdId());
+			prchsDtlMore.setUpdDt(ebookfixrateInfo.getUpdDt());
+
+			prchsDtlMoreList.add(prchsDtlMore);
+		}
+
+		return prchsDtlMoreList;
+	}
+
+	/**
+	 * <pre>
+	 * 정액제 상품의 하위 에피소드 상품 - 일괄 구매이력 생성 요청 데이터 목록 생성.
+	 * </pre>
+	 * 
+	 * @param fixrateInfo
+	 *            이용할 정액제 상품 구매 정보 VO
+	 * 
+	 * @param episodeList
+	 *            이용할 정액제 상품의 하위 에피소드 상품 정보 VO
+	 * 
+	 * @param statusCd
+	 *            구매상태코드
+	 * 
+	 * @return 정액제 상품의 하위 에피소드 상품 - 일괄 구매이력 생성 요청 데이터 목록
+	 */
+	@Override
+	public List<PrchsDtlMore> makePackageEpisodeList(PrchsDtlMore fixrateInfo, List<CmpxProductInfoList> episodeList,
+			String statusCd) {
+
+		// 구매생성 요청 데이터 세팅
+		List<PrchsDtlMore> prchsDtlMoreList = new ArrayList<PrchsDtlMore>();
+		PrchsDtlMore prchsDtlMore = null;
+
+		int prchsDtlCnt = 2; // 정액제 상품 자체가 1, 에피소드는 2부터
+		for (CmpxProductInfoList episode : episodeList) {
+
+			if (StringUtils.isBlank(episode.getUsePeriodUnitCd())) {
+				throw new StorePlatformException("SAC_PUR_7215", "정액제 에피소드 <null>");
+			}
+
+			prchsDtlMore = new PrchsDtlMore();
+
+			prchsDtlMore.setStatusCd(statusCd);
+			prchsDtlMore.setSystemId(fixrateInfo.getSystemId());
+			prchsDtlMore.setUseTenantId(fixrateInfo.getUseTenantId());
+			prchsDtlMore.setUseInsdUsermbrNo(fixrateInfo.getUseInsdUsermbrNo());
+			prchsDtlMore.setProdId(episode.getProdId());
+			prchsDtlMore.setCid(episode.getCid());
+
+			prchsDtlMore.setPrchsDtlId(prchsDtlCnt++);
+
+			prchsDtlMore.setTenantId(fixrateInfo.getTenantId());
+			prchsDtlMore.setPrchsId(fixrateInfo.getPrchsId());
+			prchsDtlMore.setPrchsDt(fixrateInfo.getPrchsDt());
+			prchsDtlMore.setUseInsdDeviceId(fixrateInfo.getUseInsdDeviceId());
+			prchsDtlMore.setSendInsdUsermbrNo(fixrateInfo.getSendInsdUsermbrNo());
+			prchsDtlMore.setSendInsdDeviceId(fixrateInfo.getSendInsdDeviceId());
+			prchsDtlMore.setTotAmt(fixrateInfo.getTotAmt());
+			prchsDtlMore.setPrchsReqPathCd(fixrateInfo.getPrchsReqPathCd());
+			prchsDtlMore.setClientIp(fixrateInfo.getClientIp());
+			prchsDtlMore.setUseHidingYn(PurchaseConstants.USE_N);
+			prchsDtlMore.setSendHidingYn(PurchaseConstants.USE_N);
+			prchsDtlMore.setPrchsCaseCd(fixrateInfo.getPrchsCaseCd());
+			prchsDtlMore.setTenantProdGrpCd(fixrateInfo.getTenantProdGrpCd().substring(0, 12)
+					+ PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_UNIT);
+			prchsDtlMore.setCurrencyCd(fixrateInfo.getCurrencyCd());
+			prchsDtlMore.setNetworkTypeCd(fixrateInfo.getNetworkTypeCd());
+			prchsDtlMore.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_UNIT); // 단위 상품
+			prchsDtlMore.setProdAmt(episode.getProdAmt());
+			prchsDtlMore.setProdQty(1);
+			prchsDtlMore.setUseStartDt(fixrateInfo.getUseStartDt());
+			prchsDtlMore.setDwldStartDt(fixrateInfo.getDwldStartDt());
+			prchsDtlMore.setUsePeriodUnitCd(episode.getUsePeriodUnitCd());
+			prchsDtlMore.setUsePeriod(String.valueOf(episode.getUsePeriod() == null ? 0 : episode.getUsePeriod()));
+			prchsDtlMore.setDrmYn(episode.getDrmYn());
+
+			prchsDtlMore.setUseFixrateProdId(fixrateInfo.getProdId());
+			prchsDtlMore.setUseFixratePrchsId(fixrateInfo.getPrchsId());
+			prchsDtlMore.setAlarmYn(PurchaseConstants.USE_Y);
+			prchsDtlMore.setRegId(fixrateInfo.getRegId());
+			prchsDtlMore.setRegDt(fixrateInfo.getRegDt());
+			prchsDtlMore.setUpdId(fixrateInfo.getUpdId());
+			prchsDtlMore.setUpdDt(fixrateInfo.getUpdDt());
 
 			prchsDtlMoreList.add(prchsDtlMore);
 		}
@@ -759,7 +870,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 									.getAutoPrchsLastPeriodValue()).append("&specialCouponId=")
 							.append(StringUtils.defaultString(product.getSpecialSaleCouponId()))
 							.append("&specialCouponAmt=").append(product.getSpecialCouponAmt())
-							.append("&cmpxProdClsfCd=").append(StringUtils.defaultString(product.getCmpxProdClsfCd()))
+							.append("&possLendClsfCd=").append(StringUtils.defaultString(product.getPossLendClsfCd()))
 							.append("&prodCaseCd=").append(StringUtils.defaultString(product.getProdCaseCd()))
 							.append("&s2sAutoYn=").append(StringUtils.defaultString(product.getS2sAutoPrchsYn()))
 							.append("&s2sYn=").append(StringUtils.isNotBlank(product.getSearchPriceUrl()) ? "Y" : "N");
@@ -792,6 +903,16 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 						if (product.getIapUsePeriod() != null) {
 							sbReserveData.append("&iapUsePeriod=").append(product.getIapUsePeriod());
 						}
+					}
+
+					// 정액제 상품
+					if (purchaseOrderInfo.isFlat()) {
+						sbReserveData.append("&packagePrchsYn=")
+								.append(StringUtils.defaultString(product.getPackagePrchsYn()))
+								.append("&cmpxProdClsfCd=")
+								.append(StringUtils.defaultString(product.getCmpxProdClsfCd()))
+								.append("&cmpxProdBookClsfCd=")
+								.append(StringUtils.defaultString(product.getCmpxProdBookClsfCd()));
 					}
 
 					prchsDtlMoreList.get(idx++).setPrchsResvDesc(sbReserveData.toString());
@@ -849,6 +970,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		purchaseReservedData.setAutoLastPeriod(reservedDataMap.get("autoLastPeriod"));
 		purchaseReservedData.setSpecialCouponId(reservedDataMap.get("specialCouponId"));
 		purchaseReservedData.setSpecialCouponAmt(reservedDataMap.get("specialCouponAmt"));
+		purchaseReservedData.setPossLendClsfCd(reservedDataMap.get("possLendClsfCd"));
+		purchaseReservedData.setCmpxProdBookClsfCd(reservedDataMap.get("cmpxProdBookClsfCd"));
 		purchaseReservedData.setCmpxProdClsfCd(reservedDataMap.get("cmpxProdClsfCd"));
 		purchaseReservedData.setProdCaseCd(reservedDataMap.get("prodCaseCd"));
 		purchaseReservedData.setS2sAutoYn(reservedDataMap.get("s2sAutoYn"));
@@ -860,6 +983,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 		purchaseReservedData.setIapProdKind(reservedDataMap.get("iapProdKind"));
 		purchaseReservedData.setIapProdCase(reservedDataMap.get("iapProdCase"));
 		purchaseReservedData.setIapUsePeriod(reservedDataMap.get("iapUsePeriod"));
+		purchaseReservedData.setPackagePrchsYn(reservedDataMap.get("packagePrchsYn"));
 
 		return purchaseReservedData;
 	}

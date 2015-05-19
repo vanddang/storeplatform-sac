@@ -12,6 +12,9 @@ package com.skplanet.storeplatform.sac.purchase.order.repository;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfo;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoList;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductSacReq;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
@@ -102,6 +105,39 @@ public interface PurchaseDisplayRepository {
 	/**
 	 * 
 	 * <pre>
+	 * 이용권에 등록된 상품 목록 조회.
+	 * </pre>
+	 * 
+	 * @param cmpxProductSacReq
+	 *            이용권에 등록된 상품 목록 조회 요청VO
+	 * @return 이용권에 등록된 상품 목록
+	 */
+	public List<CmpxProductInfoList> searchCmpxProductList(CmpxProductSacReq cmpxProductSacReq);
+
+	/**
+	 * 
+	 * <pre>
+	 * 이용권 및 에피소드 상품 정보 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트ID
+	 * @param langCd
+	 *            언어코드
+	 * @param fixrateProdId
+	 *            정액제 상품 ID
+	 * @param episodeProdId
+	 *            해당 정액제 상품을 이용하여 구매할 상품 ID
+	 * @param chapter
+	 *            회차 정보 (이용권에 매핑된 상품 중 요청한 회차만 조회)
+	 * @return 이용권 및 에피소드 상품 정보
+	 */
+	public CmpxProductInfo searchCmpxProductInfo(String tenantId, String langCd, String fixrateProdId,
+			String episodeProdId, String chapter);
+
+	/**
+	 * 
+	 * <pre>
 	 * 쇼핑 특가 상품에 대해 품절 등록.
 	 * </pre>
 	 * 
@@ -114,7 +150,7 @@ public interface PurchaseDisplayRepository {
 
 	/**
 	 * 실시간으로 구매 및 구매 취소시에 쇼핑 특가 상품에 대한 구매수를 업데이트 한다.
-	 *
+	 * 
 	 * @param tenentId
 	 *            테넌트ID
 	 * @param purchaseId

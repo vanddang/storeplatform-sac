@@ -51,7 +51,9 @@ public class PurchaseReservedData extends CommonInfo {
 	private String autoLastPeriod;
 	private String specialCouponId;
 	private String specialCouponAmt;
+	private String possLendClsfCd;
 	private String cmpxProdClsfCd;
+	private String cmpxProdBookClsfCd;
 	private String prodCaseCd;
 	private String s2sAutoYn;
 	private String s2sYn;
@@ -62,6 +64,7 @@ public class PurchaseReservedData extends CommonInfo {
 	private String iapProdKind;
 	private String iapProdCase;
 	private String iapUsePeriod;
+	private String packagePrchsYn;
 
 	/**
 	 * @return the apiVer
@@ -544,6 +547,21 @@ public class PurchaseReservedData extends CommonInfo {
 	}
 
 	/**
+	 * @return the possLendClsfCd
+	 */
+	public String getPossLendClsfCd() {
+		return this.possLendClsfCd;
+	}
+
+	/**
+	 * @param possLendClsfCd
+	 *            the possLendClsfCd to set
+	 */
+	public void setPossLendClsfCd(String possLendClsfCd) {
+		this.possLendClsfCd = possLendClsfCd;
+	}
+
+	/**
 	 * @return the cmpxProdClsfCd
 	 */
 	public String getCmpxProdClsfCd() {
@@ -556,6 +574,21 @@ public class PurchaseReservedData extends CommonInfo {
 	 */
 	public void setCmpxProdClsfCd(String cmpxProdClsfCd) {
 		this.cmpxProdClsfCd = cmpxProdClsfCd;
+	}
+
+	/**
+	 * @return the cmpxProdBookClsfCd
+	 */
+	public String getCmpxProdBookClsfCd() {
+		return this.cmpxProdBookClsfCd;
+	}
+
+	/**
+	 * @param cmpxProdBookClsfCd
+	 *            the cmpxProdBookClsfCd to set
+	 */
+	public void setCmpxProdBookClsfCd(String cmpxProdBookClsfCd) {
+		this.cmpxProdBookClsfCd = cmpxProdBookClsfCd;
 	}
 
 	/**
@@ -706,6 +739,21 @@ public class PurchaseReservedData extends CommonInfo {
 	 */
 	public void setIapUsePeriod(String iapUsePeriod) {
 		this.iapUsePeriod = iapUsePeriod;
+	}
+
+	/**
+	 * @return the packagePrchsYn
+	 */
+	public String getPackagePrchsYn() {
+		return this.packagePrchsYn;
+	}
+
+	/**
+	 * @param packagePrchsYn
+	 *            the packagePrchsYn to set
+	 */
+	public void setPackagePrchsYn(String packagePrchsYn) {
+		this.packagePrchsYn = packagePrchsYn;
 	}
 
 }

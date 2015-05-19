@@ -9,6 +9,16 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
@@ -19,15 +29,6 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.SellerMbrAppSacParam;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
 
 /**
  * 
@@ -200,24 +201,37 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 	private String makeProductName(PurchaseProduct purchaseProduct) {
 		if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(), PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
 			// 시리즈 전회차
-			if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
-					PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) {
-				return "'" + purchaseProduct.getProdNm() + "' 시리즈 전회차 영구소장"; // 무제한
+			if (StringUtils
+					.startsWith(purchaseProduct.getTenantProdGrpCd(), PurchaseConstants.TENANT_PRODUCT_GROUP_VOD)) {
+				// VOD
+				if (StringUtils.equals(purchaseProduct.getUsePeriodUnitCd(),
+						PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED)) {
+					return "'" + purchaseProduct.getProdNm() + "' 시리즈 전회차 영구소장"; // 무제한
+				} else {
+					return "'" + purchaseProduct.getProdNm() + "' 시리즈 전회차";
+				}
+
+			} else if (StringUtils.startsWith(purchaseProduct.getTenantProdGrpCd(),
+					PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
+				// 이북/코믹
+				return "'" + purchaseProduct.getProdNm() + "' 전"
+						+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권");
+
 			} else {
-				return "'" + purchaseProduct.getProdNm() + "' 시리즈 전회차";
+				return purchaseProduct.getProdNm();
 			}
 
-		} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-				PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
-			// 전권 소장
-			return "'" + purchaseProduct.getProdNm() + "' 전"
-					+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권");
-
-		} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
-				PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
-			// 전권 대여
-			return "'" + purchaseProduct.getProdNm() + "' 전"
-					+ StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권");
+			// } else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+			// PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_OWN)) {
+			// // 전권 소장
+			// return "'" + purchaseProduct.getProdNm() + "' 전"
+			// + StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권");
+			//
+			// } else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
+			// PurchaseConstants.FIXRATE_PROD_TYPE_EBOOKCOMIC_LOAN)) {
+			// // 전권 대여
+			// return "'" + purchaseProduct.getProdNm() + "' 전"
+			// + StringUtils.defaultIfBlank(purchaseProduct.getChapterUnit(), "권");
 
 		} else {
 			// 상품명은 전시에서 회차 정보까지 구성해서 넘겨주는 값 그대로 사용. 2014.09.02 반영
@@ -355,13 +369,14 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 		} else if (StringUtils.endsWith(tenantProdGrpCd, PurchaseConstants.TENANT_PRODUCT_GROUP_SUFFIX_FIXRATE)) {
 			if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_SERIESPASS)) {
-				if(StringUtil.equals(purchaseProduct.getPossLendClsfCd(), PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION))
+				if (StringUtil.equals(purchaseProduct.getPossLendClsfCd(),
+						PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_POSSESION))
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_OWN; // 소장
-				else if(StringUtil.equals(purchaseProduct.getPossLendClsfCd(), PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL))
+				else if (StringUtil.equals(purchaseProduct.getPossLendClsfCd(),
+						PurchaseConstants.PRODUCT_POSS_RENTAL_TYPE_RENTAL))
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_LOAN; // 대여
 				else
 					return PurchaseConstants.PAYMENT_PAGE_PRODUCT_DESC_SERIES; // 구매
-						
 
 			} else if (StringUtils.equals(purchaseProduct.getCmpxProdClsfCd(),
 					PurchaseConstants.FIXRATE_PROD_TYPE_VOD_FIXRATE)) {

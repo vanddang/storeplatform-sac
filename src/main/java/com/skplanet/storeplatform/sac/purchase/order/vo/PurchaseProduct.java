@@ -9,8 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.vo;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PaymentInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.PossLendProductInfo;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * 
@@ -72,6 +75,92 @@ public class PurchaseProduct extends PaymentInfo {
 
 	// 정액권으로 에피소드 상품 이용할 때
 	private String dwldExprDt; // 다운로드 종료 일시
+
+	/**
+	 * 디폴트 생성자
+	 */
+	public PurchaseProduct() {
+	}
+
+	/**
+	 * Super Class 멤버변수 세팅을 위한 생성자
+	 */
+	public PurchaseProduct(PaymentInfo displayInfo) {
+		// 상품 군 조회 변수
+		this.setTopMenuId(displayInfo.getTopMenuId());
+		this.setSvcGrpCd(displayInfo.getSvcGrpCd());
+		this.setInAppYn(displayInfo.getInAppYn());
+		// APP,멀티미디어 상품 변수
+		this.setProdId(displayInfo.getProdId());
+		this.setProdNm(displayInfo.getProdNm());
+		this.setProdAmt(displayInfo.getProdAmt());
+		this.setProdStatusCd(displayInfo.getProdStatusCd());
+		this.setProdGrdCd(displayInfo.getProdGrdCd());
+		// 허용 연령 (상품등급이 청소년이용불가 등급일 경우에 18/19 판별을 위해 사용)
+		this.setAgeAllowedFrom(displayInfo.getAgeAllowedFrom());
+
+		this.setProdSprtYn(displayInfo.getProdSprtYn());
+		this.setDrmYn(StringUtils.defaultString(displayInfo.getDrmYn(), PurchaseConstants.USE_N));
+
+		this.setUsePeriodUnitCd(displayInfo.getUsePeriodUnitCd());
+		this.setUsePeriod(StringUtils.equals(displayInfo.getUsePeriodUnitCd(),
+				PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) ? "0" : displayInfo.getUsePeriod());
+
+		this.setAid(displayInfo.getAid());
+		this.setTenantProdGrpCd(displayInfo.getTenantProdGrpCd());
+		this.setMallCd(displayInfo.getMallCd());
+		this.setOutsdContentsId(displayInfo.getOutsdContentsId());
+		this.setSellerMbrNo(displayInfo.getSellerMbrNo());
+		this.setSellerNm(displayInfo.getSellerNm());
+		this.setSellerEmail(displayInfo.getSellerEmail());
+		this.setSellerTelno(displayInfo.getSellerTelno());
+		this.setPossLendClsfCd(displayInfo.getPossLendClsfCd());
+		// 회차정보
+		this.setBookClsfCd(displayInfo.getBookClsfCd());
+		this.setChapter(displayInfo.getChapter());
+		this.setChapterText(displayInfo.getChapterText());
+		this.setChapterUnit(displayInfo.getChapterUnit());
+		// ////////////////////////// 쇼핑 상품 변수 ////////////////////////////
+		this.setProdCaseCd(displayInfo.getProdCaseCd()); // DP006301-상품권, DP006302-교환권, DP006303-배송상품
+		this.setCouponCode(displayInfo.getCouponCode());
+		this.setItemCode(displayInfo.getItemCode());
+		this.setSpecialTypeCd(displayInfo.getSpecialTypeCd());
+		this.setSpecialSaleAmt(displayInfo.getSpecialSaleAmt());
+		this.setSpecialSaleStartDt(displayInfo.getSpecialSaleStartDt());
+		this.setSpecialSaleEndDt(displayInfo.getSpecialSaleEndDt());
+		this.setSpecialSaleCouponId(displayInfo.getSpecialSaleCouponId());
+		this.setSpecialSaleMonthLimit(displayInfo.getSpecialSaleMonthLimit());
+		this.setSpecialSaleDayLimit(displayInfo.getSpecialSaleDayLimit());
+		this.setSpecialSaleMonthLimitPerson(displayInfo.getSpecialSaleMonthLimitPerson());
+		this.setSpecialSaleDayLimitPerson(displayInfo.getSpecialSaleDayLimitPerson());
+		this.setSpecialSaleOncePrchsLimit(displayInfo.getSpecialSaleOncePrchsLimit());
+		// ////////////////////////// 정액제 상품 변수 ////////////////////////////
+		this.setAvailableFixrateProdIdList(displayInfo.getAvailableFixrateProdIdList());
+		this.setAvailableFixrateInfoList(displayInfo.getAvailableFixrateInfoList());
+		this.setAutoPrchsYN(displayInfo.getAutoPrchsYN());
+		if (StringUtils.equals(displayInfo.getAutoPrchsYN(), PurchaseConstants.USE_Y)) {
+			this.setAutoPrchsPeriodUnitCd(displayInfo.getAutoPrchsPeriodUnitCd());
+			this.setAutoPrchsPeriodValue(displayInfo.getAutoPrchsPeriodValue() == null ? 0 : displayInfo
+					.getAutoPrchsPeriodValue());
+		}
+		this.setAutoPrchsLastDt(displayInfo.getAutoPrchsLastDt());
+		this.setExclusiveFixrateProdExistYn(displayInfo.getExclusiveFixrateProdExistYn());
+		this.setExclusiveFixrateProdIdList(displayInfo.getExclusiveFixrateProdIdList());
+		this.setCmpxProdClsfCd(displayInfo.getCmpxProdClsfCd());
+		this.setCmpxProdBookClsfCd(displayInfo.getCmpxProdBookClsfCd());
+		// 게임캐쉬
+		this.setBnsCashAmt(displayInfo.getBnsCashAmt());
+		this.setBnsUsePeriodUnitCd(displayInfo.getBnsUsePeriodUnitCd());
+		this.setBnsUsePeriod(displayInfo.getBnsUsePeriod() == null ? 0 : displayInfo.getBnsUsePeriod());
+		// T멤버쉽 적립율
+		this.setMileageRateMap(displayInfo.getMileageRateMap());
+		// S2S
+		this.setSearchPriceUrl(displayInfo.getSearchPriceUrl());
+
+		this.setSeriesYn(displayInfo.getSeriesYn());
+		this.setPackagePrchsYn(displayInfo.getPackagePrchsYn());
+
+	}
 
 	/**
 	 * @return the possLendProductInfo

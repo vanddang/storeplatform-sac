@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.purchase.client.common.vo.Payment;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsProdCnt;
 import com.skplanet.storeplatform.purchase.client.order.vo.AutoPrchsMore;
 import com.skplanet.storeplatform.purchase.client.order.vo.PrchsDtlMore;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfoList;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.EpisodeInfoRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PaymentInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
@@ -122,7 +123,7 @@ public interface PurchaseOrderMakeDataService {
 	 * 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록 생성.
 	 * </pre>
 	 * 
-	 * @param ebookflatInfo
+	 * @param ebookfixrateInfo
 	 *            이북/코믹 전권 소장/대여 구매 정보 VO
 	 * 
 	 * @param episodeList
@@ -136,8 +137,27 @@ public interface PurchaseOrderMakeDataService {
 	 * 
 	 * @return 이북/코믹 전권 소장/대여 에피소드 상품 - 구매이력 생성 요청 데이터 목록
 	 */
-	public List<PrchsDtlMore> makeEbookComicEpisodeList(PrchsDtlMore ebookflatInfo, List<EpisodeInfoRes> episodeList,
-			String cmpxProdClsfCd, String statusCd);
+	public List<PrchsDtlMore> makeEbookComicEpisodeList(PrchsDtlMore ebookfixrateInfo,
+			List<EpisodeInfoRes> episodeList, String cmpxProdClsfCd, String statusCd);
+
+	/**
+	 * <pre>
+	 * 정액제 상품의 하위 에피소드 상품 - 일괄 구매이력 생성 요청 데이터 목록 생성.
+	 * </pre>
+	 * 
+	 * @param fixrateInfo
+	 *            이용할 정액제 상품 구매 정보 VO
+	 * 
+	 * @param episodeList
+	 *            이용할 정액제 상품의 하위 에피소드 상품 정보 VO
+	 * 
+	 * @param statusCd
+	 *            구매상태코드
+	 * 
+	 * @return 정액제 상품의 하위 에피소드 상품 - 일괄 구매이력 생성 요청 데이터 목록
+	 */
+	public List<PrchsDtlMore> makePackageEpisodeList(PrchsDtlMore fixrateInfo, List<CmpxProductInfoList> episodeList,
+			String statusCd);
 
 	/**
 	 * <pre>

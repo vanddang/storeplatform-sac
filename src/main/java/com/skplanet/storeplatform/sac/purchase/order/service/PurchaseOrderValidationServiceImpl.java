@@ -22,6 +22,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,8 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.purchase.client.order.sci.PurchaseOrderSearchSCI;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScReq;
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchShoppingSpecialCountScRes;
+import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.CmpxProductInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePass;
-import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.FreePassInfo;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
@@ -969,6 +970,14 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 							continue;
 						}
 
+						// 회차 비교: 정액제 상품의 max회차 값이 없는 경우는 모두 허용
+						if (StringUtils.isNotBlank(checkRes.getPartChrgProdNm())) {
+							if (NumberUtils.toInt(product.getChapter(), 0) > NumberUtils.toInt(
+									checkRes.getPartChrgProdNm(), 99999)) {
+								continue;
+							}
+						}
+
 						if (useExistenceScRes == null) {
 							useExistenceScRes = checkRes;
 
@@ -984,46 +993,16 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						}
 
 						// 이북/코믹 경우, 이용 가능한 정액권이 나오면 구매 불가 처리 (구매가 가능한 상황이 나오지 못함: 2014.05. 현재)
-						if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
-								PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
-							throw new StorePlatformException("SAC_PUR_6111");
-						}
+						// 2015.05. 정액제 고도화 적용 : 이북/코믹이 시리즈패스 로 흡수 되면서 단품 구매 가능
+						// if (StringUtils.startsWith(purchaseOrderInfo.getTenantProdGrpCd(),
+						// PurchaseConstants.TENANT_PRODUCT_GROUP_EBOOKCOMIC)) {
+						// throw new StorePlatformException("SAC_PUR_6111");
+						// }
 
-						// 정액권으로 이용할 에피소드 상품에 적용할 DRM 정보 조회 및 반영
-						FreePassInfo freepassInfo = this.purchaseDisplayRepository.searchFreePassDrmInfo(
-								useUser.getTenantId(), purchaseOrderInfo.getLangCd(), useExistenceScRes.getProdId(),
-								product.getProdId());
-
-						if (freepassInfo != null) {
-							if (StringUtils.isBlank(freepassInfo.getUsePeriodUnitCd())
-									|| ((StringUtils.equals(freepassInfo.getUsePeriodUnitCd(),
-											PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) == false) && StringUtils
-											.isBlank(freepassInfo.getUsePeriod()))) {
-								throw new StorePlatformException("SAC_PUR_5116", useExistenceScRes.getProdId(),
-										product.getProdId(), freepassInfo.getUsePeriodUnitCd(),
-										freepassInfo.getUsePeriod());
-							}
-							product.setUsePeriodUnitCd(freepassInfo.getUsePeriodUnitCd());
-							product.setUsePeriod(StringUtils.equals(freepassInfo.getUsePeriodUnitCd(),
-									PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) ? "0" : freepassInfo
-									.getUsePeriod());
-							product.setDrmYn(StringUtils.defaultString(freepassInfo.getDrmYn(), PurchaseConstants.USE_N));
-
-							// 다운로드 만료일시의 최대값은 정액권의 이용종료일시
-							Date currDateObj = new Date();
-							String currDt = new SimpleDateFormat("yyyyMMddHHmmss").format(currDateObj);
-							String exprDt = this.purchaseOrderAssistService.calculateUseDate(currDt,
-									product.getUsePeriodUnitCd(), product.getUsePeriod());
-							if (exprDt.compareTo(useExistenceScRes.getUseExprDt()) > 0) {
-								product.setDwldExprDt(useExistenceScRes.getUseExprDt());
-							}
-
-							product.setUseFixrateProdId(useExistenceScRes.getProdId()); // 사용할 정액권 상품ID 세팅
-							product.setUseFixratePrchsId(useExistenceScRes.getPrchsId()); // 사용할 정액권 구매ID 세팅
-							product.setUseFixrateProdClsfCd(freepassInfo.getCmpxProdClsfCd()); // 사용할 정액권 타입
-
-							// 무료구매 처리 데이터 세팅
-							purchaseOrderInfo.setRealTotAmt(0.0);
+						// 정액제 상품으로 이용할 에피소드 상품에 적용할 DRM/이용기간 정보 조회 및 반영
+						if (this.setEpisodeDrmInfo(product, useExistenceScRes, useUser.getTenantId(),
+								purchaseOrderInfo.getLangCd())) {
+							purchaseOrderInfo.setRealTotAmt(0.0); // 정상적으로 정액제 상품 이용하는 경우: 무료구매 처리 데이터 세팅
 						}
 					}
 				} // #END 이용 가능한 정액권 기구매 확인 처리
@@ -1267,6 +1246,52 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 				throw e;
 			}
+		}
+	}
+
+	/*
+	 * 정액권으로 이용할 에피소드 상품에 적용할 DRM 정보 조회 및 반영
+	 */
+	private boolean setEpisodeDrmInfo(PurchaseProduct episodeProduct, ExistenceScRes fixrateExistence, String tenantId,
+			String langCd) {
+		CmpxProductInfo cmpxProductInfo = this.purchaseDisplayRepository.searchCmpxProductInfo(tenantId, langCd,
+				fixrateExistence.getProdId(), episodeProduct.getProdId(), episodeProduct.getChapter());
+
+		if (cmpxProductInfo != null) {
+			if (StringUtils.isBlank(cmpxProductInfo.getUsePeriodUnitCd())
+					|| ((StringUtils.equals(cmpxProductInfo.getUsePeriodUnitCd(),
+							PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) == false) && (cmpxProductInfo
+							.getUsePeriod() == null || cmpxProductInfo.getUsePeriod() == 0))) {
+				throw new StorePlatformException("SAC_PUR_5116", fixrateExistence.getProdId(),
+						episodeProduct.getProdId(), episodeProduct.getChapter(), cmpxProductInfo.getUsePeriodUnitCd(),
+						cmpxProductInfo.getUsePeriod());
+			}
+
+			episodeProduct.setUsePeriodUnitCd(cmpxProductInfo.getUsePeriodUnitCd());
+			episodeProduct.setUsePeriod(StringUtils.equals(cmpxProductInfo.getUsePeriodUnitCd(),
+					PurchaseConstants.PRODUCT_USE_PERIOD_UNIT_UNLIMITED) ? "0" : String.valueOf(cmpxProductInfo
+					.getUsePeriod()));
+			episodeProduct.setDrmYn(StringUtils.defaultString(cmpxProductInfo.getDrmYn(), PurchaseConstants.USE_N));
+
+			// 다운로드 만료일시의 최대값은 정액권의 이용종료일시
+			// 2015.05: 이용 만료일시도 동일 처리
+			Date currDateObj = new Date();
+			String currDt = new SimpleDateFormat("yyyyMMddHHmmss").format(currDateObj);
+			String exprDt = this.purchaseOrderAssistService.calculateUseDate(currDt,
+					episodeProduct.getUsePeriodUnitCd(), episodeProduct.getUsePeriod());
+			if (exprDt.compareTo(fixrateExistence.getUseExprDt()) > 0) {
+				episodeProduct.setUseExprDt(fixrateExistence.getUseExprDt());
+				episodeProduct.setDwldExprDt(fixrateExistence.getUseExprDt());
+			}
+
+			episodeProduct.setUseFixrateProdId(fixrateExistence.getProdId()); // 사용할 정액권 상품ID 세팅
+			episodeProduct.setUseFixratePrchsId(fixrateExistence.getPrchsId()); // 사용할 정액권 구매ID 세팅
+			episodeProduct.setUseFixrateProdClsfCd(cmpxProductInfo.getCmpxProdClsfCd()); // 사용할 정액권 타입
+
+			return true;
+
+		} else {
+			return false;
 		}
 	}
 

@@ -71,9 +71,6 @@ public final class PurchaseConstants extends com.skplanet.storeplatform.purchase
 	public static final String SAP_POLICY_LIMIT_CREDIT = "LIMIT_CREDIT"; // 신용카드 결제 불가
 	public static final String SAP_POLICY_TEST_PHONE = "TEST_PHONE"; // 시험폰
 
-	/** 무제한 일시 */
-	public static final String UNLIMITED_DATE = "99991231235959";
-
 	/** 비회원 처리용 UserKey */
 	public static final String NONMEMBER_COMMON_USERKEY = "NONMEMBER";
 
