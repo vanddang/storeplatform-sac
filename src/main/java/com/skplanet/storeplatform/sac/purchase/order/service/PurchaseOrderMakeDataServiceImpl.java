@@ -54,8 +54,8 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 
 	@Value("#{systemProperties['spring.profiles.active']}")
 	private String envServerLevel;
-	@Value("#{propertiesForSac['purchase.order.drm.applicable']}")
-	private boolean drmApplicable;
+	@Value("#{propertiesForSac['purchase.order.drm.redate']}")
+	private boolean drmRedate;
 
 	@Autowired
 	private PurchaseOrderAssistService purchaseOrderAssistService;
@@ -212,7 +212,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					// - 초기 재다운로드 종료일시는 무제한 (다운로드 비대상인 정액제상품 & 정액제로 이용하는 에피소드 상품은 제외)
 					// - DRM_YN 값 변경
 					// - 외부구매경로(T프리미엄 등 비과금 구매요청 경로), 정액제 상품, 정액제 이용 에피소드 상품 경우 제외
-					if (this.drmApplicable) {
+					if (this.drmRedate) {
 						if (StringUtils.equals("Y", product.getDrmYn())
 								&& (purchaseOrderInfo.isVod() || purchaseOrderInfo.isEbookcomic())
 								&& purchaseOrderInfo.isFlat() == false
