@@ -49,7 +49,7 @@
     			ON ARTIST.ARTIST_ID = PROD_DESC.ARTIST1_ID
     		LEFT JOIN TB_DP_SOCIAL_STATS_MBR_LIKE SSML
                 ON SSML.TENANT_ID = #{tenantId, jdbcType=VARCHAR} AND SSML.STATS_KEY = #{prodId, jdbcType=VARCHAR}
-                   AND SSML.STATS_CLSF = 'DP01210002' AND SSML.USER_KEY = #{userKey, jdbcType=VARCHAR}
+                   AND SSML.STATS_CLSF = 'DP01210004' AND SSML.USER_KEY = #{userKey, jdbcType=VARCHAR}
  
     	WHERE 1=1
     		AND PROD.PROD_ID = #{prodId, jdbcType=VARCHAR}

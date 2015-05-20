@@ -30,6 +30,6 @@ public interface StatMemberItemService {
 
 	Product findProd(String prodId, SacRequestHeader header);
 	
-	Contributor findArtist(String prodId, SacRequestHeader header);
+	Contributor findArtist(String prodId, String userKey, SacRequestHeader header);
 
 }

@@ -146,7 +146,6 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 		contributor.setIdentifierList(identifierList);
 		contributor.setName(metaInfo.getArtistNm());
 		contributor.setDebutDay(metaInfo.getDebutDay());
-		// contributor.setDebutDay(DateUtils.parseDate(metaInfo.getDebutDay()));
 		contributor.setDebutMusicNm(metaInfo.getDebutMusicNm());
 		contributor.setCountry(metaInfo.getCountry());
 

@@ -51,6 +51,8 @@ public class OtherArtistServiceImpl implements OtherArtistService {
 		OtherArtistRes res = new OtherArtistRes();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("artistId", req.getArtistId());
+		paramMap.put("userKey", req.getUserKey());
+		paramMap.put("tenantId", header.getTenantHeader().getTenantId());
 
 		MetaInfo metaInfo = this.commonDAO.queryForObject("OtherArtist.searchArtistDetail", paramMap, MetaInfo.class);
 
@@ -61,7 +63,9 @@ public class OtherArtistServiceImpl implements OtherArtistService {
 		} else {
 			commonResponse.setTotalCount(1);
 			contributor = this.musicGenerator.generateArtistDetailContributor(metaInfo);
+			contributor.setLikeYn(metaInfo.getLikeYn());
 		}
+		
 		res.setContributor(contributor);
 		res.setCommonResponse(commonResponse);
 
