@@ -19,7 +19,6 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
@@ -44,7 +43,6 @@ import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcReq
 import com.skplanet.storeplatform.external.client.market.vo.MarketAuthorizeEcRes;
 import com.skplanet.storeplatform.external.client.market.vo.MarketClauseExtraInfoEc;
 import com.skplanet.storeplatform.external.client.tstore.sci.TstoreTransferSCI;
-import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil;
 import com.skplanet.storeplatform.framework.core.util.log.TLogUtil.ShuttleSetter;
@@ -67,8 +65,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceSetInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
@@ -78,12 +74,10 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SimpleLoginResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TlogInfo;
 import com.skplanet.storeplatform.member.client.user.sci.vo.TlogRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateDeviceManagementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.IapProductInfoRes;
 import com.skplanet.storeplatform.sac.client.internal.display.localsci.vo.UserDownloadInfoRes;
@@ -312,84 +306,84 @@ public class LoginServiceImpl implements LoginService {
 			return res;
 		}
 
-		// 한도 요금제 여부 로직 추가 (2015-05-27)
-		// 공통 파라미터 셋팅
-		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-		searchDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-		searchDeviceRequest.setUserKey(dbDeviceInfo.getUserKey());
-		/**
-		 * 검색 조건 setting
-		 */
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-		keySchUserKey.setKeyString(dbDeviceInfo.getDeviceKey());
-		keySearchList.add(keySchUserKey);
-		searchDeviceRequest.setKeySearchList(keySearchList);
-		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
-
-		boolean limitChargeFlag = true;
-		List<UserMbrDeviceDetail> userMbrDeviceDetails = searchDeviceResponse.getUserMbrDevice()
-				.getUserMbrDeviceDetail();
-		if (userMbrDeviceDetails != null) {
-			for (UserMbrDeviceDetail userMbrDeviceDetail : userMbrDeviceDetails) {
-
-				// 단말 부가속성중 한도요금제 속성 여부
-				if (StringUtils.equals(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN,
-						userMbrDeviceDetail.getExtraProfile())) {
-
-					if (StringUtils.isNotBlank(userMbrDeviceDetail.getUpdateDatePlue7())) {
-						if (NumberUtils.createLong(userMbrDeviceDetail.getUpdateDatePlue7()) > NumberUtils
-								.createLong(userMbrDeviceDetail.getNowDate())) {
-							limitChargeFlag = false;
-						}
-					} else if (StringUtils.isNotBlank(userMbrDeviceDetail.getRegDatePlus7())) {
-						if (NumberUtils.createLong(userMbrDeviceDetail.getRegDatePlus7()) > NumberUtils
-								.createLong(userMbrDeviceDetail.getNowDate())) {
-							limitChargeFlag = false;
-						}
-					}
-					break;
-				}
-			}
-		}
-
-		// UAPS 연동, 단말 부가정보 등록
-		if (limitChargeFlag && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
-			UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
-			updateDeviceManagementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-			updateDeviceManagementRequest.setDeviceKey(dbDeviceInfo.getDeviceKey());
-			updateDeviceManagementRequest.setUserKey(dbDeviceInfo.getUserKey());
-
-			UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN);
-			userMbrDeviceDetail.setExtraProfileValue(MemberConstants.USE_N);
-			userMbrDeviceDetail.setDeviceKey(dbDeviceInfo.getDeviceKey());
-			userMbrDeviceDetail.setUserKey(dbDeviceInfo.getUserKey());
-			userMbrDeviceDetail.setRegID(dbDeviceInfo.getUserId());
-			try {
-				// UAPS 연동 : 한도요금제(NA00002125) 여부 확인
-				UserEcRes userEcRes = this.commService.getMappingInfo(req.getDeviceId(), "mdn");
-				if (userEcRes != null) {
-					if (userEcRes.getServiceCD() != null) {
-						for (String serviceCD : userEcRes.getServiceCD()) {
-							if (StringUtils.equals("NA00002125", serviceCD)) {
-								userMbrDeviceDetail.setExtraProfileValue(MemberConstants.USE_Y);
-								break;
-							}
-						}
-					}
-				}
-				List<UserMbrDeviceDetail> setDeviceDetails = new ArrayList<UserMbrDeviceDetail>();
-				setDeviceDetails.add(userMbrDeviceDetail);
-				updateDeviceManagementRequest.setUserMbrDeviceDetail(setDeviceDetails);
-
-				this.deviceSCI.updateDeviceManagement(updateDeviceManagementRequest);
-			} catch (StorePlatformException e) {
-				LOGGER.info("UAPS getMappingInfo MDN : {}, errorCode : {}, errorMessage : {}", req.getDeviceId(), e
-						.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
-			}
-		}
+		// // 한도 요금제 여부 로직 추가 (2015-05-27)
+		// // 공통 파라미터 셋팅
+		// SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		// searchDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		// searchDeviceRequest.setUserKey(dbDeviceInfo.getUserKey());
+		// /**
+		// * 검색 조건 setting
+		// */
+		// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		// KeySearch keySchUserKey = new KeySearch();
+		// keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		// keySchUserKey.setKeyString(dbDeviceInfo.getDeviceKey());
+		// keySearchList.add(keySchUserKey);
+		// searchDeviceRequest.setKeySearchList(keySearchList);
+		// SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
+		//
+		// boolean limitChargeFlag = true;
+		// List<UserMbrDeviceDetail> userMbrDeviceDetails = searchDeviceResponse.getUserMbrDevice()
+		// .getUserMbrDeviceDetail();
+		// if (userMbrDeviceDetails != null) {
+		// for (UserMbrDeviceDetail userMbrDeviceDetail : userMbrDeviceDetails) {
+		//
+		// // 단말 부가속성중 한도요금제 속성 여부
+		// if (StringUtils.equals(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN,
+		// userMbrDeviceDetail.getExtraProfile())) {
+		//
+		// if (StringUtils.isNotBlank(userMbrDeviceDetail.getUpdateDatePlue7())) {
+		// if (NumberUtils.createLong(userMbrDeviceDetail.getUpdateDatePlue7()) > NumberUtils
+		// .createLong(userMbrDeviceDetail.getNowDate())) {
+		// limitChargeFlag = false;
+		// }
+		// } else if (StringUtils.isNotBlank(userMbrDeviceDetail.getRegDatePlus7())) {
+		// if (NumberUtils.createLong(userMbrDeviceDetail.getRegDatePlus7()) > NumberUtils
+		// .createLong(userMbrDeviceDetail.getNowDate())) {
+		// limitChargeFlag = false;
+		// }
+		// }
+		// break;
+		// }
+		// }
+		// }
+		//
+		// // UAPS 연동, 단말 부가정보 등록
+		// if (limitChargeFlag && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
+		// UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
+		// updateDeviceManagementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		// updateDeviceManagementRequest.setDeviceKey(dbDeviceInfo.getDeviceKey());
+		// updateDeviceManagementRequest.setUserKey(dbDeviceInfo.getUserKey());
+		//
+		// UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+		// userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN);
+		// userMbrDeviceDetail.setExtraProfileValue(MemberConstants.USE_N);
+		// userMbrDeviceDetail.setDeviceKey(dbDeviceInfo.getDeviceKey());
+		// userMbrDeviceDetail.setUserKey(dbDeviceInfo.getUserKey());
+		// userMbrDeviceDetail.setRegID(dbDeviceInfo.getUserId());
+		// try {
+		// // UAPS 연동 : 한도요금제(NA00002125) 여부 확인
+		// UserEcRes userEcRes = this.commService.getMappingInfo(req.getDeviceId(), "mdn");
+		// if (userEcRes != null) {
+		// if (userEcRes.getServiceCD() != null) {
+		// for (String serviceCD : userEcRes.getServiceCD()) {
+		// if (StringUtils.equals("NA00002125", serviceCD)) {
+		// userMbrDeviceDetail.setExtraProfileValue(MemberConstants.USE_Y);
+		// break;
+		// }
+		// }
+		// }
+		// }
+		// List<UserMbrDeviceDetail> setDeviceDetails = new ArrayList<UserMbrDeviceDetail>();
+		// setDeviceDetails.add(userMbrDeviceDetail);
+		// updateDeviceManagementRequest.setUserMbrDeviceDetail(setDeviceDetails);
+		//
+		// this.deviceSCI.updateDeviceManagement(updateDeviceManagementRequest);
+		// } catch (StorePlatformException e) {
+		// LOGGER.info("UAPS getMappingInfo MDN : {}, errorCode : {}, errorMessage : {}", req.getDeviceId(), e
+		// .getErrorInfo().getCode(), e.getErrorInfo().getMessage());
+		// }
+		// }
 
 		/* 로그인 결과 */
 		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
@@ -540,84 +534,84 @@ public class LoginServiceImpl implements LoginService {
 			return res;
 		}
 
-		// 한도 요금제 여부 로직 추가 (2015-05-27)
-		// 공통 파라미터 셋팅
-		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-		searchDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-		searchDeviceRequest.setUserKey(dbDeviceInfo.getUserKey());
-		/**
-		 * 검색 조건 setting
-		 */
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-		keySchUserKey.setKeyString(dbDeviceInfo.getDeviceKey());
-		keySearchList.add(keySchUserKey);
-		searchDeviceRequest.setKeySearchList(keySearchList);
-		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
-
-		boolean limitChargeFlag = true;
-		List<UserMbrDeviceDetail> userMbrDeviceDetails = searchDeviceResponse.getUserMbrDevice()
-				.getUserMbrDeviceDetail();
-		if (userMbrDeviceDetails != null) {
-			for (UserMbrDeviceDetail userMbrDeviceDetail : userMbrDeviceDetails) {
-
-				// 단말 부가속성중 한도요금제 속성 여부
-				if (StringUtils.equals(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN,
-						userMbrDeviceDetail.getExtraProfile())) {
-
-					if (StringUtils.isNotBlank(userMbrDeviceDetail.getUpdateDatePlue7())) {
-						if (NumberUtils.createLong(userMbrDeviceDetail.getUpdateDatePlue7()) > NumberUtils
-								.createLong(userMbrDeviceDetail.getNowDate())) {
-							limitChargeFlag = false;
-						}
-					} else if (StringUtils.isNotBlank(userMbrDeviceDetail.getRegDatePlus7())) {
-						if (NumberUtils.createLong(userMbrDeviceDetail.getRegDatePlus7()) > NumberUtils
-								.createLong(userMbrDeviceDetail.getNowDate())) {
-							limitChargeFlag = false;
-						}
-					}
-					break;
-				}
-			}
-		}
-
-		// UAPS 연동, 단말 부가정보 등록
-		if (limitChargeFlag && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
-			UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
-			updateDeviceManagementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
-			updateDeviceManagementRequest.setDeviceKey(dbDeviceInfo.getDeviceKey());
-			updateDeviceManagementRequest.setUserKey(dbDeviceInfo.getUserKey());
-
-			UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN);
-			userMbrDeviceDetail.setExtraProfileValue(MemberConstants.USE_N);
-			userMbrDeviceDetail.setDeviceKey(dbDeviceInfo.getDeviceKey());
-			userMbrDeviceDetail.setUserKey(dbDeviceInfo.getUserKey());
-			userMbrDeviceDetail.setRegID(dbDeviceInfo.getUserId());
-			try {
-				// UAPS 연동 : 한도요금제(NA00002125) 여부 확인
-				UserEcRes userEcRes = this.commService.getMappingInfo(req.getDeviceId(), "mdn");
-				if (userEcRes != null) {
-					if (userEcRes.getServiceCD() != null) {
-						for (String serviceCD : userEcRes.getServiceCD()) {
-							if (StringUtils.equals("NA00002125", serviceCD)) {
-								userMbrDeviceDetail.setExtraProfileValue(MemberConstants.USE_Y);
-								break;
-							}
-						}
-					}
-				}
-				List<UserMbrDeviceDetail> setDeviceDetails = new ArrayList<UserMbrDeviceDetail>();
-				setDeviceDetails.add(userMbrDeviceDetail);
-				updateDeviceManagementRequest.setUserMbrDeviceDetail(setDeviceDetails);
-
-				this.deviceSCI.updateDeviceManagement(updateDeviceManagementRequest);
-			} catch (StorePlatformException e) {
-				LOGGER.info("UAPS getMappingInfo MDN : {}, errorCode : {}, errorMessage : {}", req.getDeviceId(), e
-						.getErrorInfo().getCode(), e.getErrorInfo().getMessage());
-			}
-		}
+		// // 한도 요금제 여부 로직 추가 (2015-05-27)
+		// // 공통 파라미터 셋팅
+		// SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		// searchDeviceRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		// searchDeviceRequest.setUserKey(dbDeviceInfo.getUserKey());
+		// /**
+		// * 검색 조건 setting
+		// */
+		// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		// KeySearch keySchUserKey = new KeySearch();
+		// keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		// keySchUserKey.setKeyString(dbDeviceInfo.getDeviceKey());
+		// keySearchList.add(keySchUserKey);
+		// searchDeviceRequest.setKeySearchList(keySearchList);
+		// SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
+		//
+		// boolean limitChargeFlag = true;
+		// List<UserMbrDeviceDetail> userMbrDeviceDetails = searchDeviceResponse.getUserMbrDevice()
+		// .getUserMbrDeviceDetail();
+		// if (userMbrDeviceDetails != null) {
+		// for (UserMbrDeviceDetail userMbrDeviceDetail : userMbrDeviceDetails) {
+		//
+		// // 단말 부가속성중 한도요금제 속성 여부
+		// if (StringUtils.equals(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN,
+		// userMbrDeviceDetail.getExtraProfile())) {
+		//
+		// if (StringUtils.isNotBlank(userMbrDeviceDetail.getUpdateDatePlue7())) {
+		// if (NumberUtils.createLong(userMbrDeviceDetail.getUpdateDatePlue7()) > NumberUtils
+		// .createLong(userMbrDeviceDetail.getNowDate())) {
+		// limitChargeFlag = false;
+		// }
+		// } else if (StringUtils.isNotBlank(userMbrDeviceDetail.getRegDatePlus7())) {
+		// if (NumberUtils.createLong(userMbrDeviceDetail.getRegDatePlus7()) > NumberUtils
+		// .createLong(userMbrDeviceDetail.getNowDate())) {
+		// limitChargeFlag = false;
+		// }
+		// }
+		// break;
+		// }
+		// }
+		// }
+		//
+		// // UAPS 연동, 단말 부가정보 등록
+		// if (limitChargeFlag && StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, req.getDeviceTelecom())) {
+		// UpdateDeviceManagementRequest updateDeviceManagementRequest = new UpdateDeviceManagementRequest();
+		// updateDeviceManagementRequest.setCommonRequest(this.commService.getSCCommonRequest(requestHeader));
+		// updateDeviceManagementRequest.setDeviceKey(dbDeviceInfo.getDeviceKey());
+		// updateDeviceManagementRequest.setUserKey(dbDeviceInfo.getUserKey());
+		//
+		// UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+		// userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_LIMIT_CHARGE_YN);
+		// userMbrDeviceDetail.setExtraProfileValue(MemberConstants.USE_N);
+		// userMbrDeviceDetail.setDeviceKey(dbDeviceInfo.getDeviceKey());
+		// userMbrDeviceDetail.setUserKey(dbDeviceInfo.getUserKey());
+		// userMbrDeviceDetail.setRegID(dbDeviceInfo.getUserId());
+		// try {
+		// // UAPS 연동 : 한도요금제(NA00002125) 여부 확인
+		// UserEcRes userEcRes = this.commService.getMappingInfo(req.getDeviceId(), "mdn");
+		// if (userEcRes != null) {
+		// if (userEcRes.getServiceCD() != null) {
+		// for (String serviceCD : userEcRes.getServiceCD()) {
+		// if (StringUtils.equals("NA00002125", serviceCD)) {
+		// userMbrDeviceDetail.setExtraProfileValue(MemberConstants.USE_Y);
+		// break;
+		// }
+		// }
+		// }
+		// }
+		// List<UserMbrDeviceDetail> setDeviceDetails = new ArrayList<UserMbrDeviceDetail>();
+		// setDeviceDetails.add(userMbrDeviceDetail);
+		// updateDeviceManagementRequest.setUserMbrDeviceDetail(setDeviceDetails);
+		//
+		// this.deviceSCI.updateDeviceManagement(updateDeviceManagementRequest);
+		// } catch (StorePlatformException e) {
+		// LOGGER.info("UAPS getMappingInfo MDN : {}, errorCode : {}, errorMessage : {}", req.getDeviceId(), e
+		// .getErrorInfo().getCode(), e.getErrorInfo().getMessage());
+		// }
+		// }
 
 		/* 로그인 결과 */
 		res.setUserKey(chkDupRes.getUserMbr().getUserKey());
