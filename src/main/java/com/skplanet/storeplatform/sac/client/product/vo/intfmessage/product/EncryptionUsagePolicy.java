@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * EncryptionUsagePolicy Value Object.
- * 
+ *
  * Updated on : 2014. 02. 11. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -27,6 +27,11 @@ public class EncryptionUsagePolicy extends CommonInfo implements Serializable {
 	private String applyDrm; // DRM 지원여부
 
 	private String expirationDate; // DRM 만료일
+
+    //	"dl": 다운로드 Only
+    //	"strm": 스트리밍 Only
+    //	"both": 다운로드 & 스트리밍 모두 지원
+	private String dlStrmCd;
 
 	/**
 	 * @return the applyDrm
@@ -56,5 +61,13 @@ public class EncryptionUsagePolicy extends CommonInfo implements Serializable {
 	 */
 	public void setExpirationDate(String expirationDate) {
 		this.expirationDate = expirationDate;
+	}
+
+	public String getDlStrmCd() {
+		return dlStrmCd;
+	}
+
+	public void setDlStrmCd(String dlStrmCd) {
+		this.dlStrmCd = dlStrmCd;
 	}
 }
