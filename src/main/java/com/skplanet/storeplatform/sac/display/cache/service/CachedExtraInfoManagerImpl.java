@@ -64,7 +64,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
         updateTargetMap.put("subContentsId", param.getSubContentsId());
         updateTargetMap.put("langCd", param.getLangCd());
 
-        return commonDAO.queryForObject("UpdateProductInfo.getUpdateProductInfo", updateTargetMap, UpdateProduct.class);
+        return commonDAO.queryForObject("CachedExtraInfoManager.getUpdateProductInfo", updateTargetMap, UpdateProduct.class);
     }
 
     @Override
