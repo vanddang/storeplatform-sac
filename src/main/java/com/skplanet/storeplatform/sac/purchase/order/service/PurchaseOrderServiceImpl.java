@@ -332,6 +332,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			cmpxProductSacReq.setLangCd(prchsDtlMore.getCurrencyCd());
 			cmpxProductSacReq.setDeviceModelCd(useUser.getDeviceModelCd());
 			cmpxProductSacReq.setProdId(prchsDtlMore.getProdId());
+			cmpxProductSacReq.setChapter(product.getChapter());
 			cmpxProductSacReq.setPossLendClsfCd(product.getPossLendClsfCd());
 			cmpxProductSacReq.setCmpxProdClsfCd(product.getCmpxProdClsfCd());
 			cmpxProductSacReq.setSeriesBookClsfCd(product.getCmpxProdBookClsfCd());
@@ -1139,6 +1140,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			cmpxProductSacReq.setLangCd(prchsDtlMore.getCurrencyCd());
 			cmpxProductSacReq.setDeviceModelCd(reservedDataMap.get("deviceModelCd"));
 			cmpxProductSacReq.setProdId(prchsDtlMore.getProdId());
+			cmpxProductSacReq.setChapter(prchsDtlMore.getPartChrgProdNm());
 			cmpxProductSacReq.setPossLendClsfCd(reservedDataMap.get("possLendClsfCd"));
 			cmpxProductSacReq.setCmpxProdClsfCd(reservedDataMap.get("cmpxProdClsfCd"));
 			cmpxProductSacReq.setSeriesBookClsfCd(reservedDataMap.get("cmpxProdBookClsfCd"));
