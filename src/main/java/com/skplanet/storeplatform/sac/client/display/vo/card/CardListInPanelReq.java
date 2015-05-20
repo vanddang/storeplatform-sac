@@ -35,7 +35,7 @@ public class CardListInPanelReq extends CommonInfo {
 
     private String userKey;
 
-    private String useGrdCd = "PD004401"; // 12세 이용가
+    private String useGrdCd = "PD004404"; // 청소년 이용불가
 
     private List<PreferredCategoryReq> preferredCategoryList;
 
