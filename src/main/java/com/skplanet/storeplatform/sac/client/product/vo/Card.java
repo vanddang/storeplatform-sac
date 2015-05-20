@@ -83,6 +83,9 @@ public class Card extends CommonInfo {
      */
     private String lndLayout;
 
+    /** 랜딩 핀 인증여부 */
+    private String lndPinAuthYn;
+
     /**
      * 메뉴 카테고리
      */
@@ -274,6 +277,14 @@ public class Card extends CommonInfo {
 
     public void setPreference(Preference preference) {
         this.preference = preference;
+    }
+
+	public String getLndPinAuthYn() {
+	    return lndPinAuthYn;
+    }
+
+	public void setLndPinAuthYn( String lndPinAuthYn ) {
+	    this.lndPinAuthYn = lndPinAuthYn;
     }
 
 
