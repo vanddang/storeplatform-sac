@@ -110,6 +110,11 @@ public class Contributor extends CommonInfo implements Serializable {
 	 * 출시일, 개봉일, 웹툰 등록일 등 날짜를 기입할 경우 사용한다.(데이터가 날짜 형식은 경우 사용)
 	 */
 	private Date date;
+	
+	/**
+	 * 개별 사용자가 해당 contributor에 like를 했는지 여부
+	 */
+	private String likeYn;
 
 	/**
 	 * resource 정보.
@@ -428,4 +433,14 @@ public class Contributor extends CommonInfo implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+	public String getLikeYn() {
+		return likeYn;
+	}
+
+	public void setLikeYn(String likeYn) {
+		this.likeYn = likeYn;
+	}
+	
+	
 }
