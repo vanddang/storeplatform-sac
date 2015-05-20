@@ -240,7 +240,11 @@ public class PurchaseCancelController {
 						purchaseCancelSacParam.getCancelReqPathCd())) {
 			throw new StorePlatformException("SAC_PUR_8102");
 		}
-		purchaseCancelSacParam.setIgnorePayment(false);
+		if (StringUtils.equals(PurchaseConstants.PRCHS_REQ_PATH_S2S,
+				purchaseCancelSacParam.getCancelReqPathCd()))
+			purchaseCancelSacParam.setIgnorePayment(true);
+		else
+			purchaseCancelSacParam.setIgnorePayment(false);
 		// request user type setting.
 		purchaseCancelSacParam.setPrchsCancelByType(PurchaseConstants.PRCHS_CANCEL_BY_USER);
 
