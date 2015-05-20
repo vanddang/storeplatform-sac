@@ -116,6 +116,8 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
         } else {
             usagePolicy.setExpirationDate("");
         }
+        String dlStrmCd = getDlStrmCd(metaInfo);
+        usagePolicy.setDlStrmCd(dlStrmCd);
         data.setUsagePolicy(usagePolicy);
 
         // 기기 정보
@@ -138,6 +140,19 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
         contents.setData(data);
         return contents;
     }
+
+	private String getDlStrmCd(MetaInfo metaInfo) {
+		String dlStrmCdStore=metaInfo.getStoreDlStrmCd();
+        String dlStrmCdPlay=metaInfo.getPlayDlStrmCd();
+        String dlStrmCd;
+        if(StringUtils.isNotEmpty(dlStrmCdStore))
+        	dlStrmCd = dlStrmCdStore;
+        else if(StringUtils.isNotEmpty(dlStrmCdPlay))
+        	dlStrmCd = dlStrmCdPlay;
+        else
+        	dlStrmCd = ""; // Default 값으로 null이 아닌 ""이 들어가야 한다.
+		return dlStrmCd;
+	}
 
     private EncryptionSubContents getEncryptionSdSubContents(MetaInfo metaInfo) {
         EncryptionSubContents sdSc = new EncryptionSubContents();
@@ -174,14 +189,14 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 
     private EncryptionSubContents getEncryptionHdSubContents(MetaInfo metaInfo) {
         EncryptionSubContents hdSc = new EncryptionSubContents();
-        
+
         if (StringUtils.isNotEmpty(metaInfo.getHihdSubContsId())) {
         	hdSc.setType("");
             hdSc.setDeltaPath("");
             hdSc.setDeltaSize(0L);
             hdSc.setSize(Long.parseLong(metaInfo.getHihdFileSize()));
             hdSc.setScid(metaInfo.getHihdSubContsId());
-            hdSc.setPath(metaInfo.getHihdFilePath());	
+            hdSc.setPath(metaInfo.getHihdFilePath());
         } else {
         	hdSc.setType("");
             hdSc.setDeltaPath("");
@@ -190,7 +205,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
             hdSc.setScid(metaInfo.getHdSubContsId());
             hdSc.setPath(metaInfo.getHiFilePath());
         }
-        
+
         return hdSc;
     }
 
@@ -205,7 +220,7 @@ public class EncrytionGeneratorImpl implements EncryptionGenerator {
 		if (StringUtils.isNotBlank(metaInfo.getParentBunchId())) {
 			extra.append("parentBunchId=").append(metaInfo.getParentBunchId()).append(";");
 		}
-		
+
 		if (StringUtils.isNotBlank(metaInfo.getVisitPathNm())) {
 			extra.append("visitPathNm=").append(metaInfo.getVisitPathNm()).append(";");
 		}
