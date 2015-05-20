@@ -237,7 +237,7 @@ public class PurchaseOrderMakeDataServiceImpl implements PurchaseOrderMakeDataSe
 					// IAP 상품 경우-부분유료화 상품, 멀티 상품 경우-회차 정보
 					if (purchaseOrderInfo.isIap()) {
 						prchsDtlMore.setPartChrgProdNm(product.getPartChrgProdNm()); // 부분_유료_상품_명
-					} else {
+					} else if (purchaseOrderInfo.isFlat()) {
 						prchsDtlMore.setPartChrgProdNm(product.getChapter());
 					}
 					/* Ring & Bell */
