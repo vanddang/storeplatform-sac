@@ -971,11 +971,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 						}
 
 						// 회차 비교: 정액제 상품의 max회차 값이 없는 경우는 모두 허용
-						if (StringUtils.isNotBlank(checkRes.getPartChrgProdNm())) {
-							if (NumberUtils.toInt(product.getChapter(), 0) > NumberUtils.toInt(
-									checkRes.getPartChrgProdNm(), 99999)) {
-								continue;
-							}
+						if (NumberUtils.toInt(product.getChapter(), 0) > NumberUtils.toInt(
+								checkRes.getPartChrgProdNm(), Integer.MAX_VALUE)) {
+							continue;
 						}
 
 						if (useExistenceScRes == null) {

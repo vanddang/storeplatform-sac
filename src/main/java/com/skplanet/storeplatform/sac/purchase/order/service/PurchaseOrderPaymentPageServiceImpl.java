@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.purchase.common.util.MD5Utils;
 import com.skplanet.storeplatform.sac.purchase.common.util.PayPlanetUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRepository;
+import com.skplanet.storeplatform.sac.purchase.order.vo.MctSpareParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
@@ -180,14 +181,39 @@ public class PurchaseOrderPaymentPageServiceImpl implements PurchaseOrderPayment
 
 	/*
 	 * 
-	 * <pre> 가맹점 파라미터 구성. </pre>
+	 * <pre> 가맹점 파라미터 구성: 구매인증/결제처리결과알림 요청 시 그대로 전달받음. </pre>
 	 * 
 	 * @param purchaseOrderInfo 구매요청 정보
 	 * 
 	 * @return 구성된 가맹점 파라미터
 	 */
 	private String makeMctSpareParam(PurchaseOrderInfo purchaseOrderInfo) {
-		return purchaseOrderInfo.getTenantId();
+		/*
+		 * 구매 DB 파티션 처리를 위해, USE_ 회원이 1명인 경우에만 파티션 조건 값 세팅 버전:값1:값2:...:값N
+		 */
+
+		// 1:useTenantId:useInsdUsermbrNo
+
+		String useTenantId = "";
+		String useInsdUsermbrNo = "";
+
+		if (purchaseOrderInfo.isGift()) {
+			if (purchaseOrderInfo.getReceiveUserList().size() == 1) {
+				useTenantId = purchaseOrderInfo.getReceiveUserList().get(0).getTenantId();
+				useInsdUsermbrNo = purchaseOrderInfo.getReceiveUserList().get(0).getUserKey();
+			}
+
+		} else {
+			useTenantId = purchaseOrderInfo.getTenantId();
+			useInsdUsermbrNo = purchaseOrderInfo.getPurchaseUser().getUserKey();
+		}
+
+		MctSpareParam mctSpareParam = new MctSpareParam();
+		mctSpareParam.setVersion(1);
+		mctSpareParam.setUseTenantId(useTenantId);
+		mctSpareParam.setUseUserKey(useInsdUsermbrNo);
+
+		return mctSpareParam.makeMctSpareParam();
 	}
 
 	/*

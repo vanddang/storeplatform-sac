@@ -89,6 +89,7 @@ import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseMemberRe
 import com.skplanet.storeplatform.sac.purchase.order.repository.PurchaseShoppingOrderRepository;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.CheckPaymentPolicyResult;
+import com.skplanet.storeplatform.sac.purchase.order.vo.MctSpareParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.MileageSubInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderInfo;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseProduct;
@@ -717,11 +718,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public VerifyOrderSacRes verifyPurchaseOrder(VerifyOrderInfo verifyOrderInfo) {
+
+		MctSpareParam mctSpareParam = new MctSpareParam(verifyOrderInfo.getMctSpareParam()); // 가맹점 파라미터
+
 		// ------------------------------------------------------------------------------------------------
 		// 예약된 구매정보 조회
 
 		List<PrchsDtlMore> prchsDtlMoreList = this.searchReservedPurchaseList(verifyOrderInfo.getTenantId(),
-				verifyOrderInfo.getPrchsId(), verifyOrderInfo.getUserKey());
+				verifyOrderInfo.getPrchsId(), mctSpareParam.getUseTenantId(), mctSpareParam.getUseUserKey());
 
 		PrchsDtlMore prchsDtlMore = prchsDtlMoreList.get(0);
 
@@ -1013,11 +1017,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	public List<PrchsDtlMore> confirmPurchase(NotifyPaymentSacReq notifyPaymentReq, String tenantId) {
 		this.logger.info("PRCHS,ORDER,SAC,CONFIRM,START");
 
+		MctSpareParam mctSpareParam = new MctSpareParam(notifyPaymentReq.getMctSpareParam()); // 가맹점 파라미터
+
 		// ------------------------------------------------------------------------------
 		// 구매 예약 건 조회
 
 		List<PrchsDtlMore> prchsDtlMoreList = this.searchReservedPurchaseList(tenantId, notifyPaymentReq.getPrchsId(),
-				notifyPaymentReq.getUserKey());
+				mctSpareParam.getUseTenantId(), mctSpareParam.getUseUserKey());
 
 		// ------------------------------------------------------------------------------
 		// 구매예약 시, 추가 저장해 두었던 데이터 추출
@@ -1416,6 +1422,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			confirmPurchaseScReq.setTenantId(prchsDtlMore.getTenantId());
 			confirmPurchaseScReq.setSystemId(prchsDtlMore.getSystemId());
 			confirmPurchaseScReq.setPrchsId(prchsDtlMore.getPrchsId());
+			confirmPurchaseScReq.setUseTenantId(mctSpareParam.getUseTenantId());
+			confirmPurchaseScReq.setUseInsdUsermbrNo(mctSpareParam.getUseUserKey());
 			confirmPurchaseScReq.setNetworkTypeCd(prchsDtlMore.getNetworkTypeCd());
 			confirmPurchaseScReq.setOfferingId(offeringId);
 			if (CollectionUtils.isNotEmpty(cashReserveResList)) {
@@ -1981,16 +1989,21 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 * 
 	 * @param prchsId 조회할 구매 ID
 	 * 
-	 * @param userKey 결제사용자 내부관리 번호
+	 * @param useTenantId 이용자 테넌트 ID
+	 * 
+	 * @param useUserKey 이용자 내부관리 번호
 	 * 
 	 * @return 구매 예약 정보 목록
 	 */
-	private List<PrchsDtlMore> searchReservedPurchaseList(String tenantId, String prchsId, String userKey) {
+	private List<PrchsDtlMore> searchReservedPurchaseList(String tenantId, String prchsId, String useTenantId,
+			String useUserKey) {
 		SearchPurchaseListByStatusScReq reqSearch = new SearchPurchaseListByStatusScReq();
 		reqSearch.setTenantId(tenantId);
 		reqSearch.setPrchsId(prchsId);
 		reqSearch.setStatusCd(null);
-		// TAKTODO:: userKey
+		// 구매DB 파티션
+		reqSearch.setUseTenantId(useTenantId);
+		reqSearch.setUseInsdUsermbrNo(useUserKey);
 
 		SearchPurchaseListByStatusScRes searchPurchaseListRes = this.purchaseOrderSearchSCI
 				.searchPurchaseListByStatus(reqSearch);
