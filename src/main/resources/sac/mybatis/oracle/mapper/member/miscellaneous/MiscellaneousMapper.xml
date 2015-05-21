@@ -202,6 +202,22 @@
        AND  auth_value = #{authValue}
     </select>
     
+    <!-- 이메일 인증URL 코드 정보 확인 -->
+    <select id="searchEmailAuthUrlInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
+    SELECT  /* MiscellaneousMapper.xml, searchEmailAuthInfo, SAC(SAC), 김경복, 2015-05-27 */
+            auth_seq
+          , mbr_no
+          , auth_email
+            <if test="timeToLive!=null">
+          , TO_CHAR(auth_value_create_dt -(SYSDATE - ${timeToLive}/24)) AS curr_dt
+            </if>
+          , TO_CHAR(auth_value_create_dt, 'yyyyMMdd hh24:mi:ss') AS auth_value_create_dt
+          , auth_compt_yn
+      FROM  tb_cm_svc_auth
+     WHERE  auth_type_cd = #{authTypeCd}  /* 인증 타입 (CM010901:SMS, CM010902:Email, CM010903:EmailAuthUrl) */
+       AND  auth_value = #{authValue}
+    </select>
+    
     <!-- 휴대폰 인증 여부 확인 --> 
     <select id="searchPhoneAuthCheck" parameterType="ServiceAuth" resultType="ServiceAuth">
      SELECT /* MiscellaneousMapper.searchPhoneAuthCheck, SAC (SAC), 윤보영, 2015-03-05 */

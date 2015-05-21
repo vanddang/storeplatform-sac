@@ -1141,7 +1141,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		serviceAuthReq.setAuthValue(authValue);
 		serviceAuthReq.setTimeToLive(timeToLive);
 		serviceAuthReq.setAuthTypeCd(MemberConstants.AUTH_TYPE_CD_EMAIL_AUTH_URL);
-		ServiceAuth serviceAuthInfo = this.commonDao.queryForObject("Miscellaneous.searchEmailAuthInfo",
+		ServiceAuth serviceAuthInfo = this.commonDao.queryForObject("Miscellaneous.searchEmailAuthUrlInfo",
 				serviceAuthReq, ServiceAuth.class);
 
 		/** 2. 인증코드 정보가 존재할 경우, 인증 처리 */
