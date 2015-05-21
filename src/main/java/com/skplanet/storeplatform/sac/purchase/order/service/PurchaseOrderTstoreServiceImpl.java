@@ -95,7 +95,10 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,RES,{}",
 					ReflectionToStringBuilder.toString(userCouponListEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7210", e);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,RES_EXCEPTION,{}",
+					ReflectionToStringBuilder.toString(userCouponListEcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+			return "NULL";
+//			throw new StorePlatformException("SAC_PUR_7210", e);
 		}
 
 		if (StringUtils.equals(userCouponListEcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
@@ -172,7 +175,10 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES,{}",
 					ReflectionToStringBuilder.toString(userCouponListV2EcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_PUR_7210", e);
+			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES_EXCEPTION,{}",
+					ReflectionToStringBuilder.toString(userCouponListV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+//			throw new StorePlatformException("SAC_PUR_7210", e);
+			return "NULL";
 		}
 
 		if (StringUtils.equals(userCouponListV2EcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
