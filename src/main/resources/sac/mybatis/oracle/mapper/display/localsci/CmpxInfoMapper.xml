@@ -236,7 +236,8 @@
                      ,TB_DP_PROD_RSHP B
                      ,TB_DP_PROD C
                      ,TB_DP_USE_POLICY D      
-                     ,TB_DP_EBOOK_PROD I                       
+                     ,TB_DP_EBOOK_PROD I      
+                     ,TB_DP_VOD_PROD H                     
                WHERE AA.PROD_ID= A.PROD_ID
                  AND A.PROD_ID = CC.PROD_ID
                  AND AA.USE_POLICY_ID = BB.USE_POLICY_ID
@@ -245,10 +246,11 @@
                  AND B.PART_PROD_ID = C.PROD_ID
                  AND C.USE_POLICY_ID =D.USE_POLICY_ID   
                  AND C.PROD_ID  = I.PROD_ID(+)               
+                 AND C.PROD_ID  = H.PROD_ID(+)
                  AND B.PART_PROD_ID=#{episodeProdId}
                  <if test="chapter != null">
-                 AND I.CHAPTER = #{chapter}                     
-                 </if>                 
+                 AND (CASE WHEN C.TOP_MENU_ID IN ('DP17','DP18') THEN H.CHAPTER ELSE I.CHAPTER END) = #{chapter}                     
+                 </if>                  
              )PM             
         WHERE PD.PROD_ID = #{prodId}
         AND PD.PROD_ID = CM.PROD_ID
