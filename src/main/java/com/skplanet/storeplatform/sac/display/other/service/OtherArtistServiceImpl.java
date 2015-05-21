@@ -51,10 +51,16 @@ public class OtherArtistServiceImpl implements OtherArtistService {
 		OtherArtistRes res = new OtherArtistRes();
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("artistId", req.getArtistId());
-		paramMap.put("userKey", req.getUserKey());
 		paramMap.put("tenantId", header.getTenantHeader().getTenantId());
 
-		MetaInfo metaInfo = this.commonDAO.queryForObject("OtherArtist.searchArtistDetail", paramMap, MetaInfo.class);
+		MetaInfo metaInfo;
+		
+		if (req.getUserKey() == null) {
+			metaInfo = commonDAO.queryForObject("OtherArtist.searchArtistDetail", paramMap, MetaInfo.class);
+		} else {
+			paramMap.put("userKey", req.getUserKey());
+			metaInfo = commonDAO.queryForObject("OtherArtist.searchArtistDetailWithLikeYn", paramMap, MetaInfo.class);
+		}
 
 		if (metaInfo == null) {
 			commonResponse.setTotalCount(0);

@@ -72,7 +72,7 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 		} else if (CLSF_PROD.equals(statsClsf) || CLSF_ALBUM.equals(statsClsf)) {
 			item = findProd(statsKey, header);
 		} else if (CLSF_ARTIST.equals(statsClsf)) {
-			item = findArtist(statsKey, userKey, header);
+			item = findArtist(statsKey, header);
 		} else {
 			item = new Object();
 		}
@@ -123,10 +123,9 @@ public class StatMemberItemServiceImpl implements StatMemberItemService {
 	}
 	
 	@Override
-	public Contributor findArtist(String statsKey, String userKey, SacRequestHeader header) {
+	public Contributor findArtist(String statsKey, SacRequestHeader header) {
 		OtherArtistReq req = new OtherArtistReq();
 		req.setArtistId(statsKey);
-		req.setUserKey(userKey);
 		OtherArtistRes otherArtistRes = otherArtistService.searchArtistDetail(req, header);
 		return otherArtistRes.getContributor();
 	}
