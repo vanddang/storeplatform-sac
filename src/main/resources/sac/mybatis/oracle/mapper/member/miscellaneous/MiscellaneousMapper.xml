@@ -204,7 +204,7 @@
     
     <!-- 이메일 인증URL 코드 정보 확인 -->
     <select id="searchEmailAuthUrlInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
-    SELECT  /* MiscellaneousMapper.xml, searchEmailAuthInfo, SAC(SAC), 김경복, 2015-05-27 */
+    SELECT  /* MiscellaneousMapper.xml, searchEmailAuthUrlInfo, SAC(SAC), 김경복, 2015-05-27 */
             auth_seq
           , mbr_no
           , auth_email
