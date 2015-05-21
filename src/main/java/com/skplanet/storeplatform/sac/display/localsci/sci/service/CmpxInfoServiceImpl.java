@@ -136,6 +136,16 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 			req.setSeriesBookClsfCd(null);
 		}
 
+		this.log.info("----------------------------------------------------------------");
+		this.log.info("tenantId : " + req.getTenantId());
+		this.log.info("cmpxProdClsfCd : " + req.getCmpxProdClsfCd());
+		this.log.info("prodId : " + req.getProdId());
+		this.log.info("possLendClsfCd : " + req.getPossLendClsfCd());
+		this.log.info("deviceModelCd : " + req.getDeviceModelCd());
+		this.log.info("langCd : " + req.getLangCd());
+		this.log.info("----------------------------------------------------------------");
+		
+		
 		// / 단말 지원 정보 조회
 		SupportDevice supportDevice = this.displayCommonService.getSupportDeviceInfo(req.getDeviceModelCd());
 
@@ -197,6 +207,15 @@ public class CmpxInfoServiceImpl implements CmpxInfoService {
 		if (StringUtils.isEmpty(req.getChapter())) {
 			req.setChapter(null);
 		}
+		
+		this.log.info("----------------------------------------------------------------");
+		this.log.info("tenantId : " + req.getTenantId());
+		this.log.info("langCd : " + req.getLangCd());
+		this.log.info("prodId : " + req.getProdId());
+		this.log.info("episodeProdId : " + req.getEpisodeProdId());
+		this.log.info("chapter : " + req.getChapter());
+		this.log.info("----------------------------------------------------------------");
+		
 		CmpxProductInfo cmpxProductInfo = null;
 		cmpxProductInfo = this.commonDAO.queryForObject("CmpxInfo.searchCmpxProductInfo", req, CmpxProductInfo.class);
 
