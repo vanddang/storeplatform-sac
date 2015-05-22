@@ -113,7 +113,7 @@
                         , C.DRM_ATTR_CLSF
                         , AA.DRM_YN AS FREE_PASS_DRM_YN
                         , G.DRM_YN                      
-	                    , I.CHAPTER    
+	                    , (CASE WHEN G.TOP_MENU_ID IN ('DP17','DP18') THEN J.CHAPTER ELSE I.CHAPTER END) AS CHAPTER
 	                    , I.BOOK_CLSF_CD
 	                    , C.FREE_PASS_CLSF_CD
 	                    , C.SERIES_BOOK_CLSF_CD
@@ -128,7 +128,8 @@
 	                     ,TB_DP_TENANT_PROD_PRICE F
 	                     ,TB_DP_PROD G
 	                     ,TB_DP_USE_POLICY H   
-	                     ,TB_DP_EBOOK_PROD I                    
+	                     ,TB_DP_EBOOK_PROD I
+	                     ,TB_DP_VOD_PROD J        
 	               WHERE AA.PROD_ID= A.PROD_ID
 	                 AND AA.USE_POLICY_ID = BB.USE_POLICY_ID
 	                 AND A.PART_PROD_ID = B.PROD_ID
@@ -138,8 +139,9 @@
 	                 AND A.PROD_ID = F.PROD_ID
 	                 AND B.PART_PROD_ID  = G.PROD_ID
 	                 AND G.PROD_ID  = I.PROD_ID(+)
+	                 AND G.PROD_ID  = J.PROD_ID(+)
                      <if test="chapter != null">
-                     AND I.CHAPTER <![CDATA[ <= ]]> #{chapter}                    
+                     AND (CASE WHEN G.TOP_MENU_ID IN ('DP17','DP18') THEN J.CHAPTER ELSE I.CHAPTER END) <![CDATA[ <= ]]> #{chapter}                  
                      </if>
 	                 AND G.USE_POLICY_ID = H.USE_POLICY_ID
 	                 AND D.LANG_CD = #{langCd} 
