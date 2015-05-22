@@ -83,8 +83,19 @@
                        WHEN PM.USE_PERIOD_ATTR_CLSF  ='PD013402' THEN PM.USE_PERIOD
                   END)  AS USE_PERIOD                    	              
 	            , PD.CID  
-	            , PM.CHAPTER AS chapterText 
-                , PM.BOOK_CLSF_CD  AS chapterUnit
+	            , PM.CHAPTER AS chapterText                
+                , (CASE WHEN PD.TOP_MENU_ID IN ('DP13','DP14') THEN
+                       (CASE WHEN PM.BOOK_CLSF_CD = 'DP004301' THEN '권'
+                            WHEN PM.BOOK_CLSF_CD = 'DP004302' THEN '회'
+                            WHEN PM.BOOK_CLSF_CD = 'DP004303' THEN '호'
+                       ELSE ''
+                       END)
+                  ELSE 
+                       (CASE
+                            WHEN PD.META_CLSF_CD IN ('CT14', 'CT15','CT16') THEN '회'
+                       ELSE ''
+                       END)
+                  END) AS chapterUnit
 	            , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN PM.POSS_LEND_CLSF_CD ELSE '' END) AS POSS_LEND_CLSF_CD
                 , (CASE WHEN FREE_PASS_CLSF_CD !='OR004305' THEN
 	                    CASE WHEN PM.DWLD_STRM_ATTR_CLSF  ='PD013401' THEN PM.FREE_PASS_DWLD_STRM_CLSF_CD
