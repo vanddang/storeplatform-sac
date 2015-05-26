@@ -95,7 +95,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,RES,{}",
 					ReflectionToStringBuilder.toString(userCouponListEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 			for (Coupon coupon : userCouponListEcRes.getCouponList())
-				this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON_DETAIL,SEARCH,RES,{}",
+				this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON_DETAIL,SEARCH,RES,{}",
 						ReflectionToStringBuilder.toString(coupon, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7210", e);
