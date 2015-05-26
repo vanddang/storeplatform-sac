@@ -32,6 +32,7 @@ public class Identifier extends CommonInfo implements Serializable {
 	 */
 	private String type;
 	private String text; // 상품ID
+    private Integer price;
 
 	public Identifier() {
 	}
@@ -56,4 +57,12 @@ public class Identifier extends CommonInfo implements Serializable {
 	public void setText(String text) {
 		this.text = text;
 	}
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 }
