@@ -772,8 +772,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		// ------------------------------------------------------------------------------------------------
 		// T store 쿠폰 조회
 
-		this.logger.info("PRCHS,ORDER,SAC,VERIFY,ORDERSACRES,RES,{}",
-				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
+//		this.logger.info("PRCHS,ORDER,SAC,VERIFY,ORDERSACRES,RES,{}",
+//				ReflectionToStringBuilder.toString(res, ToStringStyle.SHORT_PREFIX_STYLE));
 		if (StringUtils.contains(res.getCdMaxAmtRate(), "26:0:0") == false) {
 			List<String> prodIdList = new ArrayList<String>();
 			for (PrchsDtlMore productInfo : prchsDtlMoreList) {
