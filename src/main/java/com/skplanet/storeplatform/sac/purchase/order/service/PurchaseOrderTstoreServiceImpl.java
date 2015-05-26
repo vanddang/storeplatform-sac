@@ -218,7 +218,7 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 									.replace(StringUtils.replace(coupon.getCouponName(), ":", ""), ";", "")).append(":") // (1)쿠폰명
 							.append(coupon.getCouponDcType()).append(":") // (2)쿠폰할인방식
 							.append(coupon.getCouponAmt()).append(":") // (3)쿠폰금액/할인율 (변경 필요)
-							.append(coupon.getCouponAmt()).append(":") // (4)상한할인금액
+							.append(coupon.getDcMaxAmt()).append(":") // (4)상한할인금액
 							.append(coupon.getPrchsMinAmt()).append(":") // (5)결제하한금액
 							.append(coupon.getMakeHost()).append(":") // (6)쿠폰 생성 주체
 							.append(coupon.getCouponType()); // (7)쿠폰 타입
