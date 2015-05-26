@@ -2040,6 +2040,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 							// 특가 상품 쿠폰 ID 경우
 							episodeProduct.setSpecialCouponId(episodeShopping.getSpecialCouponId());
+							this.log.info("################################################################");
+							this.log.info("PartProdId : "+episodeShopping.getPartProdId());
+							this.log.info("SpecialCouponId : "+episodeShopping.getSpecialCouponId());
+							this.log.info("################################################################");							
 							// Title 생성
 							Title episodeTitle = this.commonGenerator.generateTitle(episodeShopping);
 							episodeProduct.setTitle(episodeTitle);
@@ -2483,6 +2487,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (paymentInfo == null) {
 				throw new StorePlatformException("SAC_DSP_0005", "[쇼핑상품 조회]" + prodIdList.get(0));
 			}
+
+			this.log.info("################################################################");
+			this.log.info("ProdId : "+paymentInfo.getProdId());
+			this.log.info("SpecialCouponId : "+paymentInfo.getSpecialSaleCouponId());
+			this.log.info("################################################################");				
 			paymentInfoList.add(paymentInfo);
 		}
 
@@ -4115,6 +4124,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 								episodeSaleOption.setMaxMonthlyBuy(Integer.parseInt(episodeShopping.getMthUsrMaxCnt())); // 월_회원_최대_구매_수량
 								episodeSaleOption.setMaxDailyBuy(Integer.parseInt(episodeShopping.getDlyUsrMaxCnt())); // 일_회원_최대_구매_수량
 								episodeSaleOption.setMaxOnceBuy(Integer.parseInt(episodeShopping.getEachMaxCnt())); // 1차_최대_구매_수량
+
+								this.log.info("################################################################");
+								this.log.info("PartProdId_1 : "+episodeShopping.getPartProdId());
+								this.log.info("SpecialCouponId_1 : "+episodeShopping.getSpecialCouponId());
+								this.log.info("################################################################");	
 							}
 
 							episodeSaleOption.setPlaceUsage(episodeShopping.getUsePlac()); // 사용_장소
@@ -4166,7 +4180,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 												selectOption.setMaxDailySale(Integer.parseInt(optionShopping.getDlyMaxCnt())); // 일_최대_판매_수량
 												selectOption.setMaxMonthlyBuy(Integer.parseInt(optionShopping.getMthUsrMaxCnt())); // 월_회원_최대_구매_수량
 												selectOption.setMaxDailyBuy(Integer.parseInt(optionShopping.getDlyUsrMaxCnt())); // 일_회원_최대_구매_수량
-												selectOption.setMaxOnceBuy(Integer.parseInt(optionShopping.getEachMaxCnt())); // 1차_최대_구매_수량    											
+												selectOption.setMaxOnceBuy(Integer.parseInt(optionShopping.getEachMaxCnt())); // 1차_최대_구매_수량    		
+
+												this.log.info("################################################################");
+												this.log.info("PartProdId_2 : "+optionShopping.getPartProdId());
+												this.log.info("SpecialCouponId_2 : "+optionShopping.getSpecialCouponId());
+												this.log.info("################################################################");	
 											}
 
 											selectOption.setSubYn("N");
@@ -4199,6 +4218,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 											subSelectOption.setMaxDailyBuy(Integer.parseInt(optionShopping.getDlyUsrMaxCnt())); // 일_회원_최대_구매_수량
 											subSelectOption.setMaxOnceBuy(Integer.parseInt(optionShopping.getEachMaxCnt())); // 1차_최대_구매_수량
 											subSelectOption.setSalesStatus(optionShopping.getProdStatusCd());
+											
+											this.log.info("################################################################");
+											this.log.info("PartProdId_3 : "+optionShopping.getPartProdId());
+											this.log.info("SpecialCouponId_3 : "+optionShopping.getSpecialCouponId());
+											this.log.info("################################################################");																				
 
 											subSelectOptionList.add(subSelectOption);
 										}
