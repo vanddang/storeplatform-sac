@@ -9,9 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import org.codehaus.jackson.annotate.JsonRawValue;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * <p>
@@ -24,49 +25,34 @@ public class MenuDetail extends CommonInfo {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 테넌트 ID
-     */
+    /** 테넌트 ID */
     private String tenantId;
 
-    /**
-     * 시스템 ID
-     */
+    /** 시스템 ID */
     private String systemId;
 
-    /**
-     * 메뉴 Key
-     */
+    /** 메뉴 Key */
     private String menuKey;
 
-    /**
-     * 상위 메뉴 Key
-     */
+    /** 상위 메뉴 Key */
     private String upMenuKey;
 
-    /**
-     * 노출 순서
-     */
+    /** 노출 순서 */
     private Integer expoOrd;
 
-    /**
-     * 식별자
-     */
+    /** 식별자 */
     private String keyType;
 
-    /**
-     * 메뉴명
-     */
+    /** 메뉴명 */
     private String menuName;
 
-    /**
-     * 썸네일 이미지 URL
-     */
+    /** 썸네일 이미지 URL */
     private String imgPath;
 
-    /**
-     * 주입 변수
-     */
+    /** PIN 인증여부 (Y/N) */
+    private String pinAuthYn;
+
+    /** 주입 변수 */
     @JsonRawValue
     private Object urlParam;
 
@@ -140,5 +126,13 @@ public class MenuDetail extends CommonInfo {
 
     public void setUrlParam(Object urlParam) {
         this.urlParam = urlParam;
+    }
+
+	public String getPinAuthYn() {
+	    return pinAuthYn;
+    }
+
+	public void setPinAuthYn( String pinAuthYn ) {
+	    this.pinAuthYn = pinAuthYn;
     }
 }
