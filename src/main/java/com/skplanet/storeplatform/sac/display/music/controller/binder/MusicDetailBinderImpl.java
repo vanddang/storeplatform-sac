@@ -58,9 +58,11 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         music.setRelatedProductList(new ArrayList<Identifier>());
         if(relatedProductList != null && relatedProductList.size() > 0) {
             for (RelatedProduct relatedProduct : relatedProductList) {
-
-                music.getRelatedProductList().add(
-                        new Identifier(META_CLS_TO_PROD_TYPE.get(relatedProduct.getMetaClsfCd()), relatedProduct.getProdId()));
+                Identifier identifier = new Identifier();
+                identifier.setType(META_CLS_TO_PROD_TYPE.get(relatedProduct.getMetaClsfCd()));
+                identifier.setText(relatedProduct.getProdId());
+                identifier.setPrice(relatedProduct.getProdAmt());
+                music.getRelatedProductList().add(identifier);
             }
         }
 

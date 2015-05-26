@@ -22,6 +22,7 @@ public class RelatedProduct extends CommonInfo {
 
     private String prodId;
     private String metaClsfCd;
+    private Integer prodAmt;
 
     public String getProdId() {
         return prodId;
@@ -37,5 +38,13 @@ public class RelatedProduct extends CommonInfo {
 
     public void setMetaClsfCd(String metaClsfCd) {
         this.metaClsfCd = metaClsfCd;
+    }
+
+    public Integer getProdAmt() {
+        return prodAmt;
+    }
+
+    public void setProdAmt(Integer prodAmt) {
+        this.prodAmt = prodAmt;
     }
 }
