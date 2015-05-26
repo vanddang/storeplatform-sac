@@ -172,10 +172,10 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES,{}",
 					ReflectionToStringBuilder.toString(userCouponListV2EcRes, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
-			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES_EXCEPTION,{}",
-					ReflectionToStringBuilder.toString(userCouponListV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));
-//			throw new StorePlatformException("SAC_PUR_7210", e);
-			return "NULL";
+//			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES_EXCEPTION,{}",
+//					ReflectionToStringBuilder.toString(userCouponListV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));
+//			return "NULL";
+			throw new StorePlatformException("SAC_PUR_7210", e);
 		}
 
 		if (StringUtils.equals(userCouponListV2EcRes.getResultCd(), PurchaseConstants.TSTORE_COUPON_RESULT_CD_SUCCESS) == false) {
