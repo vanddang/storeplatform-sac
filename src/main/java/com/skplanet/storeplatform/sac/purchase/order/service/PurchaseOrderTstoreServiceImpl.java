@@ -94,6 +94,9 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			userCouponListEcRes = this.tStoreCouponSCI.getUserCouponList(userCouponListEcReq);
 			this.logger.info("PRCHS,ORDER,SAC,TSTORE,OLD_COUPON,SEARCH,RES,{}",
 					ReflectionToStringBuilder.toString(userCouponListEcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+			for (Coupon coupon : userCouponListEcRes.getCouponList())
+				this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON_DETAIL,SEARCH,RES,{}",
+						ReflectionToStringBuilder.toString(coupon, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
 			throw new StorePlatformException("SAC_PUR_7210", e);
 		}
@@ -171,6 +174,9 @@ public class PurchaseOrderTstoreServiceImpl implements PurchaseOrderTstoreServic
 			userCouponListV2EcRes = this.tStoreCouponSCI.getUserCouponListV2(userCouponListV2EcReq);
 			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES,{}",
 					ReflectionToStringBuilder.toString(userCouponListV2EcRes, ToStringStyle.SHORT_PREFIX_STYLE));
+			for (Coupon coupon : userCouponListV2EcRes.getCouponList())
+				this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON_DETAIL,SEARCH,RES,{}",
+						ReflectionToStringBuilder.toString(coupon, ToStringStyle.SHORT_PREFIX_STYLE));
 		} catch (Exception e) {
 			this.logger.info("PRCHS,ORDER,SAC,TSTORE,COUPON,SEARCH,RES_EXCEPTION,{}",
 					ReflectionToStringBuilder.toString(userCouponListV2EcReq, ToStringStyle.SHORT_PREFIX_STYLE));
