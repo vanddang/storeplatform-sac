@@ -1185,17 +1185,19 @@
     <select id="selectFixrateProdInfo" parameterType="Map" resultType="MetaInfo">
           SELECT  /* DownloadMapper.selectFixrateProdInfo, 정액권 상품 정보 조회, 임근대/SKP, 2014-09-02 */
                   A.prod_id as freepass_prod_id, A.part_prod_id as chnl_prod_id, B.part_prod_id as prod_id, 
-                  CASE WHEN C.DRM_ATTR_CLSF='PD013401' THEN D.DRM_YN ELSE A.DWLD_DRM_YN END AS STORE_DRM_YN,
-                  CASE WHEN C.DRM_ATTR_CLSF='PD013401' THEN D.DRM_YN ELSE A.STRM_DRM_YN END AS PLAY_DRM_YN
+                  CASE WHEN C.DRM_ATTR_CLSF='PD013401' THEN D.DRM_YN ELSE E.DRM_YN END AS STORE_DRM_YN,
+                  CASE WHEN C.DRM_ATTR_CLSF='PD013401' THEN D.DRM_YN ELSE E.DRM_YN END AS PLAY_DRM_YN
             FROM  TB_DP_FIXRATE_PROD_MAPG A,
                   TB_DP_PROD_RSHP B,
                   TB_DP_CMPX_PROD C,
-                  TB_DP_PROD D /* 정액권 상품 */
+                  TB_DP_PROD D, /* 정액권 상품 */
+                  TB_DP_PROD E  /* 에피소드 상품 */
            WHERE  A.prod_id = #{fixrateProdId} /* 정액권 상품ID */
              AND  A.part_prod_id = B.prod_id
              AND  A.PROD_ID=C.PROD_ID
              AND  A.PROD_ID=D.PROD_ID
-             AND  b.part_prod_id = #{prodId} /* 상품ID */
+             AND  B.PART_PROD_ID = E.PROD_ID
+             AND  B.PART_PROD_ID = #{prodId} /* 상품ID */
     </select>
 
     <update id="mergeUserDownloadInfo" parameterType="map">
