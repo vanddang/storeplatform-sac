@@ -9,10 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
@@ -26,6 +29,8 @@ import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.FindPasswdEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.FindPasswdEcRes;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEcReq;
+import com.skplanet.storeplatform.external.client.idp.vo.imidp.ResetUserPwdIdpEcRes;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UserInfoIdpSearchServerEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -583,44 +588,44 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 
 		} else {
-			// 원아이디인 경우 원아이디포털사이트에서 비밀번호 찾기를 하도록 되어있기 때문에 기존 로직 주석처리
+
 			// 통합ID회원
-			// UserInfoIdpSearchServerEcReq ecReqUserInfo = new UserInfoIdpSearchServerEcReq();
-			// ecReqUserInfo.setKey(info.getImSvcNo()); // 통합 서비스 관리번호
-			// ecReqUserInfo.setKeyType("1");
-			// UserInfoIdpSearchServerEcRes ecResUserInfo = this.imIdpSCI.userInfoIdpSearchServer(ecReqUserInfo);
-			//
-			// LOGGER.debug("## ImIDP Request UserSearch : {}", ecReqUserInfo.toString());
-			// LOGGER.debug("## ImIDP Response UserSearch{}", ecResUserInfo.toString());
-			//
-			// // 통합ID회원 패스워드 리셋
-			// ResetUserPwdIdpEcReq ecReqResetUserPwd = new ResetUserPwdIdpEcReq();
-			// Date dtCur = new Date();
-			// ecReqResetUserPwd.setKeyType("1");
-			// ecReqResetUserPwd.setKey(info.getImSvcNo());
-			// ecReqResetUserPwd.setLangCode("KOR");
-			// ecReqResetUserPwd.setModifyReqDate(new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(dtCur));
-			// ecReqResetUserPwd.setModifyReqTime(new SimpleDateFormat("HHmmss", Locale.KOREA).format(dtCur));
-			//
-			// if (ecResUserInfo.getIsUserTnAuth().equals("Y")) {
-			// // 휴대폰 인증
-			// ecReqResetUserPwd.setUserTn(ecResUserInfo.getUserTn());
-			// ecReqResetUserPwd.setUserTnNationCd("82");
-			// ecReqResetUserPwd.setUserTnType("M");
-			// ecReqResetUserPwd.setIsUserTnAuth("Y");
-			// ecReqResetUserPwd.setIsEmailAuth("N");
-			// } else if (ecResUserInfo.getIsEmailAuth().equals("Y")) {
-			// // 이메일 인증
-			// ecReqResetUserPwd.setIsEmailAuth("Y");
-			// ecReqResetUserPwd.setUserEmail(ecResUserInfo.getUserEmail());
-			// ecReqResetUserPwd.setIsUserTnAuth("N");
-			// }
-			//
-			// LOGGER.debug("## ImIDP Request ResetUserPWD : {}", ecReqResetUserPwd.toString());
-			//
-			// ResetUserPwdIdpEcRes ecResResetUserPwd = this.imIdpSCI.resetUserPwdIdp(ecReqResetUserPwd);
-			//
-			// LOGGER.debug("## ImIDP Response ResetUserPWD : {}", ecResResetUserPwd.getCommonRes().getResultText());
+			UserInfoIdpSearchServerEcReq ecReqUserInfo = new UserInfoIdpSearchServerEcReq();
+			ecReqUserInfo.setKey(info.getImSvcNo()); // 통합 서비스 관리번호
+			ecReqUserInfo.setKeyType("1");
+			UserInfoIdpSearchServerEcRes ecResUserInfo = this.imIdpSCI.userInfoIdpSearchServer(ecReqUserInfo);
+
+			LOGGER.debug("## ImIDP Request UserSearch : {}", ecReqUserInfo.toString());
+			LOGGER.debug("## ImIDP Response UserSearch{}", ecResUserInfo.toString());
+
+			// 통합ID회원 패스워드 리셋
+			ResetUserPwdIdpEcReq ecReqResetUserPwd = new ResetUserPwdIdpEcReq();
+			Date dtCur = new Date();
+			ecReqResetUserPwd.setKeyType("1");
+			ecReqResetUserPwd.setKey(info.getImSvcNo());
+			ecReqResetUserPwd.setLangCode("KOR");
+			ecReqResetUserPwd.setModifyReqDate(new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(dtCur));
+			ecReqResetUserPwd.setModifyReqTime(new SimpleDateFormat("HHmmss", Locale.KOREA).format(dtCur));
+
+			if (ecResUserInfo.getIsUserTnAuth().equals("Y")) {
+				// 휴대폰 인증
+				ecReqResetUserPwd.setUserTn(ecResUserInfo.getUserTn());
+				ecReqResetUserPwd.setUserTnNationCd("82");
+				ecReqResetUserPwd.setUserTnType("M");
+				ecReqResetUserPwd.setIsUserTnAuth("Y");
+				ecReqResetUserPwd.setIsEmailAuth("N");
+			} else if (ecResUserInfo.getIsEmailAuth().equals("Y")) {
+				// 이메일 인증
+				ecReqResetUserPwd.setIsEmailAuth("Y");
+				ecReqResetUserPwd.setUserEmail(ecResUserInfo.getUserEmail());
+				ecReqResetUserPwd.setIsUserTnAuth("N");
+			}
+
+			LOGGER.debug("## ImIDP Request ResetUserPWD : {}", ecReqResetUserPwd.toString());
+
+			ResetUserPwdIdpEcRes ecResResetUserPwd = this.imIdpSCI.resetUserPwdIdp(ecReqResetUserPwd);
+
+			LOGGER.debug("## ImIDP Response ResetUserPWD : {}", ecResResetUserPwd.getCommonRes().getResultText());
 
 			res.setSendInfo("");
 			res.setUserPw("");
