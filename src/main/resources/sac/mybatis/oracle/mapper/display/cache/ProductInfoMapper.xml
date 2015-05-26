@@ -955,8 +955,8 @@
             , CPROD.MALL_CD
             , CPROD.FEE_CASE_CD
             , CPROD.FEE_UNIT_CD
-            , CPROD.USE_PERIOD_UNIT_CD
-            , CPROD.USE_PERIOD
+            , UP.USE_PERIOD_UNIT_CD
+            , UP.USE_PERIOD
             , CPROD.DRM_YN
             , CPROD.DRM_SET_CD
             , CPROD.DRM_SET_VALUE
@@ -1005,6 +1005,8 @@
                 ON TPRC.PROD_ID = CPROD.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
             LEFT OUTER JOIN TB_DP_PROD_IMG BIMG
                 ON BIMG.PROD_ID = CPROD.PROD_ID AND BIMG.LANG_CD = CPDESC.LANG_CD AND BIMG.IMG_CD = #{bannImageCd} -- Banner
+            LEFT OUTER JOIN TB_DP_USE_POLICY UP
+                ON CPROD.USE_POLICY_ID = UP.USE_POLICY_ID
             LEFT OUTER JOIN TB_DP_PROD_IMG TIMG
                 ON TIMG.PROD_ID = CPROD.PROD_ID AND TIMG.LANG_CD = CPDESC.LANG_CD
                    AND TIMG.IMG_CD = (
