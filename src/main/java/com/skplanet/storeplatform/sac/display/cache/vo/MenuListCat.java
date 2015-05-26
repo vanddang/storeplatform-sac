@@ -28,6 +28,7 @@ public class MenuListCat {
     private String menuNm;
     private String injtVar;
     private String keyType;
+    private String pinAuthYn;
 
     public String getTenantId() {
         return tenantId;
@@ -115,5 +116,13 @@ public class MenuListCat {
 
     public void setKeyType(String keyType) {
         this.keyType = keyType;
+    }
+
+	public String getPinAuthYn() {
+	    return pinAuthYn;
+    }
+
+	public void setPinAuthYn( String pinAuthYn ) {
+	    this.pinAuthYn = pinAuthYn;
     }
 }
