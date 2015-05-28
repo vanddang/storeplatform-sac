@@ -81,7 +81,7 @@ public class CachedExtraInfoManagerImpl implements CachedExtraInfoManager {
                     public void store(String pkgNm, String value, Plandasj redis) {
                         String key = SacRedisKeys.pkg2prod(pkgNm);
                         redis.set(key, value);
-                        redis.expire(key, 60 * 5);
+                        redis.expire(key, 60 * 60 * 12);
 
                         redis.sadd(SacRedisKeys.pkgsInProd(value), pkgNm);
                     }
