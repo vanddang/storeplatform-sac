@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,10 +53,24 @@ public class CardListControllerTest {
 	@Test
 	public void basic() throws Exception {
 
+		SegmentReq segmentReq = new SegmentReq();
+
+		segmentReq.setOutsdMbrGrdCd( "1" );
+		segmentReq.setInsdMbrGrdCd( "Z6" );
+		segmentReq.setSex( "M" );
+		segmentReq.setAgeClsfCd( "18" );
+		segmentReq.setDeviceChgYn( "N" );
+		segmentReq.setNewEntryYn( "N" );
+		segmentReq.setMnoClsfCd( "US001201" );
+		segmentReq.setCategoryBest( Arrays.asList( "DP30" ) );
+
 		CardListInPanelReq req = new CardListInPanelReq();
 
+		req.setUserKey( "Merong" );
 		req.setPanelId( "PN00002"   );
 //		req.setUseGrdCd( "PD004401" );
+		req.setSegment( segmentReq );
+
 
 		String postBody = new ObjectMapper().writeValueAsString( req );
 
@@ -77,7 +93,7 @@ public class CardListControllerTest {
 
 		CardListInPanelReq req = new CardListInPanelReq();
 
-		req.setPanelId( "PN00002"   );
+		req.setPanelId( "PN14002"   );
 		req.setUseGrdCd( "PD004400" ); // 없는 코드지만... 0건이 나와야 함
 
 		String postBody = new ObjectMapper().writeValueAsString( req );

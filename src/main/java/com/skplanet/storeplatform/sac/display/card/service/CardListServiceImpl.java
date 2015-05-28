@@ -249,7 +249,7 @@ public class CardListServiceImpl implements CardListService {
         if( ! cardSegment.getDeviceChgYn().equals(CARD_SGMT_NA) && ! cardSegment.getDeviceChgYn().equals(segmentInfo.getDeviceChgYn())  ) return true;
         if( ! cardSegment.getNewEntryYn().equals(CARD_SGMT_NA)  && ! cardSegment.getNewEntryYn().equals(segmentInfo.getNewEntryYn())    ) return true;
 
-        return true;
+        return false;
 
     }
 }
