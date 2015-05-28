@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.cache.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.display.vo.card.SegmentReq;
 
@@ -99,7 +100,7 @@ public class SegmentInfo extends CommonInfo {
     }
 
     public void setDeviceChgYn(String deviceChgYn) {
-        this.deviceChgYn = deviceChgYn;
+    	this.deviceChgYn = StringUtil.trim( deviceChgYn );
     }
 
     public String getNewEntryYn() {
@@ -107,7 +108,7 @@ public class SegmentInfo extends CommonInfo {
     }
 
     public void setNewEntryYn(String newEntryYn) {
-        this.newEntryYn = newEntryYn;
+    	this.newEntryYn = StringUtil.trim( newEntryYn );
     }
 
     public String getMnoClsfCd() {
