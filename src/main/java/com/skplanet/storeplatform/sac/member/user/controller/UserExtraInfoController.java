@@ -19,15 +19,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.client.common.constant.Constant;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckAdditionalInformationSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CheckAdditionalInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserExtraInfoService;
+import com.skplanet.storeplatform.sac.member.user.service.UserService;
 
 /**
  * 회원 부가 정보 등록/수정/삭제/조회 서비스 Controller
@@ -42,6 +46,9 @@ public class UserExtraInfoController {
 
 	@Autowired
 	private UserExtraInfoService userExtraService;
+
+	@Autowired
+	private UserService userService;
 
 	@RequestMapping(value = "/modifyAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -132,7 +139,7 @@ public class UserExtraInfoController {
 	 *            CheckAdditionalInformationSacReq
 	 * @return CheckAdditionalInformationSacRes
 	 */
-	@RequestMapping(value = "/checkAdditionalInformation/v1", method = RequestMethod.POST)
+	/* @RequestMapping(value = "/checkAdditionalInformation/v1", method = RequestMethod.POST) */
 	@ResponseBody
 	public CheckAdditionalInformationSacRes checkAdditionalInformation(SacRequestHeader sacHeader,
 			@RequestBody CheckAdditionalInformationSacReq req) {
@@ -140,6 +147,34 @@ public class UserExtraInfoController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		CheckAdditionalInformationSacRes res = this.userExtraService.checkAdditionalInformation(sacHeader, req);
+
+		LOGGER.info("Response : {}", res);
+
+		return res;
+	}
+
+	@RequestMapping(value = "/checkAdditionalInformation/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public MoveUserInfoSacRes moveUserInfo(SacRequestHeader sacHeader, @RequestBody MoveUserInfoSacReq req) {
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String moveType = StringUtil.nvl(req.getMoveType(), "");
+		if (userKey.equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "userKey");
+		}
+		if (moveType.equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "moveType");
+		}
+
+		// Constant.USERMBR_MOVE_TYPE_ACTIVATE(정상 처리), Constant.USERMBR_MOVE_TYPE_DORMANT(휴면 처리)
+		if ("1".equals(req.getMoveType()))
+			req.setMoveType(Constant.USERMBR_MOVE_TYPE_ACTIVATE);
+		if ("2".equals(req.getMoveType()))
+			req.setMoveType(Constant.USERMBR_MOVE_TYPE_DORMANT);
+
+		MoveUserInfoSacRes res = this.userService.moveUserInfo(sacHeader, req);
 
 		LOGGER.info("Response : {}", res);
 

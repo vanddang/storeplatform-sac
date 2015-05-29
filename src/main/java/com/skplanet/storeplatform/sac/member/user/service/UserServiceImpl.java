@@ -11,12 +11,17 @@ import com.skplanet.storeplatform.external.client.idp.sci.ImIdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.ModifyProfileEcReq;
 import com.skplanet.storeplatform.external.client.idp.vo.imidp.UpdateAdditionalInfoEcReq;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
+import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.MoveUserInfoRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.MoveUserInfoResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailV2Res;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchExtentReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -50,6 +55,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserSearchService userSearchService;
+
+	private static CommonRequest commonRequest;
+
+	static {
+		commonRequest = new CommonRequest();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -170,4 +181,28 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.UserService# moveUserInfo
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader, MoveUserInfoSacReq)
+	 */
+	@Override
+	public MoveUserInfoSacRes moveUserInfo(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq) {
+		/* 헤더 정보 셋팅 */
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		MoveUserInfoRequest moveUserInfoRequest = new MoveUserInfoRequest();
+		moveUserInfoRequest.setCommonRequest(commonRequest);
+		moveUserInfoRequest.setUserKey(moveUserInfoSacReq.getUserKey());
+		// 실제 moveType 정보는 정상/휴면 회원 여부를 체크 해서 아래 둘중 하나로 넣도록 한다.
+		// Constant.USERMBR_MOVE_TYPE_ACTIVATE(정상 처리), Constant.USERMBR_MOVE_TYPE_DORMANT(휴면 처리)
+		moveUserInfoRequest.setMoveType(moveUserInfoSacReq.getMoveType());
+		MoveUserInfoResponse moveUserInfoResponse = this.userSCI.moveUserMbr(moveUserInfoRequest);
+
+		MoveUserInfoSacRes moveUserInfoSacRes = new MoveUserInfoSacRes();
+		moveUserInfoSacRes.setUserKey(moveUserInfoResponse.getUserKey());
+
+		return moveUserInfoSacRes;
+	}
 }

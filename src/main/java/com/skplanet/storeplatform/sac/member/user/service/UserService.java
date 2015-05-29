@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MoveUserInfoSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -43,4 +45,15 @@ public interface UserService {
 	 * @return UpdateAdditionalInfoEcRes
 	 */
 	public void modAdditionalInfoForNonLogin(SacRequestHeader requestHeader, String userKey, String imSvcNo);
+
+	/**
+	 * <pre>
+	 * 정상인 회원정보를 휴면 DB로 이동한다.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 * @param moveUserInfoSacReq
+	 * @return MoveUserInfoSacRes
+	 */
+	public MoveUserInfoSacRes moveUserInfo(SacRequestHeader sacHeader, MoveUserInfoSacReq moveUserInfoSacReq);
 }
