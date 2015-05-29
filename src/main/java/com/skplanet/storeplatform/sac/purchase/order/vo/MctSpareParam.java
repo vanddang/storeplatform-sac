@@ -11,7 +11,6 @@ package com.skplanet.storeplatform.sac.purchase.order.vo;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -40,7 +39,7 @@ public class MctSpareParam extends CommonInfo {
 	public MctSpareParam(String mctSpareParam) {
 		if (StringUtils.contains(mctSpareParam, SEPARATOR)) {
 			// String[] arrVal = mctSpareParam.split(SEPARATOR, -1);
-			String[] arrVal = StringUtil.splitPreserveAllTokens(mctSpareParam, SEPARATOR);
+			String[] arrVal = StringUtils.splitPreserveAllTokens(mctSpareParam, SEPARATOR);
 
 			this.version = Integer.parseInt(arrVal[0]);
 
