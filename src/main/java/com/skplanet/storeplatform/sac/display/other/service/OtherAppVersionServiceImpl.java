@@ -108,7 +108,6 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
                         Map<String, Object> req = new HashMap<String, Object>();
                         req.put("prodId", param.getProdId());
                         req.put("deviceModelCd", param.getDeviceModelCd());
-                        commonDAO.queryForObject("OtherAppVersion.getSprtDev", req, SprtDev.class);
 
                         return commonDAO.queryForObject("OtherAppVersion.getSprtDev", req, SprtDev.class);
                     }
@@ -118,7 +117,7 @@ public class OtherAppVersionServiceImpl implements OtherAppVersionService {
             return null;
 
         // OS 프로비저닝
-        HashSet<String> verSet = new HashSet<String>(Arrays.asList(sprtDev.getOsVer().split(",")));
+        HashSet<String> verSet = new HashSet<String>(Arrays.asList(sprtDev.getOsVer().split(";")));
         if(!verSet.contains(osVer))
             return null;
 
