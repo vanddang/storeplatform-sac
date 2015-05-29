@@ -37,7 +37,8 @@
             SD.DEVICE_MODEL_CD,
             CPD.SVC_GRP_CD,
             NVL((SELECT MUSIC_SPRT_YN FROM TB_CM_DEVICE CM2 WHERE CM2.DEVICE_MODEL_CD = #{deviceModelCd}), 'N') AS MUSIC_SPRT_YN,
-            NVL2(SSML.STATS_KEY, 'Y', 'N') AS LIKE_YN
+            NVL2(SSML.STATS_KEY, 'Y', 'N') AS LIKE_YN,
+            CPD.SELLER_MBR_NO
             ]]>
         FROM TB_DP_PROD CPD
             INNER JOIN TB_DP_PROD_RSHP RS

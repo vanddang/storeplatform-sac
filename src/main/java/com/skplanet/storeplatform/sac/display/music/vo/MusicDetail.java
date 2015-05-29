@@ -46,6 +46,7 @@ public class MusicDetail extends CommonInfo {
     private String svcGrpCd;
     private String musicSprtYn;
     private String likeYn;
+    private String sellerMbrNo;
 
     public String getMusicSprtYn() {
         return musicSprtYn;
@@ -333,5 +334,13 @@ public class MusicDetail extends CommonInfo {
 
     public void setLikeYn(String likeYn) {
         this.likeYn = likeYn;
+    }
+
+    public String getSellerMbrNo() {
+        return sellerMbrNo;
+    }
+
+    public void setSellerMbrNo(String sellerMbrNo) {
+        this.sellerMbrNo = sellerMbrNo;
     }
 }

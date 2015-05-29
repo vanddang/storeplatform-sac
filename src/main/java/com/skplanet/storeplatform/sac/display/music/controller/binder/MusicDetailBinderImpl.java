@@ -102,41 +102,18 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
     @Override
     public void mapBasicInfo(Product product, MusicDetail musicDetail, List<Point> pointList) {
 
-        product.setIdentifierList(new ArrayList<Identifier>());
-        product.getIdentifierList().add(new Identifier("channel", musicDetail.getChnlId()));
-        product.getIdentifierList().add(new Identifier("episode", musicDetail.getEpsdId()));
-        product.getIdentifierList().add(new Identifier("song", musicDetail.getOutsdContentsId()));
-        product.getIdentifierList().add(new Identifier("album", musicDetail.getAlbumId()));
+        product.setIdentifierList(newIdentifierList(musicDetail));
         product.setProductExplain(musicDetail.getProdBaseDesc());
-
-        Title title = new Title();
-        title.setText(musicDetail.getProdNm());
-        product.setTitle(title);
-        Price price = new Price();
-        price.setText(musicDetail.getProdAmt());
-        product.setPrice(price);
-        Accrual accrual = new Accrual();
-        accrual.setVoterCount(musicDetail.getPaticpersCnt());
-        accrual.setDownloadCount(musicDetail.getDwldCnt());
-        accrual.setScore(musicDetail.getAvgEvluScore());
-        product.setAccrual(accrual);
-        Rights rights = new Rights();
-        rights.setGrade(musicDetail.getProdGrdCd());
-        product.setRights(rights);
+        product.setTitle(newTitle(musicDetail));
+        product.setPrice(newPrice(musicDetail));
+        product.setAccrual(newAccrual(musicDetail));
+        product.setRights(newRights(musicDetail));
         product.setSvcGrpCd(musicDetail.getSvcGrpCd());
         product.setSalesStatus(musicDetail.getProdStatusCd());
-
-        // Contributor
-        product.setContributor(generateContributor(musicDetail));
-
-        // Date
-        product.setDateList(new ArrayList<Date>());
-        if(StringUtils.isNotEmpty(musicDetail.getIssueDay())) {
-            product.getDateList().add(new Date(DisplayConstants.DP_DATE_ISSUE,
-                    DateUtils.parseDate(StringUtils.rightPad(musicDetail.getIssueDay(), 14, "0"))));
-        }
-
+        product.setContributor(newContributor(musicDetail));
+        product.setDateList(newDateList(musicDetail));
         product.setLikeYn(musicDetail.getLikeYn());
+        product.setDistributor(newDistributor(musicDetail));
         
         // tmembership 할인율
         if(pointList != null) {
@@ -144,7 +121,7 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         }
     }
     
-    private Contributor generateContributor(MusicDetail musicDetail) {
+    private Contributor newContributor(MusicDetail musicDetail) {
     	Contributor contributor = new Contributor();
         contributor.setIdentifierList(new ArrayList<Identifier>());
         contributor.getIdentifierList().add(new Identifier("artist", musicDetail.getArtist1Id()));
@@ -170,5 +147,55 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
             contributor.getSourceList().add(source);
         }
         return contributor;
+    }
+
+    private Distributor newDistributor(MusicDetail musicDetail) {
+        Distributor distributor = new Distributor();
+        distributor.setSellerKey(musicDetail.getSellerMbrNo());
+        return distributor;
+    }
+
+    private List<Date> newDateList(MusicDetail musicDetail) {
+        List<Date> dateList = new ArrayList<Date>();
+        if(StringUtils.isNotEmpty(musicDetail.getIssueDay())) {
+            dateList.add(new Date(DisplayConstants.DP_DATE_ISSUE,
+                    DateUtils.parseDate(StringUtils.rightPad(musicDetail.getIssueDay(), 14, "0"))));
+        }
+        return dateList;
+    }
+
+    private Rights newRights(MusicDetail musicDetail) {
+        Rights rights = new Rights();
+        rights.setGrade(musicDetail.getProdGrdCd());
+        return rights;
+    }
+
+    private Accrual newAccrual(MusicDetail musicDetail) {
+        Accrual accrual = new Accrual();
+        accrual.setVoterCount(musicDetail.getPaticpersCnt());
+        accrual.setDownloadCount(musicDetail.getDwldCnt());
+        accrual.setScore(musicDetail.getAvgEvluScore());
+        return accrual;
+    }
+
+    private Price newPrice(MusicDetail musicDetail) {
+        Price price = new Price();
+        price.setText(musicDetail.getProdAmt());
+        return price;
+    }
+
+    private Title newTitle(MusicDetail musicDetail) {
+        Title title = new Title();
+        title.setText(musicDetail.getProdNm());
+        return title;
+    }
+
+    private List<Identifier> newIdentifierList(MusicDetail musicDetail) {
+        List<Identifier> identifiers = new ArrayList<Identifier>();
+        identifiers.add(new Identifier("channel", musicDetail.getChnlId()));
+        identifiers.add(new Identifier("episode", musicDetail.getEpsdId()));
+        identifiers.add(new Identifier("song", musicDetail.getOutsdContentsId()));
+        identifiers.add(new Identifier("album", musicDetail.getAlbumId()));
+        return identifiers;
     }
 }
