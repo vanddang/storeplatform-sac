@@ -98,7 +98,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
-	private final String APP_CODI_SVC_GRP_NM = "APPCODI";
+	// private final String APP_CODI_SVC_GRP_NM = "APPCODI";
 
 	/*
 	 * (non-Javadoc)
@@ -156,7 +156,8 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 		CommonResponse commonResponse = new CommonResponse();
 
-		ISFRes response = new ISFRes();
+		// ISFRes response = new ISFRes();
+		ISFRes response = null;
 		try {
 			// ISF 연동
 			response = this.invoker.invoke(this.makeRequest(requestVO));
@@ -771,7 +772,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
 
 			if (metaInfo != null) {
-				metaInfo.setSvcGrpNm(this.APP_CODI_SVC_GRP_NM);
+				metaInfo.setSvcGrpNm(DisplayConstants.APP_CODI_SVC_GRP_NM);
 				product = this.responseInfoGenerateFacade.generateMovieProductShort(metaInfo);
 			}
 		}
@@ -781,7 +782,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			metaInfo = this.metaInfoService.getVODMetaInfo(paramMap);
 
 			if (metaInfo != null) {
-				metaInfo.setSvcGrpNm(this.APP_CODI_SVC_GRP_NM);
+				metaInfo.setSvcGrpNm(DisplayConstants.APP_CODI_SVC_GRP_NM);
 				product = this.responseInfoGenerateFacade.generateBroadcastProductShort(metaInfo);
 			}
 		}
@@ -791,7 +792,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
 
 			if (metaInfo != null) {
-				metaInfo.setSvcGrpNm(this.APP_CODI_SVC_GRP_NM);
+				metaInfo.setSvcGrpNm(DisplayConstants.APP_CODI_SVC_GRP_NM);
 				product = this.responseInfoGenerateFacade.generateEbookProductShort(metaInfo);
 			}
 		}
@@ -801,7 +802,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			metaInfo = this.metaInfoService.getEbookComicMetaInfo(paramMap);
 
 			if (metaInfo != null) {
-				metaInfo.setSvcGrpNm(this.APP_CODI_SVC_GRP_NM);
+				metaInfo.setSvcGrpNm(DisplayConstants.APP_CODI_SVC_GRP_NM);
 				product = this.responseInfoGenerateFacade.generateComicProductShort(metaInfo);
 			}
 		}
@@ -865,7 +866,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 			List<Identifier> identifierList;
 
 			product = new Product();
-			identifier = new Identifier();
+			// identifier = new Identifier();
 			title = new Title();
 			app = new App();
 			music = new Music();
