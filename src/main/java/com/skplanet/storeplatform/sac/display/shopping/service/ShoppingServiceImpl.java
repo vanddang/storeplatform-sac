@@ -540,7 +540,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialPriceProductList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new MetaInfo();
+//			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;
@@ -645,7 +645,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new MetaInfo();
+//			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Promotion promotion = null;
@@ -776,7 +776,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new MetaInfo();
+//			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Promotion promotion = null;
@@ -1043,7 +1043,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 
 		// offset, Count default setting
-		resultList = new ArrayList<MetaInfo>();
+//		resultList = new ArrayList<MetaInfo>();
 
 		// 브랜드샵 정보 가져오기
 		resultList = this.commonDAO.queryForList("Shopping.getBrandshopDetail", req, MetaInfo.class);
@@ -1197,7 +1197,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new MetaInfo();
+//			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Layout layOut = null;
@@ -2548,9 +2548,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 
 			String compareTypeCd = "";
+ 		    StringBuffer buf = new StringBuffer();
+
 			for (int i = 0; i < arraySpecialTypeCd.length; i++) {
-				compareTypeCd = compareTypeCd + arraySpecialTypeCd[i];
+				buf.append(arraySpecialTypeCd[i]);
 			}
+			compareTypeCd = buf.toString();
 			if (!compareTypeCd.equals("DP007501DP007502") && !compareTypeCd.equals("DP007503")) {
 				throw new StorePlatformException("SAC_DSP_0003", "specialTypeCd", req.getSpecialTypeCd());
 			}
@@ -2600,7 +2603,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialPriceProductListV2", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new MetaInfo();
+//			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;
@@ -2707,7 +2710,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesListV2", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new MetaInfo();
+//			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Promotion promotion = null;
@@ -2840,7 +2843,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesListV2", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new MetaInfo();
+//			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Promotion promotion = null;
@@ -3305,7 +3308,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		resultList = this.commonDAO.queryForList("Shopping.getBrandshopCategoryList", req, MetaInfo.class);
 
 		if (resultList != null) {
-			shopping = new MetaInfo();
+//			shopping = new MetaInfo();
 
 			// Response VO를 만들기위한 생성자
 			Layout layOut = null;
