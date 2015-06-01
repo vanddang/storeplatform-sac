@@ -1212,34 +1212,30 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// 기본 등록ID.
 		String regId = this.getMaskRegId(prodNoti.getRegId());
 
-		LOGGER.info("@@@ -->> {}", obj);
-
 		if (obj instanceof SearchSapUserSacRes) {
 
 			SearchSapUserSacRes searchSapUserSacRes = (SearchSapUserSacRes) obj;
 			/**
 			 * REG_ID 정책. 회원 데이타를 기준으로 regId를 세팅한다. (회원 데이타 없을경우 Noti 테이블의 reg_id 참조.)
 			 */
-			if (searchSapUserSacRes != null) {
-				if (!CollectionUtils.isEmpty(searchSapUserSacRes.getUserInfo())) {
-					UserInfoSac userInfoSac = searchSapUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
-					if (userInfoSac != null) {
-						// 사용자가 기기사용자이면.
-						if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+			if (!CollectionUtils.isEmpty(searchSapUserSacRes.getUserInfo())) {
+				UserInfoSac userInfoSac = searchSapUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
+				if (userInfoSac != null) {
+					// 사용자가 기기사용자이면.
+					if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-							// 회원정보는 있으나 단말정보가 없을경우 방어로직.
-							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
-								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0),
-										userInfoSac.getUserId());
-							} else { // 단말정보가 미존재.
-								regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
-							}
-
-						} else {
-
-							regId = this.getMaskRegId(userInfoSac.getUserId());
-
+						// 회원정보는 있으나 단말정보가 없을경우 방어로직.
+						if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
+							regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0),
+									userInfoSac.getUserId());
+						} else { // 단말정보가 미존재.
+							regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
 						}
+
+					} else {
+
+						regId = this.getMaskRegId(userInfoSac.getUserId());
+
 					}
 				}
 			}
@@ -1249,26 +1245,24 @@ public class FeedbackServiceImpl implements FeedbackService {
 			/**
 			 * REG_ID 정책. 회원 데이타를 기준으로 regId를 세팅한다. (회원 데이타 없을경우 Noti 테이블의 reg_id 참조.)
 			 */
-			if (searchUserSacRes != null) {
-				if (!CollectionUtils.isEmpty(searchUserSacRes.getUserInfo())) {
-					UserInfoSac userInfoSac = searchUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
-					if (userInfoSac != null) {
-						// 사용자가 기기사용자이면.
-						if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
+			if (!CollectionUtils.isEmpty(searchUserSacRes.getUserInfo())) {
+				UserInfoSac userInfoSac = searchUserSacRes.getUserInfo().get(prodNoti.getMbrNo());
+				if (userInfoSac != null) {
+					// 사용자가 기기사용자이면.
+					if (StringUtils.equals(userInfoSac.getUserType(), MemberConstants.USER_TYPE_MOBILE)) {
 
-							// 회원정보는 있으나 단말정보가 없을경우 방어로직.
-							if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
-								regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0),
-										userInfoSac.getUserId());
-							} else { // 단말정보가 미존재.
-								regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
-							}
-
-						} else {
-
-							regId = this.getMaskRegId(userInfoSac.getUserId());
-
+						// 회원정보는 있으나 단말정보가 없을경우 방어로직.
+						if (!CollectionUtils.isEmpty(userInfoSac.getDeviceIdList())) { // 단말정보가 존재.
+							regId = this.getMaskTelNoOrDefaultRegId(userInfoSac.getDeviceIdList().get(0),
+									userInfoSac.getUserId());
+						} else { // 단말정보가 미존재.
+							regId = this.getMaskTelNoOrDefaultRegId(prodNoti.getMbrTelno(), prodNoti.getRegId());
 						}
+
+					} else {
+
+						regId = this.getMaskRegId(userInfoSac.getUserId());
+
 					}
 				}
 			}
@@ -1476,10 +1470,13 @@ public class FeedbackServiceImpl implements FeedbackService {
 	}
 
 	private String RPAD(String str, int iLen, char cPad) {
+		StringBuffer returnStr = new StringBuffer();
 		int iTempLen = iLen - str.length();
+		returnStr.append(str);
 		for (int i = 0; i < iTempLen; i++) {
-			str = str + cPad;
+			returnStr.append(cPad);
 		}
-		return str;
+		return returnStr.toString();
 	}
+
 }
