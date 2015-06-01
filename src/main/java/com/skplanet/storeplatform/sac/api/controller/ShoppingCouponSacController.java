@@ -711,19 +711,19 @@ public class ShoppingCouponSacController {
 			case LS:
 
 				String seperatorComma = "";
-				String eventList = "";
+//				String eventList = "";
+				StringBuffer eventList = new StringBuffer();
 				int j = 0;
 				if (couponList != null) {
 					for (CouponRes couponInfo : couponList) {
 						if (j > 0)
 							seperatorComma = ",";
-						eventList = eventList + seperatorComma + couponInfo.getCouponCode() + ":"
-								+ couponInfo.getSpecialYN();
+						eventList.append(seperatorComma).append(couponInfo.getCouponCode()).append(":").append(couponInfo.getSpecialYN());
 
 						j++;
 					}
 				}
-				couponRes.setEventList(eventList);
+				couponRes.setEventList(eventList.toString());
 				break;
 			case DT:
 				break;
