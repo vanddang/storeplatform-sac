@@ -111,7 +111,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		List<SpRegistProd> spRegistProdList = new ArrayList<SpRegistProd>();
 		if (couponReq != null) {
 			List<DpItemInfo> itemInfoList = null; // 아이템 정보 List;
-			itemInfoList = new ArrayList<DpItemInfo>(); // 아이템 정보 List;
 			itemInfoList = couponReq.getDpItemInfo();
 			// 1. Validation Check
 
@@ -564,7 +563,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			List<TbDpProdRshpInfo> tbDpProdRshpList, String cudType) {
 		this.log.info("■■■■■ setTbDpProdRshpValue Start ■■■■■");
 		TbDpProdRshpInfo dps = null;
-		dps = new TbDpProdRshpInfo();
 		try {
 
 			// ////////////////// Item 정보 S////////////////////////////
@@ -786,7 +784,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private boolean setTbDpProdOptValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpProdOpt> tbDpProdOptList, String cudType) {
 		this.log.info("■■■■■ setTbDpProdOptValue Start ■■■■■");
-		TbDpProdOpt dpo = new TbDpProdOpt();
+		TbDpProdOpt dpo =null;
 		try {
 
 			boolean newOpt = true;
@@ -888,7 +886,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private boolean setTbDpSprtDeviceListValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
 			List<TbDpSprtDeviceInfo> tbDpSprtDeviceList, String cudType) {
 		this.log.info("■■■■■ setTbDpSprtDeviceListValue Start ■■■■■");
-		TbDpSprtDeviceInfo tdsd = new TbDpSprtDeviceInfo();
+		TbDpSprtDeviceInfo tdsd =null;
 		try {
 
 			// ////////////////// Item 정보 S////////////////////////////
@@ -1027,7 +1025,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		this.log.info("################ [SAC DP LocalSCI] SAC Member Stat : sellerSearchSCI.detailInformation : "
 				+ DateUtil.getToday("yyyy-MM-dd hh:mm:ss.SSS"));
 		DetailInformationSacReq detailInformationSacReq = new DetailInformationSacReq();
-		DetailInformationSacRes detailInformationSacRes = new DetailInformationSacRes();
+		DetailInformationSacRes detailInformationSacRes =null;
 		List<SellerMbrSac> sellerMbrSacList = new ArrayList<SellerMbrSac>();
 		SellerMbrSac sellerMbrSac = new SellerMbrSac();
 		this.log.debug("#########################################################");
@@ -1040,8 +1038,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		try {
 			detailInformationSacRes = this.sellerSearchSCI.detailInformation(detailInformationSacReq);
 			Iterator<String> it = detailInformationSacRes.getSellerMbrListMap().keySet().iterator();
-			List<SellerMbrSac> sellerMbrs = new ArrayList<SellerMbrSac>();
-			sellerMbrSac = new SellerMbrSac();
+			List<SellerMbrSac> sellerMbrs = null;
 			while (it.hasNext()) {
 				String key = it.next();
 				sellerMbrs = detailInformationSacRes.getSellerMbrListMap().get(key);
@@ -1284,7 +1281,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		boolean flag = true;
 
 		ArrayList<CouponReq> couponList = new ArrayList<CouponReq>();
-		ArrayList<String> resultList = new ArrayList<String>();
+		ArrayList<String> resultList =null;
 
 		CSVReader reader = null;
 		// 파일명을 위한 날짜
@@ -1405,8 +1402,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 		try {
 			String filePath = "/log/omp/coupon/";
-
-			File dir = new File(filePath);
+			File dir = null;
+			dir = new File(filePath);
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}

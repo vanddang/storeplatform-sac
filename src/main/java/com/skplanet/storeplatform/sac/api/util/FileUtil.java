@@ -91,7 +91,7 @@ public class FileUtil {
 	public synchronized static byte[] readBytes(File fname) throws Exception {
 		try {
 			FileInputStream fis = new FileInputStream(fname);
-			int bufsize = new Long(fname.length()).intValue();
+			int bufsize = Long.valueOf(fname.length()).intValue();
 			byte[] buffer = new byte[bufsize];
 			int rsize = 0;
 
@@ -235,7 +235,7 @@ public class FileUtil {
 			URL oUrl = new URL(url);
 			URLConnection oURLConnection = oUrl.openConnection();
 			oURLConnection.connect();
-			String szContent = oURLConnection.getContent().toString();
+//			String szContent = oURLConnection.getContent().toString();
 
 			return true;
 

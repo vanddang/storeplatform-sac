@@ -367,7 +367,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 		String[] imgClsCode = { CouponConstants.BRAND_IMG_177_177 };
 
 		// 파일 생성 크기
-		int[][] imageSizeForDrived = { { 177, 177 } };
+//		int[][] imageSizeForDrived = { { 177, 177 } };
 		// String IMAGE_TYPE = "PNG";
 
 		String targetFileName = null;
@@ -482,7 +482,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			int nHeightSize = oHeight * 684 / oWidth;
 
 			// 파일 생성 크기
-			int[][] imageSizeForDrived = { { 182, 182 } };
+//			int[][] imageSizeForDrived = { { 182, 182 } };
 			int[][] imageSizeForDrivedDtl = { { 684, nHeightSize } };
 
 			// 카탈로그 대표이미지 리사이즈
@@ -763,7 +763,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 	@Override
 	public boolean couponRetryImg(CouponReq couponReq) {
 
-		List<BrandCatalogProdImgInfo> list = new ArrayList<BrandCatalogProdImgInfo>();
+		List<BrandCatalogProdImgInfo> list = null;
 
 		if (couponReq.getUpType().equals("brand")) {
 			DpBrandInfo dpBrandInfo = new DpBrandInfo();

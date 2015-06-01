@@ -611,7 +611,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("couponCode", couponCode);
 				map.put("itemCode", strItem);
-				EventInfo eventInfo = new EventInfo();
+				EventInfo eventInfo = null;
 				cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_COUPON_INFO", strItem);
 				if (cnt > 0) {
 					eventInfo = (EventInfo) this.commonDAO.queryForObject("Coupon.GET_SPECIAL_PRODUCT_DETAIL", map);

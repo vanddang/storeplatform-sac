@@ -99,7 +99,8 @@ public class DateUtil {
 
 		try {
 			sdf.setLenient(false);
-			Date dt = sdf.parse(textDate);
+			Date dt = null;
+			dt = sdf.parse(textDate);
 		} catch (Exception e) {
 			throw new Exception("[" + textDate + "] is not date value");
 		}
@@ -354,7 +355,7 @@ public class DateUtil {
 			else
 				days -= 1;
 		}
-		return new Long(days).intValue();
+		return Long.valueOf(days).intValue();
 	}
 
 	/**

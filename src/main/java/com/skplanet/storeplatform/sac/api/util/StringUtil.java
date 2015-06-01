@@ -331,7 +331,7 @@ public class StringUtil extends StringUtils {
 	 * @return 결과 String
 	 */
 	public static String getLeft(String str, int len) {
-		if (str.equals(null))
+		if (str==null)
 			return "";
 
 		return str.substring(0, len);
@@ -347,21 +347,16 @@ public class StringUtil extends StringUtils {
 	 * @return 결과 String
 	 */
 	public static String getRight(String str, int len) {
-		if (str.equals(null))
+		if (str==null)
 			return "";
-
-		String dest = "";
-		for (int i = (str.length() - 1); i >= 0; i--)
-			dest = dest + str.charAt(i);
-
-		str = dest;
+	
 		str = str.substring(0, len);
-		dest = "";
+		StringBuffer dest = new StringBuffer();
 
-		for (int i = (str.length() - 1); i >= 0; i--)
-			dest = dest + str.charAt(i);
-
-		return dest;
+		for (int i = (str.length() - 1); i >= 0; i--){
+			dest.append(str.charAt(i));
+		}
+		return dest.toString();
 	}
 
 	/**
@@ -543,7 +538,8 @@ public class StringUtil extends StringUtils {
 	 */
 	public static boolean isInteger(String value) {
 		try {
-			Integer num = new Integer(value);
+			Integer num = null;
+			num = new Integer(value);
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -926,15 +922,18 @@ public class StringUtil extends StringUtils {
 	 */
 	public static String extendStrWith(String src, int length, String with) {
 
+		StringBuffer buf = new StringBuffer();
 		if (src.length() >= length) // 원본이 만들고자 하는 길이보다 길면 그대로 반환
 			return src;
 		else {
+			 
+			 buf.append(src);
 			for (int i = src.length(); i < length; i++) {
-				src = src + with;
+				buf.append(with);
 			}
 		}
 
-		return src;
+		return buf.toString();
 	}
 
 	/**
@@ -989,7 +988,9 @@ public class StringUtil extends StringUtils {
 		if (limit <= 0 || StringUtils.isBlank(regex))
 			return src;
 
-		String s = "";
+		
+		StringBuffer s = new StringBuffer();
+
 		// null 문자 공백 처리
 		src = src.replaceAll("null", "").replaceAll("NULL", "");
 
@@ -999,13 +1000,13 @@ public class StringUtil extends StringUtils {
 			if (i >= limit)
 				break;
 
-			if (StringUtils.isNotBlank(s))
-				s += regex;
+			if (StringUtils.isNotBlank(s.toString()))
+				s.append(regex);
 
-			s += tags[i];
+			s.append(tags[i]);
 		}
 
-		return s;
+		return s.toString();
 	}
 
 	/**
